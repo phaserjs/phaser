@@ -380,11 +380,11 @@ Phaser.Physics.Arcade.prototype = {
 
         this._result = (this.separateX(body1, body2) || this.separateY(body1, body2));
 
-        if (this._result)
-        {
-            body1.postUpdate();
-            body2.postUpdate();
-        }
+        // if (this._result)
+        // {
+        //     body1.postUpdate();
+        //     body2.postUpdate();
+        // }
 
     },
 

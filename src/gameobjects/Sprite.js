@@ -210,17 +210,8 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache.dirty = true;
     }
 
-    this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
-    this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
-
-    //  If this sprite or the camera have moved then let's update everything
-    //  Note: The actual position shouldn't be changed if this item is inside a Group?
-    if (this.position.x != this._cache.x || this.position.y != this._cache.y)
-    {
-        this.position.x = this._cache.x;
-        this.position.y = this._cache.y;
-        this._cache.dirty = true;
-    }
+    // this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
+    // this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
 
     if (this.visible)
     {
@@ -281,21 +272,6 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
         this.updateBounds();
     }
-    // }
-    // else
-    // {
-        //  We still need to work out the bounds in case the camera has moved
-        //  but we can't use the local or worldTransform to do it, as Pixi resets that if a Sprite is invisible.
-        //  So we'll compare against the cached state + new position.
-    //     if (this._cache.dirty && this.visible == false)
-    //     {
-    //         this.bounds.x -= this._cache.boundsX - this._cache.x;
-    //         this._cache.boundsX = this._cache.x;
-
-    //         this.bounds.y -= this._cache.boundsY - this._cache.y;
-    //         this._cache.boundsY = this._cache.y;
-    //     }
-    // }
 
     //  Re-run the camera visibility check
     if (this._cache.dirty)
@@ -312,7 +288,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this.body.updateBounds(this.center.x, this.center.y, this._cache.scaleX, this._cache.scaleY);
     }
 
-    this.body.update();
+    this.body.preUpdate();
 
 }
 
@@ -320,7 +296,13 @@ Phaser.Sprite.prototype.postUpdate = function() {
 
     if (this.exists)
     {
+        //  The sprite is positioned in this call, after taking into consideration motion updates and collision
         this.body.postUpdate();
+
+        this.position.x -= (this.game.world.camera.x * this.scrollFactor.x);
+        this.position.y -= (this.game.world.camera.y * this.scrollFactor.y);
+        this.x -= (this.game.world.camera.x * this.scrollFactor.x);
+        this.y -= (this.game.world.camera.y * this.scrollFactor.y);
     }
 
 }

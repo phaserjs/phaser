@@ -9,9 +9,12 @@
 
 		if (isset($mobile))
 		{
-	?>
-    <meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0" />
-	<?php
+			echo '    <meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0" />';
+		}
+
+		if (isset($css))
+		{
+			echo "    <style>$css</style>";
 		}
 	?>
 </head>

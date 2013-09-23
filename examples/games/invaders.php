@@ -23,8 +23,6 @@
     var bullets;
     var bulletTime = 0;
 
-    var pickle;
-
     function create() {
 
         player = game.add.sprite(400, 500, 'ship');
@@ -36,13 +34,12 @@
         {
             for (var x = 0; x < 10; x++)
             {
-                aliens.create(170 + x * 48, 100 + y * 50, 'alien');
+                aliens.create(x * 48, y * 50, 'alien');
             }
         }
 
-        //  Shows off a known bug:
-        // aliens.x = 100;
-        // aliens.y = 50;
+        aliens.x = 100;
+        aliens.y = 50;
 
         bullets = game.add.group(null, 'bullets');
 
@@ -52,18 +49,15 @@
             b.name = 'bullet' + i;
             b.exists = false;
             b.visible = false;
+            b.anchor.setTo(0.5, 1);
             b.events.onOutOfBounds.add(resetBullet, this);
         }
 
-        //  Shows off a known bug:
-        // var tween = game.add.tween(aliens).to({x: 200}, 3000, Phaser.Easing.Linear.None, true, 0, 1000, true);
-        // tween.onComplete.add(descend, this);
+        var tween = game.add.tween(aliens).to({x: 200}, 3000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+        tween.onComplete.add(descend, this);
 
     }
 
-    function overAlien () {
-        console.log('over pickle');
-    }
 
     function descend() {
         aliens.y += 10;
@@ -100,7 +94,7 @@
 
             if (bullet)
             {
-                bullet.reset(player.x + 6, player.y - 8);
+                bullet.reset(player.x, player.y - 8);
                 bullet.velocity.y = -300;
                 bulletTime = game.time.now + 250;
             }
@@ -122,7 +116,7 @@
 
     function render () {
 
-        aliens.forEach(renderBounds, this);
+        // aliens.forEach(renderBounds, this);
 
         game.debug.renderQuadTree(game.physics.quadTree);
 

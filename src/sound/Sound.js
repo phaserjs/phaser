@@ -170,6 +170,8 @@ Phaser.Sound.prototype = {
 
 	},
 
+    //  start and stop are in SECONDS.MS (2.5 = 2500ms, 0.5 = 500ms, etc)
+    //  volume is between 0 and 1
     addMarker: function (name, start, stop, volume, loop) {
 
     	volume = volume || 1;

@@ -112,6 +112,30 @@ Phaser.World.prototype = {
 
 	},
 
+    /**
+    * This is called automatically every frame, and is where main logic happens.
+    * @method update
+    */
+    postUpdate: function () {
+
+        if (this.game.stage._stage.first._iNext)
+        {
+            var currentNode = this.game.stage._stage.first._iNext;
+            
+            do  
+            {
+                if (currentNode['postUpdate'])
+                {
+                    currentNode.postUpdate();
+                }
+                
+                currentNode = currentNode._iNext;
+            }
+            while (currentNode != this.game.stage._stage.last._iNext)
+        }
+
+    },
+
 	/**
 	* Updates the size of this world.
 	* @method setSize
