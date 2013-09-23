@@ -46,6 +46,11 @@ Version 1.0.6 (in progress)
 * New: When loading a Sprite Sheet you can now pass negative values for the frame sizes which specifies the number of rows/columns to load instead (thanks TheJare)
 * New: BitmapText now supports anchor and has fixed box dimensions (thanks TheJare)
 * Fixed bug where if a State contains an empty Preloader the Update will not be called (thanks TheJare)
+* Added World.postUpdate - all sprite position changes, as a result of physics, happen here before the render.
+* Complete overhaul of Physics.Arcade.Body - now significantly more stable and faster too.
+* Updated ArcadePhysics.separateX/Y to use new body system - much better results now.
+* QuadTree bug found in 1.0.5 now fixed. The QuadTree is updated properly now using worldTransform values.
+* Several new examples added (cameras, tweens, etc)
 
 
 

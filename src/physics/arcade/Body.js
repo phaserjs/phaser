@@ -9,8 +9,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
 	this.y = sprite.y;
 	this.preX = sprite.x;
 	this.preY = sprite.y;
-	this.lastX = sprite.x;
-	this.lastY = sprite.y;
 
 	//	un-scaled original size
 	this.sourceWidth = sprite.currentFrame.sourceSizeW;
@@ -64,6 +62,9 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.overlapX = 0;
     this.overlapY = 0;
 
+    //	If a body is overlapping with another body, but neither of them are moving (maybe they spawned on-top of each other?) this is set to true
+    this.embedded = false;
+
     this.collideWorldBounds = false;
 
 };
@@ -99,18 +100,14 @@ Phaser.Physics.Arcade.Body.prototype = {
 	    this.touching.left = false;
 	    this.touching.right = false;
 
+	    this.embedded = false;
+
 		this.preX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
 		this.preY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 		this.rotation = this.sprite.angle;
 
 		this.x = this.preX;
 		this.y = this.preY;
-
-		//	There is a bug here in that the worldTransform values are what should be used, otherwise the quadTree gets the wrong rect given to it
-		// this.x = (this.sprite.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		// this.y = (this.sprite.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
-		// this.x = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		// this.y = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 
 		if (this.moves)
 		{
@@ -129,51 +126,24 @@ Phaser.Physics.Arcade.Body.prototype = {
 			this.game.physics.quadTree.insert(this);
 		}
 
-		if (this.allowRotation)
-		{
-			this.sprite.angle = this.rotation;
-		}
-
 	},
 
 	postUpdate: function () {
 
 		if (this.deltaX() != 0)
 		{
-			this.sprite.position.x += this.deltaX();
 			this.sprite.x += this.deltaX();
 		}
 
 		if (this.deltaY() != 0)
 		{
-			this.sprite.position.y += this.deltaY();
 			this.sprite.y += this.deltaY();
 		}
 
-
-    // this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
-    // this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
-
-
-	    // if (this.position.x != this._cache.x || this.position.y != this._cache.y)
-	    // {
-	    //     this.position.x = this._cache.x;
-	    //     this.position.y = this._cache.y;
-	    //     this._cache.dirty = true;
-	    // }
-
-
-		//	Adjust the sprite based on all of the above, so the x/y coords will be correct going into the State update
-		// this.sprite.x = this.x - this.offset.x + (this.sprite.anchor.x * this.width);
-		// this.sprite.y = this.y - this.offset.y + (this.sprite.anchor.y * this.height);
-
-		// this.sprite.x = this.x - this.offset.x + (this.sprite.anchor.x * this.width);
-		// this.sprite.y = this.y - this.offset.y + (this.sprite.anchor.y * this.height);
-
-		// if (this.allowRotation)
-		// {
-		// 	this.sprite.angle = this.rotation;
-		// }
+		if (this.allowRotation)
+		{
+			this.sprite.angle = this.rotation;
+		}
 
 	},
 
@@ -226,30 +196,25 @@ Phaser.Physics.Arcade.Body.prototype = {
 	    this.angularVelocity = 0;
 	    this.angularAcceleration = 0;
 
-		// this.x = (this.sprite.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		// this.y = (this.sprite.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
-		// this.lastX = this.x;
-		// this.lastY = this.y;
+		this.x = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+		this.y = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+		this.rotation = this.sprite.angle;
 
 	},
 
     deltaAbsX: function () {
-        // return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
         return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
     },
 
     deltaAbsY: function () {
-        // return (this.deltaY() > 0 ? this.deltaY() : -this.deltaY());
         return (this.deltaY() > 0 ? this.deltaY() : -this.deltaY());
     },
 
     deltaX: function () {
-        // return this.x - this.lastX;
         return this.x - this.preX;
     },
 
     deltaY: function () {
-        // return this.y - this.lastY;
         return this.y - this.preY;
     }
 

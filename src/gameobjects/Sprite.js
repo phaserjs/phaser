@@ -210,9 +210,6 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache.dirty = true;
     }
 
-    // this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
-    // this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
-
     if (this.visible)
     {
         this.renderOrderID = this.game.world.currentRenderOrderID++;
@@ -299,10 +296,14 @@ Phaser.Sprite.prototype.postUpdate = function() {
         //  The sprite is positioned in this call, after taking into consideration motion updates and collision
         this.body.postUpdate();
 
-        this.position.x -= (this.game.world.camera.x * this.scrollFactor.x);
-        this.position.y -= (this.game.world.camera.y * this.scrollFactor.y);
-        this.x -= (this.game.world.camera.x * this.scrollFactor.x);
-        this.y -= (this.game.world.camera.y * this.scrollFactor.y);
+        this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
+        this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
+
+        if (this.position.x != this._cache.x || this.position.y != this._cache.y)
+        {
+            this.position.x = this._cache.x;
+            this.position.y = this._cache.y;
+        }
     }
 
 }

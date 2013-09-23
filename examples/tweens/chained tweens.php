@@ -7,7 +7,7 @@
 
 (function () {
 
-    var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+    var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
 
     var p;
 
@@ -19,21 +19,15 @@
 
     function create() {
 
-        game.stage.backgroundColor = 0x337799;
+        game.stage.backgroundColor = 0x2d2d2d;
 
-        p = game.add.sprite(0, 0, 'diamond');
+        p = game.add.sprite(100, 100, 'diamond');
 
-        game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
+        game.add.tween(p).to({ x: 600 }, 2000, Phaser.Easing.Linear.None, true)
         .to({ y: 300 }, 1000, Phaser.Easing.Linear.None)
-        .to({ x: 0 }, 1000, Phaser.Easing.Linear.None)
-        .to({ y: 0 }, 1000, Phaser.Easing.Linear.None)
+        .to({ x: 100 }, 2000, Phaser.Easing.Linear.None)
+        .to({ y: 100 }, 1000, Phaser.Easing.Linear.None)
         .loop();
-    }
-
-    function update() {
-    }
-
-    function render() {
     }
 
 })();

@@ -183,6 +183,8 @@ Phaser.Tilemap.prototype.parseTiledJSON = function (json, key) {
 */
 Phaser.Tilemap.prototype.generateTiles = function (qty) {
 
+    console.log('generating', qty, 'tiles');
+
     for (var i = 0; i < qty; i++)
     {
         this.tiles.push(new Phaser.Tile(this.game, this, i, this.currentLayer.tileWidth, this.currentLayer.tileHeight));

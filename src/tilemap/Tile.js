@@ -121,18 +121,33 @@ Phaser.Tile.prototype = {
         this.collideUp = false;
         this.collideDown = false;
 
-    },
-
-	/**
-    * Returns a string representation of this object.
-    * @method toString
-    * @return {string} a string representation of the object.
-    **/
-    toString: function () {
-
-        // return "[{Tile (index=" + this.index + " collisions=" + this.allowCollisions + " width=" + this.width + " height=" + this.height + ")}]";
-        return '';
-
     }
 
 };
+
+Object.defineProperty(Phaser.Tile.prototype, "bottom", {
+    
+    /**
+    * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
+    * @method bottom
+    * @return {Number}
+    **/
+    get: function () {
+        return this.y + this.height;
+    }
+
+});
+
+Object.defineProperty(Phaser.Tile.prototype, "right", {
+    
+    /**
+    * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
+    * However it does affect the width property.
+    * @method right
+    * @return {Number}
+    **/    
+    get: function () {
+        return this.x + this.width;
+    }
+
+});

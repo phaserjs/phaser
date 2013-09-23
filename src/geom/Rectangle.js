@@ -648,7 +648,7 @@ Phaser.Rectangle.equals = function (a, b) {
 */
 Phaser.Rectangle.intersection = function (a, b, out) {
 
-    out  = out || new Phaser.Rectangle;
+    out = out || new Phaser.Rectangle;
 
     if (Phaser.Rectangle.intersects(a, b))
     {
