@@ -1,7 +1,7 @@
 /**
 * Phaser - http://www.phaser.io
 *
-* v1.0.6 - Built at: Sun, 22 Sep 2013 22:05:45 +0000
+* v1.0.6 - Built at: Tue, 24 Sep 2013 14:51:13 +0000
 *
 * @author Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -25827,6 +25827,11 @@ Phaser.Physics.Arcade.prototype = {
 
     collideGroupVsTilemap: function (group, tilemap, collideCallback, processCallback, callbackContext) {
 
+        if (group.length == 0)
+        {
+            return;
+        }
+
         if (group._container.first._iNext)
         {
             var currentNode = group._container.first._iNext;
@@ -25881,6 +25886,11 @@ Phaser.Physics.Arcade.prototype = {
 
     collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext) {
 
+        if (group.length == 0)
+        {
+            return;
+        }
+
         //  What is the sprite colliding with in the quadtree?
         this._potentials = this.quadTree.retrieve(sprite);
 
@@ -25911,6 +25921,11 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext) {
+
+        if (group1.length == 0 || group2.length == 0)
+        {
+            return;
+        }
 
         if (group1._container.first._iNext)
         {
