@@ -2,6 +2,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-typescript');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-yuidoc');
 
     var wrapPhaserInUmd = function(content, isAddon) {
         var replacement = [
@@ -69,6 +70,21 @@ module.exports = function (grunt) {
                 }
             },
         },
+
+        yuidoc: {
+            compile: {
+                name: '<%= pkg.name %>',
+                description: '<%= pkg.description %>',
+                version: '<%= pkg.version %>',
+                url: '<%= pkg.homepage %>',
+                options: {
+                    paths: 'src/',
+                    themedir: 'Docs/yuidoc-theme-dana/',
+                    outdir: 'Docs/API/'
+                }
+            }
+        },
+
         watch: {
             files: '**/*.ts',
             tasks: ['typescript', 'copy']
