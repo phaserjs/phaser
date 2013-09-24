@@ -79,6 +79,9 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     */
 	this._frameIndex = 0;
 
+    this._frameDiff = 0;
+    this._frameSkip = 1;
+
     /**
     * @property {Phaser.Animation.Frame} currentFrame - The currently displayed frame of the Animation.
     */
@@ -181,13 +184,31 @@ Phaser.Animation.prototype = {
 
         if (this.isPlaying == true && this.game.time.now >= this._timeNextFrame)
         {
-            this._frameIndex++;
+            this._frameSkip = 1;
 
-            if (this._frameIndex == this._frames.length)
+            //  Lagging?
+            this._frameDiff = this.game.time.now - this._timeNextFrame;
+
+            this._timeLastFrame = this.game.time.now;
+
+            if (this._frameDiff > this.delay)
+            {
+                //  We need to skip a frame, work out how many
+                this._frameSkip = Math.floor(this._frameDiff / this.delay);
+
+                this._frameDiff -= (this._frameSkip * this.delay);
+            }
+
+            //  And what's left now?
+            this._timeNextFrame = this.game.time.now + (this.delay - this._frameDiff);
+
+            this._frameIndex += this._frameSkip;
+
+            if (this._frameIndex >= this._frames.length)
             {
                 if (this.looped)
                 {
-                    this._frameIndex = 0;
+                    this._frameIndex = this._frameIndex - this._frames.length;
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
                     this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
                     this._parent.events.onAnimationLoop.dispatch(this._parent, this);
@@ -202,9 +223,6 @@ Phaser.Animation.prototype = {
                 this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 				this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
             }
-
-            this._timeLastFrame = this.game.time.now;
-            this._timeNextFrame = this.game.time.now + this.delay;
 
             return true;
         }
@@ -260,12 +278,18 @@ Object.defineProperty(Phaser.Animation.prototype, "frameTotal", {
 
 });
 
+/**
+ * Sets the current frame to the given frame index and updates the texture cache.
+ * @param {number} value - The frame to display
+ *
+ *//**
+ *
+ * Returns the current frame, or if not set the index of the most recent frame.
+ * @returns {Animation.Frame}
+ *
+ */
 Object.defineProperty(Phaser.Animation.prototype, "frame", {
 
-    /**
-    * @method frame
-    * @return {Animation.Frame} Returns the current frame, or if not set the index of the most recent frame.
-    */
     get: function () {
 
         if (this.currentFrame !== null)
@@ -279,10 +303,6 @@ Object.defineProperty(Phaser.Animation.prototype, "frame", {
 
     },
 
-    /**
-    * @method frame
-    * @return {Number} Sets the current frame to the given frame index and updates the texture cache.
-    */
     set: function (value) {
 
         this.currentFrame = this._frameData.getFrame(value);

@@ -1,7 +1,7 @@
 /**
 * Phaser - http://www.phaser.io
 *
-* v1.0.6 - Built at: Sun, 22 Sep 2013 22:05:45 +0000
+* v1.0.6 - Built at: Tue, 24 Sep 2013 12:29:16 +0000
 *
 * @author Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -51,7 +51,13 @@ var Phaser = Phaser || {
 	RENDERTEXTURE: 8,
 	TILEMAP: 9,
 	TILEMAPLAYER: 10,
-	EMITTER: 11
+	EMITTER: 11,
+
+	NONE: 0,
+	LEFT: 1,
+	RIGHT: 2,
+	UP: 3,
+	DOWN: 4
 
  };
 
@@ -7966,9 +7972,13 @@ Phaser.StateManager.prototype = {
         if (this._created == false && this.onCreateCallback)
         {
 			// console.log('Create callback found');
+	        this._created = true;
             this.onCreateCallback.call(this.callbackContext);
         }
-        this._created = true;
+        else
+        {
+	        this._created = true;
+        }
 
     },
 
@@ -10008,6 +10018,30 @@ Phaser.World.prototype = {
 
 	},
 
+    /**
+    * This is called automatically every frame, and is where main logic happens.
+    * @method update
+    */
+    postUpdate: function () {
+
+        if (this.game.stage._stage.first._iNext)
+        {
+            var currentNode = this.game.stage._stage.first._iNext;
+            
+            do  
+            {
+                if (currentNode['postUpdate'])
+                {
+                    currentNode.postUpdate();
+                }
+                
+                currentNode = currentNode._iNext;
+            }
+            while (currentNode != this.game.stage._stage.last._iNext)
+        }
+
+    },
+
 	/**
 	* Updates the size of this world.
 	* @method setSize
@@ -10527,6 +10561,8 @@ Phaser.Game.prototype = {
 			this.particles.update();
 			this.state.update();
 	        this.plugins.update();
+
+			this.world.postUpdate();
 
 			this.renderer.render(this.stage._stage);
 			this.plugins.render();
@@ -13958,6 +13994,9 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.x = x;
     this.y = y;
 
+    this.prevX = x;
+    this.prevY = y;
+
 	this.position.x = x;
 	this.position.y = y;
 
@@ -14069,22 +14108,13 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache.dirty = true;
     }
 
-    this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
-    this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
-
-    //  If this sprite or the camera have moved then let's update everything
-    //  Note: The actual position shouldn't be changed if this item is inside a Group?
-    if (this.position.x != this._cache.x || this.position.y != this._cache.y)
-    {
-        this.position.x = this._cache.x;
-        this.position.y = this._cache.y;
-        this._cache.dirty = true;
-    }
-
     if (this.visible)
     {
         this.renderOrderID = this.game.world.currentRenderOrderID++;
     }
+
+    this.prevX = this.x;
+    this.prevY = this.y;
 
     //  |a c tx|
     //  |b d ty|
@@ -14140,21 +14170,6 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
         this.updateBounds();
     }
-    // }
-    // else
-    // {
-        //  We still need to work out the bounds in case the camera has moved
-        //  but we can't use the local or worldTransform to do it, as Pixi resets that if a Sprite is invisible.
-        //  So we'll compare against the cached state + new position.
-    //     if (this._cache.dirty && this.visible == false)
-    //     {
-    //         this.bounds.x -= this._cache.boundsX - this._cache.x;
-    //         this._cache.boundsX = this._cache.x;
-
-    //         this.bounds.y -= this._cache.boundsY - this._cache.y;
-    //         this._cache.boundsY = this._cache.y;
-    //     }
-    // }
 
     //  Re-run the camera visibility check
     if (this._cache.dirty)
@@ -14171,7 +14186,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this.body.updateBounds(this.center.x, this.center.y, this._cache.scaleX, this._cache.scaleY);
     }
 
-    this.body.update();
+    this.body.preUpdate();
 
 }
 
@@ -14179,9 +14194,35 @@ Phaser.Sprite.prototype.postUpdate = function() {
 
     if (this.exists)
     {
+        //  The sprite is positioned in this call, after taking into consideration motion updates and collision
         this.body.postUpdate();
+
+        this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
+        this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
+
+        if (this.position.x != this._cache.x || this.position.y != this._cache.y)
+        {
+            this.position.x = this._cache.x;
+            this.position.y = this._cache.y;
+        }
     }
 
+}
+
+Phaser.Sprite.prototype.deltaAbsX = function () {
+    return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
+}
+
+Phaser.Sprite.prototype.deltaAbsY = function () {
+    return (this.deltaY() > 0 ? this.deltaY() : -this.deltaY());
+}
+
+Phaser.Sprite.prototype.deltaX = function () {
+    return this.x - this.prevX;
+}
+
+Phaser.Sprite.prototype.deltaY = function () {
+    return this.y - this.prevY;
 }
 
 /**
@@ -19244,7 +19285,7 @@ Phaser.Rectangle.equals = function (a, b) {
 */
 Phaser.Rectangle.intersection = function (a, b, out) {
 
-    out  = out || new Phaser.Rectangle;
+    out = out || new Phaser.Rectangle;
 
     if (Phaser.Rectangle.intersects(a, b))
     {
@@ -20989,6 +21030,9 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     */
 	this._frameIndex = 0;
 
+    this._frameDiff = 0;
+    this._frameSkip = 1;
+
     /**
     * @property {Phaser.Animation.Frame} currentFrame - The currently displayed frame of the Animation.
     */
@@ -21091,13 +21135,31 @@ Phaser.Animation.prototype = {
 
         if (this.isPlaying == true && this.game.time.now >= this._timeNextFrame)
         {
-            this._frameIndex++;
+            this._frameSkip = 1;
 
-            if (this._frameIndex == this._frames.length)
+            //  Lagging?
+            this._frameDiff = this.game.time.now - this._timeNextFrame;
+
+            this._timeLastFrame = this.game.time.now;
+
+            if (this._frameDiff > this.delay)
+            {
+                //  We need to skip a frame, work out how many
+                this._frameSkip = Math.floor(this._frameDiff / this.delay);
+
+                this._frameDiff -= (this._frameSkip * this.delay);
+            }
+
+            //  And what's left now?
+            this._timeNextFrame = this.game.time.now + (this.delay - this._frameDiff);
+
+            this._frameIndex += this._frameSkip;
+
+            if (this._frameIndex >= this._frames.length)
             {
                 if (this.looped)
                 {
-                    this._frameIndex = 0;
+                    this._frameIndex = this._frameIndex - this._frames.length;
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
                     this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
                     this._parent.events.onAnimationLoop.dispatch(this._parent, this);
@@ -21112,9 +21174,6 @@ Phaser.Animation.prototype = {
                 this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 				this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
             }
-
-            this._timeLastFrame = this.game.time.now;
-            this._timeNextFrame = this.game.time.now + this.delay;
 
             return true;
         }
@@ -21170,12 +21229,18 @@ Object.defineProperty(Phaser.Animation.prototype, "frameTotal", {
 
 });
 
+/**
+ * Sets the current frame to the given frame index and updates the texture cache.
+ * @param {number} value - The frame to display
+ *
+ *//**
+ *
+ * Returns the current frame, or if not set the index of the most recent frame.
+ * @returns {Animation.Frame}
+ *
+ */
 Object.defineProperty(Phaser.Animation.prototype, "frame", {
 
-    /**
-    * @method frame
-    * @return {Animation.Frame} Returns the current frame, or if not set the index of the most recent frame.
-    */
     get: function () {
 
         if (this.currentFrame !== null)
@@ -21189,10 +21254,6 @@ Object.defineProperty(Phaser.Animation.prototype, "frame", {
 
     },
 
-    /**
-    * @method frame
-    * @return {Number} Sets the current frame to the given frame index and updates the texture cache.
-    */
     set: function (value) {
 
         this.currentFrame = this._frameData.getFrame(value);
@@ -23768,6 +23829,8 @@ Phaser.Sound.prototype = {
 
 	},
 
+    //  start and stop are in SECONDS.MS (2.5 = 2500ms, 0.5 = 500ms, etc)
+    //  volume is between 0 and 1
     addMarker: function (name, start, stop, volume, loop) {
 
     	volume = volume || 1;
@@ -25060,8 +25123,10 @@ Phaser.Utils.Debug.prototype = {
         // this.line('ty: ' + sprite.worldTransform[5]);
         // this.line('skew x: ' + sprite.worldTransform[3]);
         // this.line('skew y: ' + sprite.worldTransform[1]);
-        // this.line('dx: ' + sprite.body.deltaX());
-        // this.line('dy: ' + sprite.body.deltaY());
+        this.line('dx: ' + sprite.body.deltaX());
+        this.line('dy: ' + sprite.body.deltaY());
+        this.line('sdx: ' + sprite.deltaX());
+        this.line('sdy: ' + sprite.deltaY());
 
         // this.line('inCamera: ' + this.game.renderer.spriteRenderer.inCamera(this.game.camera, sprite));
 
@@ -25827,6 +25892,11 @@ Phaser.Physics.Arcade.prototype = {
 
     collideGroupVsTilemap: function (group, tilemap, collideCallback, processCallback, callbackContext) {
 
+        if (group.length == 0)
+        {
+            return;
+        }
+
         if (group._container.first._iNext)
         {
             var currentNode = group._container.first._iNext;
@@ -25881,6 +25951,11 @@ Phaser.Physics.Arcade.prototype = {
 
     collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext) {
 
+        if (group.length == 0)
+        {
+            return;
+        }
+
         //  What is the sprite colliding with in the quadtree?
         this._potentials = this.quadTree.retrieve(sprite);
 
@@ -25912,6 +25987,11 @@ Phaser.Physics.Arcade.prototype = {
 
     collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext) {
 
+        if (group1.length == 0 || group2.length == 0)
+        {
+            return;
+        }
+
         if (group1._container.first._iNext)
         {
             var currentNode = group1._container.first._iNext;
@@ -25939,12 +26019,6 @@ Phaser.Physics.Arcade.prototype = {
 
         this._result = (this.separateX(body1, body2) || this.separateY(body1, body2));
 
-        if (this._result)
-        {
-            body1.postUpdate();
-            body2.postUpdate();
-        }
-
     },
 
     /**
@@ -25955,105 +26029,102 @@ Phaser.Physics.Arcade.prototype = {
      */
     separateX: function (body1, body2) {
 
-        //  Can't separate two immovable or non-existing bodys
+        //  Can't separate two immovable bodies
         if (body1.immovable && body2.immovable)
         {
             return false;
         }
 
-        //  First, get the two body deltas
         this._overlap = 0;
 
-        if (body1.deltaX() != body2.deltaX())
+        //  Check if the hulls actually overlap
+        if (Phaser.Rectangle.intersects(body1, body2))
         {
-            //  Check if the X hulls actually overlap
+            this._maxOverlap = body1.deltaAbsX() + body2.deltaAbsX() + this.OVERLAP_BIAS;
 
-            this._bounds1.setTo(body1.x - ((body1.deltaX() > 0) ? body1.deltaX() : 0), body1.lastY, body1.width + ((body1.deltaX() > 0) ? body1.deltaX() : -body1.deltaX()), body1.height);
-            this._bounds2.setTo(body2.x - ((body2.deltaX() > 0) ? body2.deltaX() : 0), body2.lastY, body2.width + ((body2.deltaX() > 0) ? body2.deltaX() : -body2.deltaX()), body2.height);
-
-            if ((this._bounds1.right > this._bounds2.x) && (this._bounds1.x < this._bounds2.right) && (this._bounds1.bottom > this._bounds2.y) && (this._bounds1.y < this._bounds2.bottom))
+            if (body1.deltaX() == 0 && body2.deltaX() == 0)
             {
-                this._maxOverlap = body1.deltaAbsX() + body2.deltaAbsX() + this.OVERLAP_BIAS;
+                //  They overlap but neither of them are moving
+                body1.embedded = true;
+                body2.embedded = true;
+            }
+            else if (body1.deltaX() > body2.deltaX())
+            {
+                //  Body1 is moving right and/or Body2 is moving left
+                this._overlap = body1.x + body1.width - body2.x;
 
-                //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-                if (body1.deltaX() > body2.deltaX())
+                if ((this._overlap > this._maxOverlap) || body1.allowCollision.right == false || body2.allowCollision.left == false)
                 {
-                    this._overlap = body1.x + body1.width - body2.x;
-
-                    if ((this._overlap > this._maxOverlap) || body1.allowCollision.right == false || body2.allowCollision.left == false)
-                    {
-                        this._overlap = 0;
-                    }
-                    else
-                    {
-                        body1.touching.right = true;
-                        body2.touching.left = true;
-                    }
+                    this._overlap = 0;
                 }
-                else if (body1.deltaX() < body2.deltaX())
+                else
                 {
-                    this._overlap = body1.x - body2.width - body2.x;
-
-                    if ((-this._overlap > this._maxOverlap) || body1.allowCollision.left == false || body2.allowCollision.right == false)
-                    {
-                        this._overlap = 0;
-                    }
-                    else
-                    {
-                        body1.touching.left = true;
-                        body2.touching.right = true;
-                    }
+                    body1.touching.right = true;
+                    body2.touching.left = true;
                 }
             }
-        }
-
-        //  Then adjust their positions and velocities accordingly (if there was any overlap)
-        if (this._overlap != 0)
-        {
-            body1.overlapX = this._overlap;
-            body2.overlapX = this._overlap;
-
-            if (body1.customSeparateX || body2.customSeparateX)
+            else if (body1.deltaX() < body2.deltaX())
             {
+                //  Body1 is moving left and/or Body2 is moving right
+                this._overlap = body1.x - body2.width - body2.x;
+
+                if ((-this._overlap > this._maxOverlap) || body1.allowCollision.left == false || body2.allowCollision.right == false)
+                {
+                    this._overlap = 0;
+                }
+                else
+                {
+                    body1.touching.left = true;
+                    body2.touching.right = true;
+                }
+            }
+
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
+            if (this._overlap != 0)
+            {
+                body1.overlapX = this._overlap;
+                body2.overlapX = this._overlap;
+
+                if (body1.customSeparateX || body2.customSeparateX)
+                {
+                    return true;
+                }
+
+                this._velocity1 = body1.velocity.x;
+                this._velocity2 = body2.velocity.x;
+
+                if (!body1.immovable && !body2.immovable)
+                {
+                    this._overlap *= 0.5;
+
+                    body1.x = body1.x - this._overlap;
+                    body2.x += this._overlap;
+
+                    this._newVelocity1 = Math.sqrt((this._velocity2 * this._velocity2 * body2.mass) / body1.mass) * ((this._velocity2 > 0) ? 1 : -1);
+                    this._newVelocity2 = Math.sqrt((this._velocity1 * this._velocity1 * body1.mass) / body2.mass) * ((this._velocity1 > 0) ? 1 : -1);
+                    this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
+                    this._newVelocity1 -= this._average;
+                    this._newVelocity2 -= this._average;
+
+                    body1.velocity.x = this._average + this._newVelocity1 * body1.bounce.x;
+                    body2.velocity.x = this._average + this._newVelocity2 * body2.bounce.x;
+                }
+                else if (!body1.immovable)
+                {
+                    body1.x = body1.x - this._overlap;
+                    body1.velocity.x = this._velocity2 - this._velocity1 * body1.bounce.x;
+                }
+                else if (!body2.immovable)
+                {
+                    body2.x += this._overlap;
+                    body2.velocity.x = this._velocity1 - this._velocity2 * body2.bounce.x;
+                }
+
                 return true;
             }
-
-            this._velocity1 = body1.velocity.x;
-            this._velocity2 = body2.velocity.x;
-
-            if (!body1.immovable && !body2.immovable)
-            {
-                this._overlap *= 0.5;
-
-                body1.x = body1.x - this._overlap;
-                body2.x += this._overlap;
-
-                this._newVelocity1 = Math.sqrt((this._velocity2 * this._velocity2 * body2.mass) / body1.mass) * ((this._velocity2 > 0) ? 1 : -1);
-                this._newVelocity2 = Math.sqrt((this._velocity1 * this._velocity1 * body1.mass) / body2.mass) * ((this._velocity1 > 0) ? 1 : -1);
-                this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
-                this._newVelocity1 -= this._average;
-                this._newVelocity2 -= this._average;
-
-                body1.velocity.x = this._average + this._newVelocity1 * body1.bounce.x;
-                body2.velocity.x = this._average + this._newVelocity2 * body2.bounce.x;
-            }
-            else if (!body1.immovable)
-            {
-                body1.x = body1.x - this._overlap;
-                body1.velocity.x = this._velocity2 - this._velocity1 * body1.bounce.x;
-            }
-            else if (!body2.immovable)
-            {
-                body2.x += this._overlap;
-                body2.velocity.x = this._velocity1 - this._velocity2 * body2.bounce.x;
-            }
-
-            return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
 
     },
 
@@ -26071,110 +26142,110 @@ Phaser.Physics.Arcade.prototype = {
             return false;
         }
 
-        //  First, get the two body deltas
         this._overlap = 0;
 
-        if (body1.deltaY() != body2.deltaY())
+        //  Check if the hulls actually overlap
+        if (Phaser.Rectangle.intersects(body1, body2))
         {
-            //  Check if the Y hulls actually overlap
-            this._bounds1.setTo(body1.x, body1.y - ((body1.deltaY() > 0) ? body1.deltaY() : 0), body1.width, body1.height + body1.deltaAbsY());
-            this._bounds2.setTo(body2.x, body2.y - ((body2.deltaY() > 0) ? body2.deltaY() : 0), body2.width, body2.height + body2.deltaAbsY());
+            this._maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + this.OVERLAP_BIAS;
 
-            if ((this._bounds1.right > this._bounds2.x) && (this._bounds1.x < this._bounds2.right) && (this._bounds1.bottom > this._bounds2.y) && (this._bounds1.y < this._bounds2.bottom))
+            if (body1.deltaY() == 0 && body2.deltaY() == 0)
             {
-                this._maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + this.OVERLAP_BIAS;
+                //  They overlap but neither of them are moving
+                body1.embedded = true;
+                body2.embedded = true;
+            }
+            else if (body1.deltaY() > body2.deltaY())
+            {
+                //  Body1 is moving down and/or Body2 is moving up
+                this._overlap = body1.y + body1.height - body2.y;
 
-                //  If they did overlap (and can), figure out by how much and flip the corresponding flags
-                if (body1.deltaY() > body2.deltaY())
+                if ((this._overlap > this._maxOverlap) || body1.allowCollision.down == false || body2.allowCollision.up == false)
                 {
-                    this._overlap = body1.y + body1.height - body2.y;
-
-                    if ((this._overlap > this._maxOverlap) || body1.allowCollision.down == false || body2.allowCollision.up == false)
-                    {
-                        this._overlap = 0;
-                    }
-                    else
-                    {
-                        body1.touching.down = true;
-                        body2.touching.up = true;
-                    }
+                    this._overlap = 0;
                 }
-                else if (body1.deltaY() < body2.deltaY())
+                else
                 {
-                    this._overlap = body1.y - body2.height - body2.y;
-
-                    if ((-this._overlap > this._maxOverlap) || body1.allowCollision.up == false || body2.allowCollision.down == false)
-                    {
-                        this._overlap = 0;
-                    }
-                    else
-                    {
-                        body1.touching.up = true;
-                        body2.touching.down = true;
-                    }
+                    body1.touching.down = true;
+                    body2.touching.up = true;
                 }
             }
-        }
-
-        //  Then adjust their positions and velocities accordingly (if there was any overlap)
-        if (this._overlap != 0)
-        {
-            body1.overlapY = this._overlap;
-            body2.overlapY = this._overlap;
-
-            if (body1.customSeparateY || body2.customSeparateY)
+            else if (body1.deltaY() < body2.deltaY())
             {
+                //  Body1 is moving up and/or Body2 is moving down
+                this._overlap = body1.y - body2.height - body2.y;
+
+                if ((-this._overlap > this._maxOverlap) || body1.allowCollision.up == false || body2.allowCollision.down == false)
+                {
+                    this._overlap = 0;
+                }
+                else
+                {
+                    body1.touching.up = true;
+                    body2.touching.down = true;
+                }
+            }
+
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
+            if (this._overlap != 0)
+            {
+                body1.overlapY = this._overlap;
+                body2.overlapY = this._overlap;
+
+                if (body1.customSeparateY || body2.customSeparateY)
+                {
+                    return true;
+                }
+
+                this._velocity1 = body1.velocity.y;
+                this._velocity2 = body2.velocity.y;
+
+                if (!body1.immovable && !body2.immovable)
+                {
+                    this._overlap *= 0.5;
+
+                    body1.y = body1.y - this._overlap;
+                    body2.y += this._overlap;
+
+                    this._newVelocity1 = Math.sqrt((this._velocity2 * this._velocity2 * body2.mass) / body1.mass) * ((this._velocity2 > 0) ? 1 : -1);
+                    this._newVelocity2 = Math.sqrt((this._velocity1 * this._velocity1 * body1.mass) / body2.mass) * ((this._velocity1 > 0) ? 1 : -1);
+                    this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
+                    this._newVelocity1 -= this._average;
+                    this._newVelocity2 -= this._average;
+
+                    body1.velocity.y = this._average + this._newVelocity1 * body1.bounce.y;
+                    body2.velocity.y = this._average + this._newVelocity2 * body2.bounce.y;
+                }
+                else if (!body1.immovable)
+                {
+                    body1.y = body1.y - this._overlap;
+                    body1.velocity.y = this._velocity2 - this._velocity1 * body1.bounce.y;
+
+                    //  This is special case code that handles things like horizontal moving platforms you can ride
+                    if (body2.active && body2.moves && (body1.deltaY() > body2.deltaY()))
+                    {
+                        body1.x += body2.x - body2.lastX;
+                    }
+                }
+                else if (!body2.immovable)
+                {
+                    body2.y += this._overlap;
+                    body2.velocity.y = this._velocity1 - this._velocity2 * body2.bounce.y;
+
+                    //  This is special case code that handles things like horizontal moving platforms you can ride
+                    if (body1.sprite.active && body1.moves && (body1.deltaY() < body2.deltaY()))
+                    {
+                        body2.x += body1.x - body1.lastX;
+                    }
+                }
+
                 return true;
             }
 
-            this._velocity1 = body1.velocity.y;
-            this._velocity2 = body2.velocity.y;
-
-            if (!body1.immovable && !body2.immovable)
-            {
-                this._overlap *= 0.5;
-
-                body1.y = body1.y - this._overlap;
-                body2.y += this._overlap;
-
-                this._newVelocity1 = Math.sqrt((this._velocity2 * this._velocity2 * body2.mass) / body1.mass) * ((this._velocity2 > 0) ? 1 : -1);
-                this._newVelocity2 = Math.sqrt((this._velocity1 * this._velocity1 * body1.mass) / body2.mass) * ((this._velocity1 > 0) ? 1 : -1);
-                this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
-                this._newVelocity1 -= this._average;
-                this._newVelocity2 -= this._average;
-
-                body1.velocity.y = this._average + this._newVelocity1 * body1.bounce.y;
-                body2.velocity.y = this._average + this._newVelocity2 * body2.bounce.y;
-            }
-            else if (!body1.immovable)
-            {
-                body1.y = body1.y - this._overlap;
-                body1.velocity.y = this._velocity2 - this._velocity1 * body1.bounce.y;
-
-                //  This is special case code that handles things like horizontal moving platforms you can ride
-                if (body2.active && body2.moves && (body1.deltaY() > body2.deltaY()))
-                {
-                    body1.x += body2.x - body2.lastX;
-                }
-            }
-            else if (!body2.immovable)
-            {
-                body2.y += this._overlap;
-                body2.velocity.y = this._velocity1 - this._velocity2 * body2.bounce.y;
-
-                //  This is special case code that handles things like horizontal moving platforms you can ride
-                if (body1.sprite.active && body1.moves && (body1.deltaY() < body2.deltaY()))
-                {
-                    body2.x += body1.x - body1.lastX;
-                }
-            }
-
-            return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
+
     },
 
      /**
@@ -26190,7 +26261,6 @@ Phaser.Physics.Arcade.prototype = {
 
         if (separatedX || separatedY)
         {
-            object.body.postUpdate();
             return true;
         }
 
@@ -26370,6 +26440,160 @@ Phaser.Physics.Arcade.prototype = {
         {
             return false;
         }
+
+    },    
+
+    /**
+     * Separates the two objects on their x axis
+     * @param object The GameObject to separate
+     * @param tile The Tile to separate
+     * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+     */
+    NEWseparateTileX: function (object, x, y, width, height, mass, collideLeft, collideRight, separate) {
+
+        //  Can't separate two immovable objects (tiles are always immovable)
+        if (object.immovable)
+        {
+            return false;
+        }
+
+        this._overlap = 0;
+
+        if (Phaser.Rectangle.intersectsRaw(object, x, x + width, y, y + height))
+        {
+            this._maxOverlap = object.deltaAbsX() + this.OVERLAP_BIAS;
+
+            if (object.deltaX() == 0)
+            {
+                //  Object is stuck inside a tile and not moving
+            }
+            else if (object.deltaX() > 0)
+            {
+                //  Going right ...
+                this._overlap = object.x + object.width - x;
+
+                if ((this._overlap > this._maxOverlap) || !object.allowCollision.right || !collideLeft)
+                {
+                    this._overlap = 0;
+                }
+                else
+                {
+                    object.touching.right = true;
+                }
+            }
+            else if (object.deltaX() < 0)
+            {
+                //  Going left ...
+                this._overlap = object.x - width - x;
+
+                if ((-this._overlap > this._maxOverlap) || !object.allowCollision.left || !collideRight)
+                {
+                    this._overlap = 0;
+                }
+                else
+                {
+                    object.touching.left = true;
+                }
+            }
+
+            if (this._overlap != 0)
+            {
+                if (separate)
+                {
+                    object.x = object.x - this._overlap;
+
+                    if (object.bounce.x == 0)
+                    {
+                        object.velocity.x = 0;
+                    }
+                    else
+                    {
+                        object.velocity.x = -object.velocity.x * object.bounce.x;
+                    }
+                }
+                return true;
+            }
+
+        }
+
+        return false;
+
+    },
+
+    /**
+     * Separates the two objects on their x axis
+     * @param object The GameObject to separate
+     * @param tile The Tile to separate
+     * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
+     */
+    NEWseparateTileY: function (object, x, y, width, height, mass, collideUp, collideDown, separate) {
+
+        //  Can't separate two immovable objects (tiles are always immovable)
+        if (object.immovable)
+        {
+            return false;
+        }
+
+        this._overlap = 0;
+
+        if (Phaser.Rectangle.intersectsRaw(object, x, x + width, y, y + height))
+        {
+            this._maxOverlap = object.deltaAbsY() + this.OVERLAP_BIAS;
+
+            if (object.deltaY() == 0)
+            {
+                //  Object is stuck inside a tile and not moving
+            }
+            else if (object.deltaY() > 0)
+            {
+                //  Going down ...
+                this._overlap = object.bottom - y;
+
+                // if (object.allowCollision.down && collideDown && this._overlap < this._maxOverlap)
+                if ((this._overlap > this._maxOverlap) || !object.allowCollision.down || !collideDown)
+                {
+                    this._overlap = 0;
+                }
+                else
+                {
+                    object.touching.down = true;
+                }
+            }
+            else if (object.deltaY() < 0)
+            {
+                //  Going up ...
+                this._overlap = object.y - height - y;
+
+                if ((-this._overlap > this._maxOverlap) || !object.allowCollision.up || !collideUp)
+                {
+                    this._overlap = 0;
+                }
+                else
+                {
+                    object.touching.up = true;
+                }
+            }
+
+            if (this._overlap != 0)
+            {
+                if (separate)
+                {
+                    object.y = object.y - this._overlap;
+
+                    if (object.bounce.y == 0)
+                    {
+                        object.velocity.y = 0;
+                    }
+                    else
+                    {
+                        object.velocity.y = -object.velocity.y * object.bounce.y;
+                    }
+                }
+                return true;
+            }
+        }
+        
+        return false;
 
     },
 
@@ -26747,8 +26971,8 @@ Phaser.Physics.Arcade.Body = function (sprite) {
 
 	this.x = sprite.x;
 	this.y = sprite.y;
-	this.lastX = sprite.x;
-	this.lastY = sprite.y;
+	this.preX = sprite.x;
+	this.preY = sprite.y;
 
 	//	un-scaled original size
 	this.sourceWidth = sprite.currentFrame.sourceSizeW;
@@ -26784,6 +27008,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.allowCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
     this.touching = { none: true, up: false, down: false, left: false, right: false };
     this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
+    this.facing = Phaser.NONE;
 
     this.immovable = false;
     this.moves = true;
@@ -26801,6 +27026,9 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     //	These values are useful if you want to provide your own custom separation logic.
     this.overlapX = 0;
     this.overlapY = 0;
+
+    //	If a body is overlapping with another body, but neither of them are moving (maybe they spawned on-top of each other?) this is set to true
+    this.embedded = false;
 
     this.collideWorldBounds = false;
 
@@ -26822,7 +27050,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 	},
 
-	update: function () {
+	preUpdate: function () {
 
 		//	Store and reset collision flags
 	    this.wasTouching.none = this.touching.none;
@@ -26837,15 +27065,14 @@ Phaser.Physics.Arcade.Body.prototype = {
 	    this.touching.left = false;
 	    this.touching.right = false;
 
-		this.lastX = this.x;
-		this.lastY = this.y;
+	    this.embedded = false;
+
+		this.preX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+		this.preY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 		this.rotation = this.sprite.angle;
 
-		//	There is a bug here in that the worldTransform values are what should be used, otherwise the quadTree gets the wrong rect given to it
-		this.x = (this.sprite.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		this.y = (this.sprite.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
-		// this.x = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		// this.y = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+		this.x = this.preX;
+		this.y = this.preY;
 
 		if (this.moves)
 		{
@@ -26864,31 +27091,47 @@ Phaser.Physics.Arcade.Body.prototype = {
 			this.game.physics.quadTree.insert(this);
 		}
 
-		if (this.deltaX() != 0)
-		{
-			this.sprite.x -= this.deltaX();
-		}
-
-		if (this.deltaY() != 0)
-		{
-			this.sprite.y -= this.deltaY();
-		}
-
-		//	Adjust the sprite based on all of the above, so the x/y coords will be correct going into the State update
-		this.sprite.x = this.x - this.offset.x + (this.sprite.anchor.x * this.width);
-		this.sprite.y = this.y - this.offset.y + (this.sprite.anchor.y * this.height);
-
-		if (this.allowRotation)
-		{
-			this.sprite.angle = this.rotation;
-		}
-
 	},
 
 	postUpdate: function () {
 
-		this.sprite.x = this.x - this.offset.x + (this.sprite.anchor.x * this.width);
-		this.sprite.y = this.y - this.offset.y + (this.sprite.anchor.y * this.height);
+		//	Calculate forward-facing edge
+		if (this.deltaX() == 0 && this.deltaY() == 0)
+		{
+			//	Can't work it out from the Body, how about from x position?
+			if (this.sprite.deltaX() == 0 && this.sprite.deltaY() == 0)
+			{
+				//	still as a statue
+			}
+		}
+
+		if (this.deltaX() < 0)
+		{
+			this.facing = Phaser.LEFT;
+		}
+		else if (this.deltaX() > 0)
+		{
+			this.facing = Phaser.RIGHT;
+		}
+
+		if (this.deltaY() < 0)
+		{
+			this.facing = Phaser.UP;
+		}
+		else if (this.deltaY() > 0)
+		{
+			this.facing = Phaser.DOWN;
+		}
+
+		if (this.deltaX() != 0)
+		{
+			this.sprite.x += this.deltaX();
+		}
+
+		if (this.deltaY() != 0)
+		{
+			this.sprite.y += this.deltaY();
+		}
 
 		if (this.allowRotation)
 		{
@@ -26946,10 +27189,9 @@ Phaser.Physics.Arcade.Body.prototype = {
 	    this.angularVelocity = 0;
 	    this.angularAcceleration = 0;
 
-		this.x = (this.sprite.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		this.y = (this.sprite.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
-		this.lastX = this.x;
-		this.lastY = this.y;
+		this.x = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+		this.y = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+		this.rotation = this.sprite.angle;
 
 	},
 
@@ -26962,11 +27204,11 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     deltaX: function () {
-        return this.x - this.lastX;
+        return this.x - this.preX;
     },
 
     deltaY: function () {
-        return this.y - this.lastY;
+        return this.y - this.preY;
     }
 
 };
@@ -27836,6 +28078,8 @@ Phaser.Tilemap.prototype.parseTiledJSON = function (json, key) {
 * @param qty {number} Quentity of tiles to be generated.
 */
 Phaser.Tilemap.prototype.generateTiles = function (qty) {
+
+    console.log('generating', qty, 'tiles');
 
     for (var i = 0; i < qty; i++)
     {
@@ -28744,21 +28988,37 @@ Phaser.Tile.prototype = {
         this.collideUp = false;
         this.collideDown = false;
 
-    },
-
-	/**
-    * Returns a string representation of this object.
-    * @method toString
-    * @return {string} a string representation of the object.
-    **/
-    toString: function () {
-
-        // return "[{Tile (index=" + this.index + " collisions=" + this.allowCollisions + " width=" + this.width + " height=" + this.height + ")}]";
-        return '';
-
     }
 
 };
+
+Object.defineProperty(Phaser.Tile.prototype, "bottom", {
+    
+    /**
+    * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
+    * @method bottom
+    * @return {Number}
+    **/
+    get: function () {
+        return this.y + this.height;
+    }
+
+});
+
+Object.defineProperty(Phaser.Tile.prototype, "right", {
+    
+    /**
+    * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
+    * However it does affect the width property.
+    * @method right
+    * @return {Number}
+    **/    
+    get: function () {
+        return this.x + this.width;
+    }
+
+});
+
 Phaser.TilemapRenderer = function (game) {
 
     this.game = game;

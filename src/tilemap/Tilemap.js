@@ -138,6 +138,8 @@ Phaser.Tilemap.prototype.parseTiledJSON = function (json, key) {
             continue;
         }
 
+        // layer.createQuadTree(json.tilewidth * json.layers[i].width, json.tileheight * json.layers[i].height);
+
         layer.alpha = json.layers[i].opacity;
         layer.visible = json.layers[i].visible;
         layer.tileMargin = json.tilesets[0].margin;
@@ -182,8 +184,6 @@ Phaser.Tilemap.prototype.parseTiledJSON = function (json, key) {
 * @param qty {number} Quentity of tiles to be generated.
 */
 Phaser.Tilemap.prototype.generateTiles = function (qty) {
-
-    console.log('generating', qty, 'tiles');
 
     for (var i = 0; i < qty; i++)
     {

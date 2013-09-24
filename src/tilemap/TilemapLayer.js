@@ -87,6 +87,8 @@ Phaser.TilemapLayer = function (parent, id, key, mapFormat, name, tileWidth, til
 
     this._alpha = 1;
 
+    this.quadTree = null;
+
     this.canvas = null;
     this.context = null;
     this.baseTexture = null;
@@ -471,6 +473,12 @@ Phaser.TilemapLayer.prototype = {
         this.sprite = new PIXI.Sprite(this.texture);
 
         this.parent.addChild(this.sprite);
+
+    },
+
+    createQuadTree: function (width, height) {
+
+        this.quadTree = new Phaser.QuadTree(this, 0, 0, width, height, 20, 4);
 
     },
 

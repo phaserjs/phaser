@@ -38,10 +38,11 @@
         map.setCollisionRange(18, 47, true, true, true, true);
         map.setCollisionRange(53, 69, true, true, true, true);
 
-        player = game.add.sprite(32, 32, 'dude');
+        // player = game.add.sprite(32, 32, 'dude');
+        player = game.add.sprite(250, 220, 'dude');
         player.body.bounce.y = 0.2;
         player.body.collideWorldBounds = true;
-        player.body.gravity.y = 10;
+        // player.body.gravity.y = 10;
 
         player.animations.add('left', [0, 1, 2, 3], 10, true);
         player.animations.add('turn', [4], 20, true);
@@ -56,6 +57,7 @@
         game.physics.collide(player, map);
 
         player.body.velocity.x = 0;
+        player.body.velocity.y = 0;
         // player.body.acceleration.y = 500;
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
@@ -96,25 +98,33 @@
                 facing = 'idle';
             }
         }
-        
-        if (game.input.keyboard.isDown(Phaser.Keyboard.UP) || game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
+
+        if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
-            if (player.body.touching.down && game.time.now > jumpTimer)
-            {
-                player.body.velocity.y = -200;
-                jumpTimer = game.time.now + 500;
-            }
+            player.body.velocity.y = -150;
         }
+        else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
+        {
+            player.body.velocity.y = 150;
+        }
+
+        
+        // if (game.input.keyboard.isDown(Phaser.Keyboard.UP) || game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
+        // {
+        //     if (player.body.touching.down && game.time.now > jumpTimer)
+        //     {
+        //         player.body.velocity.y = -200;
+        //         jumpTimer = game.time.now + 500;
+        //     }
+        // }
 
     }
 
     function render() {
 
-        // game.debug.renderSpriteCorners(p);
-        // game.debug.renderSpriteCollision(p, 32, 320);
-        // game.debug.renderText(player.body.velocity.y, 32, 32, 'rgb(255,255,255)');
-        // game.debug.renderText('left: ' + player.body.touching.left, 32, 32, 'rgb(255,255,255)');
-        // game.debug.renderText('right: ' + player.body.touching.right, 32, 64, 'rgb(255,255,255)');
+        game.debug.renderSpriteInfo(player, 32, 32);
+        game.debug.renderSpriteCorners(player, false, true);
+        game.debug.renderSpriteCollision(player, 32, 320);
 
     }
 

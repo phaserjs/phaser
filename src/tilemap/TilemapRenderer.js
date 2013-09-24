@@ -112,7 +112,14 @@ Phaser.TilemapRenderer.prototype = {
                             layer.tileWidth,
                             layer.tileHeight
                             );
+
+                        if (tilemap.tiles[this._columnData[tile]].collideNone == false)
+                        {
+                            layer.context.fillStyle = 'rgba(255,255,0,0.5)';
+                            layer.context.fillRect(this._tx, this._ty, layer.tileWidth, layer.tileHeight);
+                        }
                     }
+
 
                     this._tx += layer.tileWidth;
 

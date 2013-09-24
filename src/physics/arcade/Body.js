@@ -231,6 +231,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 	},
 
+	//	Basically Math.abs
     deltaAbsX: function () {
         return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
     },
