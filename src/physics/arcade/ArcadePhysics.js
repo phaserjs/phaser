@@ -268,6 +268,11 @@ Phaser.Physics.Arcade.prototype = {
 
     collideGroupVsTilemap: function (group, tilemap, collideCallback, processCallback, callbackContext) {
 
+        if (group.length == 0)
+        {
+            return;
+        }
+
         if (group._container.first._iNext)
         {
             var currentNode = group._container.first._iNext;
@@ -322,6 +327,11 @@ Phaser.Physics.Arcade.prototype = {
 
     collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext) {
 
+        if (group.length == 0)
+        {
+            return;
+        }
+
         //  What is the sprite colliding with in the quadtree?
         this._potentials = this.quadTree.retrieve(sprite);
 
@@ -352,6 +362,11 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext) {
+
+        if (group1.length == 0 || group2.length == 0)
+        {
+            return;
+        }
 
         if (group1._container.first._iNext)
         {
