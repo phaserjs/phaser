@@ -322,6 +322,11 @@ Phaser.Game.prototype = {
 				console.log('%cPhaser ' + Phaser.VERSION + ' initialized. Rendering to WebGL', 'color: #ffff33; background: #000000');
 			}
 
+			if (Phaser.VERSION.substr(-5) == '-beta')
+			{
+				console.warn('You are using a beta version of Phaser. Some things may not work.');
+			}
+
 	        this.isRunning = true;
             this._loadComplete = false;
 
