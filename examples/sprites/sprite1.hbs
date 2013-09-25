@@ -1,0 +1,18 @@
+---
+title: Display a Sprite
+---
+<script>
+!function() {
+
+    var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
+
+    function preload() {
+        game.load.image('mushroom', '{{ assets }}/sprites/mushroom2.png');
+    }
+
+    function create() {
+        var test = game.add.sprite(200, 200, 'mushroom');
+    }
+
+}();
+</script>

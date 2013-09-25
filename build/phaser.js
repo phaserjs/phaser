@@ -1,7 +1,7 @@
 /**
 * Phaser - http://www.phaser.io
 *
-* v1.0.6 - Built at: Sun, 22 Sep 2013 22:05:45 +0000
+* v1.0.6 - Built at: Wed, 25 Sep 2013 08:54:41 GMT
 *
 * @author Richard Davey http://www.photonstorm.com @photonstorm
 *

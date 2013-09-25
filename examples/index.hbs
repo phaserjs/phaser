@@ -1,0 +1,14 @@
+---
+title: Examples
+---
+<div id="header">
+  <h1 id="title">Phaser Test Suite</h1>
+</div>
+
+<div id="links">
+{{#withSort pages "src"}}
+  {{#unless_eq ../filename compare=filename}}
+    <a class="button" href="{{relative ../../page.dest ../dest}}">{{data.title}}</a>
+  {{/unless_eq}}
+{{/withSort}}
+</div>
