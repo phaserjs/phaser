@@ -196,9 +196,25 @@ module.exports = function (grunt) {
           assets: 'out/examples/assets',
           layout: 'example.hbs'
         },
-        files: {
-          'out/': ['examples/**/*.hbs']
-        }
+        files: [
+          {expand: true, cwd: 'examples/animation', src: ['*.hbs'], dest: 'out/examples/animation'},
+          {expand: true, cwd: 'examples/audio', src: ['*.hbs'], dest: 'out/examples/audio'},
+          {expand: true, cwd: 'examples/buttons', src: ['*.hbs'], dest: 'out/examples/buttons'},
+          {expand: true, cwd: 'examples/camera', src: ['*.hbs'], dest: 'out/examples/camera'},
+          {expand: true, cwd: 'examples/collision', src: ['*.hbs'], dest: 'out/examples/collision'},
+          {expand: true, cwd: 'examples/display', src: ['*.hbs'], dest: 'out/examples/display'},
+          {expand: true, cwd: 'examples/games', src: ['*.hbs'], dest: 'out/examples/games'},
+          {expand: true, cwd: 'examples/input', src: ['*.hbs'], dest: 'out/examples/input'},
+          {expand: true, cwd: 'examples/particles', src: ['*.hbs'], dest: 'out/examples/particles'},
+          {expand: true, cwd: 'examples/quadtree', src: ['*.hbs'], dest: 'out/examples/quadtree'},
+          {expand: true, cwd: 'examples/sprites', src: ['*.hbs'], dest: 'out/examples/sprites'},
+          {expand: true, cwd: 'examples/text', src: ['*.hbs'], dest: 'out/examples/text'},
+          {expand: true, cwd: 'examples/texture-crop', src: ['*.hbs'], dest: 'out/examples/texture-crop'},
+          {expand: true, cwd: 'examples/tilemaps', src: ['*.hbs'], dest: 'out/examples/tilemaps'},
+          {expand: true, cwd: 'examples/tilesprites', src: ['*.hbs'], dest: 'out/examples/tilesprites'},
+          {expand: true, cwd: 'examples/tweens', src: ['*.hbs'], dest: 'out/examples/tweens'},
+          {expand: true, cwd: 'examples', src: ['index.hbs'], dest: 'out/examples'},
+        ]
       }
     }
   });
