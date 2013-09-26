@@ -1,7 +1,7 @@
 /**
 * Phaser - http://www.phaser.io
 *
-* v1.0.6 - Built at: Tue, 24 Sep 2013 14:51:13 +0000
+* v1.0.6 - Built at: Thu, 26 Sep 2013 10:48:10 +0000
 *
 * @author Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -34,7 +34,7 @@ var PIXI = PIXI || {};
  */
 var Phaser = Phaser || { 
 
-	VERSION: '1.0.6', 
+	VERSION: '1.0.6a', 
 	GAMES: [], 
 	AUTO: 0,
 	CANVAS: 1,
@@ -7966,9 +7966,13 @@ Phaser.StateManager.prototype = {
         if (this._created == false && this.onCreateCallback)
         {
 			// console.log('Create callback found');
+	        this._created = true;
             this.onCreateCallback.call(this.callbackContext);
         }
-        this._created = true;
+        else
+        {
+	        this._created = true;
+        }
 
     },
 

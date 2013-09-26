@@ -5,7 +5,7 @@ Phaser 1.0
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 1.0.6 - Released: September 24th 2013
+Version: 1.0.6a - Released: September 26th 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -41,8 +41,15 @@ Version 1.0.7 (in progress in the dev branch)
 * Complete overhaul of Physics.Arcade.Body - now significantly more stable and faster too.
 * Updated ArcadePhysics.separateX/Y to use new body system - much better results now.
 * QuadTree bug found in 1.0.5 now fixed. The QuadTree is updated properly now using worldTransform values.
+* Added Zwoptex Phaser Template created by Bruno Assarisse - it's in the docs folder if you need it. Thanks Bruno!
+
 * TODO: addMarker hh:mm:ss:ms
 * TODO: Direction constants
+
+Version 1.0.6a (September 26th 2013)
+
+Sorry there was an error in the StateManager that stopped states from switching correctly that we forgot to merge with the 1.0.6
+release. This has now been resolved, so please update to 1.0.6a.
 
 Version 1.0.6 (September 24th 2013)
 
