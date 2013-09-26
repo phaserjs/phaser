@@ -240,7 +240,7 @@ Phaser.Easing = {
 
 		In: function ( k ) {
 
-			return 1 - TWEEN.Easing.Bounce.Out( 1 - k );
+			return 1 - Phaser.Easing.Bounce.Out( 1 - k );
 
 		},
 
@@ -268,8 +268,8 @@ Phaser.Easing = {
 
 		InOut: function ( k ) {
 
-			if ( k < 0.5 ) return TWEEN.Easing.Bounce.In( k * 2 ) * 0.5;
-			return TWEEN.Easing.Bounce.Out( k * 2 - 1 ) * 0.5 + 0.5;
+			if ( k < 0.5 ) return Phaser.Easing.Bounce.In( k * 2 ) * 0.5;
+			return Phaser.Easing.Bounce.Out( k * 2 - 1 ) * 0.5 + 0.5;
 
 		}
 

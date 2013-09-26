@@ -41,6 +41,8 @@ Version 1.0.7 (in progress in the dev branch)
 * Complete overhaul of Physics.Arcade.Body - now significantly more stable and faster too.
 * Updated ArcadePhysics.separateX/Y to use new body system - much better results now.
 * QuadTree bug found in 1.0.5 now fixed. The QuadTree is updated properly now using worldTransform values.
+* Fixed the Bounce.In and Bounce.InOut tweens (thanks XekeDeath)
+
 * TODO: addMarker hh:mm:ss:ms
 * TODO: Direction constants
 
