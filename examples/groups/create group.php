@@ -1,6 +1,6 @@
  
  <?php
-    $title = "Calling a function on all children";
+    $title = "Add a new sprite and log what happened";
     require('../head.php');
 ?>
 

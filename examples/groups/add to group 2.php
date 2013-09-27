@@ -23,7 +23,7 @@
         friendAndFoe = game.add.group();
         enemies = game.add.group();
 
-        // You can directly create sprite and add it to a group
+        // You can directly create a sprite and add it to a group
         // using just one line. 
         friendAndFoe.create(200, 240, 'ufo');
 

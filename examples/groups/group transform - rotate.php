@@ -1,6 +1,6 @@
  
  <?php
-    $title = "Grouping";
+    $title = "Rotating an entire group";
     require('../head.php');
 ?>
 

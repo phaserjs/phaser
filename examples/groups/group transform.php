@@ -1,6 +1,6 @@
  
  <?php
-    $title = "Grouping";
+    $title = "Grouping and dragging";
     require('../head.php');
 ?>
 
