@@ -13,8 +13,8 @@
 Phaser.Utils = {
 	
 	/**
-	*  Javascript string pad
-	*  http://www.webtoolkit.info/
+	* Javascript string pad
+	* http://www.webtoolkit.info/
 	* pad = the string to pad it out with (defaults to a space)
 	* dir = 1 (left), 2 (right), 3 (both)
 	* @method pad

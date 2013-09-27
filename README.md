@@ -42,9 +42,19 @@ Version 1.0.7 (in progress in the dev branch)
 * Updated ArcadePhysics.separateX/Y to use new body system - much better results now.
 * QuadTree bug found in 1.0.5 now fixed. The QuadTree is updated properly now using worldTransform values.
 * Fixed the Bounce.In and Bounce.InOut tweens (thanks XekeDeath)
+* Renamed Phaser.Text.text to Phaser.Text.content to avoid conflict and overwrite from Pixi local var.
+* Renamed Phaser.Text.style to Phaser.Text.font to avoid conflict and overwrite from Pixi local var.
+* Phaser.Button now sets useHandCursor to true by default.
+* Fixed an issue in Animation.update where if the game was paused it would get an insane delta timer throwing a uuid error.
+* Added PixiPatch.js to patch in a few essential features until Pixi is updated.
+* Fixed issue in Animation.play where the given frameRate and loop values wouldn't overwrite those set on construction.
+* Added Animation.paused - can be set to true/false.
+* New: Phaser.Animation.generateFrameNames - really useful when creating animation data from texture atlases using file names, not indexes.
+
 
 * TODO: addMarker hh:mm:ss:ms
 * TODO: Direction constants
+* TODO: Camera will adjust core DO. Means scrollFactor will need to be dropped sadly, but there are other ways to emulate its effect.
 
 Version 1.0.6 (September 24th 2013)
 

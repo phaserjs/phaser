@@ -268,7 +268,7 @@ Phaser.Sound.prototype = {
     	if (typeof loop == 'undefined') { loop = false; }
     	if (typeof forceRestart == 'undefined') { forceRestart = false; }
 
-        console.log(this.name + ' play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop);
+        // console.log(this.name + ' play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop);
 
         if (this.isPlaying == true && forceRestart == false && this.override == false)
         {

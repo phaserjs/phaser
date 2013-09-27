@@ -255,7 +255,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
     }
 
     //  Frame updated?
-    if (this.currentFrame.uuid != this._cache.frameID)
+    if (this.currentFrame && this.currentFrame.uuid != this._cache.frameID)
     {
         this._cache.frameWidth = this.texture.frame.width;
         this._cache.frameHeight = this.texture.frame.height;
@@ -263,7 +263,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache.dirty = true;
     }
 
-    if (this._cache.dirty)
+    if (this._cache.dirty && this.currentFrame)
     {
         this._cache.width = Math.floor(this.currentFrame.sourceSizeW * this._cache.scaleX);
         this._cache.height = Math.floor(this.currentFrame.sourceSizeH * this._cache.scaleY);
