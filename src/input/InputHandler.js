@@ -75,7 +75,7 @@ Phaser.InputHandler.prototype = {
 	start: function (priority, useHandCursor) {
 
 		priority = priority || 0;
-		useHandCursor = useHandCursor || false;
+		if (typeof useHandCursor == 'undefined') { useHandCursor = false; }
 
         //  Turning on
         if (this.enabled == false)
