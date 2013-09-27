@@ -50,6 +50,7 @@ Version 1.0.7 (in progress in the dev branch)
 * Fixed issue in Animation.play where the given frameRate and loop values wouldn't overwrite those set on construction.
 * Added Animation.paused - can be set to true/false.
 * New: Phaser.Animation.generateFrameNames - really useful when creating animation data from texture atlases using file names, not indexes.
+* Added Sprite.play as a handy short-cut to play an animation already loaded onto a Sprite.
 
 
 * TODO: addMarker hh:mm:ss:ms
