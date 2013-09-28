@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>geom\Point.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/AnimationManager.html">AnimationManager</a></li>
+            
+                <li><a href="../classes/AssetLoader.html">AssetLoader</a></li>
+            
+                <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
+            
+                <li><a href="../classes/BitmapFontLoader.html">BitmapFontLoader</a></li>
+            
+                <li><a href="../classes/BitmapText.html">BitmapText</a></li>
+            
+                <li><a href="../classes/Button.html">Button</a></li>
+            
+                <li><a href="../classes/Camera.html">Camera</a></li>
+            
+                <li><a href="../classes/Canvas.html">Canvas</a></li>
+            
+                <li><a href="../classes/CanvasGraphics.html">CanvasGraphics</a></li>
+            
+                <li><a href="../classes/CanvasRenderer.html">CanvasRenderer</a></li>
+            
+                <li><a href="../classes/Circle.html">Circle</a></li>
+            
+                <li><a href="../classes/Color.html">Color</a></li>
+            
+                <li><a href="../classes/CustomRenderable.html">CustomRenderable</a></li>
+            
+                <li><a href="../classes/DebugUtils.html">DebugUtils</a></li>
+            
+                <li><a href="../classes/DisplayObject.html">DisplayObject</a></li>
+            
+                <li><a href="../classes/DisplayObjectContainer.html">DisplayObjectContainer</a></li>
+            
+                <li><a href="../classes/Ellipse.html">Ellipse</a></li>
+            
+                <li><a href="../classes/EventTarget.html">EventTarget</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FrameData.html">FrameData</a></li>
+            
+                <li><a href="../classes/Graphics.html">Graphics</a></li>
+            
+                <li><a href="../classes/ImageLoader.html">ImageLoader</a></li>
+            
+                <li><a href="../classes/JsonLoader.html">JsonLoader</a></li>
+            
+                <li><a href="../classes/MovieClip.html">MovieClip</a></li>
+            
+                <li><a href="../classes/Phaser.Animation.html">Phaser.Animation</a></li>
+            
+                <li><a href="../classes/Point.html">Point</a></li>
+            
+                <li><a href="../classes/Polygon.html">Polygon</a></li>
+            
+                <li><a href="../classes/PolyK._convex.html">PolyK._convex</a></li>
+            
+                <li><a href="../classes/PolyK._PointInTriangle.html">PolyK._PointInTriangle</a></li>
+            
+                <li><a href="../classes/PolyK.AjaxRequest.html">PolyK.AjaxRequest</a></li>
+            
+                <li><a href="../classes/PolyK.InteractionData.html">PolyK.InteractionData</a></li>
+            
+                <li><a href="../classes/PolyK.InteractionManager.html">PolyK.InteractionManager</a></li>
+            
+                <li><a href="../classes/Rectangle.html">Rectangle</a></li>
+            
+                <li><a href="../classes/RenderTexture.html">RenderTexture</a></li>
+            
+                <li><a href="../classes/Sound.html">Sound</a></li>
+            
+                <li><a href="../classes/SoundManager.html">SoundManager</a></li>
+            
+                <li><a href="../classes/Spine.html">Spine</a></li>
+            
+                <li><a href="../classes/Sprite.html">Sprite</a></li>
+            
+                <li><a href="../classes/SpriteSheetLoader.html">SpriteSheetLoader</a></li>
+            
+                <li><a href="../classes/Stage.html">Stage</a></li>
+            
+                <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/Texture.html">Texture</a></li>
+            
+                <li><a href="../classes/TilingSprite.html">TilingSprite</a></li>
+            
+                <li><a href="../classes/Time.html">Time</a></li>
+            
+                <li><a href="../classes/Utils.html">Utils</a></li>
+            
+                <li><a href="../classes/WebGLBatch.html">WebGLBatch</a></li>
+            
+                <li><a href="../classes/WebGLRenderer.html">WebGLRenderer</a></li>
+            
+                <li><a href="../classes/World.html">World</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/Phaser.html">Phaser</a></li>
+            
+                <li><a href="../modules/Phaser.Animation.html">Phaser.Animation</a></li>
+            
+                <li><a href="../modules/Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a></li>
+            
+                <li><a href="../modules/Phaser.Button.html">Phaser.Button</a></li>
+            
+                <li><a href="../modules/Phaser.Camera.html">Phaser.Camera</a></li>
+            
+                <li><a href="../modules/Phaser.Canvas.html">Phaser.Canvas</a></li>
+            
+                <li><a href="../modules/Phaser.Stage.html">Phaser.Stage</a></li>
+            
+                <li><a href="../modules/Phaser.Time.html">Phaser.Time</a></li>
+            
+                <li><a href="../modules/Phaser.Utils.html">Phaser.Utils</a></li>
+            
+                <li><a href="../modules/Phaser.World.html">Phaser.World</a></li>
+            
+                <li><a href="../modules/PIXI.html">PIXI</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: geom\Point.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+* Phaser - Point
+*
+* The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
+*
+* @author       Richard Davey &lt;rich@photonstorm.com&gt;
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser
+*/
+
+/**
+* Creates a new Point. If you pass no parameters a Point is created set to (0,0).
+* @class Point
+* @constructor
+* @param {Number} x The horizontal position of this Point (default 0)
+* @param {Number} y The vertical position of this Point (default 0)
+**/
+Phaser.Point = function (x, y) {
+
+    x = x || 0;
+    y = y || 0;
+
+    this.x = x;
+    this.y = y;
+
+};
+
+Phaser.Point.prototype = {
+
+    /**
+    * Copies the x and y properties from any given object to this Point.
+    * @method copyFrom
+    * @param {any} source - The object to copy from.
+    * @return {Point} This Point object.
+    **/
+    copyFrom: function (source) {
+        return this.setTo(source.x, source.y);
+    },
+
+    /**
+    * Inverts the x and y values of this Point
+    * @method invert
+    * @return {Point} This Point object.
+    **/
+    invert: function () {
+        return this.setTo(this.y, this.x);
+    },
+
+    /**
+    * Sets the x and y values of this Point object to the given coordinates.
+    * @method setTo
+    * @param {Number} x - The horizontal position of this point.
+    * @param {Number} y - The vertical position of this point.
+    * @return {Point} This Point object. Useful for chaining method calls.
+    **/        
+    setTo: function (x, y) {
+        this.x = x;
+        this.y = y;
+        return this;
+    },
+
+    add: function (x, y) {
+
+        this.x += x;
+        this.y += y;
+        return this;
+
+    },
+
+    subtract: function (x, y) {
+
+        this.x -= x;
+        this.y -= y;
+        return this;
+
+    },
+
+    multiply: function (x, y) {
+
+        this.x *= x;
+        this.y *= y;
+        return this;
+
+    },
+
+    divide: function (x, y) {
+
+        this.x /= x;
+        this.y /= y;
+        return this;
+
+    },
+
+    /**
+    * Clamps the x value of this Point to be between the given min and max
+    * @method clampX
+    * @param {Number} min The minimum value to clamp this Point to
+    * @param {Number} max The maximum value to clamp this Point to
+    * @return {Phaser.Point} This Point object.
+    */
+    clampX: function (min, max) {
+
+        this.x = Phaser.Math.clamp(this.x, min, max);
+        return this;
+        
+    },
+
+    /**
+    * Clamps the y value of this Point to be between the given min and max
+    * @method clampY
+    * @param {Number} min The minimum value to clamp this Point to
+    * @param {Number} max The maximum value to clamp this Point to
+    * @return {Phaser.Point} This Point object.
+    */
+    clampY: function (min, max) {
+
+        this.y = Phaser.Math.clamp(this.y, min, max);
+        return this;
+        
+    },
+
+    /**
+    * Clamps this Point object values to be between the given min and max
+    * @method clamp
+    * @param {Number} min The minimum value to clamp this Point to
+    * @param {Number} max The maximum value to clamp this Point to
+    * @return {Phaser.Point} This Point object.
+    */
+    clamp: function (min, max) {
+
+        this.x = Phaser.Math.clamp(this.x, min, max);
+        this.y = Phaser.Math.clamp(this.y, min, max);
+        return this;
+
+    },
+
+    /**
+    * Creates a copy of the given Point.
+    * @method clone
+    * @param {Phaser.Point} output Optional Point object. If given the values will be set into this object, otherwise a brand new Point object will be created and returned.
+    * @return {Phaser.Point} The new Point object.
+    */
+    clone: function (output) {
+
+        if (typeof output === &quot;undefined&quot;) { output = new Phaser.Point; }
+
+        return output.setTo(this.x, this.y);
+
+    },
+
+    /**
+    * Copies the x and y properties from any given object to this Point.
+    * @method copyFrom
+    * @param {any} source - The object to copy from.
+    * @return {Point} This Point object.
+    **/
+    copyFrom: function (source) {
+        return this.setTo(source.x, source.y);
+    },
+
+    /**
+    * Copies the x and y properties from this Point to any given object.
+    * @method copyTo
+    * @param {any} dest - The object to copy to.
+    * @return {Object} The dest object.
+    **/
+    copyTo: function(dest) {
+
+        dest[x] = this.x;
+        dest[y] = this.y;
+
+        return dest;
+
+    },
+
+    /**
+    * Returns the distance of this Point object to the given object (can be a Circle, Point or anything with x/y properties)
+    * @method distance
+    * @param {object} dest The target object. Must have visible x and y properties that represent the center of the object.
+    * @param {bool} [optional] round Round the distance to the nearest integer (default false)
+    * @return {Number} The distance between this Point object and the destination Point object.
+    */
+    distance: function (dest, round) {
+
+        return Phaser.Point.distance(this, dest, round);
+        
+    },
+
+    /**
+    * Determines whether the given objects x/y values are equal to this Point object.
+    * @method equals
+    * @param {Phaser.Point} a The first object to compare.
+    * @return {bool} A value of true if the Points are equal, otherwise false.
+    */
+    equals: function (a) {
+        return (a.x == this.x &amp;&amp; a.y == this.y);
+    },
+
+    /**
+    * Rotates this Point around the x/y coordinates given to the desired angle.
+    * @method rotate
+    * @param {Number} x The x coordinate of the anchor point
+    * @param {Number} y The y coordinate of the anchor point
+    * @param {Number} angle The angle in radians (unless asDegrees is true) to rotate the Point to.
+    * @param {bool} asDegrees Is the given rotation in radians (false) or degrees (true)?
+    * @param {Number} distance An optional distance constraint between the Point and the anchor.
+    * @return {Phaser.Point} The modified point object
+    */
+    rotate: function (x, y, angle, asDegrees, distance) {
+        return Phaser.Point.rotate(this, x, y, angle, asDegrees, distance);
+    },
+
+    /**
+    * Returns a string representation of this object.
+    * @method toString
+    * @return {string} a string representation of the instance.
+    **/
+    toString: function () {
+        return &#x27;[{Point (x=&#x27; + this.x + &#x27; y=&#x27; + this.y + &#x27;)}]&#x27;;
+    }
+
+};
+
+//  Statics
+
+/**
+* Adds the coordinates of two points together to create a new point.
+* @method add
+* @param {Phaser.Point} a The first Point object.
+* @param {Phaser.Point} b The second Point object.
+* @param {Phaser.Point} out Optional Point to store the value in, if not supplied a new Point object will be created.
+* @return {Phaser.Point} The new Point object.
+*/
+Phaser.Point.add = function (a, b, out) {
+
+    if (typeof out === &quot;undefined&quot;) { out = new Phaser.Point(); }
+
+    out.x = a.x + b.x;
+    out.y = a.y + b.y;
+
+    return out;
+
+};
+
+/**
+* Subtracts the coordinates of two points to create a new point.
+* @method subtract
+* @param {Phaser.Point} a The first Point object.
+* @param {Phaser.Point} b The second Point object.
+* @param {Phaser.Point} out Optional Point to store the value in, if not supplied a new Point object will be created.
+* @return {Phaser.Point} The new Point object.
+*/
+Phaser.Point.subtract = function (a, b, out) {
+
+    if (typeof out === &quot;undefined&quot;) { out = new Phaser.Point(); }
+
+    out.x = a.x - b.x;
+    out.y = a.y - b.y;
+
+    return out;
+
+};
+
+/**
+* Multiplies the coordinates of two points to create a new point.
+* @method subtract
+* @param {Phaser.Point} a The first Point object.
+* @param {Phaser.Point} b The second Point object.
+* @param {Phaser.Point} out Optional Point to store the value in, if not supplied a new Point object will be created.
+* @return {Phaser.Point} The new Point object.
+*/
+Phaser.Point.multiply = function (a, b, out) {
+
+    if (typeof out === &quot;undefined&quot;) { out = new Phaser.Point(); }
+
+    out.x = a.x * b.x;
+    out.y = a.y * b.y;
+
+    return out;
+
+};
+
+/**
+* Divides the coordinates of two points to create a new point.
+* @method subtract
+* @param {Phaser.Point} a The first Point object.
+* @param {Phaser.Point} b The second Point object.
+* @param {Phaser.Point} out Optional Point to store the value in, if not supplied a new Point object will be created.
+* @return {Phaser.Point} The new Point object.
+*/
+Phaser.Point.divide = function (a, b, out) {
+
+    if (typeof out === &quot;undefined&quot;) { out = new Phaser.Point(); }
+
+    out.x = a.x / b.x;
+    out.y = a.y / b.y;
+
+    return out;
+
+};
+
+/**
+* Determines whether the two given Point objects are equal. They are considered equal if they have the same x and y values.
+* @method equals
+* @param {Phaser.Point} a The first Point object.
+* @param {Phaser.Point} b The second Point object.
+* @return {bool} A value of true if the Points are equal, otherwise false.
+*/
+Phaser.Point.equals = function (a, b) {
+    return (a.x == b.x &amp;&amp; a.y == b.y);
+};
+
+/**
+* Returns the distance of this Point object to the given object (can be a Circle, Point or anything with x/y properties)
+* @method distance
+* @param {object} a The target object. Must have visible x and y properties that represent the center of the object.
+* @param {object} b The target object. Must have visible x and y properties that represent the center of the object.
+* @param {bool} [optional] round Round the distance to the nearest integer (default false)
+* @return {Number} The distance between this Point object and the destination Point object.
+*/
+Phaser.Point.distance = function (a, b, round) {
+
+    if (typeof round === &quot;undefined&quot;) { round = false }
+
+    if (round)
+    {
+        return Phaser.Math.distanceRound(a.x, a.y, b.x, b.y);
+    }
+    else
+    {
+        return Phaser.Math.distance(a.x, a.y, b.x, b.y);
+    }
+
+},
+
+/**
+* Rotates a Point around the x/y coordinates given to the desired angle.
+* @method rotate
+* @param {Phaser.Point} a The Point object to rotate.
+* @param {Number} x The x coordinate of the anchor point
+* @param {Number} y The y coordinate of the anchor point
+* @param {Number} angle The angle in radians (unless asDegrees is true) to rotate the Point to.
+* @param {bool} asDegrees Is the given rotation in radians (false) or degrees (true)?
+* @param {Number} distance An optional distance constraint between the Point and the anchor.
+* @return {Phaser.Point} The modified point object
+*/
+Phaser.Point.rotate = function (a, x, y, angle, asDegrees, distance) {
+
+    asDegrees = asDegrees || false;
+    distance = distance || null;
+
+    if (asDegrees)
+    {
+        angle = Phaser.Math.radToDeg(angle);
+    }
+
+    //  Get distance from origin (cx/cy) to this point
+    if (distance === null)
+    {
+        distance = Math.sqrt(((x - a.x) * (x - a.x)) + ((y - a.y) * (y - a.y)));
+    }
+
+    return a.setTo(x + distance * Math.cos(angle), y + distance * Math.sin(angle));
+
+};
+
+
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

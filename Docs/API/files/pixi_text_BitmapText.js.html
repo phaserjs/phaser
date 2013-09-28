@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Phaser</title>
+    <title>pixi\text\BitmapText.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -198,259 +198,176 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Phaser Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: pixi\text\BitmapText.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/utils_Debug.js.html#l8"><code>utils\Debug.js:8</code></a>
-        </div>
-    
+/**
+ * A Text Object will create a line(s) of text using bitmap font. To split a line you can use &quot;\n&quot;, &quot;\r&quot; or &quot;\r\n&quot;
+ * You can generate the fnt files using 
+ * http://www.angelcode.com/products/bmfont/ for windows or
+ * http://www.bmglyph.com/ for mac.
+ *
+ * @class BitmapText
+ * @extends DisplayObjectContainer
+ * @constructor
+ * @param text {String} The copy that you would like the text to display
+ * @param style {Object} The style parameters
+ * @param style.font {String} The size (optional) and bitmap font id (required) eq &quot;Arial&quot; or &quot;20px Arial&quot; (must have loaded previously)
+ * @param [style.align=&quot;left&quot;] {String} An alignment of the multiline text (&quot;left&quot;, &quot;center&quot; or &quot;right&quot;)
+ */
+PIXI.BitmapText = function(text, style)
+{
+    PIXI.DisplayObjectContainer.call(this);
 
-    
-</div>
+    this.setText(text);
+    this.setStyle(style);
+    this.updateText();
+    this.dirty = false
 
+};
 
+// constructor
+PIXI.BitmapText.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
+PIXI.BitmapText.prototype.constructor = PIXI.BitmapText;
 
-<div class="box intro">
-    
-</div>
+/**
+ * Set the copy for the text object
+ *
+ * @method setText
+ * @param text {String} The copy that you would like the text to display
+ */
+PIXI.BitmapText.prototype.setText = function(text)
+{
+    this.text = text || &quot; &quot;;
+    this.dirty = true;
+};
 
+/**
+ * Set the style of the text
+ *
+ * @method setStyle
+ * @param style {Object} The style parameters
+ * @param style.font {String} The size (optional) and bitmap font id (required) eq &quot;Arial&quot; or &quot;20px Arial&quot; (must have loaded previously)
+ * @param [style.align=&quot;left&quot;] {String} An alignment of the multiline text (&quot;left&quot;, &quot;center&quot; or &quot;right&quot;)
+ */
+PIXI.BitmapText.prototype.setStyle = function(style)
+{
+    style = style || {};
+    style.align = style.align || &quot;left&quot;;
+    this.style = style;
 
+    var font = style.font.split(&quot; &quot;);
+    this.fontName = font[font.length - 1];
+    this.fontSize = font.length &gt;= 2 ? parseInt(font[font.length - 2], 10) : PIXI.BitmapText.fonts[this.fontName].size;
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
+    this.dirty = true;
+};
+
+/**
+ * Renders text
+ *
+ * @method updateText
+ * @private
+ */
+PIXI.BitmapText.prototype.updateText = function()
+{
+    var data = PIXI.BitmapText.fonts[this.fontName];
+    var pos = new PIXI.Point();
+    var prevCharCode = null;
+    var chars = [];
+    var maxLineWidth = 0;
+    var lineWidths = [];
+    var line = 0;
+    var scale = this.fontSize / data.size;
+    for(var i = 0; i &lt; this.text.length; i++)
+    {
+        var charCode = this.text.charCodeAt(i);
+        if(/(?:\r\n|\r|\n)/.test(this.text.charAt(i)))
+        {
+            lineWidths.push(pos.x);
+            maxLineWidth = Math.max(maxLineWidth, pos.x);
+            line++;
+
+            pos.x = 0;
+            pos.y += data.lineHeight;
+            prevCharCode = null;
+            continue;
+        }
         
-            <p>This module provides the following classes:</p>
+        var charData = data.chars[charCode];
+        if(!charData) continue;
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/AssetLoader.html">
-                        AssetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BaseTexture.html">
-                        BaseTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapFontLoader.html">
-                        BitmapFontLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapText.html">
-                        BitmapText
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasGraphics.html">
-                        CanvasGraphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasRenderer.html">
-                        CanvasRenderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Circle.html">
-                        Circle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Color.html">
-                        Color
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CustomRenderable.html">
-                        CustomRenderable
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DebugUtils.html">
-                        DebugUtils
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObject.html">
-                        DisplayObject
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObjectContainer.html">
-                        DisplayObjectContainer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Ellipse.html">
-                        Ellipse
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/EventTarget.html">
-                        EventTarget
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Graphics.html">
-                        Graphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/ImageLoader.html">
-                        ImageLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/JsonLoader.html">
-                        JsonLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/MovieClip.html">
-                        MovieClip
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Point.html">
-                        Point
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Polygon.html">
-                        Polygon
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._convex.html">
-                        PolyK._convex
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._PointInTriangle.html">
-                        PolyK._PointInTriangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.AjaxRequest.html">
-                        PolyK.AjaxRequest
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionData.html">
-                        PolyK.InteractionData
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionManager.html">
-                        PolyK.InteractionManager
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Rectangle.html">
-                        Rectangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/RenderTexture.html">
-                        RenderTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Spine.html">
-                        Spine
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Sprite.html">
-                        Sprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/SpriteSheetLoader.html">
-                        SpriteSheetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Stage.html">
-                        Stage
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Text.html">
-                        Text
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Texture.html">
-                        Texture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/TilingSprite.html">
-                        TilingSprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLBatch.html">
-                        WebGLBatch
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLRenderer.html">
-                        WebGLRenderer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
+        if(prevCharCode &amp;&amp; charData[prevCharCode])
+        {
+           pos.x += charData.kerning[prevCharCode];
+        }
+        chars.push({texture:charData.texture, line: line, charCode: charCode, position: new PIXI.Point(pos.x + charData.xOffset, pos.y + charData.yOffset)});
+        pos.x += charData.xAdvance;
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+        prevCharCode = charCode;
+    }
+
+    lineWidths.push(pos.x);
+    maxLineWidth = Math.max(maxLineWidth, pos.x);
+
+    var lineAlignOffsets = [];
+    for(i = 0; i &lt;= line; i++)
+    {
+        var alignOffset = 0;
+        if(this.style.align == &quot;right&quot;)
+        {
+            alignOffset = maxLineWidth - lineWidths[i];
+        }
+        else if(this.style.align == &quot;center&quot;)
+        {
+            alignOffset = (maxLineWidth - lineWidths[i]) / 2;
+        }
+        lineAlignOffsets.push(alignOffset);
+    }
+
+    for(i = 0; i &lt; chars.length; i++)
+    {
+        var c = new PIXI.Sprite(chars[i].texture)//PIXI.Sprite.fromFrame(chars[i].charCode);
+        c.position.x = (chars[i].position.x + lineAlignOffsets[chars[i].line]) * scale;
+        c.position.y = chars[i].position.y * scale;
+        c.scale.x = c.scale.y = scale;
+        this.addChild(c);
+    }
+
+    this.width = pos.x * scale;
+    this.height = (pos.y + data.lineHeight) * scale;
+};
+
+/**
+ * Updates the transfor of this object
+ *
+ * @method updateTransform
+ * @private
+ */
+PIXI.BitmapText.prototype.updateTransform = function()
+{
+	if(this.dirty)
+	{
+        while(this.children.length &gt; 0)
+        {
+            this.removeChild(this.getChildAt(0));
+        }
+        this.updateText();
+
+        this.dirty = false;
+	}
+	
+	PIXI.DisplayObjectContainer.prototype.updateTransform.call(this);
+};
+
+PIXI.BitmapText.fonts = {};
+
+    </pre>
 </div>
 
                     </div>

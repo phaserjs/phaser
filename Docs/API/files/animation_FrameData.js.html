@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Phaser</title>
+    <title>animation\FrameData.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -198,259 +198,252 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Phaser Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: animation\FrameData.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+* @author       Richard Davey &lt;rich@photonstorm.com&gt;
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.Animation.FrameData
+*/
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/utils_Debug.js.html#l8"><code>utils\Debug.js:8</code></a>
-        </div>
-    
+/**
+* FrameData is a container for Frame objects, which are the internal representation of animation data in Phaser.
+*
+* @class FrameData
+* @constructor
+*/
+Phaser.Animation.FrameData = function () {
 
-    
-</div>
+    /**
+    * Local array of frames.
+    * @property _frames
+    * @private
+    * @type {Array}
+    */
+    this._frames = [];
 
+    /**
+    * Local array of frame names for name to index conversions.
+    * @property _frameNames
+    * @private
+    * @type {Array}
+    */
+    this._frameNames = [];
 
+};
 
-<div class="box intro">
-    
-</div>
+Phaser.Animation.FrameData.prototype = {
 
+    /**
+    * Adds a new Frame to this FrameData collection. Typically called by the Animation.Parser and not directly.
+    *
+    * @method addFrame
+    * @param {Phaser.Animation.Frame} frame The frame to add to this FrameData set.
+    * @return {Phaser.Animation.Frame} The frame that was just added.
+    */
+    addFrame: function (frame) {
 
+        frame.index = this._frames.length;
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
+        this._frames.push(frame);
+
+        if (frame.name !== &#x27;&#x27;)
+        {
+            this._frameNames[frame.name] = frame.index;
+        }
+
+        return frame;
+
+    },
+
+	/**
+	* Get a Frame by its numerical index.
+    *
+    * @method getFrame
+	* @param {Number} index The index of the frame you want to get.
+	* @return {Phaser.Animation.Frame} The frame, if found.
+	*/
+    getFrame: function (index) {
+
+        if (this._frames[index])
+        {
+            return this._frames[index];
+        }
+
+        return null;
+
+    },
+
+    /**
+    * Get a Frame by its frame name.
+    *
+    * @method getFrameByName
+    * @param {String} name The name of the frame you want to get.
+    * @return {Phaser.Animation.Frame} The frame, if found.
+    */
+    getFrameByName: function (name) {
+
+        if (typeof this._frameNames[name] === &#x27;number&#x27;)
+        {
+            return this._frames[this._frameNames[name]];
+        }
+
+        return null;
+
+    },
+
+    /**
+    * Check if there is a Frame with the given name.
+    *
+    * @method checkFrameName
+    * @param {String} name The name of the frame you want to check.
+    * @return {Boolean} True if the frame is found, otherwise false.
+    */
+    checkFrameName: function (name) {
+
+        if (this._frameNames[name] == null)
+        {
+            return false;
+        }
+
+        return true;
         
-            <p>This module provides the following classes:</p>
+    },
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/AssetLoader.html">
-                        AssetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BaseTexture.html">
-                        BaseTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapFontLoader.html">
-                        BitmapFontLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapText.html">
-                        BitmapText
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasGraphics.html">
-                        CanvasGraphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasRenderer.html">
-                        CanvasRenderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Circle.html">
-                        Circle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Color.html">
-                        Color
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CustomRenderable.html">
-                        CustomRenderable
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DebugUtils.html">
-                        DebugUtils
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObject.html">
-                        DisplayObject
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObjectContainer.html">
-                        DisplayObjectContainer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Ellipse.html">
-                        Ellipse
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/EventTarget.html">
-                        EventTarget
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Graphics.html">
-                        Graphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/ImageLoader.html">
-                        ImageLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/JsonLoader.html">
-                        JsonLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/MovieClip.html">
-                        MovieClip
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Point.html">
-                        Point
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Polygon.html">
-                        Polygon
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._convex.html">
-                        PolyK._convex
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._PointInTriangle.html">
-                        PolyK._PointInTriangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.AjaxRequest.html">
-                        PolyK.AjaxRequest
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionData.html">
-                        PolyK.InteractionData
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionManager.html">
-                        PolyK.InteractionManager
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Rectangle.html">
-                        Rectangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/RenderTexture.html">
-                        RenderTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Spine.html">
-                        Spine
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Sprite.html">
-                        Sprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/SpriteSheetLoader.html">
-                        SpriteSheetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Stage.html">
-                        Stage
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Text.html">
-                        Text
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Texture.html">
-                        Texture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/TilingSprite.html">
-                        TilingSprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLBatch.html">
-                        WebGLBatch
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLRenderer.html">
-                        WebGLRenderer
-                    </a>
-                </li>
-            
-            </ul>
+	/**
+	* Returns a range of frames based on the given start and end frame indexes and returns them in an Array.
+    *
+    * @method getFrameRange
+    * @param {Number} start The starting frame index.
+	* @param {Number} end The ending frame index.
+	* @param {Array} [output] Optional array. If given the results will be appended to the end of this Array.
+	* @return {Array} An array of Frames between the start and end index values, or an empty array if none were found.
+	*/
+    getFrameRange: function (start, end, output) {
         
-    </div>
+        if (typeof output === &quot;undefined&quot;) { output = []; }
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+        for (var i = start; i &lt;= end; i++)
+        {
+            output.push(this._frames[i]);
+        }
+
+        return output;
+
+    },
+
+	/**
+	* Returns all of the Frames in this FrameData set where the frame index is found in the input array.
+    * The frames are returned in the output array, or if none is provided in a new Array object.
+    *
+    * @method getFrames
+    * @param {Array} frames An Array containing the indexes of the frames to retrieve. If the array is empty then all frames in the FrameData are returned.
+    * @param {Boolean} [useNumericIndex=true] Are the given frames using numeric indexes (default) or strings? (false)
+    * @param {Array} [output] Optional array. If given the results will be appended to the end of this Array, otherwise a new array is created.
+    * @return {Array} An array of all Frames in this FrameData set matching the given names or IDs.
+	*/
+    getFrames: function (frames, useNumericIndex, output) {
+
+        if (typeof useNumericIndex === &quot;undefined&quot;) { useNumericIndex = true; }
+        if (typeof output === &quot;undefined&quot;) { output = []; }
+
+        if (typeof frames === &quot;undefined&quot; || frames.length == 0)
+        {
+            //  No input array, so we loop through all frames
+            for (var i = 0; i &lt; this._frames.length; i++)
+            {
+                //  We only need the indexes
+                output.push(this._frames[i]);
+            }
+        }
+        else
+        {
+            //  Input array given, loop through that instead
+            for (var i = 0, len = frames.length; i &lt; len; i++)
+            {
+                //  Does the input array contain names or indexes?
+                if (useNumericIndex)
+                {
+                    //  The actual frame
+                    output.push(this.getFrame(frames[i]));
+                }
+                else
+                {
+                    //  The actual frame
+                    output.push(this.getFrameByName(frames[i]));
+                }
+            }
+        }
+
+        return output;
+
+    },
+
+    /**
+    * Returns all of the Frame indexes in this FrameData set.
+    * The frames indexes are returned in the output array, or if none is provided in a new Array object.
+    *
+    * @method getFrameIndexes
+    * @param {Array} frames An Array containing the indexes of the frames to retrieve. If the array is empty then all frames in the FrameData are returned.
+    * @param {Boolean} [useNumericIndex=true] Are the given frames using numeric indexes (default) or strings? (false)
+    * @param {Array} [output] Optional array. If given the results will be appended to the end of this Array, otherwise a new array is created.
+    * @return {Array} An array of all Frame indexes matching the given names or IDs.
+    */
+    getFrameIndexes: function (frames, useNumericIndex, output) {
+
+        if (typeof useNumericIndex === &quot;undefined&quot;) { useNumericIndex = true; }
+        if (typeof output === &quot;undefined&quot;) { output = []; }
+
+        if (typeof frames === &quot;undefined&quot; || frames.length == 0)
+        {
+            //  No frames array, so we loop through all frames
+            for (var i = 0, len = this._frames.length; i &lt; len; i++)
+            {
+                output.push(this._frames[i].index);
+            }
+        }
+        else
+        {
+            //  Input array given, loop through that instead
+            for (var i = 0, len = frames.length; i &lt; len; i++)
+            {
+                //  Does the frames array contain names or indexes?
+                if (useNumericIndex)
+                {
+                    output.push(frames[i]);
+                }
+                else
+                {
+                    output.push(this.getFrameByName(frames[i]).index);
+                }
+            }
+        }
+
+        return output;
+
+    }
+
+};
+
+Object.defineProperty(Phaser.Animation.FrameData.prototype, &quot;total&quot;, {
+
+    /**
+    * Returns the total number of frames in this FrameData set.
+    *
+    * @method total
+    * @return {Number} The total number of frames in this FrameData set.
+    */
+    get: function () {
+        return this._frames.length;
+    }
+
+});
+
+
+    </pre>
 </div>
 
                     </div>

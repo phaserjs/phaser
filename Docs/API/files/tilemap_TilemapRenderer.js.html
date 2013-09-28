@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Phaser</title>
+    <title>tilemap\TilemapRenderer.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -198,259 +198,154 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Phaser Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: tilemap\TilemapRenderer.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+Phaser.TilemapRenderer = function (game) {
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/utils_Debug.js.html#l8"><code>utils\Debug.js:8</code></a>
-        </div>
-    
+    this.game = game;
 
-    
-</div>
+    //  Local rendering related temp vars to help avoid gc spikes through constant var creation
+    this._ga = 1;
+    this._dx = 0;
+    this._dy = 0;
+    this._dw = 0;
+    this._dh = 0;
+    this._tx = 0;
+    this._ty = 0;
+    this._tl = 0;
+    this._maxX = 0;
+    this._maxY = 0;
+    this._startX = 0;
+    this._startY = 0;
+	
+};
 
+Phaser.TilemapRenderer.prototype = {
 
+    /**
+     * Render a tilemap to a canvas.
+     * @param tilemap {Tilemap} The tilemap data to render.
+     */
+    render: function (tilemap) {
 
-<div class="box intro">
-    
-</div>
+        //  Loop through the layers
+        this._tl = tilemap.layers.length;
 
+        for (var i = 0; i &lt; this._tl; i++)
+        {
+            if (tilemap.layers[i].visible == false || tilemap.layers[i].alpha &lt; 0.1)
+            {
+                continue;
+            }
 
+            var layer = tilemap.layers[i];
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
+            //  Work out how many tiles we can fit into our canvas and round it up for the edges
+            this._maxX = this.game.math.ceil(layer.canvas.width / layer.tileWidth) + 1;
+            this._maxY = this.game.math.ceil(layer.canvas.height / layer.tileHeight) + 1;
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/AssetLoader.html">
-                        AssetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BaseTexture.html">
-                        BaseTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapFontLoader.html">
-                        BitmapFontLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapText.html">
-                        BitmapText
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasGraphics.html">
-                        CanvasGraphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasRenderer.html">
-                        CanvasRenderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Circle.html">
-                        Circle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Color.html">
-                        Color
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CustomRenderable.html">
-                        CustomRenderable
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DebugUtils.html">
-                        DebugUtils
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObject.html">
-                        DisplayObject
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObjectContainer.html">
-                        DisplayObjectContainer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Ellipse.html">
-                        Ellipse
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/EventTarget.html">
-                        EventTarget
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Graphics.html">
-                        Graphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/ImageLoader.html">
-                        ImageLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/JsonLoader.html">
-                        JsonLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/MovieClip.html">
-                        MovieClip
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Point.html">
-                        Point
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Polygon.html">
-                        Polygon
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._convex.html">
-                        PolyK._convex
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._PointInTriangle.html">
-                        PolyK._PointInTriangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.AjaxRequest.html">
-                        PolyK.AjaxRequest
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionData.html">
-                        PolyK.InteractionData
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionManager.html">
-                        PolyK.InteractionManager
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Rectangle.html">
-                        Rectangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/RenderTexture.html">
-                        RenderTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Spine.html">
-                        Spine
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Sprite.html">
-                        Sprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/SpriteSheetLoader.html">
-                        SpriteSheetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Stage.html">
-                        Stage
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Text.html">
-                        Text
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Texture.html">
-                        Texture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/TilingSprite.html">
-                        TilingSprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLBatch.html">
-                        WebGLBatch
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLRenderer.html">
-                        WebGLRenderer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
+            //  And now work out where in the tilemap the camera actually is
+            this._startX = this.game.math.floor(this.game.camera.x / layer.tileWidth);
+            this._startY = this.game.math.floor(this.game.camera.y / layer.tileHeight);
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+            //  Tilemap bounds check
+            if (this._startX &lt; 0)
+            {
+                this._startX = 0;
+            }
+
+            if (this._startY &lt; 0)
+            {
+                this._startY = 0;
+            }
+
+            if (this._maxX &gt; layer.widthInTiles)
+            {
+                this._maxX = layer.widthInTiles;
+            }
+
+            if (this._maxY &gt; layer.heightInTiles)
+            {
+                this._maxY = layer.heightInTiles;
+            }
+
+            if (this._startX + this._maxX &gt; layer.widthInTiles)
+            {
+                this._startX = layer.widthInTiles - this._maxX;
+            }
+
+            if (this._startY + this._maxY &gt; layer.heightInTiles)
+            {
+                this._startY = layer.heightInTiles - this._maxY;
+            }
+
+            //  Finally get the offset to avoid the blocky movement
+            this._dx = -(this.game.camera.x - (this._startX * layer.tileWidth));
+            this._dy = -(this.game.camera.y - (this._startY * layer.tileHeight));
+
+            this._tx = this._dx;
+            this._ty = this._dy;
+
+            //  Alpha
+            if (layer.alpha !== 1)
+            {
+                this._ga = layer.context.globalAlpha;
+                layer.context.globalAlpha = layer.alpha;
+            }
+
+            layer.context.clearRect(0, 0, layer.canvas.width, layer.canvas.height);
+
+            for (var row = this._startY; row &lt; this._startY + this._maxY; row++)
+            {
+                this._columnData = layer.mapData[row];
+
+                for (var tile = this._startX; tile &lt; this._startX + this._maxX; tile++)
+                {
+                    if (layer.tileOffsets[this._columnData[tile]])
+                    {
+                        layer.context.drawImage(
+                            layer.tileset,
+                            layer.tileOffsets[this._columnData[tile]].x,
+                            layer.tileOffsets[this._columnData[tile]].y,
+                            layer.tileWidth,
+                            layer.tileHeight,
+                            this._tx,
+                            this._ty,
+                            layer.tileWidth,
+                            layer.tileHeight
+                            );
+                    }
+
+                    this._tx += layer.tileWidth;
+
+                }
+
+                this._tx = this._dx;
+                this._ty += layer.tileHeight;
+
+            }
+
+            if (this._ga &gt; -1)
+            {
+                layer.context.globalAlpha = this._ga;
+            }
+
+	        //  Only needed if running in WebGL, otherwise this array will never get cleared down I don&#x27;t think!
+	        if (this.game.renderType == Phaser.WEBGL)
+	        {
+		        PIXI.texturesToUpdate.push(layer.baseTexture);
+	        }
+
+        }
+
+        return true;
+
+    }
+
+};
+    </pre>
 </div>
 
                     </div>

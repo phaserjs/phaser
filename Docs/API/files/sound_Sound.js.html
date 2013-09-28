@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>sound\Sound.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/AnimationManager.html">AnimationManager</a></li>
+            
+                <li><a href="../classes/AssetLoader.html">AssetLoader</a></li>
+            
+                <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
+            
+                <li><a href="../classes/BitmapFontLoader.html">BitmapFontLoader</a></li>
+            
+                <li><a href="../classes/BitmapText.html">BitmapText</a></li>
+            
+                <li><a href="../classes/Button.html">Button</a></li>
+            
+                <li><a href="../classes/Camera.html">Camera</a></li>
+            
+                <li><a href="../classes/Canvas.html">Canvas</a></li>
+            
+                <li><a href="../classes/CanvasGraphics.html">CanvasGraphics</a></li>
+            
+                <li><a href="../classes/CanvasRenderer.html">CanvasRenderer</a></li>
+            
+                <li><a href="../classes/Circle.html">Circle</a></li>
+            
+                <li><a href="../classes/Color.html">Color</a></li>
+            
+                <li><a href="../classes/CustomRenderable.html">CustomRenderable</a></li>
+            
+                <li><a href="../classes/DebugUtils.html">DebugUtils</a></li>
+            
+                <li><a href="../classes/DisplayObject.html">DisplayObject</a></li>
+            
+                <li><a href="../classes/DisplayObjectContainer.html">DisplayObjectContainer</a></li>
+            
+                <li><a href="../classes/Ellipse.html">Ellipse</a></li>
+            
+                <li><a href="../classes/EventTarget.html">EventTarget</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FrameData.html">FrameData</a></li>
+            
+                <li><a href="../classes/Graphics.html">Graphics</a></li>
+            
+                <li><a href="../classes/ImageLoader.html">ImageLoader</a></li>
+            
+                <li><a href="../classes/JsonLoader.html">JsonLoader</a></li>
+            
+                <li><a href="../classes/MovieClip.html">MovieClip</a></li>
+            
+                <li><a href="../classes/Phaser.Animation.html">Phaser.Animation</a></li>
+            
+                <li><a href="../classes/Point.html">Point</a></li>
+            
+                <li><a href="../classes/Polygon.html">Polygon</a></li>
+            
+                <li><a href="../classes/PolyK._convex.html">PolyK._convex</a></li>
+            
+                <li><a href="../classes/PolyK._PointInTriangle.html">PolyK._PointInTriangle</a></li>
+            
+                <li><a href="../classes/PolyK.AjaxRequest.html">PolyK.AjaxRequest</a></li>
+            
+                <li><a href="../classes/PolyK.InteractionData.html">PolyK.InteractionData</a></li>
+            
+                <li><a href="../classes/PolyK.InteractionManager.html">PolyK.InteractionManager</a></li>
+            
+                <li><a href="../classes/Rectangle.html">Rectangle</a></li>
+            
+                <li><a href="../classes/RenderTexture.html">RenderTexture</a></li>
+            
+                <li><a href="../classes/Sound.html">Sound</a></li>
+            
+                <li><a href="../classes/SoundManager.html">SoundManager</a></li>
+            
+                <li><a href="../classes/Spine.html">Spine</a></li>
+            
+                <li><a href="../classes/Sprite.html">Sprite</a></li>
+            
+                <li><a href="../classes/SpriteSheetLoader.html">SpriteSheetLoader</a></li>
+            
+                <li><a href="../classes/Stage.html">Stage</a></li>
+            
+                <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/Texture.html">Texture</a></li>
+            
+                <li><a href="../classes/TilingSprite.html">TilingSprite</a></li>
+            
+                <li><a href="../classes/Time.html">Time</a></li>
+            
+                <li><a href="../classes/Utils.html">Utils</a></li>
+            
+                <li><a href="../classes/WebGLBatch.html">WebGLBatch</a></li>
+            
+                <li><a href="../classes/WebGLRenderer.html">WebGLRenderer</a></li>
+            
+                <li><a href="../classes/World.html">World</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/Phaser.html">Phaser</a></li>
+            
+                <li><a href="../modules/Phaser.Animation.html">Phaser.Animation</a></li>
+            
+                <li><a href="../modules/Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a></li>
+            
+                <li><a href="../modules/Phaser.Button.html">Phaser.Button</a></li>
+            
+                <li><a href="../modules/Phaser.Camera.html">Phaser.Camera</a></li>
+            
+                <li><a href="../modules/Phaser.Canvas.html">Phaser.Canvas</a></li>
+            
+                <li><a href="../modules/Phaser.Stage.html">Phaser.Stage</a></li>
+            
+                <li><a href="../modules/Phaser.Time.html">Phaser.Time</a></li>
+            
+                <li><a href="../modules/Phaser.Utils.html">Phaser.Utils</a></li>
+            
+                <li><a href="../modules/Phaser.World.html">Phaser.World</a></li>
+            
+                <li><a href="../modules/PIXI.html">PIXI</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: sound\Sound.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+* The Sound class
+*
+* @class Sound
+* @constructor
+* @param {Phaser.Game} game Reference to the current game instance.
+* @param {string} key Asset key for the sound.
+* @param {number} volume Default value for the volume.
+* @param {bool} loop Whether or not the sound will loop.
+*/
+Phaser.Sound = function (game, key, volume, loop) {
+	
+	volume = volume || 1;
+	if (typeof loop == &#x27;undefined&#x27;) { loop = false; }
+
+    /**
+    * A reference to the currently running Game.
+    * @property game
+    * @public
+    * @type {Phaser.Game}
+    */
+    this.game = game;
+
+    /**
+    * Name of the sound
+    * @property name
+    * @public
+    * @type {string}
+    */
+    this.name = key;
+
+    /**
+    * Asset key for the sound.
+    * @property key
+    * @public
+    * @type {string}
+    */
+    this.key = key;
+
+    /**
+    * Whether or not the sound will loop.
+    * @property loop
+    * @public
+    * @type {bool}
+    */
+    this.loop = loop;
+
+    /**
+    * The global audio volume. A value between 0 (silence) and 1 (full volume)
+    * @property _volume
+    * @private
+    * @type {number} 
+    */
+    this._volume = volume;
+
+    /**
+    * The sound markers, empty by default
+    * @property markers
+    * @public
+    * @type {object} 
+    */
+    this.markers = {};
+
+    
+    /**
+    * Reference to AudioContext instance.
+    * @property context
+    * @public
+    * @type {AudioContext} 
+    */
+    this.context = null;
+
+    /**
+    * Decoded data buffer / Audio tag.
+    */
+    this._buffer = null;
+
+    /**
+    * Boolean indicating whether the game is on &quot;mute&quot; 
+    * @property _muted
+    * @private
+    * @type {bool} 
+    */
+    this._muted = false;
+
+    /**
+    * Boolean indicating whether the sound should start automatically
+    * @property autoplay
+    * @public
+    * @type {bool} 
+    */
+    this.autoplay = false;
+
+    /**
+    * The total duration of the sound, in milliseconds
+    * @property autoplay
+    * @public
+    * @type {bool} 
+    */
+    this.totalDuration = 0;
+    this.startTime = 0;
+    this.currentTime = 0;
+    this.duration = 0;
+    this.stopTime = 0;
+    this.paused = false;
+    this.isPlaying = false;
+    this.currentMarker = &#x27;&#x27;;
+    this.pendingPlayback = false;
+    this.override = false;
+
+    this.usingWebAudio = this.game.sound.usingWebAudio;
+    this.usingAudioTag = this.game.sound.usingAudioTag;
+
+    if (this.usingWebAudio)
+    {
+        this.context = this.game.sound.context;
+        this.masterGainNode = this.game.sound.masterGain;
+
+        if (typeof this.context.createGain === &#x27;undefined&#x27;)
+        {
+            this.gainNode = this.context.createGainNode();
+        }
+        else
+        {
+            this.gainNode = this.context.createGain();
+        }
+
+        this.gainNode.gain.value = volume * this.game.sound.volume;
+        this.gainNode.connect(this.masterGainNode);
+    }
+    else
+    {
+        if (this.game.cache.getSound(key) &amp;&amp; this.game.cache.isSoundReady(key))
+        {
+            this._sound = this.game.cache.getSoundData(key);
+            this.totalDuration = 0;
+
+            if (this._sound.duration)
+            {
+                this.totalDuration = this._sound.duration;
+            }
+        }
+        else
+        {
+            this.game.cache.onSoundUnlock.add(this.soundHasUnlocked, this);
+        }
+    }
+
+    this.onDecoded = new Phaser.Signal;
+    this.onPlay = new Phaser.Signal;
+    this.onPause = new Phaser.Signal;
+    this.onResume = new Phaser.Signal;
+    this.onLoop = new Phaser.Signal;
+    this.onStop = new Phaser.Signal;
+    this.onMute = new Phaser.Signal;
+    this.onMarkerComplete = new Phaser.Signal;
+
+};
+
+Phaser.Sound.prototype = {
+
+    soundHasUnlocked: function (key) {
+
+        if (key == this.key)
+        {
+            this._sound = this.game.cache.getSoundData(this.key);
+            this.totalDuration = this._sound.duration;
+            console.log(&#x27;sound has unlocked&#x27; + this._sound);
+	    }
+
+	},
+
+    addMarker: function (name, start, stop, volume, loop) {
+
+    	volume = volume || 1;
+    	if (typeof loop == &#x27;undefined&#x27;) { loop = false; }
+
+        this.markers[name] = {
+            name: name,
+            start: start,
+            stop: stop,
+            volume: volume,
+            duration: stop - start,
+            loop: loop
+        };
+
+    },
+
+    removeMarker: function (name) {
+
+        delete this.markers[name];
+
+    },
+
+    update: function () {
+
+        if (this.pendingPlayback &amp;&amp; this.game.cache.isSoundReady(this.key))
+        {
+            this.pendingPlayback = false;
+            this.play(this._tempMarker, this._tempPosition, this._tempVolume, this._tempLoop);
+        }
+
+        if (this.isPlaying)
+        {
+            this.currentTime = this.game.time.now - this.startTime;
+
+            if (this.currentTime &gt;= this.duration)
+            {
+                //console.log(this.currentMarker, &#x27;has hit duration&#x27;);
+                if (this.usingWebAudio)
+                {
+                    if (this.loop)
+                    {
+                        //console.log(&#x27;loop1&#x27;);
+                        //  won&#x27;t work with markers, needs to reset the position
+                        this.onLoop.dispatch(this);
+
+                        if (this.currentMarker == &#x27;&#x27;)
+                        {
+                            //console.log(&#x27;loop2&#x27;);
+                            this.currentTime = 0;
+                            this.startTime = this.game.time.now;
+                        }
+                        else
+                        {
+                            //console.log(&#x27;loop3&#x27;);
+                            this.play(this.currentMarker, 0, this.volume, true, true);
+                        }
+                    }
+                    else
+                    {
+                        //console.log(&#x27;stopping, no loop for marker&#x27;);
+                        this.stop();
+                    }
+                }
+                else
+                {
+                    if (this.loop)
+                    {
+                        this.onLoop.dispatch(this);
+                        this.play(this.currentMarker, 0, this.volume, true, true);
+                    }
+                    else
+                    {
+                        this.stop();
+                    }
+                }
+            }
+        }
+    },
+
+	/**
+    * Play this sound, or a marked section of it.
+    * @method play
+    * @param {string} marker Assets key of the sound you want to play.
+    * @param {number} position The starting position
+    * @param {number} [volume] Volume of the sound you want to play.
+    * @param {bool} [loop] Loop when it finished playing? (Default to false)
+    * @return {Sound} The playing sound object.
+    */
+    play: function (marker, position, volume, loop, forceRestart) {
+
+    	marker = marker || &#x27;&#x27;;
+    	position = position || 0;
+    	volume = volume || 1;
+    	if (typeof loop == &#x27;undefined&#x27;) { loop = false; }
+    	if (typeof forceRestart == &#x27;undefined&#x27;) { forceRestart = false; }
+
+        console.log(this.name + &#x27; play &#x27; + marker + &#x27; position &#x27; + position + &#x27; volume &#x27; + volume + &#x27; loop &#x27; + loop);
+
+        if (this.isPlaying == true &amp;&amp; forceRestart == false &amp;&amp; this.override == false)
+        {
+            //  Use Restart instead
+            return;
+        }
+
+        if (this.isPlaying &amp;&amp; this.override)
+        {
+            // console.log(&#x27;asked to play &#x27; + marker + &#x27; but already playing &#x27; + this.currentMarker);
+        
+            if (this.usingWebAudio)
+            {
+                if (typeof this._sound.stop === &#x27;undefined&#x27;)
+                {
+                    this._sound.noteOff(0);
+                }
+                else
+                {
+                    this._sound.stop(0);
+                }
+            }
+            else if (this.usingAudioTag)
+            {
+                this._sound.pause();
+                this._sound.currentTime = 0;
+            }
+        }
+
+        this.currentMarker = marker;
+
+        if (marker !== &#x27;&#x27; &amp;&amp; this.markers[marker])
+        {
+            this.position = this.markers[marker].start;
+            this.volume = this.markers[marker].volume;
+            this.loop = this.markers[marker].loop;
+            this.duration = this.markers[marker].duration * 1000;
+
+            // console.log(&#x27;marker info loaded&#x27;, this.loop, this.duration);
+            this._tempMarker = marker;
+            this._tempPosition = this.position;
+            this._tempVolume = this.volume;
+            this._tempLoop = this.loop;
+        }
+        else
+        {
+            this.position = position;
+            this.volume = volume;
+            this.loop = loop;
+            this.duration = 0;
+
+            this._tempMarker = marker;
+            this._tempPosition = position;
+            this._tempVolume = volume;
+            this._tempLoop = loop;
+        }
+
+        if (this.usingWebAudio)
+        {
+            //  Does the sound need decoding?
+            if (this.game.cache.isSoundDecoded(this.key))
+            {
+                //  Do we need to do this every time we play? How about just if the buffer is empty?
+                if (this._buffer == null)
+                {
+                    this._buffer = this.game.cache.getSoundData(this.key);
+                }
+
+                this._sound = this.context.createBufferSource();
+                this._sound.buffer = this._buffer;
+                this._sound.connect(this.gainNode);
+                this.totalDuration = this._sound.buffer.duration;
+
+                if (this.duration == 0)
+                {
+                    this.duration = this.totalDuration * 1000;
+                }
+
+                if (this.loop &amp;&amp; marker == &#x27;&#x27;)
+                {
+                    this._sound.loop = true;
+                }
+
+                //  Useful to cache this somewhere perhaps?
+                if (typeof this._sound.start === &#x27;undefined&#x27;)
+                {
+                    this._sound.noteGrainOn(0, this.position, this.duration / 1000);
+                    //this._sound.noteOn(0); // the zero is vitally important, crashes iOS6 without it
+				}
+				else
+				{
+                    this._sound.start(0, this.position, this.duration / 1000);
+                }
+
+                this.isPlaying = true;
+                this.startTime = this.game.time.now;
+                this.currentTime = 0;
+                this.stopTime = this.startTime + this.duration;
+                this.onPlay.dispatch(this);
+			}
+			else
+			{
+                this.pendingPlayback = true;
+
+                if (this.game.cache.getSound(this.key) &amp;&amp; this.game.cache.getSound(this.key).isDecoding == false)
+                {
+                    this.game.sound.decode(this.key, this);
+                }
+            }
+        }
+        else
+        {
+            // console.log(&#x27;Sound play Audio&#x27;);
+            if (this.game.cache.getSound(this.key) &amp;&amp; this.game.cache.getSound(this.key).locked)
+            {
+                // console.log(&#x27;tried playing locked sound, pending set, reload started&#x27;);
+                this.game.cache.reloadSound(this.key);
+                this.pendingPlayback = true;
+            }
+            else
+            {
+                // console.log(&#x27;sound not locked, state?&#x27;, this._sound.readyState);
+                if (this._sound &amp;&amp; this._sound.readyState == 4)
+                {
+                    this._sound.play();
+                    //  This doesn&#x27;t become available until you call play(), wonderful ...
+                    this.totalDuration = this._sound.duration;
+
+                    if (this.duration == 0)
+                    {
+                        this.duration = this.totalDuration * 1000;
+                    }
+
+                    // console.log(&#x27;playing&#x27;, this._sound);
+                    this._sound.currentTime = this.position;
+                    this._sound.muted = this._muted;
+                    
+                    if (this._muted)
+                    {
+                        this._sound.volume = 0;
+                    }
+                    else
+                    {
+                        this._sound.volume = this._volume;
+                    }
+
+                    this.isPlaying = true;
+                    this.startTime = this.game.time.now;
+                    this.currentTime = 0;
+                    this.stopTime = this.startTime + this.duration;
+                    this.onPlay.dispatch(this);
+                }
+                else
+                {
+                    this.pendingPlayback = true;
+                }
+            }
+        }
+    },
+
+    /**
+    * Restart the sound, or a marked section of it.
+    * @method restart
+    * @param {string} marker Assets key of the sound you want to play.
+    * @param {number} position The starting position
+    * @param {number} [volume] Volume of the sound you want to play.
+    * @param {bool} [loop] Loop when it finished playing? (Default to false)
+    */
+    restart: function (marker, position, volume, loop) {
+
+    	marker = marker || &#x27;&#x27;;
+    	position = position || 0;
+    	volume = volume || 1;
+    	if (typeof loop == &#x27;undefined&#x27;) { loop = false; }
+
+        this.play(marker, position, volume, loop, true);
+
+    },
+
+    /**
+    * Pauses the sound
+    * @method pause
+    */
+    pause: function () {
+
+        if (this.isPlaying &amp;&amp; this._sound)
+        {
+            this.stop();
+            this.isPlaying = false;
+            this.paused = true;
+            this.onPause.dispatch(this);
+        }
+
+    },
+    /**
+    * Resumes the sound
+    * @method pause
+    */
+    resume: function () {
+
+        if (this.paused &amp;&amp; this._sound)
+        {
+            if (this.usingWebAudio)
+            {
+                if (typeof this._sound.start === &#x27;undefined&#x27;)
+                {
+                    this._sound.noteGrainOn(0, this.position, this.duration);
+                    //this._sound.noteOn(0); // the zero is vitally important, crashes iOS6 without it
+				}
+				else
+				{
+                    this._sound.start(0, this.position, this.duration);
+                }
+            }
+            else
+            {
+                this._sound.play();
+            }
+
+            this.isPlaying = true;
+            this.paused = false;
+            this.onResume.dispatch(this);
+        }
+
+    },
+
+	/**
+    * Stop playing this sound.
+    * @method stop
+    */
+    stop: function () {
+
+        if (this.isPlaying &amp;&amp; this._sound)
+        {
+            if (this.usingWebAudio)
+            {
+                if (typeof this._sound.stop === &#x27;undefined&#x27;)
+                {
+                    this._sound.noteOff(0);
+                }
+                else
+                {
+                    this._sound.stop(0);
+                }
+            }
+            else if (this.usingAudioTag)
+            {
+                this._sound.pause();
+                this._sound.currentTime = 0;
+            }
+        }
+
+        this.isPlaying = false;
+        var prevMarker = this.currentMarker;
+        
+        this.currentMarker = &#x27;&#x27;;
+        this.onStop.dispatch(this, prevMarker);
+
+    }
+
+};
+
+Object.defineProperty(Phaser.Sound.prototype, &quot;isDecoding&quot;, {
+
+    get: function () {
+        return this.game.cache.getSound(this.key).isDecoding;
+    }
+
+});
+
+Object.defineProperty(Phaser.Sound.prototype, &quot;isDecoded&quot;, {
+
+    get: function () {
+        return this.game.cache.isSoundDecoded(this.key);
+    }
+
+});
+
+Object.defineProperty(Phaser.Sound.prototype, &quot;mute&quot;, {
+
+	
+    /**
+    * Mutes sound.
+    * @method mute
+    * @return {bool} whether or not the sound is muted
+    */
+    get: function () {
+        return this._muted;
+    },
+    /**
+    * Mutes sound.
+    * @method mute
+    * @return {bool} whether or not the sound is muted
+    */
+    set: function (value) {
+
+    	value = value || null;
+
+        if (value)
+        {
+            this._muted = true;
+
+            if (this.usingWebAudio)
+            {
+                this._muteVolume = this.gainNode.gain.value;
+                this.gainNode.gain.value = 0;
+            }
+            else if (this.usingAudioTag &amp;&amp; this._sound)
+            {
+                this._muteVolume = this._sound.volume;
+                this._sound.volume = 0;
+            }
+        }
+        else
+        {
+            this._muted = false;
+
+            if (this.usingWebAudio)
+            {
+                this.gainNode.gain.value = this._muteVolume;
+            }
+            else if (this.usingAudioTag &amp;&amp; this._sound)
+            {
+                this._sound.volume = this._muteVolume;
+            }
+        }
+
+        this.onMute.dispatch(this);
+
+    }
+
+});
+
+Object.defineProperty(Phaser.Sound.prototype, &quot;volume&quot;, {
+
+    /**
+    * @method volume
+    * @return {number} The current volume. A value between 0 (silence) and 1 (full volume)
+    */
+    get: function () {
+        return this._volume;
+    },
+
+    /**
+    * @method volume
+    * @return {number} Sets the current volume. A value between 0 (silence) and 1 (full volume)
+    */
+    set: function (value) {
+
+        if (this.usingWebAudio)
+        {
+            this._volume = value;
+            this.gainNode.gain.value = value;
+        }
+        else if (this.usingAudioTag &amp;&amp; this._sound)
+        {
+            //  Causes an Index size error in Firefox if you don&#x27;t clamp the value
+            if (value &gt;= 0 &amp;&amp; value &lt;= 1)
+            {
+                this._volume = value;
+                this._sound.volume = value;
+            }
+        }
+    }
+
+});
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

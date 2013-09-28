@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>animation\Parser.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/AnimationManager.html">AnimationManager</a></li>
+            
+                <li><a href="../classes/AssetLoader.html">AssetLoader</a></li>
+            
+                <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
+            
+                <li><a href="../classes/BitmapFontLoader.html">BitmapFontLoader</a></li>
+            
+                <li><a href="../classes/BitmapText.html">BitmapText</a></li>
+            
+                <li><a href="../classes/Button.html">Button</a></li>
+            
+                <li><a href="../classes/Camera.html">Camera</a></li>
+            
+                <li><a href="../classes/Canvas.html">Canvas</a></li>
+            
+                <li><a href="../classes/CanvasGraphics.html">CanvasGraphics</a></li>
+            
+                <li><a href="../classes/CanvasRenderer.html">CanvasRenderer</a></li>
+            
+                <li><a href="../classes/Circle.html">Circle</a></li>
+            
+                <li><a href="../classes/Color.html">Color</a></li>
+            
+                <li><a href="../classes/CustomRenderable.html">CustomRenderable</a></li>
+            
+                <li><a href="../classes/DebugUtils.html">DebugUtils</a></li>
+            
+                <li><a href="../classes/DisplayObject.html">DisplayObject</a></li>
+            
+                <li><a href="../classes/DisplayObjectContainer.html">DisplayObjectContainer</a></li>
+            
+                <li><a href="../classes/Ellipse.html">Ellipse</a></li>
+            
+                <li><a href="../classes/EventTarget.html">EventTarget</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FrameData.html">FrameData</a></li>
+            
+                <li><a href="../classes/Graphics.html">Graphics</a></li>
+            
+                <li><a href="../classes/ImageLoader.html">ImageLoader</a></li>
+            
+                <li><a href="../classes/JsonLoader.html">JsonLoader</a></li>
+            
+                <li><a href="../classes/MovieClip.html">MovieClip</a></li>
+            
+                <li><a href="../classes/Phaser.Animation.html">Phaser.Animation</a></li>
+            
+                <li><a href="../classes/Point.html">Point</a></li>
+            
+                <li><a href="../classes/Polygon.html">Polygon</a></li>
+            
+                <li><a href="../classes/PolyK._convex.html">PolyK._convex</a></li>
+            
+                <li><a href="../classes/PolyK._PointInTriangle.html">PolyK._PointInTriangle</a></li>
+            
+                <li><a href="../classes/PolyK.AjaxRequest.html">PolyK.AjaxRequest</a></li>
+            
+                <li><a href="../classes/PolyK.InteractionData.html">PolyK.InteractionData</a></li>
+            
+                <li><a href="../classes/PolyK.InteractionManager.html">PolyK.InteractionManager</a></li>
+            
+                <li><a href="../classes/Rectangle.html">Rectangle</a></li>
+            
+                <li><a href="../classes/RenderTexture.html">RenderTexture</a></li>
+            
+                <li><a href="../classes/Sound.html">Sound</a></li>
+            
+                <li><a href="../classes/SoundManager.html">SoundManager</a></li>
+            
+                <li><a href="../classes/Spine.html">Spine</a></li>
+            
+                <li><a href="../classes/Sprite.html">Sprite</a></li>
+            
+                <li><a href="../classes/SpriteSheetLoader.html">SpriteSheetLoader</a></li>
+            
+                <li><a href="../classes/Stage.html">Stage</a></li>
+            
+                <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/Texture.html">Texture</a></li>
+            
+                <li><a href="../classes/TilingSprite.html">TilingSprite</a></li>
+            
+                <li><a href="../classes/Time.html">Time</a></li>
+            
+                <li><a href="../classes/Utils.html">Utils</a></li>
+            
+                <li><a href="../classes/WebGLBatch.html">WebGLBatch</a></li>
+            
+                <li><a href="../classes/WebGLRenderer.html">WebGLRenderer</a></li>
+            
+                <li><a href="../classes/World.html">World</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/Phaser.html">Phaser</a></li>
+            
+                <li><a href="../modules/Phaser.Animation.html">Phaser.Animation</a></li>
+            
+                <li><a href="../modules/Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a></li>
+            
+                <li><a href="../modules/Phaser.Button.html">Phaser.Button</a></li>
+            
+                <li><a href="../modules/Phaser.Camera.html">Phaser.Camera</a></li>
+            
+                <li><a href="../modules/Phaser.Canvas.html">Phaser.Canvas</a></li>
+            
+                <li><a href="../modules/Phaser.Stage.html">Phaser.Stage</a></li>
+            
+                <li><a href="../modules/Phaser.Time.html">Phaser.Time</a></li>
+            
+                <li><a href="../modules/Phaser.Utils.html">Phaser.Utils</a></li>
+            
+                <li><a href="../modules/Phaser.World.html">Phaser.World</a></li>
+            
+                <li><a href="../modules/PIXI.html">PIXI</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: animation\Parser.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+* Responsible for parsing sprite sheet and JSON data into the internal FrameData format that Phaser uses for animations.
+*
+* @author       Richard Davey &lt;rich@photonstorm.com&gt;
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.Animation
+*/
+
+Phaser.Animation.Parser = {
+
+    /**
+    * Parse a Sprite Sheet and extract the animation frame data from it.
+    *
+    * @method spriteSheet
+    * @param {Phaser.Game} game A reference to the currently running game.
+    * @param {String} key The Game.Cache asset key of the Sprite Sheet image.
+    * @param {Number} frameWidth The fixed width of each frame of the animation.
+    * @param {Number} frameHeight The fixed height of each frame of the animation.
+    * @param {Number} [frameMax=-1] The total number of animation frames to extact from the Sprite Sheet. The default value of -1 means &quot;extract all frames&quot;.
+    * @return {Phaser.Animation.FrameData} A FrameData object containing the parsed frames.
+    */
+    spriteSheet: function (game, key, frameWidth, frameHeight, frameMax) {
+
+        //  How big is our image?
+        var img = game.cache.getImage(key);
+
+        if (img == null)
+        {
+            return null;
+        }
+
+        var width = img.width;
+        var height = img.height;
+        var row = Math.round(width / frameWidth);
+        var column = Math.round(height / frameHeight);
+        var total = row * column;
+        
+        if (frameMax !== -1)
+        {
+            total = frameMax;
+        }
+
+        //  Zero or smaller than frame sizes?
+        if (width == 0 || height == 0 || width &lt; frameWidth || height &lt; frameHeight || total === 0)
+        {
+            console.warn(&quot;Phaser.Animation.Parser.spriteSheet: width/height zero or width/height &lt; given frameWidth/frameHeight&quot;);
+            return null;
+        }
+
+        //  Let&#x27;s create some frames then
+        var data = new Phaser.Animation.FrameData();
+        var x = 0;
+        var y = 0;
+
+        for (var i = 0; i &lt; total; i++)
+        {
+            var uuid = game.rnd.uuid();
+
+            data.addFrame(new Phaser.Animation.Frame(i, x, y, frameWidth, frameHeight, &#x27;&#x27;, uuid));
+
+            PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[key], {
+                x: x,
+                y: y,
+                width: frameWidth,
+                height: frameHeight
+            });
+
+            x += frameWidth;
+
+            if (x === width)
+            {
+                x = 0;
+                y += frameHeight;
+            }
+        }
+
+        return data;
+
+    },
+
+    /**
+    * Parse the JSON data and extract the animation frame data from it.
+    *
+    * @method JSONData
+    * @param {Phaser.Game} game A reference to the currently running game.
+    * @param {Object} json The JSON data from the Texture Atlas. Must be in Array format.
+    * @param {String} cacheKey The Game.Cache asset key of the texture image.
+    * @return {Phaser.Animation.FrameData} A FrameData object containing the parsed frames.
+    */
+    JSONData: function (game, json, cacheKey) {
+
+        //  Malformed?
+        if (!json[&#x27;frames&#x27;])
+        {
+            console.warn(&quot;Phaser.Animation.Parser.JSONData: Invalid Texture Atlas JSON given, missing &#x27;frames&#x27; array&quot;);
+            console.log(json);
+            return;
+        }
+
+        //  Let&#x27;s create some frames then
+        var data = new Phaser.Animation.FrameData();
+        
+        //  By this stage frames is a fully parsed array
+        var frames = json[&#x27;frames&#x27;];
+        var newFrame;
+        
+        for (var i = 0; i &lt; frames.length; i++)
+        {
+            var uuid = game.rnd.uuid();
+
+            newFrame = data.addFrame(new Phaser.Animation.Frame(
+                i,
+            	frames[i].frame.x, 
+            	frames[i].frame.y, 
+            	frames[i].frame.w, 
+            	frames[i].frame.h, 
+            	frames[i].filename,
+                uuid
+			));
+
+            PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
+                x: frames[i].frame.x,
+                y: frames[i].frame.y,
+                width: frames[i].frame.w,
+                height: frames[i].frame.h
+            });
+
+            if (frames[i].trimmed)
+            {
+                newFrame.setTrim(
+                    frames[i].trimmed, 
+                    frames[i].sourceSize.w, 
+                    frames[i].sourceSize.h, 
+                    frames[i].spriteSourceSize.x, 
+                    frames[i].spriteSourceSize.y, 
+                    frames[i].spriteSourceSize.w, 
+                    frames[i].spriteSourceSize.h
+                );
+
+                PIXI.TextureCache[uuid].realSize = frames[i].spriteSourceSize;
+                // PIXI.TextureCache[uuid].realSize = frames[i].sourceSize;
+                PIXI.TextureCache[uuid].trim.x = 0;
+            }
+        }
+
+        return data;
+
+    },
+
+    /**
+    * Parse the JSON data and extract the animation frame data from it.
+    *
+    * @method JSONDataHash
+    * @param {Phaser.Game} game A reference to the currently running game.
+    * @param {Object} json The JSON data from the Texture Atlas. Must be in JSON Hash format.
+    * @param {String} cacheKey The Game.Cache asset key of the texture image.
+    * @return {Phaser.Animation.FrameData} A FrameData object containing the parsed frames.
+    */
+    JSONDataHash: function (game, json, cacheKey) {
+
+        //  Malformed?
+        if (!json[&#x27;frames&#x27;])
+        {
+            console.warn(&quot;Phaser.Animation.Parser.JSONDataHash: Invalid Texture Atlas JSON given, missing &#x27;frames&#x27; object&quot;);
+            console.log(json);
+            return;
+        }
+            
+        //  Let&#x27;s create some frames then
+        var data = new Phaser.Animation.FrameData();
+
+        //  By this stage frames is a fully parsed array
+        var frames = json[&#x27;frames&#x27;];
+        var newFrame;
+        var i = 0;
+        
+        for (var key in frames)
+        {
+            var uuid = game.rnd.uuid();
+
+            newFrame = data.addFrame(new Phaser.Animation.Frame(
+                i,
+                frames[key].frame.x, 
+                frames[key].frame.y, 
+                frames[key].frame.w, 
+                frames[key].frame.h, 
+                key,
+                uuid
+            ));
+
+            PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
+                x: frames[key].frame.x,
+                y: frames[key].frame.y,
+                width: frames[key].frame.w,
+                height: frames[key].frame.h
+            });
+
+            if (frames[key].trimmed)
+            {
+                newFrame.setTrim(
+                    frames[key].trimmed, 
+                    frames[key].sourceSize.w, 
+                    frames[key].sourceSize.h, 
+                    frames[key].spriteSourceSize.x, 
+                    frames[key].spriteSourceSize.y, 
+                    frames[key].spriteSourceSize.w, 
+                    frames[key].spriteSourceSize.h
+                );
+
+                PIXI.TextureCache[uuid].realSize = frames[key].spriteSourceSize;
+                // PIXI.TextureCache[uuid].realSize = frames[key].sourceSize;
+                PIXI.TextureCache[uuid].trim.x = 0;
+            }
+
+            i++;
+        }
+
+        return data;
+
+    },
+
+    /**
+    * Parse the XML data and extract the animation frame data from it.
+    *
+    * @method XMLData
+    * @param {Phaser.Game} game A reference to the currently running game.
+    * @param {Object} xml The XML data from the Texture Atlas. Must be in Starling XML format.
+    * @param {String} cacheKey The Game.Cache asset key of the texture image.
+    * @return {Phaser.Animation.FrameData} A FrameData object containing the parsed frames.
+    */
+    XMLData: function (game, xml, cacheKey) {
+
+        //  Malformed?
+        if (!xml.getElementsByTagName(&#x27;TextureAtlas&#x27;))
+        {
+            console.warn(&quot;Phaser.Animation.Parser.XMLData: Invalid Texture Atlas XML given, missing &lt;TextureAtlas&gt; tag&quot;);
+            return;
+        }
+
+        //  Let&#x27;s create some frames then
+        var data = new Phaser.Animation.FrameData();
+        var frames = xml.getElementsByTagName(&#x27;SubTexture&#x27;);
+        var newFrame;
+        
+        for (var i = 0; i &lt; frames.length; i++)
+        {
+            var uuid = game.rnd.uuid();
+
+            var frame = frames[i].attributes;
+
+            newFrame = data.addFrame(new Phaser.Animation.Frame(
+                i,
+            	frame.x.nodeValue, 
+            	frame.y.nodeValue, 
+            	frame.width.nodeValue, 
+            	frame.height.nodeValue, 
+            	frame.name.nodeValue,
+                uuid
+            ));
+
+            PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
+                x: frame.x.nodeValue,
+                y: frame.y.nodeValue,
+                width: frame.width.nodeValue,
+                height: frame.height.nodeValue
+            });
+
+            //  Trimmed?
+            if (frame.frameX.nodeValue != &#x27;-0&#x27; || frame.frameY.nodeValue != &#x27;-0&#x27;) {
+                newFrame.setTrim(
+                	true, 
+                	frame.width.nodeValue, 
+                	frame.height.nodeValue, 
+                	Math.abs(frame.frameX.nodeValue), 
+                	Math.abs(frame.frameY.nodeValue), 
+                	frame.frameWidth.nodeValue, 
+                	frame.frameHeight.nodeValue
+                );
+
+                PIXI.TextureCache[uuid].realSize = {
+                    x: Math.abs(frame.frameX.nodeValue),
+                    y: Math.abs(frame.frameY.nodeValue),
+                    w: frame.frameWidth.nodeValue,
+                    h: frame.frameHeight.nodeValue
+                };
+
+                PIXI.TextureCache[uuid].trim.x = 0;
+
+            }
+        }
+
+        return data;
+
+    }
+
+};
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Phaser</title>
+    <title>core\SignalBinding.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -198,259 +198,163 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Phaser Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: core\SignalBinding.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+* Phaser.SignalBinding
+*
+* Object that represents a binding between a Signal and a listener function.
+* &lt;br /&gt;- &lt;strong&gt;This is an internal constructor and shouldn&#x27;t be called by regular users.&lt;/strong&gt;
+* &lt;br /&gt;- inspired by Joa Ebert AS3 SignalBinding and Robert Penner&#x27;s Slot classes.
+*
+* @author Miller Medeiros http://millermedeiros.github.com/js-signals/
+* @constructor
+* @internal
+* @name SignalBinding
+* @param {Signal} signal Reference to Signal object that listener is currently bound to.
+* @param {Function} listener Handler function bound to the signal.
+* @param {boolean} isOnce If binding should be executed just once.
+* @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the &#x60;this&#x60; variable inside listener function).
+* @param {Number} [priority] The priority level of the event listener. (default = 0).
+*/
+Phaser.SignalBinding = function (signal, listener, isOnce, listenerContext, priority) {
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/utils_Debug.js.html#l8"><code>utils\Debug.js:8</code></a>
-        </div>
-    
+    /**
+     * Handler function bound to the signal.
+     * @type Function
+     * @private
+     */
+    this._listener = listener;
 
-    
-</div>
+    /**
+     * If binding should be executed just once.
+     * @type boolean
+     * @private
+     */
+    this._isOnce = isOnce;
 
+    /**
+     * Context on which listener will be executed (object that should represent the &#x60;this&#x60; variable inside listener function).
+     * @memberOf SignalBinding.prototype
+     * @name context
+     * @type Object|undefined|null
+     */
+    this.context = listenerContext;
 
+    /**
+     * Reference to Signal object that listener is currently bound to.
+     * @type Signal
+     * @private
+     */
+    this._signal = signal;
 
-<div class="box intro">
-    
-</div>
+    /**
+     * Listener priority
+     * @type Number
+     * @private
+     */
+    this._priority = priority || 0;
 
+};
 
+Phaser.SignalBinding.prototype = {
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
+    /**
+     * If binding is active and should be executed.
+     * @type boolean
+     */
+    active: true,
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/AssetLoader.html">
-                        AssetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BaseTexture.html">
-                        BaseTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapFontLoader.html">
-                        BitmapFontLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapText.html">
-                        BitmapText
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasGraphics.html">
-                        CanvasGraphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasRenderer.html">
-                        CanvasRenderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Circle.html">
-                        Circle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Color.html">
-                        Color
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CustomRenderable.html">
-                        CustomRenderable
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DebugUtils.html">
-                        DebugUtils
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObject.html">
-                        DisplayObject
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObjectContainer.html">
-                        DisplayObjectContainer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Ellipse.html">
-                        Ellipse
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/EventTarget.html">
-                        EventTarget
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Graphics.html">
-                        Graphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/ImageLoader.html">
-                        ImageLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/JsonLoader.html">
-                        JsonLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/MovieClip.html">
-                        MovieClip
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Point.html">
-                        Point
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Polygon.html">
-                        Polygon
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._convex.html">
-                        PolyK._convex
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._PointInTriangle.html">
-                        PolyK._PointInTriangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.AjaxRequest.html">
-                        PolyK.AjaxRequest
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionData.html">
-                        PolyK.InteractionData
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionManager.html">
-                        PolyK.InteractionManager
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Rectangle.html">
-                        Rectangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/RenderTexture.html">
-                        RenderTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Spine.html">
-                        Spine
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Sprite.html">
-                        Sprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/SpriteSheetLoader.html">
-                        SpriteSheetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Stage.html">
-                        Stage
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Text.html">
-                        Text
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Texture.html">
-                        Texture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/TilingSprite.html">
-                        TilingSprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLBatch.html">
-                        WebGLBatch
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLRenderer.html">
-                        WebGLRenderer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
+    /**
+     * Default parameters passed to listener during &#x60;Signal.dispatch&#x60; and &#x60;SignalBinding.execute&#x60;. (curried parameters)
+     * @type Array|null
+     */
+    params: null,
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+    /**
+     * Call listener passing arbitrary parameters.
+     * &lt;p&gt;If binding was added using &#x60;Signal.addOnce()&#x60; it will be automatically removed from signal dispatch queue, this method is used internally for the signal dispatch.&lt;/p&gt;
+     * @param {Array} [paramsArr] Array of parameters that should be passed to the listener
+     * @return {*} Value returned by the listener.
+     */
+    execute: function (paramsArr) {
+
+        var handlerReturn, params;
+
+        if (this.active &amp;&amp; !!this._listener)
+        {
+            params = this.params? this.params.concat(paramsArr) : paramsArr;
+            handlerReturn = this._listener.apply(this.context, params);
+
+            if (this._isOnce)
+            {
+                this.detach();
+            }
+        }
+
+        return handlerReturn;
+
+    },
+
+    /**
+     * Detach binding from signal.
+     * - alias to: mySignal.remove(myBinding.getListener());
+     * @return {Function|null} Handler function bound to the signal or &#x60;null&#x60; if binding was previously detached.
+     */
+    detach: function () {
+        return this.isBound() ? this._signal.remove(this._listener, this.context) : null;
+    },
+
+    /**
+     * @return {Boolean} &#x60;true&#x60; if binding is still bound to the signal and have a listener.
+     */
+    isBound: function () {
+        return (!!this._signal &amp;&amp; !!this._listener);
+    },
+
+    /**
+     * @return {boolean} If SignalBinding will only be executed once.
+     */
+    isOnce: function () {
+        return this._isOnce;
+    },
+
+    /**
+     * @return {Function} Handler function bound to the signal.
+     */
+    getListener: function () {
+        return this._listener;
+    },
+
+    /**
+     * @return {Signal} Signal that listener is currently bound to.
+     */
+    getSignal: function () {
+        return this._signal;
+    },
+
+    /**
+     * Delete instance properties
+     * @private
+     */
+    _destroy: function () {
+        delete this._signal;
+        delete this._listener;
+        delete this.context;
+    },
+
+    /**
+     * @return {string} String representation of the object.
+     */
+    toString: function () {
+        return &#x27;[Phaser.SignalBinding isOnce:&#x27; + this._isOnce +&#x27;, isBound:&#x27;+ this.isBound() +&#x27;, active:&#x27; + this.active + &#x27;]&#x27;;
+    }
+
+};
+
+    </pre>
 </div>
 
                     </div>

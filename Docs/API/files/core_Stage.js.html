@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Phaser</title>
+    <title>core\Stage.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -198,259 +198,184 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Phaser Module</h1>
-<div class="box clearfix meta">
+                        <h1 class="file-heading">File: core\Stage.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+* @author       Richard Davey &lt;rich@photonstorm.com&gt;
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.Stage
+*/
+
+/**
+*
+* The Stage controls the canvas on which everything is displayed. It handles display within the browser,
+* focus handling, game resizing, scaling and the pause, boot and orientation screens.
+*
+* @class Stage
+* @constructor
+* @param {Phaser.Game} game Game reference to the currently running game.
+* @param {number} width Width of the canvas element
+* @param {number} height Height of the canvas element
+ */
+Phaser.Stage = function (game, width, height) {
+
+	/**
+    * A reference to the currently running Game.
+    * @property game
+    * @public
+    * @type {Phaser.Game}
+    */
+	this.game = game;
+
+    /**
+    * Background color of the stage (defaults to black). Set via the public backgroundColor property.
+    * @property _backgroundColor
+    * @private
+    * @type {string}
+    */
+    this._backgroundColor = &#x27;rgb(0,0,0)&#x27;;
+
+    /**
+    * Get the offset values (for input and other things)
+    * @property offset
+    * @public
+    * @type {Phaser.Point}
+    */
+	this.offset = new Phaser.Point;
     
-
+    /**
+    * reference to the newly created &lt;canvas&gt; element
+    * @property canvas
+    * @public
+    * @type {HTMLCanvasElement}
+    */
+    this.canvas = Phaser.Canvas.create(width, height);    
+    this.canvas.style[&#x27;-webkit-full-screen&#x27;] = &#x27;width: 100%; height: 100%&#x27;;
     
+    /**
+    * The Pixi Stage which is hooked to the renderer
+    * @property _stage
+    * @private
+    * @type {PIXI.Stage}
+    */
+    this._stage = new PIXI.Stage(0x000000, false);
+    this._stage.name = &#x27;_stage_root&#x27;;
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/utils_Debug.js.html#l8"><code>utils\Debug.js:8</code></a>
-        </div>
-    
+    /**
+    * The current scaleMode
+    * @property scaleMode
+    * @public
+    * @type {number}
+    */
+    this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
 
-    
-</div>
+    /**
+    * The scale of the current running game
+    * @property scale
+    * @public
+    * @type {Phaser.StageScaleMode}
+    */
+    this.scale = new Phaser.StageScaleMode(this.game, width, height);
 
+    /**
+    * aspect ratio
+    * @property aspectRatio
+    * @public
+    * @type {number}
+    */
+    this.aspectRatio = width / height;
 
+};
 
-<div class="box intro">
-    
-</div>
+Phaser.Stage.prototype = {
 
+    /**
+    * Initialises the stage and adds the event listeners
+    * @method boot
+    */
+    boot: function () {
 
+        Phaser.Canvas.getOffset(this.canvas, this.offset);
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
+        this.bounds = new Phaser.Rectangle(this.offset.x, this.offset.y, this.game.width, this.game.height);
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/AssetLoader.html">
-                        AssetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BaseTexture.html">
-                        BaseTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapFontLoader.html">
-                        BitmapFontLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapText.html">
-                        BitmapText
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasGraphics.html">
-                        CanvasGraphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasRenderer.html">
-                        CanvasRenderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Circle.html">
-                        Circle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Color.html">
-                        Color
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CustomRenderable.html">
-                        CustomRenderable
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DebugUtils.html">
-                        DebugUtils
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObject.html">
-                        DisplayObject
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObjectContainer.html">
-                        DisplayObjectContainer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Ellipse.html">
-                        Ellipse
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/EventTarget.html">
-                        EventTarget
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Graphics.html">
-                        Graphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/ImageLoader.html">
-                        ImageLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/JsonLoader.html">
-                        JsonLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/MovieClip.html">
-                        MovieClip
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Point.html">
-                        Point
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Polygon.html">
-                        Polygon
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._convex.html">
-                        PolyK._convex
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._PointInTriangle.html">
-                        PolyK._PointInTriangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.AjaxRequest.html">
-                        PolyK.AjaxRequest
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionData.html">
-                        PolyK.InteractionData
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionManager.html">
-                        PolyK.InteractionManager
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Rectangle.html">
-                        Rectangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/RenderTexture.html">
-                        RenderTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Spine.html">
-                        Spine
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Sprite.html">
-                        Sprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/SpriteSheetLoader.html">
-                        SpriteSheetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Stage.html">
-                        Stage
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Text.html">
-                        Text
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Texture.html">
-                        Texture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/TilingSprite.html">
-                        TilingSprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLBatch.html">
-                        WebGLBatch
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLRenderer.html">
-                        WebGLRenderer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
+        var _this = this;
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+        this._onChange = function (event) {
+            return _this.visibilityChange(event);
+        }
+
+        document.addEventListener(&#x27;visibilitychange&#x27;, this._onChange, false);
+        document.addEventListener(&#x27;webkitvisibilitychange&#x27;, this._onChange, false);
+        document.addEventListener(&#x27;pagehide&#x27;, this._onChange, false);
+        document.addEventListener(&#x27;pageshow&#x27;, this._onChange, false);
+
+        window.onblur = this._onChange;
+        window.onfocus = this._onChange;
+
+    },
+
+	/**
+    * This method is called when the document visibility is changed.
+    * @method visibilityChange
+    * @param {Event} event Its type will be used to decide whether the game should be paused or not
+    */
+    visibilityChange: function (event) {
+
+        if (this.disableVisibilityChange)
+        {
+            return;
+        }
+
+        if (event.type == &#x27;pagehide&#x27; || event.type == &#x27;blur&#x27; || document[&#x27;hidden&#x27;] == true || document[&#x27;webkitHidden&#x27;] == true)
+        {
+	        // console.log(&#x27;visibilityChange - hidden&#x27;, event);
+	        this.game.paused = true;
+        }
+        else
+        {
+	        // console.log(&#x27;visibilityChange - shown&#x27;, event);
+	        this.game.paused = false;
+        }
+
+    },
+
+};
+
+Object.defineProperty(Phaser.Stage.prototype, &quot;backgroundColor&quot;, {
+
+    /**
+    * @method backgroundColor
+    * @return {string} returns the background color of the stage
+    */
+    get: function () {
+        return this._backgroundColor;
+    },
+
+    /**
+    * @method backgroundColor
+    * @param {string} the background color you want the stage to have
+    * @return {string} returns the background color of the stage
+    */
+    set: function (color) {
+
+        this._backgroundColor = color;
+
+        if (typeof color === &#x27;string&#x27;)
+        {
+            color = Phaser.Color.hexToRGB(color);
+        }
+
+        this._stage.setBackgroundColor(color);
+
+    }
+
+});
+
+    </pre>
 </div>
 
                     </div>

@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>loader\Loader.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/AnimationManager.html">AnimationManager</a></li>
+            
+                <li><a href="../classes/AssetLoader.html">AssetLoader</a></li>
+            
+                <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
+            
+                <li><a href="../classes/BitmapFontLoader.html">BitmapFontLoader</a></li>
+            
+                <li><a href="../classes/BitmapText.html">BitmapText</a></li>
+            
+                <li><a href="../classes/Button.html">Button</a></li>
+            
+                <li><a href="../classes/Camera.html">Camera</a></li>
+            
+                <li><a href="../classes/Canvas.html">Canvas</a></li>
+            
+                <li><a href="../classes/CanvasGraphics.html">CanvasGraphics</a></li>
+            
+                <li><a href="../classes/CanvasRenderer.html">CanvasRenderer</a></li>
+            
+                <li><a href="../classes/Circle.html">Circle</a></li>
+            
+                <li><a href="../classes/Color.html">Color</a></li>
+            
+                <li><a href="../classes/CustomRenderable.html">CustomRenderable</a></li>
+            
+                <li><a href="../classes/DebugUtils.html">DebugUtils</a></li>
+            
+                <li><a href="../classes/DisplayObject.html">DisplayObject</a></li>
+            
+                <li><a href="../classes/DisplayObjectContainer.html">DisplayObjectContainer</a></li>
+            
+                <li><a href="../classes/Ellipse.html">Ellipse</a></li>
+            
+                <li><a href="../classes/EventTarget.html">EventTarget</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FrameData.html">FrameData</a></li>
+            
+                <li><a href="../classes/Graphics.html">Graphics</a></li>
+            
+                <li><a href="../classes/ImageLoader.html">ImageLoader</a></li>
+            
+                <li><a href="../classes/JsonLoader.html">JsonLoader</a></li>
+            
+                <li><a href="../classes/MovieClip.html">MovieClip</a></li>
+            
+                <li><a href="../classes/Phaser.Animation.html">Phaser.Animation</a></li>
+            
+                <li><a href="../classes/Point.html">Point</a></li>
+            
+                <li><a href="../classes/Polygon.html">Polygon</a></li>
+            
+                <li><a href="../classes/PolyK._convex.html">PolyK._convex</a></li>
+            
+                <li><a href="../classes/PolyK._PointInTriangle.html">PolyK._PointInTriangle</a></li>
+            
+                <li><a href="../classes/PolyK.AjaxRequest.html">PolyK.AjaxRequest</a></li>
+            
+                <li><a href="../classes/PolyK.InteractionData.html">PolyK.InteractionData</a></li>
+            
+                <li><a href="../classes/PolyK.InteractionManager.html">PolyK.InteractionManager</a></li>
+            
+                <li><a href="../classes/Rectangle.html">Rectangle</a></li>
+            
+                <li><a href="../classes/RenderTexture.html">RenderTexture</a></li>
+            
+                <li><a href="../classes/Sound.html">Sound</a></li>
+            
+                <li><a href="../classes/SoundManager.html">SoundManager</a></li>
+            
+                <li><a href="../classes/Spine.html">Spine</a></li>
+            
+                <li><a href="../classes/Sprite.html">Sprite</a></li>
+            
+                <li><a href="../classes/SpriteSheetLoader.html">SpriteSheetLoader</a></li>
+            
+                <li><a href="../classes/Stage.html">Stage</a></li>
+            
+                <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/Texture.html">Texture</a></li>
+            
+                <li><a href="../classes/TilingSprite.html">TilingSprite</a></li>
+            
+                <li><a href="../classes/Time.html">Time</a></li>
+            
+                <li><a href="../classes/Utils.html">Utils</a></li>
+            
+                <li><a href="../classes/WebGLBatch.html">WebGLBatch</a></li>
+            
+                <li><a href="../classes/WebGLRenderer.html">WebGLRenderer</a></li>
+            
+                <li><a href="../classes/World.html">World</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/Phaser.html">Phaser</a></li>
+            
+                <li><a href="../modules/Phaser.Animation.html">Phaser.Animation</a></li>
+            
+                <li><a href="../modules/Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a></li>
+            
+                <li><a href="../modules/Phaser.Button.html">Phaser.Button</a></li>
+            
+                <li><a href="../modules/Phaser.Camera.html">Phaser.Camera</a></li>
+            
+                <li><a href="../modules/Phaser.Canvas.html">Phaser.Canvas</a></li>
+            
+                <li><a href="../modules/Phaser.Stage.html">Phaser.Stage</a></li>
+            
+                <li><a href="../modules/Phaser.Time.html">Phaser.Time</a></li>
+            
+                <li><a href="../modules/Phaser.Utils.html">Phaser.Utils</a></li>
+            
+                <li><a href="../modules/Phaser.World.html">Phaser.World</a></li>
+            
+                <li><a href="../modules/PIXI.html">PIXI</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: loader\Loader.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+* Phaser.Loader
+*
+* The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
+* It uses a combination of Image() loading and xhr and provides progress and completion callbacks.
+*/
+Phaser.Loader = function (game) {
+
+	/**
+	* Local reference to Game.
+	*/
+	this.game = game;
+
+	/**
+	* Array stores assets keys. So you can get that asset by its unique key.
+	*/
+	this._keys = [];
+
+	/**
+	* Contains all the assets file infos.
+	*/
+	this._fileList = {};
+
+	/**
+	* Indicates assets loading progress. (from 0 to 100)
+	* @type {number}
+	*/
+	this._progressChunk = 0;
+
+	/**
+	* An XMLHttpRequest object used for loading text and audio data
+	* @type {XMLHttpRequest}
+	*/
+	this._xhr = new XMLHttpRequest();
+
+	/**
+	* Length of assets queue.
+	* @type {number}
+	*/
+	this.queueSize = 0;
+
+	/**
+	* True if the Loader is in the process of loading the queue.
+	* @type {bool}
+	*/
+	this.isLoading = false;
+
+	/**
+	* True if all assets in the queue have finished loading.
+	* @type {bool}
+	*/
+	this.hasLoaded = false;
+
+	/**
+	* The Load progress percentage value (from 0 to 100)
+	* @type {number}
+	*/
+	this.progress = 0;
+
+	/**
+	* You can optionally link a sprite to the preloader.
+	* If you do so the Sprite&#x27;s width or height will be cropped based on the percentage loaded.
+	*/
+	this.preloadSprite = null;
+
+	/**
+	* The crossOrigin value applied to loaded images
+	* @type {string}
+	*/
+	this.crossOrigin = &#x27;&#x27;;
+
+	/**
+	* If you want to append a URL before the path of any asset you can set this here.
+	* Useful if you need to allow an asset url to be configured outside of the game code.
+	* MUST have / on the end of it!
+	* @type {string}
+	*/
+	this.baseURL = &#x27;&#x27;;
+
+	/**
+	 * Event Signals
+	 */
+	this.onFileComplete = new Phaser.Signal;
+	this.onFileError = new Phaser.Signal;
+	this.onLoadStart = new Phaser.Signal;
+	this.onLoadComplete = new Phaser.Signal;
+
+};
+
+/**
+ * TextureAtlas data format constants
+ */
+Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY = 0;
+Phaser.Loader.TEXTURE_ATLAS_JSON_HASH = 1;
+Phaser.Loader.TEXTURE_ATLAS_XML_STARLING = 2;
+
+Phaser.Loader.prototype = {
+
+	setPreloadSprite: function (sprite, direction) {
+
+		direction = direction || 0;
+
+		this.preloadSprite = { sprite: sprite, direction: direction, width: sprite.width, height: sprite.height, crop: null };
+
+		if (direction == 0)
+		{
+			//	Horizontal crop
+			this.preloadSprite.crop = new Phaser.Rectangle(0, 0, 0, sprite.height);
+		}
+		else
+		{
+			//	Vertical crop
+			this.preloadSprite.crop = new Phaser.Rectangle(0, 0, sprite.width, 0);
+		}
+
+		sprite.crop = this.preloadSprite.crop;
+
+	},
+
+	/**
+	* Check whether asset exists with a specific key.
+	* @param key {string} Key of the asset you want to check.
+	* @return {bool} Return true if exists, otherwise return false.
+	*/
+	checkKeyExists: function (key) {
+
+		if (this._fileList[key])
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
+	},
+
+	/**
+	 * Reset loader, this will remove all loaded assets.
+	 */
+	reset: function () {
+
+		this.preloadSprite = null;
+		this.queueSize = 0;
+		this.isLoading = false;
+
+	},
+
+	/**
+	* Internal function that adds a new entry to the file list.
+	*/
+	addToFileList: function (type, key, url, properties) {
+
+		var entry = {
+			type: type,
+			key: key,
+			url: url,
+			data: null,
+			error: false,
+			loaded: false
+		};
+
+		if (typeof properties !== &quot;undefined&quot;)
+		{
+			for (var prop in properties)
+			{
+				entry[prop] = properties[prop];
+			}
+		}
+
+		this._fileList[key] = entry;
+
+		this._keys.push(key);
+
+		this.queueSize++;
+
+	},
+
+	/**
+	* Add an image to the Loader.
+	* @param key {string} Unique asset key of this image file.
+	* @param url {string} URL of image file.
+	* @param overwrite {boolean} If an entry with a matching key already exists this will over-write it
+	*/
+	image: function (key, url, overwrite) {
+
+		if (typeof overwrite === &quot;undefined&quot;) { overwrite = false; }
+
+		if (overwrite || this.checkKeyExists(key) == false)
+		{
+			this.addToFileList(&#x27;image&#x27;, key, url);
+		}
+
+	},
+
+	/**
+	* Add a text file to the Loader.
+	* @param key {string} Unique asset key of the text file.
+	* @param url {string} URL of the text file.
+	*/
+	text: function (key, url, overwrite) {
+
+		if (typeof overwrite === &quot;undefined&quot;) { overwrite = false; }
+
+		if (overwrite || this.checkKeyExists(key) == false)
+		{
+			this.addToFileList(&#x27;text&#x27;, key, url);
+		}
+
+	},
+
+	/**
+	* Add a new sprite sheet loading request.
+	* @param key {string} Unique asset key of the sheet file.
+	* @param url {string} URL of sheet file.
+	* @param frameWidth {number} Width of each single frame.
+	* @param frameHeight {number} Height of each single frame.
+	* @param frameMax {number} How many frames in this sprite sheet.
+	*/
+	spritesheet: function (key, url, frameWidth, frameHeight, frameMax) {
+
+		if (typeof frameMax === &quot;undefined&quot;) { frameMax = -1; }
+
+		if (this.checkKeyExists(key) === false)
+		{
+			this.addToFileList(&#x27;spritesheet&#x27;, key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax });
+		}
+
+	},
+
+	/**
+	* Add a new audio file loading request.
+	* @param key {string} Unique asset key of the audio file.
+	* @param urls {Array} An array containing the URLs of the audio files, i.e.: [ &#x27;jump.mp3&#x27;, &#x27;jump.ogg&#x27;, &#x27;jump.m4a&#x27; ]
+	* @param autoDecode {bool} When using Web Audio the audio files can either be decoded at load time or run-time. They can&#x27;t be played until they are decoded, but this let&#x27;s you control when that happens. Decoding is a non-blocking async process.
+	*/
+	audio: function (key, urls, autoDecode) {
+
+		if (typeof autoDecode === &quot;undefined&quot;) { autoDecode = true; }
+
+		if (this.checkKeyExists(key) === false)
+		{
+			this.addToFileList(&#x27;audio&#x27;, key, urls, { buffer: null, autoDecode: autoDecode });
+		}
+
+	},
+
+	/**
+	* Add a new tilemap loading request.
+	* @param key {string} Unique asset key of the tilemap data.
+	* @param tilesetURL {string} The url of the tile set image file.
+	* @param [mapDataURL] {string} The url of the map data file (csv/json)
+	* @param [mapData] {object} An optional JSON data object (can be given in place of a URL).
+	* @param [format] {string} The format of the map data.
+	*/
+	tilemap: function (key, tilesetURL, mapDataURL, mapData, format) {
+
+		if (typeof mapDataURL === &quot;undefined&quot;) { mapDataURL = null; }
+		if (typeof mapData === &quot;undefined&quot;) { mapData = null; }
+		if (typeof format === &quot;undefined&quot;) { format = Phaser.Tilemap.CSV; }
+
+		if (this.checkKeyExists(key) === false)
+		{
+			//  A URL to a json/csv file has been given
+			if (mapDataURL)
+			{
+				this.addToFileList(&#x27;tilemap&#x27;, key, tilesetURL, { mapDataURL: mapDataURL, format: format });
+			}
+			else
+			{
+				switch (format)
+				{
+					//  A csv string or object has been given
+					case Phaser.Tilemap.CSV:
+						break;
+
+					//  An xml string or object has been given
+					case Phaser.Tilemap.JSON:
+
+						if (typeof mapData === &#x27;string&#x27;)
+						{
+							mapData = JSON.parse(mapData);
+						}
+						break;
+				}
+
+				this.addToFileList(&#x27;tilemap&#x27;, key, tilesetURL, { mapDataURL: null, mapData: mapData, format: format });
+
+			}
+		}
+
+	},
+
+	/**
+	* Add a new bitmap font loading request.
+	* @param key {string} Unique asset key of the bitmap font.
+	* @param textureURL {string} The url of the font image file.
+	* @param [xmlURL] {string} The url of the font data file (xml/fnt)
+	* @param [xmlData] {object} An optional XML data object.
+	*/
+	bitmapFont: function (key, textureURL, xmlURL, xmlData) {
+
+		if (typeof xmlURL === &quot;undefined&quot;) { xmlURL = null; }
+		if (typeof xmlData === &quot;undefined&quot;) { xmlData = null; }
+
+		if (this.checkKeyExists(key) === false)
+		{
+			//  A URL to a json/xml file has been given
+			if (xmlURL)
+			{
+				this.addToFileList(&#x27;bitmapfont&#x27;, key, textureURL, { xmlURL: xmlURL });
+			}
+			else
+			{
+				//  An xml string or object has been given
+				if (typeof xmlData === &#x27;string&#x27;)
+				{
+					var xml;
+
+					try  {
+						if (window[&#x27;DOMParser&#x27;])
+						{
+							var domparser = new DOMParser();
+							xml = domparser.parseFromString(xmlData, &quot;text/xml&quot;);
+						}
+						else
+						{
+							xml = new ActiveXObject(&quot;Microsoft.XMLDOM&quot;);
+							xml.async = &#x27;false&#x27;;
+							xml.loadXML(xmlData);
+						}
+					}
+					catch (e)
+					{
+						xml = undefined;
+					}
+
+					if (!xml || !xml.documentElement || xml.getElementsByTagName(&quot;parsererror&quot;).length)
+					{
+						throw new Error(&quot;Phaser.Loader. Invalid Bitmap Font XML given&quot;);
+					}
+					else
+					{
+						this.addToFileList(&#x27;bitmapfont&#x27;, key, textureURL, { xmlURL: null, xmlData: xml });
+					}
+				}
+			}
+		}
+
+	},
+
+	atlasJSONArray: function (key, textureURL, atlasURL, atlasData) {
+
+		this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
+
+	},
+
+	atlasJSONHash: function (key, textureURL, atlasURL, atlasData) {
+
+		this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+
+	},
+
+	atlasXML: function (key, textureURL, atlasURL, atlasData) {
+
+		this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_XML_STARLING);
+
+	},
+
+	/**
+	* Add a new texture atlas loading request.
+	* @param key {string} Unique asset key of the texture atlas file.
+	* @param textureURL {string} The url of the texture atlas image file.
+	* @param [atlasURL] {string} The url of the texture atlas data file (json/xml)
+	* @param [atlasData] {object} A JSON or XML data object.
+	* @param [format] {number} A value describing the format of the data.
+	*/
+	atlas: function (key, textureURL, atlasURL, atlasData, format) {
+
+		if (typeof atlasURL === &quot;undefined&quot;) { atlasURL = null; }
+		if (typeof atlasData === &quot;undefined&quot;) { atlasData = null; }
+		if (typeof format === &quot;undefined&quot;) { format = Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY; }
+
+		if (this.checkKeyExists(key) === false)
+		{
+			//  A URL to a json/xml file has been given
+			if (atlasURL)
+			{
+				this.addToFileList(&#x27;textureatlas&#x27;, key, textureURL, { atlasURL: atlasURL, format: format });
+			}
+			else
+			{
+				switch (format)
+				{
+					//  A json string or object has been given
+					case Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY: 
+
+						if (typeof atlasData === &#x27;string&#x27;)
+						{
+							atlasData = JSON.parse(atlasData);
+						}
+						break;
+
+					//  An xml string or object has been given
+					case Phaser.Loader.TEXTURE_ATLAS_XML_STARLING:
+
+						if (typeof atlasData === &#x27;string&#x27;)
+						{
+							var xml;
+
+							try  {
+								if (window[&#x27;DOMParser&#x27;])
+								{
+									var domparser = new DOMParser();
+									xml = domparser.parseFromString(atlasData, &quot;text/xml&quot;);
+								}
+								else
+								{
+									xml = new ActiveXObject(&quot;Microsoft.XMLDOM&quot;);
+									xml.async = &#x27;false&#x27;;
+									xml.loadXML(atlasData);
+								}
+							}
+							catch (e)
+							{
+								xml = undefined;
+							}
+
+							if (!xml || !xml.documentElement || xml.getElementsByTagName(&quot;parsererror&quot;).length)
+							{
+								throw new Error(&quot;Phaser.Loader. Invalid Texture Atlas XML given&quot;);
+							}
+							else
+							{
+								atlasData = xml;
+							}
+						}
+						break;
+				}
+
+				this.addToFileList(&#x27;textureatlas&#x27;, key, textureURL, { atlasURL: null, atlasData: atlasData, format: format });
+
+			}
+
+		}
+
+	},
+
+	/**
+	 * Remove loading request of a file.
+	 * @param key {string} Key of the file you want to remove.
+	 */
+	removeFile: function (key) {
+
+		delete this._fileList[key];
+
+	},
+
+	/**
+	 * Remove all file loading requests.
+	 */
+	removeAll: function () {
+
+		this._fileList = {};
+
+	},
+
+	/**
+	 * Load assets.
+	 */
+	start: function () {
+
+		if (this.isLoading)
+		{
+			return;
+		}
+
+		this.progress = 0;
+		this.hasLoaded = false;
+		this.isLoading = true;
+
+		this.onLoadStart.dispatch(this.queueSize);
+
+		if (this._keys.length &gt; 0)
+		{
+			this._progressChunk = 100 / this._keys.length;
+			this.loadFile();
+		}
+		else
+		{
+			this.progress = 100;
+			this.hasLoaded = true;
+			this.onLoadComplete.dispatch();
+		}
+
+	},
+
+	/**
+	* Load files. Private method ONLY used by loader.
+	* @private
+	*/
+	loadFile: function () {
+
+		var file = this._fileList[this._keys.shift()];
+		var _this = this;
+
+		//  Image or Data?
+		switch (file.type)
+		{
+			case &#x27;image&#x27;:
+			case &#x27;spritesheet&#x27;:
+			case &#x27;textureatlas&#x27;:
+			case &#x27;bitmapfont&#x27;:
+			case &#x27;tilemap&#x27;:
+				file.data = new Image();
+				file.data.name = file.key;
+				file.data.onload = function () {
+					return _this.fileComplete(file.key);
+				};
+				file.data.onerror = function () {
+					return _this.fileError(file.key);
+				};
+				file.data.crossOrigin = this.crossOrigin;
+				file.data.src = this.baseURL + file.url;
+				break;
+
+			case &#x27;audio&#x27;:
+				file.url = this.getAudioURL(file.url);
+
+				if (file.url !== null)
+				{
+					//  WebAudio or Audio Tag?
+					if (this.game.sound.usingWebAudio)
+					{
+						this._xhr.open(&quot;GET&quot;, this.baseURL + file.url, true);
+						this._xhr.responseType = &quot;arraybuffer&quot;;
+						this._xhr.onload = function () {
+							return _this.fileComplete(file.key);
+						};
+						this._xhr.onerror = function () {
+							return _this.fileError(file.key);
+						};
+						this._xhr.send();
+					}
+					else if (this.game.sound.usingAudioTag)
+					{
+						if (this.game.sound.touchLocked)
+						{
+							//  If audio is locked we can&#x27;t do this yet, so need to queue this load request. Bum.
+							file.data = new Audio();
+							file.data.name = file.key;
+							file.data.preload = &#x27;auto&#x27;;
+							file.data.src = this.baseURL + file.url;
+							this.fileComplete(file.key);
+						}
+						else
+						{
+							file.data = new Audio();
+							file.data.name = file.key;
+							file.data.onerror = function () {
+								return _this.fileError(file.key);
+							};
+							file.data.preload = &#x27;auto&#x27;;
+							file.data.src = this.baseURL + file.url;
+							file.data.addEventListener(&#x27;canplaythrough&#x27;, Phaser.GAMES[this.game.id].load.fileComplete(file.key), false);
+							file.data.load();
+						}
+					}
+				}
+				else
+				{
+					this.fileError(file.key);
+				}
+
+				break;
+
+			case &#x27;text&#x27;:
+				this._xhr.open(&quot;GET&quot;, this.baseURL + file.url, true);
+				this._xhr.responseType = &quot;text&quot;;
+				this._xhr.onload = function () {
+					return _this.fileComplete(file.key);
+				};
+				this._xhr.onerror = function () {
+					return _this.fileError(file.key);
+				};
+				this._xhr.send();
+				break;
+		}
+
+	},
+
+	getAudioURL: function (urls) {
+
+		var extension;
+
+		for (var i = 0; i &lt; urls.length; i++)
+		{
+			extension = urls[i].toLowerCase();
+			extension = extension.substr((Math.max(0, extension.lastIndexOf(&quot;.&quot;)) || Infinity) + 1);
+
+			if (this.game.device.canPlayAudio(extension))
+			{
+				return urls[i];
+			}
+
+		}
+
+		return null;
+
+	},
+
+	/**
+	 * Error occured when load a file.
+	 * @param key {string} Key of the error loading file.
+	 */
+	fileError: function (key) {
+
+		this._fileList[key].loaded = true;
+		this._fileList[key].error = true;
+
+		this.onFileError.dispatch(key);
+
+		console.warn(&quot;Phaser.Loader error loading file: &quot; + key);
+
+		this.nextFile(key, false);
+
+	},
+
+	/**
+	 * Called when a file is successfully loaded.
+	 * @param key {string} Key of the successfully loaded file.
+	 */
+	fileComplete: function (key) {
+
+		if (!this._fileList[key])
+		{
+			console.warn(&#x27;Phaser.Loader fileComplete invalid key &#x27; + key);
+			return;
+		}
+		
+		this._fileList[key].loaded = true;
+
+		var file = this._fileList[key];
+		var loadNext = true;
+		var _this = this;
+
+		switch (file.type)
+		{
+			case &#x27;image&#x27;:
+
+				this.game.cache.addImage(file.key, file.url, file.data);
+				break;
+
+			case &#x27;spritesheet&#x27;:
+
+				this.game.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax);
+				break;
+
+			case &#x27;tilemap&#x27;:
+
+				if (file.mapDataURL == null)
+				{
+					this.game.cache.addTilemap(file.key, file.url, file.data, file.mapData, file.format);
+				}
+				else
+				{
+					//  Load the JSON or CSV before carrying on with the next file
+					loadNext = false;
+					this._xhr.open(&quot;GET&quot;, this.baseURL + file.mapDataURL, true);
+					this._xhr.responseType = &quot;text&quot;;
+
+					if (file.format == Phaser.Tilemap.JSON)
+					{
+						this._xhr.onload = function () {
+							return _this.jsonLoadComplete(file.key);
+						};
+					}
+					else if (file.format == Phaser.Tilemap.CSV)
+					{
+						this._xhr.onload = function () {
+							return _this.csvLoadComplete(file.key);
+						};
+					}
+
+					this._xhr.onerror = function () {
+						return _this.dataLoadError(file.key);
+					};
+					this._xhr.send();
+				}
+				break;
+
+			case &#x27;textureatlas&#x27;:
+
+				if (file.atlasURL == null)
+				{
+					this.game.cache.addTextureAtlas(file.key, file.url, file.data, file.atlasData, file.format);
+				}
+				else
+				{
+					//  Load the JSON or XML before carrying on with the next file
+					loadNext = false;
+					this._xhr.open(&quot;GET&quot;, this.baseURL + file.atlasURL, true);
+					this._xhr.responseType = &quot;text&quot;;
+
+					if (file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY || file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
+					{
+						this._xhr.onload = function () {
+							return _this.jsonLoadComplete(file.key);
+						};
+					}
+					else if (file.format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
+					{
+						this._xhr.onload = function () {
+							return _this.xmlLoadComplete(file.key);
+						};
+					}
+
+					this._xhr.onerror = function () {
+						return _this.dataLoadError(file.key);
+					};
+					this._xhr.send();
+				}
+				break;
+
+			case &#x27;bitmapfont&#x27;:
+
+				if (file.xmlURL == null)
+				{
+					this.game.cache.addBitmapFont(file.key, file.url, file.data, file.xmlData);
+				}
+				else
+				{
+					//  Load the XML before carrying on with the next file
+					loadNext = false;
+					this._xhr.open(&quot;GET&quot;, this.baseURL + file.xmlURL, true);
+					this._xhr.responseType = &quot;text&quot;;
+
+					this._xhr.onload = function () {
+						return _this.xmlLoadComplete(file.key);
+					};
+
+					this._xhr.onerror = function () {
+						return _this.dataLoadError(file.key);
+					};
+					this._xhr.send();
+				}
+				break;
+
+			case &#x27;audio&#x27;:
+
+				if (this.game.sound.usingWebAudio)
+				{
+					file.data = this._xhr.response;
+
+					this.game.cache.addSound(file.key, file.url, file.data, true, false);
+
+					if (file.autoDecode)
+					{
+						this.game.cache.updateSound(key, &#x27;isDecoding&#x27;, true);
+
+						var that = this;
+						var key = file.key;
+
+						this.game.sound.context.decodeAudioData(file.data, function (buffer) {
+							if (buffer)
+							{
+								that.game.cache.decodedSound(key, buffer);
+							}
+						});
+					}
+				}
+				else
+				{
+					file.data.removeEventListener(&#x27;canplaythrough&#x27;, Phaser.GAMES[this.game.id].load.fileComplete);
+					this.game.cache.addSound(file.key, file.url, file.data, false, true);
+				}
+				break;
+
+			case &#x27;text&#x27;:
+				file.data = this._xhr.response;
+				this.game.cache.addText(file.key, file.url, file.data);
+				break;
+		}
+
+		if (loadNext)
+		{
+			this.nextFile(key, true);
+		}
+
+	},
+
+	/**
+	 * Successfully loaded a JSON file.
+	 * @param key {string} Key of the loaded JSON file.
+	 */
+	jsonLoadComplete: function (key) {
+
+		var data = JSON.parse(this._xhr.response);
+		var file = this._fileList[key];
+
+		if (file.type == &#x27;tilemap&#x27;)
+		{
+			this.game.cache.addTilemap(file.key, file.url, file.data, data, file.format);
+		}
+		else
+		{
+			this.game.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
+		}
+
+		this.nextFile(key, true);
+
+	},
+
+	/**
+	 * Successfully loaded a CSV file.
+	 * @param key {string} Key of the loaded CSV file.
+	 */
+	csvLoadComplete: function (key) {
+
+		var data = this._xhr.response;
+		var file = this._fileList[key];
+
+		this.game.cache.addTilemap(file.key, file.url, file.data, data, file.format);
+
+		this.nextFile(key, true);
+
+	},
+
+	/**
+	 * Error occured when load a JSON.
+	 * @param key {string} Key of the error loading JSON file.
+	 */
+	dataLoadError: function (key) {
+
+		var file = this._fileList[key];
+
+		file.error = true;
+
+		console.warn(&quot;Phaser.Loader dataLoadError: &quot; + key);
+
+		this.nextFile(key, true);
+
+	},
+
+	xmlLoadComplete: function (key) {
+
+		var data = this._xhr.response;
+		var xml;
+
+		try
+		{
+			if (window[&#x27;DOMParser&#x27;])
+			{
+				var domparser = new DOMParser();
+				xml = domparser.parseFromString(data, &quot;text/xml&quot;);
+			}
+			else
+			{
+				xml = new ActiveXObject(&quot;Microsoft.XMLDOM&quot;);
+				xml.async = &#x27;false&#x27;;
+				xml.loadXML(data);
+			}
+		}
+		catch (e)
+		{
+			xml = undefined;
+		}
+
+		if (!xml || !xml.documentElement || xml.getElementsByTagName(&quot;parsererror&quot;).length)
+		{
+			throw new Error(&quot;Phaser.Loader. Invalid XML given&quot;);
+		}
+
+		var file = this._fileList[key];
+
+		if (file.type == &#x27;bitmapfont&#x27;)
+		{
+			this.game.cache.addBitmapFont(file.key, file.url, file.data, xml);
+		}
+		else if (file.type == &#x27;textureatlas&#x27;)
+		{
+			this.game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
+		}
+
+		this.nextFile(key, true);
+
+	},
+
+	/**
+	 * Handle loading next file.
+	 * @param previousKey {string} Key of previous loaded asset.
+	 * @param success {bool} Whether the previous asset loaded successfully or not.
+	 */
+	nextFile: function (previousKey, success) {
+
+		this.progress = Math.round(this.progress + this._progressChunk);
+
+		if (this.progress &gt; 100)
+		{
+			this.progress = 100;
+		}
+
+		if (this.preloadSprite !== null)
+		{
+			if (this.preloadSprite.direction == 0)
+			{
+				this.preloadSprite.crop.width = (this.preloadSprite.width / 100) * this.progress;
+			}
+			else
+			{
+				this.preloadSprite.crop.height = (this.preloadSprite.height / 100) * this.progress;
+			}
+
+			this.preloadSprite.sprite.crop = this.preloadSprite.crop;
+		}
+
+		this.onFileComplete.dispatch(this.progress, previousKey, success, this.queueSize - this._keys.length, this.queueSize);
+
+		if (this._keys.length &gt; 0)
+		{
+			this.loadFile();
+		}
+		else
+		{
+			this.hasLoaded = true;
+			this.isLoading = false;
+			
+			this.removeAll();
+
+			this.onLoadComplete.dispatch();
+		}
+
+	}
+
+};
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

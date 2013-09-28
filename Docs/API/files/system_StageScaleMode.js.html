@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>system\StageScaleMode.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/AnimationManager.html">AnimationManager</a></li>
+            
+                <li><a href="../classes/AssetLoader.html">AssetLoader</a></li>
+            
+                <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
+            
+                <li><a href="../classes/BitmapFontLoader.html">BitmapFontLoader</a></li>
+            
+                <li><a href="../classes/BitmapText.html">BitmapText</a></li>
+            
+                <li><a href="../classes/Button.html">Button</a></li>
+            
+                <li><a href="../classes/Camera.html">Camera</a></li>
+            
+                <li><a href="../classes/Canvas.html">Canvas</a></li>
+            
+                <li><a href="../classes/CanvasGraphics.html">CanvasGraphics</a></li>
+            
+                <li><a href="../classes/CanvasRenderer.html">CanvasRenderer</a></li>
+            
+                <li><a href="../classes/Circle.html">Circle</a></li>
+            
+                <li><a href="../classes/Color.html">Color</a></li>
+            
+                <li><a href="../classes/CustomRenderable.html">CustomRenderable</a></li>
+            
+                <li><a href="../classes/DebugUtils.html">DebugUtils</a></li>
+            
+                <li><a href="../classes/DisplayObject.html">DisplayObject</a></li>
+            
+                <li><a href="../classes/DisplayObjectContainer.html">DisplayObjectContainer</a></li>
+            
+                <li><a href="../classes/Ellipse.html">Ellipse</a></li>
+            
+                <li><a href="../classes/EventTarget.html">EventTarget</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FrameData.html">FrameData</a></li>
+            
+                <li><a href="../classes/Graphics.html">Graphics</a></li>
+            
+                <li><a href="../classes/ImageLoader.html">ImageLoader</a></li>
+            
+                <li><a href="../classes/JsonLoader.html">JsonLoader</a></li>
+            
+                <li><a href="../classes/MovieClip.html">MovieClip</a></li>
+            
+                <li><a href="../classes/Phaser.Animation.html">Phaser.Animation</a></li>
+            
+                <li><a href="../classes/Point.html">Point</a></li>
+            
+                <li><a href="../classes/Polygon.html">Polygon</a></li>
+            
+                <li><a href="../classes/PolyK._convex.html">PolyK._convex</a></li>
+            
+                <li><a href="../classes/PolyK._PointInTriangle.html">PolyK._PointInTriangle</a></li>
+            
+                <li><a href="../classes/PolyK.AjaxRequest.html">PolyK.AjaxRequest</a></li>
+            
+                <li><a href="../classes/PolyK.InteractionData.html">PolyK.InteractionData</a></li>
+            
+                <li><a href="../classes/PolyK.InteractionManager.html">PolyK.InteractionManager</a></li>
+            
+                <li><a href="../classes/Rectangle.html">Rectangle</a></li>
+            
+                <li><a href="../classes/RenderTexture.html">RenderTexture</a></li>
+            
+                <li><a href="../classes/Sound.html">Sound</a></li>
+            
+                <li><a href="../classes/SoundManager.html">SoundManager</a></li>
+            
+                <li><a href="../classes/Spine.html">Spine</a></li>
+            
+                <li><a href="../classes/Sprite.html">Sprite</a></li>
+            
+                <li><a href="../classes/SpriteSheetLoader.html">SpriteSheetLoader</a></li>
+            
+                <li><a href="../classes/Stage.html">Stage</a></li>
+            
+                <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/Texture.html">Texture</a></li>
+            
+                <li><a href="../classes/TilingSprite.html">TilingSprite</a></li>
+            
+                <li><a href="../classes/Time.html">Time</a></li>
+            
+                <li><a href="../classes/Utils.html">Utils</a></li>
+            
+                <li><a href="../classes/WebGLBatch.html">WebGLBatch</a></li>
+            
+                <li><a href="../classes/WebGLRenderer.html">WebGLRenderer</a></li>
+            
+                <li><a href="../classes/World.html">World</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/Phaser.html">Phaser</a></li>
+            
+                <li><a href="../modules/Phaser.Animation.html">Phaser.Animation</a></li>
+            
+                <li><a href="../modules/Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a></li>
+            
+                <li><a href="../modules/Phaser.Button.html">Phaser.Button</a></li>
+            
+                <li><a href="../modules/Phaser.Camera.html">Phaser.Camera</a></li>
+            
+                <li><a href="../modules/Phaser.Canvas.html">Phaser.Canvas</a></li>
+            
+                <li><a href="../modules/Phaser.Stage.html">Phaser.Stage</a></li>
+            
+                <li><a href="../modules/Phaser.Time.html">Phaser.Time</a></li>
+            
+                <li><a href="../modules/Phaser.Utils.html">Phaser.Utils</a></li>
+            
+                <li><a href="../modules/Phaser.World.html">Phaser.World</a></li>
+            
+                <li><a href="../modules/PIXI.html">PIXI</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: system\StageScaleMode.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+Phaser.StageScaleMode = function (game, width, height) {
+
+    /**
+    * Stage height when start the game.
+    * @type {number}
+    */
+    this._startHeight = 0;
+
+    /**
+    * If the game should be forced to use Landscape mode, this is set to true by Game.Stage
+    * @type {bool}
+    */
+    this.forceLandscape = false;
+
+    /**
+    * If the game should be forced to use Portrait mode, this is set to true by Game.Stage
+    * @type {bool}
+    */
+    this.forcePortrait = false;
+
+    /**
+    * If the game should be forced to use a specific orientation and the device currently isn&#x27;t in that orientation this is set to true.
+    * @type {bool}
+    */
+    this.incorrectOrientation = false;
+
+    /**
+    * If you wish to align your game in the middle of the page then you can set this value to true.
+    * It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.
+    * It doesn&#x27;t care about any other DOM element that may be on the page, it literally just sets the margin.
+    * @type {bool}
+    */
+    this.pageAlignHorizontally = false;
+
+    /**
+    * If you wish to align your game in the middle of the page then you can set this value to true.
+    * It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.
+    * It doesn&#x27;t care about any other DOM element that may be on the page, it literally just sets the margin.
+    * @type {bool}
+    */
+    this.pageAlignVeritcally = false;
+
+    /**
+    * Minimum width the canvas should be scaled to (in pixels)
+    * @type {number}
+    */
+    this.minWidth = null;
+
+    /**
+    * Maximum width the canvas should be scaled to (in pixels).
+    * If null it will scale to whatever width the browser can handle.
+    * @type {number}
+    */
+    this.maxWidth = null;
+
+    /**
+    * Minimum height the canvas should be scaled to (in pixels)
+    * @type {number}
+    */
+    this.minHeight = null;
+
+    /**
+    * Maximum height the canvas should be scaled to (in pixels).
+    * If null it will scale to whatever height the browser can handle.
+    * @type {number}
+    */
+    this.maxHeight = null;
+
+    /**
+    * Width of the stage after calculation.
+    * @type {number}
+    */
+    this.width = 0;
+
+    /**
+    * Height of the stage after calculation.
+    * @type {number}
+    */
+    this.height = 0;
+
+    /**
+    * The maximum number of times it will try to resize the canvas to fill the browser (default is 5)
+    * @type {number}
+    */
+    this.maxIterations = 5;
+    this.game = game;
+
+    this.enterLandscape = new Phaser.Signal();
+    this.enterPortrait = new Phaser.Signal();
+
+    if (window[&#x27;orientation&#x27;])
+    {
+        this.orientation = window[&#x27;orientation&#x27;];
+    }
+    else
+    {
+        if (window.outerWidth &gt; window.outerHeight)
+        {
+            this.orientation = 90;
+        }
+        else
+        {
+            this.orientation = 0;
+        }
+    }
+
+    this.scaleFactor = new Phaser.Point(1, 1);
+    this.aspectRatio = 0;
+
+    var _this = this;
+
+    window.addEventListener(&#x27;orientationchange&#x27;, function (event) {
+        return _this.checkOrientation(event);
+    }, false);
+
+    window.addEventListener(&#x27;resize&#x27;, function (event) {
+        return _this.checkResize(event);
+    }, false);
+	
+};
+
+Phaser.StageScaleMode.EXACT_FIT = 0;
+Phaser.StageScaleMode.NO_SCALE = 1;
+Phaser.StageScaleMode.SHOW_ALL = 2;
+
+Phaser.StageScaleMode.prototype = {
+
+    startFullScreen: function () {
+
+        if (this.isFullScreen)
+        {
+            return;
+        }
+
+        var element = this.game.canvas;
+        
+        if (element[&#x27;requestFullScreen&#x27;])
+        {
+            element[&#x27;requestFullScreen&#x27;]();
+        }
+        else if (element[&#x27;mozRequestFullScreen&#x27;])
+        {
+            element[&#x27;mozRequestFullScreen&#x27;]();
+        }
+        else if (element[&#x27;webkitRequestFullScreen&#x27;])
+        {
+            element[&#x27;webkitRequestFullScreen&#x27;](Element.ALLOW_KEYBOARD_INPUT);
+        }
+
+        this.game.stage.canvas.style[&#x27;width&#x27;] = &#x27;100%&#x27;;
+        this.game.stage.canvas.style[&#x27;height&#x27;] = &#x27;100%&#x27;;
+
+    },
+
+    stopFullScreen: function () {
+
+        if (document[&#x27;cancelFullScreen&#x27;])
+        {
+            document[&#x27;cancelFullScreen&#x27;]();
+        }
+        else if (document[&#x27;mozCancelFullScreen&#x27;])
+        {
+            document[&#x27;mozCancelFullScreen&#x27;]();
+        }
+        else if (document[&#x27;webkitCancelFullScreen&#x27;])
+        {
+            document[&#x27;webkitCancelFullScreen&#x27;]();
+        }
+
+    },
+
+    checkOrientationState: function () {
+
+        //  They are in the wrong orientation
+        if (this.incorrectOrientation)
+        {
+            if ((this.forceLandscape &amp;&amp; window.innerWidth &gt; window.innerHeight) || (this.forcePortrait &amp;&amp; window.innerHeight &gt; window.innerWidth))
+            {
+                //  Back to normal
+                this.game.paused = false;
+                this.incorrectOrientation = false;
+                this.refresh();
+            }
+        }
+        else
+        {
+            if ((this.forceLandscape &amp;&amp; window.innerWidth &lt; window.innerHeight) || (this.forcePortrait &amp;&amp; window.innerHeight &lt; window.innerWidth))
+            {
+                //  Show orientation screen
+                this.game.paused = true;
+                this.incorrectOrientation = true;
+                this.refresh();
+            }
+        }
+    },
+
+	/**
+    * Handle window.orientationchange events
+    */
+    checkOrientation: function (event) {
+
+        this.orientation = window[&#x27;orientation&#x27;];
+
+        if (this.isLandscape)
+        {
+            this.enterLandscape.dispatch(this.orientation, true, false);
+        }
+        else
+        {
+            this.enterPortrait.dispatch(this.orientation, false, true);
+        }
+
+        if (this.game.stage.scaleMode !== Phaser.StageScaleMode.NO_SCALE)
+        {
+            this.refresh();
+        }
+
+    },
+
+	/**
+    * Handle window.resize events
+    */
+    checkResize: function (event) {
+
+        if (window.outerWidth &gt; window.outerHeight)
+        {
+            this.orientation = 90;
+        }
+        else
+        {
+            this.orientation = 0;
+        }
+
+        if (this.isLandscape)
+        {
+            this.enterLandscape.dispatch(this.orientation, true, false);
+        }
+        else
+        {
+            this.enterPortrait.dispatch(this.orientation, false, true);
+        }
+
+        if (this.game.stage.scaleMode !== Phaser.StageScaleMode.NO_SCALE)
+        {
+            this.refresh();
+        }
+    },
+
+	/**
+    * Re-calculate scale mode and update screen size.
+    */
+    refresh: function () {
+
+        var _this = this;
+        
+        //  We can&#x27;t do anything about the status bars in iPads, web apps or desktops
+        if (this.game.device.iPad == false &amp;&amp; this.game.device.webApp == false &amp;&amp; this.game.device.desktop == false)
+        {
+            // document.documentElement[&#x27;style&#x27;].minHeight = &#x27;2000px&#x27;;
+            // this._startHeight = window.innerHeight;
+
+            if (this.game.device.android &amp;&amp; this.game.device.chrome == false)
+            {
+                window.scrollTo(0, 1);
+            }
+            else
+            {
+                window.scrollTo(0, 0);
+            }
+        }
+
+        if (this._check == null &amp;&amp; this.maxIterations &gt; 0)
+        {
+            this._iterations = this.maxIterations;
+            this._check = window.setInterval(function () {
+                return _this.setScreenSize();
+            }, 10);
+            this.setScreenSize();
+        }
+
+    },
+
+	/**
+    * Set screen size automatically based on the scaleMode.
+    */
+    setScreenSize: function (force) {
+
+        if (typeof force == &#x27;undefined&#x27;)
+        {
+            force = false;
+        }
+        
+        if (this.game.device.iPad == false &amp;&amp; this.game.device.webApp == false &amp;&amp; this.game.device.desktop == false) 
+        {
+            if (this.game.device.android &amp;&amp; this.game.device.chrome == false)
+            {
+                window.scrollTo(0, 1);
+            }
+            else
+            {
+                window.scrollTo(0, 0);
+            }
+        }
+
+        this._iterations--;
+
+        if (force || window.innerHeight &gt; this._startHeight || this._iterations &lt; 0)
+        {
+            // Set minimum height of content to new window height
+            document.documentElement[&#x27;style&#x27;].minHeight = window.innerHeight + &#x27;px&#x27;;
+        
+            if (this.incorrectOrientation == true)
+            {
+                this.setMaximum();
+            }
+            else if (this.game.stage.scaleMode == Phaser.StageScaleMode.EXACT_FIT)
+            {
+                this.setExactFit();
+            }
+            else if (this.game.stage.scaleMode == Phaser.StageScaleMode.SHOW_ALL)
+            {
+                this.setShowAll();
+            }
+
+            this.setSize();
+            clearInterval(this._check);
+            this._check = null;
+        }
+
+    },
+
+    setSize: function () {
+
+        if (this.incorrectOrientation == false)
+        {
+            if (this.maxWidth &amp;&amp; this.width &gt; this.maxWidth)
+            {
+                this.width = this.maxWidth;
+            }
+
+            if (this.maxHeight &amp;&amp; this.height &gt; this.maxHeight)
+            {
+                this.height = this.maxHeight;
+            }
+
+            if (this.minWidth &amp;&amp; this.width &lt; this.minWidth)
+            {
+                this.width = this.minWidth;
+            }
+
+            if (this.minHeight &amp;&amp; this.height &lt; this.minHeight)
+            {
+                this.height = this.minHeight;
+            }
+        }
+
+        this.game.canvas.style.width = this.width + &#x27;px&#x27;;
+        this.game.canvas.style.height = this.height + &#x27;px&#x27;;
+        
+        this.game.input.scale.setTo(this.game.width / this.width, this.game.height / this.height);
+
+        if (this.pageAlignHorizontally)
+        {
+            if (this.width &lt; window.innerWidth &amp;&amp; this.incorrectOrientation == false)
+            {
+                this.game.canvas.style.marginLeft = Math.round((window.innerWidth - this.width) / 2) + &#x27;px&#x27;;
+            }
+            else
+            {
+                this.game.canvas.style.marginLeft = &#x27;0px&#x27;;
+            }
+        }
+
+        if (this.pageAlignVeritcally)
+        {
+            if (this.height &lt; window.innerHeight &amp;&amp; this.incorrectOrientation == false)
+            {
+                this.game.canvas.style.marginTop = Math.round((window.innerHeight - this.height) / 2) + &#x27;px&#x27;;
+            }
+            else
+            {
+                this.game.canvas.style.marginTop = &#x27;0px&#x27;;
+            }
+        }
+
+        Phaser.Canvas.getOffset(this.game.canvas, this.game.stage.offset);
+        
+        this.aspectRatio = this.width / this.height;
+        
+        this.scaleFactor.x = this.game.width / this.width;
+        this.scaleFactor.y = this.game.height / this.height;
+
+    },
+
+    setMaximum: function () {
+
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+
+    },
+
+    setShowAll: function () {
+
+        var multiplier = Math.min((window.innerHeight / this.game.height), (window.innerWidth / this.game.width));
+
+        this.width = Math.round(this.game.width * multiplier);
+        this.height = Math.round(this.game.height * multiplier);
+
+    },
+
+    setExactFit: function () {
+
+        var availableWidth = window.innerWidth - 0;
+        var availableHeight = window.innerHeight - 5;
+
+        console.log(&#x27;available&#x27;, availableWidth, availableHeight);
+
+        if (this.maxWidth &amp;&amp; availableWidth &gt; this.maxWidth)
+        {
+            this.width = this.maxWidth;
+        }
+        else
+        {
+            this.width = availableWidth;
+        }
+
+        if (this.maxHeight &amp;&amp; availableHeight &gt; this.maxHeight)
+        {
+            this.height = this.maxHeight;
+        }
+        else
+        {
+            this.height = availableHeight;
+        }
+
+        console.log(&#x27;setExactFit&#x27;, this.width, this.height, this.game.stage.offset);
+
+    }
+
+};
+
+Object.defineProperty(Phaser.StageScaleMode.prototype, &quot;isFullScreen&quot;, {
+
+    get: function () {
+
+        if (document[&#x27;fullscreenElement&#x27;] === null || document[&#x27;mozFullScreenElement&#x27;] === null || document[&#x27;webkitFullscreenElement&#x27;] === null)
+        {
+            return false;
+        }
+
+        return true;
+
+    }
+
+});
+
+Object.defineProperty(Phaser.StageScaleMode.prototype, &quot;isPortrait&quot;, {
+
+    get: function () {
+        return this.orientation == 0 || this.orientation == 180;
+    }
+
+});
+
+Object.defineProperty(Phaser.StageScaleMode.prototype, &quot;isLandscape&quot;, {
+
+    get: function () {
+        return this.orientation === 90 || this.orientation === -90;
+    }
+
+});
+
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>
