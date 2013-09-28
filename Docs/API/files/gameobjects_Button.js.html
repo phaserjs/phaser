@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Phaser</title>
+    <title>gameobjects\Button.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -198,259 +198,200 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Phaser Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: gameobjects\Button.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+* @author       Richard Davey &lt;rich@photonstorm.com&gt;
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.Button
+*/
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/utils_Debug.js.html#l8"><code>utils\Debug.js:8</code></a>
-        </div>
-    
+/**
+* Create a new &lt;code&gt;Button&lt;/code&gt; object.
+* @class Button
+* @constructor
+*
+* @param {Phaser.Game} game Current game instance.
+* @param {number} [x] X position of the button.
+* @param {number} [y] Y position of the button.
+* @param {string} [key] The image key as defined in the Game.Cache to use as the texture for this button.
+* @param {function} [callback] The function to call when this button is pressed
+* @param {object} [callbackContext] The context in which the callback will be called (usually &#x27;this&#x27;)
+* @param {string|number} [overFrame] This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
+* @param {string|number} [outFrame] This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
+* @param {string|number} [downFrame] This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
+*/
+Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame) {
 
-    
-</div>
 
+    x = x || 0;
+    y = y || 0;
+    key = key || null;
+    callback = callback || null;
+    callbackContext = callbackContext || this;
 
+	Phaser.Sprite.call(this, game, x, y, key, outFrame);
 
-<div class="box intro">
-    
-</div>
+    this.type = Phaser.BUTTON;
 
+    this._onOverFrameName = null;
+    this._onOutFrameName = null;
+    this._onDownFrameName = null;
+    this._onUpFrameName = null;
+    this._onOverFrameID = null;
+    this._onOutFrameID = null;
+    this._onDownFrameID = null;
+    this._onUpFrameID = null;
 
+    //  These are the signals the game will subscribe to
+    this.onInputOver = new Phaser.Signal;
+    this.onInputOut = new Phaser.Signal;
+    this.onInputDown = new Phaser.Signal;
+    this.onInputUp = new Phaser.Signal;
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
+    this.setFrames(overFrame, outFrame, downFrame);
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/AssetLoader.html">
-                        AssetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BaseTexture.html">
-                        BaseTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapFontLoader.html">
-                        BitmapFontLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapText.html">
-                        BitmapText
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasGraphics.html">
-                        CanvasGraphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasRenderer.html">
-                        CanvasRenderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Circle.html">
-                        Circle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Color.html">
-                        Color
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CustomRenderable.html">
-                        CustomRenderable
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DebugUtils.html">
-                        DebugUtils
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObject.html">
-                        DisplayObject
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObjectContainer.html">
-                        DisplayObjectContainer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Ellipse.html">
-                        Ellipse
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/EventTarget.html">
-                        EventTarget
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Graphics.html">
-                        Graphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/ImageLoader.html">
-                        ImageLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/JsonLoader.html">
-                        JsonLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/MovieClip.html">
-                        MovieClip
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Point.html">
-                        Point
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Polygon.html">
-                        Polygon
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._convex.html">
-                        PolyK._convex
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._PointInTriangle.html">
-                        PolyK._PointInTriangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.AjaxRequest.html">
-                        PolyK.AjaxRequest
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionData.html">
-                        PolyK.InteractionData
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionManager.html">
-                        PolyK.InteractionManager
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Rectangle.html">
-                        Rectangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/RenderTexture.html">
-                        RenderTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Spine.html">
-                        Spine
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Sprite.html">
-                        Sprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/SpriteSheetLoader.html">
-                        SpriteSheetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Stage.html">
-                        Stage
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Text.html">
-                        Text
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Texture.html">
-                        Texture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/TilingSprite.html">
-                        TilingSprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLBatch.html">
-                        WebGLBatch
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLRenderer.html">
-                        WebGLRenderer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
+    if (callback !== null)
+    {
+        this.onInputUp.add(callback, callbackContext);
+    }
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+    this.input.start(0, false, true);
+
+    //  Redirect the input events to here so we can handle animation updates, etc
+    this.events.onInputOver.add(this.onInputOverHandler, this);
+    this.events.onInputOut.add(this.onInputOutHandler, this);
+    this.events.onInputDown.add(this.onInputDownHandler, this);
+    this.events.onInputUp.add(this.onInputUpHandler, this);
+
+};
+
+Phaser.Button.prototype = Phaser.Utils.extend(true, Phaser.Sprite.prototype, PIXI.Sprite.prototype);
+Phaser.Button.prototype.constructor = Phaser.Button;
+
+/**
+* Used to manually set the frames that will be used for the different states of the button
+* exactly like setting them in the constructor
+*
+* @method setFrames
+* @param {string|number} [overFrame] This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
+* @param {string|number} [outFrame] This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
+* @param {string|number} [downFrame] This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
+*/
+Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
+
+    if (overFrame !== null)
+    {
+        if (typeof overFrame === &#x27;string&#x27;)
+        {
+            this._onOverFrameName = overFrame;
+        }
+        else
+        {
+            this._onOverFrameID = overFrame;
+        }
+    }
+
+    if (outFrame !== null)
+    {
+        if (typeof outFrame === &#x27;string&#x27;)
+        {
+            this._onOutFrameName = outFrame;
+            this._onUpFrameName = outFrame;
+        }
+        else
+        {
+            this._onOutFrameID = outFrame;
+            this._onUpFrameID = outFrame;
+        }
+    }
+
+    if (downFrame !== null)
+    {
+        if (typeof downFrame === &#x27;string&#x27;)
+        {
+            this._onDownFrameName = downFrame;
+        }
+        else
+        {
+            this._onDownFrameID = downFrame;
+        }
+    }
+
+};
+
+Phaser.Button.prototype.onInputOverHandler = function (pointer) {
+
+    if (this._onOverFrameName != null)
+    {
+        this.frameName = this._onOverFrameName;
+    }
+    else if (this._onOverFrameID != null)
+    {
+        this.frame = this._onOverFrameID;
+    }
+
+    if (this.onInputOver)
+    {
+        this.onInputOver.dispatch(this, pointer);
+    }
+};
+
+Phaser.Button.prototype.onInputOutHandler = function (pointer) {
+
+    if (this._onOutFrameName != null)
+    {
+        this.frameName = this._onOutFrameName;
+    }
+    else if (this._onOutFrameID != null)
+    {
+        this.frame = this._onOutFrameID;
+    }
+
+    if (this.onInputOut)
+    {
+        this.onInputOut.dispatch(this, pointer);
+    }
+};
+
+Phaser.Button.prototype.onInputDownHandler = function (pointer) {
+
+    if (this._onDownFrameName != null)
+    {
+        this.frameName = this._onDownFrameName;
+    }
+    else if (this._onDownFrameID != null)
+    {
+        this.frame = this._onDownFrameID;
+    }
+
+    if (this.onInputDown)
+    {
+        this.onInputDown.dispatch(this, pointer);
+    }
+};
+
+Phaser.Button.prototype.onInputUpHandler = function (pointer) {
+
+    if (this._onUpFrameName != null)
+    {
+        this.frameName = this._onUpFrameName;
+    }
+    else if (this._onUpFrameID != null)
+    {
+        this.frame = this._onUpFrameID;
+    }
+
+    if (this.onInputUp)
+    {
+        this.onInputUp.dispatch(this, pointer);
+    }
+};
+
+    </pre>
 </div>
 
                     </div>

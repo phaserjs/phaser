@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>core\Camera.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/AnimationManager.html">AnimationManager</a></li>
+            
+                <li><a href="../classes/AssetLoader.html">AssetLoader</a></li>
+            
+                <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
+            
+                <li><a href="../classes/BitmapFontLoader.html">BitmapFontLoader</a></li>
+            
+                <li><a href="../classes/BitmapText.html">BitmapText</a></li>
+            
+                <li><a href="../classes/Button.html">Button</a></li>
+            
+                <li><a href="../classes/Camera.html">Camera</a></li>
+            
+                <li><a href="../classes/Canvas.html">Canvas</a></li>
+            
+                <li><a href="../classes/CanvasGraphics.html">CanvasGraphics</a></li>
+            
+                <li><a href="../classes/CanvasRenderer.html">CanvasRenderer</a></li>
+            
+                <li><a href="../classes/Circle.html">Circle</a></li>
+            
+                <li><a href="../classes/Color.html">Color</a></li>
+            
+                <li><a href="../classes/CustomRenderable.html">CustomRenderable</a></li>
+            
+                <li><a href="../classes/DebugUtils.html">DebugUtils</a></li>
+            
+                <li><a href="../classes/DisplayObject.html">DisplayObject</a></li>
+            
+                <li><a href="../classes/DisplayObjectContainer.html">DisplayObjectContainer</a></li>
+            
+                <li><a href="../classes/Ellipse.html">Ellipse</a></li>
+            
+                <li><a href="../classes/EventTarget.html">EventTarget</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FrameData.html">FrameData</a></li>
+            
+                <li><a href="../classes/Graphics.html">Graphics</a></li>
+            
+                <li><a href="../classes/ImageLoader.html">ImageLoader</a></li>
+            
+                <li><a href="../classes/JsonLoader.html">JsonLoader</a></li>
+            
+                <li><a href="../classes/MovieClip.html">MovieClip</a></li>
+            
+                <li><a href="../classes/Phaser.Animation.html">Phaser.Animation</a></li>
+            
+                <li><a href="../classes/Point.html">Point</a></li>
+            
+                <li><a href="../classes/Polygon.html">Polygon</a></li>
+            
+                <li><a href="../classes/PolyK._convex.html">PolyK._convex</a></li>
+            
+                <li><a href="../classes/PolyK._PointInTriangle.html">PolyK._PointInTriangle</a></li>
+            
+                <li><a href="../classes/PolyK.AjaxRequest.html">PolyK.AjaxRequest</a></li>
+            
+                <li><a href="../classes/PolyK.InteractionData.html">PolyK.InteractionData</a></li>
+            
+                <li><a href="../classes/PolyK.InteractionManager.html">PolyK.InteractionManager</a></li>
+            
+                <li><a href="../classes/Rectangle.html">Rectangle</a></li>
+            
+                <li><a href="../classes/RenderTexture.html">RenderTexture</a></li>
+            
+                <li><a href="../classes/Sound.html">Sound</a></li>
+            
+                <li><a href="../classes/SoundManager.html">SoundManager</a></li>
+            
+                <li><a href="../classes/Spine.html">Spine</a></li>
+            
+                <li><a href="../classes/Sprite.html">Sprite</a></li>
+            
+                <li><a href="../classes/SpriteSheetLoader.html">SpriteSheetLoader</a></li>
+            
+                <li><a href="../classes/Stage.html">Stage</a></li>
+            
+                <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/Texture.html">Texture</a></li>
+            
+                <li><a href="../classes/TilingSprite.html">TilingSprite</a></li>
+            
+                <li><a href="../classes/Time.html">Time</a></li>
+            
+                <li><a href="../classes/Utils.html">Utils</a></li>
+            
+                <li><a href="../classes/WebGLBatch.html">WebGLBatch</a></li>
+            
+                <li><a href="../classes/WebGLRenderer.html">WebGLRenderer</a></li>
+            
+                <li><a href="../classes/World.html">World</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/Phaser.html">Phaser</a></li>
+            
+                <li><a href="../modules/Phaser.Animation.html">Phaser.Animation</a></li>
+            
+                <li><a href="../modules/Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a></li>
+            
+                <li><a href="../modules/Phaser.Button.html">Phaser.Button</a></li>
+            
+                <li><a href="../modules/Phaser.Camera.html">Phaser.Camera</a></li>
+            
+                <li><a href="../modules/Phaser.Canvas.html">Phaser.Canvas</a></li>
+            
+                <li><a href="../modules/Phaser.Stage.html">Phaser.Stage</a></li>
+            
+                <li><a href="../modules/Phaser.Time.html">Phaser.Time</a></li>
+            
+                <li><a href="../modules/Phaser.Utils.html">Phaser.Utils</a></li>
+            
+                <li><a href="../modules/Phaser.World.html">Phaser.World</a></li>
+            
+                <li><a href="../modules/PIXI.html">PIXI</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: core\Camera.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+* @author       Richard Davey &lt;rich@photonstorm.com&gt;
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.Camera
+*/
+
+/**
+*
+* A Camera is your view into the game world. It has a position and size and renders only those objects within its field of view.
+* The game automatically creates a single Stage sized camera on boot. Move the camera around the world with Phaser.Camera.x/y
+*
+* @class Camera
+* @constructor
+* @param {Phaser.Game} game game reference to the currently running game.
+* @param {number} id not being used at the moment, will be when Phaser supports multiple camera
+* @param {number} x position of the camera on the X axis
+* @param {number} y position of the camera on the Y axis
+* @param {number} width the width of the view rectangle
+* @param {number} height the height of the view rectangle
+*/
+
+Phaser.Camera = function (game, id, x, y, width, height) {
+
+    /**
+    * A reference to the currently running Game.
+    * @property game
+    * @public
+    * @type {Phaser.Game}
+    */
+	this.game = game;
+
+    /**
+    * A reference to the game world
+    * @property world
+    * @public
+    * @type {Phaser.World}
+    */
+	this.world = game.world;
+
+    /**
+    * reserved for future multiple camera set-ups
+    * @property id
+    * @public
+    * @type {number}
+    */
+	this.id = 0; 
+
+    /**
+    * Camera view.
+    * The view into the world we wish to render (by default the game dimensions)
+    * The x/y values are in world coordinates, not screen coordinates, the width/height is how many pixels to render
+    * Objects outside of this view are not rendered (unless set to ignore the Camera, i.e. UI?)
+    * @property view
+    * @public
+    * @type {Phaser.Rectangle}
+    */
+    this.view = new Phaser.Rectangle(x, y, width, height);
+
+    /**
+    * Used by Sprites to work out Camera culling.
+    * @property screenView
+    * @public
+    * @type {Phaser.Rectangle}
+    */
+	this.screenView = new Phaser.Rectangle(x, y, width, height);
+
+    /**
+    * Sprite moving inside this Rectangle will not cause camera moving.
+    * @property deadzone
+    * @type {Phaser.Rectangle}
+    */
+    this.deadzone = null;
+
+    /**
+    * Whether this camera is visible or not. (default is true)
+    * @property visible
+    * @public
+    * @default true
+    * @type {bool}
+    */
+    this.visible = true;
+
+    /**
+    * Whether this camera is flush with the World Bounds or not.
+    * @property atLimit
+    * @type {bool}
+    */
+    this.atLimit = { x: false, y: false };
+
+    /**
+    * If the camera is tracking a Sprite, this is a reference to it, otherwise null
+    * @property target
+    * @public
+    * @type {Phaser.Sprite}
+    */
+    this.target = null;
+
+    /**
+    * Edge property
+    * @property edge
+    * @private
+    * @type {number}
+    */
+    this._edge = 0;
+	
+};
+
+//	Consts
+Phaser.Camera.FOLLOW_LOCKON = 0;
+Phaser.Camera.FOLLOW_PLATFORMER = 1;
+Phaser.Camera.FOLLOW_TOPDOWN = 2;
+Phaser.Camera.FOLLOW_TOPDOWN_TIGHT = 3;
+
+Phaser.Camera.prototype = {
+
+	/**
+    * Tells this camera which sprite to follow.
+    * @method follow
+    * @param {Phaser.Sprite} target The object you want the camera to track. Set to null to not follow anything.
+    * @param {number} [style] Leverage one of the existing &quot;deadzone&quot; presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
+    */
+    follow: function (target, style) {
+
+        if (typeof style === &quot;undefined&quot;) { style = Phaser.Camera.FOLLOW_LOCKON; }
+
+        this.target = target;
+
+        var helper;
+
+        switch (style) {
+
+            case Phaser.Camera.FOLLOW_PLATFORMER:
+                var w = this.width / 8;
+                var h = this.height / 3;
+                this.deadzone = new Phaser.Rectangle((this.width - w) / 2, (this.height - h) / 2 - h * 0.25, w, h);
+                break;
+
+            case Phaser.Camera.FOLLOW_TOPDOWN:
+                helper = Math.max(this.width, this.height) / 4;
+                this.deadzone = new Phaser.Rectangle((this.width - helper) / 2, (this.height - helper) / 2, helper, helper);
+                break;
+
+            case Phaser.Camera.FOLLOW_TOPDOWN_TIGHT:
+                helper = Math.max(this.width, this.height) / 8;
+                this.deadzone = new Phaser.Rectangle((this.width - helper) / 2, (this.height - helper) / 2, helper, helper);
+                break;
+
+            case Phaser.Camera.FOLLOW_LOCKON:
+            default:
+                this.deadzone = null;
+                break;
+        }
+
+    },
+
+	/**
+    * Move the camera focus to a location instantly.
+    * @method focusOnXY
+    * @param {number} x X position.
+    * @param {number} y Y position.
+    */
+    focusOnXY: function (x, y) {
+
+        this.view.x = Math.round(x - this.view.halfWidth);
+        this.view.y = Math.round(y - this.view.halfHeight);
+
+    },
+
+	/**
+    * Update focusing and scrolling.
+    * @method update
+    */
+    update: function () {
+
+        //  Add dirty flag
+
+        if (this.target !== null)
+        {
+            if (this.deadzone)
+            {
+                this._edge = this.target.x - this.deadzone.x;
+
+                if (this.view.x &gt; this._edge)
+                {
+                    this.view.x = this._edge;
+                }
+
+                this._edge = this.target.x + this.target.width - this.deadzone.x - this.deadzone.width;
+
+                if (this.view.x &lt; this._edge)
+                {
+                    this.view.x = this._edge;
+                }
+
+                this._edge = this.target.y - this.deadzone.y;
+
+                if (this.view.y &gt; this._edge)
+                {
+                    this.view.y = this._edge;
+                }
+
+                this._edge = this.target.y + this.target.height - this.deadzone.y - this.deadzone.height;
+
+                if (this.view.y &lt; this._edge)
+                {
+                    this.view.y = this._edge;
+                }
+            }
+            else
+            {
+                this.focusOnXY(this.target.x, this.target.y);
+            }
+        }
+
+        this.checkWorldBounds();
+
+    },
+
+    /**
+    * Method called to ensure the camera doesn&#x27;t venture outside of the game world
+    * @method checkWorldBounds
+    */
+    checkWorldBounds: function () {
+
+        this.atLimit.x = false;
+        this.atLimit.y = false;
+
+        //  Make sure we didn&#x27;t go outside the cameras worldBounds
+        if (this.view.x &lt; this.world.bounds.left)
+        {
+            this.atLimit.x = true;
+            this.view.x = this.world.bounds.left;
+        }
+
+        if (this.view.x &gt; this.world.bounds.right - this.width)
+        {
+            this.atLimit.x = true;
+            this.view.x = (this.world.bounds.right - this.width) + 1;
+        }
+
+        if (this.view.y &lt; this.world.bounds.top)
+        {
+            this.atLimit.y = true;
+            this.view.y = this.world.bounds.top;
+        }
+
+        if (this.view.y &gt; this.world.bounds.bottom - this.height)
+        {
+            this.atLimit.y = true;
+            this.view.y = (this.world.bounds.bottom - this.height) + 1;
+        }
+
+        this.view.floor();
+
+    },
+
+    /**
+    * A helper function to set both the X and Y properties of the camera at once
+    * without having to use game.camera.x and game.camera.y
+    * 
+    * @method setPosition
+    * @param {number} x X position.
+    * @param {number} y Y position.
+    */
+    setPosition: function (x, y) {
+
+        this.view.x = x;
+        this.view.y = y;
+        this.checkWorldBounds();
+
+    },
+
+    /**
+    * Sets the size of the view rectangle given the width and height in parameters
+    * 
+    * @method setSize
+    * @param {number} width The desired width.
+    * @param {number} height The desired height.
+    */
+    setSize: function (width, height) {
+
+        this.view.width = width;
+        this.view.height = height;
+
+    }
+
+};
+
+Object.defineProperty(Phaser.Camera.prototype, &quot;x&quot;, {
+
+    /**
+    * @method x
+    * @return {Number} The x position
+    */
+    get: function () {
+        return this.view.x;
+    },
+    /**
+    * @method x
+    * @return {Number} Sets the camera&#x27;s x position and clamp it if it&#x27;s outside the world bounds
+    */
+    set: function (value) {
+        this.view.x = value;
+        this.checkWorldBounds();
+    }
+
+});
+
+Object.defineProperty(Phaser.Camera.prototype, &quot;y&quot;, {
+
+    /**
+    * @method y
+    * @return {Number} The y position
+    */
+    get: function () {
+        return this.view.y;
+    },
+
+    /**
+    * @method y
+    * @return {Number} Sets the camera&#x27;s y position and clamp it if it&#x27;s outside the world bounds
+    */
+    set: function (value) {
+        this.view.y = value;
+        this.checkWorldBounds();
+    }
+
+});
+
+Object.defineProperty(Phaser.Camera.prototype, &quot;width&quot;, {
+
+    /**
+    * @method width
+    * @return {Number} The width of the view rectangle, in pixels
+    */
+    get: function () {
+        return this.view.width;
+    },
+
+    /**
+    * @method width
+    * @return {Number} Sets the width of the view rectangle
+    */
+    set: function (value) {
+        this.view.width = value;
+    }
+
+});
+
+Object.defineProperty(Phaser.Camera.prototype, &quot;height&quot;, {
+
+    /**
+    * @method height
+    * @return {Number} The height of the view rectangle, in pixels
+    */
+    get: function () {
+        return this.view.height;
+    },
+
+    /**
+    * @method height
+    * @return {Number} Sets the height of the view rectangle
+    */
+    set: function (value) {
+        this.view.height = value;
+    }
+
+});
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

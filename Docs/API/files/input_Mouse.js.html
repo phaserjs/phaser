@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Phaser</title>
+    <title>input\Mouse.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -198,259 +198,202 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Phaser Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: input\Mouse.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+Phaser.Mouse = function (game) {
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/utils_Debug.js.html#l8"><code>utils\Debug.js:8</code></a>
-        </div>
-    
+	this.game = game;
+	this.callbackContext = this.game;
 
-    
-</div>
+	this.mouseDownCallback = null;
+	this.mouseMoveCallback = null;
+	this.mouseUpCallback = null;
 
+};
 
+Phaser.Mouse.LEFT_BUTTON = 0;
+Phaser.Mouse.MIDDLE_BUTTON = 1;
+Phaser.Mouse.RIGHT_BUTTON = 2;
 
-<div class="box intro">
-    
-</div>
+Phaser.Mouse.prototype = {
 
+	game: null,
 
+    /**
+    * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+    * @type {bool}
+    */
+	disabled: false,
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
+    /**
+    * If the mouse has been Pointer Locked successfully this will be set to true.
+    * @type {bool}
+    */
+    locked: false,
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/AssetLoader.html">
-                        AssetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BaseTexture.html">
-                        BaseTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapFontLoader.html">
-                        BitmapFontLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapText.html">
-                        BitmapText
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasGraphics.html">
-                        CanvasGraphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasRenderer.html">
-                        CanvasRenderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Circle.html">
-                        Circle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Color.html">
-                        Color
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CustomRenderable.html">
-                        CustomRenderable
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DebugUtils.html">
-                        DebugUtils
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObject.html">
-                        DisplayObject
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObjectContainer.html">
-                        DisplayObjectContainer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Ellipse.html">
-                        Ellipse
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/EventTarget.html">
-                        EventTarget
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Graphics.html">
-                        Graphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/ImageLoader.html">
-                        ImageLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/JsonLoader.html">
-                        JsonLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/MovieClip.html">
-                        MovieClip
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Point.html">
-                        Point
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Polygon.html">
-                        Polygon
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._convex.html">
-                        PolyK._convex
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._PointInTriangle.html">
-                        PolyK._PointInTriangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.AjaxRequest.html">
-                        PolyK.AjaxRequest
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionData.html">
-                        PolyK.InteractionData
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionManager.html">
-                        PolyK.InteractionManager
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Rectangle.html">
-                        Rectangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/RenderTexture.html">
-                        RenderTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Spine.html">
-                        Spine
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Sprite.html">
-                        Sprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/SpriteSheetLoader.html">
-                        SpriteSheetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Stage.html">
-                        Stage
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Text.html">
-                        Text
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Texture.html">
-                        Texture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/TilingSprite.html">
-                        TilingSprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLBatch.html">
-                        WebGLBatch
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLRenderer.html">
-                        WebGLRenderer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
+	/**
+    * Starts the event listeners running
+    * @method start
+    */
+    start: function () {
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+        var _this = this;
+
+        if (this.game.device.android &amp;&amp; this.game.device.chrome == false)
+        {
+            //  Android stock browser fires mouse events even if you preventDefault on the touchStart, so ...
+            return;
+        }
+
+        this._onMouseDown = function (event) {
+            return _this.onMouseDown(event);
+        };
+
+        this._onMouseMove = function (event) {
+            return _this.onMouseMove(event);
+        };
+
+        this._onMouseUp = function (event) {
+            return _this.onMouseUp(event);
+        };
+
+        this.game.renderer.view.addEventListener(&#x27;mousedown&#x27;, this._onMouseDown, true);
+        this.game.renderer.view.addEventListener(&#x27;mousemove&#x27;, this._onMouseMove, true);
+        this.game.renderer.view.addEventListener(&#x27;mouseup&#x27;, this._onMouseUp, true);
+
+    },
+
+	/**
+    * @param {MouseEvent} event
+    */
+    onMouseDown: function (event) {
+
+        if (this.mouseDownCallback)
+        {
+            this.mouseDownCallback.call(this.callbackContext, event);
+        }
+
+        if (this.game.input.disabled || this.disabled)
+        {
+            return;
+        }
+
+        event[&#x27;identifier&#x27;] = 0;
+
+        this.game.input.mousePointer.start(event);
+
+    },
+
+	/**
+    * @param {MouseEvent} event
+    */
+    onMouseMove: function (event) {
+
+        if (this.mouseMoveCallback)
+        {
+            this.mouseMoveCallback.call(this.callbackContext, event);
+        }
+
+        if (this.game.input.disabled || this.disabled)
+        {
+            return;
+        }
+
+        event[&#x27;identifier&#x27;] = 0;
+
+        this.game.input.mousePointer.move(event);
+
+    },
+
+	/**
+    * @param {MouseEvent} event
+    */
+    onMouseUp: function (event) {
+
+        if (this.mouseUpCallback)
+        {
+            this.mouseUpCallback.call(this.callbackContext, event);
+        }
+
+        if (this.game.input.disabled || this.disabled)
+        {
+            return;
+        }
+
+        event[&#x27;identifier&#x27;] = 0;
+
+        this.game.input.mousePointer.stop(event);
+
+    },
+
+    requestPointerLock: function () {
+
+        if (this.game.device.pointerLock)
+        {
+            var element = this.game.stage.canvas;
+
+            element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+
+            element.requestPointerLock();
+
+            var _this = this;
+
+            this._pointerLockChange = function (event) {
+                return _this.pointerLockChange(event);
+            };
+
+            document.addEventListener(&#x27;pointerlockchange&#x27;, this._pointerLockChange, false);
+            document.addEventListener(&#x27;mozpointerlockchange&#x27;, this._pointerLockChange, false);
+            document.addEventListener(&#x27;webkitpointerlockchange&#x27;, this._pointerLockChange, false);
+        }
+
+    },
+
+    pointerLockChange: function (event) {
+
+        var element = this.game.stage.canvas;
+
+        if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element)
+        {
+            //  Pointer was successfully locked
+            this.locked = true;
+        }
+        else
+        {
+            //  Pointer was unlocked
+            this.locked = false;
+        }
+
+    },
+
+    releasePointerLock: function () {
+
+        document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock || document.webkitExitPointerLock;
+
+        document.exitPointerLock();
+
+        document.removeEventListener(&#x27;pointerlockchange&#x27;, this._pointerLockChange);
+        document.removeEventListener(&#x27;mozpointerlockchange&#x27;, this._pointerLockChange);
+        document.removeEventListener(&#x27;webkitpointerlockchange&#x27;, this._pointerLockChange);
+
+    },
+
+	/**
+    * Stop the event listeners
+    * @method stop
+    */
+    stop: function () {
+
+        this.game.stage.canvas.removeEventListener(&#x27;mousedown&#x27;, this._onMouseDown);
+        this.game.stage.canvas.removeEventListener(&#x27;mousemove&#x27;, this._onMouseMove);
+        this.game.stage.canvas.removeEventListener(&#x27;mouseup&#x27;, this._onMouseUp);
+
+    }
+
+};
+    </pre>
 </div>
 
                     </div>

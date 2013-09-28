@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Phaser</title>
+    <title>math\RandomDataGenerator.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -198,259 +198,245 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Phaser Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: math\RandomDataGenerator.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+* Phaser.RandomDataGenerator
+*
+* An extremely useful repeatable random data generator. Access it via Phaser.Game.rnd
+* Based on Nonsense by Josh Faul https://github.com/jocafa/Nonsense
+* Random number generator from http://baagoe.org/en/wiki/Better_random_numbers_for_javascript
+*/
+Phaser.RandomDataGenerator = function (seeds) {
+	
+	if (typeof seeds === &quot;undefined&quot;) { seeds = []; }
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/utils_Debug.js.html#l8"><code>utils\Debug.js:8</code></a>
-        </div>
-    
+	this.sow(seeds);
 
-    
-</div>
+};
 
+Phaser.RandomDataGenerator.prototype = {
 
+	/**
+	* @property c
+	* @type Number
+	* @private
+	*/
+	c: 1,
 
-<div class="box intro">
-    
-</div>
+	/**
+	* @property s0
+	* @type Number
+	* @private
+	*/
+	s0: 0,
 
+	/**
+	* @property s1
+	* @type Number
+	* @private
+	*/
+	s1: 0,
 
+	/**
+	* @property s2
+	* @type Number
+	* @private
+	*/
+	s2: 0,
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
+	/**
+	* Private random helper
+	* @method rnd
+	* @private
+	*/
+	rnd: function () {
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/AssetLoader.html">
-                        AssetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BaseTexture.html">
-                        BaseTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapFontLoader.html">
-                        BitmapFontLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapText.html">
-                        BitmapText
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasGraphics.html">
-                        CanvasGraphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasRenderer.html">
-                        CanvasRenderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Circle.html">
-                        Circle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Color.html">
-                        Color
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CustomRenderable.html">
-                        CustomRenderable
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DebugUtils.html">
-                        DebugUtils
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObject.html">
-                        DisplayObject
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObjectContainer.html">
-                        DisplayObjectContainer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Ellipse.html">
-                        Ellipse
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/EventTarget.html">
-                        EventTarget
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Graphics.html">
-                        Graphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/ImageLoader.html">
-                        ImageLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/JsonLoader.html">
-                        JsonLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/MovieClip.html">
-                        MovieClip
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Point.html">
-                        Point
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Polygon.html">
-                        Polygon
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._convex.html">
-                        PolyK._convex
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._PointInTriangle.html">
-                        PolyK._PointInTriangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.AjaxRequest.html">
-                        PolyK.AjaxRequest
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionData.html">
-                        PolyK.InteractionData
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionManager.html">
-                        PolyK.InteractionManager
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Rectangle.html">
-                        Rectangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/RenderTexture.html">
-                        RenderTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Spine.html">
-                        Spine
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Sprite.html">
-                        Sprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/SpriteSheetLoader.html">
-                        SpriteSheetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Stage.html">
-                        Stage
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Text.html">
-                        Text
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Texture.html">
-                        Texture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/TilingSprite.html">
-                        TilingSprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLBatch.html">
-                        WebGLBatch
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLRenderer.html">
-                        WebGLRenderer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
+		var t = 2091639 * this.s0 + this.c * 2.3283064365386963e-10; // 2^-32
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+		this.c = t | 0;
+		this.s0 = this.s1;
+		this.s1 = this.s2;
+		this.s2 = t - this.c;
+
+		return this.s2;
+	},
+
+	/**
+	* Reset the seed of the random data generator
+	* @method sow
+	* @param {Array} seeds
+	*/
+	sow: function (seeds) {
+
+		if (typeof seeds === &quot;undefined&quot;) { seeds = []; }
+
+		this.s0 = this.hash(&#x27; &#x27;);
+		this.s1 = this.hash(this.s0);
+		this.s2 = this.hash(this.s1);
+
+		var seed;
+
+		for (var i = 0; seed = seeds[i++]; ) {
+			this.s0 -= this.hash(seed);
+			this.s0 += ~~(this.s0 &lt; 0);
+			this.s1 -= this.hash(seed);
+			this.s1 += ~~(this.s1 &lt; 0);
+			this.s2 -= this.hash(seed);
+			this.s2 += ~~(this.s2 &lt; 0);
+		}
+		
+	},
+
+	/**
+	* @method hash
+	* @param {Any} data
+	* @private
+	*/
+	hash: function (data) {
+
+		var h, i, n;
+		n = 0xefc8249d;
+		data = data.toString();
+
+		for (i = 0; i &lt; data.length; i++) {
+			n += data.charCodeAt(i);
+			h = 0.02519603282416938 * n;
+			n = h &gt;&gt;&gt; 0;
+			h -= n;
+			h *= n;
+			n = h &gt;&gt;&gt; 0;
+			h -= n;
+			n += h * 0x100000000;// 2^32
+		}
+
+		return (n &gt;&gt;&gt; 0) * 2.3283064365386963e-10;// 2^-32
+
+	},
+
+	/**
+	* Returns a random integer between 0 and 2^32
+	* @method integer
+	* @return {Number}
+	*/
+	integer: function() {
+		return this.rnd.apply(this) * 0x100000000;// 2^32
+	},
+
+	/**
+	* Returns a random real number between 0 and 1
+	* @method frac
+	* @return {Number}
+	*/	
+	frac: function() {
+		return this.rnd.apply(this) + (this.rnd.apply(this) * 0x200000 | 0) * 1.1102230246251565e-16;// 2^-53
+	},
+
+	/**
+	* Returns a random real number between 0 and 2^32
+	* @method real
+	* @return {Number}
+	*/
+	real: function() {
+		return this.integer() + this.frac();
+	},
+
+	/**
+	* Returns a random integer between min and max
+	* @method integerInRange
+	* @param {Number} min
+	* @param {Number} max
+	* @return {Number}
+	*/
+	integerInRange: function (min, max) {
+		return Math.floor(this.realInRange(min, max));
+	},
+
+	/**
+	* Returns a random real number between min and max
+	* @method realInRange
+	* @param {Number} min
+	* @param {Number} max
+	* @return {Number}
+	*/
+	realInRange: function (min, max) {
+
+		min = min || 0;
+		max = max || 0;
+
+		return this.frac() * (max - min) + min;
+
+	},
+
+	/**
+	* Returns a random real number between -1 and 1
+	* @method normal
+	* @return {Number}
+	*/
+	normal: function () {
+		return 1 - 2 * this.frac();
+	},
+
+	/**
+	* Returns a valid RFC4122 version4 ID hex string (from https://gist.github.com/1308368)
+	* @method uuid
+	* @return {String}
+	*/
+	uuid: function () {
+
+		var a, b;
+
+		for (
+			b=a=&#x27;&#x27;;
+			a++&lt;36;
+			b+=~a%5|a*3&amp;4?(a^15?8^this.frac()*(a^20?16:4):4).toString(16):&#x27;-&#x27;
+		);
+
+		return b;
+
+	},
+
+	/**
+	* Returns a random member of &#x60;array&#x60;
+	* @method pick
+	* @param {Any} array
+	*/
+	pick: function (ary) {
+		return ary[this.integerInRange(0, ary.length)];
+	},
+
+	/**
+	* Returns a random member of &#x60;array&#x60;, favoring the earlier entries
+	* @method weightedPick
+	* @param {Any} array
+	*/
+	weightedPick: function (ary) {
+		return ary[~~(Math.pow(this.frac(), 2) * ary.length)];
+	},
+
+	/**
+	* Returns a random timestamp between min and max, or between the beginning of 2000 and the end of 2020 if min and max aren&#x27;t specified
+	* @method timestamp
+	* @param {Number} min
+	* @param {Number} max
+	*/
+	timestamp: function (a, b) {
+		return this.realInRange(a || 946684800000, b || 1577862000000);
+	},
+
+	/**
+	* Returns a random angle between -180 and 180
+	* @method angle
+	*/
+	angle: function() {
+		return this.integerInRange(-180, 180);
+	}
+
+};
+
+    </pre>
 </div>
 
                     </div>

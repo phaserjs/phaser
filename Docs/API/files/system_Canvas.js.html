@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>system\Canvas.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/AnimationManager.html">AnimationManager</a></li>
+            
+                <li><a href="../classes/AssetLoader.html">AssetLoader</a></li>
+            
+                <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
+            
+                <li><a href="../classes/BitmapFontLoader.html">BitmapFontLoader</a></li>
+            
+                <li><a href="../classes/BitmapText.html">BitmapText</a></li>
+            
+                <li><a href="../classes/Button.html">Button</a></li>
+            
+                <li><a href="../classes/Camera.html">Camera</a></li>
+            
+                <li><a href="../classes/Canvas.html">Canvas</a></li>
+            
+                <li><a href="../classes/CanvasGraphics.html">CanvasGraphics</a></li>
+            
+                <li><a href="../classes/CanvasRenderer.html">CanvasRenderer</a></li>
+            
+                <li><a href="../classes/Circle.html">Circle</a></li>
+            
+                <li><a href="../classes/Color.html">Color</a></li>
+            
+                <li><a href="../classes/CustomRenderable.html">CustomRenderable</a></li>
+            
+                <li><a href="../classes/DebugUtils.html">DebugUtils</a></li>
+            
+                <li><a href="../classes/DisplayObject.html">DisplayObject</a></li>
+            
+                <li><a href="../classes/DisplayObjectContainer.html">DisplayObjectContainer</a></li>
+            
+                <li><a href="../classes/Ellipse.html">Ellipse</a></li>
+            
+                <li><a href="../classes/EventTarget.html">EventTarget</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FrameData.html">FrameData</a></li>
+            
+                <li><a href="../classes/Graphics.html">Graphics</a></li>
+            
+                <li><a href="../classes/ImageLoader.html">ImageLoader</a></li>
+            
+                <li><a href="../classes/JsonLoader.html">JsonLoader</a></li>
+            
+                <li><a href="../classes/MovieClip.html">MovieClip</a></li>
+            
+                <li><a href="../classes/Phaser.Animation.html">Phaser.Animation</a></li>
+            
+                <li><a href="../classes/Point.html">Point</a></li>
+            
+                <li><a href="../classes/Polygon.html">Polygon</a></li>
+            
+                <li><a href="../classes/PolyK._convex.html">PolyK._convex</a></li>
+            
+                <li><a href="../classes/PolyK._PointInTriangle.html">PolyK._PointInTriangle</a></li>
+            
+                <li><a href="../classes/PolyK.AjaxRequest.html">PolyK.AjaxRequest</a></li>
+            
+                <li><a href="../classes/PolyK.InteractionData.html">PolyK.InteractionData</a></li>
+            
+                <li><a href="../classes/PolyK.InteractionManager.html">PolyK.InteractionManager</a></li>
+            
+                <li><a href="../classes/Rectangle.html">Rectangle</a></li>
+            
+                <li><a href="../classes/RenderTexture.html">RenderTexture</a></li>
+            
+                <li><a href="../classes/Sound.html">Sound</a></li>
+            
+                <li><a href="../classes/SoundManager.html">SoundManager</a></li>
+            
+                <li><a href="../classes/Spine.html">Spine</a></li>
+            
+                <li><a href="../classes/Sprite.html">Sprite</a></li>
+            
+                <li><a href="../classes/SpriteSheetLoader.html">SpriteSheetLoader</a></li>
+            
+                <li><a href="../classes/Stage.html">Stage</a></li>
+            
+                <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/Texture.html">Texture</a></li>
+            
+                <li><a href="../classes/TilingSprite.html">TilingSprite</a></li>
+            
+                <li><a href="../classes/Time.html">Time</a></li>
+            
+                <li><a href="../classes/Utils.html">Utils</a></li>
+            
+                <li><a href="../classes/WebGLBatch.html">WebGLBatch</a></li>
+            
+                <li><a href="../classes/WebGLRenderer.html">WebGLRenderer</a></li>
+            
+                <li><a href="../classes/World.html">World</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/Phaser.html">Phaser</a></li>
+            
+                <li><a href="../modules/Phaser.Animation.html">Phaser.Animation</a></li>
+            
+                <li><a href="../modules/Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a></li>
+            
+                <li><a href="../modules/Phaser.Button.html">Phaser.Button</a></li>
+            
+                <li><a href="../modules/Phaser.Camera.html">Phaser.Camera</a></li>
+            
+                <li><a href="../modules/Phaser.Canvas.html">Phaser.Canvas</a></li>
+            
+                <li><a href="../modules/Phaser.Stage.html">Phaser.Stage</a></li>
+            
+                <li><a href="../modules/Phaser.Time.html">Phaser.Time</a></li>
+            
+                <li><a href="../modules/Phaser.Utils.html">Phaser.Utils</a></li>
+            
+                <li><a href="../modules/Phaser.World.html">Phaser.World</a></li>
+            
+                <li><a href="../modules/PIXI.html">PIXI</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: system\Canvas.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+* @author       Richard Davey &lt;rich@photonstorm.com&gt;
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.Canvas
+*/
+
+/**
+* The Canvas class handles everything related to the &lt;canvas&gt; tag as a DOM Element, like styles, offset, aspect ratio
+*
+* @class Canvas
+* @static
+*/
+
+Phaser.Canvas = {
+    /**
+    * Creates the &lt;canvas&gt; tag
+    *
+    * @method create
+    * @param {number} width The desired width
+    * @param {number} height The desired height
+    * @return {HTMLCanvasElement} the newly created &lt;canvas&gt; tag
+    */
+    create: function (width, height) {
+
+        width = width || 256;
+        height = height || 256;
+
+        var canvas = document.createElement(&#x27;canvas&#x27;);
+        canvas.width = width;
+        canvas.height = height;
+        canvas.style.display = &#x27;block&#x27;;
+
+        return canvas;
+
+    },
+
+    /**
+    * Get the DOM offset values of any given element
+    * @method getOffset
+    * @param {HTMLElement} element The targeted element that we want to retrieve the offset
+    * @param {Phaser.Point} [point] The point we want to take the x/y values of the offset
+    * @return point {Phaser.Point} A point objet with the offsetX and Y as its properties
+    */    
+    getOffset: function (element, point) {
+
+        point = point || new Phaser.Point;
+
+        var box = element.getBoundingClientRect();
+        var clientTop = element.clientTop || document.body.clientTop || 0;
+        var clientLeft = element.clientLeft || document.body.clientLeft || 0;
+        var scrollTop = window.pageYOffset || element.scrollTop || document.body.scrollTop;
+        var scrollLeft = window.pageXOffset || element.scrollLeft || document.body.scrollLeft;
+
+        point.x = box.left + scrollLeft - clientLeft;
+        point.y = box.top + scrollTop - clientTop;
+
+        return point;
+
+    },
+
+    /**
+    * Returns the aspect ratio of the given canvas.
+    *
+    * @method getAspectRatio
+    * @param {HTMLCanvasElement} canvas The canvas to get the aspect ratio from.
+    * @return {Number} Returns true on success
+    */        
+    getAspectRatio: function (canvas) {
+        return canvas.width / canvas.height;
+    },
+
+    /**
+    * Sets the background color behind the canvas. This changes the canvas style property.
+    *
+    * @method setBackgroundColor
+    * @param {HTMLCanvasElement} canvas The canvas to set the background color on.
+    * @param {String} color The color to set. Can be in the format &#x27;rgb(r,g,b)&#x27;, or &#x27;#RRGGBB&#x27; or any valid CSS color.
+    * @return {HTMLCanvasElement} Returns the source canvas.
+    */
+    setBackgroundColor: function (canvas, color) {
+
+        color = color || &#x27;rgb(0,0,0)&#x27;;
+
+        canvas.style.backgroundColor = color;
+        
+        return canvas;
+
+    },
+
+    /**
+    * Sets the touch-action property on the canvas style. Can be used to disable default browser touch actions.
+    *
+    * @method setTouchAction
+    * @param {HTMLCanvasElement} canvas The canvas to set the touch action on.
+    * @param {String} value The touch action to set. Defaults to &#x27;none&#x27;.
+    * @return {HTMLCanvasElement} Returns the source canvas.
+    */
+    setTouchAction: function (canvas, value) {
+
+        value = value || &#x27;none&#x27;;
+
+        canvas.style.msTouchAction = value;
+        canvas.style[&#x27;ms-touch-action&#x27;] = value;
+        canvas.style[&#x27;touch-action&#x27;] = value;
+
+        return canvas;
+
+    },
+
+    /**
+    * Adds the given canvas element to the DOM. The canvas will be added as a child of the given parent.
+    * If no parent is given it will be added as a child of the document.body.
+    *
+    * @method addToDOM
+    * @param {HTMLCanvasElement} canvas The canvas to set the touch action on.
+    * @param {String} parent The DOM element to add the canvas to. Defaults to &#x27;&#x27;.
+    * @param {bool} overflowHidden If set to true it will add the overflow=&#x27;hidden&#x27; style to the parent DOM element.
+    * @return {HTMLCanvasElement} Returns the source canvas.
+    */
+    addToDOM: function (canvas, parent, overflowHidden) {
+
+        parent = parent || &#x27;&#x27;;
+
+        if (typeof overflowHidden === &#x27;undefined&#x27;) { overflowHidden = true; }
+
+        if (parent !== &#x27;&#x27;)
+        {
+            if (document.getElementById(parent))
+            {
+                document.getElementById(parent).appendChild(canvas);
+
+                if (overflowHidden)
+                {
+                    document.getElementById(parent).style.overflow = &#x27;hidden&#x27;;
+                }
+            }
+            else
+            {
+                document.body.appendChild(canvas);
+            }
+        }
+        else
+        {
+            document.body.appendChild(canvas);
+        }
+
+        return canvas;
+
+    },
+
+    /**
+    * Sets the transform of the given canvas to the matrix values provided.
+    *
+    * @method setTransform
+    * @param {CanvasRenderingContext2D} context The context to set the transform on.
+    * @param {Number} translateX The value to translate horizontally by.
+    * @param {Number} translateY The value to translate vertically by.
+    * @param {Number} scaleX The value to scale horizontally by.
+    * @param {Number} scaleY The value to scale vertically by.
+    * @param {Number} skewX The value to skew horizontaly by.
+    * @param {Number} skewY The value to skew vertically by.
+    * @return {CanvasRenderingContext2D} Returns the source context.
+    */
+    setTransform: function (context, translateX, translateY, scaleX, scaleY, skewX, skewY) {
+
+        context.setTransform(scaleX, skewX, skewY, scaleY, translateX, translateY);
+
+        return context;
+
+    },
+
+    /**
+    * Sets the Image Smoothing property on the given context. Set to false to disable image smoothing.
+    * By default browsers have image smoothing enabled, which isn&#x27;t always what you visually want, especially
+    * when using pixel art in a game. Note that this sets the property on the context itself, so that any image
+    * drawn to the context will be affected. This sets the property across all current browsers but support is
+    * patchy on earlier browsers, especially on mobile.
+    *
+    * @method setSmoothingEnabled
+    * @param {CanvasRenderingContext2D} context The context to enable or disable the image smoothing on.
+    * @param {bool} value If set to true it will enable image smoothing, false will disable it.
+    * @return {CanvasRenderingContext2D} Returns the source context.
+    */
+    setSmoothingEnabled: function (context, value) {
+
+        context[&#x27;imageSmoothingEnabled&#x27;] = value;
+        context[&#x27;mozImageSmoothingEnabled&#x27;] = value;
+        context[&#x27;oImageSmoothingEnabled&#x27;] = value;
+        context[&#x27;webkitImageSmoothingEnabled&#x27;] = value;
+        context[&#x27;msImageSmoothingEnabled&#x27;] = value;
+
+        return context;
+
+    },
+
+    /**
+    * Sets the CSS image-rendering property on the given canvas to be &#x27;crisp&#x27; (aka &#x27;optimize contrast on webkit&#x27;).
+    * Note that if this doesn&#x27;t given the desired result then see the setSmoothingEnabled.
+    *
+    * @method setImageRenderingCrisp
+    * @param {HTMLCanvasElement} canvas The canvas to set image-rendering crisp on.
+    * @return {HTMLCanvasElement} Returns the source canvas.
+    */
+    setImageRenderingCrisp: function (canvas) {
+
+        canvas.style[&#x27;image-rendering&#x27;] = &#x27;crisp-edges&#x27;;
+        canvas.style[&#x27;image-rendering&#x27;] = &#x27;-moz-crisp-edges&#x27;;
+        canvas.style[&#x27;image-rendering&#x27;] = &#x27;-webkit-optimize-contrast&#x27;;
+        canvas.style.msInterpolationMode = &#x27;nearest-neighbor&#x27;;
+
+        return canvas;
+
+    },
+
+    /**
+    * Sets the CSS image-rendering property on the given canvas to be &#x27;bicubic&#x27; (aka &#x27;auto&#x27;).
+    * Note that if this doesn&#x27;t given the desired result then see the CanvasUtils.setSmoothingEnabled method.
+    *
+    * @method setImageRenderingBicubic
+    * @param {HTMLCanvasElement} canvas The canvas to set image-rendering bicubic on.
+    * @return {HTMLCanvasElement} Returns the source canvas.
+    */
+    setImageRenderingBicubic: function (canvas) {
+
+        canvas.style[&#x27;image-rendering&#x27;] = &#x27;auto&#x27;;
+        canvas.style.msInterpolationMode = &#x27;bicubic&#x27;;
+
+        return canvas;
+
+    }
+
+};
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Phaser</title>
+    <title>gameobjects\GameObjectFactory.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -198,259 +198,138 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Phaser Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: gameobjects\GameObjectFactory.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+Phaser.GameObjectFactory = function (game) {
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/utils_Debug.js.html#l8"><code>utils\Debug.js:8</code></a>
-        </div>
-    
+	this.game = game;
+	this.world = this.game.world;
 
-    
-</div>
+};
 
+Phaser.GameObjectFactory.prototype = {
 
+	game: null,
+    world: null,
 
-<div class="box intro">
-    
-</div>
+    existing: function (object) {
 
+        return this.world.group.add(object);
 
+    },
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
+	/**
+    * Create a new Sprite with specific position and sprite sheet key.
+    *
+    * @param x {number} X position of the new sprite.
+    * @param y {number} Y position of the new sprite.
+    * @param [key] {string|RenderTexture} The image key as defined in the Game.Cache to use as the texture for this sprite OR a RenderTexture
+    * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
+    * @returns {Sprite} The newly created sprite object.
+    */
+    sprite: function (x, y, key, frame) {
+
+        return this.world.group.add(new Phaser.Sprite(this.game, x, y, key, frame));
+
+    },
+
+    /**
+    * Create a new Sprite with specific position and sprite sheet key that will automatically be added as a child of the given parent.
+    *
+    * @param x {number} X position of the new sprite.
+    * @param y {number} Y position of the new sprite.
+    * @param [key] {string|RenderTexture} The image key as defined in the Game.Cache to use as the texture for this sprite OR a RenderTexture
+    * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
+    * @returns {Sprite} The newly created sprite object.
+    */
+    child: function (parent, x, y, key, frame) {
+
+        var child = this.world.group.add(new Phaser.Sprite(this.game, x, y, key, frame));
+        parent.addChild(child);
+        return child;
+
+    },
+
+    /**
+    * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
+    *
+    * @param obj {object} Object the tween will be run on.
+    * @return {Phaser.Tween} The newly created tween object.
+    */
+    tween: function (obj) {
+
+        return this.game.tweens.create(obj);
+
+    },
+
+    group: function (parent, name) {
+
+        return new Phaser.Group(this.game, parent, name);
+
+    },
+
+    audio: function (key, volume, loop) {
+
+        return this.game.sound.add(key, volume, loop);
         
-            <p>This module provides the following classes:</p>
+    },
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/AssetLoader.html">
-                        AssetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BaseTexture.html">
-                        BaseTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapFontLoader.html">
-                        BitmapFontLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapText.html">
-                        BitmapText
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasGraphics.html">
-                        CanvasGraphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasRenderer.html">
-                        CanvasRenderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Circle.html">
-                        Circle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Color.html">
-                        Color
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CustomRenderable.html">
-                        CustomRenderable
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DebugUtils.html">
-                        DebugUtils
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObject.html">
-                        DisplayObject
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObjectContainer.html">
-                        DisplayObjectContainer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Ellipse.html">
-                        Ellipse
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/EventTarget.html">
-                        EventTarget
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Graphics.html">
-                        Graphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/ImageLoader.html">
-                        ImageLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/JsonLoader.html">
-                        JsonLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/MovieClip.html">
-                        MovieClip
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Point.html">
-                        Point
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Polygon.html">
-                        Polygon
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._convex.html">
-                        PolyK._convex
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._PointInTriangle.html">
-                        PolyK._PointInTriangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.AjaxRequest.html">
-                        PolyK.AjaxRequest
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionData.html">
-                        PolyK.InteractionData
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionManager.html">
-                        PolyK.InteractionManager
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Rectangle.html">
-                        Rectangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/RenderTexture.html">
-                        RenderTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Spine.html">
-                        Spine
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Sprite.html">
-                        Sprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/SpriteSheetLoader.html">
-                        SpriteSheetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Stage.html">
-                        Stage
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Text.html">
-                        Text
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Texture.html">
-                        Texture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/TilingSprite.html">
-                        TilingSprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLBatch.html">
-                        WebGLBatch
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLRenderer.html">
-                        WebGLRenderer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
+    tileSprite: function (x, y, width, height, key, frame) {
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+        return this.world.group.add(new Phaser.TileSprite(this.game, x, y, width, height, key, frame));
+
+    },
+
+    text: function (x, y, text, style) {
+
+        return this.world.group.add(new Phaser.Text(this.game, x, y, text, style));
+
+    },
+
+    button: function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame) {
+
+        return this.world.group.add(new Phaser.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
+
+    },
+
+    graphics: function (x, y) {
+
+        return this.world.group.add(new Phaser.Graphics(this.game, x, y));
+
+    },
+
+    emitter: function (x, y, maxParticles) {
+
+        return this.game.particles.add(new Phaser.Particles.Arcade.Emitter(this.game, x, y, maxParticles));
+
+    },
+
+    bitmapText: function (x, y, text, style) {
+
+        return this.world.group.add(new Phaser.BitmapText(this.game, x, y, text, style));
+
+    },
+
+    tilemap: function (x, y, key, resizeWorld, tileWidth, tileHeight) {
+
+        return this.world.group.add(new Phaser.Tilemap(this.game, key, x, y, resizeWorld, tileWidth, tileHeight));
+
+    },
+
+    renderTexture: function (key, width, height) {
+
+        var texture = new Phaser.RenderTexture(this.game, key, width, height);
+
+        this.game.cache.addRenderTexture(key, texture);
+
+        return texture;
+
+    },
+
+};
+    </pre>
 </div>
 
                     </div>

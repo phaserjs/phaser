@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Phaser</title>
+    <title>pixi\renderers\webgl\WebGLShaders.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -198,259 +198,243 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Phaser Module</h1>
-<div class="box clearfix meta">
+                        <h1 class="file-heading">File: pixi\renderers\webgl\WebGLShaders.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
+
+
+/*
+ * the default suoer fast shader!
+ */
+
+PIXI.shaderFragmentSrc = [
+  &quot;precision mediump float;&quot;,
+  &quot;varying vec2 vTextureCoord;&quot;,
+  &quot;varying float vColor;&quot;,
+  &quot;uniform sampler2D uSampler;&quot;,
+  &quot;void main(void) {&quot;,
+    &quot;gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y));&quot;,
+    &quot;gl_FragColor = gl_FragColor * vColor;&quot;,
+  &quot;}&quot;
+];
+
+PIXI.shaderVertexSrc = [
+  &quot;attribute vec2 aVertexPosition;&quot;,
+  &quot;attribute vec2 aTextureCoord;&quot;,
+  &quot;attribute float aColor;&quot;,
+  //&quot;uniform mat4 uMVMatrix;&quot;,
+  
+  &quot;uniform vec2 projectionVector;&quot;,
+  &quot;varying vec2 vTextureCoord;&quot;,
+  &quot;varying float vColor;&quot;,
+  &quot;void main(void) {&quot;,
+   // &quot;gl_Position = uMVMatrix * vec4(aVertexPosition, 1.0, 1.0);&quot;,
+    &quot;gl_Position = vec4( aVertexPosition.x / projectionVector.x -1.0, aVertexPosition.y / -projectionVector.y + 1.0 , 0.0, 1.0);&quot;,
+    &quot;vTextureCoord = aTextureCoord;&quot;,
+    &quot;vColor = aColor;&quot;,
+  &quot;}&quot;
+];
+
+/*
+ * the triangle strip shader..
+ */
+
+PIXI.stripShaderFragmentSrc = [
+  &quot;precision mediump float;&quot;,
+  &quot;varying vec2 vTextureCoord;&quot;,
+  &quot;varying float vColor;&quot;,
+  &quot;uniform float alpha;&quot;,
+  &quot;uniform sampler2D uSampler;&quot;,
+  &quot;void main(void) {&quot;,
+    &quot;gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y));&quot;,
+    &quot;gl_FragColor = gl_FragColor * alpha;&quot;,
+  &quot;}&quot;
+];
+
+
+PIXI.stripShaderVertexSrc = [
+  &quot;attribute vec2 aVertexPosition;&quot;,
+  &quot;attribute vec2 aTextureCoord;&quot;,
+  &quot;attribute float aColor;&quot;,
+  &quot;uniform mat3 translationMatrix;&quot;,
+  &quot;uniform vec2 projectionVector;&quot;,
+  &quot;varying vec2 vTextureCoord;&quot;,
+  &quot;varying float vColor;&quot;,
+  &quot;void main(void) {&quot;,
+	&quot;vec3 v = translationMatrix * vec3(aVertexPosition, 1.0);&quot;,
+    &quot;gl_Position = vec4( v.x / projectionVector.x -1.0, v.y / -projectionVector.y + 1.0 , 0.0, 1.0);&quot;,
+    &quot;vTextureCoord = aTextureCoord;&quot;,
+    &quot;vColor = aColor;&quot;,
+  &quot;}&quot;
+];
+
+
+/*
+ * primitive shader..
+ */
+
+PIXI.primitiveShaderFragmentSrc = [
+  &quot;precision mediump float;&quot;,
+  &quot;varying vec4 vColor;&quot;,
+  &quot;void main(void) {&quot;,
+    &quot;gl_FragColor = vColor;&quot;,
+  &quot;}&quot;
+];
+
+PIXI.primitiveShaderVertexSrc = [
+  &quot;attribute vec2 aVertexPosition;&quot;,
+  &quot;attribute vec4 aColor;&quot;,
+  &quot;uniform mat3 translationMatrix;&quot;,
+  &quot;uniform vec2 projectionVector;&quot;,
+  &quot;uniform float alpha;&quot;,
+  &quot;varying vec4 vColor;&quot;,
+  &quot;void main(void) {&quot;,
+  	&quot;vec3 v = translationMatrix * vec3(aVertexPosition, 1.0);&quot;,
+    &quot;gl_Position = vec4( v.x / projectionVector.x -1.0, v.y / -projectionVector.y + 1.0 , 0.0, 1.0);&quot;,
+    &quot;vColor = aColor  * alpha;&quot;,
+  &quot;}&quot;
+];
+
+PIXI.initPrimitiveShader = function() 
+{
+	var gl = PIXI.gl;
+
+	var shaderProgram = PIXI.compileProgram(PIXI.primitiveShaderVertexSrc, PIXI.primitiveShaderFragmentSrc)
+	
+    gl.useProgram(shaderProgram);
+
+    shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, &quot;aVertexPosition&quot;);
+    shaderProgram.colorAttribute = gl.getAttribLocation(shaderProgram, &quot;aColor&quot;);
     
-
+    shaderProgram.projectionVector = gl.getUniformLocation(shaderProgram, &quot;projectionVector&quot;);
+    shaderProgram.translationMatrix = gl.getUniformLocation(shaderProgram, &quot;translationMatrix&quot;);
     
+	shaderProgram.alpha = gl.getUniformLocation(shaderProgram, &quot;alpha&quot;);
 
+	PIXI.primitiveProgram = shaderProgram;
+}
+
+PIXI.initDefaultShader = function() 
+{
+	var gl = this.gl;
+	var shaderProgram = PIXI.compileProgram(PIXI.shaderVertexSrc, PIXI.shaderFragmentSrc)
+	
+    gl.useProgram(shaderProgram);
+
+    shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, &quot;aVertexPosition&quot;);
+    shaderProgram.projectionVector = gl.getUniformLocation(shaderProgram, &quot;projectionVector&quot;);
+    shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, &quot;aTextureCoord&quot;);
+	shaderProgram.colorAttribute = gl.getAttribLocation(shaderProgram, &quot;aColor&quot;);
+
+   // shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, &quot;uMVMatrix&quot;);
+    shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, &quot;uSampler&quot;);
     
-        <div class="foundat">
-            Defined in: <a href="../files/utils_Debug.js.html#l8"><code>utils\Debug.js:8</code></a>
-        </div>
+	PIXI.shaderProgram = shaderProgram;
+}
+
+PIXI.initDefaultStripShader = function() 
+{
+	var gl = this.gl;
+	var shaderProgram = PIXI.compileProgram(PIXI.stripShaderVertexSrc, PIXI.stripShaderFragmentSrc)
+	
+    gl.useProgram(shaderProgram);
+
+    shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, &quot;aVertexPosition&quot;);
+    shaderProgram.projectionVector = gl.getUniformLocation(shaderProgram, &quot;projectionVector&quot;);
+    shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, &quot;aTextureCoord&quot;);
+	shaderProgram.translationMatrix = gl.getUniformLocation(shaderProgram, &quot;translationMatrix&quot;);
+	shaderProgram.alpha = gl.getUniformLocation(shaderProgram, &quot;alpha&quot;);
+
+	shaderProgram.colorAttribute = gl.getAttribLocation(shaderProgram, &quot;aColor&quot;);
+
+    shaderProgram.projectionVector = gl.getUniformLocation(shaderProgram, &quot;projectionVector&quot;);
     
-
+    shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, &quot;uSampler&quot;);
     
-</div>
+	PIXI.stripShaderProgram = shaderProgram;
+}
+
+PIXI.CompileVertexShader = function(gl, shaderSrc)
+{
+  return PIXI._CompileShader(gl, shaderSrc, gl.VERTEX_SHADER);
+}
+
+PIXI.CompileFragmentShader = function(gl, shaderSrc)
+{
+  return PIXI._CompileShader(gl, shaderSrc, gl.FRAGMENT_SHADER);
+}
+
+PIXI._CompileShader = function(gl, shaderSrc, shaderType)
+{
+  var src = shaderSrc.join(&quot;\n&quot;);
+  var shader = gl.createShader(shaderType);
+  gl.shaderSource(shader, src);
+  gl.compileShader(shader);
+
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    alert(gl.getShaderInfoLog(shader));
+    return null;
+  }
+
+  return shader;
+}
 
 
+PIXI.compileProgram = function(vertexSrc, fragmentSrc)
+{
+	var gl = PIXI.gl;
+	var fragmentShader = PIXI.CompileFragmentShader(gl, fragmentSrc);
+	var vertexShader = PIXI.CompileVertexShader(gl, vertexSrc);
+	
+	var shaderProgram = gl.createProgram();
+	
+    gl.attachShader(shaderProgram, vertexShader);
+    gl.attachShader(shaderProgram, fragmentShader);
+    gl.linkProgram(shaderProgram);
 
-<div class="box intro">
+    if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+        alert(&quot;Could not initialise shaders&quot;);
+    }
+
+	return shaderProgram;
+} 
+
+
+PIXI.activateDefaultShader = function()
+{
+	var gl = PIXI.gl;
+	var shaderProgram = PIXI.shaderProgram;
+	
+	gl.useProgram(shaderProgram);
+	
+	
+	gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+    gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
+    gl.enableVertexAttribArray(shaderProgram.colorAttribute);
+}
+
+	
+
+PIXI.activatePrimitiveShader = function()
+{
+	var gl = PIXI.gl;
+	
+	gl.disableVertexAttribArray(PIXI.shaderProgram.textureCoordAttribute);
+    gl.disableVertexAttribArray(PIXI.shaderProgram.colorAttribute);
     
-</div>
+	gl.useProgram(PIXI.primitiveProgram);
+	
+	gl.enableVertexAttribArray(PIXI.primitiveProgram.vertexPositionAttribute);
+	gl.enableVertexAttribArray(PIXI.primitiveProgram.colorAttribute);
+} 
 
 
-
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
-
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/AssetLoader.html">
-                        AssetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BaseTexture.html">
-                        BaseTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapFontLoader.html">
-                        BitmapFontLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapText.html">
-                        BitmapText
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasGraphics.html">
-                        CanvasGraphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasRenderer.html">
-                        CanvasRenderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Circle.html">
-                        Circle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Color.html">
-                        Color
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CustomRenderable.html">
-                        CustomRenderable
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DebugUtils.html">
-                        DebugUtils
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObject.html">
-                        DisplayObject
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObjectContainer.html">
-                        DisplayObjectContainer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Ellipse.html">
-                        Ellipse
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/EventTarget.html">
-                        EventTarget
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Graphics.html">
-                        Graphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/ImageLoader.html">
-                        ImageLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/JsonLoader.html">
-                        JsonLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/MovieClip.html">
-                        MovieClip
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Point.html">
-                        Point
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Polygon.html">
-                        Polygon
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._convex.html">
-                        PolyK._convex
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._PointInTriangle.html">
-                        PolyK._PointInTriangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.AjaxRequest.html">
-                        PolyK.AjaxRequest
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionData.html">
-                        PolyK.InteractionData
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionManager.html">
-                        PolyK.InteractionManager
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Rectangle.html">
-                        Rectangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/RenderTexture.html">
-                        RenderTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Spine.html">
-                        Spine
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Sprite.html">
-                        Sprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/SpriteSheetLoader.html">
-                        SpriteSheetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Stage.html">
-                        Stage
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Text.html">
-                        Text
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Texture.html">
-                        Texture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/TilingSprite.html">
-                        TilingSprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLBatch.html">
-                        WebGLBatch
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLRenderer.html">
-                        WebGLRenderer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
-
-    <div class="yui3-u-1-2">
-        
-    </div>
+    </pre>
 </div>
 
                     </div>

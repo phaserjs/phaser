@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Phaser</title>
+    <title>pixi\textures\BaseTexture.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -198,259 +198,153 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Phaser Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: pixi\textures\BaseTexture.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+ * @author Mat Groves http://matgroves.com/ @Doormat23
+ */
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/utils_Debug.js.html#l8"><code>utils\Debug.js:8</code></a>
-        </div>
-    
+PIXI.BaseTextureCache = {};
+PIXI.texturesToUpdate = [];
+PIXI.texturesToDestroy = [];
 
-    
-</div>
+/**
+ * A texture stores the information that represents an image. All textures have a base texture
+ *
+ * @class BaseTexture
+ * @uses EventTarget
+ * @constructor
+ * @param source {String} the source object (image or canvas)
+ */
+PIXI.BaseTexture = function(source)
+{
+	PIXI.EventTarget.call( this );
 
+	/**
+	 * [read-only] The width of the base texture set when the image has loaded
+	 *
+	 * @property width
+	 * @type Number
+	 * @readOnly
+	 */
+	this.width = 100;
 
+	/**
+	 * [read-only] The height of the base texture set when the image has loaded
+	 *
+	 * @property height
+	 * @type Number
+	 * @readOnly
+	 */
+	this.height = 100;
 
-<div class="box intro">
-    
-</div>
+	/**
+	 * [read-only] Describes if the base texture has loaded or not
+	 *
+	 * @property hasLoaded
+	 * @type Boolean
+	 * @readOnly
+	 */
+	this.hasLoaded = false;
 
+	/**
+	 * The source that is loaded to create the texture
+	 *
+	 * @property source
+	 * @type Image
+	 */
+	this.source = source;
 
+	if(!source)return;
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
+	if(this.source instanceof Image || this.source instanceof HTMLImageElement)
+	{
+		if(this.source.complete)
+		{
+			this.hasLoaded = true;
+			this.width = this.source.width;
+			this.height = this.source.height;
+			
+			PIXI.texturesToUpdate.push(this);
+		}
+		else
+		{
+			
+			var scope = this;
+			this.source.onload = function(){
+				
+				scope.hasLoaded = true;
+				scope.width = scope.source.width;
+				scope.height = scope.source.height;
+			
+				// add it to somewhere...
+				PIXI.texturesToUpdate.push(scope);
+				scope.dispatchEvent( { type: &#x27;loaded&#x27;, content: scope } );
+			}
+			//	this.image.src = imageUrl;
+		}
+	}
+	else
+	{
+		this.hasLoaded = true;
+		this.width = this.source.width;
+		this.height = this.source.height;
+			
+		PIXI.texturesToUpdate.push(this);
+	}
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/AssetLoader.html">
-                        AssetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BaseTexture.html">
-                        BaseTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapFontLoader.html">
-                        BitmapFontLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapText.html">
-                        BitmapText
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasGraphics.html">
-                        CanvasGraphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasRenderer.html">
-                        CanvasRenderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Circle.html">
-                        Circle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Color.html">
-                        Color
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CustomRenderable.html">
-                        CustomRenderable
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DebugUtils.html">
-                        DebugUtils
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObject.html">
-                        DisplayObject
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObjectContainer.html">
-                        DisplayObjectContainer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Ellipse.html">
-                        Ellipse
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/EventTarget.html">
-                        EventTarget
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Graphics.html">
-                        Graphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/ImageLoader.html">
-                        ImageLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/JsonLoader.html">
-                        JsonLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/MovieClip.html">
-                        MovieClip
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Point.html">
-                        Point
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Polygon.html">
-                        Polygon
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._convex.html">
-                        PolyK._convex
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._PointInTriangle.html">
-                        PolyK._PointInTriangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.AjaxRequest.html">
-                        PolyK.AjaxRequest
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionData.html">
-                        PolyK.InteractionData
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionManager.html">
-                        PolyK.InteractionManager
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Rectangle.html">
-                        Rectangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/RenderTexture.html">
-                        RenderTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Spine.html">
-                        Spine
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Sprite.html">
-                        Sprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/SpriteSheetLoader.html">
-                        SpriteSheetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Stage.html">
-                        Stage
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Text.html">
-                        Text
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Texture.html">
-                        Texture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/TilingSprite.html">
-                        TilingSprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLBatch.html">
-                        WebGLBatch
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLRenderer.html">
-                        WebGLRenderer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
+	this._powerOf2 = false;
+}
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+PIXI.BaseTexture.prototype.constructor = PIXI.BaseTexture;
+
+/**
+ * Destroys this base texture
+ *
+ * @method destroy
+ */
+PIXI.BaseTexture.prototype.destroy = function()
+{
+	if(this.source instanceof Image)
+	{
+		this.source.src = null;
+	}
+	this.source = null;
+	PIXI.texturesToDestroy.push(this);
+}
+
+/**
+ * Helper function that returns a base texture based on an image url
+ * If the image is not in the base texture cache it will be  created and loaded
+ *
+ * @static
+ * @method fromImage
+ * @param imageUrl {String} The image url of the texture
+ * @return BaseTexture
+ */
+PIXI.BaseTexture.fromImage = function(imageUrl, crossorigin)
+{
+	var baseTexture = PIXI.BaseTextureCache[imageUrl];
+	if(!baseTexture)
+	{
+		// new Image() breaks tex loading in some versions of Chrome.
+		// See https://code.google.com/p/chromium/issues/detail?id=238071
+		var image = new Image();//document.createElement(&#x27;img&#x27;); 
+		if (crossorigin)
+		{
+			image.crossOrigin = &#x27;&#x27;;
+		}
+		image.src = imageUrl;
+		baseTexture = new PIXI.BaseTexture(image);
+		PIXI.BaseTextureCache[imageUrl] = baseTexture;
+	}
+
+	return baseTexture;
+}
+
+    </pre>
 </div>
 
                     </div>

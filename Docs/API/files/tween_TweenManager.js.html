@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Phaser</title>
+    <title>tween\TweenManager.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -198,259 +198,159 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Phaser Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: tween\TweenManager.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+* Phaser - TweenManager
+*
+* Phaser.Game has a single instance of the TweenManager through which all Tween objects are created and updated.
+* Tweens are hooked into the game clock and pause system, adjusting based on the game state.
+*
+* TweenManager is based heavily on tween.js by sole (http://soledadpenades.com).
+* The difference being that tweens belong to a games instance of TweenManager, rather than to a global TWEEN object.
+* It also has callbacks swapped for Signals and a few issues patched with regard to properties and completion errors.
+* Please see https://github.com/sole/tween.js for a full list of contributors.
+*/
+Phaser.TweenManager = function (game) {
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/utils_Debug.js.html#l8"><code>utils\Debug.js:8</code></a>
-        </div>
-    
+	this.game = game;
+	this._tweens = [];
+	this._add = [];
 
-    
-</div>
+	this.game.onPause.add(this.pauseAll, this);
+	this.game.onResume.add(this.resumeAll, this);
 
+};
 
+Phaser.TweenManager.prototype = {
 
-<div class="box intro">
-    
-</div>
+	REVISION: &#x27;11dev&#x27;,
 
+	/**
+	* Get all the tween objects in an array.
+	* @return {Phaser.Tween[]} Array with all tween objects.
+	*/
+	getAll: function () {
 
+		return this._tweens;
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
+	},
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/AssetLoader.html">
-                        AssetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BaseTexture.html">
-                        BaseTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapFontLoader.html">
-                        BitmapFontLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapText.html">
-                        BitmapText
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasGraphics.html">
-                        CanvasGraphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasRenderer.html">
-                        CanvasRenderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Circle.html">
-                        Circle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Color.html">
-                        Color
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CustomRenderable.html">
-                        CustomRenderable
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DebugUtils.html">
-                        DebugUtils
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObject.html">
-                        DisplayObject
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObjectContainer.html">
-                        DisplayObjectContainer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Ellipse.html">
-                        Ellipse
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/EventTarget.html">
-                        EventTarget
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Graphics.html">
-                        Graphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/ImageLoader.html">
-                        ImageLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/JsonLoader.html">
-                        JsonLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/MovieClip.html">
-                        MovieClip
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Point.html">
-                        Point
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Polygon.html">
-                        Polygon
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._convex.html">
-                        PolyK._convex
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._PointInTriangle.html">
-                        PolyK._PointInTriangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.AjaxRequest.html">
-                        PolyK.AjaxRequest
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionData.html">
-                        PolyK.InteractionData
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionManager.html">
-                        PolyK.InteractionManager
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Rectangle.html">
-                        Rectangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/RenderTexture.html">
-                        RenderTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Spine.html">
-                        Spine
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Sprite.html">
-                        Sprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/SpriteSheetLoader.html">
-                        SpriteSheetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Stage.html">
-                        Stage
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Text.html">
-                        Text
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Texture.html">
-                        Texture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/TilingSprite.html">
-                        TilingSprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLBatch.html">
-                        WebGLBatch
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLRenderer.html">
-                        WebGLRenderer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
+	/**
+	* Remove all tween objects.
+	*/
+	removeAll: function () {
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+		this._tweens = [];
+
+	},
+
+	/**
+	* Add a new tween into the TweenManager.
+	*
+	* @param tween {Phaser.Tween} The tween object you want to add.
+	* @return {Phaser.Tween} The tween object you added to the manager.
+	*/
+	add: function ( tween ) {
+
+		this._add.push( tween );
+
+	},
+
+	/**
+    * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
+    *
+    * @param obj {object} Object the tween will be run on.
+    * @return {Phaser.Tween} The newly created tween object.
+    */
+    create: function (object) {
+
+        return new Phaser.Tween(object, this.game);
+
+    },
+
+	/**
+	* Remove a tween from this manager.
+	*
+	* @param tween {Phaser.Tween} The tween object you want to remove.
+	*/
+	remove: function ( tween ) {
+
+		var i = this._tweens.indexOf( tween );
+
+		if ( i !== -1 ) {
+
+			this._tweens[i].pendingDelete = true;
+
+		}
+
+	},
+
+	/**
+	* Update all the tween objects you added to this manager.
+	*
+	* @return {bool} Return false if there&#x27;s no tween to update, otherwise return true.
+	*/
+	update: function () {
+
+		if ( this._tweens.length === 0 &amp;&amp; this._add.length === 0 ) return false;
+
+		var i = 0;
+		var numTweens = this._tweens.length;
+
+		while ( i &lt; numTweens ) {
+
+			if ( this._tweens[ i ].update( this.game.time.now ) ) {
+
+				i++;
+
+			} else {
+
+				this._tweens.splice( i, 1 );
+
+				numTweens--;
+
+			}
+
+		}
+
+		//	If there are any new tweens to be added, do so now - otherwise they can be spliced out of the array before ever running
+		if (this._add.length &gt; 0)
+		{
+			this._tweens = this._tweens.concat(this._add);
+			this._add.length = 0;
+		}
+
+		return true;
+
+	},
+
+	/**
+	* Pauses all currently running tweens.
+	*/
+    pauseAll: function () {
+
+    	for (var i = this._tweens.length - 1; i &gt;= 0; i--) {
+    		this._tweens[i].pause();
+    	};
+
+    },
+
+	/**
+	* Pauses all currently paused tweens.
+	*/
+    resumeAll: function () {
+
+    	for (var i = this._tweens.length - 1; i &gt;= 0; i--) {
+    		this._tweens[i].resume();
+    	};
+
+    }
+
+};
+    </pre>
 </div>
 
                     </div>

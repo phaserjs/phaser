@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>core\Group.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/AnimationManager.html">AnimationManager</a></li>
+            
+                <li><a href="../classes/AssetLoader.html">AssetLoader</a></li>
+            
+                <li><a href="../classes/BaseTexture.html">BaseTexture</a></li>
+            
+                <li><a href="../classes/BitmapFontLoader.html">BitmapFontLoader</a></li>
+            
+                <li><a href="../classes/BitmapText.html">BitmapText</a></li>
+            
+                <li><a href="../classes/Button.html">Button</a></li>
+            
+                <li><a href="../classes/Camera.html">Camera</a></li>
+            
+                <li><a href="../classes/Canvas.html">Canvas</a></li>
+            
+                <li><a href="../classes/CanvasGraphics.html">CanvasGraphics</a></li>
+            
+                <li><a href="../classes/CanvasRenderer.html">CanvasRenderer</a></li>
+            
+                <li><a href="../classes/Circle.html">Circle</a></li>
+            
+                <li><a href="../classes/Color.html">Color</a></li>
+            
+                <li><a href="../classes/CustomRenderable.html">CustomRenderable</a></li>
+            
+                <li><a href="../classes/DebugUtils.html">DebugUtils</a></li>
+            
+                <li><a href="../classes/DisplayObject.html">DisplayObject</a></li>
+            
+                <li><a href="../classes/DisplayObjectContainer.html">DisplayObjectContainer</a></li>
+            
+                <li><a href="../classes/Ellipse.html">Ellipse</a></li>
+            
+                <li><a href="../classes/EventTarget.html">EventTarget</a></li>
+            
+                <li><a href="../classes/Frame.html">Frame</a></li>
+            
+                <li><a href="../classes/FrameData.html">FrameData</a></li>
+            
+                <li><a href="../classes/Graphics.html">Graphics</a></li>
+            
+                <li><a href="../classes/ImageLoader.html">ImageLoader</a></li>
+            
+                <li><a href="../classes/JsonLoader.html">JsonLoader</a></li>
+            
+                <li><a href="../classes/MovieClip.html">MovieClip</a></li>
+            
+                <li><a href="../classes/Phaser.Animation.html">Phaser.Animation</a></li>
+            
+                <li><a href="../classes/Point.html">Point</a></li>
+            
+                <li><a href="../classes/Polygon.html">Polygon</a></li>
+            
+                <li><a href="../classes/PolyK._convex.html">PolyK._convex</a></li>
+            
+                <li><a href="../classes/PolyK._PointInTriangle.html">PolyK._PointInTriangle</a></li>
+            
+                <li><a href="../classes/PolyK.AjaxRequest.html">PolyK.AjaxRequest</a></li>
+            
+                <li><a href="../classes/PolyK.InteractionData.html">PolyK.InteractionData</a></li>
+            
+                <li><a href="../classes/PolyK.InteractionManager.html">PolyK.InteractionManager</a></li>
+            
+                <li><a href="../classes/Rectangle.html">Rectangle</a></li>
+            
+                <li><a href="../classes/RenderTexture.html">RenderTexture</a></li>
+            
+                <li><a href="../classes/Sound.html">Sound</a></li>
+            
+                <li><a href="../classes/SoundManager.html">SoundManager</a></li>
+            
+                <li><a href="../classes/Spine.html">Spine</a></li>
+            
+                <li><a href="../classes/Sprite.html">Sprite</a></li>
+            
+                <li><a href="../classes/SpriteSheetLoader.html">SpriteSheetLoader</a></li>
+            
+                <li><a href="../classes/Stage.html">Stage</a></li>
+            
+                <li><a href="../classes/Text.html">Text</a></li>
+            
+                <li><a href="../classes/Texture.html">Texture</a></li>
+            
+                <li><a href="../classes/TilingSprite.html">TilingSprite</a></li>
+            
+                <li><a href="../classes/Time.html">Time</a></li>
+            
+                <li><a href="../classes/Utils.html">Utils</a></li>
+            
+                <li><a href="../classes/WebGLBatch.html">WebGLBatch</a></li>
+            
+                <li><a href="../classes/WebGLRenderer.html">WebGLRenderer</a></li>
+            
+                <li><a href="../classes/World.html">World</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/Phaser.html">Phaser</a></li>
+            
+                <li><a href="../modules/Phaser.Animation.html">Phaser.Animation</a></li>
+            
+                <li><a href="../modules/Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a></li>
+            
+                <li><a href="../modules/Phaser.Button.html">Phaser.Button</a></li>
+            
+                <li><a href="../modules/Phaser.Camera.html">Phaser.Camera</a></li>
+            
+                <li><a href="../modules/Phaser.Canvas.html">Phaser.Canvas</a></li>
+            
+                <li><a href="../modules/Phaser.Stage.html">Phaser.Stage</a></li>
+            
+                <li><a href="../modules/Phaser.Time.html">Phaser.Time</a></li>
+            
+                <li><a href="../modules/Phaser.Utils.html">Phaser.Utils</a></li>
+            
+                <li><a href="../modules/Phaser.World.html">Phaser.World</a></li>
+            
+                <li><a href="../modules/PIXI.html">PIXI</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: core\Group.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+Phaser.Group = function (game, parent, name, useStage) {
+
+	parent = parent || null;
+
+	if (typeof useStage == &#x27;undefined&#x27;)
+	{
+		useStage = false;
+	}
+
+	this.game = game;
+	this.name = name || &#x27;group&#x27;;
+
+	if (useStage)
+	{
+		this._container = this.game.stage._stage;
+	}
+	else
+	{
+		this._container = new PIXI.DisplayObjectContainer();
+		this._container.name = this.name;
+
+		if (parent)
+		{
+			if (parent instanceof Phaser.Group)
+			{
+				parent._container.addChild(this._container);
+			}
+			else
+			{
+				parent.addChild(this._container);
+			}
+		}
+		else
+		{
+			this.game.stage._stage.addChild(this._container);
+		}
+	}
+
+	this.type = Phaser.GROUP;
+
+	this.exists = true;
+
+    /**
+    * Helper for sort.
+    */
+    this._sortIndex = &#x27;y&#x27;;
+	
+};
+
+Phaser.Group.prototype = {
+
+	add: function (child) {
+
+		if (child.group !== this)
+		{
+			child.group = this;
+
+			if (child.events)
+			{
+				child.events.onAddedToGroup.dispatch(child, this);
+			}
+
+			this._container.addChild(child);
+		}
+
+		return child;
+
+	},
+
+	addAt: function (child, index) {
+
+		if (child.group !== this)
+		{
+			child.group = this;
+
+			if (child.events)
+			{
+				child.events.onAddedToGroup.dispatch(child, this);
+			}
+
+			this._container.addChildAt(child, index);
+		}
+
+		return child;
+
+	},
+
+	getAt: function (index) {
+
+		return this._container.getChildAt(index);
+
+	},
+
+	create: function (x, y, key, frame, exists) {
+
+		if (typeof exists == &#x27;undefined&#x27;) { exists = true; }
+
+		var child = new Phaser.Sprite(this.game, x, y, key, frame);
+
+		child.group = this;
+		child.exists = exists;
+
+		if (child.events)
+		{
+			child.events.onAddedToGroup.dispatch(child, this);
+		}
+
+		this._container.addChild(child);
+
+		return child;
+
+	},
+
+	swap: function (child1, child2) {
+
+		if (child1 === child2 || !child1.parent || !child2.parent)
+		{
+			console.warn(&#x27;You cannot swap a child with itself or swap un-parented children&#x27;);
+			return false;
+		}
+
+		//	Cache the values
+		var child1Prev = child1._iPrev;
+		var child1Next = child1._iNext;
+		var child2Prev = child2._iPrev;
+		var child2Next = child2._iNext;
+
+		var endNode = this._container.last._iNext;
+		var currentNode = this.game.stage._stage;
+			
+		do
+		{
+			if (currentNode !== child1 &amp;&amp; currentNode !== child2)
+			{
+				if (currentNode.first === child1)
+				{
+					currentNode.first = child2;
+				}
+				else if (currentNode.first === child2)
+				{
+					currentNode.first = child1;
+				}
+
+				if (currentNode.last === child1)
+				{
+					currentNode.last = child2;
+				}
+				else if (currentNode.last === child2)
+				{
+					currentNode.last = child1;
+				}
+			}
+
+			currentNode = currentNode._iNext;
+		}
+		while (currentNode != endNode)
+
+		if (child1._iNext == child2)
+		{
+			//	This is a downward (A to B) neighbour swap
+			child1._iNext = child2Next;
+			child1._iPrev = child2;
+			child2._iNext = child1;
+			child2._iPrev = child1Prev;
+
+			if (child1Prev) { child1Prev._iNext = child2; }
+			if (child2Next) { child2Next._iPrev = child1; }
+
+			if (child1.__renderGroup)
+			{
+				child1.__renderGroup.updateTexture(child1);
+			}
+
+			if (child2.__renderGroup)
+			{
+				child2.__renderGroup.updateTexture(child2);
+			}
+
+			return true;
+		}
+		else if (child2._iNext == child1)
+		{
+			//	This is an upward (B to A) neighbour swap
+			child1._iNext = child2;
+			child1._iPrev = child2Prev;
+			child2._iNext = child1Next;
+			child2._iPrev = child1;
+
+			if (child2Prev) { child2Prev._iNext = child1; }
+			if (child1Next) { child2Next._iPrev = child2; }
+
+			if (child1.__renderGroup)
+			{
+				child1.__renderGroup.updateTexture(child1);
+			}
+
+			if (child2.__renderGroup)
+			{
+				child2.__renderGroup.updateTexture(child2);
+			}
+
+			return true;
+		}
+		else
+		{
+			//	Children are far apart
+			child1._iNext = child2Next;
+			child1._iPrev = child2Prev;
+			child2._iNext = child1Next;
+			child2._iPrev = child1Prev;
+
+			if (child1Prev) { child1Prev._iNext = child2; }
+			if (child1Next) { child1Next._iPrev = child2; }
+			if (child2Prev) { child2Prev._iNext = child1; }
+			if (child2Next) { child2Next._iPrev = child1; }
+
+			if (child1.__renderGroup)
+			{
+				child1.__renderGroup.updateTexture(child1);
+			}
+
+			if (child2.__renderGroup)
+			{
+				child2.__renderGroup.updateTexture(child2);
+			}
+
+			return true;
+		}
+
+		return false;
+		
+	},
+
+	bringToTop: function (child) {
+
+		if (child.group === this)
+		{
+			this.remove(child);
+			this.add(child);
+		}
+
+		return child;
+
+	},
+
+	getIndex: function (child) {
+
+		return this._container.children.indexOf(child);
+
+	},
+
+	replace: function (oldChild, newChild) {
+
+		if (!this._container.first._iNext)
+		{
+			return;
+		}
+
+		var index = this.getIndex(oldChild);
+		
+		if (index != -1)
+		{
+			if (newChild.parent != undefined)
+			{
+				newChild.events.onRemovedFromGroup.dispatch(newChild, this);
+				newChild.parent.removeChild(newChild);
+			}
+
+			this._container.removeChild(oldChild);
+			this._container.addChildAt(newChild, index);
+			newChild.events.onAddedToGroup.dispatch(newChild, this);
+		}
+
+	},
+
+	//	key is an ARRAY of values.
+	setProperty: function (child, key, value, operation) {
+
+		operation = operation || 0;
+
+		//	As ugly as this approach looks, and although it&#x27;s limited to a depth of only 4, it&#x27;s extremely fast.
+		//	Much faster than a for loop or object iteration. There are no checks, so if the key isn&#x27;t valid then it&#x27;ll fail
+		//	but as you are likely to call this from inner loops that have to perform well, I&#x27;ll take that trade off.
+
+		//	0 = Equals
+		//	1 = Add
+		//	2 = Subtract
+		//	3 = Multiply
+		//	4 = Divide
+
+		if (key.length == 1)
+		{
+			if (operation == 0) { child[key[0]] = value; }
+			else if (operation == 1) { child[key[0]] += value; }
+			else if (operation == 2) { child[key[0]] -= value; }
+			else if (operation == 3) { child[key[0]] *= value; }
+			else if (operation == 4) { child[key[0]] /= value; }
+		}
+		else if (key.length == 2)
+		{
+			if (operation == 0) { child[key[0]][key[1]] = value; }
+			else if (operation == 1) { child[key[0]][key[1]] += value; }
+			else if (operation == 2) { child[key[0]][key[1]] -= value; }
+			else if (operation == 3) { child[key[0]][key[1]] *= value; }
+			else if (operation == 4) { child[key[0]][key[1]] /= value; }
+		}
+		else if (key.length == 3)
+		{
+			if (operation == 0) { child[key[0]][key[1]][key[2]] = value; }
+			else if (operation == 1) { child[key[0]][key[1]][key[2]] += value; }
+			else if (operation == 2) { child[key[0]][key[1]][key[2]] -= value; }
+			else if (operation == 3) { child[key[0]][key[1]][key[2]] *= value; }
+			else if (operation == 4) { child[key[0]][key[1]][key[2]] /= value; }
+		}
+		else if (key.length == 4)
+		{
+			if (operation == 0) { child[key[0]][key[1]][key[2]][key[3]] = value; }
+			else if (operation == 1) { child[key[0]][key[1]][key[2]][key[3]] += value; }
+			else if (operation == 2) { child[key[0]][key[1]][key[2]][key[3]] -= value; }
+			else if (operation == 3) { child[key[0]][key[1]][key[2]][key[3]] *= value; }
+			else if (operation == 4) { child[key[0]][key[1]][key[2]][key[3]] /= value; }
+		}
+		else
+		{
+			//	TODO - Deep property scane
+		}
+
+	},
+
+	setAll: function (key, value, checkAlive, checkVisible, operation) {
+
+		key = key.split(&#x27;.&#x27;);
+		checkAlive = checkAlive || false;
+		checkVisible = checkVisible || false;
+		operation = operation || 0;
+
+		if (this._container.children.length &gt; 0 &amp;&amp; this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if ((checkAlive == false || (checkAlive &amp;&amp; currentNode.alive)) &amp;&amp; (checkVisible == false || (checkVisible &amp;&amp; currentNode.visible)))
+				{
+					this.setProperty(currentNode, key, value, operation);
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext)
+		}
+
+	},
+
+	addAll: function (key, value, checkAlive, checkVisible) {
+
+		this.setAll(key, value, checkAlive, checkVisible, 1);
+
+	},
+
+	subAll: function (key, value, checkAlive, checkVisible) {
+
+		this.setAll(key, value, checkAlive, checkVisible, 2);
+
+	},
+
+	multiplyAll: function (key, value, checkAlive, checkVisible) {
+
+		this.setAll(key, value, checkAlive, checkVisible, 3);
+
+	},
+
+	divideAll: function (key, value, checkAlive, checkVisible) {
+
+		this.setAll(key, value, checkAlive, checkVisible, 4);
+
+	},
+
+	callAllExists: function (callback, callbackContext, existsValue) {
+
+		var args = Array.prototype.splice.call(arguments, 3);
+
+		if (this._container.children.length &gt; 0 &amp;&amp; this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if (currentNode.exists == existsValue &amp;&amp; currentNode[callback])
+				{
+					currentNode[callback].apply(currentNode, args);
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext)
+
+		}
+
+	},
+
+	/**
+    * Calls a function on all of the children regardless if they are dead or alive (see callAllExists if you need control over that)
+    * You must pass the context in which the callback is applied.
+    * After the context you can add as many parameters as you like, which will all be passed to the child.
+    */
+	callAll: function (callback, callbackContext) {
+
+		var args = Array.prototype.splice.call(arguments, 2);
+
+		if (this._container.children.length &gt; 0 &amp;&amp; this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if (currentNode[callback])
+				{
+					currentNode[callback].apply(currentNode, args);
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext)
+
+		}
+
+	},
+
+	forEach: function (callback, callbackContext, checkExists) {
+
+		if (typeof checkExists == &#x27;undefined&#x27;) { checkExists = false; }
+
+		if (this._container.children.length &gt; 0 &amp;&amp; this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if (checkExists == false || (checkExists &amp;&amp; currentNode.exists))
+				{
+					callback.call(callbackContext, currentNode);
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext);
+
+		}
+
+	},
+
+	forEachAlive: function (callback, callbackContext) {
+
+		if (this._container.children.length &gt; 0 &amp;&amp; this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if (currentNode.alive)
+				{
+					callback.call(callbackContext, currentNode);
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext);
+
+		}
+
+	},
+
+	forEachDead: function (callback, callbackContext) {
+
+		if (this._container.children.length &gt; 0 &amp;&amp; this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if (currentNode.alive == false)
+				{
+					callback.call(callbackContext, currentNode);
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext);
+
+		}
+	},
+
+	/**
+    * Call this function to retrieve the first object with exists == (the given state) in the group.
+    *
+    * @return {Any} The first child, or null if none found.
+    */
+	getFirstExists: function (state) {
+
+		if (typeof state !== &#x27;boolean&#x27;)
+		{
+			state = true;
+		}
+
+		if (this._container.children.length &gt; 0 &amp;&amp; this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if (currentNode.exists === state)
+				{
+					return currentNode;
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext);
+		}
+
+		return null;
+
+	},
+
+	/**
+    * Call this function to retrieve the first object with alive == true in the group.
+    * This is handy for checking if everything&#x27;s wiped out, or choosing a squad leader, etc.
+    *
+    * @return {Any} The first alive child, or null if none found.
+    */
+	getFirstAlive: function () {
+
+		if (this._container.children.length &gt; 0 &amp;&amp; this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if (currentNode.alive)
+				{
+					return currentNode;
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext);
+		}
+
+		return null;
+
+	},
+
+	/**
+    * Call this function to retrieve the first object with alive == false in the group.
+    * This is handy for checking if everything&#x27;s wiped out, or choosing a squad leader, etc.
+    *
+    * @return {Any} The first dead child, or null if none found.
+    */
+	getFirstDead: function () {
+
+		if (this._container.children.length &gt; 0 &amp;&amp; this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if (!currentNode.alive)
+				{
+					return currentNode;
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext);
+		}
+
+		return null;
+
+	},
+
+	/**
+    * Call this function to find out how many members of the group are alive.
+    *
+    * @return {number} The number of children flagged as alive. Returns -1 if Group is empty.
+    */
+	countLiving: function () {
+
+		var total = -1;
+
+		if (this._container.children.length &gt; 0 &amp;&amp; this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if (currentNode.alive)
+				{
+					total++;
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext);
+		}
+
+		return total;
+
+	},
+
+	/**
+    * Call this function to find out how many members of the group are dead.
+    *
+    * @return {number} The number of children flagged as dead. Returns -1 if Group is empty.
+    */
+	countDead: function () {
+
+		var total = -1;
+
+		if (this._container.children.length &gt; 0 &amp;&amp; this._container.first._iNext)
+		{
+			var currentNode = this._container.first._iNext;
+				
+			do	
+			{
+				if (!currentNode.alive)
+				{
+					total++;
+				}
+
+				currentNode = currentNode._iNext;
+			}
+			while (currentNode != this._container.last._iNext);
+		}
+
+		return total;
+
+	},
+
+	/**
+    * Returns a member at random from the group.
+    *
+    * @param {number} startIndex Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+    * @param {number} length Optional restriction on the number of values you want to randomly select from.
+    *
+    * @return {Any} A random child of this Group.
+    */
+	getRandom: function (startIndex, length) {
+
+		if (this._container.children.length == 0)
+		{
+			return null;
+		}
+
+		startIndex = startIndex || 0;
+		length = length || this._container.children.length;
+
+        return this.game.math.getRandom(this._container.children, startIndex, length);
+
+	},
+
+	remove: function (child) {
+
+		child.events.onRemovedFromGroup.dispatch(child, this);
+		this._container.removeChild(child);
+		child.group = null;
+
+	},
+
+	removeAll: function () {
+
+		if (this._container.children.length == 0)
+		{
+			return;
+		}
+
+		do
+		{
+			if (this._container.children[0].events)
+			{
+				this._container.children[0].events.onRemovedFromGroup.dispatch(this._container.children[0], this);
+			}
+			this._container.removeChild(this._container.children[0]);
+		}
+		while (this._container.children.length &gt; 0);
+
+	},
+
+	removeBetween: function (startIndex, endIndex) {
+
+		if (this._container.children.length == 0)
+		{
+			return;
+		}
+
+		if (startIndex &gt; endIndex || startIndex &lt; 0 || endIndex &gt; this._container.children.length)
+		{
+			return false;
+		}
+
+		for (var i = startIndex; i &lt; endIndex; i++)
+		{
+			var child = this._container.children[i];
+			child.events.onRemovedFromGroup.dispatch(child, this);
+			this._container.removeChild(child);
+		}
+
+	},
+
+	destroy: function () {
+
+		this.removeAll();
+
+		this._container.parent.removeChild(this._container);
+
+		this._container = null;
+
+		this.game = null;
+
+		this.exists = false;
+
+	},
+
+	dump: function (full) {
+
+		if (typeof full == &#x27;undefined&#x27;)
+		{
+			full = false;
+		}
+
+		var spacing = 20;
+		var output = &quot;\n&quot; + Phaser.Utils.pad(&#x27;Node&#x27;, spacing) + &quot;|&quot; + Phaser.Utils.pad(&#x27;Next&#x27;, spacing) + &quot;|&quot; + Phaser.Utils.pad(&#x27;Previous&#x27;, spacing) + &quot;|&quot; + Phaser.Utils.pad(&#x27;First&#x27;, spacing) + &quot;|&quot; + Phaser.Utils.pad(&#x27;Last&#x27;, spacing);
+
+		console.log(output);
+
+		var output = Phaser.Utils.pad(&#x27;----------&#x27;, spacing) + &quot;|&quot; + Phaser.Utils.pad(&#x27;----------&#x27;, spacing) + &quot;|&quot; + Phaser.Utils.pad(&#x27;----------&#x27;, spacing) + &quot;|&quot; + Phaser.Utils.pad(&#x27;----------&#x27;, spacing) + &quot;|&quot; + Phaser.Utils.pad(&#x27;----------&#x27;, spacing);
+		console.log(output);
+
+		if (full)
+		{
+			var testObject = this.game.stage._stage.last._iNext;
+			var displayObject = this.game.stage._stage;
+		}
+		else
+		{
+			var testObject = this._container.last._iNext;
+			var displayObject = this._container;
+		}
+		
+		do	
+		{
+			var name = displayObject.name || &#x27;*&#x27;;
+			var nameNext = &#x27;-&#x27;;
+			var namePrev = &#x27;-&#x27;;
+			var nameFirst = &#x27;-&#x27;;
+			var nameLast = &#x27;-&#x27;;
+
+			if (displayObject._iNext)
+			{
+				nameNext = displayObject._iNext.name;
+			}
+
+			if (displayObject._iPrev)
+			{
+				namePrev = displayObject._iPrev.name;
+			}
+
+			if (displayObject.first)
+			{
+				nameFirst = displayObject.first.name;
+			}
+
+			if (displayObject.last)
+			{
+				nameLast = displayObject.last.name;
+			}
+
+			if (typeof nameNext === &#x27;undefined&#x27;)
+			{
+				nameNext = &#x27;-&#x27;;
+			}
+
+			if (typeof namePrev === &#x27;undefined&#x27;)
+			{
+				namePrev = &#x27;-&#x27;;
+			}
+
+			if (typeof nameFirst === &#x27;undefined&#x27;)
+			{
+				nameFirst = &#x27;-&#x27;;
+			}
+
+			if (typeof nameLast === &#x27;undefined&#x27;)
+			{
+				nameLast = &#x27;-&#x27;;
+			}
+
+			var output = Phaser.Utils.pad(name, spacing) + &quot;|&quot; + Phaser.Utils.pad(nameNext, spacing) + &quot;|&quot; + Phaser.Utils.pad(namePrev, spacing) + &quot;|&quot; + Phaser.Utils.pad(nameFirst, spacing) + &quot;|&quot; + Phaser.Utils.pad(nameLast, spacing);
+			console.log(output);
+
+			displayObject = displayObject._iNext;
+
+		}
+		while(displayObject != testObject)
+
+	}
+
+};
+
+Object.defineProperty(Phaser.Group.prototype, &quot;length&quot;, {
+
+    get: function () {
+        return this._container.children.length;
+    }
+
+});
+
+Object.defineProperty(Phaser.Group.prototype, &quot;x&quot;, {
+
+    get: function () {
+        return this._container.position.x;
+    },
+
+    set: function (value) {
+        this._container.position.x = value;
+    }
+
+});
+
+Object.defineProperty(Phaser.Group.prototype, &quot;y&quot;, {
+
+    get: function () {
+        return this._container.position.y;
+    },
+
+    set: function (value) {
+        this._container.position.y = value;
+    }
+
+});
+
+Object.defineProperty(Phaser.Group.prototype, &quot;angle&quot;, {
+
+    get: function() {
+        return Phaser.Math.radToDeg(this._container.rotation);
+    },
+
+    set: function(value) {
+        this._container.rotation = Phaser.Math.degToRad(value);
+    }
+
+});
+
+Object.defineProperty(Phaser.Group.prototype, &quot;rotation&quot;, {
+
+    get: function () {
+        return this._container.rotation;
+    },
+
+    set: function (value) {
+        this._container.rotation = value;
+    }
+
+});
+
+Object.defineProperty(Phaser.Group.prototype, &quot;visible&quot;, {
+
+    get: function () {
+        return this._container.visible;
+    },
+
+    set: function (value) {
+        this._container.visible = value;
+    }
+
+});
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

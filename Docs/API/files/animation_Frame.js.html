@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Phaser</title>
+    <title>animation\Frame.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -198,259 +198,229 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Phaser Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: animation\Frame.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+* @author       Richard Davey &lt;rich@photonstorm.com&gt;
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.Animation
+*/
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/utils_Debug.js.html#l8"><code>utils\Debug.js:8</code></a>
-        </div>
-    
+/**
+* A Frame is a single frame of an animation and is part of a FrameData collection.
+*
+* @class Frame
+* @constructor
+* @param {Number} index The index of this Frame within the FrameData set it is being added to.
+* @param {Number} x X position of the frame within the texture image.
+* @param {Number} y Y position of the frame within the texture image.
+* @param {Number} width Width of the frame within the texture image.
+* @param {Number} height Height of the frame within the texture image.
+* @param {String} name The name of the frame. In Texture Atlas data this is usually set to the filename.
+* @param {String} uuid Internal UUID key.
+*/
+Phaser.Animation.Frame = function (index, x, y, width, height, name, uuid) {
 
-    
-</div>
+	/**
+	* The index of this Frame within the FrameData set it is being added to.
+    * @property index
+    * @public
+	* @type {Number}
+	*/
+	this.index = index;
 
+	/**
+	* X position within the image to cut from.
+    * @property x
+    * @public
+	* @type {Number}
+	*/
+	this.x = x;
 
+	/**
+	* Y position within the image to cut from.
+    * @property y
+    * @public
+	* @type {Number}
+	*/
+	this.y = y;
 
-<div class="box intro">
-    
-</div>
+	/**
+	* Width of the frame.
+    * @property width
+    * @public
+	* @type {Number}
+	*/
+	this.width = width;
 
+	/**
+	* Height of the frame.
+    * @property height
+    * @public
+	* @type {Number}
+	*/
+	this.height = height;
 
+	/**
+	* Useful for Texture Atlas files. (is set to the filename value)
+    * @property name
+    * @public
+    * @type {String}
+	*/
+	this.name = name;
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
+	/**
+	* A link to the PIXI.TextureCache entry
+    * @property uuid
+    * @public
+    * @type {String}
+	*/
+	this.uuid = uuid;
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/AssetLoader.html">
-                        AssetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BaseTexture.html">
-                        BaseTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapFontLoader.html">
-                        BitmapFontLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapText.html">
-                        BitmapText
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasGraphics.html">
-                        CanvasGraphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasRenderer.html">
-                        CanvasRenderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Circle.html">
-                        Circle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Color.html">
-                        Color
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CustomRenderable.html">
-                        CustomRenderable
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DebugUtils.html">
-                        DebugUtils
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObject.html">
-                        DisplayObject
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObjectContainer.html">
-                        DisplayObjectContainer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Ellipse.html">
-                        Ellipse
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/EventTarget.html">
-                        EventTarget
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Graphics.html">
-                        Graphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/ImageLoader.html">
-                        ImageLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/JsonLoader.html">
-                        JsonLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/MovieClip.html">
-                        MovieClip
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Point.html">
-                        Point
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Polygon.html">
-                        Polygon
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._convex.html">
-                        PolyK._convex
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._PointInTriangle.html">
-                        PolyK._PointInTriangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.AjaxRequest.html">
-                        PolyK.AjaxRequest
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionData.html">
-                        PolyK.InteractionData
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionManager.html">
-                        PolyK.InteractionManager
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Rectangle.html">
-                        Rectangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/RenderTexture.html">
-                        RenderTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Spine.html">
-                        Spine
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Sprite.html">
-                        Sprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/SpriteSheetLoader.html">
-                        SpriteSheetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Stage.html">
-                        Stage
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Text.html">
-                        Text
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Texture.html">
-                        Texture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/TilingSprite.html">
-                        TilingSprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLBatch.html">
-                        WebGLBatch
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLRenderer.html">
-                        WebGLRenderer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
+	/**
+	* center X position within the image to cut from.
+    * @property centerX
+    * @public
+	* @type {Number}
+	*/
+    this.centerX = Math.floor(width / 2);
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+	/**
+	* center Y position within the image to cut from.
+    * @property centerY
+    * @public
+	* @type {Number}
+	*/
+    this.centerY = Math.floor(height / 2);
+
+	/**
+	* The distance from the top left to the bottom-right of this Frame.
+    * @property distance
+    * @public
+	* @type {Number}
+	*/
+	this.distance = Phaser.Math.distance(0, 0, width, height);
+
+	/**
+	* Rotated? (not yet implemented)
+    * @property rotated
+    * @public
+    * @type {Boolean}
+    * @default false
+	*/
+	this.rotated = false;
+
+	/**
+	* Either cw or ccw, rotation is always 90 degrees.
+    * @property rotationDirection
+    * @public
+    * @type {String}
+    * @default &quot;cw&quot;
+	*/
+	this.rotationDirection = &#x27;cw&#x27;;
+
+	/**
+	* Was it trimmed when packed?
+    * @property trimmed
+    * @public
+	* @type {Boolean}
+	*/
+	this.trimmed = false;
+
+	/**
+	* Width of the original sprite.
+    * @property sourceSizeW
+    * @public
+	* @type {Number}
+	*/
+    this.sourceSizeW = width;
+
+	/**
+	* Height of the original sprite.
+    * @property sourceSizeH
+    * @public
+	* @type {Number}
+	*/
+    this.sourceSizeH = height;
+
+	/**
+	* X position of the trimmed sprite inside original sprite.
+    * @property spriteSourceSizeX
+    * @public
+	* @type {Number}
+    * @default 0
+	*/
+	this.spriteSourceSizeX = 0;
+
+	/**
+	* Y position of the trimmed sprite inside original sprite.
+    * @property spriteSourceSizeY
+    * @public
+	* @type {Number}
+    * @default 0
+	*/
+	this.spriteSourceSizeY = 0;
+
+	/**
+	* Width of the trimmed sprite.
+    * @property spriteSourceSizeW
+    * @public
+	* @type {Number}
+    * @default 0
+	*/
+	this.spriteSourceSizeW = 0;
+
+	/**
+	* Height of the trimmed sprite.
+    * @property spriteSourceSizeH
+    * @public
+	* @type {Number}
+    * @default 0
+	*/
+	this.spriteSourceSizeH = 0;
+
+};
+
+Phaser.Animation.Frame.prototype = {
+
+	/**
+	* If the frame was trimmed when added to the Texture Atlas this records the trim and source data.
+	*
+	* @method setTrim
+	* @param {Boolean} trimmed If this frame was trimmed or not.
+	* @param {Number} actualWidth The width of the frame before being trimmed.
+	* @param {Number} actualHeight The height of the frame before being trimmed.
+	* @param {Number} destX The destination X position of the trimmed frame for display.
+	* @param {Number} destY The destination Y position of the trimmed frame for display.
+	* @param {Number} destWidth The destination width of the trimmed frame for display.
+	* @param {Number} destHeight The destination height of the trimmed frame for display.
+	*/
+    setTrim: function (trimmed, actualWidth, actualHeight, destX, destY, destWidth, destHeight) {
+
+        this.trimmed = trimmed;
+
+        if (trimmed)
+        {
+            this.width = actualWidth;
+            this.height = actualHeight;
+            this.sourceSizeW = actualWidth;
+            this.sourceSizeH = actualHeight;
+		    this.centerX = Math.floor(actualWidth / 2);
+		    this.centerY = Math.floor(actualHeight / 2);
+            this.spriteSourceSizeX = destX;
+            this.spriteSourceSizeY = destY;
+            this.spriteSourceSizeW = destWidth;
+            this.spriteSourceSizeH = destHeight;
+        }
+
+    }
+
+};
+
+    </pre>
 </div>
 
                     </div>

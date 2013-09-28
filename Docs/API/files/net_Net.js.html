@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Phaser</title>
+    <title>net\Net.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -198,259 +198,142 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Phaser Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: net\Net.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+Phaser.Net = function (game) {
+	
+	this.game = game;
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/utils_Debug.js.html#l8"><code>utils\Debug.js:8</code></a>
-        </div>
-    
+};
 
-    
-</div>
+Phaser.Net.prototype = {
+
+	/**
+	* Returns the hostname given by the browser.
+	*/        
+	getHostName: function () {
+
+		if (window.location &amp;&amp; window.location.hostname) {
+			return window.location.hostname;
+		}
+
+		return null;
+
+	},
+
+	/**
+	* Compares the given domain name against the hostname of the browser containing the game.
+	* If the domain name is found it returns true.
+	* You can specify a part of a domain, for example &#x27;google&#x27; would match &#x27;google.com&#x27;, &#x27;google.co.uk&#x27;, etc.
+	* Do not include &#x27;http://&#x27; at the start.
+	*/        
+	checkDomainName: function (domain) {
+		return window.location.hostname.indexOf(domain) !== -1;
+	},
+
+	/**
+	* Updates a value on the Query String and returns it in full.
+	* If the value doesn&#x27;t already exist it is set.
+	* If the value exists it is replaced with the new value given. If you don&#x27;t provide a new value it is removed from the query string.
+	* Optionally you can redirect to the new url, or just return it as a string.
+	*/
+	updateQueryString: function (key, value, redirect, url) {
+
+		if (typeof redirect === &quot;undefined&quot;) { redirect = false; }
+		if (typeof url === &quot;undefined&quot;) { url = &#x27;&#x27;; }
+
+		if (url == &#x27;&#x27;) {
+			url = window.location.href;
+		}
+
+		var output = &#x27;&#x27;;
+		var re = new RegExp(&quot;([?|&amp;])&quot; + key + &quot;=.*?(&amp;|#|$)(.*)&quot;, &quot;gi&quot;);
+		
+		if (re.test(url))
+		{
+			if (typeof value !== &#x27;undefined&#x27; &amp;&amp; value !== null)
+			{
+				output = url.replace(re, &#x27;$1&#x27; + key + &quot;=&quot; + value + &#x27;$2$3&#x27;);
+			}
+			else
+			{
+				output = url.replace(re, &#x27;$1$3&#x27;).replace(/(&amp;|\?)$/, &#x27;&#x27;);
+			}
+		}
+		else
+		{
+			if (typeof value !== &#x27;undefined&#x27; &amp;&amp; value !== null)
+			{
+				var separator = url.indexOf(&#x27;?&#x27;) !== -1 ? &#x27;&amp;&#x27; : &#x27;?&#x27;;
+				var hash = url.split(&#x27;#&#x27;);
+				url = hash[0] + separator + key + &#x27;=&#x27; + value;
+
+				if (hash[1]) {
+					url += &#x27;#&#x27; + hash[1];
+				}
+
+				output = url;
+
+			}
+			else
+			{
+				output = url;
+			}
+		}
+
+		if (redirect)
+		{
+			window.location.href = output;
+		}
+		else
+		{
+			return output;
+		}
+
+	},
+
+	/**
+	* Returns the Query String as an object.
+	* If you specify a parameter it will return just the value of that parameter, should it exist.
+	*/
+	getQueryString: function (parameter) {
+
+		if (typeof parameter === &quot;undefined&quot;) { parameter = &#x27;&#x27;; }
+
+		var output = {};
+		var keyValues = location.search.substring(1).split(&#x27;&amp;&#x27;);
+
+		for (var i in keyValues) {
+
+			var key = keyValues[i].split(&#x27;=&#x27;);
+
+			if (key.length &gt; 1)
+			{
+				if (parameter &amp;&amp; parameter == this.decodeURI(key[0]))
+				{
+					return this.decodeURI(key[1]);
+				}
+				else
+				{
+					output[this.decodeURI(key[0])] = this.decodeURI(key[1]);
+				}
+			}
+		}
+
+		return output;
+
+	},
+
+	decodeURI: function (value) {
+		return decodeURIComponent(value.replace(/\+/g, &quot; &quot;));
+	}
+
+};
 
 
-
-<div class="box intro">
-    
-</div>
-
-
-
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
-
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/AssetLoader.html">
-                        AssetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BaseTexture.html">
-                        BaseTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapFontLoader.html">
-                        BitmapFontLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/BitmapText.html">
-                        BitmapText
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasGraphics.html">
-                        CanvasGraphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CanvasRenderer.html">
-                        CanvasRenderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Circle.html">
-                        Circle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Color.html">
-                        Color
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/CustomRenderable.html">
-                        CustomRenderable
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DebugUtils.html">
-                        DebugUtils
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObject.html">
-                        DisplayObject
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/DisplayObjectContainer.html">
-                        DisplayObjectContainer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Ellipse.html">
-                        Ellipse
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/EventTarget.html">
-                        EventTarget
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Graphics.html">
-                        Graphics
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/ImageLoader.html">
-                        ImageLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/JsonLoader.html">
-                        JsonLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/MovieClip.html">
-                        MovieClip
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Point.html">
-                        Point
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Polygon.html">
-                        Polygon
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._convex.html">
-                        PolyK._convex
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK._PointInTriangle.html">
-                        PolyK._PointInTriangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.AjaxRequest.html">
-                        PolyK.AjaxRequest
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionData.html">
-                        PolyK.InteractionData
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/PolyK.InteractionManager.html">
-                        PolyK.InteractionManager
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Rectangle.html">
-                        Rectangle
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/RenderTexture.html">
-                        RenderTexture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Spine.html">
-                        Spine
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Sprite.html">
-                        Sprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/SpriteSheetLoader.html">
-                        SpriteSheetLoader
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Stage.html">
-                        Stage
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Text.html">
-                        Text
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Texture.html">
-                        Texture
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/TilingSprite.html">
-                        TilingSprite
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLBatch.html">
-                        WebGLBatch
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/WebGLRenderer.html">
-                        WebGLRenderer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
-
-    <div class="yui3-u-1-2">
-        
-    </div>
+    </pre>
 </div>
 
                     </div>
