@@ -1,7 +1,7 @@
 /**
 * Phaser - http://www.phaser.io
 *
-* v1.0.6 - Built at: Thu, 26 Sep 2013 10:48:10 +0000
+* v1.0.6 - Built at: Sun, 29 Sep 2013 18:33:05 -0400
 *
 * @author Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -8085,35 +8085,46 @@ Phaser.LinkedList.prototype = {
 
     remove: function (child) {
 
-    	//	If the list is empty
-    	if (this.first == null && this.last == null)
-    	{
-    		return;
-    	}
+		if( child == this.first )  this.first = this.first.next;      // It was the first, make the first point to first.next
+		else if ( child == this.last ) this.last = this.last.prev; // It was the last, make the last point to last.prev
+
+		if( child.prev ) child.prev.next = child.next; // make child.prev.next point to childs.next instead of child
+		if( child.next ) child.next.prev = child.prev; // make child.next.prev point to child.prev instead of child
+		child.next = child.prev = null;
+
+		if( this.first == null ) this.last = null;
 
 		this.total--;
 
-    	//	The only node?
-    	if (this.first == child && this.last == child)
-    	{
-    		this.first = null;
-    		this.last = null;
-    		this.next = null;
-    		child.next = null;
-    		child.prev = null;
-    		return;
-    	}
+  //   	//	If the list is empty
+  //   	if (this.first == null && this.last == null)
+  //   	{
+  //   		return;
+  //   	}
 
-		var childPrev = child.prev;
+		// this.total--;
 
-    	//	Tail node?
-    	if (child.next)
-    	{
-			//	Has another node after it?
-	    	child.next.prev = child.prev;
-    	}
+  //   	//	The only node?
+  //   	if (this.first == child && this.last == child)
+  //   	{
+  //   		this.first = null;
+  //   		this.last = null;
+  //   		this.next = null;
+  //   		child.next = null;
+  //   		child.prev = null;
+  //   		return;
+  //   	}
 
-    	childPrev.next = child.next;
+		// var childPrev = child.prev;
+
+  //   	//	Tail node?
+  //   	if (child.next)
+  //   	{
+		// 	//	Has another node after it?
+	 //    	child.next.prev = child.prev;
+  //   	}
+
+  //   	childPrev.next = child.next;
 
     },
 
@@ -13759,7 +13770,7 @@ Phaser.GameObjectFactory.prototype = {
     * @param y {number} Y position of the new sprite.
     * @param [key] {string|RenderTexture} The image key as defined in the Game.Cache to use as the texture for this sprite OR a RenderTexture
     * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-    * @returns {Sprite} The newly created sprite object.
+    * @returns {Phaser.Sprite} The newly created sprite object.
     */
     sprite: function (x, y, key, frame) {
 
@@ -13774,7 +13785,7 @@ Phaser.GameObjectFactory.prototype = {
     * @param y {number} Y position of the new sprite.
     * @param [key] {string|RenderTexture} The image key as defined in the Game.Cache to use as the texture for this sprite OR a RenderTexture
     * @param [frame] {string|number} If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-    * @returns {Sprite} The newly created sprite object.
+    * @returns {Phaser.Sprite} The newly created sprite object.
     */
     child: function (parent, x, y, key, frame) {
 
@@ -13952,7 +13963,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
      * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right
      *
      * @property anchor
-     * @type Point
+     * @type Phaser.Point
      */
     this.anchor = new Phaser.Point();
 

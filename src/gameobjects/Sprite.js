@@ -89,7 +89,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
      * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right
      *
      * @property anchor
-     * @type Point
+     * @type Phaser.Point
      */
     this.anchor = new Phaser.Point();
 
