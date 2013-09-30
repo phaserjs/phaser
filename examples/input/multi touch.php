@@ -7,21 +7,13 @@
 
 (function () {
 
-	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
+	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', {create: create, render: render });
 
-	function preload() {
-
-		// game.load.image('disk', 'assets/sprites/ra_dont_crack_under_pressure.png');
-
-	}
 
 	function create() {
 
 		game.stage.backgroundColor = '#454645';
 
-	}
-
-	function update() {
 	}
 
 	function render() {
