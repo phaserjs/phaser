@@ -305,22 +305,6 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameTotal", {
 
 });
 
-Object.defineProperty(Phaser.AnimationManager.prototype, "paused", {
-
-    get: function () {
-
-        return this.currentAnim.isPaused;
-
-    },
-
-    set: function (value) {
-
-        this.currentAnim.paused = value;
-
-    }
-
-});
-
 Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
 
     /**

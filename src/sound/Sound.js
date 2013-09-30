@@ -172,7 +172,6 @@ Phaser.Sound.prototype = {
 
     //  start and stop are in SECONDS.MS (2.5 = 2500ms, 0.5 = 500ms, etc)
     //  volume is between 0 and 1
-    /*
     addMarker: function (name, start, stop, volume, loop) {
 
     	volume = volume || 1;
@@ -184,26 +183,6 @@ Phaser.Sound.prototype = {
             stop: stop,
             volume: volume,
             duration: stop - start,
-            loop: loop
-        };
-
-    },
-    */
-
-    //  start and stop are in SECONDS.MS (2.5 = 2500ms, 0.5 = 500ms, etc)
-    //  volume is between 0 and 1
-    addMarker: function (name, start, duration, volume, loop) {
-
-        volume = volume || 1;
-        if (typeof loop == 'undefined') { loop = false; }
-
-        this.markers[name] = {
-            name: name,
-            start: start,
-            stop: start + duration,
-            volume: volume,
-            duration: duration,
-            durationMS: duration * 1000,
             loop: loop
         };
 
@@ -287,20 +266,19 @@ Phaser.Sound.prototype = {
     	position = position || 0;
     	volume = volume || 1;
     	if (typeof loop == 'undefined') { loop = false; }
-    	if (typeof forceRestart == 'undefined') { forceRestart = true; }
+    	if (typeof forceRestart == 'undefined') { forceRestart = false; }
 
-        console.log(this.name + ' play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop, 'force', forceRestart);
+        // console.log(this.name + ' play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop);
 
         if (this.isPlaying == true && forceRestart == false && this.override == false)
         {
             //  Use Restart instead
-            console.log('Use Restart instead');
             return;
         }
 
         if (this.isPlaying && this.override)
         {
-            console.log('asked to play ' + marker + ' but already playing ' + this.currentMarker);
+            // console.log('asked to play ' + marker + ' but already playing ' + this.currentMarker);
         
             if (this.usingWebAudio)
             {
@@ -327,10 +305,9 @@ Phaser.Sound.prototype = {
             this.position = this.markers[marker].start;
             this.volume = this.markers[marker].volume;
             this.loop = this.markers[marker].loop;
-            this.duration = this.markers[marker].duration;
+            this.duration = this.markers[marker].duration * 1000;
 
-            console.log('Marker Loaded: ', marker, 'start:', this.position, 'end: ', this.duration, 'loop', this.loop);
-
+            // console.log('marker info loaded', this.loop, this.duration);
             this._tempMarker = marker;
             this._tempPosition = this.position;
             this._tempVolume = this.volume;
@@ -338,8 +315,6 @@ Phaser.Sound.prototype = {
         }
         else
         {
-            console.log('no marker info loaded', marker);
-
             this.position = position;
             this.volume = volume;
             this.loop = loop;
@@ -380,14 +355,12 @@ Phaser.Sound.prototype = {
                 //  Useful to cache this somewhere perhaps?
                 if (typeof this._sound.start === 'undefined')
                 {
-                    this._sound.noteGrainOn(0, this.position, this.duration);
-                    // this._sound.noteGrainOn(0, this.position, this.duration / 1000);
+                    this._sound.noteGrainOn(0, this.position, this.duration / 1000);
                     //this._sound.noteOn(0); // the zero is vitally important, crashes iOS6 without it
 				}
 				else
 				{
-                    // this._sound.start(0, this.position, this.duration / 1000);
-                    this._sound.start(0, this.position, this.duration);
+                    this._sound.start(0, this.position, this.duration / 1000);
                 }
 
                 this.isPlaying = true;

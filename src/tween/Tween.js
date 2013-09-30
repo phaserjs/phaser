@@ -246,15 +246,11 @@ Phaser.Tween.prototype = {
 
     pause: function () {
         this._paused = true;
-        this._pausedTime = this.game.time.now;
     },
 
     resume: function () {
-
         this._paused = false;
-
-        this._startTime += (this.game.time.now - this._pausedTime);
-
+        this._startTime += this.game.time.pauseDuration;
     },
 
 	update: function ( time ) {

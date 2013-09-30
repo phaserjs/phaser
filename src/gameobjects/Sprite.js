@@ -363,8 +363,8 @@ Phaser.Sprite.prototype.reset = function(x, y) {
 
     this.x = x;
     this.y = y;
-    this.position.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
-    this.position.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
+    this.position.x = x;
+    this.position.y = y;
     this.alive = true;
     this.exists = true;
     this.visible = true;
@@ -467,25 +467,6 @@ Phaser.Sprite.prototype.getBounds = function(rect) {
     rect.height = bottom - top;
     
     return rect;
-
-}
-
-/**
-* Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()
-* If the requested animation is already playing this request will be ignored. If you need to reset an already running animation do so directly on the Animation object itself.
-* 
-* @method play
-* @param {String} name The name of the animation to be played, e.g. "fire", "walk", "jump".
-* @param {Number} [frameRate=null] The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
-* @param {Boolean} [loop=null] Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
-* @return {Phaser.Animation} A reference to playing Animation instance.
-*/
-Phaser.Sprite.prototype.play = function (name, frameRate, loop) {
-
-    if (this.animations)
-    {
-        this.animations.play(name, frameRate, loop);
-    }
 
 }
 

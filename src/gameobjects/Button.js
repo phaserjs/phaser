@@ -151,7 +151,6 @@ Phaser.Button.prototype.onInputOutHandler = function (pointer) {
     {
         this.onInputOut.dispatch(this, pointer);
     }
-
 };
 
 Phaser.Button.prototype.onInputDownHandler = function (pointer) {
