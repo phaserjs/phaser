@@ -1,7 +1,7 @@
 /**
 * Phaser - http://www.phaser.io
 *
-* v1.0.6 - Built at: Thu, 26 Sep 2013 10:48:10 +0000
+* v1.0.6 - Built at: Mon, 30 Sep 2013 09:25:11 +0100
 *
 * @author Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -19,7 +19,15 @@
 * "If you want them to be more intelligent, read them more fairy tales."
 *                                                     -- Albert Einstein
 */
-
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(factory);
+    } else if (typeof exports === 'object') {
+        module.exports = factory();
+    } else {
+        root.Phaser = factory();
+    }
+}(this, function (b) {
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -28921,3 +28929,6 @@ Phaser.TilemapRenderer.prototype = {
     }
 
 };
+
+    return Phaser;
+}));
