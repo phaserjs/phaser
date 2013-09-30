@@ -18,7 +18,6 @@
         //  Add some values to the query string
         game.debug.renderText('Query string with new values : '+game.net.updateQueryString('atari', '520'),game.world.centerX-400,80);
         game.debug.renderText('Query string with new values : '+game.net.updateQueryString('amiga', '1200'),game.world.centerX-400,100);
-        game.debug.renderText('Query string with new values : '+game.net.updateQueryString('commodore', '64'),game.world.centerX-400,120);
 
         console.log('Query String: '+game.net.getQueryString(),game.world.centerX-300,140);
         console.log('Query String Param: '+game.net.getQueryString('atari'),game.world.centerX-300,160);
