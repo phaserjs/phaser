@@ -105,12 +105,12 @@ Phaser.Loader.prototype = {
 		if (direction == 0)
 		{
 			//	Horizontal crop
-			this.preloadSprite.crop = new Phaser.Rectangle(0, 0, 0, sprite.height);
+			this.preloadSprite.crop = new Phaser.Rectangle(0, 0, 1, sprite.height);
 		}
 		else
 		{
 			//	Vertical crop
-			this.preloadSprite.crop = new Phaser.Rectangle(0, 0, sprite.width, 0);
+			this.preloadSprite.crop = new Phaser.Rectangle(0, 0, sprite.width, 1);
 		}
 
 		sprite.crop = this.preloadSprite.crop;
@@ -904,11 +904,11 @@ Phaser.Loader.prototype = {
 		{
 			if (this.preloadSprite.direction == 0)
 			{
-				this.preloadSprite.crop.width = (this.preloadSprite.width / 100) * this.progress;
+				this.preloadSprite.crop.width = Math.floor((this.preloadSprite.width / 100) * this.progress);
 			}
 			else
 			{
-				this.preloadSprite.crop.height = (this.preloadSprite.height / 100) * this.progress;
+				this.preloadSprite.crop.height = Math.floor((this.preloadSprite.height / 100) * this.progress);
 			}
 
 			this.preloadSprite.sprite.crop = this.preloadSprite.crop;

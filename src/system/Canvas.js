@@ -108,6 +108,20 @@ Phaser.Canvas = {
 
     },
 
+    setUserSelect: function (canvas, value) {
+
+        canvas.style['-webkit-touch-callout'] = value;
+        canvas.style['-webkit-user-select'] = value;
+        canvas.style['-khtml-user-select'] = value;
+        canvas.style['-moz-user-select'] = value;
+        canvas.style['-ms-user-select'] = value;
+        canvas.style['user-select'] = value;
+        canvas.style['-webkit-tap-highlight-color'] = 'rgba(0, 0, 0, 0)';
+
+        return canvas;
+
+    },
+
     /**
     * Adds the given canvas element to the DOM. The canvas will be added as a child of the given parent.
     * If no parent is given it will be added as a child of the document.body.

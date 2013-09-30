@@ -59,6 +59,14 @@ Version 1.0.7 (in progress in the dev branch)
 * Made animation looping more robust when skipping frames (thanks XekeDeath)
 * Fix for incorrect new particle positioning (issue #73) (thanks cottonflop)
 * Added support for Body.maxVelocity (thanks cocoademon)
+* Fixed issue in Sound.play where if you gave a missing marker it would play the whole sound sprite instead.
+* Button.setFrames will set the current frame based on the button state immediately.
+* InputHandler now creates the _pointerData array on creation and populates with one empty set of values, so pointerOver etc all work before a start call.
+* Added Canvas.setUserSelect() to disable touchCallouts and user selections within the canvas.
+* When the game boots it will now by default disable user-select and touch action events on the game canvas.
+* Loaded.setPreloadSprite now rounds the width/height values and starts from 1. This fixes canvas draw errors in IE9/10 and Firefox.
+
+
 
 * TODO: addMarker hh:mm:ss:ms
 * TODO: Direction constants

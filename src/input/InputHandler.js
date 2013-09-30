@@ -68,6 +68,24 @@ Phaser.InputHandler = function (sprite) {
 
     this._tempPoint = new Phaser.Point;
 
+    this._pointerData = [];
+
+    this._pointerData.push({
+        id: 0,
+        x: 0,
+        y: 0,
+        isDown: false,
+        isUp: false,
+        isOver: false,
+        isOut: false,
+        timeOver: 0,
+        timeOut: 0,
+        timeDown: 0,
+        timeUp: 0,
+        downDuration: 0,
+        isDragged: false
+    });
+
 };
 
 Phaser.InputHandler.prototype = {
@@ -84,11 +102,10 @@ Phaser.InputHandler.prototype = {
 			this.game.input.interactiveItems.add(this);
             this.useHandCursor = useHandCursor;
             this.priorityID = priority;
-            this._pointerData = [];
 
             for (var i = 0; i < 10; i++)
             {
-                this._pointerData.push({
+                this._pointerData[i] = {
                     id: i,
                     x: 0,
                     y: 0,
@@ -102,7 +119,7 @@ Phaser.InputHandler.prototype = {
                     timeUp: 0,
                     downDuration: 0,
                     isDragged: false
-                });
+                };
             }
 
             this.snapOffset = new Phaser.Point;
@@ -350,10 +367,8 @@ Phaser.InputHandler.prototype = {
                 }
             }
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
 
     },
 
@@ -388,7 +403,7 @@ Phaser.InputHandler.prototype = {
     */
     update: function (pointer) {
 
-        if (this.enabled == false || this.sprite.visible == false)
+        if (this.enabled == false || this.sprite.visible == false || (this.sprite.group && this.sprite.group.visible == false))
         {
             this._pointerOutHandler(pointer);
             return false;

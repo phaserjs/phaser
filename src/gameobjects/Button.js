@@ -84,10 +84,20 @@ Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
         if (typeof overFrame === 'string')
         {
             this._onOverFrameName = overFrame;
+            
+            if (this.input.pointerOver())
+            {
+                this.frameName = overFrame;
+            }
         }
         else
         {
             this._onOverFrameID = overFrame;
+
+            if (this.input.pointerOver())
+            {
+                this.frame = overFrame;
+            }
         }
     }
 
@@ -97,11 +107,21 @@ Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
         {
             this._onOutFrameName = outFrame;
             this._onUpFrameName = outFrame;
+
+            if (this.input.pointerOver() == false)
+            {
+                this.frameName = outFrame;
+            }
         }
         else
         {
             this._onOutFrameID = outFrame;
             this._onUpFrameID = outFrame;
+
+            if (this.input.pointerOver() == false)
+            {
+                this.frame = outFrame;
+            }
         }
     }
 
@@ -110,10 +130,20 @@ Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
         if (typeof downFrame === 'string')
         {
             this._onDownFrameName = downFrame;
+
+            if (this.input.pointerOver())
+            {
+                this.frameName = downFrame;
+            }
         }
         else
         {
             this._onDownFrameID = downFrame;
+
+            if (this.input.pointerOver())
+            {
+                this.frame = downFrame;
+            }
         }
     }
 

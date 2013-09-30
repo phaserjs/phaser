@@ -104,6 +104,9 @@ Phaser.Stage.prototype = {
             return _this.visibilityChange(event);
         }
 
+        Phaser.Canvas.setUserSelect(this.canvas, 'none');
+        Phaser.Canvas.setTouchAction(this.canvas, 'none');
+
         document.addEventListener('visibilitychange', this._onChange, false);
         document.addEventListener('webkitvisibilitychange', this._onChange, false);
         document.addEventListener('pagehide', this._onChange, false);
