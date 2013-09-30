@@ -1,50 +1,77 @@
-<a href="http://yui.2clics.net/">Minify it</a><br />
-
-<textarea style="width: 800px; height: 800px">
 <?php
-	//	Get the version number
-	//	VERSION: '1.0.5', 
-	$vf = file_get_contents('../src/Phaser.js');
-	$version = substr($vf, strpos($vf, 'VERSION: ') + 10, 5);
 
-	echo "Building version $version \n\n";
+date_default_timezone_set('Europe/London');
 
-	$js = file('../examples/js.php');
-	$output = "";
+//	Get the version number
+//	VERSION: '1.0.5', 
+$vf = file_get_contents(dirname(__FILE__) . '/../src/Phaser.js');
+$version = substr($vf, strpos($vf, 'VERSION: ') + 10, 5);
+$buildLog = "Building version $version \n\n";
+$header = "";
 
-	for ($i = 0; $i < count($js); $i++)
+$js = file(dirname(__FILE__) . '/../examples/js.php');
+$output = "";
+
+for ($i = 0; $i < count($js); $i++)
+{
+	//	<script src="../src/Phaser.js"></script>		
+	$line = trim($js[$i]);
+
+	if (strpos($line, '<script') !== false)
 	{
-		//	<script src="../src/Phaser.js"></script>		
-		$line = trim($js[$i]);
+		$line = str_replace('<script src="', '', $line);
+		$line = dirname(__FILE__) . DIRECTORY_SEPARATOR . str_replace('"></script>', '', $line);
+		$filename = substr($line, strrpos($line, '/') + 1);
 
-		if (strpos($line, '<script') !== false)
+		$buildLog .= $line . "\n";
+		// echo $filename . "\n";
+
+		//	Read the file in
+		$source = file_get_contents($line);
+
+		if ($filename == 'Intro.js')
 		{
-			$line = str_replace('<script src="', '', $line);
-			$line = str_replace('"></script>', '', $line);
-			$filename = substr($line, strrpos($line, '/') + 1);
+			//	Built at: {buildDate}
+			$source = str_replace('{buildDate}', date('r'), $source);
 
-			echo $line . "\n";
-			// echo $filename . "\n";
+			//	{version}
+			$source = str_replace('{version}', $version, $source);
 
-			//	Read the file in
-			$source = file_get_contents($line);
-
-			if ($filename == 'Intro.js')
-			{
-				//	Built at: {buildDate}
-				$source = str_replace('{buildDate}', date('r'), $source);
-
-				//	{version}
-				$source = str_replace('{version}', $version, $source);
-			}
-
+			// Set the header
+			$header = $source;
+			
+		} else {
 			$output .= $source . "\n";
 		}
 	}
+}
 
-	//echo $output;
+// Create a UMD wrapper, to allow Phaser to be exposed to AMD, Node and Browsers
+$template = <<<EOT
+%s(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(factory);
+    } else if (typeof exports === 'object') {
+        module.exports = factory();
+    } else {
+        root.Phaser = factory();
+    }
+}(this, function (b) {
+%s
+    return Phaser;
+}));
+EOT;
 
-	file_put_contents('phaser.js', $output);
+file_put_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'phaser.js', sprintf($template, $header, $output));
+
+if(php_sapi_name() == 'cli' || empty($_SERVER['REMOTE_ADDR'])) {
+  echo "\ndone\n\n";
+  return;
+}
 
 ?>
+<a href="http://yui.2clics.net/">Minify it</a><br />
+
+<textarea style="width: 800px; height: 800px">
+<?php echo $buildLog; ?>
 </textarea>
