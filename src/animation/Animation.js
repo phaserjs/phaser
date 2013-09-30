@@ -208,7 +208,7 @@ Phaser.Animation.prototype = {
             {
                 if (this.looped)
                 {
-                    this._frameIndex = this._frameIndex - this._frames.length;
+                    this._frameIndex = this._frameIndex %= this._frames.length;
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
                     this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
                     this._parent.events.onAnimationLoop.dispatch(this._parent, this);
