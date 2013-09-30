@@ -71,9 +71,6 @@
 
         game.camera.follow(ufo);
 
-        
-
-
         // follow style switch buttons
         btn0 = game.add.button(6, 40, 'button', lockonFollow,this, 0, 0, 0);
         btn1 = game.add.button(6, 120, 'button', platformerFollow,this, 1, 1, 1);

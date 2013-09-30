@@ -31,7 +31,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 	renderer = renderer || Phaser.AUTO;
 	parent = parent || '';
 	state = state || null;
-	transparent = transparent || false;
+	if (typeof transparent == 'undefined') { transparent = false; }
 	antialias = typeof antialias === 'undefined' ? true : antialias;
 
 	/**
