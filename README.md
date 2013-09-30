@@ -55,6 +55,9 @@ Version 1.0.7 (in progress in the dev branch)
 * Fixed an issue where Tweens.removeAll wasn't clearing tweens in the addition queue.
 * Change: When you swap State all active tweens are now purged.
 * BUG: Loader conflict if 2 keys are the same even if they are in different packages (i.e. "title" for picture and audio).
+* Fixed Particle Emitters when using Emitter width/height (thanks XekeDeath)
+* Made animation looping more robust when skipping frames (thanks XekeDeath)
+* Fix for incorrect new particle positioning (issue #73) (thanks cottonflop)
 
 
 * TODO: addMarker hh:mm:ss:ms
