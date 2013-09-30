@@ -58,7 +58,7 @@ Version 1.0.7 (in progress in the dev branch)
 * Fixed Particle Emitters when using Emitter width/height (thanks XekeDeath)
 * Made animation looping more robust when skipping frames (thanks XekeDeath)
 * Fix for incorrect new particle positioning (issue #73) (thanks cottonflop)
-
+* Added support for Body.maxVelocity (thanks cocoademon)
 
 * TODO: addMarker hh:mm:ss:ms
 * TODO: Direction constants

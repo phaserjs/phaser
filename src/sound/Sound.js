@@ -203,6 +203,7 @@ Phaser.Sound.prototype = {
             stop: start + duration,
             volume: volume,
             duration: duration,
+            durationMS: duration * 1000,
             loop: loop
         };
 
@@ -293,12 +294,13 @@ Phaser.Sound.prototype = {
         if (this.isPlaying == true && forceRestart == false && this.override == false)
         {
             //  Use Restart instead
+            console.log('Use Restart instead');
             return;
         }
 
         if (this.isPlaying && this.override)
         {
-            // console.log('asked to play ' + marker + ' but already playing ' + this.currentMarker);
+            console.log('asked to play ' + marker + ' but already playing ' + this.currentMarker);
         
             if (this.usingWebAudio)
             {
@@ -325,9 +327,10 @@ Phaser.Sound.prototype = {
             this.position = this.markers[marker].start;
             this.volume = this.markers[marker].volume;
             this.loop = this.markers[marker].loop;
-            this.duration = this.markers[marker].duration * 1000;
+            this.duration = this.markers[marker].duration;
 
-            console.log('marker info loaded', this.loop, this.duration);
+            console.log('Marker Loaded: ', marker, 'start:', this.position, 'end: ', this.duration, 'loop', this.loop);
+
             this._tempMarker = marker;
             this._tempPosition = this.position;
             this._tempVolume = this.volume;
@@ -335,7 +338,7 @@ Phaser.Sound.prototype = {
         }
         else
         {
-            console.log('no marker info loaded');
+            console.log('no marker info loaded', marker);
 
             this.position = position;
             this.volume = volume;
@@ -377,12 +380,14 @@ Phaser.Sound.prototype = {
                 //  Useful to cache this somewhere perhaps?
                 if (typeof this._sound.start === 'undefined')
                 {
-                    this._sound.noteGrainOn(0, this.position, this.duration / 1000);
+                    this._sound.noteGrainOn(0, this.position, this.duration);
+                    // this._sound.noteGrainOn(0, this.position, this.duration / 1000);
                     //this._sound.noteOn(0); // the zero is vitally important, crashes iOS6 without it
 				}
 				else
 				{
-                    this._sound.start(0, this.position, this.duration / 1000);
+                    // this._sound.start(0, this.position, this.duration / 1000);
+                    this._sound.start(0, this.position, this.duration);
                 }
 
                 this.isPlaying = true;
