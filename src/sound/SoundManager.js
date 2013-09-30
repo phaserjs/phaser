@@ -293,8 +293,6 @@ Phaser.SoundManager.prototype = {
     	volume = volume || 1;
     	if (typeof loop == 'undefined') { loop = false; }
 
-        
-
         var sound = new Phaser.Sound(this.game, key, volume, loop);
 
         this._sounds.push(sound);

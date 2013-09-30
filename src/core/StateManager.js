@@ -235,7 +235,9 @@ Phaser.StateManager.prototype = {
 				this.onShutDownCallback.call(this.callbackContext);
 			}
 
-	        if (clearWorld) {
+	        if (clearWorld)
+	        {
+				this.game.tweens.removeAll();
 
 	            this.game.world.destroy();
 
