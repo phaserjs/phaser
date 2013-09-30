@@ -1,5 +1,5 @@
 <?php
-    $title = "Test Title";
+    $title = "How to drag a sprite";
     require('../head.php');
 ?>
 
