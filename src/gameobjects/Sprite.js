@@ -363,8 +363,8 @@ Phaser.Sprite.prototype.reset = function(x, y) {
 
     this.x = x;
     this.y = y;
-    this.position.x = x;
-    this.position.y = y;
+    this.position.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
+    this.position.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
     this.alive = true;
     this.exists = true;
     this.visible = true;
