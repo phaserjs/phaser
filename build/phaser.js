@@ -1,7 +1,7 @@
 /**
 * Phaser - http://www.phaser.io
 *
-* v1.0.7 - Built at: Fri, 27 Sep 2013 23:12:25 +0000
+* v1.0.7 - Built at: Mon, 30 Sep 2013 18:13:41 +0000
 *
 * @author Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -8962,6 +8962,9 @@ Phaser.Stage.prototype = {
             return _this.visibilityChange(event);
         }
 
+        Phaser.Canvas.setUserSelect(this.canvas, 'none');
+        Phaser.Canvas.setTouchAction(this.canvas, 'none');
+
         document.addEventListener('visibilitychange', this._onChange, false);
         document.addEventListener('webkitvisibilitychange', this._onChange, false);
         document.addEventListener('pagehide', this._onChange, false);
@@ -10204,7 +10207,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 	renderer = renderer || Phaser.AUTO;
 	parent = parent || '';
 	state = state || null;
-	transparent = transparent || false;
+	if (typeof transparent == 'undefined') { transparent = false; }
 	antialias = typeof antialias === 'undefined' ? true : antialias;
 
 	/**
@@ -12969,6 +12972,24 @@ Phaser.InputHandler = function (sprite) {
 
     this._tempPoint = new Phaser.Point;
 
+    this._pointerData = [];
+
+    this._pointerData.push({
+        id: 0,
+        x: 0,
+        y: 0,
+        isDown: false,
+        isUp: false,
+        isOver: false,
+        isOut: false,
+        timeOver: 0,
+        timeOut: 0,
+        timeDown: 0,
+        timeUp: 0,
+        downDuration: 0,
+        isDragged: false
+    });
+
 };
 
 Phaser.InputHandler.prototype = {
@@ -12976,7 +12997,7 @@ Phaser.InputHandler.prototype = {
 	start: function (priority, useHandCursor) {
 
 		priority = priority || 0;
-		useHandCursor = useHandCursor || false;
+		if (typeof useHandCursor == 'undefined') { useHandCursor = false; }
 
         //  Turning on
         if (this.enabled == false)
@@ -12985,11 +13006,10 @@ Phaser.InputHandler.prototype = {
 			this.game.input.interactiveItems.add(this);
             this.useHandCursor = useHandCursor;
             this.priorityID = priority;
-            this._pointerData = [];
 
             for (var i = 0; i < 10; i++)
             {
-                this._pointerData.push({
+                this._pointerData[i] = {
                     id: i,
                     x: 0,
                     y: 0,
@@ -13003,7 +13023,7 @@ Phaser.InputHandler.prototype = {
                     timeUp: 0,
                     downDuration: 0,
                     isDragged: false
-                });
+                };
             }
 
             this.snapOffset = new Phaser.Point;
@@ -13251,10 +13271,8 @@ Phaser.InputHandler.prototype = {
                 }
             }
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
 
     },
 
@@ -13289,7 +13307,7 @@ Phaser.InputHandler.prototype = {
     */
     update: function (pointer) {
 
-        if (this.enabled == false || this.sprite.visible == false)
+        if (this.enabled == false || this.sprite.visible == false || (this.sprite.group && this.sprite.group.visible == false))
         {
             this._pointerOutHandler(pointer);
             return false;
@@ -14265,8 +14283,8 @@ Phaser.Sprite.prototype.reset = function(x, y) {
 
     this.x = x;
     this.y = y;
-    this.position.x = x;
-    this.position.y = y;
+    this.position.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
+    this.position.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
     this.alive = true;
     this.exists = true;
     this.visible = true;
@@ -14910,10 +14928,20 @@ Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
         if (typeof overFrame === 'string')
         {
             this._onOverFrameName = overFrame;
+            
+            if (this.input.pointerOver())
+            {
+                this.frameName = overFrame;
+            }
         }
         else
         {
             this._onOverFrameID = overFrame;
+
+            if (this.input.pointerOver())
+            {
+                this.frame = overFrame;
+            }
         }
     }
 
@@ -14923,11 +14951,21 @@ Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
         {
             this._onOutFrameName = outFrame;
             this._onUpFrameName = outFrame;
+
+            if (this.input.pointerOver() == false)
+            {
+                this.frameName = outFrame;
+            }
         }
         else
         {
             this._onOutFrameID = outFrame;
             this._onUpFrameID = outFrame;
+
+            if (this.input.pointerOver() == false)
+            {
+                this.frame = outFrame;
+            }
         }
     }
 
@@ -14936,10 +14974,20 @@ Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
         if (typeof downFrame === 'string')
         {
             this._onDownFrameName = downFrame;
+
+            if (this.input.pointerOver())
+            {
+                this.frameName = downFrame;
+            }
         }
         else
         {
             this._onDownFrameID = downFrame;
+
+            if (this.input.pointerOver())
+            {
+                this.frame = downFrame;
+            }
         }
     }
 
@@ -15180,6 +15228,20 @@ Phaser.Canvas = {
         canvas.style.msTouchAction = value;
         canvas.style['ms-touch-action'] = value;
         canvas.style['touch-action'] = value;
+
+        return canvas;
+
+    },
+
+    setUserSelect: function (canvas, value) {
+
+        canvas.style['-webkit-touch-callout'] = value;
+        canvas.style['-webkit-user-select'] = value;
+        canvas.style['-khtml-user-select'] = value;
+        canvas.style['-moz-user-select'] = value;
+        canvas.style['-ms-user-select'] = value;
+        canvas.style['user-select'] = value;
+        canvas.style['-webkit-tap-highlight-color'] = 'rgba(0, 0, 0, 0)';
 
         return canvas;
 
@@ -21222,7 +21284,7 @@ Phaser.Animation.prototype = {
             {
                 if (this.looped)
                 {
-                    this._frameIndex = this._frameIndex - this._frames.length;
+                    this._frameIndex %= this._frames.length;
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
                     if (this.currentFrame)
@@ -21401,6 +21463,7 @@ Phaser.Animation.generateFrameNames = function (prefix, min, max, suffix, zeroPa
     return output;
 
 }
+
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
@@ -22899,12 +22962,12 @@ Phaser.Loader.prototype = {
 		if (direction == 0)
 		{
 			//	Horizontal crop
-			this.preloadSprite.crop = new Phaser.Rectangle(0, 0, 0, sprite.height);
+			this.preloadSprite.crop = new Phaser.Rectangle(0, 0, 1, sprite.height);
 		}
 		else
 		{
 			//	Vertical crop
-			this.preloadSprite.crop = new Phaser.Rectangle(0, 0, sprite.width, 0);
+			this.preloadSprite.crop = new Phaser.Rectangle(0, 0, sprite.width, 1);
 		}
 
 		sprite.crop = this.preloadSprite.crop;
@@ -23698,11 +23761,11 @@ Phaser.Loader.prototype = {
 		{
 			if (this.preloadSprite.direction == 0)
 			{
-				this.preloadSprite.crop.width = (this.preloadSprite.width / 100) * this.progress;
+				this.preloadSprite.crop.width = Math.floor((this.preloadSprite.width / 100) * this.progress);
 			}
 			else
 			{
-				this.preloadSprite.crop.height = (this.preloadSprite.height / 100) * this.progress;
+				this.preloadSprite.crop.height = Math.floor((this.preloadSprite.height / 100) * this.progress);
 			}
 
 			this.preloadSprite.sprite.crop = this.preloadSprite.crop;
@@ -23901,6 +23964,7 @@ Phaser.Sound = function (game, key, volume, loop) {
     this.startTime = 0;
     this.currentTime = 0;
     this.duration = 0;
+    this.durationMS = 0;
     this.stopTime = 0;
     this.paused = false;
     this.isPlaying = false;
@@ -24003,6 +24067,7 @@ Phaser.Sound.prototype = {
             stop: start + duration,
             volume: volume,
             duration: duration,
+            durationMS: duration * 1000,
             loop: loop
         };
 
@@ -24026,7 +24091,7 @@ Phaser.Sound.prototype = {
         {
             this.currentTime = this.game.time.now - this.startTime;
 
-            if (this.currentTime >= this.duration)
+            if (this.currentTime >= this.durationMS)
             {
                 //console.log(this.currentMarker, 'has hit duration');
                 if (this.usingWebAudio)
@@ -24088,7 +24153,7 @@ Phaser.Sound.prototype = {
     	if (typeof loop == 'undefined') { loop = false; }
     	if (typeof forceRestart == 'undefined') { forceRestart = true; }
 
-        console.log(this.name + ' play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop, 'force', forceRestart);
+        // console.log(this.name + ' play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop, 'force', forceRestart);
 
         if (this.isPlaying == true && forceRestart == false && this.override == false)
         {
@@ -24120,27 +24185,38 @@ Phaser.Sound.prototype = {
 
         this.currentMarker = marker;
 
-        if (marker !== '' && this.markers[marker])
+        if (marker !== '')
         {
-            this.position = this.markers[marker].start;
-            this.volume = this.markers[marker].volume;
-            this.loop = this.markers[marker].loop;
-            this.duration = this.markers[marker].duration * 1000;
+            if (this.markers[marker])
+            {
+                this.position = this.markers[marker].start;
+                this.volume = this.markers[marker].volume;
+                this.loop = this.markers[marker].loop;
+                this.duration = this.markers[marker].duration;
+                this.durationMS = this.markers[marker].durationMS;
 
-            console.log('marker info loaded', this.loop, this.duration);
-            this._tempMarker = marker;
-            this._tempPosition = this.position;
-            this._tempVolume = this.volume;
-            this._tempLoop = this.loop;
+                // console.log('Marker Loaded: ', marker, 'start:', this.position, 'end: ', this.duration, 'loop', this.loop);
+
+                this._tempMarker = marker;
+                this._tempPosition = this.position;
+                this._tempVolume = this.volume;
+                this._tempLoop = this.loop;
+            }
+            else
+            {
+                console.warn("Phaser.Sound.play: audio marker " + marker + " doesn't exist");
+                return;
+            }
         }
         else
         {
-            console.log('no marker info loaded');
+            // console.log('no marker info loaded', marker);
 
             this.position = position;
             this.volume = volume;
             this.loop = loop;
             this.duration = 0;
+            this.durationMS = 0;
 
             this._tempMarker = marker;
             this._tempPosition = position;
@@ -24166,7 +24242,9 @@ Phaser.Sound.prototype = {
 
                 if (this.duration == 0)
                 {
-                    this.duration = this.totalDuration * 1000;
+                    // console.log('duration reset');
+                    this.duration = this.totalDuration;
+                    this.durationMS = this.totalDuration * 1000;
                 }
 
                 if (this.loop && marker == '')
@@ -24177,18 +24255,20 @@ Phaser.Sound.prototype = {
                 //  Useful to cache this somewhere perhaps?
                 if (typeof this._sound.start === 'undefined')
                 {
-                    this._sound.noteGrainOn(0, this.position, this.duration / 1000);
+                    this._sound.noteGrainOn(0, this.position, this.duration);
+                    // this._sound.noteGrainOn(0, this.position, this.duration / 1000);
                     //this._sound.noteOn(0); // the zero is vitally important, crashes iOS6 without it
 				}
 				else
 				{
-                    this._sound.start(0, this.position, this.duration / 1000);
+                    // this._sound.start(0, this.position, this.duration / 1000);
+                    this._sound.start(0, this.position, this.duration);
                 }
 
                 this.isPlaying = true;
                 this.startTime = this.game.time.now;
                 this.currentTime = 0;
-                this.stopTime = this.startTime + this.duration;
+                this.stopTime = this.startTime + this.durationMS;
                 this.onPlay.dispatch(this);
 			}
 			else
@@ -24221,7 +24301,8 @@ Phaser.Sound.prototype = {
 
                     if (this.duration == 0)
                     {
-                        this.duration = this.totalDuration * 1000;
+                        this.duration = this.totalDuration;
+                        this.durationMS = this.totalDuration * 1000;
                     }
 
                     // console.log('playing', this._sound);
@@ -24240,7 +24321,7 @@ Phaser.Sound.prototype = {
                     this.isPlaying = true;
                     this.startTime = this.game.time.now;
                     this.currentTime = 0;
-                    this.stopTime = this.startTime + this.duration;
+                    this.stopTime = this.startTime + this.durationMS;
                     this.onPlay.dispatch(this);
                 }
                 else
@@ -25836,13 +25917,13 @@ Phaser.Physics.Arcade.prototype = {
         body.rotation += body.angularVelocity * this.game.time.physicsElapsed;
 
     	//	Horizontal
-        this._velocityDelta = (this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x) - body.velocity.x) / 2;
+        this._velocityDelta = (this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x) - body.velocity.x) / 2;
         body.velocity.x += this._velocityDelta;
 	    this._delta = body.velocity.x * this.game.time.physicsElapsed;
         body.x += this._delta;
 
     	//	Vertical
-        this._velocityDelta = (this.computeVelocity(2, body, body.velocity.y, body.acceleration.y, body.drag.y) - body.velocity.y) / 2;
+        this._velocityDelta = (this.computeVelocity(2, body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y) - body.velocity.y) / 2;
         body.velocity.y += this._velocityDelta;
         this._delta = body.velocity.y * this.game.time.physicsElapsed;
         body.y += this._delta;
@@ -27846,7 +27927,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
 
     if (this.width > 1 || this.height > 1)
     {
-    	particle.reset(this.emiteX - this.game.rnd.integerInRange(this.left, this.right), this.emiteY - this.game.rnd.integerInRange(this.top, this.bottom));
+    	particle.reset(this.game.rnd.integerInRange(this.left, this.right), this.game.rnd.integerInRange(this.top, this.bottom));
     }
     else
     {
