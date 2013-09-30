@@ -172,6 +172,7 @@ Phaser.Sound.prototype = {
 
     //  start and stop are in SECONDS.MS (2.5 = 2500ms, 0.5 = 500ms, etc)
     //  volume is between 0 and 1
+    /*
     addMarker: function (name, start, stop, volume, loop) {
 
     	volume = volume || 1;
@@ -183,6 +184,25 @@ Phaser.Sound.prototype = {
             stop: stop,
             volume: volume,
             duration: stop - start,
+            loop: loop
+        };
+
+    },
+    */
+
+    //  start and stop are in SECONDS.MS (2.5 = 2500ms, 0.5 = 500ms, etc)
+    //  volume is between 0 and 1
+    addMarker: function (name, start, duration, volume, loop) {
+
+        volume = volume || 1;
+        if (typeof loop == 'undefined') { loop = false; }
+
+        this.markers[name] = {
+            name: name,
+            start: start,
+            stop: start + duration,
+            volume: volume,
+            duration: duration,
             loop: loop
         };
 
@@ -266,9 +286,9 @@ Phaser.Sound.prototype = {
     	position = position || 0;
     	volume = volume || 1;
     	if (typeof loop == 'undefined') { loop = false; }
-    	if (typeof forceRestart == 'undefined') { forceRestart = false; }
+    	if (typeof forceRestart == 'undefined') { forceRestart = true; }
 
-        // console.log(this.name + ' play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop);
+        console.log(this.name + ' play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop, 'force', forceRestart);
 
         if (this.isPlaying == true && forceRestart == false && this.override == false)
         {
@@ -307,7 +327,7 @@ Phaser.Sound.prototype = {
             this.loop = this.markers[marker].loop;
             this.duration = this.markers[marker].duration * 1000;
 
-            // console.log('marker info loaded', this.loop, this.duration);
+            console.log('marker info loaded', this.loop, this.duration);
             this._tempMarker = marker;
             this._tempPosition = this.position;
             this._tempVolume = this.volume;
@@ -315,6 +335,8 @@ Phaser.Sound.prototype = {
         }
         else
         {
+            console.log('no marker info loaded');
+
             this.position = position;
             this.volume = volume;
             this.loop = loop;

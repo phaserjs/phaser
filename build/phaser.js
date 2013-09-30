@@ -1,7 +1,7 @@
 /**
 * Phaser - http://www.phaser.io
 *
-* v1.0.6 - Built at: Tue, 24 Sep 2013 12:29:16 +0000
+* v1.0.7 - Built at: Fri, 27 Sep 2013 23:12:25 +0000
 *
 * @author Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -34,7 +34,7 @@ var PIXI = PIXI || {};
  */
 var Phaser = Phaser || { 
 
-	VERSION: '1.0.6', 
+	VERSION: '1.0.7-beta', 
 	GAMES: [], 
 	AUTO: 0,
 	CANVAS: 1,
@@ -80,8 +80,8 @@ PIXI.InteractionManager = function (dummy) {
 Phaser.Utils = {
 	
 	/**
-	*  Javascript string pad
-	*  http://www.webtoolkit.info/
+	* Javascript string pad
+	* http://www.webtoolkit.info/
 	* pad = the string to pad it out with (defaults to a space)
 	* dir = 1 (left), 2 (right), 3 (both)
 	* @method pad
@@ -7839,7 +7839,9 @@ Phaser.StateManager.prototype = {
 				this.onShutDownCallback.call(this.callbackContext);
 			}
 
-	        if (clearWorld) {
+	        if (clearWorld)
+	        {
+				this.game.tweens.removeAll();
 
 	            this.game.world.destroy();
 
@@ -10491,6 +10493,11 @@ Phaser.Game.prototype = {
 			else
 			{
 				console.log('%cPhaser ' + Phaser.VERSION + ' initialized. Rendering to WebGL', 'color: #ffff33; background: #000000');
+			}
+
+			if (Phaser.VERSION.substr(-5) == '-beta')
+			{
+				console.warn('You are using a beta version of Phaser. Some things may not work.');
 			}
 
 	        this.isRunning = true;
@@ -14150,7 +14157,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
     }
 
     //  Frame updated?
-    if (this.currentFrame.uuid != this._cache.frameID)
+    if (this.currentFrame && this.currentFrame.uuid != this._cache.frameID)
     {
         this._cache.frameWidth = this.texture.frame.width;
         this._cache.frameHeight = this.texture.frame.height;
@@ -14158,7 +14165,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache.dirty = true;
     }
 
-    if (this._cache.dirty)
+    if (this._cache.dirty && this.currentFrame)
     {
         this._cache.width = Math.floor(this.currentFrame.sourceSizeW * this._cache.scaleX);
         this._cache.height = Math.floor(this.currentFrame.sourceSizeH * this._cache.scaleY);
@@ -14362,6 +14369,25 @@ Phaser.Sprite.prototype.getBounds = function(rect) {
     rect.height = bottom - top;
     
     return rect;
+
+}
+
+/**
+* Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()
+* If the requested animation is already playing this request will be ignored. If you need to reset an already running animation do so directly on the Animation object itself.
+* 
+* @method play
+* @param {String} name The name of the animation to be played, e.g. "fire", "walk", "jump".
+* @param {Number} [frameRate=null] The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
+* @param {Boolean} [loop=null] Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
+* @return {Phaser.Animation} A reference to playing Animation instance.
+*/
+Phaser.Sprite.prototype.play = function (name, frameRate, loop) {
+
+    if (this.animations)
+    {
+        this.animations.play(name, frameRate, loop);
+    }
 
 }
 
@@ -14637,7 +14663,7 @@ Object.defineProperty(Phaser.Text.prototype, 'angle', {
 
 });
 
-Object.defineProperty(Phaser.Text.prototype, 'text', {
+Object.defineProperty(Phaser.Text.prototype, 'content', {
 
     get: function() {
         return this._text;
@@ -14649,14 +14675,14 @@ Object.defineProperty(Phaser.Text.prototype, 'text', {
         if (value !== this._text)
         {
             this._text = value;
-            this.dirty = true;
+            this.setText(value);
         }
 
     }
 
 });
 
-Object.defineProperty(Phaser.Text.prototype, 'style', {
+Object.defineProperty(Phaser.Text.prototype, 'font', {
 
     get: function() {
         return this._style;
@@ -14668,7 +14694,7 @@ Object.defineProperty(Phaser.Text.prototype, 'style', {
         if (value !== this._style)
         {
             this._style = value;
-            this.dirty = true;
+            this.setStyle(value);
         }
 
     }
@@ -14855,7 +14881,7 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
         this.onInputUp.add(callback, callbackContext);
     }
 
-    this.input.start(0, false, true);
+    this.input.start(0, true);
 
     //  Redirect the input events to here so we can handle animation updates, etc
     this.events.onInputOver.add(this.onInputOverHandler, this);
@@ -14951,6 +14977,7 @@ Phaser.Button.prototype.onInputOutHandler = function (pointer) {
     {
         this.onInputOut.dispatch(this, pointer);
     }
+
 };
 
 Phaser.Button.prototype.onInputDownHandler = function (pointer) {
@@ -19522,7 +19549,8 @@ Phaser.TweenManager.prototype = {
 	*/
 	removeAll: function () {
 
-		this._tweens = [];
+		this._add.length = 0;
+		this._tweens.length = 0;
 
 	},
 
@@ -19877,11 +19905,15 @@ Phaser.Tween.prototype = {
 
     pause: function () {
         this._paused = true;
+        this._pausedTime = this.game.time.now;
     },
 
     resume: function () {
+
         this._paused = false;
-        this._startTime += this.game.time.pauseDuration;
+
+        this._startTime += (this.game.time.now - this._pausedTime);
+
     },
 
 	update: function ( time ) {
@@ -20257,7 +20289,7 @@ Phaser.Easing = {
 
 		In: function ( k ) {
 
-			return 1 - TWEEN.Easing.Bounce.Out( 1 - k );
+			return 1 - Phaser.Easing.Bounce.Out( 1 - k );
 
 		},
 
@@ -20285,8 +20317,8 @@ Phaser.Easing = {
 
 		InOut: function ( k ) {
 
-			if ( k < 0.5 ) return TWEEN.Easing.Bounce.In( k * 2 ) * 0.5;
-			return TWEEN.Easing.Bounce.Out( k * 2 - 1 ) * 0.5 + 0.5;
+			if ( k < 0.5 ) return Phaser.Easing.Bounce.In( k * 2 ) * 0.5;
+			return Phaser.Easing.Bounce.Out( k * 2 - 1 ) * 0.5 + 0.5;
 
 		}
 
@@ -20880,6 +20912,22 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameTotal", {
 
 });
 
+Object.defineProperty(Phaser.AnimationManager.prototype, "paused", {
+
+    get: function () {
+
+        return this.currentAnim.isPaused;
+
+    },
+
+    set: function (value) {
+
+        this.currentAnim.paused = value;
+
+    }
+
+});
+
 Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
 
     /**
@@ -21024,6 +21072,19 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
 	this.isPlaying = false;
 
     /**
+    * @property {boolean} isPaused - The paused state of the Animation.
+    * @default
+    */
+    this.isPaused = false;
+
+    /**
+    * @property {boolean} _pauseStartTime - The time the animation paused.
+    * @private
+    * @default
+    */
+    this._pauseStartTime = 0;
+
+    /**
     * @property {number} _frameIndex
     * @private
     * @default
@@ -21052,18 +21113,15 @@ Phaser.Animation.prototype = {
     */
     play: function (frameRate, loop) {
 
-        frameRate = frameRate || null;
-        loop = loop || null;
-
-        if (frameRate !== null)
+        if (typeof frameRate === 'number')
         {
+            //  If they set a new frame rate then use it, otherwise use the one set on creation
             this.delay = 1000 / frameRate;
-            // this.delay = frameRate;
         }
 
-        if (loop !== null)
+        if (typeof loop === 'boolean')
         {
-            //  If they set a new loop value then use it, otherwise use the default set on creation
+            //  If they set a new loop value then use it, otherwise use the one set on creation
             this.looped = loop;
         }
 
@@ -21133,6 +21191,11 @@ Phaser.Animation.prototype = {
     */
     update: function () {
 
+        if (this.isPaused)
+        {
+            return false;
+        }
+
         if (this.isPlaying == true && this.game.time.now >= this._timeNextFrame)
         {
             this._frameSkip = 1;
@@ -21161,7 +21224,12 @@ Phaser.Animation.prototype = {
                 {
                     this._frameIndex = this._frameIndex - this._frames.length;
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-                    this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+                    if (this.currentFrame)
+                    {
+                        this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+                    }
+                    
                     this._parent.events.onAnimationLoop.dispatch(this._parent, this);
                 }
                 else
@@ -21217,6 +21285,38 @@ Phaser.Animation.prototype = {
 
 };
 
+/**
+ */
+Object.defineProperty(Phaser.Animation.prototype, "paused", {
+
+    get: function () {
+
+        return this.isPaused;
+
+    },
+
+    set: function (value) {
+
+        this.isPaused = value;
+
+        if (value)
+        {
+            //  Paused
+            this._pauseStartTime = this.game.time.now;
+        }
+        else
+        {
+            //  Un-paused
+            if (this.isPlaying)
+            {
+                this._timeNextFrame = this.game.time.now + this.delay;
+            }
+        }
+
+    }
+
+});
+
 Object.defineProperty(Phaser.Animation.prototype, "frameTotal", {
 
     /**
@@ -21268,6 +21368,39 @@ Object.defineProperty(Phaser.Animation.prototype, "frame", {
 
 });
 
+/*
+ * Really handy function for when you are creating arrays of animation data but it's using frame names and not numbers.
+ * For example imagine you've got 30 frames named: 'explosion_0001-large' to 'explosion_0030-large'
+ * You could use this function to generate those by doing: Phaser.Animation.generateFrameNames('explosion_', 1, 30, '-large', 4);
+ * The zeroPad value dictates how many zeroes to add in front of the numbers (if any)
+ */
+Phaser.Animation.generateFrameNames = function (prefix, min, max, suffix, zeroPad) {
+
+    if (typeof suffix == 'undefined') { suffix = ''; }
+
+    var output = [];
+    var frame = '';
+
+    for (var i = min; i <= max; i++)
+    {
+        if (typeof zeroPad == 'number')
+        {
+            //  str, len, pad, dir
+            frame = Phaser.Utils.pad(i.toString(), zeroPad, '0', 1);
+        }
+        else
+        {
+            frame = i.toString();
+        }
+
+        frame = prefix + frame + suffix;
+
+        output.push(frame);
+    }
+
+    return output;
+
+}
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
@@ -21875,9 +22008,11 @@ Phaser.Animation.Parser = {
                     frames[i].spriteSourceSize.h
                 );
 
-                PIXI.TextureCache[uuid].realSize = frames[i].spriteSourceSize;
-                // PIXI.TextureCache[uuid].realSize = frames[i].sourceSize;
-                PIXI.TextureCache[uuid].trim.x = 0;
+                //  We had to hack Pixi to get this to work :(
+                PIXI.TextureCache[uuid].trimmed = true;
+                PIXI.TextureCache[uuid].trim.x = frames[i].spriteSourceSize.x;
+                PIXI.TextureCache[uuid].trim.y = frames[i].spriteSourceSize.y;
+
             }
         }
 
@@ -21945,9 +22080,11 @@ Phaser.Animation.Parser = {
                     frames[key].spriteSourceSize.h
                 );
 
-                PIXI.TextureCache[uuid].realSize = frames[key].spriteSourceSize;
-                // PIXI.TextureCache[uuid].realSize = frames[key].sourceSize;
-                PIXI.TextureCache[uuid].trim.x = 0;
+                //  We had to hack Pixi to get this to work :(
+                PIXI.TextureCache[uuid].trimmed = true;
+                PIXI.TextureCache[uuid].trim.x = frames[key].spriteSourceSize.x;
+                PIXI.TextureCache[uuid].trim.y = frames[key].spriteSourceSize.y;
+
             }
 
             i++;
@@ -22004,7 +22141,8 @@ Phaser.Animation.Parser = {
             });
 
             //  Trimmed?
-            if (frame.frameX.nodeValue != '-0' || frame.frameY.nodeValue != '-0') {
+            if (frame.frameX.nodeValue != '-0' || frame.frameY.nodeValue != '-0')
+            {
                 newFrame.setTrim(
                 	true, 
                 	frame.width.nodeValue, 
@@ -22022,7 +22160,10 @@ Phaser.Animation.Parser = {
                     h: frame.frameHeight.nodeValue
                 };
 
-                PIXI.TextureCache[uuid].trim.x = 0;
+                //  We had to hack Pixi to get this to work :(
+                PIXI.TextureCache[uuid].trimmed = true;
+                PIXI.TextureCache[uuid].trim.x = Math.abs(frame.frameX.nodeValue);
+                PIXI.TextureCache[uuid].trim.y = Math.abs(frame.frameY.nodeValue);
 
             }
         }
@@ -23831,6 +23972,7 @@ Phaser.Sound.prototype = {
 
     //  start and stop are in SECONDS.MS (2.5 = 2500ms, 0.5 = 500ms, etc)
     //  volume is between 0 and 1
+    /*
     addMarker: function (name, start, stop, volume, loop) {
 
     	volume = volume || 1;
@@ -23842,6 +23984,25 @@ Phaser.Sound.prototype = {
             stop: stop,
             volume: volume,
             duration: stop - start,
+            loop: loop
+        };
+
+    },
+    */
+
+    //  start and stop are in SECONDS.MS (2.5 = 2500ms, 0.5 = 500ms, etc)
+    //  volume is between 0 and 1
+    addMarker: function (name, start, duration, volume, loop) {
+
+        volume = volume || 1;
+        if (typeof loop == 'undefined') { loop = false; }
+
+        this.markers[name] = {
+            name: name,
+            start: start,
+            stop: start + duration,
+            volume: volume,
+            duration: duration,
             loop: loop
         };
 
@@ -23925,9 +24086,9 @@ Phaser.Sound.prototype = {
     	position = position || 0;
     	volume = volume || 1;
     	if (typeof loop == 'undefined') { loop = false; }
-    	if (typeof forceRestart == 'undefined') { forceRestart = false; }
+    	if (typeof forceRestart == 'undefined') { forceRestart = true; }
 
-        console.log(this.name + ' play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop);
+        console.log(this.name + ' play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop, 'force', forceRestart);
 
         if (this.isPlaying == true && forceRestart == false && this.override == false)
         {
@@ -23966,7 +24127,7 @@ Phaser.Sound.prototype = {
             this.loop = this.markers[marker].loop;
             this.duration = this.markers[marker].duration * 1000;
 
-            // console.log('marker info loaded', this.loop, this.duration);
+            console.log('marker info loaded', this.loop, this.duration);
             this._tempMarker = marker;
             this._tempPosition = this.position;
             this._tempVolume = this.volume;
@@ -23974,6 +24135,8 @@ Phaser.Sound.prototype = {
         }
         else
         {
+            console.log('no marker info loaded');
+
             this.position = position;
             this.volume = volume;
             this.loop = loop;
@@ -24589,8 +24752,6 @@ Phaser.SoundManager.prototype = {
 
     	volume = volume || 1;
     	if (typeof loop == 'undefined') { loop = false; }
-
-        
 
         var sound = new Phaser.Sound(this.game, key, volume, loop);
 
@@ -26256,8 +26417,8 @@ Phaser.Physics.Arcade.prototype = {
      */
     separateTile: function (object, x, y, width, height, mass, collideLeft, collideRight, collideUp, collideDown, separateX, separateY) {
 
-        var separatedY = this.separateTileY(object.body, x, y, width, height, mass, collideUp, collideDown, separateY);
         var separatedX = this.separateTileX(object.body, x, y, width, height, mass, collideLeft, collideRight, separateX);
+        var separatedY = this.separateTileY(object.body, x, y, width, height, mass, collideUp, collideDown, separateY);
 
         if (separatedX || separatedY)
         {
@@ -26274,7 +26435,7 @@ Phaser.Physics.Arcade.prototype = {
      * @param tile The Tile to separate
      * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
      */
-    separateTileX: function (object, x, y, width, height, mass, collideLeft, collideRight, separate) {
+    OLDseparateTileX: function (object, x, y, width, height, mass, collideLeft, collideRight, separate) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
         if (object.immovable)
@@ -26361,7 +26522,7 @@ Phaser.Physics.Arcade.prototype = {
      * @param tile The Tile to separate
      * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
      */
-    separateTileY: function (object, x, y, width, height, mass, collideUp, collideDown, separate) {
+    OLDseparateTileY: function (object, x, y, width, height, mass, collideUp, collideDown, separate) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
         if (object.immovable)
@@ -26449,7 +26610,7 @@ Phaser.Physics.Arcade.prototype = {
      * @param tile The Tile to separate
      * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
      */
-    NEWseparateTileX: function (object, x, y, width, height, mass, collideLeft, collideRight, separate) {
+    separateTileX: function (object, x, y, width, height, mass, collideLeft, collideRight, separate) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
         if (object.immovable)
@@ -26459,17 +26620,21 @@ Phaser.Physics.Arcade.prototype = {
 
         this._overlap = 0;
 
+        //  Do we have any overlap at all?
         if (Phaser.Rectangle.intersectsRaw(object, x, x + width, y, y + height))
         {
             this._maxOverlap = object.deltaAbsX() + this.OVERLAP_BIAS;
 
             if (object.deltaX() == 0)
             {
-                //  Object is stuck inside a tile and not moving
+                //  Object is either stuck inside the tile or only overlapping on the Y axis
             }
             else if (object.deltaX() > 0)
             {
                 //  Going right ...
+
+
+                
                 this._overlap = object.x + object.width - x;
 
                 if ((this._overlap > this._maxOverlap) || !object.allowCollision.right || !collideLeft)
@@ -26500,6 +26665,7 @@ Phaser.Physics.Arcade.prototype = {
             {
                 if (separate)
                 {
+                    console.log('x over', this._overlap);
                     object.x = object.x - this._overlap;
 
                     if (object.bounce.x == 0)
@@ -26526,7 +26692,7 @@ Phaser.Physics.Arcade.prototype = {
      * @param tile The Tile to separate
      * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
      */
-    NEWseparateTileY: function (object, x, y, width, height, mass, collideUp, collideDown, separate) {
+    separateTileY: function (object, x, y, width, height, mass, collideUp, collideDown, separate) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
         if (object.immovable)
@@ -26576,6 +26742,8 @@ Phaser.Physics.Arcade.prototype = {
 
             if (this._overlap != 0)
             {
+                console.log('y over', this._overlap);
+
                 if (separate)
                 {
                     object.y = object.y - this._overlap;
@@ -27195,6 +27363,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 	},
 
+	//	Basically Math.abs
     deltaAbsX: function () {
         return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
     },
@@ -28034,6 +28203,8 @@ Phaser.Tilemap.prototype.parseTiledJSON = function (json, key) {
             continue;
         }
 
+        // layer.createQuadTree(json.tilewidth * json.layers[i].width, json.tileheight * json.layers[i].height);
+
         layer.alpha = json.layers[i].opacity;
         layer.visible = json.layers[i].visible;
         layer.tileMargin = json.tilesets[0].margin;
@@ -28078,8 +28249,6 @@ Phaser.Tilemap.prototype.parseTiledJSON = function (json, key) {
 * @param qty {number} Quentity of tiles to be generated.
 */
 Phaser.Tilemap.prototype.generateTiles = function (qty) {
-
-    console.log('generating', qty, 'tiles');
 
     for (var i = 0; i < qty; i++)
     {
@@ -28412,6 +28581,8 @@ Phaser.TilemapLayer = function (parent, id, key, mapFormat, name, tileWidth, til
     this.tileset = map.data;
 
     this._alpha = 1;
+
+    this.quadTree = null;
 
     this.canvas = null;
     this.context = null;
@@ -28800,6 +28971,12 @@ Phaser.TilemapLayer.prototype = {
 
     },
 
+    createQuadTree: function (width, height) {
+
+        this.quadTree = new Phaser.QuadTree(this, 0, 0, width, height, 20, 4);
+
+    },
+
 	/**
     * Update boundsInTiles with widthInTiles and heightInTiles.
     */
@@ -29133,7 +29310,14 @@ Phaser.TilemapRenderer.prototype = {
                             layer.tileWidth,
                             layer.tileHeight
                             );
+
+                        if (tilemap.tiles[this._columnData[tile]].collideNone == false)
+                        {
+                            layer.context.fillStyle = 'rgba(255,255,0,0.5)';
+                            layer.context.fillRect(this._tx, this._ty, layer.tileWidth, layer.tileHeight);
+                        }
                     }
+
 
                     this._tx += layer.tileWidth;
 
@@ -29162,3 +29346,234 @@ Phaser.TilemapRenderer.prototype = {
     }
 
 };
+/**
+ * We're replacing a couple of Pixi's methods here to fix or add some vital functionality:
+ *
+ * 1) Added support for Trimmed sprite sheets
+ * 2) Skip display objects with an alpha of zero
+ *
+ * Hopefully we can remove this once Pixi has been updated to support these things.
+ */
+
+PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
+{
+	// no loger recurrsive!
+	var transform;
+	var context = this.context;
+	
+	context.globalCompositeOperation = 'source-over';
+	
+	// one the display object hits this. we can break the loop	
+	var testObject = displayObject.last._iNext;
+	displayObject = displayObject.first;
+	
+	do	
+	{
+		transform = displayObject.worldTransform;
+		
+		if(!displayObject.visible)
+		{
+			displayObject = displayObject.last._iNext;
+			continue;
+		}
+		
+		if(!displayObject.renderable || displayObject.alpha == 0)
+		{
+			displayObject = displayObject._iNext;
+			continue;
+		}
+		
+		if(displayObject instanceof PIXI.Sprite)
+		{
+			var frame = displayObject.texture.frame;
+			
+			if(frame)
+			{
+				context.globalAlpha = displayObject.worldAlpha;
+				
+				if (displayObject.texture.trimmed)
+				{
+					context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2] + displayObject.texture.trim.x, transform[5] + displayObject.texture.trim.y);
+				}
+				else
+				{
+					context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5]);
+				}
+					
+				context.drawImage(displayObject.texture.baseTexture.source, 
+								   frame.x,
+								   frame.y,
+								   frame.width,
+								   frame.height,
+								   (displayObject.anchor.x) * -frame.width, 
+								   (displayObject.anchor.y) * -frame.height,
+								   frame.width,
+								   frame.height);
+			}					   
+	   	}
+	   	else if(displayObject instanceof PIXI.Strip)
+		{
+			context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5])
+			this.renderStrip(displayObject);
+		}
+		else if(displayObject instanceof PIXI.TilingSprite)
+		{
+			context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5])
+			this.renderTilingSprite(displayObject);
+		}
+		else if(displayObject instanceof PIXI.CustomRenderable)
+		{
+			displayObject.renderCanvas(this);
+		}
+		else if(displayObject instanceof PIXI.Graphics)
+		{
+			context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5])
+			PIXI.CanvasGraphics.renderGraphics(displayObject, context);
+		}
+		else if(displayObject instanceof PIXI.FilterBlock)
+		{
+			if(displayObject.open)
+			{
+				context.save();
+				
+				var cacheAlpha = displayObject.mask.alpha;
+				var maskTransform = displayObject.mask.worldTransform;
+				
+				context.setTransform(maskTransform[0], maskTransform[3], maskTransform[1], maskTransform[4], maskTransform[2], maskTransform[5])
+				
+				displayObject.mask.worldAlpha = 0.5;
+				
+				context.worldAlpha = 0;
+				
+				PIXI.CanvasGraphics.renderGraphicsMask(displayObject.mask, context);
+				context.clip();
+				
+				displayObject.mask.worldAlpha = cacheAlpha;
+			}
+			else
+			{
+				context.restore();
+			}
+		}
+	//	count++
+		displayObject = displayObject._iNext;
+		
+		
+	}
+	while(displayObject != testObject)
+	
+}
+
+PIXI.WebGLBatch.prototype.update = function()
+{
+	var gl = this.gl;
+	var worldTransform, width, height, aX, aY, w0, w1, h0, h1, index, index2, index3
+
+	var a, b, c, d, tx, ty;
+
+	var indexRun = 0;
+
+	var displayObject = this.head;
+
+	while(displayObject)
+	{
+		if(displayObject.vcount === PIXI.visibleCount)
+		{
+			width = displayObject.texture.frame.width;
+			height = displayObject.texture.frame.height;
+
+			// TODO trim??
+			aX = displayObject.anchor.x;// - displayObject.texture.trim.x
+			aY = displayObject.anchor.y; //- displayObject.texture.trim.y
+			w0 = width * (1-aX);
+			w1 = width * -aX;
+
+			h0 = height * (1-aY);
+			h1 = height * -aY;
+
+			index = indexRun * 8;
+
+			worldTransform = displayObject.worldTransform;
+
+			a = worldTransform[0];
+			b = worldTransform[3];
+			c = worldTransform[1];
+			d = worldTransform[4];
+			tx = worldTransform[2];
+			ty = worldTransform[5];
+
+			if (displayObject.texture.trimmed)
+			{
+				tx += displayObject.texture.trim.x;
+				ty += displayObject.texture.trim.y;
+			}
+
+			this.verticies[index + 0 ] = a * w1 + c * h1 + tx; 
+			this.verticies[index + 1 ] = d * h1 + b * w1 + ty;
+
+			this.verticies[index + 2 ] = a * w0 + c * h1 + tx; 
+			this.verticies[index + 3 ] = d * h1 + b * w0 + ty; 
+
+			this.verticies[index + 4 ] = a * w0 + c * h0 + tx; 
+			this.verticies[index + 5 ] = d * h0 + b * w0 + ty; 
+
+			this.verticies[index + 6] =  a * w1 + c * h0 + tx; 
+			this.verticies[index + 7] =  d * h0 + b * w1 + ty; 
+
+			if(displayObject.updateFrame || displayObject.texture.updateFrame)
+			{
+				this.dirtyUVS = true;
+
+				var texture = displayObject.texture;
+
+				var frame = texture.frame;
+				var tw = texture.baseTexture.width;
+				var th = texture.baseTexture.height;
+
+				this.uvs[index + 0] = frame.x / tw;
+				this.uvs[index +1] = frame.y / th;
+
+				this.uvs[index +2] = (frame.x + frame.width) / tw;
+				this.uvs[index +3] = frame.y / th;
+
+				this.uvs[index +4] = (frame.x + frame.width) / tw;
+				this.uvs[index +5] = (frame.y + frame.height) / th; 
+
+				this.uvs[index +6] = frame.x / tw;
+				this.uvs[index +7] = (frame.y + frame.height) / th;
+
+				displayObject.updateFrame = false;
+			}
+
+			// TODO this probably could do with some optimisation....
+			if(displayObject.cacheAlpha != displayObject.worldAlpha)
+			{
+				displayObject.cacheAlpha = displayObject.worldAlpha;
+
+				var colorIndex = indexRun * 4;
+				this.colors[colorIndex] = this.colors[colorIndex + 1] = this.colors[colorIndex + 2] = this.colors[colorIndex + 3] = displayObject.worldAlpha;
+				this.dirtyColors = true;
+			}
+		}
+		else
+		{
+			index = indexRun * 8;
+
+			this.verticies[index + 0 ] = 0;
+			this.verticies[index + 1 ] = 0;
+
+			this.verticies[index + 2 ] = 0;
+			this.verticies[index + 3 ] = 0;
+
+			this.verticies[index + 4 ] = 0;
+			this.verticies[index + 5 ] = 0;
+
+			this.verticies[index + 6] = 0;
+			this.verticies[index + 7] = 0;
+		}
+
+		indexRun++;
+		displayObject = displayObject.__next;
+   }
+}
+

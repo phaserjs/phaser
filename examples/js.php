@@ -118,3 +118,4 @@
 	<script src="../src/tilemap/Tile.js"></script>
 	<script src="../src/tilemap/TilemapRenderer.js"></script>
 	
+	<script src="../src/PixiPatch.js"></script>

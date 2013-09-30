@@ -39,7 +39,8 @@ Phaser.TweenManager.prototype = {
 	*/
 	removeAll: function () {
 
-		this._tweens = [];
+		this._add.length = 0;
+		this._tweens.length = 0;
 
 	},
 

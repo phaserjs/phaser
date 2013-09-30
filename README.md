@@ -51,6 +51,10 @@ Version 1.0.7 (in progress in the dev branch)
 * Added Animation.paused - can be set to true/false.
 * New: Phaser.Animation.generateFrameNames - really useful when creating animation data from texture atlases using file names, not indexes.
 * Added Sprite.play as a handy short-cut to play an animation already loaded onto a Sprite.
+* Fixed small bug stopping Tween.pause / resume from resuming correctly when called directly.
+* Fixed an issue where Tweens.removeAll wasn't clearing tweens in the addition queue.
+* Change: When you swap State all active tweens are now purged.
+* BUG: Loader conflict if 2 keys are the same even if they are in different packages (i.e. "title" for picture and audio).
 
 
 * TODO: addMarker hh:mm:ss:ms
