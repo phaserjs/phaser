@@ -255,7 +255,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
     }
 
     //  Frame updated?
-    if (this.currentFrame.uuid != this._cache.frameID)
+    if (this.currentFrame && this.currentFrame.uuid != this._cache.frameID)
     {
         this._cache.frameWidth = this.texture.frame.width;
         this._cache.frameHeight = this.texture.frame.height;
@@ -263,7 +263,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache.dirty = true;
     }
 
-    if (this._cache.dirty)
+    if (this._cache.dirty && this.currentFrame)
     {
         this._cache.width = Math.floor(this.currentFrame.sourceSizeW * this._cache.scaleX);
         this._cache.height = Math.floor(this.currentFrame.sourceSizeH * this._cache.scaleY);
@@ -467,6 +467,25 @@ Phaser.Sprite.prototype.getBounds = function(rect) {
     rect.height = bottom - top;
     
     return rect;
+
+}
+
+/**
+* Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()
+* If the requested animation is already playing this request will be ignored. If you need to reset an already running animation do so directly on the Animation object itself.
+* 
+* @method play
+* @param {String} name The name of the animation to be played, e.g. "fire", "walk", "jump".
+* @param {Number} [frameRate=null] The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
+* @param {Boolean} [loop=null] Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
+* @return {Phaser.Animation} A reference to playing Animation instance.
+*/
+Phaser.Sprite.prototype.play = function (name, frameRate, loop) {
+
+    if (this.animations)
+    {
+        this.animations.play(name, frameRate, loop);
+    }
 
 }
 

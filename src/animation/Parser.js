@@ -146,9 +146,11 @@ Phaser.Animation.Parser = {
                     frames[i].spriteSourceSize.h
                 );
 
-                PIXI.TextureCache[uuid].realSize = frames[i].spriteSourceSize;
-                // PIXI.TextureCache[uuid].realSize = frames[i].sourceSize;
-                PIXI.TextureCache[uuid].trim.x = 0;
+                //  We had to hack Pixi to get this to work :(
+                PIXI.TextureCache[uuid].trimmed = true;
+                PIXI.TextureCache[uuid].trim.x = frames[i].spriteSourceSize.x;
+                PIXI.TextureCache[uuid].trim.y = frames[i].spriteSourceSize.y;
+
             }
         }
 
@@ -216,9 +218,11 @@ Phaser.Animation.Parser = {
                     frames[key].spriteSourceSize.h
                 );
 
-                PIXI.TextureCache[uuid].realSize = frames[key].spriteSourceSize;
-                // PIXI.TextureCache[uuid].realSize = frames[key].sourceSize;
-                PIXI.TextureCache[uuid].trim.x = 0;
+                //  We had to hack Pixi to get this to work :(
+                PIXI.TextureCache[uuid].trimmed = true;
+                PIXI.TextureCache[uuid].trim.x = frames[key].spriteSourceSize.x;
+                PIXI.TextureCache[uuid].trim.y = frames[key].spriteSourceSize.y;
+
             }
 
             i++;
@@ -275,7 +279,8 @@ Phaser.Animation.Parser = {
             });
 
             //  Trimmed?
-            if (frame.frameX.nodeValue != '-0' || frame.frameY.nodeValue != '-0') {
+            if (frame.frameX.nodeValue != '-0' || frame.frameY.nodeValue != '-0')
+            {
                 newFrame.setTrim(
                 	true, 
                 	frame.width.nodeValue, 
@@ -293,7 +298,10 @@ Phaser.Animation.Parser = {
                     h: frame.frameHeight.nodeValue
                 };
 
-                PIXI.TextureCache[uuid].trim.x = 0;
+                //  We had to hack Pixi to get this to work :(
+                PIXI.TextureCache[uuid].trimmed = true;
+                PIXI.TextureCache[uuid].trim.x = Math.abs(frame.frameX.nodeValue);
+                PIXI.TextureCache[uuid].trim.y = Math.abs(frame.frameY.nodeValue);
 
             }
         }

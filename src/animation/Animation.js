@@ -73,6 +73,19 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
 	this.isPlaying = false;
 
     /**
+    * @property {boolean} isPaused - The paused state of the Animation.
+    * @default
+    */
+    this.isPaused = false;
+
+    /**
+    * @property {boolean} _pauseStartTime - The time the animation paused.
+    * @private
+    * @default
+    */
+    this._pauseStartTime = 0;
+
+    /**
     * @property {number} _frameIndex
     * @private
     * @default
@@ -101,18 +114,15 @@ Phaser.Animation.prototype = {
     */
     play: function (frameRate, loop) {
 
-        frameRate = frameRate || null;
-        loop = loop || null;
-
-        if (frameRate !== null)
+        if (typeof frameRate === 'number')
         {
+            //  If they set a new frame rate then use it, otherwise use the one set on creation
             this.delay = 1000 / frameRate;
-            // this.delay = frameRate;
         }
 
-        if (loop !== null)
+        if (typeof loop === 'boolean')
         {
-            //  If they set a new loop value then use it, otherwise use the default set on creation
+            //  If they set a new loop value then use it, otherwise use the one set on creation
             this.looped = loop;
         }
 
@@ -182,6 +192,11 @@ Phaser.Animation.prototype = {
     */
     update: function () {
 
+        if (this.isPaused)
+        {
+            return false;
+        }
+
         if (this.isPlaying == true && this.game.time.now >= this._timeNextFrame)
         {
             this._frameSkip = 1;
@@ -210,7 +225,12 @@ Phaser.Animation.prototype = {
                 {
                     this._frameIndex = this._frameIndex %= this._frames.length;
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-                    this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+                    if (this.currentFrame)
+                    {
+                        this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+                    }
+                    
                     this._parent.events.onAnimationLoop.dispatch(this._parent, this);
                 }
                 else
@@ -266,6 +286,38 @@ Phaser.Animation.prototype = {
 
 };
 
+/**
+ */
+Object.defineProperty(Phaser.Animation.prototype, "paused", {
+
+    get: function () {
+
+        return this.isPaused;
+
+    },
+
+    set: function (value) {
+
+        this.isPaused = value;
+
+        if (value)
+        {
+            //  Paused
+            this._pauseStartTime = this.game.time.now;
+        }
+        else
+        {
+            //  Un-paused
+            if (this.isPlaying)
+            {
+                this._timeNextFrame = this.game.time.now + this.delay;
+            }
+        }
+
+    }
+
+});
+
 Object.defineProperty(Phaser.Animation.prototype, "frameTotal", {
 
     /**
@@ -316,3 +368,37 @@ Object.defineProperty(Phaser.Animation.prototype, "frame", {
     }
 
 });
+
+/*
+ * Really handy function for when you are creating arrays of animation data but it's using frame names and not numbers.
+ * For example imagine you've got 30 frames named: 'explosion_0001-large' to 'explosion_0030-large'
+ * You could use this function to generate those by doing: Phaser.Animation.generateFrameNames('explosion_', 1, 30, '-large', 4);
+ * The zeroPad value dictates how many zeroes to add in front of the numbers (if any)
+ */
+Phaser.Animation.generateFrameNames = function (prefix, min, max, suffix, zeroPad) {
+
+    if (typeof suffix == 'undefined') { suffix = ''; }
+
+    var output = [];
+    var frame = '';
+
+    for (var i = min; i <= max; i++)
+    {
+        if (typeof zeroPad == 'number')
+        {
+            //  str, len, pad, dir
+            frame = Phaser.Utils.pad(i.toString(), zeroPad, '0', 1);
+        }
+        else
+        {
+            frame = i.toString();
+        }
+
+        frame = prefix + frame + suffix;
+
+        output.push(frame);
+    }
+
+    return output;
+
+}

@@ -55,7 +55,7 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
         this.onInputUp.add(callback, callbackContext);
     }
 
-    this.input.start(0, false, true);
+    this.input.start(0, true);
 
     //  Redirect the input events to here so we can handle animation updates, etc
     this.events.onInputOver.add(this.onInputOverHandler, this);

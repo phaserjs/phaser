@@ -1,1 +1,0 @@
-yuidoc -n -e .ts --server 3000 ../Phaser/time

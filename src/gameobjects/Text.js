@@ -94,7 +94,7 @@ Object.defineProperty(Phaser.Text.prototype, 'angle', {
 
 });
 
-Object.defineProperty(Phaser.Text.prototype, 'text', {
+Object.defineProperty(Phaser.Text.prototype, 'content', {
 
     get: function() {
         return this._text;
@@ -106,14 +106,14 @@ Object.defineProperty(Phaser.Text.prototype, 'text', {
         if (value !== this._text)
         {
             this._text = value;
-            this.dirty = true;
+            this.setText(value);
         }
 
     }
 
 });
 
-Object.defineProperty(Phaser.Text.prototype, 'style', {
+Object.defineProperty(Phaser.Text.prototype, 'font', {
 
     get: function() {
         return this._style;
@@ -125,7 +125,7 @@ Object.defineProperty(Phaser.Text.prototype, 'style', {
         if (value !== this._style)
         {
             this._style = value;
-            this.dirty = true;
+            this.setStyle(value);
         }
 
     }
