@@ -21,8 +21,8 @@ Phaser.BitmapText = function (game, x, y, text, style) {
 
     this.type = Phaser.BITMAPTEXT;
 
-    this.position.x = x;
-    this.position.y = y;
+    this.position.x = this.x = x;
+    this.position.y = this.y = y;
 
     //  Replaces the PIXI.Point with a slightly more flexible one
     this.anchor = new Phaser.Point();
@@ -93,30 +93,6 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'angle', {
 
     set: function(value) {
         this.rotation = Phaser.Math.degToRad(value);
-    }
-
-});
-
-Object.defineProperty(Phaser.BitmapText.prototype, 'x', {
-
-    get: function() {
-        return this.position.x;
-    },
-
-    set: function(value) {
-        this.position.x = value;
-    }
-
-});
-
-Object.defineProperty(Phaser.BitmapText.prototype, 'y', {
-
-    get: function() {
-        return this.position.y;
-    },
-
-    set: function(value) {
-        this.position.y = value;
     }
 
 });
