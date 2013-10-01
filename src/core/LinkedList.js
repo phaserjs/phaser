@@ -38,17 +38,14 @@ Phaser.LinkedList.prototype = {
     },
 
     remove: function (child) {
-		if( this.first ) {
-		  child.next = this.last.next;
-		  child.prev = this.last;
-		  if( this.last.next ) {
-		    this.last.next.prev = child;
-		  }
-		  this.last.next = child;
-		  this.last = this.last.next;
-		} else {
-		  this.first = this.last = child;
-		}
+    	if( child == this.first )  this.first = this.first.next;      // It was 'first', make 'first' point to first.next
+		else if ( child == this.last ) this.last = this.last.prev; // It was 'last', make 'last' point to last.prev
+
+		if( child.prev ) child.prev.next = child.next; // make child.prev.next point to childs.next instead of child
+		if( child.next ) child.next.prev = child.prev; // make child.next.prev point to child.prev instead of child
+		child.next = child.prev = null;
+
+		if( this.first == null ) this.last = null;
 
 		this.total--;
     },
