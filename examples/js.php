@@ -52,6 +52,7 @@
 	<script src="../src/core/Game.js"></script>
 
 	<script src="../src/input/Input.js"></script>
+	<script src="../src/input/Key.js"></script>
 	<script src="../src/input/Keyboard.js"></script>
 	<script src="../src/input/Mouse.js"></script>
 	<script src="../src/input/MSPointer.js"></script>

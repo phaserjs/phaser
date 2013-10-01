@@ -2,7 +2,15 @@ Phaser.Keyboard = function (game) {
 
 	this.game = game;
     this._keys = {};
+    this._hotkeys = {};
     this._capture = {};
+
+    this.callbackContext = this;
+    this.onDownCallback = null;
+    this.onUpCallback = null;
+
+    this.onDown = new Phaser.Signal();
+    this.onUp = new Phaser.Signal();
 	
 };
 
@@ -19,16 +27,41 @@ Phaser.Keyboard.prototype = {
 	_onKeyDown: null,
 	_onKeyUp: null,
 
+    addCallbacks: function (context, onDown, onUp) {
+
+        this.callbackContext = context;
+        this.onDownCallback = onDown;
+
+        if (typeof onUp !== 'undefined')
+        {
+            this.onUpCallback = onUp;
+        }
+
+    },
+
+    addKey: function (keycode) {
+
+        this._hotkeys[keycode] = new Phaser.Key(this.game, keycode);
+        return this._hotkeys[keycode];
+
+    },
+
+    removeKey: function (keycode) {
+
+        delete (this._hotkeys[keycode]);
+
+    },
+
     start: function () {
 
         var _this = this;
 
         this._onKeyDown = function (event) {
-            return _this.onKeyDown(event);
+            return _this.processKeyDown(event);
         };
 
         this._onKeyUp = function (event) {
-            return _this.onKeyUp(event);
+            return _this.processKeyUp(event);
         };
 
         document.body.addEventListener('keydown', this._onKeyDown, false);
@@ -80,10 +113,11 @@ Phaser.Keyboard.prototype = {
 
     },
 
+
 	/**
     * @param {KeyboardEvent} event
     */    
-    onKeyDown: function (event) {
+    processKeyDown: function (event) {
 
         if (this.game.input.disabled || this.disabled)
         {
@@ -95,18 +129,40 @@ Phaser.Keyboard.prototype = {
             event.preventDefault();
         }
 
-        if (!this._keys[event.keyCode])
+        if (this.onDownCallback)
         {
-            this._keys[event.keyCode] = {
-                isDown: true,
-                timeDown: this.game.time.now,
-                timeUp: 0
-            };
+            this.onDownCallback.call(this.callbackContext, event);
+        }
+
+        if (this._keys[event.keyCode] && this._keys[event.keyCode].isDown)
+        {
+            //  Key already down and still down, so update
+            this._keys[event.keyCode].duration = this.game.time.now - this._keys[event.keyCode].timeDown;
         }
         else
         {
-            this._keys[event.keyCode].isDown = true;
-            this._keys[event.keyCode].timeDown = this.game.time.now;
+            if (!this._keys[event.keyCode])
+            {
+                //  Not used this key before, so register it
+                this._keys[event.keyCode] = {
+                    isDown: true,
+                    timeDown: this.game.time.now,
+                    timeUp: 0,
+                    duration: 0
+                };
+            }
+            else
+            {
+                //  Key used before but freshly down
+                this._keys[event.keyCode].isDown = true;
+                this._keys[event.keyCode].timeDown = this.game.time.now;
+                this._keys[event.keyCode].duration = 0;
+            }
+        }
+
+        if (this._hotkeys[event.keyCode])
+        {
+            this._hotkeys[event.keyCode].processKeyDown(event);
         }
 
     },
@@ -114,7 +170,7 @@ Phaser.Keyboard.prototype = {
 	/**
     * @param {KeyboardEvent} event
     */
-    onKeyUp: function (event) {
+    processKeyUp: function (event) {
 
         if (this.game.input.disabled || this.disabled)
         {
@@ -126,19 +182,18 @@ Phaser.Keyboard.prototype = {
             event.preventDefault();
         }
 
-        if (!this._keys[event.keyCode])
+        if (this.onUpCallback)
         {
-            this._keys[event.keyCode] = {
-                isDown: false,
-                timeDown: 0,
-                timeUp: this.game.time.now
-            };
+            this.onUpCallback.call(this.callbackContext, event);
         }
-        else
+
+        if (this._hotkeys[event.keyCode])
         {
-            this._keys[event.keyCode].isDown = false;
-            this._keys[event.keyCode].timeUp = this.game.time.now;
+            this._hotkeys[event.keyCode].processKeyUp(event);
         }
+
+        this._keys[event.keyCode].isDown = false;
+        this._keys[event.keyCode].timeUp = this.game.time.now;
 
     },
 
@@ -160,7 +215,7 @@ Phaser.Keyboard.prototype = {
 
         if (typeof duration === "undefined") { duration = 250; }
 
-        if (this._keys[keycode] && this._keys[keycode].isDown === true && (this.game.time.now - this._keys[keycode].timeDown < duration))
+        if (this._keys[keycode] && this._keys[keycode].isDown && this._keys[keycode].duration < duration)
         {
             return true;
         }

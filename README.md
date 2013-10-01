@@ -65,6 +65,9 @@ Version 1.0.7 (in progress in the dev branch)
 * Added Canvas.setUserSelect() to disable touchCallouts and user selections within the canvas.
 * When the game boots it will now by default disable user-select and touch action events on the game canvas.
 * Loaded.setPreloadSprite now rounds the width/height values and starts from 1. This fixes canvas draw errors in IE9/10 and Firefox.
+* Fixed issue causing Keyboard.justPressed to always fire (thanks stemkoski)
+* Added Keyboard.addKey() which creates a new Phaser.Key object that can be polled for updates, pressed states, etc. See the 2 new examples showing use.
+
 
 
 

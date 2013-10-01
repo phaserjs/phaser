@@ -361,6 +361,7 @@ Phaser.Input.prototype = {
         if (this.pointer10) { this.pointer10.update(); }
 
         this._pollCounter = 0;
+
     },
 
 	/**
