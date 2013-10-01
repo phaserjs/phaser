@@ -336,7 +336,7 @@ Phaser.Cache.prototype = {
     /**
     * Checks if an image key exists.
     * @param {string} key - Asset key of the image you want.
-    * @return {bool} True if the key exists, otherwise false.
+    * @return {boolean} True if the key exists, otherwise false.
     */    
     checkImageKey: function (key) {
 

@@ -27,7 +27,7 @@ Phaser.SoundManager = function (game) {
 	this.onSoundDecode = new Phaser.Signal;
 	
 	/**
-	* @property {bool} _muted - Description.
+	* @property {boolean} _muted - Description.
 	* @private
 	* @default
 	*/
@@ -61,25 +61,25 @@ Phaser.SoundManager = function (game) {
     this.context = null;
     
 	/**
-	* @property {bool} usingWebAudio - Description.
+	* @property {boolean} usingWebAudio - Description.
 	* @default
 	*/
     this.usingWebAudio = true;
     
 	/**
-	* @property {bool} usingAudioTag - Description.
+	* @property {boolean} usingAudioTag - Description.
 	* @default
 	*/
     this.usingAudioTag = false;
     
 	/**
-	* @property {bool} noAudio - Description.
+	* @property {boolean} noAudio - Description.
 	* @default
 	*/
     this.noAudio = false;
 
 	/**
-	* @property {bool} touchLocked - Description.
+	* @property {boolean} touchLocked - Description.
 	* @default
 	*/
     this.touchLocked = false;
@@ -323,7 +323,7 @@ Phaser.SoundManager.prototype = {
     * @method add
     * @param {string} key - Asset key for the sound.
     * @param {number} volume - Default value for the volume.
-    * @param {bool} loop - Whether or not the sound will loop.
+    * @param {boolean} loop - Whether or not the sound will loop.
     */
     add: function (key, volume, loop) {
 
@@ -344,10 +344,10 @@ Phaser.SoundManager.prototype = {
 
 /**
 * A global audio mute toggle.
-* @return {bool} Whether or not the game is on "mute".
+* @return {boolean} Whether or not the game is on "mute".
 *//**
 * Mute sounds.
-* @param {bool} value - Whether or not the game is on "mute"
+* @param {boolean} value - Whether or not the game is on "mute"
 */
 Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
 

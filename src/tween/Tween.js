@@ -67,14 +67,14 @@ Phaser.Tween = function (object, game) {
     this._repeat = 0;
 
     /**
-    * @property {bool} _yoyo - Description.
+    * @property {boolean} _yoyo - Description.
     * @private
     * @default
     */
     this._yoyo = false;
 
     /**
-    * @property {bool} _reversed - Description.
+    * @property {boolean} _reversed - Description.
     * @private
     * @default
     */
@@ -120,7 +120,7 @@ Phaser.Tween = function (object, game) {
     this._onStartCallback = null;
 
     /**
-    * @property {bool} _onStartCallbackFired - Description.
+    * @property {boolean} _onStartCallbackFired - Description.
     * @private
     * @default
     */
@@ -148,7 +148,7 @@ Phaser.Tween = function (object, game) {
     this._pausedTime = 0;
 
     /**
-    * @property {bool} pendingDelete - Description.
+    * @property {boolean} pendingDelete - Description.
     * @default
     */
     this.pendingDelete = false;
@@ -169,7 +169,7 @@ Phaser.Tween = function (object, game) {
     this.onComplete = new Phaser.Signal();
 
     /**
-    * @property {bool} isRunning - Description.
+    * @property {boolean} isRunning - Description.
     * @default
     */
     this.isRunning = false;
@@ -185,9 +185,9 @@ Phaser.Tween.prototype = {
 	* @param {object} properties - Properties you want to tween.
 	* @param {number} duration - Duration of this tween.
 	* @param {function} ease - Easing function.
-	* @param {bool} autoStart - Whether this tween will start automatically or not.
+	* @param {boolean} autoStart - Whether this tween will start automatically or not.
 	* @param {number} delay - Delay before this tween will start, defaults to 0 (no delay).
-	* @param {bool} repeat - Should the tween automatically restart once complete? (ignores any chained tweens).
+	* @param {boolean} repeat - Should the tween automatically restart once complete? (ignores any chained tweens).
 	* @param {Phaser.Tween} yoyo - Description.
 	* @return {Phaser.Tween} Itself.
 	*/
@@ -471,7 +471,7 @@ Phaser.Tween.prototype = {
 	*
 	* @method update
 	* @param {number} time - Description.
-	* @return {bool} Description.
+	* @return {boolean} Description.
 	*/
 	update: function ( time ) {
 

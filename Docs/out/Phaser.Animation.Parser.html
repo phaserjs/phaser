@@ -121,6 +121,864 @@
     
     
     
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="JSONData"><span class="type-signature">&lt;static> </span>JSONData<span class="signature">(game, json, cacheKey)</span><span class="type-signature"> &rarr; {<a href="Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Parse the JSON data and extract the animation frame data from it.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>game</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">A reference to the currently running game.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>json</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The JSON data from the Texture Atlas. Must be in Array format.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>cacheKey</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The Game.Cache asset key of the texture image.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        animation/Parser.js, line 97
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A FrameData object containing the parsed frames.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="JSONDataHash"><span class="type-signature">&lt;static> </span>JSONDataHash<span class="signature">(game, json, cacheKey)</span><span class="type-signature"> &rarr; {<a href="Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Parse the JSON data and extract the animation frame data from it.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>game</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">A reference to the currently running game.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>json</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The JSON data from the Texture Atlas. Must be in JSON Hash format.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>cacheKey</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The Game.Cache asset key of the texture image.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        animation/Parser.js, line 169
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A FrameData object containing the parsed frames.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="spriteSheet"><span class="type-signature">&lt;static> </span>spriteSheet<span class="signature">(game, key, frameWidth, frameHeight, <span class="optional">frameMax</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Parse a Sprite Sheet and extract the animation frame data from it.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>game</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">A reference to the currently running game.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The Game.Cache asset key of the Sprite Sheet image.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>frameWidth</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The fixed width of each frame of the animation.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>frameHeight</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The fixed height of each frame of the animation.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>frameMax</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    -1
+                
+                </td>
+            
+            
+            <td class="description last">The total number of animation frames to extact from the Sprite Sheet. The default value of -1 means "extract all frames".</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        animation/Parser.js, line 15
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A FrameData object containing the parsed frames.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="XMLData"><span class="type-signature">&lt;static> </span>XMLData<span class="signature">(game, xml, cacheKey)</span><span class="type-signature"> &rarr; {<a href="Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Parse the XML data and extract the animation frame data from it.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>game</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">A reference to the currently running game.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>xml</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The XML data from the Texture Atlas. Must be in Starling XML format.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>cacheKey</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The Game.Cache asset key of the texture image.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        animation/Parser.js, line 244
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A FrameData object containing the parsed frames.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        </dl>
+    
     
     
     
@@ -135,13 +993,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-Phaser.html">Phaser</a></li><li><a href="Animation.html">Animation</a></li></ul><h3>Classes</h3><ul><li><a href="Phaser.Animation.Frame.html">Frame</a></li><li><a href="Phaser.Animation.FrameData.html">FrameData</a></li><li><a href="Phaser.Animation.Parser.html">Parser</a></li><li><a href="Phaser.AnimationManager.html">AnimationManager</a></li><li><a href="Animation-Phaser.Animation.html">Animation</a></li></ul><h3>Namespaces</h3><ul><li><a href="Phaser.html">Phaser</a></li></ul><h3>Global</h3><ul><li><a href="global.html#add">add</a></li><li><a href="global.html#addFrame">addFrame</a></li><li><a href="global.html#checkFrameName">checkFrameName</a></li><li><a href="global.html#destroy">destroy</a></li><li><a href="global.html#generateFrameNames">generateFrameNames</a></li><li><a href="global.html#getFrame">getFrame</a></li><li><a href="global.html#getFrameByName">getFrameByName</a></li><li><a href="global.html#getFrameIndexes">getFrameIndexes</a></li><li><a href="global.html#getFrameRange">getFrameRange</a></li><li><a href="global.html#getFrames">getFrames</a></li><li><a href="global.html#JSONData">JSONData</a></li><li><a href="global.html#JSONDataHash">JSONDataHash</a></li><li><a href="global.html#onComplete">onComplete</a></li><li><a href="global.html#play">play</a></li><li><a href="global.html#restart">restart</a></li><li><a href="global.html#setTrim">setTrim</a></li><li><a href="global.html#spriteSheet">spriteSheet</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#total">total</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#validateFrames">validateFrames</a></li><li><a href="global.html#XMLData">XMLData</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-Phaser.html">Phaser</a></li><li><a href="Animation.html">Animation</a></li><li><a href="Camera.html">Camera</a></li><li><a href="Game.html">Game</a></li><li><a href="Group.html">Group</a></li></ul><h3>Classes</h3><ul><li><a href="Phaser.Animation.Frame.html">Frame</a></li><li><a href="Phaser.Animation.FrameData.html">FrameData</a></li><li><a href="Phaser.Animation.Parser.html">Parser</a></li><li><a href="Phaser.AnimationManager.html">AnimationManager</a></li><li><a href="Animation-Phaser.Animation.html">Animation</a></li><li><a href="Camera-Phaser.Camera.html">Camera</a></li><li><a href="Game-Phaser.Game.html">Game</a></li><li><a href="Group-Phaser.Group.html">Group</a></li></ul><h3>Namespaces</h3><ul><li><a href="Phaser.html">Phaser</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Oct 01 2013 16:05:08 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Oct 01 2013 16:31:59 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

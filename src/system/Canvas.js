@@ -127,7 +127,7 @@ Phaser.Canvas = {
     * @method addToDOM
     * @param {HTMLCanvasElement} canvas - The canvas to set the touch action on.
     * @param {string} parent - The DOM element to add the canvas to. Defaults to ''.
-    * @param {bool} overflowHidden - If set to true it will add the overflow='hidden' style to the parent DOM element.
+    * @param {boolean} overflowHidden - If set to true it will add the overflow='hidden' style to the parent DOM element.
     * @return {HTMLCanvasElement} Returns the source canvas.
     */
     addToDOM: function (canvas, parent, overflowHidden) {
@@ -191,7 +191,7 @@ Phaser.Canvas = {
     *
     * @method setSmoothingEnabled
     * @param {CanvasRenderingContext2D} context - The context to enable or disable the image smoothing on.
-    * @param {bool} value - If set to true it will enable image smoothing, false will disable it.
+    * @param {boolean} value - If set to true it will enable image smoothing, false will disable it.
     * @return {CanvasRenderingContext2D} Returns the source context.
     */
     setSmoothingEnabled: function (context, value) {

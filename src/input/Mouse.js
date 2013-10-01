@@ -59,14 +59,14 @@ Phaser.Mouse.prototype = {
 
     /**
     * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-    * @property {bool} disabled
+    * @property {boolean} disabled
     * @default
     */
 	disabled: false,
 
     /**
     * If the mouse has been Pointer Locked successfully this will be set to true.
-    * @property {bool} locked
+    * @property {boolean} locked
     * @default
     */
     locked: false,

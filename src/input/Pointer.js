@@ -18,7 +18,7 @@ Phaser.Pointer = function (game, id) {
 
     /**
     * Local private variable to store the status of dispatching a hold event.
-    * @property {bool} _holdSent
+    * @property {boolean} _holdSent
     * @private
     * @default
     */
@@ -41,7 +41,7 @@ Phaser.Pointer = function (game, id) {
 
     /**
      * Monitor events outside of a state reset loop.
-     * @property {bool} _stateReset
+     * @property {boolean} _stateReset
      * @private
      * @default
      */
@@ -71,7 +71,7 @@ Phaser.Pointer = function (game, id) {
 
     /**
     * Description.
-    * @property {bool} withinGame
+    * @property {boolean} withinGame
     */
     this.withinGame = false;
 
@@ -133,21 +133,21 @@ Phaser.Pointer = function (game, id) {
 
     /**
     * If the Pointer is a mouse this is true, otherwise false.
-    * @property {bool} isMouse
-    * @type {bool}
+    * @property {boolean} isMouse
+    * @type {boolean}
     */
     this.isMouse = false;
 
     /**
     * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true.
-    * @property {bool} isDown
+    * @property {boolean} isDown
     * @default
     */
     this.isDown = false;
 
     /**
     * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true.
-    * @property {bool} isUp
+    * @property {boolean} isUp
     * @default
     */
     this.isUp = true;
@@ -206,7 +206,7 @@ Phaser.Pointer = function (game, id) {
 
     /**
     * Description.
-    * @property {bool} isDown - Description.
+    * @property {boolean} isDown - Description.
     * @default
     */
     this.active = false;
@@ -575,7 +575,7 @@ Phaser.Pointer.prototype = {
     * The Pointer is considered justPressed if the time it was pressed onto the touchscreen or clicked is less than justPressedRate.
     * @method justPressed
     * @param {number} [duration]
-    * @return {bool}
+    * @return {boolean}
     */
     justPressed: function (duration) {
 
@@ -589,7 +589,7 @@ Phaser.Pointer.prototype = {
     * The Pointer is considered justReleased if the time it left the touchscreen is less than justReleasedRate.
     * @method justReleased
     * @param {number} [duration]
-    * @return {bool}
+    * @return {boolean}
     */
     justReleased: function (duration) {
 

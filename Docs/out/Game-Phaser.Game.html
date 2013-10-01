@@ -1,0 +1,3542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: Game</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Class: Game</h1>
+    
+    
+
+
+
+<section>
+    
+<header>
+    <h2>
+    Game
+    </h2>
+    
+        <div class="class-description">This is where the magic happens. The Game object is the heart of your game,providing quick access to common functions and handling the boot process.<p>"Hell, there are no rules here - we're trying to accomplish something."</p><br>                                                      Thomas A. Edison</div>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+<dt>
+    <h4 class="name" id="Game"><span class="type-signature"></span>new Game<span class="signature">(width, height, renderer, parent, state, transparent, antialias)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Game constructorInstantiate a new <code>Phaser.Game</code> object.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The width of your game in game pixels.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The height of your game in game pixels.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>renderer</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Which renderer to use (canvas or webgl)</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>parent</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The Games DOM parent.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>state</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Description</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Description.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>transparent</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Use a transparent canvas background or not.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>antialias</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Anti-alias graphics.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 26
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Members</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="add"><span class="type-signature"></span>add<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>add</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.GameObjectFactory</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Reference to the GameObject Factory.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 120
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="antialias"><span class="type-signature"></span>antialias<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>antialias</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Anti-alias graphics (in WebGL this helps with edges, in Canvas2D it retains pixel-art quality).</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 66
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="cache"><span class="type-signature"></span>cache<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>cache</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Cache</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Reference to the assets cache.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 126
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="camera"><span class="type-signature"></span>camera<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>camera</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Physics.PhysicsManager</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">A handy reference to world.camera.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 204
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="canvas"><span class="type-signature"></span>canvas<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>canvas</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLCanvasElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">A handy reference to renderer.view.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 210
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="context"><span class="type-signature"></span>context<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Context</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">A handy reference to renderer.context (only set for CANVAS games)</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 216
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="debug"><span class="type-signature"></span>debug<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>debug</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Utils.Debug</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">A set of useful debug utilitie.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 222
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="device"><span class="type-signature"></span>device<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>device</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Device</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Contains device information and capabilities.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 198
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="height"><span class="type-signature"></span>height<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The Game height (in pixels).</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 56
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="id"><span class="type-signature"></span>id<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Phaser Game ID (for when Pixi supports multiple instances).</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 39
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="input"><span class="type-signature"></span>input<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>input</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Input</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Reference to the input manager</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 132
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="isBooted"><span class="type-signature"></span>isBooted<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>isBooted</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Whether the game engine is booted, aka available.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 102
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="isRunning"><span class="type-signature"></span>isRunning<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Is game running or paused?</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 108
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="load"><span class="type-signature"></span>load<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>load</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Loader</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Reference to the assets loader.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 138
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="math"><span class="type-signature"></span>math<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>math</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.GameMath</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Reference to the math helper.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 144
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="net"><span class="type-signature"></span>net<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>net</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Net</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Reference to the network class.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 150
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="parent"><span class="type-signature"></span>parent<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>parent</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The Games DOM parent.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 44
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="particles"><span class="type-signature"></span>particles<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>particles</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Particles</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The Particle Manager.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 228
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="physics"><span class="type-signature"></span>physics<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>physics</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Physics.PhysicsManager</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Reference to the physics manager.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 186
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="raf"><span class="type-signature"></span>raf<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>raf</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.RequestAnimationFrame</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Automatically handles the core game loop via requestAnimationFrame or setTimeout</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 114
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="renderer"><span class="type-signature"></span>renderer<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>renderer</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The Pixi Renderer</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 72
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="renderType"><span class="type-signature"></span>renderType<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>renderType</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The Renderer this Phaser.Game will use. Either Phaser.RENDERER_AUTO, Phaser.RENDERER_CANVAS or Phaser.RENDERER_WEBGL.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 89
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="rnd"><span class="type-signature"></span>rnd<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>rnd</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.RandomDataGenerator</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Instance of repeatable random data generator helper.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 192
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="sound"><span class="type-signature"></span>sound<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>sound</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.SoundManager</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Reference to the sound manager.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 156
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="stage"><span class="type-signature"></span>stage<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>stage</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Stage</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Reference to the stage.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 162
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="state"><span class="type-signature"></span>state<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>state</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The StateManager.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 77
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="time"><span class="type-signature"></span>time<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>time</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.TimeManager</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Reference to game clock.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 168
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="transparent"><span class="type-signature"></span>transparent<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>transparent</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Use a transparent canvas background or not.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 61
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="tweens"><span class="type-signature"></span>tweens<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>tweens</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.TweenManager</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Reference to the tween manager.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 174
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="width"><span class="type-signature"></span>width<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The Game width (in pixels).</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 51
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="world"><span class="type-signature"></span>world<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>world</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.World</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Reference to the world.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Game.js, line 180
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+    
+    
+</article>
+
+</section>  
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-Phaser.html">Phaser</a></li><li><a href="Animation.html">Animation</a></li><li><a href="Camera.html">Camera</a></li><li><a href="Game.html">Game</a></li><li><a href="Group.html">Group</a></li></ul><h3>Classes</h3><ul><li><a href="Phaser.Animation.Frame.html">Frame</a></li><li><a href="Phaser.Animation.FrameData.html">FrameData</a></li><li><a href="Phaser.Animation.Parser.html">Parser</a></li><li><a href="Phaser.AnimationManager.html">AnimationManager</a></li><li><a href="Animation-Phaser.Animation.html">Animation</a></li><li><a href="Camera-Phaser.Camera.html">Camera</a></li><li><a href="Game-Phaser.Game.html">Game</a></li><li><a href="Group-Phaser.Group.html">Group</a></li></ul><h3>Namespaces</h3><ul><li><a href="Phaser.html">Phaser</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Oct 01 2013 16:31:59 GMT+0100 (BST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

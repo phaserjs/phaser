@@ -71,7 +71,7 @@ Phaser.Animation.Frame = function (index, x, y, width, height, name, uuid) {
 	this.distance = Phaser.Math.distance(0, 0, width, height);
 
 	/**
-	* @property {bool} rotated - Rotated? (not yet implemented)
+	* @property {boolean} rotated - Rotated? (not yet implemented)
 	* @default
 	*/
 	this.rotated = false;
@@ -83,7 +83,7 @@ Phaser.Animation.Frame = function (index, x, y, width, height, name, uuid) {
 	this.rotationDirection = 'cw';
 
 	/**
-	* @property {bool} trimmed - Was it trimmed when packed?
+	* @property {boolean} trimmed - Was it trimmed when packed?
 	* @default
 	*/
 	this.trimmed = false;
@@ -130,7 +130,8 @@ Phaser.Animation.Frame.prototype = {
 	* If the frame was trimmed when added to the Texture Atlas this records the trim and source data.
 	*
 	* @method setTrim
-	* @param {bool} trimmed - If this frame was trimmed or not.
+	* @memberof Phaser.Animation.Frame
+	* @param {boolean} trimmed - If this frame was trimmed or not.
 	* @param {number} actualWidth - The width of the frame before being trimmed.
 	* @param {number} actualHeight - The height of the frame before being trimmed.
 	* @param {number} destX - The destination X position of the trimmed frame for display.

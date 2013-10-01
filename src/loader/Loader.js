@@ -54,13 +54,13 @@ Phaser.Loader = function (game) {
 	this.queueSize = 0;
 
 	/**
-	* @property {bool} isLoading - True if the Loader is in the process of loading the queue.
+	* @property {boolean} isLoading - True if the Loader is in the process of loading the queue.
 	* @default
 	*/
 	this.isLoading = false;
 
 	/**
-	* @property {bool} hasLoaded - True if all assets in the queue have finished loading.
+	* @property {boolean} hasLoaded - True if all assets in the queue have finished loading.
 	* @default
 	*/
 	this.hasLoaded = false;
@@ -155,7 +155,7 @@ Phaser.Loader.prototype = {
 	* Check whether asset exists with a specific key.
 	* @method checkKeyExists
 	* @param {string} key - Key of the asset you want to check.
-	* @return {bool} Return true if exists, otherwise return false.
+	* @return {boolean} Return true if exists, otherwise return false.
 	*/
 	checkKeyExists: function (key) {
 
@@ -240,7 +240,7 @@ Phaser.Loader.prototype = {
 	* @method text
 	* @param {string} key - Unique asset key of the text file.
 	* @param {string} url - URL of the text file.
-	* @param {bool} overwrite - True if Description.
+	* @param {boolean} overwrite - True if Description.
 	*/
 	text: function (key, url, overwrite) {
 
@@ -278,7 +278,7 @@ Phaser.Loader.prototype = {
 	* @method audio
 	* @param {string} key - Unique asset key of the audio file.
 	* @param {Array} urls - An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ].
-	* @param {bool} autoDecode - When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
+	* @param {boolean} autoDecode - When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
 	*/
 	audio: function (key, urls, autoDecode) {
 
@@ -978,7 +978,7 @@ Phaser.Loader.prototype = {
 	/**
 	 * Handle loading next file.
 	 * @param previousKey {string} Key of previous loaded asset.
-	 * @param success {bool} Whether the previous asset loaded successfully or not.
+	 * @param success {boolean} Whether the previous asset loaded successfully or not.
 	 */
 	nextFile: function (previousKey, success) {
 

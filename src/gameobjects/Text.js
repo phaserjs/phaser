@@ -25,14 +25,14 @@ Phaser.Text = function (game, x, y, text, style) {
 
     //  If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all
 	/**
-	* @property {bool} exists - Description.
+	* @property {boolean} exists - Description.
 	* @default
 	*/
     this.exists = true;
 
     //  This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering
 	/**
-	* @property {bool} alive - Description.
+	* @property {boolean} alive - Description.
 	* @default
 	*/
     this.alive = true;
@@ -111,7 +111,7 @@ Phaser.Text = function (game, x, y, text, style) {
     this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
 
     /**
-    * @property {bool} renderable - Description. 
+    * @property {boolean} renderable - Description. 
     */
     this.renderable = true;
 

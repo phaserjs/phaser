@@ -29,13 +29,13 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 	this.game = game;
  
 	/**
-	* @property {bool} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
+	* @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
 	* @default
 	*/
     this.exists = true;
 
 	/**
-    * @property {bool} alive - This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering.
+    * @property {boolean} alive - This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering.
    	* @default
    	*/
     this.alive = true;
@@ -174,7 +174,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * Note that this check doesn't look at this Sprites children, which may still be in camera range.
     * So you should set autoCull to false if the Sprite will have children likely to still be in camera range.
     *
-    * @property {bool} autoCull
+    * @property {boolean} autoCull
     * @default
     */
     this.autoCull = false;
@@ -290,7 +290,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.inWorldThreshold = 0;
     
     /**
-    * @property {bool} _outOfBoundsFired - Description.
+    * @property {boolean} _outOfBoundsFired - Description.
     * @private
     * @default
     */
@@ -649,7 +649,7 @@ Phaser.Sprite.prototype.getBounds = function(rect) {
 * 
 * @method play
 * @param {String} name The name of the animation to be played, e.g. "fire", "walk", "jump".
-* @param {Number} [frameRate=null] The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
+* @param {number} [frameRate=null] The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
 * @param {Boolean} [loop=null] Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
 * @return {Phaser.Animation} A reference to playing Animation instance.
 */
@@ -714,7 +714,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "frameName", {
 
 /**
 * Is this sprite visible to the camera or not?
-* @returns {bool}
+* @returns {boolean}
 */
 Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
     

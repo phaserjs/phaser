@@ -170,7 +170,7 @@ Object.defineProperty(Phaser.World.prototype, "width", {
 
     /**
     * @method width
-    * @return {Number} The current width of the game world
+    * @return {number} The current width of the game world
     */
     get: function () {
         return this.bounds.width;
@@ -178,7 +178,7 @@ Object.defineProperty(Phaser.World.prototype, "width", {
 
     /**
     * @method width
-    * @return {Number} Sets the width of the game world
+    * @return {number} Sets the width of the game world
     */
     set: function (value) {
         this.bounds.width = value;

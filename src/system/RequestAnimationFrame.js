@@ -21,13 +21,13 @@ Phaser.RequestAnimationFrame = function(game) {
 	this.game = game;
 
      /**
-     * @property {bool} _isSetTimeOut  - Description.
+     * @property {boolean} _isSetTimeOut  - Description.
      * @private
      */
 	this._isSetTimeOut = false;
      
      /**
-     * @property {bool} isRunning - Description.
+     * @property {boolean} isRunning - Description.
      * @default
      */
 	this.isRunning = false;
@@ -135,7 +135,7 @@ Phaser.RequestAnimationFrame.prototype = {
 	/**
 	* Is the browser using setTimeout?
 	* @method isSetTimeOut
-	* @return {bool}
+	* @return {boolean}
 	**/
 	isSetTimeOut: function () {
 		return this._isSetTimeOut;
@@ -144,7 +144,7 @@ Phaser.RequestAnimationFrame.prototype = {
 	/**
 	* Is the browser using requestAnimationFrame?
 	* @method isRAF
-	* @return {bool}
+	* @return {boolean}
 	**/
 	isRAF: function () {
 		return (this._isSetTimeOut === false);

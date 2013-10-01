@@ -69,9 +69,9 @@ PIXI.Graphics.prototype.constructor = PIXI.Graphics;
  * Specifies a line style used for subsequent calls to Graphics methods such as the lineTo() method or the drawCircle() method.
  *
  * @method lineStyle
- * @param lineWidth {Number} width of the line to draw, will update the object's stored style
- * @param color {Number} color of the line to draw, will update the object's stored style
- * @param alpha {Number} alpha of the line to draw, will update the object's stored style
+ * @param lineWidth {number} width of the line to draw, will update the object's stored style
+ * @param color {number} color of the line to draw, will update the object's stored style
+ * @param alpha {number} alpha of the line to draw, will update the object's stored style
  */
 PIXI.Graphics.prototype.lineStyle = function(lineWidth, color, alpha)
 {
@@ -91,8 +91,8 @@ PIXI.Graphics.prototype.lineStyle = function(lineWidth, color, alpha)
  * Moves the current drawing position to (x, y).
  *
  * @method moveTo
- * @param x {Number} the X coord to move to
- * @param y {Number} the Y coord to move to
+ * @param x {number} the X coord to move to
+ * @param y {number} the Y coord to move to
  */
 PIXI.Graphics.prototype.moveTo = function(x, y)
 {
@@ -111,8 +111,8 @@ PIXI.Graphics.prototype.moveTo = function(x, y)
  * the current drawing position is then set to (x, y).
  *
  * @method lineTo
- * @param x {Number} the X coord to draw to
- * @param y {Number} the Y coord to draw to
+ * @param x {number} the X coord to draw to
+ * @param y {number} the Y coord to draw to
  */
 PIXI.Graphics.prototype.lineTo = function(x, y)
 {
@@ -126,7 +126,7 @@ PIXI.Graphics.prototype.lineTo = function(x, y)
  *
  * @method beginFill
  * @param color {uint} the color of the fill
- * @param alpha {Number} the alpha
+ * @param alpha {number} the alpha
  */
 PIXI.Graphics.prototype.beginFill = function(color, alpha)
 {
@@ -150,10 +150,10 @@ PIXI.Graphics.prototype.endFill = function()
 /**
  * @method drawRect
  *
- * @param x {Number} The X coord of the top-left of the rectangle
- * @param y {Number} The Y coord of the top-left of the rectangle
- * @param width {Number} The width of the rectangle
- * @param height {Number} The height of the rectangle
+ * @param x {number} The X coord of the top-left of the rectangle
+ * @param y {number} The Y coord of the top-left of the rectangle
+ * @param width {number} The width of the rectangle
+ * @param height {number} The height of the rectangle
  */
 PIXI.Graphics.prototype.drawRect = function( x, y, width, height )
 {
@@ -171,9 +171,9 @@ PIXI.Graphics.prototype.drawRect = function( x, y, width, height )
  * Draws a circle.
  *
  * @method drawCircle
- * @param x {Number} The X coord of the center of the circle
- * @param y {Number} The Y coord of the center of the circle
- * @param radius {Number} The radius of the circle
+ * @param x {number} The X coord of the center of the circle
+ * @param y {number} The Y coord of the center of the circle
+ * @param radius {number} The radius of the circle
  */
 PIXI.Graphics.prototype.drawCircle = function( x, y, radius)
 {
@@ -191,10 +191,10 @@ PIXI.Graphics.prototype.drawCircle = function( x, y, radius)
  * Draws an elipse.
  *
  * @method drawElipse
- * @param x {Number}
- * @param y {Number}
- * @param width {Number}
- * @param height {Number}
+ * @param x {number}
+ * @param y {number}
+ * @param width {number}
+ * @param height {number}
  */
 PIXI.Graphics.prototype.drawElipse = function( x, y, width, height)
 {

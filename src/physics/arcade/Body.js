@@ -255,7 +255,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
     /**
     * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
     * @method bottom
-    * @return {Number}
+    * @return {number}
     **/
     get: function () {
         return this.y + this.height;
@@ -264,7 +264,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
     /**
     * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
     * @method bottom
-    * @param {Number} value
+    * @param {number} value
     **/    
     set: function (value) {
 
@@ -287,7 +287,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
     * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
     * However it does affect the width property.
     * @method right
-    * @return {Number}
+    * @return {number}
     **/    
     get: function () {
         return this.x + this.width;
@@ -297,7 +297,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
     * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
     * However it does affect the width property.
     * @method right
-    * @param {Number} value
+    * @param {number} value
     **/
     set: function (value) {
 

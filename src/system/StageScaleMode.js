@@ -25,25 +25,25 @@ Phaser.StageScaleMode = function (game, width, height) {
     this._startHeight = 0;
 
     /**
-    * @property {bool} forceLandscape - If the game should be forced to use Landscape mode, this is set to true by Game.Stage
+    * @property {boolean} forceLandscape - If the game should be forced to use Landscape mode, this is set to true by Game.Stage
     * @default
     */
     this.forceLandscape = false;
 
     /**
-    * @property {bool} forcePortrait - If the game should be forced to use Portrait mode, this is set to true by Game.Stage
+    * @property {boolean} forcePortrait - If the game should be forced to use Portrait mode, this is set to true by Game.Stage
     * @default
     */
      this.forcePortrait = false;
 
     /**
-    * @property {bool} incorrectOrientation - If the game should be forced to use a specific orientation and the device currently isn't in that orientation this is set to true.
+    * @property {boolean} incorrectOrientation - If the game should be forced to use a specific orientation and the device currently isn't in that orientation this is set to true.
     * @default
     */
     this.incorrectOrientation = false;
 
     /**
-    * @property {bool} pageAlignHorizontally - If you wish to align your game in the middle of the page then you can set this value to true.
+    * @property {boolean} pageAlignHorizontally - If you wish to align your game in the middle of the page then you can set this value to true.
     <ul><li>It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.</li>
     <li>It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.</li></ul>
     * @default
@@ -51,7 +51,7 @@ Phaser.StageScaleMode = function (game, width, height) {
     this.pageAlignHorizontally = false;
 
     /**
-    * @property {bool} pageAlignVeritcally - If you wish to align your game in the middle of the page then you can set this value to true.
+    * @property {boolean} pageAlignVeritcally - If you wish to align your game in the middle of the page then you can set this value to true.
     <ul><li>It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.
     <li>It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.</li></ul>
     * @default
@@ -511,7 +511,7 @@ Phaser.StageScaleMode.prototype = {
 
 /**
 * Get
-* @return {bool}
+* @return {boolean}
 */
 Object.defineProperty(Phaser.StageScaleMode.prototype, "isFullScreen", {
 

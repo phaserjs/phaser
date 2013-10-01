@@ -107,7 +107,7 @@ Phaser.Circle.prototype = {
     * (can be Circle, Point or anything with x/y properties)
     * @method distance
     * @param {object} dest - The target object. Must have visible x and y properties that represent the center of the object.
-    * @param {bool} [round] - Round the distance to the nearest integer (default false).
+    * @param {boolean} [round] - Round the distance to the nearest integer (default false).
     * @return {number} The distance between this Point object and the destination Point object.
     */
     distance: function (dest, round) {
@@ -144,7 +144,7 @@ Phaser.Circle.prototype = {
     * @method contains
     * @param {number} x - The X value of the coordinate to test.
     * @param {number} y - The Y value of the coordinate to test.
-    * @return {bool} True if the coordinates are within this circle, otherwise false.
+    * @return {boolean} True if the coordinates are within this circle, otherwise false.
     */
     contains: function (x, y) {
         return Phaser.Circle.contains(this, x, y);
@@ -154,7 +154,7 @@ Phaser.Circle.prototype = {
     * Returns a Point object containing the coordinates of a point on the circumference of the Circle based on the given angle.
     * @method circumferencePoint
     * @param {number} angle - The angle in radians (unless asDegrees is true) to return the point from.
-    * @param {bool} asDegrees - Is the given angle in radians (false) or degrees (true)?
+    * @param {boolean} asDegrees - Is the given angle in radians (false) or degrees (true)?
     * @param {Phaser.Point} [out] - An optional Point object to put the result in to. If none specified a new Point object will be created.
     * @return {Phaser.Point} The Point object holding the result.
     */
@@ -214,7 +214,7 @@ Object.defineProperty(Phaser.Circle.prototype, "diameter", {
     /**
     * The diameter of the circle. The largest distance between any two points on the circle. The same as the radius * 2.
     * @method diameter
-    * @param {Number} The diameter of the circle.
+    * @param {number} The diameter of the circle.
     **/
     set: function (value) {
         if (value > 0) {
@@ -362,7 +362,7 @@ Object.defineProperty(Phaser.Circle.prototype, "area", {
 
 /**
 * Determines whether or not this Circle object is empty.
-* @return {bool} A value of true if the Circle objects diameter is less than or equal to 0; otherwise false.
+* @return {boolean} A value of true if the Circle objects diameter is less than or equal to 0; otherwise false.
 *//**
 * Sets all of the Circle objects properties to 0. A Circle object is empty if its diameter is less than or equal to 0.
 * @param {Description} value - Description.
@@ -392,7 +392,7 @@ Object.defineProperty(Phaser.Circle.prototype, "empty", {
 * @param {Phaser.Circle} a - The Circle to be checked.
 * @param {number} x - The X value of the coordinate to test.
 * @param {number} y - The Y value of the coordinate to test.
-* @return {bool} True if the coordinates are within this circle, otherwise false.
+* @return {boolean} True if the coordinates are within this circle, otherwise false.
 */
 Phaser.Circle.contains = function (a, x, y) {
 
@@ -415,7 +415,7 @@ Phaser.Circle.contains = function (a, x, y) {
 * @method equals
 * @param {Phaser.Circle} a - The first Circle object.
 * @param {Phaser.Circle} b - The second Circle object.
-* @return {bool} A value of true if the object has exactly the same values for the x, y and diameter properties as this Circle object; otherwise false.
+* @return {boolean} A value of true if the object has exactly the same values for the x, y and diameter properties as this Circle object; otherwise false.
 */
 Phaser.Circle.equals = function (a, b) {
     return (a.x == b.x && a.y == b.y && a.diameter == b.diameter);
@@ -427,7 +427,7 @@ Phaser.Circle.equals = function (a, b) {
 * @method intersects
 * @param {Phaser.Circle} a - The first Circle object.
 * @param {Phaser.Circle} b - The second Circle object.
-* @return {bool} A value of true if the specified object intersects with this Circle object; otherwise false.
+* @return {boolean} A value of true if the specified object intersects with this Circle object; otherwise false.
 */
 Phaser.Circle.intersects = function (a, b) {
     return (Phaser.Math.distance(a.x, a.y, b.x, b.y) <= (a.radius + b.radius));
@@ -438,7 +438,7 @@ Phaser.Circle.intersects = function (a, b) {
 * @method circumferencePoint
 * @param {Phaser.Circle} a - The first Circle object.
 * @param {number} angle - The angle in radians (unless asDegrees is true) to return the point from.
-* @param {bool} asDegrees - Is the given angle in radians (false) or degrees (true)?
+* @param {boolean} asDegrees - Is the given angle in radians (false) or degrees (true)?
 * @param {Phaser.Point} [out] - An optional Point object to put the result in to. If none specified a new Point object will be created.
 * @return {Phaser.Point} The Point object holding the result.
 */
@@ -463,7 +463,7 @@ Phaser.Circle.circumferencePoint = function (a, angle, asDegrees, out) {
 * @method intersectsRectangle
 * @param {Phaser.Circle} c - The Circle object to test.
 * @param {Phaser.Rectangle} r - The Rectangle object to test.
-* @return {bool} True if the two objects intersect, otherwise false.
+* @return {boolean} True if the two objects intersect, otherwise false.
 */
 Phaser.Circle.intersectsRectangle = function (c, r) {
 

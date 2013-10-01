@@ -44,7 +44,7 @@ Phaser.GameObjectFactory.prototype = {
     * Description.
     * @method existing.
     * @param {object} - Description.
-    * @return {bool} Description.
+    * @return {boolean} Description.
     */
     existing: function (object) {
 

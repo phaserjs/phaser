@@ -25,7 +25,7 @@ Phaser.InputHandler = function (sprite) {
 	this.sprite = sprite;
 
 	/**
-	* @property {bool} enabled - Description. 
+	* @property {boolean} enabled - Description. 
 	* @default
 	*/
     this.enabled = false;
@@ -68,31 +68,31 @@ Phaser.InputHandler = function (sprite) {
     this.priorityID = 0;
     
 	/**
-	* @property {bool} useHandCursor - Description. 
+	* @property {boolean} useHandCursor - Description. 
 	* @default
 	*/
     this.useHandCursor = false;
 	
 	/**
-	* @property {bool} isDragged - Description. 
+	* @property {boolean} isDragged - Description. 
 	* @default
 	*/
     this.isDragged = false;
     
 	/**
-	* @property {bool} allowHorizontalDrag - Description. 
+	* @property {boolean} allowHorizontalDrag - Description. 
 	* @default
 	*/
     this.allowHorizontalDrag = true;
     
 	/**
-	* @property {bool} allowVerticalDrag - Description. 
+	* @property {boolean} allowVerticalDrag - Description. 
 	* @default
 	*/
     this.allowVerticalDrag = true;
     
 	/**
-	* @property {bool} bringToTop - Description. 
+	* @property {boolean} bringToTop - Description. 
 	* @default
 	*/
     this.bringToTop = false;
@@ -104,13 +104,13 @@ Phaser.InputHandler = function (sprite) {
     this.snapOffset = null;
     
 	/**
-	* @property {bool} snapOnDrag - Description. 
+	* @property {boolean} snapOnDrag - Description. 
 	* @default
 	*/
     this.snapOnDrag = false;
     
 	/**
-	* @property {bool} snapOnRelease - Description. 
+	* @property {boolean} snapOnRelease - Description. 
 	* @default
 	*/
     this.snapOnRelease = false;
@@ -140,7 +140,7 @@ Phaser.InputHandler = function (sprite) {
     this.pixelPerfectAlpha = 255;
 
     /**
-    * @property {bool} draggable - Is this sprite allowed to be dragged by the mouse? true = yes, false = no
+    * @property {boolean} draggable - Is this sprite allowed to be dragged by the mouse? true = yes, false = no
     * @default 
     */
     this.draggable = false;
@@ -160,7 +160,7 @@ Phaser.InputHandler = function (sprite) {
     /**
     * If this object is set to consume the pointer event then it will stop all propogation from this object on.
     * For example if you had a stack of 6 sprites with the same priority IDs and one consumed the event, none of the others would receive it.
-    * @property {bool} consumePointerEvent
+    * @property {boolean} consumePointerEvent
     * @default
     */
     this.consumePointerEvent = false;
@@ -197,7 +197,7 @@ Phaser.InputHandler.prototype = {
 	* Description.
 	* @method start
 	* @param {number} priority - Description.
-	* @param {bool} useHandCursor - Description.
+	* @param {boolean} useHandCursor - Description.
 	* @return {Phaser.Sprite} Description.
 	*/
 	start: function (priority, useHandCursor) {
@@ -348,7 +348,7 @@ Phaser.InputHandler.prototype = {
     * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true.
     * @method pointerDown
     * @param {Pointer} pointer
-    * @return {bool}
+    * @return {boolean}
     */
     pointerDown: function (pointer) {
 
@@ -362,7 +362,7 @@ Phaser.InputHandler.prototype = {
     * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
     * @method pointerUp
     * @param {Pointer} pointer
-    * @return {bool}
+    * @return {boolean}
     */
     pointerUp: function (pointer) {
 
@@ -418,7 +418,7 @@ Phaser.InputHandler.prototype = {
     * Is the Pointer outside of this Sprite?
     * @method pointerOut
     * @param {Pointer} pointer
-    * @return {bool}
+    * @return {boolean}
     */
     pointerOut: function (pointer) {
 
@@ -474,7 +474,7 @@ Phaser.InputHandler.prototype = {
     * Checks if the given pointer is over this Sprite.
     * @method checkPointerOver
     * @param {Pointer} pointer
-    * @return {bool}
+    * @return {boolean}
     */
     checkPointerOver: function (pointer) {
 
@@ -513,7 +513,7 @@ Phaser.InputHandler.prototype = {
      * @method checkPixel
      * @param {Description} x - Description.
      * @param {Description} y - Description.
-     * @return {bool}
+     * @return {boolean}
      */
     checkPixel: function (x, y) {
 
@@ -696,7 +696,7 @@ Phaser.InputHandler.prototype = {
     * Updates the Pointer drag on this Sprite.
     * @method updateDrag
     * @param {Pointer} pointer
-    * @return {bool}
+    * @return {boolean}
     */
     updateDrag: function (pointer) {
 
@@ -741,7 +741,7 @@ Phaser.InputHandler.prototype = {
     * @method justOver
     * @param {Pointer} pointer
     * @param {number} delay - The time below which the pointer is considered as just over.
-    * @return {bool}
+    * @return {boolean}
     */
     justOver: function (pointer, delay) {
 
@@ -757,7 +757,7 @@ Phaser.InputHandler.prototype = {
     * @method justOut
     * @param {Pointer} pointer
     * @param {number} delay - The time below which the pointer is considered as just out.
-    * @return {bool}
+    * @return {boolean}
     */
     justOut: function (pointer, delay) {
 
@@ -773,7 +773,7 @@ Phaser.InputHandler.prototype = {
     * @method justPressed
     * @param {Pointer} pointer
     * @param {number} delay - The time below which the pointer is considered as just over.
-    * @return {bool}
+    * @return {boolean}
     */
     justPressed: function (pointer, delay) {
 
@@ -789,7 +789,7 @@ Phaser.InputHandler.prototype = {
     * @method justReleased
     * @param {Pointer} pointer
     * @param {number} delay - The time below which the pointer is considered as just out.
-    * @return {bool}
+    * @return {boolean}
     */
     justReleased: function (pointer, delay) {
 

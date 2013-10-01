@@ -15,7 +15,7 @@
 * @param {Phaser.Game} game - Reference to the current game instance.
 * @param {string} key - Asset key for the sound.
 * @param {number} volume - Default value for the volume.
-* @param {bool} loop - Whether or not the sound will loop.
+* @param {boolean} loop - Whether or not the sound will loop.
 */
 Phaser.Sound = function (game, key, volume, loop) {
 	
@@ -43,7 +43,7 @@ Phaser.Sound = function (game, key, volume, loop) {
 
     /**
     * Whether or not the sound will loop.
-    * @property {bool} loop
+    * @property {boolean} loop
     */
     this.loop = loop;
 
@@ -77,7 +77,7 @@ Phaser.Sound = function (game, key, volume, loop) {
 
     /**
     * Boolean indicating whether the game is on "mute". 
-    * @property {bool} _muted
+    * @property {boolean} _muted
     * @private
     * @default
     */
@@ -85,7 +85,7 @@ Phaser.Sound = function (game, key, volume, loop) {
 
     /**
     * Boolean indicating whether the sound should start automatically.
-    * @property {bool} autoplay
+    * @property {boolean} autoplay
     * @private
     */
     this.autoplay = false;
@@ -127,14 +127,14 @@ Phaser.Sound = function (game, key, volume, loop) {
     
     /**
     * Description.
-    * @property {bool} paused
+    * @property {boolean} paused
     * @default
     */
     this.paused = false;
     
     /**
     * Description.
-    * @property {bool} isPlaying
+    * @property {boolean} isPlaying
     * @default
     */
     this.isPlaying = false;
@@ -148,21 +148,21 @@ Phaser.Sound = function (game, key, volume, loop) {
     
     /**
     * Description.
-    * @property {bool} pendingPlayback
+    * @property {boolean} pendingPlayback
     * @default
     */
     this.pendingPlayback = false;
     
     /**
     * Description.
-    * @property {bool} override
+    * @property {boolean} override
     * @default
     */
     this.override = false;
     
     /**
     * Description.
-    * @property {bool} usingWebAudio
+    * @property {boolean} usingWebAudio
     */
     this.usingWebAudio = this.game.sound.usingWebAudio;
     
@@ -396,7 +396,7 @@ Phaser.Sound.prototype = {
     * @param {string} marker - Assets key of the sound you want to play.
     * @param {number} position - The starting position.
     * @param {number} [volume] - Volume of the sound you want to play.
-    * @param {bool} [loop] - Loop when it finished playing? (Default to false)
+    * @param {boolean} [loop] - Loop when it finished playing? (Default to false)
     * @param {Description} forceRestart - Description.
     * @return {Sound} The playing sound object.
     */
@@ -593,7 +593,7 @@ Phaser.Sound.prototype = {
     * @param {string} marker - Assets key of the sound you want to play.
     * @param {number} position - The starting position.
     * @param {number} [volume] - Volume of the sound you want to play.
-    * @param {bool} [loop] - Loop when it finished playing? (Default to false)
+    * @param {boolean} [loop] - Loop when it finished playing? (Default to false)
     */
     restart: function (marker, position, volume, loop) {
 
@@ -691,7 +691,7 @@ Phaser.Sound.prototype = {
 
 /**
 * Get
-* @return {bool} Description.
+* @return {boolean} Description.
 */
 Object.defineProperty(Phaser.Sound.prototype, "isDecoding", {
 
@@ -703,7 +703,7 @@ Object.defineProperty(Phaser.Sound.prototype, "isDecoding", {
 
 /**
 * Get
-* @return {bool} Description.
+* @return {boolean} Description.
 */
 Object.defineProperty(Phaser.Sound.prototype, "isDecoded", {
 
@@ -715,10 +715,10 @@ Object.defineProperty(Phaser.Sound.prototype, "isDecoded", {
 
 /**
 * Get
-* @return {bool} Whether or not the sound is muted.
+* @return {boolean} Whether or not the sound is muted.
 *//**
 * Mutes sound.
-* @param {bool} value - Whether or not the sound is muted.
+* @param {boolean} value - Whether or not the sound is muted.
 */
 Object.defineProperty(Phaser.Sound.prototype, "mute", {
 	

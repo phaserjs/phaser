@@ -67,7 +67,7 @@ Phaser.Touch = function (game) {
     this.touchCancelCallback = null;
     
 	/**
-	* @property {bool} preventDefault - Description.
+	* @property {boolean} preventDefault - Description.
 	* @default
     */
     this.preventDefault = true;
@@ -81,7 +81,7 @@ Phaser.Touch.prototype = {
     /**
     * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
     * @method disabled
-    * @return {bool}
+    * @return {boolean}
     */
 	disabled: false,
 

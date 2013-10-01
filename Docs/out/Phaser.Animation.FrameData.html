@@ -123,6 +123,1332 @@
     
     
     
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="addFrame"><span class="type-signature">&lt;static> </span>addFrame<span class="signature">(frame)</span><span class="type-signature"> &rarr; {<a href="Phaser.Animation.Frame.html">Phaser.Animation.Frame</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Adds a new Frame to this FrameData collection. Typically called by the Animation.Parser and not directly.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>frame</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Animation.Frame.html">Phaser.Animation.Frame</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The frame to add to this FrameData set.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        animation/FrameData.js, line 33
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The frame that was just added.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Animation.Frame.html">Phaser.Animation.Frame</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="checkFrameName"><span class="type-signature">&lt;static> </span>checkFrameName<span class="signature">(name)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Check if there is a Frame with the given name.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The name of the frame you want to check.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        animation/FrameData.js, line 94
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    True if the frame is found, otherwise false.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">boolean</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getFrame"><span class="type-signature">&lt;static> </span>getFrame<span class="signature">(index)</span><span class="type-signature"> &rarr; {<a href="Phaser.Animation.Frame.html">Phaser.Animation.Frame</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Get a Frame by its numerical index.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The index of the frame you want to get.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        animation/FrameData.js, line 56
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The frame, if found.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Animation.Frame.html">Phaser.Animation.Frame</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getFrameByName"><span class="type-signature">&lt;static> </span>getFrameByName<span class="signature">(name)</span><span class="type-signature"> &rarr; {<a href="Phaser.Animation.Frame.html">Phaser.Animation.Frame</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Get a Frame by its frame name.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The name of the frame you want to get.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        animation/FrameData.js, line 75
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The frame, if found.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Animation.Frame.html">Phaser.Animation.Frame</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getFrameIndexes"><span class="type-signature">&lt;static> </span>getFrameIndexes<span class="signature">(frames, <span class="optional">useNumericIndex</span>, <span class="optional">output</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns all of the Frame indexes in this FrameData set.The frames indexes are returned in the output array, or if none is provided in a new Array object.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>frames</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">An Array containing the indexes of the frames to retrieve. If the array is empty then all frames in the FrameData are returned.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>useNumericIndex</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last">Are the given frames using numeric indexes (default) or strings? (false)</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>output</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">If given the results will be appended to the end of this array otherwise a new array will be created.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        animation/FrameData.js, line 184
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    An array of all Frame indexes matching the given names or IDs.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Array</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getFrameRange"><span class="type-signature">&lt;static> </span>getFrameRange<span class="signature">(start, end, <span class="optional">output</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns a range of frames based on the given start and end frame indexes and returns them in an Array.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>start</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The starting frame index.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>end</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The ending frame index.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>output</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">If given the results will be appended to the end of this array otherwise a new array will be created.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        animation/FrameData.js, line 113
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    An array of Frames between the start and end index values, or an empty array if none were found.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Array</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getFrames"><span class="type-signature">&lt;static> </span>getFrames<span class="signature">(frames, <span class="optional">useNumericIndex</span>, <span class="optional">output</span>)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns all of the Frames in this FrameData set where the frame index is found in the input array.The frames are returned in the output array, or if none is provided in a new Array object.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>frames</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">An Array containing the indexes of the frames to retrieve. If the array is empty then all frames in the FrameData are returned.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>useNumericIndex</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last">Are the given frames using numeric indexes (default) or strings? (false)</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>output</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">If given the results will be appended to the end of this array otherwise a new array will be created.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        animation/FrameData.js, line 136
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    An array of all Frames in this FrameData set matching the given names or IDs.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Array</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="total"><span class="type-signature">&lt;static> </span>total<span class="signature">()</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns the total number of frames in this FrameData set.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        animation/FrameData.js, line 233
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The total number of frames in this FrameData set.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Number</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        </dl>
+    
     
     
     
@@ -137,13 +1463,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-Phaser.html">Phaser</a></li><li><a href="Animation.html">Animation</a></li></ul><h3>Classes</h3><ul><li><a href="Phaser.Animation.Frame.html">Frame</a></li><li><a href="Phaser.Animation.FrameData.html">FrameData</a></li><li><a href="Phaser.Animation.Parser.html">Parser</a></li><li><a href="Phaser.AnimationManager.html">AnimationManager</a></li><li><a href="Animation-Phaser.Animation.html">Animation</a></li></ul><h3>Namespaces</h3><ul><li><a href="Phaser.html">Phaser</a></li></ul><h3>Global</h3><ul><li><a href="global.html#add">add</a></li><li><a href="global.html#addFrame">addFrame</a></li><li><a href="global.html#checkFrameName">checkFrameName</a></li><li><a href="global.html#destroy">destroy</a></li><li><a href="global.html#generateFrameNames">generateFrameNames</a></li><li><a href="global.html#getFrame">getFrame</a></li><li><a href="global.html#getFrameByName">getFrameByName</a></li><li><a href="global.html#getFrameIndexes">getFrameIndexes</a></li><li><a href="global.html#getFrameRange">getFrameRange</a></li><li><a href="global.html#getFrames">getFrames</a></li><li><a href="global.html#JSONData">JSONData</a></li><li><a href="global.html#JSONDataHash">JSONDataHash</a></li><li><a href="global.html#onComplete">onComplete</a></li><li><a href="global.html#play">play</a></li><li><a href="global.html#restart">restart</a></li><li><a href="global.html#setTrim">setTrim</a></li><li><a href="global.html#spriteSheet">spriteSheet</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#total">total</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#validateFrames">validateFrames</a></li><li><a href="global.html#XMLData">XMLData</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-Phaser.html">Phaser</a></li><li><a href="Animation.html">Animation</a></li><li><a href="Camera.html">Camera</a></li><li><a href="Game.html">Game</a></li><li><a href="Group.html">Group</a></li></ul><h3>Classes</h3><ul><li><a href="Phaser.Animation.Frame.html">Frame</a></li><li><a href="Phaser.Animation.FrameData.html">FrameData</a></li><li><a href="Phaser.Animation.Parser.html">Parser</a></li><li><a href="Phaser.AnimationManager.html">AnimationManager</a></li><li><a href="Animation-Phaser.Animation.html">Animation</a></li><li><a href="Camera-Phaser.Camera.html">Camera</a></li><li><a href="Game-Phaser.Game.html">Game</a></li><li><a href="Group-Phaser.Group.html">Group</a></li></ul><h3>Namespaces</h3><ul><li><a href="Phaser.html">Phaser</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Oct 01 2013 16:05:08 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Oct 01 2013 16:31:58 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

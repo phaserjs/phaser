@@ -116,8 +116,8 @@ Phaser.Key.prototype = {
     },
 
 	/**
-    * @param {Number} [duration]
-    * @return {bool}
+    * @param {number} [duration]
+    * @return {boolean}
     */
     justPressed: function (duration) {
 
@@ -128,8 +128,8 @@ Phaser.Key.prototype = {
     },
 
 	/**
-    * @param {Number} [duration]
-    * @return {bool}
+    * @param {number} [duration]
+    * @return {boolean}
     */
     justReleased: function (duration) {
 

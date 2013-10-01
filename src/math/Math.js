@@ -25,7 +25,7 @@ Phaser.Math = {
 	* @param {number} a
 	* @param {number} b
 	* @param {number} epsilon 
-	* @return {bool} True if |a-b|<&epsilon;
+	* @return {boolean} True if |a-b|<&epsilon;
 	*/
     fuzzyEqual: function (a, b, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
@@ -38,7 +38,7 @@ Phaser.Math = {
 	* @param {number} a
 	* @param {number} b
 	* @param {number} epsilon 
-	* @return {bool} True if a<b+&epsilon;
+	* @return {boolean} True if a<b+&epsilon;
 	*/
     fuzzyLessThan: function (a, b, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
@@ -51,7 +51,7 @@ Phaser.Math = {
 	* @param {number} a
 	* @param {number} b
 	* @param {number} epsilon 
-	* @return {bool} True if a>b+&epsilon;
+	* @return {boolean} True if a>b+&epsilon;
 	*/
     fuzzyGreaterThan: function (a, b, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
@@ -62,7 +62,7 @@ Phaser.Math = {
 	* @method fuzzyCeil
 	* @param {number} val
 	* @param {number} epsilon 
-	* @return {bool} ceiling(val-&epsilon;)
+	* @return {boolean} ceiling(val-&epsilon;)
 	*/
     fuzzyCeil: function (val, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
@@ -73,7 +73,7 @@ Phaser.Math = {
 	* @method fuzzyFloor
 	* @param {number} val
 	* @param {number} epsilon 
-	* @return {bool} floor(val-&epsilon;)
+	* @return {boolean} floor(val-&epsilon;)
 	*/
     fuzzyFloor: function (val, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
@@ -198,7 +198,7 @@ Phaser.Math = {
 	* @method
 	* @param {number} input
 	* @param {array} arr 
-	* @param {bool} sort - True if the array needs to be sorted.
+	* @param {boolean} sort - True if the array needs to be sorted.
 	*/
     snapToInArray: function (input, arr, sort) {
 
@@ -332,7 +332,7 @@ Phaser.Math = {
 	* Set an angle  within the bounds of -&pi; to&pi;.
 	* @method normalizeAngle
 	* @param {number} angle
-	* @param {bool} radians - True if angle size is expressed in radians.
+	* @param {boolean} radians - True if angle size is expressed in radians.
 	*/
     normalizeAngle: function (angle, radians) {
 
@@ -349,7 +349,7 @@ Phaser.Math = {
 	* @method nearestAngleBetween
 	* @param {number} a1
 	* @param {number} a2
-	* @param {bool} radians - True if angle sizes are expressed in radians.
+	* @param {boolean} radians - True if angle sizes are expressed in radians.
 	*/
     nearestAngleBetween: function (a1, a2, radians) {
 
@@ -379,7 +379,7 @@ Phaser.Math = {
 	* @param {number} a1 - Description.
 	* @param {number} a2 - Description.
 	* @param {number} weight - Description.
-	* @param {bool} radians - True if angle sizes are expressed in radians.
+	* @param {boolean} radians - True if angle sizes are expressed in radians.
 	* @param {Description} ease - Description.
 	*/
     interpolateAngles: function (a1, a2, weight, radians, ease) {
@@ -402,7 +402,7 @@ Phaser.Math = {
 	* </p>
 	* @method chanceRoll
 	* @param {number} chance - The chance of receiving the value. A number between 0 and 100 (effectively 0% to 100%).
-	* @return {bool} True if the roll passed, or false otherwise.
+	* @return {boolean} True if the roll passed, or false otherwise.
 	*/
     chanceRoll: function (chance) {
 
@@ -557,7 +557,7 @@ Phaser.Math = {
 	*
 	* @method isOdd
 	* @param  {number} n - The number to check.
-	* @return {bool} True if the given number is odd. False if the given number is even.
+	* @return {boolean} True if the given number is odd. False if the given number is even.
 	*/
     isOdd: function (n) {
 
@@ -570,7 +570,7 @@ Phaser.Math = {
 	*
 	* @method isEven
 	* @param  {number} n - The number to check.
-	* @return {bool} True if the given number is even. False if the given number is odd.
+	* @return {boolean} True if the given number is even. False if the given number is odd.
 	*/
     isEven: function (n) {
 

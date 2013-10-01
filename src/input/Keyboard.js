@@ -58,7 +58,7 @@ Phaser.Keyboard.prototype = {
     /**
     * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
     * @default
-    * @property {bool} disabled
+    * @property {boolean} disabled
     */
 	disabled: false,
 
@@ -284,7 +284,7 @@ Phaser.Keyboard.prototype = {
 	* @method justPressed
     * @param {number} keycode
     * @param {number} [duration]
-    * @return {bool}
+    * @return {boolean}
     */
     justPressed: function (keycode, duration) {
 
@@ -304,7 +304,7 @@ Phaser.Keyboard.prototype = {
 	* @method justReleased
     * @param {number} keycode
     * @param {number} [duration]
-    * @return {bool}
+    * @return {boolean}
     */
     justReleased: function (keycode, duration) {
 
@@ -323,7 +323,7 @@ Phaser.Keyboard.prototype = {
 	* Description.
 	* @method isDown
     * @param {number} keycode
-    * @return {bool}
+    * @return {boolean}
     */
     isDown: function (keycode) {
 

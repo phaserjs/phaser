@@ -21,13 +21,13 @@
 Phaser.TilemapLayer = function (parent, id, key, mapFormat, name, tileWidth, tileHeight) {
 
 	/**
-	* @property {bool} exists - Controls whether update() and draw() are automatically called.
+	* @property {boolean} exists - Controls whether update() and draw() are automatically called.
 	* @default
 	*/
     this.exists = true;
 
 	/**
-	* @property {bool} visible - Controls whether draw() are automatically called.
+	* @property {boolean} visible - Controls whether draw() are automatically called.
 	* @default
 	*/
     this.visible = true;
@@ -444,7 +444,7 @@ Phaser.TilemapLayer.prototype = {
     * @param {number} [y] - Y position (in tiles) of block's left-top corner.
     * @param {number} [width] - width of block.
     * @param {number} [height] - height of block.
-    * @param {bool} collisionOnly - Whethor or not ONLY return tiles which will collide (its allowCollisions value is not Collision.NONE).
+    * @param {boolean} collisionOnly - Whethor or not ONLY return tiles which will collide (its allowCollisions value is not Collision.NONE).
     */
     getTempBlock: function (x, y, width, height, collisionOnly) {
 

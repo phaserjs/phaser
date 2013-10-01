@@ -47,13 +47,13 @@ Phaser.Signal.prototype = {
     * If Signal should keep record of previously dispatched parameters and
 	* automatically execute listener during `add()`/`addOnce()` if Signal was
 	* already dispatched before.
-	* @property {bool} memorize
+	* @property {boolean} memorize
 	*/
 	memorize: false,
 
 	/**
 	* Description.
-	* @property {bool} _shouldPropagate 
+	* @property {boolean} _shouldPropagate 
 	* @private
 	*/
 	_shouldPropagate: true,
@@ -61,7 +61,7 @@ Phaser.Signal.prototype = {
 	/**
 	* If Signal is active and should broadcast events.
 	* <p><strong>IMPORTANT:</strong> Setting this property during a dispatch will only affect the next dispatch, if you want to stop the propagation of a signal use `halt()` instead.</p>
-	* @property {bool} active
+	* @property {boolean} active
     * @default
     */
 	active: true,
@@ -84,7 +84,7 @@ Phaser.Signal.prototype = {
 	 * 
 	 * @method _registerListener
 	 * @param {function} listener - Signal handler function.
-	 * @param {bool} isOnce - Description.
+	 * @param {boolean} isOnce - Description.
 	 * @param {object} [listenerContext] - Description.
 	 * @param {number} [priority] - The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0).
 	 * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
@@ -152,7 +152,7 @@ Phaser.Signal.prototype = {
 	 * @method has
 	 * @param {Function} listener - Signal handler function.
 	 * @param {Object} [context] - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-	 * @return {bool} If Signal has the specified listener.
+	 * @return {boolean} If Signal has the specified listener.
 	 */
 	has: function (listener, context) {
 		return this._indexOfListener(listener, context) !== -1;

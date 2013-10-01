@@ -36,7 +36,7 @@ Phaser.Utils.Debug = function (game) {
     this.lineHeight = 16;
     
 	/**
-	* @property {bool} renderShadow - Description.
+	* @property {boolean} renderShadow - Description.
 	*/
     this.renderShadow = true;
     
@@ -185,8 +185,8 @@ Phaser.Utils.Debug.prototype = {
      * Description.
      * @method renderSpriteCorners
      * @param {Phaser.Sprite} sprite - The sprite to be rendered.
-     * @param {bool} showText - Description.
-     * @param {bool} showBounds - Description.
+     * @param {boolean} showText - Description.
+     * @param {boolean} showBounds - Description.
      * @param {string} color - Description.
      */
     renderSpriteCorners: function (sprite, showText, showBounds, color) {
@@ -302,7 +302,7 @@ Phaser.Utils.Debug.prototype = {
     * Renders the Pointer.circle object onto the stage in green if down or red if up.
     * @method renderDebug
     * @param {Description} pointer - Description.
-    * @param {bool} hideIfUp - Description.
+    * @param {boolean} hideIfUp - Description.
     * @param {string} downColor - Description.
     * @param {string} upColor - Description.
     * @param {string} color - Description.

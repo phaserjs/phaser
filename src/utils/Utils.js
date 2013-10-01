@@ -57,7 +57,7 @@ Phaser.Utils = {
     * This is a slightly modified version of jQuery.isPlainObject.
     * @method isPlainObject
     * @param {object} obj - Description.
-    * @return {bool} - Description.
+    * @return {boolean} - Description.
     */
 	isPlainObject: function (obj) {
 

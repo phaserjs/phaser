@@ -149,7 +149,7 @@ Phaser.Time = function (game) {
 
 	/**
 	* Description.
-	* @property {bool} _justResumed
+	* @property {boolean} _justResumed
     * @default
 	*/
 	this._justResumed = false;

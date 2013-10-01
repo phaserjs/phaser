@@ -3,7 +3,7 @@
         "allowUnknownTags": true
     },
     "source": {
-        "include": [ "../src/Phaser.js", "../src/animation/Animation.js" ],
+        "include": [ "../src/Phaser.js", "../src/animation/", "../src/core/Camera.js", "../src/core/Game.js", "../src/core/Group.js" ],
         "exclude": [],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"

@@ -20,8 +20,8 @@
 * @param {number} renderer -Which renderer to use (canvas or webgl)
 * @param {HTMLElement} parent -The Games DOM parent.
 * @param {Description} state - Description.
-* @param {bool} transparent - Use a transparent canvas background or not.
-* @param  {bool} antialias - Anti-alias graphics.
+* @param {boolean} transparent - Use a transparent canvas background or not.
+* @param  {boolean} antialias - Anti-alias graphics.
 */
 Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias) {
 
@@ -56,12 +56,12 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 	this.height = height;
 
 	/**
-	* @property {bool} transparent - Use a transparent canvas background or not.
+	* @property {boolean} transparent - Use a transparent canvas background or not.
 	*/
 	this.transparent = transparent;
 
 	/**
-	* @property {bool} antialias - Anti-alias graphics (in WebGL this helps with edges, in Canvas2D it retains pixel-art quality).
+	* @property {boolean} antialias - Anti-alias graphics (in WebGL this helps with edges, in Canvas2D it retains pixel-art quality).
 	*/
 	this.antialias = antialias;
 
@@ -77,7 +77,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 	this.state = new Phaser.StateManager(this, state);
 
 	/**
-	* @property {bool} _paused - Is game paused?
+	* @property {boolean} _paused - Is game paused?
 	* @private
 	* @default
 	*/
@@ -89,20 +89,20 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 	this.renderType = renderer;
 
 	/**
-	* @property {bool} _loadComplete - Whether load complete loading or not.
+	* @property {boolean} _loadComplete - Whether load complete loading or not.
 	* @private
 	* @default
 	*/
 	this._loadComplete = false;
 
 	/**
-	* @property {bool} isBooted - Whether the game engine is booted, aka available.
+	* @property {boolean} isBooted - Whether the game engine is booted, aka available.
 	* @default
 	*/
 	this.isBooted = false;
 
 	/**
-	* @property {bool} id -Is game running or paused?
+	* @property {boolean} id -Is game running or paused?
 	* @default
 	*/
 	this.isRunning = false;
@@ -253,6 +253,7 @@ Phaser.Game.prototype = {
 	* Initialize engine sub modules and start the game.
 	* 
 	* @method boot
+    * @memberOf Phaser.Game
 	*/
 	boot: function () {
 
@@ -333,6 +334,7 @@ Phaser.Game.prototype = {
 	* Checks if the device is capable of using the requested renderer and sets it up or an alternative if not.
 	* 
 	* @method setUpRenderer
+    * @memberOf Phaser.Game
 	*/
 	setUpRenderer: function () {
 
@@ -369,6 +371,7 @@ Phaser.Game.prototype = {
     * Called when the load has finished, after preload was run.
     * 
     * @method loadComplete
+    * @memberOf Phaser.Game
     */
     loadComplete: function () {
 
@@ -382,6 +385,7 @@ Phaser.Game.prototype = {
     * The core game loop.
     * 
     * @method update
+    * @memberOf Phaser.Game
 	* @param {number} time - The current time as provided by RequestAnimationFrame.
     */
 	update: function (time) {
@@ -416,6 +420,7 @@ Phaser.Game.prototype = {
     * Nuke the entire game from orbit
     * 
     * @method destroy
+    * @memberOf Phaser.Game
     */
     destroy: function () {
 

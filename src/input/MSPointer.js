@@ -57,7 +57,7 @@ Phaser.MSPointer.prototype = {
 
     /**
     * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-    * @property {bool} disabled
+    * @property {boolean} disabled
     */
 	disabled: false,
 

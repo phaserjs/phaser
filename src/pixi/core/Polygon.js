@@ -52,8 +52,8 @@ PIXI.Polygon.prototype.clone = function()
  * Checks if the x, and y coords passed to this function are contained within this polygon
  *
  * @method contains
- * @param x {Number} The X coord of the point to test
- * @param y {Number} The Y coord of the point to test
+ * @param x {number} The X coord of the point to test
+ * @param y {number} The Y coord of the point to test
  * @return {Boolean} if the x/y coords are within this polygon
  */
 PIXI.Polygon.prototype.contains = function(x, y)

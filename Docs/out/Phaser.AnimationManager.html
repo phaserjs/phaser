@@ -325,7 +325,7 @@
             <td class="type">
             
                 
-<span class="param-type">Phaser.Game</span>
+<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
 
 
             
@@ -587,6 +587,1084 @@
     
     
     
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="add"><span class="type-signature">&lt;static> </span>add<span class="signature">(name, <span class="optional">frames</span>, <span class="optional">frameRate</span>, <span class="optional">loop</span>, <span class="optional">useNumericIndex</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Animation.html">Phaser.Animation</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Adds a new animation under the given key. Optionally set the frames, frame rate and loop.Animations added in this way are played back with the play function.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The unique (within this Sprite) name for the animation, i.e. "run", "fire", "walk".</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>frames</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+            
+            <td class="description last">An array of numbers/strings that correspond to the frames to add to this animation and in which order. e.g. [1, 2, 3] or ['run0', 'run1', run2]). If null then all frames will be used.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>frameRate</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    60
+                
+                </td>
+            
+            
+            <td class="description last">The speed at which the animation should play. The speed is given in frames per second.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>loop</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last">{boolean} - Whether or not the animation is looped or just plays once.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>useNumericIndex</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last">Are the given frames using numeric indexes (default) or strings?</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        animation/AnimationManager.js, line 79
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The Animation object that was created.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Animation.html">Phaser.Animation</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="destroy"><span class="type-signature">&lt;static> </span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Destroys all references this AnimationManager contains. Sets the _anims to a new object and nulls the current animation.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        animation/AnimationManager.js, line 249
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="play"><span class="type-signature">&lt;static> </span>play<span class="signature">(name, <span class="optional">frameRate</span>, <span class="optional">loop</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Animation.html">Phaser.Animation</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()If the requested animation is already playing this request will be ignored. If you need to reset an already running animation do so directly on the Animation object itself.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">The name of the animation to be played, e.g. "fire", "walk", "jump".</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>frameRate</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+            
+            <td class="description last">The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>loop</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+            
+            <td class="description last">Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        animation/AnimationManager.js, line 161
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A reference to playing Animation instance.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Animation.html">Phaser.Animation</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="stop"><span class="type-signature">&lt;static> </span>stop<span class="signature">(<span class="optional">name</span>, <span class="optional">resetFrame</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Stop playback of an animation. If a name is given that specific animation is stopped, otherwise the current animation is stopped.The currentAnim property of the AnimationManager is automatically set to the animation given.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+            
+            <td class="description last">The name of the animation to be stopped, e.g. "fire". If none is given the currently running animation is stopped.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>resetFrame</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+            
+            <td class="description last">When the animation is stopped should the currentFrame be set to the first frame of the animation (true) or paused on the last frame displayed (false)</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        animation/AnimationManager.js, line 192
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="update"><span class="type-signature">&lt;protected, static> </span>update<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The main update function is called by the Sprites update loop. It's responsible for updating animation frames and firing related events.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        animation/AnimationManager.js, line 223
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    True if a new animation frame has been set, otherwise false.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">boolean</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="validateFrames"><span class="type-signature">&lt;static> </span>validateFrames<span class="signature">(frames, <span class="optional">useNumericIndex</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Check whether the frames in the given array are valid and exist.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>frames</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">An array of frames to be validated.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>useNumericIndex</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last">Validate the frames based on their numeric index (true) or string index (false)</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        animation/AnimationManager.js, line 126
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    True if all given Frames are valid, otherwise false.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">boolean</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        </dl>
+    
     
     
     
@@ -601,13 +1679,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-Phaser.html">Phaser</a></li><li><a href="Animation.html">Animation</a></li></ul><h3>Classes</h3><ul><li><a href="Phaser.Animation.Frame.html">Frame</a></li><li><a href="Phaser.Animation.FrameData.html">FrameData</a></li><li><a href="Phaser.Animation.Parser.html">Parser</a></li><li><a href="Phaser.AnimationManager.html">AnimationManager</a></li><li><a href="Animation-Phaser.Animation.html">Animation</a></li></ul><h3>Namespaces</h3><ul><li><a href="Phaser.html">Phaser</a></li></ul><h3>Global</h3><ul><li><a href="global.html#add">add</a></li><li><a href="global.html#addFrame">addFrame</a></li><li><a href="global.html#checkFrameName">checkFrameName</a></li><li><a href="global.html#destroy">destroy</a></li><li><a href="global.html#generateFrameNames">generateFrameNames</a></li><li><a href="global.html#getFrame">getFrame</a></li><li><a href="global.html#getFrameByName">getFrameByName</a></li><li><a href="global.html#getFrameIndexes">getFrameIndexes</a></li><li><a href="global.html#getFrameRange">getFrameRange</a></li><li><a href="global.html#getFrames">getFrames</a></li><li><a href="global.html#JSONData">JSONData</a></li><li><a href="global.html#JSONDataHash">JSONDataHash</a></li><li><a href="global.html#onComplete">onComplete</a></li><li><a href="global.html#play">play</a></li><li><a href="global.html#restart">restart</a></li><li><a href="global.html#setTrim">setTrim</a></li><li><a href="global.html#spriteSheet">spriteSheet</a></li><li><a href="global.html#stop">stop</a></li><li><a href="global.html#total">total</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#validateFrames">validateFrames</a></li><li><a href="global.html#XMLData">XMLData</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-Phaser.html">Phaser</a></li><li><a href="Animation.html">Animation</a></li><li><a href="Camera.html">Camera</a></li><li><a href="Game.html">Game</a></li><li><a href="Group.html">Group</a></li></ul><h3>Classes</h3><ul><li><a href="Phaser.Animation.Frame.html">Frame</a></li><li><a href="Phaser.Animation.FrameData.html">FrameData</a></li><li><a href="Phaser.Animation.Parser.html">Parser</a></li><li><a href="Phaser.AnimationManager.html">AnimationManager</a></li><li><a href="Animation-Phaser.Animation.html">Animation</a></li><li><a href="Camera-Phaser.Camera.html">Camera</a></li><li><a href="Game-Phaser.Game.html">Game</a></li><li><a href="Group-Phaser.Group.html">Group</a></li></ul><h3>Namespaces</h3><ul><li><a href="Phaser.html">Phaser</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Oct 01 2013 16:05:08 GMT+0100 (BST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Tue Oct 01 2013 16:31:59 GMT+0100 (BST)
 </footer>
 
 <script> prettyPrint(); </script>

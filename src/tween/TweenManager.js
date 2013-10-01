@@ -124,7 +124,7 @@ Phaser.TweenManager.prototype = {
 	* Update all the tween objects you added to this manager.
 	*
 	* @method update
-	* @returns {bool} Return false if there's no tween to update, otherwise return true.
+	* @returns {boolean} Return false if there's no tween to update, otherwise return true.
 	*/
 	update: function () {
 

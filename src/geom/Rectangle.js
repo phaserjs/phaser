@@ -168,7 +168,7 @@ Phaser.Rectangle.prototype = {
     * @method contains
     * @param {number} x - The x coordinate of the point to test.
     * @param {number} y - The y coordinate of the point to test.
-    * @return {bool} A value of true if the Rectangle object contains the specified point; otherwise false.
+    * @return {boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
     */
     contains: function (x, y) {
         return Phaser.Rectangle.contains(this, x, y);
@@ -179,7 +179,7 @@ Phaser.Rectangle.prototype = {
     * A Rectangle object is said to contain another if the second Rectangle object falls entirely within the boundaries of the first.
     * @method containsRect
     * @param {Phaser.Rectangle} b - The second Rectangle object.
-    * @return {bool} A value of true if the Rectangle object contains the specified point; otherwise false.
+    * @return {boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
     */
     containsRect: function (b) {
         return Phaser.Rectangle.containsRect(this, b);
@@ -190,7 +190,7 @@ Phaser.Rectangle.prototype = {
     * This method compares the x, y, width and height properties of each Rectangle.
     * @method equals
     * @param {Phaser.Rectangle} b - The second Rectangle object.
-    * @return {bool} A value of true if the two Rectangles have exactly the same values for the x, y, width and height properties; otherwise false.
+    * @return {boolean} A value of true if the two Rectangles have exactly the same values for the x, y, width and height properties; otherwise false.
     */
     equals: function (b) {
         return Phaser.Rectangle.equals(this, b);
@@ -213,7 +213,7 @@ Phaser.Rectangle.prototype = {
     * @method intersects
     * @param {Phaser.Rectangle} b - The second Rectangle object.
     * @param {number} tolerance - A tolerance value to allow for an intersection test with padding, default to 0.
-    * @return {bool} A value of true if the specified object intersects with this Rectangle object; otherwise false.
+    * @return {boolean} A value of true if the specified object intersects with this Rectangle object; otherwise false.
     */
     intersects: function (b, tolerance) {
         return Phaser.Rectangle.intersects(this, b, tolerance);
@@ -227,7 +227,7 @@ Phaser.Rectangle.prototype = {
     * @param {number} top - Description.
     * @param {number} bottomt - Description.
     * @param {number} tolerance - A tolerance value to allow for an intersection test with padding, default to 0
-    * @return {bool} A value of true if the specified object intersects with the Rectangle; otherwise false.
+    * @return {boolean} A value of true if the specified object intersects with the Rectangle; otherwise false.
     */
     intersectsRaw: function (left, right, top, bottom, tolerance) {
         return Phaser.Rectangle.intersectsRaw(this, left, right, top, bottom, tolerance);
@@ -483,7 +483,7 @@ Object.defineProperty(Phaser.Rectangle.prototype, "topLeft", {
 
 /**
 * Determines whether or not this Rectangle object is empty.
-* @return {bool}
+* @return {boolean}
 *//**
 * Sets all of the Rectangle object's properties to 0. A Rectangle object is empty if its width or height is less than or equal to 0.
 * @param {Description} value 
@@ -506,8 +506,8 @@ Object.defineProperty(Phaser.Rectangle.prototype, "empty", {
 * Increases the size of the Rectangle object by the specified amounts. The center point of the Rectangle object stays the same, and its size increases to the left and right by the dx value, and to the top and the bottom by the dy value.
 * @method inflate
 * @param {Phaser.Rectangle} a - The Rectangle object.
-* @param {Number} dx - The amount to be added to the left side of the Rectangle.
-* @param {Number} dy - The amount to be added to the bottom side of the Rectangle.
+* @param {number} dx - The amount to be added to the left side of the Rectangle.
+* @param {number} dy - The amount to be added to the bottom side of the Rectangle.
 * @return {Phaser.Rectangle} This Rectangle object.
 */
 Phaser.Rectangle.inflate = function (a, dx, dy) {
@@ -559,7 +559,7 @@ Phaser.Rectangle.clone = function (a, output) {
 * @param {Phaser.Rectangle} a - The Rectangle object.
 * @param {number} x - The x coordinate of the point to test.
 * @param {number} y - The y coordinate of the point to test.
-* @return {bool} A value of true if the Rectangle object contains the specified point; otherwise false.
+* @return {boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
 */
 Phaser.Rectangle.contains = function (a, x, y) {
     return (x >= a.x && x <= a.right && y >= a.y && y <= a.bottom);
@@ -570,7 +570,7 @@ Phaser.Rectangle.contains = function (a, x, y) {
 * @method containsPoint
 * @param {Phaser.Rectangle} a - The Rectangle object.
 * @param {Phaser.Point} point - The point object being checked. Can be Point or any object with .x and .y values.
-* @return {bool} A value of true if the Rectangle object contains the specified point; otherwise false.
+* @return {boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
 */
 Phaser.Rectangle.containsPoint = function (a, point) {
     return Phaser.Phaser.Rectangle.contains(a, point.x, point.y);
@@ -582,7 +582,7 @@ Phaser.Rectangle.containsPoint = function (a, point) {
 * @method containsRect
 * @param {Phaser.Rectangle} a - The first Rectangle object.
 * @param {Phaser.Rectangle} b - The second Rectangle object.
-* @return {bool} A value of true if the Rectangle object contains the specified point; otherwise false.
+* @return {boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
 */
 Phaser.Rectangle.containsRect = function (a, b) {
 
@@ -602,7 +602,7 @@ Phaser.Rectangle.containsRect = function (a, b) {
 * @method equals
 * @param {Phaser.Rectangle} a - The first Rectangle object.
 * @param {Phaser.Rectangle} b - The second Rectangle object.
-* @return {bool} A value of true if the two Rectangles have exactly the same values for the x, y, width and height properties; otherwise false.
+* @return {boolean} A value of true if the two Rectangles have exactly the same values for the x, y, width and height properties; otherwise false.
 */
 Phaser.Rectangle.equals = function (a, b) {
     return (a.x == b.x && a.y == b.y && a.width == b.width && a.height == b.height);
@@ -639,7 +639,7 @@ Phaser.Rectangle.intersection = function (a, b, out) {
 * @param {Phaser.Rectangle} a - The first Rectangle object.
 * @param {Phaser.Rectangle} b - The second Rectangle object.
 * @param {number} tolerance - A tolerance value to allow for an intersection test with padding, default to 0
-* @return {bool} A value of true if the specified object intersects with this Rectangle object; otherwise false.
+* @return {boolean} A value of true if the specified object intersects with this Rectangle object; otherwise false.
 */
 Phaser.Rectangle.intersects = function (a, b, tolerance) {
 
@@ -657,7 +657,7 @@ Phaser.Rectangle.intersects = function (a, b, tolerance) {
 * @param {number} top - Description.
 * @param {number} bottom - Description.
 * @param {number} tolerance - A tolerance value to allow for an intersection test with padding, default to 0
-* @return {bool} A value of true if the specified object intersects with the Rectangle; otherwise false.
+* @return {boolean} A value of true if the specified object intersects with the Rectangle; otherwise false.
 */
 Phaser.Rectangle.intersectsRaw = function (a, left, right, top, bottom, tolerance) {
 

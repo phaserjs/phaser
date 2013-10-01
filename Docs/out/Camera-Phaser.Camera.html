@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Animation</title>
+    <title>JSDoc: Class: Camera</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: Animation</h1>
+    <h1 class="page-title">Class: Camera</h1>
     
     
 
@@ -27,10 +27,10 @@
     
 <header>
     <h2>
-    Animation
+    Camera
     </h2>
     
-        <div class="class-description">Phaser.Animation</div>
+        <div class="class-description">Camera</div>
     
 </header>  
 
@@ -41,7 +41,7 @@
     
         
 <dt>
-    <h4 class="name" id="Animation"><span class="type-signature"></span>new Animation<span class="signature">(game, parent, name, frameData, frames, delay, looped)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Camera"><span class="type-signature"></span>new Camera<span class="signature">(game, id, x, y, width, height)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -49,7 +49,7 @@
     
     
     <div class="description">
-        An Animation instance contains a single animation and the controls to play it.It is created by the AnimationManager, consists of Animation.Frame objects and belongs to a single Game Object such as a Sprite.
+        A Camera is your view into the game world. It has a position and size and renders only those objects within its field of view.The game automatically creates a single Stage sized camera on boot. Move the camera around the world with Phaser.Camera.x/y
     </div>
     
 
@@ -99,109 +99,14 @@
             
             
             
-            <td class="description last">A reference to the currently running game.</td>
+            <td class="description last">Game reference to the currently running game.</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>parent</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Phaser.Sprite</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">A reference to the owner of this Animation.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The unique name for this animation, used in playback commands.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>frameData</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a></span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The FrameData object that contains all frames used by this Animation.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>frames</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number></span>
-|
-
-<span class="param-type">Array.&lt;string></span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">An array of numbers or strings indicating which frames to play in which order.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>delay</code></td>
+                <td class="name"><code>id</code></td>
             
             
             <td class="type">
@@ -217,20 +122,20 @@
             
             
             
-            <td class="description last">The time between each frame of the animation, given in ms.</td>
+            <td class="description last">Not being used at the moment, will be when Phaser supports multiple camera</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>looped</code></td>
+                <td class="name"><code>x</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">number</span>
 
 
             
@@ -240,7 +145,76 @@
             
             
             
-            <td class="description last">Should this animation loop or play through once.</td>
+            <td class="description last">Position of the camera on the X axis</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Position of the camera on the Y axis</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The width of the view rectangle</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The height of the view rectangle</td>
         </tr>
 	
 	
@@ -271,7 +245,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        animation/Animation.js, line 22
+        core/Camera.js, line 23
     </li></ul></dd>
     
     
@@ -315,7 +289,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="currentFrame"><span class="type-signature"></span>currentFrame<span class="type-signature"></span></h4>
+    <h4 class="name" id="_edge"><span class="type-signature"></span>_edge<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -354,13 +328,13 @@
 	
         <tr>
             
-                <td class="name"><code>currentFrame</code></td>
+                <td class="name"><code>edge</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Animation.Frame.html">Phaser.Animation.Frame</a></span>
+<span class="param-type">number</span>
 
 
             
@@ -370,7 +344,7 @@
             
             
             
-            <td class="description last">The currently displayed frame of the Animation.</td>
+            <td class="description last">Edge property. Description.</td>
         </tr>
 	
 	
@@ -394,11 +368,14 @@
     
     
     
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
+    
     
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        animation/Animation.js, line 112
+        core/Camera.js, line 81
     </li></ul></dd>
     
     
@@ -416,7 +393,7 @@
         
             
 <dt>
-    <h4 class="name" id="delay"><span class="type-signature"></span>delay<span class="type-signature"></span></h4>
+    <h4 class="name" id="atLimit"><span class="type-signature"></span>atLimit<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -455,13 +432,13 @@
 	
         <tr>
             
-                <td class="name"><code>delay</code></td>
+                <td class="name"><code>atLimit</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">bool</span>
 
 
             
@@ -471,7 +448,7 @@
             
             
             
-            <td class="description last">The delay in ms between each frame of the Animation.</td>
+            <td class="description last">Whether this camera is flush with the World Bounds or not.</td>
         </tr>
 	
 	
@@ -499,7 +476,108 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        animation/Animation.js, line 56
+        core/Camera.js, line 69
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="deadzone"><span class="type-signature"></span>deadzone<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>deadzone</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Rectangle</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Moving inside this Rectangle will not cause camera moving.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Camera.js, line 58
     </li></ul></dd>
     
     
@@ -600,7 +678,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        animation/Animation.js, line 27
+        core/Camera.js, line 28
     </li></ul></dd>
     
     
@@ -618,7 +696,7 @@
         
             
 <dt>
-    <h4 class="name" id="isFinished"><span class="type-signature"></span>isFinished<span class="type-signature"></span></h4>
+    <h4 class="name" id="id"><span class="type-signature"></span>id<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -657,13 +735,13 @@
 	
         <tr>
             
-                <td class="name"><code>isFinished</code></td>
+                <td class="name"><code>id</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">number</span>
 
 
             
@@ -673,7 +751,7 @@
             
             
             
-            <td class="description last">The finished state of the Animation. Set to true once playback completes, false during playback.</td>
+            <td class="description last">Reserved for future multiple camera set-ups.</td>
         </tr>
 	
 	
@@ -698,13 +776,13 @@
     
     
     <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
     
     
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        animation/Animation.js, line 67
+        core/Camera.js, line 39
     </li></ul></dd>
     
     
@@ -722,7 +800,7 @@
         
             
 <dt>
-    <h4 class="name" id="isPaused"><span class="type-signature"></span>isPaused<span class="type-signature"></span></h4>
+    <h4 class="name" id="screenView"><span class="type-signature"></span>screenView<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -761,13 +839,13 @@
 	
         <tr>
             
-                <td class="name"><code>isPaused</code></td>
+                <td class="name"><code>screenView</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">Phaser.Rectangle</span>
 
 
             
@@ -777,7 +855,108 @@
             
             
             
-            <td class="description last">The paused state of the Animation.</td>
+            <td class="description last">Used by Sprites to work out Camera culling.</td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Camera.js, line 53
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="target"><span class="type-signature"></span>target<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>target</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Sprite</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">If the camera is tracking a Sprite, this is a reference to it, otherwise null.</td>
         </tr>
 	
 	
@@ -802,13 +981,13 @@
     
     
     <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
     
     
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        animation/Animation.js, line 79
+        core/Camera.js, line 75
     </li></ul></dd>
     
     
@@ -826,7 +1005,112 @@
         
             
 <dt>
-    <h4 class="name" id="isPlaying"><span class="type-signature"></span>isPlaying<span class="type-signature"></span></h4>
+    <h4 class="name" id="view"><span class="type-signature"></span>view<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Camera view. The view into the world we wish to render (by default the game dimensions).The x/y values are in world coordinates, not screen coordinates, the width/height is how many pixels to render.Objects outside of this view are not rendered (unless set to ignore the Camera, i.e. UI?).
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>view</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Rectangle</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        core/Camera.js, line 48
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="visible"><span class="type-signature"></span>visible<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -865,13 +1149,13 @@
 	
         <tr>
             
-                <td class="name"><code>isPlaying</code></td>
+                <td class="name"><code>visible</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">bool</span>
 
 
             
@@ -881,7 +1165,7 @@
             
             
             
-            <td class="description last">The playing state of the Animation. Set to false once playback completes, true during playback.</td>
+            <td class="description last">Whether this camera is visible or not.</td>
         </tr>
 	
 	
@@ -906,13 +1190,13 @@
     
     
     <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    <dd class="tag-default"><ul class="dummy"><li>true</li></ul></dd>
     
     
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        animation/Animation.js, line 73
+        core/Camera.js, line 64
     </li></ul></dd>
     
     
@@ -930,7 +1214,7 @@
         
             
 <dt>
-    <h4 class="name" id="looped"><span class="type-signature"></span>looped<span class="type-signature"></span></h4>
+    <h4 class="name" id="world"><span class="type-signature"></span>world<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -969,13 +1253,13 @@
 	
         <tr>
             
-                <td class="name"><code>looped</code></td>
+                <td class="name"><code>world</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">Phaser.World</span>
 
 
             
@@ -985,7 +1269,7 @@
             
             
             
-            <td class="description last">The loop state of the Animation.</td>
+            <td class="description last">A reference to the game world.</td>
         </tr>
 	
 	
@@ -1013,108 +1297,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        animation/Animation.js, line 61
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="name"><span class="type-signature"></span>name<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-        
-        <h5 class="subsection-title">Properties:</h5>
-        
-        <dl>
-
-<table class="props">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The user defined name given to this Animation.</td>
-        </tr>
-	
-	
-	</tbody>
-</table></dl>
-        
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        animation/Animation.js, line 44
+        core/Camera.js, line 33
     </li></ul></dd>
     
     

@@ -86,7 +86,7 @@ Phaser.Input.prototype = {
     /**
     * You can disable all Input by setting Input.disabled: true. While set all new input related events will be ignored.
     * If you need to disable just one type of input, for example mouse, use Input.mouse.disabled: true instead
-    * @property {bool} disabled
+    * @property {boolean} disabled
     * @default
     */
     disabled: false,
@@ -182,7 +182,7 @@ Phaser.Input.prototype = {
     * Sets if the Pointer objects should record a history of x/y coordinates they have passed through.
     * The history is cleared each time the Pointer is pressed down.
     * The history is updated at the rate specified in Input.pollRate
-    * @property {bool} recordPointerHistory
+    * @property {boolean} recordPointerHistory
     * @default
     **/
     recordPointerHistory: false,
@@ -446,7 +446,7 @@ Phaser.Input.prototype = {
 	/**
     * Reset all of the Pointers and Input states
     * @method reset
-    * @param  {bool} hard - A soft reset (hard = false) won't reset any signals that might be bound. A hard reset will.
+    * @param  {boolean} hard - A soft reset (hard = false) won't reset any signals that might be bound. A hard reset will.
     **/
     reset: function (hard) {
 
@@ -597,7 +597,7 @@ Phaser.Input.prototype = {
 	/**
     * Get the next Pointer object whos active property matches the given state
     * @method getPointer
-    * @param {bool} state - The state the Pointer should be in (false for inactive, true for active).
+    * @param {boolean} state - The state the Pointer should be in (false for inactive, true for active).
     * @return {Pointer} A Pointer object or null if no Pointer object matches the requested state.
     **/
     getPointer: function (state) {

@@ -20,7 +20,7 @@
 * @inner
 * @param {Signal} signal - Reference to Signal object that listener is currently bound to.
 * @param {function} listener - Handler function bound to the signal.
-* @param {bool} isOnce - If binding should be executed just once.
+* @param {boolean} isOnce - If binding should be executed just once.
 * @param {object} [listenerContext] - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
 * @param {number} [priority] - The priority level of the event listener. (default = 0).
 */
@@ -33,7 +33,7 @@ Phaser.SignalBinding = function (signal, listener, isOnce, listenerContext, prio
     this._listener = listener;
 
     /**
-	* @property {bool} _isOnce - If binding should be executed just once.
+	* @property {boolean} _isOnce - If binding should be executed just once.
 	* @private
 	*/
     this._isOnce = isOnce;
@@ -62,7 +62,7 @@ Phaser.SignalBinding.prototype = {
 
     /**
     * If binding is active and should be executed.
-    * @property {bool} active
+    * @property {boolean} active
     * @default
     */ 
     active: true,
@@ -112,7 +112,7 @@ Phaser.SignalBinding.prototype = {
 
     /**
     * @method isBound
-    * @return {bool} True if binding is still bound to the signal and has a listener.
+    * @return {boolean} True if binding is still bound to the signal and has a listener.
     */
     isBound: function () {
         return (!!this._signal && !!this._listener);
@@ -120,7 +120,7 @@ Phaser.SignalBinding.prototype = {
 
     /**
     * @method isOnce
-    * @return {bool} If SignalBinding will only be executed once.
+    * @return {boolean} If SignalBinding will only be executed once.
     */
     isOnce: function () {
         return this._isOnce;

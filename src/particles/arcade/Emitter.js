@@ -136,7 +136,7 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
 
     /**
      * How often a particle is emitted in ms (if emitter is started with Explode == false).
-     * @property {bool} frequency
+     * @property {boolean} frequency
      * @default
      */
     this.frequency = 100;
@@ -187,7 +187,7 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
 
     /**
      * Internal helper for the style of particle emission (all at once, or one at a time).
-     * @property {bool} _explode
+     * @property {boolean} _explode
      * @private
      * @default
      */
@@ -196,14 +196,14 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     /**
      * Determines whether the emitter is currently emitting particles.
      * It is totally safe to directly toggle this.
-     * @property {bool} on
+     * @property {boolean} on
      * @default
      */
     this.on = false;
 
     /**
      * Determines whether the emitter is being updated by the core game loop.
-     * @property {bool} exists
+     * @property {boolean} exists
      * @default
      */
     this.exists = true;
@@ -212,7 +212,7 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
      * The point the particles are emitted from.
      * Emitter.x and Emitter.y control the containers location, which updates all current particles
      * Emitter.emitX and Emitter.emitY control the emission location relative to the x/y position.
-     * @property {bool} emitX
+     * @property {boolean} emitX
      */
     this.emitX = x;
     
@@ -220,7 +220,7 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
      * The point the particles are emitted from.
      * Emitter.x and Emitter.y control the containers location, which updates all current particles
      * Emitter.emitX and Emitter.emitY control the emission location relative to the x/y position.
-     * @property {bool} emitY
+     * @property {boolean} emitY
      */
     this.emitY = y;
 	
@@ -281,7 +281,7 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
  * @param {number} frames - Description.
  * @param {number} quantity - The number of particles to generate when using the "create from image" option.
  * @param {number} collide - Description.
- * @param {bool} collideWorldBounds - Description.
+ * @param {boolean} collideWorldBounds - Description.
  * @return This Emitter instance (nice for chaining stuff together, if you're into that).
  */
 Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames, quantity, collide, collideWorldBounds) {
@@ -582,10 +582,10 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "alpha", {
 
 /**
 * Get the emitter visible state.
-* @return {bool}
+* @return {boolean}
 *//**
 * Set the emitter visible state.
-* @param {bool} value - Description
+* @param {boolean} value - Description
 */
 Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "visible", {
     
@@ -601,10 +601,10 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "visible", {
 
 /**
 * Get
-* @return {bool}
+* @return {boolean}
 *//**
 * Set
-* @param {bool} value - Description
+* @param {boolean} value - Description
 */
 Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "x", {
 
@@ -620,10 +620,10 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "x", {
 
 /**
 * Get
-* @return {bool}
+* @return {boolean}
 *//**
 * Set
-* @param {bool} value - Description
+* @param {boolean} value - Description
 */
 Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "y", {
 

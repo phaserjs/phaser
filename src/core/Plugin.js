@@ -29,37 +29,37 @@ Phaser.Plugin = function (game, parent) {
     this.parent = parent;
     
     /**
-	* @property {bool} active - Description.
+	* @property {boolean} active - Description.
 	* @default
 	*/
     this.active = false;
     
     /**
-	* @property {bool} visible - Description.
+	* @property {boolean} visible - Description.
 	* @default
 	*/
     this.visible = false;
     
     /**
-	* @property {bool} hasPreUpdate - Description.
+	* @property {boolean} hasPreUpdate - Description.
 	* @default
 	*/
     this.hasPreUpdate = false;
     
     /**
-	* @property {bool} hasUpdate - Description.
+	* @property {boolean} hasUpdate - Description.
 	* @default
 	*/
     this.hasUpdate = false;
     
     /**
-	* @property {bool} hasRender - Description.
+	* @property {boolean} hasRender - Description.
 	* @default
 	*/
     this.hasRender = false;
     
     /**
-	* @property {bool} hasPostRender - Description.
+	* @property {boolean} hasPostRender - Description.
 	* @default
 	*/
     this.hasPostRender = false;

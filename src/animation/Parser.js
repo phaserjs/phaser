@@ -16,6 +16,7 @@ Phaser.Animation.Parser = {
     * Parse a Sprite Sheet and extract the animation frame data from it.
     *
     * @method spriteSheet
+    * @memberof Phaser.Animation.Parser
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {string} key - The Game.Cache asset key of the Sprite Sheet image.
     * @param {number} frameWidth - The fixed width of each frame of the animation.
@@ -97,6 +98,7 @@ Phaser.Animation.Parser = {
     * Parse the JSON data and extract the animation frame data from it.
     *
     * @method JSONData
+    * @memberof Phaser.Animation.Parser
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {Object} json - The JSON data from the Texture Atlas. Must be in Array format.
     * @param {string} cacheKey - The Game.Cache asset key of the texture image.
@@ -168,6 +170,7 @@ Phaser.Animation.Parser = {
     * Parse the JSON data and extract the animation frame data from it.
     *
     * @method JSONDataHash
+    * @memberof Phaser.Animation.Parser
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {Object} json - The JSON data from the Texture Atlas. Must be in JSON Hash format.
     * @param {string} cacheKey - The Game.Cache asset key of the texture image.
@@ -242,6 +245,7 @@ Phaser.Animation.Parser = {
     * Parse the XML data and extract the animation frame data from it.
     *
     * @method XMLData
+    * @memberof Phaser.Animation.Parser
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {Object} xml - The XML data from the Texture Atlas. Must be in Starling XML format.
     * @param {string} cacheKey - The Game.Cache asset key of the texture image.

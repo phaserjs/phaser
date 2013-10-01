@@ -16,7 +16,7 @@
 * @param {string} key - Asset key for this map.
 * @param {object} x - Description.
 * @param {object} y - Description.
-* @param {bool} resizeWorld - Resize the world bound automatically based on this tilemap?
+* @param {boolean} resizeWorld - Resize the world bound automatically based on this tilemap?
 * @param {number} tileWidth - Width of tiles in this map (used for CSV maps).
 * @param {number} tileHeight - Height of tiles in this map (used for CSV maps).
 */
@@ -54,31 +54,31 @@ Phaser.Tilemap = function (game, key, x, y, resizeWorld, tileWidth, tileHeight) 
     this.renderOrderID = 0;
 
 	/**
-	* @property {bool} collisionCallback - Tilemap collision callback.
+	* @property {boolean} collisionCallback - Tilemap collision callback.
 	* @default
 	*/
     this.collisionCallback = null;
 
 	/**
-	* @property {bool} exists - Description.
+	* @property {boolean} exists - Description.
 	* @default
 	*/
     this.exists = true;
     
     /**
-	* @property {bool} visible - Description.
+	* @property {boolean} visible - Description.
 	* @default
 	*/
     this.visible = true;
 
     /**
-	* @property {bool} tiles - Description.
+	* @property {boolean} tiles - Description.
 	* @default
 	*/
     this.tiles = [];
     
     /**
-	* @property {bool} layers - Description.
+	* @property {boolean} layers - Description.
 	* @default
 	*/
     this.layers = [];
@@ -268,9 +268,9 @@ Phaser.Tilemap.prototype.setCollisionCallback = function (context, callback) {
 * @param {number} start - First index of tiles.
 * @param {number} end - Last index of tiles.
 * @param {number} collision - Bit field of flags. (see Tile.allowCollision)
-* @param {bool} resetCollisions - Reset collision flags before set.
-* @param {bool} separateX - Enable separate at x-axis.
-* @param {bool} separateY - Enable separate at y-axis.
+* @param {boolean} resetCollisions - Reset collision flags before set.
+* @param {boolean} separateX - Enable separate at x-axis.
+* @param {boolean} separateY - Enable separate at y-axis.
 */
 Phaser.Tilemap.prototype.setCollisionRange = function (start, end, left, right, up, down, resetCollisions, separateX, separateY) {
 
@@ -289,13 +289,13 @@ Phaser.Tilemap.prototype.setCollisionRange = function (start, end, left, right, 
 * Set collision configs of tiles with given index.
 * @param {number[]} values - Index array which contains all tile indexes. The tiles with those indexes will be setup with rest parameters.
 * @param {number} collision - Bit field of flags (see Tile.allowCollision).
-* @param {bool} resetCollisions - Reset collision flags before set.
-* @param {bool} left - Indicating collide with any object on the left.
-* @param {bool} right - Indicating collide with any object on the right.
-* @param {bool} up - Indicating collide with any object on the top.
-* @param {bool} down - Indicating collide with any object on the bottom.
-* @param {bool} separateX - Enable separate at x-axis.
-* @param {bool} separateY  - Enable separate at y-axis.
+* @param {boolean} resetCollisions - Reset collision flags before set.
+* @param {boolean} left - Indicating collide with any object on the left.
+* @param {boolean} right - Indicating collide with any object on the right.
+* @param {boolean} up - Indicating collide with any object on the top.
+* @param {boolean} down - Indicating collide with any object on the bottom.
+* @param {boolean} separateX - Enable separate at x-axis.
+* @param {boolean} separateY  - Enable separate at y-axis.
 */
 Phaser.Tilemap.prototype.setCollisionByIndex = function (values, left, right, up, down, resetCollisions, separateX, separateY) {
 
@@ -389,7 +389,7 @@ Phaser.Tilemap.prototype.getTileOverlaps = function (object) {
 * @param {Function} objectOrGroup - Target object of group you want to check.
 * @param {Function} callback - This is called if objectOrGroup collides the tilemap.
 * @param {object} context - Callback will be called with this context.
-* @return {bool} Return true if this collides with given object, otherwise return false.
+* @return {boolean} Return true if this collides with given object, otherwise return false.
 */
 Phaser.Tilemap.prototype.collide = function (objectOrGroup, callback, context) {
 
@@ -417,7 +417,7 @@ Phaser.Tilemap.prototype.collide = function (objectOrGroup, callback, context) {
 /**
 * Check whether this tilemap collides with the given game object.
 * @param {GameObject} object - Target object you want to check.
-* @return {bool} Return true if this collides with given object, otherwise return false.
+* @return {boolean} Return true if this collides with given object, otherwise return false.
 */
 Phaser.Tilemap.prototype.collideGameObject = function (object) {
 

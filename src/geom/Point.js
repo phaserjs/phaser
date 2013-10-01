@@ -10,8 +10,8 @@
 * @class Point
 * @classdesc The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
 * @constructor
-* @param {Number} x The horizontal position of this Point (default 0)
-* @param {Number} y The vertical position of this Point (default 0)
+* @param {number} x The horizontal position of this Point (default 0)
+* @param {number} y The vertical position of this Point (default 0)
 **/
 Phaser.Point = function (x, y) {
 
@@ -182,7 +182,7 @@ Phaser.Point.prototype = {
     * Returns the distance of this Point object to the given object (can be a Circle, Point or anything with x/y properties)
     * @method distance
     * @param {object} dest - The target object. Must have visible x and y properties that represent the center of the object.
-    * @param {bool} [round] - Round the distance to the nearest integer (default false).
+    * @param {boolean} [round] - Round the distance to the nearest integer (default false).
     * @return {number} The distance between this Point object and the destination Point object.
     */
     distance: function (dest, round) {
@@ -195,7 +195,7 @@ Phaser.Point.prototype = {
     * Determines whether the given objects x/y values are equal to this Point object.
     * @method equals
     * @param {Phaser.Point} a - The first object to compare.
-    * @return {bool} A value of true if the Points are equal, otherwise false.
+    * @return {boolean} A value of true if the Points are equal, otherwise false.
     */
     equals: function (a) {
         return (a.x == this.x && a.y == this.y);
@@ -207,7 +207,7 @@ Phaser.Point.prototype = {
     * @param {number} x - The x coordinate of the anchor point
     * @param {number} y - The y coordinate of the anchor point
     * @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the Point to.
-    * @param {bool} asDegrees - Is the given rotation in radians (false) or degrees (true)?
+    * @param {boolean} asDegrees - Is the given rotation in radians (false) or degrees (true)?
     * @param {number} [distance] - An optional distance constraint between the Point and the anchor.
     * @return {Phaser.Point} The modified point object.
     */
@@ -309,7 +309,7 @@ Phaser.Point.divide = function (a, b, out) {
 * @method equals
 * @param {Phaser.Point} a - The first Point object.
 * @param {Phaser.Point} b - The second Point object.
-* @return {bool} A value of true if the Points are equal, otherwise false.
+* @return {boolean} A value of true if the Points are equal, otherwise false.
 */
 Phaser.Point.equals = function (a, b) {
     return (a.x == b.x && a.y == b.y);
@@ -320,8 +320,8 @@ Phaser.Point.equals = function (a, b) {
 * @method distance
 * @param {object} a - The target object. Must have visible x and y properties that represent the center of the object.
 * @param {object} b - The target object. Must have visible x and y properties that represent the center of the object.
-* @param {bool} [round] - Round the distance to the nearest integer (default false).
-* @return {Number} The distance between this Point object and the destination Point object.
+* @param {boolean} [round] - Round the distance to the nearest integer (default false).
+* @return {number} The distance between this Point object and the destination Point object.
 */
 Phaser.Point.distance = function (a, b, round) {
 
@@ -345,7 +345,7 @@ Phaser.Point.distance = function (a, b, round) {
 * @param {number} x - The x coordinate of the anchor point
 * @param {number} y - The y coordinate of the anchor point
 * @param {number} angle - The angle in radians (unless asDegrees is true) to rotate the Point to.
-* @param {bool} asDegrees - Is the given rotation in radians (false) or degrees (true)?
+* @param {boolean} asDegrees - Is the given rotation in radians (false) or degrees (true)?
 * @param {number} distance - An optional distance constraint between the Point and the anchor.
 * @return {Phaser.Point} The modified point object.
 */

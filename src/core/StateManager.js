@@ -51,7 +51,7 @@ Phaser.StateManager.prototype = {
 
 	/**
 	* Flag that sets if the State has been created or not.
-	* @property {bool}_created
+	* @property {boolean}_created
 	* @private
 	*/
 	_created: false,
@@ -160,7 +160,7 @@ Phaser.StateManager.prototype = {
     * @method add
     * @param key {string} - A unique key you use to reference this state, i.e. "MainMenu", "Level1".
     * @param state {State} - The state you want to switch to.
-    * @param autoStart {bool} - Start the state immediately after creating it? (default true)
+    * @param autoStart {boolean} - Start the state immediately after creating it? (default true)
     */
     add: function (key, state, autoStart) {
 
@@ -241,8 +241,8 @@ Phaser.StateManager.prototype = {
     * Start the given state
     * @method start
     * @param {string} key - The key of the state you want to start.
-    * @param {bool} [clearWorld] - clear everything in the world? (Default to true)
-    * @param {bool} [clearCache] - clear asset cache? (Default to false and ONLY available when clearWorld=true)
+    * @param {boolean} [clearWorld] - clear everything in the world? (Default to true)
+    * @param {boolean} [clearCache] - clear asset cache? (Default to false and ONLY available when clearWorld=true)
     */
     start: function (key, clearWorld, clearCache) {
 
@@ -327,7 +327,7 @@ Phaser.StateManager.prototype = {
     * Description.
     * @method checkState
     * @param {string} key - The key of the state you want to check.
-    * @return {bool} Description.
+    * @return {boolean} Description.
     */
     checkState: function (key) {
 

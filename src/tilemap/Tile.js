@@ -27,43 +27,43 @@ Phaser.Tile = function (game, tilemap, index, width, height) {
     this.mass = 1.0;
 
     /**
-    * @property {bool} collideNone - Indicating this Tile doesn't collide at all.
+    * @property {boolean} collideNone - Indicating this Tile doesn't collide at all.
     * @default
     */
     this.collideNone = true;
 
     /**
-    * @property {bool} collideLeft - Indicating collide with any object on the left.
+    * @property {boolean} collideLeft - Indicating collide with any object on the left.
     * @default
     */
     this.collideLeft = false;
 
     /**
-    * @property {bool} collideRight - Indicating collide with any object on the right.
+    * @property {boolean} collideRight - Indicating collide with any object on the right.
     * @default
     */
     this.collideRight = false;
 
     /**
-    * @property {bool} collideUp - Indicating collide with any object on the top.
+    * @property {boolean} collideUp - Indicating collide with any object on the top.
     * @default
     */
     this.collideUp = false;
 
     /**
-    * @property {bool} collideDown - Indicating collide with any object on the bottom.
+    * @property {boolean} collideDown - Indicating collide with any object on the bottom.
     * @default
     */
     this.collideDown = false;
 
     /**
-    * @property {bool} separateX - Enable separation at x-axis. 
+    * @property {boolean} separateX - Enable separation at x-axis. 
     * @default
     */
     this.separateX = true;
 
     /**
-    * @property {bool} separateY - Enable separation at y-axis. 
+    * @property {boolean} separateY - Enable separation at y-axis. 
     * @default
     */
     this.separateY = true;
@@ -74,7 +74,7 @@ Phaser.Tile = function (game, tilemap, index, width, height) {
     this.game = game;
     
     /**
-    * @property {bool} tilemap - The tilemap this tile belongs to.
+    * @property {boolean} tilemap - The tilemap this tile belongs to.
     */
     this.tilemap = tilemap;
     
@@ -108,13 +108,13 @@ Phaser.Tile.prototype = {
     /**
     * Set collision configs.
     * @method setCollision
-    * @param {bool}   left - Indicating collide with any object on the left.
-    * @param {bool}   right - Indicating collide with any object on the right.
-    * @param {bool}   up - Indicating collide with any object on the top.
-    * @param {bool}   down - Indicating collide with any object on the bottom.
-    * @param {bool}   reset - Description. 
-    * @param {bool}   separateX - Separate at x-axis.
-    * @param {bool}   separateY - Separate at y-axis.
+    * @param {boolean}   left - Indicating collide with any object on the left.
+    * @param {boolean}   right - Indicating collide with any object on the right.
+    * @param {boolean}   up - Indicating collide with any object on the top.
+    * @param {boolean}   down - Indicating collide with any object on the bottom.
+    * @param {boolean}   reset - Description. 
+    * @param {boolean}   separateX - Separate at x-axis.
+    * @param {boolean}   separateY - Separate at y-axis.
     */
     setCollision: function (left, right, up, down, reset, separateX, separateY) {
 
@@ -160,7 +160,7 @@ Object.defineProperty(Phaser.Tile.prototype, "bottom", {
     /**
     * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
     * @method bottom
-    * @return {Number}
+    * @return {number}
     **/
     get: function () {
         return this.y + this.height;
@@ -174,7 +174,7 @@ Object.defineProperty(Phaser.Tile.prototype, "right", {
     * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
     * However it does affect the width property.
     * @method right
-    * @return {Number}
+    * @return {number}
     **/    
     get: function () {
         return this.x + this.width;

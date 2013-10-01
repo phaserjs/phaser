@@ -111,7 +111,7 @@ Phaser.TilemapRenderer.prototype = {
     * Render a tilemap to a canvas.
     * @method render
     * @param tilemap {Tilemap} The tilemap data to render.
-    * @return {bool} Description.
+    * @return {boolean} Description.
     */
     render: function (tilemap) {
 

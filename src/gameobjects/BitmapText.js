@@ -26,13 +26,13 @@ Phaser.BitmapText = function (game, x, y, text, style) {
     style = style || '';
 
 	/** 
-	* @property {bool} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
+	* @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
 	* @default
 	*/
     this.exists = true;
 
 	/**
-    * @property {bool} alive - This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering.
+    * @property {boolean} alive - This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering.
 	* @default
 	*/
     this.alive = true;
@@ -112,7 +112,7 @@ Phaser.BitmapText = function (game, x, y, text, style) {
     this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
 
 	/**
-	* @property {bool} renderable - Description.
+	* @property {boolean} renderable - Description.
 	* @private
 	*/
     this.renderable = true;
