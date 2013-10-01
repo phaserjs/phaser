@@ -38,37 +38,19 @@ Phaser.LinkedList.prototype = {
     },
 
     remove: function (child) {
-
-    	//	If the list is empty
-    	if (this.first == null && this.last == null)
-    	{
-    		return;
-    	}
+		if( this.first ) {
+		  child.next = this.last.next;
+		  child.prev = this.last;
+		  if( this.last.next ) {
+		    this.last.next.prev = child;
+		  }
+		  this.last.next = child;
+		  this.last = this.last.next;
+		} else {
+		  this.first = this.last = child;
+		}
 
 		this.total--;
-
-    	//	The only node?
-    	if (this.first == child && this.last == child)
-    	{
-    		this.first = null;
-    		this.last = null;
-    		this.next = null;
-    		child.next = null;
-    		child.prev = null;
-    		return;
-    	}
-
-		var childPrev = child.prev;
-
-    	//	Tail node?
-    	if (child.next)
-    	{
-			//	Has another node after it?
-	    	child.next.prev = child.prev;
-    	}
-
-    	childPrev.next = child.next;
-
     },
 
     callAll: function (callback) {
