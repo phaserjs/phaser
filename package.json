@@ -1,8 +1,8 @@
 {
   "name": "Phaser",
-  "version": "1.0.0",
+  "version": "1.0.7",
   "description": "html5 game framework",
-  "main": "index.js",
+  "main": "build/phaser.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

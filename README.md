@@ -67,7 +67,9 @@ Version 1.0.7 (in progress in the dev branch)
 * Loaded.setPreloadSprite now rounds the width/height values and starts from 1. This fixes canvas draw errors in IE9/10 and Firefox.
 * Fixed issue causing Keyboard.justPressed to always fire (thanks stemkoski)
 * Added Keyboard.addKey() which creates a new Phaser.Key object that can be polled for updates, pressed states, etc. See the 2 new examples showing use.
-
+* Removed the callbackContext parameter from Group.callAll because it's no longer needed.
+* Updated Group.forEach, forEachAlive and forEachDead so you can now pass as many parameters as you want, which will all be given to the callback after the child.
+* Updated build script so it can be run from the command-line and includes UMD wrappers (thanks iaincarsberg)
 
 
 

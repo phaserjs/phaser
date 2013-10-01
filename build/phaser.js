@@ -1,7 +1,7 @@
 /**
 * Phaser - http://www.phaser.io
 *
-* v1.0.7 - Built at: Mon, 30 Sep 2013 21:50:07 +0000
+* v1.0.7 - Built at: Tue, 01 Oct 2013 02:14:43 +0100
 *
 * @author Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -19,7 +19,15 @@
 * "If you want them to be more intelligent, read them more fairy tales."
 *                                                     -- Albert Einstein
 */
-
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(factory);
+    } else if (typeof exports === 'object') {
+        module.exports = factory();
+    } else {
+        root.Phaser = factory();
+    }
+}(this, function (b) {
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -9435,12 +9443,11 @@ Phaser.Group.prototype = {
 
 	/**
     * Calls a function on all of the children regardless if they are dead or alive (see callAllExists if you need control over that)
-    * You must pass the context in which the callback is applied.
-    * After the context you can add as many parameters as you like, which will all be passed to the child.
+    * After the function you can add as many parameters as you like, which will all be passed to the child.
     */
-	callAll: function (callback, callbackContext) {
+	callAll: function (callback) {
 
-		var args = Array.prototype.splice.call(arguments, 2);
+		var args = Array.prototype.splice.call(arguments, 1);
 
 		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
@@ -9461,9 +9468,16 @@ Phaser.Group.prototype = {
 
 	},
 
+    // After the checkExists parameter you can add as many parameters as you like, which will all be passed to the callback along with the child.
 	forEach: function (callback, callbackContext, checkExists) {
 
-		if (typeof checkExists == 'undefined') { checkExists = false; }
+		if (typeof checkExists === 'undefined')
+		{
+			checkExists = false;
+		}
+
+		var args = Array.prototype.splice.call(arguments, 3);
+		args.unshift(null);
 
 		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
@@ -9473,7 +9487,8 @@ Phaser.Group.prototype = {
 			{
 				if (checkExists == false || (checkExists && currentNode.exists))
 				{
-					callback.call(callbackContext, currentNode);
+					args[0] = currentNode;
+					callback.apply(callbackContext, args);
 				}
 
 				currentNode = currentNode._iNext;
@@ -9486,6 +9501,9 @@ Phaser.Group.prototype = {
 
 	forEachAlive: function (callback, callbackContext) {
 
+		var args = Array.prototype.splice.call(arguments, 2);
+		args.unshift(null);
+
 		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
@@ -9494,7 +9512,8 @@ Phaser.Group.prototype = {
 			{
 				if (currentNode.alive)
 				{
-					callback.call(callbackContext, currentNode);
+					args[0] = currentNode;
+					callback.apply(callbackContext, args);
 				}
 
 				currentNode = currentNode._iNext;
@@ -9507,6 +9526,9 @@ Phaser.Group.prototype = {
 
 	forEachDead: function (callback, callbackContext) {
 
+		var args = Array.prototype.splice.call(arguments, 2);
+		args.unshift(null);
+
 		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
@@ -9515,7 +9537,8 @@ Phaser.Group.prototype = {
 			{
 				if (currentNode.alive == false)
 				{
-					callback.call(callbackContext, currentNode);
+					args[0] = currentNode;
+					callback.apply(callbackContext, args);
 				}
 
 				currentNode = currentNode._iNext;
@@ -10997,6 +11020,7 @@ Phaser.Input.prototype = {
         if (this.pointer10) { this.pointer10.update(); }
 
         this._pollCounter = 0;
+
     },
 
 	/**
@@ -11336,11 +11360,161 @@ Object.defineProperty(Phaser.Input.prototype, "worldY", {
 
 });
 
+Phaser.Key = function (game, keycode) {
+
+	this.game = game;
+
+	/**
+	*
+	* @property isDown
+	* @type Boolean
+	**/
+	this.isDown = false;
+
+	/**
+	*
+	* @property isUp
+	* @type Boolean
+	**/
+	this.isUp = false;
+
+	/**
+	*
+	* @property altKey
+	* @type Boolean
+	**/
+	this.altKey = false;
+
+	/**
+	*
+	* @property ctrlKey
+	* @type Boolean
+	**/
+	this.ctrlKey = false;
+
+	/**
+	*
+	* @property shiftKey
+	* @type Boolean
+	**/
+	this.shiftKey = false;
+
+	/**
+	*
+	* @property timeDown
+	* @type Number
+	**/
+	this.timeDown = 0;
+
+	/**
+	*
+	* @property duration
+	* @type Number
+	**/
+	this.duration = 0;
+
+	/**
+	*
+	* @property timeUp
+	* @type Number
+	**/
+	this.timeUp = 0;
+
+	/**
+	*
+	* @property repeats
+	* @type Number
+	**/
+	this.repeats = 0;
+
+	this.keyCode = keycode;
+
+    this.onDown = new Phaser.Signal();
+    this.onUp = new Phaser.Signal();
+	
+};
+
+Phaser.Key.prototype = {
+
+	/**
+    *
+    * @method update
+    * @param {KeyboardEvent} event.
+    * @return {}
+    */
+    processKeyDown: function (event) {
+
+        this.altKey = event.altKey;
+        this.ctrlKey = event.ctrlKey;
+        this.shiftKey = event.shiftKey;
+
+        if (this.isDown)
+        {
+            //  Key was already held down, this must be a repeat rate based event
+            this.duration = event.timeStamp - this.timeDown;
+            this.repeats++;
+        }
+        else
+        {
+            this.isDown = true;
+            this.isUp = false;
+            this.timeDown = event.timeStamp;
+            this.duration = 0;
+            this.repeats = 0;
+
+            this.onDown.dispatch(this);
+        }
+
+    },
+
+    processKeyUp: function (event) {
+
+        this.isDown = false;
+        this.isUp = true;
+        this.timeUp = event.timeStamp;
+
+        this.onUp.dispatch(this);
+
+    },
+
+	/**
+    * @param {Number} [duration]
+    * @return {bool}
+    */
+    justPressed: function (duration) {
+
+        if (typeof duration === "undefined") { duration = 250; }
+
+        return (this.isDown && this.duration < duration);
+
+    },
+
+	/**
+    * @param {Number} [duration]
+    * @return {bool}
+    */
+    justReleased: function (duration) {
+
+        if (typeof duration === "undefined") { duration = 250; }
+
+        return (this.isDown == false && (this.game.time.now - this.timeUp < duration));
+
+    }
+
+};
 Phaser.Keyboard = function (game) {
 
 	this.game = game;
     this._keys = {};
+    this._hotkeys = {};
     this._capture = {};
+
+    this.callbackContext = this;
+    this.onDownCallback = null;
+    this.onUpCallback = null;
+
+    this.onDown = new Phaser.Signal();
+    this.onUp = new Phaser.Signal();
 	
 };
 
@@ -11357,16 +11531,41 @@ Phaser.Keyboard.prototype = {
 	_onKeyDown: null,
 	_onKeyUp: null,
 
+    addCallbacks: function (context, onDown, onUp) {
+
+        this.callbackContext = context;
+        this.onDownCallback = onDown;
+
+        if (typeof onUp !== 'undefined')
+        {
+            this.onUpCallback = onUp;
+        }
+
+    },
+
+    addKey: function (keycode) {
+
+        this._hotkeys[keycode] = new Phaser.Key(this.game, keycode);
+        return this._hotkeys[keycode];
+
+    },
+
+    removeKey: function (keycode) {
+
+        delete (this._hotkeys[keycode]);
+
+    },
+
     start: function () {
 
         var _this = this;
 
         this._onKeyDown = function (event) {
-            return _this.onKeyDown(event);
+            return _this.processKeyDown(event);
         };
 
         this._onKeyUp = function (event) {
-            return _this.onKeyUp(event);
+            return _this.processKeyUp(event);
         };
 
         document.body.addEventListener('keydown', this._onKeyDown, false);
@@ -11418,10 +11617,11 @@ Phaser.Keyboard.prototype = {
 
     },
 
+
 	/**
     * @param {KeyboardEvent} event
     */    
-    onKeyDown: function (event) {
+    processKeyDown: function (event) {
 
         if (this.game.input.disabled || this.disabled)
         {
@@ -11433,18 +11633,40 @@ Phaser.Keyboard.prototype = {
             event.preventDefault();
         }
 
-        if (!this._keys[event.keyCode])
+        if (this.onDownCallback)
         {
-            this._keys[event.keyCode] = {
-                isDown: true,
-                timeDown: this.game.time.now,
-                timeUp: 0
-            };
+            this.onDownCallback.call(this.callbackContext, event);
+        }
+
+        if (this._keys[event.keyCode] && this._keys[event.keyCode].isDown)
+        {
+            //  Key already down and still down, so update
+            this._keys[event.keyCode].duration = this.game.time.now - this._keys[event.keyCode].timeDown;
         }
         else
         {
-            this._keys[event.keyCode].isDown = true;
-            this._keys[event.keyCode].timeDown = this.game.time.now;
+            if (!this._keys[event.keyCode])
+            {
+                //  Not used this key before, so register it
+                this._keys[event.keyCode] = {
+                    isDown: true,
+                    timeDown: this.game.time.now,
+                    timeUp: 0,
+                    duration: 0
+                };
+            }
+            else
+            {
+                //  Key used before but freshly down
+                this._keys[event.keyCode].isDown = true;
+                this._keys[event.keyCode].timeDown = this.game.time.now;
+                this._keys[event.keyCode].duration = 0;
+            }
+        }
+
+        if (this._hotkeys[event.keyCode])
+        {
+            this._hotkeys[event.keyCode].processKeyDown(event);
         }
 
     },
@@ -11452,7 +11674,7 @@ Phaser.Keyboard.prototype = {
 	/**
     * @param {KeyboardEvent} event
     */
-    onKeyUp: function (event) {
+    processKeyUp: function (event) {
 
         if (this.game.input.disabled || this.disabled)
         {
@@ -11464,19 +11686,18 @@ Phaser.Keyboard.prototype = {
             event.preventDefault();
         }
 
-        if (!this._keys[event.keyCode])
+        if (this.onUpCallback)
         {
-            this._keys[event.keyCode] = {
-                isDown: false,
-                timeDown: 0,
-                timeUp: this.game.time.now
-            };
+            this.onUpCallback.call(this.callbackContext, event);
         }
-        else
+
+        if (this._hotkeys[event.keyCode])
         {
-            this._keys[event.keyCode].isDown = false;
-            this._keys[event.keyCode].timeUp = this.game.time.now;
+            this._hotkeys[event.keyCode].processKeyUp(event);
         }
+
+        this._keys[event.keyCode].isDown = false;
+        this._keys[event.keyCode].timeUp = this.game.time.now;
 
     },
 
@@ -11498,7 +11719,7 @@ Phaser.Keyboard.prototype = {
 
         if (typeof duration === "undefined") { duration = 250; }
 
-        if (this._keys[keycode] && this._keys[keycode].isDown === true && (this.game.time.now - this._keys[keycode].timeDown < duration))
+        if (this._keys[keycode] && this._keys[keycode].isDown && this._keys[keycode].duration < duration)
         {
             return true;
         }
@@ -29658,3 +29879,6 @@ PIXI.WebGLBatch.prototype.update = function()
    }
 }
 
+
+    return Phaser;
+}));

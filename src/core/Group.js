@@ -401,12 +401,11 @@ Phaser.Group.prototype = {
 
 	/**
     * Calls a function on all of the children regardless if they are dead or alive (see callAllExists if you need control over that)
-    * You must pass the context in which the callback is applied.
-    * After the context you can add as many parameters as you like, which will all be passed to the child.
+    * After the function you can add as many parameters as you like, which will all be passed to the child.
     */
-	callAll: function (callback, callbackContext) {
+	callAll: function (callback) {
 
-		var args = Array.prototype.splice.call(arguments, 2);
+		var args = Array.prototype.splice.call(arguments, 1);
 
 		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
@@ -427,9 +426,16 @@ Phaser.Group.prototype = {
 
 	},
 
+    // After the checkExists parameter you can add as many parameters as you like, which will all be passed to the callback along with the child.
 	forEach: function (callback, callbackContext, checkExists) {
 
-		if (typeof checkExists == 'undefined') { checkExists = false; }
+		if (typeof checkExists === 'undefined')
+		{
+			checkExists = false;
+		}
+
+		var args = Array.prototype.splice.call(arguments, 3);
+		args.unshift(null);
 
 		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
@@ -439,7 +445,8 @@ Phaser.Group.prototype = {
 			{
 				if (checkExists == false || (checkExists && currentNode.exists))
 				{
-					callback.call(callbackContext, currentNode);
+					args[0] = currentNode;
+					callback.apply(callbackContext, args);
 				}
 
 				currentNode = currentNode._iNext;
@@ -452,6 +459,9 @@ Phaser.Group.prototype = {
 
 	forEachAlive: function (callback, callbackContext) {
 
+		var args = Array.prototype.splice.call(arguments, 2);
+		args.unshift(null);
+
 		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
@@ -460,7 +470,8 @@ Phaser.Group.prototype = {
 			{
 				if (currentNode.alive)
 				{
-					callback.call(callbackContext, currentNode);
+					args[0] = currentNode;
+					callback.apply(callbackContext, args);
 				}
 
 				currentNode = currentNode._iNext;
@@ -473,6 +484,9 @@ Phaser.Group.prototype = {
 
 	forEachDead: function (callback, callbackContext) {
 
+		var args = Array.prototype.splice.call(arguments, 2);
+		args.unshift(null);
+
 		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
@@ -481,7 +495,8 @@ Phaser.Group.prototype = {
 			{
 				if (currentNode.alive == false)
 				{
-					callback.call(callbackContext, currentNode);
+					args[0] = currentNode;
+					callback.apply(callbackContext, args);
 				}
 
 				currentNode = currentNode._iNext;
