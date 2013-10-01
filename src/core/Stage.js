@@ -129,7 +129,7 @@ Phaser.Stage.prototype = {
 *//**
 * Set
 * @param {string} The background color you want the stage to have
-*/.
+*/
 Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 
     get: function () {

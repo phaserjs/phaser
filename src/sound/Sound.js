@@ -282,7 +282,6 @@ Phaser.Sound.prototype = {
 	 * @param {Description} stop - Description.
 	 * @param {Description} volume - Description.
 	 * @param {Description} loop - Description.
-	 */
     addMarker: function (name, start, stop, volume, loop) {
 
     	volume = volume || 1;

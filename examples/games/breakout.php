@@ -129,7 +129,7 @@
         }
         else
         {
-            livesText.text = 'lives: ' + lives;
+            livesText.content = 'lives: ' + lives;
             ballOnPaddle = true;
             ball.body.velocity.setTo(0, 0);
             ball.x = paddle.x + 16;
@@ -143,7 +143,7 @@
 
         ball.body.velocity.setTo(0, 0);
         
-        introText.text = "Game Over!";
+        introText.content = "Game Over!";
         introText.visible = true;
 
     }
@@ -155,14 +155,14 @@
 
         score += 10;
 
-        scoreText.text = 'score: ' + score;
+        scoreText.content = 'score: ' + score;
 
         //  Are they any bricks left?
         if (bricks.countLiving() == 0)
         {
             //  New level starts
             score += 1000;
-            scoreText.text = 'score: ' + score;
+            scoreText.content = 'score: ' + score;
             introText = '- Next Level -';
 
             //  Let's move the ball back to the paddle
