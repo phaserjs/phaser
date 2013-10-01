@@ -1,14 +1,44 @@
 /**
-* Phaser - PluginManager
-*
-* TODO: We can optimise this a lot by using separate hashes per function (update, render, etc)
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.PluginManager
 */
 
+
+// TODO: We can optimise this a lot by using separate hashes per function (update, render, etc)
+/** 
+* Description.
+* 
+* @class Phaser.PluginManager
+* @classdesc PPhaser - PluginManager
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {Description} parent - Description.
+*/
 Phaser.PluginManager = function(game, parent) {
 
+	/**
+	* @property {Phaser.Game} game - A reference to the currently running game.
+	*/
     this.game = game;
+    
+    /**
+	* @property {Description} _parent - Description.
+	* @private
+	*/
     this._parent = parent;
+    
+    /**
+	* @property {array} plugins - Description.
+	*/
     this.plugins = [];
+    
+    /**
+	* @property {array} _pluginsLength - Description.
+	* @private
+	* @default
+	*/
     this._pluginsLength = 0;
 
 };
@@ -17,8 +47,9 @@ Phaser.PluginManager.prototype = {
 
     /**
     * Add a new Plugin to the PluginManager.
-    * The plugins game and parent reference are set to this game and pluginmanager parent.
-    * @type {Phaser.Plugin}
+    * The plugin's game and parent reference are set to this game and pluginmanager parent.
+    * @param {Phaser.Plugin} plugin - Description.
+    * @return {Phaser.Plugin} Description.
     */
     add: function (plugin) {
 
@@ -82,6 +113,10 @@ Phaser.PluginManager.prototype = {
         }
     },
 
+    /**
+     * Remove a Plugin from the PluginManager.
+     * @param {Phaser.Plugin} plugin - Description.
+     */
     remove: function (plugin) {
 
         //  TODO
@@ -89,6 +124,11 @@ Phaser.PluginManager.prototype = {
 
     },
 
+    /**
+    * Description.
+    * 
+    * @method preUpdate
+    */
     preUpdate: function () {
 
         if (this._pluginsLength == 0)
@@ -106,6 +146,11 @@ Phaser.PluginManager.prototype = {
 
     },
 
+    /**
+    * Description.
+    * 
+    * @method update
+    */
     update: function () {
         
         if (this._pluginsLength == 0)
@@ -123,6 +168,11 @@ Phaser.PluginManager.prototype = {
 
     },
 
+    /**
+    * Description.
+    * 
+    * @method render
+    */
     render: function () {
 
         if (this._pluginsLength == 0)
@@ -140,6 +190,11 @@ Phaser.PluginManager.prototype = {
 
     },
 
+    /**
+    * Description.
+    * 
+    * @method postRender
+    */
     postRender: function () {
 
         if (this._pluginsLength == 0)
@@ -157,6 +212,11 @@ Phaser.PluginManager.prototype = {
 
     },
 
+    /**
+    * Description.
+    * 
+    * @method destroy
+    */
     destroy: function () {
 
         this.plugins.length = 0;

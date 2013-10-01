@@ -1,91 +1,120 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.StageScaleMode
+*/
+
+/**
+* An Animation instance contains a single animation and the controls to play it.
+* It is created by the AnimationManager, consists of Animation.Frame objects and belongs to a single Game Object such as a Sprite.
+*
+* @class Phaser.StageScaleMode 
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {number} width - Description.
+* @param {number} height - Description.
+*/
 Phaser.StageScaleMode = function (game, width, height) {
 
     /**
-    * Stage height when start the game.
-    * @type {number}
+    * @property {number} _startHeight - Stage height when starting the game.
+    * @default
+    * @private
     */
     this._startHeight = 0;
 
     /**
-    * If the game should be forced to use Landscape mode, this is set to true by Game.Stage
-    * @type {bool}
+    * @property {bool} forceLandscape - If the game should be forced to use Landscape mode, this is set to true by Game.Stage
+    * @default
     */
     this.forceLandscape = false;
 
     /**
-    * If the game should be forced to use Portrait mode, this is set to true by Game.Stage
-    * @type {bool}
+    * @property {bool} forcePortrait - If the game should be forced to use Portrait mode, this is set to true by Game.Stage
+    * @default
     */
-    this.forcePortrait = false;
+     this.forcePortrait = false;
 
     /**
-    * If the game should be forced to use a specific orientation and the device currently isn't in that orientation this is set to true.
-    * @type {bool}
+    * @property {bool} incorrectOrientation - If the game should be forced to use a specific orientation and the device currently isn't in that orientation this is set to true.
+    * @default
     */
     this.incorrectOrientation = false;
 
     /**
-    * If you wish to align your game in the middle of the page then you can set this value to true.
-    * It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.
-    * It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.
-    * @type {bool}
+    * @property {bool} pageAlignHorizontally - If you wish to align your game in the middle of the page then you can set this value to true.
+    <ul><li>It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.</li>
+    <li>It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.</li></ul>
+    * @default
     */
     this.pageAlignHorizontally = false;
 
     /**
-    * If you wish to align your game in the middle of the page then you can set this value to true.
-    * It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.
-    * It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.
-    * @type {bool}
+    * @property {bool} pageAlignVeritcally - If you wish to align your game in the middle of the page then you can set this value to true.
+    <ul><li>It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.
+    <li>It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.</li></ul>
+    * @default
     */
     this.pageAlignVeritcally = false;
 
     /**
-    * Minimum width the canvas should be scaled to (in pixels)
-    * @type {number}
+    * @property {number} minWidth - Minimum width the canvas should be scaled to (in pixels).
+    * @default
     */
     this.minWidth = null;
 
     /**
-    * Maximum width the canvas should be scaled to (in pixels).
+    * @property {number} maxWidth - Maximum width the canvas should be scaled to (in pixels).
     * If null it will scale to whatever width the browser can handle.
-    * @type {number}
+    * @default
     */
     this.maxWidth = null;
 
     /**
-    * Minimum height the canvas should be scaled to (in pixels)
-    * @type {number}
+    * @property {number} minHeight - Minimum height the canvas should be scaled to (in pixels).
+    * @default
     */
     this.minHeight = null;
 
     /**
-    * Maximum height the canvas should be scaled to (in pixels).
+    * @property {number} maxHeight - Maximum height the canvas should be scaled to (in pixels).
     * If null it will scale to whatever height the browser can handle.
-    * @type {number}
+    * @default
     */
     this.maxHeight = null;
 
     /**
-    * Width of the stage after calculation.
-    * @type {number}
+    * @property {number} width - Width of the stage after calculation.
+    * @default
     */
     this.width = 0;
 
     /**
-    * Height of the stage after calculation.
-    * @type {number}
+    * @property {number} height - Height of the stage after calculation.
+    * @default
     */
     this.height = 0;
 
     /**
-    * The maximum number of times it will try to resize the canvas to fill the browser (default is 5)
-    * @type {number}
+    * @property {number} maxIterations - The maximum number of times it will try to resize the canvas to fill the browser.
+    * @default
     */
     this.maxIterations = 5;
+    
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game.
+    */
     this.game = game;
 
+    /**
+    * @property {Description} enterLandscape - Description.
+    */
     this.enterLandscape = new Phaser.Signal();
+
+    /**
+    * @property {Description} enterPortrait - Description.
+    */
     this.enterPortrait = new Phaser.Signal();
 
     if (window['orientation'])
@@ -104,7 +133,15 @@ Phaser.StageScaleMode = function (game, width, height) {
         }
     }
 
+    /**
+    * @property {Description} scaleFactor - Description.
+    */
     this.scaleFactor = new Phaser.Point(1, 1);
+
+    /**
+    * @property {number} aspectRatio - Aspect ratio.
+    * @default
+    */
     this.aspectRatio = 0;
 
     var _this = this;
@@ -124,7 +161,10 @@ Phaser.StageScaleMode.NO_SCALE = 1;
 Phaser.StageScaleMode.SHOW_ALL = 2;
 
 Phaser.StageScaleMode.prototype = {
-
+    /**
+    * Description.
+    * @method startFullScreen
+    */
     startFullScreen: function () {
 
         if (this.isFullScreen)
@@ -152,6 +192,10 @@ Phaser.StageScaleMode.prototype = {
 
     },
 
+    /**
+    * Description.
+    * @method stopFullScreen
+    */
     stopFullScreen: function () {
 
         if (document['cancelFullScreen'])
@@ -169,6 +213,10 @@ Phaser.StageScaleMode.prototype = {
 
     },
 
+    /**
+    * Description.
+    * @method checkOrientationState
+    */
     checkOrientationState: function () {
 
         //  They are in the wrong orientation
@@ -194,8 +242,10 @@ Phaser.StageScaleMode.prototype = {
         }
     },
 
-	/**
+    /**
     * Handle window.orientationchange events
+    * @method checkOrientation
+    * @param {Description} event - Description.
     */
     checkOrientation: function (event) {
 
@@ -217,8 +267,10 @@ Phaser.StageScaleMode.prototype = {
 
     },
 
-	/**
+    /**
     * Handle window.resize events
+    * @method checkResize
+    * @param {Description} event - Description.
     */
     checkResize: function (event) {
 
@@ -246,8 +298,9 @@ Phaser.StageScaleMode.prototype = {
         }
     },
 
-	/**
+    /**
     * Re-calculate scale mode and update screen size.
+    * @method refresh
     */
     refresh: function () {
 
@@ -280,8 +333,9 @@ Phaser.StageScaleMode.prototype = {
 
     },
 
-	/**
+    /**
     * Set screen size automatically based on the scaleMode.
+    * @param {Description} force - Description.
     */
     setScreenSize: function (force) {
 
@@ -329,6 +383,10 @@ Phaser.StageScaleMode.prototype = {
 
     },
 
+    /**
+    * Description.
+    * @method setSize
+    */
     setSize: function () {
 
         if (this.incorrectOrientation == false)
@@ -392,6 +450,10 @@ Phaser.StageScaleMode.prototype = {
 
     },
 
+    /**
+    * Description.
+    * @method setMaximum
+    */
     setMaximum: function () {
 
         this.width = window.innerWidth;
@@ -399,6 +461,10 @@ Phaser.StageScaleMode.prototype = {
 
     },
 
+    /**
+    * Description.
+    * @method setShowAll
+    */
     setShowAll: function () {
 
         var multiplier = Math.min((window.innerHeight / this.game.height), (window.innerWidth / this.game.width));
@@ -408,6 +474,10 @@ Phaser.StageScaleMode.prototype = {
 
     },
 
+    /**
+    * Description.
+    * @method setExactFit
+    */
     setExactFit: function () {
 
         var availableWidth = window.innerWidth - 0;
@@ -439,6 +509,10 @@ Phaser.StageScaleMode.prototype = {
 
 };
 
+/**
+* Get
+* @return {bool}
+*/
 Object.defineProperty(Phaser.StageScaleMode.prototype, "isFullScreen", {
 
     get: function () {
@@ -454,6 +528,10 @@ Object.defineProperty(Phaser.StageScaleMode.prototype, "isFullScreen", {
 
 });
 
+/**
+* Get
+* @return {number}
+*/
 Object.defineProperty(Phaser.StageScaleMode.prototype, "isPortrait", {
 
     get: function () {
@@ -462,6 +540,10 @@ Object.defineProperty(Phaser.StageScaleMode.prototype, "isPortrait", {
 
 });
 
+/**
+* Get
+* @return {number}
+*/
 Object.defineProperty(Phaser.StageScaleMode.prototype, "isLandscape", {
 
     get: function () {

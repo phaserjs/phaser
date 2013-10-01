@@ -1,52 +1,177 @@
 /**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.Tween
+*/
+
+
+/**
 * Tween constructor
 * Create a new <code>Tween</code>.
 *
-* @param object {object} Target object will be affected by this tween.
-* @param game {Phaser.Game} Current game instance.
+* @class Phaser.Tween
+* @constructor
+* @param {object} object - Target object will be affected by this tween.
+* @param {Phaser.Game} game - Current game instance.
 */
-
 Phaser.Tween = function (object, game) {
 
     /**
     * Reference to the target object.
-    * @type {object}
+    * @property {object} _object
+    * @private
     */
 	this._object = object;
 
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
     this.game = game;
+
+    /**
+    * @property {object} _manager - Description.
+    * @private
+    */
     this._manager = this.game.tweens;
 
-	this._valuesStart = {};
-	this._valuesEnd = {};
-	this._valuesStartRepeat = {};
-	this._duration = 1000;
-	this._repeat = 0;
-	this._yoyo = false;
-	this._reversed = false;
-	this._delayTime = 0;
-	this._startTime = null;
-	this._easingFunction = Phaser.Easing.Linear.None;
-	this._interpolationFunction = Phaser.Math.linearInterpolation;
-	this._chainedTweens = [];
-	this._onStartCallback = null;
-	this._onStartCallbackFired = false;
-	this._onUpdateCallback = null;
-	this._onCompleteCallback = null;
+    /**
+    * @property {object} _valuesStart - Description.
+    * @private
+    */
+    this._valuesStart = {};
 
+    /**
+    * @property {object} _valuesEnd - Description.
+    * @private
+    */
+    this._valuesEnd = {};
+
+    /**
+    * @property {object} _valuesStartRepeat - Description.
+    * @private
+    */
+    this._valuesStartRepeat = {};
+
+    /**
+    * @property {number} _duration - Description.
+    * @default
+    */
+    this._duration = 1000;
+
+    /**
+    * @property {number} _repeat - Description.
+    * @private
+    * @default
+    */
+    this._repeat = 0;
+
+    /**
+    * @property {bool} _yoyo - Description.
+    * @private
+    * @default
+    */
+    this._yoyo = false;
+
+    /**
+    * @property {bool} _reversed - Description.
+    * @private
+    * @default
+    */
+    this._reversed = false;
+
+    /**
+    * @property {number} _delayTime - Description.
+    * @private
+    * @default
+    */
+    this._delayTime = 0;
+
+    /**
+    * @property {Description} _startTime - Description.
+    * @private
+    * @default null
+    */
+    this._startTime = null;
+
+    /**
+    * @property {Description} _easingFunction - Description.
+    * @private
+    */
+    this._easingFunction = Phaser.Easing.Linear.None;
+
+    /**
+    * @property {Description} _interpolationFunction - Description.
+    * @private
+    */
+    this._interpolationFunction = Phaser.Math.linearInterpolation;
+
+    /**
+    * @property {Description} _chainedTweens - Description.
+    * @private
+    */
+    this._chainedTweens = [];
+
+    /**
+    * @property {Description} _onStartCallback - Description.
+    * @private
+    * @default
+    */
+    this._onStartCallback = null;
+
+    /**
+    * @property {bool} _onStartCallbackFired - Description.
+    * @private
+    * @default
+    */
+    this._onStartCallbackFired = false;
+
+    /**
+    * @property {Description} _onUpdateCallback - Description.
+    * @private
+    * @default null
+    */
+    this._onUpdateCallback = null;
+
+    /**
+    * @property {Description} _onCompleteCallback - Description.
+    * @private
+    * @default null
+    */
+    this._onCompleteCallback = null;
+    
+    /**
+    * @property {number} _pausedTime - Description.
+    * @private
+    * @default
+    */
     this._pausedTime = 0;
-    this._parent = null;
 
+    /**
+    * @property {bool} pendingDelete - Description.
+    * @default
+    */
     this.pendingDelete = false;
 
-	// Set all starting values present on the target object
-	for ( var field in object ) {
-		this._valuesStart[ field ] = parseFloat(object[field], 10);
-	}
-
+    // Set all starting values present on the target object
+    for ( var field in object ) {
+    	this._valuesStart[ field ] = parseFloat(object[field], 10);
+    }
+    
+    /**
+    * @property {Phaser.Signal} onStart - Description.
+    */
     this.onStart = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onComplete - Description.
+    */
     this.onComplete = new Phaser.Signal();
 
+    /**
+    * @property {bool} isRunning - Description.
+    * @default
+    */
     this.isRunning = false;
 
 };
@@ -55,13 +180,16 @@ Phaser.Tween.prototype = {
 
 	/**
 	* Configure the Tween
-	* @param properties {object} Propertis you want to tween.
-	* @param [duration] {number} duration of this tween.
-	* @param [ease] {any} Easing function.
-	* @param [autoStart] {bool} Whether this tween will start automatically or not.
-	* @param [delay] {number} delay before this tween will start, defaults to 0 (no delay)
-	* @param [loop] {bool} Should the tween automatically restart once complete? (ignores any chained tweens)
-	* @return {Tween} Itself.
+	*
+	* @method to
+	* @param {object} properties - Properties you want to tween.
+	* @param {number} duration - Duration of this tween.
+	* @param {function} ease - Easing function.
+	* @param {bool} autoStart - Whether this tween will start automatically or not.
+	* @param {number} delay - Delay before this tween will start, defaults to 0 (no delay).
+	* @param {bool} repeat - Should the tween automatically restart once complete? (ignores any chained tweens).
+	* @param {Phaser.Tween} yoyo - Description.
+	* @return {Phaser.Tween} Itself.
 	*/
 	to: function ( properties, duration, ease, autoStart, delay, repeat, yoyo ) {
 
@@ -109,6 +237,13 @@ Phaser.Tween.prototype = {
 
 	},
 
+	/**
+	* Description. 
+	*
+	* @method start
+	* @param {number} time - Description.
+	* @return {Phaser.Tween} Itself.
+	*/
 	start: function ( time ) {
 
         if (this.game === null || this._object === null) {
@@ -155,6 +290,12 @@ Phaser.Tween.prototype = {
 
 	},
 
+	/**
+	* Description. 
+	*
+	* @method stop
+	* @return {Phaser.Tween} Itself.
+	*/
 	stop: function () {
 
 		this._manager.remove(this);
@@ -164,6 +305,13 @@ Phaser.Tween.prototype = {
 
 	},
 
+	/**
+	* Description. 
+	*
+	* @method delay
+	* @param {number} amount - Description.
+	* @return {Phaser.Tween} Itself.
+	*/
 	delay: function ( amount ) {
 
 		this._delayTime = amount;
@@ -171,6 +319,13 @@ Phaser.Tween.prototype = {
 
 	},
 
+	/**
+	* Description. 
+	*
+	* @method repeat
+	* @param {number} times - How many times to repeat.
+	* @return {Phaser.Tween} Itself.
+	*/
 	repeat: function ( times ) {
 
 		this._repeat = times;
@@ -178,6 +333,13 @@ Phaser.Tween.prototype = {
 
 	},
 
+	/**
+	* Description. 
+	*
+	* @method yoyo
+	* @param {Phaser.Tween} yoyo - Description.
+	* @return {Phaser.Tween} Itself.
+	*/
 	yoyo: function( yoyo ) {
 
 		this._yoyo = yoyo;
@@ -185,6 +347,13 @@ Phaser.Tween.prototype = {
 
 	},
 
+	/**
+	* Set easing function. 
+	*
+	* @method easing
+	* @param {function} easing - Description.
+	* @return {Phaser.Tween} Itself.
+	*/
 	easing: function ( easing ) {
 
 		this._easingFunction = easing;
@@ -192,6 +361,13 @@ Phaser.Tween.prototype = {
 
 	},
 
+	/**
+	* Set interpolation function. 
+	*
+	* @method interpolation
+	* @param {function} interpolation - Description.
+	* @return {Phaser.Tween} Itself.
+	*/
 	interpolation: function ( interpolation ) {
 
 		this._interpolationFunction = interpolation;
@@ -199,6 +375,12 @@ Phaser.Tween.prototype = {
 
 	},
 
+	/**
+	* Description. 
+	*
+	* @method chain
+	* @return {Phaser.Tween} Itself.
+	*/
 	chain: function () {
 
 		this._chainedTweens = arguments;
@@ -215,7 +397,7 @@ Phaser.Tween.prototype = {
 	* .to({ x: 0 }, 1000, Phaser.Easing.Linear.None)
 	* .to({ y: 0 }, 1000, Phaser.Easing.Linear.None)
 	* .loop();
-	* 
+	* @method loop
 	* @return {Tween} Itself.
 	*/
 	loop: function() {
@@ -223,6 +405,13 @@ Phaser.Tween.prototype = {
 		return this;
 	},
 
+	/**
+	* Description. 
+	*
+	* @method onStartCallback
+	* @param {object} callback - Description.
+	* @return {Phaser.Tween} Itself.
+	*/
 	onStartCallback: function ( callback ) {
 
 		this._onStartCallback = callback;
@@ -230,6 +419,13 @@ Phaser.Tween.prototype = {
 
 	},
 
+	/**
+	* Description. 
+	*
+	* @method onUpdateCallback
+	* @param {object} callback - Description.
+	* @return {Phaser.Tween} Itself.
+	*/
 	onUpdateCallback: function ( callback ) {
 
 		this._onUpdateCallback = callback;
@@ -237,6 +433,13 @@ Phaser.Tween.prototype = {
 
 	},
 
+	/**
+	* Description. 
+	*
+	* @method onCompleteCallback
+	* @param {object} callback - Description.
+	* @return {Phaser.Tween} Itself.
+	*/
 	onCompleteCallback: function ( callback ) {
 
 		this._onCompleteCallback = callback;
@@ -244,19 +447,32 @@ Phaser.Tween.prototype = {
 
 	},
 
-    pause: function () {
-        this._paused = true;
-        this._pausedTime = this.game.time.now;
-    },
+	/**
+	* Pause. 
+	*
+	* @method pause
+	*/
+        pause: function () {
+            this._paused = true;
+        },
 
-    resume: function () {
+	/**
+	* Resume.
+	*
+	* @method resume
+	*/
+        resume: function () {
+            this._paused = false;
+            this._startTime += this.game.time.pauseDuration;
+        },
 
-        this._paused = false;
-
-        this._startTime += (this.game.time.now - this._pausedTime);
-
-    },
-
+	/**
+	* Description.
+	*
+	* @method update
+	* @param {number} time - Description.
+	* @return {bool} Description.
+	*/
 	update: function ( time ) {
 
 		if (this.pendingDelete)

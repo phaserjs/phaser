@@ -1,4 +1,11 @@
 /**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.Intro
+*/
+
+/**
 * Phaser - http://www.phaser.io
 *
 * v{version} - Built at: {buildDate}

@@ -1,7 +1,7 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
-* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 * @module       Phaser.Camera
 */
 
@@ -12,95 +12,71 @@
 *
 * @class Camera
 * @constructor
-* @param {Phaser.Game} game game reference to the currently running game.
-* @param {number} id not being used at the moment, will be when Phaser supports multiple camera
-* @param {number} x position of the camera on the X axis
-* @param {number} y position of the camera on the Y axis
-* @param {number} width the width of the view rectangle
-* @param {number} height the height of the view rectangle
+* @param {Phaser.Game} game - Game reference to the currently running game.
+* @param {number} id - Not being used at the moment, will be when Phaser supports multiple camera
+* @param {number} x - Position of the camera on the X axis
+* @param {number} y - Position of the camera on the Y axis
+* @param {number} width - The width of the view rectangle
+* @param {number} height - The height of the view rectangle
 */
 
 Phaser.Camera = function (game, id, x, y, width, height) {
-
-    /**
-    * A reference to the currently running Game.
-    * @property game
-    * @public
-    * @type {Phaser.Game}
-    */
+    
+	/**
+	* @property {Phaser.Game} game - A reference to the currently running Game.
+	*/
 	this.game = game;
 
-    /**
-    * A reference to the game world
-    * @property world
-    * @public
-    * @type {Phaser.World}
-    */
+	/**
+	* @property {Phaser.World} world - A reference to the game world.
+	*/
 	this.world = game.world;
 
-    /**
-    * reserved for future multiple camera set-ups
-    * @property id
-    * @public
-    * @type {number}
-    */
+	/**
+	* @property {number} id - Reserved for future multiple camera set-ups.
+	* @default
+	*/
 	this.id = 0; 
 
-    /**
-    * Camera view.
-    * The view into the world we wish to render (by default the game dimensions)
-    * The x/y values are in world coordinates, not screen coordinates, the width/height is how many pixels to render
-    * Objects outside of this view are not rendered (unless set to ignore the Camera, i.e. UI?)
-    * @property view
-    * @public
-    * @type {Phaser.Rectangle}
-    */
+	/**
+	* Camera view. 
+	* The view into the world we wish to render (by default the game dimensions).
+    * The x/y values are in world coordinates, not screen coordinates, the width/height is how many pixels to render.
+    * Objects outside of this view are not rendered (unless set to ignore the Camera, i.e. UI?).
+	* @property {Phaser.Rectangle} view
+	*/
     this.view = new Phaser.Rectangle(x, y, width, height);
 
     /**
-    * Used by Sprites to work out Camera culling.
-    * @property screenView
-    * @public
-    * @type {Phaser.Rectangle}
-    */
+	* @property {Phaser.Rectangle} screenView - Used by Sprites to work out Camera culling.
+	*/
 	this.screenView = new Phaser.Rectangle(x, y, width, height);
 
     /**
-    * Sprite moving inside this Rectangle will not cause camera moving.
-    * @property deadzone
-    * @type {Phaser.Rectangle}
-    */
+	* @property {Phaser.Rectangle} deadzone - Moving inside this Rectangle will not cause camera moving.
+	*/
     this.deadzone = null;
 
-    /**
-    * Whether this camera is visible or not. (default is true)
-    * @property visible
-    * @public
-    * @default true
-    * @type {bool}
-    */
+	/**
+	* @property {bool} visible - Whether this camera is visible or not.
+	* @default
+	*/
     this.visible = true;
 
-    /**
-    * Whether this camera is flush with the World Bounds or not.
-    * @property atLimit
-    * @type {bool}
+	/**
+	* @property {bool} atLimit - Whether this camera is flush with the World Bounds or not.
     */
     this.atLimit = { x: false, y: false };
 
-    /**
-    * If the camera is tracking a Sprite, this is a reference to it, otherwise null
-    * @property target
-    * @public
-    * @type {Phaser.Sprite}
+	/**
+	* @property {Phaser.Sprite} target - If the camera is tracking a Sprite, this is a reference to it, otherwise null.
+    * @default
     */
     this.target = null;
 
-    /**
-    * Edge property
-    * @property edge
-    * @private
-    * @type {number}
+	/**
+	* @property {number} edge - Edge property. Description.
+    * @default
     */
     this._edge = 0;
 	
@@ -117,7 +93,7 @@ Phaser.Camera.prototype = {
 	/**
     * Tells this camera which sprite to follow.
     * @method follow
-    * @param {Phaser.Sprite} target The object you want the camera to track. Set to null to not follow anything.
+    * @param {Phaser.Sprite} target - The object you want the camera to track. Set to null to not follow anything.
     * @param {number} [style] Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
     */
     follow: function (target, style) {
@@ -157,8 +133,8 @@ Phaser.Camera.prototype = {
 	/**
     * Move the camera focus to a location instantly.
     * @method focusOnXY
-    * @param {number} x X position.
-    * @param {number} y Y position.
+    * @param {number} x - X position.
+    * @param {number} y - Y position.
     */
     focusOnXY: function (x, y) {
 
@@ -218,7 +194,7 @@ Phaser.Camera.prototype = {
     },
 
     /**
-    * Method called to ensure the camera doesn't venture outside of the game world
+    * Method called to ensure the camera doesn't venture outside of the game world.
     * @method checkWorldBounds
     */
     checkWorldBounds: function () {
@@ -257,11 +233,11 @@ Phaser.Camera.prototype = {
 
     /**
     * A helper function to set both the X and Y properties of the camera at once
-    * without having to use game.camera.x and game.camera.y
+    * without having to use game.camera.x and game.camera.y.
     * 
     * @method setPosition
-    * @param {number} x X position.
-    * @param {number} y Y position.
+    * @param {number} x - X position.
+    * @param {number} y - Y position.
     */
     setPosition: function (x, y) {
 
@@ -272,11 +248,11 @@ Phaser.Camera.prototype = {
     },
 
     /**
-    * Sets the size of the view rectangle given the width and height in parameters
+    * Sets the size of the view rectangle given the width and height in parameters.
     * 
     * @method setSize
-    * @param {number} width The desired width.
-    * @param {number} height The desired height.
+    * @param {number} width - The desired width.
+    * @param {number} height - The desired height.
     */
     setSize: function (width, height) {
 
@@ -287,19 +263,19 @@ Phaser.Camera.prototype = {
 
 };
 
+/**
+* Get
+* @return {number} The x position.
+*//**
+* Sets the camera's x position and clamp it if it's outside the world bounds.
+* @param {number} value - The x position.
+*/
 Object.defineProperty(Phaser.Camera.prototype, "x", {
 
-    /**
-    * @method x
-    * @return {Number} The x position
-    */
     get: function () {
         return this.view.x;
     },
-    /**
-    * @method x
-    * @return {Number} Sets the camera's x position and clamp it if it's outside the world bounds
-    */
+ 
     set: function (value) {
         this.view.x = value;
         this.checkWorldBounds();
@@ -307,20 +283,19 @@ Object.defineProperty(Phaser.Camera.prototype, "x", {
 
 });
 
+/**
+* Get
+* @return {number} The y position.
+*//**
+* Sets the camera's y position and clamp it if it's outside the world bounds.
+* @param {number} value - The y position.
+*/
 Object.defineProperty(Phaser.Camera.prototype, "y", {
-
-    /**
-    * @method y
-    * @return {Number} The y position
-    */
+	
     get: function () {
         return this.view.y;
     },
 
-    /**
-    * @method y
-    * @return {Number} Sets the camera's y position and clamp it if it's outside the world bounds
-    */
     set: function (value) {
         this.view.y = value;
         this.checkWorldBounds();
@@ -328,40 +303,38 @@ Object.defineProperty(Phaser.Camera.prototype, "y", {
 
 });
 
+/**
+* Returns the width of the view rectangle, in pixels.
+*  @return {number} The width of the view rectangle, in pixels.
+*//**
+* Sets the width of the view rectangle.
+* @param {number} value - Width of the view rectangle.
+*/
 Object.defineProperty(Phaser.Camera.prototype, "width", {
 
-    /**
-    * @method width
-    * @return {Number} The width of the view rectangle, in pixels
-    */
     get: function () {
         return this.view.width;
     },
 
-    /**
-    * @method width
-    * @return {Number} Sets the width of the view rectangle
-    */
     set: function (value) {
         this.view.width = value;
     }
 
 });
 
+/**
+* Returns the height of the view rectangle, in pixels.
+*  @return {number} The height of the view rectangle, in pixels.
+*//**
+* Sets the height of the view rectangle.
+* @param {number} value - Height of the view rectangle.
+*/
 Object.defineProperty(Phaser.Camera.prototype, "height", {
 
-    /**
-    * @method height
-    * @return {Number} The height of the view rectangle, in pixels
-    */
     get: function () {
         return this.view.height;
     },
 
-    /**
-    * @method height
-    * @return {Number} Sets the height of the view rectangle
-    */
     set: function (value) {
         this.view.height = value;
     }

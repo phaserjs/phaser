@@ -1,7 +1,30 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.StateManager
+*/
+
+/**
+* Description.
+* 
+* @class Phaser.StateManager
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {Description} pendingState - Description.
+*/
 Phaser.StateManager = function (game, pendingState) {
 
+	/**
+	* A reference to the currently running game.
+	* @property {Phaser.Game} game.
+	*/
 	this.game = game;
 
+	/**
+	* Description.
+	* @property {Description} states.
+	*/
 	this.states = {};
 
 	if (pendingState !== null)
@@ -14,94 +37,101 @@ Phaser.StateManager = function (game, pendingState) {
 Phaser.StateManager.prototype = {
 	
 	/**
-	* @type {Phaser.Game}
+	* A reference to the currently running game.
+	* @property {Phaser.Game} game.
 	*/
 	game: null,
 
 	/**
 	* The state to be switched to in the next frame.
-	* @type {State}
+	* @property {State} _pendingState 
+	* @private
 	*/
 	_pendingState: null,
 
 	/**
 	* Flag that sets if the State has been created or not.
-	* @type {Boolean}
+	* @property {bool}_created
+	* @private
 	*/
 	_created: false,
 
 	/**
 	* The state to be switched to in the next frame.
-	* @type {Object}
+	* @property {Description} states
 	*/
 	states: {},
 
 	/**
-	* The current active State object (defaults to null)
-	* @type {String}
+	* The current active State object (defaults to null).
+	* @property {string} current
 	*/
 	current: '',
 	
 	/**
-	* This will be called when the state is started (i.e. set as the current active state)
-	* @type {function}
+	* This will be called when the state is started (i.e. set as the current active state).
+	* @property {function} onInitCallback
 	*/
 	onInitCallback: null,
 
 	/**
-	* This will be called when init states. (loading assets...)
-	* @type {function}
+	* This will be called when init states (loading assets...).
+	* @property {function} onPreloadCallback
 	*/
 	onPreloadCallback: null,
 	
 	/**
-	* This will be called when create states. (setup states...)
-	* @type {function}
+	* This will be called when create states (setup states...).
+	* @property {function} onCreateCallback
 	*/
 	onCreateCallback: null,
 
 	/**
-	* This will be called when State is updated, this doesn't happen during load (see onLoadUpdateCallback)
-	* @type {function}
+	* This will be called when State is updated, this doesn't happen during load (@see onLoadUpdateCallback).
+	* @property {function} onUpdateCallback
 	*/
 	onUpdateCallback: null,
 
 	/**
-	* This will be called when the State is rendered, this doesn't happen during load (see onLoadRenderCallback)
-	* @type {function}
+	* This will be called when the State is rendered, this doesn't happen during load (see onLoadRenderCallback).
+	* @property {function} onRenderCallback
 	*/
 	onRenderCallback: null,
 
 	/**
-	* This will be called before the State is rendered and before the stage is cleared
-	* @type {function}
+	* This will be called before the State is rendered and before the stage is cleared.
+	* @property {function} onPreRenderCallback
 	*/
 	onPreRenderCallback: null,
 
 	/**
-	* This will be called when the State is updated but only during the load process
-	* @type {function}
+	* This will be called when the State is updated but only during the load process.
+	* @property {function} onLoadUpdateCallback
 	*/
 	onLoadUpdateCallback: null,
 
 	/**
-	* This will be called when the State is rendered but only during the load process
-	* @type {function}
+	* This will be called when the State is rendered but only during the load process.
+	* @property {function} onLoadRenderCallback
 	*/
 	onLoadRenderCallback: null,
 
 	/**
 	* This will be called when states paused.
-	* @type {function}
+	* @property {function} onPausedCallback
 	*/
 	onPausedCallback: null,
 
 	/**
-	* This will be called when the state is shut down (i.e. swapped to another state)
-	* @type {function}
+	* This will be called when the state is shut down (i.e. swapped to another state).
+	* @property {function} onShutDownCallback
 	*/
 	onShutDownCallback: null,
 
+	/**
+	* Description.
+	* @method boot
+	*/
 	boot: function () {
 
 		// console.log('Phaser.StateManager.boot');
@@ -127,9 +157,10 @@ Phaser.StateManager.prototype = {
 
 	/**
     * Add a new State.
-    * @param key {String} A unique key you use to reference this state, i.e. "MainMenu", "Level1".
-    * @param state {State} The state you want to switch to.
-    * @param autoStart {Boolean} Start the state immediately after creating it? (default true)
+    * @method add
+    * @param key {string} - A unique key you use to reference this state, i.e. "MainMenu", "Level1".
+    * @param state {State} - The state you want to switch to.
+    * @param autoStart {bool} - Start the state immediately after creating it? (default true)
     */
     add: function (key, state, autoStart) {
 
@@ -178,6 +209,11 @@ Phaser.StateManager.prototype = {
 
     },
 
+	/**
+     * Delete the given state.
+     * @method remove
+     * @param {string} key - A unique key you use to reference this state, i.e. "MainMenu", "Level1".
+     */
     remove: function (key) {
 
     	if (this.current == key)
@@ -203,9 +239,10 @@ Phaser.StateManager.prototype = {
 
 	/**
     * Start the given state
-    * @param key {String} The key of the state you want to start.
-    * @param [clearWorld] {bool} clear everything in the world? (Default to true)
-    * @param [clearCache] {bool} clear asset cache? (Default to false and ONLY available when clearWorld=true)
+    * @method start
+    * @param {string} key - The key of the state you want to start.
+    * @param {bool} [clearWorld] - clear everything in the world? (Default to true)
+    * @param {bool} [clearCache] - clear asset cache? (Default to false and ONLY available when clearWorld=true)
     */
     start: function (key, clearWorld, clearCache) {
 
@@ -277,11 +314,21 @@ Phaser.StateManager.prototype = {
         }
 
     },
-
-	//	Used by onInit and onShutdown when those functions don't exist on the state
+	
+	/**
+	* Used by onInit and onShutdown when those functions don't exist on the state
+    * @method dummy
+    * @private
+    */
     dummy: function () {
     },
 
+	/**
+    * Description.
+    * @method checkState
+    * @param {string} key - The key of the state you want to check.
+    * @return {bool} Description.
+    */
     checkState: function (key) {
 
 		if (this.states[key])
@@ -314,6 +361,11 @@ Phaser.StateManager.prototype = {
 
     },
 
+	/**
+    * Description.
+    * @method link
+    * @param {string} key - Description.
+    */
     link: function (key) {
 
 		// console.log('linked');
@@ -335,6 +387,11 @@ Phaser.StateManager.prototype = {
 
     },
 
+	/**
+    * Description.
+    * @method setCurrentState
+    * @param {string} key - Description.
+    */
 	setCurrentState: function (key) {
 
         this.callbackContext = this.states[key];
@@ -363,6 +420,10 @@ Phaser.StateManager.prototype = {
 
 	},
 
+	/**
+	* Description.
+	* @method loadComplete
+	*/
     loadComplete: function () {
 
 		// console.log('Phaser.StateManager.loadComplete');
@@ -380,6 +441,10 @@ Phaser.StateManager.prototype = {
 
     },
 
+	/**
+	* Description.
+	* @method update
+	*/
     update: function () {
 
     	if (this._created && this.onUpdateCallback)
@@ -396,6 +461,10 @@ Phaser.StateManager.prototype = {
 
     },
 
+	/**
+	* Description.
+	* @method preRender
+	*/
     preRender: function () {
 
 	    if (this.onPreRenderCallback)
@@ -405,6 +474,10 @@ Phaser.StateManager.prototype = {
 
     },
 
+	/**
+	* Description.
+	* @method render
+	*/
     render: function () {
 
     	if (this._created && this.onRenderCallback)
@@ -423,6 +496,7 @@ Phaser.StateManager.prototype = {
 
 	/**
     * Nuke the entire game from orbit
+    * @method destroy
     */
     destroy: function () {
 

@@ -1,13 +1,35 @@
 /**
-* Phaser - RequestAnimationFrame
-*
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.RequestAnimationFrame
+*/
+
+
+/**
 * Abstracts away the use of RAF or setTimeOut for the core game update loop.
+*
+* @class Phaser.RequestAnimationFrame 
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
 */
 Phaser.RequestAnimationFrame = function(game) {
 	
+     /**
+     * @property {Phaser.Game} game - The currently running game.
+     */
 	this.game = game;
 
+     /**
+     * @property {bool} _isSetTimeOut  - Description.
+     * @private
+     */
 	this._isSetTimeOut = false;
+     
+     /**
+     * @property {bool} isRunning - Description.
+     * @default
+     */
 	this.isRunning = false;
 
 	var vendors = [
@@ -28,6 +50,7 @@ Phaser.RequestAnimationFrame.prototype = {
 
 	/**
 	* The function called by the update
+	* @property _onLoop
 	* @private
 	**/
 	_onLoop: null,
@@ -67,7 +90,8 @@ Phaser.RequestAnimationFrame.prototype = {
 
 	/**
 	* The update method for the requestAnimationFrame
-	* @method RAFUpdate
+	* @method updateRAF	
+	* @param {number} time - Description.
 	**/
 	updateRAF: function (time) {
 
@@ -78,8 +102,8 @@ Phaser.RequestAnimationFrame.prototype = {
 	},
 
 	/**
-	* The update method for the setTimeout
-	* @method SetTimeoutUpdate
+	* The update method for the setTimeout.
+	* @method updateSetTimeout
 	**/
 	updateSetTimeout: function () {
 
@@ -90,7 +114,7 @@ Phaser.RequestAnimationFrame.prototype = {
 	},
 
 	/**
-	* Stops the requestAnimationFrame from running
+	* Stops the requestAnimationFrame from running.
 	* @method stop
 	**/
 	stop: function () {
@@ -111,7 +135,7 @@ Phaser.RequestAnimationFrame.prototype = {
 	/**
 	* Is the browser using setTimeout?
 	* @method isSetTimeOut
-	* @return bool
+	* @return {bool}
 	**/
 	isSetTimeOut: function () {
 		return this._isSetTimeOut;
@@ -120,7 +144,7 @@ Phaser.RequestAnimationFrame.prototype = {
 	/**
 	* Is the browser using requestAnimationFrame?
 	* @method isRAF
-	* @return bool
+	* @return {bool}
 	**/
 	isRAF: function () {
 		return (this._isSetTimeOut === false);

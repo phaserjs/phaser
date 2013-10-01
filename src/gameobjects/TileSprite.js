@@ -1,3 +1,23 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.TileSprite
+*/
+
+/**
+* Create a new <code>TileSprite</code>.
+* @class Phaser.Tilemap
+* @classdesc Class description.
+* @constructor
+* @param {Phaser.Game} game - Current game instance.
+* @param {object} x - Description.
+* @param {object} y - Description.
+* @param {number} width - Description.
+* @param {number} height - Description.
+* @param {string} key - Description.
+* @param {Description} frame - Description.
+*/
 Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
 
     x = x || 0;
@@ -9,26 +29,26 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
 
 	Phaser.Sprite.call(this, game, x, y, key, frame);
 
+	/**
+	* @property {Description} texture - Description. 
+    */
     this.texture = PIXI.TextureCache[key];
 
 	PIXI.TilingSprite.call(this, this.texture, width, height);
 
+	/**
+	* @property {Description} type - Description. 
+    */
 	this.type = Phaser.TILESPRITE;
 
 	/**
-	 * The scaling of the image that is being tiled
-	 *
-	 * @property tileScale
-	 * @type Point
-	 */	
+	* @property {Point} tileScale - The scaling of the image that is being tiled.
+	*/	
 	this.tileScale = new Phaser.Point(1, 1);
 
 	/**
-	 * The offset position of the image that is being tiled
-	 *
-	 * @property tilePosition
-	 * @type Point
-	 */	
+	* @property {Point} tilePosition - The offset position of the image that is being tiled.
+	*/	
 	this.tilePosition = new Phaser.Point(0, 0);
 
 };

@@ -1,16 +1,59 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.LinkedList
+*/
+
+/**
+* A linked list data structure.
+*
+* @class Phaser.LinkedList
+* @constructor
+*/
 Phaser.LinkedList = function () {
 
+    /**
+	* @property {object} next - Next element in the list.
+	* @default
+	*/
     this.next = null;
+
+    /**
+	* @property {object} prev - Previous element in the list.
+	* @default
+	*/
     this.prev = null;
+
+    /**
+	* @property {object} first - First element in the list.
+	* @default
+	*/
     this.first = null;
+
+    /**
+	* @property {object} last - Last element in the list.
+	* @default
+	*/
     this.last = null;
+    
+    /**
+	* @property {object} game - Number of elements in the list.
+	* @default
+	*/
     this.total = 0;
 
 };
 
 Phaser.LinkedList.prototype = {
 
-
+	/**
+    * Add element to a linked list.
+	* 
+	* @method add
+	* @param {object} child - Description.
+	* @return {object} Description.	   
+    */
     add: function (child) {
 
     	//	If the list is empty
@@ -37,6 +80,12 @@ Phaser.LinkedList.prototype = {
 
     },
 
+	/**
+    * Remove element from a linked list.
+ 	* 
+ 	* @method remove
+ 	* @param {object} child - Description.   
+    */
     remove: function (child) {
 		if( this.first ) {
 		  child.next = this.last.next;
@@ -53,6 +102,12 @@ Phaser.LinkedList.prototype = {
 		this.total--;
     },
 
+	/**
+    * Description.
+  	* 
+  	* @method callAll
+  	* @param {object} callback - Description.   
+    */
     callAll: function (callback) {
 
     	if (!this.first || !this.last)
@@ -76,6 +131,11 @@ Phaser.LinkedList.prototype = {
 
     },
 
+	/**
+    * Description.
+   	* 
+   	* @method dump 
+    */
 	dump: function () {
 
 		var spacing = 20;

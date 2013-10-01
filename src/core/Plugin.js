@@ -1,19 +1,67 @@
 /**
-* Phaser - Plugin
-*
-* This is a base Plugin template to use for any Phaser plugin development
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.Plugin
+*/
+
+
+/** 
+* This is a base Plugin template to use for any Phaser plugin development.
+* 
+* @class Phaser.Plugin
+* @classdesc Phaser - Plugin
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {Description} parent - Description.
+* 
 */
 Phaser.Plugin = function (game, parent) {
 
+	/**
+	* @property {Phaser.Game} game - A reference to the currently running game.
+	*/
     this.game = game;
+    
+    /**
+	* @property {Description} parent - Description.
+	*/
     this.parent = parent;
     
+    /**
+	* @property {bool} active - Description.
+	* @default
+	*/
     this.active = false;
+    
+    /**
+	* @property {bool} visible - Description.
+	* @default
+	*/
     this.visible = false;
     
+    /**
+	* @property {bool} hasPreUpdate - Description.
+	* @default
+	*/
     this.hasPreUpdate = false;
+    
+    /**
+	* @property {bool} hasUpdate - Description.
+	* @default
+	*/
     this.hasUpdate = false;
+    
+    /**
+	* @property {bool} hasRender - Description.
+	* @default
+	*/
     this.hasRender = false;
+    
+    /**
+	* @property {bool} hasPostRender - Description.
+	* @default
+	*/
     this.hasPostRender = false;
 
 };

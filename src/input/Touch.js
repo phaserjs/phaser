@@ -1,24 +1,75 @@
 /**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.Touch
+*/
+
+/**
 * Phaser - Touch
 *
-* The Touch class handles touch interactions with the game and the resulting Pointer objects.
-* http://www.w3.org/TR/touch-events/
-* https://developer.mozilla.org/en-US/docs/DOM/TouchList
-* http://www.html5rocks.com/en/mobile/touchandmouse/
-* Note: Android 2.x only supports 1 touch event at once, no multi-touch
+* @class
+* 
+* @classdesc The Touch class handles touch interactions with the game and the resulting Pointer objects.
+* {@link http://www.w3.org/TR/touch-events/}
+* {@link https://developer.mozilla.org/en-US/docs/DOM/TouchList}
+* {@link http://www.html5rocks.com/en/mobile/touchandmouse/}
+* <p>Note: Android 2.x only supports 1 touch event at once, no multi-touch.
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
 */
 Phaser.Touch = function (game) {
 
+	/**
+    * @property {Phaser.Game} game - Local reference to game.
+	*/
 	this.game = game;
+	
+	/**
+	* @property {Phaser.Game} callbackContext - Description.
+    */
     this.callbackContext = this.game;
 
+	/**
+	* @property {Phaser.Game} touchStartCallback - Description.
+	* @default
+    */
     this.touchStartCallback = null;
+    
+	/**
+	* @property {Phaser.Game} touchMoveCallback - Description.
+	* @default
+    */
     this.touchMoveCallback = null;
+    
+	/**
+	* @property {Phaser.Game} touchEndCallback - Description.
+	* @default
+    */
     this.touchEndCallback = null;
+    
+	/**
+	* @property {Phaser.Game} touchEnterCallback - Description.
+	* @default
+    */
     this.touchEnterCallback = null;
+    
+	/**
+	* @property {Phaser.Game} touchLeaveCallback - Description.
+	* @default
+    */
     this.touchLeaveCallback = null;
+    
+	/**
+	* @property {Description} touchCancelCallback - Description.
+	* @default
+    */
     this.touchCancelCallback = null;
-
+    
+	/**
+	* @property {bool} preventDefault - Description.
+	* @default
+    */
     this.preventDefault = true;
 
 };
@@ -29,7 +80,8 @@ Phaser.Touch.prototype = {
 
     /**
     * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-    * @type {bool}
+    * @method disabled
+    * @return {bool}
     */
 	disabled: false,
 
@@ -42,7 +94,7 @@ Phaser.Touch.prototype = {
 	_onTouchMove: null,
 
 	/**
-    * Starts the event listeners running
+    * Starts the event listeners running.
     * @method start
     */
     start: function () {
@@ -86,9 +138,8 @@ Phaser.Touch.prototype = {
     },
 
     /**
-    * Consumes all touchmove events on the document (only enable this if you know you need it!)
+    * Consumes all touchmove events on the document (only enable this if you know you need it!).
     * @method consumeTouchMove
-    * @param {Any} event
     **/
     consumeDocumentTouches: function () {
 
@@ -101,7 +152,7 @@ Phaser.Touch.prototype = {
     },
 
 	/**
-    *
+    * Description.
     * @method onTouchStart
     * @param {Any} event
     **/
@@ -133,8 +184,8 @@ Phaser.Touch.prototype = {
     },
 
 	/**
-    * Touch cancel - touches that were disrupted (perhaps by moving into a plugin or browser chrome)
-    * Occurs for example on iOS when you put down 4 fingers and the app selector UI appears
+    * Touch cancel - touches that were disrupted (perhaps by moving into a plugin or browser chrome).
+    * Occurs for example on iOS when you put down 4 fingers and the app selector UI appears.
     * @method onTouchCancel
     * @param {Any} event
     **/
@@ -165,8 +216,8 @@ Phaser.Touch.prototype = {
     },
 
 	/**
-    * For touch enter and leave its a list of the touch points that have entered or left the target
-    * Doesn't appear to be supported by most browsers on a canvas element yet
+    * For touch enter and leave its a list of the touch points that have entered or left the target.
+    * Doesn't appear to be supported by most browsers on a canvas element yet.
     * @method onTouchEnter
     * @param {Any} event
     **/
@@ -195,8 +246,8 @@ Phaser.Touch.prototype = {
     },
 
 	/**
-    * For touch enter and leave its a list of the touch points that have entered or left the target
-    * Doesn't appear to be supported by most browsers on a canvas element yet
+    * For touch enter and leave its a list of the touch points that have entered or left the target.
+    * Doesn't appear to be supported by most browsers on a canvas element yet.
     * @method onTouchLeave
     * @param {Any} event
     **/    
@@ -220,7 +271,7 @@ Phaser.Touch.prototype = {
     },
 
 	/**
-    *
+    * Description.
     * @method onTouchMove
     * @param {Any} event
     **/
@@ -244,7 +295,7 @@ Phaser.Touch.prototype = {
     },
 
 	/**
-    *
+    * Description.
     * @method onTouchEnd
     * @param {Any} event
     **/
@@ -271,7 +322,7 @@ Phaser.Touch.prototype = {
     },
 
 	/**
-    * Stop the event listeners
+    * Stop the event listeners.
     * @method stop
     */
     stop: function () {

@@ -1,23 +1,40 @@
 /**
-* Phaser.Signal
-*
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.Signal
+*/
+
+
+/**
+* 
 * A Signal is used for object communication via a custom broadcaster instead of Events.
 * 
+* @class Phaser.Signal
+* @classdesc Phaser Signal
 * @author Miller Medeiros http://millermedeiros.github.com/js-signals/
 * @constructor
 */
 Phaser.Signal = function () {
 
 	/**
-	 * @type Array.<Phaser.SignalBinding>
-	 * @private
-	 */
+	* @property {Array.<Phaser.SignalBinding>} _bindings - Description.
+	* @private
+	*/
 	this._bindings = [];
+	
+	/**
+	* @property {Description} _prevParams - Description.
+	* @private
+	*/
 	this._prevParams = null;
 
 	// enforce dispatch to aways work on same context (#47)
 	var self = this;
 
+	/**
+	* @property {Description} dispatch - Description.
+	*/
 	this.dispatch = function(){
 		Phaser.Signal.prototype.dispatch.apply(self, arguments);
 	};
@@ -27,26 +44,35 @@ Phaser.Signal = function () {
 Phaser.Signal.prototype = {
 
 	/**
-	 * If Signal should keep record of previously dispatched parameters and
-	 * automatically execute listener during `add()`/`addOnce()` if Signal was
-	 * already dispatched before.
-	 * @type boolean
-	 */
+    * If Signal should keep record of previously dispatched parameters and
+	* automatically execute listener during `add()`/`addOnce()` if Signal was
+	* already dispatched before.
+	* @property {bool} memorize
+	*/
 	memorize: false,
 
 	/**
-	 * @type boolean
-	 * @private
-	 */
+	* Description.
+	* @property {bool} _shouldPropagate 
+	* @private
+	*/
 	_shouldPropagate: true,
 
 	/**
-	 * If Signal is active and should broadcast events.
-	 * <p><strong>IMPORTANT:</strong> Setting this property during a dispatch will only affect the next dispatch, if you want to stop the propagation of a signal use `halt()` instead.</p>
-	 * @type boolean
-	 */
+	* If Signal is active and should broadcast events.
+	* <p><strong>IMPORTANT:</strong> Setting this property during a dispatch will only affect the next dispatch, if you want to stop the propagation of a signal use `halt()` instead.</p>
+	* @property {bool} active
+    * @default
+    */
 	active: true,
 
+	/**
+	* Description.
+	* 
+	* @method validateListener
+	* @param {function} listener - Signal handler function.
+	* @param {Description} fnName - Description.
+    */
 	validateListener: function (listener, fnName) {
 		if (typeof listener !== 'function') {
 			throw new Error( 'listener is a required param of {fn}() and should be a Function.'.replace('{fn}', fnName) );
@@ -54,11 +80,14 @@ Phaser.Signal.prototype = {
 	},
 
 	/**
-	 * @param {Function} listener
-	 * @param {boolean} isOnce
-	 * @param {Object} [listenerContext]
-	 * @param {Number} [priority]
-	 * @return {Phaser.SignalBinding}
+	 * Description.
+	 * 
+	 * @method _registerListener
+	 * @param {function} listener - Signal handler function.
+	 * @param {bool} isOnce - Description.
+	 * @param {object} [listenerContext] - Description.
+	 * @param {number} [priority] - The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0).
+	 * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
 	 * @private
 	 */
 	_registerListener: function (listener, isOnce, listenerContext, priority) {
@@ -84,7 +113,10 @@ Phaser.Signal.prototype = {
 	},
 
 	/**
-	 * @param {Phaser.SignalBinding} binding
+	 * Description.
+	 * 
+	 * @method _addBinding 
+	 * @param {Phaser.SignalBinding} binding - An Object representing the binding between the Signal and listener.
 	 * @private
 	 */
 	_addBinding: function (binding) {
@@ -95,8 +127,11 @@ Phaser.Signal.prototype = {
 	},
 
 	/**
-	 * @param {Function} listener
-	 * @return {number}
+	 * Description.
+	 * 
+	 * @method _indexOfListener
+	 * @param {function} listener - Signal handler function.
+	 * @return {number} Description.
 	 * @private
 	 */
 	_indexOfListener: function (listener, context) {
@@ -113,9 +148,11 @@ Phaser.Signal.prototype = {
 
 	/**
 	 * Check if listener was attached to Signal.
-	 * @param {Function} listener
-	 * @param {Object} [context]
-	 * @return {boolean} if Signal has the specified listener.
+	 * 
+	 * @method has
+	 * @param {Function} listener - Signal handler function.
+	 * @param {Object} [context] - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+	 * @return {bool} If Signal has the specified listener.
 	 */
 	has: function (listener, context) {
 		return this._indexOfListener(listener, context) !== -1;
@@ -123,9 +160,11 @@ Phaser.Signal.prototype = {
 
 	/**
 	 * Add a listener to the signal.
-	 * @param {Function} listener Signal handler function.
-	 * @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-	 * @param {Number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0)
+	 * 
+	 * @method add
+	 * @param {function} listener - Signal handler function.
+	 * @param {object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+	 * @param {number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0).
 	 * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
 	 */
 	add: function (listener, listenerContext, priority) {
@@ -134,23 +173,23 @@ Phaser.Signal.prototype = {
 	},
 
 	/**
-	 * Add listener to the signal that should be removed after first execution (will be executed only once).
-	 * @param {Function} listener Signal handler function.
-	 * @param {Object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-	 * @param {Number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0)
-	 * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
-	 */
+	* Add listener to the signal that should be removed after first execution (will be executed only once).
+	* @param {function} listener Signal handler function.
+	* @param {object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+	* @param {number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0)
+	* @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
+	*/
 	addOnce: function (listener, listenerContext, priority) {
 		this.validateListener(listener, 'addOnce');
 		return this._registerListener(listener, true, listenerContext, priority);
 	},
 
 	/**
-	 * Remove a single listener from the dispatch queue.
-	 * @param {Function} listener Handler function that should be removed.
-	 * @param {Object} [context] Execution context (since you can add the same handler multiple times if executing in a different context).
-	 * @return {Function} Listener handler function.
-	 */
+	* Remove a single listener from the dispatch queue.
+	* @param {function} listener Handler function that should be removed.
+	* @param {object} [context] Execution context (since you can add the same handler multiple times if executing in a different context).
+	* @return {function} Listener handler function.
+	*/
 	remove: function (listener, context) {
 		this.validateListener(listener, 'remove');
 
@@ -163,8 +202,8 @@ Phaser.Signal.prototype = {
 	},
 
 	/**
-	 * Remove all listeners from the Signal.
-	 */
+	* Remove all listeners from the Signal.
+	*/
 	removeAll: function () {
 		var n = this._bindings.length;
 		while (n--) {
@@ -174,25 +213,25 @@ Phaser.Signal.prototype = {
 	},
 
 	/**
-	 * @return {number} Number of listeners attached to the Signal.
-	 */
+	* @return {number} Number of listeners attached to the Signal.
+	*/
 	getNumListeners: function () {
 		return this._bindings.length;
 	},
 
 	/**
-	 * Stop propagation of the event, blocking the dispatch to next listeners on the queue.
-	 * <p><strong>IMPORTANT:</strong> should be called only during signal dispatch, calling it before/after dispatch won't affect signal broadcast.</p>
-	 * @see Signal.prototype.disable
-	 */
+	* Stop propagation of the event, blocking the dispatch to next listeners on the queue.
+	* <p><strong>IMPORTANT:</strong> should be called only during signal dispatch, calling it before/after dispatch won't affect signal broadcast.</p>
+	* @see Signal.prototype.disable
+	*/
 	halt: function () {
 		this._shouldPropagate = false;
 	},
 
 	/**
-	 * Dispatch/Broadcast Signal to all listeners added to the queue.
-	 * @param {...*} [params] Parameters that should be passed to each handler.
-	 */
+	* Dispatch/Broadcast Signal to all listeners added to the queue.
+	* @param {Description} [params] - Parameters that should be passed to each handler.
+	*/
 	dispatch: function (params) {
 		if (! this.active) {
 			return;

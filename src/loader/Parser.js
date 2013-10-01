@@ -1,8 +1,21 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.Parser
+*/
+
+
+/**
+* Description of Phaser.Loader.Parser
+*
+* @class    Phaser.Loader.Parser
+*/
 Phaser.Loader.Parser = {
 	
     /**
     * Parse frame data from an XML file.
-    * @param xml {object} XML data you want to parse.
+    * @param {object} xml - XML data you want to parse.
     * @return {FrameData} Generated FrameData object.
     */
 	bitmapFont: function (game, xml, cacheKey) {

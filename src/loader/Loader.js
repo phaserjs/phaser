@@ -1,71 +1,86 @@
 /**
-* Phaser.Loader
-*
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.Loader
+*/
+
+/**
+* Phaser loader constructor.
 * The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
 * It uses a combination of Image() loading and xhr and provides progress and completion callbacks.
+* @class Phaser.Loader
+* @classdesc  The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
+* It uses a combination of Image() loading and xhr and provides progress and completion callbacks.
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
 */
 Phaser.Loader = function (game) {
 
 	/**
-	* Local reference to Game.
+    * @property {Phaser.Game} game - Local reference to game.
 	*/
 	this.game = game;
 
 	/**
-	* Array stores assets keys. So you can get that asset by its unique key.
-	*/
+	* @property {array} _keys - Array stores assets keys. So you can get that asset by its unique key.
+	* @private
+    */
 	this._keys = [];
 
 	/**
-	* Contains all the assets file infos.
-	*/
+	* @property {Description} _fileList - Contains all the assets file infos.
+	* @private
+    */
 	this._fileList = {};
 
 	/**
-	* Indicates assets loading progress. (from 0 to 100)
-	* @type {number}
+	* @property {number} _progressChunk - Indicates assets loading progress. (from 0 to 100)
+	* @private
+	* @default
 	*/
 	this._progressChunk = 0;
 
 	/**
-	* An XMLHttpRequest object used for loading text and audio data
-	* @type {XMLHttpRequest}
+	* @property {XMLHttpRequest} - An XMLHttpRequest object used for loading text and audio data.
+	* @private
 	*/
 	this._xhr = new XMLHttpRequest();
 
-	/**
-	* Length of assets queue.
-	* @type {number}
+	/** 
+	* @property {number} - Length of assets queue.
+	* @default
 	*/
 	this.queueSize = 0;
 
 	/**
-	* True if the Loader is in the process of loading the queue.
-	* @type {bool}
+	* @property {bool} isLoading - True if the Loader is in the process of loading the queue.
+	* @default
 	*/
 	this.isLoading = false;
 
 	/**
-	* True if all assets in the queue have finished loading.
-	* @type {bool}
+	* @property {bool} hasLoaded - True if all assets in the queue have finished loading.
+	* @default
 	*/
 	this.hasLoaded = false;
 
 	/**
-	* The Load progress percentage value (from 0 to 100)
-	* @type {number}
+	* @property {number} progress - The Load progress percentage value (from 0 to 100)
+	* @default
 	*/
 	this.progress = 0;
 
 	/**
 	* You can optionally link a sprite to the preloader.
 	* If you do so the Sprite's width or height will be cropped based on the percentage loaded.
+	* @property {Description} preloadSprite
+	* @default
 	*/
 	this.preloadSprite = null;
 
 	/**
-	* The crossOrigin value applied to loaded images
-	* @type {string}
+	* @property {string} crossOrigin - The crossOrigin value applied to loaded images
 	*/
 	this.crossOrigin = '';
 
@@ -73,16 +88,29 @@ Phaser.Loader = function (game) {
 	* If you want to append a URL before the path of any asset you can set this here.
 	* Useful if you need to allow an asset url to be configured outside of the game code.
 	* MUST have / on the end of it!
-	* @type {string}
+	* @property {string} baseURL
+	* @default
 	*/
 	this.baseURL = '';
 
 	/**
-	 * Event Signals
-	 */
+	* @property {Phaser.Signal} onFileComplete - Event signal.
+	*/
 	this.onFileComplete = new Phaser.Signal;
+	
+	/**
+	* @property {Phaser.Signal} onFileError - Event signal.
+	*/
 	this.onFileError = new Phaser.Signal;
+	
+	/**
+	* @property {Phaser.Signal} onLoadStart - Event signal.
+	*/
 	this.onLoadStart = new Phaser.Signal;
+	
+	/**
+	* @property {Phaser.Signal} onLoadComplete - Event signal.
+	*/
 	this.onLoadComplete = new Phaser.Signal;
 
 };
@@ -95,7 +123,13 @@ Phaser.Loader.TEXTURE_ATLAS_JSON_HASH = 1;
 Phaser.Loader.TEXTURE_ATLAS_XML_STARLING = 2;
 
 Phaser.Loader.prototype = {
-
+	/**
+	* Description.
+	*
+	* @method setPreloadSprite
+    * @param {Phaser.Sprite} sprite - Description.
+    * @param {number} direction - Description.
+    */
 	setPreloadSprite: function (sprite, direction) {
 
 		direction = direction || 0;
@@ -119,7 +153,8 @@ Phaser.Loader.prototype = {
 
 	/**
 	* Check whether asset exists with a specific key.
-	* @param key {string} Key of the asset you want to check.
+	* @method checkKeyExists
+	* @param {string} key - Key of the asset you want to check.
 	* @return {bool} Return true if exists, otherwise return false.
 	*/
 	checkKeyExists: function (key) {
@@ -136,8 +171,9 @@ Phaser.Loader.prototype = {
 	},
 
 	/**
-	 * Reset loader, this will remove all loaded assets.
-	 */
+	* Reset loader, this will remove all loaded assets.
+	* @method reset
+	*/
 	reset: function () {
 
 		this.preloadSprite = null;
@@ -148,6 +184,11 @@ Phaser.Loader.prototype = {
 
 	/**
 	* Internal function that adds a new entry to the file list.
+	* @method addToFileList
+	* @param {Description} type - Description.
+	* @param {string} key - Description.
+	* @param {string} url - URL of Description.
+	* @param {Description} properties - Description.
 	*/
 	addToFileList: function (type, key, url, properties) {
 
@@ -178,9 +219,10 @@ Phaser.Loader.prototype = {
 
 	/**
 	* Add an image to the Loader.
-	* @param key {string} Unique asset key of this image file.
-	* @param url {string} URL of image file.
-	* @param overwrite {boolean} If an entry with a matching key already exists this will over-write it
+	* @method image
+	* @param {string} key - Unique asset key of this image file.
+	* @param {string} url - URL of image file.
+	* @param {boolean} overwrite - If an entry with a matching key already exists this will over-write it
 	*/
 	image: function (key, url, overwrite) {
 
@@ -195,8 +237,10 @@ Phaser.Loader.prototype = {
 
 	/**
 	* Add a text file to the Loader.
-	* @param key {string} Unique asset key of the text file.
-	* @param url {string} URL of the text file.
+	* @method text
+	* @param {string} key - Unique asset key of the text file.
+	* @param {string} url - URL of the text file.
+	* @param {bool} overwrite - True if Description.
 	*/
 	text: function (key, url, overwrite) {
 
@@ -211,11 +255,12 @@ Phaser.Loader.prototype = {
 
 	/**
 	* Add a new sprite sheet loading request.
-	* @param key {string} Unique asset key of the sheet file.
-	* @param url {string} URL of sheet file.
-	* @param frameWidth {number} Width of each single frame.
-	* @param frameHeight {number} Height of each single frame.
-	* @param frameMax {number} How many frames in this sprite sheet.
+	* @method spritesheet
+	* @param {string} key - Unique asset key of the sheet file.
+	* @param {string} url - URL of the sheet file.
+	* @param {number} frameWidth - Width of each single frame.
+	* @param {number} frameHeight - Height of each single frame.
+	* @param {number} frameMax - How many frames in this sprite sheet.
 	*/
 	spritesheet: function (key, url, frameWidth, frameHeight, frameMax) {
 
@@ -230,9 +275,10 @@ Phaser.Loader.prototype = {
 
 	/**
 	* Add a new audio file loading request.
-	* @param key {string} Unique asset key of the audio file.
-	* @param urls {Array} An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ]
-	* @param autoDecode {bool} When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
+	* @method audio
+	* @param {string} key - Unique asset key of the audio file.
+	* @param {Array} urls - An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ].
+	* @param {bool} autoDecode - When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
 	*/
 	audio: function (key, urls, autoDecode) {
 
@@ -247,11 +293,12 @@ Phaser.Loader.prototype = {
 
 	/**
 	* Add a new tilemap loading request.
-	* @param key {string} Unique asset key of the tilemap data.
-	* @param tilesetURL {string} The url of the tile set image file.
-	* @param [mapDataURL] {string} The url of the map data file (csv/json)
-	* @param [mapData] {object} An optional JSON data object (can be given in place of a URL).
-	* @param [format] {string} The format of the map data.
+	* @method tilemap
+	* @param {string} key - Unique asset key of the tilemap data.
+	* @param {string} tilesetURL - The url of the tile set image file.
+	* @param {string} [mapDataURL] - The url of the map data file (csv/json)
+	* @param {object} [mapData] - An optional JSON data object (can be given in place of a URL).
+	* @param {string} [format] - The format of the map data.
 	*/
 	tilemap: function (key, tilesetURL, mapDataURL, mapData, format) {
 
@@ -293,10 +340,11 @@ Phaser.Loader.prototype = {
 
 	/**
 	* Add a new bitmap font loading request.
-	* @param key {string} Unique asset key of the bitmap font.
-	* @param textureURL {string} The url of the font image file.
-	* @param [xmlURL] {string} The url of the font data file (xml/fnt)
-	* @param [xmlData] {object} An optional XML data object.
+	* @method bitmapFont
+	* @param {string} key - Unique asset key of the bitmap font.
+	* @param {string} textureURL - The url of the font image file.
+	* @param {string} [xmlURL] - The url of the font data file (xml/fnt)
+	* @param {object} [xmlData] - An optional XML data object.
 	*/
 	bitmapFont: function (key, textureURL, xmlURL, xmlData) {
 
@@ -349,18 +397,39 @@ Phaser.Loader.prototype = {
 
 	},
 
+	/**
+	* Description.
+	* @method atlasJSONArray
+	* @param {string} key - Unique asset key of the bitmap font.
+	* @param {Description} atlasURL - The url of the Description.
+	* @param {Description} atlasData - Description.
+	*/
 	atlasJSONArray: function (key, textureURL, atlasURL, atlasData) {
 
 		this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
 
 	},
 
+	/**
+	* Description.
+	* @method atlasJSONHash
+	* @param {string} key - Unique asset key of the bitmap font.
+	* @param {Description} atlasURL - The url of the Description.
+	* @param {Description} atlasData - Description.
+	*/
 	atlasJSONHash: function (key, textureURL, atlasURL, atlasData) {
 
 		this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 
 	},
 
+	/**
+	* Description.
+	* @method atlasXML
+	* @param {string} key - Unique asset key of the bitmap font.
+	* @param {Description} atlasURL - The url of the Description.
+	* @param {Description} atlasData - Description.
+	*/
 	atlasXML: function (key, textureURL, atlasURL, atlasData) {
 
 		this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_XML_STARLING);
@@ -369,11 +438,12 @@ Phaser.Loader.prototype = {
 
 	/**
 	* Add a new texture atlas loading request.
-	* @param key {string} Unique asset key of the texture atlas file.
-	* @param textureURL {string} The url of the texture atlas image file.
-	* @param [atlasURL] {string} The url of the texture atlas data file (json/xml)
-	* @param [atlasData] {object} A JSON or XML data object.
-	* @param [format] {number} A value describing the format of the data.
+	* @method atlas
+	* @param {string} key - Unique asset key of the texture atlas file.
+	* @param {string} textureURL - The url of the texture atlas image file.
+	* @param {string} [atlasURL] - The url of the texture atlas data file (json/xml)
+	* @param {object} [atlasData] - A JSON or XML data object.
+	* @param {number} [format] - A value describing the format of the data.
 	*/
 	atlas: function (key, textureURL, atlasURL, atlasData, format) {
 
@@ -448,6 +518,7 @@ Phaser.Loader.prototype = {
 
 	/**
 	 * Remove loading request of a file.
+	 * @method removeFile
 	 * @param key {string} Key of the file you want to remove.
 	 */
 	removeFile: function (key) {
@@ -458,6 +529,7 @@ Phaser.Loader.prototype = {
 
 	/**
 	 * Remove all file loading requests.
+	 * @method removeAll
 	 */
 	removeAll: function () {
 
@@ -467,6 +539,7 @@ Phaser.Loader.prototype = {
 
 	/**
 	 * Load assets.
+	 * @method start
 	 */
 	start: function () {
 
@@ -497,6 +570,7 @@ Phaser.Loader.prototype = {
 
 	/**
 	* Load files. Private method ONLY used by loader.
+	* @method loadFile
 	* @private
 	*/
 	loadFile: function () {
@@ -589,6 +663,11 @@ Phaser.Loader.prototype = {
 
 	},
 
+	/**
+	* Load files. Private method ONLY used by loader.
+	* @method getAudioURL
+	* @param {Description} urls - Description.
+	*/
 	getAudioURL: function (urls) {
 
 		var extension;
@@ -610,9 +689,10 @@ Phaser.Loader.prototype = {
 	},
 
 	/**
-	 * Error occured when load a file.
-	 * @param key {string} Key of the error loading file.
-	 */
+	* Error occured when load a file.
+	* @method fileError
+	* @param {string} key - Key of the error loading file.
+	*/
 	fileError: function (key) {
 
 		this._fileList[key].loaded = true;
@@ -627,9 +707,10 @@ Phaser.Loader.prototype = {
 	},
 
 	/**
-	 * Called when a file is successfully loaded.
-	 * @param key {string} Key of the successfully loaded file.
-	 */
+	* Called when a file is successfully loaded.
+	* @method fileComplete
+	* @param {string} key - Key of the successfully loaded file.
+	*/
 	fileComplete: function (key) {
 
 		if (!this._fileList[key])
@@ -790,9 +871,10 @@ Phaser.Loader.prototype = {
 	},
 
 	/**
-	 * Successfully loaded a JSON file.
-	 * @param key {string} Key of the loaded JSON file.
-	 */
+	* Successfully loaded a JSON file.
+	* @method jsonLoadComplete
+	* @param {string} key - Key of the loaded JSON file.
+	*/
 	jsonLoadComplete: function (key) {
 
 		var data = JSON.parse(this._xhr.response);
@@ -812,9 +894,10 @@ Phaser.Loader.prototype = {
 	},
 
 	/**
-	 * Successfully loaded a CSV file.
-	 * @param key {string} Key of the loaded CSV file.
-	 */
+	* Successfully loaded a CSV file.
+	* @method csvLoadComplete
+	* @param {string} key - Key of the loaded CSV file.
+	*/
 	csvLoadComplete: function (key) {
 
 		var data = this._xhr.response;
@@ -827,9 +910,10 @@ Phaser.Loader.prototype = {
 	},
 
 	/**
-	 * Error occured when load a JSON.
-	 * @param key {string} Key of the error loading JSON file.
-	 */
+	* Error occured when load a JSON.
+	* @method dataLoadError
+	* @param {string} key - Key of the error loading JSON file.
+	*/
 	dataLoadError: function (key) {
 
 		var file = this._fileList[key];
@@ -842,6 +926,11 @@ Phaser.Loader.prototype = {
 
 	},
 
+	/**
+	* Successfully loaded an XML file.
+	* @method xmlLoadComplete
+	* @param {string} key - Key of the loaded XML file.
+	*/
 	xmlLoadComplete: function (key) {
 
 		var data = this._xhr.response;

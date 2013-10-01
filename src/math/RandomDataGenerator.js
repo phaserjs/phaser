@@ -1,9 +1,21 @@
 /**
-* Phaser.RandomDataGenerator
-*
-* An extremely useful repeatable random data generator. Access it via Phaser.Game.rnd
-* Based on Nonsense by Josh Faul https://github.com/jocafa/Nonsense
-* Random number generator from http://baagoe.org/en/wiki/Better_random_numbers_for_javascript
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.RandomDataGenerator
+*/
+
+
+/**
+* Phaser.RandomDataGenerator constructor.
+* 
+* @class Phaser.RandomDataGenerator
+* @classdesc An extremely useful repeatable random data generator. Access it via Phaser.Game.rnd
+* Based on Nonsense by Josh Faul {@link https://github.com/jocafa/Nonsense}. 
+* Random number generator from {@link http://baagoe.org/en/wiki/Better_random_numbers_for_javascript}
+* 
+* @constructor
+* @param {array} seeds
 */
 Phaser.RandomDataGenerator = function (seeds) {
 	
@@ -16,37 +28,34 @@ Phaser.RandomDataGenerator = function (seeds) {
 Phaser.RandomDataGenerator.prototype = {
 
 	/**
-	* @property c
-	* @type Number
+	* @property {number} c
 	* @private
 	*/
 	c: 1,
 
 	/**
-	* @property s0
-	* @type Number
+	* @property {number} s0
 	* @private
 	*/
 	s0: 0,
 
 	/**
-	* @property s1
-	* @type Number
+	* @property {number} s1
 	* @private
 	*/
 	s1: 0,
 
 	/**
-	* @property s2
-	* @type Number
+	* @property {number} s2
 	* @private
 	*/
 	s2: 0,
 
 	/**
-	* Private random helper
+	* Private random helper.
 	* @method rnd
 	* @private
+	* @return {number} Description.
 	*/
 	rnd: function () {
 
@@ -61,9 +70,10 @@ Phaser.RandomDataGenerator.prototype = {
 	},
 
 	/**
-	* Reset the seed of the random data generator
+	* Reset the seed of the random data generator.
+	* 
 	* @method sow
-	* @param {Array} seeds
+	* @param {array} seeds
 	*/
 	sow: function (seeds) {
 
@@ -87,9 +97,11 @@ Phaser.RandomDataGenerator.prototype = {
 	},
 
 	/**
+	* Description.
 	* @method hash
 	* @param {Any} data
 	* @private
+	* @return {number} Description.
 	*/
 	hash: function (data) {
 
@@ -113,49 +125,49 @@ Phaser.RandomDataGenerator.prototype = {
 	},
 
 	/**
-	* Returns a random integer between 0 and 2^32
+	* Returns a random integer between 0 and 2^32.
 	* @method integer
-	* @return {Number}
+	* @return {number}
 	*/
 	integer: function() {
 		return this.rnd.apply(this) * 0x100000000;// 2^32
 	},
 
 	/**
-	* Returns a random real number between 0 and 1
+	* Returns a random real number between 0 and 1.
 	* @method frac
-	* @return {Number}
+	* @return {number}
 	*/	
 	frac: function() {
 		return this.rnd.apply(this) + (this.rnd.apply(this) * 0x200000 | 0) * 1.1102230246251565e-16;// 2^-53
 	},
 
 	/**
-	* Returns a random real number between 0 and 2^32
+	* Returns a random real number between 0 and 2^32.
 	* @method real
-	* @return {Number}
+	* @return {number}
 	*/
 	real: function() {
 		return this.integer() + this.frac();
 	},
 
 	/**
-	* Returns a random integer between min and max
+	* Returns a random integer between min and max.
 	* @method integerInRange
-	* @param {Number} min
-	* @param {Number} max
-	* @return {Number}
+	* @param {number} min
+	* @param {number} max
+	* @return {number}
 	*/
 	integerInRange: function (min, max) {
 		return Math.floor(this.realInRange(min, max));
 	},
 
 	/**
-	* Returns a random real number between min and max
+	* Returns a random real number between min and max.
 	* @method realInRange
-	* @param {Number} min
-	* @param {Number} max
-	* @return {Number}
+	* @param {number} min
+	* @param {number} max
+	* @return {number}
 	*/
 	realInRange: function (min, max) {
 
@@ -167,18 +179,18 @@ Phaser.RandomDataGenerator.prototype = {
 	},
 
 	/**
-	* Returns a random real number between -1 and 1
+	* Returns a random real number between -1 and 1.
 	* @method normal
-	* @return {Number}
+	* @return {number}
 	*/
 	normal: function () {
 		return 1 - 2 * this.frac();
 	},
 
 	/**
-	* Returns a valid RFC4122 version4 ID hex string (from https://gist.github.com/1308368)
+	* Returns a valid RFC4122 version4 ID hex string (from {@link https://gist.github.com/1308368}).
 	* @method uuid
-	* @return {String}
+	* @return {string}
 	*/
 	uuid: function () {
 
@@ -195,36 +207,40 @@ Phaser.RandomDataGenerator.prototype = {
 	},
 
 	/**
-	* Returns a random member of `array`
+	* Returns a random member of `array`.
 	* @method pick
-	* @param {Any} array
+	* @param {Any} ary
+	* @return {number}
 	*/
 	pick: function (ary) {
 		return ary[this.integerInRange(0, ary.length)];
 	},
 
 	/**
-	* Returns a random member of `array`, favoring the earlier entries
+	* Returns a random member of `array`, favoring the earlier entries.
 	* @method weightedPick
-	* @param {Any} array
+	* @param {Any} ary
+	* @return {number}
 	*/
 	weightedPick: function (ary) {
 		return ary[~~(Math.pow(this.frac(), 2) * ary.length)];
 	},
 
 	/**
-	* Returns a random timestamp between min and max, or between the beginning of 2000 and the end of 2020 if min and max aren't specified
+	* Returns a random timestamp between min and max, or between the beginning of 2000 and the end of 2020 if min and max aren't specified.
 	* @method timestamp
-	* @param {Number} min
-	* @param {Number} max
+	* @param {number} min
+	* @param {number} max
+	* @return {number}
 	*/
 	timestamp: function (a, b) {
 		return this.realInRange(a || 946684800000, b || 1577862000000);
 	},
 
 	/**
-	* Returns a random angle between -180 and 180
+	* Returns a random angle between -180 and 180.
 	* @method angle
+	* @return {number}
 	*/
 	angle: function() {
 		return this.integerInRange(-180, 180);

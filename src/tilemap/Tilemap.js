@@ -1,21 +1,24 @@
 /**
-* Phaser - Tilemap
-*
-* This GameObject allows for the display of a tilemap within the game world. Tile maps consist of an image, tile data and a size.
-* Internally it creates a TilemapLayer for each layer in the tilemap.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @module       Phaser.Tilemap
 */
 
+
 /**
-* Tilemap constructor
 * Create a new <code>Tilemap</code>.
-*
-* @param game {Phaser.Game} Current game instance.
-* @param key {string} Asset key for this map.
-* @param mapData {string} Data of this map. (a big 2d array, normally in csv)
-* @param format {number} Format of this map data, available: Tilemap.CSV or Tilemap.JSON.
-* @param resizeWorld {bool} Resize the world bound automatically based on this tilemap?
-* @param tileWidth {number} Width of tiles in this map (used for CSV maps).
-* @param tileHeight {number} Height of tiles in this map (used for CSV maps).
+* @class Phaser.Tilemap
+* @classdesc This GameObject allows for the display of a tilemap within the game world. Tile maps consist of an image, tile data and a size.
+* Internally it creates a TilemapLayer for each layer in the tilemap.
+* @constructor
+* @param {Phaser.Game} game - Current game instance.
+* @param {string} key - Asset key for this map.
+* @param {object} x - Description.
+* @param {object} y - Description.
+* @param {bool} resizeWorld - Resize the world bound automatically based on this tilemap?
+* @param {number} tileWidth - Width of tiles in this map (used for CSV maps).
+* @param {number} tileHeight - Height of tiles in this map (used for CSV maps).
 */
 Phaser.Tilemap = function (game, key, x, y, resizeWorld, tileWidth, tileHeight) {
 
@@ -23,38 +26,85 @@ Phaser.Tilemap = function (game, key, x, y, resizeWorld, tileWidth, tileHeight) 
     if (typeof tileWidth === "undefined") { tileWidth = 0; }
     if (typeof tileHeight === "undefined") { tileHeight = 0; }
 
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game. 
+    */
     this.game = game;
+    
+    /**
+    * @property {Description} group - Description. 
+    */  
     this.group = null;
+    
+    /**
+    * @property {string} name - The user defined name given to this Description.
+    * @default
+    */  
     this.name = '';
+    
+    /**
+    * @property {Description} key - Description.
+    */   
     this.key = key;
 
     /**
-    * Render iteration counter
+    * @property {number} renderOrderID - Render iteration counter
+    * @default
     */
     this.renderOrderID = 0;
 
-    /**
-    * Tilemap collision callback.
-    * @type {function}
-    */
+	/**
+	* @property {bool} collisionCallback - Tilemap collision callback.
+	* @default
+	*/
     this.collisionCallback = null;
 
+	/**
+	* @property {bool} exists - Description.
+	* @default
+	*/
     this.exists = true;
+    
+    /**
+	* @property {bool} visible - Description.
+	* @default
+	*/
     this.visible = true;
 
+    /**
+	* @property {bool} tiles - Description.
+	* @default
+	*/
     this.tiles = [];
+    
+    /**
+	* @property {bool} layers - Description.
+	* @default
+	*/
     this.layers = [];
 
     var map = this.game.cache.getTilemap(key);
 
     PIXI.DisplayObjectContainer.call(this);
+	/**
+	* @property {Description} position - Description.
+	*/
     this.position.x = x;
     this.position.y = y;
 
+	/**
+	* @property {Description} type - Description.
+	*/
     this.type = Phaser.TILEMAP;
 
+    /**
+	* @property {Description} renderer - Description.
+	*/
     this.renderer = new Phaser.TilemapRenderer(this.game);
 
+    /**
+	* @property {Description} mapFormat - Description.
+	*/
     this.mapFormat = map.format;
 
     switch (this.mapFormat)
@@ -83,11 +133,13 @@ Phaser.Tilemap.CSV = 0;
 Phaser.Tilemap.JSON = 1;
 
 /**
-* Parset csv map data and generate tiles.
-* @param data {string} CSV map data.
-* @param key {string} Asset key for tileset image.
-* @param tileWidth {number} Width of its tile.
-* @param tileHeight {number} Height of its tile.
+* Parse csv map data and generate tiles.
+* 
+* @method Phaser.Tilemap.prototype.parseCSV
+* @param {string} data - CSV map data.
+* @param {string} key - Asset key for tileset image.
+* @param {number} tileWidth - Width of its tile.
+* @param {number} tileHeight - Height of its tile.
 */
 Phaser.Tilemap.prototype.parseCSV = function (data, key, tileWidth, tileHeight) {
 
@@ -123,8 +175,10 @@ Phaser.Tilemap.prototype.parseCSV = function (data, key, tileWidth, tileHeight) 
 
 /**
 * Parse JSON map data and generate tiles.
-* @param data {string} JSON map data.
-* @param key {string} Asset key for tileset image.
+* 
+* @method Phaser.Tilemap.prototype.parseTiledJSON
+* @param {string} data - JSON map data.
+* @param {string} key - Asset key for tileset image.
 */
 Phaser.Tilemap.prototype.parseTiledJSON = function (json, key) {
 
@@ -181,7 +235,8 @@ Phaser.Tilemap.prototype.parseTiledJSON = function (json, key) {
 
 /**
 * Create tiles of given quantity.
-* @param qty {number} Quentity of tiles to be generated.
+* @method Phaser.Tilemap.prototype.generateTiles
+* @param {number} qty - Quantity of tiles to be generated.
 */
 Phaser.Tilemap.prototype.generateTiles = function (qty) {
 
@@ -194,8 +249,10 @@ Phaser.Tilemap.prototype.generateTiles = function (qty) {
 
 /**
 * Set callback to be called when this tilemap collides.
-* @param context {object} Callback will be called with this context.
-* @param callback {function} Callback function.
+* 
+* @method Phaser.Tilemap.prototype.setCollisionCallback
+* @param {object} context - Callback will be called with this context.
+* @param {Function} callback - Callback function.
 */
 Phaser.Tilemap.prototype.setCollisionCallback = function (context, callback) {
 
@@ -206,12 +263,14 @@ Phaser.Tilemap.prototype.setCollisionCallback = function (context, callback) {
 
 /**
 * Set collision configs of tiles in a range index.
-* @param start {number} First index of tiles.
-* @param end {number} Last index of tiles.
-* @param collision {number} Bit field of flags. (see Tile.allowCollision)
-* @param resetCollisions {bool} Reset collision flags before set.
-* @param separateX {bool} Enable seprate at x-axis.
-* @param separateY {bool} Enable seprate at y-axis.
+* 
+* @method Phaser.Tilemap.prototype.setCollisionRange
+* @param {number} start - First index of tiles.
+* @param {number} end - Last index of tiles.
+* @param {number} collision - Bit field of flags. (see Tile.allowCollision)
+* @param {bool} resetCollisions - Reset collision flags before set.
+* @param {bool} separateX - Enable separate at x-axis.
+* @param {bool} separateY - Enable separate at y-axis.
 */
 Phaser.Tilemap.prototype.setCollisionRange = function (start, end, left, right, up, down, resetCollisions, separateX, separateY) {
 
@@ -228,11 +287,15 @@ Phaser.Tilemap.prototype.setCollisionRange = function (start, end, left, right, 
 
 /**
 * Set collision configs of tiles with given index.
-* @param values {number[]} Index array which contains all tile indexes. The tiles with those indexes will be setup with rest parameters.
-* @param collision {number} Bit field of flags. (see Tile.allowCollision)
-* @param resetCollisions {bool} Reset collision flags before set.
-* @param separateX {bool} Enable seprate at x-axis.
-* @param separateY {bool} Enable seprate at y-axis.
+* @param {number[]} values - Index array which contains all tile indexes. The tiles with those indexes will be setup with rest parameters.
+* @param {number} collision - Bit field of flags (see Tile.allowCollision).
+* @param {bool} resetCollisions - Reset collision flags before set.
+* @param {bool} left - Indicating collide with any object on the left.
+* @param {bool} right - Indicating collide with any object on the right.
+* @param {bool} up - Indicating collide with any object on the top.
+* @param {bool} down - Indicating collide with any object on the bottom.
+* @param {bool} separateX - Enable separate at x-axis.
+* @param {bool} separateY  - Enable separate at y-axis.
 */
 Phaser.Tilemap.prototype.setCollisionByIndex = function (values, left, right, up, down, resetCollisions, separateX, separateY) {
 
@@ -251,7 +314,7 @@ Phaser.Tilemap.prototype.setCollisionByIndex = function (values, left, right, up
 
 /**
 * Get the tile by its index.
-* @param value {number} Index of the tile you want to get.
+* @param {number} value - Index of the tile you want to get.
 * @return {Tile} The tile with given index.
 */
 Phaser.Tilemap.prototype.getTileByIndex = function (value) {
@@ -267,9 +330,9 @@ Phaser.Tilemap.prototype.getTileByIndex = function (value) {
 
 /**
 * Get the tile located at specific position and layer.
-* @param x {number} X position of this tile located.
-* @param y {number} Y position of this tile located.
-* @param [layer] {number} layer of this tile located.
+* @param {number} x - X position of this tile located.
+* @param {number} y - Y position of this tile located.
+* @param {number} [layer] - layer of this tile located.
 * @return {Tile} The tile with specific properties.
 */
 Phaser.Tilemap.prototype.getTile = function (x, y, layer) {
@@ -281,10 +344,10 @@ Phaser.Tilemap.prototype.getTile = function (x, y, layer) {
 };
 
 /**
-* Get the tile located at specific position (in world coordinate) and layer. (thus you give a position of a point which is within the tile)
-* @param x {number} X position of the point in target tile.
-* @param x {number} Y position of the point in target tile.
-* @param [layer] {number} layer of this tile located.
+* Get the tile located at specific position (in world coordinate) and layer (thus you give a position of a point which is within the tile).
+* @param {number} x - X position of the point in target tile.
+* @param {number} y - Y position of the point in target tile.
+* @param {number} [layer] - layer of this tile located.
 * @return {Tile} The tile with specific properties.
 */
 Phaser.Tilemap.prototype.getTileFromWorldXY = function (x, y, layer) {
@@ -296,9 +359,9 @@ Phaser.Tilemap.prototype.getTileFromWorldXY = function (x, y, layer) {
 };
 
 /**
-* Gets the tile underneath the Input.x/y position
-* @param layer The layer to check, defaults to 0
-* @returns {Tile}
+* Gets the tile underneath the Input.x/y position.
+* @param {number} layer - The layer to check, defaults to 0.
+* @return {Tile}
 */
 Phaser.Tilemap.prototype.getTileFromInputXY = function (layer) {
 
@@ -310,8 +373,8 @@ Phaser.Tilemap.prototype.getTileFromInputXY = function (layer) {
 
 /**
 * Get tiles overlaps the given object.
-* @param object {GameObject} Tiles you want to get that overlaps this.
-* @return {array} Array with tiles information. (Each contains x, y and the tile.)
+* @param {GameObject} object - Tiles you want to get that overlaps this.
+* @return {array} Array with tiles information (Each contains x, y and the tile).
 */
 Phaser.Tilemap.prototype.getTileOverlaps = function (object) {
 
@@ -323,9 +386,9 @@ Phaser.Tilemap.prototype.getTileOverlaps = function (object) {
 
 /**
 * Check whether this tilemap collides with the given game object or group of objects.
-* @param objectOrGroup {function} Target object of group you want to check.
-* @param callback {function} This is called if objectOrGroup collides the tilemap.
-* @param context {object} Callback will be called with this context.
+* @param {Function} objectOrGroup - Target object of group you want to check.
+* @param {Function} callback - This is called if objectOrGroup collides the tilemap.
+* @param {object} context - Callback will be called with this context.
 * @return {bool} Return true if this collides with given object, otherwise return false.
 */
 Phaser.Tilemap.prototype.collide = function (objectOrGroup, callback, context) {
@@ -353,7 +416,7 @@ Phaser.Tilemap.prototype.collide = function (objectOrGroup, callback, context) {
 
 /**
 * Check whether this tilemap collides with the given game object.
-* @param object {GameObject} Target object you want to check.
+* @param {GameObject} object - Target object you want to check.
 * @return {bool} Return true if this collides with given object, otherwise return false.
 */
 Phaser.Tilemap.prototype.collideGameObject = function (object) {
@@ -383,10 +446,10 @@ Phaser.Tilemap.prototype.collideGameObject = function (object) {
 
 /**
 * Set a tile to a specific layer.
-* @param x {number} X position of this tile.
-* @param y {number} Y position of this tile.
-* @param index {number} The index of this tile type in the core map data.
-* @param [layer] {number} which layer you want to set the tile to.
+* @param {number} x - X position of this tile.
+* @param {number} y - Y position of this tile.
+* @param {number} index - The index of this tile type in the core map data.
+* @param {number} [layer] - Which layer you want to set the tile to.
 */
 Phaser.Tilemap.prototype.putTile = function (x, y, index, layer) {
 
@@ -397,7 +460,7 @@ Phaser.Tilemap.prototype.putTile = function (x, y, index, layer) {
 };
 
 /**
-* Calls the renderer
+* Calls the renderer.
 */
 Phaser.Tilemap.prototype.update = function () {
 
@@ -405,6 +468,9 @@ Phaser.Tilemap.prototype.update = function () {
 
 };
 
+/**
+* Description.
+*/
 Phaser.Tilemap.prototype.destroy = function () {
 
     this.tiles.length = 0;
@@ -412,6 +478,10 @@ Phaser.Tilemap.prototype.destroy = function () {
 
 };
 
+/**
+* Get width in pixels.
+* @return {number}
+*/
 Object.defineProperty(Phaser.Tilemap.prototype, "widthInPixels", {
 
     get: function () {
@@ -420,6 +490,10 @@ Object.defineProperty(Phaser.Tilemap.prototype, "widthInPixels", {
 
 });
 
+/**
+* Get height in pixels.
+* @return {number}
+*/
 Object.defineProperty(Phaser.Tilemap.prototype, "heightInPixels", {
 
     get: function () {

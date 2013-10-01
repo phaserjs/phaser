@@ -1,37 +1,98 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.BitmapText
+*/
+
+/**
+* An Animation instance contains a single animation and the controls to play it.
+* It is created by the AnimationManager, consists of Animation.Frame objects and belongs to a single Game Object such as a Sprite.
+*
+* @class Phaser.BitmapText
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {number} x - X position of Description.
+* @param {number} y - Y position of Description.
+* @param {string} text - Description.
+* @param {string} style - Description.
+*/
 Phaser.BitmapText = function (game, x, y, text, style) {
 
     x = x || 0;
     y = y || 0;
+
     text = text || '';
     style = style || '';
 
-    //  If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all
+	/** 
+	* @property {bool} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
+	* @default
+	*/
     this.exists = true;
 
-    //  This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering
+	/**
+    * @property {bool} alive - This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering.
+	* @default
+	*/
     this.alive = true;
 
+	/**
+    * @property {Description} group - Description.
+ 	* @default
+ 	*/
     this.group = null;
 
+	/**
+    * @property {string} name - Description.
+  	* @default
+  	*/
     this.name = '';
 
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
     this.game = game;
 
     PIXI.BitmapText.call(this, text, style);
 
+    /**
+    * @property {Description} type - Description.
+    */
     this.type = Phaser.BITMAPTEXT;
 
+	/**
+	* @property {number} position.x - Description.
+	*/
     this.position.x = x;
+    
+	/**
+	* @property {number} position.y - Description.
+	*/
     this.position.y = y;
 
     //  Replaces the PIXI.Point with a slightly more flexible one
+	/**
+	* @property {Phaser.Point} anchor - Description.
+	*/
     this.anchor = new Phaser.Point();
+    
+	/**
+	* @property {Phaser.Point} scale - Description.
+	*/
     this.scale = new Phaser.Point(1, 1);
 
     //  Influence of camera movement upon the position
+	/**
+	* @property {Phaser.Point} scrollFactor - Description.
+	*/
     this.scrollFactor = new Phaser.Point(1, 1);
 
     //  A mini cache for storing all of the calculated values
+	/**
+	* @property {function} _cache - Description.
+	* @private
+	*/
     this._cache = { 
 
         dirty: false,
@@ -50,6 +111,10 @@ Phaser.BitmapText = function (game, x, y, text, style) {
     this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
     this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
 
+	/**
+	* @property {bool} renderable - Description.
+	* @private
+	*/
     this.renderable = true;
 
 };
@@ -59,8 +124,9 @@ Phaser.BitmapText.prototype = Object.create(PIXI.BitmapText.prototype);
 Phaser.BitmapText.prototype.constructor = Phaser.BitmapText;
 
 /**
- * Automatically called by World.update
- */
+* Automatically called by World.update
+* @method Phaser.BitmapText.prototype.update
+*/
 Phaser.BitmapText.prototype.update = function() {
 
     if (!this.exists)
@@ -85,6 +151,13 @@ Phaser.BitmapText.prototype.update = function() {
 
 }
 
+/**
+* Get
+* @returns {Description}
+*//**
+* Set
+* @param {Description} value - Description
+*/
 Object.defineProperty(Phaser.BitmapText.prototype, 'angle', {
 
     get: function() {
@@ -97,6 +170,13 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'angle', {
 
 });
 
+/**
+* Get
+* @returns {Description}
+*//**
+* Set
+* @param {Description} value - Description
+*/
 Object.defineProperty(Phaser.BitmapText.prototype, 'x', {
 
     get: function() {
@@ -109,6 +189,13 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'x', {
 
 });
 
+/**
+* Get
+* @returns {Description}
+*//**
+* Set
+* @param {Description} value - Description
+*/
 Object.defineProperty(Phaser.BitmapText.prototype, 'y', {
 
     get: function() {

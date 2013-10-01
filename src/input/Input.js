@@ -1,14 +1,35 @@
 /**
-* Phaser.Input
-*
-* A game specific Input manager that looks after the mouse, keyboard and touch objects.
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.Input
+*/
+
+/**
+* Constructor for Phaser Input.
+* @class Phaser.Input
+* @classdesc A game specific Input manager that looks after the mouse, keyboard and touch objects.
 * This is updated by the core game loop.
+* @constructor
+* @param {Phaser.Game} game - Current game instance.
 */
 Phaser.Input = function (game) {
 
+	/**
+	* @property {Phaser.Game} game - A reference to the currently running game. 
+	*/
 	this.game = game;
 
+	/**
+    * @property {Description} hitCanvas - Description. 
+    * @default
+	*/
     this.hitCanvas = null;
+    
+	/**
+     * @property {Description} hitContext - Description. 
+     * @default
+ 	*/
     this.hitContext = null;
 	
 };
@@ -19,124 +40,141 @@ Phaser.Input.MOUSE_TOUCH_COMBINE = 2;
 
 Phaser.Input.prototype = {
 
+    /** 
+    * @property {Phaser.Game} game
+    */	
     game: null,
 
     /**
     * How often should the input pointers be checked for updates?
     * A value of 0 means every single frame (60fps), a value of 1 means every other frame (30fps) and so on.
-    * @type {number}
+    * @property {number} pollRate 
+    * @default
     */
     pollRate: 0,
+    
+    /**
+     * @property {number} _pollCounter - Description.
+     * @private
+     * @default
+     */
     _pollCounter: 0,
 
     /**
     * A vector object representing the previous position of the Pointer.
-    * @property vector
-    * @type {Vec2}
+    * @property {Vec2} vector
+    * @default 
     **/
     _oldPosition: null,
 
     /**
     * X coordinate of the most recent Pointer event
-    * @type {Number}
+    * @property {number} _x
     * @private
+    * @default
     */
     _x: 0,
 
     /**
-    * X coordinate of the most recent Pointer event
-    * @type {Number}
+    * Y coordinate of the most recent Pointer event
+    * @property {number} _y
     * @private
+    * @default
     */
     _y: 0,
 
     /**
     * You can disable all Input by setting Input.disabled: true. While set all new input related events will be ignored.
     * If you need to disable just one type of input, for example mouse, use Input.mouse.disabled: true instead
-    * @type {bool}
+    * @property {bool} disabled
+    * @default
     */
     disabled: false,
 
     /**
-    * Controls the expected behaviour when using a mouse and touch together on a multi-input device
+    * Controls the expected behaviour when using a mouse and touch together on a multi-input device.
+    * @property {Description} multiInputOverride
     */
     multiInputOverride: Phaser.Input.MOUSE_TOUCH_COMBINE,
 
     /**
     * A vector object representing the current position of the Pointer.
-    * @property vector
-    * @type {Vec2}
+    * @property {Vec2} position
+    * @default 
     **/
     position: null,
 
     /**
     * A vector object representing the speed of the Pointer. Only really useful in single Pointer games,
     * otherwise see the Pointer objects directly.
-    * @property vector
-    * @type {Vec2}
+    * @property {Vec2} speed
+    * @default 
     **/
     speed: null,
 
     /**
     * A Circle object centered on the x/y screen coordinates of the Input.
     * Default size of 44px (Apples recommended "finger tip" size) but can be changed to anything
-    * @property circle
-    * @type {Circle}
+    * @property {Circle} circle
+    * @default
     **/
     circle: null,
 
     /**
     * The scale by which all input coordinates are multiplied, calculated by the StageScaleMode.
     * In an un-scaled game the values will be x: 1 and y: 1.
-    * @type {Vec2}
+    * @property {Vec2} scale
+    * @default
     */
     scale: null,
 
     /**
     * The maximum number of Pointers allowed to be active at any one time.
-    * For lots of games it's useful to set this to 1
-    * @type {Number}
+    * For lots of games it's useful to set this to 1.
+    * @property {number} maxPointers
+    * @default
     */
     maxPointers: 10,
 
     /**
     * The current number of active Pointers.
-    * @type {Number}
+    * @property {number} currentPointers
+    * @default
     */
     currentPointers: 0,
 
     /**
-    * The number of milliseconds that the Pointer has to be pressed down and then released to be considered a tap or click
-    * @property tapRate
-    * @type {Number}
+    * The number of milliseconds that the Pointer has to be pressed down and then released to be considered a tap or clicke
+    * @property {number} tapRate
+    * @default
     **/
     tapRate: 200,
 
     /**
     * The number of milliseconds between taps of the same Pointer for it to be considered a double tap / click
-    * @property doubleTapRate
-    * @type {Number}
+    * @property {number} doubleTapRate
+    * @default
     **/
     doubleTapRate: 300,
 
     /**
     * The number of milliseconds that the Pointer has to be pressed down for it to fire a onHold event
-    * @property holdRate
-    * @type {Number}
+    * @property {number} holdRate
+    * @default
     **/
     holdRate: 2000,
 
     /**
     * The number of milliseconds below which the Pointer is considered justPressed
-    * @property justPressedRate
-    * @type {Number}
+    * @property {number} justPressedRate
+    * @default
     **/
     justPressedRate: 200,
 
     /**
-    * The number of milliseconds below which the Pointer is considered justReleased
-    * @property justReleasedRate
-    * @type {Number}
+    * The number of milliseconds below which the Pointer is considered justReleased 
+    * @property {number} justReleasedRate
+    * @default
     **/
     justReleasedRate: 200,
 
@@ -144,120 +182,162 @@ Phaser.Input.prototype = {
     * Sets if the Pointer objects should record a history of x/y coordinates they have passed through.
     * The history is cleared each time the Pointer is pressed down.
     * The history is updated at the rate specified in Input.pollRate
-    * @property recordPointerHistory
-    * @type {bool}
+    * @property {bool} recordPointerHistory
+    * @default
     **/
     recordPointerHistory: false,
 
     /**
     * The rate in milliseconds at which the Pointer objects should update their tracking history
-    * @property recordRate
-    * @type {Number}
+    * @property {number} recordRate
+    * @default
     */
     recordRate: 100,
 
     /**
     * The total number of entries that can be recorded into the Pointer objects tracking history.
     * If the Pointer is tracking one event every 100ms, then a trackLimit of 100 would store the last 10 seconds worth of history.
-    * @property recordLimit
-    * @type {Number}
+    * @property {number} recordLimit
+    * @default
     */
     recordLimit: 100,
 
     /**
     * A Pointer object
-    * @property pointer1
-    * @type {Pointer}
+    * @property {Pointer} pointer1
     **/
     pointer1: null,
 
     /**
     * A Pointer object
-    * @property pointer2
-    * @type {Pointer}
+    * @property {Pointer} pointer2
     **/
     pointer2: null,
 
     /**
-    * A Pointer object
-    * @property pointer3
-    * @type {Pointer}
+    * A Pointer object  
+    * @property {Pointer} pointer3
     **/
     pointer3: null,
 
     /**
     * A Pointer object
-    * @property pointer4
-    * @type {Pointer}
+    * @property {Pointer} pointer4
     **/
     pointer4: null,
 
     /**
     * A Pointer object
-    * @property pointer5
-    * @type {Pointer}
+    * @property {Pointer} pointer5
     **/
     pointer5: null,
 
     /**
     * A Pointer object
-    * @property pointer6
-    * @type {Pointer}
+    * @property {Pointer} pointer6
     **/
     pointer6: null,
 
     /**
-    * A Pointer object
-    * @property pointer7
-    * @type {Pointer}
+    * A Pointer object  
+    * @property {Pointer} pointer7
     **/
     pointer7: null,
 
     /**
     * A Pointer object
-    * @property pointer8
-    * @type {Pointer}
+    * @property {Pointer} pointer8
     **/
     pointer8: null,
 
     /**
     * A Pointer object
-    * @property pointer9
-    * @type {Pointer}
-    **/
+    * @property {Pointer} pointer9
+    **/ 
     pointer9: null,
 
     /**
-    * A Pointer object
-    * @property pointer10
-    * @type {Pointer}
+    * A Pointer object.
+    * @property {Pointer} pointer10
     **/
     pointer10: null,
 
     /**
     * The most recently active Pointer object.
     * When you've limited max pointers to 1 this will accurately be either the first finger touched or mouse.
-    * @property activePointer
-    * @type {Pointer}
+    * @property {Pointer} activePointer
+    * @default
     **/
     activePointer: null,
 
+    /**
+    * Description.
+    * @property {Pointer} mousePointer
+    * @default
+    **/
     mousePointer: null,
+    
+    /**
+    * Description.
+    * @property {Description} mouse
+    * @default
+    **/
     mouse: null,
+    
+    /**
+    * Description.
+    * @property {Description} keyboard
+    * @default
+    **/
     keyboard: null,
+    
+    /**
+    * Description.
+    * @property {Description} touch
+    * @default
+    **/
     touch: null,
+    
+    /**
+    * Description.
+    * @property {Description} mspointer
+    * @default
+    **/
     mspointer: null,
 
+    /**
+    * Description.
+    * @property {Description} onDown
+    * @default
+    **/
     onDown: null,
+    
+    /**
+    * Description.
+    * @property {Description} onUp
+    * @default
+    **/
     onUp: null,
+    
+    /**
+    * Description.
+    * @property {Description} onTap
+    * @default
+    **/
     onTap: null,
+    
+    /**
+    * Description.
+    * @property {Description} onHold
+    * @default
+    **/
     onHold: null,
 
     //  A linked list of interactive objects, the InputHandler components (belong to Sprites) register themselves with this
     interactiveItems: new Phaser.LinkedList(),
 
 	/**
-    * Starts the Input Manager running
+    * Starts the Input Manager running.
     * @method start
     **/
     boot: function () {
@@ -303,7 +383,7 @@ Phaser.Input.prototype = {
     * Add a new Pointer object to the Input Manager. By default Input creates 2 pointer objects for you. If you need more
     * use this to create a new one, up to a maximum of 10.
     * @method addPointer
-    * @return {Pointer} A reference to the new Pointer object
+    * @return {Pointer} A reference to the new Pointer object.
     **/
     addPointer: function () {
 
@@ -361,13 +441,12 @@ Phaser.Input.prototype = {
         if (this.pointer10) { this.pointer10.update(); }
 
         this._pollCounter = 0;
-
     },
 
 	/**
     * Reset all of the Pointers and Input states
     * @method reset
-    * @param hard {bool} A soft reset (hard = false) won't reset any signals that might be bound. A hard reset will.
+    * @param  {bool} hard - A soft reset (hard = false) won't reset any signals that might be bound. A hard reset will.
     **/
     reset: function (hard) {
 
@@ -420,8 +499,8 @@ Phaser.Input.prototype = {
 	/**
     * Find the first free Pointer object and start it, passing in the event data.
     * @method startPointer
-    * @param {Any} event The event data from the Touch event
-    * @return {Pointer} The Pointer object that was started or null if no Pointer object is available
+    * @param {Any} event - The event data from the Touch event.
+    * @return {Pointer} The Pointer object that was started or null if no Pointer object is available.
     **/
     startPointer: function (event) {
 
@@ -456,8 +535,8 @@ Phaser.Input.prototype = {
 	/**
     * Updates the matching Pointer object, passing in the event data.
     * @method updatePointer
-    * @param {Any} event The event data from the Touch event
-    * @return {Pointer} The Pointer object that was updated or null if no Pointer object is available
+    * @param {Any} event - The event data from the Touch event.
+    * @return {Pointer} The Pointer object that was updated or null if no Pointer object is available.
     **/
     updatePointer: function (event) {
 
@@ -487,8 +566,8 @@ Phaser.Input.prototype = {
 	/**
     * Stops the matching Pointer object, passing in the event data.
     * @method stopPointer
-    * @param {Any} event The event data from the Touch event
-    * @return {Pointer} The Pointer object that was stopped or null if no Pointer object is available
+    * @param {Any} event - The event data from the Touch event.
+    * @return {Pointer} The Pointer object that was stopped or null if no Pointer object is available.
     **/
     stopPointer: function (event) {
 
@@ -518,7 +597,7 @@ Phaser.Input.prototype = {
 	/**
     * Get the next Pointer object whos active property matches the given state
     * @method getPointer
-    * @param {bool} state The state the Pointer should be in (false for inactive, true for active)
+    * @param {bool} state - The state the Pointer should be in (false for inactive, true for active).
     * @return {Pointer} A Pointer object or null if no Pointer object matches the requested state.
     **/
     getPointer: function (state) {
@@ -549,9 +628,9 @@ Phaser.Input.prototype = {
     },
 
 	/**
-    * Get the Pointer object whos identified property matches the given identifier value
+    * Get the Pointer object whos identified property matches the given identifier value.
     * @method getPointerFromIdentifier
-    * @param {Number} identifier The Pointer.identifier value to search for
+    * @param {number} identifier - The Pointer.identifier value to search for.
     * @return {Pointer} A Pointer object or null if no Pointer object matches the requested identifier.
     **/
     getPointerFromIdentifier: function (identifier) {
@@ -580,20 +659,22 @@ Phaser.Input.prototype = {
     },
 
 	/**
-    * Get the distance between two Pointer objects
+    * Get the distance between two Pointer objects.
     * @method getDistance
     * @param {Pointer} pointer1
     * @param {Pointer} pointer2
+    * @return {Description} Description.
     **/
     getDistance: function (pointer1, pointer2) {
         // return Phaser.Vec2Utils.distance(pointer1.position, pointer2.position);
     },
 
 	/**
-    * Get the angle between two Pointer objects
+    * Get the angle between two Pointer objects.
     * @method getAngle
     * @param {Pointer} pointer1
     * @param {Pointer} pointer2
+    * @return {Description} Description.
     **/
     getAngle: function (pointer1, pointer2) {
         // return Phaser.Vec2Utils.angle(pointer1.position, pointer2.position);
@@ -603,14 +684,16 @@ Phaser.Input.prototype = {
 
 //	Getters / Setters
 
+/**
+* The X coordinate of the most recently active pointer.
+* This value takes game scaling into account automatically. See Pointer.screenX/clientX for source values.
+* @return {number}
+*//**
+* Set
+* @param {number} value - Description.
+*/
 Object.defineProperty(Phaser.Input.prototype, "x", {
 
-	/**
-    * The X coordinate of the most recently active pointer.
-    * This value takes game scaling into account automatically. See Pointer.screenX/clientX for source values.
-    * @property x
-    * @type {Number}
-    **/
     get: function () {
         return this._x;
     },
@@ -621,14 +704,16 @@ Object.defineProperty(Phaser.Input.prototype, "x", {
 
 });
 
+/**
+* The Y coordinate of the most recently active pointer.
+    * This value takes game scaling into account automatically. See Pointer.screenY/clientY for source values.
+* @return {number}
+*//**
+* Set
+* @param {number} value - Description.
+*/
 Object.defineProperty(Phaser.Input.prototype, "y", {
     
-	/**
-    * The Y coordinate of the most recently active pointer.
-    * This value takes game scaling into account automatically. See Pointer.screenY/clientY for source values.
-    * @property y
-    * @type {Number}
-    **/
     get: function () {
         return this._y;
     },
@@ -639,6 +724,10 @@ Object.defineProperty(Phaser.Input.prototype, "y", {
 
 });
 
+/**
+* Get
+* @return {Description} Description.
+*/
 Object.defineProperty(Phaser.Input.prototype, "pollLocked", {
 
     get: function () {
@@ -647,26 +736,24 @@ Object.defineProperty(Phaser.Input.prototype, "pollLocked", {
 
 });
 
+/**
+* Get the total number of inactive Pointers
+* @return {number} The number of Pointers currently inactive.
+*/
 Object.defineProperty(Phaser.Input.prototype, "totalInactivePointers", {
 
-	/**
-    * Get the total number of inactive Pointers
-    * @method totalInactivePointers
-    * @return {Number} The number of Pointers currently inactive
-    **/
     get: function () {
         return 10 - this.currentPointers;
     }
 
 });
 
+/**
+* Recalculates the total number of active Pointers
+* @return {number} The number of Pointers currently active.
+*/
 Object.defineProperty(Phaser.Input.prototype, "totalActivePointers", {
     
-	/**
-    * Recalculates the total number of active Pointers
-    * @method totalActivePointers
-    * @return {Number} The number of Pointers currently active
-    **/
     get: function () {
 
         this.currentPointers = 0;
@@ -685,6 +772,10 @@ Object.defineProperty(Phaser.Input.prototype, "totalActivePointers", {
 
 });
 
+/**
+* Get
+* @return {Description}
+*/
 Object.defineProperty(Phaser.Input.prototype, "worldX", {
 
     get: function () {
@@ -693,6 +784,10 @@ Object.defineProperty(Phaser.Input.prototype, "worldX", {
 
 });
 
+/**
+* Get
+* @return {Description}
+*/
 Object.defineProperty(Phaser.Input.prototype, "worldY", {
 
     get: function () {

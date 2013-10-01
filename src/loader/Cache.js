@@ -1,60 +1,68 @@
 /**
-* Cache
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.Cache
+*/
+
+/**
+* Phaser.Cache constructor.
 *
-* A game only has one instance of a Cache and it is used to store all externally loaded assets such
+* @class    Phaser.Cache
+* @classdesc A game only has one instance of a Cache and it is used to store all externally loaded assets such
 * as images, sounds and data files as a result of Loader calls. Cache items use string based keys for look-up.
-*
-* @package    Phaser.Cache
-* @author     Richard Davey <rich@photonstorm.com>
-* @copyright  2013 Photon Storm Ltd.
-* @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
 */
 Phaser.Cache = function (game) {
 
     /**
-     * Local reference to Game.
-     */
+	* @property {Phaser.Game} game - Local reference to game.
+	*/
 	this.game = game;
 
-    /**
-     * Canvas key-value container.
-     * @type {object}
-     * @private
-     */
+	/**
+	* @property {object} game - Canvas key-value container.
+	* @private
+	*/
     this._canvases = {};
 
     /**
-     * Image key-value container.
-     * @type {object}
-     */
+	* @property {object} _images - Image key-value container.
+	* @private
+	*/
     this._images = {};
 
     /**
-     * RenderTexture key-value container.
-     * @type {object}
-     */
+	* @property {object} _textures - RenderTexture key-value container.
+	* @private
+	*/
     this._textures = {};
 
     /**
-     * Sound key-value container.
-     * @type {object}
-     */
+	* @property {object} _sounds - Sound key-value container.
+	* @private
+	*/
     this._sounds = {};
 
     /**
-     * Text key-value container.
-     * @type {object}
-     */
+	* @property {object} _text - Text key-value container.
+	* @private
+	*/
     this._text = {};
 
     /**
-     * Tilemap key-value container.
-     * @type {object}
-     */
+	* @property {object} _tilemaps - Tilemap key-value container.
+	* @private
+	*/
     this._tilemaps = {};
+
 
     this.addDefaultImage();
 
+    /**
+	* @property {Phaser.Signal} onSoundUnlock - Description.
+	*/
     this.onSoundUnlock = new Phaser.Signal;
 
 };
@@ -63,9 +71,9 @@ Phaser.Cache.prototype = {
 
     /**
      * Add a new canvas.
-     * @param key {string} Asset key for this canvas.
-     * @param canvas {HTMLCanvasElement} Canvas DOM element.
-     * @param context {CanvasRenderingContext2D} Render context of this canvas.
+     * @param {string} key - Asset key for this canvas.
+     * @param {HTMLCanvasElement} canvas - Canvas DOM element.
+     * @param {CanvasRenderingContext2D} context - Render context of this canvas.
      */
     addCanvas: function (key, canvas, context) {
 
@@ -88,12 +96,12 @@ Phaser.Cache.prototype = {
 
     /**
      * Add a new sprite sheet.
-     * @param key {string} Asset key for the sprite sheet.
-     * @param url {string} URL of this sprite sheet file.
-     * @param data {object} Extra sprite sheet data.
-     * @param frameWidth {number} Width of the sprite sheet.
-     * @param frameHeight {number} Height of the sprite sheet.
-     * @param frameMax {number} How many frames stored in the sprite sheet.
+     * @param {string} key - Asset key for the sprite sheet.
+     * @param {string} url - URL of this sprite sheet file.
+     * @param {object} data - Extra sprite sheet data.
+     * @param {number} frameWidth - Width of the sprite sheet.
+     * @param {number} frameHeight - Height of the sprite sheet.
+     * @param {number} frameMax - How many frames stored in the sprite sheet.
      */
     addSpriteSheet: function (key, url, data, frameWidth, frameHeight, frameMax) {
 
@@ -108,10 +116,10 @@ Phaser.Cache.prototype = {
 
     /**
      * Add a new tilemap.
-     * @param key  {string} Asset key for the texture atlas.
-     * @param url  {string} URL of this texture atlas file.
-     * @param data {object} Extra texture atlas data.
-     * @param atlasData {object} Texture atlas frames data.
+     * @param {string} key - Asset key for the texture atlas.
+     * @param {string} url - URL of this texture atlas file.
+     * @param {object} data - Extra texture atlas data.
+     * @param {object} atlasData  - Texture atlas frames data.
      */
     addTilemap: function (key, url, data, mapData, format) {
 
@@ -124,10 +132,11 @@ Phaser.Cache.prototype = {
 
     /**
      * Add a new texture atlas.
-     * @param key  {string} Asset key for the texture atlas.
-     * @param url  {string} URL of this texture atlas file.
-     * @param data {object} Extra texture atlas data.
-     * @param atlasData {object} Texture atlas frames data.
+     * @param {string} key - Asset key for the texture atlas.
+     * @param {string} url - URL of this texture atlas file.
+     * @param {object} data - Extra texture atlas data.
+     * @param {object} atlasData  - Texture atlas frames data.
+     * @param {Description} format  - Description.
      */
     addTextureAtlas: function (key, url, data, atlasData, format) {
 
@@ -153,9 +162,9 @@ Phaser.Cache.prototype = {
 
     /**
      * Add a new Bitmap Font.
-     * @param key  {string} Asset key for the font texture.
-     * @param url  {string} URL of this font xml file.
-     * @param data {object} Extra font data.
+     * @param {string} key - Asset key for the font texture.
+     * @param {string} url - URL of this font xml file.
+     * @param {object} data - Extra font data.
      * @param xmlData {object} Texture atlas frames data.
      */
     addBitmapFont: function (key, url, data, xmlData) {
@@ -173,6 +182,7 @@ Phaser.Cache.prototype = {
     /**
      * Adds a default image to be used when a key is wrong / missing.
      * Is mapped to the key __default
+     * @method addDefaultImage
      */
     addDefaultImage: function () {
 
@@ -191,9 +201,10 @@ Phaser.Cache.prototype = {
 
     /**
      * Add a new image.
-     * @param key {string} Asset key for the image.
-     * @param url {string} URL of this image file.
-     * @param data {object} Extra image data.
+     * @method addImage
+     * @param {string} key - Asset key for the image.
+     * @param {string} url - URL of this image file.
+     * @param {object} data - Extra image data.
      */
     addImage: function (key, url, data) {
 
@@ -207,9 +218,10 @@ Phaser.Cache.prototype = {
 
     /**
      * Add a new sound.
-     * @param key {string} Asset key for the sound.
-     * @param url {string} URL of this sound file.
-     * @param data {object} Extra sound data.
+     * @method addSound
+     * @param {string} key - Asset key for the sound.
+     * @param {string} url - URL of this sound file.
+     * @param {object} data - Extra sound data.
      */
     addSound: function (key, url, data, webAudio, audioTag) {
 
@@ -228,6 +240,11 @@ Phaser.Cache.prototype = {
 
     },
 
+    /**
+     * Reload a sound.
+     * @method reloadSound
+     * @param {string} key - Asset key for the sound.
+     */
     reloadSound: function (key) {
 
         var _this = this;
@@ -244,6 +261,11 @@ Phaser.Cache.prototype = {
         }
     },
 
+    /**
+     * Description.
+     * @method reloadSoundComplete
+     * @param {string} key - Asset key for the sound.
+     */
     reloadSoundComplete: function (key) {
 
         if (this._sounds[key])
@@ -254,6 +276,11 @@ Phaser.Cache.prototype = {
 
     },
 
+    /**
+     * Description.
+     * @method updateSound
+     * @param {string} key - Asset key for the sound.
+     */
     updateSound: function (key, property, value) {
         
         if (this._sounds[key])
@@ -265,8 +292,8 @@ Phaser.Cache.prototype = {
 
 	/**
 	* Add a new decoded sound.
-	* @param key {string} Asset key for the sound.
-	* @param data {object} Extra sound data.
+	* @param {string} key - Asset key for the sound.
+	* @param {object} data - Extra sound data.
 	*/
     decodedSound: function (key, data) {
 
@@ -278,9 +305,9 @@ Phaser.Cache.prototype = {
 
 	/**
 	* Add a new text data.
-	* @param key {string} Asset key for the text data.
-	* @param url {string} URL of this text data file.
-	* @param data {object} Extra text data.
+	* @param {string} key - Asset key for the text data. 
+	* @param {string} url - URL of this text data file.
+	* @param {object} data - Extra text data.
 	*/    
     addText: function (key, url, data) {
 
@@ -293,7 +320,7 @@ Phaser.Cache.prototype = {
 
 	/**
 	* Get canvas by key.
-	* @param key Asset key of the canvas you want.
+	* @param {string} key - Asset key of the canvas you want.
 	* @return {object} The canvas you want.
 	*/
     getCanvas: function (key) {
@@ -308,8 +335,8 @@ Phaser.Cache.prototype = {
 
     /**
     * Checks if an image key exists.
-    * @param key Asset key of the image you want.
-    * @return {boolean} True if the key exists, otherwise false.
+    * @param {string} key - Asset key of the image you want.
+    * @return {bool} True if the key exists, otherwise false.
     */    
     checkImageKey: function (key) {
 
@@ -324,7 +351,7 @@ Phaser.Cache.prototype = {
 
 	/**
 	* Get image data by key.
-	* @param key Asset key of the image you want.
+	* @param {string} key - Asset key of the image you want.
 	* @return {object} The image data you want.
 	*/    
     getImage: function (key) {
@@ -339,7 +366,7 @@ Phaser.Cache.prototype = {
 
     /**
     * Get tilemap data by key.
-    * @param key Asset key of the tilemap you want.
+    * @param {string} key - Asset key of the tilemap you want.
     * @return {object} The tilemap data. The tileset image is in the data property, the map data in mapData.
     */
     getTilemap: function (key) {
@@ -354,7 +381,7 @@ Phaser.Cache.prototype = {
 
 	/**
 	* Get frame data by key.
-	* @param key Asset key of the frame data you want.
+	* @param {string} key - Asset key of the frame data you want.
 	* @return {object} The frame data you want.
 	*/
     getFrameData: function (key) {
@@ -369,7 +396,7 @@ Phaser.Cache.prototype = {
 
     /**
     * Get a single frame out of a frameData set by key.
-    * @param key Asset key of the frame data you want.
+    * @param {string} key - Asset key of the frame data you want.
     * @return {object} The frame data you want.
     */
     getFrameByIndex: function (key, frame) {
@@ -384,7 +411,7 @@ Phaser.Cache.prototype = {
 
     /**
     * Get a single frame out of a frameData set by key.
-    * @param key Asset key of the frame data you want.
+    * @param {string} key - Asset key of the frame data you want.
     * @return {object} The frame data you want.
     */
     getFrameByName: function (key, frame) {
@@ -399,7 +426,7 @@ Phaser.Cache.prototype = {
 
     /**
     * Get a single frame by key. You'd only do this to get the default Frame created for a non-atlas/spritesheet image.
-    * @param key Asset key of the frame data you want.
+    * @param {string} key - Asset key of the frame data you want.
     * @return {object} The frame data you want.
     */
     getFrame: function (key) {
@@ -414,7 +441,7 @@ Phaser.Cache.prototype = {
 
     /**
     * Get a single frame by key. You'd only do this to get the default Frame created for a non-atlas/spritesheet image.
-    * @param key Asset key of the frame data you want.
+    * @param {string} key - Asset key of the frame data you want.
     * @return {object} The frame data you want.
     */
     getTextureFrame: function (key) {
@@ -429,7 +456,7 @@ Phaser.Cache.prototype = {
 
     /**
     * Get a RenderTexture by key.
-    * @param key Asset key of the RenderTexture you want.
+    * @param {string} key - Asset key of the RenderTexture you want.
     * @return {object} The RenderTexture you want.
     */
     getTexture: function (key) {
@@ -445,7 +472,7 @@ Phaser.Cache.prototype = {
 
 	/**
 	* Get sound by key.
-	* @param key Asset key of the sound you want.
+	* @param {string} key - Asset key of the sound you want.
 	* @return {object} The sound you want.
 	*/
     getSound: function (key) {
@@ -461,7 +488,7 @@ Phaser.Cache.prototype = {
 
 	/**
 	* Get sound data by key.
-	* @param key Asset key of the sound you want.
+	* @param {string} key - Asset key of the sound you want.
 	* @return {object} The sound data you want.
 	*/
     getSoundData: function (key) {
@@ -477,7 +504,7 @@ Phaser.Cache.prototype = {
 
 	/**
 	* Check whether an asset is decoded sound.
-	* @param key Asset key of the sound you want.
+	* @param {string} key - Asset key of the sound you want.
 	* @return {object} The sound data you want.
 	*/
     isSoundDecoded: function (key) {
@@ -491,7 +518,7 @@ Phaser.Cache.prototype = {
 
 	/**
 	* Check whether an asset is decoded sound.
-	* @param key Asset key of the sound you want.
+	* @param {string} key - Asset key of the sound you want.
 	* @return {object} The sound data you want.
 	*/
     isSoundReady: function (key) {
@@ -502,7 +529,7 @@ Phaser.Cache.prototype = {
 
 	/**
 	* Check whether an asset is sprite sheet.
-	* @param key Asset key of the sprite sheet you want.
+	* @param {string} key - Asset key of the sprite sheet you want.
 	* @return {object} The sprite sheet data you want.
 	*/
     isSpriteSheet: function (key) {
@@ -518,7 +545,7 @@ Phaser.Cache.prototype = {
 
 	/**
 	* Get text data by key.
-	* @param key Asset key of the text data you want.
+	* @param {string} key - Asset key of the text data you want.
 	* @return {object} The text data you want.
 	*/
     getText: function (key) {
@@ -572,24 +599,41 @@ Phaser.Cache.prototype = {
     	return this.getKeys(this._text);
     },
 
+	/**
+	* Description.
+	* @method removeCanvas
+	*/
     removeCanvas: function (key) {
         delete this._canvases[key];
     },
 
+	/**
+	* Description.
+	* @method removeImage
+	*/
     removeImage: function (key) {
         delete this._images[key];
     },
 
+	/**
+	* Description.
+	* @method removeSound
+	*/
     removeSound: function (key) {
         delete this._sounds[key];
     },
 
+	/**
+	* Description.
+	* @method removeText
+	*/
     removeText: function (key) {
         delete this._text[key];
     },
 
 	/**
 	* Clean up cache memory.
+	* @method destroy
 	*/
     destroy: function () {
 

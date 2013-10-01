@@ -1,7 +1,7 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
-* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 * @module       Phaser.Animation
 */
 
@@ -92,7 +92,18 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     */
 	this._frameIndex = 0;
 
+    /**
+    * @property {number} _frameDiff
+    * @private
+    * @default
+    */
     this._frameDiff = 0;
+
+    /**
+    * @property {number} _frameSkip
+    * @private
+    * @default
+    */
     this._frameSkip = 1;
 
     /**
@@ -108,9 +119,9 @@ Phaser.Animation.prototype = {
     * Plays this animation.
     *
     * @method play
-    * @param {Number} [frameRate=null] The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
-    * @param {Boolean} [loop=null] Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
-    * @return {Phaser.Animation} A reference to this Animation instance.
+    * @param {number} [frameRate=null] - The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
+    * @param {boolean} [loop=null] - Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
+    * @return {Phaser.Animation} - A reference to this Animation instance.
     */
     play: function (frameRate, loop) {
 
@@ -169,7 +180,7 @@ Phaser.Animation.prototype = {
     * Stops playback of this animation and set it to a finished state. If a resetFrame is provided it will stop playback and set frame to the first in the animation.
     *
     * @method stop
-    * @param {Boolean} [resetFrame=false] If true after the animation stops the currentFrame value will be set to the first frame in this animation.
+    * @param {boolean} [resetFrame=false] - If true after the animation stops the currentFrame value will be set to the first frame in this animation.
     */
     stop: function (resetFrame) {
 
@@ -287,6 +298,14 @@ Phaser.Animation.prototype = {
 };
 
 /**
+ * Sets the paused state of the Animation.
+ * @param {boolean} value - Set to true to pause the animation or false to resume it if previous paused.
+ *
+ *//**
+ *
+ * Returns the paused state of the Animation.
+ * @returns {boolean}
+ *
  */
 Object.defineProperty(Phaser.Animation.prototype, "paused", {
 
@@ -318,12 +337,14 @@ Object.defineProperty(Phaser.Animation.prototype, "paused", {
 
 });
 
+/**
+ *
+ * Returns the total number of frames in this Animation.
+ * @return {number}
+ *
+ */
 Object.defineProperty(Phaser.Animation.prototype, "frameTotal", {
 
-    /**
-    * @method frameTotal
-    * @return {Number} The total number of frames in this animation.
-    */
     get: function () {
         return this._frames.length;
     }
@@ -369,12 +390,18 @@ Object.defineProperty(Phaser.Animation.prototype, "frame", {
 
 });
 
-/*
- * Really handy function for when you are creating arrays of animation data but it's using frame names and not numbers.
- * For example imagine you've got 30 frames named: 'explosion_0001-large' to 'explosion_0030-large'
- * You could use this function to generate those by doing: Phaser.Animation.generateFrameNames('explosion_', 1, 30, '-large', 4);
- * The zeroPad value dictates how many zeroes to add in front of the numbers (if any)
- */
+/**
+* Really handy function for when you are creating arrays of animation data but it's using frame names and not numbers.
+* For example imagine you've got 30 frames named: 'explosion_0001-large' to 'explosion_0030-large'
+* You could use this function to generate those by doing: Phaser.Animation.generateFrameNames('explosion_', 1, 30, '-large', 4);
+*
+* @param {string} prefix - The start of the filename. If the filename was 'explosion_0001-large' the prefix would be 'explosion_'.
+* @param {number} min - The number to start sequentially counting from. If your frames are named 'explosion_0001' to 'explosion_0034' the min is 1.
+* @param {number} max - The number to count up to. If your frames are named 'explosion_0001' to 'explosion_0034' the max is 34.
+* @param {string} [suffix=''] - The end of the filename. If the filename was 'explosion_0001-large' the prefix would be '-large'.
+* @param {number} [zeroPad=0] - The number of zeroes to pad the min and max values with. If your frames are named 'explosion_0001' to 'explosion_0034' then the zeroPad is 4.
+* @method generateFrameNames
+*/
 Phaser.Animation.generateFrameNames = function (prefix, min, max, suffix, zeroPad) {
 
     if (typeof suffix == 'undefined') { suffix = ''; }

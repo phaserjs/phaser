@@ -1,3 +1,21 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.Text
+*/
+
+/**
+* Create a new <code>Text</code>.
+* @class Phaser.Text
+* @classdesc Description of class.
+* @constructor
+* @param {Phaser.Game} game - Current game instance.
+* @param {Description} x - Description.
+* @param {Description} y - Description.
+* @param {string} text - Description.
+* @param {string} style - Description.
+*/
 Phaser.Text = function (game, x, y, text, style) {
 
     x = x || 0;
@@ -6,15 +24,34 @@ Phaser.Text = function (game, x, y, text, style) {
     style = style || '';
 
     //  If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all
+	/**
+	* @property {bool} exists - Description.
+	* @default
+	*/
     this.exists = true;
 
     //  This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering
+	/**
+	* @property {bool} alive - Description.
+	* @default
+	*/
     this.alive = true;
 
+	/**
+	* @property {Description} group - Description.
+	* @default
+	*/
     this.group = null;
 
+	/**
+	* @property {string} name - Description.
+	* @default
+	*/
     this.name = '';
 
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game. 
+    */
     this.game = game;
 
     this._text = text;
@@ -22,19 +59,39 @@ Phaser.Text = function (game, x, y, text, style) {
 
     PIXI.Text.call(this, text, style);
 
+    /**
+     * @property {Description} type - Description. 
+     */
     this.type = Phaser.TEXT;
 
+    /**
+     * @property {Description} position - Description. 
+     */
     this.position.x = this.x = x;
     this.position.y = this.y = y;
 
     //  Replaces the PIXI.Point with a slightly more flexible one
+    /**
+     * @property {Phaser.Point} anchor - Description. 
+     */
     this.anchor = new Phaser.Point();
+    
+    /**
+     * @property {Phaser.Point} scale - Description. 
+     */
     this.scale = new Phaser.Point(1, 1);
 
     //  Influence of camera movement upon the position
+    /**
+    * @property {Phaser.Point} scrollFactor - Description. 
+    */
     this.scrollFactor = new Phaser.Point(1, 1);
 
     //  A mini cache for storing all of the calculated values
+    /**
+    * @property {Description} _cache - Description. 
+    * @private
+    */
     this._cache = { 
 
         dirty: false,
@@ -53,6 +110,9 @@ Phaser.Text = function (game, x, y, text, style) {
     this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
     this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
 
+    /**
+    * @property {bool} renderable - Description. 
+    */
     this.renderable = true;
 
 };
@@ -60,7 +120,11 @@ Phaser.Text = function (game, x, y, text, style) {
 Phaser.Text.prototype = Object.create(PIXI.Text.prototype);
 Phaser.Text.prototype.constructor = Phaser.Text;
 
-// Automatically called by World.update
+
+/**
+* Automatically called by World.update.
+* @method Phaser.Text.prototype.update
+*/
 Phaser.Text.prototype.update = function() {
 
     if (!this.exists)
@@ -82,6 +146,13 @@ Phaser.Text.prototype.update = function() {
 
 }
 
+/**
+* Get
+* @returns {Description}
+*//**
+* Set
+* @param {Description} value - Description
+*/
 Object.defineProperty(Phaser.Text.prototype, 'angle', {
 
     get: function() {

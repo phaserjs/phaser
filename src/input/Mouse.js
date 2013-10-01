@@ -1,10 +1,47 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.Mouse
+*/
+
+
+/**
+* Phaser - Mouse constructor.
+*
+* @class Phaser.Mouse
+* @classdesc The Mouse class
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
+*/
 Phaser.Mouse = function (game) {
 
+	/**
+	* @property {Phaser.Game} game - Local reference to game.
+	*/
 	this.game = game;
+	
+	/**
+	* @property {Phaser.Game} callbackContext - Description.
+	*/
 	this.callbackContext = this.game;
 
+	/**
+	* @property {Description} mouseDownCallback - Description.
+	* @default
+	*/
 	this.mouseDownCallback = null;
+	
+	/**
+	* @property {Description} mouseMoveCallback - Description.
+	* @default
+	*/
 	this.mouseMoveCallback = null;
+	
+	/**
+	* @property {Description} mouseUpCallback - Description.
+	* @default
+	*/
 	this.mouseUpCallback = null;
 
 };
@@ -15,22 +52,27 @@ Phaser.Mouse.RIGHT_BUTTON = 2;
 
 Phaser.Mouse.prototype = {
 
+    /**
+	* @property {Phaser.Game} game - Local reference to game.
+	*/	
 	game: null,
 
     /**
     * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-    * @type {bool}
+    * @property {bool} disabled
+    * @default
     */
 	disabled: false,
 
     /**
     * If the mouse has been Pointer Locked successfully this will be set to true.
-    * @type {bool}
+    * @property {bool} locked
+    * @default
     */
     locked: false,
 
 	/**
-    * Starts the event listeners running
+    * Starts the event listeners running.
     * @method start
     */
     start: function () {
@@ -62,6 +104,8 @@ Phaser.Mouse.prototype = {
     },
 
 	/**
+	* Description.
+	* @method onMouseDown
     * @param {MouseEvent} event
     */
     onMouseDown: function (event) {
@@ -83,6 +127,8 @@ Phaser.Mouse.prototype = {
     },
 
 	/**
+	* Description
+	* @method onMouseMove
     * @param {MouseEvent} event
     */
     onMouseMove: function (event) {
@@ -104,6 +150,8 @@ Phaser.Mouse.prototype = {
     },
 
 	/**
+	* Description.
+	* @method onMouseUp
     * @param {MouseEvent} event
     */
     onMouseUp: function (event) {
@@ -124,6 +172,10 @@ Phaser.Mouse.prototype = {
 
     },
 
+    /**
+    * Description.
+	* @method requestPointerLock
+    */
     requestPointerLock: function () {
 
         if (this.game.device.pointerLock)
@@ -147,6 +199,11 @@ Phaser.Mouse.prototype = {
 
     },
 
+	/**
+	* Description.
+	* @method pointerLockChange
+    * @param {MouseEvent} event
+    */
     pointerLockChange: function (event) {
 
         var element = this.game.stage.canvas;
@@ -164,6 +221,10 @@ Phaser.Mouse.prototype = {
 
     },
 
+	/**
+	* Description.
+	* @method releasePointerLock
+    */
     releasePointerLock: function () {
 
         document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock || document.webkitExitPointerLock;
@@ -177,7 +238,7 @@ Phaser.Mouse.prototype = {
     },
 
 	/**
-    * Stop the event listeners
+    * Stop the event listeners.
     * @method stop
     */
     stop: function () {
