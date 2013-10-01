@@ -27,6 +27,12 @@ Phaser.Keyboard = function (game) {
 	*/
     this._keys = {};
     
+    /**
+    * @property {Description} _hotkeys - Description.
+    * @private
+    */
+    this._hotkeys = {};
+
 	/**
 	* @property {Description} _capture - Description.
 	* @private
@@ -71,6 +77,31 @@ Phaser.Keyboard.prototype = {
 	* @default
 	*/
 	_onKeyUp: null,
+
+    addCallbacks: function (context, onDown, onUp) {
+
+        this.callbackContext = context;
+        this.onDownCallback = onDown;
+
+        if (typeof onUp !== 'undefined')
+        {
+            this.onUpCallback = onUp;
+        }
+
+    },
+
+    addKey: function (keycode) {
+
+        this._hotkeys[keycode] = new Phaser.Key(this.game, keycode);
+        return this._hotkeys[keycode];
+
+    },
+
+    removeKey: function (keycode) {
+
+        delete (this._hotkeys[keycode]);
+
+    },
 
 	/**
 	* Description.

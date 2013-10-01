@@ -37,6 +37,7 @@ Change Log
 
 Version 1.0.7 (in progress in the dev branch)
 
+* JSDoc is go! We've added jsdoc3 blocks to every property and function, in every file.
 * Added World.postUpdate - all sprite position changes, as a result of physics, happen here before the render.
 * Complete overhaul of Physics.Arcade.Body - now significantly more stable and faster too.
 * Updated ArcadePhysics.separateX/Y to use new body system - much better results now.
@@ -71,7 +72,6 @@ Version 1.0.7 (in progress in the dev branch)
 * Updated Group.forEach, forEachAlive and forEachDead so you can now pass as many parameters as you want, which will all be given to the callback after the child.
 * Updated build script so it can be run from the command-line and includes UMD wrappers (thanks iaincarsberg)
 * Fixed bug in LinkedList#remove that could cause first to point to a dead node (thanks onedayitwillmake)
-
 
 * TODO: addMarker hh:mm:ss:ms
 * TODO: Direction constants

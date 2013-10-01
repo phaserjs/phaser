@@ -119,6 +119,7 @@ Phaser.Animation.prototype = {
     * Plays this animation.
     *
     * @method play
+    * @memberof Phaser.Animation
     * @param {number} [frameRate=null] - The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
     * @param {boolean} [loop=null] - Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
     * @return {Phaser.Animation} - A reference to this Animation instance.
@@ -161,6 +162,7 @@ Phaser.Animation.prototype = {
     * Sets this animation back to the first frame and restarts the animation.
     *
     * @method restart
+    * @memberof Phaser.Animation
     */
     restart: function () {
 
@@ -180,6 +182,7 @@ Phaser.Animation.prototype = {
     * Stops playback of this animation and set it to a finished state. If a resetFrame is provided it will stop playback and set frame to the first in the animation.
     *
     * @method stop
+    * @memberof Phaser.Animation
     * @param {boolean} [resetFrame=false] - If true after the animation stops the currentFrame value will be set to the first frame in this animation.
     */
     stop: function (resetFrame) {
@@ -200,6 +203,7 @@ Phaser.Animation.prototype = {
     * Updates this animation. Called automatically by the AnimationManager.
     *
     * @method update
+    * @memberof Phaser.Animation
     */
     update: function () {
 
@@ -266,6 +270,7 @@ Phaser.Animation.prototype = {
     * Cleans up this animation ready for deletion. Nulls all values and references.
     *
     * @method destroy
+    * @memberof Phaser.Animation
     */
     destroy: function () {
 
@@ -282,6 +287,7 @@ Phaser.Animation.prototype = {
     * Called internally when the animation finishes playback. Sets the isPlaying and isFinished states and dispatches the onAnimationComplete event if it exists on the parent.
     *
     * @method onComplete
+    * @memberof Phaser.Animation
     */
     onComplete: function () {
 
@@ -299,11 +305,13 @@ Phaser.Animation.prototype = {
 
 /**
  * Sets the paused state of the Animation.
+ * @memberof Phaser.Animation
  * @param {boolean} value - Set to true to pause the animation or false to resume it if previous paused.
  *
  *//**
  *
  * Returns the paused state of the Animation.
+ * @memberof Phaser.Animation
  * @returns {boolean}
  *
  */
@@ -338,8 +346,8 @@ Object.defineProperty(Phaser.Animation.prototype, "paused", {
 });
 
 /**
- *
  * Returns the total number of frames in this Animation.
+ * @memberof Phaser.Animation
  * @return {number}
  *
  */
@@ -353,11 +361,13 @@ Object.defineProperty(Phaser.Animation.prototype, "frameTotal", {
 
 /**
  * Sets the current frame to the given frame index and updates the texture cache.
+ * @memberof Phaser.Animation
  * @param {number} value - The frame to display
  *
  *//**
  *
  * Returns the current frame, or if not set the index of the most recent frame.
+ * @memberof Phaser.Animation
  * @returns {Animation.Frame}
  *
  */
@@ -395,12 +405,13 @@ Object.defineProperty(Phaser.Animation.prototype, "frame", {
 * For example imagine you've got 30 frames named: 'explosion_0001-large' to 'explosion_0030-large'
 * You could use this function to generate those by doing: Phaser.Animation.generateFrameNames('explosion_', 1, 30, '-large', 4);
 *
+* @method generateFrameNames
+* @memberof Phaser.Animation
 * @param {string} prefix - The start of the filename. If the filename was 'explosion_0001-large' the prefix would be 'explosion_'.
 * @param {number} min - The number to start sequentially counting from. If your frames are named 'explosion_0001' to 'explosion_0034' the min is 1.
 * @param {number} max - The number to count up to. If your frames are named 'explosion_0001' to 'explosion_0034' the max is 34.
 * @param {string} [suffix=''] - The end of the filename. If the filename was 'explosion_0001-large' the prefix would be '-large'.
 * @param {number} [zeroPad=0] - The number of zeroes to pad the min and max values with. If your frames are named 'explosion_0001' to 'explosion_0034' then the zeroPad is 4.
-* @method generateFrameNames
 */
 Phaser.Animation.generateFrameNames = function (prefix, min, max, suffix, zeroPad) {
 

@@ -2,11 +2,11 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.AnimationManager
+* @memberof     Phaser.Animation
 */
 
 /**
-* The AnimationManager is used to add, play and update Phaser Animations.
+* The Animation Manager is used to add, play and update Phaser Animations.
 * Any Game Object such as Phaser.Sprite that supports animation contains a single AnimationManager instance.
 *
 * @class Phaser.AnimationManager

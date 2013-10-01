@@ -77,7 +77,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.events = new Phaser.Events(this);
 
     /**
-    * @property {AnimationManager} animations - This manages animations of the sprite. You can modify animations through it. (see AnimationManager)
+    * @property {Phaser.AnimationManager} animations - This manages animations of the sprite. You can modify animations through it. (see Phaser.AnimationManager)
     */
     this.animations = new Phaser.AnimationManager(this);
 
