@@ -253,7 +253,7 @@ Phaser.Game.prototype = {
 	* Initialize engine sub modules and start the game.
 	* 
 	* @method boot
-    * @memberOf Phaser.Game
+    * @memberof Phaser.Game
 	*/
 	boot: function () {
 
@@ -334,7 +334,7 @@ Phaser.Game.prototype = {
 	* Checks if the device is capable of using the requested renderer and sets it up or an alternative if not.
 	* 
 	* @method setUpRenderer
-    * @memberOf Phaser.Game
+    * @memberof Phaser.Game
 	*/
 	setUpRenderer: function () {
 
@@ -371,7 +371,7 @@ Phaser.Game.prototype = {
     * Called when the load has finished, after preload was run.
     * 
     * @method loadComplete
-    * @memberOf Phaser.Game
+    * @memberof Phaser.Game
     */
     loadComplete: function () {
 
@@ -385,7 +385,7 @@ Phaser.Game.prototype = {
     * The core game loop.
     * 
     * @method update
-    * @memberOf Phaser.Game
+    * @memberof Phaser.Game
 	* @param {number} time - The current time as provided by RequestAnimationFrame.
     */
 	update: function (time) {
@@ -420,7 +420,7 @@ Phaser.Game.prototype = {
     * Nuke the entire game from orbit
     * 
     * @method destroy
-    * @memberOf Phaser.Game
+    * @memberof Phaser.Game
     */
     destroy: function () {
 

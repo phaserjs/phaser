@@ -86,7 +86,7 @@ Phaser.Group.prototype = {
     * Description.
     *
     * @method add
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
 	* @param {Description} child - Description.
 	* @return {Description} Description.
     */
@@ -112,7 +112,7 @@ Phaser.Group.prototype = {
 	* Description.
 	*
     * @method addAt
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
 	* @param {Description} child - Description.
 	* @param {Description} index - Description.
     * @return {Description} Description.
@@ -139,7 +139,7 @@ Phaser.Group.prototype = {
 	* Description.
 	*
     * @method getAt
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
 	* @param {Description} index - Description.
     * @return {Description} Description.
 	*/
@@ -153,7 +153,7 @@ Phaser.Group.prototype = {
 	* Description.
 	*
     * @method create
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
 	* @param {number} x - Description.
 	* @param {number} y - Description.
 	* @param {string} key - Description.
@@ -185,7 +185,7 @@ Phaser.Group.prototype = {
 	* Description.
 	*
     * @method swap
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
 	* @param {Description} child1 - Description.
 	* @param {Description} child2 - Description.
     * @return {boolean} Description.
@@ -314,7 +314,7 @@ Phaser.Group.prototype = {
 	* Description.
 	*
     * @method bringToTop
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
 	* @param {Description} child - Description.
     * @return {Description} Description.
 	*/
@@ -334,7 +334,7 @@ Phaser.Group.prototype = {
 	* Description.
 	*
     * @method getIndex
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
 	* @param {Description} child - Description.
     * @return {Description} Description.
 	*/
@@ -348,7 +348,7 @@ Phaser.Group.prototype = {
 	* Description.
 	*
     * @method replace
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
 	* @param {Description} oldChild - Description.
 	* @param {Description} newChild - Description.
 	*/
@@ -380,7 +380,7 @@ Phaser.Group.prototype = {
      * Description.
      *
      * @method setProperty
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
      * @param {Description} child - Description.
      * @param {array} key - An array of values that will be set.
      * @param {Description} value - Description.
@@ -444,7 +444,7 @@ Phaser.Group.prototype = {
      * Description.
      *
      * @method setAll
-     * @memberOf Phaser.Group
+     * @memberof Phaser.Group
      * @param {Description} key - Description.
      * @param {Description} value - Description.
      * @param {Description} checkAlive - Description.
@@ -483,7 +483,7 @@ Phaser.Group.prototype = {
      * Group.addAll('x', 10) will add 10 to the child.x value.
      *
      * @method addAll
-     * @memberOf Phaser.Group
+     * @memberof Phaser.Group
      * @param {string} property - The property to increment, for example 'body.velocity.x' or 'angle'.
      * @param {number} amount - The amount to increment the property by. If child.x = 10 then addAll('x', 40) would make child.x = 50.
      * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
@@ -500,7 +500,7 @@ Phaser.Group.prototype = {
      * Group.subAll('x', 10) will minus 10 from the child.x value.
      *
      * @method subAll
-     * @memberOf Phaser.Group
+     * @memberof Phaser.Group
      * @param {string} property - The property to decrement, for example 'body.velocity.x' or 'angle'.
      * @param {number} amount - The amount to subtract from the property. If child.x = 50 then subAll('x', 40) would make child.x = 10.
      * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
@@ -517,7 +517,7 @@ Phaser.Group.prototype = {
      * Group.multiplyAll('x', 2) will x2 the child.x value.
      *
      * @method multiplyAll
-     * @memberOf Phaser.Group
+     * @memberof Phaser.Group
      * @param {string} property - The property to multiply, for example 'body.velocity.x' or 'angle'.
      * @param {number} amount - The amount to multiply the property by. If child.x = 10 then multiplyAll('x', 2) would make child.x = 20.
      * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
@@ -534,7 +534,7 @@ Phaser.Group.prototype = {
      * Group.divideAll('x', 2) will half the child.x value.
      *
      * @method divideAll
-     * @memberOf Phaser.Group
+     * @memberof Phaser.Group
      * @param {string} property - The property to divide, for example 'body.velocity.x' or 'angle'.
      * @param {number} amount - The amount to divide the property by. If child.x = 100 then divideAll('x', 2) would make child.x = 50.
      * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
@@ -551,7 +551,7 @@ Phaser.Group.prototype = {
     * After the existsValue parameter you can add as many parameters as you like, which will all be passed to the child callback.
     * 
     * @method callAllExists
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
     * @param {function} callback - The function that exists on the children that will be called.
     * @param {boolean} existsValue - Only children with exists=existsValue will be called.
     * @param {...*} parameter - Additional parameters that will be passed to the callback.
@@ -584,7 +584,7 @@ Phaser.Group.prototype = {
     * After the callback parameter you can add as many extra parameters as you like, which will all be passed to the child.
     * 
     * @method callAll
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
     * @param {function} callback - The function that exists on the children that will be called.
     * @param {...*} parameter - Additional parameters that will be passed to the callback.
     */
@@ -616,7 +616,7 @@ Phaser.Group.prototype = {
    	* After the checkExists parameter you can add as many parameters as you like, which will all be passed to the callback along with the child.
 	* 
 	* @method forEach
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
 	* @param {Description} callback - Description.
     * @param {Description} callbackContext - Description.
     * @param {boolean} checkExists - Description.
@@ -655,7 +655,7 @@ Phaser.Group.prototype = {
 	* Description.
 	* 
 	* @method forEachAlive
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
 	* @param {Description} callback - Description.
     * @param {Description} callbackContext - Description.
 	*/
@@ -688,7 +688,7 @@ Phaser.Group.prototype = {
 	* Description.
 	* 
 	* @method forEachDead
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
 	* @param {Description} callback - Description.
     * @param {Description} callbackContext - Description.
 	*/
@@ -720,7 +720,7 @@ Phaser.Group.prototype = {
     * Call this function to retrieve the first object with exists == (the given state) in the group.
     *
     * @method getFirstExists
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
     * @param {Description} state - Description.
     * @return {Any} The first child, or null if none found.
     */
@@ -756,7 +756,7 @@ Phaser.Group.prototype = {
     * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
     *
     * @method getFirstAlive
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
     * @return {Any} The first alive child, or null if none found.
     */
 	getFirstAlive: function () {
@@ -786,7 +786,7 @@ Phaser.Group.prototype = {
     * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
     *
     * @method getFirstDead
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
     * @return {Any} The first dead child, or null if none found.
     */
 	getFirstDead: function () {
@@ -815,7 +815,7 @@ Phaser.Group.prototype = {
     * Call this function to find out how many members of the group are alive.
     *
     * @method countLiving
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
     * @return {number} The number of children flagged as alive. Returns -1 if Group is empty.
     */
 	countLiving: function () {
@@ -846,7 +846,7 @@ Phaser.Group.prototype = {
     * Call this function to find out how many members of the group are dead.
     *
     * @method countDead
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
     * @return {number} The number of children flagged as dead. Returns -1 if Group is empty.
     */
 	countDead: function () {
@@ -877,7 +877,7 @@ Phaser.Group.prototype = {
     * Returns a member at random from the group.
     *
     * @method getRandom
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
     * @param {number} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
     * @param {number} length - Optional restriction on the number of values you want to randomly select from.
     * @return {Any} A random child of this Group.
@@ -900,7 +900,7 @@ Phaser.Group.prototype = {
 	* Description.
 	*
 	* @method remove
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
 	* @param {Description} child - Description.
 	*/
 	remove: function (child) {
@@ -915,7 +915,7 @@ Phaser.Group.prototype = {
 	* Description.
 	*
 	* @method removeAll
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
 	*/
 	removeAll: function () {
 
@@ -940,7 +940,7 @@ Phaser.Group.prototype = {
 	* Description.
 	*
 	* @method removeBetween
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
 	* @param {Description} startIndex - Description.
 	* @param {Description} endIndex - Description.
 	*/	
@@ -969,7 +969,7 @@ Phaser.Group.prototype = {
 	* Description.
 	*
 	* @method destroy
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
 	*/
 	destroy: function () {
 
@@ -989,7 +989,7 @@ Phaser.Group.prototype = {
 	* Description.
 	*
 	* @method dump
-    * @memberOf Phaser.Group
+    * @memberof Phaser.Group
 	*/
 	dump: function (full) {
 

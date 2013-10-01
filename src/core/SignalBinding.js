@@ -40,7 +40,7 @@ Phaser.SignalBinding = function (signal, listener, isOnce, listenerContext, prio
 
     /**
 	* @property {object|undefined|null} context - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-	* @memberOf SignalBinding.prototype
+	* @memberof SignalBinding.prototype
 	*/
     this.context = listenerContext;
 

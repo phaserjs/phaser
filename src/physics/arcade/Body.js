@@ -171,7 +171,8 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 		if (this.allowRotation)
 		{
-			this.sprite.angle = this.rotation;
+			//	Needs to use rotation delta
+			// this.sprite.angle += this.rotation;
 		}
 
 	},

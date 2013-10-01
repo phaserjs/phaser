@@ -93,7 +93,7 @@ Phaser.Camera.prototype = {
 	/**
     * Tells this camera which sprite to follow.
     * @method follow
-    * @memberOf Phaser.Camera
+    * @memberof Phaser.Camera
     * @param {Phaser.Sprite} target - The object you want the camera to track. Set to null to not follow anything.
     * @param {number} [style] Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
     */
@@ -134,7 +134,7 @@ Phaser.Camera.prototype = {
 	/**
     * Move the camera focus to a location instantly.
     * @method focusOnXY
-    * @memberOf Phaser.Camera
+    * @memberof Phaser.Camera
     * @param {number} x - X position.
     * @param {number} y - Y position.
     */
@@ -148,7 +148,7 @@ Phaser.Camera.prototype = {
 	/**
     * Update focusing and scrolling.
     * @method update
-    * @memberOf Phaser.Camera
+    * @memberof Phaser.Camera
     */
     update: function () {
 
@@ -199,7 +199,7 @@ Phaser.Camera.prototype = {
     /**
     * Method called to ensure the camera doesn't venture outside of the game world.
     * @method checkWorldBounds
-    * @memberOf Phaser.Camera
+    * @memberof Phaser.Camera
     */
     checkWorldBounds: function () {
 
@@ -240,7 +240,7 @@ Phaser.Camera.prototype = {
     * without having to use game.camera.x and game.camera.y.
     * 
     * @method setPosition
-    * @memberOf Phaser.Camera
+    * @memberof Phaser.Camera
     * @param {number} x - X position.
     * @param {number} y - Y position.
     */
@@ -256,7 +256,7 @@ Phaser.Camera.prototype = {
     * Sets the size of the view rectangle given the width and height in parameters.
     * 
     * @method setSize
-    * @memberOf Phaser.Camera
+    * @memberof Phaser.Camera
     * @param {number} width - The desired width.
     * @param {number} height - The desired height.
     */
