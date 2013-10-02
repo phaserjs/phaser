@@ -57,7 +57,7 @@ Phaser.Device = function () {
     this.linux = false;
 
     /**
-    * @property {boolean} maxOS - Is running on maxOS?
+    * @property {boolean} macOS - Is running on macOS?
     * @default
     */
     this.macOS = false;
