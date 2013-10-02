@@ -1,5 +1,6 @@
 .DS_Store
 .idea
+*.iml
 Phaser OSX.sublime-project
 Phaser OSX.sublime-workspace
 Phaser.sublime-project

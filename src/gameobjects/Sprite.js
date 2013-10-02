@@ -15,13 +15,15 @@
 * @param {Description} y - Description.
 * @param {string} key - Description.
 * @param {Description} frame - Description.
+* @param {Boolean} [useArcadePhysics] - If false the game will not use the built in ArcadePhysics.
 */
-Phaser.Sprite = function (game, x, y, key, frame) {
+Phaser.Sprite = function (game, x, y, key, frame, useArcadePhysics ) {
 
     x = x || 0;
     y = y || 0;
     key = key || null;
     frame = frame || null;
+    useArcadePhysics = useArcadePhysics == undefined ? true : useArcadePhysics;
     
     /**
 	* @property {Phaser.Game} game - A reference to the currently running Game.
@@ -262,21 +264,23 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * @property {Phaser.Rectangle} bounds - Description.
     */
     this.bounds = new Phaser.Rectangle(x, y, this._cache.width, this._cache.height);
-    
+
+
     /**
-    * @property {Phaser.Physics.Arcade.Body} body - Set-up the physics body.
-    */
-    this.body = new Phaser.Physics.Arcade.Body(this);
+     * Whether this sprite has an accompanying ArcadePhysics.Body which represents it
+     * @property {Boolean}
+     */
+    this.arcadePhysicsEnabled = useArcadePhysics;
 
     /**
     * @property {Description} velocity - Description.
     */
-    this.velocity = this.body.velocity;
+    this.velocity = this.body ? this.body.velocity : new Phaser.Point;
     
     /**
     * @property {Description} acceleration - Description.
     */
-    this.acceleration = this.body.acceleration;
+    this.acceleration = this.body ? this.body.acceleration : new Phaser.Point;
 
     /**
     * @property {Description} inWorld - World bounds check.
@@ -407,10 +411,13 @@ Phaser.Sprite.prototype.preUpdate = function() {
         }
 
         //  Update our physics bounds
-        this.body.updateBounds(this.center.x, this.center.y, this._cache.scaleX, this._cache.scaleY);
+        if( this.body ) {
+          this.body.updateBounds(this.center.x, this.center.y, this._cache.scaleX, this._cache.scaleY);
+        }
     }
-
-    this.body.preUpdate();
+    if( this.body ) {
+      this.body.preUpdate();
+    }
 
 }
 
@@ -419,7 +426,9 @@ Phaser.Sprite.prototype.postUpdate = function() {
     if (this.exists)
     {
         //  The sprite is positioned in this call, after taking into consideration motion updates and collision
-        this.body.postUpdate();
+        if( this.body ) {
+          this.body.postUpdate();
+        }
 
         this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
         this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
@@ -507,7 +516,9 @@ Phaser.Sprite.prototype.reset = function(x, y) {
     this.exists = true;
     this.visible = true;
     this._outOfBoundsFired = false;
-    this.body.reset();
+    if( this.body ) {
+      this.body.reset();
+    }
     
 }
 
@@ -801,4 +812,32 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
 
     }
 
+});
+
+
+/**
+ * Whether this Sprite has a .body property which is managed by ArcadePhysics
+ * @returns {Boolean}
+ *//**
+ * Whether this Sprite has a .body property which is managed by ArcadePhysics
+ * @param {Boolean} value
+ */
+Object.defineProperty(Phaser.Sprite.prototype, "arcadePhysicsEnabled", {
+  get: function(){
+    return this.body != null;
+  },
+
+  /**
+   * Set whether this body uses the built in ArcadePhysics
+   * @param {Boolean} value
+   */
+  set: function(value){
+    if( value ) {
+      this.body = this.body || new Phaser.Physics.Arcade.Body(this); // Create it only if does not exist
+    } else if( this.body != null ) { // If it was active, destroy and null it otherwise nothing to do
+      this.body.destroy();
+      this.body = null;
+    }
+
+  }
 });

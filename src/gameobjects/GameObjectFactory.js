@@ -60,11 +60,12 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} y - Y position of the new sprite.
     * @param {string|RenderTexture} [key] - The image key as defined in the Game.Cache to use as the texture for this sprite OR a RenderTexture.
     * @param {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
+    * @param {Boolean} [useArcadePhysics] - If false the game will not use the built in ArcadePhysics.
     * @returns {Description} Description.
     */
-    sprite: function (x, y, key, frame) {
+    sprite: function (x, y, key, frame, useArcadePhysics) {
 
-        return this.world.group.add(new Phaser.Sprite(this.game, x, y, key, frame));
+        return this.world.group.add(new Phaser.Sprite(this.game, x, y, key, frame, useArcadePhysics ));
 
     },
 
@@ -76,11 +77,11 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} y - Y position of the new sprite.
     * @param {string|RenderTexture} [key] - The image key as defined in the Game.Cache to use as the texture for this sprite OR a RenderTexture.
     * @param  {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
+    * @param {Boolean} [useArcadePhysics] - If false the game will not use the built in ArcadePhysics.
     * @returns {Description} Description.
     */
-    child: function (parent, x, y, key, frame) {
-
-        var child = this.world.group.add(new Phaser.Sprite(this.game, x, y, key, frame));
+    child: function (parent, x, y, key, frame, useArcadePhysics) {
+        var child = this.world.group.add(new Phaser.Sprite(this.game, x, y, key, frame, useArcadePhysics));
         parent.addChild(child);
         return child;
 
