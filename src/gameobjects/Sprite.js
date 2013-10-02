@@ -1,9 +1,11 @@
-Phaser.Sprite = function (game, x, y, key, frame) {
+Phaser.Sprite = function (game, x, y, key, frame, usePhysics) {
+
 
     x = x || 0;
     y = y || 0;
     key = key || null;
     frame = frame || null;
+  usePhysics = usePhysics != undefined ? usePhysics : true;
 
 	this.game = game;
 
@@ -167,8 +169,8 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.bottomLeft = new Phaser.Point(x, y + this._cache.height);
     this.bounds = new Phaser.Rectangle(x, y, this._cache.width, this._cache.height);
 
-    //  Set-up the physics body
-    this.body = new Phaser.Physics.Arcade.Body(this);
+    //  Set-up the physics body (happens in the define property)
+    this.arcadePhysicsEnabled = usePhysics;
 
     this.velocity = this.body.velocity;
     this.acceleration = this.body.acceleration;
@@ -288,10 +290,13 @@ Phaser.Sprite.prototype.preUpdate = function() {
         }
 
         //  Update our physics bounds
-        this.body.updateBounds(this.center.x, this.center.y, this._cache.scaleX, this._cache.scaleY);
+        if( this.body ) {
+          this.body.updateBounds(this.center.x, this.center.y, this._cache.scaleX, this._cache.scaleY);
+        }
     }
-
-    this.body.preUpdate();
+    if( this.body ) {
+      this.body.preUpdate();
+    }
 
 }
 
@@ -300,7 +305,9 @@ Phaser.Sprite.prototype.postUpdate = function() {
     if (this.exists)
     {
         //  The sprite is positioned in this call, after taking into consideration motion updates and collision
-        this.body.postUpdate();
+        if( this.body ) {
+          this.body.postUpdate();
+        }
 
         this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
         this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
@@ -369,9 +376,13 @@ Phaser.Sprite.prototype.reset = function(x, y) {
     this.exists = true;
     this.visible = true;
     this._outOfBoundsFired = false;
-    this.body.reset();
+    if( this.body ) {
+      this.body.reset();
+    }
     
 }
+
+
 
 Phaser.Sprite.prototype.updateBounds = function() {
 
@@ -623,4 +634,24 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
 
     }
 
+});
+
+Object.defineProperty(Phaser.Sprite.prototype, "arcadePhysicsEnabled", {
+  get: function(){
+    return this.body != null;
+  },
+
+  /**
+   * Set whether this body uses the built in ArcadePhysics
+   * @param {Boolean} value
+   */
+  set: function(value){
+    if( value ) {
+      this.body = new Phaser.Physics.Arcade.Body(this);
+    } else {
+      this.body.destroy();
+      this.body = null;
+    }
+
+  }
 });

@@ -231,6 +231,19 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 	},
 
+  /**
+   * Clears references used by this physics object
+   */
+  destroy: function() {
+    this.quadTreeIDs = null;
+    this.acceleration = this.bounce = this.drag = this.gravity = this.maxVelocity = this.offset = this.velocity = null;
+    this.sprite = null;
+    this.game = null;
+    this.wasTouching = null;
+    this.touching = null;
+    this.allowCollision = null;
+  },
+
 	//	Basically Math.abs
     deltaAbsX: function () {
         return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
