@@ -834,7 +834,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "arcadePhysicsEnabled", {
   set: function(value){
     if( value ) {
       this.body = new Phaser.Physics.Arcade.Body(this);
-    } else {
+    } else if( this.body != null ) { // If it was active, destroy and null it otherwise nothing to do
       this.body.destroy();
       this.body = null;
     }
