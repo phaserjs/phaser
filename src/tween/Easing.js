@@ -1,7 +1,33 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.Easing
+*/
+
+
+/**
+* A collection of easing methods defining ease-in ease-out curves.
+*
+* @class Phaser.Easing
+*/
 Phaser.Easing = {
 
+        /**
+        * Linear easing.
+        *
+        * @namespace Linear
+        */
 	Linear: {
 
+		/**
+		* Ease-in.
+        	*
+		* @method In 
+		* @param {number} k - Description. 
+		* @memberof Linear
+		* @returns {number} k^2.
+        	*/
 		None: function ( k ) {
 
 			return k;
@@ -10,20 +36,49 @@ Phaser.Easing = {
 
 	},
 
+        /**
+        * Quadratic easing.
+        *
+        * @namespace Quadratic
+        */
 	Quadratic: {
 
+		/**
+		* Ease-in.
+        	*
+		* @method In 
+		* @param {number} k - Description. 
+		* @memberof Quadratic
+		* @returns {number} k^2.
+        	*/
 		In: function ( k ) {
 
 			return k * k;
 
 		},
 
+		/**
+		* Ease-out.
+        	*
+		* @method Out 
+		* @param {number} k - Description. 
+		* @memberof Quadratic
+		* @returns {number} k* (2-k).
+        	*/
 		Out: function ( k ) {
 
 			return k * ( 2 - k );
 
 		},
 
+		/**
+		* Ease-in/out.
+        	*
+		* @method InOut
+		* @param {number} k - Description. 
+		* @memberof Quadratic
+		* @returns {number} Description.
+        	*/
 		InOut: function ( k ) {
 
 			if ( ( k *= 2 ) < 1 ) return 0.5 * k * k;
@@ -33,20 +88,49 @@ Phaser.Easing = {
 
 	},
 
+        /**
+        * Cubic easing.
+        *
+        * @namespace Cubic
+        */
 	Cubic: {
 
+		/**
+		* Cubic ease-in.
+        	*
+		* @method In 
+		* @param {number} k - Description. 
+		* @memberof Cubic
+		* @returns {number} Description.
+        	*/
 		In: function ( k ) {
 
 			return k * k * k;
 
 		},
 
+		/**
+		* Cubic ease-out.
+        	*
+		* @method Out
+		* @param {number} k - Description. 
+		* @memberof Cubic
+		* @returns {number} Description.
+        	*/
 		Out: function ( k ) {
 
 			return --k * k * k + 1;
 
 		},
 
+		/**
+		* Cubic ease-in/out.
+        	*
+		* @method InOut
+		* @param {number} k - Description. 
+		* @memberof Cubic
+		* @returns {number} Description.
+        	*/
 		InOut: function ( k ) {
 
 			if ( ( k *= 2 ) < 1 ) return 0.5 * k * k * k;
@@ -56,20 +140,49 @@ Phaser.Easing = {
 
 	},
 
+        /**
+        * Quartic easing.
+        *
+        * @namespace Quartic
+        */
 	Quartic: {
 
+		/**
+		* Quartic ease-in.
+        	*
+		* @method In 
+		* @param {number} k - Description. 
+		* @memberof Quartic
+		* @returns {number} Description.
+        	*/
 		In: function ( k ) {
 
 			return k * k * k * k;
 
 		},
 
+		/**
+		* Quartic ease-out.
+        	*
+		* @method Out
+		* @param {number} k - Description. 
+		* @memberof Quartic
+		* @returns {number} Description.
+        	*/
 		Out: function ( k ) {
 
 			return 1 - ( --k * k * k * k );
 
 		},
 
+		/**
+		* Quartic ease-in/out.
+        	*
+		* @method InOut
+		* @param {number} k - Description. 
+		* @returns {number} Description.
+		* @memberof Quartic
+        	*/
 		InOut: function ( k ) {
 
 			if ( ( k *= 2 ) < 1) return 0.5 * k * k * k * k;
@@ -79,20 +192,49 @@ Phaser.Easing = {
 
 	},
 
+        /**
+        * Quintic easing.
+        *
+        * @namespace Quintic
+        */
 	Quintic: {
 
+		/**
+		* Quintic ease-in.
+        	*
+		* @method In 
+		* @param {number} k - Description. 
+		* @memberof Quintic
+		* @returns {number} Description.
+        	*/
 		In: function ( k ) {
 
 			return k * k * k * k * k;
 
 		},
 
+		/**
+		* Quintic ease-out.
+        	*
+		* @method Out
+		* @param {number} k - Description. 
+		* @memberof Quintic
+		* @returns {number} Description.
+        	*/
 		Out: function ( k ) {
 
 			return --k * k * k * k * k + 1;
 
 		},
 
+		/**
+		* Quintic ease-in/out.
+        	*
+		* @method InOut
+		* @param {number} k - Description. 
+		* @memberof Quintic
+		* @returns {number} Description.
+        	*/
 		InOut: function ( k ) {
 
 			if ( ( k *= 2 ) < 1 ) return 0.5 * k * k * k * k * k;
@@ -102,20 +244,49 @@ Phaser.Easing = {
 
 	},
 
+        /**
+        * Sinusoidal easing.
+        *
+        * @namespace Sinusoidal
+        */
 	Sinusoidal: {
 
+		/**
+		* Sinusoidal ease-in.
+        	*
+		* @method In 
+		* @param {number} k - Description. 
+		* @memberof Sinusoidal
+		* @returns {number} Description.
+        	*/
 		In: function ( k ) {
 
 			return 1 - Math.cos( k * Math.PI / 2 );
 
 		},
 
+		/**
+		* Sinusoidal ease-out.
+        	*
+		* @method Out
+		* @param {number} k - Description. 
+		* @memberof Sinusoidal
+		* @returns {number} Description.
+        	*/
 		Out: function ( k ) {
 
 			return Math.sin( k * Math.PI / 2 );
 
 		},
 
+		/**
+		* Sinusoidal ease-in/out.
+        	*
+		* @method InOut
+		* @param {number} k - Description. 
+		* @memberof Sinusoidal
+		* @returns {number} Description.
+        	*/
 		InOut: function ( k ) {
 
 			return 0.5 * ( 1 - Math.cos( Math.PI * k ) );
@@ -124,20 +295,49 @@ Phaser.Easing = {
 
 	},
 
+        /**
+        * Exponential easing.
+        *
+        * @namespace Exponential
+        */
 	Exponential: {
 
+		/**
+		* Exponential ease-in.
+        	*
+		* @method In 
+		* @param {number} k - Description. 
+		* @memberof Exponential
+		* @returns {number} Description.
+        	*/
 		In: function ( k ) {
 
 			return k === 0 ? 0 : Math.pow( 1024, k - 1 );
 
 		},
 
+		/**
+		* Exponential ease-out.
+        	*
+		* @method Out
+		* @param {number} k - Description. 
+		* @memberof Exponential
+		* @returns {number} Description.
+        	*/
 		Out: function ( k ) {
 
 			return k === 1 ? 1 : 1 - Math.pow( 2, - 10 * k );
 
 		},
 
+		/**
+		* Exponential ease-in/out.
+        	*
+		* @method InOut
+		* @param {number} k - Description. 
+		* @memberof Exponential
+		* @returns {number} Description.
+        	*/
 		InOut: function ( k ) {
 
 			if ( k === 0 ) return 0;
@@ -149,20 +349,49 @@ Phaser.Easing = {
 
 	},
 
+        /**
+        * Circular easing.
+        *
+        * @namespace Circular
+        */
 	Circular: {
 
+		/**
+		* Circular ease-in.
+        	*
+		* @method In 
+		* @param {number} k - Description. 
+		* @memberof Circular
+		* @returns {number} Description.
+        	*/
 		In: function ( k ) {
 
 			return 1 - Math.sqrt( 1 - k * k );
 
 		},
 
+		/**
+		* Circular ease-out.
+        	*
+		* @method Out
+		* @param {number} k - Description. 
+		* @memberof Circular
+		* @returns {number} Description.
+        	*/
 		Out: function ( k ) {
 
 			return Math.sqrt( 1 - ( --k * k ) );
 
 		},
 
+		/**
+		* Circular ease-in/out.
+        	*
+		* @method InOut
+		* @param {number} k - Description. 
+		* @memberof Circular
+		* @returns {number} Description.
+        	*/
 		InOut: function ( k ) {
 
 			if ( ( k *= 2 ) < 1) return - 0.5 * ( Math.sqrt( 1 - k * k) - 1);
@@ -172,8 +401,21 @@ Phaser.Easing = {
 
 	},
 
+        /**
+        * Elastic easing.
+        *
+        * @namespace Elastic
+        */
 	Elastic: {
 
+		/**
+		* Elastic ease-in.
+        	*
+		* @method In 
+		* @param {number} k - Description. 
+		* @memberof Elastic
+		* @returns {number} Description.
+        	*/
 		In: function ( k ) {
 
 			var s, a = 0.1, p = 0.4;
@@ -185,6 +427,14 @@ Phaser.Easing = {
 
 		},
 
+		/**
+		* Elastic ease-out.
+        	*
+		* @method Out
+		* @param {number} k - Description. 
+		* @memberof Elastic
+		* @returns {number} Description.
+        	*/
 		Out: function ( k ) {
 
 			var s, a = 0.1, p = 0.4;
@@ -196,6 +446,14 @@ Phaser.Easing = {
 
 		},
 
+		/**
+		* Elastic ease-in/out.
+        	*
+		* @method InOut
+		* @param {number} k - Description. 
+		* @memberof Elastic
+		* @returns {number} Description.
+        	*/
 		InOut: function ( k ) {
 
 			var s, a = 0.1, p = 0.4;
@@ -210,8 +468,21 @@ Phaser.Easing = {
 
 	},
 
+        /**
+        * Back easing.
+        *
+        * @namespace Back
+        */
 	Back: {
 
+		/**
+		* Back ease-in.
+        	*
+		* @method In 
+		* @param {number} k - Description. 
+		* @memberof Back
+		* @returns {number} Description.
+        	*/
 		In: function ( k ) {
 
 			var s = 1.70158;
@@ -219,6 +490,14 @@ Phaser.Easing = {
 
 		},
 
+		/**
+		* Back ease-out.
+        	*
+		* @method Out
+		* @param {number} k - Description. 
+		* @memberof Back
+		* @returns {number} Description.
+        	*/
 		Out: function ( k ) {
 
 			var s = 1.70158;
@@ -226,6 +505,14 @@ Phaser.Easing = {
 
 		},
 
+		/**
+		* Back ease-in/out.
+        	*
+		* @method InOut
+		* @param {number} k - Description. 
+		* @memberof Back
+		* @returns {number} Description.
+        	*/
 		InOut: function ( k ) {
 
 			var s = 1.70158 * 1.525;
@@ -236,14 +523,35 @@ Phaser.Easing = {
 
 	},
 
+        /**
+        * Bounce easing.
+        *
+        * @namespace Bounce
+        */
 	Bounce: {
 
+		/**
+		* Bounce ease-in.
+        	*
+		* @method In 
+		* @param {number} k - Description. 
+		* @memberof Bounce
+		* @returns {number} Description.
+        	*/
 		In: function ( k ) {
 
 			return 1 - Phaser.Easing.Bounce.Out( 1 - k );
 
 		},
 
+		/**
+		* Bounce ease-out.
+        	*
+		* @method Out
+		* @param {number} k - Description. 
+		* @memberof Bounce
+		* @returns {number} Description.
+        	*/
 		Out: function ( k ) {
 
 			if ( k < ( 1 / 2.75 ) ) {
@@ -266,6 +574,14 @@ Phaser.Easing = {
 
 		},
 
+		/**
+		* Bounce ease-in/out.
+        	*
+		* @method InOut
+		* @param {number} k - Description. 
+		* @memberof Bounce
+		* @returns {number} Description.
+        	*/
 		InOut: function ( k ) {
 
 			if ( k < 0.5 ) return Phaser.Easing.Bounce.In( k * 2 ) * 0.5;

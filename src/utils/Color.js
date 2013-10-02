@@ -1,48 +1,53 @@
 /**
-* A collection of methods useful for manipulating and comparing colors.
-*
-* @class 		Color
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
-* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
-* @module       Phaser
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.Colors
 */
+
+
+/**
+* A collection of methods useful for manipulating and comparing colors.
+*
+* @class Phaser.Color
+*/
+
 
 Phaser.Color = {
 
-	/**
-    * Given an alpha and 3 color values this will return an integer representation of it
+    /**
+    * Given an alpha and 3 color values this will return an integer representation of it.
     *
     * @method getColor32
-    * @param {Number} alpha The Alpha value (between 0 and 255)
-    * @param {Number} red The Red channel value (between 0 and 255)
-    * @param {Number} green The Green channel value (between 0 and 255)
-    * @param {Number} blue The Blue channel value (between 0 and 255)
-    * @return {Number} A native color value integer (format: 0xAARRGGBB)
+    * @param {number} alpha - The Alpha value (between 0 and 255).
+    * @param {number} red - The Red channel value (between 0 and 255).
+    * @param {number} green - The Green channel value (between 0 and 255).
+    * @param {number} blue - The Blue channel value (between 0 and 255).
+    * @returns {number} A native color value integer (format: 0xAARRGGBB).
     */
     getColor32: function (alpha, red, green, blue) {
         return alpha << 24 | red << 16 | green << 8 | blue;
     },
 
-	/**
+    /**
     * Given 3 color values this will return an integer representation of it.
     *
     * @method getColor
-    * @param {Number} red The Red channel value (between 0 and 255)
-    * @param {Number} green The Green channel value (between 0 and 255)
-    * @param {Number} blue The Blue channel value (between 0 and 255)
-    * @return {Number} A native color value integer (format: 0xRRGGBB)
+    * @param {number} red - The Red channel value (between 0 and 255).
+    * @param {number} green - The Green channel value (between 0 and 255).
+    * @param {number} blue - The Blue channel value (between 0 and 255).
+    * @returns {number} A native color value integer (format: 0xRRGGBB).
     */
     getColor: function (red, green, blue) {
         return red << 16 | green << 8 | blue;
     },
 
-	/**
+    /**
     * Converts the given hex string into an object containing the RGB values.
     *
     * @method hexToRGB
-    * @param {String} The string hex color to convert.
-    * @return {Object} An object with 3 properties: r,g and b.
+    * @param {string}h - The string hex color to convert.
+    * @returns {object} An object with 3 properties: r,g and b.
     */
     hexToRGB: function (h) {
 
@@ -55,13 +60,13 @@ Phaser.Color = {
         
     },
 
-	/**
+    /**
     * Returns a string containing handy information about the given color including string hex value,
     * RGB format information and HSL information. Each section starts on a newline, 3 lines in total.
     *
     * @method getColorInfo
-    * @param {Number} color A color value in the format 0xAARRGGBB
-    * @return {String} string containing the 3 lines of information
+    * @param {number} color - A color value in the format 0xAARRGGBB.
+    * @returns {string}String containing the 3 lines of information.
     */
     getColorInfo: function (color) {
         var argb = Phaser.Color.getRGB(color);
@@ -75,36 +80,36 @@ Phaser.Color = {
         return result;
     },
 
-	/**
-    * Return a string representation of the color in the format 0xAARRGGBB
+    /**
+    * Return a string representation of the color in the format 0xAARRGGBB.
     *
     * @method RGBtoHexstring
-    * @param {Number} color The color to get the string representation for
-    * @return {String A string of length 10 characters in the format 0xAARRGGBB
+    * @param {number} color - The color to get the string representation for
+    * @returns {String A string of length 10 characters in the format 0xAARRGGBB
     */
     RGBtoHexstring: function (color) {
         var argb = Phaser.Color.getRGB(color);
         return "0x" + Phaser.Color.colorToHexstring(argb.alpha) + Phaser.Color.colorToHexstring(argb.red) + Phaser.Color.colorToHexstring(argb.green) + Phaser.Color.colorToHexstring(argb.blue);
     },
 
-	/**
-    * Return a string representation of the color in the format #RRGGBB
+    /**
+    * Return a string representation of the color in the format #RRGGBB.
     *
     * @method RGBtoWebstring
-    * @param {Number} color The color to get the string representation for
-    * @return {String} A string of length 10 characters in the format 0xAARRGGBB
+    * @param {number} color - The color to get the string representation for.
+    * @returns {string}A string of length 10 characters in the format 0xAARRGGBB.
     */
     RGBtoWebstring: function (color) {
         var argb = Phaser.Color.getRGB(color);
         return "#" + Phaser.Color.colorToHexstring(argb.red) + Phaser.Color.colorToHexstring(argb.green) + Phaser.Color.colorToHexstring(argb.blue);
     },
 
-	/**
-    * Return a string containing a hex representation of the given color
+    /**
+    * Return a string containing a hex representation of the given color.
     *
     * @method colorToHexstring
-    * @param {Number} color The color channel to get the hex value for, must be a value between 0 and 255)
-    * @return {String} A string of length 2 characters, i.e. 255 = FF, 0 = 00
+    * @param {number} color - The color channel to get the hex value for, must be a value between 0 and 255).
+    * @returns {string}A string of length 2 characters, i.e. 255 = FF, 0 = 00.
     */
     colorToHexstring: function (color) {
         var digits = "0123456789ABCDEF";
@@ -114,15 +119,15 @@ Phaser.Color = {
         return hexified;
     },
 
-	/**
+    /**
     * Interpolates the two given colours based on the supplied step and currentStep properties.
     * @method interpolateColor
-    * @param {Number} color1
-    * @param {Number} color2
-    * @param {Number} steps
-    * @param {Number} currentStep
-    * @param {Number} alpha
-    * @return {Number} The interpolated color value.
+    * @param {number} color1 - Description.
+    * @param {number} color2 - Description.
+    * @param {number} steps - Description.
+    * @param {number} currentStep - Description.
+    * @param {number} alpha - Description.
+    * @returns {number} The interpolated color value.
     */
     interpolateColor: function (color1, color2, steps, currentStep, alpha) {
         if (typeof alpha === "undefined") { alpha = 255; }
@@ -134,16 +139,16 @@ Phaser.Color = {
         return Phaser.Color.getColor32(alpha, r, g, b);
     },
 
-	/**
+    /**
     * Interpolates the two given colours based on the supplied step and currentStep properties.
     * @method interpolateColorWithRGB
-    * @param {Number} color
-    * @param {Number} r
-    * @param {Number} g
-    * @param {Number} b
-    * @param {Number} steps
-    * @param {Number} currentStep
-    * @return {Number} The interpolated color value.
+    * @param {number} color - Description.
+    * @param {number} r - Description.
+    * @param {number} g - Description.
+    * @param {number} b - Description.
+    * @param {number} steps - Description.
+    * @param {number} currentStep - Description.
+    * @returns {number} The interpolated color value.
     */
     interpolateColorWithRGB: function (color, r, g, b, steps, currentStep) {
         var src = Phaser.Color.getRGB(color);
@@ -153,18 +158,18 @@ Phaser.Color = {
         return Phaser.Color.getColor(or, og, ob);
     },
 
-	/**
+    /**
     * Interpolates the two given colours based on the supplied step and currentStep properties.
     * @method interpolateRGB
-    * @param {Number} r1
-    * @param {Number} g1
-    * @param {Number} b1
-    * @param {Number} r2
-    * @param {Number} g2
-    * @param {Number} b2
-    * @param {Number} steps
-    * @param {Number} currentStep
-    * @return {Number} The interpolated color value.
+    * @param {number} r1 - Description.
+    * @param {number} g1 - Description.
+    * @param {number} b1 - Description.
+    * @param {number} r2 - Description.
+    * @param {number} g2 - Description.
+    * @param {number} b2 - Description.
+    * @param {number} steps - Description.
+    * @param {number} currentStep - Description.
+    * @returns {number} The interpolated color value.
     */
     interpolateRGB: function (r1, g1, b1, r2, g2, b2, steps, currentStep) {
         var r = (((r2 - r1) * currentStep) / steps) + r1;
@@ -173,16 +178,16 @@ Phaser.Color = {
         return Phaser.Color.getColor(r, g, b);
     },
 
-	/**
+    /**
     * Returns a random color value between black and white
     * <p>Set the min value to start each channel from the given offset.</p>
     * <p>Set the max value to restrict the maximum color used per channel</p>
     *
     * @method getRandomColor
-    * @param {Number} min The lowest value to use for the color
-    * @param {Number} max The highest value to use for the color
-    * @param {Number} alpha The alpha value of the returning color (default 255 = fully opaque)
-    * @return {Number} 32-bit color value with alpha
+    * @param {number} min - The lowest value to use for the color.
+    * @param {number} max - The highest value to use for the color.
+    * @param {number} alpha - The alpha value of the returning color (default 255 = fully opaque).
+    * @returns {number} 32-bit color value with alpha.
     */
     getRandomColor: function (min, max, alpha) {
         if (typeof min === "undefined") { min = 0; }
@@ -201,14 +206,14 @@ Phaser.Color = {
         return Phaser.Color.getColor32(alpha, red, green, blue);
     },
 
-	/**
+    /**
     * Return the component parts of a color as an Object with the properties alpha, red, green, blue
     *
     * <p>Alpha will only be set if it exist in the given color (0xAARRGGBB)</p>
     *
     * @method getRGB
-    * @param {Number} color in RGB (0xRRGGBB) or ARGB format (0xAARRGGBB)
-    * @return {Object} An Object with properties: alpha, red, green, blue
+    * @param {number} color - Color in RGB (0xRRGGBB) or ARGB format (0xAARRGGBB).
+    * @returns {object} An Object with properties: alpha, red, green, blue.
     */
     getRGB: function (color) {
         return {
@@ -219,11 +224,11 @@ Phaser.Color = {
         };
     },
 
-	/**
+    /**
     * Returns a CSS friendly string value from the given color.
     * @method getWebRGB
-    * @param {Number} color
-    * @return {String} A string in the format: 'rgba(r,g,b,a)'
+    * @param {number} color
+    * @returns {string}A string in the format: 'rgba(r,g,b,a)'
     */
     getWebRGB: function (color) {
         var alpha = (color >>> 24) / 255;
@@ -233,56 +238,56 @@ Phaser.Color = {
         return 'rgba(' + red.toString() + ',' + green.toString() + ',' + blue.toString() + ',' + alpha.toString() + ')';
     },
 
-	/**
-    * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component, as a value between 0 and 255
+    /**
+    * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component, as a value between 0 and 255.
     *
     * @method getAlpha
-    * @param {Number} color In the format 0xAARRGGBB
-    * @return {Number} The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent))
+    * @param {number} color - In the format 0xAARRGGBB.
+    * @returns {number} The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent)).
     */
     getAlpha: function (color) {
         return color >>> 24;
     },
 
-	/**
-    * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component as a value between 0 and 1
+    /**
+    * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component as a value between 0 and 1.
     *
     * @method getAlphaFloat
-    * @param {Number} color In the format 0xAARRGGBB
-    * @return {Number} The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent))
+    * @param {number} color - In the format 0xAARRGGBB.
+    * @returns {number} The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent)).
     */
     getAlphaFloat: function (color) {
         return (color >>> 24) / 255;
     },
 
-	/**
-    * Given a native color value (in the format 0xAARRGGBB) this will return the Red component, as a value between 0 and 255
+    /**
+    * Given a native color value (in the format 0xAARRGGBB) this will return the Red component, as a value between 0 and 255.
     *
     * @method getRed
-    * @param {Number} color In the format 0xAARRGGBB
-    * @return {Number} The Red component of the color, will be between 0 and 255 (0 being no color, 255 full Red)
+    * @param {number} color In the format 0xAARRGGBB.
+    * @returns {number} The Red component of the color, will be between 0 and 255 (0 being no color, 255 full Red).
     */
     getRed: function (color) {
         return color >> 16 & 0xFF;
     },
 
-	/**
-    * Given a native color value (in the format 0xAARRGGBB) this will return the Green component, as a value between 0 and 255
+    /**
+    * Given a native color value (in the format 0xAARRGGBB) this will return the Green component, as a value between 0 and 255.
     *
     * @method getGreen
-    * @param {Number} color In the format 0xAARRGGBB
-    * @return {Number} The Green component of the color, will be between 0 and 255 (0 being no color, 255 full Green)
+    * @param {number} color - In the format 0xAARRGGBB.
+    * @returns {number} The Green component of the color, will be between 0 and 255 (0 being no color, 255 full Green).
     */
     getGreen: function (color) {
         return color >> 8 & 0xFF;
     },
 
-	/**
-    * Given a native color value (in the format 0xAARRGGBB) this will return the Blue component, as a value between 0 and 255
+    /**
+    * Given a native color value (in the format 0xAARRGGBB) this will return the Blue component, as a value between 0 and 255.
     *
     * @method getBlue
-    * @param {Number} color In the format 0xAARRGGBB
-    * @return {Number} The Blue component of the color, will be between 0 and 255 (0 being no color, 255 full Blue)
+    * @param {number} color - In the format 0xAARRGGBB.
+    * @returns {number} The Blue component of the color, will be between 0 and 255 (0 being no color, 255 full Blue).
     */
     getBlue: function (color) {
         return color & 0xFF;

@@ -96,7 +96,7 @@ PIXI.MovieClip.prototype.play = function()
  * Stops the MovieClip and goes to a specific frame
  *
  * @method gotoAndStop
- * @param frameNumber {Number} frame index to stop at
+ * @param frameNumber {number} frame index to stop at
  */
 PIXI.MovieClip.prototype.gotoAndStop = function(frameNumber)
 {
@@ -110,7 +110,7 @@ PIXI.MovieClip.prototype.gotoAndStop = function(frameNumber)
  * Goes to a specific frame and begins playing the MovieClip
  *
  * @method gotoAndPlay
- * @param frameNumber {Number} frame index to start at
+ * @param frameNumber {number} frame index to start at
  */
 PIXI.MovieClip.prototype.gotoAndPlay = function(frameNumber)
 {

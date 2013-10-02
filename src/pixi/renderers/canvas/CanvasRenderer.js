@@ -9,8 +9,8 @@
  *
  * @class CanvasRenderer
  * @constructor
- * @param width=0 {Number} the width of the canvas view
- * @param height=0 {Number} the height of the canvas view
+ * @param width=0 {number} the width of the canvas view
+ * @param height=0 {number} the height of the canvas view
  * @param view {Canvas} the canvas to use as a view, optional
  * @param transparent=false {Boolean} the transparency of the render view, default false
  */
@@ -114,8 +114,8 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
  * resizes the canvas view to the specified width and height
  *
  * @method resize
- * @param width {Number} the new width of the canvas view
- * @param height {Number} the new height of the canvas view
+ * @param width {number} the new width of the canvas view
+ * @param height {number} the new height of the canvas view
  */
 PIXI.CanvasRenderer.prototype.resize = function(width, height)
 {

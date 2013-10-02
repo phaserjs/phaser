@@ -1,32 +1,89 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* Phaser - Keyboard constructor.
+*
+* @class Phaser.Keyboard
+* @classdesc A Keyboard object Description.
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
+*/
 Phaser.Keyboard = function (game) {
 
+	/**
+	* @property {Phaser.Game} game - Local reference to game.
+	*/
 	this.game = game;
+	
+	/**
+	* @property {Description} _keys - Description.
+	* @private
+	*/
     this._keys = {};
+    
+    /**
+    * @property {Description} _hotkeys - Description.
+    * @private
+    */
     this._hotkeys = {};
+
+	/**
+	* @property {Description} _capture - Description.
+	* @private
+	*/
     this._capture = {};
 
-    this.callbackContext = this;
-    this.onDownCallback = null;
-    this.onUpCallback = null;
+    /**
+    * You can disable all Keyboard Input by setting disabled to true. While true all new input related events will be ignored.
+    * @property {boolean} disabled - The disabled state of the Keyboard.
+    * @default
+    */
+    this.disabled = false;
 
-    this.onDown = new Phaser.Signal();
-    this.onUp = new Phaser.Signal();
+    /**
+    * @property {function} _onKeyDown
+    * @private
+    * @default
+    */
+    this._onKeyDown = null;
+    
+    /**
+    * @property {function} _onKeyUp
+    * @private
+    * @default
+    */
+    this._onKeyUp = null;
+
+    /**
+    * @property {Object} callbackContext - The context under which the callbacks are run.
+    */
+    this.callbackContext = this;
+
+    /**
+    * @property {function} onDownCallback - This callback is invoked every time a key is pressed down.
+    */
+    this.onDownCallback = null;
+
+    /**
+    * @property {function} onUpCallback - This callback is invoked every time a key is released.
+    */
+    this.onUpCallback = null;
 	
 };
 
 Phaser.Keyboard.prototype = {
 
-	game: null,
-
     /**
-    * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-    * @type {bool}
+    * Add callbacks to the Keyboard handler so that each time a key is pressed down or releases the callbacks are activated.
+    * @method Phaser.Keyboard#addCallbacks
+    * @param {Object} context - The context under which the callbacks are run.
+    * @param {function} onDown - This callback is invoked every time a key is pressed down.
+    * @param {function} [onUp=null] - This callback is invoked every time a key is released.
     */
-	disabled: false,
-
-	_onKeyDown: null,
-	_onKeyUp: null,
-
     addCallbacks: function (context, onDown, onUp) {
 
         this.callbackContext = context;
@@ -39,6 +96,14 @@ Phaser.Keyboard.prototype = {
 
     },
 
+    /**
+    * If you need more fine-grained control over a Key you can create a new Phaser.Key object via this method.
+    * The Key object can then be polled, have events attached to it, etc.
+    *
+    * @method Phaser.Keyboard#addKey
+    * @param {number} keycode - The keycode of the key, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACE_BAR
+    * @return {Phaser.Key} The Key object which you can store locally and reference directly.
+    */
     addKey: function (keycode) {
 
         this._hotkeys[keycode] = new Phaser.Key(this.game, keycode);
@@ -46,12 +111,24 @@ Phaser.Keyboard.prototype = {
 
     },
 
+    /**
+    * Removes a Key object from the Keyboard manager.
+    *
+    * @method Phaser.Keyboard#removeKey
+    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACE_BAR
+    */
     removeKey: function (keycode) {
 
         delete (this._hotkeys[keycode]);
 
     },
 
+    /**
+    * Starts the Keyboard event listeners running (keydown and keyup). They are attached to the document.body.
+    * This is called automatically by Phaser.Input and should not normally be invoked directly.
+    *
+    * @method Phaser.Keyboard#start
+    */
     start: function () {
 
         var _this = this;
@@ -69,6 +146,11 @@ Phaser.Keyboard.prototype = {
 
     },
 
+    /**
+    * Stops the Keyboard event listeners from running (keydown and keyup). They are removed from the document.body.
+    *
+    * @method Phaser.Keyboard#stop
+    */
     stop: function () {
 
         document.body.removeEventListener('keydown', this._onKeyDown);
@@ -81,6 +163,7 @@ Phaser.Keyboard.prototype = {
     * There are some keys this can be annoying for, like the arrow keys or space bar, which make the browser window scroll.
     * You can use addKeyCapture to consume the keyboard event for specific keys so it doesn't bubble up to the the browser.
     * Pass in either a single keycode or an array/hash of keycodes.
+    * @method Phaser.Keyboard#addKeyCapture
     * @param {Any} keycode
     */
     addKeyCapture: function (keycode) {
@@ -99,7 +182,9 @@ Phaser.Keyboard.prototype = {
     },
 
 	/**
-    * @param {Number} keycode
+	* Removes an existing key capture.
+	* @method Phaser.Keyboard#removeKeyCapture
+    * @param {number} keycode
     */
     removeKeyCapture: function (keycode) {
 
@@ -107,15 +192,21 @@ Phaser.Keyboard.prototype = {
 
     },
 
+	/**
+	* Clear all set key captures.
+	* @method Phaser.Keyboard#clearCaptures
+    */
     clearCaptures: function () {
 
         this._capture = {};
 
     },
 
-
 	/**
+	* Process the keydown event.
+	* @method Phaser.Keyboard#processKeyDown
     * @param {KeyboardEvent} event
+    * @protected
     */    
     processKeyDown: function (event) {
 
@@ -168,7 +259,10 @@ Phaser.Keyboard.prototype = {
     },
 
 	/**
+	* Process the keyup event.
+	* @method Phaser.Keyboard#processKeyUp
     * @param {KeyboardEvent} event
+    * @protected
     */
     processKeyUp: function (event) {
 
@@ -197,6 +291,10 @@ Phaser.Keyboard.prototype = {
 
     },
 
+	/**
+	* Reset the "isDown" state of all keys.
+	* @method Phaser.Keyboard#reset
+    */
     reset: function () {
 
         for (var key in this._keys)
@@ -206,10 +304,12 @@ Phaser.Keyboard.prototype = {
 
     },
 
-	/**
-    * @param {Number} keycode
-    * @param {Number} [duration]
-    * @return {bool}
+    /**
+    * Returns the "just pressed" state of the key. Just pressed is considered true if the key was pressed down within the duration given (default 250ms)
+    * @method Phaser.Keyboard#justPressed
+    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACE_BAR
+    * @param {number} [duration=250] - The duration below which the key is considered as being just pressed.
+    * @return {boolean} True if the key is just pressed otherwise false.
     */
     justPressed: function (keycode, duration) {
 
@@ -224,10 +324,12 @@ Phaser.Keyboard.prototype = {
 
     },
 
-	/**
-    * @param {Number} keycode
-    * @param {Number} [duration]
-    * @return {bool}
+    /**
+    * Returns the "just released" state of the Key. Just released is considered as being true if the key was released within the duration given (default 250ms)
+    * @method Phaser.Keyboard#justPressed
+    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACE_BAR
+    * @param {number} [duration=250] - The duration below which the key is considered as being just released.
+    * @return {boolean} True if the key is just released otherwise false.
     */
     justReleased: function (keycode, duration) {
 
@@ -242,9 +344,11 @@ Phaser.Keyboard.prototype = {
 
     },
 
-	/**
-    * @param {Number} keycode
-    * @return {bool}
+    /**
+    * Returns true of the key is currently pressed down. Note that it can only detect key presses on the web browser.
+    * @method Phaser.Keyboard#isDown
+    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACE_BAR
+    * @return {boolean} True if the key is currently down.
     */
     isDown: function (keycode) {
 
@@ -258,8 +362,6 @@ Phaser.Keyboard.prototype = {
     }
 
 };
-
-//	Statics
 
 Phaser.Keyboard.A = "A".charCodeAt(0);
 Phaser.Keyboard.B = "B".charCodeAt(0);

@@ -27,8 +27,8 @@
  @class RenderTexture
  @extends Texture
  @constructor
- @param width {Number} The width of the render texture
- @param height {Number} The height of the render texture
+ @param width {number} The width of the render texture
+ @param height {number} The height of the render texture
  */
 PIXI.RenderTexture = function(width, height)
 {

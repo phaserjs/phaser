@@ -7,10 +7,10 @@
  *
  * @class Rectangle
  * @constructor 
- * @param x {Number} The X coord of the upper-left corner of the rectangle
- * @param y {Number} The Y coord of the upper-left corner of the rectangle
- * @param width {Number} The overall wisth of this rectangle
- * @param height {Number} The overall height of this rectangle
+ * @param x {number} The X coord of the upper-left corner of the rectangle
+ * @param y {number} The Y coord of the upper-left corner of the rectangle
+ * @param width {number} The overall wisth of this rectangle
+ * @param height {number} The overall height of this rectangle
  */
 PIXI.Rectangle = function(x, y, width, height)
 {
@@ -58,8 +58,8 @@ PIXI.Rectangle.prototype.clone = function()
  * Checks if the x, and y coords passed to this function are contained within this Rectangle
  *
  * @method contains
- * @param x {Number} The X coord of the point to test
- * @param y {Number} The Y coord of the point to test
+ * @param x {number} The X coord of the point to test
+ * @param y {number} The Y coord of the point to test
  * @return {Boolean} if the x/y coords are within this Rectangle
  */
 PIXI.Rectangle.prototype.contains = function(x, y)

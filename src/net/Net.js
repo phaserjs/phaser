@@ -1,3 +1,17 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.Net
+*/
+
+/**
+* Description of Phaser.Net
+*
+* @class Phaser.Net
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
+*/
 Phaser.Net = function (game) {
 	
 	this.game = game;
@@ -8,6 +22,9 @@ Phaser.Net.prototype = {
 
 	/**
 	* Returns the hostname given by the browser.
+	* 
+	* @method getHostName
+	* @return {string}
 	*/        
 	getHostName: function () {
 
@@ -24,6 +41,10 @@ Phaser.Net.prototype = {
 	* If the domain name is found it returns true.
 	* You can specify a part of a domain, for example 'google' would match 'google.com', 'google.co.uk', etc.
 	* Do not include 'http://' at the start.
+	* 
+	*  @method checkDomainName
+	*  @param {string} domain
+	*  @return {string}
 	*/        
 	checkDomainName: function (domain) {
 		return window.location.hostname.indexOf(domain) !== -1;
@@ -34,6 +55,13 @@ Phaser.Net.prototype = {
 	* If the value doesn't already exist it is set.
 	* If the value exists it is replaced with the new value given. If you don't provide a new value it is removed from the query string.
 	* Optionally you can redirect to the new url, or just return it as a string.
+	* 
+	* @method updateQueryString
+	* @param {Description} key - Description.
+	* @param {Description} value - Description.
+	* @param {Description} redirect - Description.
+	* @param {Description} url - Description.
+	* @return {Description} Description.
 	*/
 	updateQueryString: function (key, value, redirect, url) {
 
@@ -93,6 +121,10 @@ Phaser.Net.prototype = {
 	/**
 	* Returns the Query String as an object.
 	* If you specify a parameter it will return just the value of that parameter, should it exist.
+	* 
+	* @method getQueryString
+	* @param {string} parameter - Description.
+	* @return {Description} Description.
 	*/
 	getQueryString: function (parameter) {
 
@@ -122,6 +154,14 @@ Phaser.Net.prototype = {
 
 	},
 
+	/**
+	* Returns the Query String as an object.
+	* If you specify a parameter it will return just the value of that parameter, should it exist.
+	* 
+	* @method decodeURI
+	* @param {string} value - Description.
+	* @return {string} Description.
+	*/
 	decodeURI: function (value) {
 		return decodeURIComponent(value.replace(/\+/g, " "));
 	}

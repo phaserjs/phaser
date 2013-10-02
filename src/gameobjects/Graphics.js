@@ -1,9 +1,27 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.Graphics
+*/
+
+/**
+* Description.
+* 
+* @class Phaser.Graphics
+* @constructor
+*
+* @param {Phaser.Game} game Current game instance.
+* @param {number} [x] X position of Description.
+* @param {number} [y] Y position of Description.
+*/
 Phaser.Graphics = function (game, x, y) {
 
     PIXI.Graphics.call(this);
 
-	Phaser.Sprite.call(this, game, x, y);
-
+    /**
+	* @property {Description} type - Description.
+	*/
     this.type = Phaser.GRAPHICS;
 
 };

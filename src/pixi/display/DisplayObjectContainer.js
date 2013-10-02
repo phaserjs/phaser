@@ -134,7 +134,7 @@ PIXI.DisplayObjectContainer.prototype.addChild = function(child)
  *
  * @method addChildAt
  * @param child {DisplayObject} The child to add
- * @param index {Number} The index to place the child in
+ * @param index {number} The index to place the child in
  */
 PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
 {
@@ -269,7 +269,7 @@ PIXI.DisplayObjectContainer.prototype.swapChildren = function(child, child2)
  * Returns the Child at the specified index
  *
  * @method getChildAt
- * @param index {Number} The index to get the child from
+ * @param index {number} The index to get the child from
  */
 PIXI.DisplayObjectContainer.prototype.getChildAt = function(index)
 {

@@ -16,8 +16,8 @@ PIXI.gl;
  *
  * @class WebGLRenderer
  * @constructor
- * @param width=0 {Number} the width of the canvas view
- * @param height=0 {Number} the height of the canvas view
+ * @param width=0 {number} the width of the canvas view
+ * @param height=0 {number} the height of the canvas view
  * @param view {Canvas} the canvas to use as a view, optional
  * @param transparent=false {Boolean} the transparency of the render view, default false
  * @param antialias=false {Boolean} sets antialias (only applicable in chrome at the moment)
@@ -277,8 +277,8 @@ PIXI.WebGLRenderer.destroyTexture = function(texture)
  * resizes the webGL view to the specified width and height
  *
  * @method resize
- * @param width {Number} the new width of the webGL view
- * @param height {Number} the new height of the webGL view
+ * @param width {number} the new width of the webGL view
+ * @param height {number} the new height of the webGL view
  */
 PIXI.WebGLRenderer.prototype.resize = function(width, height)
 {

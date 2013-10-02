@@ -1,14 +1,41 @@
 /**
-* Phaser - PluginManager
-*
-* TODO: We can optimise this a lot by using separate hashes per function (update, render, etc)
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+/** 
+* Description.
+* 
+* @class Phaser.PluginManager
+* @classdesc Phaser - PluginManager
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {Description} parent - Description.
+*/
 Phaser.PluginManager = function(game, parent) {
 
+	/**
+	* @property {Phaser.Game} game - A reference to the currently running game.
+	*/
     this.game = game;
+    
+    /**
+	* @property {Description} _parent - Description.
+	* @private
+	*/
     this._parent = parent;
+    
+    /**
+	* @property {array} plugins - Description.
+	*/
     this.plugins = [];
+    
+    /**
+	* @property {array} _pluginsLength - Description.
+	* @private
+	* @default
+	*/
     this._pluginsLength = 0;
 
 };
@@ -17,8 +44,10 @@ Phaser.PluginManager.prototype = {
 
     /**
     * Add a new Plugin to the PluginManager.
-    * The plugins game and parent reference are set to this game and pluginmanager parent.
-    * @type {Phaser.Plugin}
+    * The plugin's game and parent reference are set to this game and pluginmanager parent.
+    * @method Phaser.PluginManager#add
+    * @param {Phaser.Plugin} plugin - Description.
+    * @return {Phaser.Plugin} Description.
     */
     add: function (plugin) {
 
@@ -82,6 +111,11 @@ Phaser.PluginManager.prototype = {
         }
     },
 
+    /**
+     * Remove a Plugin from the PluginManager.
+     * @method Phaser.PluginManager#remove
+     * @param {Phaser.Plugin} plugin - The plugin to be removed.
+     */
     remove: function (plugin) {
 
         //  TODO
@@ -89,6 +123,12 @@ Phaser.PluginManager.prototype = {
 
     },
 
+    /**
+    * Pre-update is called at the very start of the update cycle, before any other subsystems have been updated (including Physics).
+    * It only calls plugins who have active=true.
+    * 
+    * @method Phaser.PluginManager#preUpdate
+    */
     preUpdate: function () {
 
         if (this._pluginsLength == 0)
@@ -106,6 +146,12 @@ Phaser.PluginManager.prototype = {
 
     },
 
+    /**
+    * Update is called after all the core subsystems (Input, Tweens, Sound, etc) and the State have updated, but before the render.
+    * It only calls plugins who have active=true.
+    * 
+    * @method Phaser.PluginManager#update
+    */
     update: function () {
         
         if (this._pluginsLength == 0)
@@ -123,6 +169,12 @@ Phaser.PluginManager.prototype = {
 
     },
 
+    /**
+    * Render is called right after the Game Renderer completes, but before the State.render.
+    * It only calls plugins who have visible=true.
+    * 
+    * @method Phaser.PluginManager#render
+    */
     render: function () {
 
         if (this._pluginsLength == 0)
@@ -140,6 +192,12 @@ Phaser.PluginManager.prototype = {
 
     },
 
+    /**
+    * Post-render is called after the Game Renderer and State.render have run.
+    * It only calls plugins who have visible=true.
+    * 
+    * @method Phaser.PluginManager#postRender
+    */
     postRender: function () {
 
         if (this._pluginsLength == 0)
@@ -157,6 +215,11 @@ Phaser.PluginManager.prototype = {
 
     },
 
+    /**
+    * Clear down this PluginManager and null out references
+    * 
+    * @method Phaser.PluginManager#destroy
+    */
     destroy: function () {
 
         this.plugins.length = 0;
