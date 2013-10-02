@@ -65,7 +65,7 @@ Phaser.GameObjectFactory.prototype = {
     */
     sprite: function (x, y, key, frame, useArcadePhysics) {
 
-        return this.world.group.add(new Phaser.Sprite(this.game, x, y, key, null, useArcadePhysics ));
+        return this.world.group.add(new Phaser.Sprite(this.game, x, y, key, frame, useArcadePhysics ));
 
     },
 
