@@ -15,13 +15,15 @@
 * @param {Description} y - Description.
 * @param {string} key - Description.
 * @param {Description} frame - Description.
+* @param {Boolean} [useArcadePhysics] - If false the game will not use the built in ArcadePhysics.
 */
-Phaser.Sprite = function (game, x, y, key, frame) {
+Phaser.Sprite = function (game, x, y, key, frame, useArcadePhysics ) {
 
     x = x || 0;
     y = y || 0;
     key = key || null;
     frame = frame || null;
+    useArcadePhysics = useArcadePhysics == undefined ? true : useArcadePhysics;
     
     /**
 	* @property {Phaser.Game} game - A reference to the currently running Game.
@@ -263,18 +265,22 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */
     this.bounds = new Phaser.Rectangle(x, y, this._cache.width, this._cache.height);
 
-    //  Set-up the physics body (happens in the define property)
-    this.arcadePhysicsEnabled = usePhysics;
+
+    /**
+     * Whether this sprite has an accompanying ArcadePhysics.Body which represents it
+     * @property {Boolean}
+     */
+    this.arcadePhysicsEnabled = useArcadePhysics;
 
     /**
     * @property {Description} velocity - Description.
     */
-    this.velocity = this.body.velocity;
+    this.velocity = this.body ? this.body.velocity : new Phaser.Point;
     
     /**
     * @property {Description} acceleration - Description.
     */
-    this.acceleration = this.body.acceleration;
+    this.acceleration = this.body ? this.body.acceleration : new Phaser.Point;
 
     /**
     * @property {Description} inWorld - World bounds check.
@@ -808,6 +814,14 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
 
 });
 
+
+/**
+ * Whether this Sprite has a .body property which is managed by ArcadePhysics
+ * @returns {Boolean}
+ *//**
+ * Whether this Sprite has a .body property which is managed by ArcadePhysics
+ * @param {Boolean} value
+ */
 Object.defineProperty(Phaser.Sprite.prototype, "arcadePhysicsEnabled", {
   get: function(){
     return this.body != null;
