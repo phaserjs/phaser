@@ -5,13 +5,9 @@
 * @module       Phaser.Signal
 */
 
-
 /**
-* 
-* A Signal is used for object communication via a custom broadcaster instead of Events.
-* 
 * @class Phaser.Signal
-* @classdesc Phaser Signal
+* @classdesc A Signal is used for object communication via a custom broadcaster instead of Events.
 * @author Miller Medeiros http://millermedeiros.github.com/js-signals/
 * @constructor
 */

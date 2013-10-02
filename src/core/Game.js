@@ -2,14 +2,13 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Game
 */
 
 /**
 * Game constructor
 *
 * Instantiate a new <code>Phaser.Game</code> object.
-* @class
+* @class Phaser.Game
 * @classdesc This is where the magic happens. The Game object is the heart of your game,
 * providing quick access to common functions and handling the boot process.
 * <p>"Hell, there are no rules here - we're trying to accomplish something."</p><br>
@@ -252,8 +251,8 @@ Phaser.Game.prototype = {
 	/**
 	* Initialize engine sub modules and start the game.
 	* 
-	* @method boot
-    * @memberof Phaser.Game
+	* @method Phaser.Game#boot
+	* @protected
 	*/
 	boot: function () {
 
@@ -333,8 +332,8 @@ Phaser.Game.prototype = {
 	/**
 	* Checks if the device is capable of using the requested renderer and sets it up or an alternative if not.
 	* 
-	* @method setUpRenderer
-    * @memberof Phaser.Game
+	* @method Phaser.Game#setUpRenderer
+	* @protected
 	*/
 	setUpRenderer: function () {
 
@@ -370,8 +369,8 @@ Phaser.Game.prototype = {
 	/**
     * Called when the load has finished, after preload was run.
     * 
-    * @method loadComplete
-    * @memberof Phaser.Game
+    * @method Phaser.Game#loadComplete
+    * @protected
     */
     loadComplete: function () {
 
@@ -384,8 +383,8 @@ Phaser.Game.prototype = {
 	/**
     * The core game loop.
     * 
-    * @method update
-    * @memberof Phaser.Game
+    * @method Phaser.Game#update
+    * @protected
 	* @param {number} time - The current time as provided by RequestAnimationFrame.
     */
 	update: function (time) {
@@ -419,8 +418,7 @@ Phaser.Game.prototype = {
 	/**
     * Nuke the entire game from orbit
     * 
-    * @method destroy
-    * @memberof Phaser.Game
+    * @method Phaser.Game#destroy
     */
     destroy: function () {
 
@@ -441,11 +439,10 @@ Phaser.Game.prototype = {
 };
 
 /**
-* Get
-* @returns {boolean} - The paused state of the game.
-*//**
-* Set
-* @param {boolean} value - Put the game into a paused state or resume it. A paused game doesn't call any of the subsystems.
+* The paused state of the Game. A paused game doesn't update any of its subsystems.
+* When a game is paused the onPause event is dispatched. When it is resumed the onResume event is dispatched.
+* @name Phaser.Game#paused
+* @property {boolean} paused - Gets and sets the paused state of the Game.
 */
 Object.defineProperty(Phaser.Game.prototype, "paused", {
 

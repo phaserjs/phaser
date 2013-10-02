@@ -14,7 +14,6 @@
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {Description} parent - Description.
-* 
 */
 Phaser.Plugin = function (game, parent) {
 
@@ -71,6 +70,8 @@ Phaser.Plugin.prototype = {
     /**
     * Pre-update is called at the start of the update cycle, before any other updates have taken place (including Physics).
     * It is only called if active is set to true.
+    * @method preUpdate
+    * @memberof Phaser.Plugin
     */
     preUpdate: function () {
     },
@@ -78,6 +79,8 @@ Phaser.Plugin.prototype = {
     /**
     * Update is called after all the core subsystems (Input, Tweens, Sound, etc) and the State have updated, but before the render.
     * It is only called if active is set to true.
+    * @method update
+    * @memberof Phaser.Plugin
     */
     update: function () {
     },
@@ -85,6 +88,8 @@ Phaser.Plugin.prototype = {
     /**
     * Render is called right after the Game Renderer completes, but before the State.render.
     * It is only called if visible is set to true.
+    * @method render
+    * @memberof Phaser.Plugin
     */
     render: function () {
     },
@@ -92,12 +97,16 @@ Phaser.Plugin.prototype = {
     /**
     * Post-render is called after the Game Renderer and State.render have run.
     * It is only called if visible is set to true.
+    * @method postRender
+    * @memberof Phaser.Plugin
     */
     postRender: function () {
     },
 
     /**
     * Clear down this Plugin and null out references
+    * @method destroy
+    * @memberof Phaser.Plugin
     */
     destroy: function () {
 

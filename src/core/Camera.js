@@ -2,7 +2,6 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Camera
 */
 
 /**
@@ -10,7 +9,7 @@
 * A Camera is your view into the game world. It has a position and size and renders only those objects within its field of view.
 * The game automatically creates a single Stage sized camera on boot. Move the camera around the world with Phaser.Camera.x/y
 *
-* @class Camera
+* @class Phaser.Camera
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
 * @param {number} id - Not being used at the moment, will be when Phaser supports multiple camera
@@ -75,25 +74,43 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     this.target = null;
 
 	/**
-	* @property {number} edge - Edge property. Description.
+	* @property {number} edge - Edge property.
+    * @private
     * @default
     */
     this._edge = 0;
 	
 };
 
-//	Consts
+/**
+* @constant
+* @type {number}
+*/
 Phaser.Camera.FOLLOW_LOCKON = 0;
+
+/**
+* @constant
+* @type {number}
+*/
 Phaser.Camera.FOLLOW_PLATFORMER = 1;
+
+/**
+* @constant
+* @type {number}
+*/
 Phaser.Camera.FOLLOW_TOPDOWN = 2;
+
+/**
+* @constant
+* @type {number}
+*/
 Phaser.Camera.FOLLOW_TOPDOWN_TIGHT = 3;
 
 Phaser.Camera.prototype = {
 
 	/**
     * Tells this camera which sprite to follow.
-    * @method follow
-    * @memberof Phaser.Camera
+    * @method Phaser.Camera#follow
     * @param {Phaser.Sprite} target - The object you want the camera to track. Set to null to not follow anything.
     * @param {number} [style] Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
     */
@@ -133,8 +150,7 @@ Phaser.Camera.prototype = {
 
 	/**
     * Move the camera focus to a location instantly.
-    * @method focusOnXY
-    * @memberof Phaser.Camera
+    * @method Phaser.Camera#focusOnXY
     * @param {number} x - X position.
     * @param {number} y - Y position.
     */
@@ -147,8 +163,7 @@ Phaser.Camera.prototype = {
 
 	/**
     * Update focusing and scrolling.
-    * @method update
-    * @memberof Phaser.Camera
+    * @method Phaser.Camera#update
     */
     update: function () {
 
@@ -198,8 +213,7 @@ Phaser.Camera.prototype = {
 
     /**
     * Method called to ensure the camera doesn't venture outside of the game world.
-    * @method checkWorldBounds
-    * @memberof Phaser.Camera
+    * @method Phaser.Camera#checkWorldBounds
     */
     checkWorldBounds: function () {
 
@@ -239,8 +253,7 @@ Phaser.Camera.prototype = {
     * A helper function to set both the X and Y properties of the camera at once
     * without having to use game.camera.x and game.camera.y.
     * 
-    * @method setPosition
-    * @memberof Phaser.Camera
+    * @method Phaser.Camera#setPosition
     * @param {number} x - X position.
     * @param {number} y - Y position.
     */
@@ -255,8 +268,7 @@ Phaser.Camera.prototype = {
     /**
     * Sets the size of the view rectangle given the width and height in parameters.
     * 
-    * @method setSize
-    * @memberof Phaser.Camera
+    * @method Phaser.Camera#setSize
     * @param {number} width - The desired width.
     * @param {number} height - The desired height.
     */
@@ -270,11 +282,9 @@ Phaser.Camera.prototype = {
 };
 
 /**
-* Get
-* @return {number} The x position.
-*//**
-* Sets the camera's x position and clamp it if it's outside the world bounds.
-* @param {number} value - The x position.
+* The Cameras x coordinate. This value is automatically clamped if it falls outside of the World bounds.
+* @name Phaser.Camera#x
+* @property {number} x - Gets or sets the cameras x position.
 */
 Object.defineProperty(Phaser.Camera.prototype, "x", {
 
@@ -290,11 +300,9 @@ Object.defineProperty(Phaser.Camera.prototype, "x", {
 });
 
 /**
-* Get
-* @return {number} The y position.
-*//**
-* Sets the camera's y position and clamp it if it's outside the world bounds.
-* @param {number} value - The y position.
+* The Cameras y coordinate. This value is automatically clamped if it falls outside of the World bounds.
+* @name Phaser.Camera#y
+* @property {number} y - Gets or sets the cameras y position.
 */
 Object.defineProperty(Phaser.Camera.prototype, "y", {
 	
@@ -310,11 +318,9 @@ Object.defineProperty(Phaser.Camera.prototype, "y", {
 });
 
 /**
-* Returns the width of the view rectangle, in pixels.
-*  @return {number} The width of the view rectangle, in pixels.
-*//**
-* Sets the width of the view rectangle.
-* @param {number} value - Width of the view rectangle.
+* The Cameras width. By default this is the same as the Game size and should not be adjusted for now.
+* @name Phaser.Camera#width
+* @property {number} width - Gets or sets the cameras width.
 */
 Object.defineProperty(Phaser.Camera.prototype, "width", {
 
@@ -329,11 +335,9 @@ Object.defineProperty(Phaser.Camera.prototype, "width", {
 });
 
 /**
-* Returns the height of the view rectangle, in pixels.
-*  @return {number} The height of the view rectangle, in pixels.
-*//**
-* Sets the height of the view rectangle.
-* @param {number} value - Height of the view rectangle.
+* The Cameras height. By default this is the same as the Game size and should not be adjusted for now.
+* @name Phaser.Camera#height
+* @property {number} height - Gets or sets the cameras height.
 */
 Object.defineProperty(Phaser.Camera.prototype, "height", {
 

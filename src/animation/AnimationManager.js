@@ -2,7 +2,6 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @memberof     Phaser.Animation
 */
 
 /**
@@ -64,8 +63,7 @@ Phaser.AnimationManager.prototype = {
     * Loads FrameData into the internal temporary vars and resets the frame index to zero.
     * This is called automatically when a new Sprite is created.
     *
-    * @method loadFrameData
-    * @memberof Phaser.AnimationManager
+    * @method Phaser.AnimationManager#loadFrameData
     * @private
     * @param {Phaser.Animation.FrameData} frameData - The FrameData set to load.
     */
@@ -80,12 +78,11 @@ Phaser.AnimationManager.prototype = {
 	* Adds a new animation under the given key. Optionally set the frames, frame rate and loop.
 	* Animations added in this way are played back with the play function.
 	*
-    * @method add
-    * @memberof Phaser.AnimationManager
+    * @method Phaser.AnimationManager#add
 	* @param {string} name - The unique (within this Sprite) name for the animation, i.e. "run", "fire", "walk".
 	* @param {Array} [frames=null] - An array of numbers/strings that correspond to the frames to add to this animation and in which order. e.g. [1, 2, 3] or ['run0', 'run1', run2]). If null then all frames will be used.
 	* @param {number} [frameRate=60] - The speed at which the animation should play. The speed is given in frames per second.
-	* @param {boolean} [loop=false] {boolean} - Whether or not the animation is looped or just plays once.
+	* @param {boolean} [loop=false] - Whether or not the animation is looped or just plays once.
 	* @param {boolean} [useNumericIndex=true] - Are the given frames using numeric indexes (default) or strings?
 	* @return {Phaser.Animation} The Animation object that was created.
 	*/
@@ -126,8 +123,7 @@ Phaser.AnimationManager.prototype = {
 	/**
 	* Check whether the frames in the given array are valid and exist.
 	*
-    * @method validateFrames
-    * @memberof Phaser.AnimationManager
+    * @method Phaser.AnimationManager#validateFrames
 	* @param {Array} frames - An array of frames to be validated.
 	* @param {boolean} [useNumericIndex=true] - Validate the frames based on their numeric index (true) or string index (false)
 	* @return {boolean} True if all given Frames are valid, otherwise false.
@@ -162,8 +158,7 @@ Phaser.AnimationManager.prototype = {
 	* Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()
 	* If the requested animation is already playing this request will be ignored. If you need to reset an already running animation do so directly on the Animation object itself.
 	* 
-	* @method play
-    * @memberof Phaser.AnimationManager
+	* @method Phaser.AnimationManager#play
 	* @param {string} name - The name of the animation to be played, e.g. "fire", "walk", "jump".
     * @param {number} [frameRate=null] - The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
     * @param {boolean} [loop=null] - Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
@@ -193,8 +188,7 @@ Phaser.AnimationManager.prototype = {
 	* Stop playback of an animation. If a name is given that specific animation is stopped, otherwise the current animation is stopped.
 	* The currentAnim property of the AnimationManager is automatically set to the animation given.
 	*
-	* @method stop
-    * @memberof Phaser.AnimationManager
+	* @method Phaser.AnimationManager#stop
 	* @param {string} [name=null] - The name of the animation to be stopped, e.g. "fire". If none is given the currently running animation is stopped.
 	* @param {boolean} [resetFrame=false] - When the animation is stopped should the currentFrame be set to the first frame of the animation (true) or paused on the last frame displayed (false)
 	*/
@@ -223,8 +217,7 @@ Phaser.AnimationManager.prototype = {
 	/**
 	* The main update function is called by the Sprites update loop. It's responsible for updating animation frames and firing related events.
 	* 
-	* @method update
-    * @memberof Phaser.AnimationManager
+	* @method Phaser.AnimationManager#update
 	* @protected
     * @return {boolean} True if a new animation frame has been set, otherwise false.
 	*/
@@ -249,8 +242,7 @@ Phaser.AnimationManager.prototype = {
     /**
     * Destroys all references this AnimationManager contains. Sets the _anims to a new object and nulls the current animation.
     *
-    * @method destroy
-    * @memberof Phaser.AnimationManager
+    * @method Phaser.AnimationManager#destroy
     */
     destroy: function () {
 
@@ -265,8 +257,8 @@ Phaser.AnimationManager.prototype = {
 };
 
 /**
-* @memberof Phaser.AnimationManager
-* @return {Phaser.Animation.FrameData} Returns the FrameData of the current animation.
+* @name Phaser.AnimationManager#frameData
+* @property {Phaser.Animation.FrameData} frameData - The current animations FrameData.
 */
 Object.defineProperty(Phaser.AnimationManager.prototype, "frameData", {
 
@@ -277,8 +269,8 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameData", {
 });
 
 /**
-* @memberof Phaser.AnimationManager
-* @return {number} Returns the total number of frames in the loaded FrameData, or -1 if no FrameData is loaded.
+* @name Phaser.AnimationManager#frameTotal
+* @property {number} frameTotal - The total number of frames in the currently loaded FrameData, or -1 if no FrameData is loaded.
 */
 Object.defineProperty(Phaser.AnimationManager.prototype, "frameTotal", {
  
@@ -297,11 +289,8 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameTotal", {
 });
 
 /**
-* @memberof Phaser.AnimationManager
-* @return {boolean} Returns the paused state of the current animation.
-*//**
-* @memberof Phaser.AnimationManager
-* @param {boolean} value - Sets the paused state of the current animation.
+* @name Phaser.AnimationManager#paused
+* @property {boolean} paused - Gets and sets the paused state of the current animation.
 */
 Object.defineProperty(Phaser.AnimationManager.prototype, "paused", {
 
@@ -320,11 +309,8 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "paused", {
 });
 
 /**
-* @memberof Phaser.AnimationManager
-* @return {number} Returns the index of the current frame.
-*//**
-* @memberof Phaser.AnimationManager
-* @param {number} value - Sets the current frame on the Sprite and updates the texture cache for display.
+* @name Phaser.AnimationManager#frame
+* @property {number} frame - Gets or sets the current frame index and updates the Texture Cache for display.
 */
 Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
 
@@ -352,11 +338,8 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
 });
 
 /**
-* @memberof Phaser.AnimationManager
-* @return {string} Returns the name of the current frame if it has one.
-*//**
-* @memberof Phaser.AnimationManager
-* @param {string} value - Sets the current frame on the Sprite and updates the texture cache for display.
+* @name Phaser.AnimationManager#frameName
+* @property {string} frameName - Gets or sets the current frame name and updates the Texture Cache for display.
 */
 Object.defineProperty(Phaser.AnimationManager.prototype, "frameName", {
 

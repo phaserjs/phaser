@@ -5,8 +5,6 @@
 * @module       Phaser.PluginManager
 */
 
-
-// TODO: We can optimise this a lot by using separate hashes per function (update, render, etc)
 /** 
 * Description.
 * 
@@ -48,6 +46,8 @@ Phaser.PluginManager.prototype = {
     /**
     * Add a new Plugin to the PluginManager.
     * The plugin's game and parent reference are set to this game and pluginmanager parent.
+    * @method add
+    * @memberof Phaser.PluginManager
     * @param {Phaser.Plugin} plugin - Description.
     * @return {Phaser.Plugin} Description.
     */
@@ -115,6 +115,8 @@ Phaser.PluginManager.prototype = {
 
     /**
      * Remove a Plugin from the PluginManager.
+     * @method remove
+     * @memberof Phaser.PluginManager
      * @param {Phaser.Plugin} plugin - Description.
      */
     remove: function (plugin) {
@@ -128,6 +130,7 @@ Phaser.PluginManager.prototype = {
     * Description.
     * 
     * @method preUpdate
+    * @memberof Phaser.PluginManager
     */
     preUpdate: function () {
 
@@ -150,6 +153,7 @@ Phaser.PluginManager.prototype = {
     * Description.
     * 
     * @method update
+    * @memberof Phaser.PluginManager
     */
     update: function () {
         
@@ -172,6 +176,7 @@ Phaser.PluginManager.prototype = {
     * Description.
     * 
     * @method render
+    * @memberof Phaser.PluginManager
     */
     render: function () {
 
@@ -194,6 +199,7 @@ Phaser.PluginManager.prototype = {
     * Description.
     * 
     * @method postRender
+    * @memberof Phaser.PluginManager
     */
     postRender: function () {
 
@@ -216,6 +222,7 @@ Phaser.PluginManager.prototype = {
     * Description.
     * 
     * @method destroy
+    * @memberof Phaser.PluginManager
     */
     destroy: function () {
 

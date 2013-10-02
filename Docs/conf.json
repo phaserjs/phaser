@@ -3,21 +3,38 @@
         "allowUnknownTags": true
     },
     "source": {
+        "Xinclude": [ "../src/Phaser.js", "../src/animation/", "../src/core/Camera.js", "../src/core/Game.js", "../src/core/Group.js", "../src/core/LinkedList.js", "../src/core/Plugin.js", "../src/core/PluginManager.js" ],
         "include": [ "../src/Phaser.js", "../src/animation/", "../src/core/Camera.js", "../src/core/Game.js", "../src/core/Group.js" ],
         "exclude": [],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
     },
-    "plugins": [],
+    "plugins"   : ["plugins/markdown"],
     "templates": {
-        "cleverLinks": false,
-        "monospaceLinks": false
+        "cleverLinks"     : false,
+        "monospaceLinks"  : false,
+        "default"         : {
+            "outputSourceFiles" : true
+        },
+        "systemName"      : "Phaser",
+        "footer"          : "",
+        "copyright"       : "Phaser Copyright © 2012-2013 Photon Storm Ltd.",
+        "navType"         : "vertical",
+        "theme"           : "cerulean",
+        "linenums"        : true,
+        "collapseSymbols" : false,
+        "inverseNav"      : true
+    },
+    "markdown"  : {
+        "parser"   : "gfm",
+        "hardwrap" : true
     },
     "opts": {
+        "template": "docstrap-master/template/",
         "encoding": "utf8",
         "destination": "./out/",
         "recurse": true,
         "private": false,
-        "lenient": true,
+        "lenient": true
     }
 }

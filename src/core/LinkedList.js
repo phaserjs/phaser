@@ -51,6 +51,7 @@ Phaser.LinkedList.prototype = {
     * Add element to a linked list.
 	* 
 	* @method add
+    * @memberof Phaser.LinkedList
 	* @param {object} child - Description.
 	* @return {object} Description.	   
     */
@@ -84,6 +85,7 @@ Phaser.LinkedList.prototype = {
     * Remove element from a linked list.
  	* 
  	* @method remove
+    * @memberof Phaser.LinkedList
  	* @param {object} child - Description.   
     */
     remove: function (child) {
@@ -103,6 +105,7 @@ Phaser.LinkedList.prototype = {
     * Description.
   	* 
   	* @method callAll
+    * @memberof Phaser.LinkedList
   	* @param {object} callback - Description.   
     */
     callAll: function (callback) {
@@ -132,6 +135,7 @@ Phaser.LinkedList.prototype = {
     * Description.
    	* 
    	* @method dump 
+    * @memberof Phaser.LinkedList
     */
 	dump: function () {
 

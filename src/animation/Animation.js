@@ -2,7 +2,6 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Animation
 */
 
 /**
@@ -118,7 +117,7 @@ Phaser.Animation.prototype = {
     /**
     * Plays this animation.
     *
-    * @method play
+    * @method Phaser.Animation#play
     * @memberof Phaser.Animation
     * @param {number} [frameRate=null] - The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
     * @param {boolean} [loop=null] - Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
@@ -161,7 +160,7 @@ Phaser.Animation.prototype = {
     /**
     * Sets this animation back to the first frame and restarts the animation.
     *
-    * @method restart
+    * @method Phaser.Animation#restart
     * @memberof Phaser.Animation
     */
     restart: function () {
@@ -181,7 +180,7 @@ Phaser.Animation.prototype = {
     /**
     * Stops playback of this animation and set it to a finished state. If a resetFrame is provided it will stop playback and set frame to the first in the animation.
     *
-    * @method stop
+    * @method Phaser.Animation#stop
     * @memberof Phaser.Animation
     * @param {boolean} [resetFrame=false] - If true after the animation stops the currentFrame value will be set to the first frame in this animation.
     */
@@ -202,7 +201,7 @@ Phaser.Animation.prototype = {
     /**
     * Updates this animation. Called automatically by the AnimationManager.
     *
-    * @method update
+    * @method Phaser.Animation#update
     * @memberof Phaser.Animation
     */
     update: function () {
@@ -269,7 +268,7 @@ Phaser.Animation.prototype = {
     /**
     * Cleans up this animation ready for deletion. Nulls all values and references.
     *
-    * @method destroy
+    * @method Phaser.Animation#destroy
     * @memberof Phaser.Animation
     */
     destroy: function () {
@@ -286,7 +285,7 @@ Phaser.Animation.prototype = {
     /**
     * Called internally when the animation finishes playback. Sets the isPlaying and isFinished states and dispatches the onAnimationComplete event if it exists on the parent.
     *
-    * @method onComplete
+    * @method Phaser.Animation#onComplete
     * @memberof Phaser.Animation
     */
     onComplete: function () {
@@ -304,17 +303,9 @@ Phaser.Animation.prototype = {
 };
 
 /**
- * Sets the paused state of the Animation.
- * @memberof Phaser.Animation
- * @param {boolean} value - Set to true to pause the animation or false to resume it if previous paused.
- *
- *//**
- *
- * Returns the paused state of the Animation.
- * @memberof Phaser.Animation
- * @returns {boolean}
- *
- */
+* @name Phaser.Animation#paused
+* @property {boolean} paused - Gets and sets the paused state of this Animation.
+*/
 Object.defineProperty(Phaser.Animation.prototype, "paused", {
 
     get: function () {
@@ -346,11 +337,9 @@ Object.defineProperty(Phaser.Animation.prototype, "paused", {
 });
 
 /**
- * Returns the total number of frames in this Animation.
- * @memberof Phaser.Animation
- * @return {number}
- *
- */
+* @name Phaser.Animation#frameTotal
+* @property {number} frameTotal - The total number of frames in the currently loaded FrameData, or -1 if no FrameData is loaded.
+*/
 Object.defineProperty(Phaser.Animation.prototype, "frameTotal", {
 
     get: function () {
@@ -360,17 +349,9 @@ Object.defineProperty(Phaser.Animation.prototype, "frameTotal", {
 });
 
 /**
- * Sets the current frame to the given frame index and updates the texture cache.
- * @memberof Phaser.Animation
- * @param {number} value - The frame to display
- *
- *//**
- *
- * Returns the current frame, or if not set the index of the most recent frame.
- * @memberof Phaser.Animation
- * @returns {Animation.Frame}
- *
- */
+* @name Phaser.Animation#frame
+* @property {number} frame - Gets or sets the current frame index and updates the Texture Cache for display.
+*/
 Object.defineProperty(Phaser.Animation.prototype, "frame", {
 
     get: function () {
@@ -405,8 +386,7 @@ Object.defineProperty(Phaser.Animation.prototype, "frame", {
 * For example imagine you've got 30 frames named: 'explosion_0001-large' to 'explosion_0030-large'
 * You could use this function to generate those by doing: Phaser.Animation.generateFrameNames('explosion_', 1, 30, '-large', 4);
 *
-* @method generateFrameNames
-* @memberof Phaser.Animation
+* @method Phaser.Animation.generateFrameNames
 * @param {string} prefix - The start of the filename. If the filename was 'explosion_0001-large' the prefix would be 'explosion_'.
 * @param {number} min - The number to start sequentially counting from. If your frames are named 'explosion_0001' to 'explosion_0034' the min is 1.
 * @param {number} max - The number to count up to. If your frames are named 'explosion_0001' to 'explosion_0034' the max is 34.

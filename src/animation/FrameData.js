@@ -2,7 +2,6 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @memberof     Phaser.Animation
 */
 
 /**
@@ -33,8 +32,7 @@ Phaser.Animation.FrameData.prototype = {
     /**
     * Adds a new Frame to this FrameData collection. Typically called by the Animation.Parser and not directly.
     *
-    * @method addFrame
-    * @memberof Phaser.Animation.FrameData
+    * @method Phaser.Animation.FrameData#addFrame
     * @param {Phaser.Animation.Frame} frame - The frame to add to this FrameData set.
     * @return {Phaser.Animation.Frame} The frame that was just added.
     */
@@ -56,8 +54,7 @@ Phaser.Animation.FrameData.prototype = {
 	/**
 	* Get a Frame by its numerical index.
     *
-    * @method getFrame
-    * @memberof Phaser.Animation.FrameData
+    * @method Phaser.Animation.FrameData#getFrame
 	* @param {number} index - The index of the frame you want to get.
 	* @return {Phaser.Animation.Frame} The frame, if found.
 	*/
@@ -75,8 +72,7 @@ Phaser.Animation.FrameData.prototype = {
     /**
     * Get a Frame by its frame name.
     *
-    * @method getFrameByName
-    * @memberof Phaser.Animation.FrameData
+    * @method Phaser.Animation.FrameData#getFrameByName
     * @param {string} name - The name of the frame you want to get.
     * @return {Phaser.Animation.Frame} The frame, if found.
     */
@@ -94,8 +90,7 @@ Phaser.Animation.FrameData.prototype = {
     /**
     * Check if there is a Frame with the given name.
     *
-    * @method checkFrameName
-    * @memberof Phaser.Animation.FrameData
+    * @method Phaser.Animation.FrameData#checkFrameName
     * @param {string} name - The name of the frame you want to check.
     * @return {boolean} True if the frame is found, otherwise false.
     */
@@ -113,8 +108,7 @@ Phaser.Animation.FrameData.prototype = {
 	/**
 	* Returns a range of frames based on the given start and end frame indexes and returns them in an Array.
     *
-    * @method getFrameRange
-    * @memberof Phaser.Animation.FrameData
+    * @method Phaser.Animation.FrameData#getFrameRange
     * @param {number} start - The starting frame index.
 	* @param {number} end - The ending frame index.
 	* @param {Array} [output] - If given the results will be appended to the end of this array otherwise a new array will be created.
@@ -137,8 +131,7 @@ Phaser.Animation.FrameData.prototype = {
 	* Returns all of the Frames in this FrameData set where the frame index is found in the input array.
     * The frames are returned in the output array, or if none is provided in a new Array object.
     *
-    * @method getFrames
-    * @memberof Phaser.Animation.FrameData
+    * @method Phaser.Animation.FrameData#getFrames
     * @param {Array} frames - An Array containing the indexes of the frames to retrieve. If the array is empty then all frames in the FrameData are returned.
     * @param {boolean} [useNumericIndex=true] - Are the given frames using numeric indexes (default) or strings? (false)
     * @param {Array} [output] - If given the results will be appended to the end of this array otherwise a new array will be created.
@@ -185,8 +178,7 @@ Phaser.Animation.FrameData.prototype = {
     * Returns all of the Frame indexes in this FrameData set.
     * The frames indexes are returned in the output array, or if none is provided in a new Array object.
     *
-    * @method getFrameIndexes
-    * @memberof Phaser.Animation.FrameData
+    * @method Phaser.Animation.FrameData#getFrameIndexes
     * @param {Array} frames - An Array containing the indexes of the frames to retrieve. If the array is empty then all frames in the FrameData are returned.
     * @param {boolean} [useNumericIndex=true] - Are the given frames using numeric indexes (default) or strings? (false)
     * @param {Array} [output] - If given the results will be appended to the end of this array otherwise a new array will be created.
@@ -228,18 +220,14 @@ Phaser.Animation.FrameData.prototype = {
 
 };
 
+/**
+* @name Phaser.Animation.FrameData#total
+* @property {number} total - The total number of frames in this FrameData set.
+*/
 Object.defineProperty(Phaser.Animation.FrameData.prototype, "total", {
 
-    /**
-    * Returns the total number of frames in this FrameData set.
-    *
-    * @method total
-    * @memberof Phaser.Animation.FrameData
-    * @return {number} The total number of frames in this FrameData set.
-    */
     get: function () {
         return this._frames.length;
     }
 
 });
-

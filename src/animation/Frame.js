@@ -2,7 +2,6 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @memberof     Phaser.Animation
 */
 
 /**
@@ -129,8 +128,7 @@ Phaser.Animation.Frame.prototype = {
 	/**
 	* If the frame was trimmed when added to the Texture Atlas this records the trim and source data.
 	*
-	* @method setTrim
-	* @memberof Phaser.Animation.Frame
+	* @method Phaser.Animation.Frame#setTrim
 	* @param {boolean} trimmed - If this frame was trimmed or not.
 	* @param {number} actualWidth - The width of the frame before being trimmed.
 	* @param {number} actualHeight - The height of the frame before being trimmed.

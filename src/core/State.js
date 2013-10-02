@@ -112,6 +112,22 @@ Phaser.State.prototype = {
     },
 
     /**
+    * Put update logic here.
+    * 
+    * @method loadUpdate
+    */
+    loadUpdate: function () {
+    },
+
+    /**
+    * Put render operations here.
+    * 
+    * @method loadRender
+    */
+    loadRender: function () {
+    },
+
+    /**
     * This method is called after the game engine successfully switches states.
     * Feel free to add any setup code here (do not load anything here, override preload() instead).
     * 
