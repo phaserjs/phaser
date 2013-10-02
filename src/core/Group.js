@@ -10,9 +10,9 @@
 * @classdesc A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {Description} parent - Description.
-* @param {string} name - The unique name for this animation, used in playback commands.
-* @param {boolean} useStage - Description.
+* @param {*} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
+* @param {string} [name=group] - A name for this Group. Not used internally but useful for debugging.
+* @param {boolean} [useStage=false] - Only the root World Group should use this value.
 */
 Phaser.Group = function (game, parent, name, useStage) {
 
@@ -29,7 +29,7 @@ Phaser.Group = function (game, parent, name, useStage) {
 	this.game = game;
 	
     /**
-	* @property {Phaser.Game} name - Description.
+	* @property {string} name - A name for this Group. Not used internally but useful for debugging.
 	*/
 	this.name = name || 'group';
 
@@ -60,33 +60,31 @@ Phaser.Group = function (game, parent, name, useStage) {
 	}
 
 	/**
-	* @property {Description} type - Description.
+	* @property {number} type - Internal Phaser Type value.
+	* @protected
 	*/
 	this.type = Phaser.GROUP;
 
 	/**
-	* @property {boolean} exists - Description.
+	* @property {boolean} exists - If exists is true the the Group is updated, otherwise it is skipped.
 	* @default
 	*/
 	this.exists = true;
-
-	/**
-	* @property {string} _sortIndex - Helper for sort.
-	* @private
-	* @default
-	*/
-    this._sortIndex = 'y';
 	
 };
 
 Phaser.Group.prototype = {
 
     /**
-    * Description.
+    * Adds an existing object to this Group. The object can be an instance of Phaser.Sprite, Phaser.Button or any other display object.
+    * The child is automatically added to the top of the Group, so renders on-top of everything else within the Group. If you need to control
+    * that then see the addAt method.
     *
+    * @see Phaser.Group#create
+    * @see Phaser.Group#addAt
     * @method Phaser.Group#add
-	* @param {Description} child - Description.
-	* @return {Description} Description.
+	* @param {*} child - An instance of Phaser.Sprite, Phaser.Button or any other display object..
+	* @return {*} The child that was added to the Group.
     */
 	add: function (child) {
 
@@ -107,12 +105,13 @@ Phaser.Group.prototype = {
 	},
 
     /**
-	* Description.
+    * Adds an existing object to this Group. The object can be an instance of Phaser.Sprite, Phaser.Button or any other display object.
+    * The child is added to the Group at the location specified by the index value, this allows you to control child ordering.
 	*
     * @method Phaser.Group#addAt
-	* @param {Description} child - Description.
-	* @param {Description} index - Description.
-    * @return {Description} Description.
+	* @param {*} child - An instance of Phaser.Sprite, Phaser.Button or any other display object..
+	* @param {number} index - The index within the Group to insert the child to.
+	* @return {*} The child that was added to the Group.
 	*/
 	addAt: function (child, index) {
 
@@ -133,12 +132,12 @@ Phaser.Group.prototype = {
 	},
 
     /**
-	* Description.
+	* Returns the child found at the given index within this Group.
 	*
     * @method Phaser.Group#getAt
     * @memberof Phaser.Group
-	* @param {Description} index - Description.
-    * @return {Description} Description.
+	* @param {number} index - The index to return the child from.
+	* @return {*} The child that was found at the given index.
 	*/
 	getAt: function (index) {
 
@@ -147,15 +146,16 @@ Phaser.Group.prototype = {
 	},
 
     /**
-	* Description.
+	* Automatically creates a new Phaser.Sprite object and adds it to the top of this Group.
+	* Useful if you don't need to create the Sprite instances before-hand.
 	*
     * @method Phaser.Group#create
-	* @param {number} x - Description.
-	* @param {number} y - Description.
-	* @param {string} key - Description.
-	* @param {string} [frame] - Description.
-	* @param {boolean} [exists] - Description.
-    * @return {Description} Description.
+	* @param {number} x - The x coordinate to display the newly created Sprite at. The value is in relation to the Group.x point.
+	* @param {number} y - The y coordinate to display the newly created Sprite at. The value is in relation to the Group.y point.
+	* @param {string} key - The Game.cache key of the image that this Sprite will use.
+	* @param {number|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
+	* @param {boolean} [exists] - The default exists state of the Sprite.
+	* @return {Phaser.Sprite} The child that was created.
 	*/
 	create: function (x, y, key, frame, exists) {
 
@@ -178,12 +178,12 @@ Phaser.Group.prototype = {
 	},
 
 	/**
-	* Description.
+	* Swaps the position of two children in this Group.
 	*
     * @method Phaser.Group#swap
-	* @param {Description} child1 - Description.
-	* @param {Description} child2 - Description.
-    * @return {boolean} Description.
+	* @param {*} child1 - The first child to swap.
+	* @param {*} child2 - The second child to swap.
+    * @return {boolean} True if the swap was successful, otherwise false.
 	*/
 	swap: function (child1, child2) {
 
@@ -306,11 +306,11 @@ Phaser.Group.prototype = {
 	},
 
 	/**
-	* Description.
+	* Brings the given child to the top of this Group so it renders above all other children.
 	*
     * @method Phaser.Group#bringToTop
-	* @param {Description} child - Description.
-    * @return {Description} Description.
+	* @param {*} child - The child to bring to the top of this Group.
+    * @return {*} The child that was moved.
 	*/
 	bringToTop: function (child) {
 
@@ -325,11 +325,11 @@ Phaser.Group.prototype = {
 	},
 
 	/**
-	* Description.
+	* Get the index position of the given child in this Group.
 	*
     * @method Phaser.Group#getIndex
-	* @param {Description} child - Description.
-    * @return {Description} Description.
+	* @param {*} child - The child to get the index for.
+    * @return {number} The index of the child or -1 if it's not a member of this Group.
 	*/
 	getIndex: function (child) {
 
@@ -338,11 +338,11 @@ Phaser.Group.prototype = {
 	},
 
 	/**
-	* Description.
+	* Replaces a child of this Group with the given newChild. The newChild cannot be a member of this Group.
 	*
     * @method Phaser.Group#replace
-	* @param {Description} oldChild - Description.
-	* @param {Description} newChild - Description.
+	* @param {*} oldChild - The child in this Group that will be replaced.
+	* @param {*} newChild - The child to be inserted into this group.
 	*/
 	replace: function (oldChild, newChild) {
 
@@ -369,14 +369,13 @@ Phaser.Group.prototype = {
 	},
 
 	/**
-     * Description.
+     * Sets the given property to the given value on the child. The operation controls the assignment of the value.
      *
      * @method Phaser.Group#setProperty
-     * @param {Description} child - Description.
-     * @param {array} key - An array of values that will be set.
-     * @param {Description} value - Description.
-     * @param {Description} operation - Description.
-     * @return {number} An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2). (TODO)
+     * @param {*} child - The child to set the property value on.
+     * @param {array} key - An array of strings that make up the property that will be set.
+     * @param {*} value - The value that will be set.
+     * @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
      */
 	setProperty: function (child, key, value, operation) {
 
@@ -432,14 +431,15 @@ Phaser.Group.prototype = {
 	},
 
 	/**
-     * Description.
+     * This function allows you to quickly set the same property across all children of this Group to a new value.
+     * The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
      *
      * @method Phaser.Group#setAll
-     * @param {Description} key - Description.
-     * @param {Description} value - Description.
-     * @param {Description} checkAlive - Description.
-     * @param {Description} checkVisible - Description.
-     * @param {Description} operation - Description.
+     * @param {string} key - The property, as a string, to be set. For example: 'body.velocity.x'
+     * @param {*} value - The value that will be set.
+     * @param {boolean} [checkAlive=false] - If set then only children with alive=true will be updated.
+     * @param {boolean} [checkVisible=false] - If set then only children with visible=true will be updated.
+     * @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
      */
 	setAll: function (key, value, checkAlive, checkVisible, operation) {
 
@@ -596,13 +596,14 @@ Phaser.Group.prototype = {
 	},
 
 	/**
-	* Description.
+	* Allows you to call your own function on each member of this Group. You must pass the callback and context in which it will run.
    	* After the checkExists parameter you can add as many parameters as you like, which will all be passed to the callback along with the child.
+   	* For example: Group.forEach(awardBonusGold, this, true, 100, 500)
 	* 
 	* @method Phaser.Group#forEach
-	* @param {Description} callback - Description.
-    * @param {Description} callbackContext - Description.
-    * @param {boolean} checkExists - Description.
+	* @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
+    * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
+    * @param {boolean} checkExists - If set only children with exists=true will be passed to the callback, otherwise all children will be passed.
 	*/
 	forEach: function (callback, callbackContext, checkExists) {
 
@@ -635,11 +636,13 @@ Phaser.Group.prototype = {
 	},
 
 	/**
-	* Description.
+	* Allows you to call your own function on each alive member of this Group (where child.alive=true). You must pass the callback and context in which it will run.
+   	* You can add as many parameters as you like, which will all be passed to the callback along with the child.
+   	* For example: Group.forEachAlive(causeDamage, this, 500)
 	* 
 	* @method Phaser.Group#forEachAlive
-	* @param {Description} callback - Description.
-    * @param {Description} callbackContext - Description.
+	* @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
+    * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
 	*/
 	forEachAlive: function (callback, callbackContext) {
 
@@ -667,11 +670,13 @@ Phaser.Group.prototype = {
 	},
 
 	/**
-	* Description.
+	* Allows you to call your own function on each dead member of this Group (where alive=false). You must pass the callback and context in which it will run.
+   	* You can add as many parameters as you like, which will all be passed to the callback along with the child.
+   	* For example: Group.forEachDead(bringToLife, this)
 	* 
 	* @method Phaser.Group#forEachDead
-	* @param {Description} callback - Description.
-    * @param {Description} callbackContext - Description.
+	* @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
+    * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
 	*/
 	forEachDead: function (callback, callbackContext) {
 
@@ -698,10 +703,10 @@ Phaser.Group.prototype = {
 	},
 
 	/**
-    * Call this function to retrieve the first object with exists == (the given state) in the group.
+    * Call this function to retrieve the first object with exists == (the given state) in the Group.
     *
     * @method Phaser.Group#getFirstExists
-    * @param {Description} state - Description.
+    * @param {boolean} state - True or false.
     * @return {Any} The first child, or null if none found.
     */
 	getFirstExists: function (state) {
@@ -733,7 +738,7 @@ Phaser.Group.prototype = {
 
 	/**
     * Call this function to retrieve the first object with alive == true in the group.
-    * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
+    * This is handy for checking if everything has been wiped out, or choosing a squad leader, etc.
     *
     * @method Phaser.Group#getFirstAlive
     * @return {Any} The first alive child, or null if none found.
@@ -762,7 +767,7 @@ Phaser.Group.prototype = {
 
 	/**
     * Call this function to retrieve the first object with alive == false in the group.
-    * This is handy for checking if everything's wiped out, or choosing a squad leader, etc.
+    * This is handy for checking if everything has been wiped out, or choosing a squad leader, etc.
     *
     * @method Phaser.Group#getFirstDead
     * @return {Any} The first dead child, or null if none found.
@@ -872,10 +877,10 @@ Phaser.Group.prototype = {
 	},
 
 	/**
-	* Description.
+	* Removes the given child from this Group and sets its group property to null.
 	*
 	* @method Phaser.Group#remove
-	* @param {Description} child - Description.
+	* @param {Any} child - The child to remove.
 	*/
 	remove: function (child) {
 
@@ -886,7 +891,8 @@ Phaser.Group.prototype = {
 	},
 
 	/**
-	* Description.
+	* Removes all children from this Group, setting all group properties to null.
+	* The Group container remains on the display list.
 	*
 	* @method Phaser.Group#removeAll
 	*/
@@ -910,11 +916,11 @@ Phaser.Group.prototype = {
 	},
 
 	/**
-	* Description.
+	* Removes all children from this Group whos index falls beteen the given startIndex and endIndex values.
 	*
 	* @method Phaser.Group#removeBetween
-	* @param {Description} startIndex - Description.
-	* @param {Description} endIndex - Description.
+	* @param {number} startIndex - The index to start removing children from.
+	* @param {number} endIndex - The index to stop removing children from. Must be higher than startIndex and less than the length of the Group.
 	*/	
 	removeBetween: function (startIndex, endIndex) {
 
@@ -938,7 +944,7 @@ Phaser.Group.prototype = {
 	},
 
 	/**
-	* Description.
+	* Destroys this Group. Removes all children, then removes the container from the display list and nulls references.
 	*
 	* @method Phaser.Group#destroy
 	*/
@@ -957,9 +963,10 @@ Phaser.Group.prototype = {
 	},
 
 	/**
-	* Description.
+	* Dumps out a list of Group children and their index positions to the browser console. Useful for group debugging.
 	*
 	* @method Phaser.Group#dump
+	* @param {boolean} [full=false] - If full the dump will include the entire display list, start from the Stage. Otherwise it will only include this container.
 	*/
 	dump: function (full) {
 
@@ -1046,7 +1053,6 @@ Phaser.Group.prototype = {
 	}
 
 };
-
 
 /**
 * @name Phaser.Group#length
