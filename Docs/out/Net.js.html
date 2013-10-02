@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Source: core/Stage.js</title>
+	<title>Phaser Source: net/Net.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -221,7 +221,7 @@
 					
 
 
-		<h1 class="page-title">Source: core/Stage.js</h1>
+		<h1 class="page-title">Source: net/Net.js</h1>
     
     <section>
         <article>
@@ -232,145 +232,167 @@
 */
 
 /**
-* The Stage controls the canvas on which everything is displayed. It handles display within the browser,
-* focus handling, game resizing, scaling and the pause, boot and orientation screens.
+* Description of Phaser.Net
 *
-* @class Phaser.Stage
+* @class Phaser.Net
 * @constructor
-* @param {Phaser.Game} game - Game reference to the currently running game.
-* @param {number} width - Width of the canvas element.
-* @param {number} height - Height of the canvas element.
- */
-Phaser.Stage = function (game, width, height) {
-
-    /**
-	* @property {Phaser.Game} game - A reference to the currently running Game.
-	*/
+* @param {Phaser.Game} game - A reference to the currently running game.
+*/
+Phaser.Net = function (game) {
+	
 	this.game = game;
 
-    /**
-	* @property {string} game - Background color of the stage (defaults to black). Set via the public backgroundColor property.
-	* @private
-	* @default 'rgb(0,0,0)'
-	*/
-    this._backgroundColor = 'rgb(0,0,0)';
-
-    /**
-	* @property {Phaser.Point} offset - Get the offset values (for input and other things).
-	*/
-	this.offset = new Phaser.Point;
-    
-    /**
-    * @property {HTMLCanvasElement} canvas - Reference to the newly created &lt;canvas&gt; element.
-    */
-    this.canvas = Phaser.Canvas.create(width, height); 
-    this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
-    
-    /**
-    * @property {PIXI.Stage} _stage - The Pixi Stage which is hooked to the renderer.
-    * @private
-    */
-    this._stage = new PIXI.Stage(0x000000, false);
-    this._stage.name = '_stage_root';
-
-    /**
-    * @property {number} scaleMode - The current scaleMode.
-    */    
-    this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
-
-    /**
-    * @property {Phaser.StageScaleMode} scale - The scale of the current running game.
-    */
-    this.scale = new Phaser.StageScaleMode(this.game, width, height);
-
-    /**
-     * @property {number} aspectRatio - Aspect ratio.
-     */
-    this.aspectRatio = width / height;
-
 };
 
-Phaser.Stage.prototype = {
-
-    /**
-    * Initialises the stage and adds the event listeners.
-    * @method Phaser.Stage#boot
-    * @private
-    */
-    boot: function () {
-
-        Phaser.Canvas.getOffset(this.canvas, this.offset);
-
-        this.bounds = new Phaser.Rectangle(this.offset.x, this.offset.y, this.game.width, this.game.height);
-
-        var _this = this;
-
-        this._onChange = function (event) {
-            return _this.visibilityChange(event);
-        }
-
-        Phaser.Canvas.setUserSelect(this.canvas, 'none');
-        Phaser.Canvas.setTouchAction(this.canvas, 'none');
-
-        document.addEventListener('visibilitychange', this._onChange, false);
-        document.addEventListener('webkitvisibilitychange', this._onChange, false);
-        document.addEventListener('pagehide', this._onChange, false);
-        document.addEventListener('pageshow', this._onChange, false);
-
-        window.onblur = this._onChange;
-        window.onfocus = this._onChange;
-
-    },
+Phaser.Net.prototype = {
 
 	/**
-    * This method is called when the document visibility is changed.
-    * @method Phaser.Stage#visibilityChange
-    * @param {Event} event - Its type will be used to decide whether the game should be paused or not.
-    */
-    visibilityChange: function (event) {
+	* Returns the hostname given by the browser.
+	* 
+	* @method Phaser.Net#getHostName
+	* @return {string}
+	*/        
+	getHostName: function () {
 
-        if (this.disableVisibilityChange)
-        {
-            return;
-        }
+		if (window.location && window.location.hostname) {
+			return window.location.hostname;
+		}
 
-        if (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true)
-        {
-	        this.game.paused = true;
-        }
-        else
-        {
-	        this.game.paused = false;
-        }
+		return null;
 
-    },
+	},
+
+	/**
+	* Compares the given domain name against the hostname of the browser containing the game.
+	* If the domain name is found it returns true.
+	* You can specify a part of a domain, for example 'google' would match 'google.com', 'google.co.uk', etc.
+	* Do not include 'http://' at the start.
+	* 
+	* @method Phaser.Net#checkDomainName
+	* @param {string} domain
+	* @return {boolean}
+	*/        
+	checkDomainName: function (domain) {
+		return window.location.hostname.indexOf(domain) !== -1;
+	},
+
+	/**
+	* Updates a value on the Query String and returns it in full.
+	* If the value doesn't already exist it is set.
+	* If the value exists it is replaced with the new value given. If you don't provide a new value it is removed from the query string.
+	* Optionally you can redirect to the new url, or just return it as a string.
+	* 
+	* @method Phaser.Net#updateQueryString
+	* @param {string} key - The querystring key to update.
+	* @param {string} value - The new value to be set. If it already exists it will be replaced.
+	* @param {boolean} redirect - If true the browser will issue a redirect to the url with the new querystring.
+	* @param {string} url - The URL to modify. If none is given it uses window.location.href.
+	* @return {string} If redirect is false then the modified url and query string is returned.
+	*/
+	updateQueryString: function (key, value, redirect, url) {
+
+		if (typeof redirect === "undefined") { redirect = false; }
+		if (typeof url === "undefined") { url = ''; }
+
+		if (url == '') {
+			url = window.location.href;
+		}
+
+		var output = '';
+		var re = new RegExp("([?|&])" + key + "=.*?(&|#|$)(.*)", "gi");
+		
+		if (re.test(url))
+		{
+			if (typeof value !== 'undefined' && value !== null)
+			{
+				output = url.replace(re, '$1' + key + "=" + value + '$2$3');
+			}
+			else
+			{
+				output = url.replace(re, '$1$3').replace(/(&|\?)$/, '');
+			}
+		}
+		else
+		{
+			if (typeof value !== 'undefined' && value !== null)
+			{
+				var separator = url.indexOf('?') !== -1 ? '&' : '?';
+				var hash = url.split('#');
+				url = hash[0] + separator + key + '=' + value;
+
+				if (hash[1]) {
+					url += '#' + hash[1];
+				}
+
+				output = url;
+
+			}
+			else
+			{
+				output = url;
+			}
+		}
+
+		if (redirect)
+		{
+			window.location.href = output;
+		}
+		else
+		{
+			return output;
+		}
+
+	},
+
+	/**
+	* Returns the Query String as an object.
+	* If you specify a parameter it will return just the value of that parameter, should it exist.
+	* 
+	* @method Phaser.Net#getQueryString
+	* @param {string} [parameter=''] - If specified this will return just the value for that key.
+	* @return {string|object} An object containing the key value pairs found in the query string or just the value if a parameter was given.
+	*/
+	getQueryString: function (parameter) {
+
+		if (typeof parameter === "undefined") { parameter = ''; }
+
+		var output = {};
+		var keyValues = location.search.substring(1).split('&');
+
+		for (var i in keyValues) {
+
+			var key = keyValues[i].split('=');
+
+			if (key.length > 1)
+			{
+				if (parameter && parameter == this.decodeURI(key[0]))
+				{
+					return this.decodeURI(key[1]);
+				}
+				else
+				{
+					output[this.decodeURI(key[0])] = this.decodeURI(key[1]);
+				}
+			}
+		}
+
+		return output;
+
+	},
+
+	/**
+	* Returns the Query String as an object.
+	* If you specify a parameter it will return just the value of that parameter, should it exist.
+	* 
+	* @method Phaser.Net#decodeURI
+	* @param {string} value - The URI component to be decoded.
+	* @return {string} The decoded value.
+	*/
+	decodeURI: function (value) {
+		return decodeURIComponent(value.replace(/\+/g, " "));
+	}
 
 };
-
-/**
-* @name Phaser.Stage#backgroundColor
-* @property {number|string} paused - Gets and sets the background color of the stage. The color can be given as a number: 0xff0000 or a hex string: '#ff0000'
-*/
-Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
-
-    get: function () {
-        return this._backgroundColor;
-    },
-
-    set: function (color) {
-
-        this._backgroundColor = color;
-
-        if (typeof color === 'string')
-        {
-            color = Phaser.Color.hexToRGB(color);
-        }
-
-        this._stage.setBackgroundColor(color);
-
-    }
-
-});
 </pre>
         </article>
     </section>

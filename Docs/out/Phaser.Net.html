@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Class: Parser</title>
+	<title>Phaser Class: Net</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -221,15 +221,15 @@
 					
 
 
-	<h1 class="page-title">Class: Parser</h1>
+	<h1 class="page-title">Class: Net</h1>
 <section>
 
 <header>
     <h2>
-        <span class="ancestors"><a href="Phaser.Animation.html">.Animation</a>.</span>
-    
-    Parser
+    Net
     </h2>
+    
+        <div class="class-description"><p>Phaser.Net</p></div>
     
 </header>
 
@@ -240,7 +240,7 @@
     
         
 <dt>
-    <h4 class="name" id="Parser"><span class="type-signature"></span>new Parser<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Net"><span class="type-signature"></span>new Net<span class="signature">(game)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -248,7 +248,7 @@
     
     
     <div class="description">
-        <p>Responsible for parsing sprite sheet and JSON data into the internal FrameData format that Phaser uses for animations.</p>
+        <p>Description of Phaser.Net</p>
     </div>
     
 
@@ -256,6 +256,55 @@
     
     
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>game</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A reference to the currently running game.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
     
     
     
@@ -281,7 +330,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Parser.js.html">animation/Parser.js</a>, <a href="Parser.js.html#sunlight-1-line-3">line 3</a>
+        <a href="Net.js.html">net/Net.js</a>, <a href="Net.js.html#sunlight-1-line-14">line 14</a>
     </li></ul></dd>
     
 
@@ -327,7 +376,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="JSONData"><span class="type-signature">&lt;static> </span>JSONData<span class="signature">(game, json, cacheKey)</span><span class="type-signature"> &rarr; {<a href="Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a>}</span></h4>
+    <h4 class="name" id="checkDomainName"><span class="type-signature"></span>checkDomainName<span class="signature">(domain)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
     
 </dt>
@@ -335,7 +384,10 @@
     
     
     <div class="description">
-        <p>Parse the JSON data and extract the animation frame data from it.</p>
+        <p>Compares the given domain name against the hostname of the browser containing the game.
+If the domain name is found it returns true.
+You can specify a part of a domain, for example 'google' would match 'google.com', 'google.co.uk', etc.
+Do not include 'http://' at the start.</p>
     </div>
     
 
@@ -369,53 +421,7 @@
 
         <tr>
             
-                <td class="name"><code>game</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A reference to the currently running game.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>json</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The JSON data from the Texture Atlas. Must be in Array format.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>cacheKey</code></td>
+                <td class="name"><code>domain</code></td>
             
 
             <td class="type">
@@ -431,7 +437,7 @@
 
             
 
-            <td class="description last"><p>The Game.Cache asset key of the texture image.</p></td>
+            <td class="description last"></td>
         </tr>
 
 	
@@ -463,7 +469,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Parser.js.html">animation/Parser.js</a>, <a href="Parser.js.html#sunlight-1-line-95">line 95</a>
+        <a href="Net.js.html">net/Net.js</a>, <a href="Net.js.html#sunlight-1-line-38">line 38</a>
     </li></ul></dd>
     
 
@@ -487,10 +493,6 @@
     <h5>Returns:</h5>
     
             
-<div class="param-desc">
-    <p>A FrameData object containing the parsed frames.</p>
-</div>
-
 
 
 <dl>
@@ -499,7 +501,7 @@
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a></span>
+<span class="param-type">boolean</span>
 
 
 	</dd>
@@ -514,7 +516,7 @@
         
             
 <dt>
-    <h4 class="name" id="JSONDataHash"><span class="type-signature">&lt;static> </span>JSONDataHash<span class="signature">(game, json, cacheKey)</span><span class="type-signature"> &rarr; {<a href="Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a>}</span></h4>
+    <h4 class="name" id="decodeURI"><span class="type-signature"></span>decodeURI<span class="signature">(value)</span><span class="type-signature"> &rarr; {string}</span></h4>
     
     
 </dt>
@@ -522,7 +524,8 @@
     
     
     <div class="description">
-        <p>Parse the JSON data and extract the animation frame data from it.</p>
+        <p>Returns the Query String as an object.
+If you specify a parameter it will return just the value of that parameter, should it exist.</p>
     </div>
     
 
@@ -556,53 +559,7 @@
 
         <tr>
             
-                <td class="name"><code>game</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A reference to the currently running game.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>json</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The JSON data from the Texture Atlas. Must be in JSON Hash format.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>cacheKey</code></td>
+                <td class="name"><code>value</code></td>
             
 
             <td class="type">
@@ -618,7 +575,7 @@
 
             
 
-            <td class="description last"><p>The Game.Cache asset key of the texture image.</p></td>
+            <td class="description last"><p>The URI component to be decoded.</p></td>
         </tr>
 
 	
@@ -650,7 +607,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Parser.js.html">animation/Parser.js</a>, <a href="Parser.js.html#sunlight-1-line-166">line 166</a>
+        <a href="Net.js.html">net/Net.js</a>, <a href="Net.js.html#sunlight-1-line-156">line 156</a>
     </li></ul></dd>
     
 
@@ -675,7 +632,7 @@
     
             
 <div class="param-desc">
-    <p>A FrameData object containing the parsed frames.</p>
+    <p>The decoded value.</p>
 </div>
 
 
@@ -686,7 +643,7 @@
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a></span>
+<span class="param-type">string</span>
 
 
 	</dd>
@@ -701,7 +658,7 @@
         
             
 <dt>
-    <h4 class="name" id="spriteSheet"><span class="type-signature">&lt;static> </span>spriteSheet<span class="signature">(game, key, frameWidth, frameHeight, <span class="optional">frameMax</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a>}</span></h4>
+    <h4 class="name" id="getHostName"><span class="type-signature"></span>getHostName<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
     
     
 </dt>
@@ -709,7 +666,96 @@
     
     
     <div class="description">
-        <p>Parse a Sprite Sheet and extract the animation frame data from it.</p>
+        <p>Returns the hostname given by the browser.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Net.js.html">net/Net.js</a>, <a href="Net.js.html#sunlight-1-line-22">line 22</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">string</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getQueryString"><span class="type-signature"></span>getQueryString<span class="signature">(<span class="optional">parameter</span>)</span><span class="type-signature"> &rarr; {string|object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Returns the Query String as an object.
+If you specify a parameter it will return just the value of that parameter, should it exist.</p>
     </div>
     
 
@@ -747,153 +793,13 @@
 
         <tr>
             
-                <td class="name"><code>game</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>A reference to the currently running game.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>key</code></td>
+                <td class="name"><code>parameter</code></td>
             
 
             <td class="type">
             
                 
 <span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The Game.Cache asset key of the Sprite Sheet image.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>frameWidth</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The fixed width of each frame of the animation.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>frameHeight</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The fixed height of each frame of the animation.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>frameMax</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
 
 
             
@@ -914,12 +820,12 @@
             
                 <td class="default">
                 
-                    -1
+                    ''
                 
                 </td>
             
 
-            <td class="description last"><p>The total number of animation frames to extact from the Sprite Sheet. The default value of -1 means &quot;extract all frames&quot;.</p></td>
+            <td class="description last"><p>If specified this will return just the value for that key.</p></td>
         </tr>
 
 	
@@ -951,7 +857,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Parser.js.html">animation/Parser.js</a>, <a href="Parser.js.html#sunlight-1-line-14">line 14</a>
+        <a href="Net.js.html">net/Net.js</a>, <a href="Net.js.html#sunlight-1-line-120">line 120</a>
     </li></ul></dd>
     
 
@@ -976,7 +882,7 @@
     
             
 <div class="param-desc">
-    <p>A FrameData object containing the parsed frames.</p>
+    <p>An object containing the key value pairs found in the query string or just the value if a parameter was given.</p>
 </div>
 
 
@@ -987,7 +893,10 @@
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a></span>
+<span class="param-type">string</span>
+|
+
+<span class="param-type">object</span>
 
 
 	</dd>
@@ -1002,7 +911,7 @@
         
             
 <dt>
-    <h4 class="name" id="XMLData"><span class="type-signature">&lt;static> </span>XMLData<span class="signature">(game, xml, cacheKey)</span><span class="type-signature"> &rarr; {<a href="Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a>}</span></h4>
+    <h4 class="name" id="updateQueryString"><span class="type-signature"></span>updateQueryString<span class="signature">(key, value, redirect, url)</span><span class="type-signature"> &rarr; {string}</span></h4>
     
     
 </dt>
@@ -1010,7 +919,10 @@
     
     
     <div class="description">
-        <p>Parse the XML data and extract the animation frame data from it.</p>
+        <p>Updates a value on the Query String and returns it in full.
+If the value doesn't already exist it is set.
+If the value exists it is replaced with the new value given. If you don't provide a new value it is removed from the query string.
+Optionally you can redirect to the new url, or just return it as a string.</p>
     </div>
     
 
@@ -1044,53 +956,7 @@
 
         <tr>
             
-                <td class="name"><code>game</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A reference to the currently running game.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>xml</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The XML data from the Texture Atlas. Must be in Starling XML format.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>cacheKey</code></td>
+                <td class="name"><code>key</code></td>
             
 
             <td class="type">
@@ -1106,7 +972,76 @@
 
             
 
-            <td class="description last"><p>The Game.Cache asset key of the texture image.</p></td>
+            <td class="description last"><p>The querystring key to update.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The new value to be set. If it already exists it will be replaced.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>redirect</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If true the browser will issue a redirect to the url with the new querystring.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The URL to modify. If none is given it uses window.location.href.</p></td>
         </tr>
 
 	
@@ -1138,7 +1073,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Parser.js.html">animation/Parser.js</a>, <a href="Parser.js.html#sunlight-1-line-240">line 240</a>
+        <a href="Net.js.html">net/Net.js</a>, <a href="Net.js.html#sunlight-1-line-52">line 52</a>
     </li></ul></dd>
     
 
@@ -1163,7 +1098,7 @@
     
             
 <div class="param-desc">
-    <p>A FrameData object containing the parsed frames.</p>
+    <p>If redirect is false then the modified url and query string is returned.</p>
 </div>
 
 
@@ -1174,7 +1109,7 @@
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="Phaser.Animation.FrameData.html">Phaser.Animation.FrameData</a></span>
+<span class="param-type">string</span>
 
 
 	</dd>
@@ -1212,7 +1147,7 @@
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a>
-		on Wed Oct 02 2013 16:05:22 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Oct 02 2013 16:05:24 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Class: Stage</title>
+	<title>Phaser Class: Particles</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -221,15 +221,15 @@
 					
 
 
-	<h1 class="page-title">Class: Stage</h1>
+	<h1 class="page-title">Class: Particles</h1>
 <section>
 
 <header>
     <h2>
-    Stage
+    Particles
     </h2>
     
-        <div class="class-description"><p>Phaser.Stage</p></div>
+        <div class="class-description"><p>Phaser Particles</p></div>
     
 </header>
 
@@ -240,7 +240,7 @@
     
         
 <dt>
-    <h4 class="name" id="Stage"><span class="type-signature"></span>new Stage<span class="signature">(game, width, height)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Particles"><span class="type-signature"></span>new Particles<span class="signature">(game)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -248,8 +248,7 @@
     
     
     <div class="description">
-        <p>The Stage controls the canvas on which everything is displayed. It handles display within the browser,
-focus handling, game resizing, scaling and the pause, boot and orientation screens.</p>
+        <p>Phaser.Particles is the Particle Manager for the game. It is called during the game update loop and in turn updates any Emitters attached to it.</p>
     </div>
     
 
@@ -299,53 +298,7 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
 
             
 
-            <td class="description last"><p>Game reference to the currently running game.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Width of the canvas element.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Height of the canvas element.</p></td>
+            <td class="description last"><p>A reference to the currently running game.</p></td>
         </tr>
 
 	
@@ -377,7 +330,7 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-17">line 17</a>
+        <a href="Particles.js.html">particles/Particles.js</a>, <a href="Particles.js.html#sunlight-1-line-15">line 15</a>
     </li></ul></dd>
     
 
@@ -421,7 +374,7 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
         <dl>
             
 <dt>
-    <h4 class="name" id="aspectRatio"><span class="type-signature"></span>aspectRatio<span class="type-signature"></span></h4>
+    <h4 class="name" id="emitters"><span class="type-signature"></span>emitters<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -460,7 +413,109 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
 
         <tr>
             
-                <td class="name"><code>aspectRatio</code></td>
+                <td class="name"><code>emitters</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Description</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Description.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Particles.js.html">particles/Particles.js</a>, <a href="Particles.js.html#sunlight-1-line-20">line 20</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="ID"><span class="type-signature"></span>ID<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>ID</code></td>
             
 
             <td class="type">
@@ -476,7 +531,7 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
 
             
 
-            <td class="description last"><p>Aspect ratio.</p></td>
+            <td class="description last"><p>Description.</p></td>
         </tr>
 
 	
@@ -501,626 +556,14 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
     
 
     
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-62">line 62</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="backgroundColor"><span class="type-signature"></span>backgroundColor<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>paused</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-|
-
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Gets and sets the background color of the stage. The color can be given as a number: 0xff0000 or a hex string: '#ff0000'</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-123">line 123</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="canvas"><span class="type-signature"></span>canvas<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>canvas</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">HTMLCanvasElement</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Reference to the newly created &lt;canvas&gt; element.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-39">line 39</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="game"><span class="type-signature"></span>game<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>game</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A reference to the currently running Game.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-22">line 22</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="offset"><span class="type-signature"></span>offset<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>offset</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Get the offset values (for input and other things).</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-34">line 34</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="scale"><span class="type-signature"></span>scale<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>scale</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Phaser.StageScaleMode</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The scale of the current running game.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-57">line 57</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="scaleMode"><span class="type-signature"></span>scaleMode<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>scaleMode</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The current scaleMode.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-52">line 52</a>
+        <a href="Particles.js.html">particles/Particles.js</a>, <a href="Particles.js.html#sunlight-1-line-26">line 26</a>
     </li></ul></dd>
     
 
@@ -1144,7 +587,7 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
         <dl>
             
 <dt>
-    <h4 class="name" id="visibilityChange"><span class="type-signature"></span>visibilityChange<span class="signature">(event)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="add"><span class="type-signature"></span>add<span class="signature">(emitter)</span><span class="type-signature"> &rarr; {Phaser.Emitter}</span></h4>
     
     
 </dt>
@@ -1152,7 +595,7 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
     
     
     <div class="description">
-        <p>This method is called when the document visibility is changed.</p>
+        <p>Adds a new Particle Emitter to the Particle Manager.</p>
     </div>
     
 
@@ -1186,13 +629,13 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
 
         <tr>
             
-                <td class="name"><code>event</code></td>
+                <td class="name"><code>emitter</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Event</span>
+<span class="param-type">Phaser.Emitter</span>
 
 
             
@@ -1202,7 +645,7 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
 
             
 
-            <td class="description last"><p>Its type will be used to decide whether the game should be paused or not.</p></td>
+            <td class="description last"><p>Description.</p></td>
         </tr>
 
 	
@@ -1234,7 +677,217 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Stage.js.html">core/Stage.js</a>, <a href="Stage.js.html#sunlight-1-line-98">line 98</a>
+        <a href="Particles.js.html">particles/Particles.js</a>, <a href="Particles.js.html#sunlight-1-line-32">line 32</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The emitter that was added.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Phaser.Emitter</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="remove"><span class="type-signature"></span>remove<span class="signature">(emitter)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Removes an existing Particle Emitter from the Particle Manager.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>emitter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Emitter</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The emitter to remove.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Particles.js.html">particles/Particles.js</a>, <a href="Particles.js.html#sunlight-1-line-46">line 46</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="update"><span class="type-signature">&lt;protected> </span>update<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Called by the core game loop. Updates all Emitters who have their exists value set to true.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Particles.js.html">particles/Particles.js</a>, <a href="Particles.js.html#sunlight-1-line-57">line 57</a>
     </li></ul></dd>
     
 
@@ -1285,7 +938,7 @@ focus handling, game resizing, scaling and the pause, boot and orientation scree
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a>
-		on Wed Oct 02 2013 16:05:25 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Oct 02 2013 16:05:24 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

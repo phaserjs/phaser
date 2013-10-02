@@ -1,9 +1,7 @@
-
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Sound
 */
 
 /**
@@ -14,8 +12,8 @@
 * @constructor
 * @param {Phaser.Game} game - Reference to the current game instance.
 * @param {string} key - Asset key for the sound.
-* @param {number} volume - Default value for the volume.
-* @param {boolean} loop - Whether or not the sound will loop.
+* @param {number} [volume=1] - Default value for the volume, between 0 and 1.
+* @param {boolean} [loop=false] - Whether or not the sound will loop.
 */
 Phaser.Sound = function (game, key, volume, loop) {
 	
@@ -260,23 +258,25 @@ Phaser.Sound = function (game, key, volume, loop) {
 Phaser.Sound.prototype = {
 
 	/**
-	 * @method soundHasUnlocked
-	 * @param {string} key - Description.
-	 */
+    * Called automatically when this sound is unlocked.
+	* @method Phaser.Sound#soundHasUnlocked
+	* @param {string} key - Description.
+    * @protected
+	*/
     soundHasUnlocked: function (key) {
 
         if (key == this.key)
         {
             this._sound = this.game.cache.getSoundData(this.key);
             this.totalDuration = this._sound.duration;
-            console.log('sound has unlocked' + this._sound);
+            // console.log('sound has unlocked' + this._sound);
 	    }
 
 	},
 
 	/**
 	 * Description.
-	 * @method addMarker
+	 * @method Phaser.Sound#addMarker
 	 * @param {string} name - Description.
 	 * @param {Description} start - Description.
 	 * @param {Description} stop - Description.
@@ -299,8 +299,17 @@ Phaser.Sound.prototype = {
     },
     */
 
-    //  start and stop are in SECONDS.MS (2.5 = 2500ms, 0.5 = 500ms, etc)
-    //  volume is between 0 and 1
+    /**
+    * Adds a marker into the current Sound. A marker is represented by a unique key and a start time and duration.
+    * This allows you to bundle multiple sounds together into a single audio file and use markers to jump between them for playback.
+    *
+    * @method Phaser.Sound#addMarker
+    * @param {string} name - A unique name for this marker, i.e. 'explosion', 'gunshot', etc.
+    * @param {number} start - The start point of this marker in the audio file, given in seconds. 2.5 = 2500ms, 0.5 = 500ms, etc.
+    * @param {number} duration - The duration of the marker in seconds. 2.5 = 2500ms, 0.5 = 500ms, etc.
+    * @param {number} [volume=1] - The volume the sound will play back at, between 0 (silent) and 1 (full volume).
+    * @param {boolean} [loop=false] - Sets if the sound will loop or not.
+    */
     addMarker: function (name, start, duration, volume, loop) {
 
         volume = volume || 1;
@@ -319,10 +328,10 @@ Phaser.Sound.prototype = {
     },
 
 	/**
-	 * Description.
-	 * @method removeMarker
-	 * @param {string} name - Description.
-	 */
+	* Removes a marker from the sound.
+	* @method Phaser.Sound#removeMarker
+	* @param {string} name - The key of the marker to remove.
+	*/
     removeMarker: function (name) {
 
         delete this.markers[name];
@@ -330,9 +339,10 @@ Phaser.Sound.prototype = {
     },
 
 	/**
-	 * Description.
-	 * @method update
-	 */
+	* Called automatically by Phaser.SoundManager.
+	* @method Phaser.Sound#update
+    * @protected
+	*/
     update: function () {
 
         if (this.pendingPlayback && this.game.cache.isSoundReady(this.key))
@@ -392,12 +402,12 @@ Phaser.Sound.prototype = {
 
 	/**
     * Play this sound, or a marked section of it.
-    * @method play
-    * @param {string} marker - Assets key of the sound you want to play.
-    * @param {number} position - The starting position.
-    * @param {number} [volume] - Volume of the sound you want to play.
-    * @param {boolean} [loop] - Loop when it finished playing? (Default to false)
-    * @param {Description} forceRestart - Description.
+    * @method Phaser.Sound#play
+    * @param {string} [marker=''] - If you want to play a marker then give the key here, otherwise leave blank to play the full sound.
+    * @param {number} [position=0] - The starting position to play the sound from - this is ignored if you provide a marker.
+    * @param {number} [volume=1] - Volume of the sound you want to play.
+    * @param {boolean} [loop=false] - Loop when it finished playing?
+    * @param {boolean} [forceRestart=true] - If the sound is already playing you can set forceRestart to restart it from the beginning.
     * @return {Sound} The playing sound object.
     */
     play: function (marker, position, volume, loop, forceRestart) {
@@ -589,7 +599,7 @@ Phaser.Sound.prototype = {
 
     /**
     * Restart the sound, or a marked section of it.
-    * @method restart
+    * @method Phaser.Sound#restart
     * @param {string} marker - Assets key of the sound you want to play.
     * @param {number} position - The starting position.
     * @param {number} [volume] - Volume of the sound you want to play.
@@ -608,7 +618,7 @@ Phaser.Sound.prototype = {
 
     /**
     * Pauses the sound
-    * @method pause
+    * @method Phaser.Sound#pause
     */
     pause: function () {
 
@@ -623,7 +633,7 @@ Phaser.Sound.prototype = {
     },
     /**
     * Resumes the sound
-    * @method resume
+    * @method Phaser.Sound#resume
     */
     resume: function () {
 
@@ -655,7 +665,7 @@ Phaser.Sound.prototype = {
 
 	/**
     * Stop playing this sound.
-    * @method stop
+    * @method Phaser.Sound#stop
     */
     stop: function () {
 

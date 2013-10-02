@@ -2,12 +2,11 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Particles
 */
 
-
 /**
-* Phaser.Particles constructor
+* Phaser.Particles is the Particle Manager for the game. It is called during the game update loop and in turn updates any Emitters attached to it.
+*
 * @class Phaser.Particles
 * @classdesc Phaser Particles
 * @constructor
@@ -31,16 +30,10 @@ Phaser.Particles = function (game) {
 Phaser.Particles.prototype = {
 
 	/**
-	* Description.
-	* @method emitters
-	*/
-	emitters: null,
-
-	/**
-	* Description.
-	* @method add
-	* @param {Description} emitter - Description.
-	* @return {Description} Description.
+	* Adds a new Particle Emitter to the Particle Manager.
+	* @method Phaser.Particles#add
+	* @param {Phaser.Emitter} emitter - Description.
+	* @return {Phaser.Emitter} The emitter that was added.
 	*/
 	add: function (emitter) {
 
@@ -51,9 +44,9 @@ Phaser.Particles.prototype = {
 	},
 
 	/**
-	* Description.
-	* @method remove
-	* @param {Description} emitter - Description.
+	* Removes an existing Particle Emitter from the Particle Manager.
+	* @method Phaser.Particles#remove
+	* @param {Phaser.Emitter} emitter - The emitter to remove.
 	*/
 	remove: function (emitter) {
 
@@ -62,9 +55,9 @@ Phaser.Particles.prototype = {
 	},
 
 	/**
-	* Description.
-	* @method update
-	* @param {Description} emitter - Description.
+	* Called by the core game loop. Updates all Emitters who have their exists value set to true.
+	* @method Phaser.Particles#update
+	* @protected
 	*/
 	update: function () {
 
@@ -76,6 +69,6 @@ Phaser.Particles.prototype = {
 			}
 		}
 
-	},
+	}
 
 };

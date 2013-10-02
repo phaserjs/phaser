@@ -120,6 +120,8 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
         this.onInputUp.add(callback, callbackContext);
     }
 
+    this.freezeFrames = false;
+
     this.input.start(0, true);
 
     //  Redirect the input events to here so we can handle animation updates, etc
@@ -222,13 +224,16 @@ Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
 */
 Phaser.Button.prototype.onInputOverHandler = function (pointer) {
 
-    if (this._onOverFrameName != null)
+    if (this.freezeFrames == false)
     {
-        this.frameName = this._onOverFrameName;
-    }
-    else if (this._onOverFrameID != null)
-    {
-        this.frame = this._onOverFrameID;
+        if (this._onOverFrameName != null)
+        {
+            this.frameName = this._onOverFrameName;
+        }
+        else if (this._onOverFrameID != null)
+        {
+            this.frame = this._onOverFrameID;
+        }
     }
 
     if (this.onInputOver)
@@ -245,13 +250,16 @@ Phaser.Button.prototype.onInputOverHandler = function (pointer) {
 */
 Phaser.Button.prototype.onInputOutHandler = function (pointer) {
 
-    if (this._onOutFrameName != null)
+    if (this.freezeFrames == false)
     {
-        this.frameName = this._onOutFrameName;
-    }
-    else if (this._onOutFrameID != null)
-    {
-        this.frame = this._onOutFrameID;
+        if (this._onOutFrameName != null)
+        {
+            this.frameName = this._onOutFrameName;
+        }
+        else if (this._onOutFrameID != null)
+        {
+            this.frame = this._onOutFrameID;
+        }
     }
 
     if (this.onInputOut)
@@ -268,13 +276,16 @@ Phaser.Button.prototype.onInputOutHandler = function (pointer) {
 */
 Phaser.Button.prototype.onInputDownHandler = function (pointer) {
 
-    if (this._onDownFrameName != null)
+    if (this.freezeFrames == false)
     {
-        this.frameName = this._onDownFrameName;
-    }
-    else if (this._onDownFrameID != null)
-    {
-        this.frame = this._onDownFrameID;
+        if (this._onDownFrameName != null)
+        {
+            this.frameName = this._onDownFrameName;
+        }
+        else if (this._onDownFrameID != null)
+        {
+            this.frame = this._onDownFrameID;
+        }
     }
 
     if (this.onInputDown)
@@ -291,13 +302,16 @@ Phaser.Button.prototype.onInputDownHandler = function (pointer) {
 */
 Phaser.Button.prototype.onInputUpHandler = function (pointer) {
 
-    if (this._onUpFrameName != null)
+    if (this.freezeFrames == false)
     {
-        this.frameName = this._onUpFrameName;
-    }
-    else if (this._onUpFrameID != null)
-    {
-        this.frame = this._onUpFrameID;
+        if (this._onUpFrameName != null)
+        {
+            this.frameName = this._onUpFrameName;
+        }
+        else if (this._onUpFrameID != null)
+        {
+            this.frame = this._onUpFrameID;
+        }
     }
 
     if (this.onInputUp)
