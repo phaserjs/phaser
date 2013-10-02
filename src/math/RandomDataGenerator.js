@@ -2,17 +2,15 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.RandomDataGenerator
 */
-
 
 /**
 * Phaser.RandomDataGenerator constructor.
 * 
 * @class Phaser.RandomDataGenerator
 * @classdesc An extremely useful repeatable random data generator. Access it via Phaser.Game.rnd
-* Based on Nonsense by Josh Faul {@link https://github.com/jocafa/Nonsense}. 
-* Random number generator from {@link http://baagoe.org/en/wiki/Better_random_numbers_for_javascript}
+* Based on Nonsense by Josh Faul https://github.com/jocafa/Nonsense.
+* Random number generator from http://baagoe.org/en/wiki/Better_random_numbers_for_javascript
 * 
 * @constructor
 * @param {array} seeds
@@ -53,7 +51,7 @@ Phaser.RandomDataGenerator.prototype = {
 
 	/**
 	* Private random helper.
-	* @method rnd
+	* @method Phaser.RandomDataGenerator#rnd
 	* @private
 	* @return {number} Description.
 	*/
@@ -72,7 +70,7 @@ Phaser.RandomDataGenerator.prototype = {
 	/**
 	* Reset the seed of the random data generator.
 	* 
-	* @method sow
+	* @method Phaser.RandomDataGenerator#sow
 	* @param {array} seeds
 	*/
 	sow: function (seeds) {
@@ -98,7 +96,7 @@ Phaser.RandomDataGenerator.prototype = {
 
 	/**
 	* Description.
-	* @method hash
+	* @method Phaser.RandomDataGenerator#hash
 	* @param {Any} data
 	* @private
 	* @return {number} Description.
@@ -126,7 +124,7 @@ Phaser.RandomDataGenerator.prototype = {
 
 	/**
 	* Returns a random integer between 0 and 2^32.
-	* @method integer
+	* @method Phaser.RandomDataGenerator#integer
 	* @return {number}
 	*/
 	integer: function() {
@@ -135,7 +133,7 @@ Phaser.RandomDataGenerator.prototype = {
 
 	/**
 	* Returns a random real number between 0 and 1.
-	* @method frac
+	* @method Phaser.RandomDataGenerator#frac
 	* @return {number}
 	*/	
 	frac: function() {
@@ -144,7 +142,7 @@ Phaser.RandomDataGenerator.prototype = {
 
 	/**
 	* Returns a random real number between 0 and 2^32.
-	* @method real
+	* @method Phaser.RandomDataGenerator#real
 	* @return {number}
 	*/
 	real: function() {
@@ -153,7 +151,7 @@ Phaser.RandomDataGenerator.prototype = {
 
 	/**
 	* Returns a random integer between min and max.
-	* @method integerInRange
+	* @method Phaser.RandomDataGenerator#integerInRange
 	* @param {number} min
 	* @param {number} max
 	* @return {number}
@@ -164,7 +162,7 @@ Phaser.RandomDataGenerator.prototype = {
 
 	/**
 	* Returns a random real number between min and max.
-	* @method realInRange
+	* @method Phaser.RandomDataGenerator#realInRange
 	* @param {number} min
 	* @param {number} max
 	* @return {number}
@@ -180,7 +178,7 @@ Phaser.RandomDataGenerator.prototype = {
 
 	/**
 	* Returns a random real number between -1 and 1.
-	* @method normal
+	* @method Phaser.RandomDataGenerator#normal
 	* @return {number}
 	*/
 	normal: function () {
@@ -188,8 +186,8 @@ Phaser.RandomDataGenerator.prototype = {
 	},
 
 	/**
-	* Returns a valid RFC4122 version4 ID hex string (from {@link https://gist.github.com/1308368}).
-	* @method uuid
+	* Returns a valid RFC4122 version4 ID hex string from https://gist.github.com/1308368
+	* @method Phaser.RandomDataGenerator#uuid
 	* @return {string}
 	*/
 	uuid: function () {
@@ -208,7 +206,7 @@ Phaser.RandomDataGenerator.prototype = {
 
 	/**
 	* Returns a random member of `array`.
-	* @method pick
+	* @method Phaser.RandomDataGenerator#pick
 	* @param {Any} ary
 	* @return {number}
 	*/
@@ -218,7 +216,7 @@ Phaser.RandomDataGenerator.prototype = {
 
 	/**
 	* Returns a random member of `array`, favoring the earlier entries.
-	* @method weightedPick
+	* @method Phaser.RandomDataGenerator#weightedPick
 	* @param {Any} ary
 	* @return {number}
 	*/
@@ -228,7 +226,7 @@ Phaser.RandomDataGenerator.prototype = {
 
 	/**
 	* Returns a random timestamp between min and max, or between the beginning of 2000 and the end of 2020 if min and max aren't specified.
-	* @method timestamp
+	* @method Phaser.RandomDataGenerator#timestamp
 	* @param {number} min
 	* @param {number} max
 	* @return {number}
@@ -239,7 +237,7 @@ Phaser.RandomDataGenerator.prototype = {
 
 	/**
 	* Returns a random angle between -180 and 180.
-	* @method angle
+	* @method Phaser.RandomDataGenerator#angle
 	* @return {number}
 	*/
 	angle: function() {

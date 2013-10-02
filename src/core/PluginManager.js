@@ -2,14 +2,13 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.PluginManager
 */
 
 /** 
 * Description.
 * 
 * @class Phaser.PluginManager
-* @classdesc PPhaser - PluginManager
+* @classdesc Phaser - PluginManager
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {Description} parent - Description.

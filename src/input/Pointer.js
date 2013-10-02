@@ -2,7 +2,6 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Pointer
 */
 
 /**
@@ -15,6 +14,16 @@
 * @param {Description} id - Description.
 */
 Phaser.Pointer = function (game, id) {
+
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
+    this.game = game;
+
+    /**
+    * @property {Description} id - Description.
+    */
+    this.id = id;
 
     /**
     * Local private variable to store the status of dispatching a hold event.
@@ -195,16 +204,6 @@ Phaser.Pointer = function (game, id) {
     this.targetObject = null;
 
     /**
-    * @property {Phaser.Game} game - Local reference to game.
-    */
-	this.game = game;
-	
-	/**
-	* @property {Description} id - Description.
-	*/
-    this.id = id;
-
-    /**
     * Description.
     * @property {boolean} isDown - Description.
     * @default
@@ -240,7 +239,7 @@ Phaser.Pointer.prototype = {
 
 	/**
     * Called when the Pointer is pressed onto the touchscreen.
-    * @method start
+    * @method Phaser.Pointer#start
     * @param {Any} event
     */
     start: function (event) {
@@ -305,7 +304,7 @@ Phaser.Pointer.prototype = {
 
 	/**
     * Description.
-    * @method update
+    * @method Phaser.Pointer#update
     */
     update: function () {
 
@@ -342,7 +341,7 @@ Phaser.Pointer.prototype = {
 
 	/**
     * Called when the Pointer is moved
-    * @method move
+    * @method Phaser.Pointer#move
     * @param {Any} event
     */
     move: function (event) {
@@ -482,7 +481,7 @@ Phaser.Pointer.prototype = {
 
 	/**
     * Called when the Pointer leaves the target area.
-    * @method leave
+    * @method Phaser.Pointer#leave
     * @param {Any} event
     */
     leave: function (event) {
@@ -494,7 +493,7 @@ Phaser.Pointer.prototype = {
 
 	/**
     * Called when the Pointer leaves the touchscreen.
-    * @method stop
+    * @method Phaser.Pointer#stop
     * @param {Any} event
     */
     stop: function (event) {
@@ -573,7 +572,7 @@ Phaser.Pointer.prototype = {
 
 	/**
     * The Pointer is considered justPressed if the time it was pressed onto the touchscreen or clicked is less than justPressedRate.
-    * @method justPressed
+    * @method Phaser.Pointer#justPressed
     * @param {number} [duration]
     * @return {boolean}
     */
@@ -587,7 +586,7 @@ Phaser.Pointer.prototype = {
 
 	/**
     * The Pointer is considered justReleased if the time it left the touchscreen is less than justReleasedRate.
-    * @method justReleased
+    * @method Phaser.Pointer#justReleased
     * @param {number} [duration]
     * @return {boolean}
     */
@@ -601,7 +600,7 @@ Phaser.Pointer.prototype = {
 
 	/**
     * Resets the Pointer properties. Called by InputManager.reset when you perform a State change.
-    * @method reset
+    * @method Phaser.Pointer#reset
     */
     reset: function () {
 
@@ -629,7 +628,7 @@ Phaser.Pointer.prototype = {
 
 	/**
     * Returns a string representation of this object.
-    * @method toString
+    * @method Phaser.Pointer#toString
     * @return {string} A string representation of the instance.
     **/
     toString: function () {
@@ -640,7 +639,9 @@ Phaser.Pointer.prototype = {
 
 /**
 * How long the Pointer has been depressed on the touchscreen. If not currently down it returns -1.
-* @return {number}
+* @name Phaser.Pointer#duration
+* @property {number} duration - How long the Pointer has been depressed on the touchscreen. If not currently down it returns -1.
+* @readonly
 */
 Object.defineProperty(Phaser.Pointer.prototype, "duration", {
 
@@ -658,9 +659,11 @@ Object.defineProperty(Phaser.Pointer.prototype, "duration", {
 });
 
 /**
- * Gets the X value of this Pointer in world coordinates based on the given camera.
- * @return {Description}
- */
+* Gets the X value of this Pointer in world coordinates based on the world camera.
+* @name Phaser.Pointer#worldX
+* @property {number} duration - The X value of this Pointer in world coordinates based on the world camera.
+* @readonly
+*/
 Object.defineProperty(Phaser.Pointer.prototype, "worldX", {
 
     get: function () {
@@ -672,9 +675,11 @@ Object.defineProperty(Phaser.Pointer.prototype, "worldX", {
 });
 
 /**
- * Gets the Y value of this Pointer in world coordinates based on the given camera.
- * @return {Description}
- */
+* Gets the Y value of this Pointer in world coordinates based on the world camera.
+* @name Phaser.Pointer#worldY
+* @property {number} duration - The Y value of this Pointer in world coordinates based on the world camera.
+* @readonly
+*/
 Object.defineProperty(Phaser.Pointer.prototype, "worldY", {
 
     get: function () {

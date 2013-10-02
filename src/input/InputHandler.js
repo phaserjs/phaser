@@ -2,7 +2,6 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.InputHandler
 */
 
 /**
@@ -15,14 +14,14 @@
 Phaser.InputHandler = function (sprite) {
 
 	/**
-	* @property {Phaser.Game} game - A reference to the currently running game. 
-	*/
-    this.game = sprite.game;
-    
-	/**
 	* @property {Phaser.Sprite} sprite - Description. 
 	*/
 	this.sprite = sprite;
+
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game. 
+    */
+    this.game = sprite.game;
 
 	/**
 	* @property {boolean} enabled - Description. 
@@ -195,7 +194,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
 	* Description.
-	* @method start
+	* @method Phaser.InputHandler#start
 	* @param {number} priority - Description.
 	* @param {boolean} useHandCursor - Description.
 	* @return {Phaser.Sprite} Description.
@@ -253,7 +252,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
 	* Description.
-	* @method reset
+	* @method Phaser.InputHandler#reset
 	*/
     reset: function () {
 
@@ -281,7 +280,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
 	* Description.
-	* @method stop
+	* @method Phaser.InputHandler#stop
 	*/
 	stop: function () {
 
@@ -301,7 +300,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
 	* Clean up memory.
-	* @method destroy
+	* @method Phaser.InputHandler#destroy
 	*/
     destroy: function () {
 
@@ -317,7 +316,7 @@ Phaser.InputHandler.prototype = {
 	/**
     * The x coordinate of the Input pointer, relative to the top-left of the parent Sprite.
     * This value is only set when the pointer is over this Sprite.
-    * @method pointerX
+    * @method Phaser.InputHandler#pointerX
     * @param {Pointer} pointer
     * @return {number} The x coordinate of the Input pointer.
     */    
@@ -332,7 +331,7 @@ Phaser.InputHandler.prototype = {
 	/**
     * The y coordinate of the Input pointer, relative to the top-left of the parent Sprite
     * This value is only set when the pointer is over this Sprite.
-    * @method pointerY
+    * @method Phaser.InputHandler#pointerY
     * @param {Pointer} pointer
     * @return {number} The y coordinate of the Input pointer.
     */
@@ -346,7 +345,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true.
-    * @method pointerDown
+    * @method Phaser.InputHandler#pointerDown
     * @param {Pointer} pointer
     * @return {boolean}
     */
@@ -360,7 +359,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
-    * @method pointerUp
+    * @method Phaser.InputHandler#pointerUp
     * @param {Pointer} pointer
     * @return {boolean}
     */
@@ -374,7 +373,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * A timestamp representing when the Pointer first touched the touchscreen.
-    * @method pointerTimeDown
+    * @method Phaser.InputHandler#pointerTimeDown
     * @param {Pointer} pointer
     * @return {number}
     */
@@ -388,7 +387,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * A timestamp representing when the Pointer left the touchscreen.
-    * @method pointerTimeUp
+    * @method Phaser.InputHandler#pointerTimeUp
     * @param {Pointer} pointer
     * @return {number}
     */
@@ -402,7 +401,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * Is the Pointer over this Sprite?
-    * @method pointerOver
+    * @method Phaser.InputHandler#pointerOver
     * @param {Pointer} pointer
     * @return {bool
     */
@@ -416,7 +415,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * Is the Pointer outside of this Sprite?
-    * @method pointerOut
+    * @method Phaser.InputHandler#pointerOut
     * @param {Pointer} pointer
     * @return {boolean}
     */
@@ -430,7 +429,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * A timestamp representing when the Pointer first touched the touchscreen.
-    * @method pointerTimeOver
+    * @method Phaser.InputHandler#pointerTimeOver
     * @param {Pointer} pointer
     * @return {number}
     */
@@ -444,7 +443,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * A timestamp representing when the Pointer left the touchscreen.
-    * @method pointerTimeOut
+    * @method Phaser.InputHandler#pointerTimeOut
     * @param {Pointer} pointer
     * @return {number}
     */
@@ -458,7 +457,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * Is this sprite being dragged by the mouse or not?
-    * @method pointerTimeOut
+    * @method Phaser.InputHandler#pointerTimeOut
     * @param {Pointer} pointer
     * @return {number}
     */
@@ -472,7 +471,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * Checks if the given pointer is over this Sprite.
-    * @method checkPointerOver
+    * @method Phaser.InputHandler#checkPointerOver
     * @param {Pointer} pointer
     * @return {boolean}
     */
@@ -510,7 +509,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
      * Description.
-     * @method checkPixel
+     * @method Phaser.InputHandler#checkPixel
      * @param {Description} x - Description.
      * @param {Description} y - Description.
      * @return {boolean}
@@ -543,7 +542,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * Update.
-    * @method update
+    * @method Phaser.InputHandler#update
     * @param {Pointer} pointer
     */
     update: function (pointer) {
@@ -576,7 +575,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
      * Description.
-     * @method _pointerOverHandler
+     * @method Phaser.InputHandler#_pointerOverHandler
      * @private
      * @param {Pointer} pointer
      */
@@ -601,7 +600,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
      * Description.
-     * @method _pointerOutHandler
+     * @method Phaser.InputHandler#_pointerOutHandler
      * @private
      * @param {Pointer} pointer
      */
@@ -622,7 +621,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
      * Description.
-     * @method _touchedHandler
+     * @method Phaser.InputHandler#_touchedHandler
      * @private
      * @param {Pointer} pointer
      */
@@ -654,7 +653,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
      * Description.
-     * @method _releasedHandler
+     * @method Phaser.InputHandler#_releasedHandler
      * @private
      * @param {Pointer} pointer
      */
@@ -694,7 +693,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * Updates the Pointer drag on this Sprite.
-    * @method updateDrag
+    * @method Phaser.InputHandler#updateDrag
     * @param {Pointer} pointer
     * @return {boolean}
     */
@@ -738,7 +737,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
-    * @method justOver
+    * @method Phaser.InputHandler#justOver
     * @param {Pointer} pointer
     * @param {number} delay - The time below which the pointer is considered as just over.
     * @return {boolean}
@@ -754,7 +753,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
-    * @method justOut
+    * @method Phaser.InputHandler#justOut
     * @param {Pointer} pointer
     * @param {number} delay - The time below which the pointer is considered as just out.
     * @return {boolean}
@@ -770,7 +769,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
-    * @method justPressed
+    * @method Phaser.InputHandler#justPressed
     * @param {Pointer} pointer
     * @param {number} delay - The time below which the pointer is considered as just over.
     * @return {boolean}
@@ -786,7 +785,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
-    * @method justReleased
+    * @method Phaser.InputHandler#justReleased
     * @param {Pointer} pointer
     * @param {number} delay - The time below which the pointer is considered as just out.
     * @return {boolean}
@@ -802,7 +801,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
-    * @method overDuration
+    * @method Phaser.InputHandler#overDuration
     * @param {Pointer} pointer
     * @return {number} The number of milliseconds the pointer has been over the Sprite, or -1 if not over.
     */
@@ -821,7 +820,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
-    * @method downDuration
+    * @method Phaser.InputHandler#downDuration
     * @param {Pointer} pointer
     * @return {number} The number of milliseconds the pointer has been pressed down on the Sprite, or -1 if not over.
     */
@@ -840,7 +839,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * Make this Sprite draggable by the mouse. You can also optionally set mouseStartDragCallback and mouseStopDragCallback
-    * @method enableDrag
+    * @method Phaser.InputHandler#enableDrag
     * @param	lockCenter			If false the Sprite will drag from where you click it minus the dragOffset. If true it will center itself to the tip of the mouse pointer.
     * @param	bringToTop			If true the Sprite will be bought to the top of the rendering list in its current Group.
     * @param	pixelPerfect		If true it will use a pixel perfect test to see if you clicked the Sprite. False uses the bounding box.
@@ -881,7 +880,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * Stops this sprite from being able to be dragged. If it is currently the target of an active drag it will be stopped immediately. Also disables any set callbacks.
-    * @method disableDrag
+    * @method Phaser.InputHandler#disableDrag
     */
     disableDrag: function () {
 
@@ -901,7 +900,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * Called by Pointer when drag starts on this Sprite. Should not usually be called directly.
-    * @method startDrag
+    * @method Phaser.InputHandler#startDrag
     */
     startDrag: function (pointer) {
 
@@ -932,7 +931,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * Called by Pointer when drag is stopped on this Sprite. Should not usually be called directly.
-    * @method stopDrag
+    * @method Phaser.InputHandler#stopDrag
     */
     stopDrag: function (pointer) {
 
@@ -953,7 +952,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * Restricts this sprite to drag movement only on the given axis. Note: If both are set to false the sprite will never move!
-    * @method setDragLock
+    * @method Phaser.InputHandler#setDragLock
     * @param	allowHorizontal		To enable the sprite to be dragged horizontally set to true, otherwise false
     * @param	allowVertical		To enable the sprite to be dragged vertically set to true, otherwise false
     */
@@ -970,7 +969,7 @@ Phaser.InputHandler.prototype = {
 	/**
     * Make this Sprite snap to the given grid either during drag or when it's released.
     * For example 16x16 as the snapX and snapY would make the sprite snap to every 16 pixels.
-    * @method enableSnap
+    * @method Phaser.InputHandler#enableSnap
     * @param	snapX		The width of the grid cell in pixels
     * @param	snapY		The height of the grid cell in pixels
     * @param	onDrag		If true the sprite will snap to the grid while being dragged
@@ -990,7 +989,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * Stops the sprite from snapping to a grid during drag or release.
-    * @method disableSnap
+    * @method Phaser.InputHandler#disableSnap
     */
     disableSnap: function () {
 
@@ -1001,7 +1000,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * Bounds Rect check for the sprite drag
-    * @method checkBoundsRect
+    * @method Phaser.InputHandler#checkBoundsRect
     */
     checkBoundsRect: function () {
 
@@ -1027,7 +1026,7 @@ Phaser.InputHandler.prototype = {
 
 	/**
     * Parent Sprite Bounds check for the sprite drag.
-    * @method checkBoundsSprite
+    * @method Phaser.InputHandler#checkBoundsSprite
     */
     checkBoundsSprite: function () {
 

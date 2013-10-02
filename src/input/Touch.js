@@ -2,100 +2,92 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Touch
 */
 
 /**
-* Phaser - Touch
+* Phaser.Touch handles touch events with your game. Note: Android 2.x only supports 1 touch event at once, no multi-touch.
 *
-* @class
-* 
+* @class Phaser.Touch
 * @classdesc The Touch class handles touch interactions with the game and the resulting Pointer objects.
-* {@link http://www.w3.org/TR/touch-events/}
-* {@link https://developer.mozilla.org/en-US/docs/DOM/TouchList}
-* {@link http://www.html5rocks.com/en/mobile/touchandmouse/}
-* <p>Note: Android 2.x only supports 1 touch event at once, no multi-touch.
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
 Phaser.Touch = function (game) {
 
-	/**
+    /**
     * @property {Phaser.Game} game - Local reference to game.
-	*/
-	this.game = game;
-	
-	/**
-	* @property {Phaser.Game} callbackContext - Description.
+    */
+    this.game = game;
+    
+    /**
+    * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+    * @method Phaser.Touch#disabled
+    * @return {boolean}
+    */
+    this.disabled = false;
+
+    /**
+    * @property {Phaser.Game} callbackContext - Description.
     */
     this.callbackContext = this.game;
 
-	/**
-	* @property {Phaser.Game} touchStartCallback - Description.
-	* @default
+    /**
+    * @property {Phaser.Game} touchStartCallback - Description.
+    * @default
     */
     this.touchStartCallback = null;
     
-	/**
-	* @property {Phaser.Game} touchMoveCallback - Description.
-	* @default
+    /**
+    * @property {Phaser.Game} touchMoveCallback - Description.
+    * @default
     */
     this.touchMoveCallback = null;
     
-	/**
-	* @property {Phaser.Game} touchEndCallback - Description.
-	* @default
+    /**
+    * @property {Phaser.Game} touchEndCallback - Description.
+    * @default
     */
     this.touchEndCallback = null;
     
-	/**
-	* @property {Phaser.Game} touchEnterCallback - Description.
-	* @default
+    /**
+    * @property {Phaser.Game} touchEnterCallback - Description.
+    * @default
     */
     this.touchEnterCallback = null;
     
-	/**
-	* @property {Phaser.Game} touchLeaveCallback - Description.
-	* @default
+    /**
+    * @property {Phaser.Game} touchLeaveCallback - Description.
+    * @default
     */
     this.touchLeaveCallback = null;
     
-	/**
-	* @property {Description} touchCancelCallback - Description.
-	* @default
+    /**
+    * @property {Description} touchCancelCallback - Description.
+    * @default
     */
     this.touchCancelCallback = null;
     
-	/**
-	* @property {boolean} preventDefault - Description.
-	* @default
+    /**
+    * @property {boolean} preventDefault - Description.
+    * @default
     */
     this.preventDefault = true;
+
+    this._onTouchStart = null;
+    this._onTouchMove = null;
+    this._onTouchEnd = null;
+    this._onTouchEnter = null;
+    this._onTouchLeave = null;
+    this._onTouchCancel = null;
+    this._onTouchMove = null;
 
 };
 
 Phaser.Touch.prototype = {
 
-	game: null,
-
     /**
-    * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-    * @method disabled
-    * @return {boolean}
-    */
-	disabled: false,
-
-	_onTouchStart: null,
-	_onTouchMove: null,
-	_onTouchEnd: null,
-	_onTouchEnter: null,
-	_onTouchLeave: null,
-	_onTouchCancel: null,
-	_onTouchMove: null,
-
-	/**
     * Starts the event listeners running.
-    * @method start
+    * @method Phaser.Touch#start
     */
     start: function () {
 
@@ -139,8 +131,8 @@ Phaser.Touch.prototype = {
 
     /**
     * Consumes all touchmove events on the document (only enable this if you know you need it!).
-    * @method consumeTouchMove
-    **/
+    * @method Phaser.Touch#consumeTouchMove
+    */
     consumeDocumentTouches: function () {
 
         this._documentTouchMove = function (event) {
@@ -151,11 +143,11 @@ Phaser.Touch.prototype = {
 
     },
 
-	/**
+    /**
     * Description.
-    * @method onTouchStart
+    * @method Phaser.Touch#onTouchStart
     * @param {Any} event
-    **/
+    */
     onTouchStart: function (event) {
 
         if (this.touchStartCallback)
@@ -183,12 +175,12 @@ Phaser.Touch.prototype = {
 
     },
 
-	/**
+    /**
     * Touch cancel - touches that were disrupted (perhaps by moving into a plugin or browser chrome).
     * Occurs for example on iOS when you put down 4 fingers and the app selector UI appears.
-    * @method onTouchCancel
+    * @method Phaser.Touch#onTouchCancel
     * @param {Any} event
-    **/
+    */
     onTouchCancel: function (event) {
 
         if (this.touchCancelCallback)
@@ -215,12 +207,12 @@ Phaser.Touch.prototype = {
 
     },
 
-	/**
+    /**
     * For touch enter and leave its a list of the touch points that have entered or left the target.
     * Doesn't appear to be supported by most browsers on a canvas element yet.
-    * @method onTouchEnter
+    * @method Phaser.Touch#onTouchEnter
     * @param {Any} event
-    **/
+    */
     onTouchEnter: function (event) {
 
         if (this.touchEnterCallback)
@@ -245,12 +237,12 @@ Phaser.Touch.prototype = {
 
     },
 
-	/**
+    /**
     * For touch enter and leave its a list of the touch points that have entered or left the target.
     * Doesn't appear to be supported by most browsers on a canvas element yet.
-    * @method onTouchLeave
+    * @method Phaser.Touch#onTouchLeave
     * @param {Any} event
-    **/    
+    */    
     onTouchLeave: function (event) {
 
         if (this.touchLeaveCallback)
@@ -270,11 +262,11 @@ Phaser.Touch.prototype = {
 
     },
 
-	/**
+    /**
     * Description.
-    * @method onTouchMove
+    * @method Phaser.Touch#onTouchMove
     * @param {Any} event
-    **/
+    */
     onTouchMove: function (event) {
 
         if (this.touchMoveCallback)
@@ -294,11 +286,11 @@ Phaser.Touch.prototype = {
 
     },
 
-	/**
+    /**
     * Description.
-    * @method onTouchEnd
+    * @method Phaser.Touch#onTouchEnd
     * @param {Any} event
-    **/
+    */
     onTouchEnd: function (event) {
 
         if (this.touchEndCallback)
@@ -321,9 +313,9 @@ Phaser.Touch.prototype = {
 
     },
 
-	/**
+    /**
     * Stop the event listeners.
-    * @method stop
+    * @method Phaser.Touch#stop
     */
     stop: function () {
 

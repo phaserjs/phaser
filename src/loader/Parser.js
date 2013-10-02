@@ -2,19 +2,18 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Parser
 */
 
-
 /**
-* Description of Phaser.Loader.Parser
+* Phaser.Loader.Parser parses data objects from Phaser.Loader that need more preparation before they can be inserted into the Cache.
 *
-* @class    Phaser.Loader.Parser
+* @class Phaser.Loader.Parser
 */
 Phaser.Loader.Parser = {
 	
     /**
     * Parse frame data from an XML file.
+    * @method Phaser.Loader.Parser.bitmapFont
     * @param {object} xml - XML data you want to parse.
     * @return {FrameData} Generated FrameData object.
     */

@@ -42,21 +42,21 @@ Phaser.Keyboard = function (game) {
     * @property {boolean} disabled - The disabled state of the Keyboard.
     * @default
     */
-    disabled: false,
+    this.disabled = false;
 
     /**
     * @property {function} _onKeyDown
     * @private
     * @default
     */
-    _onKeyDown: null,
+    this._onKeyDown = null;
     
     /**
     * @property {function} _onKeyUp
     * @private
     * @default
     */
-    _onKeyUp: null,
+    this._onKeyUp = null;
 
     /**
     * @property {Object} callbackContext - The context under which the callbacks are run.

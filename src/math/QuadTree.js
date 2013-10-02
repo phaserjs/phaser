@@ -2,7 +2,6 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Quadtree
 */
 
 /**
@@ -47,11 +46,8 @@
  * QuadTree Constructor
  * 
  * @class Phaser.QuadTree
- * @classdesc Javascript QuadTree <p>
- * The original code was a conversion of the Java code posted to GameDevTuts. However I've tweaked
- * it massively to add node indexing, removed lots of temp. var creation and significantly
- * increased performance as a result.<p>
- * Original version at {@link https://github.com/timohausmann/quadtree-js/}
+ * @classdesc A QuadTree implementation. The original code was a conversion of the Java code posted to GameDevTuts. However I've tweaked
+ * it massively to add node indexing, removed lots of temp. var creation and significantly increased performance as a result. Original version at https://github.com/timohausmann/quadtree-js/
  * @constructor
  * @param {Description} physicsManager - Description.
  * @param {Description} x - Description.
@@ -93,7 +89,7 @@ Phaser.QuadTree.prototype = {
 	/*
 	* Split the node into 4 subnodes
 	* 
-	* @method split
+	* @method Phaser.QuadTree#split
 	*/
 	split: function() {
 
@@ -118,7 +114,7 @@ Phaser.QuadTree.prototype = {
 	 * exceeds the capacity, it will split and add all
 	 * objects to their corresponding subnodes.
 	 * 
-	 * @method insert
+	 * @method Phaser.QuadTree#insert
 	 * @param {object} body - Description.
 	 */
 	insert: function (body) {
@@ -169,7 +165,7 @@ Phaser.QuadTree.prototype = {
 	/*
 	 * Determine which node the object belongs to.
 	 * 
-	 * @method getIndex
+	 * @method Phaser.QuadTree#getIndex
 	 * @param {object} rect	- Description.
 	 * @return {number} index -	Index of the subnode (0-3), or -1 if rect cannot completely fit within a subnode and is part of the parent node.
 	 */
@@ -213,7 +209,7 @@ Phaser.QuadTree.prototype = {
 	 /*
 	 * Return all objects that could collide with the given object.
 	 * 
-	 * @method retrieve
+	 * @method Phaser.QuadTree#retrieve
 	 * @param {object} rect	- Description.
 	 * @Return {array} - Array with all detected objects.
 	 */
@@ -249,7 +245,7 @@ Phaser.QuadTree.prototype = {
 
 	/*
 	 * Clear the quadtree.
-	 * @method clear
+	 * @method Phaser.QuadTree#clear
 	 */
 	clear: function () {
 		
