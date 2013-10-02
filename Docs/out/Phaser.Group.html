@@ -110,7 +110,7 @@
     
         
 <dt>
-    <h4 class="name" id="Group"><span class="type-signature"></span>new Group<span class="signature">(game, parent, name, useStage)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Group"><span class="type-signature"></span>new Group<span class="signature">(game, parent, <span class="optional">name</span>, <span class="optional">useStage</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -140,7 +140,11 @@
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -165,7 +169,19 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>A reference to the currently running game.</p></td>
@@ -181,17 +197,29 @@
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">*</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The parent Group or DisplayObjectContainer that will hold this group, if any.</p></td>
         </tr>
 
 	
@@ -211,10 +239,26 @@
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The unique name for this animation, used in playback commands.</p></td>
+            
+                <td class="default">
+                
+                    group
+                
+                </td>
+            
+
+            <td class="description last"><p>A name for this Group. Not used internally but useful for debugging.</p></td>
         </tr>
 
 	
@@ -234,10 +278,26 @@
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Only the root World Group should use this value.</p></td>
         </tr>
 
 	
@@ -402,7 +462,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1099">line 1099</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1105">line 1105</a>
     </li></ul></dd>
     
 
@@ -475,7 +535,7 @@ This will have no impact on the rotation value of its children, but it will upda
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>If exists is true the the Group is updated, otherwise it is skipped.</p></td>
         </tr>
 
 	
@@ -507,7 +567,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-71">line 71</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-72">line 72</a>
     </li></ul></dd>
     
 
@@ -711,7 +771,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1051">line 1051</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1057">line 1057</a>
     </li></ul></dd>
     
 
@@ -774,7 +834,7 @@ This will have no impact on the rotation value of its children, but it will upda
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
+<span class="param-type">string</span>
 
 
             
@@ -784,7 +844,7 @@ This will have no impact on the rotation value of its children, but it will upda
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>A name for this Group. Not used internally but useful for debugging.</p></td>
         </tr>
 
 	
@@ -920,7 +980,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1117">line 1117</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1123">line 1123</a>
     </li></ul></dd>
     
 
@@ -938,7 +998,7 @@ This will have no impact on the rotation value of its children, but it will upda
         
             
 <dt>
-    <h4 class="name" id="type"><span class="type-signature"></span>type<span class="type-signature"></span></h4>
+    <h4 class="name" id="type"><span class="type-signature">&lt;protected> </span>type<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -983,7 +1043,7 @@ This will have no impact on the rotation value of its children, but it will upda
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">number</span>
 
 
             
@@ -993,7 +1053,7 @@ This will have no impact on the rotation value of its children, but it will upda
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>Internal Phaser Type value.</p></td>
         </tr>
 
 	
@@ -1022,7 +1082,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-65">line 65</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-66">line 66</a>
     </li></ul></dd>
     
 
@@ -1124,7 +1184,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1135">line 1135</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1141">line 1141</a>
     </li></ul></dd>
     
 
@@ -1231,7 +1291,7 @@ This will have no impact on the x/y coordinates of its children, but it will upd
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1063">line 1063</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1069">line 1069</a>
     </li></ul></dd>
     
 
@@ -1338,7 +1398,7 @@ This will have no impact on the x/y coordinates of its children, but it will upd
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1081">line 1081</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1087">line 1087</a>
     </li></ul></dd>
     
 
@@ -1362,7 +1422,7 @@ This will have no impact on the x/y coordinates of its children, but it will upd
         <dl>
             
 <dt>
-    <h4 class="name" id="add"><span class="type-signature"></span>add<span class="signature">(child)</span><span class="type-signature"> &rarr; {Description}</span></h4>
+    <h4 class="name" id="add"><span class="type-signature"></span>add<span class="signature">(child)</span><span class="type-signature"> &rarr; {*}</span></h4>
     
     
 </dt>
@@ -1370,7 +1430,9 @@ This will have no impact on the x/y coordinates of its children, but it will upd
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Adds an existing object to this Group. The object can be an instance of Phaser.Sprite, Phaser.Button or any other display object.
+The child is automatically added to the top of the Group, so renders on-top of everything else within the Group. If you need to control
+that then see the addAt method.</p>
     </div>
     
 
@@ -1410,7 +1472,7 @@ This will have no impact on the x/y coordinates of its children, but it will upd
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">*</span>
 
 
             
@@ -1420,7 +1482,7 @@ This will have no impact on the x/y coordinates of its children, but it will upd
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>An instance of Phaser.Sprite, Phaser.Button or any other display object..</p></td>
         </tr>
 
 	
@@ -1452,12 +1514,21 @@ This will have no impact on the x/y coordinates of its children, but it will upd
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-84">line 84</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-78">line 78</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="Phaser.Group.html#create">Phaser.Group#create</a></li>
+        
+            <li><a href="Phaser.Group.html#addAt">Phaser.Group#addAt</a></li>
+        </ul>
+    </dd>
     
 
     
@@ -1477,7 +1548,7 @@ This will have no impact on the x/y coordinates of its children, but it will upd
     
             
 <div class="param-desc">
-    <p>Description.</p>
+    <p>The child that was added to the Group.</p>
 </div>
 
 
@@ -1488,7 +1559,7 @@ This will have no impact on the x/y coordinates of its children, but it will upd
 	</dt>
 	<dd>
 		
-<span class="param-type">Description</span>
+<span class="param-type">*</span>
 
 
 	</dd>
@@ -1691,7 +1762,7 @@ Group.addAll('x', 10) will add 10 to the child.x value.</p>
         
             
 <dt>
-    <h4 class="name" id="addAt"><span class="type-signature"></span>addAt<span class="signature">(child, index)</span><span class="type-signature"> &rarr; {Description}</span></h4>
+    <h4 class="name" id="addAt"><span class="type-signature"></span>addAt<span class="signature">(child, index)</span><span class="type-signature"> &rarr; {*}</span></h4>
     
     
 </dt>
@@ -1699,7 +1770,8 @@ Group.addAll('x', 10) will add 10 to the child.x value.</p>
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Adds an existing object to this Group. The object can be an instance of Phaser.Sprite, Phaser.Button or any other display object.
+The child is added to the Group at the location specified by the index value, this allows you to control child ordering.</p>
     </div>
     
 
@@ -1739,7 +1811,7 @@ Group.addAll('x', 10) will add 10 to the child.x value.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">*</span>
 
 
             
@@ -1749,7 +1821,7 @@ Group.addAll('x', 10) will add 10 to the child.x value.</p>
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>An instance of Phaser.Sprite, Phaser.Button or any other display object..</p></td>
         </tr>
 
 	
@@ -1762,7 +1834,7 @@ Group.addAll('x', 10) will add 10 to the child.x value.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">number</span>
 
 
             
@@ -1772,7 +1844,7 @@ Group.addAll('x', 10) will add 10 to the child.x value.</p>
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The index within the Group to insert the child to.</p></td>
         </tr>
 
 	
@@ -1804,7 +1876,7 @@ Group.addAll('x', 10) will add 10 to the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-109">line 109</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-107">line 107</a>
     </li></ul></dd>
     
 
@@ -1829,7 +1901,7 @@ Group.addAll('x', 10) will add 10 to the child.x value.</p>
     
             
 <div class="param-desc">
-    <p>Description.</p>
+    <p>The child that was added to the Group.</p>
 </div>
 
 
@@ -1840,7 +1912,7 @@ Group.addAll('x', 10) will add 10 to the child.x value.</p>
 	</dt>
 	<dd>
 		
-<span class="param-type">Description</span>
+<span class="param-type">*</span>
 
 
 	</dd>
@@ -1855,7 +1927,7 @@ Group.addAll('x', 10) will add 10 to the child.x value.</p>
         
             
 <dt>
-    <h4 class="name" id="bringToTop"><span class="type-signature"></span>bringToTop<span class="signature">(child)</span><span class="type-signature"> &rarr; {Description}</span></h4>
+    <h4 class="name" id="bringToTop"><span class="type-signature"></span>bringToTop<span class="signature">(child)</span><span class="type-signature"> &rarr; {*}</span></h4>
     
     
 </dt>
@@ -1863,7 +1935,7 @@ Group.addAll('x', 10) will add 10 to the child.x value.</p>
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Brings the given child to the top of this Group so it renders above all other children.</p>
     </div>
     
 
@@ -1903,7 +1975,7 @@ Group.addAll('x', 10) will add 10 to the child.x value.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">*</span>
 
 
             
@@ -1913,7 +1985,7 @@ Group.addAll('x', 10) will add 10 to the child.x value.</p>
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The child to bring to the top of this Group.</p></td>
         </tr>
 
 	
@@ -1970,7 +2042,7 @@ Group.addAll('x', 10) will add 10 to the child.x value.</p>
     
             
 <div class="param-desc">
-    <p>Description.</p>
+    <p>The child that was moved.</p>
 </div>
 
 
@@ -1981,7 +2053,7 @@ Group.addAll('x', 10) will add 10 to the child.x value.</p>
 	</dt>
 	<dd>
 		
-<span class="param-type">Description</span>
+<span class="param-type">*</span>
 
 
 	</dd>
@@ -2392,7 +2464,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-822">line 822</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-827">line 827</a>
     </li></ul></dd>
     
 
@@ -2484,7 +2556,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-792">line 792</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-797">line 797</a>
     </li></ul></dd>
     
 
@@ -2535,7 +2607,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
         
             
 <dt>
-    <h4 class="name" id="create"><span class="type-signature"></span>create<span class="signature">(x, y, key, <span class="optional">frame</span>, <span class="optional">exists</span>)</span><span class="type-signature"> &rarr; {Description}</span></h4>
+    <h4 class="name" id="create"><span class="type-signature"></span>create<span class="signature">(x, y, key, <span class="optional">frame</span>, <span class="optional">exists</span>)</span><span class="type-signature"> &rarr; {Phaser.Sprite}</span></h4>
     
     
 </dt>
@@ -2543,7 +2615,8 @@ After the existsValue parameter you can add as many parameters as you like, whic
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Automatically creates a new Phaser.Sprite object and adds it to the top of this Group.
+Useful if you don't need to create the Sprite instances before-hand.</p>
     </div>
     
 
@@ -2603,7 +2676,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The x coordinate to display the newly created Sprite at. The value is in relation to the Group.x point.</p></td>
         </tr>
 
 	
@@ -2634,7 +2707,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The y coordinate to display the newly created Sprite at. The value is in relation to the Group.y point.</p></td>
         </tr>
 
 	
@@ -2665,7 +2738,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The Game.cache key of the image that this Sprite will use.</p></td>
         </tr>
 
 	
@@ -2678,6 +2751,9 @@ After the existsValue parameter you can add as many parameters as you like, whic
             <td class="type">
             
                 
+<span class="param-type">number</span>
+|
+
 <span class="param-type">string</span>
 
 
@@ -2698,7 +2774,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>If the Sprite image contains multiple frames you can specify which one to use here.</p></td>
         </tr>
 
 	
@@ -2731,7 +2807,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The default exists state of the Sprite.</p></td>
         </tr>
 
 	
@@ -2763,7 +2839,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-149">line 149</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-148">line 148</a>
     </li></ul></dd>
     
 
@@ -2788,7 +2864,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
     
             
 <div class="param-desc">
-    <p>Description.</p>
+    <p>The child that was created.</p>
 </div>
 
 
@@ -2799,7 +2875,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
 	</dt>
 	<dd>
 		
-<span class="param-type">Description</span>
+<span class="param-type">Phaser.Sprite</span>
 
 
 	</dd>
@@ -2822,7 +2898,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Destroys this Group. Removes all children, then removes the container from the display list and nulls references.</p>
     </div>
     
 
@@ -2855,7 +2931,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-940">line 940</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-946">line 946</a>
     </li></ul></dd>
     
 
@@ -3071,7 +3147,7 @@ Group.divideAll('x', 2) will half the child.x value.</p>
         
             
 <dt>
-    <h4 class="name" id="dump"><span class="type-signature"></span>dump<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="dump"><span class="type-signature"></span>dump<span class="signature">(<span class="optional">full</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -3079,7 +3155,7 @@ Group.divideAll('x', 2) will half the child.x value.</p>
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Dumps out a list of Group children and their index positions to the browser console. Useful for group debugging.</p>
     </div>
     
 
@@ -3087,6 +3163,75 @@ Group.divideAll('x', 2) will half the child.x value.</p>
     
     
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>full</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>If full the dump will include the entire display list, start from the Stage. Otherwise it will only include this container.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
     
     
     
@@ -3112,7 +3257,7 @@ Group.divideAll('x', 2) will half the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-959">line 959</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-965">line 965</a>
     </li></ul></dd>
     
 
@@ -3148,8 +3293,9 @@ Group.divideAll('x', 2) will half the child.x value.</p>
     
     
     <div class="description">
-        <p>Description.
-After the checkExists parameter you can add as many parameters as you like, which will all be passed to the callback along with the child.</p>
+        <p>Allows you to call your own function on each member of this Group. You must pass the callback and context in which it will run.
+After the checkExists parameter you can add as many parameters as you like, which will all be passed to the callback along with the child.
+For example: Group.forEach(awardBonusGold, this, true, 100, 500)</p>
     </div>
     
 
@@ -3189,7 +3335,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">function</span>
 
 
             
@@ -3199,7 +3345,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The function that will be called. Each child of the Group will be passed to it as its first parameter.</p></td>
         </tr>
 
 	
@@ -3212,7 +3358,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">Object</span>
 
 
             
@@ -3222,7 +3368,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The context in which the function should be called (usually 'this').</p></td>
         </tr>
 
 	
@@ -3245,7 +3391,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>If set only children with exists=true will be passed to the callback, otherwise all children will be passed.</p></td>
         </tr>
 
 	
@@ -3313,7 +3459,9 @@ After the checkExists parameter you can add as many parameters as you like, whic
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Allows you to call your own function on each alive member of this Group (where child.alive=true). You must pass the callback and context in which it will run.
+You can add as many parameters as you like, which will all be passed to the callback along with the child.
+For example: Group.forEachAlive(causeDamage, this, 500)</p>
     </div>
     
 
@@ -3353,7 +3501,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">function</span>
 
 
             
@@ -3363,7 +3511,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The function that will be called. Each child of the Group will be passed to it as its first parameter.</p></td>
         </tr>
 
 	
@@ -3376,7 +3524,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">Object</span>
 
 
             
@@ -3386,7 +3534,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The context in which the function should be called (usually 'this').</p></td>
         </tr>
 
 	
@@ -3418,7 +3566,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-637">line 637</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-638">line 638</a>
     </li></ul></dd>
     
 
@@ -3454,7 +3602,9 @@ After the checkExists parameter you can add as many parameters as you like, whic
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Allows you to call your own function on each dead member of this Group (where alive=false). You must pass the callback and context in which it will run.
+You can add as many parameters as you like, which will all be passed to the callback along with the child.
+For example: Group.forEachDead(bringToLife, this)</p>
     </div>
     
 
@@ -3494,7 +3644,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">function</span>
 
 
             
@@ -3504,7 +3654,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The function that will be called. Each child of the Group will be passed to it as its first parameter.</p></td>
         </tr>
 
 	
@@ -3517,7 +3667,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">Object</span>
 
 
             
@@ -3527,7 +3677,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The context in which the function should be called (usually 'this').</p></td>
         </tr>
 
 	
@@ -3559,7 +3709,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-669">line 669</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-672">line 672</a>
     </li></ul></dd>
     
 
@@ -3587,7 +3737,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
         
             
 <dt>
-    <h4 class="name" id="getAt"><span class="type-signature"></span>getAt<span class="signature">(index)</span><span class="type-signature"> &rarr; {Description}</span></h4>
+    <h4 class="name" id="getAt"><span class="type-signature"></span>getAt<span class="signature">(index)</span><span class="type-signature"> &rarr; {*}</span></h4>
     
     
 </dt>
@@ -3595,7 +3745,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Returns the child found at the given index within this Group.</p>
     </div>
     
 
@@ -3635,7 +3785,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">number</span>
 
 
             
@@ -3645,7 +3795,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The index to return the child from.</p></td>
         </tr>
 
 	
@@ -3677,7 +3827,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-135">line 135</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-134">line 134</a>
     </li></ul></dd>
     
 
@@ -3702,7 +3852,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
     
             
 <div class="param-desc">
-    <p>Description.</p>
+    <p>The child that was found at the given index.</p>
 </div>
 
 
@@ -3713,7 +3863,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
 	</dt>
 	<dd>
 		
-<span class="param-type">Description</span>
+<span class="param-type">*</span>
 
 
 	</dd>
@@ -3737,7 +3887,7 @@ After the checkExists parameter you can add as many parameters as you like, whic
     
     <div class="description">
         <p>Call this function to retrieve the first object with alive == true in the group.
-This is handy for checking if everything's wiped out, or choosing a squad leader, etc.</p>
+This is handy for checking if everything has been wiped out, or choosing a squad leader, etc.</p>
     </div>
     
 
@@ -3770,7 +3920,7 @@ This is handy for checking if everything's wiped out, or choosing a squad leader
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-734">line 734</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-739">line 739</a>
     </li></ul></dd>
     
 
@@ -3830,7 +3980,7 @@ This is handy for checking if everything's wiped out, or choosing a squad leader
     
     <div class="description">
         <p>Call this function to retrieve the first object with alive == false in the group.
-This is handy for checking if everything's wiped out, or choosing a squad leader, etc.</p>
+This is handy for checking if everything has been wiped out, or choosing a squad leader, etc.</p>
     </div>
     
 
@@ -3863,7 +4013,7 @@ This is handy for checking if everything's wiped out, or choosing a squad leader
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-763">line 763</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-768">line 768</a>
     </li></ul></dd>
     
 
@@ -3922,7 +4072,7 @@ This is handy for checking if everything's wiped out, or choosing a squad leader
     
     
     <div class="description">
-        <p>Call this function to retrieve the first object with exists == (the given state) in the group.</p>
+        <p>Call this function to retrieve the first object with exists == (the given state) in the Group.</p>
     </div>
     
 
@@ -3962,7 +4112,7 @@ This is handy for checking if everything's wiped out, or choosing a squad leader
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">boolean</span>
 
 
             
@@ -3972,7 +4122,7 @@ This is handy for checking if everything's wiped out, or choosing a squad leader
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>True or false.</p></td>
         </tr>
 
 	
@@ -4004,7 +4154,7 @@ This is handy for checking if everything's wiped out, or choosing a squad leader
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-700">line 700</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-705">line 705</a>
     </li></ul></dd>
     
 
@@ -4055,7 +4205,7 @@ This is handy for checking if everything's wiped out, or choosing a squad leader
         
             
 <dt>
-    <h4 class="name" id="getIndex"><span class="type-signature"></span>getIndex<span class="signature">(child)</span><span class="type-signature"> &rarr; {Description}</span></h4>
+    <h4 class="name" id="getIndex"><span class="type-signature"></span>getIndex<span class="signature">(child)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -4063,7 +4213,7 @@ This is handy for checking if everything's wiped out, or choosing a squad leader
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Get the index position of the given child in this Group.</p>
     </div>
     
 
@@ -4103,7 +4253,7 @@ This is handy for checking if everything's wiped out, or choosing a squad leader
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">*</span>
 
 
             
@@ -4113,7 +4263,7 @@ This is handy for checking if everything's wiped out, or choosing a squad leader
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The child to get the index for.</p></td>
         </tr>
 
 	
@@ -4170,7 +4320,7 @@ This is handy for checking if everything's wiped out, or choosing a squad leader
     
             
 <div class="param-desc">
-    <p>Description.</p>
+    <p>The index of the child or -1 if it's not a member of this Group.</p>
 </div>
 
 
@@ -4181,7 +4331,7 @@ This is handy for checking if everything's wiped out, or choosing a squad leader
 	</dt>
 	<dd>
 		
-<span class="param-type">Description</span>
+<span class="param-type">number</span>
 
 
 	</dd>
@@ -4309,7 +4459,7 @@ This is handy for checking if everything's wiped out, or choosing a squad leader
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-852">line 852</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-857">line 857</a>
     </li></ul></dd>
     
 
@@ -4556,7 +4706,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Removes the given child from this Group and sets its group property to null.</p>
     </div>
     
 
@@ -4596,7 +4746,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">Any</span>
 
 
             
@@ -4606,7 +4756,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The child to remove.</p></td>
         </tr>
 
 	
@@ -4638,7 +4788,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-874">line 874</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-879">line 879</a>
     </li></ul></dd>
     
 
@@ -4674,7 +4824,8 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Removes all children from this Group, setting all group properties to null.
+The Group container remains on the display list.</p>
     </div>
     
 
@@ -4707,7 +4858,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-888">line 888</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-893">line 893</a>
     </li></ul></dd>
     
 
@@ -4743,7 +4894,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Removes all children from this Group whos index falls beteen the given startIndex and endIndex values.</p>
     </div>
     
 
@@ -4783,7 +4934,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">number</span>
 
 
             
@@ -4793,7 +4944,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The index to start removing children from.</p></td>
         </tr>
 
 	
@@ -4806,7 +4957,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">number</span>
 
 
             
@@ -4816,7 +4967,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The index to stop removing children from. Must be higher than startIndex and less than the length of the Group.</p></td>
         </tr>
 
 	
@@ -4848,7 +4999,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-912">line 912</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-918">line 918</a>
     </li></ul></dd>
     
 
@@ -4884,7 +5035,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Replaces a child of this Group with the given newChild. The newChild cannot be a member of this Group.</p>
     </div>
     
 
@@ -4924,7 +5075,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">*</span>
 
 
             
@@ -4934,7 +5085,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The child in this Group that will be replaced.</p></td>
         </tr>
 
 	
@@ -4947,7 +5098,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">*</span>
 
 
             
@@ -4957,7 +5108,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The child to be inserted into this group.</p></td>
         </tr>
 
 	
@@ -5017,7 +5168,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
         
             
 <dt>
-    <h4 class="name" id="setAll"><span class="type-signature"></span>setAll<span class="signature">(key, value, checkAlive, checkVisible, operation)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setAll"><span class="type-signature"></span>setAll<span class="signature">(key, value, <span class="optional">checkAlive</span>, <span class="optional">checkVisible</span>, <span class="optional">operation</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -5025,7 +5176,8 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>This function allows you to quickly set the same property across all children of this Group to a new value.
+The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.</p>
     </div>
     
 
@@ -5047,7 +5199,11 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -5065,17 +5221,29 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">string</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The property, as a string, to be set. For example: 'body.velocity.x'</p></td>
         </tr>
 
 	
@@ -5088,17 +5256,29 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">*</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The value that will be set.</p></td>
         </tr>
 
 	
@@ -5111,17 +5291,33 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">boolean</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>If set then only children with alive=true will be updated.</p></td>
         </tr>
 
 	
@@ -5134,17 +5330,33 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">boolean</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>If set then only children with visible=true will be updated.</p></td>
         </tr>
 
 	
@@ -5157,17 +5369,33 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">number</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.</p></td>
         </tr>
 
 	
@@ -5199,7 +5427,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-434">line 434</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-433">line 433</a>
     </li></ul></dd>
     
 
@@ -5227,7 +5455,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
         
             
 <dt>
-    <h4 class="name" id="setProperty"><span class="type-signature"></span>setProperty<span class="signature">(child, key, value, operation)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="setProperty"><span class="type-signature"></span>setProperty<span class="signature">(child, key, value, <span class="optional">operation</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -5235,7 +5463,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Sets the given property to the given value on the child. The operation controls the assignment of the value.</p>
     </div>
     
 
@@ -5257,7 +5485,11 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -5275,17 +5507,29 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">*</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The child to set the property value on.</p></td>
         </tr>
 
 	
@@ -5305,10 +5549,22 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>An array of values that will be set.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>An array of strings that make up the property that will be set.</p></td>
         </tr>
 
 	
@@ -5321,17 +5577,29 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">*</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The value that will be set.</p></td>
         </tr>
 
 	
@@ -5344,17 +5612,33 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">number</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.</p></td>
         </tr>
 
 	
@@ -5407,29 +5691,6 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>An integer value: -1 (Obj1 before Obj2), 0 (same), or 1 (Obj1 after Obj2). (TODO)</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">number</span>
-
-
-	</dd>
-</dl>
-
-
-        
     
     
 </dd>
@@ -5633,7 +5894,7 @@ Group.subAll('x', 10) will minus 10 from the child.x value.</p>
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Swaps the position of two children in this Group.</p>
     </div>
     
 
@@ -5673,7 +5934,7 @@ Group.subAll('x', 10) will minus 10 from the child.x value.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">*</span>
 
 
             
@@ -5683,7 +5944,7 @@ Group.subAll('x', 10) will minus 10 from the child.x value.</p>
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The first child to swap.</p></td>
         </tr>
 
 	
@@ -5696,7 +5957,7 @@ Group.subAll('x', 10) will minus 10 from the child.x value.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">*</span>
 
 
             
@@ -5706,7 +5967,7 @@ Group.subAll('x', 10) will minus 10 from the child.x value.</p>
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The second child to swap.</p></td>
         </tr>
 
 	
@@ -5763,7 +6024,7 @@ Group.subAll('x', 10) will minus 10 from the child.x value.</p>
     
             
 <div class="param-desc">
-    <p>Description.</p>
+    <p>True if the swap was successful, otherwise false.</p>
 </div>
 
 
@@ -5812,7 +6073,7 @@ Group.subAll('x', 10) will minus 10 from the child.x value.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a>
-		on Wed Oct 02 2013 01:12:17 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Oct 02 2013 01:51:38 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

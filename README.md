@@ -72,6 +72,8 @@ Version 1.0.7 (in progress in the dev branch)
 * Updated Group.forEach, forEachAlive and forEachDead so you can now pass as many parameters as you want, which will all be given to the callback after the child.
 * Updated build script so it can be run from the command-line and includes UMD wrappers (thanks iaincarsberg)
 * Fixed bug in LinkedList#remove that could cause first to point to a dead node (thanks onedayitwillmake)
+* Moved LinkedList.dump to Debug.dumpLinkedList(list)
+
 
 * TODO: addMarker hh:mm:ss:ms
 * TODO: Direction constants

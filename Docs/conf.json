@@ -3,8 +3,7 @@
         "allowUnknownTags": true
     },
     "source": {
-        "Xinclude": [ "../src/Phaser.js", "../src/animation/", "../src/core/Camera.js", "../src/core/Game.js", "../src/core/Group.js", "../src/core/LinkedList.js", "../src/core/Plugin.js", "../src/core/PluginManager.js" ],
-        "include": [ "../src/Phaser.js", "../src/animation/", "../src/core/Camera.js", "../src/core/Game.js", "../src/core/Group.js" ],
+        "include": [ "../src/Phaser.js", "../src/animation/", "../src/core/Camera.js", "../src/core/Game.js", "../src/core/Group.js", "../src/core/LinkedList.js", "../src/core/Plugin.js", "../src/core/PluginManager.js", "../src/core/Signal.js", "../src/core/SignalBinding.js" ],
         "exclude": [],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"

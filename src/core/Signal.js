@@ -2,7 +2,6 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Signal
 */
 
 /**
@@ -48,7 +47,6 @@ Phaser.Signal.prototype = {
 	memorize: false,
 
 	/**
-	* Description.
 	* @property {boolean} _shouldPropagate 
 	* @private
 	*/
@@ -63,11 +61,10 @@ Phaser.Signal.prototype = {
 	active: true,
 
 	/**
-	* Description.
-	* 
-	* @method validateListener
+	* @method Phaser.Signal#validateListener
 	* @param {function} listener - Signal handler function.
 	* @param {Description} fnName - Description.
+	* @private
     */
 	validateListener: function (listener, fnName) {
 		if (typeof listener !== 'function') {
@@ -76,9 +73,7 @@ Phaser.Signal.prototype = {
 	},
 
 	/**
-	 * Description.
-	 * 
-	 * @method _registerListener
+	 * @method Phaser.Signal#_registerListener
 	 * @param {function} listener - Signal handler function.
 	 * @param {boolean} isOnce - Description.
 	 * @param {object} [listenerContext] - Description.
@@ -109,9 +104,7 @@ Phaser.Signal.prototype = {
 	},
 
 	/**
-	 * Description.
-	 * 
-	 * @method _addBinding 
+	 * @method Phaser.Signal#_addBinding 
 	 * @param {Phaser.SignalBinding} binding - An Object representing the binding between the Signal and listener.
 	 * @private
 	 */
@@ -123,9 +116,7 @@ Phaser.Signal.prototype = {
 	},
 
 	/**
-	 * Description.
-	 * 
-	 * @method _indexOfListener
+	 * @method Phaser.Signal#_indexOfListener
 	 * @param {function} listener - Signal handler function.
 	 * @return {number} Description.
 	 * @private
@@ -145,7 +136,7 @@ Phaser.Signal.prototype = {
 	/**
 	 * Check if listener was attached to Signal.
 	 * 
-	 * @method has
+	 * @method Phaser.Signal#has
 	 * @param {Function} listener - Signal handler function.
 	 * @param {Object} [context] - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
 	 * @return {boolean} If Signal has the specified listener.
@@ -157,7 +148,7 @@ Phaser.Signal.prototype = {
 	/**
 	 * Add a listener to the signal.
 	 * 
-	 * @method add
+	 * @method Phaser.Signal#add
 	 * @param {function} listener - Signal handler function.
 	 * @param {object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
 	 * @param {number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0).
@@ -170,6 +161,8 @@ Phaser.Signal.prototype = {
 
 	/**
 	* Add listener to the signal that should be removed after first execution (will be executed only once).
+	*
+	* @method Phaser.Signal#addOnce
 	* @param {function} listener Signal handler function.
 	* @param {object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
 	* @param {number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0)
@@ -182,23 +175,32 @@ Phaser.Signal.prototype = {
 
 	/**
 	* Remove a single listener from the dispatch queue.
+	*
+	* @method Phaser.Signal#remove
 	* @param {function} listener Handler function that should be removed.
 	* @param {object} [context] Execution context (since you can add the same handler multiple times if executing in a different context).
 	* @return {function} Listener handler function.
 	*/
 	remove: function (listener, context) {
+
 		this.validateListener(listener, 'remove');
 
 		var i = this._indexOfListener(listener, context);
-		if (i !== -1) {
+
+		if (i !== -1)
+		{
 			this._bindings[i]._destroy(); //no reason to a Phaser.SignalBinding exist if it isn't attached to a signal
 			this._bindings.splice(i, 1);
 		}
+
 		return listener;
+
 	},
 
 	/**
 	* Remove all listeners from the Signal.
+	*
+	* @method Phaser.Signal#removeAll
 	*/
 	removeAll: function () {
 		var n = this._bindings.length;
@@ -209,6 +211,9 @@ Phaser.Signal.prototype = {
 	},
 
 	/**
+	* Gets the total number of listeneres attached to ths Signal.
+	*
+	* @method Phaser.Signal#getNumListeners
 	* @return {number} Number of listeners attached to the Signal.
 	*/
 	getNumListeners: function () {
@@ -219,6 +224,8 @@ Phaser.Signal.prototype = {
 	* Stop propagation of the event, blocking the dispatch to next listeners on the queue.
 	* <p><strong>IMPORTANT:</strong> should be called only during signal dispatch, calling it before/after dispatch won't affect signal broadcast.</p>
 	* @see Signal.prototype.disable
+	*
+	* @method Phaser.Signal#halt
 	*/
 	halt: function () {
 		this._shouldPropagate = false;
@@ -226,7 +233,9 @@ Phaser.Signal.prototype = {
 
 	/**
 	* Dispatch/Broadcast Signal to all listeners added to the queue.
-	* @param {Description} [params] - Parameters that should be passed to each handler.
+	*
+	* @method Phaser.Signal#dispatch
+	* @param {any} [params] - Parameters that should be passed to each handler.
 	*/
 	dispatch: function (params) {
 		if (! this.active) {
@@ -255,17 +264,21 @@ Phaser.Signal.prototype = {
 	},
 
 	/**
-	 * Forget memorized arguments.
-	 * @see Signal.memorize
-	 */
+	* Forget memorized arguments.
+	* @see Signal.memorize
+	*
+	* @method Phaser.Signal#forget
+ 	*/
 	forget: function(){
 		this._prevParams = null;
 	},
 
 	/**
-	 * Remove all bindings from signal and destroy any reference to external objects (destroy Signal object).
-	 * <p><strong>IMPORTANT:</strong> calling any method on the signal instance after calling dispose will throw errors.</p>
-	 */
+	* Remove all bindings from signal and destroy any reference to external objects (destroy Signal object).
+	* <p><strong>IMPORTANT:</strong> calling any method on the signal instance after calling dispose will throw errors.</p>
+	*
+	* @method Phaser.Signal#dispose
+	*/
 	dispose: function () {
 		this.removeAll();
 		delete this._bindings;
@@ -273,8 +286,10 @@ Phaser.Signal.prototype = {
 	},
 
 	/**
-	 * @return {string} String representation of the object.
-	 */
+	*
+	* @method Phaser.Signal#toString
+	* @return {string} String representation of the object.
+	*/
 	toString: function () {
 		return '[Phaser.Signal active:'+ this.active +' numListeners:'+ this.getNumListeners() +']';
 	}

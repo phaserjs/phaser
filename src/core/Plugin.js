@@ -2,9 +2,7 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Plugin
 */
-
 
 /** 
 * This is a base Plugin template to use for any Phaser plugin development.
@@ -13,9 +11,11 @@
 * @classdesc Phaser - Plugin
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {Description} parent - Description.
+* @param {Any} parent - The object that owns this plugin, usually Phaser.PluginManager.
 */
 Phaser.Plugin = function (game, parent) {
+
+    if (typeof parent === 'undefined') { parent = null; }
 
 	/**
 	* @property {Phaser.Game} game - A reference to the currently running game.
@@ -23,42 +23,42 @@ Phaser.Plugin = function (game, parent) {
     this.game = game;
     
     /**
-	* @property {Description} parent - Description.
+	* @property {Any} parent - The parent of this plugin. If added to the PluginManager the parent will be set to that, otherwise it will be null.
 	*/
     this.parent = parent;
     
     /**
-	* @property {boolean} active - Description.
+	* @property {boolean} active - A Plugin with active=true has its preUpdate and update methods called by the parent, otherwise they are skipped.
 	* @default
 	*/
     this.active = false;
     
     /**
-	* @property {boolean} visible - Description.
+	* @property {boolean} visible - A Plugin with visible=true has its render and postRender methods called by the parent, otherwise they are skipped.
 	* @default
 	*/
     this.visible = false;
     
     /**
-	* @property {boolean} hasPreUpdate - Description.
+	* @property {boolean} hasPreUpdate - A flag to indicate if this plugin has a preUpdate method.
 	* @default
 	*/
     this.hasPreUpdate = false;
     
     /**
-	* @property {boolean} hasUpdate - Description.
+	* @property {boolean} hasUpdate - A flag to indicate if this plugin has an update method.
 	* @default
 	*/
     this.hasUpdate = false;
     
     /**
-	* @property {boolean} hasRender - Description.
+	* @property {boolean} hasRender - A flag to indicate if this plugin has a render method.
 	* @default
 	*/
     this.hasRender = false;
     
     /**
-	* @property {boolean} hasPostRender - Description.
+	* @property {boolean} hasPostRender - A flag to indicate if this plugin has a postRender method.
 	* @default
 	*/
     this.hasPostRender = false;
@@ -68,10 +68,9 @@ Phaser.Plugin = function (game, parent) {
 Phaser.Plugin.prototype = {
 
     /**
-    * Pre-update is called at the start of the update cycle, before any other updates have taken place (including Physics).
+    * Pre-update is called at the very start of the update cycle, before any other subsystems have been updated (including Physics).
     * It is only called if active is set to true.
-    * @method preUpdate
-    * @memberof Phaser.Plugin
+    * @method Phaser.Plugin#preUpdate
     */
     preUpdate: function () {
     },
@@ -79,8 +78,7 @@ Phaser.Plugin.prototype = {
     /**
     * Update is called after all the core subsystems (Input, Tweens, Sound, etc) and the State have updated, but before the render.
     * It is only called if active is set to true.
-    * @method update
-    * @memberof Phaser.Plugin
+    * @method Phaser.Plugin#update
     */
     update: function () {
     },
@@ -88,8 +86,7 @@ Phaser.Plugin.prototype = {
     /**
     * Render is called right after the Game Renderer completes, but before the State.render.
     * It is only called if visible is set to true.
-    * @method render
-    * @memberof Phaser.Plugin
+    * @method Phaser.Plugin#render
     */
     render: function () {
     },
@@ -97,16 +94,14 @@ Phaser.Plugin.prototype = {
     /**
     * Post-render is called after the Game Renderer and State.render have run.
     * It is only called if visible is set to true.
-    * @method postRender
-    * @memberof Phaser.Plugin
+    * @method Phaser.Plugin#postRender
     */
     postRender: function () {
     },
 
     /**
     * Clear down this Plugin and null out references
-    * @method destroy
-    * @memberof Phaser.Plugin
+    * @method Phaser.Plugin#destroy
     */
     destroy: function () {
 

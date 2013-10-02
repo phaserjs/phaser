@@ -2,9 +2,7 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.SignalBinding
 */
-
 
 /**
 * Phaser.SignalBinding
@@ -77,7 +75,7 @@ Phaser.SignalBinding.prototype = {
     /**
     * Call listener passing arbitrary parameters.
     * <p>If binding was added using `Signal.addOnce()` it will be automatically removed from signal dispatch queue, this method is used internally for the signal dispatch.</p>
-    * @method execute
+    * @method Phaser.SignalBinding#execute
     * @param {array} [paramsArr] - Array of parameters that should be passed to the listener.
     * @return {Description} Value returned by the listener.
     */
@@ -103,7 +101,7 @@ Phaser.SignalBinding.prototype = {
     /**
     * Detach binding from signal.
     * <p>alias to: @see mySignal.remove(myBinding.getListener());
-    * @method detach
+    * @method Phaser.SignalBinding#detach
     * @return {function|null} Handler function bound to the signal or `null` if binding was previously detached.
     */
     detach: function () {
@@ -111,7 +109,7 @@ Phaser.SignalBinding.prototype = {
     },
 
     /**
-    * @method isBound
+    * @method Phaser.SignalBinding#isBound
     * @return {boolean} True if binding is still bound to the signal and has a listener.
     */
     isBound: function () {
@@ -119,7 +117,7 @@ Phaser.SignalBinding.prototype = {
     },
 
     /**
-    * @method isOnce
+    * @method Phaser.SignalBinding#isOnce
     * @return {boolean} If SignalBinding will only be executed once.
     */
     isOnce: function () {
@@ -127,7 +125,7 @@ Phaser.SignalBinding.prototype = {
     },
 
     /**
-    * @method getListener
+    * @method Phaser.SignalBinding#getListener
     * @return {Function} Handler function bound to the signal.
     */
     getListener: function () {
@@ -135,7 +133,7 @@ Phaser.SignalBinding.prototype = {
     },
 
     /**
-    * @method getSignal
+    * @method Phaser.SignalBinding#getSignal
     * @return {Signal} Signal that listener is currently bound to.
     */
     getSignal: function () {
@@ -143,7 +141,7 @@ Phaser.SignalBinding.prototype = {
     },
 
     /**
-    * @method _destroy
+    * @method Phaser.SignalBinding#_destroy
     * Delete instance properties
     * @private
     */
@@ -154,7 +152,7 @@ Phaser.SignalBinding.prototype = {
     },
 
     /**
-    * @method toString
+    * @method Phaser.SignalBinding#toString
     * @return {string} String representation of the object.
     */
     toString: function () {

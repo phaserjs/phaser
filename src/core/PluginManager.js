@@ -46,8 +46,7 @@ Phaser.PluginManager.prototype = {
     /**
     * Add a new Plugin to the PluginManager.
     * The plugin's game and parent reference are set to this game and pluginmanager parent.
-    * @method add
-    * @memberof Phaser.PluginManager
+    * @method Phaser.PluginManager#add
     * @param {Phaser.Plugin} plugin - Description.
     * @return {Phaser.Plugin} Description.
     */
@@ -115,9 +114,8 @@ Phaser.PluginManager.prototype = {
 
     /**
      * Remove a Plugin from the PluginManager.
-     * @method remove
-     * @memberof Phaser.PluginManager
-     * @param {Phaser.Plugin} plugin - Description.
+     * @method Phaser.PluginManager#remove
+     * @param {Phaser.Plugin} plugin - The plugin to be removed.
      */
     remove: function (plugin) {
 
@@ -127,10 +125,10 @@ Phaser.PluginManager.prototype = {
     },
 
     /**
-    * Description.
+    * Pre-update is called at the very start of the update cycle, before any other subsystems have been updated (including Physics).
+    * It only calls plugins who have active=true.
     * 
-    * @method preUpdate
-    * @memberof Phaser.PluginManager
+    * @method Phaser.PluginManager#preUpdate
     */
     preUpdate: function () {
 
@@ -150,10 +148,10 @@ Phaser.PluginManager.prototype = {
     },
 
     /**
-    * Description.
+    * Update is called after all the core subsystems (Input, Tweens, Sound, etc) and the State have updated, but before the render.
+    * It only calls plugins who have active=true.
     * 
-    * @method update
-    * @memberof Phaser.PluginManager
+    * @method Phaser.PluginManager#update
     */
     update: function () {
         
@@ -173,10 +171,10 @@ Phaser.PluginManager.prototype = {
     },
 
     /**
-    * Description.
+    * Render is called right after the Game Renderer completes, but before the State.render.
+    * It only calls plugins who have visible=true.
     * 
-    * @method render
-    * @memberof Phaser.PluginManager
+    * @method Phaser.PluginManager#render
     */
     render: function () {
 
@@ -196,10 +194,10 @@ Phaser.PluginManager.prototype = {
     },
 
     /**
-    * Description.
+    * Post-render is called after the Game Renderer and State.render have run.
+    * It only calls plugins who have visible=true.
     * 
-    * @method postRender
-    * @memberof Phaser.PluginManager
+    * @method Phaser.PluginManager#postRender
     */
     postRender: function () {
 
@@ -219,10 +217,9 @@ Phaser.PluginManager.prototype = {
     },
 
     /**
-    * Description.
+    * Clear down this PluginManager and null out references
     * 
-    * @method destroy
-    * @memberof Phaser.PluginManager
+    * @method Phaser.PluginManager#destroy
     */
     destroy: function () {
 
