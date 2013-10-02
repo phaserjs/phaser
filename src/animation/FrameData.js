@@ -223,6 +223,7 @@ Phaser.Animation.FrameData.prototype = {
 /**
 * @name Phaser.Animation.FrameData#total
 * @property {number} total - The total number of frames in this FrameData set.
+* @readonly
 */
 Object.defineProperty(Phaser.Animation.FrameData.prototype, "total", {
 

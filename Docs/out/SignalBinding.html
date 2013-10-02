@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Classes</title>
+	<title>Phaser Class: SignalBinding</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -143,13 +143,15 @@
 					
 
 
-	<h1 class="page-title">Classes</h1>
+	<h1 class="page-title">Class: SignalBinding</h1>
 <section>
 
 <header>
     <h2>
-    
+    SignalBinding
     </h2>
+    
+        <div class="class-description"><p>Phaser.SignalBinding</p></div>
     
 </header>
 
@@ -159,8 +161,216 @@
 
     
         
+<dt>
+    <h4 class="name" id="SignalBinding"><span class="type-signature"></span>new SignalBinding<span class="signature">(signal, listener, isOnce, <span class="optional">listenerContext</span>, <span class="optional">priority</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Phaser.SignalBinding</p>
+<p>Object that represents a binding between a Signal and a listener function.
+&lt;br /&gt;- &lt;strong&gt;This is an internal constructor and shouldn't be called by regular users.&lt;/strong&gt;
+&lt;br /&gt;- inspired by Joa Ebert AS3 SignalBinding and Robert Penner's Slot classes.</p>
+    </div>
+    
 
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
         
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>signal</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Signal</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Reference to Signal object that listener is currently bound to.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>listener</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Handler function bound to the signal.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>isOnce</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>If binding should be executed just once.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>listenerContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Context on which listener will be executed (object that should represent the <code>this</code> variable inside listener function).</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>priority</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The priority level of the event listener. (default = 0).</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
 <dl class="details">
     
 
@@ -173,13 +383,25 @@
     
 
     
-
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>Miller Medeiros http://millermedeiros.github.com/js-signals/</li>
+        </ul>
+    </dd>
     
 
     
 
     
 
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="SignalBinding.js.html">core/SignalBinding.js</a>, <a href="SignalBinding.js.html#sunlight-1-line-3">line 3</a>
+    </li></ul></dd>
     
 
     
@@ -189,8 +411,20 @@
     
 </dl>
 
+    
+    
 
-        
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
     
     </div>
 
@@ -200,70 +434,6 @@
 
     
 
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="Phaser.Animation.html">Animation</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Animation.Frame.html">Frame</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Animation.FrameData.html">FrameData</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Animation.Parser.html">Parser</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.AnimationManager.html">AnimationManager</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Camera.html">Camera</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Circle.html">Circle</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Game.html">Game</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Group.html">Group</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.LinkedList.html">LinkedList</a></dt>
-            <dd></dd>
-        
-            <dt><a href="PluginManager-Phaser.PluginManager.html">PluginManager</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Plugin.html">Plugin</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Point.html">Point</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Rectangle.html">Rectangle</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Signal.html">Signal</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Stage.html">Stage</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.State.html">State</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.StateManager.html">StateManager</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.World.html">World</a></dt>
-            <dd></dd>
-        
-            <dt><a href="SignalBinding.html">SignalBinding</a></dt>
-            <dd></dd>
-        </dl>
     
 
     
@@ -295,7 +465,7 @@
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a>
-		on Wed Oct 02 2013 12:09:54 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Oct 02 2013 12:09:55 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

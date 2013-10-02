@@ -259,6 +259,7 @@ Phaser.AnimationManager.prototype = {
 /**
 * @name Phaser.AnimationManager#frameData
 * @property {Phaser.Animation.FrameData} frameData - The current animations FrameData.
+* @readonly
 */
 Object.defineProperty(Phaser.AnimationManager.prototype, "frameData", {
 
@@ -271,6 +272,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameData", {
 /**
 * @name Phaser.AnimationManager#frameTotal
 * @property {number} frameTotal - The total number of frames in the currently loaded FrameData, or -1 if no FrameData is loaded.
+* @readonly
 */
 Object.defineProperty(Phaser.AnimationManager.prototype, "frameTotal", {
  

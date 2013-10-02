@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Class: Camera</title>
+	<title>Phaser Class: State</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -143,15 +143,15 @@
 					
 
 
-	<h1 class="page-title">Class: Camera</h1>
+	<h1 class="page-title">Class: State</h1>
 <section>
 
 <header>
     <h2>
-    Camera
+    State
     </h2>
     
-        <div class="class-description"><p>Phaser.Camera</p></div>
+        <div class="class-description"><p>Phaser.State</p></div>
     
 </header>
 
@@ -162,7 +162,7 @@
     
         
 <dt>
-    <h4 class="name" id="Camera"><span class="type-signature"></span>new Camera<span class="signature">(game, id, x, y, width, height)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="State"><span class="type-signature"></span>new State<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -170,8 +170,8 @@
     
     
     <div class="description">
-        <p>A Camera is your view into the game world. It has a position and size and renders only those objects within its field of view.
-The game automatically creates a single Stage sized camera on boot. Move the camera around the world with Phaser.Camera.x/y</p>
+        <p>This is a base State class which can be extended if you are creating your own game.
+It provides quick access to common functions such as the camera, cache, input, match, sound and more.</p>
     </div>
     
 
@@ -179,170 +179,6 @@ The game automatically creates a single Stage sized camera on boot. Move the cam
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>game</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Game reference to the currently running game.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>id</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Not being used at the moment, will be when Phaser supports multiple camera</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Position of the camera on the X axis</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Position of the camera on the Y axis</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The width of the view rectangle</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The height of the view rectangle</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
     
     
     
@@ -368,7 +204,7 @@ The game automatically creates a single Stage sized camera on boot. Move the cam
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-22">line 22</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-15">line 15</a>
     </li></ul></dd>
     
 
@@ -412,247 +248,7 @@ The game automatically creates a single Stage sized camera on boot. Move the cam
         <dl>
             
 <dt>
-    <h4 class="name" id="FOLLOW_LOCKON"><span class="type-signature">&lt;static, constant> </span>FOLLOW_LOCKON<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">number</span>
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-89">line 89</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="FOLLOW_PLATFORMER"><span class="type-signature">&lt;static, constant> </span>FOLLOW_PLATFORMER<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">number</span>
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-95">line 95</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="FOLLOW_TOPDOWN"><span class="type-signature">&lt;static, constant> </span>FOLLOW_TOPDOWN<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">number</span>
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-101">line 101</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="FOLLOW_TOPDOWN_TIGHT"><span class="type-signature">&lt;static, constant> </span>FOLLOW_TOPDOWN_TIGHT<span class="type-signature"> :number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">number</span>
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-107">line 107</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="atLimit"><span class="type-signature"></span>atLimit<span class="type-signature"></span></h4>
+    <h4 class="name" id="add"><span class="type-signature"></span>add<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -691,13 +287,13 @@ The game automatically creates a single Stage sized camera on boot. Move the cam
 
         <tr>
             
-                <td class="name"><code>atLimit</code></td>
+                <td class="name"><code>add</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">Phaser.GameObjectFactory</span>
 
 
             
@@ -707,7 +303,7 @@ The game automatically creates a single Stage sized camera on boot. Move the cam
 
             
 
-            <td class="description last"><p>Whether this camera is flush with the World Bounds or not.</p></td>
+            <td class="description last"><p>Reference to the GameObjectFactory.</p></td>
         </tr>
 
 	
@@ -732,11 +328,14 @@ The game automatically creates a single Stage sized camera on boot. Move the cam
     
 
     
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-68">line 68</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-26">line 26</a>
     </li></ul></dd>
     
 
@@ -754,7 +353,7 @@ The game automatically creates a single Stage sized camera on boot. Move the cam
         
             
 <dt>
-    <h4 class="name" id="deadzone"><span class="type-signature"></span>deadzone<span class="type-signature"></span></h4>
+    <h4 class="name" id="cache"><span class="type-signature"></span>cache<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -793,13 +392,13 @@ The game automatically creates a single Stage sized camera on boot. Move the cam
 
         <tr>
             
-                <td class="name"><code>deadzone</code></td>
+                <td class="name"><code>cache</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
+<span class="param-type">Phaser.Cache</span>
 
 
             
@@ -809,7 +408,7 @@ The game automatically creates a single Stage sized camera on boot. Move the cam
 
             
 
-            <td class="description last"><p>Moving inside this Rectangle will not cause camera moving.</p></td>
+            <td class="description last"><p>Reference to the assets cache.</p></td>
         </tr>
 
 	
@@ -834,11 +433,119 @@ The game automatically creates a single Stage sized camera on boot. Move the cam
     
 
     
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-57">line 57</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-38">line 38</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="camera"><span class="type-signature"></span>camera<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>camera</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Physics.PhysicsManager</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A handy reference to world.camera.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-32">line 32</a>
     </li></ul></dd>
     
 
@@ -940,7 +647,7 @@ The game automatically creates a single Stage sized camera on boot. Move the cam
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-27">line 27</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-20">line 20</a>
     </li></ul></dd>
     
 
@@ -958,113 +665,7 @@ The game automatically creates a single Stage sized camera on boot. Move the cam
         
             
 <dt>
-    <h4 class="name" id="height"><span class="type-signature"></span>height<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The Cameras height. By default this is the same as the Game size and should not be adjusted for now.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Gets or sets the cameras height.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-337">line 337</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="id"><span class="type-signature"></span>id<span class="type-signature"></span></h4>
+    <h4 class="name" id="input"><span class="type-signature"></span>input<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1103,13 +704,13 @@ The game automatically creates a single Stage sized camera on boot. Move the cam
 
         <tr>
             
-                <td class="name"><code>id</code></td>
+                <td class="name"><code>input</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">Phaser.Input</span>
 
 
             
@@ -1119,214 +720,7 @@ The game automatically creates a single Stage sized camera on boot. Move the cam
 
             
 
-            <td class="description last"><p>Reserved for future multiple camera set-ups.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-38">line 38</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="screenView"><span class="type-signature"></span>screenView<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>screenView</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Used by Sprites to work out Camera culling.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-52">line 52</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="target"><span class="type-signature"></span>target<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>target</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Phaser.Sprite</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>If the camera is tracking a Sprite, this is a reference to it, otherwise null.</p></td>
+            <td class="description last"><p>Reference to the input manager</p></td>
         </tr>
 
 	
@@ -1358,7 +752,7 @@ The game automatically creates a single Stage sized camera on boot. Move the cam
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-74">line 74</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-44">line 44</a>
     </li></ul></dd>
     
 
@@ -1376,116 +770,7 @@ The game automatically creates a single Stage sized camera on boot. Move the cam
         
             
 <dt>
-    <h4 class="name" id="view"><span class="type-signature"></span>view<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Camera view. 
-The view into the world we wish to render (by default the game dimensions).
-The x/y values are in world coordinates, not screen coordinates, the width/height is how many pixels to render.
-Objects outside of this view are not rendered (unless set to ignore the Camera, i.e. UI?).</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>view</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-47">line 47</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="visible"><span class="type-signature"></span>visible<span class="type-signature"></span></h4>
+    <h4 class="name" id="load"><span class="type-signature"></span>load<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1524,13 +809,13 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
 
         <tr>
             
-                <td class="name"><code>visible</code></td>
+                <td class="name"><code>load</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">Phaser.Loader</span>
 
 
             
@@ -1540,7 +825,7 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
 
             
 
-            <td class="description last"><p>Whether this camera is visible or not.</p></td>
+            <td class="description last"><p>Reference to the assets loader.</p></td>
         </tr>
 
 	
@@ -1566,13 +851,13 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
 
     
     <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>true</li></ul></dd>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-63">line 63</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-50">line 50</a>
     </li></ul></dd>
     
 
@@ -1590,15 +875,11 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
         
             
 <dt>
-    <h4 class="name" id="width"><span class="type-signature"></span>width<span class="type-signature"></span></h4>
+    <h4 class="name" id="math"><span class="type-signature"></span>math<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The Cameras width. By default this is the same as the Game size and should not be adjusted for now.</p>
-    </div>
     
     
     
@@ -1633,13 +914,13 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
 
         <tr>
             
-                <td class="name"><code>width</code></td>
+                <td class="name"><code>math</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">Phaser.GameMath</span>
 
 
             
@@ -1649,7 +930,7 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
 
             
 
-            <td class="description last"><p>Gets or sets the cameras width.</p></td>
+            <td class="description last"><p>Reference to the math helper.</p></td>
         </tr>
 
 	
@@ -1674,11 +955,644 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
     
 
     
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-320">line 320</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-56">line 56</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="particles"><span class="type-signature"></span>particles<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>add</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Description</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Description.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-92">line 92</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="physics"><span class="type-signature"></span>physics<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>physics</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Physics.PhysicsManager</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Reference to the physics manager.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-98">line 98</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="sound"><span class="type-signature"></span>sound<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>sound</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.SoundManager</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Reference to the sound manager.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-62">line 62</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="stage"><span class="type-signature"></span>stage<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>stage</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Stage.html">Phaser.Stage</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Reference to the stage.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-68">line 68</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="time"><span class="type-signature"></span>time<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>time</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.TimeManager</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Reference to game clock.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-74">line 74</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="tweens"><span class="type-signature"></span>tweens<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>tweens</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.TweenManager</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Reference to the tween manager.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-80">line 80</a>
     </li></ul></dd>
     
 
@@ -1751,7 +1665,7 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
 
             
 
-            <td class="description last"><p>A reference to the game world.</p></td>
+            <td class="description last"><p>Reference to the world.</p></td>
         </tr>
 
 	
@@ -1776,223 +1690,14 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
     
 
     
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-32">line 32</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="x"><span class="type-signature"></span>x<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The Cameras x coordinate. This value is automatically clamped if it falls outside of the World bounds.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Gets or sets the cameras x position.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-284">line 284</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="y"><span class="type-signature"></span>y<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The Cameras y coordinate. This value is automatically clamped if it falls outside of the World bounds.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Gets or sets the cameras y position.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-302">line 302</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-86">line 86</a>
     </li></ul></dd>
     
 
@@ -2016,7 +1721,7 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
         <dl>
             
 <dt>
-    <h4 class="name" id="checkWorldBounds"><span class="type-signature"></span>checkWorldBounds<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="create"><span class="type-signature"></span>create<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2024,7 +1729,8 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
     
     
     <div class="description">
-        <p>Method called to ensure the camera doesn't venture outside of the game world.</p>
+        <p>This method is called after the game engine successfully switches states.
+Feel free to add any setup code here (do not load anything here, override preload() instead).</p>
     </div>
     
 
@@ -2057,7 +1763,7 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-214">line 214</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-129">line 129</a>
     </li></ul></dd>
     
 
@@ -2085,7 +1791,7 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
         
             
 <dt>
-    <h4 class="name" id="focusOnXY"><span class="type-signature"></span>focusOnXY<span class="signature">(x, y)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2093,7 +1799,7 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
     
     
     <div class="description">
-        <p>Move the camera focus to a location instantly.</p>
+        <p>This method will be called when the state is destroyed.</p>
     </div>
     
 
@@ -2101,78 +1807,6 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>X position.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Y position.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
     
     
     
@@ -2198,7 +1832,7 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-151">line 151</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-162">line 162</a>
     </li></ul></dd>
     
 
@@ -2226,7 +1860,7 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
         
             
 <dt>
-    <h4 class="name" id="follow"><span class="type-signature"></span>follow<span class="signature">(target, <span class="optional">style</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="loadRender"><span class="type-signature"></span>loadRender<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2234,7 +1868,7 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
     
     
     <div class="description">
-        <p>Tells this camera which sprite to follow.</p>
+        <p>Put render operations here.</p>
     </div>
     
 
@@ -2242,98 +1876,6 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>target</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Phaser.Sprite</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>The object you want the camera to track. Set to null to not follow anything.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>style</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Leverage one of the existing &quot;deadzone&quot; presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
     
     
     
@@ -2359,7 +1901,7 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-111">line 111</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-121">line 121</a>
     </li></ul></dd>
     
 
@@ -2387,7 +1929,7 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
         
             
 <dt>
-    <h4 class="name" id="setPosition"><span class="type-signature"></span>setPosition<span class="signature">(x, y)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="loadUpdate"><span class="type-signature"></span>loadUpdate<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2395,8 +1937,7 @@ Objects outside of this view are not rendered (unless set to ignore the Camera, 
     
     
     <div class="description">
-        <p>A helper function to set both the X and Y properties of the camera at once
-without having to use game.camera.x and game.camera.y.</p>
+        <p>Put update logic here.</p>
     </div>
     
 
@@ -2404,78 +1945,6 @@ without having to use game.camera.x and game.camera.y.</p>
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>X position.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Y position.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
     
     
     
@@ -2501,7 +1970,7 @@ without having to use game.camera.x and game.camera.y.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-252">line 252</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-113">line 113</a>
     </li></ul></dd>
     
 
@@ -2529,7 +1998,7 @@ without having to use game.camera.x and game.camera.y.</p>
         
             
 <dt>
-    <h4 class="name" id="setSize"><span class="type-signature"></span>setSize<span class="signature">(width, height)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="paused"><span class="type-signature"></span>paused<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2537,7 +2006,7 @@ without having to use game.camera.x and game.camera.y.</p>
     
     
     <div class="description">
-        <p>Sets the size of the view rectangle given the width and height in parameters.</p>
+        <p>This method will be called when game paused.</p>
     </div>
     
 
@@ -2545,78 +2014,6 @@ without having to use game.camera.x and game.camera.y.</p>
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The desired width.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The desired height.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
     
     
     
@@ -2642,7 +2039,146 @@ without having to use game.camera.x and game.camera.y.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-268">line 268</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-154">line 154</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="preload"><span class="type-signature"></span>preload<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Override this method to add some load operations.
+If you need to use the loader, you may need to use them here.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-104">line 104</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="render"><span class="type-signature"></span>render<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Put render operations here.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-146">line 146</a>
     </li></ul></dd>
     
 
@@ -2678,7 +2214,7 @@ without having to use game.camera.x and game.camera.y.</p>
     
     
     <div class="description">
-        <p>Update focusing and scrolling.</p>
+        <p>Put update logic here.</p>
     </div>
     
 
@@ -2711,7 +2247,7 @@ without having to use game.camera.x and game.camera.y.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Camera.js.html">core/Camera.js</a>, <a href="Camera.js.html#sunlight-1-line-164">line 164</a>
+        <a href="State.js.html">core/State.js</a>, <a href="State.js.html#sunlight-1-line-138">line 138</a>
     </li></ul></dd>
     
 
@@ -2762,7 +2298,7 @@ without having to use game.camera.x and game.camera.y.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a>
-		on Wed Oct 02 2013 12:09:54 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Oct 02 2013 12:09:55 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

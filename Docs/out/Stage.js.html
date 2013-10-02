@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Source: Phaser.js</title>
+	<title>Phaser Source: core/Stage.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -143,7 +143,7 @@
 					
 
 
-		<h1 class="page-title">Source: Phaser.js</h1>
+		<h1 class="page-title">Source: core/Stage.js</h1>
     
     <section>
         <article>
@@ -154,41 +154,146 @@
 */
 
 /**
- * @module Phaser
+* The Stage controls the canvas on which everything is displayed. It handles display within the browser,
+* focus handling, game resizing, scaling and the pause, boot and orientation screens.
+*
+* @class Phaser.Stage
+* @constructor
+* @param {Phaser.Game} game - Game reference to the currently running game.
+* @param {number} width - Width of the canvas element.
+* @param {number} height - Height of the canvas element.
  */
-var Phaser = Phaser || { 
+Phaser.Stage = function (game, width, height) {
 
-	VERSION: '1.0.7-beta', 
-	GAMES: [], 
-	AUTO: 0,
-	CANVAS: 1,
-	WEBGL: 2,
+    /**
+	* @property {Phaser.Game} game - A reference to the currently running Game.
+	*/
+	this.game = game;
 
-	SPRITE: 0,
-	BUTTON: 1,
-	BULLET: 2,
-	GRAPHICS: 3,
-	TEXT: 4,
-	TILESPRITE: 5,
-	BITMAPTEXT: 6,
-	GROUP: 7,
-	RENDERTEXTURE: 8,
-	TILEMAP: 9,
-	TILEMAPLAYER: 10,
-	EMITTER: 11,
+    /**
+	* @property {string} game - Background color of the stage (defaults to black). Set via the public backgroundColor property.
+	* @private
+	* @default 'rgb(0,0,0)'
+	*/
+    this._backgroundColor = 'rgb(0,0,0)';
 
-	NONE: 0,
-	LEFT: 1,
-	RIGHT: 2,
-	UP: 3,
-	DOWN: 4
+    /**
+	* @property {Phaser.Point} offset - Get the offset values (for input and other things).
+	*/
+	this.offset = new Phaser.Point;
+    
+    /**
+    * @property {HTMLCanvasElement} canvas - Reference to the newly created &lt;canvas&gt; element.
+    */
+    this.canvas = Phaser.Canvas.create(width, height); 
+    this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
+    
+    /**
+    * @property {PIXI.Stage} _stage - The Pixi Stage which is hooked to the renderer.
+    * @private
+    */
+    this._stage = new PIXI.Stage(0x000000, false);
+    this._stage.name = '_stage_root';
 
- };
+    /**
+    * @property {number} scaleMode - The current scaleMode.
+    */    
+    this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
 
-PIXI.InteractionManager = function (dummy) {
-	//	We don't need this in Pixi, so we've removed it to save space
-	//	however the Stage object expects a reference to it, so here is a dummy entry.
-};</pre>
+    /**
+    * @property {Phaser.StageScaleMode} scale - The scale of the current running game.
+    */
+    this.scale = new Phaser.StageScaleMode(this.game, width, height);
+
+    /**
+     * @property {number} aspectRatio - Aspect ratio.
+     */
+    this.aspectRatio = width / height;
+
+};
+
+Phaser.Stage.prototype = {
+
+    /**
+    * Initialises the stage and adds the event listeners.
+    * @method Phaser.Stage#boot
+    * @private
+    */
+    boot: function () {
+
+        Phaser.Canvas.getOffset(this.canvas, this.offset);
+
+        this.bounds = new Phaser.Rectangle(this.offset.x, this.offset.y, this.game.width, this.game.height);
+
+        var _this = this;
+
+        this._onChange = function (event) {
+            return _this.visibilityChange(event);
+        }
+
+        Phaser.Canvas.setUserSelect(this.canvas, 'none');
+        Phaser.Canvas.setTouchAction(this.canvas, 'none');
+
+        document.addEventListener('visibilitychange', this._onChange, false);
+        document.addEventListener('webkitvisibilitychange', this._onChange, false);
+        document.addEventListener('pagehide', this._onChange, false);
+        document.addEventListener('pageshow', this._onChange, false);
+
+        window.onblur = this._onChange;
+        window.onfocus = this._onChange;
+
+    },
+
+	/**
+    * This method is called when the document visibility is changed.
+    * @method Phaser.Stage#visibilityChange
+    * @param {Event} event - Its type will be used to decide whether the game should be paused or not.
+    */
+    visibilityChange: function (event) {
+
+        if (this.disableVisibilityChange)
+        {
+            return;
+        }
+
+        if (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true)
+        {
+	        this.game.paused = true;
+        }
+        else
+        {
+	        this.game.paused = false;
+        }
+
+    },
+
+};
+
+/**
+* @name Phaser.Stage#backgroundColor
+* @property {number|string} paused - Gets and sets the background color of the stage. The color can be given as a number: 0xff0000 or a hex string: '#ff0000'
+*/
+Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
+
+    get: function () {
+        return this._backgroundColor;
+    },
+
+    set: function (color) {
+
+        this._backgroundColor = color;
+
+        if (typeof color === 'string')
+        {
+            color = Phaser.Color.hexToRGB(color);
+        }
+
+        this._stage.setBackgroundColor(color);
+
+    }
+
+});
+</pre>
         </article>
     </section>
 

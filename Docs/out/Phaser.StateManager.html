@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Class: Frame</title>
+	<title>Phaser Class: StateManager</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -143,17 +143,15 @@
 					
 
 
-	<h1 class="page-title">Class: Frame</h1>
+	<h1 class="page-title">Class: StateManager</h1>
 <section>
 
 <header>
     <h2>
-        <span class="ancestors"><a href="Phaser.Animation.html">.Animation</a>.</span>
-    
-    Frame
+    StateManager
     </h2>
     
-        <div class="class-description"><p>Phaser.Animation.Frame</p></div>
+        <div class="class-description"><p>Phaser.StateManager</p></div>
     
 </header>
 
@@ -164,7 +162,7 @@
     
         
 <dt>
-    <h4 class="name" id="Frame"><span class="type-signature"></span>new Frame<span class="signature">(index, x, y, width, height, name, uuid)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="StateManager"><span class="type-signature"></span>new StateManager<span class="signature">(game, <span class="optional">pendingState</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -172,7 +170,7 @@
     
     
     <div class="description">
-        <p>A Frame is a single frame of an animation and is part of a FrameData collection.</p>
+        <p>The State Manager is responsible for loading, setting up and switching game states.</p>
     </div>
     
 
@@ -194,7 +192,11 @@
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -206,161 +208,77 @@
 
         <tr>
             
-                <td class="name"><code>index</code></td>
+                <td class="name"><code>game</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The index of this Frame within the FrameData set it is being added to.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>A reference to the currently running game.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>x</code></td>
+                <td class="name"><code>pendingState</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type"><a href="Phaser.State.html">Phaser.State</a></span>
+|
+
+<span class="param-type">Object</span>
 
 
             
             </td>
 
             
-
-            
-
-            <td class="description last"><p>X position of the frame within the texture image.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
+                <td class="attributes">
                 
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Y position of the frame within the texture image.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
+                    &lt;optional><br>
                 
-<span class="param-type">number</span>
 
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Width of the frame within the texture image.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
                 
-<span class="param-type">number</span>
 
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Height of the frame within the texture image.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
                 
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
+                </td>
             
 
             
-
-            <td class="description last"><p>The name of the frame. In Texture Atlas data this is usually set to the filename.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>uuid</code></td>
-            
-
-            <td class="type">
-            
+                <td class="default">
                 
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
+                    null
+                
+                </td>
             
 
-            
-
-            <td class="description last"><p>Internal UUID key.</p></td>
+            <td class="description last"><p>A State object to seed the manager with.</p></td>
         </tr>
 
 	
@@ -392,7 +310,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-20">line 20</a>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-15">line 15</a>
     </li></ul></dd>
     
 
@@ -436,11 +354,15 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="centerX"><span class="type-signature"></span>centerX<span class="type-signature"></span></h4>
+    <h4 class="name" id="current"><span class="type-signature"></span>current<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
+    
+    <div class="description">
+        <p>The current active State object (defaults to null).</p>
+    </div>
     
     
     
@@ -475,517 +397,7 @@
 
         <tr>
             
-                <td class="name"><code>centerX</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Center X position within the image to cut from.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-60">line 60</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="centerY"><span class="type-signature"></span>centerY<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>centerY</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Center Y position within the image to cut from.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-65">line 65</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="distance"><span class="type-signature"></span>distance<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>distance</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The distance from the top left to the bottom-right of this Frame.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-70">line 70</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="height"><span class="type-signature"></span>height<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Height of the frame.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-45">line 45</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="index"><span class="type-signature"></span>index<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>index</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The index of this Frame within the FrameData set it is being added to.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-25">line 25</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="name"><span class="type-signature"></span>name<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>current</code></td>
             
 
             <td class="type">
@@ -1001,7 +413,7 @@
 
             
 
-            <td class="description last"><p>Useful for Texture Atlas files (is set to the filename value).</p></td>
+            <td class="description last"></td>
         </tr>
 
 	
@@ -1030,7 +442,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-50">line 50</a>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-68">line 68</a>
     </li></ul></dd>
     
 
@@ -1048,11 +460,15 @@
         
             
 <dt>
-    <h4 class="name" id="rotated"><span class="type-signature"></span>rotated<span class="type-signature"></span></h4>
+    <h4 class="name" id="game"><span class="type-signature"></span>game<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
+    
+    <div class="description">
+        <p>A reference to the currently running game.</p>
+    </div>
     
     
     
@@ -1087,13 +503,13 @@
 
         <tr>
             
-                <td class="name"><code>rotated</code></td>
+                <td class="name"><code>game.</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
 
 
             
@@ -1103,7 +519,7 @@
 
             
 
-            <td class="description last"><p>Rotated? (not yet implemented)</p></td>
+            <td class="description last"></td>
         </tr>
 
 	
@@ -1128,14 +544,11 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-76">line 76</a>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-21">line 21</a>
     </li></ul></dd>
     
 
@@ -1153,11 +566,15 @@
         
             
 <dt>
-    <h4 class="name" id="rotationDirection"><span class="type-signature"></span>rotationDirection<span class="type-signature"></span></h4>
+    <h4 class="name" id="game"><span class="type-signature"></span>game<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
+    
+    <div class="description">
+        <p>A reference to the currently running game.</p>
+    </div>
     
     
     
@@ -1192,13 +609,13 @@
 
         <tr>
             
-                <td class="name"><code>rotationDirection</code></td>
+                <td class="name"><code>game.</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
 
 
             
@@ -1208,7 +625,7 @@
 
             
 
-            <td class="description last"><p>Either 'cw' or 'ccw', rotation is always 90 degrees.</p></td>
+            <td class="description last"></td>
         </tr>
 
 	
@@ -1233,14 +650,11 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>'cw'</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-82">line 82</a>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-42">line 42</a>
     </li></ul></dd>
     
 
@@ -1258,11 +672,15 @@
         
             
 <dt>
-    <h4 class="name" id="sourceSizeH"><span class="type-signature"></span>sourceSizeH<span class="type-signature"></span></h4>
+    <h4 class="name" id="onCreateCallback"><span class="type-signature"></span>onCreateCallback<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
+    
+    <div class="description">
+        <p>This will be called when create states (setup states...).</p>
+    </div>
     
     
     
@@ -1297,13 +715,13 @@
 
         <tr>
             
-                <td class="name"><code>sourceSizeH</code></td>
+                <td class="name"><code>onCreateCallback</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">function</span>
 
 
             
@@ -1313,7 +731,7 @@
 
             
 
-            <td class="description last"><p>Height of the original sprite.</p></td>
+            <td class="description last"></td>
         </tr>
 
 	
@@ -1342,7 +760,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-98">line 98</a>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-86">line 86</a>
     </li></ul></dd>
     
 
@@ -1360,11 +778,15 @@
         
             
 <dt>
-    <h4 class="name" id="sourceSizeW"><span class="type-signature"></span>sourceSizeW<span class="type-signature"></span></h4>
+    <h4 class="name" id="onInitCallback"><span class="type-signature"></span>onInitCallback<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
+    
+    <div class="description">
+        <p>This will be called when the state is started (i.e. set as the current active state).</p>
+    </div>
     
     
     
@@ -1399,13 +821,13 @@
 
         <tr>
             
-                <td class="name"><code>sourceSizeW</code></td>
+                <td class="name"><code>onInitCallback</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">function</span>
 
 
             
@@ -1415,7 +837,7 @@
 
             
 
-            <td class="description last"><p>Width of the original sprite.</p></td>
+            <td class="description last"></td>
         </tr>
 
 	
@@ -1444,7 +866,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-93">line 93</a>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-74">line 74</a>
     </li></ul></dd>
     
 
@@ -1462,11 +884,15 @@
         
             
 <dt>
-    <h4 class="name" id="spriteSourceSizeH"><span class="type-signature"></span>spriteSourceSizeH<span class="type-signature"></span></h4>
+    <h4 class="name" id="onLoadRenderCallback"><span class="type-signature"></span>onLoadRenderCallback<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
+    
+    <div class="description">
+        <p>This will be called when the State is rendered but only during the load process.</p>
+    </div>
     
     
     
@@ -1501,13 +927,13 @@
 
         <tr>
             
-                <td class="name"><code>spriteSourceSizeH</code></td>
+                <td class="name"><code>onLoadRenderCallback</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">function</span>
 
 
             
@@ -1517,7 +943,7 @@
 
             
 
-            <td class="description last"><p>Height of the trimmed sprite.</p></td>
+            <td class="description last"></td>
         </tr>
 
 	
@@ -1542,14 +968,11 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-122">line 122</a>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-116">line 116</a>
     </li></ul></dd>
     
 
@@ -1567,11 +990,15 @@
         
             
 <dt>
-    <h4 class="name" id="spriteSourceSizeW"><span class="type-signature"></span>spriteSourceSizeW<span class="type-signature"></span></h4>
+    <h4 class="name" id="onLoadUpdateCallback"><span class="type-signature"></span>onLoadUpdateCallback<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
+    
+    <div class="description">
+        <p>This will be called when the State is updated but only during the load process.</p>
+    </div>
     
     
     
@@ -1606,13 +1033,13 @@
 
         <tr>
             
-                <td class="name"><code>spriteSourceSizeW</code></td>
+                <td class="name"><code>onLoadUpdateCallback</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">function</span>
 
 
             
@@ -1622,7 +1049,7 @@
 
             
 
-            <td class="description last"><p>Width of the trimmed sprite.</p></td>
+            <td class="description last"></td>
         </tr>
 
 	
@@ -1647,14 +1074,11 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-116">line 116</a>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-110">line 110</a>
     </li></ul></dd>
     
 
@@ -1672,11 +1096,15 @@
         
             
 <dt>
-    <h4 class="name" id="spriteSourceSizeX"><span class="type-signature"></span>spriteSourceSizeX<span class="type-signature"></span></h4>
+    <h4 class="name" id="onPausedCallback"><span class="type-signature"></span>onPausedCallback<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
+    
+    <div class="description">
+        <p>This will be called when states paused.</p>
+    </div>
     
     
     
@@ -1711,13 +1139,13 @@
 
         <tr>
             
-                <td class="name"><code>spriteSourceSizeX</code></td>
+                <td class="name"><code>onPausedCallback</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">function</span>
 
 
             
@@ -1727,7 +1155,7 @@
 
             
 
-            <td class="description last"><p>X position of the trimmed sprite inside original sprite.</p></td>
+            <td class="description last"></td>
         </tr>
 
 	
@@ -1752,14 +1180,11 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-104">line 104</a>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-122">line 122</a>
     </li></ul></dd>
     
 
@@ -1777,11 +1202,15 @@
         
             
 <dt>
-    <h4 class="name" id="spriteSourceSizeY"><span class="type-signature"></span>spriteSourceSizeY<span class="type-signature"></span></h4>
+    <h4 class="name" id="onPreloadCallback"><span class="type-signature"></span>onPreloadCallback<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
+    
+    <div class="description">
+        <p>This will be called when init states (loading assets...).</p>
+    </div>
     
     
     
@@ -1816,13 +1245,13 @@
 
         <tr>
             
-                <td class="name"><code>spriteSourceSizeY</code></td>
+                <td class="name"><code>onPreloadCallback</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">function</span>
 
 
             
@@ -1832,7 +1261,7 @@
 
             
 
-            <td class="description last"><p>Y position of the trimmed sprite inside original sprite.</p></td>
+            <td class="description last"></td>
         </tr>
 
 	
@@ -1857,14 +1286,11 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-110">line 110</a>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-80">line 80</a>
     </li></ul></dd>
     
 
@@ -1882,11 +1308,15 @@
         
             
 <dt>
-    <h4 class="name" id="trimmed"><span class="type-signature"></span>trimmed<span class="type-signature"></span></h4>
+    <h4 class="name" id="onPreRenderCallback"><span class="type-signature"></span>onPreRenderCallback<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
+    
+    <div class="description">
+        <p>This will be called before the State is rendered and before the stage is cleared.</p>
+    </div>
     
     
     
@@ -1921,13 +1351,13 @@
 
         <tr>
             
-                <td class="name"><code>trimmed</code></td>
+                <td class="name"><code>onPreRenderCallback</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">function</span>
 
 
             
@@ -1937,7 +1367,7 @@
 
             
 
-            <td class="description last"><p>Was it trimmed when packed?</p></td>
+            <td class="description last"></td>
         </tr>
 
 	
@@ -1962,14 +1392,11 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-88">line 88</a>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-104">line 104</a>
     </li></ul></dd>
     
 
@@ -1987,11 +1414,15 @@
         
             
 <dt>
-    <h4 class="name" id="uuid"><span class="type-signature"></span>uuid<span class="type-signature"></span></h4>
+    <h4 class="name" id="onRenderCallback"><span class="type-signature"></span>onRenderCallback<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
+    
+    <div class="description">
+        <p>This will be called when the State is rendered, this doesn't happen during load (see onLoadRenderCallback).</p>
+    </div>
     
     
     
@@ -2026,13 +1457,13 @@
 
         <tr>
             
-                <td class="name"><code>uuid</code></td>
+                <td class="name"><code>onRenderCallback</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">function</span>
 
 
             
@@ -2042,7 +1473,7 @@
 
             
 
-            <td class="description last"><p>A link to the PIXI.TextureCache entry.</p></td>
+            <td class="description last"></td>
         </tr>
 
 	
@@ -2071,7 +1502,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-55">line 55</a>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-98">line 98</a>
     </li></ul></dd>
     
 
@@ -2089,11 +1520,15 @@
         
             
 <dt>
-    <h4 class="name" id="width"><span class="type-signature"></span>width<span class="type-signature"></span></h4>
+    <h4 class="name" id="onShutDownCallback"><span class="type-signature"></span>onShutDownCallback<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
+    
+    <div class="description">
+        <p>This will be called when the state is shut down (i.e. swapped to another state).</p>
+    </div>
     
     
     
@@ -2128,13 +1563,13 @@
 
         <tr>
             
-                <td class="name"><code>width</code></td>
+                <td class="name"><code>onShutDownCallback</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">function</span>
 
 
             
@@ -2144,7 +1579,7 @@
 
             
 
-            <td class="description last"><p>Width of the frame.</p></td>
+            <td class="description last"></td>
         </tr>
 
 	
@@ -2173,7 +1608,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-40">line 40</a>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-128">line 128</a>
     </li></ul></dd>
     
 
@@ -2191,11 +1626,15 @@
         
             
 <dt>
-    <h4 class="name" id="x"><span class="type-signature"></span>x<span class="type-signature"></span></h4>
+    <h4 class="name" id="onUpdateCallback"><span class="type-signature"></span>onUpdateCallback<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
+    
+    <div class="description">
+        <p>This will be called when State is updated, this doesn't happen during load (@see onLoadUpdateCallback).</p>
+    </div>
     
     
     
@@ -2230,13 +1669,13 @@
 
         <tr>
             
-                <td class="name"><code>x</code></td>
+                <td class="name"><code>onUpdateCallback</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">function</span>
 
 
             
@@ -2246,7 +1685,7 @@
 
             
 
-            <td class="description last"><p>X position within the image to cut from.</p></td>
+            <td class="description last"></td>
         </tr>
 
 	
@@ -2275,7 +1714,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-30">line 30</a>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-92">line 92</a>
     </li></ul></dd>
     
 
@@ -2293,11 +1732,15 @@
         
             
 <dt>
-    <h4 class="name" id="y"><span class="type-signature"></span>y<span class="type-signature"></span></h4>
+    <h4 class="name" id="states"><span class="type-signature"></span>states<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
+    
+    <div class="description">
+        <p>Description.</p>
+    </div>
     
     
     
@@ -2332,13 +1775,13 @@
 
         <tr>
             
-                <td class="name"><code>y</code></td>
+                <td class="name"><code>states.</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">Description</span>
 
 
             
@@ -2348,7 +1791,7 @@
 
             
 
-            <td class="description last"><p>Y position within the image to cut from.</p></td>
+            <td class="description last"></td>
         </tr>
 
 	
@@ -2377,7 +1820,113 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-35">line 35</a>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-27">line 27</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="states"><span class="type-signature"></span>states<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The state to be switched to in the next frame.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>states</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Description</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-62">line 62</a>
     </li></ul></dd>
     
 
@@ -2401,7 +1950,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="setTrim"><span class="type-signature"></span>setTrim<span class="signature">(trimmed, actualWidth, actualHeight, destX, destY, destWidth, destHeight)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="add"><span class="type-signature"></span>add<span class="signature">(key, state, autoStart)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2409,7 +1958,7 @@
     
     
     <div class="description">
-        <p>If the frame was trimmed when added to the Texture Atlas this records the trim and source data.</p>
+        <p>Add a new State.</p>
     </div>
     
 
@@ -2443,7 +1992,53 @@
 
         <tr>
             
-                <td class="name"><code>trimmed</code></td>
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A unique key you use to reference this state, i.e. &quot;MainMenu&quot;, &quot;Level1&quot;.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>state</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">State</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The state you want to switch to.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>autoStart</code></td>
             
 
             <td class="type">
@@ -2459,145 +2054,7 @@
 
             
 
-            <td class="description last"><p>If this frame was trimmed or not.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>actualWidth</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The width of the frame before being trimmed.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>actualHeight</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The height of the frame before being trimmed.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>destX</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The destination X position of the trimmed frame for display.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>destY</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The destination Y position of the trimmed frame for display.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>destWidth</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The destination width of the trimmed frame for display.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>destHeight</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The destination height of the trimmed frame for display.</p></td>
+            <td class="description last"><p>Start the state immediately after creating it? (default true)</p></td>
         </tr>
 
 	
@@ -2629,7 +2086,1025 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Frame.js.html">animation/Frame.js</a>, <a href="Frame.js.html#sunlight-1-line-128">line 128</a>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-158">line 158</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="checkState"><span class="type-signature"></span>checkState<span class="signature">(key)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Description.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The key of the state you want to check.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-326">line 326</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Description.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">boolean</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Nuke the entire game from orbit</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-499">line 499</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="link"><span class="type-signature">&lt;protected> </span>link<span class="signature">(key)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Links game properties to the State given by the key.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>State key.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-364">line 364</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="loadComplete"><span class="type-signature">&lt;protected> </span>loadComplete<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-425">line 425</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="preRender"><span class="type-signature">&lt;protected> </span>preRender<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-466">line 466</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="remove"><span class="type-signature"></span>remove<span class="signature">(key)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Delete the given state.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A unique key you use to reference this state, i.e. &quot;MainMenu&quot;, &quot;Level1&quot;.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-212">line 212</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="render"><span class="type-signature">&lt;protected> </span>render<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-479">line 479</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setCurrentState"><span class="type-signature">&lt;protected> </span>setCurrentState<span class="signature">(key)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Sets the current State. Should not be called directly (use StateManager.start)</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>State key.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-391">line 391</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="start"><span class="type-signature"></span>start<span class="signature">(key, <span class="optional">clearWorld</span>, <span class="optional">clearCache</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Start the given state</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The key of the state you want to start.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>clearWorld</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>clear everything in the world? (Default to true)</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>clearCache</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>clear asset cache? (Default to false and ONLY available when clearWorld=true)</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-240">line 240</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="update"><span class="type-signature">&lt;protected> </span>update<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="StateManager.js.html">core/StateManager.js</a>, <a href="StateManager.js.html#sunlight-1-line-446">line 446</a>
     </li></ul></dd>
     
 
@@ -2680,7 +3155,7 @@
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a>
-		on Wed Oct 02 2013 12:09:54 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Oct 02 2013 12:09:55 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

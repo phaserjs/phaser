@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Classes</title>
+	<title>Phaser Source: core/LinkedList.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -137,147 +137,173 @@
 	<div class="row-fluid">
 
 		
-		<div class="span8">
-			
+			<div class="span12">
+				
 				<div id="main">
 					
 
 
-	<h1 class="page-title">Classes</h1>
-<section>
-
-<header>
-    <h2>
+		<h1 class="page-title">Source: core/LinkedList.js</h1>
     
-    </h2>
+    <section>
+        <article>
+            <pre class="sunlight-highlight-javascript linenums">/**
+* @author       Richard Davey &lt;rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* A basic linked list data structure.
+*
+* @class Phaser.LinkedList
+* @constructor
+*/
+Phaser.LinkedList = function () {
+
+    /**
+	* @property {object} next - Next element in the list.
+	* @default
+	*/
+    this.next = null;
+
+    /**
+	* @property {object} prev - Previous element in the list.
+	* @default
+	*/
+    this.prev = null;
+
+    /**
+	* @property {object} first - First element in the list.
+	* @default
+	*/
+    this.first = null;
+
+    /**
+	* @property {object} last - Last element in the list.
+	* @default
+	*/
+    this.last = null;
     
-</header>
+    /**
+	* @property {object} game - Number of elements in the list.
+	* @default
+	*/
+    this.total = 0;
 
-<article>
-    <div class="container-overview">
-    
+};
 
-    
-        
+Phaser.LinkedList.prototype = {
 
-        
-<dl class="details">
-    
+	/**
+    * Adds a new element to this linked list.
+	* 
+	* @method Phaser.LinkedList#add
+	* @param {object} child - The element to add to this list. Can be a Phaser.Sprite or any other object you need to quickly iterate through.
+	* @return {object} The child that was added.
+    */
+    add: function (child) {
 
-    
+    	//	If the list is empty
+    	if (this.total == 0 && this.first == null && this.last == null)
+    	{
+    		this.first = child;
+    		this.last = child;
+	    	this.next = child;
+	    	child.prev = this;
+	    	this.total++;
+    		return child;
+    	}
 
-    
+    	//	Get gets appended to the end of the list, regardless of anything, and it won't have any children of its own (non-nested list)
+    	this.last.next = child;
 
-    
+    	child.prev = this.last;
 
-    
+    	this.last = child;
 
-    
+		this.total++;
 
-    
+		return child;
 
-    
+    },
 
-    
+	/**
+    * Removes the given element from this linked list if it exists.
+ 	* 
+ 	* @method Phaser.LinkedList#remove
+ 	* @param {object} child - The child to be removed from the list.
+    */
+    remove: function (child) {
 
-    
+    	if (child == this.first)
+    	{
+			// It was 'first', make 'first' point to first.next
+    		this.first = this.first.next;
+    	}      
+		else if (child == this.last)
+		{
+			// It was 'last', make 'last' point to last.prev
+			this.last = this.last.prev;
+		} 
 
-    
+		if (child.prev)
+		{
+			// make child.prev.next point to childs.next instead of child
+			child.prev.next = child.next; 
+		} 
 
-    
+		if (child.next)
+		{
+			// make child.next.prev point to child.prev instead of child
+			child.next.prev = child.prev;
+		}
 
-    
-</dl>
+		child.next = child.prev = null;
 
+		if (this.first == null )
+		{
+			this.last = null;
+		}
 
-        
-    
-    </div>
+		this.total--;
 
-    
+    },
 
-    
+	/**
+    * Calls a function on all members of this list, using the member as the context for the callback.
+    * The function must exist on the member.
+  	* 
+  	* @method Phaser.LinkedList#callAll
+  	* @param {function} callback - The function to call.
+    */
+    callAll: function (callback) {
 
-    
+    	if (!this.first || !this.last)
+    	{
+    		return;
+    	}
 
-    
-        <h3 class="subsection-title">Classes</h3>
+		var entity = this.first;
+		
+		do	
+		{
+			if (entity && entity[callback])
+			{
+				entity[callback].call(entity);
+			}
 
-        <dl>
-            <dt><a href="Phaser.Animation.html">Animation</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Animation.Frame.html">Frame</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Animation.FrameData.html">FrameData</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Animation.Parser.html">Parser</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.AnimationManager.html">AnimationManager</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Camera.html">Camera</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Circle.html">Circle</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Game.html">Game</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Group.html">Group</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.LinkedList.html">LinkedList</a></dt>
-            <dd></dd>
-        
-            <dt><a href="PluginManager-Phaser.PluginManager.html">PluginManager</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Plugin.html">Plugin</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Point.html">Point</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Rectangle.html">Rectangle</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Signal.html">Signal</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.Stage.html">Stage</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.State.html">State</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.StateManager.html">StateManager</a></dt>
-            <dd></dd>
-        
-            <dt><a href="Phaser.World.html">World</a></dt>
-            <dd></dd>
-        
-            <dt><a href="SignalBinding.html">SignalBinding</a></dt>
-            <dd></dd>
-        </dl>
-    
+			entity = entity.next;
 
-    
+		}
+		while(entity != this.last.next)			
 
-    
+    }
 
-    
+};</pre>
+        </article>
+    </section>
 
-    
-
-    
-</article>
-
-</section>
 
 
 
@@ -300,10 +326,6 @@
 				</footer>
 			</div>
 
-			
-			<div class="span3">
-				<div id="toc"></div>
-			</div>
 			
 			<br clear="both">
 		</div>

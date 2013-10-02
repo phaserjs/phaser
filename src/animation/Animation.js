@@ -339,6 +339,7 @@ Object.defineProperty(Phaser.Animation.prototype, "paused", {
 /**
 * @name Phaser.Animation#frameTotal
 * @property {number} frameTotal - The total number of frames in the currently loaded FrameData, or -1 if no FrameData is loaded.
+* @readonly
 */
 Object.defineProperty(Phaser.Animation.prototype, "frameTotal", {
 

@@ -1057,6 +1057,7 @@ Phaser.Group.prototype = {
 /**
 * @name Phaser.Group#length
 * @property {number} length - The number of children in this Group.
+* @readonly
 */
 Object.defineProperty(Phaser.Group.prototype, "length", {
 

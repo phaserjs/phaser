@@ -2,15 +2,13 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Stage
 */
 
 /**
-*
 * The Stage controls the canvas on which everything is displayed. It handles display within the browser,
 * focus handling, game resizing, scaling and the pause, boot and orientation screens.
 *
-* @class Stage
+* @class Phaser.Stage
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
 * @param {number} width - Width of the canvas element.
@@ -69,7 +67,8 @@ Phaser.Stage.prototype = {
 
     /**
     * Initialises the stage and adds the event listeners.
-    * @method boot
+    * @method Phaser.Stage#boot
+    * @private
     */
     boot: function () {
 
@@ -98,7 +97,7 @@ Phaser.Stage.prototype = {
 
 	/**
     * This method is called when the document visibility is changed.
-    * @method visibilityChange
+    * @method Phaser.Stage#visibilityChange
     * @param {Event} event - Its type will be used to decide whether the game should be paused or not.
     */
     visibilityChange: function (event) {
@@ -110,12 +109,10 @@ Phaser.Stage.prototype = {
 
         if (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true)
         {
-	        // console.log('visibilityChange - hidden', event);
 	        this.game.paused = true;
         }
         else
         {
-	        // console.log('visibilityChange - shown', event);
 	        this.game.paused = false;
         }
 
@@ -124,11 +121,8 @@ Phaser.Stage.prototype = {
 };
 
 /**
-* Get
-* @returns {string} Returns the background color of the stage.
-*//**
-* Set
-* @param {string} The background color you want the stage to have
+* @name Phaser.Stage#backgroundColor
+* @property {number|string} paused - Gets and sets the background color of the stage. The color can be given as a number: 0xff0000 or a hex string: '#ff0000'
 */
 Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 

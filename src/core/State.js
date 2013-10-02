@@ -2,9 +2,7 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.State
 */
-
 
 /**
 * This is a base State class which can be extended if you are creating your own game.
@@ -15,13 +13,14 @@
 */
 
 Phaser.State = function () {
+
     /**
 	* @property {Phaser.Game} game - A reference to the currently running Game.
 	*/
     this.game = null;
     
 	/**
-	* @property {Description} add - Description.
+	* @property {Phaser.GameObjectFactory} add - Reference to the GameObjectFactory.
 	* @default
 	*/
     this.add = null;
@@ -106,7 +105,7 @@ Phaser.State.prototype = {
     * Override this method to add some load operations.
     * If you need to use the loader, you may need to use them here.
     * 
-    * @method preload
+    * @method Phaser.State#preload
     */
     preload: function () {
     },
@@ -114,7 +113,7 @@ Phaser.State.prototype = {
     /**
     * Put update logic here.
     * 
-    * @method loadUpdate
+    * @method Phaser.State#loadUpdate
     */
     loadUpdate: function () {
     },
@@ -122,7 +121,7 @@ Phaser.State.prototype = {
     /**
     * Put render operations here.
     * 
-    * @method loadRender
+    * @method Phaser.State#loadRender
     */
     loadRender: function () {
     },
@@ -131,7 +130,7 @@ Phaser.State.prototype = {
     * This method is called after the game engine successfully switches states.
     * Feel free to add any setup code here (do not load anything here, override preload() instead).
     * 
-    * @method create
+    * @method Phaser.State#create
     */
     create: function () {
     },
@@ -139,7 +138,7 @@ Phaser.State.prototype = {
     /**
     * Put update logic here.
     * 
-    * @method update
+    * @method Phaser.State#update
     */
     update: function () {
     },
@@ -147,7 +146,7 @@ Phaser.State.prototype = {
     /**
     * Put render operations here.
     * 
-    * @method render
+    * @method Phaser.State#render
     */
     render: function () {
     },
@@ -155,14 +154,14 @@ Phaser.State.prototype = {
     /**
     * This method will be called when game paused.
     * 
-    * @method paused
+    * @method Phaser.State#paused
     */
     paused: function () {
     },
 
     /**
-    * This method will be called when the state is destroyed.#
-    * @method destroy
+    * This method will be called when the state is destroyed.
+    * @method Phaser.State#destroy
     */
     destroy: function () {
     }
