@@ -5,8 +5,8 @@
 */
 
 /**
- * @module Phaser
- */
+* @namespace Phaser
+*/
 var Phaser = Phaser || { 
 
 	VERSION: '1.0.7-beta', 

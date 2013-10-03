@@ -23,13 +23,13 @@
 			<ul class="nav">
 				
 				<li class="dropdown">
-					<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b
+					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
 						class="caret"></b></a>
 
 					<ul class="dropdown-menu ">
 						
 						<li>
-							<a href="module-Phaser.html">Phaser</a>
+							<a href="Phaser.html">Phaser</a>
 						</li>
 						
 
@@ -47,19 +47,11 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Animation.Frame.html">Frame</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.Animation.FrameData.html">FrameData</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.Animation.Parser.html">Parser</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.AnimationManager.html">AnimationManager</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.AnimationParser.html">AnimationParser</a>
 						</li>
 						
 						<li>
@@ -79,7 +71,67 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Color.html">Color</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Device.html">Device</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.html">Easing</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Back.html">Back</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Bounce.html">Bounce</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Circular.html">Circular</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Cubic.html">Cubic</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Elastic.html">Elastic</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Exponential.html">Exponential</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Linear.html">Linear</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Quartic.html">Quartic</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Quintic.html">Quintic</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Frame.html">Frame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.FrameData.html">FrameData</a>
 						</li>
 						
 						<li>
@@ -115,7 +167,7 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Loader.Parser.html">Parser</a>
+							<a href="Phaser.LoaderParser.html">LoaderParser</a>
 						</li>
 						
 						<li>
@@ -203,7 +255,27 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tween.html">Tween</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TweenManager.html">TweenManager</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Utils.html">Utils</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Utils.Debug.html">Debug</a>
 						</li>
 						
 						<li>
@@ -212,6 +284,20 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
 						</li>
 						
 
@@ -327,7 +413,7 @@ Phaser.Cache.prototype = {
     */
     addRenderTexture: function (key, texture) {
 
-        var frame = new Phaser.Animation.Frame(0, 0, 0, texture.width, texture.height, '', '');
+        var frame = new Phaser.Frame(0, 0, 0, texture.width, texture.height, '', '');
 
         this._textures[key] = { texture: texture, frame: frame };
 
@@ -351,7 +437,7 @@ Phaser.Cache.prototype = {
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
-        this._images[key].frameData = Phaser.Animation.Parser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax);
+        this._images[key].frameData = Phaser.AnimationParser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax);
 
     },
 
@@ -393,15 +479,15 @@ Phaser.Cache.prototype = {
 
         if (format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY)
         {
-            this._images[key].frameData = Phaser.Animation.Parser.JSONData(this.game, atlasData, key);
+            this._images[key].frameData = Phaser.AnimationParser.JSONData(this.game, atlasData, key);
         }
         else if (format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
         {
-            this._images[key].frameData = Phaser.Animation.Parser.JSONDataHash(this.game, atlasData, key);
+            this._images[key].frameData = Phaser.AnimationParser.JSONDataHash(this.game, atlasData, key);
         }
         else if (format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
         {
-            this._images[key].frameData = Phaser.Animation.Parser.XMLData(this.game, atlasData, key);
+            this._images[key].frameData = Phaser.AnimationParser.XMLData(this.game, atlasData, key);
         }
 
     },
@@ -422,8 +508,8 @@ Phaser.Cache.prototype = {
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
-        Phaser.Loader.Parser.bitmapFont(this.game, xmlData, key);
-        // this._images[key].frameData = Phaser.Animation.Parser.XMLData(this.game, xmlData, key);
+        Phaser.LoaderParser.bitmapFont(this.game, xmlData, key);
+        // this._images[key].frameData = Phaser.AnimationParser.XMLData(this.game, xmlData, key);
 
     },
 
@@ -435,7 +521,7 @@ Phaser.Cache.prototype = {
     addDefaultImage: function () {
 
         this._images['__default'] = { url: null, data: null, spriteSheet: false };
-        this._images['__default'].frame = new Phaser.Animation.Frame(0, 0, 0, 32, 32, '', '');
+        this._images['__default'].frame = new Phaser.Frame(0, 0, 0, 32, 32, '', '');
 
         var base = new PIXI.BaseTexture();
         base.width = 32;
@@ -458,7 +544,7 @@ Phaser.Cache.prototype = {
     addImage: function (key, url, data) {
 
         this._images[key] = { url: url, data: data, spriteSheet: false };
-        this._images[key].frame = new Phaser.Animation.Frame(0, 0, 0, data.width, data.height, '', '');
+        this._images[key].frame = new Phaser.Frame(0, 0, 0, data.width, data.height, '', '');
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
@@ -648,7 +734,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrameData
 	* @param {string} key - Asset key of the frame data you want.
-	* @return {Phaser.Animation.FrameData} The frame data you want.
+	* @return {Phaser.FrameData} The frame data you want.
 	*/
     getFrameData: function (key) {
 
@@ -665,7 +751,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrameByIndex
     * @param {string} key - Asset key of the frame data you want.
-    * @return {Phaser.Animation.Frame} The frame data you want.
+    * @return {Phaser.Frame} The frame data you want.
     */
     getFrameByIndex: function (key, frame) {
 
@@ -682,7 +768,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrameByName
     * @param {string} key - Asset key of the frame data you want.
-    * @return {Phaser.Animation.Frame} The frame data you want.
+    * @return {Phaser.Frame} The frame data you want.
     */
     getFrameByName: function (key, frame) {
 
@@ -699,7 +785,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrame
     * @param {string} key - Asset key of the frame data you want.
-    * @return {Phaser.Animation.Frame} The frame data you want.
+    * @return {Phaser.Frame} The frame data you want.
     */
     getFrame: function (key) {
 
@@ -716,7 +802,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getTextureFrame
     * @param {string} key - Asset key of the frame data you want.
-    * @return {Phaser.Animation.Frame} The frame data you want.
+    * @return {Phaser.Frame} The frame data you want.
     */
     getTextureFrame: function (key) {
 
@@ -991,7 +1077,7 @@ Phaser.Cache.prototype = {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a>
-		on Thu Oct 03 2013 01:18:41 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Oct 03 2013 02:35:44 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

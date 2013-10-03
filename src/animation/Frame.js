@@ -7,7 +7,7 @@
 /**
 * A Frame is a single frame of an animation and is part of a FrameData collection.
 *
-* @class Phaser.Animation.Frame
+* @class Phaser.Frame
 * @constructor
 * @param {number} index - The index of this Frame within the FrameData set it is being added to.
 * @param {number} x - X position of the frame within the texture image.
@@ -17,7 +17,7 @@
 * @param {string} name - The name of the frame. In Texture Atlas data this is usually set to the filename.
 * @param {string} uuid - Internal UUID key.
 */
-Phaser.Animation.Frame = function (index, x, y, width, height, name, uuid) {
+Phaser.Frame = function (index, x, y, width, height, name, uuid) {
 
 	/**
 	* @property {number} index - The index of this Frame within the FrameData set it is being added to.
@@ -123,12 +123,12 @@ Phaser.Animation.Frame = function (index, x, y, width, height, name, uuid) {
 
 };
 
-Phaser.Animation.Frame.prototype = {
+Phaser.Frame.prototype = {
 
 	/**
 	* If the frame was trimmed when added to the Texture Atlas this records the trim and source data.
 	*
-	* @method Phaser.Animation.Frame#setTrim
+	* @method Phaser.Frame#setTrim
 	* @param {boolean} trimmed - If this frame was trimmed or not.
 	* @param {number} actualWidth - The width of the frame before being trimmed.
 	* @param {number} actualHeight - The height of the frame before being trimmed.

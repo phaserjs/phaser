@@ -74,6 +74,11 @@ Version 1.0.7 (in progress in the dev branch)
 * Fixed bug in LinkedList#remove that could cause first to point to a dead node (thanks onedayitwillmake)
 * Moved LinkedList.dump to Debug.dumpLinkedList(list)
 * Added Button.freezeFrames boolean. Stops the frames being set on mouse events if true.
+* Phaser.Animation.Frame is now Phaser.Frame
+* Phaser.Animation.FrameData is now Phaser.FrameData
+* Phaser.Animation.Parser is now Phaser.AnimationParser (also the file has renamed from Parser.js to AnimationParser.js)
+* Phaser.Loader.Parser is now Phaser.LoaderParser (also the file has renamed from Parser.js to LoaderParser.js)
+
 
 
 * TODO: addMarker hh:mm:ss:ms

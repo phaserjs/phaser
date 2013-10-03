@@ -99,7 +99,7 @@
 
 	<script src="../src/loader/Cache.js"></script>
 	<script src="../src/loader/Loader.js"></script>
-	<script src="../src/loader/Parser.js"></script>
+	<script src="../src/loader/LoaderParser.js"></script>
 
 	<script src="../src/sound/Sound.js"></script>
 	<script src="../src/sound/SoundManager.js"></script>

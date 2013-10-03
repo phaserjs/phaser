@@ -2,15 +2,16 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Intro
 */
 
 /**
+* @overview
+*
 * Phaser - http://www.phaser.io
 *
 * v{version} - Built at: {buildDate}
 *
-* @author Richard Davey http://www.photonstorm.com @photonstorm
+* By Richard Davey http://www.photonstorm.com @photonstorm
 *
 * A feature-packed 2D HTML5 game framework born from the smouldering pits of Flixel and
 * constructed via plenty of blood, sweat, tears and coffee by Richard Davey (@photonstorm).

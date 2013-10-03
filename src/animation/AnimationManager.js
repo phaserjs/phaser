@@ -25,7 +25,7 @@ Phaser.AnimationManager = function (sprite) {
 	this.game = sprite.game;
 
 	/**
-	* @property {Phaser.Animation.Frame} currentFrame - The currently displayed Frame of animation, if any.
+	* @property {Phaser.Frame} currentFrame - The currently displayed Frame of animation, if any.
 	* @default
 	*/
 	this.currentFrame = null;
@@ -37,7 +37,7 @@ Phaser.AnimationManager = function (sprite) {
 	this.updateIfVisible = true;
 
 	/**
-	* @property {Phaser.Animation.FrameData} _frameData - A temp. var for holding the currently playing Animations FrameData.
+	* @property {Phaser.FrameData} _frameData - A temp. var for holding the currently playing Animations FrameData.
 	* @private
 	* @default
 	*/
@@ -65,7 +65,7 @@ Phaser.AnimationManager.prototype = {
     *
     * @method Phaser.AnimationManager#loadFrameData
     * @private
-    * @param {Phaser.Animation.FrameData} frameData - The FrameData set to load.
+    * @param {Phaser.FrameData} frameData - The FrameData set to load.
     */
 	loadFrameData: function (frameData) {
 
@@ -258,7 +258,7 @@ Phaser.AnimationManager.prototype = {
 
 /**
 * @name Phaser.AnimationManager#frameData
-* @property {Phaser.Animation.FrameData} frameData - The current animations FrameData.
+* @property {Phaser.FrameData} frameData - The current animations FrameData.
 * @readonly
 */
 Object.defineProperty(Phaser.AnimationManager.prototype, "frameData", {

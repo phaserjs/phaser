@@ -2,15 +2,13 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Time
 */
 
 /**
 * Time constructor.
 *
 * @class Phaser.Time
-* @classdesc This is the core internal game clock. It manages the elapsed time and calculation of elapsed values,
-* used for game object motion and tweens.
+* @classdesc This is the core internal game clock. It manages the elapsed time and calculation of elapsed values, used for game object motion and tweens.
 * @constructor
 * @param {Phaser.Game} game A reference to the currently running game.
 */
@@ -160,7 +158,7 @@ Phaser.Time.prototype = {
 
 	/**
 	* The number of seconds that have elapsed since the game was started.
-	* @method totalElapsedSeconds
+	* @method Phaser.Time#totalElapsedSeconds
 	* @return {number}
 	*/
 	totalElapsedSeconds: function() {
@@ -168,9 +166,8 @@ Phaser.Time.prototype = {
 	},
 
 	/**
-	* Updates the game clock and calculate the fps.
-	* This is called automatically by Phaser.Game.
-	* @method update
+	* Updates the game clock and calculate the fps. This is called automatically by Phaser.Game.
+	* @method Phaser.Time#update
 	* @param {number} time - The current timestamp, either performance.now or Date.now depending on the browser.
 	*/
 	update: function (time) {
@@ -215,7 +212,7 @@ Phaser.Time.prototype = {
 
 	/**
 	* Called when the game enters a paused state.
-	* @method gamePaused
+	* @method Phaser.Time#gamePaused
 	* @private
 	*/
 	gamePaused: function () {
@@ -226,7 +223,7 @@ Phaser.Time.prototype = {
 
 	/**
 	* Called when the game resumes from a paused state.
-	* @method gameResumed
+	* @method Phaser.Time#gameResumed
 	* @private
 	*/
 	gameResumed: function () {
@@ -240,7 +237,7 @@ Phaser.Time.prototype = {
 
 	/**
 	* How long has passed since the given time.
-	* @method elapsedSince
+	* @method Phaser.Time#elapsedSince
 	* @param {number} since - The time you want to measure against.
 	* @return {number} The difference between the given time and now.
 	*/
@@ -250,7 +247,7 @@ Phaser.Time.prototype = {
 
 	/**
 	* How long has passed since the given time (in seconds).
-	* @method elapsedSecondsSince
+	* @method Phaser.Time#elapsedSecondsSince
 	* @param {number} since - The time you want to measure (in seconds).
 	* @return {number} Duration between given time and now (in seconds).
 	*/
@@ -260,7 +257,7 @@ Phaser.Time.prototype = {
 
 	/**
 	* Resets the private _started value to now.
-	* @method reset
+	* @method Phaser.Time#reset
 	*/
 	reset: function () {
 		this._started = this.now;

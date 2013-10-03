@@ -2,9 +2,7 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Tween
 */
-
 
 /**
 * Tween constructor
@@ -55,6 +53,7 @@ Phaser.Tween = function (object, game) {
 
     /**
     * @property {number} _duration - Description.
+    * @private
     * @default
     */
     this._duration = 1000;
@@ -148,7 +147,7 @@ Phaser.Tween = function (object, game) {
     this._pausedTime = 0;
 
     /**
-    * @property {boolean} pendingDelete - Description.
+    * @property {boolean} pendingDelete - If this tween is ready to be deleted by the TweenManager.
     * @default
     */
     this.pendingDelete = false;
@@ -181,7 +180,7 @@ Phaser.Tween.prototype = {
 	/**
 	* Configure the Tween
 	*
-	* @method to
+	* @method Phaser.Tween#to
 	* @param {object} properties - Properties you want to tween.
 	* @param {number} duration - Duration of this tween.
 	* @param {function} ease - Easing function.
@@ -238,9 +237,9 @@ Phaser.Tween.prototype = {
 	},
 
 	/**
-	* Description. 
+	* Starts the tween running. Can also be called by the autoStart parameter of Tween.to.
 	*
-	* @method start
+	* @method Phaser.Tween#start
 	* @param {number} time - Description.
 	* @return {Phaser.Tween} Itself.
 	*/
@@ -291,9 +290,9 @@ Phaser.Tween.prototype = {
 	},
 
 	/**
-	* Description. 
+	* Stops the tween if running and removes it from the TweenManager. If there are any onComplete callbacks or events they are not dispatched.
 	*
-	* @method stop
+	* @method Phaser.Tween#stop
 	* @return {Phaser.Tween} Itself.
 	*/
 	stop: function () {
@@ -306,10 +305,10 @@ Phaser.Tween.prototype = {
 	},
 
 	/**
-	* Description. 
+	* Sets a delay time before this tween will start.
 	*
-	* @method delay
-	* @param {number} amount - Description.
+	* @method Phaser.Tween#delay
+	* @param {number} amount - The amount of the delay in ms.
 	* @return {Phaser.Tween} Itself.
 	*/
 	delay: function ( amount ) {
@@ -320,9 +319,9 @@ Phaser.Tween.prototype = {
 	},
 
 	/**
-	* Description. 
+	* Sets the number of times this tween will repeat.
 	*
-	* @method repeat
+	* @method Phaser.Tween#repeat
 	* @param {number} times - How many times to repeat.
 	* @return {Phaser.Tween} Itself.
 	*/
@@ -334,10 +333,11 @@ Phaser.Tween.prototype = {
 	},
 
 	/**
-	* Description. 
+	* A tween that has yoyo set to true will run through from start to finish, then reverse from finish to start.
+	* Used in combination with repeat you can create endless loops.
 	*
-	* @method yoyo
-	* @param {Phaser.Tween} yoyo - Description.
+	* @method Phaser.Tween#yoyo
+	* @param {boolean} yoyo - Set to true to yoyo this tween.
 	* @return {Phaser.Tween} Itself.
 	*/
 	yoyo: function( yoyo ) {
@@ -348,10 +348,10 @@ Phaser.Tween.prototype = {
 	},
 
 	/**
-	* Set easing function. 
+	* Set easing function this tween will use, i.e. Phaser.Easing.Linear.None. 
 	*
-	* @method easing
-	* @param {function} easing - Description.
+	* @method Phaser.Tween#easing
+	* @param {function} easing - The easing function this tween will use, i.e. Phaser.Easing.Linear.None.
 	* @return {Phaser.Tween} Itself.
 	*/
 	easing: function ( easing ) {
@@ -362,10 +362,10 @@ Phaser.Tween.prototype = {
 	},
 
 	/**
-	* Set interpolation function. 
+	* Set interpolation function the tween will use, by default it uses Phaser.Math.linearInterpolation.
 	*
-	* @method interpolation
-	* @param {function} interpolation - Description.
+	* @method Phaser.Tween#interpolation
+	* @param {function} interpolation - The interpolation function to use (Phaser.Math.linearInterpolation by default)
 	* @return {Phaser.Tween} Itself.
 	*/
 	interpolation: function ( interpolation ) {
@@ -376,9 +376,10 @@ Phaser.Tween.prototype = {
 	},
 
 	/**
-	* Description. 
+	* You can chain tweens together by passing a reference to the chain function. This enables one tween to call another on completion.
+	* You can pass as many tweens as you like to this function, they will each be chained in sequence.
 	*
-	* @method chain
+	* @method Phaser.Tween#chain
 	* @return {Phaser.Tween} Itself.
 	*/
 	chain: function () {
@@ -397,19 +398,21 @@ Phaser.Tween.prototype = {
 	* .to({ x: 0 }, 1000, Phaser.Easing.Linear.None)
 	* .to({ y: 0 }, 1000, Phaser.Easing.Linear.None)
 	* .loop();
-	* @method loop
+	* @method Phaser.Tween#loop
 	* @return {Tween} Itself.
 	*/
 	loop: function() {
+
 		if (this._parent) this.chain(this._parent);
 		return this;
+
 	},
 
 	/**
-	* Description. 
+	* Sets a callback to be fired when the tween starts. Note: callback will be called in the context of the global scope.
 	*
-	* @method onStartCallback
-	* @param {object} callback - Description.
+	* @method Phaser.Tween#onStartCallback
+	* @param {function} callback - The callback to invoke on start.
 	* @return {Phaser.Tween} Itself.
 	*/
 	onStartCallback: function ( callback ) {
@@ -420,10 +423,10 @@ Phaser.Tween.prototype = {
 	},
 
 	/**
-	* Description. 
+	* Sets a callback to be fired each time this tween updates. Note: callback will be called in the context of the global scope.
 	*
-	* @method onUpdateCallback
-	* @param {object} callback - Description.
+	* @method Phaser.Tween#onUpdateCallback
+	* @param {function} callback - The callback to invoke each time this tween is updated.
 	* @return {Phaser.Tween} Itself.
 	*/
 	onUpdateCallback: function ( callback ) {
@@ -434,10 +437,10 @@ Phaser.Tween.prototype = {
 	},
 
 	/**
-	* Description. 
+	* Sets a callback to be fired when the tween completes. Note: callback will be called in the context of the global scope.
 	*
-	* @method onCompleteCallback
-	* @param {object} callback - Description.
+	* @method Phaser.Tween#onCompleteCallback
+	* @param {function} callback - The callback to invoke on completion.
 	* @return {Phaser.Tween} Itself.
 	*/
 	onCompleteCallback: function ( callback ) {
@@ -448,30 +451,30 @@ Phaser.Tween.prototype = {
 	},
 
 	/**
-	* Pause. 
+	* Pauses the tween. 
 	*
-	* @method pause
+	* @method Phaser.Tween#pause
 	*/
-        pause: function () {
-            this._paused = true;
-        },
+    pause: function () {
+        this._paused = true;
+    },
 
 	/**
-	* Resume.
+	* Resumes a paused tween.
 	*
-	* @method resume
+	* @method Phaser.Tween#resume
 	*/
-        resume: function () {
-            this._paused = false;
-            this._startTime += this.game.time.pauseDuration;
-        },
+    resume: function () {
+        this._paused = false;
+        this._startTime += this.game.time.pauseDuration;
+    },
 
 	/**
-	* Description.
+	* Core tween update function called by the TweenManager. Does not need to be invoked directly.
 	*
-	* @method update
-	* @param {number} time - Description.
-	* @return {boolean} Description.
+	* @method Phaser.Tween#update
+	* @param {number} time - A timestamp passed in by the TweenManager.
+	* @return {boolean} false if the tween has completed and should be deleted from the manager, otherwise true (still active).
 	*/
 	update: function ( time ) {
 
@@ -602,4 +605,3 @@ Phaser.Tween.prototype = {
 	}
 	
 };
-

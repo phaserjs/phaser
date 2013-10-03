@@ -19,7 +19,6 @@
  */
  
 /**
-* @overview
 * @copyright © 2012 Timo Hausmann
 *
 * Permission is hereby granted, free of charge, to any person obtaining

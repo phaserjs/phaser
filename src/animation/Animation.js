@@ -13,7 +13,7 @@
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {Phaser.Sprite} parent - A reference to the owner of this Animation.
 * @param {string} name - The unique name for this animation, used in playback commands.
-* @param {Phaser.Animation.FrameData} frameData - The FrameData object that contains all frames used by this Animation.
+* @param {Phaser.FrameData} frameData - The FrameData object that contains all frames used by this Animation.
 * @param {(Array.<number>|Array.<string>)} frames - An array of numbers or strings indicating which frames to play in which order.
 * @param {number} delay - The time between each frame of the animation, given in ms.
 * @param {boolean} looped - Should this animation loop or play through once.
@@ -106,7 +106,7 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     this._frameSkip = 1;
 
     /**
-    * @property {Phaser.Animation.Frame} currentFrame - The currently displayed frame of the Animation.
+    * @property {Phaser.Frame} currentFrame - The currently displayed frame of the Animation.
     */
 	this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 	

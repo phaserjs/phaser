@@ -20,7 +20,7 @@ Phaser.AnimationParser = {
     * @param {number} frameWidth - The fixed width of each frame of the animation.
     * @param {number} frameHeight - The fixed height of each frame of the animation.
     * @param {number} [frameMax=-1] - The total number of animation frames to extact from the Sprite Sheet. The default value of -1 means "extract all frames".
-    * @return {Phaser.Animation.FrameData} A FrameData object containing the parsed frames.
+    * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
     */
     spriteSheet: function (game, key, frameWidth, frameHeight, frameMax) {
 
@@ -62,7 +62,7 @@ Phaser.AnimationParser = {
         }
 
         //  Let's create some frames then
-        var data = new Phaser.Animation.FrameData();
+        var data = new Phaser.FrameData();
         var x = 0;
         var y = 0;
 
@@ -70,7 +70,7 @@ Phaser.AnimationParser = {
         {
             var uuid = game.rnd.uuid();
 
-            data.addFrame(new Phaser.Animation.Frame(i, x, y, frameWidth, frameHeight, '', uuid));
+            data.addFrame(new Phaser.Frame(i, x, y, frameWidth, frameHeight, '', uuid));
 
             PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[key], {
                 x: x,
@@ -99,7 +99,7 @@ Phaser.AnimationParser = {
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {Object} json - The JSON data from the Texture Atlas. Must be in Array format.
     * @param {string} cacheKey - The Game.Cache asset key of the texture image.
-    * @return {Phaser.Animation.FrameData} A FrameData object containing the parsed frames.
+    * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
     */
     JSONData: function (game, json, cacheKey) {
 
@@ -112,7 +112,7 @@ Phaser.AnimationParser = {
         }
 
         //  Let's create some frames then
-        var data = new Phaser.Animation.FrameData();
+        var data = new Phaser.FrameData();
         
         //  By this stage frames is a fully parsed array
         var frames = json['frames'];
@@ -122,7 +122,7 @@ Phaser.AnimationParser = {
         {
             var uuid = game.rnd.uuid();
 
-            newFrame = data.addFrame(new Phaser.Animation.Frame(
+            newFrame = data.addFrame(new Phaser.Frame(
                 i,
             	frames[i].frame.x, 
             	frames[i].frame.y, 
@@ -170,7 +170,7 @@ Phaser.AnimationParser = {
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {Object} json - The JSON data from the Texture Atlas. Must be in JSON Hash format.
     * @param {string} cacheKey - The Game.Cache asset key of the texture image.
-    * @return {Phaser.Animation.FrameData} A FrameData object containing the parsed frames.
+    * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
     */
     JSONDataHash: function (game, json, cacheKey) {
 
@@ -183,7 +183,7 @@ Phaser.AnimationParser = {
         }
             
         //  Let's create some frames then
-        var data = new Phaser.Animation.FrameData();
+        var data = new Phaser.FrameData();
 
         //  By this stage frames is a fully parsed array
         var frames = json['frames'];
@@ -194,7 +194,7 @@ Phaser.AnimationParser = {
         {
             var uuid = game.rnd.uuid();
 
-            newFrame = data.addFrame(new Phaser.Animation.Frame(
+            newFrame = data.addFrame(new Phaser.Frame(
                 i,
                 frames[key].frame.x, 
                 frames[key].frame.y, 
@@ -244,7 +244,7 @@ Phaser.AnimationParser = {
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {Object} xml - The XML data from the Texture Atlas. Must be in Starling XML format.
     * @param {string} cacheKey - The Game.Cache asset key of the texture image.
-    * @return {Phaser.Animation.FrameData} A FrameData object containing the parsed frames.
+    * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
     */
     XMLData: function (game, xml, cacheKey) {
 
@@ -256,7 +256,7 @@ Phaser.AnimationParser = {
         }
 
         //  Let's create some frames then
-        var data = new Phaser.Animation.FrameData();
+        var data = new Phaser.FrameData();
         var frames = xml.getElementsByTagName('SubTexture');
         var newFrame;
         
@@ -266,7 +266,7 @@ Phaser.AnimationParser = {
 
             var frame = frames[i].attributes;
 
-            newFrame = data.addFrame(new Phaser.Animation.Frame(
+            newFrame = data.addFrame(new Phaser.Frame(
                 i,
             	frame.x.nodeValue, 
             	frame.y.nodeValue, 

@@ -2,9 +2,7 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.TweenManager
 */
-
 
 /**
 * Phaser - TweenManager
@@ -14,10 +12,10 @@
 * Phaser.Game has a single instance of the TweenManager through which all Tween objects are created and updated.
 * Tweens are hooked into the game clock and pause system, adjusting based on the game state.
 *
-* TweenManager is based heavily on tween.js by {@link http://soledadpenades.com|sole}.
+* TweenManager is based heavily on tween.js by http://soledadpenades.com.
 * The difference being that tweens belong to a games instance of TweenManager, rather than to a global TWEEN object.
 * It also has callbacks swapped for Signals and a few issues patched with regard to properties and completion errors.
-* Please see {@link https://github.com/sole/tween.js} for a full list of contributors.
+* Please see https://github.com/sole/tween.js for a full list of contributors.
 * @constructor
 *
 * @param {Phaser.Game} game - A reference to the currently running game.
@@ -49,7 +47,7 @@ Phaser.TweenManager = function (game) {
 Phaser.TweenManager.prototype = {
 
 	/**
-	* Description.
+	* Version number of this library.
 	* @property {string} REVISION
 	* @default 
 	*/	
@@ -57,7 +55,7 @@ Phaser.TweenManager.prototype = {
 
 	/**
 	* Get all the tween objects in an array.
-	* @method getAll
+	* @method Phaser.TweenManager#getAll
 	* @returns {Phaser.Tween[]} Array with all tween objects.
 	*/
 	getAll: function () {
@@ -68,7 +66,7 @@ Phaser.TweenManager.prototype = {
 
 	/**
 	* Remove all tween objects.
-	* @method removeAll
+	* @method Phaser.TweenManager#removeAll
 	*/
 	removeAll: function () {
 
@@ -79,7 +77,7 @@ Phaser.TweenManager.prototype = {
 	/**
 	* Add a new tween into the TweenManager.
 	*
-	* @method add
+	* @method Phaser.TweenManager#add
 	* @param {Phaser.Tween} tween - The tween object you want to add.
 	* @returns {Phaser.Tween} The tween object you added to the manager.
 	*/
@@ -92,7 +90,7 @@ Phaser.TweenManager.prototype = {
 	/**
 	* Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite. 
 	*
-	* @method create
+	* @method Phaser.TweenManager#create
 	* @param {Object} object - Object the tween will be run on.
 	* @returns {Phaser.Tween} The newly created tween object.
 	*/
@@ -105,7 +103,7 @@ Phaser.TweenManager.prototype = {
 	/**
 	* Remove a tween from this manager.
 	*
-	* @method remove
+	* @method Phaser.TweenManager#remove
 	* @param {Phaser.Tween} tween - The tween object you want to remove.
 	*/
 	remove: function ( tween ) {
@@ -123,7 +121,7 @@ Phaser.TweenManager.prototype = {
 	/**
 	* Update all the tween objects you added to this manager.
 	*
-	* @method update
+	* @method Phaser.TweenManager#update
 	* @returns {boolean} Return false if there's no tween to update, otherwise return true.
 	*/
 	update: function () {
@@ -163,7 +161,7 @@ Phaser.TweenManager.prototype = {
 	/**
 	* Pauses all currently running tweens.
 	*
-	* @method update
+	* @method Phaser.TweenManager#update
 	*/
 	pauseAll: function () {
 
@@ -176,7 +174,7 @@ Phaser.TweenManager.prototype = {
 	/**
 	* Pauses all currently paused tweens.
 	*
-	* @method resumeAll
+	* @method Phaser.TweenManager#resumeAll
 	*/
    	resumeAll: function () {
 

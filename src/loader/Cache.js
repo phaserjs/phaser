@@ -90,7 +90,7 @@ Phaser.Cache.prototype = {
     */
     addRenderTexture: function (key, texture) {
 
-        var frame = new Phaser.Animation.Frame(0, 0, 0, texture.width, texture.height, '', '');
+        var frame = new Phaser.Frame(0, 0, 0, texture.width, texture.height, '', '');
 
         this._textures[key] = { texture: texture, frame: frame };
 
@@ -185,7 +185,7 @@ Phaser.Cache.prototype = {
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
-        Phaser.Loader.Parser.bitmapFont(this.game, xmlData, key);
+        Phaser.LoaderParser.bitmapFont(this.game, xmlData, key);
         // this._images[key].frameData = Phaser.AnimationParser.XMLData(this.game, xmlData, key);
 
     },
@@ -198,7 +198,7 @@ Phaser.Cache.prototype = {
     addDefaultImage: function () {
 
         this._images['__default'] = { url: null, data: null, spriteSheet: false };
-        this._images['__default'].frame = new Phaser.Animation.Frame(0, 0, 0, 32, 32, '', '');
+        this._images['__default'].frame = new Phaser.Frame(0, 0, 0, 32, 32, '', '');
 
         var base = new PIXI.BaseTexture();
         base.width = 32;
@@ -221,7 +221,7 @@ Phaser.Cache.prototype = {
     addImage: function (key, url, data) {
 
         this._images[key] = { url: url, data: data, spriteSheet: false };
-        this._images[key].frame = new Phaser.Animation.Frame(0, 0, 0, data.width, data.height, '', '');
+        this._images[key].frame = new Phaser.Frame(0, 0, 0, data.width, data.height, '', '');
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
@@ -411,7 +411,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrameData
 	* @param {string} key - Asset key of the frame data you want.
-	* @return {Phaser.Animation.FrameData} The frame data you want.
+	* @return {Phaser.FrameData} The frame data you want.
 	*/
     getFrameData: function (key) {
 
@@ -428,7 +428,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrameByIndex
     * @param {string} key - Asset key of the frame data you want.
-    * @return {Phaser.Animation.Frame} The frame data you want.
+    * @return {Phaser.Frame} The frame data you want.
     */
     getFrameByIndex: function (key, frame) {
 
@@ -445,7 +445,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrameByName
     * @param {string} key - Asset key of the frame data you want.
-    * @return {Phaser.Animation.Frame} The frame data you want.
+    * @return {Phaser.Frame} The frame data you want.
     */
     getFrameByName: function (key, frame) {
 
@@ -462,7 +462,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getFrame
     * @param {string} key - Asset key of the frame data you want.
-    * @return {Phaser.Animation.Frame} The frame data you want.
+    * @return {Phaser.Frame} The frame data you want.
     */
     getFrame: function (key) {
 
@@ -479,7 +479,7 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getTextureFrame
     * @param {string} key - Asset key of the frame data you want.
-    * @return {Phaser.Animation.Frame} The frame data you want.
+    * @return {Phaser.Frame} The frame data you want.
     */
     getTextureFrame: function (key) {
 

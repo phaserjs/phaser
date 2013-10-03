@@ -5,15 +5,15 @@
 */
 
 /**
-* Phaser.Loader.Parser parses data objects from Phaser.Loader that need more preparation before they can be inserted into the Cache.
+* Phaser.LoaderParser parses data objects from Phaser.Loader that need more preparation before they can be inserted into the Cache.
 *
-* @class Phaser.Loader.Parser
+* @class Phaser.LoaderParser
 */
-Phaser.Loader.Parser = {
+Phaser.LoaderParser = {
 	
     /**
     * Parse frame data from an XML file.
-    * @method Phaser.Loader.Parser.bitmapFont
+    * @method Phaser.LoaderParser.bitmapFont
     * @param {object} xml - XML data you want to parse.
     * @return {FrameData} Generated FrameData object.
     */
@@ -22,7 +22,7 @@ Phaser.Loader.Parser = {
         //  Malformed?
         if (!xml.getElementsByTagName('font'))
         {
-            console.warn("Phaser.Loader.Parser.bitmapFont: Invalid XML given, missing <font> tag");
+            console.warn("Phaser.LoaderParser.bitmapFont: Invalid XML given, missing <font> tag");
             return;
         }
 
