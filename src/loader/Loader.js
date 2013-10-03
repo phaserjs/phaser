@@ -733,7 +733,7 @@ Phaser.Loader.prototype = {
 
 		this.onFileError.dispatch(key);
 
-		console.warn("Phaser.Loader error loading file: " + key);
+		console.warn("Phaser.Loader error loading file: " + key + ' from URL ' + this._fileList[key].url);
 
 		this.nextFile(key, false);
 

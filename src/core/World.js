@@ -54,11 +54,12 @@ Phaser.World.prototype = {
     */
 	boot: function () {
 
+        this.group = new Phaser.Group(this.game, null, '__world', false);
+
 		this.camera = new Phaser.Camera(this.game, 0, 0, 0, this.game.width, this.game.height);
+        this.camera.displayObject = this.group;
 
 		this.game.camera = this.camera;
-
-		this.group = new Phaser.Group(this.game, null, '__world', true);
 
 	},
 
@@ -77,7 +78,7 @@ Phaser.World.prototype = {
 		{
 			var currentNode = this.game.stage._stage.first._iNext;
 			
-			do	
+			do
 			{
 				if (currentNode['preUpdate'])
 				{

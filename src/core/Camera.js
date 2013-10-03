@@ -78,6 +78,8 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     * @default
     */
     this._edge = 0;
+
+    this.displayObject = null;
 	
 };
 
@@ -166,6 +168,8 @@ Phaser.Camera.prototype = {
     */
     update: function () {
 
+        return;
+
         //  Add dirty flag
 
         if (this.target !== null)
@@ -215,6 +219,8 @@ Phaser.Camera.prototype = {
     * @method Phaser.Camera#checkWorldBounds
     */
     checkWorldBounds: function () {
+
+        return;
 
         this.atLimit.x = false;
         this.atLimit.y = false;
@@ -293,6 +299,7 @@ Object.defineProperty(Phaser.Camera.prototype, "x", {
  
     set: function (value) {
         this.view.x = value;
+        this.displayObject.x = -value;
         this.checkWorldBounds();
     }
 
@@ -311,6 +318,7 @@ Object.defineProperty(Phaser.Camera.prototype, "y", {
 
     set: function (value) {
         this.view.y = value;
+        this.displayObject.y = -value;
         this.checkWorldBounds();
     }
 

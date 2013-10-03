@@ -419,16 +419,16 @@ Phaser.Sprite.prototype.postUpdate = function() {
     if (this.exists)
     {
         //  The sprite is positioned in this call, after taking into consideration motion updates and collision
-        this.body.postUpdate();
+        // this.body.postUpdate();
 
-        this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
-        this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
+        // this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
+        // this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
 
-        if (this.position.x != this._cache.x || this.position.y != this._cache.y)
-        {
-            this.position.x = this._cache.x;
-            this.position.y = this._cache.y;
-        }
+        // if (this.position.x != this._cache.x || this.position.y != this._cache.y)
+        // {
+        //     this.position.x = this._cache.x;
+        //     this.position.y = this._cache.y;
+        // }
     }
 
 }

@@ -197,16 +197,14 @@ Phaser.Cache.prototype = {
     */
     addDefaultImage: function () {
 
-        this._images['__default'] = { url: null, data: null, spriteSheet: false };
+        var img = new Image();
+        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJ9JREFUeNq01ssOwyAMRFG46v//Mt1ESmgh+DFmE2GPOBARKb2NVjo+17PXLD8a1+pl5+A+wSgFygymWYHBb0FtsKhJDdZlncG2IzJ4ayoMDv20wTmSMzClEgbWYNTAkQ0Z+OJ+A/eWnAaR9+oxCF4Os0H8htsMUp+pwcgBBiMNnAwF8GqIgL2hAzaGFFgZauDPKABmowZ4GL369/0rwACp2yA/ttmvsQAAAABJRU5ErkJggg==";
+
+        this._images['__default'] = { url: null, data: img, spriteSheet: false };
         this._images['__default'].frame = new Phaser.Frame(0, 0, 0, 32, 32, '', '');
 
-        var base = new PIXI.BaseTexture();
-        base.width = 32;
-        base.height = 32;
-        base.hasLoaded = true; // avoids a hanging event listener
-
-        PIXI.BaseTextureCache['__default'] = base;
-        PIXI.TextureCache['__default'] = new PIXI.Texture(base);
+        PIXI.BaseTextureCache['__default'] = new PIXI.BaseTexture(img);
+        PIXI.TextureCache['__default'] = new PIXI.Texture(PIXI.BaseTextureCache['__default']);
 
     },
 

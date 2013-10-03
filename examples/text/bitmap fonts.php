@@ -7,7 +7,7 @@
 
 (function () {
 
-    var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
+    var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
     function preload() {
 
@@ -15,9 +15,17 @@
 
     }
 
+    var text;
+
     function create() {
 
-        game.add.bitmapText(200, 100, 'Phaser & Pixi\nrocking!', { font: '64px Desyrel', align: 'center' });
+        text = game.add.bitmapText(200, 100, 'Phaser & Pixi\nrocking!', { font: '64px Desyrel', align: 'center' });
+
+    }
+
+    function update() {
+
+        text.setText('Phaser & Pixi\nrocking!\n' + Math.round(game.time.now));
 
     }
 

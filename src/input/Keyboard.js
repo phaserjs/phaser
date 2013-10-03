@@ -124,6 +124,23 @@ Phaser.Keyboard.prototype = {
     },
 
     /**
+    * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right.
+    *
+    * @method Phaser.Keyboard#createCursorKeys
+    * @return {object} An object containing properties: up, down, left and right. Which can be polled like any other Phaser.Key object.
+    */
+    createCursorKeys: function () {
+
+        return { 
+            up: this.addKey(Phaser.Keyboard.UP), 
+            down: this.addKey(Phaser.Keyboard.DOWN), 
+            left: this.addKey(Phaser.Keyboard.LEFT), 
+            right: this.addKey(Phaser.Keyboard.RIGHT)
+        }
+
+    },
+
+    /**
     * Starts the Keyboard event listeners running (keydown and keyup). They are attached to the document.body.
     * This is called automatically by Phaser.Input and should not normally be invoked directly.
     *

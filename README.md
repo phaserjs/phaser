@@ -78,6 +78,9 @@ Version 1.0.7 (in progress in the dev branch)
 * Phaser.Animation.FrameData is now Phaser.FrameData
 * Phaser.Animation.Parser is now Phaser.AnimationParser (also the file has renamed from Parser.js to AnimationParser.js)
 * Phaser.Loader.Parser is now Phaser.LoaderParser (also the file has renamed from Parser.js to LoaderParser.js)
+* Fixed Cache.addDefaultImage so the default image works in Canvas as well as WebGL. Updated to a new image (32x32 black square with green outline)
+* Extended the Loader 404 error to display the url of the file that didn't load as well as the key.
+
 
 
 
