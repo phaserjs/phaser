@@ -2,7 +2,6 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.StageScaleMode
 */
 
 /**
@@ -156,14 +155,30 @@ Phaser.StageScaleMode = function (game, width, height) {
 	
 };
 
+/**
+* @constant
+* @type {number}
+*/
 Phaser.StageScaleMode.EXACT_FIT = 0;
+
+/**
+* @constant
+* @type {number}
+*/
 Phaser.StageScaleMode.NO_SCALE = 1;
+
+/**
+* @constant
+* @type {number}
+*/
 Phaser.StageScaleMode.SHOW_ALL = 2;
 
 Phaser.StageScaleMode.prototype = {
+
     /**
-    * Description.
-    * @method startFullScreen
+    * Tries to enter the browser into full screen mode.
+    * Please note that this needs to be supported by the web browser and isn't the same thing as setting your game to fill the browser.
+    * @method Phaser.StageScaleMode#startFullScreen
     */
     startFullScreen: function () {
 
@@ -193,8 +208,8 @@ Phaser.StageScaleMode.prototype = {
     },
 
     /**
-    * Description.
-    * @method stopFullScreen
+    * Stops full screen mode if the browser is in it.
+    * @method Phaser.StageScaleMode#stopFullScreen
     */
     stopFullScreen: function () {
 
@@ -214,8 +229,8 @@ Phaser.StageScaleMode.prototype = {
     },
 
     /**
-    * Description.
-    * @method checkOrientationState
+    * Checks if the browser is in the correct orientation for your game (if forceLandscape or forcePortrait have been set)
+    * @method Phaser.StageScaleMode#checkOrientationState
     */
     checkOrientationState: function () {
 
@@ -244,8 +259,8 @@ Phaser.StageScaleMode.prototype = {
 
     /**
     * Handle window.orientationchange events
-    * @method checkOrientation
-    * @param {Description} event - Description.
+    * @method Phaser.StageScaleMode#checkOrientation
+    * @param {Event} event - The orientationchange event data.
     */
     checkOrientation: function (event) {
 
@@ -269,8 +284,8 @@ Phaser.StageScaleMode.prototype = {
 
     /**
     * Handle window.resize events
-    * @method checkResize
-    * @param {Description} event - Description.
+    * @method Phaser.StageScaleMode#checkResize
+    * @param {Event} event - The resize event data.
     */
     checkResize: function (event) {
 
@@ -300,7 +315,7 @@ Phaser.StageScaleMode.prototype = {
 
     /**
     * Re-calculate scale mode and update screen size.
-    * @method refresh
+    * @method Phaser.StageScaleMode#refresh
     */
     refresh: function () {
 
@@ -335,7 +350,7 @@ Phaser.StageScaleMode.prototype = {
 
     /**
     * Set screen size automatically based on the scaleMode.
-    * @param {Description} force - Description.
+    * @param {Description} force - If force is true it will try to resize the game regardless of the document dimensions.
     */
     setScreenSize: function (force) {
 
@@ -384,8 +399,8 @@ Phaser.StageScaleMode.prototype = {
     },
 
     /**
-    * Description.
-    * @method setSize
+    * Sets the canvas style width and height values based on minWidth/Height and maxWidth/Height.
+    * @method Phaser.StageScaleMode#setSize
     */
     setSize: function () {
 
@@ -451,8 +466,8 @@ Phaser.StageScaleMode.prototype = {
     },
 
     /**
-    * Description.
-    * @method setMaximum
+    * Sets this.width equal to window.innerWidth and this.height equal to window.innerHeight
+    * @method Phaser.StageScaleMode#setMaximum
     */
     setMaximum: function () {
 
@@ -462,8 +477,8 @@ Phaser.StageScaleMode.prototype = {
     },
 
     /**
-    * Description.
-    * @method setShowAll
+    * Calculates the multiplier needed to scale the game proportionally.
+    * @method Phaser.StageScaleMode#setShowAll
     */
     setShowAll: function () {
 
@@ -475,15 +490,15 @@ Phaser.StageScaleMode.prototype = {
     },
 
     /**
-    * Description.
-    * @method setExactFit
+    * Sets the width and height values of the canvas, no larger than the maxWidth/Height.
+    * @method Phaser.StageScaleMode#setExactFit
     */
     setExactFit: function () {
 
         var availableWidth = window.innerWidth - 0;
         var availableHeight = window.innerHeight - 5;
 
-        console.log('available', availableWidth, availableHeight);
+        // console.log('available', availableWidth, availableHeight);
 
         if (this.maxWidth && availableWidth > this.maxWidth)
         {
@@ -510,8 +525,9 @@ Phaser.StageScaleMode.prototype = {
 };
 
 /**
-* Get
-* @return {boolean}
+* @name Phaser.StageScaleMode#isFullScreen
+* @property {boolean} isFullScreen - Returns true if the browser is in full screen mode, otherwise false.
+* @readonly
 */
 Object.defineProperty(Phaser.StageScaleMode.prototype, "isFullScreen", {
 
@@ -529,8 +545,9 @@ Object.defineProperty(Phaser.StageScaleMode.prototype, "isFullScreen", {
 });
 
 /**
-* Get
-* @return {number}
+* @name Phaser.StageScaleMode#isPortrait
+* @property {boolean} isPortrait - Returns true if the browser dimensions match a portrait display.
+* @readonly
 */
 Object.defineProperty(Phaser.StageScaleMode.prototype, "isPortrait", {
 
@@ -541,8 +558,9 @@ Object.defineProperty(Phaser.StageScaleMode.prototype, "isPortrait", {
 });
 
 /**
-* Get
-* @return {number}
+* @name Phaser.StageScaleMode#isLandscape
+* @property {boolean} isLandscape - Returns true if the browser dimensions match a landscape display.
+* @readonly
 */
 Object.defineProperty(Phaser.StageScaleMode.prototype, "isLandscape", {
 
@@ -551,4 +569,3 @@ Object.defineProperty(Phaser.StageScaleMode.prototype, "isLandscape", {
     }
 
 });
-

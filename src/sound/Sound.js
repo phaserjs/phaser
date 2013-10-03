@@ -600,10 +600,10 @@ Phaser.Sound.prototype = {
     /**
     * Restart the sound, or a marked section of it.
     * @method Phaser.Sound#restart
-    * @param {string} marker - Assets key of the sound you want to play.
-    * @param {number} position - The starting position.
-    * @param {number} [volume] - Volume of the sound you want to play.
-    * @param {boolean} [loop] - Loop when it finished playing? (Default to false)
+    * @param {string} [marker=''] - If you want to play a marker then give the key here, otherwise leave blank to play the full sound.
+    * @param {number} [position=0] - The starting position to play the sound from - this is ignored if you provide a marker.
+    * @param {number} [volume=1] - Volume of the sound you want to play.
+    * @param {boolean} [loop=false] - Loop when it finished playing?
     */
     restart: function (marker, position, volume, loop) {
 
@@ -700,8 +700,9 @@ Phaser.Sound.prototype = {
 };
 
 /**
-* Get
-* @return {boolean} Description.
+* @name Phaser.Sound#isDecoding
+* @property {boolean} isDecoding - Returns true if the sound file is still decoding.
+* @readonly
 */
 Object.defineProperty(Phaser.Sound.prototype, "isDecoding", {
 
@@ -712,8 +713,9 @@ Object.defineProperty(Phaser.Sound.prototype, "isDecoding", {
 });
 
 /**
-* Get
-* @return {boolean} Description.
+* @name Phaser.Sound#isDecoded
+* @property {boolean} isDecoded - Returns true if the sound file has decoded.
+* @readonly
 */
 Object.defineProperty(Phaser.Sound.prototype, "isDecoded", {
 
@@ -724,11 +726,8 @@ Object.defineProperty(Phaser.Sound.prototype, "isDecoded", {
 });
 
 /**
-* Get
-* @return {boolean} Whether or not the sound is muted.
-*//**
-* Mutes sound.
-* @param {boolean} value - Whether or not the sound is muted.
+* @name Phaser.Sound#mute
+* @property {boolean} mute - Gets or sets the muted state of this sound.
 */
 Object.defineProperty(Phaser.Sound.prototype, "mute", {
 	
@@ -776,11 +775,9 @@ Object.defineProperty(Phaser.Sound.prototype, "mute", {
 });
 
 /**
-* Get the current volume. A value between 0 (silence) and 1 (full volume).
-* @return {number}
-*//**
-* Set
-* @param {number} value - Sets the current volume. A value between 0 (silence) and 1 (full volume).
+* @name Phaser.Sound#volume
+* @property {number} volume - Gets or sets the volume of this sound, a value between 0 and 1.
+* @readonly
 */
 Object.defineProperty(Phaser.Sound.prototype, "volume", {
 

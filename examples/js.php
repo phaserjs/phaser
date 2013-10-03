@@ -95,7 +95,7 @@
 	<script src="../src/animation/Animation.js"></script>
 	<script src="../src/animation/Frame.js"></script>
 	<script src="../src/animation/FrameData.js"></script>
-	<script src="../src/animation/Parser.js"></script>
+	<script src="../src/animation/AnimationParser.js"></script>
 
 	<script src="../src/loader/Cache.js"></script>
 	<script src="../src/loader/Loader.js"></script>

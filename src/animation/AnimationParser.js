@@ -7,14 +7,14 @@
 /**
 * Responsible for parsing sprite sheet and JSON data into the internal FrameData format that Phaser uses for animations.
 *
-* @class Phaser.Animation.Parser
+* @class Phaser.AnimationParser
 */
-Phaser.Animation.Parser = {
+Phaser.AnimationParser = {
 
     /**
     * Parse a Sprite Sheet and extract the animation frame data from it.
     *
-    * @method Phaser.Animation.Parser.spriteSheet
+    * @method Phaser.AnimationParser.spriteSheet
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {string} key - The Game.Cache asset key of the Sprite Sheet image.
     * @param {number} frameWidth - The fixed width of each frame of the animation.
@@ -57,7 +57,7 @@ Phaser.Animation.Parser = {
         //  Zero or smaller than frame sizes?
         if (width == 0 || height == 0 || width < frameWidth || height < frameHeight || total === 0)
         {
-            console.warn("Phaser.Animation.Parser.spriteSheet: width/height zero or width/height < given frameWidth/frameHeight");
+            console.warn("Phaser.AnimationParser.spriteSheet: width/height zero or width/height < given frameWidth/frameHeight");
             return null;
         }
 
@@ -95,7 +95,7 @@ Phaser.Animation.Parser = {
     /**
     * Parse the JSON data and extract the animation frame data from it.
     *
-    * @method Phaser.Animation.Parser.JSONData
+    * @method Phaser.AnimationParser.JSONData
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {Object} json - The JSON data from the Texture Atlas. Must be in Array format.
     * @param {string} cacheKey - The Game.Cache asset key of the texture image.
@@ -106,7 +106,7 @@ Phaser.Animation.Parser = {
         //  Malformed?
         if (!json['frames'])
         {
-            console.warn("Phaser.Animation.Parser.JSONData: Invalid Texture Atlas JSON given, missing 'frames' array");
+            console.warn("Phaser.AnimationParser.JSONData: Invalid Texture Atlas JSON given, missing 'frames' array");
             console.log(json);
             return;
         }
@@ -166,7 +166,7 @@ Phaser.Animation.Parser = {
     /**
     * Parse the JSON data and extract the animation frame data from it.
     *
-    * @method Phaser.Animation.Parser.JSONDataHash
+    * @method Phaser.AnimationParser.JSONDataHash
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {Object} json - The JSON data from the Texture Atlas. Must be in JSON Hash format.
     * @param {string} cacheKey - The Game.Cache asset key of the texture image.
@@ -177,7 +177,7 @@ Phaser.Animation.Parser = {
         //  Malformed?
         if (!json['frames'])
         {
-            console.warn("Phaser.Animation.Parser.JSONDataHash: Invalid Texture Atlas JSON given, missing 'frames' object");
+            console.warn("Phaser.AnimationParser.JSONDataHash: Invalid Texture Atlas JSON given, missing 'frames' object");
             console.log(json);
             return;
         }
@@ -240,7 +240,7 @@ Phaser.Animation.Parser = {
     /**
     * Parse the XML data and extract the animation frame data from it.
     *
-    * @method Phaser.Animation.Parser.XMLData
+    * @method Phaser.AnimationParser.XMLData
     * @param {Phaser.Game} game - A reference to the currently running game.
     * @param {Object} xml - The XML data from the Texture Atlas. Must be in Starling XML format.
     * @param {string} cacheKey - The Game.Cache asset key of the texture image.
@@ -251,7 +251,7 @@ Phaser.Animation.Parser = {
         //  Malformed?
         if (!xml.getElementsByTagName('TextureAtlas'))
         {
-            console.warn("Phaser.Animation.Parser.XMLData: Invalid Texture Atlas XML given, missing <TextureAtlas> tag");
+            console.warn("Phaser.AnimationParser.XMLData: Invalid Texture Atlas XML given, missing <TextureAtlas> tag");
             return;
         }
 

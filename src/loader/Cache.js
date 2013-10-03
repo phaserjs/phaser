@@ -114,7 +114,7 @@ Phaser.Cache.prototype = {
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
-        this._images[key].frameData = Phaser.Animation.Parser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax);
+        this._images[key].frameData = Phaser.AnimationParser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax);
 
     },
 
@@ -156,15 +156,15 @@ Phaser.Cache.prototype = {
 
         if (format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY)
         {
-            this._images[key].frameData = Phaser.Animation.Parser.JSONData(this.game, atlasData, key);
+            this._images[key].frameData = Phaser.AnimationParser.JSONData(this.game, atlasData, key);
         }
         else if (format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
         {
-            this._images[key].frameData = Phaser.Animation.Parser.JSONDataHash(this.game, atlasData, key);
+            this._images[key].frameData = Phaser.AnimationParser.JSONDataHash(this.game, atlasData, key);
         }
         else if (format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
         {
-            this._images[key].frameData = Phaser.Animation.Parser.XMLData(this.game, atlasData, key);
+            this._images[key].frameData = Phaser.AnimationParser.XMLData(this.game, atlasData, key);
         }
 
     },
@@ -186,7 +186,7 @@ Phaser.Cache.prototype = {
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
         Phaser.Loader.Parser.bitmapFont(this.game, xmlData, key);
-        // this._images[key].frameData = Phaser.Animation.Parser.XMLData(this.game, xmlData, key);
+        // this._images[key].frameData = Phaser.AnimationParser.XMLData(this.game, xmlData, key);
 
     },
 

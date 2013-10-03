@@ -2,20 +2,20 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Canvas
 */
 
 /**
 * The Canvas class handles everything related to the &lt;canvas&gt; tag as a DOM Element, like styles, offset, aspect ratio
 *
-* @class Canvas
+* @class Phaser.Canvas
 * @static
 */
 Phaser.Canvas = {
+
     /**
     * Creates the &lt;canvas&gt; tag
     *
-    * @method create
+    * @method Phaser.Canvas.create
     * @param {number} width - The desired width.
     * @param {number} height - The desired height.
     * @return {HTMLCanvasElement} The newly created &lt;canvas&gt; tag.
@@ -35,7 +35,7 @@ Phaser.Canvas = {
 
     /**
     * Get the DOM offset values of any given element
-    * @method getOffset
+    * @method Phaser.Canvas.getOffset
     * @param {HTMLElement} element - The targeted element that we want to retrieve the offset.
     * @param {Phaser.Point} [point] - The point we want to take the x/y values of the offset.
     * @return {Phaser.Point} - A point objet with the offsetX and Y as its properties.
@@ -60,7 +60,7 @@ Phaser.Canvas = {
     /**
     * Returns the aspect ratio of the given canvas.
     *
-    * @method getAspectRatio
+    * @method Phaser.Canvas.getAspectRatio
     * @param {HTMLCanvasElement} canvas - The canvas to get the aspect ratio from.
     * @return {number} The ratio between canvas' width and height.
     */        
@@ -71,7 +71,7 @@ Phaser.Canvas = {
     /**
     * Sets the background color behind the canvas. This changes the canvas style property.
     *
-    * @method setBackgroundColor
+    * @method Phaser.Canvas.setBackgroundColor
     * @param {HTMLCanvasElement} canvas - The canvas to set the background color on.
     * @param {string} [color] - The color to set. Can be in the format 'rgb(r,g,b)', or '#RRGGBB' or any valid CSS color.
     * @return {HTMLCanvasElement} Returns the source canvas.
@@ -89,7 +89,7 @@ Phaser.Canvas = {
     /**
     * Sets the touch-action property on the canvas style. Can be used to disable default browser touch actions.
     *
-    * @method setTouchAction
+    * @method Phaser.Canvas.setTouchAction
     * @param {HTMLCanvasElement} canvas - The canvas to set the touch action on.
     * @param {String} [value] - The touch action to set. Defaults to 'none'.
     * @return {HTMLCanvasElement} The source canvas.
@@ -106,7 +106,17 @@ Phaser.Canvas = {
 
     },
 
+    /**
+    * Sets the user-select property on the canvas style. Can be used to disable default browser selection actions.
+    *
+    * @method Phaser.Canvas.setUserSelect
+    * @param {HTMLCanvasElement} canvas - The canvas to set the touch action on.
+    * @param {String} [value] - The touch action to set. Defaults to 'none'.
+    * @return {HTMLCanvasElement} The source canvas.
+    */
     setUserSelect: function (canvas, value) {
+
+        value = value || 'none';
 
         canvas.style['-webkit-touch-callout'] = value;
         canvas.style['-webkit-user-select'] = value;
@@ -124,7 +134,7 @@ Phaser.Canvas = {
     * Adds the given canvas element to the DOM. The canvas will be added as a child of the given parent.
     * If no parent is given it will be added as a child of the document.body.
     *
-    * @method addToDOM
+    * @method Phaser.Canvas.addToDOM
     * @param {HTMLCanvasElement} canvas - The canvas to set the touch action on.
     * @param {string} parent - The DOM element to add the canvas to. Defaults to ''.
     * @param {boolean} overflowHidden - If set to true it will add the overflow='hidden' style to the parent DOM element.
@@ -164,7 +174,7 @@ Phaser.Canvas = {
     /**
     * Sets the transform of the given canvas to the matrix values provided.
     *
-    * @method setTransform
+    * @method Phaser.Canvas.setTransform
     * @param {CanvasRenderingContext2D} context - The context to set the transform on.
     * @param {number} translateX - The value to translate horizontally by.
     * @param {number} translateY - The value to translate vertically by.
@@ -189,7 +199,7 @@ Phaser.Canvas = {
     * drawn to the context will be affected. This sets the property across all current browsers but support is
     * patchy on earlier browsers, especially on mobile.
     *
-    * @method setSmoothingEnabled
+    * @method Phaser.Canvas.setSmoothingEnabled
     * @param {CanvasRenderingContext2D} context - The context to enable or disable the image smoothing on.
     * @param {boolean} value - If set to true it will enable image smoothing, false will disable it.
     * @return {CanvasRenderingContext2D} Returns the source context.
@@ -210,7 +220,7 @@ Phaser.Canvas = {
     * Sets the CSS image-rendering property on the given canvas to be 'crisp' (aka 'optimize contrast on webkit').
     * Note that if this doesn't given the desired result then see the setSmoothingEnabled.
     *
-    * @method setImageRenderingCrisp
+    * @method Phaser.Canvas.setImageRenderingCrisp
     * @param {HTMLCanvasElement} canvas - The canvas to set image-rendering crisp on.
     * @return {HTMLCanvasElement} Returns the source canvas.
     */
@@ -229,7 +239,7 @@ Phaser.Canvas = {
     * Sets the CSS image-rendering property on the given canvas to be 'bicubic' (aka 'auto').
     * Note that if this doesn't given the desired result then see the CanvasUtils.setSmoothingEnabled method.
     *
-    * @method setImageRenderingBicubic
+    * @method Phaser.Canvas.setImageRenderingBicubic
     * @param {HTMLCanvasElement} canvas The canvas to set image-rendering bicubic on.
     * @return {HTMLCanvasElement} Returns the source canvas.
     */

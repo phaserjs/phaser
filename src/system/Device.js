@@ -2,13 +2,10 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Device
 */
-
 
 /**
 * Detects device support capabilities. Using some elements from System.js by MrDoob and Modernizr
-* {@link https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js}
 *
 * @class Phaser.Device
 * @constructor
@@ -17,8 +14,7 @@
 Phaser.Device = function () {
 
     /**
-    * An optional 'fix' for the horrendous Android stock browser bug
-    * {@link https://code.google.com/p/android/issues/detail?id=39247}
+    * An optional 'fix' for the horrendous Android stock browser bug https://code.google.com/p/android/issues/detail?id=39247
     * @property {boolean} patchAndroidClearRectBug - Description.
     * @default
     */
@@ -283,7 +279,7 @@ Phaser.Device.prototype = {
 
     /**
     * Check which OS is game running on.
-    * @method _checkOS
+    * @method Phaser.Device#_checkOS
     * @private
     */
     _checkOS: function () {
@@ -312,7 +308,7 @@ Phaser.Device.prototype = {
 
     /**
     * Check HTML5 features of the host environment.
-    * @method _checkFeatures
+    * @method Phaser.Device#_checkFeatures
     * @private
     */
     _checkFeatures: function () {
@@ -345,7 +341,7 @@ Phaser.Device.prototype = {
 
     /**
     * Check what browser is game running in.
-    * @method _checkBrowser
+    * @method Phaser.Device#_checkBrowser
     * @private
     */
     _checkBrowser: function () {
@@ -382,7 +378,7 @@ Phaser.Device.prototype = {
 
     /**
     * Check audio support.
-    * @method _checkAudio
+    * @method Phaser.Device#_checkAudio
     * @private
     */
     _checkAudio: function () {
@@ -429,7 +425,7 @@ Phaser.Device.prototype = {
 
     /**
     * Check PixelRatio of devices.
-    * @method _checkDevice
+    * @method Phaser.Device#_checkDevice
     * @private
     */
     _checkDevice: function () {
@@ -443,10 +439,11 @@ Phaser.Device.prototype = {
 
     /**
     * Check whether the host environment support 3D CSS.
-    * @method _checkCSS3D
+    * @method Phaser.Device#_checkCSS3D
     * @private
     */
     _checkCSS3D: function () {
+
         var el = document.createElement('p');
         var has3d;
         var transforms = {
@@ -456,6 +453,7 @@ Phaser.Device.prototype = {
             'MozTransform': '-moz-transform',
             'transform': 'transform'
         };
+
         // Add it to the body to get the computed style.
         document.body.insertBefore(el, null);
 
@@ -465,6 +463,7 @@ Phaser.Device.prototype = {
                 has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
             }
         }
+        
         document.body.removeChild(el);
         this.css3D = (has3d !== undefined && has3d.length > 0 && has3d !== "none");
 
@@ -472,20 +471,30 @@ Phaser.Device.prototype = {
 
     /**
     * Check whether the host environment can play audio.
-    * @method canPlayAudio
+    * @method Phaser.Device#canPlayAudio
     * @param {string} type - One of 'mp3, 'ogg', 'm4a', 'wav', 'webm'.
+    * @return {boolean} True if the given file type is supported by the browser, otherwise false.
     */
     canPlayAudio: function (type) {
 
-        if (type == 'mp3' && this.mp3) {
+        if (type == 'mp3' && this.mp3)
+        {
             return true;
-        } else if (type == 'ogg' && (this.ogg || this.opus)) {
+        }
+        else if (type == 'ogg' && (this.ogg || this.opus))
+        {
             return true;
-        } else if (type == 'm4a' && this.m4a) {
+        }
+        else if (type == 'm4a' && this.m4a)
+        {
             return true;
-        } else if (type == 'wav' && this.wav) {
+        }
+        else if (type == 'wav' && this.wav)
+        {
             return true;
-        } else if (type == 'webm' && this.webm) {
+        }
+        else if (type == 'webm' && this.webm)
+        {
             return true;
         }
 
@@ -495,21 +504,23 @@ Phaser.Device.prototype = {
 
     /**
     * Check whether the console is open.
-    * @method isConsoleOpen
-    * @return {boolean} True if console is open.
+    * @method Phaser.Device#isConsoleOpen
+    * @return {boolean} True if the browser dev console is open.
     */
-
     isConsoleOpen: function () {
 
-        if (window.console && window.console['firebug']) {
+        if (window.console && window.console['firebug'])
+        {
             return true;
         }
 
-        if (window.console) {
+        if (window.console)
+        {
             console.profile();
             console.profileEnd();
 
-            if (console.clear) {
+            if (console.clear)
+            {
                 console.clear();
             }
 

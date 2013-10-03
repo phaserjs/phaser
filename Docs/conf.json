@@ -3,7 +3,7 @@
         "allowUnknownTags": true
     },
     "source": {
-        "include": [ "../src/Phaser.js", "../src/animation/", "../src/core/", "../src/geom/", "../src/input/", "../src/loader/", "../src/math/", "../src/net/", "../src/particles/" ],
+        "include": [ "../src/Phaser.js", "../src/animation/", "../src/core/", "../src/geom/", "../src/input/", "../src/loader/", "../src/math/", "../src/net/", "../src/particles/", "../src/sound/", "../src/system/" ],
         "exclude": [],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"

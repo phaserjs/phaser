@@ -2,9 +2,7 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.SoundManager
 */
-
 
 /**
 * Sound Manager constructor.
@@ -96,7 +94,8 @@ Phaser.SoundManager.prototype = {
 
     /**
     * Initialises the sound manager.
-    * @method boot
+    * @method Phaser.SoundManager#boot
+    * @protected
     */
     boot: function () {
 
@@ -178,7 +177,7 @@ Phaser.SoundManager.prototype = {
 
     /**
     * Enables the audio, usually after the first touch.
-    * @method unlock
+    * @method Phaser.SoundManager#unlock
     */
     unlock: function () {
 
@@ -212,7 +211,7 @@ Phaser.SoundManager.prototype = {
 
     /**
     * Stops all the sounds in the game.
-    * @method stopAll
+    * @method Phaser.SoundManager#stopAll
     */
     stopAll: function () {
 
@@ -228,7 +227,7 @@ Phaser.SoundManager.prototype = {
 
     /**
     * Pauses all the sounds in the game.
-    * @method pauseAll
+    * @method Phaser.SoundManager#pauseAll
     */
     pauseAll: function () {
 
@@ -244,7 +243,7 @@ Phaser.SoundManager.prototype = {
 
     /**
     * resumes every sound in the game.
-    * @method resumeAll
+    * @method Phaser.SoundManager#resumeAll
     */
     resumeAll: function () {
 
@@ -259,8 +258,8 @@ Phaser.SoundManager.prototype = {
 	},
 
 	/**
-    * Decode a sound with its assets key.
-    * @method decode
+    * Decode a sound by its assets key.
+    * @method Phaser.SoundManager#decode
     * @param {string} key - Assets key of the sound to be decoded.
     * @param {Phaser.Sound} [sound] - Its buffer will be set to decoded data.
     */
@@ -292,7 +291,7 @@ Phaser.SoundManager.prototype = {
 
     /**
     * Updates every sound in the game.
-    * @method update
+    * @method Phaser.SoundManager#update
     */
     update: function () {
 
@@ -317,20 +316,17 @@ Phaser.SoundManager.prototype = {
 
     },
 
-
     /**
-    * Description.
-    * @method add
+    * Adds a new Sound into the SoundManager.
+    * @method Phaser.SoundManager#add
     * @param {string} key - Asset key for the sound.
-    * @param {number} volume - Default value for the volume.
-    * @param {boolean} loop - Whether or not the sound will loop.
+    * @param {number} [volume=1] - Default value for the volume.
+    * @param {boolean} [loop=false] - Whether or not the sound will loop.
     */
     add: function (key, volume, loop) {
 
     	volume = volume || 1;
     	if (typeof loop == 'undefined') { loop = false; }
-
-        
 
         var sound = new Phaser.Sound(this.game, key, volume, loop);
 
@@ -343,11 +339,8 @@ Phaser.SoundManager.prototype = {
 };
 
 /**
-* A global audio mute toggle.
-* @return {boolean} Whether or not the game is on "mute".
-*//**
-* Mute sounds.
-* @param {boolean} value - Whether or not the game is on "mute"
+* @name Phaser.SoundManager#mute
+* @property {boolean} mute - Gets or sets the muted state of the SoundManager. This effects all sounds in the game.
 */
 Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
 
@@ -413,11 +406,8 @@ Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
 });
 
 /**
-* Get
-* @return {number} The global audio volume. A value between 0 (silence) and 1 (full volume).
-*//**
-* Sets the global volume
-* @return {number} value - The global audio volume. A value between 0 (silence) and 1 (full volume).
+* @name Phaser.SoundManager#volume
+* @property {number} volume - Gets or sets the global volume of the SoundManager, a value between 0 and 1.
 */
 Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
     
