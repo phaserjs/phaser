@@ -193,10 +193,13 @@ Phaser.Sprite = function (game, x, y, key, frame) {
         dirty: false,
 
         //  Transform cache
-        a00: 1, a01: 0, a02: x, a10: 0, a11: 1, a12: y, id: 1, 
+        a00: -1, a01: -1, a02: -1, a10: -1, a11: -1, a12: -1, id: -1, 
 
         //  Input specific transform cache
-        i01: 0, i10: 0, idi: 1,
+        i01: -1, i10: -1, idi: -1,
+
+        //  World transform cache
+        w01: -1, w10: -1,
 
         //  Bounds check
         left: null, right: null, top: null, bottom: null, 
@@ -335,13 +338,48 @@ Phaser.Sprite.prototype.preUpdate = function() {
     this.prevX = this.x;
     this.prevY = this.y;
 
+    if (this.worldTransform[2] != this._cache.a02 || this.worldTransform[5] != this._cache.a12 || this.worldTransform[0] != this._cache.a00 || this.worldTransform[1] != this._cache.a01 || this.worldTransform[3] != this._cache.a10 || this.worldTransform[4] != this._cache.a11)
+    {
+        this.updateCache();
+    }
+
+    //  Re-run the camera visibility check
+    if (this._cache.dirty || this._cache.first)
+    {
+        this._cache.first = false;
+        this._cache.cameraVisible = Phaser.Rectangle.intersects(this.game.world.camera.screenView, this.bounds, 0);
+
+        if (this.autoCull == true)
+        {
+            //  Won't get rendered but will still get its transform updated
+            this.renderable = this._cache.cameraVisible;
+        }
+
+        //  Update our physics bounds
+        this.body.updateBounds(this.center.x, this.center.y, this._cache.scaleX, this._cache.scaleY);
+    }
+
+    if (this.body)
+    {
+        this.body.preUpdate();
+    }
+
+}
+
+Phaser.Sprite.prototype.updateCache = function() {
+
     //  |a c tx|
     //  |b d ty|
     //  |0 0  1|
 
     //  Only update the values we need
-    if (this.worldTransform[0] != this._cache.a00 || this.worldTransform[1] != this._cache.a01 || this.worldTransform[3] != this._cache.a10 || this.worldTransform[4] != this._cache.a11)
+    // if (this.worldTransform[0] != this._cache.a00 || this.worldTransform[1] != this._cache.w01 || this.worldTransform[3] != this._cache.w10 || this.worldTransform[4] != this._cache.a11)
+    if (this.worldTransform[1] != this._cache.w01 || this.worldTransform[3] != this._cache.w10)
     {
+        //  Non-modified
+        this._cache.w01 = this.worldTransform[1];  //  skewY          c
+        this._cache.w10 = this.worldTransform[3];  //  skewX          b
+
         this._cache.a00 = this.worldTransform[0];  //  scaleX         a
         this._cache.a01 = this.worldTransform[1];  //  skewY          c
         this._cache.i01 = this.worldTransform[1];  //  skewY          c
@@ -356,6 +394,8 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache.a10 *= -1;
 
         this._cache.dirty = true;
+        console.log('cache1');
+
     }
 
     if (this.worldTransform[2] != this._cache.a02 || this.worldTransform[5] != this._cache.a12)
@@ -363,6 +403,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache.a02 = this.worldTransform[2];  //  translateX     tx
         this._cache.a12 = this.worldTransform[5];  //  translateY     ty
         this._cache.dirty = true;
+        console.log('cache2');
     }
 
     //  Frame updated?
@@ -385,26 +426,6 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache.idi = 1 / (this._cache.a00 * this._cache.a11 + this._cache.i01 * -this._cache.i10);
 
         this.updateBounds();
-    }
-
-    //  Re-run the camera visibility check
-    if (this._cache.dirty)
-    {
-        this._cache.cameraVisible = Phaser.Rectangle.intersects(this.game.world.camera.screenView, this.bounds, 0);
-
-        if (this.autoCull == true)
-        {
-            //  Won't get rendered but will still get its transform updated
-            this.renderable = this._cache.cameraVisible;
-        }
-
-        //  Update our physics bounds
-        this.body.updateBounds(this.center.x, this.center.y, this._cache.scaleX, this._cache.scaleY);
-    }
-
-    if (this.body)
-    {
-        this.body.preUpdate();
     }
 
 }

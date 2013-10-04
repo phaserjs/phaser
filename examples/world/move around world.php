@@ -30,8 +30,8 @@ window.onload = function () {
 
         for (var i = 0; i < 100; i++)
         {
-            var s = game.add.sprite(game.world.randomX, game.world.randomY, 'mushroom');
-            console.log(s.x, s.y);
+            // var s = game.add.sprite(game.world.randomX, game.world.randomY, 'mushroom');
+            // console.log(s.x, s.y);
         }
 
         d = game.add.sprite(0, 0, 'phaser');
@@ -42,6 +42,8 @@ window.onload = function () {
     }
 
     function update() {
+
+                // d.angle++;
 
         if (cursors.up.isDown)
         {
