@@ -70,7 +70,12 @@ Phaser.Group = function (game, parent, name, useStage) {
 	* @default
 	*/
 	this.exists = true;
-	
+
+    /**
+    * @property {Phaser.Point} scale - Replaces the PIXI.Point with a slightly more flexible one.
+    */ 
+    this.scale = new Phaser.Point(1, 1);
+
 };
 
 Phaser.Group.prototype = {

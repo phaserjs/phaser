@@ -81,12 +81,14 @@ Version 1.0.7 (in progress in the dev branch)
 * Fixed Cache.addDefaultImage so the default image works in Canvas as well as WebGL. Updated to a new image (32x32 black square with green outline)
 * Extended the Loader 404 error to display the url of the file that didn't load as well as the key.
 * Change: We've removed the scrollFactor property from all Game Objects. Sorry, but the new Camera system doesn't work with it and it caused all kinds of issues anyway. We will sort out a replacement for it at a later date.
-* Change: The Camera has been completely revamped.
+* Change: World now extends Phaser.Group. As a result we've updated GameObjectFactory and other classes that linked to it. If you have anywhere in your code that used to reference world.group you can just remove 'group' from that. So before, world.group.add() is now just world.add().
+* Change: The Camera has been completely revamped. Rather than adjusting the position of all display objects (bad) it now just shifts the position of the single world container (good!), this is much quicker and also stops the game objects positions from self-adjusting all the time, allowing for them to be properly nested with other containers.
+* New: Direction constants have been added to Sprites and adjust based on body motion. Access them via 
+* World.randomX/Y now returns values anywhere in the world.bounds range (if set, otherwise 0), including negative values.
 
 
 * TODO: addMarker hh:mm:ss:ms
 * TODO: Direction constants
-* TODO: Camera will adjust core DO. Means scrollFactor will need to be dropped sadly, but there are other ways to emulate its effect.
 
 Version 1.0.6 (September 24th 2013)
 

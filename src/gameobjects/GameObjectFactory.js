@@ -48,7 +48,7 @@ Phaser.GameObjectFactory.prototype = {
     */
     existing: function (object) {
 
-        return this.world.group.add(object);
+        return this.world.add(object);
 
     },
 
@@ -64,7 +64,7 @@ Phaser.GameObjectFactory.prototype = {
     */
     sprite: function (x, y, key, frame) {
 
-        return this.world.group.add(new Phaser.Sprite(this.game, x, y, key, frame));
+        return this.world.create(x, y, key, frame);
 
     },
 
@@ -72,17 +72,20 @@ Phaser.GameObjectFactory.prototype = {
     * Create a new Sprite with specific position and sprite sheet key that will automatically be added as a child of the given parent.
     *
     * @method child
+    * @param {Phaser.Group} group - The Group to add this child to.
     * @param {number} x - X position of the new sprite.
     * @param {number} y - Y position of the new sprite.
     * @param {string|RenderTexture} [key] - The image key as defined in the Game.Cache to use as the texture for this sprite OR a RenderTexture.
     * @param  {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
     * @returns {Description} Description.
     */
-    child: function (parent, x, y, key, frame) {
+    child: function (group, x, y, key, frame) {
 
-        var child = this.world.group.add(new Phaser.Sprite(this.game, x, y, key, frame));
-        parent.addChild(child);
-        return child;
+        return group.create(x, y, key, frame);
+
+        // var child = new Phaser.Sprite(this.game, x, y, key, frame);
+        // parent.addChild(child);
+        // return child;
 
     },
 
@@ -142,7 +145,7 @@ Phaser.GameObjectFactory.prototype = {
      */
     tileSprite: function (x, y, width, height, key, frame) {
 
-        return this.world.group.add(new Phaser.TileSprite(this.game, x, y, width, height, key, frame));
+        return this.world.add(new Phaser.TileSprite(this.game, x, y, width, height, key, frame));
 
     },
 
@@ -157,7 +160,7 @@ Phaser.GameObjectFactory.prototype = {
      */
     text: function (x, y, text, style) {
 
-        return this.world.group.add(new Phaser.Text(this.game, x, y, text, style));
+        return this.world.add(new Phaser.Text(this.game, x, y, text, style));
 
     },
 
@@ -176,7 +179,7 @@ Phaser.GameObjectFactory.prototype = {
     */
     button: function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame) {
 
-        return this.world.group.add(new Phaser.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
+        return this.world.add(new Phaser.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
 
     },
 
@@ -190,7 +193,7 @@ Phaser.GameObjectFactory.prototype = {
      */
     graphics: function (x, y) {
 
-        return this.world.group.add(new Phaser.Graphics(this.game, x, y));
+        return this.world.add(new Phaser.Graphics(this.game, x, y));
 
     },
 
@@ -221,7 +224,7 @@ Phaser.GameObjectFactory.prototype = {
     */
     bitmapText: function (x, y, text, style) {
 
-        return this.world.group.add(new Phaser.BitmapText(this.game, x, y, text, style));
+        return this.world.add(new Phaser.BitmapText(this.game, x, y, text, style));
 
     },
 
@@ -239,7 +242,7 @@ Phaser.GameObjectFactory.prototype = {
     */
     tilemap: function (x, y, key, resizeWorld, tileWidth, tileHeight) {
 
-        return this.world.group.add(new Phaser.Tilemap(this.game, key, x, y, resizeWorld, tileWidth, tileHeight));
+        return this.world.add(new Phaser.Tilemap(this.game, key, x, y, resizeWorld, tileWidth, tileHeight));
 
     },
 

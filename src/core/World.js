@@ -17,10 +17,12 @@
 */
 Phaser.World = function (game) {
 
+    Phaser.Group.call(this, game, null, '__world', false);
+
     /**
-	* @property {Phaser.Game} game - A reference to the currently running Game.
-	*/
-	this.game = game;
+    * @property {Phaser.Point} scale - Replaces the PIXI.Point with a slightly more flexible one.
+    */ 
+    this.scale = new Phaser.Point(1, 1);
 
     /**
     * The World has no fixed size, but it does have a bounds outside of which objects are no longer considered as being "in world" and you should use this to clean-up the display list and purge dead objects.
@@ -41,120 +43,117 @@ Phaser.World = function (game) {
 	*/
 	this.currentRenderOrderID = 0;
 	
-    /**
-	* @property {Phaser.Group} group - Object container stores every object created with `create*` methods.
-	*/
-    this.group = null;
-	
 };
 
-Phaser.World.prototype = {
+Phaser.World.prototype = Object.create(Phaser.Group.prototype);
+Phaser.World.prototype.constructor = Phaser.World;
 
-    /**
-    * Initialises the game world.
-    *
-    * @method Phaser.World#boot
-    * @protected
-    */
-	boot: function () {
+/**
+* Initialises the game world.
+*
+* @method Phaser.World#boot
+* @protected
+*/
+Phaser.World.prototype.boot = function () {
 
-        this.group = new Phaser.Group(this.game, null, '__world');
+    this.camera = new Phaser.Camera(this.game, 0, 0, 0, this.game.width, this.game.height);
 
-		this.camera = new Phaser.Camera(this.game, 0, 0, 0, this.game.width, this.game.height);
-        this.camera.displayObject = this.group;
+    this.camera.displayObject = this._container;
 
-		this.game.camera = this.camera;
+    this.game.camera = this.camera;
 
-	},
+}
 
-    /**
-    * This is called automatically every frame, and is where main logic happens.
-    * 
-    * @method Phaser.World#update
-    */
-	update: function () {
+/**
+* This is called automatically every frame, and is where main logic happens.
+* 
+* @method Phaser.World#update
+*/
+Phaser.World.prototype.update = function () {
 
-		this.camera.update();
+	this.camera.update();
 
-		this.currentRenderOrderID = 0;
+	this.currentRenderOrderID = 0;
 
-		if (this.game.stage._stage.first._iNext)
+	if (this.game.stage._stage.first._iNext)
+	{
+		var currentNode = this.game.stage._stage.first._iNext;
+		
+		do
 		{
-			var currentNode = this.game.stage._stage.first._iNext;
-			
-			do
+			if (currentNode['preUpdate'])
 			{
-				if (currentNode['preUpdate'])
-				{
-					currentNode.preUpdate();
-				}
-
-				if (currentNode['update'])
-				{
-					currentNode.update();
-				}
-				
-				currentNode = currentNode._iNext;
+				currentNode.preUpdate();
 			}
-			while (currentNode != this.game.stage._stage.last._iNext)
+
+			if (currentNode['update'])
+			{
+				currentNode.update();
+			}
+			
+			currentNode = currentNode._iNext;
 		}
+		while (currentNode != this.game.stage._stage.last._iNext)
+	}
 
-	},
+}
 
-    /**
-    * This is called automatically every frame, and is where main logic happens.
-    * @method Phaser.World#postUpdate
-    */
-    postUpdate: function () {
+/**
+* This is called automatically every frame, and is where main logic happens.
+* @method Phaser.World#postUpdate
+*/
+Phaser.World.prototype.postUpdate = function () {
 
-        if (this.game.stage._stage.first._iNext)
+    if (this.game.stage._stage.first._iNext)
+    {
+        var currentNode = this.game.stage._stage.first._iNext;
+        
+        do  
         {
-            var currentNode = this.game.stage._stage.first._iNext;
-            
-            do  
+            if (currentNode['postUpdate'])
             {
-                if (currentNode['postUpdate'])
-                {
-                    currentNode.postUpdate();
-                }
-                
-                currentNode = currentNode._iNext;
+                currentNode.postUpdate();
             }
-            while (currentNode != this.game.stage._stage.last._iNext)
+            
+            currentNode = currentNode._iNext;
         }
-
-    },
-
-	/**
-	* Updates the size of this world. Note that this doesn't modify the world x/y coordinates, just the width and height.
-    * If you need to adjust the bounds of the world
-	* @method Phaser.World#setSize
-	* @param {number} width - New width of the world.
-	* @param {number} height - New height of the world.
-	*/
-	setSize: function (width, height) {
-
-        this.bounds.width = width;
-        this.bounds.height = height;
-
-	},
-
-    /**
-    * Destroyer of worlds.
-    * @method Phaser.World#destroy
-    */
-    destroy: function () {
-
-        this.camera.x = 0;
-        this.camera.y = 0;
-
-        this.game.input.reset(true);
-
-        this.group.removeAll();
-
+        while (currentNode != this.game.stage._stage.last._iNext)
     }
-	
-};
+
+}
+
+/**
+* Updates the size of this world. Note that this doesn't modify the world x/y coordinates, just the width and height.
+* If you need to adjust the bounds of the world
+* @method Phaser.World#setSize
+* @param {number} width - New width of the world.
+* @param {number} height - New height of the world.
+*/
+Phaser.World.prototype.setBounds = function (x, y, width, height) {
+
+    this.bounds.setTo(x, y, width, height);
+
+    if (this.camera.bounds)
+    {
+        this.camera.bounds.setTo(x, y, width, height);
+    }
+
+}
+
+/**
+* Destroyer of worlds.
+* @method Phaser.World#destroy
+*/
+Phaser.World.prototype.destroy = function () {
+
+    this.camera.x = 0;
+    this.camera.y = 0;
+
+    this.game.input.reset(true);
+
+    this.removeAll();
+
+}
 
 /**
 * @name Phaser.World#width
@@ -222,7 +221,7 @@ Object.defineProperty(Phaser.World.prototype, "centerY", {
 Object.defineProperty(Phaser.World.prototype, "randomX", {
 
     get: function () {
-        return Math.round(Math.random() * this.bounds.width);
+        return this.game.rnd.integerInRange(this.bounds.x, this.bounds.width);
     }
 
 });
@@ -235,7 +234,7 @@ Object.defineProperty(Phaser.World.prototype, "randomX", {
 Object.defineProperty(Phaser.World.prototype, "randomY", {
 
     get: function () {
-        return Math.round(Math.random() * this.bounds.height);
+        return this.game.rnd.integerInRange(this.bounds.y, this.bounds.height);
     }
 
 });

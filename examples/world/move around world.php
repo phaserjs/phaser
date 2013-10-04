@@ -13,9 +13,8 @@ window.onload = function () {
 
     function preload() {
 
-        // game.world.setSize(1920, 1200);
+        game.stage.backgroundColor = '#007236';
 
-        game.load.image('backdrop', 'assets/pics/remember-me.jpg');
         game.load.image('mushroom', 'assets/sprites/mushroom.png');
         game.load.image('phaser', 'assets/sprites/sonic_havok_sanity.png');
 
@@ -26,20 +25,19 @@ window.onload = function () {
 
     function create() {
 
-        game.add.sprite(0, 0, 'backdrop');
- 
+        //  Modify the world and camera bounds
+        game.world.setBounds(-1000, -1000, 2000, 2000);
+
         for (var i = 0; i < 100; i++)
         {
-            game.add.sprite(game.world.randomX, game.world.randomY, 'mushroom');
+            var s = game.add.sprite(game.world.randomX, game.world.randomY, 'mushroom');
+            console.log(s.x, s.y);
         }
 
-        d = game.add.sprite(200, 200, 'phaser');
+        d = game.add.sprite(0, 0, 'phaser');
         d.anchor.setTo(0.5, 0.5);
 
         cursors = game.input.keyboard.createCursorKeys();
-
-        console.log(game.camera.displayObject.length);
-        // console.log(game.camera.displayObject.children[0].name);
 
     }
 
@@ -72,7 +70,7 @@ window.onload = function () {
         {
             if (cursors.left.shiftKey)
             {
-                game.camera.displayObject.rotation -= 0.05;
+                game.world.rotation -= 0.05;
             }
             else
             {
@@ -83,7 +81,7 @@ window.onload = function () {
         {
             if (cursors.right.shiftKey)
             {
-                game.camera.displayObject.rotation += 0.05;
+                game.world.rotation += 0.05;
             }
             else
             {
@@ -96,8 +94,8 @@ window.onload = function () {
     function render() {
 
         game.debug.renderCameraInfo(game.camera, 32, 32);
-        game.debug.renderWorldTransformInfo(d, 32, 200);
-        game.debug.renderLocalTransformInfo(d, 32, 400);
+        // game.debug.renderWorldTransformInfo(d, 32, 200);
+        // game.debug.renderLocalTransformInfo(d, 32, 400);
         game.debug.renderSpriteCorners(d, false, true);
 
     }

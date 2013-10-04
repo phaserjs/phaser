@@ -180,8 +180,6 @@ Phaser.Camera.prototype = {
             this.updateTarget();
         }
 
-        this.updateTarget();
-
         if (this.bounds)
         {
             this.checkBounds();
@@ -325,7 +323,7 @@ Object.defineProperty(Phaser.Camera.prototype, "x", {
     set: function (value) {
 
         this.view.x = value;
-        this.displayObject.x = -value;
+        this.displayObject.position.x = -value;
 
         if (this.bounds)
         {
@@ -349,7 +347,7 @@ Object.defineProperty(Phaser.Camera.prototype, "y", {
     set: function (value) {
 
         this.view.y = value;
-        this.displayObject.y = -value;
+        this.displayObject.position.y = -value;
 
         if (this.bounds)
         {

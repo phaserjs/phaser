@@ -297,13 +297,13 @@ Phaser.Game.prototype = {
 			this.net = new Phaser.Net(this);
 			this.debug = new Phaser.Utils.Debug(this);
 
-			this.load.onLoadComplete.add(this.loadComplete, this);
-
 			this.stage.boot();
 			this.world.boot();
 			this.input.boot();
 			this.sound.boot();
 			this.state.boot();
+
+			this.load.onLoadComplete.add(this.loadComplete, this);
 
 			if (this.renderType == Phaser.CANVAS)
 			{
