@@ -12,7 +12,7 @@
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {*} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
 * @param {string} [name=group] - A name for this Group. Not used internally but useful for debugging.
-* @param {boolean} [useStage=false] - Only the root World Group should use this value.
+* @param {boolean} [useStage=false] - Should the DisplayObjectContainer this Group creates be added to the World (default, false) or direct to the Stage (true).
 */
 Phaser.Group = function (game, parent, name, useStage) {
 

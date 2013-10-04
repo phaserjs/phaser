@@ -5,16 +5,16 @@
 */
 
 /**
- * "This world is but a canvas to our imagination." - Henry David Thoreau
- * <p>
- * A game has only one world. The world is an abstract place in which all game objects live. It is not bound
- * by stage limits and can be any size. You look into the world via cameras. All game objects live within
- * the world at world-based coordinates. By default a world is created the same size as your Stage.
- *
- * @class Phaser.World
- * @constructor
- * @param {Phaser.Game} game - Reference to the current game instance.
- */
+* "This world is but a canvas to our imagination." - Henry David Thoreau
+*
+* A game has only one world. The world is an abstract place in which all game objects live. It is not bound
+* by stage limits and can be any size. You look into the world via cameras. All game objects live within
+* the world at world-based coordinates. By default a world is created the same size as your Stage.
+*
+* @class Phaser.World
+* @constructor
+* @param {Phaser.Game} game - Reference to the current game instance.
+*/
 Phaser.World = function (game) {
 
     /**
@@ -23,6 +23,10 @@ Phaser.World = function (game) {
 	this.game = game;
 
     /**
+    * The World has no fixed size, but it does have a bounds outside of which objects are no longer considered as being "in world" and you should use this to clean-up the display list and purge dead objects.
+    * By default we set the Bounds to be from 0,0 to Game.width,Game.height. I.e. it will match the size given to the game constructor with 0,0 representing the top-left of the display.
+    * However 0,0 is actually the center of the world, and if you rotate or scale the world all of that will happen from 0,0.
+    * So if you want to make a game in which the world itself will rotate you should adjust the bounds so that 0,0 is the center point, i.e. set them to -1000,-1000,2000,2000 for a 2000x2000 sized world centered around 0,0.
 	* @property {Phaser.Rectangle} bounds - Bound of this world that objects can not escape from.
 	*/
 	this.bounds = new Phaser.Rectangle(0, 0, game.width, game.height);
@@ -54,7 +58,7 @@ Phaser.World.prototype = {
     */
 	boot: function () {
 
-        this.group = new Phaser.Group(this.game, null, '__world', false);
+        this.group = new Phaser.Group(this.game, null, '__world');
 
 		this.camera = new Phaser.Camera(this.game, 0, 0, 0, this.game.width, this.game.height);
         this.camera.displayObject = this.group;
@@ -122,22 +126,16 @@ Phaser.World.prototype = {
     },
 
 	/**
-	* Updates the size of this world.
+	* Updates the size of this world. Note that this doesn't modify the world x/y coordinates, just the width and height.
+    * If you need to adjust the bounds of the world
 	* @method Phaser.World#setSize
 	* @param {number} width - New width of the world.
 	* @param {number} height - New height of the world.
 	*/
 	setSize: function (width, height) {
 
-		if (width >= this.game.width)
-        {
-            this.bounds.width = width;
-        }
-
-        if (height >= this.game.height)
-        {
-            this.bounds.height = height;
-        }
+        this.bounds.width = width;
+        this.bounds.height = height;
 
 	},
 

@@ -82,12 +82,6 @@ Phaser.BitmapText = function (game, x, y, text, style) {
 	*/
     this.scale = new Phaser.Point(1, 1);
 
-    //  Influence of camera movement upon the position
-	/**
-	* @property {Phaser.Point} scrollFactor - Description.
-	*/
-    this.scrollFactor = new Phaser.Point(1, 1);
-
     //  A mini cache for storing all of the calculated values
 	/**
 	* @property {function} _cache - Description.
@@ -100,7 +94,7 @@ Phaser.BitmapText = function (game, x, y, text, style) {
         //  Transform cache
         a00: 1, a01: 0, a02: x, a10: 0, a11: 1, a12: y, id: 1, 
 
-        //  The previous calculated position inc. camera x/y and scrollFactor
+        //  The previous calculated position
         x: -1, y: -1,
 
         //  The actual scale values based on the worldTransform
@@ -108,8 +102,8 @@ Phaser.BitmapText = function (game, x, y, text, style) {
 
     };
 
-    this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
-    this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
+    this._cache.x = this.x;
+    this._cache.y = this.y;
 
 	/**
 	* @property {boolean} renderable - Description.
@@ -136,8 +130,8 @@ Phaser.BitmapText.prototype.update = function() {
 
     this._cache.dirty = false;
 
-    this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
-    this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
+    this._cache.x = this.x;
+    this._cache.y = this.y;
 
     if (this.position.x != this._cache.x || this.position.y != this._cache.y)
     {

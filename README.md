@@ -80,8 +80,8 @@ Version 1.0.7 (in progress in the dev branch)
 * Phaser.Loader.Parser is now Phaser.LoaderParser (also the file has renamed from Parser.js to LoaderParser.js)
 * Fixed Cache.addDefaultImage so the default image works in Canvas as well as WebGL. Updated to a new image (32x32 black square with green outline)
 * Extended the Loader 404 error to display the url of the file that didn't load as well as the key.
-
-
+* Change: We've removed the scrollFactor property from all Game Objects. Sorry, but the new Camera system doesn't work with it and it caused all kinds of issues anyway. We will sort out a replacement for it at a later date.
+* Change: The Camera has been completely revamped.
 
 
 * TODO: addMarker hh:mm:ss:ms

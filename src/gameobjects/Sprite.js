@@ -185,11 +185,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.scale = new Phaser.Point(1, 1);
 
     /**
-    * @property {Phaser.Point} scrollFactor - Influence of camera movement upon the position.
-    */ 
-    this.scrollFactor = new Phaser.Point(1, 1);
-
-    /**
     * @property {Phaser.Point} _cache - A mini cache for storing all of the calculated values.
     * @private
     */
@@ -206,7 +201,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
         //  Bounds check
         left: null, right: null, top: null, bottom: null, 
 
-        //  The previous calculated position inc. camera x/y and scrollFactor
+        //  The previous calculated position
         x: -1, y: -1,
 
         //  The actual scale values based on the worldTransform
@@ -345,24 +340,21 @@ Phaser.Sprite.prototype.preUpdate = function() {
     //  |0 0  1|
 
     //  Only update the values we need
-    if (this.worldTransform[0] != this._cache.a00 || this.worldTransform[1] != this._cache.a01)
+    if (this.worldTransform[0] != this._cache.a00 || this.worldTransform[1] != this._cache.a01 || this.worldTransform[3] != this._cache.a10 || this.worldTransform[4] != this._cache.a11)
     {
         this._cache.a00 = this.worldTransform[0];  //  scaleX         a
         this._cache.a01 = this.worldTransform[1];  //  skewY          c
         this._cache.i01 = this.worldTransform[1];  //  skewY          c
-        this._cache.scaleX = Math.sqrt((this._cache.a00 * this._cache.a00) + (this._cache.a01 * this._cache.a01)); // round this off a bit?
-        this._cache.a01 *= -1;
-        this._cache.dirty = true;
-    }
-
-    //  Need to test, but probably highly unlikely that a scaleX would happen without effecting the Y skew
-    if (this.worldTransform[3] != this._cache.a10 || this.worldTransform[4] != this._cache.a11)
-    {
         this._cache.a10 = this.worldTransform[3];  //  skewX          b
         this._cache.i10 = this.worldTransform[3];  //  skewX          b
         this._cache.a11 = this.worldTransform[4];  //  scaleY         d
+
+        this._cache.scaleX = Math.sqrt((this._cache.a00 * this._cache.a00) + (this._cache.a01 * this._cache.a01)); // round this off a bit?
         this._cache.scaleY = Math.sqrt((this._cache.a10 * this._cache.a10) + (this._cache.a11 * this._cache.a11)); // round this off a bit?
+
+        this._cache.a01 *= -1;
         this._cache.a10 *= -1;
+
         this._cache.dirty = true;
     }
 
@@ -410,7 +402,10 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this.body.updateBounds(this.center.x, this.center.y, this._cache.scaleX, this._cache.scaleY);
     }
 
-    this.body.preUpdate();
+    if (this.body)
+    {
+        this.body.preUpdate();
+    }
 
 }
 
@@ -419,16 +414,19 @@ Phaser.Sprite.prototype.postUpdate = function() {
     if (this.exists)
     {
         //  The sprite is positioned in this call, after taking into consideration motion updates and collision
-        // this.body.postUpdate();
+        if (this.body)
+        {
+            this.body.postUpdate();
+        }
 
-        // this._cache.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
-        // this._cache.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
+        this._cache.x = this.x;
+        this._cache.y = this.y;
 
-        // if (this.position.x != this._cache.x || this.position.y != this._cache.y)
-        // {
-        //     this.position.x = this._cache.x;
-        //     this.position.y = this._cache.y;
-        // }
+        if (this.position.x != this._cache.x || this.position.y != this._cache.y)
+        {
+            this.position.x = this._cache.x;
+            this.position.y = this._cache.y;
+        }
     }
 
 }
@@ -501,8 +499,8 @@ Phaser.Sprite.prototype.reset = function(x, y) {
 
     this.x = x;
     this.y = y;
-    this.position.x = this.x - (this.game.world.camera.x * this.scrollFactor.x);
-    this.position.y = this.y - (this.game.world.camera.y * this.scrollFactor.y);
+    this.position.x = this.x;
+    this.position.y = this.y;
     this.alive = true;
     this.exists = true;
     this.visible = true;
@@ -619,31 +617,6 @@ Phaser.Sprite.prototype.bringToTop = function() {
 }
 
 /**
-* Description.
-* 
-* @method Phaser.Sprite.prototype.bringToTop
-* @param {Phaser.Rectangle} rect - Description.
-* @return {Phaser.Rectangle} Description.
-*/
-Phaser.Sprite.prototype.getBounds = function(rect) {
-
-    rect = rect || new Phaser.Rectangle;
-
-    var left = Phaser.Math.min(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
-    var right = Phaser.Math.max(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
-    var top = Phaser.Math.min(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
-    var bottom = Phaser.Math.max(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
-
-    rect.x = left;
-    rect.y = top;
-    rect.width = right - left;
-    rect.height = bottom - top;
-    
-    return rect;
-
-}
-
-/**
 * Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()
 * If the requested animation is already playing this request will be ignored. If you need to reset an already running animation do so directly on the Animation object itself.
 * 
@@ -748,10 +721,10 @@ Object.defineProperty(Phaser.Sprite.prototype, "crop", {
                 this._cropUUID = this.game.rnd.uuid();
 
                 PIXI.TextureCache[this._cropUUID] = new PIXI.Texture(PIXI.BaseTextureCache[this.key], {
-                    x: value.x,
-                    y: value.y,
-                    width: value.width,
-                    height: value.height
+                    x: Math.floor(value.x),
+                    y: Math.floor(value.y),
+                    width: Math.floor(value.width),
+                    height: Math.floor(value.height)
                 });
             }
             else

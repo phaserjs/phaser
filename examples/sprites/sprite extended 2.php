@@ -5,23 +5,30 @@
 
 <script type="text/javascript">
 
-//  Here is a custom game object
-MonsterBunny = function (game, x, y, rotateSpeed) {
+MonsterBunny = function (game, rotateSpeed) {
 
-    Phaser.Sprite.call(this, game, x, y, 'bunny');
+    //  We call the Phaser.Sprite passing in the game reference
+    //  We're giving it a random X/Y position here, just for the sake of this demo - you could also pass the x/y in the constructor
+    Phaser.Sprite.call(this, game, game.world.randomX, game.world.randomY, 'bunny');
+
+    this.anchor.setTo(0.5, 0.5);
 
     this.rotateSpeed = rotateSpeed;
+
+    var randomScale = 0.1 + Math.random();
+
+    this.scale.setTo(randomScale, randomScale)
+
+    game.add.existing(this);
 
 };
 
 MonsterBunny.prototype = Object.create(Phaser.Sprite.prototype);
 MonsterBunny.prototype.constructor = MonsterBunny;
 
-/**
- * Automatically called by World.update
- */
 MonsterBunny.prototype.update = function() {
 
+    //  Automatically called by World.update
     this.angle += this.rotateSpeed;
 
 };
@@ -38,14 +45,10 @@ MonsterBunny.prototype.update = function() {
 
     function create() {
 
-        var wabbit = new MonsterBunny(game, 200, 300, 1);
-        wabbit.anchor.setTo(0.5, 0.5);
-
-        var wabbit2 = new MonsterBunny(game, 600, 300, 0.5);
-        wabbit2.anchor.setTo(0.5, 0.5);
-
-        game.add.existing(wabbit);
-        game.add.existing(wabbit2);
+        for (var i = 0.1; i < 2; i += 0.1)
+        {
+            new MonsterBunny(game, i);
+        }
 
     }
 

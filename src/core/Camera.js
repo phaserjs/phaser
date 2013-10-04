@@ -17,7 +17,6 @@
 * @param {number} width - The width of the view rectangle
 * @param {number} height - The height of the view rectangle
 */
-
 Phaser.Camera = function (game, id, x, y, width, height) {
     
 	/**
@@ -49,6 +48,14 @@ Phaser.Camera = function (game, id, x, y, width, height) {
 	* @property {Phaser.Rectangle} screenView - Used by Sprites to work out Camera culling.
 	*/
 	this.screenView = new Phaser.Rectangle(x, y, width, height);
+
+    /**
+    * The Camera is bound to this Rectangle and cannot move outside of it. By default it is enabled and set to the size of the World.
+    * The Rectangle can be located anywhere in the world and updated as often as you like. If you don't wish the Camera to be bound
+    * at all then set this to null. The values can be anything and are in World coordinates, with 0,0 being the center of the world.
+    * @property {Phaser.Rectangle} bounds - The Rectangle in which the Camera is bounded. Set to null to allow for movement anywhere.
+    */
+    this.bounds = new Phaser.Rectangle(x, y, width, height);
 
     /**
 	* @property {Phaser.Rectangle} deadzone - Moving inside this Rectangle will not cause camera moving.
@@ -168,49 +175,62 @@ Phaser.Camera.prototype = {
     */
     update: function () {
 
-        return;
-
-        //  Add dirty flag
-
-        if (this.target !== null)
+        if (this.target)
         {
-            if (this.deadzone)
-            {
-                this._edge = this.target.x - this.deadzone.x;
-
-                if (this.view.x > this._edge)
-                {
-                    this.view.x = this._edge;
-                }
-
-                this._edge = this.target.x + this.target.width - this.deadzone.x - this.deadzone.width;
-
-                if (this.view.x < this._edge)
-                {
-                    this.view.x = this._edge;
-                }
-
-                this._edge = this.target.y - this.deadzone.y;
-
-                if (this.view.y > this._edge)
-                {
-                    this.view.y = this._edge;
-                }
-
-                this._edge = this.target.y + this.target.height - this.deadzone.y - this.deadzone.height;
-
-                if (this.view.y < this._edge)
-                {
-                    this.view.y = this._edge;
-                }
-            }
-            else
-            {
-                this.focusOnXY(this.target.x, this.target.y);
-            }
+            this.updateTarget();
         }
 
-        this.checkWorldBounds();
+        this.updateTarget();
+
+        if (this.bounds)
+        {
+            this.checkBounds();
+        }
+
+    },
+
+    updateTarget: function () {
+
+        if (this.deadzone)
+        {
+            this._edge = this.target.x - this.deadzone.x;
+
+            if (this.view.x > this._edge)
+            {
+                this.view.x = this._edge;
+            }
+
+            this._edge = this.target.x + this.target.width - this.deadzone.x - this.deadzone.width;
+
+            if (this.view.x < this._edge)
+            {
+                this.view.x = this._edge;
+            }
+
+            this._edge = this.target.y - this.deadzone.y;
+
+            if (this.view.y > this._edge)
+            {
+                this.view.y = this._edge;
+            }
+
+            this._edge = this.target.y + this.target.height - this.deadzone.y - this.deadzone.height;
+
+            if (this.view.y < this._edge)
+            {
+                this.view.y = this._edge;
+            }
+        }
+        else
+        {
+            this.focusOnXY(this.target.x, this.target.y);
+        }
+
+    },
+
+    setBoundsToWorld: function () {
+
+        this.bounds.setTo(this.game.world.x, this.game.world.y, this.game.world.width, this.game.world.height);
 
     },
 
@@ -218,36 +238,34 @@ Phaser.Camera.prototype = {
     * Method called to ensure the camera doesn't venture outside of the game world.
     * @method Phaser.Camera#checkWorldBounds
     */
-    checkWorldBounds: function () {
-
-        return;
+    checkBounds: function () {
 
         this.atLimit.x = false;
         this.atLimit.y = false;
 
-        //  Make sure we didn't go outside the cameras worldBounds
-        if (this.view.x < this.world.bounds.left)
+        //  Make sure we didn't go outside the cameras bounds
+        if (this.view.x < this.bounds.left)
         {
             this.atLimit.x = true;
-            this.view.x = this.world.bounds.left;
+            this.view.x = this.bounds.left;
         }
 
-        if (this.view.x > this.world.bounds.right - this.width)
+        if (this.view.x > this.bounds.right - this.width)
         {
             this.atLimit.x = true;
-            this.view.x = (this.world.bounds.right - this.width) + 1;
+            this.view.x = (this.bounds.right - this.width) + 1;
         }
 
-        if (this.view.y < this.world.bounds.top)
+        if (this.view.y < this.bounds.top)
         {
             this.atLimit.y = true;
-            this.view.y = this.world.bounds.top;
+            this.view.y = this.bounds.top;
         }
 
-        if (this.view.y > this.world.bounds.bottom - this.height)
+        if (this.view.y > this.bounds.bottom - this.height)
         {
             this.atLimit.y = true;
-            this.view.y = (this.world.bounds.bottom - this.height) + 1;
+            this.view.y = (this.bounds.bottom - this.height) + 1;
         }
 
         this.view.floor();
@@ -266,7 +284,14 @@ Phaser.Camera.prototype = {
 
         this.view.x = x;
         this.view.y = y;
-        this.checkWorldBounds();
+
+        this.displayObject.x = -x;
+        this.displayObject.y = -y;
+
+        if (this.bounds)
+        {
+            this.checkBounds();
+        }
 
     },
 
@@ -298,9 +323,14 @@ Object.defineProperty(Phaser.Camera.prototype, "x", {
     },
  
     set: function (value) {
+
         this.view.x = value;
         this.displayObject.x = -value;
-        this.checkWorldBounds();
+
+        if (this.bounds)
+        {
+            this.checkBounds();
+        }
     }
 
 });
@@ -317,9 +347,14 @@ Object.defineProperty(Phaser.Camera.prototype, "y", {
     },
 
     set: function (value) {
+
         this.view.y = value;
         this.displayObject.y = -value;
-        this.checkWorldBounds();
+
+        if (this.bounds)
+        {
+            this.checkBounds();
+        }
     }
 
 });
