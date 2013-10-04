@@ -454,9 +454,9 @@ Phaser.Utils.Debug.prototype = {
         this.start(x, y, color);
 
         this.line('Sprite: ' + ' (' + sprite.width + ' x ' + sprite.height + ') anchor: ' + sprite.anchor.x + ' x ' + sprite.anchor.y);
-        this.line('x: ' + sprite.x.toFixed(1) + ' y: ' + sprite.y.toFixed(1) + ' rotation: ' + sprite.rotation.toFixed(1));
-        this.line('visible: ' + sprite.visible);
-        this.line('in camera: ' + sprite.inCamera);
+        this.line('x: ' + sprite.x.toFixed(1) + ' y: ' + sprite.y.toFixed(1));
+        this.line('angle: ' + sprite.angle + ' rotation: ' + sprite.rotation.toFixed(1));
+        this.line('visible: ' + sprite.visible + ' in camera: ' + sprite.inCamera);
         this.line('body x: ' + sprite.body.x.toFixed(1) + ' y: ' + sprite.body.y.toFixed(1));
 
         //  0 = scaleX
@@ -466,7 +466,6 @@ Phaser.Utils.Debug.prototype = {
         //  4 = scaleY
         //  5 = translateY
 
-
         // this.line('id: ' + sprite._id);
         // this.line('scale x: ' + sprite.worldTransform[0]);
         // this.line('scale y: ' + sprite.worldTransform[4]);
@@ -474,10 +473,10 @@ Phaser.Utils.Debug.prototype = {
         // this.line('ty: ' + sprite.worldTransform[5]);
         // this.line('skew x: ' + sprite.worldTransform[3]);
         // this.line('skew y: ' + sprite.worldTransform[1]);
-        this.line('dx: ' + sprite.body.deltaX());
-        this.line('dy: ' + sprite.body.deltaY());
-        this.line('sdx: ' + sprite.deltaX());
-        this.line('sdy: ' + sprite.deltaY());
+        // this.line('dx: ' + sprite.body.deltaX());
+        // this.line('dy: ' + sprite.body.deltaY());
+        // this.line('sdx: ' + sprite.deltaX());
+        // this.line('sdy: ' + sprite.deltaY());
 
         // this.line('inCamera: ' + this.game.renderer.spriteRenderer.inCamera(this.game.camera, sprite));
 

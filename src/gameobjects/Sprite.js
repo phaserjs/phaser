@@ -198,9 +198,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
         //  Input specific transform cache
         i01: -1, i10: -1, idi: -1,
 
-        //  World transform cache
-        w01: -1, w10: -1,
-
         //  Bounds check
         left: null, right: null, top: null, bottom: null, 
 
@@ -338,15 +335,11 @@ Phaser.Sprite.prototype.preUpdate = function() {
     this.prevX = this.x;
     this.prevY = this.y;
 
-    if (this.worldTransform[2] != this._cache.a02 || this.worldTransform[5] != this._cache.a12 || this.worldTransform[0] != this._cache.a00 || this.worldTransform[1] != this._cache.a01 || this.worldTransform[3] != this._cache.a10 || this.worldTransform[4] != this._cache.a11)
-    {
-        this.updateCache();
-    }
+    this.updateCache();
 
     //  Re-run the camera visibility check
-    if (this._cache.dirty || this._cache.first)
+    if (this._cache.dirty)
     {
-        this._cache.first = false;
         this._cache.cameraVisible = Phaser.Rectangle.intersects(this.game.world.camera.screenView, this.bounds, 0);
 
         if (this.autoCull == true)
@@ -356,7 +349,10 @@ Phaser.Sprite.prototype.preUpdate = function() {
         }
 
         //  Update our physics bounds
-        this.body.updateBounds(this.center.x, this.center.y, this._cache.scaleX, this._cache.scaleY);
+        if (this.body)
+        {
+            this.body.updateBounds(this.center.x, this.center.y, this._cache.scaleX, this._cache.scaleY);
+        }
     }
 
     if (this.body)
@@ -372,20 +368,15 @@ Phaser.Sprite.prototype.updateCache = function() {
     //  |b d ty|
     //  |0 0  1|
 
-    //  Only update the values we need
-    // if (this.worldTransform[0] != this._cache.a00 || this.worldTransform[1] != this._cache.w01 || this.worldTransform[3] != this._cache.w10 || this.worldTransform[4] != this._cache.a11)
-    if (this.worldTransform[1] != this._cache.w01 || this.worldTransform[3] != this._cache.w10)
+    if (this.worldTransform[1] != this._cache.i01 || this.worldTransform[3] != this._cache.i10)
     {
-        //  Non-modified
-        this._cache.w01 = this.worldTransform[1];  //  skewY          c
-        this._cache.w10 = this.worldTransform[3];  //  skewX          b
-
         this._cache.a00 = this.worldTransform[0];  //  scaleX         a
         this._cache.a01 = this.worldTransform[1];  //  skewY          c
-        this._cache.i01 = this.worldTransform[1];  //  skewY          c
         this._cache.a10 = this.worldTransform[3];  //  skewX          b
-        this._cache.i10 = this.worldTransform[3];  //  skewX          b
         this._cache.a11 = this.worldTransform[4];  //  scaleY         d
+
+        this._cache.i01 = this.worldTransform[1];  //  skewY          c (remains non-modified for input checks)
+        this._cache.i10 = this.worldTransform[3];  //  skewX          b (remains non-modified for input checks)
 
         this._cache.scaleX = Math.sqrt((this._cache.a00 * this._cache.a00) + (this._cache.a01 * this._cache.a01)); // round this off a bit?
         this._cache.scaleY = Math.sqrt((this._cache.a10 * this._cache.a10) + (this._cache.a11 * this._cache.a11)); // round this off a bit?
@@ -394,8 +385,6 @@ Phaser.Sprite.prototype.updateCache = function() {
         this._cache.a10 *= -1;
 
         this._cache.dirty = true;
-        console.log('cache1');
-
     }
 
     if (this.worldTransform[2] != this._cache.a02 || this.worldTransform[5] != this._cache.a12)
@@ -403,7 +392,6 @@ Phaser.Sprite.prototype.updateCache = function() {
         this._cache.a02 = this.worldTransform[2];  //  translateX     tx
         this._cache.a12 = this.worldTransform[5];  //  translateY     ty
         this._cache.dirty = true;
-        console.log('cache2');
     }
 
     //  Frame updated?

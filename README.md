@@ -83,12 +83,14 @@ Version 1.0.7 (in progress in the dev branch)
 * Change: We've removed the scrollFactor property from all Game Objects. Sorry, but the new Camera system doesn't work with it and it caused all kinds of issues anyway. We will sort out a replacement for it at a later date.
 * Change: World now extends Phaser.Group. As a result we've updated GameObjectFactory and other classes that linked to it. If you have anywhere in your code that used to reference world.group you can just remove 'group' from that. So before, world.group.add() is now just world.add().
 * Change: The Camera has been completely revamped. Rather than adjusting the position of all display objects (bad) it now just shifts the position of the single world container (good!), this is much quicker and also stops the game objects positions from self-adjusting all the time, allowing for them to be properly nested with other containers.
-* New: Direction constants have been added to Sprites and adjust based on body motion. Access them via 
+* New: Direction constants have been added to Sprites and adjust based on body motion.
 * World.randomX/Y now returns values anywhere in the world.bounds range (if set, otherwise 0), including negative values.
+* Fixed a bug in the Sprite transform cache check that caused the skew/scale cache to get constantly invalidated - now only updates as needed, significant performance increase!
+* Brand new Sprite.update loop handler. Combined with the transform cache fix and further optimisations this is now much quicker to execute.
+* Made Sprite.body optional and added in checks, so you can safely null the Sprite body object if using your own physics system and not impact rendering.
 
 
 * TODO: addMarker hh:mm:ss:ms
-* TODO: Direction constants
 
 Version 1.0.6 (September 24th 2013)
 

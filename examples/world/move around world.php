@@ -15,7 +15,7 @@ window.onload = function () {
 
         game.stage.backgroundColor = '#007236';
 
-        game.load.image('mushroom', 'assets/sprites/mushroom.png');
+        game.load.image('mushroom', 'assets/sprites/mushroom2.png');
         game.load.image('phaser', 'assets/sprites/sonic_havok_sanity.png');
 
     }
@@ -30,7 +30,7 @@ window.onload = function () {
 
         for (var i = 0; i < 100; i++)
         {
-            // var s = game.add.sprite(game.world.randomX, game.world.randomY, 'mushroom');
+            var s = game.add.sprite(game.world.randomX, game.world.randomY, 'mushroom');
             // console.log(s.x, s.y);
         }
 
@@ -43,7 +43,7 @@ window.onload = function () {
 
     function update() {
 
-                // d.angle++;
+        d.angle += 1;
 
         if (cursors.up.isDown)
         {
@@ -96,6 +96,7 @@ window.onload = function () {
     function render() {
 
         game.debug.renderCameraInfo(game.camera, 32, 32);
+        game.debug.renderSpriteInfo(d, 32, 200);
         // game.debug.renderWorldTransformInfo(d, 32, 200);
         // game.debug.renderLocalTransformInfo(d, 32, 400);
         game.debug.renderSpriteCorners(d, false, true);
