@@ -88,7 +88,7 @@ Version 1.0.7 (in progress in the dev branch)
 * Fixed a bug in the Sprite transform cache check that caused the skew/scale cache to get constantly invalidated - now only updates as needed, significant performance increase!
 * Brand new Sprite.update loop handler. Combined with the transform cache fix and further optimisations this is now much quicker to execute.
 * Made Sprite.body optional and added in checks, so you can safely null the Sprite body object if using your own physics system and not impact rendering.
-
+* Fixed typo in StageScaleMode so it's not pageAlignVeritcally any longer, but pageAlignVertically.
 
 * TODO: addMarker hh:mm:ss:ms
 

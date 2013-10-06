@@ -50,12 +50,12 @@ Phaser.StageScaleMode = function (game, width, height) {
     this.pageAlignHorizontally = false;
 
     /**
-    * @property {boolean} pageAlignVeritcally - If you wish to align your game in the middle of the page then you can set this value to true.
+    * @property {boolean} pageAlignVertically - If you wish to align your game in the middle of the page then you can set this value to true.
     <ul><li>It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.
     <li>It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.</li></ul>
     * @default
     */
-    this.pageAlignVeritcally = false;
+    this.pageAlignVertically = false;
 
     /**
     * @property {number} minWidth - Minimum width the canvas should be scaled to (in pixels).
@@ -444,7 +444,7 @@ Phaser.StageScaleMode.prototype = {
             }
         }
 
-        if (this.pageAlignVeritcally)
+        if (this.pageAlignVertically)
         {
             if (this.height < window.innerHeight && this.incorrectOrientation == false)
             {
