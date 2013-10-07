@@ -473,3 +473,6 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
 
 });
 
+/**
+* "Deleted code is debugged code." - Jeff Sickel
+*/
