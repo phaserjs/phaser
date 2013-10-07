@@ -47,12 +47,6 @@
         list.add(e.input);
         list.add(f.input);
 
-        list.dump();
-
-        // list.remove(d.input);
-
-        // list.dump();
-
     }
 
 })();

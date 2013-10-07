@@ -20,7 +20,7 @@
 
 	function create() {
 
-		game.world.setSize(2000, 2000);
+		game.world.setBounds(2000, 2000);
 
 		aliens = [];
 

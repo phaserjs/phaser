@@ -19,7 +19,7 @@
 
 
 		//setting the size of the game world larger than the tilemap's size
-		game.world.setSize(2000,2000);
+		game.world.setBounds(2000,2000);
 
 		game.stage.backgroundColor = '#255d3b';
 

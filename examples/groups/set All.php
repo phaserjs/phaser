@@ -30,7 +30,7 @@
     }
     function resetAlpha() {
         // Set "alpha" value of all the childs.
-        game.world.group.setAll('alpha', Math.random());
+        game.world.setAll('alpha', Math.random());
     }
     function render() {
 

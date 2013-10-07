@@ -46,7 +46,7 @@
     }
     function render() {
 
-        game.debug.renderText('ufo added to game.world.group and "friendAndFoe" group', 20, 24);
+        game.debug.renderText('ufo added to game.world.and "friendAndFoe" group', 20, 24);
         game.debug.renderText('others ONLY added to "enemies" group', 20, 40);
 
     }

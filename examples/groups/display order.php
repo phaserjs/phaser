@@ -20,7 +20,7 @@
 
     }
 
-    var items;
+    var items,
     card;
 
     function create() {

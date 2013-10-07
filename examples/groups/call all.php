@@ -36,7 +36,7 @@
         item.kill();
     }
     function reviveAll() {
-        game.world.group.callAll('revive');
+        game.world.callAll('revive');
     }
     function render() {
 

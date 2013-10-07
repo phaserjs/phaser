@@ -28,18 +28,9 @@
         game.load.image('arm-r', 'assets/sprites/robot/arm-r.png');
         game.load.image('leg-l', 'assets/sprites/robot/leg-l.png');
         game.load.image('leg-r', 'assets/sprites/robot/leg-r.png');
-        game.load.spritesheet('item', 'assets/buttons/number-buttons-90x90.png', 90, 90);
         
     }
     function create() {
-        // Add some items.
-        var item;
-        for (var i = 0; i < 3; i++) {
-            // Give the items a different alpha increase speed.
-            item = game.add.sprite(290, 98 * (i + 1), 'item', i);
-            // An item besides the left one.
-            item = game.add.sprite(388, 98 * (i + 1), 'item', i + 3);
-        }
         // Use groups of sprites to create a big robot.
         // Robot itself, you can subclass group class in a real game.
         robot = game.add.group();

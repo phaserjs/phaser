@@ -12,7 +12,7 @@
 
         function preload() {
 
-        game.world.setSize(1920, 1200);
+        game.world.setBounds(1920, 1200);
 
         game.load.image('backdrop', 'assets/pics/remember-me.jpg');
         game.load.image('card', 'assets/sprites/mana_card.png');

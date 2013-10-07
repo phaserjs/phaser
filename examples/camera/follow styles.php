@@ -36,7 +36,7 @@
     function create() {
 
         //make the world larger than the actual canvas
-        game.world.setSize(1400,1400);
+        game.world.setBounds(1400,1400);
 
         for(var i=0,nb=10;i<nb;i++){
 
@@ -46,18 +46,12 @@
         
 
         // background images
-        game.add.sprite(0, 0, 'sky')
-            .scrollFactor.setTo(0, 0);
-        game.add.sprite(0, 360, 'ground')
-            .scrollFactor.setTo(0.5, 0.1);
-        game.add.sprite(0, 400, 'river')
-            .scrollFactor.setTo(1.3, 0.16);
-        game.add.sprite(200, 120, 'cloud0')
-            .scrollFactor.setTo(0.3, 0.1);
-        game.add.sprite(-60, 120, 'cloud1')
-            .scrollFactor.setTo(0.5, 0.1);
-        game.add.sprite(900, 170, 'cloud2')
-            .scrollFactor.setTo(0.7, 0.1);
+        game.add.sprite(0, 0, 'sky');
+        game.add.sprite(0, 360, 'ground');
+        game.add.sprite(0, 400, 'river');
+        game.add.sprite(200, 120, 'cloud0');
+        game.add.sprite(-60, 120, 'cloud1');
+        game.add.sprite(900, 170, 'cloud2');
 
 
         // ufo sprite

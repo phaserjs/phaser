@@ -27,7 +27,7 @@
     }
     function update() {
         // Animating alpha property of each item using forEach() method.
-        game.world.group.forEach(function(item) {
+        game.world.forEach(function(item) {
             // Update alpha first.
             item.alpha -= item.alphaIncSpeed;
             // Check for switch between increasing and descreasing.
