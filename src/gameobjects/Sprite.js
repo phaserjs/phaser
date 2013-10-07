@@ -298,7 +298,7 @@ Phaser.Sprite.prototype = Object.create(PIXI.Sprite.prototype);
 Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 
 /**
-* Automatically called by World.update. You can create your own update in Objects that extend Phaser.Sprite.
+* Automatically called by World.preUpdate. You can create your own update in Objects that extend Phaser.Sprite.
 * @method Phaser.Sprite.prototype.preUpdate
 */
 Phaser.Sprite.prototype.preUpdate = function() {

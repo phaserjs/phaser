@@ -807,7 +807,7 @@ Phaser.Group.prototype = {
     */
 	countLiving: function () {
 
-		var total = -1;
+		var total = 0;
 
 		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
@@ -824,6 +824,10 @@ Phaser.Group.prototype = {
 			}
 			while (currentNode != this._container.last._iNext);
 		}
+		else
+		{
+			total = -1;
+		}
 
 		return total;
 
@@ -837,7 +841,7 @@ Phaser.Group.prototype = {
     */
 	countDead: function () {
 
-		var total = -1;
+		var total = 0;
 
 		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
@@ -853,6 +857,10 @@ Phaser.Group.prototype = {
 				currentNode = currentNode._iNext;
 			}
 			while (currentNode != this._container.last._iNext);
+		}
+		else
+		{
+			total = -1;
 		}
 
 		return total;

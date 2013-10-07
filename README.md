@@ -54,8 +54,8 @@ Version 1.0.7 (in progress in the dev branch)
 * Added Sprite.play as a handy short-cut to play an animation already loaded onto a Sprite.
 * Fixed small bug stopping Tween.pause / resume from resuming correctly when called directly.
 * Fixed an issue where Tweens.removeAll wasn't clearing tweens in the addition queue.
-* Change: When you swap State all active tweens are now purged.
-* BUG: Loader conflict if 2 keys are the same even if they are in different packages (i.e. "title" for picture and audio).
+* Change: When you start a new State all active tweens are now purged.
+* BUG: Loader conflict if 2 keys are the same even if they are in different packages (i.e. you can't use "title" for both and image and sound file).
 * Fixed Particle Emitters when using Emitter width/height (thanks XekeDeath)
 * Made animation looping more robust when skipping frames (thanks XekeDeath)
 * Fix for incorrect new particle positioning (issue #73) (thanks cottonflop)
@@ -89,8 +89,14 @@ Version 1.0.7 (in progress in the dev branch)
 * Brand new Sprite.update loop handler. Combined with the transform cache fix and further optimisations this is now much quicker to execute.
 * Made Sprite.body optional and added in checks, so you can safely null the Sprite body object if using your own physics system and not impact rendering.
 * Fixed typo in StageScaleMode so it's not pageAlignVeritcally any longer, but pageAlignVertically.
+* Fixed issue in Group.countLiving / countDead where the value was off by one (thanks mjablonski)
 
+* TODO: look at Sprite.crop (http://www.html5gamedevs.com/topic/1617-error-in-spritecrop/)
+* TODO: d-pad example (http://www.html5gamedevs.com/topic/1574-gameinputondown-question/)
+* TODO: more touch input examples (http://www.html5gamedevs.com/topic/1556-mobile-touch-event/)
 * TODO: addMarker hh:mm:ss:ms
+* TODO: swap state (non-destructive shift)
+
 
 Version 1.0.6 (September 24th 2013)
 
