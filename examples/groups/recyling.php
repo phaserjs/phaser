@@ -6,7 +6,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,render:render});
 
@@ -61,7 +61,7 @@
         game.debug.renderText('Living baddies: ' + (enemies.countLiving()), 340, 420);
     }
 
-})();
+
 
 </script>
 

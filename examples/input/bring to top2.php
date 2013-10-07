@@ -5,7 +5,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, render: render });
 
@@ -43,7 +43,7 @@
         game.debug.renderInputInfo(32, 32);
     }
 
-})();
+
 </script>
 
 <?php

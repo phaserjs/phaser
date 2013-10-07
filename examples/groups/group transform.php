@@ -6,7 +6,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,render:render});
 
@@ -69,7 +69,7 @@
         game.debug.renderText('Drag each part to re-position them. ', 288, 592);
     }
 
-})();
+
 
 </script>
 

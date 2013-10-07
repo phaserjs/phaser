@@ -5,7 +5,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
 function loadStarted(size) {
 	console.log('Loader started, queue size:', size);
@@ -49,7 +49,7 @@ game.load.onLoadComplete.add(loadCompleted, this);
 
 
 
-})();
+
 
 </script>
 

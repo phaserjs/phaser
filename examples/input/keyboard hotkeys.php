@@ -5,7 +5,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
     var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
 
@@ -50,7 +50,7 @@
         game.add.sprite(game.world.randomX, game.world.randomY, 'pineapple');
     }
 
-})();
+
 </script>
 
 <?php
