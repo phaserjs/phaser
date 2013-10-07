@@ -164,8 +164,7 @@ Phaser.Camera.prototype = {
     */
     focusOnXY: function (x, y) {
 
-        this.view.x = Math.round(x - this.view.halfWidth);
-        this.view.y = Math.round(y - this.view.halfHeight);
+        this.setPosition(Math.round(x - this.view.halfWidth), Math.round(y - this.view.halfHeight));
 
     },
 
@@ -183,6 +182,16 @@ Phaser.Camera.prototype = {
         if (this.bounds)
         {
             this.checkBounds();
+        }
+
+        if (this.view.x !== -this.displayObject.position.x)
+        {
+            this.displayObject.position.x = -this.view.x;
+        }
+
+        if (this.view.y !== -this.displayObject.position.y)
+        {
+            this.displayObject.position.y = -this.view.y;
         }
 
     },
@@ -283,9 +292,6 @@ Phaser.Camera.prototype = {
         this.view.x = x;
         this.view.y = y;
 
-        this.displayObject.x = -x;
-        this.displayObject.y = -y;
-
         if (this.bounds)
         {
             this.checkBounds();
@@ -323,7 +329,6 @@ Object.defineProperty(Phaser.Camera.prototype, "x", {
     set: function (value) {
 
         this.view.x = value;
-        this.displayObject.position.x = -value;
 
         if (this.bounds)
         {
@@ -347,7 +352,6 @@ Object.defineProperty(Phaser.Camera.prototype, "y", {
     set: function (value) {
 
         this.view.y = value;
-        this.displayObject.position.y = -value;
 
         if (this.bounds)
         {

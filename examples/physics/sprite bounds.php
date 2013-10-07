@@ -22,7 +22,7 @@
 
         fuji = game.add.sprite(game.world.centerX, game.world.centerY, 'fuji');
         fuji.anchor.setTo(0, 0.5);
-        fuji.angle = 34;
+        // fuji.angle = 34;
 
         b = new Phaser.Rectangle(fuji.center.x, fuji.center.y, fuji.width, fuji.height);
 

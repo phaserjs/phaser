@@ -48,9 +48,9 @@ Phaser.Physics.Arcade.prototype = {
         //  If you're wondering why the velocity is halved and applied twice, read this: http://www.niksula.hut.fi/~hkankaan/Homepages/gravity.html
 
     	//	Rotation
-        this._velocityDelta = (this.computeVelocity(0, false, body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity) / 2;
+        this._velocityDelta = (this.computeVelocity(0, body, body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity) / 2;
         body.angularVelocity += this._velocityDelta;
-        body.rotation += body.angularVelocity * this.game.time.physicsElapsed;
+        body.rotation += (body.angularVelocity * this.game.time.physicsElapsed);
         body.angularVelocity += this._velocityDelta;
 
     	//	Horizontal
@@ -100,7 +100,7 @@ Phaser.Physics.Arcade.prototype = {
 
             if (velocity - this._drag > 0)
             {
-                velocity = velocity - this._drag;
+                velocity -= this._drag;
             }
             else if (velocity + this._drag < 0)
             {

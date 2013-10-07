@@ -8,7 +8,7 @@
 
 
 
-	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update });
+	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
 
     var baddie,
         keys=Phaser.Keyboard;
@@ -28,7 +28,7 @@
 
 		game.add.tileSprite(0, 0, 2000, 2000, 'background');
 
-        game.world.setBounds(1400,1400);
+        game.world.setBounds(0, 0, 1400,1400);
 
         for(var i=0,nb=10;i<nb;i++){
 
@@ -67,6 +67,16 @@
         }
 	}
 
+
+    function render() {
+
+        game.debug.renderCameraInfo(game.camera, 32, 32);
+        // game.debug.renderSpriteInfo(d, 32, 200);
+        // game.debug.renderWorldTransformInfo(d, 32, 200);
+        // game.debug.renderLocalTransformInfo(d, 32, 400);
+        // game.debug.renderSpriteCorners(d, false, true);
+
+    }
 
 
 </script>

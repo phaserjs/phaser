@@ -9,6 +9,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
 	this.y = sprite.y;
 	this.preX = sprite.x;
 	this.preY = sprite.y;
+	this.preRotation = sprite.angle;
 
 	//	un-scaled original size
 	this.sourceWidth = sprite.currentFrame.sourceSizeW;
@@ -37,6 +38,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.maxAngular = 1000;
     this.mass = 1;
 
+    this.skipQuadTree = false;
     this.quadTreeIDs = [];
     this.quadTreeIndex = -1;
 
@@ -105,22 +107,23 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 		this.preX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
 		this.preY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
-		this.rotation = this.sprite.angle;
+		this.preRotation = this.sprite.angle;
 
 		this.x = this.preX;
 		this.y = this.preY;
+		this.rotation = this.preRotation;
 
 		if (this.moves)
 		{
 			this.game.physics.updateMotion(this);
+
+			if (this.collideWorldBounds)
+			{
+				this.checkWorldBounds();
+			}
 		}
 
-		if (this.collideWorldBounds)
-		{
-			this.checkWorldBounds();
-		}
-
-		if (this.allowCollision.none == false && this.sprite.visible && this.sprite.alive)
+		if (this.skipQuadTree == false && this.allowCollision.none == false && this.sprite.visible && this.sprite.alive)
 		{
 		    this.quadTreeIDs = [];
 		    this.quadTreeIndex = -1;
@@ -159,20 +162,12 @@ Phaser.Physics.Arcade.Body.prototype = {
 			this.facing = Phaser.DOWN;
 		}
 
-		if (this.deltaX() != 0)
-		{
-			this.sprite.x += this.deltaX();
-		}
-
-		if (this.deltaY() != 0)
-		{
-			this.sprite.y += this.deltaY();
-		}
+		this.sprite.x += this.deltaX();
+		this.sprite.y += this.deltaY();
 
 		if (this.allowRotation)
 		{
-			//	Needs to use rotation delta
-			// this.sprite.angle += this.rotation;
+			this.sprite.angle += this.deltaZ();
 		}
 
 	},
@@ -247,6 +242,10 @@ Phaser.Physics.Arcade.Body.prototype = {
 
     deltaY: function () {
         return this.y - this.preY;
+    },
+
+    deltaZ: function () {
+        return this.rotation - this.preRotation;
     }
 
 };

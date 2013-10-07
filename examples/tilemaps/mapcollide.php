@@ -5,8 +5,6 @@
 
 <script type="text/javascript">
 
-
-
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
 
     function preload() {
@@ -42,10 +40,10 @@
 
     function update() {
 
-        map.collide(p);
+        // map.collide(p);
 
         p.body.velocity.x = 0;
-        p.body.acceleration.y = 500;
+        // p.body.acceleration.y = 500;
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {

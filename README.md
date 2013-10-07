@@ -90,12 +90,20 @@ Version 1.0.7 (in progress in the dev branch)
 * Made Sprite.body optional and added in checks, so you can safely null the Sprite body object if using your own physics system and not impact rendering.
 * Fixed typo in StageScaleMode so it's not pageAlignVeritcally any longer, but pageAlignVertically.
 * Fixed issue in Group.countLiving / countDead where the value was off by one (thanks mjablonski)
+* Fixed issue with a jittery Camera if you moved a Sprite via velocity instead of x/y placement.
+* Added Keyboard.createCursorKeys() which creates an object with 4 Key objects inside it mapped to up, down, left and right. See the new example in the input folder.
+* Added Body.skipQuadTree boolean for more fine-grained control over when a body is added to the World QuadTree.
+* Re-implemented Angular Velocity and Angular Acceleration on the Sprite.body and created 2 new examples to show use.
+* Moved the Camera update checks to World.postUpdate, so all the sprites get the correct adjusted camera position.
+* Added Sprite.fixedToCamera boolean. A Sprite that is fixed to the camera doesn't move with the world, but has its x/y coordinates relative to the top-left of the camera.
+
 
 * TODO: look at Sprite.crop (http://www.html5gamedevs.com/topic/1617-error-in-spritecrop/)
 * TODO: d-pad example (http://www.html5gamedevs.com/topic/1574-gameinputondown-question/)
 * TODO: more touch input examples (http://www.html5gamedevs.com/topic/1556-mobile-touch-event/)
 * TODO: addMarker hh:mm:ss:ms
 * TODO: swap state (non-destructive shift)
+* TODO: rotation offset
 
 
 Version 1.0.6 (September 24th 2013)

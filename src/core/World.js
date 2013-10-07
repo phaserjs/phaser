@@ -71,8 +71,6 @@ Phaser.World.prototype.boot = function () {
 */
 Phaser.World.prototype.update = function () {
 
-	this.camera.update();
-
 	this.currentRenderOrderID = 0;
 
 	if (this.game.stage._stage.first._iNext)
@@ -103,6 +101,8 @@ Phaser.World.prototype.update = function () {
 * @method Phaser.World#postUpdate
 */
 Phaser.World.prototype.postUpdate = function () {
+
+    this.camera.update();
 
     if (this.game.stage._stage.first._iNext)
     {

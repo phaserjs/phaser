@@ -266,12 +266,12 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     /**
     * @property {Description} velocity - Description.
     */
-    this.velocity = this.body.velocity;
+    // this.velocity = this.body.velocity;
     
     /**
     * @property {Description} acceleration - Description.
     */
-    this.acceleration = this.body.acceleration;
+    // this.acceleration = this.body.acceleration;
 
     /**
     * @property {Description} inWorld - World bounds check.
@@ -290,6 +290,13 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * @default
     */
     this._outOfBoundsFired = false;
+
+    /**
+    * A Sprite that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.
+    * @property {boolean} fixedToCamera - Fixes this Sprite to the Camera.
+    * @default
+    */
+    this.fixedToCamera = false;
 
 };
 
@@ -428,8 +435,16 @@ Phaser.Sprite.prototype.postUpdate = function() {
             this.body.postUpdate();
         }
 
-        this._cache.x = this.x;
-        this._cache.y = this.y;
+        if (this.fixedToCamera)
+        {
+            this._cache.x = this.game.camera.view.x + this.x;
+            this._cache.y = this.game.camera.view.y + this.y;
+        }
+        else
+        {
+            this._cache.x = this.x;
+            this._cache.y = this.y;
+        }
 
         if (this.position.x != this._cache.x || this.position.y != this._cache.y)
         {
@@ -644,14 +659,21 @@ Phaser.Sprite.prototype.play = function (name, frameRate, loop) {
 
 }
 
+/**
+* Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+* Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
+* If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
+* @name Phaser.Sprite#angle
+* @property {number} angle - Gets or sets the Sprites angle of rotation in degrees.
+*/
 Object.defineProperty(Phaser.Sprite.prototype, 'angle', {
 
     get: function() {
-        return Phaser.Math.radToDeg(this.rotation);
+        return Phaser.Math.wrapAngle(Phaser.Math.radToDeg(this.rotation));
     },
 
     set: function(value) {
-        this.rotation = Phaser.Math.degToRad(value);
+        this.rotation = Phaser.Math.degToRad(Phaser.Math.wrapAngle(value));
     }
 
 });

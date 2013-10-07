@@ -1,48 +1,40 @@
 <?php
-    $title = "Motion";
+    $title = "Mass Velocity Test";
     require('../head.php');
 ?>
 
 <script type="text/javascript">
 
-
-
-    var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update});
+    var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
 
     function preload() {
+
         game.load.image('car', 'assets/sprites/car90.png');
-        game.load.image('ship', 'assets/sprites/xenon2_ship.png');
         game.load.image('baddie', 'assets/sprites/space-baddie.png');
+
     }
 
     var car;
-    var ship;
-    var total;
     var aliens;
 
     function create() {
 
-        aliens = [];
+        aliens = game.add.group();
 
         for (var i = 0; i < 50; i++)
         {
-            var s = game.add.sprite(game.world.randomX, game.world.randomY, 'baddie');
+            var s = aliens.create(game.world.randomX, game.world.randomY, 'baddie');
             s.name = 'alien' + s;
             s.body.collideWorldBounds = true;
-            s.body.bounce.setTo(1, 1);
+            s.body.bounce.setTo(0.8, 0.8);
             s.body.velocity.setTo(10 + Math.random() * 40, 10 + Math.random() * 40);
-            aliens.push(s);
         }
 
         car = game.add.sprite(400, 300, 'car');
         car.anchor.setTo(0.5, 0.5);
         car.body.collideWorldBounds = true;
-        car.body.bounce.setTo(0.5, 0.5);
+        car.body.bounce.setTo(0.8, 0.8);
         car.body.allowRotation = true;
-
-        ship = game.add.sprite(400, 400, 'ship');
-        ship.body.collideWorldBounds = true;
-        ship.body.bounce.setTo(0.5, 0.5);
 
     }
 
@@ -66,11 +58,15 @@
             car.body.velocity.copyFrom(game.physics.velocityFromAngle(car.angle, 300));
         }
 
-        game.physics.collide(aliens);
+        game.physics.collide(car, aliens);
 
     }
 
+    function render() {
 
+        game.debug.renderSpriteInfo(car, 32, 32);
+
+    }
 
 </script>
 

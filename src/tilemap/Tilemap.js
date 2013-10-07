@@ -120,7 +120,7 @@ Phaser.Tilemap = function (game, key, x, y, resizeWorld, tileWidth, tileHeight) 
 
     if (this.currentLayer && resizeWorld)
     {
-        this.game.world.setSize(this.currentLayer.widthInPixels, this.currentLayer.heightInPixels, true);
+        this.game.world.setBounds(0, 0, this.currentLayer.widthInPixels, this.currentLayer.heightInPixels);
     }
 	
 };
