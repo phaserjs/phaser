@@ -6,7 +6,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
     var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
 
@@ -20,7 +20,7 @@
 
     }
 
-    var items;
+    var items,
     card;
 
     function create() {
@@ -55,7 +55,7 @@
 
     }
 
-})();
+
 
 </script>
 

@@ -5,7 +5,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,render:render });
 
@@ -46,14 +46,14 @@
     }
     function render() {
 
-        game.debug.renderText('ufo added to game.world.group and "friendAndFoe" group', 20, 24);
+        game.debug.renderText('ufo added to game.world.and "friendAndFoe" group', 20, 24);
         game.debug.renderText('others ONLY added to "enemies" group', 20, 40);
 
     }
 
 
 
-})();
+
 
 </script>
 

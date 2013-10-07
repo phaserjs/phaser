@@ -6,7 +6,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
 	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update });
 
@@ -28,7 +28,7 @@
 
 		game.add.tileSprite(0, 0, 2000, 2000, 'background');
 
-        game.world.setSize(1400,1400);
+        game.world.setBounds(1400,1400);
 
         for(var i=0,nb=10;i<nb;i++){
 
@@ -67,7 +67,7 @@
         }
 	}
 
-})();
+
 
 </script>
 

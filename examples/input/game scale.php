@@ -5,7 +5,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
     var game = new Phaser.Game(320, 240, Phaser.CANVAS, '', { preload: preload, create: create,update:update,render:render});
 
@@ -27,7 +27,7 @@
     function create() {
 
     	//We increase the size of our game world
-        game.world.setSize(2000, 2000);
+        game.world.setBounds(2000, 2000);
 
         for (var i = 0; i < 1000; i++)
         {
@@ -67,7 +67,7 @@
 
     }
 
-})();
+
 
 </script>
 

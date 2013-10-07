@@ -6,7 +6,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,render : render });
 
@@ -36,14 +36,14 @@
         item.kill();
     }
     function reviveAll() {
-        game.world.group.callAll('revive');
+        game.world.callAll('revive');
     }
     function render() {
 
         game.debug.renderText('Tap or click an item to kill it, and press the revive button to revive them all.', 160, 500);
     }
 
-})();
+
 
 </script>
 

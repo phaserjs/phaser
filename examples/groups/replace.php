@@ -6,7 +6,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,render:render});
 
@@ -70,7 +70,7 @@
         game.debug.renderText('Click an item and one from another group to replace it.', 240, 480);
     }
 
-})();
+
 
 </script>
 

@@ -5,7 +5,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
     var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
 
@@ -33,7 +33,7 @@
         game.stage.scale.startFullScreen();
     }
 
-})();
+
 </script>
 
 <?php

@@ -5,7 +5,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
 	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { create: create, update: update });
 
@@ -25,7 +25,7 @@
 		s.angle += 1;
 	}
 
-})();
+
 
 </script>
 

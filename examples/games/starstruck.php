@@ -5,7 +5,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
 
@@ -31,7 +31,6 @@
         game.stage.backgroundColor = '#000000';
 
         bg = game.add.tileSprite(0, 0, 800, 600, 'background');
-        bg.scrollFactor.setTo(0, 0);
 
         map = game.add.tilemap(0, 0, 'level1');
         map.setCollisionRange(1, 12, true, true, true, true);
@@ -128,7 +127,7 @@
 
     }
 
-})();
+
 </script>
 
 <?php

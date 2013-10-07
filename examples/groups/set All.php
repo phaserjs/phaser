@@ -6,7 +6,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,render:render});
 
@@ -30,14 +30,14 @@
     }
     function resetAlpha() {
         // Set "alpha" value of all the childs.
-        game.world.group.setAll('alpha', Math.random());
+        game.world.setAll('alpha', Math.random());
     }
     function render() {
 
         game.debug.renderText('Tap or click to set random alpha of all the items.', 240, 480);
     }
 
-})();
+
 
 </script>
 

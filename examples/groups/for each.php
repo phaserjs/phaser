@@ -6,7 +6,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update:update,render : render });
 
@@ -27,7 +27,7 @@
     }
     function update() {
         // Animating alpha property of each item using forEach() method.
-        game.world.group.forEach(function(item) {
+        game.world.forEach(function(item) {
             // Update alpha first.
             item.alpha -= item.alphaIncSpeed;
             // Check for switch between increasing and descreasing.
@@ -41,7 +41,7 @@
         game.debug.renderText('Alpha of items is always changing.', 280, 480);
     }
 
-})();
+
 
 </script>
 
