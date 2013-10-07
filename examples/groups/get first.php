@@ -6,7 +6,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,update:update,render:render});
 
@@ -45,7 +45,7 @@
             timer = game.time.now +cycle;
             
             // Get the first alive item and kill it.
-            var item = game.world.group.getFirstAlive();
+            var item = game.world.getFirstAlive();
 
             if(item){
 
@@ -60,10 +60,10 @@
 
         game.debug.renderText('One item will be killed each second.', 280, 420);
         // Get living and dead number of a group.
-        game.debug.renderText('Living: ' + game.world.group.countLiving() + ', Dead: ' + game.world.group.countDead(), 330, 440);
+        game.debug.renderText('Living: ' + game.world.countLiving() + ', Dead: ' + game.world.countDead(), 330, 440);
     }
 
-})();
+
 
 </script>
 

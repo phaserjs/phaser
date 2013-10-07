@@ -5,9 +5,9 @@
 
 <script type="text/javascript">
 
-(function () {
 
-	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', {create: create });
+
+	var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {create: create });
 
 
 	function create() {
@@ -23,7 +23,7 @@
 
 	}
 
-})();
+
 
 </script>
 

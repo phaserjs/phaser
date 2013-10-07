@@ -5,7 +5,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
 
@@ -23,11 +23,10 @@
     function create() {
 
         //  Make our world big ...
-        game.world.setSize(4000, 2000);
+        game.world.setBounds(4000, 2000);
 
         //  Scrolling background
         s = game.add.tileSprite(0, 0, 800, 600, 'stars');
-        s.scrollFactor.setTo(0, 0);
 
         b = game.add.sprite(200, 200, 'mummy');
         b.anchor.setTo(0.5, 0.5);
@@ -106,7 +105,7 @@
 
     }
 
-})();
+
 </script>
 
 <?php

@@ -33,7 +33,7 @@ MonsterBunny.prototype.update = function() {
 
 };
 
-(function () {
+
 
     var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
 
@@ -52,7 +52,7 @@ MonsterBunny.prototype.update = function() {
 
     }
 
-})();
+
 </script>
 
 <?php

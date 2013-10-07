@@ -5,7 +5,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create });
 
@@ -47,15 +47,9 @@
         list.add(e.input);
         list.add(f.input);
 
-        list.dump();
-
-        // list.remove(d.input);
-
-        // list.dump();
-
     }
 
-})();
+
 
 </script>
 

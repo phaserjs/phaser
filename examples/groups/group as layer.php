@@ -6,12 +6,12 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,render:render});
 
         function preload() {
-        game.world.setSize(1280, 800);
+        game.world.setBounds(1280, 800);
 
         game.load.image('ground', 'assets/tests/ground-2x.png');
         game.load.image('river', 'assets/tests/river-2x.png');
@@ -44,28 +44,22 @@
 
         // Add sky background to skyLayer.
         var sky = new Phaser.Sprite(game, 0, 0, 'sky');
-        sky.scrollFactor.setTo(0, 0);
         skyLayer.add(sky);
 
         // Add clouds to cloudLayer.
         var cloud0 = new Phaser.Sprite(game, 200, 120, 'cloud0');
-        cloud0.scrollFactor.setTo(0.3, 0.1);
         var cloud1 = new Phaser.Sprite(game, -60, 120, 'cloud1');
-        cloud1.scrollFactor.setTo(0.5, 0.1);
         var cloud2 = new Phaser.Sprite(game, 900, 170, 'cloud2');
-        cloud2.scrollFactor.setTo(0.7, 0.1);
         cloudLayer.add(cloud0);
         cloudLayer.add(cloud1);
         cloudLayer.add(cloud2);
 
         // Add ground sprite to groundLayer.
         var ground = new Phaser.Sprite(game, 0, 360, 'ground');
-        ground.scrollFactor.setTo(0.5, 0.1);
         groundLayer.add(ground);
 
         // Add river to riverLayer.
         var river = new Phaser.Sprite(game, 0, 400, 'river');
-        river.scrollFactor.setTo(1.3, 0.16);
         riverLayer.add(river);
 
         // Add sprites to spriteLayer.
@@ -82,7 +76,7 @@
         game.debug.renderText('river layer:  z = 4', 16, 84);
     }
 
-})();
+
 
 </script>
 

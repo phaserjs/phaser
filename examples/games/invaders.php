@@ -5,7 +5,7 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
 
@@ -126,7 +126,7 @@
         game.debug.renderSpriteBounds(s, 'rgba(0,0,255,0.4)', true);
     }
 
-})();
+
 </script>
 
 <?php

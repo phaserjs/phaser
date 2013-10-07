@@ -6,13 +6,13 @@
 
 <script type="text/javascript">
 
-(function () {
+
 
 	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update,render : render });
 
         function preload() {
 
-        game.world.setSize(1920, 1200);
+        game.world.setBounds(1920, 1200);
 
         game.load.image('backdrop', 'assets/pics/remember-me.jpg');
         game.load.image('card', 'assets/sprites/mana_card.png');
@@ -61,7 +61,7 @@
 
     }
 
-})();
+
 
 </script>
 
