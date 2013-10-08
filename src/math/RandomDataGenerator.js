@@ -80,10 +80,12 @@ Phaser.RandomDataGenerator.prototype = {
 		this.s0 = this.hash(' ');
 		this.s1 = this.hash(this.s0);
 		this.s2 = this.hash(this.s1);
+		this.c = 1;
 
 		var seed;
 
-		for (var i = 0; seed = seeds[i++]; ) {
+		for (var i = 0; seed = seeds[i++]; )
+		{
 			this.s0 -= this.hash(seed);
 			this.s0 += ~~(this.s0 < 0);
 			this.s1 -= this.hash(seed);

@@ -30,9 +30,10 @@ window.onload = function () {
 
         for (var i = 0; i < 100; i++)
         {
-            var s = game.add.sprite(game.world.randomX, game.world.randomY, 'mushroom');
-            // console.log(s.x, s.y);
+            game.add.sprite(game.world.randomX, game.world.randomY, 'mushroom');
         }
+
+        game.add.text(600, 800, "- phaser -", { font: "32px Arial", fill: "#330088", align: "center" });
 
         d = game.add.sprite(0, 0, 'phaser');
         d.anchor.setTo(0.5, 0.5);

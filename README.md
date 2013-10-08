@@ -105,6 +105,7 @@ Version 1.0.7 (in progress in the dev branch)
 * ArcadePhysics.moveTowardsMouse changed to ArcadePhysics.moveTowardsPointer and now lets you specify which pointer to move towards (defaults to Input.activePointer).
 * ArcadePhysics.angleBetweenMouse changed to ArcadePhysics.angleBetweenPointer and now lets you specify which pointer to get the angle to (defaults to Input.activePointer).
 * ArcadePhysics.velocityFromAngle and ArcadePhysics.velocityFromRotation added with examples created.
+* Fixed the RandomDataGenerator.sow method so if you give in the same seed you'll now get the same results (thanks Hsaka)
 
 
 * TODO: look at Sprite.crop (http://www.html5gamedevs.com/topic/1617-error-in-spritecrop/)
