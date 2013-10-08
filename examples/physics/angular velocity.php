@@ -39,7 +39,7 @@
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
-            sprite.body.velocity.copyFrom(game.physics.velocityFromAngle(sprite.angle, 300));
+            game.physics.velocityFromAngle(sprite.angle, 300, sprite.body.velocity);
         }
 
 	}

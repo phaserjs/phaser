@@ -97,7 +97,14 @@ Version 1.0.7 (in progress in the dev branch)
 * Moved the Camera update checks to World.postUpdate, so all the sprites get the correct adjusted camera position.
 * Added Sprite.fixedToCamera boolean. A Sprite that is fixed to the camera doesn't move with the world, but has its x/y coordinates relative to the top-left of the camera.
 * Updated InputHandler to use Math.round rather than Math.floor when snapping an object during drag.
-
+* If you didn't provide the useNumericIndex parameter then AnimationManager.add will set the value by looking at the datatype of the first element in the frames array.
+* Added Group.createMultiple - useful when you need to create a Group of identical sprites for pooling, such as bullets.
+* Group.create now sets the visible and alive properties of the Sprite to the same value as the 'exists' parameter.
+* Added Group.total. Same as Group.length, but more in line with the rest of the Group naming.
+* Added Sprite.outOfBoundsKill boolean flag. Will automatically kill a sprite that leaves the game World bounds (off by default).
+* ArcadePhysics.moveTowardsMouse changed to ArcadePhysics.moveTowardsPointer and now lets you specify which pointer to move towards (defaults to Input.activePointer).
+* ArcadePhysics.angleBetweenMouse changed to ArcadePhysics.angleBetweenPointer and now lets you specify which pointer to get the angle to (defaults to Input.activePointer).
+* ArcadePhysics.velocityFromAngle and ArcadePhysics.velocityFromRotation added with examples created.
 
 
 * TODO: look at Sprite.crop (http://www.html5gamedevs.com/topic/1617-error-in-spritecrop/)
@@ -106,6 +113,7 @@ Version 1.0.7 (in progress in the dev branch)
 * TODO: addMarker hh:mm:ss:ms
 * TODO: swap state (non-destructive shift)
 * TODO: rotation offset
+* TODO: check stage bgc on droid (http://www.html5gamedevs.com/topic/1629-stage-background-color-not-working-on-android-chrome/)
 
 
 Version 1.0.6 (September 24th 2013)

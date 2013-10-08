@@ -97,7 +97,19 @@ Phaser.AnimationManager.prototype = {
 		frameRate = frameRate || 60;
 
 		if (typeof loop === 'undefined') { loop = false; }
-		if (typeof useNumericIndex === 'undefined') { useNumericIndex = true; }
+
+		//	If they didn't set the useNumericIndex then let's at least try and guess it
+		if (typeof useNumericIndex === 'undefined')
+		{
+			if (frames[0] && typeof frames[0] === 'number')
+			{
+				useNumericIndex = true;
+			}
+			else
+			{
+				useNumericIndex = false;
+			}
+		}
 
 		//  Create the signals the AnimationManager will emit
 		if (this.sprite.events.onAnimationStart == null)

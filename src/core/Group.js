@@ -16,9 +16,12 @@
 */
 Phaser.Group = function (game, parent, name, useStage) {
 
-	parent = parent || null;
+	if (typeof parent === 'undefined')
+	{
+		parent = game.world;
+	}
 
-	if (typeof useStage == 'undefined')
+	if (typeof useStage === 'undefined')
 	{
 		useStage = false;
 	}
@@ -159,7 +162,7 @@ Phaser.Group.prototype = {
 	* @param {number} y - The y coordinate to display the newly created Sprite at. The value is in relation to the Group.y point.
 	* @param {string} key - The Game.cache key of the image that this Sprite will use.
 	* @param {number|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
-	* @param {boolean} [exists] - The default exists state of the Sprite.
+	* @param {boolean} [exists=true] - The default exists state of the Sprite.
 	* @return {Phaser.Sprite} The child that was created.
 	*/
 	create: function (x, y, key, frame, exists) {
@@ -170,6 +173,8 @@ Phaser.Group.prototype = {
 
 		child.group = this;
 		child.exists = exists;
+		child.visible = exists;
+		child.alive = exists;
 
 		if (child.events)
 		{
@@ -179,6 +184,40 @@ Phaser.Group.prototype = {
 		this._container.addChild(child);
 
 		return child;
+
+	},
+
+    /**
+	* Automatically creates multiple Phaser.Sprite objects and adds them to the top of this Group.
+	* Useful if you need to quickly generate a pool of identical sprites, such as bullets. By default the sprites will be set to not exist
+	* and will be positioned at 0, 0 (relative to the Group.x/y)
+	*
+    * @method Phaser.Group#createMultiple
+	* @param {number} quantity - The number of Sprites to create.
+	* @param {string} key - The Game.cache key of the image that this Sprite will use.
+	* @param {number|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
+	* @param {boolean} [exists=false] - The default exists state of the Sprite.
+	*/
+	createMultiple: function (quantity, key, frame, exists) {
+
+		if (typeof exists == 'undefined') { exists = false; }
+
+		for (var i = 0; i < quantity; i++)
+		{
+			var child = new Phaser.Sprite(this.game, 0, 0, key, frame);
+
+			child.group = this;
+			child.exists = exists;
+			child.visible = exists;
+			child.alive = exists;
+
+			if (child.events)
+			{
+				child.events.onAddedToGroup.dispatch(child, this);
+			}
+
+			this._container.addChild(child);
+		}
 
 	},
 
@@ -1066,6 +1105,19 @@ Phaser.Group.prototype = {
 	}
 
 };
+
+/**
+* @name Phaser.Group#total
+* @property {number} total - The total number of children in this Group, regardless of their alive state.
+* @readonly
+*/
+Object.defineProperty(Phaser.Group.prototype, "total", {
+
+    get: function () {
+        return this._container.children.length;
+    }
+
+});
 
 /**
 * @name Phaser.Group#length

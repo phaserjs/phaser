@@ -283,6 +283,12 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * @default
     */
     this.inWorldThreshold = 0;
+
+    /**
+    * @property {boolean} outOfBoundsKill - Kills this sprite as soon as it goes outside of the World bounds.
+    * @default
+    */
+    this.outOfBoundsKill = false;
     
     /**
     * @property {boolean} _outOfBoundsFired - Description.
@@ -528,6 +534,7 @@ Phaser.Sprite.prototype.reset = function(x, y) {
     this.alive = true;
     this.exists = true;
     this.visible = true;
+    this.renderable = true;
     this._outOfBoundsFired = false;
     this.body.reset();
     
@@ -581,6 +588,11 @@ Phaser.Sprite.prototype.updateBounds = function() {
         {
             this.events.onOutOfBounds.dispatch(this);
             this._outOfBoundsFired = true;
+
+            if (this.outOfBoundsKill)
+            {
+                this.kill();
+            }
         }
     }
 

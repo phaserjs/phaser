@@ -209,7 +209,10 @@ Phaser.FrameData.prototype = {
                 }
                 else
                 {
-                    output.push(this.getFrameByName(frames[i]).index);
+                    if (this.getFrameByName(frames[i]))
+                    {
+                        output.push(this.getFrameByName(frames[i]).index);
+                    }
                 }
             }
         }
