@@ -71,6 +71,9 @@ Phaser.Tilemap = function (game, key, x, y, resizeWorld, tileWidth, tileHeight) 
 	*/
     this.visible = true;
 
+    this.width = 0;
+    this.height = 0;
+
     /**
 	* @property {boolean} tiles - Description.
 	* @default
@@ -86,6 +89,7 @@ Phaser.Tilemap = function (game, key, x, y, resizeWorld, tileWidth, tileHeight) 
     var map = this.game.cache.getTilemap(key);
 
     PIXI.DisplayObjectContainer.call(this);
+
 	/**
 	* @property {Description} position - Description.
 	*/
@@ -101,6 +105,8 @@ Phaser.Tilemap = function (game, key, x, y, resizeWorld, tileWidth, tileHeight) 
 	* @property {Description} renderer - Description.
 	*/
     this.renderer = new Phaser.TilemapRenderer(this.game);
+
+    this.fixedToCamera = true;
 
     /**
 	* @property {Description} mapFormat - Description.
@@ -120,7 +126,7 @@ Phaser.Tilemap = function (game, key, x, y, resizeWorld, tileWidth, tileHeight) 
 
     if (this.currentLayer && resizeWorld)
     {
-        this.game.world.setBounds(0, 0, this.currentLayer.widthInPixels, this.currentLayer.heightInPixels);
+        this.game.world.setBounds(0, 0, this.width, this.heightIn);
     }
 	
 };
@@ -168,6 +174,9 @@ Phaser.Tilemap.prototype.parseCSV = function (data, key, tileWidth, tileHeight) 
     this.currentLayer = layer;
     this.collisionLayer = layer;
     this.layers.push(layer);
+
+    this.width = this.currentLayer.widthInPixels;
+    this.height = this.currentLayer.heightInPixels;
 
     this.generateTiles(tileQuantity);
 
@@ -227,6 +236,16 @@ Phaser.Tilemap.prototype.parseTiledJSON = function (json, key) {
         this.currentLayer = layer;
         this.collisionLayer = layer;
         this.layers.push(layer);
+
+        if (this.currentLayer.widthInPixels > this.width)
+        {
+            this.width = this.currentLayer.widthInPixels;
+        }
+
+        if (this.currentLayer.heightInPixels > this.height)
+        {
+            this.height = this.currentLayer.heightInPixels;
+        }
     }
 
     this.generateTiles(tileQuantity);
@@ -465,6 +484,14 @@ Phaser.Tilemap.prototype.putTile = function (x, y, index, layer) {
 Phaser.Tilemap.prototype.update = function () {
 
     this.renderer.render(this);
+
+    if (this.fixedToCamera)
+    {
+        // this.displayObject.position.x = this.game.camera.view.x + this.x;
+        // this.displayObject.position.y = this.game.camera.view.y + this.y;
+        this.position.x = this.game.camera.view.x + 0;
+        this.position.y = this.game.camera.view.y + 0;
+    }
 
 };
 

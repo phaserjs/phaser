@@ -1,5 +1,5 @@
 <?php
-    $title = "Test Title";
+    $title = "Tilemap Collision";
     require('../head.php');
 ?>
 
@@ -16,6 +16,7 @@
 
     var map;
     var p;
+    var cursors;
 
     function create() {
 
@@ -31,42 +32,51 @@
 
         p = game.add.sprite(32, 32, 'player');
 
+        p.body.gravity.y = 10;
         p.body.bounce.y = 0.4;
         p.body.collideWorldBounds = true;
 
+        game.world.setBounds(0, 0, map.width, 600);
+
         game.camera.follow(p);
+
+        cursors = game.input.keyboard.createCursorKeys();
 
     }
 
     function update() {
 
-        // map.collide(p);
+        map.collide(p);
 
         p.body.velocity.x = 0;
-        // p.body.acceleration.y = 500;
 
-        if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
-        {
-            p.body.velocity.x = -150;
-        }
-        else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
-        {
-            p.body.velocity.x = 150;
-        }
-
-        if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
+        if (cursors.up.isDown)
         {
             if (p.body.touching.down)
             {
-                p.body.velocity.y = -200;
+                p.body.velocity.y = -400;
             }
+        }
+        else if (cursors.down.isDown)
+        {
+            // game.camera.y += 4;
+        }
+
+        if (cursors.left.isDown)
+        {
+            p.body.velocity.x = -150;
+        }
+        else if (cursors.right.isDown)
+        {
+            p.body.velocity.x = 150;
         }
 
     }
 
     function render() {
 
-        game.debug.renderSpriteCorners(p);
+        game.debug.renderCameraInfo(game.camera, 32, 32);
+        // game.debug.renderSpriteCorners(p);
         game.debug.renderSpriteCollision(p, 32, 320);
 
     }

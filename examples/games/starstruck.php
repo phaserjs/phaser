@@ -31,6 +31,7 @@
         game.stage.backgroundColor = '#000000';
 
         bg = game.add.tileSprite(0, 0, 800, 600, 'background');
+        bg.fixedToCamera = true;
 
         map = game.add.tilemap(0, 0, 'level1');
         map.setCollisionRange(1, 12, true, true, true, true);
