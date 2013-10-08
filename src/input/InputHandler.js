@@ -727,8 +727,8 @@ Phaser.InputHandler.prototype = {
 
         if (this.snapOnDrag)
         {
-            this.sprite.x = Math.floor(this.sprite.x / this.snapX) * this.snapX;
-            this.sprite.y = Math.floor(this.sprite.y / this.snapY) * this.snapY;
+            this.sprite.x = Math.round(this.sprite.x / this.snapX) * this.snapX;
+            this.sprite.y = Math.round(this.sprite.y / this.snapY) * this.snapY;
         }
 
         return true;
@@ -941,8 +941,8 @@ Phaser.InputHandler.prototype = {
         
         if (this.snapOnRelease)
         {
-            this.sprite.x = Math.floor(this.sprite.x / this.snapX) * this.snapX;
-            this.sprite.y = Math.floor(this.sprite.y / this.snapY) * this.snapY;
+            this.sprite.x = Math.round(this.sprite.x / this.snapX) * this.snapX;
+            this.sprite.y = Math.round(this.sprite.y / this.snapY) * this.snapY;
         }
 
         this.sprite.events.onDragStop.dispatch(this.sprite, pointer);

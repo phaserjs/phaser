@@ -1,5 +1,5 @@
 <?php
-    $title = "Test Title";
+    $title = "Snap on Drag Example";
     require('../head.php');
 ?>
 

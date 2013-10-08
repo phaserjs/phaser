@@ -1,7 +1,7 @@
 <?php
     function dirToArray($dir) { 
 
-        $ignore = array('.', '..', 'Tests.csproj', 'Tests.csproj.user', 'bin', 'index.php', 'phaser.css', 'obj', 'assets', 'states', 'Phaser Tests.sublime-project');
+        $ignore = array('.', '..', 'Tests.csproj', 'Tests.csproj.user', 'bin', 'html', 'index.php', 'phaser.css', 'obj', 'assets', 'states', 'Phaser Tests.sublime-project');
         $result = array(); 
         $root = scandir($dir); 
         $dirs = array_diff($root, $ignore);

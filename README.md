@@ -96,6 +96,8 @@ Version 1.0.7 (in progress in the dev branch)
 * Re-implemented Angular Velocity and Angular Acceleration on the Sprite.body and created 2 new examples to show use.
 * Moved the Camera update checks to World.postUpdate, so all the sprites get the correct adjusted camera position.
 * Added Sprite.fixedToCamera boolean. A Sprite that is fixed to the camera doesn't move with the world, but has its x/y coordinates relative to the top-left of the camera.
+* Updated InputHandler to use Math.round rather than Math.floor when snapping an object during drag.
+
 
 
 * TODO: look at Sprite.crop (http://www.html5gamedevs.com/topic/1617-error-in-spritecrop/)
