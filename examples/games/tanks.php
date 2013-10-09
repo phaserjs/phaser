@@ -90,7 +90,7 @@
 		game.load.atlas('enemy', 'assets/games/tanks/enemy-tanks.png', 'assets/games/tanks/tanks.json');
 		game.load.image('bullet', 'assets/games/tanks/bullet.png');
 		game.load.image('earth', 'assets/games/tanks/scorched_earth.png');
-		game.load.spritesheet('explosion', 'assets/games/tanks/explosion.png', 64, 64, 23);
+		game.load.spritesheet('kaboom', 'assets/games/tanks/explosion.png', 64, 64, 23);
 		
 	}
 
@@ -166,8 +166,9 @@
 
 		for (var i = 0; i < 10; i++)
 		{
-			var e = explosions.create(0, 0, 'explosion', 0, false);
-			e.animations.add('boom');
+			var explosionAnimation = explosions.create(0, 0, 'kaboom', [0], false);
+			explosionAnimation.anchor.setTo(0.5, 0.5);
+			explosionAnimation.animations.add('kaboom');
 		}
 
 		tank.bringToTop();
@@ -258,9 +259,9 @@
 
 		if (destroyed)
 		{
-			var e = explosions.getFirstDead();
-			e.reset(tank.x, tank.y);
-			e.play('boom');
+			var explosionAnimation = explosions.getFirstDead();
+			explosionAnimation.reset(tank.x, tank.y);
+			explosionAnimation.play('kaboom', 30, false, true);
 		}
 
 	}

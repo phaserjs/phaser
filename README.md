@@ -111,6 +111,8 @@ Version 1.0.7 (in progress in the dev branch)
 * velocityFromAngle and velocityFromRotation added with examples created.
 * Fixed the RandomDataGenerator.sow method so if you give in the same seed you'll now get the same results (thanks Hsaka)
 * World.randomX/Y now works with negative World.bounds values.
+* Added killOnComplete parameter to Animation.play. Really useful in situations where you want a Sprite to animate once then kill itself on complete, like an explosion effect.
+
 
 
 * TODO: look at Sprite.crop (http://www.html5gamedevs.com/topic/1617-error-in-spritecrop/)

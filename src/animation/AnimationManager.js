@@ -101,7 +101,7 @@ Phaser.AnimationManager.prototype = {
 		//	If they didn't set the useNumericIndex then let's at least try and guess it
 		if (typeof useNumericIndex === 'undefined')
 		{
-			if (frames[0] && typeof frames[0] === 'number')
+			if (frames && frames[0] && typeof frames[0] === 'number')
 			{
 				useNumericIndex = true;
 			}
@@ -173,10 +173,11 @@ Phaser.AnimationManager.prototype = {
 	* @method Phaser.AnimationManager#play
 	* @param {string} name - The name of the animation to be played, e.g. "fire", "walk", "jump".
     * @param {number} [frameRate=null] - The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
-    * @param {boolean} [loop=null] - Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
+    * @param {boolean} [loop=false] - Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
+    * @param {boolean} [killOnComplete=false] - If set to true when the animation completes (only happens if loop=false) the parent Sprite will be killed.
     * @return {Phaser.Animation} A reference to playing Animation instance.
 	*/
-	play: function (name, frameRate, loop) {
+	play: function (name, frameRate, loop, killOnComplete) {
 
 		if (this._anims[name])
 		{
@@ -184,13 +185,13 @@ Phaser.AnimationManager.prototype = {
 			{
 				if (this.currentAnim.isPlaying == false)
 				{
-					return this.currentAnim.play(frameRate, loop);
+					return this.currentAnim.play(frameRate, loop, killOnComplete);
 				}
 			}
 			else
 			{
 				this.currentAnim = this._anims[name];
-				return this.currentAnim.play(frameRate, loop);
+				return this.currentAnim.play(frameRate, loop, killOnComplete);
 			}
 		}
 

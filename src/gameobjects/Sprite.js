@@ -659,14 +659,15 @@ Phaser.Sprite.prototype.bringToTop = function() {
 * @method play
 * @param {String} name The name of the animation to be played, e.g. "fire", "walk", "jump".
 * @param {number} [frameRate=null] The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
-* @param {Boolean} [loop=null] Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
+* @param {boolean} [loop=false] Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
+* @param {boolean} [killOnComplete=false] - If set to true when the animation completes (only happens if loop=false) the parent Sprite will be killed.
 * @return {Phaser.Animation} A reference to playing Animation instance.
 */
-Phaser.Sprite.prototype.play = function (name, frameRate, loop) {
+Phaser.Sprite.prototype.play = function (name, frameRate, loop, killOnComplete) {
 
     if (this.animations)
     {
-        this.animations.play(name, frameRate, loop);
+        this.animations.play(name, frameRate, loop, killOnComplete);
     }
 
 }

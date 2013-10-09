@@ -60,6 +60,11 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
 	this.looped = looped;
 
     /**
+    * @property {boolean} looped - The loop state of the Animation.
+    */
+    this.killOnComplete = false;
+
+    /**
     * @property {boolean} isFinished - The finished state of the Animation. Set to true once playback completes, false during playback.
     * @default
     */
@@ -120,10 +125,11 @@ Phaser.Animation.prototype = {
     * @method Phaser.Animation#play
     * @memberof Phaser.Animation
     * @param {number} [frameRate=null] - The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
-    * @param {boolean} [loop=null] - Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
+    * @param {boolean} [loop=false] - Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
+    * @param {boolean} [killOnComplete=false] - If set to true when the animation completes (only happens if loop=false) the parent Sprite will be killed.
     * @return {Phaser.Animation} - A reference to this Animation instance.
     */
-    play: function (frameRate, loop) {
+    play: function (frameRate, loop, killOnComplete) {
 
         if (typeof frameRate === 'number')
         {
@@ -135,6 +141,12 @@ Phaser.Animation.prototype = {
         {
             //  If they set a new loop value then use it, otherwise use the one set on creation
             this.looped = loop;
+        }
+
+        if (typeof killOnComplete !== 'undefined')
+        {
+            //  Remove the parent sprite once the animation has finished?
+            this.killOnComplete = killOnComplete;
         }
 
         this.isPlaying = true;
@@ -296,6 +308,11 @@ Phaser.Animation.prototype = {
         if (this._parent.events)
         {
             this._parent.events.onAnimationComplete.dispatch(this._parent, this);
+        }
+
+        if (this.killOnComplete)
+        {
+            this._parent.kill();
         }
 
     }
