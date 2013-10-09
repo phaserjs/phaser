@@ -223,7 +223,16 @@ Object.defineProperty(Phaser.World.prototype, "centerY", {
 Object.defineProperty(Phaser.World.prototype, "randomX", {
 
     get: function () {
-        return this.game.rnd.integerInRange(this.bounds.x, this.bounds.width);
+
+        if (this.bounds.x < 0)
+        {
+            return this.game.rnd.integerInRange(this.bounds.x, (this.bounds.width - Math.abs(this.bounds.x)));
+        }
+        else
+        {
+            return this.game.rnd.integerInRange(this.bounds.x, this.bounds.width);
+        }
+
     }
 
 });
@@ -236,7 +245,16 @@ Object.defineProperty(Phaser.World.prototype, "randomX", {
 Object.defineProperty(Phaser.World.prototype, "randomY", {
 
     get: function () {
-        return this.game.rnd.integerInRange(this.bounds.y, this.bounds.height);
+
+        if (this.bounds.y < 0)
+        {
+            return this.game.rnd.integerInRange(this.bounds.y, (this.bounds.height - Math.abs(this.bounds.y)));
+        }
+        else
+        {
+            return this.game.rnd.integerInRange(this.bounds.y, this.bounds.height);
+        }
+
     }
 
 });

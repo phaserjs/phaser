@@ -110,6 +110,8 @@ Version 1.0.7 (in progress in the dev branch)
 * New angle functions: angleBetween, angleToXY, angleToPointer
 * velocityFromAngle and velocityFromRotation added with examples created.
 * Fixed the RandomDataGenerator.sow method so if you give in the same seed you'll now get the same results (thanks Hsaka)
+* World.randomX/Y now works with negative World.bounds values.
+
 
 * TODO: look at Sprite.crop (http://www.html5gamedevs.com/topic/1617-error-in-spritecrop/)
 * TODO: d-pad example (http://www.html5gamedevs.com/topic/1574-gameinputondown-question/)

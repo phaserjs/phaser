@@ -171,9 +171,6 @@ Phaser.RandomDataGenerator.prototype = {
 	*/
 	realInRange: function (min, max) {
 
-		min = min || 0;
-		max = max || 0;
-
 		return this.frac() * (max - min) + min;
 
 	},

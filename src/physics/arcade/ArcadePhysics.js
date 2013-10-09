@@ -984,7 +984,7 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-    * Move the given display object towards the pointer at a steady velocity. If no pointer is given it will use Phaser.Input.activePointer.
+    * Move the given display object towards the destination object at a steady velocity.
     * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.
     * Timings are approximate due to the way browser timers work. Allow for a variance of +- 50ms.
     * Note: The display object does not continuously track the target. If the target changes location during transit the display object will not modify its course.
@@ -1003,7 +1003,7 @@ Phaser.Physics.Arcade.prototype = {
         speed = speed || 60;
         maxTime = maxTime || 0;
 
-        this._angle = Math.atan2(destination.y - displayObject.y, destination.x - displaxObject.x);
+        this._angle = Math.atan2(destination.y - displayObject.y, destination.x - displayObject.x);
         
         if (maxTime > 0)
         {
