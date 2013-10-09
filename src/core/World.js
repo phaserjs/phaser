@@ -125,7 +125,9 @@ Phaser.World.prototype.postUpdate = function () {
 /**
 * Updates the size of this world. Note that this doesn't modify the world x/y coordinates, just the width and height.
 * If you need to adjust the bounds of the world
-* @method Phaser.World#setSize
+* @method Phaser.World#setBounds
+* @param {number} x - Top left most corner of the world.
+* @param {number} y - Top left most corner of the world.
 * @param {number} width - New width of the world.
 * @param {number} height - New height of the world.
 */

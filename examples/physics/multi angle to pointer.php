@@ -5,7 +5,7 @@
 
 <script type="text/javascript">
 
-	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
+	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update });
 
 	function preload() {
 		game.load.image('arrow', 'assets/sprites/longarrow.png');
@@ -39,16 +39,10 @@
 		//	This will update the sprite.rotation so that it points to the currently active pointer
 		//	On a Desktop that is the mouse, on mobile the most recent finger press.
 
-		sprite1.rotation = game.physics.angleBetweenPointer(sprite1);
-		sprite2.rotation = game.physics.angleBetweenPointer(sprite2);
-		sprite3.rotation = game.physics.angleBetweenPointer(sprite3);
-		sprite4.rotation = game.physics.angleBetweenPointer(sprite4);
-
-	}
-
-	function render() {
-
-        // game.debug.renderSpriteInfo(sprite1, 32, 32);
+		sprite1.rotation = game.physics.angleToPointer(sprite1);
+		sprite2.rotation = game.physics.angleToPointer(sprite2);
+		sprite3.rotation = game.physics.angleToPointer(sprite3);
+		sprite4.rotation = game.physics.angleToPointer(sprite4);
 
 	}
 

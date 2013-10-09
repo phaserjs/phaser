@@ -1,44 +1,46 @@
 Phaser.Physics = {};
 
 Phaser.Physics.Arcade = function (game) {
-	
-	this.game = game;
+    
+    this.game = game;
 
-	this.gravity = new Phaser.Point;
-	this.bounds = new Phaser.Rectangle(0, 0, game.world.width, game.world.height);
+    this.gravity = new Phaser.Point;
+    this.bounds = new Phaser.Rectangle(0, 0, game.world.width, game.world.height);
 
-	/**
-	* Used by the QuadTree to set the maximum number of objects
-	* @type {number}
-	*/
-	this.maxObjects = 10;
+    /**
+    * Used by the QuadTree to set the maximum number of objects
+    * @type {number}
+    */
+    this.maxObjects = 10;
 
-	/**
-	* Used by the QuadTree to set the maximum number of levels
-	* @type {number}
-	*/
-	this.maxLevels = 4;
+    /**
+    * Used by the QuadTree to set the maximum number of levels
+    * @type {number}
+    */
+    this.maxLevels = 4;
 
-	this.OVERLAP_BIAS = 4;
-	this.TILE_OVERLAP = false;
+    this.OVERLAP_BIAS = 4;
+    this.TILE_OVERLAP = false;
 
     this.quadTree = new Phaser.QuadTree(this, this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
-	this.quadTreeID = 0;
+    this.quadTreeID = 0;
 
-	//	Avoid gc spikes by caching these values for re-use
-	this._bounds1 = new Phaser.Rectangle;
-	this._bounds2 = new Phaser.Rectangle;
-	this._overlap = 0;
-	this._maxOverlap = 0;
-	this._velocity1 = 0;
-	this._velocity2 = 0;
-	this._newVelocity1 = 0;
-	this._newVelocity2 = 0;
-	this._average = 0;
+    //  Avoid gc spikes by caching these values for re-use
+    this._bounds1 = new Phaser.Rectangle;
+    this._bounds2 = new Phaser.Rectangle;
+    this._overlap = 0;
+    this._maxOverlap = 0;
+    this._velocity1 = 0;
+    this._velocity2 = 0;
+    this._newVelocity1 = 0;
+    this._newVelocity2 = 0;
+    this._average = 0;
     this._mapData = [];
     this._result = false;
     this._total = 0;
     this._angle = 0;
+    this._dx = 0;
+    this._dy = 0;
 
 };
 
@@ -48,19 +50,19 @@ Phaser.Physics.Arcade.prototype = {
 
         //  If you're wondering why the velocity is halved and applied twice, read this: http://www.niksula.hut.fi/~hkankaan/Homepages/gravity.html
 
-    	//	Rotation
+        //  Rotation
         this._velocityDelta = (this.computeVelocity(0, body, body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity) / 2;
         body.angularVelocity += this._velocityDelta;
         body.rotation += (body.angularVelocity * this.game.time.physicsElapsed);
         body.angularVelocity += this._velocityDelta;
 
-    	//	Horizontal
+        //  Horizontal
         this._velocityDelta = (this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x) - body.velocity.x) / 2;
         body.velocity.x += this._velocityDelta;
         body.x += (body.velocity.x * this.game.time.physicsElapsed);
         body.velocity.x += this._velocityDelta;
 
-    	//	Vertical
+        //  Vertical
         this._velocityDelta = (this.computeVelocity(2, body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y) - body.velocity.y) / 2;
         body.velocity.y += this._velocityDelta;
         body.y += (body.velocity.y * this.game.time.physicsElapsed);
@@ -68,7 +70,7 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
-	/**
+    /**
     * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
     *
     * @param {number} Velocity Any component of velocity (e.g. 20).
@@ -80,15 +82,15 @@ Phaser.Physics.Arcade.prototype = {
     */
     computeVelocity: function (axis, body, velocity, acceleration, drag, max) {
 
-    	max = max || 10000;
+        max = max || 10000;
 
-    	if (axis == 1 && body.allowGravity)
+        if (axis == 1 && body.allowGravity)
         {
-        	velocity += this.gravity.x + body.gravity.x;
+            velocity += this.gravity.x + body.gravity.x;
         }
-    	else if (axis == 2 && body.allowGravity)
+        else if (axis == 2 && body.allowGravity)
         {
-        	velocity += this.gravity.y + body.gravity.y;
+            velocity += this.gravity.y + body.gravity.y;
         }
 
         if (acceleration !== 0)
@@ -131,16 +133,16 @@ Phaser.Physics.Arcade.prototype = {
         //  Clear the tree
         this.quadTree.clear();
 
-    	//	Create our tree which all of the Physics bodies will add themselves to
+        //  Create our tree which all of the Physics bodies will add themselves to
         this.quadTreeID = 0;
-    	this.quadTree = new Phaser.QuadTree(this, this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
+        this.quadTree = new Phaser.QuadTree(this, this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
 
     },
 
     postUpdate: function () {
 
-    	//	Clear the tree ready for the next update
-    	this.quadTree.clear();
+        //  Clear the tree ready for the next update
+        this.quadTree.clear();
 
     },
 
@@ -386,7 +388,7 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
-	 /**
+     /**
      * The core separation function to separate two physics bodies.
      * @param body1 The first Sprite.Body to separate
      * @param body2 The second Sprite.Body to separate
@@ -985,17 +987,18 @@ Phaser.Physics.Arcade.prototype = {
     * Move the given display object towards the pointer at a steady velocity. If no pointer is given it will use Phaser.Input.activePointer.
     * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.
     * Timings are approximate due to the way browser timers work. Allow for a variance of +- 50ms.
+    * Note: The display object does not continuously track the target. If the target changes location during transit the display object will not modify its course.
     * Note: The display object doesn't stop moving once it reaches the destination coordinates.
     * Note: Doesn't take into account acceleration, maxVelocity or drag (if you've set drag or acceleration too high this object may not move at all)
     * 
-    * @method Phaser.Physics.Arcade#moveTowardsObject
+    * @method Phaser.Physics.Arcade#moveToObject
     * @param {any} displayObject - The display object to move.
     * @param {any} destination - The display object to move towards. Can be any object but must have visible x/y properties.
     * @param {number} [speed=60] - The speed it will move, in pixels per second (default is 60 pixels/sec)
     * @param {number} [maxTime=0] - Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the object will arrive at destination in the given number of ms.
     * @return {number} The angle (in radians) that the object should be visually set to in order to match its new velocity.
     */
-    moveTowardsObject: function (displayObject, destination, speed, maxTime) {
+    moveToObject: function (displayObject, destination, speed, maxTime) {
 
         speed = speed || 60;
         maxTime = maxTime || 0;
@@ -1005,7 +1008,7 @@ Phaser.Physics.Arcade.prototype = {
         if (maxTime > 0)
         {
             //  We know how many pixels we need to move, but how fast?
-            speed = this.distanceToMouse(displayObject) / (maxTime / 1000);
+            speed = this.distanceBetween(displayObject, destination) / (maxTime / 1000);
         }
         
         displayObject.body.velocity.x = Math.cos(this._angle) * speed;
@@ -1019,27 +1022,28 @@ Phaser.Physics.Arcade.prototype = {
     * Move the given display object towards the pointer at a steady velocity. If no pointer is given it will use Phaser.Input.activePointer.
     * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.
     * Timings are approximate due to the way browser timers work. Allow for a variance of +- 50ms.
+    * Note: The display object does not continuously track the target. If the target changes location during transit the display object will not modify its course.
     * Note: The display object doesn't stop moving once it reaches the destination coordinates.
     * 
-    * @method Phaser.Physics.Arcade#moveTowardsPointer
+    * @method Phaser.Physics.Arcade#moveToPointer
     * @param {any} displayObject - The display object to move.
     * @param {number} [speed=60] - The speed it will move, in pixels per second (default is 60 pixels/sec)
     * @param {Phaser.Pointer} [pointer] - The pointer to move towards. Defaults to Phaser.Input.activePointer.
     * @param {number} [maxTime=0] - Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the object will arrive at destination in the given number of ms.
     * @return {number} The angle (in radians) that the object should be visually set to in order to match its new velocity.
     */
-    moveTowardsPointer: function (displayObject, speed, pointer, maxTime) {
+    moveToPointer: function (displayObject, speed, pointer, maxTime) {
 
         speed = speed || 60;
         pointer = pointer || this.game.input.activePointer;
         maxTime = maxTime || 0;
 
-        this._angle = this.angleBetweenPointer(displayObject, pointer);
+        this._angle = this.angleToPointer(displayObject, pointer);
         
         if (maxTime > 0)
         {
             //  We know how many pixels we need to move, but how fast?
-            speed = this.distanceToMouse(displayObject) / (maxTime / 1000);
+            speed = this.distanceToPointer(displayObject, pointer) / (maxTime / 1000);
         }
         
         displayObject.body.velocity.x = Math.cos(this._angle) * speed;
@@ -1050,30 +1054,32 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-    * Move the given display object towards the pointer at a steady velocity. If no pointer is given it will use Phaser.Input.activePointer.
+    * Move the given display object towards the x/y coordinates at a steady velocity.
     * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.
     * Timings are approximate due to the way browser timers work. Allow for a variance of +- 50ms.
+    * Note: The display object does not continuously track the target. If the target changes location during transit the display object will not modify its course.
     * Note: The display object doesn't stop moving once it reaches the destination coordinates.
     * Note: Doesn't take into account acceleration, maxVelocity or drag (if you've set drag or acceleration too high this object may not move at all)
     * 
-    * @method Phaser.Physics.Arcade#moveTowardsObject
+    * @method Phaser.Physics.Arcade#moveToXY
     * @param {any} displayObject - The display object to move.
-    * @param {any} destination - The display object to move towards. Can be any object but must have visible x/y properties.
+    * @param {number} x - The x coordinate to move towards.
+    * @param {number} y - The y coordinate to move towards.
     * @param {number} [speed=60] - The speed it will move, in pixels per second (default is 60 pixels/sec)
     * @param {number} [maxTime=0] - Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the object will arrive at destination in the given number of ms.
     * @return {number} The angle (in radians) that the object should be visually set to in order to match its new velocity.
     */
-    moveTowardsXY: function (displayObject, x, y, speed, maxTime) {
+    moveToXY: function (displayObject, x, y, speed, maxTime) {
 
         speed = speed || 60;
         maxTime = maxTime || 0;
 
-        this._angle = this.angleBetweenPointer(displayObject, destination);
+        this._angle = Math.atan2(y - displayObject.y, x - displayObject.x);
         
         if (maxTime > 0)
         {
             //  We know how many pixels we need to move, but how fast?
-            speed = this.distanceToMouse(displayObject) / (maxTime / 1000);
+            speed = this.distanceToXY(displayObject, x, y) / (maxTime / 1000);
         }
         
         displayObject.body.velocity.x = Math.cos(this._angle) * speed;
@@ -1121,248 +1127,223 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
-
     /**
-     * Sets the x/y acceleration on the source Sprite so it will move towards the destination Sprite at the speed given (in pixels per second)<br>
-     * You must give a maximum speed value, beyond which the Sprite won't go any faster.<br>
-     * If you don't need acceleration look at moveTowardsObject() instead.
-     * 
-     * @param   source          The Sprite on which the acceleration will be set
-     * @param   dest            The Sprite where the source object will move towards
-     * @param   speed           The speed it will accelerate in pixels per second
-     * @param   xSpeedMax       The maximum speed in pixels per second in which the sprite can move horizontally
-     * @param   ySpeedMax       The maximum speed in pixels per second in which the sprite can move vertically
-     */
-    accelerateTowardsObject: function (source, dest, speed, xSpeedMax, ySpeedMax) {
+    * Given the rotation (in radians) and speed calculate the acceleration and return it as a Point object, or set it to the given point object.
+    * One way to use this is: velocityFromRotation(rotation, 200, sprite.velocity) which will set the values directly to the sprites velocity and not create a new Point object.
+    * 
+    * @method Phaser.Physics.Arcade#accelerationFromRotation
+    * @param {number} rotation - The angle in radians.
+    * @param {number} [speed=60] - The speed it will move, in pixels per second sq.
+    * @param {Phaser.Point|object} [point] - The Point object in which the x and y properties will be set to the calculated acceleration.
+    * @return {Phaser.Point} - A Point where point.x contains the acceleration x value and point.y contains the acceleration y value.
+    */
+    accelerationFromRotation: function (rotation, speed, point) {
 
-        xSpeedMax = xSpeedMax || 1000;
-        ySpeedMax = ySpeedMax || 1000;
+        speed = speed || 60;
+        point = point || new Phaser.Point;
 
-        var a = this.angleBetween(source, dest);
-        
-        source.body.velocity.x = 0;
-        source.body.velocity.y = 0;
-        
-        source.body.acceleration.x = Math.cos(a) * speed;
-        source.body.acceleration.y = Math.sin(a) * speed;
-        
-        source.body.maxVelocity.x = xSpeedMax;
-        source.body.maxVelocity.y = ySpeedMax;
-
-    },
-
-
-    /**
-     * Sets the x/y acceleration on the source Sprite so it will move towards the mouse coordinates at the speed given (in pixels per second)<br>
-     * You must give a maximum speed value, beyond which the Sprite won't go any faster.<br>
-     * If you don't need acceleration look at moveTowardsMouse() instead.
-     * 
-     * @param   source          The Sprite on which the acceleration will be set
-     * @param   speed           The speed it will accelerate in pixels per second
-     * @param   xSpeedMax       The maximum speed in pixels per second in which the sprite can move horizontally
-     * @param   ySpeedMax       The maximum speed in pixels per second in which the sprite can move vertically
-     */
-    accelerateTowardsMouse: function (source, speed, xSpeedMax, ySpeedMax) {
-
-        xSpeedMax = xSpeedMax || 1000;
-        ySpeedMax = ySpeedMax || 1000;
-
-        var a = this.angleBetweenMouse(source, true);
-        
-        source.body.velocity.x = 0;
-        source.body.velocity.y = 0;
-        
-        source.body.acceleration.x = Math.cos(a) * speed;
-        source.body.acceleration.y = Math.sin(a) * speed;
-        
-        source.body.maxVelocity.x = xSpeedMax;
-        source.body.maxVelocity.y = ySpeedMax;
-
-    },
-
-
-    /**
-     * Sets the x/y acceleration on the source Sprite so it will move towards the target coordinates at the speed given (in pixels per second)<br>
-     * You must give a maximum speed value, beyond which the Sprite won't go any faster.<br>
-     * If you don't need acceleration look at moveTowardsPoint() instead.
-     * 
-     * @param   source          The Sprite on which the acceleration will be set
-     * @param   target          The Point coordinates to move the source Sprite towards
-     * @param   speed           The speed it will accelerate in pixels per second
-     * @param   xSpeedMax       The maximum speed in pixels per second in which the sprite can move horizontally
-     * @param   ySpeedMax       The maximum speed in pixels per second in which the sprite can move vertically
-     */
-    accelerateTowardsPoint: function (source, target, speed, xSpeedMax, ySpeedMax) {
-
-        xSpeedMax = xSpeedMax || 1000;
-        ySpeedMax = ySpeedMax || 1000;
-
-        var a = this.angleBetweenPoint(source, target);
-        
-        source.body.velocity.x = 0;
-        source.body.velocity.y = 0;
-        
-        source.body.acceleration.x = Math.cos(a) * speed;
-        source.body.acceleration.y = Math.sin(a) * speed;
-        
-        source.body.maxVelocity.x = xSpeedMax;
-        source.body.maxVelocity.y = ySpeedMax;
+        return point.setTo((Math.cos(rotation) * speed), (Math.sin(rotation) * speed));
 
     },
 
     /**
-     * Find the distance (in pixels, rounded) between two Sprites, taking their origin into account
-     * 
-     * @param   a   The first Sprite
-     * @param   b   The second Sprite
-     * @return  int Distance (in pixels)
-     */
-    distanceBetween: function (a, b) {
+    * Sets the acceleration.x/y property on the display object so it will move towards the target at the given speed (in pixels per second sq.)
+    * You must give a maximum speed value, beyond which the display object won't go any faster.
+    * Note: The display object does not continuously track the target. If the target changes location during transit the display object will not modify its course.
+    * Note: The display object doesn't stop moving once it reaches the destination coordinates.
+    * 
+    * @method Phaser.Physics.Arcade#accelerateToObject
+    * @param {any} displayObject - The display object to move.
+    * @param {any} destination - The display object to move towards. Can be any object but must have visible x/y properties.
+    * @param {number} [speed=60] - The speed it will accelerate in pixels per second.
+    * @param {number} [xSpeedMax=500] - The maximum x velocity the display object can reach.
+    * @param {number} [ySpeedMax=500] - The maximum y velocity the display object can reach.
+    * @return {number} The angle (in radians) that the object should be visually set to in order to match its new trajectory.
+    */
+    accelerateToObject: function (displayObject, destination, speed, xSpeedMax, ySpeedMax) {
 
-        var dx = a.center.x - b.center.x;
-        var dy = a.center.y - b.center.y;
-        
-        return Math.sqrt(dx * dx + dy * dy);
+        if (typeof speed === 'undefined') { speed = 60; }
+        if (typeof xSpeedMax === 'undefined') { xSpeedMax = 1000; }
+        if (typeof ySpeedMax === 'undefined') { ySpeedMax = 1000; }
 
-    },
+        this._angle = this.angleBetween(displayObject, destination);
 
-    /**
-     * Find the distance (in pixels, rounded) from an Sprite to the given Point, taking the source origin into account
-     * 
-     * @param   a       The Sprite
-     * @param   target  The Point
-     * @return  int     Distance (in pixels)
-     */
-    distanceToPoint: function (a, target) {
+        displayObject.body.acceleration.setTo(Math.cos(this._angle) * speed, Math.sin(this._angle) * speed);
+        displayObject.body.maxVelocity.setTo(xSpeedMax, ySpeedMax);
 
-        var dx = a.center.x - target.x;
-        var dy = a.center.y - target.y;
-        
-        return Math.sqrt(dx * dx + dy * dy);
+        return this._angle;
 
     },
 
     /**
-     * Find the distance (in pixels, rounded) from the object x/y and the mouse x/y
-     * 
-     * @param   a   The Sprite to test against
-     * @return  int The distance between the given sprite and the mouse coordinates
-     */
-    distanceToMouse: function (a) {
+    * Sets the acceleration.x/y property on the display object so it will move towards the target at the given speed (in pixels per second sq.)
+    * You must give a maximum speed value, beyond which the display object won't go any faster.
+    * Note: The display object does not continuously track the target. If the target changes location during transit the display object will not modify its course.
+    * Note: The display object doesn't stop moving once it reaches the destination coordinates.
+    * 
+    * @method Phaser.Physics.Arcade#accelerateToPointer
+    * @param {any} displayObject - The display object to move.
+    * @param {Phaser.Pointer} [pointer] - The pointer to move towards. Defaults to Phaser.Input.activePointer.
+    * @param {number} [speed=60] - The speed it will accelerate in pixels per second.
+    * @param {number} [xSpeedMax=500] - The maximum x velocity the display object can reach.
+    * @param {number} [ySpeedMax=500] - The maximum y velocity the display object can reach.
+    * @return {number} The angle (in radians) that the object should be visually set to in order to match its new trajectory.
+    */
+    accelerateToPointer: function (displayObject, pointer, speed, xSpeedMax, ySpeedMax) {
 
-        var dx = a.center.x - this.game.input.x;
-        var dy = a.center.y - this.game.input.y;
+        if (typeof speed === 'undefined') { speed = 60; }
+        if (typeof pointer === 'undefined') { pointer = this.game.input.activePointer; }
+        if (typeof xSpeedMax === 'undefined') { xSpeedMax = 1000; }
+        if (typeof ySpeedMax === 'undefined') { ySpeedMax = 1000; }
+
+        this._angle = this.angleToPointer(displayObject, pointer);
         
-        return Math.sqrt(dx * dx + dy * dy);
+        displayObject.body.acceleration.setTo(Math.cos(this._angle) * speed, Math.sin(this._angle) * speed);
+        displayObject.body.maxVelocity.setTo(xSpeedMax, ySpeedMax);
+
+        return this._angle;
 
     },
 
     /**
-     * Find the angle (in radians) between an Sprite and an Point. The source sprite takes its x/y and origin into account.
-     * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
-     * 
-     * @param   a           The Sprite to test from
-     * @param   target      The Point to angle the Sprite towards
-     * @param   asDegrees   If you need the value in degrees instead of radians, set to true
-     * 
-     * @return  Number The angle (in radians unless asDegrees is true)
-     */
-    angleBetweenPoint: function (a, target, asDegrees) {
+    * Sets the acceleration.x/y property on the display object so it will move towards the x/y coordinates at the given speed (in pixels per second sq.)
+    * You must give a maximum speed value, beyond which the display object won't go any faster.
+    * Note: The display object does not continuously track the target. If the target changes location during transit the display object will not modify its course.
+    * Note: The display object doesn't stop moving once it reaches the destination coordinates.
+    * 
+    * @method Phaser.Physics.Arcade#accelerateToXY
+    * @param {any} displayObject - The display object to move.
+    * @param {number} x - The x coordinate to accelerate towards.
+    * @param {number} y - The y coordinate to accelerate towards.
+    * @param {number} [speed=60] - The speed it will accelerate in pixels per second.
+    * @param {number} [xSpeedMax=500] - The maximum x velocity the display object can reach.
+    * @param {number} [ySpeedMax=500] - The maximum y velocity the display object can reach.
+    * @return {number} The angle (in radians) that the object should be visually set to in order to match its new trajectory.
+    */
+    accelerateToXY: function (displayObject, x, y, speed, xSpeedMax, ySpeedMax) {
 
-        asDegrees = asDegrees || false;
+        if (typeof speed === 'undefined') { speed = 60; }
+        if (typeof xSpeedMax === 'undefined') { xSpeedMax = 1000; }
+        if (typeof ySpeedMax === 'undefined') { ySpeedMax = 1000; }
 
-        var dx = target.x - a.center.x;
-        var dy = target.y - a.center.y;
-        
-        if (asDegrees)
-        {
-            return this.game.math.radToDeg(Math.atan2(dy, dx));
-        }
-        else
-        {
-            return Math.atan2(dy, dx);
-        }
+        this._angle = this.angleToXY(displayObject, x, y);
 
-    },
+        displayObject.body.acceleration.setTo(Math.cos(this._angle) * speed, Math.sin(this._angle) * speed);
+        displayObject.body.maxVelocity.setTo(xSpeedMax, ySpeedMax);
 
-    /**
-     * Find the angle (in radians) between the two Sprite, taking their x/y and origin into account.
-     * The angle is calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
-     * 
-     * @param   a           The Sprite to test from
-     * @param   b           The Sprite to test to
-     * @param   asDegrees   If you need the value in degrees instead of radians, set to true
-     * 
-     * @return  Number The angle (in radians unless asDegrees is true)
-     */
-    angleBetween: function (a, b, asDegrees) {
-
-        asDegrees = asDegrees || false;
-
-        var dx = b.center.x - a.center.x;
-        var dy = b.center.y - a.center.y;
-        
-        if (asDegrees)
-        {
-            return this.game.math.radToDeg(Math.atan2(dy, dx));
-        }
-        else
-        {
-            return Math.atan2(dy, dx);
-        }
+        return this._angle;
 
     },
 
     /**
-     * Given the GameObject and speed calculate the velocity and return it as an Point based on the direction the sprite is facing
-     * 
-     * @param   parent  The Sprite to get the facing value from
-     * @param   speed   The speed it will move, in pixels per second sq
-     * 
-     * @return  An Point where Point.x contains the velocity x value and Point.y contains the velocity y value
-     */
-    velocityFromFacing: function (parent, speed) {
+    * Find the distance between two display objects (like Sprites).
+    * 
+    * @method Phaser.Physics.Arcade#distanceBetween
+    * @param {any} source - The Display Object to test from.
+    * @param {any} target - The Display Object to test to.
+    * @return {number} The distance between the source and target objects.
+    */
+    distanceBetween: function (source, target) {
 
-        /*
-        var a;
+        this._dx = source.x - target.x;
+        this._dy = source.y - target.y;
         
-        if (parent.facing == Collision.LEFT)
-        {
-            a = this._game.math.degreesToRadians(180);
-        }
-        else if (parent.facing == Collision.RIGHT)
-        {
-            a = this._game.math.degreesToRadians(0);
-        }
-        else if (parent.facing == Collision.UP)
-        {
-            a = this._game.math.degreesToRadians(-90);
-        }
-        else if (parent.facing == Collision.DOWN)
-        {
-            a = this._game.math.degreesToRadians(90);
-        }
+        return Math.sqrt(this._dx * this._dx + this._dy * this._dy);
+
+    },
+
+    /**
+    * Find the distance between a display object (like a Sprite) and the given x/y coordinates.
+    * The calculation is made from the display objects x/y coordinate. This may be the top-left if its anchor hasn't been changed.
+    * If you need to calculate from the center of a display object instead use the method distanceBetweenCenters()
+    * 
+    * @method Phaser.Physics.Arcade#distanceToXY
+    * @param {any} displayObject - The Display Object to test from.
+    * @param {number} x - The x coordinate to move towards.
+    * @param {number} y - The y coordinate to move towards.
+    * @return {number} The distance between the object and the x/y coordinates.
+    */
+    distanceToXY: function (displayObject, x, y) {
+
+        this._dx = displayObject.x - x;
+        this._dy = displayObject.y - y;
         
-        return new Point(Math.cos(a) * speed, Math.sin(a) * speed);
-        */
+        return Math.sqrt(this._dx * this._dx + this._dy * this._dy);
+
+    },
+
+    /**
+    * Find the distance between a display object (like a Sprite) and a Pointer. If no Pointer is given the Input.activePointer is used.
+    * The calculation is made from the display objects x/y coordinate. This may be the top-left if its anchor hasn't been changed.
+    * If you need to calculate from the center of a display object instead use the method distanceBetweenCenters()
+    * 
+    * @method Phaser.Physics.Arcade#distanceToPointer
+    * @param {any} displayObject - The Display Object to test from.
+    * @param {Phaser.Pointer} [pointer] - The Phaser.Pointer to test to. If none is given then Input.activePointer is used.
+    * @return {number} The distance between the object and the Pointer.
+    */
+    distanceToPointer: function (displayObject, pointer) {
+
+        pointer = pointer || this.game.input.activePointer;
+
+        this._dx = displayObject.x - pointer.x;
+        this._dy = displayObject.y - pointer.y;
+        
+        return Math.sqrt(this._dx * this._dx + this._dy * this._dy);
+
+    },
+
+    /**
+    * Find the angle in radians between two display objects (like Sprites).
+    * 
+    * @method Phaser.Physics.Arcade#angleBetween
+    * @param {any} source - The Display Object to test from.
+    * @param {any} target - The Display Object to test to.
+    * @return {number} The angle in radians between the source and target display objects.
+    */
+    angleBetween: function (source, target) {
+
+        this._dx = target.x - source.x;
+        this._dy = target.y - source.y;
+
+        return Math.atan2(this._dy, this._dx);
+
+    },
+
+    /**
+    * Find the angle in radians between a display object (like a Sprite) and the given x/y coordinate.
+    * 
+    * @method Phaser.Physics.Arcade#angleToXY
+    * @param {any} displayObject - The Display Object to test from.
+    * @param {number} x - The x coordinate to get the angle to.
+    * @param {number} y - The y coordinate to get the angle to.
+    * @return {number} The angle in radians between displayObject.x/y to Pointer.x/y
+    */
+    angleToXY: function (displayObject, x, y) {
+
+        this._dx = x - displayObject.x;
+        this._dy = y - displayObject.y;
+        
+        return Math.atan2(this._dy, this._dx);
 
     },
     
     /**
     * Find the angle in radians between a display object (like a Sprite) and a Pointer, taking their x/y and center into account.
     * 
+    * @method Phaser.Physics.Arcade#angleToPointer
     * @param {any} displayObject - The Display Object to test from.
     * @param {Phaser.Pointer} [pointer] - The Phaser.Pointer to test to. If none is given then Input.activePointer is used.
-    * @return {number} The angle in radians between displayObject.center.x/y to Pointer.x/y
+    * @return {number} The angle in radians between displayObject.x/y to Pointer.x/y
     */
-    angleBetweenPointer: function (displayObject, pointer) {
+    angleToPointer: function (displayObject, pointer) {
 
         pointer = pointer || this.game.input.activePointer;
 
-        var dx = pointer.x - displayObject.x;
-        var dy = pointer.y - displayObject.y;
+        this._dx = pointer.x - displayObject.x;
+        this._dy = pointer.y - displayObject.y;
         
-        return Math.atan2(dy, dx);
+        return Math.atan2(this._dy, this._dx);
 
     }
 

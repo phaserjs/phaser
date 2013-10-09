@@ -58,9 +58,11 @@ Phaser.Point.prototype = {
     * @return {Point} This Point object. Useful for chaining method calls.
     **/        
     setTo: function (x, y) {
+
         this.x = x;
         this.y = y;
         return this;
+        
     },
 
     /**

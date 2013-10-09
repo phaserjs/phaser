@@ -1,5 +1,5 @@
 <?php
-	$title = "Shoot at the Mouse";
+	$title = "Shoot the Pointer";
 	require('../head.php');
 ?>
 
@@ -8,8 +8,10 @@
 	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
 
 	function preload() {
+
 		game.load.image('arrow', 'assets/sprites/arrow.png');
 		game.load.image('bullet', 'assets/sprites/purple_ball.png');
+		
 	}
 
 	var sprite;
@@ -35,7 +37,7 @@
 
 	function update() {
 
-		sprite.rotation = game.physics.angleBetweenPointer(sprite);
+		sprite.rotation = game.physics.angleToPointer(sprite);
 
 		if (game.input.activePointer.isDown)
 		{
@@ -54,8 +56,7 @@
 
 			bullet.reset(sprite.x, sprite.y);
 
-			bullet.rotation = game.physics.moveTowardsPointer(bullet, 300);
-
+			bullet.rotation = game.physics.moveToPointer(bullet, 300);
 		}
 
 	}
@@ -63,9 +64,7 @@
 	function render() {
 
         game.debug.renderText('Active Bullets: ' + bullets.countLiving() + ' / ' + bullets.total, 32, 32);
-
         game.debug.renderSpriteInfo(sprite, 32, 450);
-        game.debug.renderSpriteCorners(sprite);
 
 	}
 

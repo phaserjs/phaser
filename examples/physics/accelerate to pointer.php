@@ -1,5 +1,5 @@
 <?php
-	$title = "Angle between Sprite and Active Pointer";
+	$title = "Accelerate to the Active Pointer";
 	require('../head.php');
 ?>
 
@@ -24,9 +24,7 @@
 
 	function update() {
 
-		//	This will update the sprite.rotation so that it points to the currently active pointer
-		//	On a Desktop that is the mouse, on mobile the most recent finger press.
-		sprite.rotation = game.physics.angleToPointer(sprite);
+		sprite.rotation = game.physics.accelerateToPointer(sprite, this.game.input.activePointer, 500, 500, 500);
 
 	}
 

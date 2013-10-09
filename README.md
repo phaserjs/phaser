@@ -102,11 +102,14 @@ Version 1.0.7 (in progress in the dev branch)
 * Group.create now sets the visible and alive properties of the Sprite to the same value as the 'exists' parameter.
 * Added Group.total. Same as Group.length, but more in line with the rest of the Group naming.
 * Added Sprite.outOfBoundsKill boolean flag. Will automatically kill a sprite that leaves the game World bounds (off by default).
-* ArcadePhysics.moveTowardsMouse changed to ArcadePhysics.moveTowardsPointer and now lets you specify which pointer to move towards (defaults to Input.activePointer).
-* ArcadePhysics.angleBetweenMouse changed to ArcadePhysics.angleBetweenPointer and now lets you specify which pointer to get the angle to (defaults to Input.activePointer).
-* ArcadePhysics.velocityFromAngle and ArcadePhysics.velocityFromRotation added with examples created.
+* Lots of changes and fixes in ArcadePhysics, including:
+* Functions with "mouse" in the title have been updated to "pointer" to more accurately reflect what they do.
+* New velocity functions: moveToObject, moveToPointer, moveToXY
+* New acceleration functions: accelerateToObject, accelerateToPointer, accelerateToXY
+* New distance functions: distanceBetween, distanceToXY, distanceToPointer
+* New angle functions: angleBetween, angleToXY, angleToPointer
+* velocityFromAngle and velocityFromRotation added with examples created.
 * Fixed the RandomDataGenerator.sow method so if you give in the same seed you'll now get the same results (thanks Hsaka)
-
 
 * TODO: look at Sprite.crop (http://www.html5gamedevs.com/topic/1617-error-in-spritecrop/)
 * TODO: d-pad example (http://www.html5gamedevs.com/topic/1574-gameinputondown-question/)
