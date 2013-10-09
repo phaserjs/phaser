@@ -1286,8 +1286,8 @@ Phaser.Physics.Arcade.prototype = {
 
         pointer = pointer || this.game.input.activePointer;
 
-        this._dx = displayObject.x - pointer.x;
-        this._dy = displayObject.y - pointer.y;
+        this._dx = displayObject.worldX - pointer.x;
+        this._dy = displayObject.worldY - pointer.y;
         
         return Math.sqrt(this._dx * this._dx + this._dy * this._dy);
 
@@ -1340,8 +1340,8 @@ Phaser.Physics.Arcade.prototype = {
 
         pointer = pointer || this.game.input.activePointer;
 
-        this._dx = pointer.x - displayObject.x;
-        this._dy = pointer.y - displayObject.y;
+        this._dx = pointer.worldX - displayObject.x;
+        this._dy = pointer.worldY - displayObject.y;
         
         return Math.atan2(this._dy, this._dx);
 

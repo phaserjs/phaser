@@ -41,7 +41,7 @@ Version 1.0.7 (in progress in the dev branch)
 * Added World.postUpdate - all sprite position changes, as a result of physics, happen here before the render.
 * Complete overhaul of Physics.Arcade.Body - now significantly more stable and faster too.
 * Updated ArcadePhysics.separateX/Y to use new body system - much better results now.
-* QuadTree bug found in 1.0.5 now fixed. The QuadTree is updated properly now using worldTransform values.
+* QuadTree bug found in 1.0.5 now fixed. The QuadTree is updated properly now using localTransform values.
 * Fixed the Bounce.In and Bounce.InOut tweens (thanks XekeDeath)
 * Renamed Phaser.Text.text to Phaser.Text.content to avoid conflict and overwrite from Pixi local var.
 * Renamed Phaser.Text.style to Phaser.Text.font to avoid conflict and overwrite from Pixi local var.

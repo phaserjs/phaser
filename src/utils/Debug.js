@@ -539,8 +539,6 @@ Phaser.Utils.Debug.prototype = {
         this.line('scaleY: ' + sprite.localTransform[4]);
         this.line('transX: ' + sprite.localTransform[2]);
         this.line('transY: ' + sprite.localTransform[5]);
-        this.line('sX:     ' + sprite._sx);
-        this.line('sY:     ' + sprite._sy);
 
     },
 
