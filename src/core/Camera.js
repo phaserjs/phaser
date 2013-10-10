@@ -156,8 +156,19 @@ Phaser.Camera.prototype = {
 
     },
 
+    /**
+    * Move the camera focus on a display object instantly.
+    * @method Phaser.Camera#focusOn
+    * @param {any} displayObject - The display object to focus the camera on. Must have visible x/y properties.
+    */
+    focusOn: function (displayObject) {
+
+        this.setPosition(Math.round(displayObject.x - this.view.halfWidth), Math.round(displayObject.y - this.view.halfHeight));
+
+    },
+
 	/**
-    * Move the camera focus to a location instantly.
+    * Move the camera focus on a location instantly.
     * @method Phaser.Camera#focusOnXY
     * @param {number} x - X position.
     * @param {number} y - Y position.

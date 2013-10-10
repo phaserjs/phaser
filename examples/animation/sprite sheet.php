@@ -5,8 +5,6 @@
 
 <script type="text/javascript">
 
-
-
 	var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
 
 	function preload() {
@@ -33,8 +31,6 @@
 		mummy.animations.play('walk', 30, true);
 
 	}
-
-
 
 </script>
 

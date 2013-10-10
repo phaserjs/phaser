@@ -264,6 +264,11 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.body = new Phaser.Physics.Arcade.Body(this);
 
     /**
+    * @property {number} health - Health value. Used in combination with damage() to allow for quick killing of Sprites.
+    */    
+    this.health = 1;
+
+    /**
     * @property {Description} velocity - Description.
     */
     // this.velocity = this.body.velocity;
@@ -349,6 +354,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
     this.prevY = this.y;
 
     this.updateCache();
+    this.updateAnimation();
 
     //  Re-run the camera visibility check
     if (this._cache.dirty)
@@ -407,7 +413,10 @@ Phaser.Sprite.prototype.updateCache = function() {
         this._cache.dirty = true;
     }
 
-    //  Frame updated?
+}
+
+Phaser.Sprite.prototype.updateAnimation = function() {
+
     if (this.currentFrame && this.currentFrame.uuid != this._cache.frameID)
     {
         this._cache.frameWidth = this.texture.frame.width;
@@ -461,6 +470,47 @@ Phaser.Sprite.prototype.postUpdate = function() {
 
 }
 
+Phaser.Sprite.prototype.loadTexture = function (key, frame) {
+
+    this.key = key;
+
+    if (key instanceof Phaser.RenderTexture)
+    {
+        this.currentFrame = this.game.cache.getTextureFrame(key.name);
+    }
+    else
+    {
+        if (key == null || this.game.cache.checkImageKey(key) == false)
+        {
+            key = '__default';
+        }
+
+        if (this.game.cache.isSpriteSheet(key))
+        {
+            this.animations.loadFrameData(this.game.cache.getFrameData(key));
+
+            if (frame !== null)
+            {
+                if (typeof frame === 'string')
+                {
+                    this.frameName = frame;
+                }
+                else
+                {
+                    this.frame = frame;
+                }
+            }
+        }
+        else
+        {
+            this.currentFrame = this.game.cache.getFrame(key);
+        }
+    }
+
+    this.updateAnimation();
+
+}
+
 Phaser.Sprite.prototype.deltaAbsX = function () {
     return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
 }
@@ -497,11 +547,15 @@ Phaser.Sprite.prototype.centerOn = function(x, y) {
 * 
 * @method Phaser.Sprite.prototype.revive
 */
-Phaser.Sprite.prototype.revive = function() {
+Phaser.Sprite.prototype.revive = function(health) {
+
+    if (typeof health === 'undefined') { health = 1; }
 
     this.alive = true;
     this.exists = true;
     this.visible = true;
+    this.health = health;
+
     this.events.onRevived.dispatch(this);
 
 }
@@ -523,9 +577,30 @@ Phaser.Sprite.prototype.kill = function() {
 /**
 * Description.
 * 
+* @method Phaser.Sprite.prototype.kill
+*/
+Phaser.Sprite.prototype.damage = function(amount) {
+
+    if (this.alive)
+    {
+        this.health -= amount;
+
+        if (this.health < 0)
+        {
+            this.kill();
+        }
+    }
+
+}
+
+/**
+* Description.
+* 
 * @method Phaser.Sprite.prototype.reset
 */
-Phaser.Sprite.prototype.reset = function(x, y) {
+Phaser.Sprite.prototype.reset = function(x, y, health) {
+
+    if (typeof health === 'undefined') { health = 1; }
 
     this.x = x;
     this.y = y;
@@ -536,7 +611,13 @@ Phaser.Sprite.prototype.reset = function(x, y) {
     this.visible = true;
     this.renderable = true;
     this._outOfBoundsFired = false;
-    this.body.reset();
+
+    this.health = health;
+
+    if (this.body)
+    {
+        this.body.reset();
+    }
     
 }
 
@@ -737,6 +818,18 @@ Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
     
     get: function () {
         return this._cache.cameraVisible;
+    }
+
+});
+
+/**
+* 
+* @returns {boolean}
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "worldX", {
+    
+    get: function () {
+        return 1;
     }
 
 });

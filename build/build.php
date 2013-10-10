@@ -26,21 +26,25 @@
 			// echo $filename . "\n";
 
 			//	Read the file in
-			$source = file_get_contents($line);
-
-			if ($filename == 'Intro.js')
+			if (file_exists($line))
 			{
-				//	Built at: {buildDate}
-				$source = str_replace('{buildDate}', date('r'), $source);
+				$source = file_get_contents($line);
 
-				//	{version}
-				$source = str_replace('{version}', $version, $source);
+				if ($filename == 'Intro.js')
+				{
+					//	Built at: {buildDate}
+					$source = str_replace('{buildDate}', date('r'), $source);
 
-				// Set the header
-				$header = $source;
-				
-			} else {
-				$output .= $source . "\n";
+					//	{version}
+					$source = str_replace('{version}', $version, $source);
+
+					// Set the header
+					$header = $source;
+				}
+				else
+				{
+					$output .= $source . "\n";
+				}
 			}
 		}
 	}

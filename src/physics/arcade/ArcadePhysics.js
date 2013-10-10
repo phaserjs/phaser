@@ -883,7 +883,7 @@ Phaser.Physics.Arcade.prototype = {
             {
                 if (separate)
                 {
-                    console.log('x over', this._overlap);
+                    // console.log('x over', this._overlap);
                     object.x = object.x - this._overlap;
 
                     if (object.bounce.x == 0)
@@ -960,7 +960,7 @@ Phaser.Physics.Arcade.prototype = {
 
             if (this._overlap != 0)
             {
-                console.log('y over', this._overlap);
+                // console.log('y over', this._overlap);
 
                 if (separate)
                 {

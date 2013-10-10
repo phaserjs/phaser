@@ -1,6 +1,14 @@
 <?php
-	$title = "Tanks";
-	require('../head.php');
+	$title = "Tanks " . $_SERVER['SERVER_NAME'];
+
+	if ($_SERVER['SERVER_NAME'] == 'gametest.mobi')
+	{
+		require('head_live.php');
+	}
+	else
+	{
+		require('../head.php');
+	}
 ?>
 
 <script type="text/javascript">
@@ -82,12 +90,14 @@
 
 	};
 
-	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
+	var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+	// var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
 
 	function preload () {
 
 		game.load.atlas('tank', 'assets/games/tanks/tanks.png', 'assets/games/tanks/tanks.json');
 		game.load.atlas('enemy', 'assets/games/tanks/enemy-tanks.png', 'assets/games/tanks/tanks.json');
+		game.load.image('logo', 'assets/games/tanks/logo.png');
 		game.load.image('bullet', 'assets/games/tanks/bullet.png');
 		game.load.image('earth', 'assets/games/tanks/scorched_earth.png');
 		game.load.spritesheet('kaboom', 'assets/games/tanks/explosion.png', 64, 64, 23);
@@ -103,6 +113,8 @@
 	var enemies;
 	var enemyBullets;
 	var explosions;
+
+	var logo;
 
 	var currentSpeed = 0;
 	var cursors;
@@ -145,7 +157,7 @@
 		//	Create some baddies to waste :)
 		enemies = [];
 
-		for (var i = 0; i < 10; i++)
+		for (var i = 0; i < 20; i++)
 		{
 			enemies.push(new EnemyTank(i, game, tank, enemyBullets));
 		}
@@ -174,11 +186,23 @@
 		tank.bringToTop();
 		turret.bringToTop();
 
+		logo = game.add.sprite(0, 200, 'logo');
+		logo.fixedToCamera = true;
+
+		game.input.onDown.add(removeLogo, this);
+
 		game.camera.follow(tank);
-		game.camera.deadzone = new Phaser.Rectangle(100, 100, 600, 400);
+		game.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
 		game.camera.focusOnXY(0, 0);
 
 		cursors = game.input.keyboard.createCursorKeys();
+
+	}
+
+	function removeLogo () {
+
+		game.input.onDown.remove(removeLogo, this);
+		logo.kill();
 
 	}
 
@@ -290,5 +314,12 @@
 </script>
 
 <?php
-	require('../foot.php');
+	if ($_SERVER['SERVER_NAME'] == 'gametest.mobi')
+	{
+		require('foot.php');
+	}
+	else
+	{
+		require('../foot.php');
+	}
 ?>

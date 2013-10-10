@@ -460,6 +460,7 @@ Phaser.Utils.Debug.prototype = {
         this.line('angle: ' + sprite.angle.toFixed(1) + ' rotation: ' + sprite.rotation.toFixed(1));
         this.line('visible: ' + sprite.visible + ' in camera: ' + sprite.inCamera);
         this.line('body x: ' + sprite.body.x.toFixed(1) + ' y: ' + sprite.body.y.toFixed(1));
+        this.stop();
 
         //  0 = scaleX
         //  1 = skewY
@@ -510,6 +511,7 @@ Phaser.Utils.Debug.prototype = {
         this.line('scaleY: ' + sprite.worldTransform[4]);
         this.line('transX: ' + sprite.worldTransform[2]);
         this.line('transY: ' + sprite.worldTransform[5]);
+        this.stop();
 
     },
 
@@ -539,6 +541,49 @@ Phaser.Utils.Debug.prototype = {
         this.line('scaleY: ' + sprite.localTransform[4]);
         this.line('transX: ' + sprite.localTransform[2]);
         this.line('transY: ' + sprite.localTransform[5]);
+        this.stop();
+
+    },
+
+    renderSpriteCoords: function (sprite, x, y, color) {
+
+        if (this.context == null)
+        {
+            return;
+        }
+
+        color = color || 'rgb(255, 255, 255)';
+
+        this.start(x, y, color);
+
+        this.line(sprite.name);
+        this.line('x: ' + sprite.x);
+        this.line('y: ' + sprite.y);
+        this.line('local x: ' + sprite.localTransform[2]);
+        this.line('local y: ' + sprite.localTransform[5]);
+        this.line('world x: ' + sprite.worldTransform[2]);
+        this.line('world y: ' + sprite.worldTransform[5]);
+
+        this.stop();
+
+    },
+
+    renderGroupInfo: function (group, x, y, color) {
+
+        if (this.context == null)
+        {
+            return;
+        }
+
+        color = color || 'rgb(255, 255, 255)';
+
+        this.start(x, y, color);
+
+        this.line('Group (size: ' + group.length + ')');
+        this.line('x: ' + group.x);
+        this.line('y: ' + group.y);
+
+        this.stop();
 
     },
 
