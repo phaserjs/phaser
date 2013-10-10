@@ -203,13 +203,14 @@ Phaser.Tween.prototype = {
 		if (this._parent)
 		{
 			self = this._manager.create(this._object);
-			self._parent = this._parent;
-			this.chain(self);
+			this._lastChild.chain(self);
+			this._lastChild = self;
 		}
 		else
 		{
 			self = this;
-			self._parent = self;
+			this._parent = this;
+			this._lastChild = this;
 		}
 
 		self._repeat = repeat;
@@ -229,9 +230,9 @@ Phaser.Tween.prototype = {
         self._yoyo = yoyo;
 
         if (autoStart) {
-            return self.start();
+            return this.start();
         } else {
-            return self;
+            return this;
         }
 
 	},
@@ -399,11 +400,11 @@ Phaser.Tween.prototype = {
 	* .to({ y: 0 }, 1000, Phaser.Easing.Linear.None)
 	* .loop();
 	* @method Phaser.Tween#loop
-	* @return {Tween} Itself.
+	* @return {Phaser.Tween} Itself.
 	*/
 	loop: function() {
 
-		if (this._parent) this.chain(this._parent);
+		this._lastChild.chain(this);
 		return this;
 
 	},
