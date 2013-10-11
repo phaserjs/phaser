@@ -17,6 +17,7 @@
 
     var layer;
     var cursors;
+    var sprite2;
 
     function create() {
 
@@ -36,16 +37,22 @@
             '#bcbcbc', '#bcbcbc'
         ];
 
-        map.dump();
+        // map.dump();
 
-        layer = new Phaser.TilemapLayer(game, 200, 200, 320, 200);
+        // layer = new Phaser.TilemapLayer(game, 0, 0, 640, 400);
+        layer = new Phaser.TilemapLayer(game, 0, 0, 320, 200);
         layer.updateTileset('tiles');
         layer.updateMapData(map, 0);
 
-        layer.sprite.anchor.setTo(0.5, 0.5);
+        // layer.sprite.anchor.setTo(0.5, 0.5);
 
         game.world.add(layer.sprite);
 
+        // layer.sprite.scale.setTo(2, 2);
+
+        game.add.sprite(320, 0, layer.texture, layer.frame);
+        game.add.sprite(0, 200, layer.texture, layer.frame);
+        game.add.sprite(320, 200, layer.texture, layer.frame);
 
         cursors = game.input.keyboard.createCursorKeys();
     }

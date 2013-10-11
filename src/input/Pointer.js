@@ -247,7 +247,7 @@ Phaser.Pointer.prototype = {
         this.identifier = event.identifier;
         this.target = event.target;
 
-        if (event.button)
+        if (typeof event.button !== 'undefined')
         {
             this.button = event.button;
         }
@@ -351,7 +351,7 @@ Phaser.Pointer.prototype = {
             return;
         }
 
-        if (event.button)
+        if (typeof event.button !== 'undefined')
         {
             this.button = event.button;
         }
@@ -430,8 +430,6 @@ Phaser.Pointer.prototype = {
 
         if (this._highestRenderObject == null)
         {
-            // console.log("HRO null");
-
             //  The pointer isn't currently over anything, check if we've got a lingering previous target
             if (this.targetObject)
             {

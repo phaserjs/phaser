@@ -30,7 +30,6 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, mapData, 
 	*/
     this.texture = new PIXI.Texture(this.baseTexture);
     
-    //  index, x, y, width, height, name, uuid
     this.frame = new Phaser.Frame(0, 0, 0, renderWidth, renderHeight, 'tilemaplayer', game.rnd.uuid());
 
 	/**
@@ -47,8 +46,20 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, mapData, 
     this.tileWidth = 0;
     this.tileHeight = 0;
 
-    this.widthInTiles = 0;
-    this.heightInTiles = 0;
+    /**
+    * Read-only variable, do NOT recommend changing after the map is loaded!
+    * @property {number} widthInPixels
+    * @default
+    */
+    this.widthInPixels = 0;
+
+    /**
+    * Read-only variable, do NOT recommend changing after the map is loaded!
+    * @property {number} heightInPixels
+    * @default
+    */
+    this.heightInPixels = 0;
+
 
     this.renderWidth = renderWidth;
     this.renderHeight = renderHeight;
@@ -143,15 +154,7 @@ Phaser.TilemapLayer.prototype = {
         this.tilemap = tilemap;
         this.layer = this.tilemap.layers[layerID];
 
-        if (this._maxX > this.layer.width)
-        {
-            this._maxX = this.layer.width;
-        }
-
-        if (this._maxY > this.layer.height)
-        {
-            this._maxY = this.layer.height;
-        }
+        this.updateMax();
 
     },
 
@@ -161,9 +164,29 @@ Phaser.TilemapLayer.prototype = {
         this.tileWidth = this.tileset.tileWidth;
         this.tileHeight = this.tileset.tileHeight;
 
-        //  This don't need to be calculated every frame!
+        this.updateMax();
+    },
+
+    updateMax: function () {
+
         this._maxX = this.game.math.ceil(this.canvas.width / this.tileWidth) + 1;
         this._maxY = this.game.math.ceil(this.canvas.height / this.tileHeight) + 1;
+
+        if (this.layer)
+        {
+            if (this._maxX > this.layer.width)
+            {
+                this._maxX = this.layer.width;
+            }
+
+            if (this._maxY > this.layer.height)
+            {
+                this._maxY = this.layer.height;
+            }
+
+            this.widthInPixels = this.layer.width * this.tileWidth;
+            this.heightInPixels = this.layer.height * this.tileHeight;
+        }
 
     },
 
@@ -174,36 +197,6 @@ Phaser.TilemapLayer.prototype = {
             return;
         }
 
-        //  Work out how many tiles we can fit into our canvas and round it up for the edges
-        // this._maxX = this.game.math.ceil(this.canvas.width / this.tileWidth) + 1;
-        // this._maxY = this.game.math.ceil(this.canvas.height / this.tileHeight) + 1;
-
-        //  And now work out where in the tilemap the camera actually is
-        this._startX = this.game.math.floor(this._x / this.tileWidth);
-        this._startY = this.game.math.floor(this._y / this.tileHeight);
-
-        //  Tilemap bounds check
-        if (this._startX < 0)
-        {
-            this._startX = 0;
-        }
-
-        if (this._startY < 0)
-        {
-            this._startY = 0;
-        }
-
-        if (this._startX + this._maxX > this.layer.width)
-        {
-            this._startX = this.layer.width - this._maxX;
-        }
-
-        if (this._startY + this._maxY > this.layer.height)
-        {
-            this._startY = this.layer.height - this._maxY;
-        }
-
-        //  Finally get the offset to avoid the blocky movement
         this._dx = -(this._x - (this._startX * this.tileWidth));
         this._dy = -(this._y - (this._startY * this.tileHeight));
 
@@ -282,9 +275,27 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "x", {
 
     set: function (value) {
 
-        if (value !== this._x)
+        if (value !== this._x && value >= 0)
         {
             this._x = value;
+
+            if (this._x > (this.widthInPixels - this.renderWidth))
+            {
+                this._x = this.widthInPixels - this.renderWidth;
+            }
+
+            this._startX = this.game.math.floor(this._x / this.tileWidth);
+
+            if (this._startX < 0)
+            {
+                this._startX = 0;
+            }
+
+            if (this._startX + this._maxX > this.layer.width)
+            {
+                this._startX = this.layer.width - this._maxX;
+            }
+
             this.dirty = true;
         }
 
@@ -300,9 +311,27 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "y", {
 
     set: function (value) {
 
-        if (value !== this._y)
+        if (value !== this._y && value >= 0)
         {
             this._y = value;
+
+            if (this._y > (this.heightInPixels - this.renderHeight))
+            {
+                this._y = this.heightInPixels - this.renderHeight;
+            }
+
+            this._startY = this.game.math.floor(this._y / this.tileHeight);
+
+            if (this._startY < 0)
+            {
+                this._startY = 0;
+            }
+
+            if (this._startY + this._maxY > this.layer.height)
+            {
+                this._startY = this.layer.height - this._maxY;
+            }
+
             this.dirty = true;
         }
 

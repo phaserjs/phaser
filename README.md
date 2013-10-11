@@ -114,6 +114,8 @@ Version 1.0.7 (in progress in the dev branch)
 * Added killOnComplete parameter to Animation.play. Really useful in situations where you want a Sprite to animate once then kill itself on complete, like an explosion effect.
 * Added Sprite.loadTexture(key, frame) which allows you to load a new texture set into an existing sprite rather than having to create a new sprite.
 * Tweens .to will now always return the parent (thanks powerfear)
+* You can now pass a PIXI.Texture to Sprite (you also need to pass a Phaser.Frame as the frame parameter) but this is useful for Sprites sharing joint canvases.
+* Fixed Issue #101 (Mouse Button 0 is not recognised, thanks rezoner)
 
 
 * TODO: look at Sprite.crop (http://www.html5gamedevs.com/topic/1617-error-in-spritecrop/)
