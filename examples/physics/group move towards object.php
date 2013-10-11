@@ -1,5 +1,5 @@
 <?php
-	$title = "Group move towards object";
+	$title = "Group moves towards object";
 	require('../head.php');
 ?>
 
@@ -35,7 +35,7 @@
 			//	First is the callback
 			//	Second is the context in which the callback runs, in this case game.physics
 			//	Third is the parameter the callback expects - it is always sent the Group child as the first parameter
-			balls.forEach(game.physics.moveTowardsMouse, game.physics, false, 200);
+			balls.forEach(game.physics.moveToPointer, game.physics, false, 200);
 		}
 		else
 		{

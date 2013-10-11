@@ -1,5 +1,5 @@
 <?php
-    $title = "Bounce";
+    $title = "Tweening several properties";
     require('../head.php');
 ?>
 

@@ -1,5 +1,5 @@
 <?php
-	$title = "Animation from a Texture Atlas";
+    $title = "Several sprites using only one texture file";
 	require('../head.php');
 ?>
 

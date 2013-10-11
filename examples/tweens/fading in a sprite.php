@@ -1,5 +1,5 @@
 <?php
-    $title = "Using duration and scale";
+    $title = "Alpha fading a sprite";
     require('../head.php');
 ?>
 
