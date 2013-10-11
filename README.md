@@ -113,6 +113,7 @@ Version 1.0.7 (in progress in the dev branch)
 * World.randomX/Y now works with negative World.bounds values.
 * Added killOnComplete parameter to Animation.play. Really useful in situations where you want a Sprite to animate once then kill itself on complete, like an explosion effect.
 * Added Sprite.loadTexture(key, frame) which allows you to load a new texture set into an existing sprite rather than having to create a new sprite.
+* Tweens .to will now always return the parent (thanks powerfear)
 
 
 * TODO: look at Sprite.crop (http://www.html5gamedevs.com/topic/1617-error-in-spritecrop/)

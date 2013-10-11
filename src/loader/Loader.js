@@ -280,7 +280,7 @@ Phaser.Loader.prototype = {
 	* @param {string} url - URL of the sheet file.
 	* @param {number} frameWidth - Width of each single frame.
 	* @param {number} frameHeight - Height of each single frame.
-	* @param {number} frameMax - How many frames in this sprite sheet.
+	* @param {number} [frameMax=-1] - How many frames in this sprite sheet. If not specified it will divide the whole image into frames.
 	*/
 	spritesheet: function (key, url, frameWidth, frameHeight, frameMax) {
 
@@ -289,6 +289,27 @@ Phaser.Loader.prototype = {
 		if (this.checkKeyExists(key) === false)
 		{
 			this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax });
+		}
+
+	},
+
+	/**
+	* Add a new tile set to the loader. These are used in the rendering of tile maps.
+	*
+	* @method Phaser.Loader#tileset
+	* @param {string} key - Unique asset key of the tileset file.
+	* @param {string} url - URL of the tileset.
+	* @param {number} tileWidth - Width of each single tile in pixels.
+	* @param {number} tileHeight - Height of each single tile in pixels.
+	* @param {number} [tileMax=-1] - How many tiles in this tileset. If not specified it will divide the whole image into tiles.
+	*/
+	tileset: function (key, url, tileWidth, tileHeight, tileMax) {
+
+		if (typeof tileMax === "undefined") { tileMax = -1; }
+
+		if (this.checkKeyExists(key) === false)
+		{
+			this.addToFileList('tileset', key, url, { tileWidth: tileWidth, tileHeight: tileHeight, tileMax: tileMax });
 		}
 
 	},
@@ -617,6 +638,7 @@ Phaser.Loader.prototype = {
 			case 'textureatlas':
 			case 'bitmapfont':
 			case 'tilemap':
+			case 'tileset':
 				file.data = new Image();
 				file.data.name = file.key;
 				file.data.onload = function () {
@@ -769,6 +791,11 @@ Phaser.Loader.prototype = {
 			case 'spritesheet':
 
 				this.game.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax);
+				break;
+
+			case 'tileset':
+
+				this.game.cache.addTileset(file.key, file.url, file.data, file.tileWidth, file.tileHeight, file.tileMax);
 				break;
 
 			case 'tilemap':

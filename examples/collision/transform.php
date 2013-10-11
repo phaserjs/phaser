@@ -13,12 +13,14 @@
 
         game.load.image('atari', 'assets/sprites/atari130xe.png');
         game.load.image('mushroom', 'assets/sprites/mushroom2.png');
+        game.load.image('flectrum', 'assets/sprites/flectrum.png');
 
     }
 
     var testGroup;
     var sprite1;
     var sprite2;
+    var sprite3;
 
     function create() {
 
@@ -61,6 +63,9 @@
         sprite2 = game.add.sprite(-100, 150, 'mushroom');
         sprite2.name = 'mushroom';
 
+        sprite3 = game.add.sprite(-200, 150, 'flectrum');
+        sprite3.name = 'tall';
+
         testGroup.x = -600;
         testGroup.y = 200;
 
@@ -88,6 +93,8 @@
 
         game.physics.collide(sprite1, sprite2, collisionHandler, null, this);
 
+        // sprite3.angle += 0.5;
+
     }
 
     function collisionHandler (obj1, obj2) {
@@ -110,6 +117,7 @@
 
         game.debug.renderSpriteBody(sprite1);
         game.debug.renderSpriteBody(sprite2);
+        game.debug.renderSpriteBody(sprite3);
 
         game.debug.renderGroupInfo(testGroup, 500, 500);
         game.debug.renderPixel(testGroup.x, testGroup.y, 'rgb(255,255,0)');

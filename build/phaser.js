@@ -9,7 +9,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v1.0.7 - Built at: Wed, 09 Oct 2013 17:16:16 +0100
+* v1.0.7 - Built at: Thu, 10 Oct 2013 16:51:46 +0100
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -7342,8 +7342,19 @@ Phaser.Camera.prototype = {
 
     },
 
+    /**
+    * Move the camera focus on a display object instantly.
+    * @method Phaser.Camera#focusOn
+    * @param {any} displayObject - The display object to focus the camera on. Must have visible x/y properties.
+    */
+    focusOn: function (displayObject) {
+
+        this.setPosition(Math.round(displayObject.x - this.view.halfWidth), Math.round(displayObject.y - this.view.halfHeight));
+
+    },
+
 	/**
-    * Move the camera focus to a location instantly.
+    * Move the camera focus on a location instantly.
     * @method Phaser.Camera#focusOnXY
     * @param {number} x - X position.
     * @param {number} y - Y position.
@@ -16007,6 +16018,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
     this.prevY = this.y;
 
     this.updateCache();
+    this.updateAnimation();
 
     //  Re-run the camera visibility check
     if (this._cache.dirty)
@@ -16065,7 +16077,10 @@ Phaser.Sprite.prototype.updateCache = function() {
         this._cache.dirty = true;
     }
 
-    //  Frame updated?
+}
+
+Phaser.Sprite.prototype.updateAnimation = function() {
+
     if (this.currentFrame && this.currentFrame.uuid != this._cache.frameID)
     {
         this._cache.frameWidth = this.texture.frame.width;
@@ -16116,6 +16131,47 @@ Phaser.Sprite.prototype.postUpdate = function() {
             this.position.y = this._cache.y;
         }
     }
+
+}
+
+Phaser.Sprite.prototype.loadTexture = function (key, frame) {
+
+    this.key = key;
+
+    if (key instanceof Phaser.RenderTexture)
+    {
+        this.currentFrame = this.game.cache.getTextureFrame(key.name);
+    }
+    else
+    {
+        if (key == null || this.game.cache.checkImageKey(key) == false)
+        {
+            key = '__default';
+        }
+
+        if (this.game.cache.isSpriteSheet(key))
+        {
+            this.animations.loadFrameData(this.game.cache.getFrameData(key));
+
+            if (frame !== null)
+            {
+                if (typeof frame === 'string')
+                {
+                    this.frameName = frame;
+                }
+                else
+                {
+                    this.frame = frame;
+                }
+            }
+        }
+        else
+        {
+            this.currentFrame = this.game.cache.getFrame(key);
+        }
+    }
+
+    this.updateAnimation();
 
 }
 
@@ -16426,6 +16482,18 @@ Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
     
     get: function () {
         return this._cache.cameraVisible;
+    }
+
+});
+
+/**
+* 
+* @returns {boolean}
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "worldX", {
+    
+    get: function () {
+        return 1;
     }
 
 });
@@ -22959,6 +23027,7 @@ Phaser.Tween.prototype = {
 	*/
     pause: function () {
         this._paused = true;
+        this._pausedTime = this.game.time.now;
     },
 
 	/**
@@ -22968,7 +23037,7 @@ Phaser.Tween.prototype = {
 	*/
     resume: function () {
         this._paused = false;
-        this._startTime += this.game.time.pauseDuration;
+        this._startTime += (this.game.time.now - this._pausedTime);
     },
 
 	/**
@@ -29081,6 +29150,7 @@ Phaser.Utils.Debug.prototype = {
         this.line('angle: ' + sprite.angle.toFixed(1) + ' rotation: ' + sprite.rotation.toFixed(1));
         this.line('visible: ' + sprite.visible + ' in camera: ' + sprite.inCamera);
         this.line('body x: ' + sprite.body.x.toFixed(1) + ' y: ' + sprite.body.y.toFixed(1));
+        this.stop();
 
         //  0 = scaleX
         //  1 = skewY
@@ -29131,6 +29201,7 @@ Phaser.Utils.Debug.prototype = {
         this.line('scaleY: ' + sprite.worldTransform[4]);
         this.line('transX: ' + sprite.worldTransform[2]);
         this.line('transY: ' + sprite.worldTransform[5]);
+        this.stop();
 
     },
 
@@ -29160,6 +29231,49 @@ Phaser.Utils.Debug.prototype = {
         this.line('scaleY: ' + sprite.localTransform[4]);
         this.line('transX: ' + sprite.localTransform[2]);
         this.line('transY: ' + sprite.localTransform[5]);
+        this.stop();
+
+    },
+
+    renderSpriteCoords: function (sprite, x, y, color) {
+
+        if (this.context == null)
+        {
+            return;
+        }
+
+        color = color || 'rgb(255, 255, 255)';
+
+        this.start(x, y, color);
+
+        this.line(sprite.name);
+        this.line('x: ' + sprite.x);
+        this.line('y: ' + sprite.y);
+        this.line('local x: ' + sprite.localTransform[2]);
+        this.line('local y: ' + sprite.localTransform[5]);
+        this.line('world x: ' + sprite.worldTransform[2]);
+        this.line('world y: ' + sprite.worldTransform[5]);
+
+        this.stop();
+
+    },
+
+    renderGroupInfo: function (group, x, y, color) {
+
+        if (this.context == null)
+        {
+            return;
+        }
+
+        color = color || 'rgb(255, 255, 255)';
+
+        this.start(x, y, color);
+
+        this.line('Group (size: ' + group.length + ')');
+        this.line('x: ' + group.x);
+        this.line('y: ' + group.y);
+
+        this.stop();
 
     },
 

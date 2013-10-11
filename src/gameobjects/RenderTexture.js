@@ -39,7 +39,8 @@ Phaser.RenderTexture = function (game, key, width, height) {
     */
 	this.height = height || 100;
 
-	/**	I know this has a typo in it, but it's because the PIXI.RenderTexture does and we need to pair-up with it
+	/**
+	* I know this has a typo in it, but it's because the PIXI.RenderTexture does and we need to pair-up with it
 	* once they update pixi to fix the typo, we'll fix it here too :)
     * @property {Description} indetityMatrix - Description. 
  	*/

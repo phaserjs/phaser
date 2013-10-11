@@ -56,6 +56,11 @@ Phaser.Cache = function (game) {
 	*/
     this._tilemaps = {};
 
+    /**
+    * @property {object} _tilesets - Tileset key-value container.
+    * @private
+    */
+    this._tilesets = {};
 
     this.addDefaultImage();
 
@@ -115,6 +120,28 @@ Phaser.Cache.prototype = {
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
         this._images[key].frameData = Phaser.AnimationParser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax);
+
+    },
+
+    /**
+    * Add a new tile set in to the cache.
+    *
+    * @method Phaser.Cache#addTileset
+    * @param {string} key - The unique key by which you will reference this object.
+    * @param {string} url - URL of this tile set file.
+    * @param {object} data - Extra tile set data.
+    * @param {number} tileWidth - Width of the sprite sheet.
+    * @param {number} tileHeight - Height of the sprite sheet.
+    * @param {number} tileMax - How many tiles stored in the sprite sheet.
+    */
+    addTileset: function (key, url, data, tileWidth, tileHeight, tileMax) {
+
+        this._tilesets[key] = { url: url, data: data, tileWidth: tileWidth, tileHeight: tileHeight };
+
+        PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
+        PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
+
+        this._tilesets[key].tileData = Phaser.TilemapParser.tileset(this.game, key, tileWidth, tileHeight, tileMax);
 
     },
 
@@ -205,6 +232,23 @@ Phaser.Cache.prototype = {
 
         PIXI.BaseTextureCache['__default'] = new PIXI.BaseTexture(img);
         PIXI.TextureCache['__default'] = new PIXI.Texture(PIXI.BaseTextureCache['__default']);
+
+    },
+
+    /**
+    * Add a new text data.
+    *
+    * @method Phaser.Cache#addText
+    * @param {string} key - Asset key for the text data. 
+    * @param {string} url - URL of this text data file.
+    * @param {object} data - Extra text data.
+    */    
+    addText: function (key, url, data) {
+
+        this._text[key] = {
+            url: url,
+            data: data
+        };
 
     },
 
@@ -319,23 +363,6 @@ Phaser.Cache.prototype = {
     },
 
 	/**
-	* Add a new text data.
-    *
-    * @method Phaser.Cache#addText
-	* @param {string} key - Asset key for the text data. 
-	* @param {string} url - URL of this text data file.
-	* @param {object} data - Extra text data.
-	*/    
-    addText: function (key, url, data) {
-
-        this._text[key] = {
-            url: url,
-            data: data
-        };
-
-    },
-
-	/**
 	* Get acanvas object from the cache by its key.
     *
     * @method Phaser.Cache#getCanvas
@@ -385,6 +412,42 @@ Phaser.Cache.prototype = {
         }
 
         return null;
+    },
+
+    /**
+    * Get tile set image data by key.
+    *
+    * @method Phaser.Cache#getTileSetImage
+    * @param {string} key - Asset key of the image you want.
+    * @return {object} The image data you want.
+    */    
+    getTilesetImage: function (key) {
+
+        if (this._tilesets[key])
+        {
+            return this._tilesets[key].data;
+        }
+
+        return null;
+
+    },
+
+    /**
+    * Get tile set image data by key.
+    *
+    * @method Phaser.Cache#getTileset
+    * @param {string} key - Asset key of the image you want.
+    * @return {Phaser.Tileset} The tileset data. The tileset image is in the data property, the tile data in tileData.
+    */    
+    getTileset: function (key) {
+
+        if (this._tilesets[key])
+        {
+            return this._tilesets[key];
+        }
+
+        return null;
+
     },
 
     /**
