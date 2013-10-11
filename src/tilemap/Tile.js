@@ -109,7 +109,9 @@ Phaser.Tile.prototype = {
     * @method destroy
     */
     destroy: function () {
-        this.tilemap = null;
+
+        this.tileset = null;
+        
     },
 
     /**

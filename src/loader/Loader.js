@@ -343,18 +343,24 @@ Phaser.Loader.prototype = {
 	* @param {object} [mapData] - An optional JSON data object (can be given in place of a URL).
 	* @param {string} [format] - The format of the map data.
 	*/
-	tilemap: function (key, tilesetURL, mapDataURL, mapData, format) {
+	tilemap: function (key, mapDataURL, mapData, format) {
 
 		if (typeof mapDataURL === "undefined") { mapDataURL = null; }
 		if (typeof mapData === "undefined") { mapData = null; }
 		if (typeof format === "undefined") { format = Phaser.Tilemap.CSV; }
+
+		if (mapDataURL == null && mapData == null)
+		{
+			console.warn('Phaser.Loader.tilemap - Both mapDataURL and mapData are null. One must be set.');
+			return;
+		}
 
 		if (this.checkKeyExists(key) === false)
 		{
 			//  A URL to a json/csv file has been given
 			if (mapDataURL)
 			{
-				this.addToFileList('tilemap', key, tilesetURL, { mapDataURL: mapDataURL, format: format });
+				this.addToFileList('tilemap', key, mapDataURL, { format: format });
 			}
 			else
 			{
@@ -374,7 +380,7 @@ Phaser.Loader.prototype = {
 						break;
 				}
 
-				this.addToFileList('tilemap', key, tilesetURL, { mapDataURL: null, mapData: mapData, format: format });
+				this.game.cache.addTilemap(key, null, mapData, format);
 
 			}
 		}
@@ -637,7 +643,6 @@ Phaser.Loader.prototype = {
 			case 'spritesheet':
 			case 'textureatlas':
 			case 'bitmapfont':
-			case 'tilemap':
 			case 'tileset':
 				file.data = new Image();
 				file.data.name = file.key;
@@ -699,6 +704,29 @@ Phaser.Loader.prototype = {
 					this.fileError(file.key);
 				}
 
+				break;
+
+			case 'tilemap':
+				this._xhr.open("GET", this.baseURL + file.url, true);
+				this._xhr.responseType = "text";
+
+				if (file.format == Phaser.Tilemap.JSON)
+				{
+					this._xhr.onload = function () {
+						return _this.jsonLoadComplete(file.key);
+					};
+				}
+				else if (file.format == Phaser.Tilemap.CSV)
+				{
+					this._xhr.onload = function () {
+						return _this.csvLoadComplete(file.key);
+					};
+				}
+
+				this._xhr.onerror = function () {
+					return _this.dataLoadError(file.key);
+				};
+				this._xhr.send();
 				break;
 
 			case 'text':
@@ -798,7 +826,11 @@ Phaser.Loader.prototype = {
 				this.game.cache.addTileset(file.key, file.url, file.data, file.tileWidth, file.tileHeight, file.tileMax);
 				break;
 
+				/*
 			case 'tilemap':
+
+				file.data = this._xhr.response;
+				this.game.cache.addTilemap(file.key, file.url, file.data, file.format);
 
 				if (file.mapDataURL == null)
 				{
@@ -830,6 +862,7 @@ Phaser.Loader.prototype = {
 					this._xhr.send();
 				}
 				break;
+				*/
 
 			case 'textureatlas':
 
@@ -944,7 +977,7 @@ Phaser.Loader.prototype = {
 
 		if (file.type == 'tilemap')
 		{
-			this.game.cache.addTilemap(file.key, file.url, file.data, data, file.format);
+			this.game.cache.addTilemap(file.key, file.url, data, file.format);
 		}
 		else
 		{
@@ -966,7 +999,7 @@ Phaser.Loader.prototype = {
 		var data = this._xhr.response;
 		var file = this._fileList[key];
 
-		this.game.cache.addTilemap(file.key, file.url, file.data, data, file.format);
+		this.game.cache.addTilemap(file.key, file.url, data, file.format);
 
 		this.nextFile(key, true);
 

@@ -1,15 +1,17 @@
 
-Phaser.Tileset = function (key, tileWidth, tileHeight) {
+Phaser.Tileset = function (image, key, tileWidth, tileHeight) {
 
     /**
     * @property {string} key - The cache ID.
     */
     this.key = key;
 
-    this.tilewidth = tileWidth;
+    this.image = image;
+
+    this.tileWidth = tileWidth;
     this.tileHeight = tileHeight;
 
-    this._tiles = [];
+    this.tiles = [];
 
 }
 
@@ -17,7 +19,7 @@ Phaser.Tileset.prototype = {
 
     addTile: function (tile) {
 
-        this._tiles.push(tile);
+        this.tiles.push(tile);
 
         return tile;
 
@@ -25,12 +27,20 @@ Phaser.Tileset.prototype = {
 
     getTile: function (index) {
 
-        if (this._tiles[index])
+        if (this.tiles[index])
         {
-            return this._tiles[index];
+            return this.tiles[index];
         }
 
         return null;
+
+    },
+
+    checkTileIndex: function (index) {
+
+    	console.log('checking tile', index);
+
+    	return (this.tiles[index]);
 
     }
 
@@ -44,7 +54,7 @@ Phaser.Tileset.prototype = {
 Object.defineProperty(Phaser.Tileset.prototype, "total", {
 
     get: function () {
-        return this._ties.length;
+        return this.tiles.length;
     }
 
 });

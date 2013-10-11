@@ -1,16 +1,5 @@
 Phaser.TilemapParser = {
 
-	/**
-	* Parse a Sprite Sheet and extract the animation frame data from it.
-	*
-	* @method Phaser.AnimationParser.spriteSheet
-	* @param {Phaser.Game} game - A reference to the currently running game.
-	* @param {string} key - The Game.Cache asset key of the Sprite Sheet image.
-	* @param {number} frameWidth - The fixed width of each frame of the animation.
-	* @param {number} frameHeight - The fixed height of each frame of the animation.
-	* @param {number} [frameMax=-1] - The total number of animation frames to extact from the Sprite Sheet. The default value of -1 means "extract all frames".
-	* @return {Phaser.FrameData} A FrameData object containing the parsed frames.
-	*/
 	tileset: function (game, key, tileWidth, tileHeight, tileMax) {
 
 	    //  How big is our image?
@@ -54,7 +43,7 @@ Phaser.TilemapParser = {
 	    var x = 0;
 	    var y = 0;
 
-	    var tileset = new Phaser.Tileset(key, tileWidth, tileHeight);
+	    var tileset = new Phaser.Tileset(img, key, tileWidth, tileHeight);
 
 	    for (var i = 0; i < total; i++)
 	    {
@@ -73,47 +62,110 @@ Phaser.TilemapParser = {
 
 	},
 
+	parse: function (game, data, format) {
+
+		if (format == Phaser.Tilemap.CSV)
+		{
+			return this.parseCSV(data);
+		}
+		else if (format == Phaser.Tilemap.TILED_JSON)
+		{
+			return this.parseTiledJSON(data);
+		}
+
+	},
+
 	/**
 	* Parse csv map data and generate tiles.
 	* 
 	* @method Phaser.Tilemap.prototype.parseCSV
 	* @param {string} data - CSV map data.
-	* @param {string} key - Asset key for tileset image.
-	* @param {number} tileWidth - Width of its tile.
-	* @param {number} tileHeight - Height of its tile.
 	*/
-	parseCSV: function (data, key, tileWidth, tileHeight) {
-
-	    // var layer = new Phaser.TilemapLayer(this, 0, key, Phaser.Tilemap.CSV, 'TileLayerCSV' + this.layers.length.toString(), tileWidth, tileHeight);
+	parseCSV: function (data) {
 
 	    //  Trim any rogue whitespace from the data
 	    data = data.trim();
+
+	    var output = [];
 
 	    var rows = data.split("\n");
 
 	    for (var i = 0; i < rows.length; i++)
 	    {
+	    	output[i] = [];
+
 	        var column = rows[i].split(",");
 
-	        if (column.length > 0)
+	        for (var c = 0; c < column.length; c++)
 	        {
-	            // layer.addColumn(column);
+	            output[i][c] = parseInt(column[c]);
 	        }
 	    }
 
-	    // layer.updateBounds();
-	    // layer.createCanvas();
+	    return [{ name: 'csv', alpha: 1, visible: true, tileMargin: 0, tileSpacing: 0, data: output }];
 
-	    // var tileQuantity = layer.parseTileOffsets();
+	},
 
-	    // this.currentLayer = layer;
-	    // this.collisionLayer = layer;
-	    // this.layers.push(layer);
+	/**
+	* Parse JSON map data and generate tiles.
+	* 
+	* @method Phaser.Tilemap.prototype.parseTiledJSON
+	* @param {string} data - JSON map data.
+	* @param {string} key - Asset key for tileset image.
+	*/
+	parseTiledJSON: function (json) {
 
-	    // this.width = this.currentLayer.widthInPixels;
-	    // this.height = this.currentLayer.heightInPixels;
+		var layers = [];
 
-	    // this.generateTiles(tileQuantity);
+	    for (var i = 0; i < json.layers.length; i++)
+	    {
+	        //  Check it's a data layer
+	        if (!json.layers[i].data)
+	        {
+	            continue;
+	        }
+
+			//	json.tilewidth
+			//	json.tileheight
+
+	        var layer = {
+
+		        name: json.layers[i].name,
+		        alpha: json.layers[i].opacity,
+		        visible: json.layers[i].visible,
+		        tileMargin: json.tilesets[0].margin,
+		        tileSpacing: json.tilesets[0].spacing
+
+	        };
+
+	        var output = [];
+	        var c = 0;
+	        var row;
+
+	        for (var t = 0; t < json.layers[i].data.length; t++)
+	        {
+	            if (c == 0)
+	            {
+	                row = [];
+	            }
+
+	            row.push(json.layers[i].data[t]);
+	            c++;
+
+	            if (c == json.layers[i].width)
+	            {
+	            	output.push(row);
+	                // layer.addColumn(row);
+	                c = 0;
+	            }
+	        }
+
+	        layers.data = output;
+	        this.layers.push(layer);
+
+	    }
+
+	    return layers;
 
 	}
 

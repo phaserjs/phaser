@@ -151,16 +151,14 @@ Phaser.Cache.prototype = {
     * @method Phaser.Cache#addTilemap
     * @param {string} key - The unique key by which you will reference this object.
     * @param {string} url - URL of the tilemap image.
-    * @param {object} data - Tilemap data.
     * @param {object} mapData - The tilemap data object.
     * @param {number} format - The format of the tilemap data.
     */
-    addTilemap: function (key, url, data, mapData, format) {
+    addTilemap: function (key, url, mapData, format) {
 
-        this._tilemaps[key] = { url: url, data: data, spriteSheet: true, mapData: mapData, format: format };
+        this._tilemaps[key] = { url: url, mapData: mapData, format: format };
 
-        PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
+        this._tilemaps[key].mapData = Phaser.TilemapParser.parse(this.game, mapData, format);
 
     },
 
@@ -443,7 +441,7 @@ Phaser.Cache.prototype = {
 
         if (this._tilesets[key])
         {
-            return this._tilesets[key];
+            return this._tilesets[key].tileData;
         }
 
         return null;
