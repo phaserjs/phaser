@@ -156,9 +156,9 @@ Phaser.Cache.prototype = {
     */
     addTilemap: function (key, url, mapData, format) {
 
-        this._tilemaps[key] = { url: url, mapData: mapData, format: format };
+        this._tilemaps[key] = { url: url, data: mapData, format: format };
 
-        this._tilemaps[key].mapData = Phaser.TilemapParser.parse(this.game, mapData, format);
+        this._tilemaps[key].layers = Phaser.TilemapParser.parse(this.game, mapData, format);
 
     },
 
@@ -453,9 +453,9 @@ Phaser.Cache.prototype = {
     *
     * @method Phaser.Cache#getTilemap
     * @param {string} key - Asset key of the tilemap you want.
-    * @return {Phaser.Tilemap} The tilemap data. The tileset image is in the data property, the map data in mapData.
+    * @return {Object} The tilemap data. The tileset image is in the data property, the map data in mapData.
     */
-    getTilemap: function (key) {
+    getTilemapData: function (key) {
 
         if (this._tilemaps[key])
         {

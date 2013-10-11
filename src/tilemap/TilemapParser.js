@@ -64,11 +64,11 @@ Phaser.TilemapParser = {
 
 	parse: function (game, data, format) {
 
-		if (format == Phaser.Tilemap.CSV)
+		if (format === Phaser.Tilemap.CSV)
 		{
 			return this.parseCSV(data);
 		}
-		else if (format == Phaser.Tilemap.TILED_JSON)
+		else if (format === Phaser.Tilemap.TILED_JSON)
 		{
 			return this.parseTiledJSON(data);
 		}
@@ -87,8 +87,9 @@ Phaser.TilemapParser = {
 	    data = data.trim();
 
 	    var output = [];
-
 	    var rows = data.split("\n");
+	    var height = rows.length;
+	    var width = 0;
 
 	    for (var i = 0; i < rows.length; i++)
 	    {
@@ -100,9 +101,14 @@ Phaser.TilemapParser = {
 	        {
 	            output[i][c] = parseInt(column[c]);
 	        }
+
+            if (width == 0)
+            {
+            	width = column.length;
+            }
 	    }
 
-	    return [{ name: 'csv', alpha: 1, visible: true, tileMargin: 0, tileSpacing: 0, data: output }];
+	    return [{ name: 'csv', width: width, height: height, alpha: 1, visible: true, tileMargin: 0, tileSpacing: 0, data: output }];
 
 	},
 
@@ -131,10 +137,13 @@ Phaser.TilemapParser = {
 	        var layer = {
 
 		        name: json.layers[i].name,
+		        width: json.layers[i].width,
+		        height: json.layers[i].height,
 		        alpha: json.layers[i].opacity,
 		        visible: json.layers[i].visible,
+
 		        tileMargin: json.tilesets[0].margin,
-		        tileSpacing: json.tilesets[0].spacing
+		        tileSpacing: json.tilesets[0].spacing,
 
 	        };
 
@@ -155,13 +164,13 @@ Phaser.TilemapParser = {
 	            if (c == json.layers[i].width)
 	            {
 	            	output.push(row);
-	                // layer.addColumn(row);
 	                c = 0;
 	            }
 	        }
 
-	        layers.data = output;
-	        this.layers.push(layer);
+	        layer.data = output;
+	        
+	        layers.push(layer);
 
 	    }
 

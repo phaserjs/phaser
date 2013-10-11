@@ -371,7 +371,7 @@ Phaser.Loader.prototype = {
 						break;
 
 					//  An xml string or object has been given
-					case Phaser.Tilemap.JSON:
+					case Phaser.Tilemap.TILED_JSON:
 
 						if (typeof mapData === 'string')
 						{
@@ -710,7 +710,7 @@ Phaser.Loader.prototype = {
 				this._xhr.open("GET", this.baseURL + file.url, true);
 				this._xhr.responseType = "text";
 
-				if (file.format == Phaser.Tilemap.JSON)
+				if (file.format == Phaser.Tilemap.TILED_JSON)
 				{
 					this._xhr.onload = function () {
 						return _this.jsonLoadComplete(file.key);

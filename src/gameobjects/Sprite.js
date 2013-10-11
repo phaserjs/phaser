@@ -97,6 +97,12 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
         this.currentFrame = this.game.cache.getTextureFrame(key.name);
     }
+    else if (key instanceof PIXI.Texture)
+    {
+        PIXI.Sprite.call(this, key);
+
+        this.currentFrame = frame;
+    }
     else
     {
         if (key == null || this.game.cache.checkImageKey(key) == false)

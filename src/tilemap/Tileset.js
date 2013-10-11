@@ -38,8 +38,6 @@ Phaser.Tileset.prototype = {
 
     checkTileIndex: function (index) {
 
-    	console.log('checking tile', index);
-
     	return (this.tiles[index]);
 
     }

@@ -30,16 +30,14 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, mapData, 
 	*/
     this.texture = new PIXI.Texture(this.baseTexture);
     
+    //  index, x, y, width, height, name, uuid
+    this.frame = new Phaser.Frame(0, 0, 0, renderWidth, renderHeight, 'tilemaplayer', game.rnd.uuid());
+
 	/**
 	* @property {Description} sprite - Description.
 	* @default
 	*/
-    this.sprite = new PIXI.Sprite(this.texture);
-
-    /**
-    * @property {array} mapData - Description.
-    */
-    this.mapData = [];
+    this.sprite = new Phaser.Sprite(this.game, x, y, this.texture, this.frame);
 
     /**
     * @property {Description} tileset - Description.
@@ -127,46 +125,32 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, mapData, 
     */
     this._startY = 0;
 
+    this.tilemap;
+    this.layer;
+
+    this._x = 0;
+    this._y = 0;
+    this._prevX = 0;
+    this._prevY = 0;
+    this.dirty = true;
+
 };
 
 Phaser.TilemapLayer.prototype = {
 
-    create: function (width, height) {
+    updateMapData: function (tilemap, layerID) {
 
-        this.mapData = [];
+        this.tilemap = tilemap;
+        this.layer = this.tilemap.layers[layerID];
 
-        var data;
-
-        for (var y = 0; y < height; y++)
+        if (this._maxX > this.layer.width)
         {
-            this.mapData[y] = [];
-
-            for (var x = 0; x < width; x++)
-            {
-                this.mapData[y][x] = 0;
-            }
+            this._maxX = this.layer.width;
         }
 
-        this.widthInTiles = width;
-        this.heightInTiles = height;
-
-    },
-
-    /**
-    * Set a specific tile with its x and y in tiles.
-    * @method putTile
-    * @param {number} x - X position of this tile.
-    * @param {number} y - Y position of this tile.
-    * @param {number} index - The index of this tile type in the core map data.
-    */
-    putTile: function (x, y, index) {
-
-        if (y >= 0 && y < this.mapData.length)
+        if (this._maxY > this.layer.height)
         {
-            if (x >= 0 && x < this.mapData[y].length)
-            {
-                this.mapData[y][x] = index;
-            }
+            this._maxY = this.layer.height;
         }
 
     },
@@ -177,22 +161,26 @@ Phaser.TilemapLayer.prototype = {
         this.tileWidth = this.tileset.tileWidth;
         this.tileHeight = this.tileset.tileHeight;
 
+        //  This don't need to be calculated every frame!
+        this._maxX = this.game.math.ceil(this.canvas.width / this.tileWidth) + 1;
+        this._maxY = this.game.math.ceil(this.canvas.height / this.tileHeight) + 1;
+
     },
 
     render: function () {
 
-        if (this.visible == false)
+        if (this.visible == false || this.dirty == false)
         {
             return;
         }
 
         //  Work out how many tiles we can fit into our canvas and round it up for the edges
-        this._maxX = this.game.math.ceil(this.canvas.width / this.tileWidth) + 1;
-        this._maxY = this.game.math.ceil(this.canvas.height / this.tileHeight) + 1;
+        // this._maxX = this.game.math.ceil(this.canvas.width / this.tileWidth) + 1;
+        // this._maxY = this.game.math.ceil(this.canvas.height / this.tileHeight) + 1;
 
         //  And now work out where in the tilemap the camera actually is
-        this._startX = this.game.math.floor(this.game.camera.x / this.tileWidth);
-        this._startY = this.game.math.floor(this.game.camera.y / this.tileHeight);
+        this._startX = this.game.math.floor(this._x / this.tileWidth);
+        this._startY = this.game.math.floor(this._y / this.tileHeight);
 
         //  Tilemap bounds check
         if (this._startX < 0)
@@ -205,47 +193,40 @@ Phaser.TilemapLayer.prototype = {
             this._startY = 0;
         }
 
-        if (this._maxX > this.widthInTiles)
+        if (this._startX + this._maxX > this.layer.width)
         {
-            this._maxX = this.widthInTiles;
+            this._startX = this.layer.width - this._maxX;
         }
 
-        if (this._maxY > this.heightInTiles)
+        if (this._startY + this._maxY > this.layer.height)
         {
-            this._maxY = this.heightInTiles;
-        }
-
-        if (this._startX + this._maxX > this.widthInTiles)
-        {
-            this._startX = this.widthInTiles - this._maxX;
-        }
-
-        if (this._startY + this._maxY > this.heightInTiles)
-        {
-            this._startY = this.heightInTiles - this._maxY;
+            this._startY = this.layer.height - this._maxY;
         }
 
         //  Finally get the offset to avoid the blocky movement
-        this._dx = -(this.game.camera.x - (this._startX * this.tileWidth));
-        this._dy = -(this.game.camera.y - (this._startY * this.tileHeight));
+        this._dx = -(this._x - (this._startX * this.tileWidth));
+        this._dy = -(this._y - (this._startY * this.tileHeight));
 
         this._tx = this._dx;
         this._ty = this._dy;
 
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        for (var row = this._startY; row < this._startY + this._maxY; row++)
+        for (var y = this._startY; y < this._startY + this._maxY; y++)
         {
-            this._columnData = this.mapData[row];
+            this._column = this.layer.data[y];
 
-            for (var tile = this._startX; tile < this._startX + this._maxX; tile++)
+            for (var x = this._startX; x < this._startX + this._maxX; x++)
             {
-                if (this.tileset.checkTileIndex(this._columnData[tile]))
-                {
+                //  only -1 on TILED maps, not CSV
+                var tile = this.tileset.tiles[this._column[x]-1];
+
+                // if (this.tileset.checkTileIndex(tile))
+                // {
                     this.context.drawImage(
                         this.tileset.image,
-                        this.tileset.tiles[this._columnData[tile]].x,
-                        this.tileset.tiles[this._columnData[tile]].y,
+                        tile.x,
+                        tile.y,
                         this.tileWidth,
                         this.tileHeight,
                         this._tx,
@@ -253,7 +234,7 @@ Phaser.TilemapLayer.prototype = {
                         this.tileWidth,
                         this.tileHeight
                     );
-                }
+                // }
 
                 this._tx += this.tileWidth;
 
@@ -269,39 +250,62 @@ Phaser.TilemapLayer.prototype = {
             PIXI.texturesToUpdate.push(this.baseTexture);
         }
 
+        this.dirty = false;
+
         return true;
-
-    },
-
-
-    dump: function () {
-
-        var txt = '';
-        var args = [''];
-
-        for (var y = 0; y < this.heightInTiles; y++)
-        {
-            for (var x = 0; x < this.widthInTiles; x++)
-            {
-                txt += "%c  ";
-
-                if (this.mapData[y][x] > 0)
-                {
-                    args.push("background: rgb(50, 50, 50)");
-                }
-                else
-                {
-                    args.push("background: rgb(0, 0, 0)");
-                }
-            }
-
-            txt += "\n";
-        }
-
-        args[0] = txt;
-        console.log.apply(console, args);
 
     }
 
 };
 
+Phaser.TilemapLayer.prototype.deltaAbsX = function () {
+    return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
+}
+
+Phaser.TilemapLayer.prototype.deltaAbsY = function () {
+    return (this.deltaY() > 0 ? this.deltaY() : -this.deltaY());
+}
+
+Phaser.TilemapLayer.prototype.deltaX = function () {
+    return this._x - this._prevX;
+}
+
+Phaser.TilemapLayer.prototype.deltaY = function () {
+    return this._y - this._prevY;
+}
+
+Object.defineProperty(Phaser.TilemapLayer.prototype, "x", {
+    
+    get: function () {
+        return this._x;
+    },
+
+    set: function (value) {
+
+        if (value !== this._x)
+        {
+            this._x = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+Object.defineProperty(Phaser.TilemapLayer.prototype, "y", {
+    
+    get: function () {
+        return this._y;
+    },
+
+    set: function (value) {
+
+        if (value !== this._y)
+        {
+            this._y = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
