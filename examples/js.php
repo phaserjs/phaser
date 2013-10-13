@@ -87,6 +87,7 @@
 
 	<script src="../src/tween/TweenManager.js"></script>
 	<script src="../src/tween/Tween.js"></script>
+	<script src="../src/tween/TweenGroup.js"></script>
 	<script src="../src/tween/Easing.js"></script>
 
 	<script src="../src/time/Time.js"></script>

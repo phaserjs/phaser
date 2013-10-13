@@ -39,8 +39,10 @@ Phaser.TweenManager = function (game) {
 	*/
 	this._add = [];
 
-	this.game.onPause.add(this.pauseAll, this);
-	this.game.onResume.add(this.resumeAll, this);
+	this._paused = false;
+
+	this.game.onPause.add(this.pause, this);
+	this.game.onResume.add(this.resume, this);
 
 };
 
@@ -126,14 +128,14 @@ Phaser.TweenManager.prototype = {
 	*/
 	update: function () {
 
-		if ( this._tweens.length === 0 && this._add.length === 0 ) return false;
+		if ( (this._tweens.length === 0 && this._add.length === 0) || this._paused ) return false;
 
 		var i = 0;
 		var numTweens = this._tweens.length;
 
 		while ( i < numTweens ) {
 
-			if ( this._tweens[ i ].update( this.game.time.now ) ) {
+			if ( this._tweens[ i ].update( this.game.time.elapsed ) ) {
 
 				i++;
 
@@ -182,6 +184,14 @@ Phaser.TweenManager.prototype = {
     		this._tweens[i].resume();
     	};
 
+    },
+
+    pause: function () {
+    	this._paused = true;
+    },
+
+    resume: function () {
+    	this._paused = false;
     }
 
 };

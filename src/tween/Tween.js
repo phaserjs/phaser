@@ -87,13 +87,6 @@ Phaser.Tween = function (object, game) {
     this._delayTime = 0;
 
     /**
-    * @property {Description} _startTime - Description.
-    * @private
-    * @default null
-    */
-    this._startTime = null;
-
-    /**
     * @property {Description} _easingFunction - Description.
     * @private
     */
@@ -104,12 +97,6 @@ Phaser.Tween = function (object, game) {
     * @private
     */
     this._interpolationFunction = Phaser.Math.linearInterpolation;
-
-    /**
-    * @property {Description} _chainedTweens - Description.
-    * @private
-    */
-    this._chainedTweens = [];
 
     /**
     * @property {Description} _onStartCallback - Description.
@@ -138,13 +125,6 @@ Phaser.Tween = function (object, game) {
     * @default null
     */
     this._onCompleteCallback = null;
-    
-    /**
-    * @property {number} _pausedTime - Description.
-    * @private
-    * @default
-    */
-    this._pausedTime = 0;
 
     /**
     * @property {boolean} pendingDelete - If this tween is ready to be deleted by the TweenManager.
@@ -173,6 +153,12 @@ Phaser.Tween = function (object, game) {
     */
     this.isRunning = false;
 
+    this._next = null;
+    this._prev = null;
+
+    this._time = 0;
+    this._needReset = true;
+    this._finished = false;
 };
 
 Phaser.Tween.prototype = {
@@ -199,35 +185,21 @@ Phaser.Tween.prototype = {
 		repeat = repeat || 0;
 		yoyo = yoyo || false;
 
-		var self;
-		if (this._parent)
-		{
-			self = this._manager.create(this._object);
-			this._lastChild.chain(self);
-			this._lastChild = self;
-		}
-		else
-		{
-			self = this;
-			this._parent = this;
-			this._lastChild = this;
-		}
-
-		self._repeat = repeat;
-        self._duration = duration;
-		self._valuesEnd = properties;
+		this._repeat = repeat;
+        this._duration = duration;
+		this._valuesEnd = properties;
 
         if (ease !== null)
         {
-            self._easingFunction = ease;
+            this._easingFunction = ease;
         }
 
-        if (delay > 0)
+        if (delay != 0)
         {
-            self._delayTime = delay;
+            this._delayTime = delay;
         }
 
-        self._yoyo = yoyo;
+        this._yoyo = yoyo;
 
         if (autoStart) {
             return this.start();
@@ -252,13 +224,17 @@ Phaser.Tween.prototype = {
 
 		this._manager.add(this);
 
+		return this;
+
+	},
+
+	_reset: function() {
+
 		this.onStart.dispatch(this._object);
 
-        this.isRunning = true;
+		this.isRunning = true;
 
 		this._onStartCallbackFired = false;
-
-        this._startTime = this.game.time.now + this._delayTime;
 
 		for ( var property in this._valuesEnd ) {
 
@@ -285,9 +261,6 @@ Phaser.Tween.prototype = {
 			this._valuesStartRepeat[ property ] = this._valuesStart[ property ] || 0;
 
 		}
-
-		return this;
-
 	},
 
 	/**
@@ -377,39 +350,6 @@ Phaser.Tween.prototype = {
 	},
 
 	/**
-	* You can chain tweens together by passing a reference to the chain function. This enables one tween to call another on completion.
-	* You can pass as many tweens as you like to this function, they will each be chained in sequence.
-	*
-	* @method Phaser.Tween#chain
-	* @return {Phaser.Tween} Itself.
-	*/
-	chain: function () {
-
-		this._chainedTweens = arguments;
-		return this;
-
-	},
-
-	/**
-	* Loop a chain of tweens
-	* 
-	* Usage:
-	* game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
-	* .to({ y: 300 }, 1000, Phaser.Easing.Linear.None)
-	* .to({ x: 0 }, 1000, Phaser.Easing.Linear.None)
-	* .to({ y: 0 }, 1000, Phaser.Easing.Linear.None)
-	* .loop();
-	* @method Phaser.Tween#loop
-	* @return {Phaser.Tween} Itself.
-	*/
-	loop: function() {
-
-		this._lastChild.chain(this);
-		return this;
-
-	},
-
-	/**
 	* Sets a callback to be fired when the tween starts. Note: callback will be called in the context of the global scope.
 	*
 	* @method Phaser.Tween#onStartCallback
@@ -485,19 +425,22 @@ Phaser.Tween.prototype = {
 			return false;
 		}
 
-        if (this._paused || time < this._startTime) {
+		if ( this._paused || this._finished ) {
+			return true;
+		}
 
+		this._time += time;
+
+        if ( this._time < this._delayTime ) {
             return true;
+        }
 
+        if (this._needReset) {
+        	this._reset();
+        	this._needReset = false;
         }
 
 		var property;
-
-		if ( time < this._startTime ) {
-
-			return true;
-
-		}
 
 		if ( this._onStartCallbackFired === false ) {
 
@@ -511,7 +454,7 @@ Phaser.Tween.prototype = {
 
 		}
 
-		var elapsed = ( time - this._startTime ) / this._duration;
+		var elapsed = ( this._time - this._delayTime ) / this._duration;
 		elapsed = elapsed > 1 ? 1 : elapsed;
 
 		var value = this._easingFunction( elapsed );
@@ -548,6 +491,8 @@ Phaser.Tween.prototype = {
 		}
 
 		if ( elapsed == 1 ) {
+
+			this._finished = true;
 
 			if ( this._repeat > 0 ) {
 
@@ -588,12 +533,6 @@ Phaser.Tween.prototype = {
 
 				if ( this._onCompleteCallback !== null ) {
 					this._onCompleteCallback.call( this._object );
-				}
-
-				for ( var i = 0, numChainedTweens = this._chainedTweens.length; i < numChainedTweens; i ++ ) {
-
-					this._chainedTweens[ i ].start( time );
-
 				}
 
 				return false;

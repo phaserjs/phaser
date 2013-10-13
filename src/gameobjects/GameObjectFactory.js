@@ -103,6 +103,19 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
+    * Create a TweenGroup
+    *
+    * @method tweenGroup
+    * @param {boolean} autoStart - Whether this group will start automatically or not. Default false.
+    * @return {Phaser.TweenGroup} Description.
+    */
+    tweenGroup: function(autoStart) {
+
+        return new Phaser.TweenGroup(this.game, autoStart);
+
+    },
+
+    /**
     * Description.
     *
     * @method group
