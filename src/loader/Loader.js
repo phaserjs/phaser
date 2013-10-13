@@ -251,6 +251,8 @@ Phaser.Loader.prototype = {
 			this.addToFileList('image', key, url);
 		}
 
+		return this;
+
 	},
 
 	/**
@@ -269,6 +271,8 @@ Phaser.Loader.prototype = {
 		{
 			this.addToFileList('text', key, url);
 		}
+
+		return this;
 
 	},
 
@@ -291,6 +295,8 @@ Phaser.Loader.prototype = {
 			this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax });
 		}
 
+		return this;
+
 	},
 
 	/**
@@ -312,6 +318,8 @@ Phaser.Loader.prototype = {
 			this.addToFileList('tileset', key, url, { tileWidth: tileWidth, tileHeight: tileHeight, tileMax: tileMax });
 		}
 
+		return this;
+
 	},
 
 	/**
@@ -330,6 +338,8 @@ Phaser.Loader.prototype = {
 		{
 			this.addToFileList('audio', key, urls, { buffer: null, autoDecode: autoDecode });
 		}
+
+		return this;
 
 	},
 
@@ -352,7 +362,8 @@ Phaser.Loader.prototype = {
 		if (mapDataURL == null && mapData == null)
 		{
 			console.warn('Phaser.Loader.tilemap - Both mapDataURL and mapData are null. One must be set.');
-			return;
+
+			return this;
 		}
 
 		if (this.checkKeyExists(key) === false)
@@ -384,6 +395,8 @@ Phaser.Loader.prototype = {
 
 			}
 		}
+
+		return this;
 
 	},
 
@@ -445,6 +458,8 @@ Phaser.Loader.prototype = {
 			}
 		}
 
+		return this;
+
 	},
 
 	/**
@@ -457,7 +472,7 @@ Phaser.Loader.prototype = {
 	*/
 	atlasJSONArray: function (key, textureURL, atlasURL, atlasData) {
 
-		this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
+		return this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
 
 	},
 
@@ -471,7 +486,7 @@ Phaser.Loader.prototype = {
 	*/
 	atlasJSONHash: function (key, textureURL, atlasURL, atlasData) {
 
-		this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+		return this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 
 	},
 
@@ -485,7 +500,7 @@ Phaser.Loader.prototype = {
 	*/
 	atlasXML: function (key, textureURL, atlasURL, atlasData) {
 
-		this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_XML_STARLING);
+		return this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_XML_STARLING);
 
 	},
 
@@ -567,6 +582,8 @@ Phaser.Loader.prototype = {
 			}
 
 		}
+
+		return this;
 
 	},
 

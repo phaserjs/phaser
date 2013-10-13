@@ -1219,3 +1219,19 @@ Object.defineProperty(Phaser.Group.prototype, "visible", {
     }
 
 });
+
+/**
+* @name Phaser.Group#alpha
+* @property {number} alpha - The alpha value of the Group container.
+*/
+Object.defineProperty(Phaser.Group.prototype, "alpha", {
+
+    get: function () {
+        return this._container.alpha;
+    },
+
+    set: function (value) {
+        this._container.alpha = value;
+    }
+
+});

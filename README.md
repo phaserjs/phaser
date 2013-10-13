@@ -117,6 +117,9 @@ Version 1.0.7 (in progress in the dev branch)
 * You can now pass a PIXI.Texture to Sprite (you also need to pass a Phaser.Frame as the frame parameter) but this is useful for Sprites sharing joint canvases.
 * Fixed Issue #101 (Mouse Button 0 is not recognised, thanks rezoner)
 * Added Sprite.destroy back in again and made it a lot more robust at cleaning up child objects.
+* Added 'return this' to all the core Loader functions so you can chain load calls if you so wish.
+* Group.alpha is now exposed publically and changes the Group container object (not the children directly, who can still have their own alpha values)
+
 
 
 

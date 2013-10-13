@@ -25,7 +25,12 @@
 
 	function update() {
 
-		sprite.rotation += 0.01;
+		sprite.angle += 1;
+
+		//	Note: Due to a bug in Chrome the following doesn't work atm:
+		//	sprite.angle++;
+		//	See: https://code.google.com/p/chromium/issues/detail?id=306851
+
 
 	}
 
