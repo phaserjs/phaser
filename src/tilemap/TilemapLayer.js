@@ -197,11 +197,19 @@ Phaser.TilemapLayer.prototype = {
             return;
         }
 
+        this._prevX = this._dx;
+        this._prevY = this._dy;
+
         this._dx = -(this._x - (this._startX * this.tileWidth));
         this._dy = -(this._y - (this._startY * this.tileHeight));
 
         this._tx = this._dx;
         this._ty = this._dy;
+
+        //  First let's just copy over the whole canvas, offset by the scroll difference
+
+        //  Then we only need fill in the missing strip/s (could be top/bottom/left/right I guess)
+        //   ScrollZone code might be useful here.
 
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -260,11 +268,11 @@ Phaser.TilemapLayer.prototype.deltaAbsY = function () {
 }
 
 Phaser.TilemapLayer.prototype.deltaX = function () {
-    return this._x - this._prevX;
+    return this._dx - this._prevX;
 }
 
 Phaser.TilemapLayer.prototype.deltaY = function () {
-    return this._y - this._prevY;
+    return this._dy - this._prevY;
 }
 
 Object.defineProperty(Phaser.TilemapLayer.prototype, "x", {

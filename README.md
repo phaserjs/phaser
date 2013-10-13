@@ -116,6 +116,8 @@ Version 1.0.7 (in progress in the dev branch)
 * Tweens .to will now always return the parent (thanks powerfear)
 * You can now pass a PIXI.Texture to Sprite (you also need to pass a Phaser.Frame as the frame parameter) but this is useful for Sprites sharing joint canvases.
 * Fixed Issue #101 (Mouse Button 0 is not recognised, thanks rezoner)
+* Added Sprite.destroy back in again and made it a lot more robust at cleaning up child objects.
+
 
 
 * TODO: look at Sprite.crop (http://www.html5gamedevs.com/topic/1617-error-in-spritecrop/)

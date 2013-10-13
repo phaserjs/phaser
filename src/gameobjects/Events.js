@@ -35,3 +35,35 @@ Phaser.Events = function (sprite) {
 	this.onAnimationLoop = null;
 
 };
+
+Phaser.Events.prototype = {
+
+	destroy: function () {
+
+		this.parent = null;
+		this.onAddedToGroup.dispose();
+		this.onRemovedFromGroup.dispose();
+		this.onKilled.dispose();
+		this.onRevived.dispose();
+		this.onOutOfBounds.dispose();
+
+		if (this.onInputOver)
+		{
+		    this.onInputOver.dispose();
+		    this.onInputOut.dispose();
+		    this.onInputDown.dispose();
+		    this.onInputUp.dispose();
+		    this.onDragStart.dispose();
+		    this.onDragStop.dispose();
+		}
+
+		if (this.onAnimationStart)
+		{
+			this.onAnimationStart.dispose();
+			this.onAnimationComplete.dispose();
+			this.onAnimationLoop.dispose();
+		}
+
+	}
+
+};

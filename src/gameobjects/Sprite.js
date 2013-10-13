@@ -583,6 +583,30 @@ Phaser.Sprite.prototype.kill = function() {
 /**
 * Description.
 * 
+* @method Phaser.Sprite.prototype.destroy
+*/
+Phaser.Sprite.prototype.destroy = function() {
+
+    if (this.group)
+    {
+        this.group.remove(this);
+    }
+
+    this.input.destroy();
+    this.events.destroy();
+    this.animations.destroy();
+
+    this.alive = false;
+    this.exists = false;
+    this.visible = false;
+
+    this.game = null;
+
+}
+
+/**
+* Description.
+* 
 * @method Phaser.Sprite.prototype.kill
 */
 Phaser.Sprite.prototype.damage = function(amount) {

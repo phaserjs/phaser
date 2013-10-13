@@ -50,9 +50,10 @@
 
         // layer.sprite.scale.setTo(2, 2);
 
-        game.add.sprite(320, 0, layer.texture, layer.frame);
-        game.add.sprite(0, 200, layer.texture, layer.frame);
-        game.add.sprite(320, 200, layer.texture, layer.frame);
+        //  Works a treat :)
+        // game.add.sprite(320, 0, layer.texture, layer.frame);
+        // game.add.sprite(0, 200, layer.texture, layer.frame);
+        // game.add.sprite(320, 200, layer.texture, layer.frame);
 
         cursors = game.input.keyboard.createCursorKeys();
     }
