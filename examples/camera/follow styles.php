@@ -36,7 +36,7 @@
     function create() {
 
         //make the world larger than the actual canvas
-        game.world.setBounds(1400,1400);
+        game.world.setBounds(0,0,1400,1400);
 
         for(var i=0,nb=10;i<nb;i++){
 

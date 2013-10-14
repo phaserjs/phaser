@@ -1,5 +1,5 @@
 <?php
-	$title = "Animation from a Texture Atlas";
+	$title = "Animation from a Texture Atlas From TexturePacker";
 	require('../head.php');
 ?>
 

@@ -7,7 +7,7 @@
 
 
 
-	var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+	var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
 
 	function preload() {
 		game.load.image('mushroom', 'assets/sprites/mushroom2.png');
@@ -17,9 +17,6 @@
 
 		var test = game.add.sprite(200, 200, 'mushroom');
 
-	}
-
-	function update() {
 	}
 
 
