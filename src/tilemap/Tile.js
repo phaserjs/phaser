@@ -125,17 +125,8 @@ Phaser.Tile.prototype = {
     * @param {boolean}   separateX - Separate at x-axis.
     * @param {boolean}   separateY - Separate at y-axis.
     */
-    setCollision: function (left, right, up, down, reset, separateX, separateY) {
+    setCollision: function (left, right, up, down) {
 
-        if (reset)
-        {
-            this.resetCollision();
-        }
-
-        this.separateX = separateX;
-        this.separateY = separateY;
-
-        this.collideNone = true;
         this.collideLeft = left;
         this.collideRight = right;
         this.collideUp = up;
@@ -144,6 +135,10 @@ Phaser.Tile.prototype = {
         if (left || right || up || down)
         {
             this.collideNone = false;
+        }
+        else
+        {
+            this.collideNone = true;
         }
 
     },

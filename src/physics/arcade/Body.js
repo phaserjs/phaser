@@ -65,6 +65,9 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.overlapX = 0;
     this.overlapY = 0;
 
+    this.hullX = new Phaser.Rectangle();
+    this.hullY = new Phaser.Rectangle();
+
     //	If a body is overlapping with another body, but neither of them are moving (maybe they spawned on-top of each other?) this is set to true
     this.embedded = false;
 
@@ -105,8 +108,6 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 	    this.embedded = false;
 
-		// this.preX = (this.sprite.localTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		// this.preY = (this.sprite.localTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 		this.preX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
 		this.preY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 		this.preRotation = this.sprite.angle;
@@ -123,6 +124,8 @@ Phaser.Physics.Arcade.Body.prototype = {
 			{
 				this.checkWorldBounds();
 			}
+
+			this.updateHulls();
 		}
 
 		if (this.skipQuadTree == false && this.allowCollision.none == false && this.sprite.visible && this.sprite.alive)
@@ -171,6 +174,13 @@ Phaser.Physics.Arcade.Body.prototype = {
 		{
 			this.sprite.angle += this.deltaZ();
 		}
+
+	},
+
+	updateHulls: function () {
+
+		this.hullX.setTo(this.x, this.preY, this.width, this.height);
+		this.hullY.setTo(this.preX, this.y, this.width, this.height);
 
 	},
 
@@ -223,21 +233,16 @@ Phaser.Physics.Arcade.Body.prototype = {
 	    this.angularVelocity = 0;
 	    this.angularAcceleration = 0;
 
-		// this.preX = (this.sprite.localTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		// this.preY = (this.sprite.localTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 		this.preX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
 		this.preY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 		this.preRotation = this.sprite.angle;
 
-		// this.x = (this.sprite.localTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		// this.y = (this.sprite.localTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
-		this.x = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		this.y = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
-		this.rotation = this.sprite.angle;
+		this.x = this.preX;
+		this.y = this.preY;
+		this.rotation = this.preRotation;
 
 	},
 
-	//	Basically Math.abs
     deltaAbsX: function () {
         return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
     },

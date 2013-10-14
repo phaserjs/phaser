@@ -9,7 +9,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v1.0.7 - Built at: Thu, 10 Oct 2013 16:51:46 +0100
+* v1.0.7 - Built at: Mon, 14 Oct 2013 15:29:30 +0100
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -10622,6 +10622,22 @@ Object.defineProperty(Phaser.Group.prototype, "visible", {
 });
 
 /**
+* @name Phaser.Group#alpha
+* @property {number} alpha - The alpha value of the Group container.
+*/
+Object.defineProperty(Phaser.Group.prototype, "alpha", {
+
+    get: function () {
+        return this._container.alpha;
+    },
+
+    set: function (value) {
+        this._container.alpha = value;
+    }
+
+});
+
+/**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
@@ -13527,7 +13543,7 @@ Phaser.Pointer.prototype = {
         this.identifier = event.identifier;
         this.target = event.target;
 
-        if (event.button)
+        if (typeof event.button !== 'undefined')
         {
             this.button = event.button;
         }
@@ -13631,7 +13647,7 @@ Phaser.Pointer.prototype = {
             return;
         }
 
-        if (event.button)
+        if (typeof event.button !== 'undefined')
         {
             this.button = event.button;
         }
@@ -13710,8 +13726,6 @@ Phaser.Pointer.prototype = {
 
         if (this._highestRenderObject == null)
         {
-            // console.log("HRO null");
-
             //  The pointer isn't currently over anything, check if we've got a lingering previous target
             if (this.targetObject)
             {
@@ -15394,6 +15408,38 @@ Phaser.Events = function (sprite) {
 	this.onAnimationLoop = null;
 
 };
+
+Phaser.Events.prototype = {
+
+	destroy: function () {
+
+		this.parent = null;
+		this.onAddedToGroup.dispose();
+		this.onRemovedFromGroup.dispose();
+		this.onKilled.dispose();
+		this.onRevived.dispose();
+		this.onOutOfBounds.dispose();
+
+		if (this.onInputOver)
+		{
+		    this.onInputOver.dispose();
+		    this.onInputOut.dispose();
+		    this.onInputDown.dispose();
+		    this.onInputUp.dispose();
+		    this.onDragStart.dispose();
+		    this.onDragStop.dispose();
+		}
+
+		if (this.onAnimationStart)
+		{
+			this.onAnimationStart.dispose();
+			this.onAnimationComplete.dispose();
+			this.onAnimationLoop.dispose();
+		}
+
+	}
+
+};
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
@@ -15760,6 +15806,12 @@ Phaser.Sprite = function (game, x, y, key, frame) {
         PIXI.Sprite.call(this, key);
 
         this.currentFrame = this.game.cache.getTextureFrame(key.name);
+    }
+    else if (key instanceof PIXI.Texture)
+    {
+        PIXI.Sprite.call(this, key);
+
+        this.currentFrame = frame;
     }
     else
     {
@@ -16235,6 +16287,30 @@ Phaser.Sprite.prototype.kill = function() {
     this.exists = false;
     this.visible = false;
     this.events.onKilled.dispatch(this);
+
+}
+
+/**
+* Description.
+* 
+* @method Phaser.Sprite.prototype.destroy
+*/
+Phaser.Sprite.prototype.destroy = function() {
+
+    if (this.group)
+    {
+        this.group.remove(this);
+    }
+
+    this.input.destroy();
+    this.events.destroy();
+    this.animations.destroy();
+
+    this.alive = false;
+    this.exists = false;
+    this.visible = false;
+
+    this.game = null;
 
 }
 
@@ -17449,7 +17525,8 @@ Phaser.RenderTexture = function (game, key, width, height) {
     */
 	this.height = height || 100;
 
-	/**	I know this has a typo in it, but it's because the PIXI.RenderTexture does and we need to pair-up with it
+	/**
+	* I know this has a typo in it, but it's because the PIXI.RenderTexture does and we need to pair-up with it
 	* once they update pixi to fix the typo, we'll fix it here too :)
     * @property {Description} indetityMatrix - Description. 
  	*/
@@ -22773,13 +22850,14 @@ Phaser.Tween.prototype = {
 		if (this._parent)
 		{
 			self = this._manager.create(this._object);
-			self._parent = this._parent;
-			this.chain(self);
+			this._lastChild.chain(self);
+			this._lastChild = self;
 		}
 		else
 		{
 			self = this;
-			self._parent = self;
+			this._parent = this;
+			this._lastChild = this;
 		}
 
 		self._repeat = repeat;
@@ -22799,9 +22877,9 @@ Phaser.Tween.prototype = {
         self._yoyo = yoyo;
 
         if (autoStart) {
-            return self.start();
+            return this.start();
         } else {
-            return self;
+            return this;
         }
 
 	},
@@ -22969,11 +23047,11 @@ Phaser.Tween.prototype = {
 	* .to({ y: 0 }, 1000, Phaser.Easing.Linear.None)
 	* .loop();
 	* @method Phaser.Tween#loop
-	* @return {Tween} Itself.
+	* @return {Phaser.Tween} Itself.
 	*/
 	loop: function() {
 
-		if (this._parent) this.chain(this._parent);
+		this._lastChild.chain(this);
 		return this;
 
 	},
@@ -25608,6 +25686,11 @@ Phaser.Cache = function (game) {
 	*/
     this._tilemaps = {};
 
+    /**
+    * @property {object} _tilesets - Tileset key-value container.
+    * @private
+    */
+    this._tilesets = {};
 
     this.addDefaultImage();
 
@@ -25671,21 +25754,41 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    * Add a new tile set in to the cache.
+    *
+    * @method Phaser.Cache#addTileset
+    * @param {string} key - The unique key by which you will reference this object.
+    * @param {string} url - URL of this tile set file.
+    * @param {object} data - Extra tile set data.
+    * @param {number} tileWidth - Width of the sprite sheet.
+    * @param {number} tileHeight - Height of the sprite sheet.
+    * @param {number} tileMax - How many tiles stored in the sprite sheet.
+    */
+    addTileset: function (key, url, data, tileWidth, tileHeight, tileMax) {
+
+        this._tilesets[key] = { url: url, data: data, tileWidth: tileWidth, tileHeight: tileHeight };
+
+        PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
+        PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
+
+        this._tilesets[key].tileData = Phaser.TilemapParser.tileset(this.game, key, tileWidth, tileHeight, tileMax);
+
+    },
+
+    /**
     * Add a new tilemap.
     *
     * @method Phaser.Cache#addTilemap
     * @param {string} key - The unique key by which you will reference this object.
     * @param {string} url - URL of the tilemap image.
-    * @param {object} data - Tilemap data.
     * @param {object} mapData - The tilemap data object.
     * @param {number} format - The format of the tilemap data.
     */
-    addTilemap: function (key, url, data, mapData, format) {
+    addTilemap: function (key, url, mapData, format) {
 
-        this._tilemaps[key] = { url: url, data: data, spriteSheet: true, mapData: mapData, format: format };
+        this._tilemaps[key] = { url: url, data: mapData, format: format };
 
-        PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
-        PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
+        this._tilemaps[key].layers = Phaser.TilemapParser.parse(this.game, mapData, format);
 
     },
 
@@ -25757,6 +25860,23 @@ Phaser.Cache.prototype = {
 
         PIXI.BaseTextureCache['__default'] = new PIXI.BaseTexture(img);
         PIXI.TextureCache['__default'] = new PIXI.Texture(PIXI.BaseTextureCache['__default']);
+
+    },
+
+    /**
+    * Add a new text data.
+    *
+    * @method Phaser.Cache#addText
+    * @param {string} key - Asset key for the text data. 
+    * @param {string} url - URL of this text data file.
+    * @param {object} data - Extra text data.
+    */    
+    addText: function (key, url, data) {
+
+        this._text[key] = {
+            url: url,
+            data: data
+        };
 
     },
 
@@ -25871,23 +25991,6 @@ Phaser.Cache.prototype = {
     },
 
 	/**
-	* Add a new text data.
-    *
-    * @method Phaser.Cache#addText
-	* @param {string} key - Asset key for the text data. 
-	* @param {string} url - URL of this text data file.
-	* @param {object} data - Extra text data.
-	*/    
-    addText: function (key, url, data) {
-
-        this._text[key] = {
-            url: url,
-            data: data
-        };
-
-    },
-
-	/**
 	* Get acanvas object from the cache by its key.
     *
     * @method Phaser.Cache#getCanvas
@@ -25940,13 +26043,49 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    * Get tile set image data by key.
+    *
+    * @method Phaser.Cache#getTileSetImage
+    * @param {string} key - Asset key of the image you want.
+    * @return {object} The image data you want.
+    */    
+    getTilesetImage: function (key) {
+
+        if (this._tilesets[key])
+        {
+            return this._tilesets[key].data;
+        }
+
+        return null;
+
+    },
+
+    /**
+    * Get tile set image data by key.
+    *
+    * @method Phaser.Cache#getTileset
+    * @param {string} key - Asset key of the image you want.
+    * @return {Phaser.Tileset} The tileset data. The tileset image is in the data property, the tile data in tileData.
+    */    
+    getTileset: function (key) {
+
+        if (this._tilesets[key])
+        {
+            return this._tilesets[key].tileData;
+        }
+
+        return null;
+
+    },
+
+    /**
     * Get tilemap data by key.
     *
     * @method Phaser.Cache#getTilemap
     * @param {string} key - Asset key of the tilemap you want.
-    * @return {Phaser.Tilemap} The tilemap data. The tileset image is in the data property, the map data in mapData.
+    * @return {Object} The tilemap data. The tileset image is in the data property, the map data in mapData.
     */
-    getTilemap: function (key) {
+    getTilemapData: function (key) {
 
         if (this._tilemaps[key])
         {
@@ -26537,6 +26676,8 @@ Phaser.Loader.prototype = {
 			this.addToFileList('image', key, url);
 		}
 
+		return this;
+
 	},
 
 	/**
@@ -26556,6 +26697,8 @@ Phaser.Loader.prototype = {
 			this.addToFileList('text', key, url);
 		}
 
+		return this;
+
 	},
 
 	/**
@@ -26566,7 +26709,7 @@ Phaser.Loader.prototype = {
 	* @param {string} url - URL of the sheet file.
 	* @param {number} frameWidth - Width of each single frame.
 	* @param {number} frameHeight - Height of each single frame.
-	* @param {number} frameMax - How many frames in this sprite sheet.
+	* @param {number} [frameMax=-1] - How many frames in this sprite sheet. If not specified it will divide the whole image into frames.
 	*/
 	spritesheet: function (key, url, frameWidth, frameHeight, frameMax) {
 
@@ -26576,6 +26719,31 @@ Phaser.Loader.prototype = {
 		{
 			this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax });
 		}
+
+		return this;
+
+	},
+
+	/**
+	* Add a new tile set to the loader. These are used in the rendering of tile maps.
+	*
+	* @method Phaser.Loader#tileset
+	* @param {string} key - Unique asset key of the tileset file.
+	* @param {string} url - URL of the tileset.
+	* @param {number} tileWidth - Width of each single tile in pixels.
+	* @param {number} tileHeight - Height of each single tile in pixels.
+	* @param {number} [tileMax=-1] - How many tiles in this tileset. If not specified it will divide the whole image into tiles.
+	*/
+	tileset: function (key, url, tileWidth, tileHeight, tileMax) {
+
+		if (typeof tileMax === "undefined") { tileMax = -1; }
+
+		if (this.checkKeyExists(key) === false)
+		{
+			this.addToFileList('tileset', key, url, { tileWidth: tileWidth, tileHeight: tileHeight, tileMax: tileMax });
+		}
+
+		return this;
 
 	},
 
@@ -26596,6 +26764,8 @@ Phaser.Loader.prototype = {
 			this.addToFileList('audio', key, urls, { buffer: null, autoDecode: autoDecode });
 		}
 
+		return this;
+
 	},
 
 	/**
@@ -26608,18 +26778,25 @@ Phaser.Loader.prototype = {
 	* @param {object} [mapData] - An optional JSON data object (can be given in place of a URL).
 	* @param {string} [format] - The format of the map data.
 	*/
-	tilemap: function (key, tilesetURL, mapDataURL, mapData, format) {
+	tilemap: function (key, mapDataURL, mapData, format) {
 
 		if (typeof mapDataURL === "undefined") { mapDataURL = null; }
 		if (typeof mapData === "undefined") { mapData = null; }
 		if (typeof format === "undefined") { format = Phaser.Tilemap.CSV; }
+
+		if (mapDataURL == null && mapData == null)
+		{
+			console.warn('Phaser.Loader.tilemap - Both mapDataURL and mapData are null. One must be set.');
+
+			return this;
+		}
 
 		if (this.checkKeyExists(key) === false)
 		{
 			//  A URL to a json/csv file has been given
 			if (mapDataURL)
 			{
-				this.addToFileList('tilemap', key, tilesetURL, { mapDataURL: mapDataURL, format: format });
+				this.addToFileList('tilemap', key, mapDataURL, { format: format });
 			}
 			else
 			{
@@ -26630,7 +26807,7 @@ Phaser.Loader.prototype = {
 						break;
 
 					//  An xml string or object has been given
-					case Phaser.Tilemap.JSON:
+					case Phaser.Tilemap.TILED_JSON:
 
 						if (typeof mapData === 'string')
 						{
@@ -26639,10 +26816,12 @@ Phaser.Loader.prototype = {
 						break;
 				}
 
-				this.addToFileList('tilemap', key, tilesetURL, { mapDataURL: null, mapData: mapData, format: format });
+				this.game.cache.addTilemap(key, null, mapData, format);
 
 			}
 		}
+
+		return this;
 
 	},
 
@@ -26704,6 +26883,8 @@ Phaser.Loader.prototype = {
 			}
 		}
 
+		return this;
+
 	},
 
 	/**
@@ -26716,7 +26897,7 @@ Phaser.Loader.prototype = {
 	*/
 	atlasJSONArray: function (key, textureURL, atlasURL, atlasData) {
 
-		this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
+		return this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
 
 	},
 
@@ -26730,7 +26911,7 @@ Phaser.Loader.prototype = {
 	*/
 	atlasJSONHash: function (key, textureURL, atlasURL, atlasData) {
 
-		this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+		return this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 
 	},
 
@@ -26744,7 +26925,7 @@ Phaser.Loader.prototype = {
 	*/
 	atlasXML: function (key, textureURL, atlasURL, atlasData) {
 
-		this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_XML_STARLING);
+		return this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_XML_STARLING);
 
 	},
 
@@ -26827,6 +27008,8 @@ Phaser.Loader.prototype = {
 
 		}
 
+		return this;
+
 	},
 
 	/**
@@ -26902,7 +27085,7 @@ Phaser.Loader.prototype = {
 			case 'spritesheet':
 			case 'textureatlas':
 			case 'bitmapfont':
-			case 'tilemap':
+			case 'tileset':
 				file.data = new Image();
 				file.data.name = file.key;
 				file.data.onload = function () {
@@ -26963,6 +27146,29 @@ Phaser.Loader.prototype = {
 					this.fileError(file.key);
 				}
 
+				break;
+
+			case 'tilemap':
+				this._xhr.open("GET", this.baseURL + file.url, true);
+				this._xhr.responseType = "text";
+
+				if (file.format == Phaser.Tilemap.TILED_JSON)
+				{
+					this._xhr.onload = function () {
+						return _this.jsonLoadComplete(file.key);
+					};
+				}
+				else if (file.format == Phaser.Tilemap.CSV)
+				{
+					this._xhr.onload = function () {
+						return _this.csvLoadComplete(file.key);
+					};
+				}
+
+				this._xhr.onerror = function () {
+					return _this.dataLoadError(file.key);
+				};
+				this._xhr.send();
 				break;
 
 			case 'text':
@@ -27057,7 +27263,16 @@ Phaser.Loader.prototype = {
 				this.game.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax);
 				break;
 
+			case 'tileset':
+
+				this.game.cache.addTileset(file.key, file.url, file.data, file.tileWidth, file.tileHeight, file.tileMax);
+				break;
+
+				/*
 			case 'tilemap':
+
+				file.data = this._xhr.response;
+				this.game.cache.addTilemap(file.key, file.url, file.data, file.format);
 
 				if (file.mapDataURL == null)
 				{
@@ -27089,6 +27304,7 @@ Phaser.Loader.prototype = {
 					this._xhr.send();
 				}
 				break;
+				*/
 
 			case 'textureatlas':
 
@@ -27203,7 +27419,7 @@ Phaser.Loader.prototype = {
 
 		if (file.type == 'tilemap')
 		{
-			this.game.cache.addTilemap(file.key, file.url, file.data, data, file.format);
+			this.game.cache.addTilemap(file.key, file.url, data, file.format);
 		}
 		else
 		{
@@ -27225,7 +27441,7 @@ Phaser.Loader.prototype = {
 		var data = this._xhr.response;
 		var file = this._fileList[key];
 
-		this.game.cache.addTilemap(file.key, file.url, file.data, data, file.format);
+		this.game.cache.addTilemap(file.key, file.url, data, file.format);
 
 		this.nextFile(key, true);
 
@@ -31308,6 +31524,9 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.overlapX = 0;
     this.overlapY = 0;
 
+    this.hullX = new Phaser.Rectangle();
+    this.hullY = new Phaser.Rectangle();
+
     //	If a body is overlapping with another body, but neither of them are moving (maybe they spawned on-top of each other?) this is set to true
     this.embedded = false;
 
@@ -31348,8 +31567,6 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 	    this.embedded = false;
 
-		// this.preX = (this.sprite.localTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		// this.preY = (this.sprite.localTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 		this.preX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
 		this.preY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 		this.preRotation = this.sprite.angle;
@@ -31366,6 +31583,8 @@ Phaser.Physics.Arcade.Body.prototype = {
 			{
 				this.checkWorldBounds();
 			}
+
+			this.updateHulls();
 		}
 
 		if (this.skipQuadTree == false && this.allowCollision.none == false && this.sprite.visible && this.sprite.alive)
@@ -31414,6 +31633,13 @@ Phaser.Physics.Arcade.Body.prototype = {
 		{
 			this.sprite.angle += this.deltaZ();
 		}
+
+	},
+
+	updateHulls: function () {
+
+		this.hullX.setTo(this.x, this.preY, this.width, this.height);
+		this.hullY.setTo(this.preX, this.y, this.width, this.height);
 
 	},
 
@@ -31466,21 +31692,16 @@ Phaser.Physics.Arcade.Body.prototype = {
 	    this.angularVelocity = 0;
 	    this.angularAcceleration = 0;
 
-		// this.preX = (this.sprite.localTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		// this.preY = (this.sprite.localTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 		this.preX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
 		this.preY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 		this.preRotation = this.sprite.angle;
 
-		// this.x = (this.sprite.localTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		// this.y = (this.sprite.localTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
-		this.x = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		this.y = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
-		this.rotation = this.sprite.angle;
+		this.x = this.preX;
+		this.y = this.preY;
+		this.rotation = this.preRotation;
 
 	},
 
-	//	Basically Math.abs
     deltaAbsX: function () {
         return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
     },
@@ -32318,67 +32539,377 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "bottom", {
 
 });
 
-Phaser.Tilemap = function (game, key, x, y, resizeWorld, tileWidth, tileHeight) {
-
-};
-
-//  Needed to keep the PIXI.Sprite constructor in the prototype chain (as the core pixi renderer uses an instanceof check sadly)
-Phaser.Tilemap.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
-Phaser.Tilemap.prototype.constructor = Phaser.Tilemap;
-
-Phaser.Tilemap.CSV = 0;
-Phaser.Tilemap.JSON = 1;
-
-
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
-* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
-* @module       Phaser.TilemapLayer
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.Tile
 */
+
 
 /**
-* Create a new <code>TilemapLayer</code>.
-* @class Phaser.TilemapLayer
-* @classdesc A Tilemap Layer. Tiled format maps can have multiple overlapping layers.
+* Create a new <code>Tile</code>.
+*
+* @class Phaser.Tile
+* @classdesc A Tile is a single representation of a tile within a Tilemap.
 * @constructor
-* @param parent {Tilemap} The tilemap that contains this layer.
-* @param id {number} The ID of this layer within the Tilemap array.
-* @param key {string} Asset key for this map.
-* @param mapformat {number} Format of this map data, available: Tilemap.CSV or Tilemap.JSON.
-* @param name {string} Name of this layer, so you can get this layer by its name.
-* @param tileWidth {number} Width of tiles in this map.
-* @param tileHeight {number} Height of tiles in this map.
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {Tilemap} tilemap - The tilemap this tile belongs to.
+* @param {number}  index - The index of this tile type in the core map data.
+* @param {number}  width - Width of the tile.
+* @param {number}  height - Height of the tile.
 */
-Phaser.TilemapLayer = function (parent, id, key, mapFormat, name, tileWidth, tileHeight) {
-
-	/**
-	* @property {boolean} exists - Controls whether update() and draw() are automatically called.
-	* @default
-	*/
-    this.exists = true;
-
-	/**
-	* @property {boolean} visible - Controls whether draw() are automatically called.
-	* @default
-	*/
-    this.visible = true;
+Phaser.Tile = function (tileset, index, x, y, width, height) {
 
     /**
-    * How many tiles in each row.
-    * Read-only variable, do NOT recommend changing after the map is loaded!
-    * @property {number} widthInTiles
-    * @default
+    * @property {string} tileset - The tileset this tile belongs to.
     */
-    this.widthInTiles = 0;
+    this.tileset = tileset;
+    
+    /**
+    * @property {number} index - The index of this tile within the tileset.
+    */
+    this.index = index;
+    
+    /**
+    * @property {number} width - The width of the tile in pixels.
+    */
+    this.width = width;
+    
+    /**
+    * @property {number} height - The height of the tile in pixels.
+    */
+    this.height = height;
 
     /**
-    * How many tiles in each column.
-    * Read-only variable, do NOT recommend changing after the map is loaded!
-    * @property {number} heightInTiles
+    * @property {number} x - The top-left corner of the tile within the tileset.
+    */
+    this.x = x;
+    
+    /**
+    * @property {number} y - The top-left corner of the tile within the tileset.
+    */
+    this.y = y;
+
+    //  Any extra meta data info we need here
+
+    /**
+    * @property {number} mass - The virtual mass of the tile.
     * @default
     */
-    this.heightInTiles = 0;
+    this.mass = 1.0;
+
+    /**
+    * @property {boolean} collideNone - Indicating this Tile doesn't collide at all.
+    * @default
+    */
+    this.collideNone = true;
+
+    /**
+    * @property {boolean} collideLeft - Indicating collide with any object on the left.
+    * @default
+    */
+    this.collideLeft = false;
+
+    /**
+    * @property {boolean} collideRight - Indicating collide with any object on the right.
+    * @default
+    */
+    this.collideRight = false;
+
+    /**
+    * @property {boolean} collideUp - Indicating collide with any object on the top.
+    * @default
+    */
+    this.collideUp = false;
+
+    /**
+    * @property {boolean} collideDown - Indicating collide with any object on the bottom.
+    * @default
+    */
+    this.collideDown = false;
+
+    /**
+    * @property {boolean} separateX - Enable separation at x-axis. 
+    * @default
+    */
+    this.separateX = true;
+
+    /**
+    * @property {boolean} separateY - Enable separation at y-axis. 
+    * @default
+    */
+    this.separateY = true;
+
+};
+
+Phaser.Tile.prototype = {
+
+    /**
+    * Clean up memory.
+    * @method destroy
+    */
+    destroy: function () {
+
+        this.tileset = null;
+        
+    },
+
+    /**
+    * Set collision configs.
+    * @method setCollision
+    * @param {boolean}   left - Indicating collide with any object on the left.
+    * @param {boolean}   right - Indicating collide with any object on the right.
+    * @param {boolean}   up - Indicating collide with any object on the top.
+    * @param {boolean}   down - Indicating collide with any object on the bottom.
+    * @param {boolean}   reset - Description. 
+    * @param {boolean}   separateX - Separate at x-axis.
+    * @param {boolean}   separateY - Separate at y-axis.
+    */
+    setCollision: function (left, right, up, down) {
+
+        this.collideLeft = left;
+        this.collideRight = right;
+        this.collideUp = up;
+        this.collideDown = down;
+
+        if (left || right || up || down)
+        {
+            this.collideNone = false;
+        }
+        else
+        {
+            this.collideNone = true;
+        }
+
+    },
+
+    /**
+    * Reset collision status flags.
+    * @method resetCollision
+    */
+    resetCollision: function () {
+
+        this.collideNone = true;
+        this.collideLeft = false;
+        this.collideRight = false;
+        this.collideUp = false;
+        this.collideDown = false;
+
+    }
+
+};
+
+Object.defineProperty(Phaser.Tile.prototype, "bottom", {
+    
+    /**
+    * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
+    * @method bottom
+    * @return {number}
+    **/
+    get: function () {
+        return this.y + this.height;
+    }
+
+});
+
+Object.defineProperty(Phaser.Tile.prototype, "right", {
+    
+    /**
+    * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
+    * However it does affect the width property.
+    * @method right
+    * @return {number}
+    **/    
+    get: function () {
+        return this.x + this.width;
+    }
+
+});
+
+Phaser.Tilemap = function (game, key) {
+
+	/**
+	* @property {Phaser.Game} game - Description.
+	*/ 
+    this.game = game;
+
+    /**
+    * @property {array} layers - Description.
+    */
+	this.layers;
+
+    if (typeof key === 'string')
+    {
+    	this.key = key;
+
+		this.layers = game.cache.getTilemapData(key).layers;
+    }
+    else
+    {
+	    this.layers = [];
+    }
+
+    this.currentLayer = 0;
+
+    this.debugMap = [];
+
+};
+
+Phaser.Tilemap.CSV = 0;
+Phaser.Tilemap.TILED_JSON = 1;
+
+Phaser.Tilemap.prototype = {
+
+    create: function (name, width, height) {
+
+        var data = [];
+
+        for (var y = 0; y < height; y++)
+        {
+            data[y] = [];
+
+            for (var x = 0; x < width; x++)
+            {
+                data[y][x] = 0;
+            }
+        }
+
+        this.currentLayer = this.layers.push({
+
+			name: name, 
+			width: width, 
+			height: height, 
+			alpha: 1, 
+			visible: true, 
+			tileMargin: 0, 
+			tileSpacing: 0,
+			format: Phaser.Tilemap.CSV,
+			data: data
+
+        });
+
+    },
+
+    setLayer: function (layer) {
+
+    	if (this.layers[layer])
+    	{
+    		this.currentLayer = layer;
+    	}
+
+    },
+
+    createLayerSprite: function (tilset) {
+
+    	//	Creates a TilemapLayer which you can add to the display list
+    	//	Hooked to a specific layer within the map data
+
+
+    },
+
+    /**
+    * Set a specific tile with its x and y in tiles.
+    * @method putTile
+    * @param {number} x - X position of this tile.
+    * @param {number} y - Y position of this tile.
+    * @param {number} index - The index of this tile type in the core map data.
+    */
+    putTile: function (x, y, index) {
+
+    	if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+    	{
+    		this.layers[this.currentLayer].data[y][x] = index;
+    	}
+
+    },
+
+    dump: function () {
+
+        var txt = '';
+        var args = [''];
+
+        for (var y = 0; y < this.layers[this.currentLayer].height; y++)
+        {
+            for (var x = 0; x < this.layers[this.currentLayer].width; x++)
+            {
+                txt += "%c  ";
+
+                if (this.layers[this.currentLayer].data[y][x] > 1)
+                {
+                	if (this.debugMap[this.layers[this.currentLayer].data[y][x]])
+                	{
+	                    args.push("background: " + this.debugMap[this.layers[this.currentLayer].data[y][x]]);
+                	}
+                	else
+                	{
+	                    args.push("background: #ffffff");
+                	}
+                }
+                else
+                {
+                    args.push("background: rgb(0, 0, 0)");
+                }
+            }
+
+            txt += "\n";
+        }
+
+        args[0] = txt;
+        console.log.apply(console, args);
+
+    }
+
+};
+
+//  Maybe should extend Sprite?
+Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, tilemap, layer) {
+
+	/**
+	* @property {Phaser.Game} game - Description.
+	*/ 
+    this.game = game;
+    
+	/**
+	* @property {Description} canvas - Description.
+	* @default
+	*/
+    this.canvas = Phaser.Canvas.create(renderWidth, renderHeight);
+    
+	/**
+	* @property {Description} context - Description.
+	* @default
+	*/
+    this.context = this.canvas.getContext('2d');
+    
+	/**
+	* @property {Description} baseTexture - Description.
+	* @default
+	*/
+    this.baseTexture = new PIXI.BaseTexture(this.canvas);
+    
+	/**
+	* @property {Description} texture - Description.
+	* @default
+	*/
+    this.texture = new PIXI.Texture(this.baseTexture);
+    
+    this.frame = new Phaser.Frame(0, 0, 0, renderWidth, renderHeight, 'tilemaplayer', game.rnd.uuid());
+
+	/**
+	* @property {Description} sprite - Description.
+	* @default
+	*/
+    this.sprite = new Phaser.Sprite(this.game, x, y, this.texture, this.frame);
+
+
+    /**
+    * @property {Description} tileset - Description.
+    */
+    this.tileset = null;
+
+    this.tileWidth = 0;
+    this.tileHeight = 0;
 
     /**
     * Read-only variable, do NOT recommend changing after the map is loaded!
@@ -32394,601 +32925,542 @@ Phaser.TilemapLayer = function (parent, id, key, mapFormat, name, tileWidth, til
     */
     this.heightInPixels = 0;
 
-    /**
-    * Distance between REAL tiles to the tileset texture bound.
-    * @property {number} tileMargin
-    * @default
-    */
-    this.tileMargin = 0;
+
+    this.renderWidth = renderWidth;
+    this.renderHeight = renderHeight;
 
     /**
-    * Distance between every 2 neighbor tile in the tileset texture.
-    * @property {number} tileSpacing
-    * @default
+    * @property {number} _ga - Local render loop var to help avoid gc spikes.
+    * @private 
     */
-    this.tileSpacing = 0;
+    this._ga = 1;
+    
+    /**
+    * @property {number} _dx - Local render loop var to help avoid gc spikes.
+    * @private 
+    */
+    this._dx = 0;
+    
+    /**
+    * @property {number} _dy - Local render loop var to help avoid gc spikes.
+    * @private 
+    */
+    this._dy = 0;
+    
+    /**
+    * @property {number} _dw - Local render loop var to help avoid gc spikes.
+    * @private 
+    */
+    this._dw = 0;
+    
+    /**
+    * @property {number} _dh - Local render loop var to help avoid gc spikes.
+    * @private 
+    */
+    this._dh = 0;
+    
+    /**
+    * @property {number} _tx - Local render loop var to help avoid gc spikes.
+    * @private 
+    */
+    this._tx = 0;
+    
+    /**
+    * @property {number} _ty - Local render loop var to help avoid gc spikes.
+    * @private 
+    */
+    this._ty = 0;
+    
+    /**
+    * @property {number} _tl - Local render loop var to help avoid gc spikes.
+    * @private 
+    */
+    this._tl = 0;
+    
+    /**
+    * @property {number} _maxX - Local render loop var to help avoid gc spikes.
+    * @private 
+    */
+    this._maxX = 0;
+    
+    /**
+    * @property {number} _maxY - Local render loop var to help avoid gc spikes.
+    * @private 
+    */
+    this._maxY = 0;
+    
+    /**
+    * @property {number} _startX - Local render loop var to help avoid gc spikes.
+    * @private 
+    */
+    this._startX = 0;
+    
+    /**
+    * @property {number} _startY - Local render loop var to help avoid gc spikes.
+    * @private 
+    */
+    this._startY = 0;
 
-	/**
-	* @property {Description} parent - Description.
-	*/
-    this.parent = parent;
-    
-	/**
-	* @property {Phaser.Game} game - Description.
-	*/ 
-    this.game = parent.game;
-    
-	/**
-	* @property {Description} ID - Description.
-	*/    
-    this.ID = id;
-    
-	/**
-	* @property {Description} name - Description.
-	*/
-    this.name = name;
-    
-	/**
-	* @property {Description} key - Description.
-	*/
-    this.key = key;
-    
-	/**
-	* @property {Description} type - Description.
-	*/
-    this.type = Phaser.TILEMAPLAYER;
+    this.tilemap = null;
+    this.layer = null;
 
-	/**
-	* @property {tileWidth} mapFormat - Description.
-	*/
-    this.mapFormat = mapFormat;
-    
-	/**
-	* @property {Description} tileWidth - Description.
-	*/
-    this.tileWidth = tileWidth;
-    
-	/**
-	* @property {Description} tileHeight - Description.
-	*/
-    this.tileHeight = tileHeight;
+    this._x = 0;
+    this._y = 0;
+    this._prevX = 0;
+    this._prevY = 0;
+    this.dirty = true;
 
-	/**
-	* @property {Phaser.Rectangle} boundsInTiles - Description.
-	*/
-    this.boundsInTiles = new Phaser.Rectangle();
+    if (typeof tileset === 'string')
+    {
+        this.updateTileset(tileset);
+    }
 
-    var map = this.game.cache.getTilemap(key);
-
-	/**
-	* @property {Description} tileset - Description.
-	*/
-    this.tileset = map.data;
-
-	/**
-	* @property {Description} _alpha - Description.
-	* @private
-	* @default
-	*/
-    this._alpha = 1;
-
-	/**
-	* @property {Description} canvas - Description.
-	* @default
-	*/
-    this.canvas = null;
-    
-	/**
-	* @property {Description} context - Description.
-	* @default
-	*/
-    this.context = null;
-    
-	/**
-	* @property {Description} baseTexture - Description.
-	* @default
-	*/
-    this.baseTexture = null;
-    
-	/**
-	* @property {Description} texture - Description.
-	* @default
-	*/
-    this.texture = null;
-    
-	/**
-	* @property {Description} sprite - Description.
-	* @default
-	*/
-    this.sprite = null;
-
-	/**
-	* @property {array} mapData - Description.
-	*/
-    this.mapData = [];
-    
-	/**
-	* @property {array} _tempTileBlock - Description.
-	* @private
-	*/
-    this._tempTileBlock = [];
-    
-	/**
-	* @property {array} _tempBlockResults - Description.
-	* @private
-	* 
-	*/
-    this._tempBlockResults = [];
+    if (tilemap instanceof Phaser.Tilemap)
+    {
+        this.updateMapData(tilemap, layer);
+    }
 
 };
 
 Phaser.TilemapLayer.prototype = {
 
-    /**
-    * Set a specific tile with its x and y in tiles.
-    * @method putTileWorldXY
-    * @param {number} x - X position of this tile in world coordinates.
-    * @param {number} y - Y position of this tile in world coordinates.
-    * @param {number} index - The index of this tile type in the core map data.
-    */
-    putTileWorldXY: function (x, y, index) {
+    updateTileset: function (tileset) {
 
-        x = this.game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
-        y = this.game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
+        this.tileset = this.game.cache.getTileset(tileset);
+        this.tileWidth = this.tileset.tileWidth;
+        this.tileHeight = this.tileset.tileHeight;
 
-        if (y >= 0 && y < this.mapData.length)
-        {
-            if (x >= 0 && x < this.mapData[y].length)
-            {
-                this.mapData[y][x] = index;
-            }
-        }
+        this.updateMax();
+    },
+
+    updateMapData: function (tilemap, layerID) {
+
+        this.tilemap = tilemap;
+        this.layer = this.tilemap.layers[layerID];
+
+        this.updateMax();
 
     },
 
-    /**
-    * Set a specific tile with its x and y in tiles.
-    * @method putTile
-    * @param {number} x - X position of this tile.
-    * @param {number} y - Y position of this tile.
-    * @param {number} index - The index of this tile type in the core map data.
-    */
-    putTile: function (x, y, index) {
+    updateMax: function () {
 
-        if (y >= 0 && y < this.mapData.length)
+        this._maxX = this.game.math.ceil(this.canvas.width / this.tileWidth) + 1;
+        this._maxY = this.game.math.ceil(this.canvas.height / this.tileHeight) + 1;
+
+        if (this.layer)
         {
-            if (x >= 0 && x < this.mapData[y].length)
+            if (this._maxX > this.layer.width)
             {
-                this.mapData[y][x] = index;
-            }
-        }
-
-    },
-
-    /**
-    * Swap tiles with 2 kinds of indexes.
-    * @method swapTile
-    * @param {number} tileA - First tile index.
-    * @param {number} tileB - Second tile index.
-    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
-    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
-    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
-    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
-    */
-    swapTile: function (tileA, tileB, x, y, width, height) {
-
-        x = x || 0;
-        y = y || 0;
-        width = width || this.widthInTiles;
-        height = height || this.heightInTiles;
-        
-        this.getTempBlock(x, y, width, height);
-
-        for (var r = 0; r < this._tempTileBlock.length; r++)
-        {
-            //  First sweep marking tileA as needing a new index
-            if (this._tempTileBlock[r].tile.index == tileA)
-            {
-                this._tempTileBlock[r].newIndex = true;
+                this._maxX = this.layer.width;
             }
 
-            //  In the same pass we can swap tileB to tileA
-            if (this._tempTileBlock[r].tile.index == tileB)
+            if (this._maxY > this.layer.height)
             {
-                this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = tileA;
+                this._maxY = this.layer.height;
             }
+
+            this.widthInPixels = this.layer.width * this.tileWidth;
+            this.heightInPixels = this.layer.height * this.tileHeight;
         }
 
-        for (var r = 0; r < this._tempTileBlock.length; r++)
+        this.dirty = true;
+
+    },
+
+    render: function () {
+
+        if (!this.dirty || !this.tileset || !this.tilemap || !this.sprite.visible)
         {
-            //  And now swap our newIndex tiles for tileB
-            if (this._tempTileBlock[r].newIndex == true)
+            return;
+        }
+
+        this._prevX = this._dx;
+        this._prevY = this._dy;
+
+        this._dx = -(this._x - (this._startX * this.tileWidth));
+        this._dy = -(this._y - (this._startY * this.tileHeight));
+
+        this._tx = this._dx;
+        this._ty = this._dy;
+
+        //  First let's just copy over the whole canvas, offset by the scroll difference
+
+        //  Then we only need fill in the missing strip/s (could be top/bottom/left/right I guess)
+        //   ScrollZone code might be useful here.
+
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        for (var y = this._startY; y < this._startY + this._maxY; y++)
+        {
+            this._column = this.layer.data[y];
+
+            for (var x = this._startX; x < this._startX + this._maxX; x++)
             {
-                this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = tileB;
+                //  only -1 on TILED maps, not CSV
+                var tile = this.tileset.tiles[this._column[x]-1];
+
+                // if (this.tileset.checkTileIndex(tile))
+                // {
+                    this.context.drawImage(
+                        this.tileset.image,
+                        tile.x,
+                        tile.y,
+                        this.tileWidth,
+                        this.tileHeight,
+                        Math.floor(this._tx),
+                        Math.floor(this._ty),
+                        this.tileWidth,
+                        this.tileHeight
+                    );
+                // }
+
+                this._tx += this.tileWidth;
+
             }
+
+            this._tx = this._dx;
+            this._ty += this.tileHeight;
         }
 
-    },
-
-    /**
-    * Fill a tile block with a specific tile index.
-    * @method fillTile
-    * @param {number} index - Index of tiles you want to fill with.
-    * @param {number} [x] - X position (in tiles) of block's left-top corner.
-    * @param {number} [y] - Y position (in tiles) of block's left-top corner.
-    * @param {number} [width] - width of block.
-    * @param {number} [height] - height of block.
-    */
-    fillTile: function (index, x, y, width, height) {
-
-        x = x || 0;
-        y = y || 0;
-        width = width || this.widthInTiles;
-        height = height || this.heightInTiles;
-
-        this.getTempBlock(x, y, width, height);
-
-        for (var r = 0; r < this._tempTileBlock.length; r++)
+        //  Only needed if running in WebGL, otherwise this array will never get cleared down I don't think!
+        if (this.game.renderType == Phaser.WEBGL)
         {
-            this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = index;
+            PIXI.texturesToUpdate.push(this.baseTexture);
         }
 
+        this.dirty = false;
+
+        return true;
+
+    }
+
+};
+
+Phaser.TilemapLayer.prototype.deltaAbsX = function () {
+    return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
+}
+
+Phaser.TilemapLayer.prototype.deltaAbsY = function () {
+    return (this.deltaY() > 0 ? this.deltaY() : -this.deltaY());
+}
+
+Phaser.TilemapLayer.prototype.deltaX = function () {
+    return this._dx - this._prevX;
+}
+
+Phaser.TilemapLayer.prototype.deltaY = function () {
+    return this._dy - this._prevY;
+}
+
+Object.defineProperty(Phaser.TilemapLayer.prototype, "x", {
+    
+    get: function () {
+        return this._x;
     },
 
-    /**
-    * Set random tiles to a specific tile block.
-    * @method randomiseTiles
-    * @param {number[]} tiles - Tiles with indexes in this array will be randomly set to the given block.
-    * @param {number} [x] - X position (in tiles) of block's left-top corner.
-    * @param {number} [y] - Y position (in tiles) of block's left-top corner.
-    * @param {number} [width] - width of block.
-    * @param {number} [height] - height of block.
-    */
-    randomiseTiles: function (tiles, x, y, width, height) {
+    set: function (value) {
 
-        x = x || 0;
-        y = y || 0;
-        width = width || this.widthInTiles;
-        height = height || this.heightInTiles;
-
-        this.getTempBlock(x, y, width, height);
-
-        for (var r = 0; r < this._tempTileBlock.length; r++)
+        if (value !== this._x && value >= 0)
         {
-            this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = this.game.math.getRandom(tiles);
-        }
+            this._x = value;
 
-    },
-
-    /**
-    * Replace one kind of tiles to another kind.
-    * @method replaceTile
-    * @param {number} tileA - First tile index.
-    * @param {number} tileB - Second tile index.
-    * @param {number} [x] - X position (in tiles) of block's left-top corner.
-    * @param {number} [y] - Y position (in tiles) of block's left-top corner.
-    * @param {number} [width] - width of block.
-    * @param {number} [height] - height of block.
-    */
-    replaceTile: function (tileA, tileB, x, y, width, height) {
-
-        x = x || 0;
-        y = y || 0;
-        width = width || this.widthInTiles;
-        height = height || this.heightInTiles;
-
-        this.getTempBlock(x, y, width, height);
-
-        for (var r = 0; r < this._tempTileBlock.length; r++)
-        {
-            if (this._tempTileBlock[r].tile.index == tileA)
+            if (this._x > (this.widthInPixels - this.renderWidth))
             {
-                this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = tileB;
+                this._x = this.widthInPixels - this.renderWidth;
             }
-        }
 
-    },
+            this._startX = this.game.math.floor(this._x / this.tileWidth);
 
-    /**
-    * Get a tile block with specific position and size (both are in tiles).
-    * @method getTileBlock
-    * @param {number} [x] - X position (in tiles) of block's left-top corner.
-    * @param {number} [y] - Y position (in tiles) of block's left-top corner.
-    * @param {number} [width] - width of block.
-    * @param {number} [height] - height of block.
-    */
-    getTileBlock: function (x, y, width, height) {
-
-        var output = [];
-
-        this.getTempBlock(x, y, width, height);
-
-        for (var r = 0; r < this._tempTileBlock.length; r++)
-        {
-            output.push({
-                x: this._tempTileBlock[r].x,
-                y: this._tempTileBlock[r].y,
-                tile: this._tempTileBlock[r].tile
-            });
-        }
-
-        return output;
-
-    },
-
-    /**
-    * Get a tile with specific position (in world coordinate). (thus you give a position of a point which is within the tile)
-    * @method getTileFromWorldXY
-    * @param {number} [x] - X position (in tiles) of block's left-top corner.
-    * @param {number} [y] - Y position (in tiles) of block's left-top corner.
-    */
-    getTileFromWorldXY: function (x, y) {
-
-        x = Phaser.Math.snapToFloor(x, this.tileWidth) / this.tileWidth;
-        y = Phaser.Math.snapToFloor(y, this.tileHeight) / this.tileHeight;
-
-        return this.getTileIndex(x, y);
-
-    },
-
-    /**
-    * Get tiles overlaps the given object.
-    * @method getTileOverlaps
-    * @param {GameObject} object - Tiles you want to get that overlaps this.
-    * @return {array} Array with tiles informations (each contains x, y, and the tile).
-    */
-    getTileOverlaps: function (object) {
-
-        this._tempBlockResults.length = 0;
-
-        //  If the object is outside of the world coordinates then abort the check (tilemap has to exist within world bounds)
-        if (object.body.x < 0 || object.body.x > this.widthInPixels || object.body.y < 0 || object.body.bottom > this.heightInPixels)
-        {
-            return this._tempBlockResults;
-        }
-
-        //  What tiles do we need to check against?
-        this._tempTileX = this.game.math.snapToFloor(object.body.x, this.tileWidth) / this.tileWidth;
-        this._tempTileY = this.game.math.snapToFloor(object.body.y, this.tileHeight) / this.tileHeight;
-        this._tempTileW = (this.game.math.snapToCeil(object.body.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
-        this._tempTileH = (this.game.math.snapToCeil(object.body.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
-
-        //  Loop through the tiles we've got and check overlaps accordingly (the results are stored in this._tempTileBlock)
-        this.getTempBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH, true);
-
-        for (var r = 0; r < this._tempTileBlock.length; r++)
-        {
-            //  separateTile: function (object, x, y, width, height, mass, collideLeft, collideRight, collideUp, collideDown, separateX, separateY)            
-            if (this.game.physics.separateTile(object, this._tempTileBlock[r].x * this.tileWidth, this._tempTileBlock[r].y * this.tileHeight, this.tileWidth, this.tileHeight, this._tempTileBlock[r].tile.mass, this._tempTileBlock[r].tile.collideLeft, this._tempTileBlock[r].tile.collideRight, this._tempTileBlock[r].tile.collideUp, this._tempTileBlock[r].tile.collideDown, this._tempTileBlock[r].tile.separateX, this._tempTileBlock[r].tile.separateY))
+            if (this._startX < 0)
             {
-                this._tempBlockResults.push({ x: this._tempTileBlock[r].x, y: this._tempTileBlock[r].y, tile: this._tempTileBlock[r].tile });
+                this._startX = 0;
             }
+
+            if (this._startX + this._maxX > this.layer.width)
+            {
+                this._startX = this.layer.width - this._maxX;
+            }
+
+            this.dirty = true;
         }
 
-        return this._tempBlockResults;
+    }
+
+});
+
+Object.defineProperty(Phaser.TilemapLayer.prototype, "y", {
+    
+    get: function () {
+        return this._y;
+    },
+
+    set: function (value) {
+
+        if (value !== this._y && value >= 0)
+        {
+            this._y = value;
+
+            if (this._y > (this.heightInPixels - this.renderHeight))
+            {
+                this._y = this.heightInPixels - this.renderHeight;
+            }
+
+            this._startY = this.game.math.floor(this._y / this.tileHeight);
+
+            if (this._startY < 0)
+            {
+                this._startY = 0;
+            }
+
+            if (this._startY + this._maxY > this.layer.height)
+            {
+                this._startY = this.layer.height - this._maxY;
+            }
+
+            this.dirty = true;
+        }
+
+    }
+
+});
+
+Phaser.TilemapParser = {
+
+	tileset: function (game, key, tileWidth, tileHeight, tileMax) {
+
+	    //  How big is our image?
+	    var img = game.cache.getTilesetImage(key);
+
+	    if (img == null)
+	    {
+	        return null;
+	    }
+
+	    var width = img.width;
+	    var height = img.height;
+
+	    if (tileWidth <= 0)
+	    {
+	        tileWidth = Math.floor(-width / Math.min(-1, tileWidth));
+	    }
+
+	    if (tileHeight <= 0)
+	    {
+	        tileHeight = Math.floor(-height / Math.min(-1, tileHeight));
+	    }
+
+	    var row = Math.round(width / tileWidth);
+	    var column = Math.round(height / tileHeight);
+	    var total = row * column;
+	    
+	    if (tileMax !== -1)
+	    {
+	        total = tileMax;
+	    }
+
+	    //  Zero or smaller than tile sizes?
+	    if (width == 0 || height == 0 || width < tileWidth || height < tileHeight || total === 0)
+	    {
+	        console.warn("Phaser.TilemapParser.tileSet: width/height zero or width/height < given tileWidth/tileHeight");
+	        return null;
+	    }
+
+	    //  Let's create some tiles
+	    var x = 0;
+	    var y = 0;
+
+	    var tileset = new Phaser.Tileset(img, key, tileWidth, tileHeight);
+
+	    for (var i = 0; i < total; i++)
+	    {
+	        tileset.addTile(new Phaser.Tile(tileset, i, x, y, tileWidth, tileHeight));
+
+	        x += tileWidth;
+
+	        if (x === width)
+	        {
+	            x = 0;
+	            y += tileHeight;
+	        }
+	    }
+
+	    return tileset;
+
+	},
+
+	parse: function (game, data, format) {
+
+		if (format === Phaser.Tilemap.CSV)
+		{
+			return this.parseCSV(data);
+		}
+		else if (format === Phaser.Tilemap.TILED_JSON)
+		{
+			return this.parseTiledJSON(data);
+		}
+
+	},
+
+	/**
+	* Parse csv map data and generate tiles.
+	* 
+	* @method Phaser.Tilemap.prototype.parseCSV
+	* @param {string} data - CSV map data.
+	*/
+	parseCSV: function (data) {
+
+	    //  Trim any rogue whitespace from the data
+	    data = data.trim();
+
+	    var output = [];
+	    var rows = data.split("\n");
+	    var height = rows.length;
+	    var width = 0;
+
+	    for (var i = 0; i < rows.length; i++)
+	    {
+	    	output[i] = [];
+
+	        var column = rows[i].split(",");
+
+	        for (var c = 0; c < column.length; c++)
+	        {
+	            output[i][c] = parseInt(column[c]);
+	        }
+
+            if (width == 0)
+            {
+            	width = column.length;
+            }
+	    }
+
+	    return [{ name: 'csv', width: width, height: height, alpha: 1, visible: true, tileMargin: 0, tileSpacing: 0, data: output }];
+
+	},
+
+	/**
+	* Parse JSON map data and generate tiles.
+	* 
+	* @method Phaser.Tilemap.prototype.parseTiledJSON
+	* @param {string} data - JSON map data.
+	* @param {string} key - Asset key for tileset image.
+	*/
+	parseTiledJSON: function (json) {
+
+		var layers = [];
+
+	    for (var i = 0; i < json.layers.length; i++)
+	    {
+	        //  Check it's a data layer
+	        if (!json.layers[i].data)
+	        {
+	            continue;
+	        }
+
+			//	json.tilewidth
+			//	json.tileheight
+
+	        var layer = {
+
+		        name: json.layers[i].name,
+		        width: json.layers[i].width,
+		        height: json.layers[i].height,
+		        alpha: json.layers[i].opacity,
+		        visible: json.layers[i].visible,
+
+		        tileMargin: json.tilesets[0].margin,
+		        tileSpacing: json.tilesets[0].spacing,
+
+	        };
+
+	        var output = [];
+	        var c = 0;
+	        var row;
+
+	        for (var t = 0; t < json.layers[i].data.length; t++)
+	        {
+	            if (c == 0)
+	            {
+	                row = [];
+	            }
+
+	            row.push(json.layers[i].data[t]);
+	            c++;
+
+	            if (c == json.layers[i].width)
+	            {
+	            	output.push(row);
+	                c = 0;
+	            }
+	        }
+
+	        layer.data = output;
+	        
+	        layers.push(layer);
+
+	    }
+
+	    return layers;
+
+	}
+
+}
+
+
+Phaser.Tileset = function (image, key, tileWidth, tileHeight) {
+
+    /**
+    * @property {string} key - The cache ID.
+    */
+    this.key = key;
+
+    this.image = image;
+
+    this.tileWidth = tileWidth;
+    this.tileHeight = tileHeight;
+
+    this.tiles = [];
+
+}
+
+Phaser.Tileset.prototype = {
+
+    addTile: function (tile) {
+
+        this.tiles.push(tile);
+
+        return tile;
 
     },
 
-    /**
-    * Get a tile block with its position and size (this method does not return, it'll set result to _tempTileBlock).
-    * @method getTempBlock
-    * @param {number} [x] - X position (in tiles) of block's left-top corner.
-    * @param {number} [y] - Y position (in tiles) of block's left-top corner.
-    * @param {number} [width] - width of block.
-    * @param {number} [height] - height of block.
-    * @param {boolean} collisionOnly - Whethor or not ONLY return tiles which will collide (its allowCollisions value is not Collision.NONE).
-    */
-    getTempBlock: function (x, y, width, height, collisionOnly) {
+    getTile: function (index) {
 
-        if (typeof collisionOnly === "undefined") { collisionOnly = false; }
-
-        if (x < 0)
+        if (this.tiles[index])
         {
-            x = 0;
-        }
-
-        if (y < 0)
-        {
-            y = 0;
-        }
-
-        if (width > this.widthInTiles)
-        {
-            width = this.widthInTiles;
-        }
-
-        if (height > this.heightInTiles)
-        {
-            height = this.heightInTiles;
-        }
-
-        this._tempTileBlock = [];
-
-        for (var ty = y; ty < y + height; ty++)
-        {
-            for (var tx = x; tx < x + width; tx++)
-            {
-                if (collisionOnly)
-                {
-                    //  We only want to consider the tile for checking if you can actually collide with it
-                    if (this.mapData[ty] && this.mapData[ty][tx] && this.parent.tiles[this.mapData[ty][tx]].collideNone == false)
-                    {
-                        this._tempTileBlock.push({
-                            x: tx,
-                            y: ty,
-                            tile: this.parent.tiles[this.mapData[ty][tx]]
-                        });
-                    }
-                }
-                else
-                {
-                    if (this.mapData[ty] && this.mapData[ty][tx])
-                    {
-                        this._tempTileBlock.push({
-                            x: tx,
-                            y: ty,
-                            tile: this.parent.tiles[this.mapData[ty][tx]]
-                        });
-                    }
-                }
-            }
-        }
-    },
-
-    /**
-    * Get the tile index of specific position (in tiles).
-    * @method getTileIndex
-    * @param {number} x - X position of the tile.
-    * @param {number} y - Y position of the tile.
-    * @return {number} Index of the tile at that position. Return null if there isn't a tile there.
-    */
-    getTileIndex: function (x, y) {
-
-        if (y >= 0 && y < this.mapData.length)
-        {
-            if (x >= 0 && x < this.mapData[y].length)
-            {
-                return this.mapData[y][x];
-            }
+            return this.tiles[index];
         }
 
         return null;
 
     },
 
-    /**
-    * Add a column of tiles into the layer.
-    * @method addColumn
-    * @param {string[]|number[]} column - An array of tile indexes to be added.
-    */
-    addColumn: function (column) {
+    checkTileIndex: function (index) {
 
-        var data = [];
-
-        for (var c = 0; c < column.length; c++)
-        {
-            data[c] = parseInt(column[c]);
-        }
-
-        if (this.widthInTiles == 0)
-        {
-            this.widthInTiles = data.length;
-            this.widthInPixels = this.widthInTiles * this.tileWidth;
-        }
-
-        this.mapData.push(data);
-
-        this.heightInTiles++;
-        this.heightInPixels += this.tileHeight;
-
-    },
-
-    /**
-    * Description.
-    * @method createCanvas
-    */
-    createCanvas: function () {
-
-        var width = this.game.width;
-        var height = this.game.height;
-
-        if (this.widthInPixels < width)
-        {
-            width = this.widthInPixels;
-        }
-
-        if (this.heightInPixels < height)
-        {
-            height = this.heightInPixels;
-        }
-
-        this.canvas = Phaser.Canvas.create(width, height);
-        this.context = this.canvas.getContext('2d');
-
-        this.baseTexture = new PIXI.BaseTexture(this.canvas);
-        this.texture = new PIXI.Texture(this.baseTexture);
-        this.sprite = new PIXI.Sprite(this.texture);
-
-        this.parent.addChild(this.sprite);
-
-    },
-
-    createQuadTree: function (width, height) {
-
-        this.quadTree = new Phaser.QuadTree(this, 0, 0, width, height, 20, 4);
-
-    },
-
-	/**
-    * Update boundsInTiles with widthInTiles and heightInTiles.
-    * @method updateBounds
-    */
-    updateBounds: function () {
-
-        this.boundsInTiles.setTo(0, 0, this.widthInTiles, this.heightInTiles);
-
-    },
-
-    /**
-    * Parse tile offsets from map data.
-    * Basically this creates a large array of objects that contain the x/y coordinates to grab each tile from
-    * for the entire map. Yes we could calculate this at run-time by using the tile index and some math, but we're
-    * trading a quite small bit of memory here to not have to process that in our main render loop.
-    * @method parseTileOffsets
-    * @return {number} Length of tileOffsets array.
-    */
-    parseTileOffsets: function () {
-
-        this.tileOffsets = [];
-
-        var i = 0;
-
-        if (this.mapFormat == Phaser.Tilemap.JSON)
-        {
-            //  For some reason Tiled counts from 1 not 0
-            this.tileOffsets[0] = null;
-            i = 1;
-        }
-
-        for (var ty = this.tileMargin; ty < this.tileset.height; ty += (this.tileHeight + this.tileSpacing))
-        {
-            for (var tx = this.tileMargin; tx < this.tileset.width; tx += (this.tileWidth + this.tileSpacing))
-            {
-                this.tileOffsets[i] = {
-                    x: tx,
-                    y: ty
-                };
-                i++;
-            }
-        }
-
-        return this.tileOffsets.length;
+    	return (this.tiles[index]);
 
     }
 
-};
+}
 
 /**
-* Get
-* @return {Description}
-*//**
-* Set
-* @param {Description} value - Description.
+* @name Phaser.Tileset#total
+* @property {number} total - The total number of tiles in this Tileset.
+* @readonly
 */
-Object.defineProperty(Phaser.TilemapLayer.prototype, 'alpha', {
+Object.defineProperty(Phaser.Tileset.prototype, "total", {
 
-    get: function() {
-        return this._alpha;
-    },
-
-    set: function(value) {
-
-        if (this.sprite)
-        {
-            this.sprite.alpha = value;
-        }
-        
-        this._alpha = value;
+    get: function () {
+        return this.tiles.length;
     }
 
 });

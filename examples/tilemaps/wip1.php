@@ -23,7 +23,28 @@
 
         game.stage.backgroundColor = '#3d3d3d';
 
+        //  A Tilemap object just holds the data needed to describe the map (i.e. the json exported from Tiled, or the CSV exported from elsewhere).
+        //  You can add your own data or manipulate the data (swap tiles around, etc) but in order to display it you need to create a TilemapLayer.
         var map = new Phaser.Tilemap(game, 'level3');
+
+        var tileset = game.cache.getTileset('tiles');
+
+        //  A TilemapLayer consists of an x,y coordinate (position), a width and height, a Tileset and a Tilemap which it uses for map data.
+        //  The x/y coordinates are in World space and you can place the tilemap layer anywhere in the world.
+        //  The width/height is the rendered size of the layer in pixels, not the size of the map data itself.
+
+        //  This one gives tileset as a string, the other an object
+        // layer = new Phaser.TilemapLayer(game, 0, 0, 640, 400, 'tiles', map, 0);
+        layer = new Phaser.TilemapLayer(game, 0, 0, 640, 400, tileset, map, 0);
+
+        //  To set tiles for collision you need to modify the Tileset, which is a property of the layer
+        
+
+        //  Collision is based on the layer.x/y value
+
+        // layer.sprite.anchor.setTo(0.5, 0.5);
+ 
+        game.world.add(layer.sprite);
 
         //  This is a bit nuts, ought to find a way to automate it, but it looks cool :)
         map.debugMap = [ '#000000', 
@@ -39,21 +60,15 @@
 
         // map.dump();
 
-        // layer = new Phaser.TilemapLayer(game, 0, 0, 640, 400);
-        layer = new Phaser.TilemapLayer(game, 0, 0, 320, 200);
-        layer.updateTileset('tiles');
-        layer.updateMapData(map, 0);
-
-        // layer.sprite.anchor.setTo(0.5, 0.5);
-
-        game.world.add(layer.sprite);
-
         // layer.sprite.scale.setTo(2, 2);
 
         //  Works a treat :)
         // game.add.sprite(320, 0, layer.texture, layer.frame);
         // game.add.sprite(0, 200, layer.texture, layer.frame);
         // game.add.sprite(320, 200, layer.texture, layer.frame);
+
+        // game.world.setBounds(0, 0, 2000, 2000);
+        // game.camera.x = 400;
 
         cursors = game.input.keyboard.createCursorKeys();
     }

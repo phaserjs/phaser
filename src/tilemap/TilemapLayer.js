@@ -1,5 +1,5 @@
-
-Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, mapData, tileset) {
+//  Maybe should extend Sprite?
+Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, tilemap, layer) {
 
 	/**
 	* @property {Phaser.Game} game - Description.
@@ -37,6 +37,7 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, mapData, 
 	* @default
 	*/
     this.sprite = new Phaser.Sprite(this.game, x, y, this.texture, this.frame);
+
 
     /**
     * @property {Description} tileset - Description.
@@ -136,8 +137,8 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, mapData, 
     */
     this._startY = 0;
 
-    this.tilemap;
-    this.layer;
+    this.tilemap = null;
+    this.layer = null;
 
     this._x = 0;
     this._y = 0;
@@ -145,26 +146,48 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, mapData, 
     this._prevY = 0;
     this.dirty = true;
 
+    if (tileset instanceof Phaser.Tileset || typeof tileset === 'string')
+    {
+        this.updateTileset(tileset);
+    }
+
+    if (tilemap instanceof Phaser.Tilemap)
+    {
+        this.updateMapData(tilemap, layer);
+    }
+
 };
 
 Phaser.TilemapLayer.prototype = {
 
-    updateMapData: function (tilemap, layerID) {
+    updateTileset: function (tileset) {
 
-        this.tilemap = tilemap;
-        this.layer = this.tilemap.layers[layerID];
+        if (tileset instanceof Phaser.Tileset)
+        {
+            this.tileset = tileset;
+        }
+        else if (typeof tileset === 'string')
+        {
+            this.tileset = this.game.cache.getTileset('tiles');;
+        }
 
+        this.tileWidth = this.tileset.tileWidth;
+        this.tileHeight = this.tileset.tileHeight;
         this.updateMax();
 
     },
 
-    updateTileset: function (tileset) {
+    updateMapData: function (tilemap, layer) {
 
-        this.tileset = this.game.cache.getTileset(tileset);
-        this.tileWidth = this.tileset.tileWidth;
-        this.tileHeight = this.tileset.tileHeight;
+        if (typeof layer === 'undefined')
+        {
+            layer = 0;
+        }
 
+        this.tilemap = tilemap;
+        this.layer = this.tilemap.layers[layer];
         this.updateMax();
+
     },
 
     updateMax: function () {
@@ -188,11 +211,13 @@ Phaser.TilemapLayer.prototype = {
             this.heightInPixels = this.layer.height * this.tileHeight;
         }
 
+        this.dirty = true;
+
     },
 
     render: function () {
 
-        if (this.visible == false || this.dirty == false)
+        if (!this.dirty || !this.tileset || !this.tilemap || !this.sprite.visible)
         {
             return;
         }
@@ -230,8 +255,8 @@ Phaser.TilemapLayer.prototype = {
                         tile.y,
                         this.tileWidth,
                         this.tileHeight,
-                        this._tx,
-                        this._ty,
+                        Math.floor(this._tx),
+                        Math.floor(this._ty),
                         this.tileWidth,
                         this.tileHeight
                     );

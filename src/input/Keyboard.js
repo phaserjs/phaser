@@ -303,8 +303,21 @@ Phaser.Keyboard.prototype = {
             this._hotkeys[event.keyCode].processKeyUp(event);
         }
 
-        this._keys[event.keyCode].isDown = false;
-        this._keys[event.keyCode].timeUp = this.game.time.now;
+        if (this._keys[event.keyCode])
+        {
+            this._keys[event.keyCode].isDown = false;
+            this._keys[event.keyCode].timeUp = this.game.time.now;
+        }
+        else
+        {
+            //  Not used this key before, so register it
+            this._keys[event.keyCode] = {
+                isDown: false,
+                timeDown: this.game.time.now,
+                timeUp: this.game.time.now,
+                duration: 0
+            };
+        }
 
     },
 
