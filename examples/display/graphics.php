@@ -55,8 +55,6 @@
         graphics.moveTo(30,30);
         graphics.lineTo(600, 300);
 
-        game.add.tween(graphics).to({ x: 200 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
-
     }
 
 

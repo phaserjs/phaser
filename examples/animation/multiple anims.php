@@ -7,7 +7,7 @@
 
 
 
-	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create });
+	var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
 
 	function preload() {
 		game.load.atlas('bot', 'assets/misc/NumberSprite.png', 'assets/misc/NumberSprite.json');
@@ -22,7 +22,7 @@
 		bot.animations.add('num3', ['num30000','num30001','num30002','num30003','num30004','num30005'], 24, false, false);
 
 		// bot.animations.play('num1', 15, true);
-		bot.animations.play('num2', 15, true);
+		//bot.animations.play('num2', 15, true);
 		// bot.animations.play('num3', 15, true);
 
 	}

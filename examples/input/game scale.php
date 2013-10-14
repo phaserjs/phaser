@@ -27,7 +27,7 @@
     function create() {
 
     	//We increase the size of our game world
-        game.world.setBounds(2000, 2000);
+        game.world.setBounds(0,0,2000, 2000);
 
         for (var i = 0; i < 1000; i++)
         {

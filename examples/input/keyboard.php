@@ -15,7 +15,7 @@
     var speed=4;
 
     function preload() {
-        game.world.setBounds(1280, 600);
+        game.world.setBounds(0,0,1280, 600);
         game.load.image('ground', 'assets/tests/ground-2x.png');
         game.load.image('river', 'assets/tests/river-2x.png');
         game.load.image('sky', 'assets/tests/sky-2x.png');
@@ -31,7 +31,7 @@
     }
     function create() {
         // background images
-        game.add.sprite(0, 0, 'sky');
+        game.add.tileSprite(0, 0,1280,600, 'sky');
         game.add.sprite(0, 360, 'ground');
         game.add.sprite(0, 400, 'river');
         game.add.sprite(200, 120, 'cloud0');

@@ -1,5 +1,5 @@
 <?php
-    $title = "Test Title";
+    $title = "Using pixel perfect plus scrolling background";
     require('../head.php');
 ?>
 
@@ -23,10 +23,10 @@
     function create() {
 
         //  Make our world big ...
-        game.world.setBounds(4000, 2000);
+        game.world.setBounds(0,0,4000, 2000);
 
         //  Scrolling background
-        s = game.add.tileSprite(0, 0, 800, 600, 'stars');
+        s = game.add.tileSprite(0, 0, 4000, 600, 'stars');
 
         b = game.add.sprite(200, 200, 'mummy');
         b.anchor.setTo(0.5, 0.5);
