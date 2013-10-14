@@ -1,5 +1,5 @@
 <?php
-    $title = "Test Title";
+    $title = "Enabling pixel perfect hit detection";
     require('../head.php');
 ?>
 

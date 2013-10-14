@@ -11,7 +11,7 @@
     var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create,render:render});
 
         function preload() {
-        game.world.setBounds(1280, 800);
+        game.world.setBounds(0,0,1280, 800);
 
         game.load.image('ground', 'assets/tests/ground-2x.png');
         game.load.image('river', 'assets/tests/river-2x.png');

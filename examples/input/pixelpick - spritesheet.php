@@ -1,5 +1,5 @@
 <?php
-    $title = "Test Title";
+    $title = "Enabling pixel perfect hit detection on a spritesheet";
     require('../head.php');
 ?>
 
@@ -7,7 +7,7 @@
 
 
 
-    var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
+    var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, render: render });
 
     function preload() {
 
@@ -45,10 +45,6 @@
 
     function outSprite() {
         console.log('out');
-    }
-
-    function update() {
-        // b.angle += 0.1;
     }
 
     function render() {

@@ -56,16 +56,16 @@
 
     function update() {
 
-        sprite.velocity.x = 0;
-        sprite.velocity.y = 0;
+        sprite.body.velocity.x = 0;
+        sprite.body.velocity.y = 0;
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
-            sprite.velocity.x = -200;
+            sprite.body.velocity.x = -200;
         }
         else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
-            sprite.velocity.x = 200;
+            sprite.body.velocity.x = 200;
         }
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
@@ -86,7 +86,7 @@
             if (bullet)
             {
                 bullet.reset(sprite.x + 6, sprite.y - 8);
-                bullet.velocity.y = -300;
+                bullet.body.velocity.y = -300;
                 bulletTime = game.time.now + 250;
             }
         }
