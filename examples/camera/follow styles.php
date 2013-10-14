@@ -46,7 +46,7 @@
         
 
         // background images
-        game.add.sprite(0, 0, 'sky');
+        game.add.tileSprite(0, 0,1400,600, 'sky');
         game.add.sprite(0, 360, 'ground');
         game.add.sprite(0, 400, 'river');
         game.add.sprite(200, 120, 'cloud0');

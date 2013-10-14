@@ -49,25 +49,25 @@
 
     function update() {
 
-        sprite.velocity.x = 0;
-        sprite.velocity.y = 0;
+        sprite.body.velocity.x = 0;
+        sprite.body.velocity.y = 0;
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
-            sprite.velocity.x = -200;
+            sprite.body.velocity.x = -200;
         }
         else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
-            sprite.velocity.x = 200;
+            sprite.body.velocity.x = 200;
         }
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
-            sprite.velocity.y = -200;
+            sprite.body.velocity.y = -200;
         }
         else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
         {
-            sprite.velocity.y = 200;
+            sprite.body.velocity.y = 200;
         }
 
         game.physics.collide(sprite, group, collisionHandler, null, this);
