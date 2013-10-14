@@ -18,7 +18,7 @@
 		game.stage.backgroundColor = '#2d2d2d';
 
 		//	Make our game world 2000x2000 pixels in size (the default is to match the game size)
-		game.world.setBounds(2000, 2000);
+		game.world.setBounds(0,0,2000, 2000);
 
 		for (var i = 0; i < 50; i++)
 		{

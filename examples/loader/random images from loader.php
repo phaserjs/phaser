@@ -1,5 +1,5 @@
 <?php
-    $title = "Test Title";
+    $title = "Retrieving images from the cache";
     require('../head.php');
 ?>
 
