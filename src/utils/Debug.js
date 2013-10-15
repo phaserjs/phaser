@@ -76,17 +76,14 @@ Phaser.Utils.Debug.prototype = {
             return;
         }
 
-        x = x || null;
-        y = y || null;
+        if (typeof x !== 'number') { x = 0; }
+        if (typeof y !== 'number') { y = 0; }
+
         color = color || 'rgb(255,255,255)';
 
-        if (x && y)
-        {
-            this.currentX = x;
-            this.currentY = y;
-            this.currentColor = color;
-        }
-
+        this.currentX = x;
+        this.currentY = y;
+        this.currentColor = color;
         this.currentAlpha = this.context.globalAlpha;
 
         this.context.save();
@@ -102,6 +99,7 @@ Phaser.Utils.Debug.prototype = {
     * @method Phaser.Utils.Debug#stop
     */
     stop: function () {
+
 
         this.context.restore();
         this.context.globalAlpha = this.currentAlpha;
@@ -460,7 +458,6 @@ Phaser.Utils.Debug.prototype = {
         this.line('angle: ' + sprite.angle.toFixed(1) + ' rotation: ' + sprite.rotation.toFixed(1));
         this.line('visible: ' + sprite.visible + ' in camera: ' + sprite.inCamera);
         this.line('body x: ' + sprite.body.x.toFixed(1) + ' y: ' + sprite.body.y.toFixed(1));
-        this.stop();
 
         //  0 = scaleX
         //  1 = skewY
@@ -476,12 +473,13 @@ Phaser.Utils.Debug.prototype = {
         // this.line('ty: ' + sprite.worldTransform[5]);
         // this.line('skew x: ' + sprite.worldTransform[3]);
         // this.line('skew y: ' + sprite.worldTransform[1]);
-        // this.line('dx: ' + sprite.body.deltaX());
-        // this.line('dy: ' + sprite.body.deltaY());
+        this.line('deltaX: ' + sprite.body.deltaX());
+        this.line('deltaY: ' + sprite.body.deltaY());
         // this.line('sdx: ' + sprite.deltaX());
         // this.line('sdy: ' + sprite.deltaY());
 
         // this.line('inCamera: ' + this.game.renderer.spriteRenderer.inCamera(this.game.camera, sprite));
+        this.stop();
 
     },
 

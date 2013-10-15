@@ -267,7 +267,7 @@ Phaser.TilemapLayer.prototype = {
 
                     if (collides == false || (collides && _tile.collideNone == false))
                     {
-                        this._results.push({ left: wx * _tile.width, right: (wx * _tile.width) + _tile.width, top: wy * _tile.height, bottom: (wy * _tile.height) + _tile.height, width: _tile.width, height: _tile.height, tx: wx, ty: wy, tile: _tile });
+                        this._results.push({ x: wx * _tile.width, right: (wx * _tile.width) + _tile.width, y: wy * _tile.height, bottom: (wy * _tile.height) + _tile.height, width: _tile.width, height: _tile.height, tx: wx, ty: wy, tile: _tile });
                     }
                 }
             }

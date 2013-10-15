@@ -12,7 +12,8 @@
 
         game.load.tilemap('level3', 'assets/maps/cybernoid.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.tileset('tiles', 'assets/maps/cybernoid.png', 16, 16);
-        game.load.image('phaser', 'assets/sprites/phaser-dude.png');
+        // game.load.image('phaser', 'assets/sprites/phaser-dude.png');
+        game.load.image('phaser', 'assets/sprites/space-baddie.png');
 
     }
 
@@ -42,6 +43,8 @@
 
         //  And this turns off collision on the only tile we don't want collision on :)
         tileset.setCollision(6, false, false, false, false);
+        tileset.setCollision(34, false, false, false, false);
+        tileset.setCollision(35, false, false, false, false);
 
         //  A TilemapLayer consists of an x,y coordinate (position), a width and height, a Tileset and a Tilemap which it uses for map data.
         //  The x/y coordinates are in World space and you can place the tilemap layer anywhere in the world.
@@ -92,6 +95,7 @@
         sprite = game.add.sprite(200, 80, 'phaser');
 
         cursors = game.input.keyboard.createCursorKeys();
+
     }
 
     function update() {
@@ -102,7 +106,7 @@
 
         if (cursors.up.isDown)
         {
-            sprite.body.velocity.y = -100;
+             sprite.body.velocity.y = -100;
             // layer.y -= 4;
         }
         else if (cursors.down.isDown)
@@ -127,6 +131,7 @@
 
         if (overlap.length > 1)
         {
+            // console.log('%c                                         ', 'background: #000000')
             for (var i = 1; i < overlap.length; i++)
             {
                 game.physics.separateTile(sprite.body, overlap[i]);
@@ -139,8 +144,14 @@
 
         layer.render();
 
+        game.debug.renderSpriteInfo(sprite, 32, 450);
+        // game.debug.renderCameraInfo(game.camera, 32, 32);
+
+        /*
         game.context.save();
         game.context.setTransform(1, 0, 0, 1, 0, 0);
+
+
         game.context.fillStyle = 'rgba(255, 0, 0, 0.5)';
 
         if (overlap.length > 1)
@@ -178,8 +189,9 @@
         }
 
         game.context.restore();
+        */
 
-        game.debug.renderRectangle(sprite.body.hullX);
+        // game.debug.renderRectangle(sprite.body.hullX);
 
     }
 

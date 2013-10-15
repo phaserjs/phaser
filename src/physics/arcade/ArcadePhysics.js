@@ -636,18 +636,25 @@ Phaser.Physics.Arcade.prototype = {
     separateTile: function (body, tile) {
 
         var separatedX = this.separateTileX(body, tile, true);
+        var separatedY = this.separateTileY(body, tile, true);
 
+        /*
         if (separatedX)
         {
             console.log('x overlap', this._overlap);
         }
 
-        var separatedY = this.separateTileY(body, tile, true);
 
         if (separatedY)
         {
             console.log('y overlap', this._overlap);
         }
+
+        if (separatedX || separatedY)
+        {
+            return true;
+        }
+        */
 
         if (separatedX || separatedY)
         {
@@ -667,46 +674,50 @@ Phaser.Physics.Arcade.prototype = {
     separateTileX: function (body, tile, separate) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
-        if (body.immovable)
+        if (body.immovable || body.deltaX() == 0 || Phaser.Rectangle.intersects(body.hullX, tile) == false)
         {
             return false;
         }
 
         this._overlap = 0;
 
-        //  Phaser.Rectangle.intersectsRaw = function (a, left, right, top, bottom, tolerance)
-        if (body.deltaX() != 0 && Phaser.Rectangle.intersects(body.hullX, tile, 0))
+        //  The hulls overlap, let's process it
+        this._maxOverlap = body.deltaAbsX() + this.OVERLAP_BIAS;
+
+        console.log('sx hulls over');
+        console.log('x', body.hullX.x, 'y', body.hullX.y, 'bottom', body.hullX.y, 'right', body.hullX.right);
+        console.log(tile);
+
+        if (body.deltaX() < 0)
         {
-            //  The hulls overlap, let's process it
-            this._maxOverlap = body.deltaAbsX() + this.OVERLAP_BIAS;
+            //  Moving left
+            this._overlap = tile.right - body.hullX.x;
 
-            if (body.deltaX() < 0)
+            console.log('sx left', this._overlap);
+
+            if ((this._overlap > this._maxOverlap) || body.allowCollision.left == false || tile.tile.collideRight == false)
             {
-                //  Moving left
-                this._overlap = tile.right - body.hullX.x;
-
-                if ((this._overlap > this._maxOverlap) || body.allowCollision.left == false || tile.tile.collideRight == false)
-                {
-                    this._overlap = 0;
-                }
-                else
-                {
-                    body.touching.left = true;
-                }
+                this._overlap = 0;
             }
             else
             {
-                //  Moving right
-                this._overlap = body.hullX.right - tile.left;
+                body.touching.left = true;
+            }
+        }
+        else
+        {
+            //  Moving right
+            this._overlap = body.hullX.right - tile.x;
 
-                if ((this._overlap > this._maxOverlap) || body.allowCollision.right == false || tile.tile.collideLeft == false)
-                {
-                    this._overlap = 0;
-                }
-                else
-                {
-                    body.touching.right = true;
-                }
+            console.log('sx right', this._overlap);
+
+            if ((this._overlap > this._maxOverlap) || body.allowCollision.right == false || tile.tile.collideLeft == false)
+            {
+                this._overlap = 0;
+            }
+            else
+            {
+                body.touching.right = true;
             }
         }
 
@@ -717,11 +728,15 @@ Phaser.Physics.Arcade.prototype = {
             {
                 if (body.deltaX() < 0)
                 {
+                    console.log('sx sep left 1', body.x);
                     body.x = body.x + this._overlap;
+                    console.log('sx sep left 2', body.x);
                 }
                 else
                 {
+                    console.log('sx sep right 1', body.x);
                     body.x = body.x - this._overlap;
+                    console.log('sx sep right 2', body.x);
                 }
 
                 if (body.bounce.x == 0)
@@ -732,12 +747,16 @@ Phaser.Physics.Arcade.prototype = {
                 {
                     body.velocity.x = -body.velocity.x * body.bounce.x;
                 }
+
                 body.updateHulls();
             }
+
+            console.log('%c                                         ', 'background: #7f7f7f')
             return true;
         }
         else
         {
+            console.log('%c                                         ', 'background: #7f7f7f')
             return false;
         }
 
@@ -752,45 +771,42 @@ Phaser.Physics.Arcade.prototype = {
     separateTileY: function (body, tile, separate) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
-        if (body.immovable)
+        if (body.immovable || body.deltaY() == 0 || Phaser.Rectangle.intersects(body.hullY, tile) == false)
         {
             return false;
         }
 
         this._overlap = 0;
 
-        if (body.deltaY() != 0 && Phaser.Rectangle.intersects(body.hullY, tile, 0))
+        //  The hulls overlap, let's process it
+        this._maxOverlap = body.deltaAbsY() + this.OVERLAP_BIAS;
+
+        if (body.deltaY() < 0)
         {
-            //  The hulls overlap, let's process it
-            this._maxOverlap = body.deltaAbsY() + this.OVERLAP_BIAS;
+            //  Moving up
+            this._overlap = tile.bottom - body.hullY.y;
 
-            if (body.deltaY() < 0)
+            if ((this._overlap > this._maxOverlap) || body.allowCollision.up == false || tile.tile.collideDown == false)
             {
-                //  Moving up
-                this._overlap = tile.bottom - body.hullY.y;
-
-                if ((this._overlap > this._maxOverlap) || body.allowCollision.up == false || tile.tile.collideDown == false)
-                {
-                    this._overlap = 0;
-                }
-                else
-                {
-                    body.touching.up = true;
-                }
+                this._overlap = 0;
             }
             else
             {
-                //  Moving down
-                this._overlap = body.hullY.bottom - tile.top;
+                body.touching.up = true;
+            }
+        }
+        else
+        {
+            //  Moving down
+            this._overlap = body.hullY.bottom - tile.y;
 
-                if ((this._overlap > this._maxOverlap) || body.allowCollision.down == false || tile.tile.collideUp == false)
-                {
-                    this._overlap = 0;
-                }
-                else
-                {
-                    body.touching.down = true;
-                }
+            if ((this._overlap > this._maxOverlap) || body.allowCollision.down == false || tile.tile.collideUp == false)
+            {
+                this._overlap = 0;
+            }
+            else
+            {
+                body.touching.down = true;
             }
         }
 
@@ -816,8 +832,10 @@ Phaser.Physics.Arcade.prototype = {
                 {
                     body.velocity.y = -body.velocity.y * body.bounce.y;
                 }
+
                 body.updateHulls();
             }
+            
             return true;
         }
         else
