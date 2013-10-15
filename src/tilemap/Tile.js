@@ -100,9 +100,35 @@ Phaser.Tile = function (tileset, index, x, y, width, height) {
     */
     this.separateY = true;
 
+    /**
+    * @property {boolean} collisionCallback - Tilemap collision callback.
+    * @default
+    */
+    this.collisionCallback = null;
+
+    /**
+    * @property {boolean} collisionCallback - Tilemap collision callback.
+    * @default
+    */
+    this.collisionCallbackContext = this;
+
 };
 
 Phaser.Tile.prototype = {
+
+    /**
+    * Set callback to be called when this tilemap collides.
+    * 
+    * @method Phaser.Tilemap.prototype.setCollisionCallback
+    * @param {Function} callback - Callback function.
+    * @param {object} context - Callback will be called with this context.
+    */
+    setCollisionCallback: function (callback, context) {
+
+        this.collisionCallbackContext = context;
+        this.collisionCallback = callback;
+
+    },
 
     /**
     * Clean up memory.

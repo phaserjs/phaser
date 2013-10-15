@@ -633,10 +633,21 @@ Phaser.Physics.Arcade.prototype = {
      * @param object2 The second GameObject to separate
      * @returns {boolean} Returns true if the objects were separated, otherwise false.
      */
-    separateTile: function (object, x, y, width, height, mass, collideLeft, collideRight, collideUp, collideDown, separateX, separateY) {
+    separateTile: function (body, tile) {
 
-        var separatedX = this.separateTileX(object.body, x, y, width, height, mass, collideLeft, collideRight, separateX);
-        var separatedY = this.separateTileY(object.body, x, y, width, height, mass, collideUp, collideDown, separateY);
+        var separatedX = this.separateTileX(body, tile, true);
+
+        if (separatedX)
+        {
+            console.log('x overlap', this._overlap);
+        }
+
+        var separatedY = this.separateTileY(body, tile, true);
+
+        if (separatedY)
+        {
+            console.log('y overlap', this._overlap);
+        }
 
         if (separatedX || separatedY)
         {
@@ -653,58 +664,48 @@ Phaser.Physics.Arcade.prototype = {
      * @param tile The Tile to separate
      * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
      */
-    OLDseparateTileX: function (object, x, y, width, height, mass, collideLeft, collideRight, separate) {
+    separateTileX: function (body, tile, separate) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
-        if (object.immovable)
+        if (body.immovable)
         {
             return false;
         }
 
-        //  First, get the object delta
         this._overlap = 0;
 
-        // console.log('separatedX', x, y, object.deltaX());
-
-        if (object.deltaX() != 0)
+        //  Phaser.Rectangle.intersectsRaw = function (a, left, right, top, bottom, tolerance)
+        if (body.deltaX() != 0 && Phaser.Rectangle.intersects(body.hullX, tile, 0))
         {
-            this._bounds1.setTo(object.x, object.y, object.width, object.height);
+            //  The hulls overlap, let's process it
+            this._maxOverlap = body.deltaAbsX() + this.OVERLAP_BIAS;
 
-            if ((this._bounds1.right > x) && (this._bounds1.x < x + width) && (this._bounds1.bottom > y) && (this._bounds1.y < y + height))
+            if (body.deltaX() < 0)
             {
-                //  The hulls overlap, let's process it
-                this._maxOverlap = object.deltaAbsX() + this.OVERLAP_BIAS;
+                //  Moving left
+                this._overlap = tile.right - body.hullX.x;
 
-                //  TODO - We need to check if we're already inside of the tile, i.e. jumping through an n-way tile
-                //  in which case we didn't ought to separate because it'll look like tunneling
-
-                if (object.deltaX() > 0)
+                if ((this._overlap > this._maxOverlap) || body.allowCollision.left == false || tile.tile.collideRight == false)
                 {
-                    //  Going right ...
-                    this._overlap = object.x + object.width - x;
-
-                    if ((this._overlap > this._maxOverlap) || !object.allowCollision.right || !collideLeft)
-                    {
-                        this._overlap = 0;
-                    }
-                    else
-                    {
-                        object.touching.right = true;
-                    }
+                    this._overlap = 0;
                 }
-                else if (object.deltaX() < 0)
+                else
                 {
-                    //  Going left ...
-                    this._overlap = object.x - width - x;
+                    body.touching.left = true;
+                }
+            }
+            else
+            {
+                //  Moving right
+                this._overlap = body.hullX.right - tile.left;
 
-                    if ((-this._overlap > this._maxOverlap) || !object.allowCollision.left || !collideRight)
-                    {
-                        this._overlap = 0;
-                    }
-                    else
-                    {
-                        object.touching.left = true;
-                    }
+                if ((this._overlap > this._maxOverlap) || body.allowCollision.right == false || tile.tile.collideLeft == false)
+                {
+                    this._overlap = 0;
+                }
+                else
+                {
+                    body.touching.right = true;
                 }
             }
         }
@@ -714,16 +715,24 @@ Phaser.Physics.Arcade.prototype = {
         {
             if (separate)
             {
-                object.x = object.x - this._overlap;
-
-                if (object.bounce.x == 0)
+                if (body.deltaX() < 0)
                 {
-                    object.velocity.x = 0;
+                    body.x = body.x + this._overlap;
                 }
                 else
                 {
-                    object.velocity.x = -object.velocity.x * object.bounce.x;
+                    body.x = body.x - this._overlap;
                 }
+
+                if (body.bounce.x == 0)
+                {
+                    body.velocity.x = 0;
+                }
+                else
+                {
+                    body.velocity.x = -body.velocity.x * body.bounce.x;
+                }
+                body.updateHulls();
             }
             return true;
         }
@@ -740,59 +749,47 @@ Phaser.Physics.Arcade.prototype = {
      * @param tile The Tile to separate
      * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
      */
-    OLDseparateTileY: function (object, x, y, width, height, mass, collideUp, collideDown, separate) {
+    separateTileY: function (body, tile, separate) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
-        if (object.immovable)
+        if (body.immovable)
         {
             return false;
         }
 
-        //  First, get the object delta
         this._overlap = 0;
 
-        if (object.deltaY() != 0)
+        if (body.deltaY() != 0 && Phaser.Rectangle.intersects(body.hullY, tile, 0))
         {
-            this._bounds1.setTo(object.x, object.y, object.width, object.height);
+            //  The hulls overlap, let's process it
+            this._maxOverlap = body.deltaAbsY() + this.OVERLAP_BIAS;
 
-            if ((this._bounds1.right > x) && (this._bounds1.x < x + width) && (this._bounds1.bottom > y) && (this._bounds1.y < y + height))
+            if (body.deltaY() < 0)
             {
-                //  The hulls overlap, let's process it
+                //  Moving up
+                this._overlap = tile.bottom - body.hullY.y;
 
-                //  Not currently used, may need it so keep for now
-                this._maxOverlap = object.deltaAbsY() + this.OVERLAP_BIAS;
-
-                //  TODO - We need to check if we're already inside of the tile, i.e. jumping through an n-way tile
-                //  in which case we didn't ought to separate because it'll look like tunneling
-
-                if (object.deltaY() > 0)
+                if ((this._overlap > this._maxOverlap) || body.allowCollision.up == false || tile.tile.collideDown == false)
                 {
-                    //  Going down ...
-                    this._overlap = object.bottom - y;
-
-                    // if (object.allowCollision.down && collideDown && this._overlap < this._maxOverlap)
-                    if ((this._overlap > this._maxOverlap) || !object.allowCollision.down || !collideDown)
-                    {
-                        this._overlap = 0;
-                    }
-                    else
-                    {
-                        object.touching.down = true;
-                    }
+                    this._overlap = 0;
                 }
                 else
                 {
-                    //  Going up ...
-                    this._overlap = object.y - height - y;
+                    body.touching.up = true;
+                }
+            }
+            else
+            {
+                //  Moving down
+                this._overlap = body.hullY.bottom - tile.top;
 
-                    if ((-this._overlap > this._maxOverlap) || !object.allowCollision.up || !collideUp)
-                    {
-                        this._overlap = 0;
-                    }
-                    else
-                    {
-                        object.touching.up = true;
-                    }
+                if ((this._overlap > this._maxOverlap) || body.allowCollision.down == false || tile.tile.collideUp == false)
+                {
+                    this._overlap = 0;
+                }
+                else
+                {
+                    body.touching.down = true;
                 }
             }
         }
@@ -802,16 +799,24 @@ Phaser.Physics.Arcade.prototype = {
         {
             if (separate)
             {
-                object.y = object.y - this._overlap;
-
-                if (object.bounce.y == 0)
+                if (body.deltaY() < 0)
                 {
-                    object.velocity.y = 0;
+                    body.y = body.y + this._overlap;
                 }
                 else
                 {
-                    object.velocity.y = -object.velocity.y * object.bounce.y;
+                    body.y = body.y - this._overlap;
                 }
+
+                if (body.bounce.y == 0)
+                {
+                    body.velocity.y = 0;
+                }
+                else
+                {
+                    body.velocity.y = -body.velocity.y * body.bounce.y;
+                }
+                body.updateHulls();
             }
             return true;
         }
@@ -819,167 +824,6 @@ Phaser.Physics.Arcade.prototype = {
         {
             return false;
         }
-
-    },    
-
-    /**
-     * Separates the two objects on their x axis
-     * @param object The GameObject to separate
-     * @param tile The Tile to separate
-     * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
-     */
-    separateTileX: function (object, x, y, width, height, mass, collideLeft, collideRight, separate) {
-
-        //  Can't separate two immovable objects (tiles are always immovable)
-        if (object.immovable)
-        {
-            return false;
-        }
-
-        this._overlap = 0;
-
-        //  Do we have any overlap at all?
-        if (Phaser.Rectangle.intersectsRaw(object, x, x + width, y, y + height))
-        {
-            this._maxOverlap = object.deltaAbsX() + this.OVERLAP_BIAS;
-
-            if (object.deltaX() == 0)
-            {
-                //  Object is either stuck inside the tile or only overlapping on the Y axis
-            }
-            else if (object.deltaX() > 0)
-            {
-                //  Going right ...
-
-
-                
-                this._overlap = object.x + object.width - x;
-
-                if ((this._overlap > this._maxOverlap) || !object.allowCollision.right || !collideLeft)
-                {
-                    this._overlap = 0;
-                }
-                else
-                {
-                    object.touching.right = true;
-                }
-            }
-            else if (object.deltaX() < 0)
-            {
-                //  Going left ...
-                this._overlap = object.x - width - x;
-
-                if ((-this._overlap > this._maxOverlap) || !object.allowCollision.left || !collideRight)
-                {
-                    this._overlap = 0;
-                }
-                else
-                {
-                    object.touching.left = true;
-                }
-            }
-
-            if (this._overlap != 0)
-            {
-                if (separate)
-                {
-                    // console.log('x over', this._overlap);
-                    object.x = object.x - this._overlap;
-
-                    if (object.bounce.x == 0)
-                    {
-                        object.velocity.x = 0;
-                    }
-                    else
-                    {
-                        object.velocity.x = -object.velocity.x * object.bounce.x;
-                    }
-                }
-                return true;
-            }
-
-        }
-
-        return false;
-
-    },
-
-    /**
-     * Separates the two objects on their x axis
-     * @param object The GameObject to separate
-     * @param tile The Tile to separate
-     * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
-     */
-    separateTileY: function (object, x, y, width, height, mass, collideUp, collideDown, separate) {
-
-        //  Can't separate two immovable objects (tiles are always immovable)
-        if (object.immovable)
-        {
-            return false;
-        }
-
-        this._overlap = 0;
-
-        if (Phaser.Rectangle.intersectsRaw(object, x, x + width, y, y + height))
-        {
-            this._maxOverlap = object.deltaAbsY() + this.OVERLAP_BIAS;
-
-            if (object.deltaY() == 0)
-            {
-                //  Object is stuck inside a tile and not moving
-            }
-            else if (object.deltaY() > 0)
-            {
-                //  Going down ...
-                this._overlap = object.bottom - y;
-
-                // if (object.allowCollision.down && collideDown && this._overlap < this._maxOverlap)
-                if ((this._overlap > this._maxOverlap) || !object.allowCollision.down || !collideDown)
-                {
-                    this._overlap = 0;
-                }
-                else
-                {
-                    object.touching.down = true;
-                }
-            }
-            else if (object.deltaY() < 0)
-            {
-                //  Going up ...
-                this._overlap = object.y - height - y;
-
-                if ((-this._overlap > this._maxOverlap) || !object.allowCollision.up || !collideUp)
-                {
-                    this._overlap = 0;
-                }
-                else
-                {
-                    object.touching.up = true;
-                }
-            }
-
-            if (this._overlap != 0)
-            {
-                // console.log('y over', this._overlap);
-
-                if (separate)
-                {
-                    object.y = object.y - this._overlap;
-
-                    if (object.bounce.y == 0)
-                    {
-                        object.velocity.y = 0;
-                    }
-                    else
-                    {
-                        object.velocity.y = -object.velocity.y * object.bounce.y;
-                    }
-                }
-                return true;
-            }
-        }
-        
-        return false;
 
     },
 

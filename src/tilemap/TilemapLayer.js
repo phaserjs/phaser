@@ -106,6 +106,11 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     * @private 
     */
     this._ty = 0;
+
+    this._results = [];
+
+    this._tw = 0;
+    this._th = 0;
     
     /**
     * @property {number} _tl - Local render loop var to help avoid gc spikes.
@@ -144,6 +149,8 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     this._y = 0;
     this._prevX = 0;
     this._prevY = 0;
+
+
     this.dirty = true;
 
     if (tileset instanceof Phaser.Tileset || typeof tileset === 'string')
@@ -168,7 +175,11 @@ Phaser.TilemapLayer.prototype = {
         }
         else if (typeof tileset === 'string')
         {
-            this.tileset = this.game.cache.getTileset('tiles');;
+            this.tileset = this.game.cache.getTileset('tiles');
+        }
+        else
+        {
+            return;
         }
 
         this.tileWidth = this.tileset.tileWidth;
@@ -184,9 +195,85 @@ Phaser.TilemapLayer.prototype = {
             layer = 0;
         }
 
-        this.tilemap = tilemap;
-        this.layer = this.tilemap.layers[layer];
-        this.updateMax();
+        if (tilemap instanceof Phaser.Tilemap)
+        {
+            this.tilemap = tilemap;
+            this.layer = this.tilemap.layers[layer];
+            this.updateMax();
+        }
+
+    },
+
+    /**
+    * 
+    * @method getTileOverlaps
+    * @param {GameObject} object - Tiles you want to get that overlaps this.
+    * @return {array} Array with tiles informations (each contains x, y, and the tile).
+    */
+    getTiles: function (x, y, width, height, collides) {
+
+        if (this.tilemap === null)
+        {
+            return;
+        }
+
+        //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
+        if (typeof collides === 'undefined') { collides = false; }
+
+        //  Cap the values
+
+        if (x < 0)
+        {
+            x = 0;
+        }
+
+        if (y < 0)
+        {
+            y = 0;
+        }
+
+        if (width > this.widthInPixels)
+        {
+            width = this.widthInPixels;
+        }
+
+        if (height > this.heightInPixels)
+        {
+            height = this.heightInPixels;
+        }
+
+        //  Convert the pixel values into tile coordinates
+        this._tx = this.game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
+        this._ty = this.game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
+        this._tw = (this.game.math.snapToCeil(width, this.tileWidth) + this.tileWidth) / this.tileWidth;
+        this._th = (this.game.math.snapToCeil(height, this.tileHeight) + this.tileHeight) / this.tileHeight;
+
+        this._results.length = 0;
+
+        this._results.push( { x: x, y: y, width: width, height: height, tx: this._tx, ty: this._ty, tw: this._tw, th: this._th });
+
+        var _index = 0;
+        var _tile = null;
+
+        for (var wy = this._ty; wy < this._ty + this._th; wy++)
+        {
+            for (var wx = this._tx; wx < this._tx + this._tw; wx++)
+            {
+                if (this.layer.data[wy] && this.layer.data[wy][wx])
+                {
+                    //  Could combine
+                    _index = this.layer.data[wy][wx] - 1;
+                    _tile = this.tileset.getTile(_index);
+
+                    if (collides == false || (collides && _tile.collideNone == false))
+                    {
+                        this._results.push({ left: wx * _tile.width, right: (wx * _tile.width) + _tile.width, top: wy * _tile.height, bottom: (wy * _tile.height) + _tile.height, width: _tile.width, height: _tile.height, tx: wx, ty: wy, tile: _tile });
+                    }
+                }
+            }
+        }
+
+        return this._results;
 
     },
 

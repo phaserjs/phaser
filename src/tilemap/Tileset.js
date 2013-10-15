@@ -36,11 +36,43 @@ Phaser.Tileset.prototype = {
 
     },
 
+    canCollide: function (index) {
+
+        if (this.tiles[index])
+        {
+            return this.tiles[index].collideNone;
+        }
+
+        return null;
+
+    },
+
     checkTileIndex: function (index) {
 
     	return (this.tiles[index]);
 
-    }
+    },
+
+    setCollisionRange: function (start, stop, left, right, up, down) {
+
+        if (this.tiles[start] && this.tiles[stop] && start < stop)
+        {
+            for (var i = start; i <= stop; i++)
+            {
+                this.tiles[i].setCollision(left, right, up, down);
+            }
+        }
+
+    },
+
+    setCollision: function (index, left, right, up, down) {
+
+        if (this.tiles[index])
+        {
+            this.tiles[index].setCollision(left, right, up, down);
+        }
+
+    },
 
 }
 

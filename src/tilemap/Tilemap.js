@@ -21,6 +21,8 @@ Phaser.Tilemap = function (game, key) {
 	    this.layers = [];
     }
 
+    console.log(this.layers);
+
     this.currentLayer = 0;
 
     this.debugMap = [];
@@ -80,6 +82,23 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
+    * Get the tile located at specific position (in world coordinate) and layer (thus you give a position of a point which is within the tile).
+    * @param {number} x - X position of the point in target tile.
+    * @param {number} y - Y position of the point in target tile.
+    * @param {number} [layer] - layer of this tile located.
+    * @return {Tile} The tile with specific properties.
+    */
+    getTileFromWorldXY: function (x, y, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+
+
+        // return this.tiles[this.layers[layer].getTileFromWorldXY(x, y)];
+
+    },
+
+    /**
     * Set a specific tile with its x and y in tiles.
     * @method putTile
     * @param {number} x - X position of this tile.
@@ -92,6 +111,38 @@ Phaser.Tilemap.prototype = {
     	{
     		this.layers[this.currentLayer].data[y][x] = index;
     	}
+
+    },
+
+    /**
+    * Set a specific tile with its x and y in tiles.
+    * @method putTileWorldXY
+    * @param {number} x - X position of this tile in world coordinates.
+    * @param {number} y - Y position of this tile in world coordinates.
+    * @param {number} index - The index of this tile type in the core map data.
+    */
+    putTileWorldXY: function (x, y, index) {
+
+        x = this.game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
+        y = this.game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
+
+        if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+        {
+            this.layers[this.currentLayer].data[y][x] = index;
+        }
+
+    },
+
+
+    //  swapTile
+    //  fillTile
+    //  randomiseTiles
+    //  replaceTiles
+
+    removeAllLayers: function () {
+
+        this.layers.length = 0;
+        this.currentLayer = 0;
 
     },
 
@@ -128,6 +179,13 @@ Phaser.Tilemap.prototype = {
 
         args[0] = txt;
         console.log.apply(console, args);
+
+    },
+
+    destroy: function () {
+
+        this.removeAllLayers();
+        this.game = null;
 
     }
 

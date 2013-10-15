@@ -12,6 +12,7 @@
 
         game.load.tilemap('level3', 'assets/maps/cybernoid.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.tileset('tiles', 'assets/maps/cybernoid.png', 16, 16);
+        game.load.image('phaser', 'assets/sprites/phaser-dude.png');
 
     }
 
@@ -19,8 +20,8 @@
     var tileset;
     var layer;
     var cursors;
-    var sprite2;
     var overlap;
+    var sprite;
 
     function create() {
 
@@ -88,33 +89,49 @@
         // game.world.setBounds(0, 0, 2000, 2000);
         // game.camera.x = 400;
 
+        sprite = game.add.sprite(200, 80, 'phaser');
+
         cursors = game.input.keyboard.createCursorKeys();
     }
 
     function update() {
 
+        sprite.body.velocity.setTo(0, 0);
+
         // layer.sprite.angle += 0.5;
 
         if (cursors.up.isDown)
         {
-            layer.y -= 4;
+            sprite.body.velocity.y = -100;
+            // layer.y -= 4;
         }
         else if (cursors.down.isDown)
         {
-            layer.y += 4;
+            sprite.body.velocity.y = 100;
+            // layer.y += 4;
         }
 
         if (cursors.left.isDown)
         {
-            layer.x -= 4;
+            sprite.body.velocity.x = -100;
+            // layer.x -= 4;
         }
         else if (cursors.right.isDown)
         {
-            layer.x += 4;
+            sprite.body.velocity.x = 100;
+            // layer.x += 4;
         }
 
         //    getTiles: function (x, y, width, height, collides, layer) {
-        overlap = layer.getTiles(layer.x, layer.y, 128, 128);
+        overlap = layer.getTiles(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height, true);
+
+        if (overlap.length > 1)
+        {
+            for (var i = 1; i < overlap.length; i++)
+            {
+                game.physics.separateTile(sprite.body, overlap[i]);
+            }
+        }
 
     }
 
@@ -161,6 +178,8 @@
         }
 
         game.context.restore();
+
+        game.debug.renderRectangle(sprite.body.hullX);
 
     }
 
