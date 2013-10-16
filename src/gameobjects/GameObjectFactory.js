@@ -83,10 +83,6 @@ Phaser.GameObjectFactory.prototype = {
 
         return group.create(x, y, key, frame);
 
-        // var child = new Phaser.Sprite(this.game, x, y, key, frame);
-        // parent.addChild(child);
-        // return child;
-
     },
 
     /**
@@ -232,17 +228,43 @@ Phaser.GameObjectFactory.prototype = {
     * Description.
     *
     * @method tilemap
-    * @param {Description} x - Description.
-    * @param {Description} y - Description.
     * @param {Description} key - Description.
-    * @param {Description} resizeWorld - Description.
-    * @param {Description} tileWidth - Description.
-    * @param {Description} tileHeight - Description.
     * @return {Description} Description.
     */
-    tilemap: function (x, y, key, resizeWorld, tileWidth, tileHeight) {
+    tilemap: function (key) {
 
-        return this.world.add(new Phaser.Tilemap(this.game, key, x, y, resizeWorld, tileWidth, tileHeight));
+        return new Phaser.Tilemap(this.game, key);
+
+    },
+
+    /**
+    * Description.
+    *
+    * @method tilemap
+    * @param {Description} key - Description.
+    * @return {Description} Description.
+    */
+    tileset: function (key) {
+
+        return this.game.cache.getTileset(key);
+
+    },
+
+    /**
+     * Description.
+     *
+     * @method tileSprite
+     * @param {Description} x - Description.
+     * @param {Description} y - Description.
+     * @param {Description} width - Description.
+     * @param {Description} height - Description.
+     * @param {Description} key - Description.
+     * @param {Description} frame - Description.
+     * @return {Description} Description.
+     */
+    tilemapLayer: function (x, y, width, height, tileset, tilemap, layer) {
+
+        return this.world.add(new Phaser.TilemapLayer(this.game, x, y, width, height, tileset, tilemap, layer));
 
     },
 

@@ -36,6 +36,7 @@ Phaser.Physics.Arcade = function (game) {
     this._newVelocity2 = 0;
     this._average = 0;
     this._mapData = [];
+    this._mapTiles = 0;
     this._result = false;
     this._total = 0;
     this._angle = 0;
@@ -182,9 +183,9 @@ Phaser.Physics.Arcade.prototype = {
                 {
                     this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext);
                 }
-                else if (object2.type == Phaser.TILEMAP)
+                else if (object2.type == Phaser.TILEMAPLAYER)
                 {
-                    this.collideSpriteVsTilemap(object1, object2, collideCallback, processCallback, callbackContext);
+                    this.collideSpriteVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext);
                 }
             }
             //  GROUPS
@@ -198,21 +199,21 @@ Phaser.Physics.Arcade.prototype = {
                 {
                     this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext);
                 }
-                else if (object2.type == Phaser.TILEMAP)
+                else if (object2.type == Phaser.TILEMAPLAYER)
                 {
-                    this.collideGroupVsTilemap(object1, object2, collideCallback, processCallback, callbackContext);
+                    this.collideGroupVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext);
                 }
             }
-            //  TILEMAPS
-            else if (object1.type == Phaser.TILEMAP)
+            //  TILEMAP LAYERS
+            else if (object1.type == Phaser.TILEMAPLAYER)
             {
                 if (object2.type == Phaser.SPRITE)
                 {
-                    this.collideSpriteVsTilemap(object2, object1, collideCallback, processCallback, callbackContext);
+                    this.collideSpriteVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext);
                 }
                 else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
                 {
-                    this.collideGroupVsTilemap(object2, object1, collideCallback, processCallback, callbackContext);
+                    this.collideGroupVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext);
                 }
             }
             //  EMITTER
@@ -226,14 +227,78 @@ Phaser.Physics.Arcade.prototype = {
                 {
                     this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext);
                 }
-                else if (object2.type == Phaser.TILEMAP)
+                else if (object2.type == Phaser.TILEMAPLAYER)
                 {
-                    this.collideGroupVsTilemap(object1, object2, collideCallback, processCallback, callbackContext);
+                    this.collideGroupVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext);
                 }
             }
         }
 
         return (this._total > 0);
+
+    },
+
+    collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext) {
+
+        this._mapData = tilemapLayer.getTiles(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height, true);
+
+        if (this._mapData.length > 1)
+        {
+            for (var i = 1; i < this._mapData.length; i++)
+            {
+                this.separateTile(sprite.body, this._mapData[i]);
+
+                if (this._result)
+                {
+                    //  They collided, is there a custom process callback?
+                    if (processCallback)
+                    {
+                        if (processCallback.call(callbackContext, sprite, this._mapData[i]))
+                        {
+                            this._total++;
+
+                            if (collideCallback)
+                            {
+                                collideCallback.call(callbackContext, sprite, this._mapData[i]);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        this._total++;
+
+                        if (collideCallback)
+                        {
+                            collideCallback.call(callbackContext, sprite, this._mapData[i]);
+                        }
+                    }
+                }
+            }
+        }
+
+    },
+
+    collideGroupVsTilemapLayer: function (group, tilemapLayer, collideCallback, processCallback, callbackContext) {
+
+        if (group.length == 0)
+        {
+            return;
+        }
+
+        if (group._container.first._iNext)
+        {
+            var currentNode = group._container.first._iNext;
+                
+            do  
+            {
+                if (currentNode.exists)
+                {
+                    this.collideSpriteVsTilemapLayer(currentNode, tilemapLayer, collideCallback, processCallback, callbackContext);
+                }
+                currentNode = currentNode._iNext;
+            }
+            while (currentNode != group._container.last._iNext);
+        }
 
     },
 
@@ -263,65 +328,6 @@ Phaser.Physics.Arcade.prototype = {
                 if (collideCallback)
                 {
                     collideCallback.call(callbackContext, sprite1, sprite2);
-                }
-            }
-        }
-
-    },
-
-    collideGroupVsTilemap: function (group, tilemap, collideCallback, processCallback, callbackContext) {
-
-        if (group.length == 0)
-        {
-            return;
-        }
-
-        if (group._container.first._iNext)
-        {
-            var currentNode = group._container.first._iNext;
-                
-            do  
-            {
-                if (currentNode.exists)
-                {
-                    this.collideSpriteVsTilemap(currentNode, tilemap, collideCallback, processCallback, callbackContext);
-                }
-                currentNode = currentNode._iNext;
-            }
-            while (currentNode != group._container.last._iNext);
-        }
-
-    },
-
-    collideSpriteVsTilemap: function (sprite, tilemap, collideCallback, processCallback, callbackContext) {
-
-        this._mapData = tilemap.collisionLayer.getTileOverlaps(sprite);
-
-        //  If the sprite actually collided with the tilemap then _mapData contains an array of the tiles it collided with
-        var i = this._mapData.length;
-
-        while (i--)
-        {
-            if (processCallback)
-            {
-                //  We've got a custom process callback to hit first
-                if (processCallback.call(callbackContext, sprite, this._mapData[i].tile))
-                {
-                    this._total++;
-
-                    if (collideCallback)
-                    {
-                        collideCallback.call(callbackContext, sprite, this._mapData[i].tile);
-                    }
-                }
-            }
-            else
-            {
-                this._total++;
-
-                if (collideCallback)
-                {
-                    collideCallback.call(callbackContext, sprite, this._mapData[i].tile);
                 }
             }
         }
@@ -635,12 +641,7 @@ Phaser.Physics.Arcade.prototype = {
      */
     separateTile: function (body, tile) {
 
-        if (this.separateTileX(body, tile, true) || this.separateTileY(body, tile, true))
-        {
-            return true;
-        }
-
-        return false;
+        this._result = (this.separateTileX(body, tile, true) || this.separateTileY(body, tile, true));
 
     },
 

@@ -275,16 +275,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.health = 1;
 
     /**
-    * @property {Description} velocity - Description.
-    */
-    // this.velocity = this.body.velocity;
-    
-    /**
-    * @property {Description} acceleration - Description.
-    */
-    // this.acceleration = this.body.acceleration;
-
-    /**
     * @property {Description} inWorld - World bounds check.
     */
     this.inWorld = Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds);
@@ -848,18 +838,6 @@ Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
     
     get: function () {
         return this._cache.cameraVisible;
-    }
-
-});
-
-/**
-* 
-* @returns {boolean}
-*/
-Object.defineProperty(Phaser.Sprite.prototype, "worldX", {
-    
-    get: function () {
-        return 1;
     }
 
 });

@@ -5,8 +5,6 @@
 
 <script type="text/javascript">
 
-
-
     var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
 
     var emitter;
@@ -43,7 +41,6 @@
         emitter.start(true, 2000, null, 10);
 
     }
-
 
 </script>
 
