@@ -635,28 +635,7 @@ Phaser.Physics.Arcade.prototype = {
      */
     separateTile: function (body, tile) {
 
-        var separatedX = this.separateTileX(body, tile, true);
-        var separatedY = this.separateTileY(body, tile, true);
-
-        /*
-        if (separatedX)
-        {
-            console.log('x overlap', this._overlap);
-        }
-
-
-        if (separatedY)
-        {
-            console.log('y overlap', this._overlap);
-        }
-
-        if (separatedX || separatedY)
-        {
-            return true;
-        }
-        */
-
-        if (separatedX || separatedY)
+        if (this.separateTileX(body, tile, true) || this.separateTileY(body, tile, true))
         {
             return true;
         }
@@ -684,16 +663,10 @@ Phaser.Physics.Arcade.prototype = {
         //  The hulls overlap, let's process it
         this._maxOverlap = body.deltaAbsX() + this.OVERLAP_BIAS;
 
-        console.log('sx hulls over');
-        console.log('x', body.hullX.x, 'y', body.hullX.y, 'bottom', body.hullX.y, 'right', body.hullX.right);
-        console.log(tile);
-
         if (body.deltaX() < 0)
         {
             //  Moving left
             this._overlap = tile.right - body.hullX.x;
-
-            console.log('sx left', this._overlap);
 
             if ((this._overlap > this._maxOverlap) || body.allowCollision.left == false || tile.tile.collideRight == false)
             {
@@ -708,8 +681,6 @@ Phaser.Physics.Arcade.prototype = {
         {
             //  Moving right
             this._overlap = body.hullX.right - tile.x;
-
-            console.log('sx right', this._overlap);
 
             if ((this._overlap > this._maxOverlap) || body.allowCollision.right == false || tile.tile.collideLeft == false)
             {
@@ -728,15 +699,11 @@ Phaser.Physics.Arcade.prototype = {
             {
                 if (body.deltaX() < 0)
                 {
-                    console.log('sx sep left 1', body.x);
                     body.x = body.x + this._overlap;
-                    console.log('sx sep left 2', body.x);
                 }
                 else
                 {
-                    console.log('sx sep right 1', body.x);
                     body.x = body.x - this._overlap;
-                    console.log('sx sep right 2', body.x);
                 }
 
                 if (body.bounce.x == 0)
@@ -751,12 +718,10 @@ Phaser.Physics.Arcade.prototype = {
                 body.updateHulls();
             }
 
-            console.log('%c                                         ', 'background: #7f7f7f')
             return true;
         }
         else
         {
-            console.log('%c                                         ', 'background: #7f7f7f')
             return false;
         }
 

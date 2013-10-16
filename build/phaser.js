@@ -9,7 +9,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v1.0.7 - Built at: Tue, 15 Oct 2013 21:10:11 +0100
+* v1.0.7 - Built at: Wed, 16 Oct 2013 03:37:04 +0100
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -18722,8 +18722,7 @@ Phaser.Device.prototype = {
 
         this.file = !!window['File'] && !!window['FileReader'] && !!window['FileList'] && !!window['Blob'];
         this.fileSystem = !!window['requestFileSystem'];
-        this.webGL = ( function () { try { return !! window.WebGLRenderingContext && !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' ); } catch( e ) { return false; } } )();
-        // this.webGL = !!window['WebGLRenderingContext'];
+        this.webGL = ( function () { try { var canvas = document.createElement( 'canvas' ); return !! window.WebGLRenderingContext && ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ); } catch( e ) { return false; } } )();
         this.worker = !!window['Worker'];
         
         if ('ontouchstart' in document.documentElement || window.navigator.msPointerEnabled) {
@@ -22300,7 +22299,7 @@ Phaser.Rectangle.union = function (a, b, out) {
 
     if (typeof out === "undefined") { out = new Phaser.Rectangle(); }
 
-    return out.setTo(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.max(a.right, b.right), Math.max(a.bottom, b.bottom));
+    return out.setTo(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.max(a.right, b.right) - Math.min(a.left, b.left), Math.max(a.bottom, b.bottom) - Math.min(a.top, b.top));
     
 };
 
@@ -24201,7 +24200,7 @@ Phaser.AnimationManager.prototype = {
 		//	If they didn't set the useNumericIndex then let's at least try and guess it
 		if (typeof useNumericIndex === 'undefined')
 		{
-			if (frames && frames[0] && typeof frames[0] === 'number')
+			if (frames && typeof frames[0] === 'number')
 			{
 				useNumericIndex = true;
 			}
@@ -25148,7 +25147,7 @@ Phaser.FrameData.prototype = {
 	*/
     getFrame: function (index) {
 
-        if (this._frames[index])
+        if (this._frames.length > index)
         {
             return this._frames[index];
         }
@@ -29547,8 +29546,7 @@ Phaser.Utils.Debug.prototype = {
         this.start(0, 0, color);
 
         this.context.fillStyle = color;
-        // this.context.fillRect(sprite.body.x - sprite.body.deltaX(), sprite.body.y - sprite.body.deltaY(), sprite.body.width, sprite.body.height);
-        this.context.fillRect(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height);
+        this.context.fillRect(sprite.body.screenX, sprite.body.screenY, sprite.body.width, sprite.body.height);
 
         this.stop();
 
@@ -30756,28 +30754,7 @@ Phaser.Physics.Arcade.prototype = {
      */
     separateTile: function (body, tile) {
 
-        var separatedX = this.separateTileX(body, tile, true);
-        var separatedY = this.separateTileY(body, tile, true);
-
-        /*
-        if (separatedX)
-        {
-            console.log('x overlap', this._overlap);
-        }
-
-
-        if (separatedY)
-        {
-            console.log('y overlap', this._overlap);
-        }
-
-        if (separatedX || separatedY)
-        {
-            return true;
-        }
-        */
-
-        if (separatedX || separatedY)
+        if (this.separateTileX(body, tile, true) || this.separateTileY(body, tile, true))
         {
             return true;
         }
@@ -30805,16 +30782,10 @@ Phaser.Physics.Arcade.prototype = {
         //  The hulls overlap, let's process it
         this._maxOverlap = body.deltaAbsX() + this.OVERLAP_BIAS;
 
-        console.log('sx hulls over');
-        console.log('x', body.hullX.x, 'y', body.hullX.y, 'bottom', body.hullX.y, 'right', body.hullX.right);
-        console.log(tile);
-
         if (body.deltaX() < 0)
         {
             //  Moving left
             this._overlap = tile.right - body.hullX.x;
-
-            console.log('sx left', this._overlap);
 
             if ((this._overlap > this._maxOverlap) || body.allowCollision.left == false || tile.tile.collideRight == false)
             {
@@ -30829,8 +30800,6 @@ Phaser.Physics.Arcade.prototype = {
         {
             //  Moving right
             this._overlap = body.hullX.right - tile.x;
-
-            console.log('sx right', this._overlap);
 
             if ((this._overlap > this._maxOverlap) || body.allowCollision.right == false || tile.tile.collideLeft == false)
             {
@@ -30849,15 +30818,11 @@ Phaser.Physics.Arcade.prototype = {
             {
                 if (body.deltaX() < 0)
                 {
-                    console.log('sx sep left 1', body.x);
                     body.x = body.x + this._overlap;
-                    console.log('sx sep left 2', body.x);
                 }
                 else
                 {
-                    console.log('sx sep right 1', body.x);
                     body.x = body.x - this._overlap;
-                    console.log('sx sep right 2', body.x);
                 }
 
                 if (body.bounce.x == 0)
@@ -30872,12 +30837,10 @@ Phaser.Physics.Arcade.prototype = {
                 body.updateHulls();
             }
 
-            console.log('%c                                         ', 'background: #7f7f7f')
             return true;
         }
         else
         {
-            console.log('%c                                         ', 'background: #7f7f7f')
             return false;
         }
 
@@ -31344,6 +31307,8 @@ Phaser.Physics.Arcade.Body = function (sprite) {
 	this.preX = sprite.x;
 	this.preY = sprite.y;
 	this.preRotation = sprite.angle;
+	this.screenX = sprite.x;
+	this.screenY = sprite.y;
 
 	//	un-scaled original size
 	this.sourceWidth = sprite.currentFrame.sourceSizeW;
@@ -31442,8 +31407,10 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 	    this.embedded = false;
 
-		this.preX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		this.preY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+		this.screenX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+		this.screenY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+		this.preX = (this.sprite.localTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+		this.preY = (this.sprite.localTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 		this.preRotation = this.sprite.angle;
 
 		this.x = this.preX;
@@ -31567,8 +31534,10 @@ Phaser.Physics.Arcade.Body.prototype = {
 	    this.angularVelocity = 0;
 	    this.angularAcceleration = 0;
 
-		this.preX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		this.preY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+		// this.preX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+		// this.preY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+		this.preX = (this.sprite.localTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+		this.preY = (this.sprite.localTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 		this.preRotation = this.sprite.angle;
 
 		this.x = this.preX;
@@ -32651,8 +32620,6 @@ Phaser.Tilemap = function (game, key) {
 	    this.layers = [];
     }
 
-    console.log(this.layers);
-
     this.currentLayer = 0;
 
     this.debugMap = [];
@@ -32860,6 +32827,7 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
 	* @default
 	*/
     this.sprite = new Phaser.Sprite(this.game, x, y, this.texture, this.frame);
+    this.sprite.fixedToCamera = true;
 
 
     /**
@@ -32990,6 +32958,19 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
 
 Phaser.TilemapLayer.prototype = {
 
+    update: function () {
+
+        this.x = this.game.camera.x;
+        this.y = this.game.camera.y;
+
+    },
+
+    resizeWorld: function () {
+
+        this.game.world.setBounds(0, 0, this.widthInPixels, this.heightInPixels);
+
+    },
+
     updateTileset: function (tileset) {
 
         if (tileset instanceof Phaser.Tileset)
@@ -33007,6 +32988,7 @@ Phaser.TilemapLayer.prototype = {
 
         this.tileWidth = this.tileset.tileWidth;
         this.tileHeight = this.tileset.tileHeight;
+
         this.updateMax();
 
     },
@@ -33150,11 +33132,6 @@ Phaser.TilemapLayer.prototype = {
         this._tx = this._dx;
         this._ty = this._dy;
 
-        //  First let's just copy over the whole canvas, offset by the scroll difference
-
-        //  Then we only need fill in the missing strip/s (could be top/bottom/left/right I guess)
-        //   ScrollZone code might be useful here.
-
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         for (var y = this._startY; y < this._startY + this._maxY; y++)
@@ -33167,7 +33144,8 @@ Phaser.TilemapLayer.prototype = {
                 var tile = this.tileset.tiles[this._column[x]-1];
 
                 // if (this.tileset.checkTileIndex(tile))
-                // {
+                if (tile)
+                {
                     this.context.drawImage(
                         this.tileset.image,
                         tile.x,
@@ -33179,7 +33157,7 @@ Phaser.TilemapLayer.prototype = {
                         this.tileWidth,
                         this.tileHeight
                     );
-                // }
+                }
 
                 this._tx += this.tileWidth;
 

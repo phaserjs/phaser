@@ -21,8 +21,6 @@ Phaser.Tilemap = function (game, key) {
 	    this.layers = [];
     }
 
-    console.log(this.layers);
-
     this.currentLayer = 0;
 
     this.debugMap = [];

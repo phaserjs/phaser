@@ -179,8 +179,6 @@ Phaser.TilemapLayer.prototype = {
 
         this.game.world.setBounds(0, 0, this.widthInPixels, this.heightInPixels);
 
-        console.log('world', this.game.world.bounds);
-
     },
 
     updateTileset: function (tileset) {
@@ -200,6 +198,7 @@ Phaser.TilemapLayer.prototype = {
 
         this.tileWidth = this.tileset.tileWidth;
         this.tileHeight = this.tileset.tileHeight;
+
         this.updateMax();
 
     },
@@ -355,7 +354,8 @@ Phaser.TilemapLayer.prototype = {
                 var tile = this.tileset.tiles[this._column[x]-1];
 
                 // if (this.tileset.checkTileIndex(tile))
-                // {
+                if (tile)
+                {
                     this.context.drawImage(
                         this.tileset.image,
                         tile.x,
@@ -367,7 +367,7 @@ Phaser.TilemapLayer.prototype = {
                         this.tileWidth,
                         this.tileHeight
                     );
-                // }
+                }
 
                 this._tx += this.tileWidth;
 
