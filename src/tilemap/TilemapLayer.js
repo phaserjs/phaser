@@ -37,6 +37,7 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
 	* @default
 	*/
     this.sprite = new Phaser.Sprite(this.game, x, y, this.texture, this.frame);
+    this.sprite.fixedToCamera = true;
 
 
     /**
@@ -167,6 +168,21 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
 
 Phaser.TilemapLayer.prototype = {
 
+    update: function () {
+
+        this.x = this.game.camera.x;
+        this.y = this.game.camera.y;
+
+    },
+
+    resizeWorld: function () {
+
+        this.game.world.setBounds(0, 0, this.widthInPixels, this.heightInPixels);
+
+        console.log('world', this.game.world.bounds);
+
+    },
+
     updateTileset: function (tileset) {
 
         if (tileset instanceof Phaser.Tileset)
@@ -242,11 +258,14 @@ Phaser.TilemapLayer.prototype = {
             height = this.heightInPixels;
         }
 
+        var tileWidth = this.tileWidth * this.sprite.scale.x;
+        var tileHeight = this.tileHeight * this.sprite.scale.y;
+
         //  Convert the pixel values into tile coordinates
-        this._tx = this.game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
-        this._ty = this.game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
-        this._tw = (this.game.math.snapToCeil(width, this.tileWidth) + this.tileWidth) / this.tileWidth;
-        this._th = (this.game.math.snapToCeil(height, this.tileHeight) + this.tileHeight) / this.tileHeight;
+        this._tx = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
+        this._ty = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
+        this._tw = (this.game.math.snapToCeil(width, tileWidth) + tileWidth) / tileWidth;
+        this._th = (this.game.math.snapToCeil(height, tileHeight) + tileHeight) / tileHeight;
 
         this._results.length = 0;
 
@@ -254,6 +273,8 @@ Phaser.TilemapLayer.prototype = {
 
         var _index = 0;
         var _tile = null;
+        var sx = 0;
+        var sy = 0;
 
         for (var wy = this._ty; wy < this._ty + this._th; wy++)
         {
@@ -265,9 +286,13 @@ Phaser.TilemapLayer.prototype = {
                     _index = this.layer.data[wy][wx] - 1;
                     _tile = this.tileset.getTile(_index);
 
+                    sx = _tile.width * this.sprite.scale.x;
+                    sy = _tile.height * this.sprite.scale.y;
+
                     if (collides == false || (collides && _tile.collideNone == false))
                     {
-                        this._results.push({ x: wx * _tile.width, right: (wx * _tile.width) + _tile.width, y: wy * _tile.height, bottom: (wy * _tile.height) + _tile.height, width: _tile.width, height: _tile.height, tx: wx, ty: wy, tile: _tile });
+                        // this._results.push({ x: wx * _tile.width, right: (wx * _tile.width) + _tile.width, y: wy * _tile.height, bottom: (wy * _tile.height) + _tile.height, width: _tile.width, height: _tile.height, tx: wx, ty: wy, tile: _tile });
+                        this._results.push({ x: wx * sx, right: (wx * sx) + sx, y: wy * sy, bottom: (wy * sy) + sy, width: sx, height: sy, tx: wx, ty: wy, tile: _tile });
                     }
                 }
             }
@@ -317,11 +342,6 @@ Phaser.TilemapLayer.prototype = {
 
         this._tx = this._dx;
         this._ty = this._dy;
-
-        //  First let's just copy over the whole canvas, offset by the scroll difference
-
-        //  Then we only need fill in the missing strip/s (could be top/bottom/left/right I guess)
-        //   ScrollZone code might be useful here.
 
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 

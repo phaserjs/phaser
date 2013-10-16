@@ -626,8 +626,7 @@ Phaser.Utils.Debug.prototype = {
         this.start(0, 0, color);
 
         this.context.fillStyle = color;
-        // this.context.fillRect(sprite.body.x - sprite.body.deltaX(), sprite.body.y - sprite.body.deltaY(), sprite.body.width, sprite.body.height);
-        this.context.fillRect(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height);
+        this.context.fillRect(sprite.body.screenX, sprite.body.screenY, sprite.body.width, sprite.body.height);
 
         this.stop();
 

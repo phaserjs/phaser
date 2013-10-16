@@ -9,7 +9,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v1.0.7 - Built at: Mon, 14 Oct 2013 15:29:30 +0100
+* v1.0.7 - Built at: Tue, 15 Oct 2013 21:10:11 +0100
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -12676,8 +12676,21 @@ Phaser.Keyboard.prototype = {
             this._hotkeys[event.keyCode].processKeyUp(event);
         }
 
-        this._keys[event.keyCode].isDown = false;
-        this._keys[event.keyCode].timeUp = this.game.time.now;
+        if (this._keys[event.keyCode])
+        {
+            this._keys[event.keyCode].isDown = false;
+            this._keys[event.keyCode].timeUp = this.game.time.now;
+        }
+        else
+        {
+            //  Not used this key before, so register it
+            this._keys[event.keyCode] = {
+                isDown: false,
+                timeDown: this.game.time.now,
+                timeUp: this.game.time.now,
+                duration: 0
+            };
+        }
 
     },
 
@@ -22244,14 +22257,16 @@ Phaser.Rectangle.intersection = function (a, b, out) {
 * @method Phaser.Rectangle.intersects
 * @param {Phaser.Rectangle} a - The first Rectangle object.
 * @param {Phaser.Rectangle} b - The second Rectangle object.
-* @param {number} tolerance - A tolerance value to allow for an intersection test with padding, default to 0
 * @return {boolean} A value of true if the specified object intersects with this Rectangle object; otherwise false.
 */
-Phaser.Rectangle.intersects = function (a, b, tolerance) {
+Phaser.Rectangle.intersects = function (a, b) {
 
-    tolerance = tolerance || 0;
+    return (a.x < b.right && b.x < a.right && a.y < b.bottom && b.y < a.bottom);
 
-    return !(a.x > b.right + tolerance || a.right < b.x - tolerance || a.y > b.bottom + tolerance || a.bottom < b.y - tolerance);
+    // return (a.x <= b.right && b.x <= a.right && a.y <= b.bottom && b.y <= a.bottom);
+
+    // return (a.left <= b.right && b.left <= a.right && a.top <= b.bottom && b.top <= a.bottom);
+    // return !(a.x > b.right + tolerance || a.right < b.x - tolerance || a.y > b.bottom + tolerance || a.bottom < b.y - tolerance);
 
 };
 
@@ -28982,17 +28997,14 @@ Phaser.Utils.Debug.prototype = {
             return;
         }
 
-        x = x || null;
-        y = y || null;
+        if (typeof x !== 'number') { x = 0; }
+        if (typeof y !== 'number') { y = 0; }
+
         color = color || 'rgb(255,255,255)';
 
-        if (x && y)
-        {
-            this.currentX = x;
-            this.currentY = y;
-            this.currentColor = color;
-        }
-
+        this.currentX = x;
+        this.currentY = y;
+        this.currentColor = color;
         this.currentAlpha = this.context.globalAlpha;
 
         this.context.save();
@@ -29008,6 +29020,7 @@ Phaser.Utils.Debug.prototype = {
     * @method Phaser.Utils.Debug#stop
     */
     stop: function () {
+
 
         this.context.restore();
         this.context.globalAlpha = this.currentAlpha;
@@ -29366,7 +29379,6 @@ Phaser.Utils.Debug.prototype = {
         this.line('angle: ' + sprite.angle.toFixed(1) + ' rotation: ' + sprite.rotation.toFixed(1));
         this.line('visible: ' + sprite.visible + ' in camera: ' + sprite.inCamera);
         this.line('body x: ' + sprite.body.x.toFixed(1) + ' y: ' + sprite.body.y.toFixed(1));
-        this.stop();
 
         //  0 = scaleX
         //  1 = skewY
@@ -29382,12 +29394,13 @@ Phaser.Utils.Debug.prototype = {
         // this.line('ty: ' + sprite.worldTransform[5]);
         // this.line('skew x: ' + sprite.worldTransform[3]);
         // this.line('skew y: ' + sprite.worldTransform[1]);
-        // this.line('dx: ' + sprite.body.deltaX());
-        // this.line('dy: ' + sprite.body.deltaY());
+        this.line('deltaX: ' + sprite.body.deltaX());
+        this.line('deltaY: ' + sprite.body.deltaY());
         // this.line('sdx: ' + sprite.deltaX());
         // this.line('sdy: ' + sprite.deltaY());
 
         // this.line('inCamera: ' + this.game.renderer.spriteRenderer.inCamera(this.game.camera, sprite));
+        this.stop();
 
     },
 
@@ -30741,10 +30754,28 @@ Phaser.Physics.Arcade.prototype = {
      * @param object2 The second GameObject to separate
      * @returns {boolean} Returns true if the objects were separated, otherwise false.
      */
-    separateTile: function (object, x, y, width, height, mass, collideLeft, collideRight, collideUp, collideDown, separateX, separateY) {
+    separateTile: function (body, tile) {
 
-        var separatedX = this.separateTileX(object.body, x, y, width, height, mass, collideLeft, collideRight, separateX);
-        var separatedY = this.separateTileY(object.body, x, y, width, height, mass, collideUp, collideDown, separateY);
+        var separatedX = this.separateTileX(body, tile, true);
+        var separatedY = this.separateTileY(body, tile, true);
+
+        /*
+        if (separatedX)
+        {
+            console.log('x overlap', this._overlap);
+        }
+
+
+        if (separatedY)
+        {
+            console.log('y overlap', this._overlap);
+        }
+
+        if (separatedX || separatedY)
+        {
+            return true;
+        }
+        */
 
         if (separatedX || separatedY)
         {
@@ -30761,59 +30792,53 @@ Phaser.Physics.Arcade.prototype = {
      * @param tile The Tile to separate
      * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
      */
-    OLDseparateTileX: function (object, x, y, width, height, mass, collideLeft, collideRight, separate) {
+    separateTileX: function (body, tile, separate) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
-        if (object.immovable)
+        if (body.immovable || body.deltaX() == 0 || Phaser.Rectangle.intersects(body.hullX, tile) == false)
         {
             return false;
         }
 
-        //  First, get the object delta
         this._overlap = 0;
 
-        // console.log('separatedX', x, y, object.deltaX());
+        //  The hulls overlap, let's process it
+        this._maxOverlap = body.deltaAbsX() + this.OVERLAP_BIAS;
 
-        if (object.deltaX() != 0)
+        console.log('sx hulls over');
+        console.log('x', body.hullX.x, 'y', body.hullX.y, 'bottom', body.hullX.y, 'right', body.hullX.right);
+        console.log(tile);
+
+        if (body.deltaX() < 0)
         {
-            this._bounds1.setTo(object.x, object.y, object.width, object.height);
+            //  Moving left
+            this._overlap = tile.right - body.hullX.x;
 
-            if ((this._bounds1.right > x) && (this._bounds1.x < x + width) && (this._bounds1.bottom > y) && (this._bounds1.y < y + height))
+            console.log('sx left', this._overlap);
+
+            if ((this._overlap > this._maxOverlap) || body.allowCollision.left == false || tile.tile.collideRight == false)
             {
-                //  The hulls overlap, let's process it
-                this._maxOverlap = object.deltaAbsX() + this.OVERLAP_BIAS;
+                this._overlap = 0;
+            }
+            else
+            {
+                body.touching.left = true;
+            }
+        }
+        else
+        {
+            //  Moving right
+            this._overlap = body.hullX.right - tile.x;
 
-                //  TODO - We need to check if we're already inside of the tile, i.e. jumping through an n-way tile
-                //  in which case we didn't ought to separate because it'll look like tunneling
+            console.log('sx right', this._overlap);
 
-                if (object.deltaX() > 0)
-                {
-                    //  Going right ...
-                    this._overlap = object.x + object.width - x;
-
-                    if ((this._overlap > this._maxOverlap) || !object.allowCollision.right || !collideLeft)
-                    {
-                        this._overlap = 0;
-                    }
-                    else
-                    {
-                        object.touching.right = true;
-                    }
-                }
-                else if (object.deltaX() < 0)
-                {
-                    //  Going left ...
-                    this._overlap = object.x - width - x;
-
-                    if ((-this._overlap > this._maxOverlap) || !object.allowCollision.left || !collideRight)
-                    {
-                        this._overlap = 0;
-                    }
-                    else
-                    {
-                        object.touching.left = true;
-                    }
-                }
+            if ((this._overlap > this._maxOverlap) || body.allowCollision.right == false || tile.tile.collideLeft == false)
+            {
+                this._overlap = 0;
+            }
+            else
+            {
+                body.touching.right = true;
             }
         }
 
@@ -30822,21 +30847,37 @@ Phaser.Physics.Arcade.prototype = {
         {
             if (separate)
             {
-                object.x = object.x - this._overlap;
-
-                if (object.bounce.x == 0)
+                if (body.deltaX() < 0)
                 {
-                    object.velocity.x = 0;
+                    console.log('sx sep left 1', body.x);
+                    body.x = body.x + this._overlap;
+                    console.log('sx sep left 2', body.x);
                 }
                 else
                 {
-                    object.velocity.x = -object.velocity.x * object.bounce.x;
+                    console.log('sx sep right 1', body.x);
+                    body.x = body.x - this._overlap;
+                    console.log('sx sep right 2', body.x);
                 }
+
+                if (body.bounce.x == 0)
+                {
+                    body.velocity.x = 0;
+                }
+                else
+                {
+                    body.velocity.x = -body.velocity.x * body.bounce.x;
+                }
+
+                body.updateHulls();
             }
+
+            console.log('%c                                         ', 'background: #7f7f7f')
             return true;
         }
         else
         {
+            console.log('%c                                         ', 'background: #7f7f7f')
             return false;
         }
 
@@ -30848,60 +30889,45 @@ Phaser.Physics.Arcade.prototype = {
      * @param tile The Tile to separate
      * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
      */
-    OLDseparateTileY: function (object, x, y, width, height, mass, collideUp, collideDown, separate) {
+    separateTileY: function (body, tile, separate) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
-        if (object.immovable)
+        if (body.immovable || body.deltaY() == 0 || Phaser.Rectangle.intersects(body.hullY, tile) == false)
         {
             return false;
         }
 
-        //  First, get the object delta
         this._overlap = 0;
 
-        if (object.deltaY() != 0)
+        //  The hulls overlap, let's process it
+        this._maxOverlap = body.deltaAbsY() + this.OVERLAP_BIAS;
+
+        if (body.deltaY() < 0)
         {
-            this._bounds1.setTo(object.x, object.y, object.width, object.height);
+            //  Moving up
+            this._overlap = tile.bottom - body.hullY.y;
 
-            if ((this._bounds1.right > x) && (this._bounds1.x < x + width) && (this._bounds1.bottom > y) && (this._bounds1.y < y + height))
+            if ((this._overlap > this._maxOverlap) || body.allowCollision.up == false || tile.tile.collideDown == false)
             {
-                //  The hulls overlap, let's process it
+                this._overlap = 0;
+            }
+            else
+            {
+                body.touching.up = true;
+            }
+        }
+        else
+        {
+            //  Moving down
+            this._overlap = body.hullY.bottom - tile.y;
 
-                //  Not currently used, may need it so keep for now
-                this._maxOverlap = object.deltaAbsY() + this.OVERLAP_BIAS;
-
-                //  TODO - We need to check if we're already inside of the tile, i.e. jumping through an n-way tile
-                //  in which case we didn't ought to separate because it'll look like tunneling
-
-                if (object.deltaY() > 0)
-                {
-                    //  Going down ...
-                    this._overlap = object.bottom - y;
-
-                    // if (object.allowCollision.down && collideDown && this._overlap < this._maxOverlap)
-                    if ((this._overlap > this._maxOverlap) || !object.allowCollision.down || !collideDown)
-                    {
-                        this._overlap = 0;
-                    }
-                    else
-                    {
-                        object.touching.down = true;
-                    }
-                }
-                else
-                {
-                    //  Going up ...
-                    this._overlap = object.y - height - y;
-
-                    if ((-this._overlap > this._maxOverlap) || !object.allowCollision.up || !collideUp)
-                    {
-                        this._overlap = 0;
-                    }
-                    else
-                    {
-                        object.touching.up = true;
-                    }
-                }
+            if ((this._overlap > this._maxOverlap) || body.allowCollision.down == false || tile.tile.collideUp == false)
+            {
+                this._overlap = 0;
+            }
+            else
+            {
+                body.touching.down = true;
             }
         }
 
@@ -30910,184 +30936,33 @@ Phaser.Physics.Arcade.prototype = {
         {
             if (separate)
             {
-                object.y = object.y - this._overlap;
-
-                if (object.bounce.y == 0)
+                if (body.deltaY() < 0)
                 {
-                    object.velocity.y = 0;
+                    body.y = body.y + this._overlap;
                 }
                 else
                 {
-                    object.velocity.y = -object.velocity.y * object.bounce.y;
+                    body.y = body.y - this._overlap;
                 }
+
+                if (body.bounce.y == 0)
+                {
+                    body.velocity.y = 0;
+                }
+                else
+                {
+                    body.velocity.y = -body.velocity.y * body.bounce.y;
+                }
+
+                body.updateHulls();
             }
+            
             return true;
         }
         else
         {
             return false;
         }
-
-    },    
-
-    /**
-     * Separates the two objects on their x axis
-     * @param object The GameObject to separate
-     * @param tile The Tile to separate
-     * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
-     */
-    separateTileX: function (object, x, y, width, height, mass, collideLeft, collideRight, separate) {
-
-        //  Can't separate two immovable objects (tiles are always immovable)
-        if (object.immovable)
-        {
-            return false;
-        }
-
-        this._overlap = 0;
-
-        //  Do we have any overlap at all?
-        if (Phaser.Rectangle.intersectsRaw(object, x, x + width, y, y + height))
-        {
-            this._maxOverlap = object.deltaAbsX() + this.OVERLAP_BIAS;
-
-            if (object.deltaX() == 0)
-            {
-                //  Object is either stuck inside the tile or only overlapping on the Y axis
-            }
-            else if (object.deltaX() > 0)
-            {
-                //  Going right ...
-
-
-                
-                this._overlap = object.x + object.width - x;
-
-                if ((this._overlap > this._maxOverlap) || !object.allowCollision.right || !collideLeft)
-                {
-                    this._overlap = 0;
-                }
-                else
-                {
-                    object.touching.right = true;
-                }
-            }
-            else if (object.deltaX() < 0)
-            {
-                //  Going left ...
-                this._overlap = object.x - width - x;
-
-                if ((-this._overlap > this._maxOverlap) || !object.allowCollision.left || !collideRight)
-                {
-                    this._overlap = 0;
-                }
-                else
-                {
-                    object.touching.left = true;
-                }
-            }
-
-            if (this._overlap != 0)
-            {
-                if (separate)
-                {
-                    // console.log('x over', this._overlap);
-                    object.x = object.x - this._overlap;
-
-                    if (object.bounce.x == 0)
-                    {
-                        object.velocity.x = 0;
-                    }
-                    else
-                    {
-                        object.velocity.x = -object.velocity.x * object.bounce.x;
-                    }
-                }
-                return true;
-            }
-
-        }
-
-        return false;
-
-    },
-
-    /**
-     * Separates the two objects on their x axis
-     * @param object The GameObject to separate
-     * @param tile The Tile to separate
-     * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
-     */
-    separateTileY: function (object, x, y, width, height, mass, collideUp, collideDown, separate) {
-
-        //  Can't separate two immovable objects (tiles are always immovable)
-        if (object.immovable)
-        {
-            return false;
-        }
-
-        this._overlap = 0;
-
-        if (Phaser.Rectangle.intersectsRaw(object, x, x + width, y, y + height))
-        {
-            this._maxOverlap = object.deltaAbsY() + this.OVERLAP_BIAS;
-
-            if (object.deltaY() == 0)
-            {
-                //  Object is stuck inside a tile and not moving
-            }
-            else if (object.deltaY() > 0)
-            {
-                //  Going down ...
-                this._overlap = object.bottom - y;
-
-                // if (object.allowCollision.down && collideDown && this._overlap < this._maxOverlap)
-                if ((this._overlap > this._maxOverlap) || !object.allowCollision.down || !collideDown)
-                {
-                    this._overlap = 0;
-                }
-                else
-                {
-                    object.touching.down = true;
-                }
-            }
-            else if (object.deltaY() < 0)
-            {
-                //  Going up ...
-                this._overlap = object.y - height - y;
-
-                if ((-this._overlap > this._maxOverlap) || !object.allowCollision.up || !collideUp)
-                {
-                    this._overlap = 0;
-                }
-                else
-                {
-                    object.touching.up = true;
-                }
-            }
-
-            if (this._overlap != 0)
-            {
-                // console.log('y over', this._overlap);
-
-                if (separate)
-                {
-                    object.y = object.y - this._overlap;
-
-                    if (object.bounce.y == 0)
-                    {
-                        object.velocity.y = 0;
-                    }
-                    else
-                    {
-                        object.velocity.y = -object.velocity.y * object.bounce.y;
-                    }
-                }
-                return true;
-            }
-        }
-        
-        return false;
 
     },
 
@@ -32641,9 +32516,35 @@ Phaser.Tile = function (tileset, index, x, y, width, height) {
     */
     this.separateY = true;
 
+    /**
+    * @property {boolean} collisionCallback - Tilemap collision callback.
+    * @default
+    */
+    this.collisionCallback = null;
+
+    /**
+    * @property {boolean} collisionCallback - Tilemap collision callback.
+    * @default
+    */
+    this.collisionCallbackContext = this;
+
 };
 
 Phaser.Tile.prototype = {
+
+    /**
+    * Set callback to be called when this tilemap collides.
+    * 
+    * @method Phaser.Tilemap.prototype.setCollisionCallback
+    * @param {Function} callback - Callback function.
+    * @param {object} context - Callback will be called with this context.
+    */
+    setCollisionCallback: function (callback, context) {
+
+        this.collisionCallbackContext = context;
+        this.collisionCallback = callback;
+
+    },
 
     /**
     * Clean up memory.
@@ -32750,6 +32651,8 @@ Phaser.Tilemap = function (game, key) {
 	    this.layers = [];
     }
 
+    console.log(this.layers);
+
     this.currentLayer = 0;
 
     this.debugMap = [];
@@ -32809,6 +32712,23 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
+    * Get the tile located at specific position (in world coordinate) and layer (thus you give a position of a point which is within the tile).
+    * @param {number} x - X position of the point in target tile.
+    * @param {number} y - Y position of the point in target tile.
+    * @param {number} [layer] - layer of this tile located.
+    * @return {Tile} The tile with specific properties.
+    */
+    getTileFromWorldXY: function (x, y, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+
+
+        // return this.tiles[this.layers[layer].getTileFromWorldXY(x, y)];
+
+    },
+
+    /**
     * Set a specific tile with its x and y in tiles.
     * @method putTile
     * @param {number} x - X position of this tile.
@@ -32821,6 +32741,38 @@ Phaser.Tilemap.prototype = {
     	{
     		this.layers[this.currentLayer].data[y][x] = index;
     	}
+
+    },
+
+    /**
+    * Set a specific tile with its x and y in tiles.
+    * @method putTileWorldXY
+    * @param {number} x - X position of this tile in world coordinates.
+    * @param {number} y - Y position of this tile in world coordinates.
+    * @param {number} index - The index of this tile type in the core map data.
+    */
+    putTileWorldXY: function (x, y, index) {
+
+        x = this.game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
+        y = this.game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
+
+        if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+        {
+            this.layers[this.currentLayer].data[y][x] = index;
+        }
+
+    },
+
+
+    //  swapTile
+    //  fillTile
+    //  randomiseTiles
+    //  replaceTiles
+
+    removeAllLayers: function () {
+
+        this.layers.length = 0;
+        this.currentLayer = 0;
 
     },
 
@@ -32857,6 +32809,13 @@ Phaser.Tilemap.prototype = {
 
         args[0] = txt;
         console.log.apply(console, args);
+
+    },
+
+    destroy: function () {
+
+        this.removeAllLayers();
+        this.game = null;
 
     }
 
@@ -32970,6 +32929,11 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     * @private 
     */
     this._ty = 0;
+
+    this._results = [];
+
+    this._tw = 0;
+    this._th = 0;
     
     /**
     * @property {number} _tl - Local render loop var to help avoid gc spikes.
@@ -33008,9 +32972,11 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     this._y = 0;
     this._prevX = 0;
     this._prevY = 0;
+
+
     this.dirty = true;
 
-    if (typeof tileset === 'string')
+    if (tileset instanceof Phaser.Tileset || typeof tileset === 'string')
     {
         this.updateTileset(tileset);
     }
@@ -33026,19 +32992,120 @@ Phaser.TilemapLayer.prototype = {
 
     updateTileset: function (tileset) {
 
-        this.tileset = this.game.cache.getTileset(tileset);
+        if (tileset instanceof Phaser.Tileset)
+        {
+            this.tileset = tileset;
+        }
+        else if (typeof tileset === 'string')
+        {
+            this.tileset = this.game.cache.getTileset('tiles');
+        }
+        else
+        {
+            return;
+        }
+
         this.tileWidth = this.tileset.tileWidth;
         this.tileHeight = this.tileset.tileHeight;
-
         this.updateMax();
+
     },
 
-    updateMapData: function (tilemap, layerID) {
+    updateMapData: function (tilemap, layer) {
 
-        this.tilemap = tilemap;
-        this.layer = this.tilemap.layers[layerID];
+        if (typeof layer === 'undefined')
+        {
+            layer = 0;
+        }
 
-        this.updateMax();
+        if (tilemap instanceof Phaser.Tilemap)
+        {
+            this.tilemap = tilemap;
+            this.layer = this.tilemap.layers[layer];
+            this.updateMax();
+        }
+
+    },
+
+    /**
+    * 
+    * @method getTileOverlaps
+    * @param {GameObject} object - Tiles you want to get that overlaps this.
+    * @return {array} Array with tiles informations (each contains x, y, and the tile).
+    */
+    getTiles: function (x, y, width, height, collides) {
+
+        if (this.tilemap === null)
+        {
+            return;
+        }
+
+        //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
+        if (typeof collides === 'undefined') { collides = false; }
+
+        //  Cap the values
+
+        if (x < 0)
+        {
+            x = 0;
+        }
+
+        if (y < 0)
+        {
+            y = 0;
+        }
+
+        if (width > this.widthInPixels)
+        {
+            width = this.widthInPixels;
+        }
+
+        if (height > this.heightInPixels)
+        {
+            height = this.heightInPixels;
+        }
+
+        var tileWidth = this.tileWidth * this.sprite.scale.x;
+        var tileHeight = this.tileHeight * this.sprite.scale.y;
+
+        //  Convert the pixel values into tile coordinates
+        this._tx = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
+        this._ty = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
+        this._tw = (this.game.math.snapToCeil(width, tileWidth) + tileWidth) / tileWidth;
+        this._th = (this.game.math.snapToCeil(height, tileHeight) + tileHeight) / tileHeight;
+
+        this._results.length = 0;
+
+        this._results.push( { x: x, y: y, width: width, height: height, tx: this._tx, ty: this._ty, tw: this._tw, th: this._th });
+
+        var _index = 0;
+        var _tile = null;
+        var sx = 0;
+        var sy = 0;
+
+        for (var wy = this._ty; wy < this._ty + this._th; wy++)
+        {
+            for (var wx = this._tx; wx < this._tx + this._tw; wx++)
+            {
+                if (this.layer.data[wy] && this.layer.data[wy][wx])
+                {
+                    //  Could combine
+                    _index = this.layer.data[wy][wx] - 1;
+                    _tile = this.tileset.getTile(_index);
+
+                    sx = _tile.width * this.sprite.scale.x;
+                    sy = _tile.height * this.sprite.scale.y;
+
+                    if (collides == false || (collides && _tile.collideNone == false))
+                    {
+                        // this._results.push({ x: wx * _tile.width, right: (wx * _tile.width) + _tile.width, y: wy * _tile.height, bottom: (wy * _tile.height) + _tile.height, width: _tile.width, height: _tile.height, tx: wx, ty: wy, tile: _tile });
+                        this._results.push({ x: wx * sx, right: (wx * sx) + sx, y: wy * sy, bottom: (wy * sy) + sy, width: sx, height: sy, tx: wx, ty: wy, tile: _tile });
+                    }
+                }
+            }
+        }
+
+        return this._results;
 
     },
 
@@ -33444,11 +33511,43 @@ Phaser.Tileset.prototype = {
 
     },
 
+    canCollide: function (index) {
+
+        if (this.tiles[index])
+        {
+            return this.tiles[index].collideNone;
+        }
+
+        return null;
+
+    },
+
     checkTileIndex: function (index) {
 
     	return (this.tiles[index]);
 
-    }
+    },
+
+    setCollisionRange: function (start, stop, left, right, up, down) {
+
+        if (this.tiles[start] && this.tiles[stop] && start < stop)
+        {
+            for (var i = start; i <= stop; i++)
+            {
+                this.tiles[i].setCollision(left, right, up, down);
+            }
+        }
+
+    },
+
+    setCollision: function (index, left, right, up, down) {
+
+        if (this.tiles[index])
+        {
+            this.tiles[index].setCollision(left, right, up, down);
+        }
+
+    },
 
 }
 

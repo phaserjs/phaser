@@ -11,7 +11,7 @@
 
     function preload() {
 
-        game.load.tilemap('level1', 'assets/games/starstruck/tiles-1.png', 'assets/games/starstruck/level1.json', null, Phaser.Tilemap.JSON);
+        // game.load.tilemap('level1', 'assets/games/starstruck/tiles-1.png', 'assets/games/starstruck/level1.json', null, Phaser.Tilemap.JSON);
         game.load.spritesheet('dude', 'assets/games/starstruck/dude.png', 32, 48);
         game.load.spritesheet('droid', 'assets/games/starstruck/droid.png', 32, 32);
         game.load.image('starSmall', 'assets/games/starstruck/star.png');

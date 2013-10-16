@@ -119,6 +119,10 @@ Version 1.0.7 (in progress in the dev branch)
 * Added Sprite.destroy back in again and made it a lot more robust at cleaning up child objects.
 * Added 'return this' to all the core Loader functions so you can chain load calls if you so wish.
 * Group.alpha is now exposed publically and changes the Group container object (not the children directly, who can still have their own alpha values)
+* Device.webGL uses new inspection code to accurately catch more webGL capable devices.
+* Fixed an issue where creating an animation with just one frame with an index of zero would cause a UUID error (thanks SYNYST3R1)
+* Fixed Rectangle.union (thanks andron77)
+* Debug.renderSpriteBody updated to use a the new Sprite.Body.screenX/Y properties.
 
 
 

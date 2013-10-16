@@ -661,6 +661,6 @@ Phaser.Rectangle.union = function (a, b, out) {
 
     if (typeof out === "undefined") { out = new Phaser.Rectangle(); }
 
-    return out.setTo(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.max(a.right, b.right), Math.max(a.bottom, b.bottom));
+    return out.setTo(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.max(a.right, b.right) - Math.min(a.left, b.left), Math.max(a.bottom, b.bottom) - Math.min(a.top, b.top));
     
 };

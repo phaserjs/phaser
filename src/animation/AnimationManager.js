@@ -101,7 +101,7 @@ Phaser.AnimationManager.prototype = {
 		//	If they didn't set the useNumericIndex then let's at least try and guess it
 		if (typeof useNumericIndex === 'undefined')
 		{
-			if (frames && frames[0] && typeof frames[0] === 'number')
+			if (frames && typeof frames[0] === 'number')
 			{
 				useNumericIndex = true;
 			}

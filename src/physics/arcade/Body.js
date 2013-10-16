@@ -10,6 +10,8 @@ Phaser.Physics.Arcade.Body = function (sprite) {
 	this.preX = sprite.x;
 	this.preY = sprite.y;
 	this.preRotation = sprite.angle;
+	this.screenX = sprite.x;
+	this.screenY = sprite.y;
 
 	//	un-scaled original size
 	this.sourceWidth = sprite.currentFrame.sourceSizeW;
@@ -108,8 +110,10 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 	    this.embedded = false;
 
-		this.preX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		this.preY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+		this.screenX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+		this.screenY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+		this.preX = (this.sprite.localTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+		this.preY = (this.sprite.localTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 		this.preRotation = this.sprite.angle;
 
 		this.x = this.preX;
@@ -233,8 +237,10 @@ Phaser.Physics.Arcade.Body.prototype = {
 	    this.angularVelocity = 0;
 	    this.angularAcceleration = 0;
 
-		this.preX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		this.preY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+		// this.preX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+		// this.preY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+		this.preX = (this.sprite.localTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+		this.preY = (this.sprite.localTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 		this.preRotation = this.sprite.angle;
 
 		this.x = this.preX;

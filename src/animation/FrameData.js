@@ -60,7 +60,7 @@ Phaser.FrameData.prototype = {
 	*/
     getFrame: function (index) {
 
-        if (this._frames[index])
+        if (this._frames.length > index)
         {
             return this._frames[index];
         }

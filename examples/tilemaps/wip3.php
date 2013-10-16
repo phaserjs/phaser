@@ -51,18 +51,9 @@
         //  The width/height is the rendered size of the layer in pixels, not the size of the map data itself.
 
         //  This one gives tileset as a string, the other an object
-        // layer = new Phaser.TilemapLayer(game, 0, 0, 640, 400, 'tiles', map, 0);
-        layer = new Phaser.TilemapLayer(game, 0, 0, 800, 400, tileset, map, 0);
-
-        //  To set tiles for collision you need to modify the Tileset, which is a property of the layer
-
-        //  Task now
-        //
-        //  1) Get tiles that will collide with sprites new position (hullX and hullY)
-        //  2) Separate x/y
-        
-
-        //  Collision is based on the layer.x/y value
+        // layer = new Phaser.TilemapLayer(game, 0, 0, 800, 400, tileset, map, 0);
+        layer = new Phaser.TilemapLayer(game, 0, 0, 400, 200, tileset, map, 0);
+        layer.sprite.scale.setTo(2, 2);
 
         // layer.sprite.anchor.setTo(0.5, 0.5);
  
@@ -93,6 +84,12 @@
         // game.camera.x = 400;
 
         sprite = game.add.sprite(200, 80, 'phaser');
+        // sprite.x = 140;
+        // sprite.y = 40;
+
+        //sprite.scale.setTo(2, 2);
+
+        
 
         cursors = game.input.keyboard.createCursorKeys();
 
@@ -143,6 +140,8 @@
     function render() {
 
         layer.render();
+
+        game.debug.renderSpriteBody(sprite);
 
         game.debug.renderSpriteInfo(sprite, 32, 450);
         // game.debug.renderCameraInfo(game.camera, 32, 32);

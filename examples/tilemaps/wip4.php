@@ -12,8 +12,7 @@
 
         game.load.tilemap('level3', 'assets/maps/cybernoid.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.tileset('tiles', 'assets/maps/cybernoid.png', 16, 16);
-        // game.load.image('phaser', 'assets/sprites/phaser-dude.png');
-        game.load.image('phaser', 'assets/sprites/space-baddie.png');
+        game.load.image('phaser', 'assets/sprites/phaser-ship.png');
 
     }
 
@@ -43,29 +42,24 @@
 
         //  And this turns off collision on the only tile we don't want collision on :)
         tileset.setCollision(6, false, false, false, false);
+        tileset.setCollision(31, false, false, false, false);
         tileset.setCollision(34, false, false, false, false);
         tileset.setCollision(35, false, false, false, false);
+        tileset.setCollision(46, false, false, false, false);
 
         //  A TilemapLayer consists of an x,y coordinate (position), a width and height, a Tileset and a Tilemap which it uses for map data.
         //  The x/y coordinates are in World space and you can place the tilemap layer anywhere in the world.
         //  The width/height is the rendered size of the layer in pixels, not the size of the map data itself.
 
         //  This one gives tileset as a string, the other an object
-        // layer = new Phaser.TilemapLayer(game, 0, 0, 640, 400, 'tiles', map, 0);
-        layer = new Phaser.TilemapLayer(game, 0, 0, 800, 400, tileset, map, 0);
-
-        //  To set tiles for collision you need to modify the Tileset, which is a property of the layer
-
-        //  Task now
-        //
-        //  1) Get tiles that will collide with sprites new position (hullX and hullY)
-        //  2) Separate x/y
-        
-
-        //  Collision is based on the layer.x/y value
+        layer = new Phaser.TilemapLayer(game, 0, 0, 800, 600, tileset, map, 0);
+        // layer = new Phaser.TilemapLayer(game, 0, 0, 400, 200, tileset, map, 0);
+        // layer.sprite.scale.setTo(2, 2);
 
         // layer.sprite.anchor.setTo(0.5, 0.5);
  
+        layer.resizeWorld();
+
         game.world.add(layer.sprite);
 
         //  This is a bit nuts, ought to find a way to automate it, but it looks cool :)
@@ -92,7 +86,19 @@
         // game.world.setBounds(0, 0, 2000, 2000);
         // game.camera.x = 400;
 
-        sprite = game.add.sprite(200, 80, 'phaser');
+        sprite = game.add.sprite(450, 80, 'phaser');
+        sprite.anchor.setTo(0.5, 0.5);
+        // sprite.x = 140;
+        // sprite.y = 40;
+
+        //sprite.scale.setTo(2, 2);
+
+        // sprite.body.gravity.y = 100;
+        // sprite.body.bounce.x = 0.5;
+        // sprite.body.bounce.y = 0.2;
+
+        game.camera.follow(sprite);
+        game.camera.deadzone = new Phaser.Rectangle(160, 160, layer.renderWidth-320, layer.renderHeight-320);
 
         cursors = game.input.keyboard.createCursorKeys();
 
@@ -100,43 +106,42 @@
 
     function update() {
 
-        sprite.body.velocity.setTo(0, 0);
-
-        // layer.sprite.angle += 0.5;
-
-        if (cursors.up.isDown)
-        {
-             sprite.body.velocity.y = -100;
-            // layer.y -= 4;
-        }
-        else if (cursors.down.isDown)
-        {
-            sprite.body.velocity.y = 100;
-            // layer.y += 4;
-        }
-
-        if (cursors.left.isDown)
-        {
-            sprite.body.velocity.x = -100;
-            // layer.x -= 4;
-        }
-        else if (cursors.right.isDown)
-        {
-            sprite.body.velocity.x = 100;
-            // layer.x += 4;
-        }
+        layer.update();
 
         //    getTiles: function (x, y, width, height, collides, layer) {
         overlap = layer.getTiles(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height, true);
 
         if (overlap.length > 1)
         {
-            // console.log('%c                                         ', 'background: #000000')
             for (var i = 1; i < overlap.length; i++)
             {
                 game.physics.separateTile(sprite.body, overlap[i]);
             }
         }
+
+        sprite.body.velocity.x = 0;
+        sprite.body.velocity.y = 0;
+
+        if (cursors.up.isDown)
+        {
+             sprite.body.velocity.y = -150;
+        }
+        else if (cursors.down.isDown)
+        {
+            sprite.body.velocity.y = 150;
+        }
+
+        if (cursors.left.isDown)
+        {
+            sprite.body.velocity.x = -150;
+            sprite.scale.x = -1;
+        }
+        else if (cursors.right.isDown)
+        {
+            sprite.body.velocity.x = 150;
+            sprite.scale.x = 1;
+        }
+
 
     }
 
@@ -144,7 +149,10 @@
 
         layer.render();
 
-        game.debug.renderSpriteInfo(sprite, 32, 450);
+        // game.debug.renderSpriteBody(sprite);
+
+        // game.debug.renderSpriteInfo(sprite, 32, 450);
+
         // game.debug.renderCameraInfo(game.camera, 32, 32);
 
         /*
@@ -191,7 +199,7 @@
         game.context.restore();
         */
 
-        // game.debug.renderRectangle(sprite.body.hullX);
+        // game.debug.renderRectangle(game.camera.deadzone, 'rgba(0,200,0,0.5)');
 
     }
 
