@@ -1,6 +1,6 @@
 Phaser.TilemapParser = {
 
-	tileset: function (game, key, tileWidth, tileHeight, tileMax) {
+	tileset: function (game, key, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing) {
 
 	    //  How big is our image?
 	    var img = game.cache.getTilesetImage(key);
@@ -13,6 +13,7 @@ Phaser.TilemapParser = {
 	    var width = img.width;
 	    var height = img.height;
 
+	    //	If no tile width/height is given, try and figure it out (won't work if the tileset has margin/spacing)
 	    if (tileWidth <= 0)
 	    {
 	        tileWidth = Math.floor(-width / Math.min(-1, tileWidth));
@@ -40,21 +41,21 @@ Phaser.TilemapParser = {
 	    }
 
 	    //  Let's create some tiles
-	    var x = 0;
-	    var y = 0;
+	    var x = tileMargin;
+	    var y = tileMargin;
 
-	    var tileset = new Phaser.Tileset(img, key, tileWidth, tileHeight);
+	    var tileset = new Phaser.Tileset(img, key, tileWidth, tileHeight, tileMargin, tileSpacing);
 
 	    for (var i = 0; i < total; i++)
 	    {
 	        tileset.addTile(new Phaser.Tile(tileset, i, x, y, tileWidth, tileHeight));
 
-	        x += tileWidth;
+	        x += tileWidth + tileSpacing;
 
 	        if (x === width)
 	        {
-	            x = 0;
-	            y += tileHeight;
+	            x = tileMargin;
+	            y += tileHeight + tileSpacing;
 	        }
 	    }
 

@@ -25,6 +25,12 @@ Phaser.Tilemap = function (game, key) {
 
     this.debugMap = [];
 
+    this.dirty = false;
+
+    this._results = [];
+    this._tempA = 0;
+    this._tempB = 0;
+
 };
 
 Phaser.Tilemap.CSV = 0;
@@ -60,6 +66,8 @@ Phaser.Tilemap.prototype = {
 
         });
 
+        this.dirty = true;
+
     },
 
     setLayer: function (layer) {
@@ -68,31 +76,6 @@ Phaser.Tilemap.prototype = {
     	{
     		this.currentLayer = layer;
     	}
-
-    },
-
-    createLayerSprite: function (tilset) {
-
-    	//	Creates a TilemapLayer which you can add to the display list
-    	//	Hooked to a specific layer within the map data
-
-
-    },
-
-    /**
-    * Get the tile located at specific position (in world coordinate) and layer (thus you give a position of a point which is within the tile).
-    * @param {number} x - X position of the point in target tile.
-    * @param {number} y - Y position of the point in target tile.
-    * @param {number} [layer] - layer of this tile located.
-    * @return {Tile} The tile with specific properties.
-    */
-    getTileFromWorldXY: function (x, y, layer) {
-
-        if (typeof layer === "undefined") { layer = this.currentLayer; }
-
-
-
-        // return this.tiles[this.layers[layer].getTileFromWorldXY(x, y)];
 
     },
 
@@ -109,6 +92,8 @@ Phaser.Tilemap.prototype = {
     	{
     		this.layers[this.currentLayer].data[y][x] = index;
     	}
+
+        this.dirty = true;
 
     },
 
@@ -129,13 +114,237 @@ Phaser.Tilemap.prototype = {
             this.layers[this.currentLayer].data[y][x] = index;
         }
 
+        this.dirty = true;
+
     },
 
+    //  Values are in TILEs, not pixels.
+    getTiles: function (x, y, width, height, layer) {
 
-    //  swapTile
-    //  fillTile
-    //  randomiseTiles
-    //  replaceTiles
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        if (!this.layers[layer])
+        {
+            this._results.length = 0;
+            return;
+        }
+
+        if (typeof x === "undefined") { x = 0; }
+        if (typeof y === "undefined") { y = 0; }
+        if (typeof width === "undefined") { width = this.layers[layer].width; }
+        if (typeof height === "undefined") { height = this.layers[layer].height; }
+
+        if (x < 0)
+        {
+            x = 0;
+        }
+
+        if (y < 0)
+        {
+            y = 0;
+        }
+
+        if (width > this.layers[layer].width)
+        {
+            width = this.layers[layer].width;
+        }
+
+        if (height > this.layers[layer].height)
+        {
+            height = this.layers[layer].height;
+        }
+
+        this._results.length = 0;
+
+        this._results.push( { x: x, y: y, width: width, height: height, layer: layer });
+
+        for (var ty = y; ty < y + height; ty++)
+        {
+            for (var tx = x; tx < x + width; tx++)
+            {
+                this._results.push({ x: tx, y: ty, index: this.layers[layer].data[ty][tx] });
+            }
+        }
+
+        return this._results;
+
+    },
+
+    putTiles: function (x, y, tileblock, layer) {
+
+        if (typeof x === "undefined") { x = 0; }
+        if (typeof y === "undefined") { y = 0; }
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        if (!tileblock || tileblock.length < 2)
+        {
+            return;
+        }
+
+        //  Find out the difference between tileblock[1].x/y and x/y and use it as an offset, as it's the top left of the block to paste
+        var diffX = tileblock[1].x - x;
+        var diffY = tileblock[1].y - y;
+
+        for (var i = 1; i < tileblock.length; i++)
+        {
+            this.layers[layer].data[ diffY + tileblock[i].y ][ diffX + tileblock[i].x ] = tileblock[i].index;
+        }
+
+        this.dirty = true;
+
+    },
+
+    /**
+    * Swap tiles with 2 kinds of indexes.
+    * @method swapTile
+    * @param {number} tileA - First tile index.
+    * @param {number} tileB - Second tile index.
+    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
+    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
+    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
+    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    */
+    swap: function (tileA, tileB, x, y, width, height, layer) {
+
+        this.getTiles(x, y, width, height, layer);
+
+        if (this._results.length < 2)
+        {
+            return;
+        }
+
+        this._tempA = tileA;
+        this._tempB = tileB;
+
+        this._results.forEach(this.swapHandler, this);
+
+        this.putTiles(x, y, this._results);
+
+    },
+
+    swapHandler: function (value, index, array) {
+
+        if (value.index === this._tempA)
+        {
+            this._results[index].index = this._tempB;
+        }
+        else if (value.index === this._tempB)
+        {
+            this._results[index].index = this._tempA;
+        }
+
+    },
+
+    /**
+    * Swap tiles with 2 kinds of indexes.
+    * @method swapTile
+    * @param {number} tileA - First tile index.
+    * @param {number} tileB - Second tile index.
+    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
+    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
+    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
+    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    */
+    forEach: function (callback, context, x, y, width, height, layer) {
+
+        this.getTiles(x, y, width, height, layer);
+
+        if (this._results.length < 2)
+        {
+            return;
+        }
+
+        this._results.forEach(callback, context);
+
+        this.putTiles(x, y, this._results);
+
+    },
+
+    /**
+    * Replaces one type of tile with another.
+    * @method replace
+    * @param {number} tileA - First tile index.
+    * @param {number} tileB - Second tile index.
+    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
+    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
+    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
+    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    */
+    replace: function (tileA, tileB, x, y, width, height, layer) {
+
+        this.getTiles(x, y, width, height, layer);
+
+        if (this._results.length < 2)
+        {
+            return;
+        }
+
+        for (var i = 1; i < this._results.length; i++)
+        {
+            if (this._results[i].index === tileA)
+            {
+                this._results[i].index = tileB;
+            }
+        }
+
+        this.putTiles(x, y, this._results);
+
+    },
+
+    /**
+    * Randomises a set of tiles in a given area.
+    * @method replace
+    * @param {number} tileA - First tile index.
+    * @param {number} tileB - Second tile index.
+    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
+    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
+    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
+    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    */
+    random: function (x, y, width, height, layer) {
+
+        this.getTiles(x, y, width, height, layer);
+
+        if (this._results.length < 2)
+        {
+            return;
+        }
+
+        for (var i = 1; i < this._results.length; i++)
+        {
+            this._results[i].index = this.game.rnd.integerInRange(0, this.layers[layer].tileset.total);
+        }
+
+        this.putTiles(x, y, this._results);
+
+    },
+
+    /**
+    * Fill a tile block with a specific tile index.
+    * @method fill
+    * @param {number} index - Index of tiles you want to fill with.
+    * @param {number} [x] - X position (in tiles) of block's left-top corner.
+    * @param {number} [y] - Y position (in tiles) of block's left-top corner.
+    * @param {number} [width] - width of block.
+    * @param {number} [height] - height of block.
+    */
+    fill: function (index, x, y, width, height, layer) {
+
+        this.getTiles(x, y, width, height, layer);
+
+        if (this._results.length < 2)
+        {
+            return;
+        }
+
+        for (var i = 1; i < this._results.length; i++)
+        {
+            this._results[i].index = index;
+        }
+
+        this.putTiles(x, y, this._results);
+
+    },
 
     removeAllLayers: function () {
 

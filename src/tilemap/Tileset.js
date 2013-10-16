@@ -1,5 +1,8 @@
 
-Phaser.Tileset = function (image, key, tileWidth, tileHeight) {
+Phaser.Tileset = function (image, key, tileWidth, tileHeight, tileMargin, tileSpacing) {
+
+    if (typeof tileMargin === "undefined") { tileMargin = 0; }
+    if (typeof tileSpacing === "undefined") { tileSpacing = 0; }
 
     /**
     * @property {string} key - The cache ID.
@@ -10,6 +13,8 @@ Phaser.Tileset = function (image, key, tileWidth, tileHeight) {
 
     this.tileWidth = tileWidth;
     this.tileHeight = tileHeight;
+    this.margin = tileMargin;
+    this.spacing = tileSpacing;
 
     this.tiles = [];
 
@@ -33,6 +38,13 @@ Phaser.Tileset.prototype = {
         }
 
         return null;
+
+    },
+
+    setSpacing: function (margin, spacing) {
+
+        this.tileMargin = margin;
+        this.tileSpacing = spacing;
 
     },
 

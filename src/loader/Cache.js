@@ -133,15 +133,17 @@ Phaser.Cache.prototype = {
     * @param {number} tileWidth - Width of the sprite sheet.
     * @param {number} tileHeight - Height of the sprite sheet.
     * @param {number} tileMax - How many tiles stored in the sprite sheet.
+    * @param {number} [tileMargin=0] - If the tiles have been drawn with a margin, specify the amount here.
+    * @param {number} [tileSpacing=0] - If the tiles have been drawn with spacing between them, specify the amount here.
     */
-    addTileset: function (key, url, data, tileWidth, tileHeight, tileMax) {
+    addTileset: function (key, url, data, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing) {
 
-        this._tilesets[key] = { url: url, data: data, tileWidth: tileWidth, tileHeight: tileHeight };
+        this._tilesets[key] = { url: url, data: data, tileWidth: tileWidth, tileHeight: tileHeight, tileMargin: tileMargin, tileSpacing: tileSpacing };
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
-        this._tilesets[key].tileData = Phaser.TilemapParser.tileset(this.game, key, tileWidth, tileHeight, tileMax);
+        this._tilesets[key].tileData = Phaser.TilemapParser.tileset(this.game, key, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing);
 
     },
 

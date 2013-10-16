@@ -308,14 +308,18 @@ Phaser.Loader.prototype = {
 	* @param {number} tileWidth - Width of each single tile in pixels.
 	* @param {number} tileHeight - Height of each single tile in pixels.
 	* @param {number} [tileMax=-1] - How many tiles in this tileset. If not specified it will divide the whole image into tiles.
+	* @param {number} [tileMargin=0] - If the tiles have been drawn with a margin, specify the amount here.
+	* @param {number} [tileSpacing=0] - If the tiles have been drawn with spacing between them, specify the amount here.
 	*/
-	tileset: function (key, url, tileWidth, tileHeight, tileMax) {
+	tileset: function (key, url, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing) {
 
 		if (typeof tileMax === "undefined") { tileMax = -1; }
+		if (typeof tileMargin === "undefined") { tileMargin = 0; }
+		if (typeof tileSpacing === "undefined") { tileSpacing = 0; }
 
 		if (this.checkKeyExists(key) === false)
 		{
-			this.addToFileList('tileset', key, url, { tileWidth: tileWidth, tileHeight: tileHeight, tileMax: tileMax });
+			this.addToFileList('tileset', key, url, { tileWidth: tileWidth, tileHeight: tileHeight, tileMax: tileMax, tileMargin: tileMargin, tileSpacing: tileSpacing });
 		}
 
 		return this;
@@ -840,46 +844,8 @@ Phaser.Loader.prototype = {
 
 			case 'tileset':
 
-				this.game.cache.addTileset(file.key, file.url, file.data, file.tileWidth, file.tileHeight, file.tileMax);
+				this.game.cache.addTileset(file.key, file.url, file.data, file.tileWidth, file.tileHeight, file.tileMax, file.tileMargin, file.tileSpacing);
 				break;
-
-				/*
-			case 'tilemap':
-
-				file.data = this._xhr.response;
-				this.game.cache.addTilemap(file.key, file.url, file.data, file.format);
-
-				if (file.mapDataURL == null)
-				{
-					this.game.cache.addTilemap(file.key, file.url, file.data, file.mapData, file.format);
-				}
-				else
-				{
-					//  Load the JSON or CSV before carrying on with the next file
-					loadNext = false;
-					this._xhr.open("GET", this.baseURL + file.mapDataURL, true);
-					this._xhr.responseType = "text";
-
-					if (file.format == Phaser.Tilemap.JSON)
-					{
-						this._xhr.onload = function () {
-							return _this.jsonLoadComplete(file.key);
-						};
-					}
-					else if (file.format == Phaser.Tilemap.CSV)
-					{
-						this._xhr.onload = function () {
-							return _this.csvLoadComplete(file.key);
-						};
-					}
-
-					this._xhr.onerror = function () {
-						return _this.dataLoadError(file.key);
-					};
-					this._xhr.send();
-				}
-				break;
-				*/
 
 			case 'textureatlas':
 

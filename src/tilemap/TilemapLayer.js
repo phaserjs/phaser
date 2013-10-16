@@ -45,6 +45,8 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
 
     this.tileWidth = 0;
     this.tileHeight = 0;
+    this.tileMargin = 0;
+    this.tileSpacing = 0;
 
     /**
     * Read-only variable, do NOT recommend changing after the map is loaded!
@@ -143,6 +145,7 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
 
     this.tilemap = null;
     this.layer = null;
+    this.index = 0;
 
     this._x = 0;
     this._y = 0;
@@ -199,6 +202,8 @@ Phaser.TilemapLayer.prototype.updateTileset = function (tileset) {
 
     this.tileWidth = this.tileset.tileWidth;
     this.tileHeight = this.tileset.tileHeight;
+    this.tileMargin = this.tileset.tileMargin;
+    this.tileSpacing = this.tileset.tileSpacing;
 
     this.updateMax();
 
@@ -215,8 +220,47 @@ Phaser.TilemapLayer.prototype.updateMapData = function (tilemap, layer) {
     {
         this.tilemap = tilemap;
         this.layer = this.tilemap.layers[layer];
+        this.index = layer;
         this.updateMax();
+        this.tilemap.dirty = true;
     }
+
+}
+
+/**
+* Convert a pixel value to a tile coordinate.
+* @param {number} x - X position of the point in target tile.
+* @param {number} [layer] - layer of this tile located.
+* @return {number} The tile with specific properties.
+*/
+Phaser.TilemapLayer.prototype.getTileX = function (x) {
+
+    var tileWidth = this.tileWidth * this.scale.x;
+
+    return this.game.math.snapToFloor(x, tileWidth) / tileWidth;
+
+}
+
+/**
+* Convert a pixel value to a tile coordinate.
+* @param {number} x - X position of the point in target tile.
+* @param {number} [layer] - layer of this tile located.
+* @return {number} The tile with specific properties.
+*/
+Phaser.TilemapLayer.prototype.getTileY = function (y) {
+
+    var tileHeight = this.tileHeight * this.scale.y;
+
+    return this.game.math.snapToFloor(y, tileHeight) / tileHeight;
+
+}
+
+Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
+
+    point.x = this.getTileX(x);
+    point.y = this.getTileY(y);
+
+    return point;
 
 }
 
@@ -269,6 +313,7 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
 
     this._results.length = 0;
 
+    //  pretty sure we don't use this any more?
     this._results.push( { x: x, y: y, width: width, height: height, tx: this._tx, ty: this._ty, tw: this._tw, th: this._th });
 
     var _index = 0;
@@ -291,7 +336,6 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
 
                 if (collides == false || (collides && _tile.collideNone == false))
                 {
-                    // this._results.push({ x: wx * _tile.width, right: (wx * _tile.width) + _tile.width, y: wy * _tile.height, bottom: (wy * _tile.height) + _tile.height, width: _tile.width, height: _tile.height, tx: wx, ty: wy, tile: _tile });
                     this._results.push({ x: wx * sx, right: (wx * sx) + sx, y: wy * sy, bottom: (wy * sy) + sy, width: sx, height: sy, tx: wx, ty: wy, tile: _tile });
                 }
             }
@@ -329,6 +373,11 @@ Phaser.TilemapLayer.prototype.updateMax = function () {
 
 Phaser.TilemapLayer.prototype.render = function () {
 
+    if (this.tilemap && this.tilemap.dirty)
+    {
+        this.dirty = true;
+    }
+
     if (!this.dirty || !this.tileset || !this.tilemap || !this.visible)
     {
         return;
@@ -354,7 +403,6 @@ Phaser.TilemapLayer.prototype.render = function () {
             //  only -1 on TILED maps, not CSV
             var tile = this.tileset.tiles[this._column[x]-1];
 
-            // if (this.tileset.checkTileIndex(tile))
             if (tile)
             {
                 this.context.drawImage(
@@ -385,6 +433,11 @@ Phaser.TilemapLayer.prototype.render = function () {
     }
 
     this.dirty = false;
+
+    if (this.tilemap.dirty)
+    {
+        this.tilemap.dirty = false;
+    }
 
     return true;
 
