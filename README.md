@@ -123,6 +123,8 @@ Version 1.0.7 (in progress in the dev branch)
 * Fixed an issue where creating an animation with just one frame with an index of zero would cause a UUID error (thanks SYNYST3R1)
 * Fixed Rectangle.union (thanks andron77)
 * Debug.renderSpriteBody updated to use a the new Sprite.Body.screenX/Y properties.
+* Added Text.destroy() and BitmapText.destroy(), also updated Group.remove to make it more bullet-proof when an element doesn't have any events.
+
 
 
 

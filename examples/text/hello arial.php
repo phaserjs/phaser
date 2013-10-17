@@ -5,8 +5,6 @@
 
 <script type="text/javascript">
 
-
-
 	var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { create: create });
 
 	function create() {
@@ -18,8 +16,6 @@
 		t.anchor.setTo(0.5, 0.5);
 
 	}
-
-
 
 </script>
 

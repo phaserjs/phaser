@@ -114,7 +114,6 @@ Phaser.Text = function (game, x, y, text, style) {
 Phaser.Text.prototype = Object.create(PIXI.Text.prototype);
 Phaser.Text.prototype.constructor = Phaser.Text;
 
-
 /**
 * Automatically called by World.update.
 * @method Phaser.Text.prototype.update
@@ -137,6 +136,32 @@ Phaser.Text.prototype.update = function() {
         this.position.y = this._cache.y;
         this._cache.dirty = true;
     }
+
+}
+
+/**
+* @method Phaser.Text.prototype.destroy
+*/
+Phaser.Text.prototype.destroy = function() {
+
+    if (this.group)
+    {
+        this.group.remove(this);
+    }
+
+    if (this.canvas.parentNode)
+    {
+        this.canvas.parentNode.removeChild(this.canvas);
+    }
+    else
+    {
+        this.canvas = null;
+        this.context = null;
+    }
+
+    this.exists = false;
+
+    this.group = null;
 
 }
 

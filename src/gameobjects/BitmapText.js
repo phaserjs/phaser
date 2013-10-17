@@ -146,6 +146,32 @@ Phaser.BitmapText.prototype.update = function() {
 }
 
 /**
+* @method Phaser.Text.prototype.destroy
+*/
+Phaser.BitmapText.prototype.destroy = function() {
+
+    if (this.group)
+    {
+        this.group.remove(this);
+    }
+
+    if (this.canvas.parentNode)
+    {
+        this.canvas.parentNode.removeChild(this.canvas);
+    }
+    else
+    {
+        this.canvas = null;
+        this.context = null;
+    }
+
+    this.exists = false;
+
+    this.group = null;
+
+}
+
+/**
 * Get
 * @returns {Description}
 *//**
