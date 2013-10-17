@@ -109,7 +109,7 @@ Phaser.TilemapParser = {
             }
 	    }
 
-	    return [{ name: 'csv', width: width, height: height, alpha: 1, visible: true, tileMargin: 0, tileSpacing: 0, data: output }];
+	    return [{ name: 'csv', width: width, height: height, alpha: 1, visible: true, indexes: [], tileMargin: 0, tileSpacing: 0, data: output }];
 
 	},
 
@@ -142,6 +142,7 @@ Phaser.TilemapParser = {
 		        height: json.layers[i].height,
 		        alpha: json.layers[i].opacity,
 		        visible: json.layers[i].visible,
+		        indexes: [],
 
 		        tileMargin: json.tilesets[0].margin,
 		        tileSpacing: json.tilesets[0].spacing,

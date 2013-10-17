@@ -50,7 +50,7 @@
 
         //  You can also pass in x, y, width, height values to control the area in which the replace happens
 
-        map.random(layer.getTileX(sprite.x), layer.getTileY(sprite.y), 6, 6);
+        map.shuffle(layer.getTileX(sprite.x), layer.getTileY(sprite.y), 6, 6);
 
     }
 

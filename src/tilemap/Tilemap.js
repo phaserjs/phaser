@@ -15,6 +15,7 @@ Phaser.Tilemap = function (game, key) {
     	this.key = key;
 
 		this.layers = game.cache.getTilemapData(key).layers;
+        this.calculateIndexes();
     }
     else
     {
@@ -62,11 +63,34 @@ Phaser.Tilemap.prototype = {
 			tileMargin: 0, 
 			tileSpacing: 0,
 			format: Phaser.Tilemap.CSV,
-			data: data
+			data: data,
+            indexes: []
 
         });
 
         this.dirty = true;
+
+    },
+
+    calculateIndexes: function () {
+
+        for (var layer = 0; layer < this.layers.length; layer++)
+        {
+            this.layers[layer].indexes = [];
+
+            for (var y = 0; y < this.layers[layer].height ; y++)
+            {
+                for (var x = 0; x < this.layers[layer].width; x++)
+                {
+                    var idx = this.layers[layer].data[y][x];
+
+                    if (this.layers[layer].indexes.indexOf(idx) === -1)
+                    {
+                        this.layers[layer].indexes.push(idx);
+                    }
+                }
+            }
+        }
 
     },
 
@@ -86,7 +110,9 @@ Phaser.Tilemap.prototype = {
     * @param {number} y - Y position of this tile.
     * @param {number} index - The index of this tile type in the core map data.
     */
-    putTile: function (x, y, index) {
+    putTile: function (index, x, y, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
 
     	if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
     	{
@@ -97,6 +123,31 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    getTile: function (x, y, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+        {
+            return this.layers[this.currentLayer].data[y][x];
+        }
+
+    },
+
+    getTileWorldXY: function (x, y, tileWidth, tileHeight, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
+        y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
+
+        if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+        {
+            return this.layers[this.currentLayer].data[y][x];
+        }
+
+    },
+
     /**
     * Set a specific tile with its x and y in tiles.
     * @method putTileWorldXY
@@ -104,10 +155,10 @@ Phaser.Tilemap.prototype = {
     * @param {number} y - Y position of this tile in world coordinates.
     * @param {number} index - The index of this tile type in the core map data.
     */
-    putTileWorldXY: function (x, y, index) {
+    putTileWorldXY: function (index, x, y, tileWidth, tileHeight, layer) {
 
-        x = this.game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
-        y = this.game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
+        x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
+        y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
 
         if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
         {
@@ -119,7 +170,7 @@ Phaser.Tilemap.prototype = {
     },
 
     //  Values are in TILEs, not pixels.
-    getTiles: function (x, y, width, height, layer) {
+    copy: function (x, y, width, height, layer) {
 
         if (typeof layer === "undefined") { layer = this.currentLayer; }
 
@@ -170,7 +221,7 @@ Phaser.Tilemap.prototype = {
 
     },
 
-    putTiles: function (x, y, tileblock, layer) {
+    paste: function (x, y, tileblock, layer) {
 
         if (typeof x === "undefined") { x = 0; }
         if (typeof y === "undefined") { y = 0; }
@@ -206,7 +257,7 @@ Phaser.Tilemap.prototype = {
     */
     swap: function (tileA, tileB, x, y, width, height, layer) {
 
-        this.getTiles(x, y, width, height, layer);
+        this.copy(x, y, width, height, layer);
 
         if (this._results.length < 2)
         {
@@ -218,7 +269,7 @@ Phaser.Tilemap.prototype = {
 
         this._results.forEach(this.swapHandler, this);
 
-        this.putTiles(x, y, this._results);
+        this.paste(x, y, this._results);
 
     },
 
@@ -247,7 +298,7 @@ Phaser.Tilemap.prototype = {
     */
     forEach: function (callback, context, x, y, width, height, layer) {
 
-        this.getTiles(x, y, width, height, layer);
+        this.copy(x, y, width, height, layer);
 
         if (this._results.length < 2)
         {
@@ -256,7 +307,7 @@ Phaser.Tilemap.prototype = {
 
         this._results.forEach(callback, context);
 
-        this.putTiles(x, y, this._results);
+        this.paste(x, y, this._results);
 
     },
 
@@ -272,7 +323,7 @@ Phaser.Tilemap.prototype = {
     */
     replace: function (tileA, tileB, x, y, width, height, layer) {
 
-        this.getTiles(x, y, width, height, layer);
+        this.copy(x, y, width, height, layer);
 
         if (this._results.length < 2)
         {
@@ -287,13 +338,13 @@ Phaser.Tilemap.prototype = {
             }
         }
 
-        this.putTiles(x, y, this._results);
+        this.paste(x, y, this._results);
 
     },
 
     /**
-    * Randomises a set of tiles in a given area.
-    * @method replace
+    * Randomises a set of tiles in a given area. It will only randomise the tiles in that area, so if they're all the same nothing will appear to have changed!
+    * @method random
     * @param {number} tileA - First tile index.
     * @param {number} tileB - Second tile index.
     * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
@@ -303,19 +354,64 @@ Phaser.Tilemap.prototype = {
     */
     random: function (x, y, width, height, layer) {
 
-        this.getTiles(x, y, width, height, layer);
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        this.copy(x, y, width, height, layer);
 
         if (this._results.length < 2)
         {
             return;
         }
 
-        for (var i = 1; i < this._results.length; i++)
+        var indexes = [];
+
+        for (var t = 1; t < this._results.length; t++)
         {
-            this._results[i].index = this.game.rnd.integerInRange(0, this.layers[layer].tileset.total);
+            var idx = this._results[t].index;
+
+            if (indexes.indexOf(idx) === -1)
+            {
+                indexes.push(idx);
+            }
         }
 
-        this.putTiles(x, y, this._results);
+        for (var i = 1; i < this._results.length; i++)
+        {
+            this._results[i].index = this.game.rnd.pick(indexes);
+        }
+
+        this.paste(x, y, this._results);
+
+    },
+
+    /**
+    * Randomises a set of tiles in a given area. It will only randomise the tiles in that area, so if they're all the same nothing will appear to have changed!
+    * @method random
+    * @param {number} tileA - First tile index.
+    * @param {number} tileB - Second tile index.
+    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
+    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
+    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
+    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    */
+    shuffle: function (x, y, width, height, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        this.copy(x, y, width, height, layer);
+
+        if (this._results.length < 2)
+        {
+            return;
+        }
+
+        var header = this._results.shift();
+
+        Phaser.Utils.shuffle(this._results);
+
+        this._results.unshift(header);
+
+        this.paste(x, y, this._results);
 
     },
 
@@ -330,7 +426,7 @@ Phaser.Tilemap.prototype = {
     */
     fill: function (index, x, y, width, height, layer) {
 
-        this.getTiles(x, y, width, height, layer);
+        this.copy(x, y, width, height, layer);
 
         if (this._results.length < 2)
         {
@@ -342,7 +438,7 @@ Phaser.Tilemap.prototype = {
             this._results[i].index = index;
         }
 
-        this.putTiles(x, y, this._results);
+        this.paste(x, y, this._results);
 
     },
 

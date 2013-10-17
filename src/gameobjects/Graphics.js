@@ -17,6 +17,8 @@
 */
 Phaser.Graphics = function (game, x, y) {
 
+    this.game = game;
+
     PIXI.Graphics.call(this);
 
     /**
@@ -28,18 +30,59 @@ Phaser.Graphics = function (game, x, y) {
 
 Phaser.Graphics.prototype = Object.create(PIXI.Graphics.prototype);
 Phaser.Graphics.prototype.constructor = Phaser.Graphics;
-Phaser.Graphics.prototype = Phaser.Utils.extend(true, Phaser.Graphics.prototype, Phaser.Sprite.prototype);
 
 //  Add our own custom methods
+
+/**
+* Description.
+* 
+* @method Phaser.Sprite.prototype.destroy
+*/
+Phaser.Graphics.prototype.destroy = function() {
+
+    this.clear();
+
+    if (this.group)
+    {
+        this.group.remove(this);
+    }
+
+    this.game = null;
+
+}
 
 Object.defineProperty(Phaser.Graphics.prototype, 'angle', {
 
     get: function() {
-        return Phaser.Math.radToDeg(this.rotation);
+        return Phaser.Math.wrapAngle(Phaser.Math.radToDeg(this.rotation));
     },
 
     set: function(value) {
-        this.rotation = Phaser.Math.degToRad(value);
+        this.rotation = Phaser.Math.degToRad(Phaser.Math.wrapAngle(value));
+    }
+
+});
+
+Object.defineProperty(Phaser.Graphics.prototype, 'x', {
+
+    get: function() {
+        return this.position.x;
+    },
+
+    set: function(value) {
+        this.position.x = value;
+    }
+
+});
+
+Object.defineProperty(Phaser.Graphics.prototype, 'y', {
+
+    get: function() {
+        return this.position.y;
+    },
+
+    set: function(value) {
+        this.position.y = value;
     }
 
 });

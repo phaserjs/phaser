@@ -124,6 +124,9 @@ Version 1.0.7 (in progress in the dev branch)
 * Fixed Rectangle.union (thanks andron77)
 * Debug.renderSpriteBody updated to use a the new Sprite.Body.screenX/Y properties.
 * Added Text.destroy() and BitmapText.destroy(), also updated Group.remove to make it more bullet-proof when an element doesn't have any events.
+* Added Phaser.Utils.shuffle to shuffle an array.
+* Added Graphics.destroy, x, y and updated angle functions.
+
 
 
 
