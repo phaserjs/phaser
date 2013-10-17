@@ -9,7 +9,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v1.0.7 - Built at: Wed, 16 Oct 2013 06:25:10 +0100
+* v1.0.7 - Built at: Thu, 17 Oct 2013 22:56:02 +0100
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -99,6 +99,20 @@ PIXI.InteractionManager = function (dummy) {
 */
 Phaser.Utils = {
 	
+	shuffle: function (array) {
+
+	    for (var i = array.length - 1; i > 0; i--)
+	    {
+	        var j = Math.floor(Math.random() * (i + 1));
+	        var temp = array[i];
+	        array[i] = array[j];
+	        array[j] = temp;
+	    }
+
+	    return array;
+	    
+	},
+
 	/**
 	* Javascript string pad http://www.webtoolkit.info/.
 	* pad = the string to pad it out with (defaults to a space)<br>
@@ -10337,8 +10351,13 @@ Phaser.Group.prototype = {
 	*/
 	remove: function (child) {
 
-		child.events.onRemovedFromGroup.dispatch(child, this);
+		if (child.events)
+		{
+			child.events.onRemovedFromGroup.dispatch(child, this);
+		}
+
 		this._container.removeChild(child);
+
 		child.group = null;
 
 	},
@@ -16842,7 +16861,6 @@ Phaser.Text = function (game, x, y, text, style) {
 Phaser.Text.prototype = Object.create(PIXI.Text.prototype);
 Phaser.Text.prototype.constructor = Phaser.Text;
 
-
 /**
 * Automatically called by World.update.
 * @method Phaser.Text.prototype.update
@@ -16865,6 +16883,32 @@ Phaser.Text.prototype.update = function() {
         this.position.y = this._cache.y;
         this._cache.dirty = true;
     }
+
+}
+
+/**
+* @method Phaser.Text.prototype.destroy
+*/
+Phaser.Text.prototype.destroy = function() {
+
+    if (this.group)
+    {
+        this.group.remove(this);
+    }
+
+    if (this.canvas.parentNode)
+    {
+        this.canvas.parentNode.removeChild(this.canvas);
+    }
+    else
+    {
+        this.canvas = null;
+        this.context = null;
+    }
+
+    this.exists = false;
+
+    this.group = null;
 
 }
 
@@ -17069,6 +17113,32 @@ Phaser.BitmapText.prototype.update = function() {
 
     this.pivot.x = this.anchor.x*this.width;
     this.pivot.y = this.anchor.y*this.height;
+
+}
+
+/**
+* @method Phaser.Text.prototype.destroy
+*/
+Phaser.BitmapText.prototype.destroy = function() {
+
+    if (this.group)
+    {
+        this.group.remove(this);
+    }
+
+    if (this.canvas.parentNode)
+    {
+        this.canvas.parentNode.removeChild(this.canvas);
+    }
+    else
+    {
+        this.canvas = null;
+        this.context = null;
+    }
+
+    this.exists = false;
+
+    this.group = null;
 
 }
 
@@ -17470,6 +17540,8 @@ Phaser.Button.prototype.onInputUpHandler = function (pointer) {
 */
 Phaser.Graphics = function (game, x, y) {
 
+    this.game = game;
+
     PIXI.Graphics.call(this);
 
     /**
@@ -17481,18 +17553,59 @@ Phaser.Graphics = function (game, x, y) {
 
 Phaser.Graphics.prototype = Object.create(PIXI.Graphics.prototype);
 Phaser.Graphics.prototype.constructor = Phaser.Graphics;
-Phaser.Graphics.prototype = Phaser.Utils.extend(true, Phaser.Graphics.prototype, Phaser.Sprite.prototype);
 
 //  Add our own custom methods
+
+/**
+* Description.
+* 
+* @method Phaser.Sprite.prototype.destroy
+*/
+Phaser.Graphics.prototype.destroy = function() {
+
+    this.clear();
+
+    if (this.group)
+    {
+        this.group.remove(this);
+    }
+
+    this.game = null;
+
+}
 
 Object.defineProperty(Phaser.Graphics.prototype, 'angle', {
 
     get: function() {
-        return Phaser.Math.radToDeg(this.rotation);
+        return Phaser.Math.wrapAngle(Phaser.Math.radToDeg(this.rotation));
     },
 
     set: function(value) {
-        this.rotation = Phaser.Math.degToRad(value);
+        this.rotation = Phaser.Math.degToRad(Phaser.Math.wrapAngle(value));
+    }
+
+});
+
+Object.defineProperty(Phaser.Graphics.prototype, 'x', {
+
+    get: function() {
+        return this.position.x;
+    },
+
+    set: function(value) {
+        this.position.x = value;
+    }
+
+});
+
+Object.defineProperty(Phaser.Graphics.prototype, 'y', {
+
+    get: function() {
+        return this.position.y;
+    },
+
+    set: function(value) {
+        this.position.y = value;
     }
 
 });
@@ -25777,15 +25890,17 @@ Phaser.Cache.prototype = {
     * @param {number} tileWidth - Width of the sprite sheet.
     * @param {number} tileHeight - Height of the sprite sheet.
     * @param {number} tileMax - How many tiles stored in the sprite sheet.
+    * @param {number} [tileMargin=0] - If the tiles have been drawn with a margin, specify the amount here.
+    * @param {number} [tileSpacing=0] - If the tiles have been drawn with spacing between them, specify the amount here.
     */
-    addTileset: function (key, url, data, tileWidth, tileHeight, tileMax) {
+    addTileset: function (key, url, data, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing) {
 
-        this._tilesets[key] = { url: url, data: data, tileWidth: tileWidth, tileHeight: tileHeight };
+        this._tilesets[key] = { url: url, data: data, tileWidth: tileWidth, tileHeight: tileHeight, tileMargin: tileMargin, tileSpacing: tileSpacing };
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
-        this._tilesets[key].tileData = Phaser.TilemapParser.tileset(this.game, key, tileWidth, tileHeight, tileMax);
+        this._tilesets[key].tileData = Phaser.TilemapParser.tileset(this.game, key, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing);
 
     },
 
@@ -26747,14 +26862,18 @@ Phaser.Loader.prototype = {
 	* @param {number} tileWidth - Width of each single tile in pixels.
 	* @param {number} tileHeight - Height of each single tile in pixels.
 	* @param {number} [tileMax=-1] - How many tiles in this tileset. If not specified it will divide the whole image into tiles.
+	* @param {number} [tileMargin=0] - If the tiles have been drawn with a margin, specify the amount here.
+	* @param {number} [tileSpacing=0] - If the tiles have been drawn with spacing between them, specify the amount here.
 	*/
-	tileset: function (key, url, tileWidth, tileHeight, tileMax) {
+	tileset: function (key, url, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing) {
 
 		if (typeof tileMax === "undefined") { tileMax = -1; }
+		if (typeof tileMargin === "undefined") { tileMargin = 0; }
+		if (typeof tileSpacing === "undefined") { tileSpacing = 0; }
 
 		if (this.checkKeyExists(key) === false)
 		{
-			this.addToFileList('tileset', key, url, { tileWidth: tileWidth, tileHeight: tileHeight, tileMax: tileMax });
+			this.addToFileList('tileset', key, url, { tileWidth: tileWidth, tileHeight: tileHeight, tileMax: tileMax, tileMargin: tileMargin, tileSpacing: tileSpacing });
 		}
 
 		return this;
@@ -27279,46 +27398,8 @@ Phaser.Loader.prototype = {
 
 			case 'tileset':
 
-				this.game.cache.addTileset(file.key, file.url, file.data, file.tileWidth, file.tileHeight, file.tileMax);
+				this.game.cache.addTileset(file.key, file.url, file.data, file.tileWidth, file.tileHeight, file.tileMax, file.tileMargin, file.tileSpacing);
 				break;
-
-				/*
-			case 'tilemap':
-
-				file.data = this._xhr.response;
-				this.game.cache.addTilemap(file.key, file.url, file.data, file.format);
-
-				if (file.mapDataURL == null)
-				{
-					this.game.cache.addTilemap(file.key, file.url, file.data, file.mapData, file.format);
-				}
-				else
-				{
-					//  Load the JSON or CSV before carrying on with the next file
-					loadNext = false;
-					this._xhr.open("GET", this.baseURL + file.mapDataURL, true);
-					this._xhr.responseType = "text";
-
-					if (file.format == Phaser.Tilemap.JSON)
-					{
-						this._xhr.onload = function () {
-							return _this.jsonLoadComplete(file.key);
-						};
-					}
-					else if (file.format == Phaser.Tilemap.CSV)
-					{
-						this._xhr.onload = function () {
-							return _this.csvLoadComplete(file.key);
-						};
-					}
-
-					this._xhr.onerror = function () {
-						return _this.dataLoadError(file.key);
-					};
-					this._xhr.send();
-				}
-				break;
-				*/
 
 			case 'textureatlas':
 
@@ -32615,6 +32696,7 @@ Phaser.Tilemap = function (game, key) {
     	this.key = key;
 
 		this.layers = game.cache.getTilemapData(key).layers;
+        this.calculateIndexes();
     }
     else
     {
@@ -32624,6 +32706,12 @@ Phaser.Tilemap = function (game, key) {
     this.currentLayer = 0;
 
     this.debugMap = [];
+
+    this.dirty = false;
+
+    this._results = [];
+    this._tempA = 0;
+    this._tempB = 0;
 
 };
 
@@ -32656,9 +32744,34 @@ Phaser.Tilemap.prototype = {
 			tileMargin: 0, 
 			tileSpacing: 0,
 			format: Phaser.Tilemap.CSV,
-			data: data
+			data: data,
+            indexes: []
 
         });
+
+        this.dirty = true;
+
+    },
+
+    calculateIndexes: function () {
+
+        for (var layer = 0; layer < this.layers.length; layer++)
+        {
+            this.layers[layer].indexes = [];
+
+            for (var y = 0; y < this.layers[layer].height ; y++)
+            {
+                for (var x = 0; x < this.layers[layer].width; x++)
+                {
+                    var idx = this.layers[layer].data[y][x];
+
+                    if (this.layers[layer].indexes.indexOf(idx) === -1)
+                    {
+                        this.layers[layer].indexes.push(idx);
+                    }
+                }
+            }
+        }
 
     },
 
@@ -32671,31 +32784,6 @@ Phaser.Tilemap.prototype = {
 
     },
 
-    createLayerSprite: function (tilset) {
-
-    	//	Creates a TilemapLayer which you can add to the display list
-    	//	Hooked to a specific layer within the map data
-
-
-    },
-
-    /**
-    * Get the tile located at specific position (in world coordinate) and layer (thus you give a position of a point which is within the tile).
-    * @param {number} x - X position of the point in target tile.
-    * @param {number} y - Y position of the point in target tile.
-    * @param {number} [layer] - layer of this tile located.
-    * @return {Tile} The tile with specific properties.
-    */
-    getTileFromWorldXY: function (x, y, layer) {
-
-        if (typeof layer === "undefined") { layer = this.currentLayer; }
-
-
-
-        // return this.tiles[this.layers[layer].getTileFromWorldXY(x, y)];
-
-    },
-
     /**
     * Set a specific tile with its x and y in tiles.
     * @method putTile
@@ -32703,12 +32791,41 @@ Phaser.Tilemap.prototype = {
     * @param {number} y - Y position of this tile.
     * @param {number} index - The index of this tile type in the core map data.
     */
-    putTile: function (x, y, index) {
+    putTile: function (index, x, y, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
 
     	if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
     	{
     		this.layers[this.currentLayer].data[y][x] = index;
     	}
+
+        this.dirty = true;
+
+    },
+
+    getTile: function (x, y, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+        {
+            return this.layers[this.currentLayer].data[y][x];
+        }
+
+    },
+
+    getTileWorldXY: function (x, y, tileWidth, tileHeight, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
+        y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
+
+        if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+        {
+            return this.layers[this.currentLayer].data[y][x];
+        }
 
     },
 
@@ -32719,23 +32836,292 @@ Phaser.Tilemap.prototype = {
     * @param {number} y - Y position of this tile in world coordinates.
     * @param {number} index - The index of this tile type in the core map data.
     */
-    putTileWorldXY: function (x, y, index) {
+    putTileWorldXY: function (index, x, y, tileWidth, tileHeight, layer) {
 
-        x = this.game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
-        y = this.game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
+        x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
+        y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
 
         if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
         {
             this.layers[this.currentLayer].data[y][x] = index;
         }
 
+        this.dirty = true;
+
     },
 
+    //  Values are in TILEs, not pixels.
+    copy: function (x, y, width, height, layer) {
 
-    //  swapTile
-    //  fillTile
-    //  randomiseTiles
-    //  replaceTiles
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        if (!this.layers[layer])
+        {
+            this._results.length = 0;
+            return;
+        }
+
+        if (typeof x === "undefined") { x = 0; }
+        if (typeof y === "undefined") { y = 0; }
+        if (typeof width === "undefined") { width = this.layers[layer].width; }
+        if (typeof height === "undefined") { height = this.layers[layer].height; }
+
+        if (x < 0)
+        {
+            x = 0;
+        }
+
+        if (y < 0)
+        {
+            y = 0;
+        }
+
+        if (width > this.layers[layer].width)
+        {
+            width = this.layers[layer].width;
+        }
+
+        if (height > this.layers[layer].height)
+        {
+            height = this.layers[layer].height;
+        }
+
+        this._results.length = 0;
+
+        this._results.push( { x: x, y: y, width: width, height: height, layer: layer });
+
+        for (var ty = y; ty < y + height; ty++)
+        {
+            for (var tx = x; tx < x + width; tx++)
+            {
+                this._results.push({ x: tx, y: ty, index: this.layers[layer].data[ty][tx] });
+            }
+        }
+
+        return this._results;
+
+    },
+
+    paste: function (x, y, tileblock, layer) {
+
+        if (typeof x === "undefined") { x = 0; }
+        if (typeof y === "undefined") { y = 0; }
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        if (!tileblock || tileblock.length < 2)
+        {
+            return;
+        }
+
+        //  Find out the difference between tileblock[1].x/y and x/y and use it as an offset, as it's the top left of the block to paste
+        var diffX = tileblock[1].x - x;
+        var diffY = tileblock[1].y - y;
+
+        for (var i = 1; i < tileblock.length; i++)
+        {
+            this.layers[layer].data[ diffY + tileblock[i].y ][ diffX + tileblock[i].x ] = tileblock[i].index;
+        }
+
+        this.dirty = true;
+
+    },
+
+    /**
+    * Swap tiles with 2 kinds of indexes.
+    * @method swapTile
+    * @param {number} tileA - First tile index.
+    * @param {number} tileB - Second tile index.
+    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
+    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
+    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
+    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    */
+    swap: function (tileA, tileB, x, y, width, height, layer) {
+
+        this.copy(x, y, width, height, layer);
+
+        if (this._results.length < 2)
+        {
+            return;
+        }
+
+        this._tempA = tileA;
+        this._tempB = tileB;
+
+        this._results.forEach(this.swapHandler, this);
+
+        this.paste(x, y, this._results);
+
+    },
+
+    swapHandler: function (value, index, array) {
+
+        if (value.index === this._tempA)
+        {
+            this._results[index].index = this._tempB;
+        }
+        else if (value.index === this._tempB)
+        {
+            this._results[index].index = this._tempA;
+        }
+
+    },
+
+    /**
+    * Swap tiles with 2 kinds of indexes.
+    * @method swapTile
+    * @param {number} tileA - First tile index.
+    * @param {number} tileB - Second tile index.
+    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
+    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
+    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
+    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    */
+    forEach: function (callback, context, x, y, width, height, layer) {
+
+        this.copy(x, y, width, height, layer);
+
+        if (this._results.length < 2)
+        {
+            return;
+        }
+
+        this._results.forEach(callback, context);
+
+        this.paste(x, y, this._results);
+
+    },
+
+    /**
+    * Replaces one type of tile with another.
+    * @method replace
+    * @param {number} tileA - First tile index.
+    * @param {number} tileB - Second tile index.
+    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
+    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
+    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
+    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    */
+    replace: function (tileA, tileB, x, y, width, height, layer) {
+
+        this.copy(x, y, width, height, layer);
+
+        if (this._results.length < 2)
+        {
+            return;
+        }
+
+        for (var i = 1; i < this._results.length; i++)
+        {
+            if (this._results[i].index === tileA)
+            {
+                this._results[i].index = tileB;
+            }
+        }
+
+        this.paste(x, y, this._results);
+
+    },
+
+    /**
+    * Randomises a set of tiles in a given area. It will only randomise the tiles in that area, so if they're all the same nothing will appear to have changed!
+    * @method random
+    * @param {number} tileA - First tile index.
+    * @param {number} tileB - Second tile index.
+    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
+    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
+    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
+    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    */
+    random: function (x, y, width, height, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        this.copy(x, y, width, height, layer);
+
+        if (this._results.length < 2)
+        {
+            return;
+        }
+
+        var indexes = [];
+
+        for (var t = 1; t < this._results.length; t++)
+        {
+            var idx = this._results[t].index;
+
+            if (indexes.indexOf(idx) === -1)
+            {
+                indexes.push(idx);
+            }
+        }
+
+        for (var i = 1; i < this._results.length; i++)
+        {
+            this._results[i].index = this.game.rnd.pick(indexes);
+        }
+
+        this.paste(x, y, this._results);
+
+    },
+
+    /**
+    * Randomises a set of tiles in a given area. It will only randomise the tiles in that area, so if they're all the same nothing will appear to have changed!
+    * @method random
+    * @param {number} tileA - First tile index.
+    * @param {number} tileB - Second tile index.
+    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
+    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
+    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
+    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    */
+    shuffle: function (x, y, width, height, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        this.copy(x, y, width, height, layer);
+
+        if (this._results.length < 2)
+        {
+            return;
+        }
+
+        var header = this._results.shift();
+
+        Phaser.Utils.shuffle(this._results);
+
+        this._results.unshift(header);
+
+        this.paste(x, y, this._results);
+
+    },
+
+    /**
+    * Fill a tile block with a specific tile index.
+    * @method fill
+    * @param {number} index - Index of tiles you want to fill with.
+    * @param {number} [x] - X position (in tiles) of block's left-top corner.
+    * @param {number} [y] - Y position (in tiles) of block's left-top corner.
+    * @param {number} [width] - width of block.
+    * @param {number} [height] - height of block.
+    */
+    fill: function (index, x, y, width, height, layer) {
+
+        this.copy(x, y, width, height, layer);
+
+        if (this._results.length < 2)
+        {
+            return;
+        }
+
+        for (var i = 1; i < this._results.length; i++)
+        {
+            this._results[i].index = index;
+        }
+
+        this.paste(x, y, this._results);
+
+    },
 
     removeAllLayers: function () {
 
@@ -32836,6 +33222,8 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
 
     this.tileWidth = 0;
     this.tileHeight = 0;
+    this.tileMargin = 0;
+    this.tileSpacing = 0;
 
     /**
     * Read-only variable, do NOT recommend changing after the map is loaded!
@@ -32934,6 +33322,7 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
 
     this.tilemap = null;
     this.layer = null;
+    this.index = 0;
 
     this._x = 0;
     this._y = 0;
@@ -32990,6 +33379,8 @@ Phaser.TilemapLayer.prototype.updateTileset = function (tileset) {
 
     this.tileWidth = this.tileset.tileWidth;
     this.tileHeight = this.tileset.tileHeight;
+    this.tileMargin = this.tileset.tileMargin;
+    this.tileSpacing = this.tileset.tileSpacing;
 
     this.updateMax();
 
@@ -33006,8 +33397,47 @@ Phaser.TilemapLayer.prototype.updateMapData = function (tilemap, layer) {
     {
         this.tilemap = tilemap;
         this.layer = this.tilemap.layers[layer];
+        this.index = layer;
         this.updateMax();
+        this.tilemap.dirty = true;
     }
+
+}
+
+/**
+* Convert a pixel value to a tile coordinate.
+* @param {number} x - X position of the point in target tile.
+* @param {number} [layer] - layer of this tile located.
+* @return {number} The tile with specific properties.
+*/
+Phaser.TilemapLayer.prototype.getTileX = function (x) {
+
+    var tileWidth = this.tileWidth * this.scale.x;
+
+    return this.game.math.snapToFloor(x, tileWidth) / tileWidth;
+
+}
+
+/**
+* Convert a pixel value to a tile coordinate.
+* @param {number} x - X position of the point in target tile.
+* @param {number} [layer] - layer of this tile located.
+* @return {number} The tile with specific properties.
+*/
+Phaser.TilemapLayer.prototype.getTileY = function (y) {
+
+    var tileHeight = this.tileHeight * this.scale.y;
+
+    return this.game.math.snapToFloor(y, tileHeight) / tileHeight;
+
+}
+
+Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
+
+    point.x = this.getTileX(x);
+    point.y = this.getTileY(y);
+
+    return point;
 
 }
 
@@ -33060,6 +33490,7 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
 
     this._results.length = 0;
 
+    //  pretty sure we don't use this any more?
     this._results.push( { x: x, y: y, width: width, height: height, tx: this._tx, ty: this._ty, tw: this._tw, th: this._th });
 
     var _index = 0;
@@ -33082,7 +33513,6 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
 
                 if (collides == false || (collides && _tile.collideNone == false))
                 {
-                    // this._results.push({ x: wx * _tile.width, right: (wx * _tile.width) + _tile.width, y: wy * _tile.height, bottom: (wy * _tile.height) + _tile.height, width: _tile.width, height: _tile.height, tx: wx, ty: wy, tile: _tile });
                     this._results.push({ x: wx * sx, right: (wx * sx) + sx, y: wy * sy, bottom: (wy * sy) + sy, width: sx, height: sy, tx: wx, ty: wy, tile: _tile });
                 }
             }
@@ -33120,6 +33550,11 @@ Phaser.TilemapLayer.prototype.updateMax = function () {
 
 Phaser.TilemapLayer.prototype.render = function () {
 
+    if (this.tilemap && this.tilemap.dirty)
+    {
+        this.dirty = true;
+    }
+
     if (!this.dirty || !this.tileset || !this.tilemap || !this.visible)
     {
         return;
@@ -33145,7 +33580,6 @@ Phaser.TilemapLayer.prototype.render = function () {
             //  only -1 on TILED maps, not CSV
             var tile = this.tileset.tiles[this._column[x]-1];
 
-            // if (this.tileset.checkTileIndex(tile))
             if (tile)
             {
                 this.context.drawImage(
@@ -33176,6 +33610,11 @@ Phaser.TilemapLayer.prototype.render = function () {
     }
 
     this.dirty = false;
+
+    if (this.tilemap.dirty)
+    {
+        this.tilemap.dirty = false;
+    }
 
     return true;
 
@@ -33271,7 +33710,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
 
 Phaser.TilemapParser = {
 
-	tileset: function (game, key, tileWidth, tileHeight, tileMax) {
+	tileset: function (game, key, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing) {
 
 	    //  How big is our image?
 	    var img = game.cache.getTilesetImage(key);
@@ -33284,6 +33723,7 @@ Phaser.TilemapParser = {
 	    var width = img.width;
 	    var height = img.height;
 
+	    //	If no tile width/height is given, try and figure it out (won't work if the tileset has margin/spacing)
 	    if (tileWidth <= 0)
 	    {
 	        tileWidth = Math.floor(-width / Math.min(-1, tileWidth));
@@ -33311,21 +33751,21 @@ Phaser.TilemapParser = {
 	    }
 
 	    //  Let's create some tiles
-	    var x = 0;
-	    var y = 0;
+	    var x = tileMargin;
+	    var y = tileMargin;
 
-	    var tileset = new Phaser.Tileset(img, key, tileWidth, tileHeight);
+	    var tileset = new Phaser.Tileset(img, key, tileWidth, tileHeight, tileMargin, tileSpacing);
 
 	    for (var i = 0; i < total; i++)
 	    {
 	        tileset.addTile(new Phaser.Tile(tileset, i, x, y, tileWidth, tileHeight));
 
-	        x += tileWidth;
+	        x += tileWidth + tileSpacing;
 
 	        if (x === width)
 	        {
-	            x = 0;
-	            y += tileHeight;
+	            x = tileMargin;
+	            y += tileHeight + tileSpacing;
 	        }
 	    }
 
@@ -33379,7 +33819,7 @@ Phaser.TilemapParser = {
             }
 	    }
 
-	    return [{ name: 'csv', width: width, height: height, alpha: 1, visible: true, tileMargin: 0, tileSpacing: 0, data: output }];
+	    return [{ name: 'csv', width: width, height: height, alpha: 1, visible: true, indexes: [], tileMargin: 0, tileSpacing: 0, data: output }];
 
 	},
 
@@ -33412,6 +33852,7 @@ Phaser.TilemapParser = {
 		        height: json.layers[i].height,
 		        alpha: json.layers[i].opacity,
 		        visible: json.layers[i].visible,
+		        indexes: [],
 
 		        tileMargin: json.tilesets[0].margin,
 		        tileSpacing: json.tilesets[0].spacing,
@@ -33452,7 +33893,10 @@ Phaser.TilemapParser = {
 }
 
 
-Phaser.Tileset = function (image, key, tileWidth, tileHeight) {
+Phaser.Tileset = function (image, key, tileWidth, tileHeight, tileMargin, tileSpacing) {
+
+    if (typeof tileMargin === "undefined") { tileMargin = 0; }
+    if (typeof tileSpacing === "undefined") { tileSpacing = 0; }
 
     /**
     * @property {string} key - The cache ID.
@@ -33463,6 +33907,8 @@ Phaser.Tileset = function (image, key, tileWidth, tileHeight) {
 
     this.tileWidth = tileWidth;
     this.tileHeight = tileHeight;
+    this.margin = tileMargin;
+    this.spacing = tileSpacing;
 
     this.tiles = [];
 
@@ -33486,6 +33932,13 @@ Phaser.Tileset.prototype = {
         }
 
         return null;
+
+    },
+
+    setSpacing: function (margin, spacing) {
+
+        this.tileMargin = margin;
+        this.tileSpacing = spacing;
 
     },
 
