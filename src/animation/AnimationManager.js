@@ -37,6 +37,12 @@ Phaser.AnimationManager = function (sprite) {
 	this.updateIfVisible = true;
 
 	/**
+	* @property {boolean} isLoaded - Set to true once animation data has been loaded.
+	* @default
+	*/
+	this.isLoaded = false;
+
+	/**
 	* @property {Phaser.FrameData} _frameData - A temp. var for holding the currently playing Animations FrameData.
 	* @private
 	* @default
@@ -71,6 +77,7 @@ Phaser.AnimationManager.prototype = {
 
 		this._frameData = frameData;
 		this.frame = 0;
+		this.isLoaded = true;
 
 	},
 
@@ -253,6 +260,18 @@ Phaser.AnimationManager.prototype = {
 	},
 
     /**
+    * Refreshes the current frame data back to the parent Sprite and also resets the texture data.
+    *
+    * @method Phaser.AnimationManager#refreshFrame
+    */
+	refreshFrame: function () {
+
+        this.sprite.currentFrame = this.currentFrame;
+		this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+	},
+
+    /**
     * Destroys all references this AnimationManager contains. Sets the _anims to a new object and nulls the current animation.
     *
     * @method Phaser.AnimationManager#destroy
@@ -340,7 +359,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
 
     set: function (value) {
 
-        if (this._frameData && this._frameData.getFrame(value) !== null)
+        if (typeof value === 'number' && this._frameData && this._frameData.getFrame(value) !== null)
         {
             this.currentFrame = this._frameData.getFrame(value);
             this._frameIndex = value;
@@ -369,7 +388,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameName", {
 
     set: function (value) {
 
-        if (this._frameData && this._frameData.getFrameByName(value) !== null)
+        if (typeof value === 'string' && this._frameData && this._frameData.getFrameByName(value) !== null)
         {
             this.currentFrame = this._frameData.getFrameByName(value);
             this._frameIndex = this.currentFrame.index;

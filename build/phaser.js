@@ -9,7 +9,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v1.0.7 - Built at: Thu, 17 Oct 2013 22:56:02 +0100
+* v1.0.7 - Built at: Fri, 18 Oct 2013 01:36:29 +0100
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -10948,8 +10948,9 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 	renderer = renderer || Phaser.AUTO;
 	parent = parent || '';
 	state = state || null;
+
 	if (typeof transparent == 'undefined') { transparent = false; }
-	if (typeof antialias == 'undefined') { antialias = false; }
+	if (typeof antialias == 'undefined') { antialias = true; }
 	
 	/**
 	* @property {number} id - Phaser Game ID (for when Pixi supports multiple instances).
@@ -16644,7 +16645,19 @@ Object.defineProperty(Phaser.Sprite.prototype, "crop", {
             this._cropRect = value;
             this.setTexture(PIXI.TextureCache[this._cropUUID]);
         }
+        else
+        {
+            this._cropRect = null;
 
+            if (this.animations.isLoaded)
+            {
+                this.animations.refreshFrame();
+            }
+            else
+            {
+                this.setTexture(PIXI.TextureCache[this.key]);
+            }
+        }
     }
 
 });
@@ -17705,6 +17718,7 @@ Phaser.Canvas = {
     * @return {HTMLCanvasElement} The newly created &lt;canvas&gt; tag.
     */
     create: function (width, height) {
+
         width = width || 256;
         height = height || 256;
 
@@ -24249,6 +24263,12 @@ Phaser.AnimationManager = function (sprite) {
 	this.updateIfVisible = true;
 
 	/**
+	* @property {boolean} isLoaded - Set to true once animation data has been loaded.
+	* @default
+	*/
+	this.isLoaded = false;
+
+	/**
 	* @property {Phaser.FrameData} _frameData - A temp. var for holding the currently playing Animations FrameData.
 	* @private
 	* @default
@@ -24283,6 +24303,7 @@ Phaser.AnimationManager.prototype = {
 
 		this._frameData = frameData;
 		this.frame = 0;
+		this.isLoaded = true;
 
 	},
 
@@ -24465,6 +24486,18 @@ Phaser.AnimationManager.prototype = {
 	},
 
     /**
+    * Refreshes the current frame data back to the parent Sprite and also resets the texture data.
+    *
+    * @method Phaser.AnimationManager#refreshFrame
+    */
+	refreshFrame: function () {
+
+        this.sprite.currentFrame = this.currentFrame;
+		this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+	},
+
+    /**
     * Destroys all references this AnimationManager contains. Sets the _anims to a new object and nulls the current animation.
     *
     * @method Phaser.AnimationManager#destroy
@@ -24552,7 +24585,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
 
     set: function (value) {
 
-        if (this._frameData && this._frameData.getFrame(value) !== null)
+        if (typeof value === 'number' && this._frameData && this._frameData.getFrame(value) !== null)
         {
             this.currentFrame = this._frameData.getFrame(value);
             this._frameIndex = value;
@@ -24581,7 +24614,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameName", {
 
     set: function (value) {
 
-        if (this._frameData && this._frameData.getFrameByName(value) !== null)
+        if (typeof value === 'string' && this._frameData && this._frameData.getFrameByName(value) !== null)
         {
             this.currentFrame = this._frameData.getFrameByName(value);
             this._frameIndex = this.currentFrame.index;
@@ -31491,8 +31524,12 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 		this.screenX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
 		this.screenY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
-		this.preX = (this.sprite.localTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		this.preY = (this.sprite.localTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+
+		// this.preX = (this.sprite.localTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+		// this.preY = (this.sprite.localTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+		this.preX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+		this.preY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+
 		this.preRotation = this.sprite.angle;
 
 		this.x = this.preX;
@@ -31616,10 +31653,10 @@ Phaser.Physics.Arcade.Body.prototype = {
 	    this.angularVelocity = 0;
 	    this.angularAcceleration = 0;
 
-		// this.preX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		// this.preY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
-		this.preX = (this.sprite.localTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		this.preY = (this.sprite.localTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+		this.preX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+		this.preY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+		// this.preX = (this.sprite.localTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+		// this.preY = (this.sprite.localTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 		this.preRotation = this.sprite.angle;
 
 		this.x = this.preX;

@@ -126,6 +126,11 @@ Version 1.0.7 (in progress in the dev branch)
 * Added Text.destroy() and BitmapText.destroy(), also updated Group.remove to make it more bullet-proof when an element doesn't have any events.
 * Added Phaser.Utils.shuffle to shuffle an array.
 * Added Graphics.destroy, x, y and updated angle functions.
+* Additional checks added to AnimationManager.frame/frameName on the given values.
+* Added AnimationManager.refreshFrame - will reset the texture being used for a Sprite (useful after a crop rect clear)
+* You can now null a Sprite.crop and it will clear down the crop rect area correctly.
+* The default Game.antialias value is now 'true', so graphics will be smoothed automatically in canvas. Disable it via the Game constructor or Canvas utils.
+
 
 
 

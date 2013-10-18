@@ -21,6 +21,7 @@ Phaser.Canvas = {
     * @return {HTMLCanvasElement} The newly created &lt;canvas&gt; tag.
     */
     create: function (width, height) {
+
         width = width || 256;
         height = height || 256;
 

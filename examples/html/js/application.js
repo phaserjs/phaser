@@ -20,6 +20,6 @@ $(document).ready(function(){
     }else if((liAmount/4)>1){
       $(this).addClass('laser2');
     }
-    console.log(liAmount/4);
+    // console.log(liAmount/4);
   });
 });

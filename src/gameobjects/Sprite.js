@@ -880,7 +880,19 @@ Object.defineProperty(Phaser.Sprite.prototype, "crop", {
             this._cropRect = value;
             this.setTexture(PIXI.TextureCache[this._cropUUID]);
         }
+        else
+        {
+            this._cropRect = null;
 
+            if (this.animations.isLoaded)
+            {
+                this.animations.refreshFrame();
+            }
+            else
+            {
+                this.setTexture(PIXI.TextureCache[this.key]);
+            }
+        }
     }
 
 });

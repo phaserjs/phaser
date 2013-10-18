@@ -100,7 +100,7 @@ ul.group-items > li a:visited span.mark{background: url('../img/group-item-hover
 .border-bottom{border-bottom: 1px solid #d1d1d1;}
 
 .prize-bg{background: url('../img/prize-bg.png') no-repeat; background-size: cover; background-position: center center; height: 326px; width: 100%;}
-.gradient{background: url('../img/gradient-bg') repeat-y;}
+.gradient{background: url('../img/gradient-bg.jpg') repeat-y; width: 100%;}
 .prize-button{text-transform: uppercase; color: #000; text-shadow: 1px 0 #fff; float:right; background: url('../img/prize-button.png') no-repeat; width: 300px; height: 70px; padding-top:135px; font-size: 16px; padding-left: 75px; margin-top: 25px; margin-right: 145px;}
 
 .footer{background: #e0e4f1 url('../img/footer-bg.jpg') no-repeat; background-size: cover; width:100%; height: 425px; bottom:0; color:#fff; text-shadow: 1px 1px 0 #000; line-height: 1.25em; font-size: 15px;}

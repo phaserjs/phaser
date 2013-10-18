@@ -29,8 +29,9 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 	renderer = renderer || Phaser.AUTO;
 	parent = parent || '';
 	state = state || null;
+
 	if (typeof transparent == 'undefined') { transparent = false; }
-	if (typeof antialias == 'undefined') { antialias = false; }
+	if (typeof antialias == 'undefined') { antialias = true; }
 	
 	/**
 	* @property {number} id - Phaser Game ID (for when Pixi supports multiple instances).
