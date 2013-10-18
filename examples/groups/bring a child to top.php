@@ -33,6 +33,7 @@
 
        game.debug.renderText('Tap or click buttons to bring it to the top.', 32, 32);
     }
+    //The sprite added as a parameter will be brought to top
     function bringMeToTop(btn) {
         container.bringToTop(btn);
     }

@@ -57,7 +57,7 @@
       <div class="box100 no-padding">
         <div class="phaser-version">
           <span>Phaser Version: 1.0.6</span>
-          <a href="#" class="version-button">Update to 1.0.7</a>
+          <a href="#" class="version-button">Update to 1.1</a>
         </div>
       </div>
       <div class="clear"></div>
