@@ -8,7 +8,7 @@
 	$buildLog = "Building version $version \n\n";
 	$header = "";
 
-	$js = file(dirname(__FILE__) . '/../examples/js.php');
+	$js = file(dirname(__FILE__) . '/../examples/phaser-debug-js.php');
 	$output = "";
 
 	for ($i = 0; $i < count($js); $i++)
