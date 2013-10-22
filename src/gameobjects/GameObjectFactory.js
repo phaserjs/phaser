@@ -86,7 +86,24 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
+    * Create a new TweenGroup
+    * 
+    * @method Phaser.GameObjectFactory#tweenGroup
+    * @param {number} delay - Delay before this tween will start, defaults to 0 (no delay).
+    * @param {number} repeat - How many time should the TweenGroup repeat itself. Infinity can be used for infinite repetition.
+    * @param {Phaser.Tween} yoyo - Description.
+    * @param {boolean} autoStart - Whether this TweenGroup will start automatically or not.
+    * @return {Phaser.TweenGroup} The TweenGroup created.
+    */
+    tweenGroup: function (delay, repeat, yoyo, autoStart) {
+
+        return new Phaser.TweenGroup(this.game, delay, repeat, yoyo, autoStart);
+
+    },
+
+    /**
     * A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
+    * Create a TweenGroup.
     *
     * @method Phaser.GameObjectFactory#group
     * @param {*} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
@@ -102,7 +119,7 @@ Phaser.GameObjectFactory.prototype = {
     /**
      * Creates a new instance of the Sound class.
      *
-    * @method Phaser.GameObjectFactory#audio
+     * @method Phaser.GameObjectFactory#audio
      * @param {string} key - The Game.cache key of the sound that this object will use.
      * @param {number} volume - The volume at which the sound will be played.
      * @param {boolean} loop - Whether or not the sound will loop.
@@ -117,7 +134,7 @@ Phaser.GameObjectFactory.prototype = {
     /**
      * Creates a new <code>TileSprite</code>.
      *
-    * @method Phaser.GameObjectFactory#tileSprite
+     * @method Phaser.GameObjectFactory#tileSprite
      * @param {number} x - X position of the new tileSprite.
      * @param {number} y - Y position of the new tileSprite.
      * @param {number} width - the width of the tilesprite.
@@ -135,7 +152,7 @@ Phaser.GameObjectFactory.prototype = {
     /**
      * Creates a new <code>Text</code>.
      *
-    * @method Phaser.GameObjectFactory#text
+     * @method Phaser.GameObjectFactory#text
      * @param {number} x - X position of the new text object.
      * @param {number} y - Y position of the new text object.
      * @param {string} text - The actual text that will be written.
@@ -171,7 +188,7 @@ Phaser.GameObjectFactory.prototype = {
     /**
      * Creates a new <code>Graphics</code> object.
      *
-    * @method Phaser.GameObjectFactory#graphics
+     * @method Phaser.GameObjectFactory#graphics
      * @param {number} x - X position of the new graphics object.
      * @param {number} y - Y position of the new graphics object.
      * @return {Phaser.Graphics} The newly created graphics object.
@@ -200,7 +217,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * * Create a new <code>BitmapText</code>.
+    * Create a new <code>BitmapText</code>.
     *
     * @method Phaser.GameObjectFactory#bitmapText
     * @param {number} x - X position of the new bitmapText object.
