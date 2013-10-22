@@ -8,7 +8,7 @@ blockquote, q {quotes: none;}
 blockquote:before, blockquote:after, q:before, q:after {content: ''; content: none;}
 table {border-collapse: collapse; border-spacing: 0;}
 /* reset css ends */
-@font-face{font-family: 'HelveticaBd'; src: url('assets/html/HelveticaNeueLTStd-Bd.otf');}
+@font-face{font-family: 'HelveticaBd'; src: url('../../_site/fonts/HelveticaNeueLTStd-Bd.otf');}
 
 body { margin:0; padding:0; overflow-x: hidden; font-family: Arial, Tahoma, Verdana !important; background: #e0e4f1;}
 
@@ -16,30 +16,35 @@ a{color:#fff; text-decoration: none;}
 a:hover{text-decoration: underline;}
 
 .helvetica{font-family: Arial, Tahoma, Verdana !important;}
-.header{background: #e0e4f1 url('assets/html/header-bg2.jpg') no-repeat; width:100%; margin:0; padding:0; background-size: cover; height: 530px; display: block; clear:both; margin-bottom: -400px}
+.header{background: #e0e4f1 url('../../_site/images/header-bg2.jpg') no-repeat; width:100%; margin:0; padding:0; background-size: cover; height: 530px; display: block; clear:both; margin-bottom: -400px}
 .main-container{display: block; clear:both; width: 1125px; height: auto; margin:0 auto;}
 
 ul.nav-links{ margin:0; padding:0; display: inline-block; float: right; list-style-type: none; color: #fff; font-size: 15px; line-height: 2em; margin-top: 50px; min-width: 180px;}
 ul.nav-links > li{margin:0; padding:0; list-style-type: none; padding-left: 55px;}
 ul.nav-links > li > a{color: #fff; text-decoration: none;}
 ul.nav-links > li > a:hover{text-decoration: underline;}
-.link-home, .link-latest, .link-forum, .link-docs, .link-twitter{background-image: url('assets/html/nav-icons.png'); background-repeat: no-repeat;}
+.link-home, .link-latest, .link-forum, .link-docs, .link-twitter{background-image: url('../../_site/images/nav-icons.png'); background-repeat: no-repeat;}
 
-.main-title{font-family: 'HelveticaBd', Helvetica, Arial;font-size:55px;color:#fff;text-shadow:0 0 15px #b643e6; text-align: center; display: block; text-transform: xuppercase; margin: 40px auto 0 auto;}
+.main-title{font-family: 'HelveticaBd', Helvetica, Arial;font-size:55px;color:#fff;text-shadow:0 0 15px #b643e6; text-align: center; display: block; margin: 40px auto 0 auto;}
 .link-home{background-position: 0 -9px;}
 .link-latest{background-position: 0 -37px;}
 .link-forum{background-position: 0 -67px;}
 .link-docs{background-position: 0 -97px;}
 .link-twitter{background-position: 0 -127px;}
-.phaser-examples{background: url('assets/html/phaser-examples.png') no-repeat; display: block; width: 485px; height: 205px; margin: 20px auto;}
-.phaser-version{float: right; background: url('assets/html/phaser-version.png') no-repeat; display: block; width: 345px; height: 30px; color: #fff; font-size: 11px; text-shadow: 1px 1px #000; right:0; top:0; }
+.phaser-examples{background: url('../../_site/images/phaser-examples.png') no-repeat; display: block; width: 485px; height: 205px; margin: 20px auto;}
+.phaser-version{float: right; background: url('../../_site/images/phaser-version.png') no-repeat; display: block; width: 345px; height: 30px; color: #fff; font-size: 11px; text-shadow: 1px 1px #000; right:0; top:0; }
 .phaser-version > span{margin-top: 10px; display: inline-block; margin-left: 60px; margin-right: 25px;}
-.phaser-version > a{color: #fff; text-decoration: none; background: url('assets/html/version-button.png') no-repeat; background-size: cover; display: inline-block; width: 123px; height: 10px; vertical-align: middle; text-align: center;padding-top:11px; padding-bottom: 11px}
+.phaser-version > a{color: #fff; text-decoration: none; background: url('../../_site/images/version-button.png') no-repeat; background-size: cover; display: inline-block; width: 123px; height: 10px; vertical-align: middle; text-align: center;padding-top:11px; padding-bottom: 11px}
 .phaser-version > a:hover{text-decoration: underline;}
-.phaser-logo{display: block; float: right; width: 168px;height: 144px; background: url('assets/html/phaser-logo.png') no-repeat; margin-top: 40px; margin-right: 40px;}
+.phaser-logo{display: block; float: right; width: 168px;height: 144px; background: url('../../_site/images/phaser-logo.png') no-repeat; margin-top: 40px; margin-right: 40px;}
+
+.error { margin-left: 48px; width: 700px; background-color: rgb(150,25,25); color:#fff; text-shadow: 1px 1px 0 #000; line-height: 24px }
+
+.error p {
+  padding: 16px 24px;
+}
 
 .line{display:block;clear:both; width:100%; margin:0;padding:0; float:left; background-color: transparent;}
-.xxgo-top{margin-top: -200px;}
 .box5, .box10, .box15 .box20, .box25, .box30, .box35, .box40, .box45, .box50, .box55, .box60, .box65, .box70, .box75, .box80, .box85, .box90, .box95, .box100{position: relative;display: inline-block; box-sizing: border-box; padding: 5px 10px; -moz-box-sizing: border-box; vertical-align: top; margin:0;}
 .float-right{float:right !important;}
 
@@ -78,36 +83,36 @@ ul.nav-links > li > a:hover{text-decoration: underline;}
 p.title{font-family: 'HelveticaBd', Helvetica, Arial; font-size: 30px; color: #fff; text-shadow: 0 1px 3px #9e6ce8; text-align: right;}
 p.count-examples{font-size: 12px; color: #676773; text-align: right;}
 
-ul.group-items{background-image: url('assets/html/laser1.png'); background-repeat: no-repeat; background-position: left top 5px; padding-left: 125px; width: 875px !important;}
-ul.group-items > li{width: 213px; padding-top: 15px; height: 35px; background: url('assets/html/group-item.png') no-repeat; text-align: center; display: inline-block; margin-bottom: 15px}
+ul.group-items{background-image: url('../../_site/images/laser1.png'); background-repeat: no-repeat; background-position: left top 5px; padding-left: 125px; width: 875px !important;}
+ul.group-items > li{width: 213px; padding-top: 15px; height: 35px; background: url('../../_site/images/group-item.png') no-repeat; text-align: center; display: inline-block; margin-bottom: 15px}
 ul.group-items > li a{display:block; width:100%; height: 100%; padding: 20px 0; margin-top: -20px; color:#333;}
 ul.group-items > li a:hover{cursor: pointer; text-decoration: underline;}
 ul.group-items > li a span.mark{display:inline-block;width: 1px; height: 25px; vertical-align: middle;}
-ul.group-items > li a:visited span.mark{background: url('assets/html/group-item-hover.png') no-repeat; background-position: center center;width:25px; padding-left:4px;}
+ul.group-items > li a:visited span.mark{background: url('../../_site/images/group-item-hover.png') no-repeat; background-position: center center;width:25px; padding-left:4px;}
 
-.laser2{background-image: url('assets/html/laser2.png') !important; background-repeat: no-repeat; background-position: center 20px;}
-.laser3{background-image: url('assets/html/laser3.png') !important; background-repeat: no-repeat; background-position: center 20px;}
-.laser4{background-image: url('assets/html/laser4.png') !important; background-repeat: no-repeat; background-position: center 20px;}
-.laser5{background-image: url('assets/html/laser5.png') !important; background-repeat: no-repeat; background-position: center 20px;}
-.laser6{background-image: url('assets/html/laser6.png') !important; background-repeat: no-repeat; background-position: center 20px;}
-.laser7{background-image: url('assets/html/laser7.png') !important; background-repeat: no-repeat; background-position: center 20px;}
-.laser8{background-image: url('assets/html/laser8.png') !important; background-repeat: no-repeat; background-position: center 20px;}
-.laser9{background-image: url('assets/html/laser9.png') !important; background-repeat: no-repeat; background-position: center 20px;}
-.laser10{background-image: url('assets/html/laser10.png') !important; background-repeat: no-repeat; background-position: center 20px;}
+.laser2{background-image: url('../../_site/images/laser2.png') !important; background-repeat: no-repeat; background-position: center 20px;}
+.laser3{background-image: url('../../_site/images/laser3.png') !important; background-repeat: no-repeat; background-position: center 20px;}
+.laser4{background-image: url('../../_site/images/laser4.png') !important; background-repeat: no-repeat; background-position: center 20px;}
+.laser5{background-image: url('../../_site/images/laser5.png') !important; background-repeat: no-repeat; background-position: center 20px;}
+.laser6{background-image: url('../../_site/images/laser6.png') !important; background-repeat: no-repeat; background-position: center 20px;}
+.laser7{background-image: url('../../_site/images/laser7.png') !important; background-repeat: no-repeat; background-position: center 20px;}
+.laser8{background-image: url('../../_site/images/laser8.png') !important; background-repeat: no-repeat; background-position: center 20px;}
+.laser9{background-image: url('../../_site/images/laser9.png') !important; background-repeat: no-repeat; background-position: center 20px;}
+.laser10{background-image: url('../../_site/images/laser10.png') !important; background-repeat: no-repeat; background-position: center 20px;}
 
 .bright-bg, .dark-bg{border-bottom: 1px solid #d1d1d1; padding:25px 0;}
 
 .border-bottom{border-bottom: 1px solid #d1d1d1;}
 
-.prize-bg{background: url('assets/html/prize-bg.png') no-repeat; background-size: cover; background-position: center center; height: 326px; width: 100%;}
-.prize-button{text-transform: uppercase; color: #000; text-shadow: 1px 0 #fff; float:right; background: url('assets/html/prize-button.png') no-repeat; width: 300px; height: 70px; padding-top:135px; font-size: 16px; padding-left: 75px; margin-top: 25px; margin-right: 145px;}
+.prize-bg{background: url('../../_site/images/prize-bg.png') no-repeat; background-size: cover; background-position: center center; height: 326px; width: 100%;}
+.prize-button{text-transform: uppercase; color: #000; text-shadow: 1px 0 #fff; float:right; background: url('../../_site/images/prize-button.png') no-repeat; width: 300px; height: 70px; padding-top:135px; font-size: 16px; padding-left: 75px; margin-top: 25px; margin-right: 145px;}
 
-.footer{ background: #e0e4f1 url('assets/html/footer-bg2.jpg') no-repeat; background-size: cover; width:100%; height: 592px; bottom:0; }
-.photonstorm-logo{background: url('assets/html/photonstorm-logo.png') no-repeat; background-size: cover; display: block;clear:both; width:113px;height:15px; margin-bottom: 6px;}
-.flixel-logo{display:block; clear:both; width:26px; height:50px; background: url('assets/html/flixel-logo.png') no-repeat;}
-.forums-icon, .twitter-icon, .github-icon{background: url('assets/html/forums-icon.png') no-repeat; vertical-align: middle; padding-left: 68px; height: 35px; display: inline-block; padding-top: 25px;}
-.twitter-icon{background: url('assets/html/twitter-icon.png') no-repeat;}
-.github-icon{background: url('assets/html/github-icon.png') no-repeat;}
+.footer{ background: #e0e4f1 url('../../_site/images/footer-bg2.jpg') no-repeat; background-size: cover; width:100%; height: 592px; bottom:0; }
+.photonstorm-logo{background: url('../../_site/images/photonstorm-logo.png') no-repeat; background-size: cover; display: block;clear:both; width:113px;height:15px; margin-bottom: 6px;}
+.flixel-logo{display:block; clear:both; width:26px; height:50px; background: url('../../_site/images/flixel-logo.png') no-repeat;}
+.forums-icon, .twitter-icon, .github-icon{background: url('../../_site/images/forums-icon.png') no-repeat; vertical-align: middle; padding-left: 68px; height: 35px; display: inline-block; padding-top: 25px;}
+.twitter-icon{background: url('../../_site/images/twitter-icon.png') no-repeat;}
+.github-icon{background: url('../../_site/images/github-icon.png') no-repeat;}
 
 #footer .main-container .line {
   margin-top: 130px;
@@ -119,21 +124,21 @@ ul.footer-links > li{display: inline-block; padding:0; margin:0; float:right;}
 
 .game-panel{width:800px; height: 680px; overflow: hidden; display:block; clear:both;box-shadow: 0 0 15px #6ac8f8; margin:-150px auto 0 auto; border-radius: 10px; position: relative; z-index: 10;}
 .game-screen{display:block; clear:both; width:800px;height:600px;margin:0;}
-.game-controls{display:block; width:100%; height:80px; margin:0; padding:0;background: url('assets/html/game-controls-bg.jpg') repeat-x;}
+.game-controls{display:block; width:100%; height:80px; margin:0; padding:0;background: url('../../_site/images/game-controls-bg.jpg') repeat-x;}
 ul.left-controls{float:left; list-style-type: none; margin:30px 0 0 25px;padding:0; display: inline-block;}
 ul.left-controls > li{margin:0;padding:0; display: inline-block; vertical-align: middle;}
-.controls-label{display:inline-block; width:80px; height:9px; background: url('assets/html/controls-label.png') no-repeat;}
-.up-label{display: inline-block; width:11px; height: 11px; background: url('assets/html/up-label.png') no-repeat;}
-.down-label{display: inline-block; width:11px; height: 11px; background: url('assets/html/down-label.png') no-repeat;}
-.left-label{display: inline-block; width:13px; height: 11px; background: url('assets/html/left-label.png') no-repeat;}
-.right-label{display: inline-block; width:12px; height: 11px; background: url('assets/html/right-label.png') no-repeat;}
-.space-label{display: inline-block; width:64px; height: 18px; background: url('assets/html/space-label.png') no-repeat;}
+.controls-label{display:inline-block; width:80px; height:9px; background: url('../../_site/images/controls-label.png') no-repeat;}
+.up-label{display: inline-block; width:11px; height: 11px; background: url('../../_site/images/up-label.png') no-repeat;}
+.down-label{display: inline-block; width:11px; height: 11px; background: url('../../_site/images/down-label.png') no-repeat;}
+.left-label{display: inline-block; width:13px; height: 11px; background: url('../../_site/images/left-label.png') no-repeat;}
+.right-label{display: inline-block; width:12px; height: 11px; background: url('../../_site/images/right-label.png') no-repeat;}
+.space-label{display: inline-block; width:64px; height: 18px; background: url('../../_site/images/space-label.png') no-repeat;}
 
 ul.right-controls{float:right;list-style-type: none; padding:0; display: inline-block; margin: 15px 25px 0 0;}
 ul.right-controls > li{margin:0;padding:0; display: inline-block; vertical-align: middle;}
-.pause-button{width: 121px; height:52px; display:inline-block; background: url('assets/html/pause-button.png') no-repeat;}
-.mute-button{width: 121px; height:52px; display:inline-block; background: url('assets/html/mute-button.png') no-repeat;}
-.reset-button{width: 121px; height:52px; display:inline-block; background: url('assets/html/reset-button.png') no-repeat;}
+.pause-button{width: 121px; height:52px; display:inline-block; background: url('../../_site/images/pause-button.png') no-repeat;}
+.mute-button{width: 121px; height:52px; display:inline-block; background: url('../../_site/images/mute-button.png') no-repeat;}
+.reset-button{width: 121px; height:52px; display:inline-block; background: url('../../_site/images/reset-button.png') no-repeat;}
 .pause-button:hover, .mute-button:hover, .reset-button:hover{cursor: pointer;}
 .filler{height: 720px;}
 .code-block{font-family: Courier; font-size: 14px; width:750px; height:auto; overflow: hidden; margin:0 auto; border-radius: 10px; background:#fdfdfd; border:0 !important; box-shadow: inset 0 5px 15px rgba(0,0,0,0.15), 0 0 10px rgba(106,200,248,0.5); padding: 25px !important;display: block; margin-bottom: 20px; margin-top: 30px;}

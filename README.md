@@ -12,8 +12,10 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 View the [Official Website](http://phaser.io)<br />
 Follow on [Twitter](https://twitter.com/photonstorm)<br />
 Read the [Development Blog](http://www.photonstorm.com)<br />
-Join the [Forum](http://www.html5gamedevs.com/forum/14-phaser/)
+Join the [Forum](http://www.html5gamedevs.com/forum/14-phaser/)<br />
 Try out the [Phaser Test Suite](http://gametest.mobi/phaser/)
+
+[Un-official Getting Started with Phaser](http://www.antonoffplus.com/coding-an-html5-game-for-30-minutes-or-an-introduction-to-the-phaser-framework)
 
 "Being negative is not how we make progress" - Larry Page, Google
 
@@ -35,7 +37,7 @@ Phaser is everything we ever wanted from an HTML5 game framework. It will power 
 Change Log
 ----------
 
-Version 1.0.7 (in progress in the dev branch)
+Version 1.1 (in progress in the dev branch)
 
 * JSDoc is go! We've added jsdoc3 blocks to every property and function, in every file.
 * Added World.postUpdate - all sprite position changes, as a result of physics, happen here before the render.
@@ -303,7 +305,6 @@ Known Issues
 ------------
 
 * The TypeScript definition file isn't yet complete.
-* The JSDOCS are not yet complete.
 
 Future Plans
 ------------
@@ -321,8 +322,6 @@ The following list is not exhaustive and is subject to change:
 * Gestures input class.
 * Flash CC html output support.
 * Game parameters read from Google Docs.
-
-Right now however our main focus is on documentation and examples, we won't be touching any of the above features until the docs are finished.
 
 Test Suite
 ----------
