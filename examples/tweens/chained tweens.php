@@ -7,7 +7,7 @@
 
     var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
 
-    var p, tween, button, flag = false;
+    var p, tween;
 
     function preload() {
 
@@ -26,25 +26,7 @@
         .to({ y: 300 }, 1000, Phaser.Easing.Linear.None)
         .to({ x: 100 }, 2000, Phaser.Easing.Linear.None)
         .to({ y: 100 }, 1000, Phaser.Easing.Linear.None)
-        .loop()
         .start();
-
-        button = game.add.button(game.world.centerX, 400, 'button', actionOnClick, this, 2, 1, 0);
-    }
-
-    function actionOnClick() {
-
-        if (flag) {
-            console.log('started');
-            tween.start();
-        }
-        else {
-            console.log('stopped');
-            tween.stop();
-        }
-
-        flag = !flag;
-
     }
 
 </script>

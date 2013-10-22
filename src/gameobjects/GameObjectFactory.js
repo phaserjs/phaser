@@ -99,6 +99,22 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
+    * Create a TweenGroup.
+    *
+    * @method tweenGroup
+    * @param {number} delay - Delay before this tween will start, defaults to 0 (no delay).
+    * @param {number} repeat - How many time should the TweenGroup repeat itself. Infinity can be used for infinite repetition.
+    * @param {Phaser.Tween} yoyo - Description.
+    * @param {boolean} autoStart - Whether this TweenGroup will start automatically or not.
+    * @return {Phaser.TweenGroup} The TweenGroup created.
+    */
+    tweenGroup: function (delay, repeat, yoyo, autoStart) {
+
+        return new Phaser.TweenGroup(this.game, delay, repeat, yoyo, autoStart);
+
+    },
+
+    /**
     * Description.
     *
     * @method group
