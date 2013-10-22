@@ -288,3 +288,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 [1]: https://github.com/photonstorm/phaser/issues
 [phaser]: https://github.com/photonstorm/phaser
+
+
+Other
+----------
+
+[Non-official Getting Started with Phaser](http://www.antonoffplus.com/coding-an-html5-game-for-30-minutes-or-an-introduction-to-the-phaser-framework) 
