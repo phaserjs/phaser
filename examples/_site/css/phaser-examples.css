@@ -44,6 +44,10 @@ ul.nav-links > li > a:hover{text-decoration: underline;}
   padding: 16px 24px;
 }
 
+#title {
+  text-transform: capitalize;
+}
+
 .line{display:block;clear:both; width:100%; margin:0;padding:0; float:left; background-color: transparent;}
 .box5, .box10, .box15 .box20, .box25, .box30, .box35, .box40, .box45, .box50, .box55, .box60, .box65, .box70, .box75, .box80, .box85, .box90, .box95, .box100{position: relative;display: inline-block; box-sizing: border-box; padding: 5px 10px; -moz-box-sizing: border-box; vertical-align: top; margin:0;}
 .float-right{float:right !important;}
@@ -141,7 +145,7 @@ ul.right-controls > li{margin:0;padding:0; display: inline-block; vertical-align
 .reset-button{width: 121px; height:52px; display:inline-block; background: url('../../_site/images/reset-button.png') no-repeat;}
 .pause-button:hover, .mute-button:hover, .reset-button:hover{cursor: pointer;}
 .filler{height: 720px;}
-.code-block{font-family: Courier; font-size: 14px; width:750px; height:auto; overflow: hidden; margin:0 auto; border-radius: 10px; background:#fdfdfd; border:0 !important; box-shadow: inset 0 5px 15px rgba(0,0,0,0.15), 0 0 10px rgba(106,200,248,0.5); padding: 25px !important;display: block; margin-bottom: 20px; margin-top: 30px;}
+.code-block{font-family: Courier; font-size: 12px; width:750px; height:auto; overflow: scroll; margin:0 auto; border-radius: 10px; background:#fdfdfd; border:0 !important; box-shadow: inset 0 5px 15px rgba(0,0,0,0.15), 0 0 10px rgba(106,200,248,0.5); padding: 25px !important;display: block; margin-bottom: 20px; margin-top: 30px;}
 .px800{width:800px; clear:both; display: block; margin:0 auto; line-height: 1.5em;}
 .gradient p{color:#333;}
 
