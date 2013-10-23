@@ -32,7 +32,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
 	if (typeof transparent == 'undefined') { transparent = false; }
 	if (typeof antialias == 'undefined') { antialias = true; }
-	
+
 	/**
 	* @property {number} id - Phaser Game ID (for when Pixi supports multiple instances).
 	*/
@@ -251,7 +251,7 @@ Phaser.Game.prototype = {
 
 	/**
 	* Initialize engine sub modules and start the game.
-	* 
+	*
 	* @method Phaser.Game#boot
 	* @protected
 	*/
@@ -315,10 +315,13 @@ Phaser.Game.prototype = {
 				console.log('%cPhaser ' + Phaser.VERSION + ' initialized. Rendering to WebGL', 'color: #ffff33; background: #000000');
 			}
 
-			if (Phaser.VERSION.substr(-5) == '-beta')
-			{
-				console.warn('You are using a beta version of Phaser. Some things may not work.');
-			}
+			var pos = Phaser.VERSION.indexOf('-');
+            var versionQualifier = (pos >= 0) ? Phaser.VERSION.substr(pos + 1) : null;
+            if (versionQualifier)
+            {
+                var article = ['a', 'e', 'i', 'o', 'u', 'y'].indexOf(versionQualifier.charAt(0)) >= 0 ? 'an' : 'a';
+                console.warn('You are using %s %s version of Phaser. Some things may not work.', article, versionQualifier);
+            }
 
 	        this.isRunning = true;
             this._loadComplete = false;
@@ -329,10 +332,10 @@ Phaser.Game.prototype = {
 		}
 
 	},
-	
+
 	/**
 	* Checks if the device is capable of using the requested renderer and sets it up or an alternative if not.
-	* 
+	*
 	* @method Phaser.Game#setUpRenderer
 	* @protected
 	*/
@@ -369,7 +372,7 @@ Phaser.Game.prototype = {
 
 	/**
     * Called when the load has finished, after preload was run.
-    * 
+    *
     * @method Phaser.Game#loadComplete
     * @protected
     */
@@ -383,7 +386,7 @@ Phaser.Game.prototype = {
 
 	/**
     * The core game loop.
-    * 
+    *
     * @method Phaser.Game#update
     * @protected
 	* @param {number} time - The current time as provided by RequestAnimationFrame.
@@ -418,7 +421,7 @@ Phaser.Game.prototype = {
 
 	/**
     * Nuke the entire game from orbit
-    * 
+    *
     * @method Phaser.Game#destroy
     */
     destroy: function () {

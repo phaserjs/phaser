@@ -7,10 +7,10 @@
 /**
 * @namespace Phaser
 */
-var Phaser = Phaser || { 
+var Phaser = Phaser || {
 
-	VERSION: '1.1.0', 
-	GAMES: [], 
+	VERSION: '<%= version %>',
+	GAMES: [],
 	AUTO: 0,
 	CANVAS: 1,
 	WEBGL: 2,
