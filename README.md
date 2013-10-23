@@ -22,13 +22,13 @@ Try out the [Phaser Test Suite](http://gametest.mobi/phaser/)
 Welcome to Phaser
 -----------------
 
-It's staggering to think just how much has been achieved in the short time the 1.0 branch of Phaser has been available. We've seen literally hundreds of bug fixes and updates. Exciting new features and enhancements have been merged into the core library thanks to contributions from the community. We also completely overhauled the Examples Suite, removed the requirement for PHP, rebuilt it in html+js and filled it with over 150 examples to dig in to and learn from. And more importantly we've got our first pass at the API docs online and ready too.
+It's staggering to think just how much has been achieved in the short time Phaser has been alive. We've implemented literally hundreds of bug fixes and updates, thanks to the effort the community puts in to reporting issues they find. Exciting new features have been merged into the core and we revisited old ones and pimped them out. We also completely overhauled the Examples Suite, removed the requirement for PHP, rebuilt it and filled it with over 150 examples to dig in and learn from. And more importantly we've got our first pass at the API docs ready too.
 
-There is still more to be done of course. The API docs, while a good start, still need to be backed up with a proper comprehensive manual. And we desperately need to write some 'best practises' and 'getting started' tutorials. But at least now you don't have to flounder around in the dark and can turn to the examples and docs.
+There is still more to be done of course. The API docs, while a good start, are lacking in places and still need to be backed up with a proper comprehensive manual. And we desperately need to write some 'best practises' and 'getting started' tutorials too. But we hope you appreciate the amount of effort that has been put in by the team so far.
 
-There are so many exciting new features and tweaks in this build that we felt it warranted a proper full point release: 1.1. A few things have also changed, so games that were in development in the 1.0 version may need refactoring for 1.1, but we feel those changes have benefitted the framework as a whole.
+There are many exciting new features and tweaks in this build that we felt it warranted a proper point release, hence the shift to version 1.1. Because of several core changes games that were in development in a 1.0.x version of Phaser may need refactoring for 1.1, but we feel those changes have helped the framework grow and mature as a whole.
 
-As before "Thank you!" to everyone who has encouraged us along the way. To those of you who worked with Phaser during its various incarnations, and who released full games with it despite there being zero API documentation available: you are our heroes. It's your kind words and enthusiasm, as well as our commercial need for Phaser that has kept us going.
+As before we offer a heart-felt "Thank you!" to everyone who has encouraged us along the way. To those of you who worked with Phaser during its various incarnations, and who released full games with it despite there being zero API documentation available: you are our heroes. It's your kind words and enthusiasm that has kept us going.
 
 Phaser is everything we ever wanted from an HTML5 game framework. It powers all of our client work in build today and remains our single most important product, and we've only just scratched the surface of what we have planned for it.
 
@@ -42,6 +42,7 @@ Version 1.1
 
 * JSDoc is go! We've added jsdoc3 blocks to every property and function, in every file.
 * Brand new Example system (no more php!) and over 150 examples to learn from too.
+* New TypeScript definitions file generated (in the build folder).
 * Added World.postUpdate - all sprite position changes, as a result of physics, happen here before the render.
 * Complete overhaul of Physics.Arcade.Body - now significantly more stable and faster too.
 * Updated ArcadePhysics.separateX/Y to use new body system - much better results now.
@@ -134,6 +135,10 @@ Version 1.1
 * Added AnimationManager.refreshFrame - will reset the texture being used for a Sprite (useful after a crop rect clear)
 * You can now null a Sprite.crop and it will clear down the crop rect area correctly.
 * The default Game.antialias value is now 'true', so graphics will be smoothed automatically in canvas. Disable it via the Game constructor or Canvas utils.
+* Added Physics.overlap(sprite1, sprite2) for quick body vs. body overlap tests with no separation performed.
+* Fixed Issue 111 - calling Kill on a Phaser.Graphics instance causes error on undefined events.
+
+
 
 Outstanding Tasks
 -----------------
@@ -145,14 +150,13 @@ Outstanding Tasks
 * TODO: Sound.addMarker hh:mm:ss:ms
 * TODO: swap state (non-destructive shift)
 * TODO: rotation offset
-* TODO: check stage bgc on droid (http://www.html5gamedevs.com/topic/1629-stage-background-color-not-working-on-android-chrome/)
 
 Requirements
 ------------
 
 Games created with Phaser require a modern web browser that supports the canvas tag. This includes Internet Explorer 9+, Firefox, Chrome, Safari and Opera. It also works on mobile web browsers including stock Android 2.x browser and above and iOS5 Mobile Safari and above.
 
-For developing with Phaser you can use either a plain-vanilla JavaScript approach or [TypeScript](https://typescript.codeplex.com/). We made no assumptions about how you like to code your games, and were careful not to impose any form of class/inheritance/structure upon you.
+For developing with Phaser you can use either a plain-vanilla JavaScript approach or [TypeScript](https://typescript.codeplex.com/) using the provided TypeScript definitions file. We made no assumptions about how you like to code your games, and were careful not to impose any form of class/inheritance/structure upon you.
 
 Phaser is 275 KB minified and 62 KB gzipped.
 
@@ -226,11 +230,6 @@ Although Phaser 1.0 is a brand new release it is born from years of experience b
 
 ![Phaser Particles](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_particles.png)
 
-Known Issues
-------------
-
-* The TypeScript definition file isn't yet complete.
-
 Future Plans
 ------------
 
@@ -248,20 +247,20 @@ The following list is not exhaustive and is subject to change:
 * Flash CC html output support.
 * Game parameters read from Google Docs.
 
-Test Suite
-----------
+Learn By Example
+----------------
 
-Phaser comes with an ever growing Test Suite. Personally we learn better by looking at small refined code examples, so we create lots of them to test each new feature we add. Inside the Tests folder you'll find the current set. If you write a particularly good test then please send it to us.
+Phaser comes with an ever growing suite of Examples. Personally I feel that we learn better by looking at small refined code examples, so we created over 150 of them and create new ones to test every new feature added. Inside the `examples` folder you'll find the current set. If you write a particularly good example then please send it to us.
 
-The tests need running through a local web server (to avoid file access permission errors from your browser).
+The examples need running through a local web server (to avoid file access permission errors from your browser).
 
-Make sure you can browse to the Tests folder via your web server. If you've got php installed then launch:
+Browse to the examples folder via your web server.
 
-    examples/index.php
+    examples/index.html
 
-Right now the Test Suite requires PHP, but we will remove this requirement soon.
+There is a new 'Side View' example viewer as well. This loads all the examples into a left-hand frame for faster navigation.
 
-You can also browse the [Phaser Test Suite](http://gametest.mobi/phaser/) online.
+You can also browse all [Phaser Examples](http://gametest.mobi/phaser/) online.
 
 Contributing
 ------------

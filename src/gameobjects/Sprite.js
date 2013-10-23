@@ -190,6 +190,9 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */ 
     this.scale = new Phaser.Point(1, 1);
 
+    // console.log(this.worldTransform);
+    // this.worldTransform = [];
+
     /**
     * @property {Phaser.Point} _cache - A mini cache for storing all of the calculated values.
     * @private
@@ -566,7 +569,11 @@ Phaser.Sprite.prototype.kill = function() {
     this.alive = false;
     this.exists = false;
     this.visible = false;
-    this.events.onKilled.dispatch(this);
+
+    if (this.events)
+    {
+        this.events.onKilled.dispatch(this);
+    }
 
 }
 

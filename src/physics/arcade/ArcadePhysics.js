@@ -148,6 +148,25 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
+    * Checks if two Sprite objects intersect.
+    *
+    * @param object1 The first object to check. Can be an instance of Phaser.Sprite or anything that extends it.
+    * @param object2 The second object to check. Can be an instance of Phaser.Sprite or anything that extends it.
+    * @returns {boolean} true if the two objects overlap.
+    **/
+    overlap: function (object1, object2) {
+
+        //  Only test valid objects
+        if (object1 && object2 && object1.exists && object2.exists)
+        {
+            return (Phaser.Rectangle.intersects(object1.body, object2.body));
+        }
+
+        return false;
+
+    },
+
+    /**
     * Checks for collision between two game objects. The objects can be Sprites, Groups, Emitters or Tilemaps.
     * You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap or Group vs. Tilemap collisions.
     *

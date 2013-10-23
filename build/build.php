@@ -8,7 +8,7 @@
 	$buildLog = "Building version $version \n\n";
 	$header = "";
 
-	$js = file(dirname(__FILE__) . 'config.php');
+	$js = file(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'config.php');
 	$output = "";
 
 	for ($i = 0; $i < count($js); $i++)

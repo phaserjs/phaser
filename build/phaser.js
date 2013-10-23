@@ -9,7 +9,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v1.0.7 - Built at: Tue, 22 Oct 2013 00:54:52 +0100
+* v1.1.0 - Built at: Wed, 23 Oct 2013 13:05:12 +0100
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -56,7 +56,7 @@ var PIXI = PIXI || {};
 */
 var Phaser = Phaser || { 
 
-	VERSION: '1.0.7-beta', 
+	VERSION: '1.1.0', 
 	GAMES: [], 
 	AUTO: 0,
 	CANVAS: 1,
@@ -15955,6 +15955,9 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */ 
     this.scale = new Phaser.Point(1, 1);
 
+    // console.log(this.worldTransform);
+    // this.worldTransform = [];
+
     /**
     * @property {Phaser.Point} _cache - A mini cache for storing all of the calculated values.
     * @private
@@ -16331,7 +16334,11 @@ Phaser.Sprite.prototype.kill = function() {
     this.alive = false;
     this.exists = false;
     this.visible = false;
-    this.events.onKilled.dispatch(this);
+
+    if (this.events)
+    {
+        this.events.onKilled.dispatch(this);
+    }
 
 }
 
@@ -30381,6 +30388,25 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
+    * Checks if two Sprite objects intersect.
+    *
+    * @param object1 The first object to check. Can be an instance of Phaser.Sprite or anything that extends it.
+    * @param object2 The second object to check. Can be an instance of Phaser.Sprite or anything that extends it.
+    * @returns {boolean} true if the two objects overlap.
+    **/
+    overlap: function (object1, object2) {
+
+        //  Only test valid objects
+        if (object1 && object2 && object1.exists && object2.exists)
+        {
+            return (Phaser.Rectangle.intersects(object1.body, object2.body));
+        }
+
+        return false;
+
+    },
+
+    /**
     * Checks for collision between two game objects. The objects can be Sprites, Groups, Emitters or Tilemaps.
     * You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap or Group vs. Tilemap collisions.
     *
@@ -31527,6 +31553,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 		// this.preX = (this.sprite.localTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
 		// this.preY = (this.sprite.localTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+
 		this.preX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
 		this.preY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 
