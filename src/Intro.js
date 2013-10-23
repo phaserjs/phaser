@@ -9,7 +9,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v{version} - Built at: {buildDate}
+* v<%= version %> - Built at: <%= buildDate %>
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *

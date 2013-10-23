@@ -1,11 +1,7 @@
 {
   "name": "Phaser",
-  "version": "1.0.7",
-  "description": "html5 game framework",
-  "main": "build/phaser.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "version": "1.1.0",
+  "description": "HTML5 game framework",
   "repository": {
     "type": "git",
     "url": "https://photonstorm@github.com/photonstorm/phaser.git"
@@ -18,15 +14,13 @@
   ],
   "author": "Richard Davey",
   "license": "MIT",
-  "readmeFilename": "README.md",
-  "gitHead": "1217bf4722768514fe15ff904dab59f848d146f4",
   "devDependencies": {
     "grunt": "~0.4.1",
-    "typescript": "~0.8.3",
-    "grunt-typescript": "~0.1.4",
-    "grunt-contrib-watch": "~0.3.1",
-    "grunt-contrib-connect": "~0.3.0",
-    "grunt-open": "~0.2.0",
-    "grunt-contrib-copy": "~0.4.1"
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-connect": "~0.5.0",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-uglify": "~0.2.4",
+    "lodash": "~2.2.1"
   }
 }

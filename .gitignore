@@ -1,7 +1,13 @@
+# System and IDE files
 .DS_Store
 .idea
 Phaser OSX.sublime-project
 Phaser OSX.sublime-workspace
 Phaser.sublime-project
 Phaser.sublime-workspace
-node_modules
+
+# Vendors
+node_modules/
+
+# Build
+dist/
