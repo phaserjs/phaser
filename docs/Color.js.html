@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Phaser Source: utils/Color.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+	
+</head>
+
+<body>
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top navbar-inverse">
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">Phaser</a>
+			<ul class="nav">
+				
+				<li class="dropdown">
+					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="Phaser.html">Phaser</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="Phaser.Animation.html">Animation</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.AnimationManager.html">AnimationManager</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.AnimationParser.html">AnimationParser</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Cache.html">Cache</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Camera.html">Camera</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Canvas.html">Canvas</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Circle.html">Circle</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Color.html">Color</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Device.html">Device</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.html">Easing</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Back.html">Back</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Bounce.html">Bounce</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Circular.html">Circular</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Cubic.html">Cubic</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Elastic.html">Elastic</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Exponential.html">Exponential</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Linear.html">Linear</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Quartic.html">Quartic</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Quintic.html">Quintic</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Frame.html">Frame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.FrameData.html">FrameData</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Game.html">Game</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Input.html">Input</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.InputHandler.html">InputHandler</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Key.html">Key</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.LinkedList.html">LinkedList</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Loader.html">Loader</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.LoaderParser.html">LoaderParser</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Math.html">Math</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Mouse.html">Mouse</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.MSPointer.html">MSPointer</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Net.html">Net</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Particles.html">Particles</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Particles.Arcade.Emitter.html">Emitter</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Plugin.html">Plugin</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.PluginManager.html">PluginManager</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Point.html">Point</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Pointer.html">Pointer</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Rectangle.html">Rectangle</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Sound.html">Sound</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.SoundManager.html">SoundManager</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Stage.html">Stage</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.State.html">State</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.StateManager.html">StateManager</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Touch.html">Touch</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tween.html">Tween</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TweenManager.html">TweenManager</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Utils.html">Utils</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Utils.Debug.html">Debug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.World.html">World</a>
+						</li>
+						
+						<li>
+							<a href="SignalBinding.html">SignalBinding</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+		
+			<div class="span12">
+				
+				<div id="main">
+					
+
+
+		<h1 class="page-title">Source: utils/Color.js</h1>
+    
+    <section>
+        <article>
+            <pre class="sunlight-highlight-javascript linenums">/**
+* @author       Richard Davey &lt;rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* A collection of methods useful for manipulating and comparing colors.
+*
+* @class Phaser.Color
+*/
+Phaser.Color = {
+
+    /**
+    * Given an alpha and 3 color values this will return an integer representation of it.
+    *
+    * @method Phaser.Color.getColor32
+    * @param {number} alpha - The Alpha value (between 0 and 255).
+    * @param {number} red - The Red channel value (between 0 and 255).
+    * @param {number} green - The Green channel value (between 0 and 255).
+    * @param {number} blue - The Blue channel value (between 0 and 255).
+    * @returns {number} A native color value integer (format: 0xAARRGGBB).
+    */
+    getColor32: function (alpha, red, green, blue) {
+        return alpha &lt;&lt; 24 | red &lt;&lt; 16 | green &lt;&lt; 8 | blue;
+    },
+
+    /**
+    * Given 3 color values this will return an integer representation of it.
+    *
+    * @method Phaser.Color.getColor
+    * @param {number} red - The Red channel value (between 0 and 255).
+    * @param {number} green - The Green channel value (between 0 and 255).
+    * @param {number} blue - The Blue channel value (between 0 and 255).
+    * @returns {number} A native color value integer (format: 0xRRGGBB).
+    */
+    getColor: function (red, green, blue) {
+        return red &lt;&lt; 16 | green &lt;&lt; 8 | blue;
+    },
+
+    /**
+    * Converts the given hex string into an object containing the RGB values.
+    *
+    * @method Phaser.Color.hexToRGB
+    * @param {string} h - The string hex color to convert.
+    * @returns {object} An object with 3 properties: r,g and b.
+    */
+    hexToRGB: function (h) {
+
+        var hex16 = (h.charAt(0) == "#") ? h.substring(1, 7) : h;
+        var red = parseInt(hex16.substring(0, 2), 16);
+        var green = parseInt(hex16.substring(2, 4), 16);
+        var blue = parseInt(hex16.substring(4, 6), 16);
+
+        return red &lt;&lt; 16 | green &lt;&lt; 8 | blue;
+        
+    },
+
+    /**
+    * Returns a string containing handy information about the given color including string hex value,
+    * RGB format information and HSL information. Each section starts on a newline, 3 lines in total.
+    *
+    * @method Phaser.Color.getColorInfo
+    * @param {number} color - A color value in the format 0xAARRGGBB.
+    * @returns {string} String containing the 3 lines of information.
+    */
+    getColorInfo: function (color) {
+
+        var argb = Phaser.Color.getRGB(color);
+        var hsl = Phaser.Color.RGBtoHSV(color);
+        
+        //	Hex format
+        var result = Phaser.Color.RGBtoHexstring(color) + "\n";
+        
+        //	RGB format
+        result = result.concat("Alpha: " + argb.alpha + " Red: " + argb.red + " Green: " + argb.green + " Blue: " + argb.blue) + "\n";
+        
+        //	HSL info
+        result = result.concat("Hue: " + hsl.hue + " Saturation: " + hsl.saturation + " Lightnes: " + hsl.lightness);
+
+        return result;
+
+    },
+
+    /**
+    * Return a string representation of the color in the format 0xAARRGGBB.
+    *
+    * @method Phaser.Color.RGBtoHexstring
+    * @param {number} color - The color to get the string representation for
+    * @returns {string} A string of length 10 characters in the format 0xAARRGGBB
+    */
+    RGBtoHexstring: function (color) {
+
+        var argb = Phaser.Color.getRGB(color);
+
+        return "0x" + Phaser.Color.colorToHexstring(argb.alpha) + Phaser.Color.colorToHexstring(argb.red) + Phaser.Color.colorToHexstring(argb.green) + Phaser.Color.colorToHexstring(argb.blue);
+
+    },
+
+    /**
+    * Return a string representation of the color in the format #RRGGBB.
+    *
+    * @method Phaser.Color.RGBtoWebstring
+    * @param {number} color - The color to get the string representation for.
+    * @returns {string} A string of length 10 characters in the format 0xAARRGGBB.
+    */
+    RGBtoWebstring: function (color) {
+
+        var argb = Phaser.Color.getRGB(color);
+
+        return "#" + Phaser.Color.colorToHexstring(argb.red) + Phaser.Color.colorToHexstring(argb.green) + Phaser.Color.colorToHexstring(argb.blue);
+
+    },
+
+    /**
+    * Return a string containing a hex representation of the given color.
+    *
+    * @method Phaser.Color.colorToHexstring
+    * @param {number} color - The color channel to get the hex value for, must be a value between 0 and 255).
+    * @returns {string} A string of length 2 characters, i.e. 255 = FF, 0 = 00.
+    */
+    colorToHexstring: function (color) {
+
+        var digits = "0123456789ABCDEF";
+        var lsd = color % 16;
+        var msd = (color - lsd) / 16;
+        var hexified = digits.charAt(msd) + digits.charAt(lsd);
+        return hexified;
+
+    },
+
+    /**
+    * Interpolates the two given colours based on the supplied step and currentStep properties.
+    * @method Phaser.Color.interpolateColor
+    * @param {number} color1 - Description.
+    * @param {number} color2 - Description.
+    * @param {number} steps - Description.
+    * @param {number} currentStep - Description.
+    * @param {number} alpha - Description.
+    * @returns {number} The interpolated color value.
+    */
+    interpolateColor: function (color1, color2, steps, currentStep, alpha) {
+
+        if (typeof alpha === "undefined") { alpha = 255; }
+
+        var src1 = Phaser.Color.getRGB(color1);
+        var src2 = Phaser.Color.getRGB(color2);
+        var r = (((src2.red - src1.red) * currentStep) / steps) + src1.red;
+        var g = (((src2.green - src1.green) * currentStep) / steps) + src1.green;
+        var b = (((src2.blue - src1.blue) * currentStep) / steps) + src1.blue;
+
+        return Phaser.Color.getColor32(alpha, r, g, b);
+
+    },
+
+    /**
+    * Interpolates the two given colours based on the supplied step and currentStep properties.
+    * @method Phaser.Color.interpolateColorWithRGB
+    * @param {number} color - Description.
+    * @param {number} r - Description.
+    * @param {number} g - Description.
+    * @param {number} b - Description.
+    * @param {number} steps - Description.
+    * @param {number} currentStep - Description.
+    * @returns {number} The interpolated color value.
+    */
+    interpolateColorWithRGB: function (color, r, g, b, steps, currentStep) {
+
+        var src = Phaser.Color.getRGB(color);
+        var or = (((r - src.red) * currentStep) / steps) + src.red;
+        var og = (((g - src.green) * currentStep) / steps) + src.green;
+        var ob = (((b - src.blue) * currentStep) / steps) + src.blue;
+
+        return Phaser.Color.getColor(or, og, ob);
+
+    },
+
+    /**
+    * Interpolates the two given colours based on the supplied step and currentStep properties.
+    * @method Phaser.Color.interpolateRGB
+    * @param {number} r1 - Description.
+    * @param {number} g1 - Description.
+    * @param {number} b1 - Description.
+    * @param {number} r2 - Description.
+    * @param {number} g2 - Description.
+    * @param {number} b2 - Description.
+    * @param {number} steps - Description.
+    * @param {number} currentStep - Description.
+    * @returns {number} The interpolated color value.
+    */
+    interpolateRGB: function (r1, g1, b1, r2, g2, b2, steps, currentStep) {
+
+        var r = (((r2 - r1) * currentStep) / steps) + r1;
+        var g = (((g2 - g1) * currentStep) / steps) + g1;
+        var b = (((b2 - b1) * currentStep) / steps) + b1;
+
+        return Phaser.Color.getColor(r, g, b);
+
+    },
+
+    /**
+    * Returns a random color value between black and white
+    * &lt;p>Set the min value to start each channel from the given offset.&lt;/p>
+    * &lt;p>Set the max value to restrict the maximum color used per channel&lt;/p>
+    *
+    * @method Phaser.Color.getRandomColor
+    * @param {number} min - The lowest value to use for the color.
+    * @param {number} max - The highest value to use for the color.
+    * @param {number} alpha - The alpha value of the returning color (default 255 = fully opaque).
+    * @returns {number} 32-bit color value with alpha.
+    */
+    getRandomColor: function (min, max, alpha) {
+
+        if (typeof min === "undefined") { min = 0; }
+        if (typeof max === "undefined") { max = 255; }
+        if (typeof alpha === "undefined") { alpha = 255; }
+
+        //	Sanity checks
+        if (max > 255) {
+            return Phaser.Color.getColor(255, 255, 255);
+        }
+
+        if (min > max) {
+            return Phaser.Color.getColor(255, 255, 255);
+        }
+
+        var red = min + Math.round(Math.random() * (max - min));
+        var green = min + Math.round(Math.random() * (max - min));
+        var blue = min + Math.round(Math.random() * (max - min));
+
+        return Phaser.Color.getColor32(alpha, red, green, blue);
+
+    },
+
+    /**
+    * Return the component parts of a color as an Object with the properties alpha, red, green, blue
+    *
+    * &lt;p>Alpha will only be set if it exist in the given color (0xAARRGGBB)&lt;/p>
+    *
+    * @method Phaser.Color.getRGB
+    * @param {number} color - Color in RGB (0xRRGGBB) or ARGB format (0xAARRGGBB).
+    * @returns {object} An Object with properties: alpha, red, green, blue.
+    */
+    getRGB: function (color) {
+
+        return {
+            alpha: color >>> 24,
+            red: color >> 16 & 0xFF,
+            green: color >> 8 & 0xFF,
+            blue: color & 0xFF
+        };
+
+    },
+
+    /**
+    * Returns a CSS friendly string value from the given color.
+    * @method Phaser.Color.getWebRGB
+    * @param {number} color
+    * @returns {string}A string in the format: 'rgba(r,g,b,a)'
+    */
+    getWebRGB: function (color) {
+
+        var alpha = (color >>> 24) / 255;
+        var red = color >> 16 & 0xFF;
+        var green = color >> 8 & 0xFF;
+        var blue = color & 0xFF;
+
+        return 'rgba(' + red.toString() + ',' + green.toString() + ',' + blue.toString() + ',' + alpha.toString() + ')';
+        
+    },
+
+    /**
+    * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component, as a value between 0 and 255.
+    *
+    * @method Phaser.Color.getAlpha
+    * @param {number} color - In the format 0xAARRGGBB.
+    * @returns {number} The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent)).
+    */
+    getAlpha: function (color) {
+        return color >>> 24;
+    },
+
+    /**
+    * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component as a value between 0 and 1.
+    *
+    * @method Phaser.Color.getAlphaFloat
+    * @param {number} color - In the format 0xAARRGGBB.
+    * @returns {number} The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent)).
+    */
+    getAlphaFloat: function (color) {
+        return (color >>> 24) / 255;
+    },
+
+    /**
+    * Given a native color value (in the format 0xAARRGGBB) this will return the Red component, as a value between 0 and 255.
+    *
+    * @method Phaser.Color.getRed
+    * @param {number} color In the format 0xAARRGGBB.
+    * @returns {number} The Red component of the color, will be between 0 and 255 (0 being no color, 255 full Red).
+    */
+    getRed: function (color) {
+        return color >> 16 & 0xFF;
+    },
+
+    /**
+    * Given a native color value (in the format 0xAARRGGBB) this will return the Green component, as a value between 0 and 255.
+    *
+    * @method Phaser.Color.getGreen
+    * @param {number} color - In the format 0xAARRGGBB.
+    * @returns {number} The Green component of the color, will be between 0 and 255 (0 being no color, 255 full Green).
+    */
+    getGreen: function (color) {
+        return color >> 8 & 0xFF;
+    },
+
+    /**
+    * Given a native color value (in the format 0xAARRGGBB) this will return the Blue component, as a value between 0 and 255.
+    *
+    * @method Phaser.Color.getBlue
+    * @param {number} color - In the format 0xAARRGGBB.
+    * @returns {number} The Blue component of the color, will be between 0 and 255 (0 being no color, 255 full Blue).
+    */
+    getBlue: function (color) {
+        return color & 0xFF;
+    }
+	
+};
+</pre>
+        </article>
+    </section>
+
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+					
+					
+		<span class="copyright">
+		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		</span>
+					<br />
+					
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a>
+		on Wed Oct 23 2013 13:51:58 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+			
+			<br clear="both">
+		</div>
+
+	</div>
+	<script src="scripts/sunlight.js"></script>
+	<script src="scripts/sunlight.javascript.js"></script>
+	<script src="scripts/sunlight-plugin.doclinks.js"></script>
+	<script src="scripts/sunlight-plugin.linenumbers.js"></script>
+	<script src="scripts/sunlight-plugin.menu.js"></script>
+	<script src="scripts/jquery.min.js"></script>
+	<script src="scripts/jquery.scrollTo.js"></script>
+	<script src="scripts/jquery.localScroll.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+
+	<script>  Sunlight.highlightAll({lineNumbers:true,  showMenu: true, enableDoclinks :true}); </script>
+
+	<script>
+		$( function () {
+			$( "#toc" ).toc( {
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : 60
+			} );
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+
+		} );
+	</script>
+
+	
+
+</body>
+</html>
