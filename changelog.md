@@ -1,7 +1,81 @@
 Change Log
 ----------
 
-V0.9.8
+Version 1.0.6 (September 24th 2013)
+
+* Added check into Pointer.move to always consider a Sprite that has pixelPerfect enabled, regardless of render ID.
+* BUG: The pixel perfect click check doesn't work if the sprite is part of a texture atlas yet.
+* Fixed issue with anti-alias in the Game constructor not being set correctly (thanks luizbills)
+* Added support for the Graphics game object back in and two examples (thanks earok for spotting)
+* New: Tweens can now be chained via multiple to() calls + example created (thanks to powerfear for adding)
+* Fixed Math.wrap (thanks TheJare)
+* New: When loading a Sprite Sheet you can now pass negative values for the frame sizes which specifies the number of rows/columns to load instead (thanks TheJare)
+* New: BitmapText now supports anchor and has fixed box dimensions (thanks TheJare)
+* Fixed bug where if a State contains an empty Preloader the Update will not be called (thanks TheJare)
+* Several new examples added (cameras, tweens, etc)
+* Added in extra checks to halt collision if it involves an empty Group (thanks cang)
+* Added time smoothing to Animation update to help frames hopefully not get too out of sync during long animations with high frame rates.
+* Added frame skip to Animation.update. If it gets too far behind it will now skip frames to try and catch up.
+
+Version 1.0.5 (September 20th 2013)
+
+* Fixed issue in FrameData.getFrameIndexes where the input array was being ignored.
+* Added Math.numberArray - Returns an Array containing the numbers from min to max (inclusive), useful for animation frame construction.
+* Fixed a horrendously sneaky bug: If a new tween was created in the onComplete callback of a tween about to be deleted, it would get automatically spliced.
+* Added a pendingDelete property to Tween to stop tweens that were removed during a callback from causing update errors during the TweenManager loop.
+* Added Group.length property.
+* Added explicit x/y attributes to Phaser.Text to make it work with the camera system (thanks cocoademon).
+* Fixed issue stopping multiple animations from playing, only the most recent would play (frames array was being overwritten, thanks Legrandk)
+* Updated Debug.renderSpriteBounds() so it doesn't use the deprecated Sprite.worldView any more (thanks MikeMnD)
+* Added 2 new properties to the Text object: Text.text and Text.style, both are getter/setters and don't flag dirty unless changed, so safe for core loop use.
+* Removed the exists check from Group.callAll, it now runs on all children (as the name implies)
+* Added Group.callAllExists - you can now call a function on all children who have exists = the provided boolean.
+* Finished off the Breakout example game - now fully playable, proper rebound, scoring, lives, etc.
+* Removed Group.sort dummy entry until it's working.
+* Removed ArcadePhysics.postUpdate.
+* Updated Sprite.update to set renderable to false when the object goes out of Camera, not 'visible' false, otherwise it stops the transform being updated by Pixi.
+* BUG: There is a known issue where the wrong rect coordinates are given to the QuadTree if the Sprite is a child of a Group or another Sprite which has an x/y offset.
+
+Version 1.0.4 (September 18th 2013)
+
+* Small fix to Phaser.Canvas to stop it from setting overflow hidden if the parent DOM element doesn't exist.
+* Added Loader.setPreloadSprite(sprite, direction) - this will automatically apply a crop rect to the Sprite which is updated in line with the load progress.
+* A lot of changes inside the StateManager. State functions are now passed through link() which automatically creates the key Game properties (load, input, etc)
+* Fixed a bug in getFrameByName that wouldn't return the first frame in the array.
+* Updated Phaser.Rectangle.intersects to use x and y instead of left and top so it can be used to check Physics bodies overlapping.
+* Fixed issue in Cache where the Frame index wasn't being set correctly (thanks Cameron)
+* Fixed issue in Sprite where boundsY wasn't set (thanks Cameron)
+* For some reason there were 2 copies of the Canvas class in the build file - fixed, a few KB saved :)
+
+Version 1.0.3 (September 17th 2013)
+
+* FrameData.getFrameIndexes and getFrameIndexesByName refactored into a more versatile getFrames function.
+* Various fixes to looping parameters in the Sound system.
+* Documentation started across most classes. Keep track of progress in the Docs folder.
+* Optimised AnimationManager.add so it will only get the required frames rather than all of them and is now faster at parsing the frame data.
+* Fixed Phaser.Text and Phaser.BitmapText so they now render correctly and added several Text examples.
+
+Version 1.0.2 (September 16th 2013)
+
+* Added optional parameter to Animation.stop: resetFrame. If true the animation will be stopped and then the current frame reset to the first frame in the animation.
+* Fixed an issue causing 'explode' particle bursts to ignore the quantity parameter.
+* Added 'collideWorldBounds' to Emitter.makeParticles function.
+* Added Emitter.angularDrag
+* Changed Emitter.bounce from a number to a Point, so now set its x/y properties to control different amounts of bounce per axis.
+* Fixed a bug in the AnimationManager where useNumericIndex was always set to true
+* Added in lots of Particle examples
+* Added in the start of a Breakout game
+* Added in the start of a Platformer game
+
+Version 1.0.1 (September 15th 2013)
+
+* Added checks into every Group function to ensure that the Group has children before running them.
+* Added optional flag to Group.create which allows you to set the default exists state of the Sprites.
+* Sprite.animation.stop no longer needs an animation name parameter, will default to stopping the current animation.
+* Fixed the license in package.json
+* Fixed a logic bug in the separateTileX function that would sometimes cause tunneling of big sprites through small tiles.
+
+Version 0.9.8
 
 * Massive refactoring across the entire codebase.
 * Removed Basic and GameObject and put Sprite on a diet. 127 properties and methods cut down to 32.
@@ -109,7 +183,7 @@ V0.9.8
 * Added CanvasUtils class, including ability to set image rendering, add a canvas to the dom and other handy things.
 
 
-V0.9.6
+Version 0.9.6
 
 * Virtually every class now has documentation - if you spot a typo or something missing please shout (thanks pixelpicosean).
 * Grunt file updated to produce the new Special FX JS file (thanks HackManiac).
@@ -197,7 +271,7 @@ V0.9.6
 * Added the GameObjectFactory to Phaser.State
 * Added new format parameter to Loader.addTextureAtlas defining the format. Currently supported: JSON Array and Starling/Sparrow XML.
 
-V0.9.5
+Version 0.9.5
 
 * Moved the BootScreen and PauseScreen out of Stage into their own classes (system/screens/BootScreen and PauseScreen).
 * Updated the PauseScreen to show a subtle animation effect, making it easier to create your own interesting pause screens.
@@ -231,7 +305,7 @@ V0.9.5
 * Added fun new "map draw" test - rebound those carrots! :)
 * Changed SoundManager class to respect volume on first play (thanks initials and hackmaniac)
 
-V0.9.4
+Version 0.9.4
 
 * Added Tilemap.getTile, getTileFromWorldXY, getTileFromInputXY
 * Added Tilemap.setCollisionByIndex and setCollisionByRange
@@ -261,7 +335,7 @@ V0.9.3
 * Removed the need for DynamicTextures to require a key property and updated test cases.
 * You can now pass an array or a single value to Input.Keyboard.addKeyCapture().
 
-V0.9.2
+Version 0.9.2
 
 * Fixed issue with create not being called if there was an empty init method.
 * Added ability to flip a sprite (Sprite.flipped = true) + a test case for it.
@@ -269,7 +343,7 @@ V0.9.2
 * Sprite animations don't restart if you call play on them when they are already running.
 * Added Stage.disablePauseScreen. Set to true to stop your game pausing when the tab loses focus.
 
-V0.9.1
+Version 0.9.1
 
 * Added the new align property to GameObjects that controls placement when rendering.
 * Added an align example to the Sprites test group (click the mouse to change alignment position)
@@ -279,7 +353,7 @@ for new collision system.
 * Game.Input now has 2 signals you can subscribe to for down/up events, see the Sprite align example for use.
 * Updated the States examples to bring in-line with 0.9 release.
 
-V0.9
+Version 0.9
 
 * Large refactoring. Everything now lives inside the Phaser module, so all code and all tests have been updated to reflect this. Makes coding a tiny bit more verbose but stops the framework from globbing up the global namespace. Also should make code-insight work in WebStorm and similar editors.
 * Added the new GeomSprite object. This is a sprite that uses a geometry class for display (Circle, Rectangle, Point, Line). It's extremely flexible!
@@ -290,27 +364,27 @@ V0.9
 * Added new Motion class which contains lots of handy functions like 'moveTowardsObject', 'velocityFromAngle' and more.
 * Tween Manager added. You can now create tweens via Game.createTween (or for more control game.tweens). All the usual suspects are here: Bounce, * Elastic, Quintic, etc and it's hooked into the core game clock, so if your game pauses and resumes your tweens adjust accordingly.
 
-V0.8
+Version 0.8
 
 * Added ability to set Sprite frame by name (sprite.frameName), useful when you've loaded a Texture Atlas with filename values set rather than using frame indexes.
 * Updated texture atlas 4 demo to show this.
 * Fixed a bug that would cause a run-time error if you tried to create a sprite using an invalid texture key.
 * Added in DynamicTexture support and a test case for it.
 
-V0.7
+Version 0.7
 
 * Renamed FullScreen to StageScaleMode as it's much more fitting. Tested across Android and iOS with the various scale modes.
 * Added in world x/y coordinates to the input class, and the ability to get world x/y input coordinates from any Camera.
 * Added the RandomDataGenerator for seeded random number generation.
 * Setting the game world size now resizes the default camera (optional bool flag)
 
-V0.6
+Version 0.6
 
 * Added in Touch support for mobile devices (and desktops that enable it) and populated x/y coords in Input with common values from touch and mouse.
 * Added new Circle geometry class (used by Touch) and moved them into a Geom folder.
 * Added in Device class for device inspection.
 * Added FullScreen class to enable full-screen support on mobile devices (scrolls URL bar out of the way on iOS and Android)
 
-V0.5
+Version 0.5
 
 * Initial release

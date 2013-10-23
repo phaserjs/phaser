@@ -34,9 +34,30 @@ ul.nav-links > li > a:hover{text-decoration: underline;}
 .phaser-examples{background: url('../../_site/images/phaser-examples.png') no-repeat; display: block; width: 485px; height: 205px; margin: 20px auto;}
 .phaser-version{float: right; background: url('../../_site/images/phaser-version.png') no-repeat; display: block; width: 345px; height: 30px; color: #fff; font-size: 11px; text-shadow: 1px 1px #000; right:0; top:0; }
 .phaser-version > span{margin-top: 10px; display: inline-block; margin-left: 60px; margin-right: 25px;}
-.phaser-version > a{color: #fff; text-decoration: none; background: url('../../_site/images/version-button.png') no-repeat; background-size: cover; display: inline-block; width: 123px; height: 10px; vertical-align: middle; text-align: center;padding-top:11px; padding-bottom: 11px}
+.phaser-version > a {color: #fff; text-decoration: none; background: url('../../_site/images/version-button.png') no-repeat; background-size: cover; display: inline-block; width: 123px; height: 10px; vertical-align: middle; text-align: center;padding-top:11px; padding-bottom: 11px}
 .phaser-version > a:hover{text-decoration: underline;}
 .phaser-logo{display: block; float: right; width: 168px;height: 144px; background: url('../../_site/images/phaser-logo.png') no-repeat; margin-top: 40px; margin-right: 40px;}
+
+#upgrade {
+  display: none;
+}
+
+#welcome {
+  position: absolute;
+  top: 260px;
+  left: 40%;
+  width: 200px;
+  line-height: 28px;
+}
+
+#welcome p {
+  text-align: center;
+  text-shadow: 1px 1px 0 #fff;
+}
+
+#welcome a {
+  color: #7a50c4;
+}
 
 .error { margin-left: 48px; width: 700px; background-color: rgb(150,25,25); color:#fff; text-shadow: 1px 1px 0 #000; line-height: 24px }
 

@@ -5,13 +5,19 @@ $(document).ready(function(){
 	.done(function(data) {
 
 		var i = 0;
+		var t = 0;
 		var len = 0;
 		var node = '';
 		var laser = '';
 
 		$.each(data, function(dir, files)
 		{
-			len = files.length / 4;
+			len = Math.floor(files.length / 4) + 1;
+
+			if ((files.length / 4) % 1 == 0)
+			{
+				len--;
+			}
 
 			if (len > 9)
 			{
@@ -19,7 +25,7 @@ $(document).ready(function(){
 			}
 			else
 			{
-				laser = 'laser' + (len + 1);
+				laser = 'laser' + len;
 			}
 
 			if (i == 1)
@@ -38,6 +44,7 @@ $(document).ready(function(){
 			for (var e = 0; e < files.length; e++)
 			{
 				node += '<li><a href="_site/view_full.html?d=' + dir + '&amp;f=' + files[e].file + '&amp;t=' + files[e].title + '">' + files[e].title + '</a></li>';
+	            t++;
 			}
 
 			node += '</ul></div>';
@@ -52,6 +59,8 @@ $(document).ready(function(){
             }
 
 		});
+
+		$("#total").append(t);
 
 	})
 
@@ -71,6 +80,18 @@ $(document).ready(function(){
 		node += '</div>';
 
 		$("#examples-list").append(node);
+
+	});
+
+	$.getJSON("http://phaser.io/version.json")
+
+	.done(function(data) {
+
+		if (data.version !== '1.1')
+		{
+			$("#upgrade").append(data.version);
+			$("#upgrade").css('display', 'inline-block');
+		}
 
 	});
 

@@ -55,40 +55,55 @@
         return $result; 
     } 
 
-    function printJSLinks($dir, $files, $target) {
+    function printJSLinks($dir, $files) {
 
         $output = "";
 
         foreach ($files as $key => $value)
         {
             $value2 = substr($value, 0, -3);
-            $dir = urlencode($dir);
             $file = urlencode($value);
-            $title = urlencode($value2);
 
-            if ($target == 'viewer')
-            {
-                $output .= "          <a href=\"view_lite.php?d=$dir&amp;f=$file&amp;t=$title\" target=\"viewer\">$value2</a></br>\n";
-            }
-            else if ($target == 'json')
-            {
-                $output .= "    { \"file\": \"$file\", \"title\": \"$value2\" },\n";
-            }
-            else
-            {
-                $output .= "          <li><a href=\"view_full.php?d=$dir&amp;f=$file&amp;t=$title\">$value2</a></li>\n";
-            }
-        }
-
-        if ($target == 'json')
-        {
-            $output = rtrim($output);
-            $output = substr($output, 0, -1);
-            $output .= "\n";
+            $output .= "<a href=\"wip/index.php?f=$file\">$value2</a><br />";
         }
 
         return $output;
 
     }
-
 ?>
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>phaser</title>
+        <base href="../"></base>
+        <?php
+            require('../../build/config.php');
+
+            if (isset($_GET['f']))
+            {
+                $f = $_GET['f'];
+        ?>
+        <script src="wip/<?php echo $f?>" type="text/javascript"></script>
+        <?php
+            }
+        ?>
+        <style>
+            body {
+                font-family: Arial;
+                font-size: 14px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div id="phaser-example"></div>
+
+        <h2>work in progress examples</h2>
+
+        <?php
+            echo printJSLinks('wip', $files);
+        ?>
+
+    </body>
+</html>

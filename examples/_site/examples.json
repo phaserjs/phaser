@@ -1,4 +1,13 @@
 {
+"basics": [
+    { "file": "01+-+load+an+image.js", "title": "01 - load an image" }
+],
+"games": [
+    { "file": "breakout.js", "title": "breakout" },
+    { "file": "invaders.js", "title": "invaders" },
+    { "file": "starstruck.js", "title": "starstruck" },
+    { "file": "tanks.js", "title": "tanks" }
+],
 "animation": [
     { "file": "change+texture+on+click.js", "title": "change texture on click" },
     { "file": "local+json+object.js", "title": "local json object" },
@@ -39,12 +48,6 @@
     { "file": "fullscreen.js", "title": "fullscreen" },
     { "file": "graphics.js", "title": "graphics" },
     { "file": "render+crisp.js", "title": "render crisp" }
-],
-"games": [
-    { "file": "breakout.js", "title": "breakout" },
-    { "file": "invaders.js", "title": "invaders" },
-    { "file": "starstruck.js", "title": "starstruck" },
-    { "file": "tanks.js", "title": "tanks" }
 ],
 "geometry": [
     { "file": "circle.js", "title": "circle" },
@@ -131,8 +134,8 @@
     { "file": "collide+world+bounds.js", "title": "collide world bounds" },
     { "file": "destroy.js", "title": "destroy" },
     { "file": "dynamic+crop.js", "title": "dynamic crop" },
-    { "file": "extending+sprite+object+demo+2.js", "title": "extending sprite object demo 2" },
-    { "file": "extending+sprite+object.js", "title": "extending sprite object" },
+    { "file": "extending+sprite+demo+1.js", "title": "extending sprite demo 1" },
+    { "file": "extending+sprite+demo+2.js", "title": "extending sprite demo 2" },
     { "file": "horizontal+crop.js", "title": "horizontal crop" },
     { "file": "move+a+sprite.js", "title": "move a sprite" },
     { "file": "out+of+bounds.js", "title": "out of bounds" },

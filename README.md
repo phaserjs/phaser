@@ -1,11 +1,11 @@
 ![Phaser Logo](http://www.photonstorm.com/wp-content/uploads/2013/09/phaser_10_release.jpg)
 
-Phaser 1.0
+Phaser 1.1
 ==========
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 1.0.6 - Released: September 24th 2013
+Version: 1.1 - Released: October 24th 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -22,24 +22,26 @@ Try out the [Phaser Test Suite](http://gametest.mobi/phaser/)
 Welcome to Phaser
 -----------------
 
-We're very pleased to have finally shipped the 1.0 release of Phaser. This version represents many months of hard work, feedback and refactoring based on the previous 0.5 through to 0.97 releases. You can see the full gory details in our change log.
+It's staggering to think just how much has been achieved in the short time the 1.0 branch of Phaser has been available. We've seen literally hundreds of bug fixes and updates. Exciting new features and enhancements have been merged into the core library thanks to contributions from the community. We also completely overhauled the Examples Suite, removed the requirement for PHP, rebuilt it in html+js and filled it with over 150 examples to dig in to and learn from. And more importantly we've got our first pass at the API docs online and ready too.
 
-Sorry but the jsdocs aren't yet finished, but it is now our priority (along with bug fixing). If you run into problems, or just want to chat about how to best use Phaser then please do join our forums. It's an active and inspiring community.
+There is still more to be done of course. The API docs, while a good start, still need to be backed up with a proper comprehensive manual. And we desperately need to write some 'best practises' and 'getting started' tutorials. But at least now you don't have to flounder around in the dark and can turn to the examples and docs.
 
-Now 1.0 is released we'll focus on getting the docs and more examples completed. Both of these will be pushed to the master repo on a regular basis. We will tag new releases of Phaser, but changes to the examples or docs won't be release tagged.
+There are so many exciting new features and tweaks in this build that we felt it warranted a proper full point release: 1.1. A few things have also changed, so games that were in development in the 1.0 version may need refactoring for 1.1, but we feel those changes have benefitted the framework as a whole.
 
-Thank you to everyone who has encouraged us along the way. To those of you who worked with Phaser during its various incarnations, and who released full games with it despite there being zero API documentation available: you are our heroes. It's your kind words and enthusiasm, as well as our commercial need for Phaser that has kept us going. Now we're at 1.0 we will continue releasing rapidly and jumping on patches and bug reports quickly.
+As before "Thank you!" to everyone who has encouraged us along the way. To those of you who worked with Phaser during its various incarnations, and who released full games with it despite there being zero API documentation available: you are our heroes. It's your kind words and enthusiasm, as well as our commercial need for Phaser that has kept us going.
 
-Phaser is everything we ever wanted from an HTML5 game framework. It will power all our client work going forward and we look forward to you joining us on this journey.
+Phaser is everything we ever wanted from an HTML5 game framework. It powers all of our client work in build today and remains our single most important product, and we've only just scratched the surface of what we have planned for it.
 
 ![Blasteroids](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_blaster.png)
+(swap for tanks)
 
 Change Log
 ----------
 
-Version 1.1 (in progress in the dev branch)
+Version 1.1
 
 * JSDoc is go! We've added jsdoc3 blocks to every property and function, in every file.
+* Brand new Example system (no more php!) and over 150 examples to learn from too.
 * Added World.postUpdate - all sprite position changes, as a result of physics, happen here before the render.
 * Complete overhaul of Physics.Arcade.Body - now significantly more stable and faster too.
 * Updated ArcadePhysics.separateX/Y to use new body system - much better results now.
@@ -133,94 +135,17 @@ Version 1.1 (in progress in the dev branch)
 * You can now null a Sprite.crop and it will clear down the crop rect area correctly.
 * The default Game.antialias value is now 'true', so graphics will be smoothed automatically in canvas. Disable it via the Game constructor or Canvas utils.
 
+Outstanding Tasks
+-----------------
 
-
-
-
-
-
+* BUG: The pixel perfect click check doesn't work if the sprite is part of a texture atlas yet.
 * TODO: look at Sprite.crop (http://www.html5gamedevs.com/topic/1617-error-in-spritecrop/)
 * TODO: d-pad example (http://www.html5gamedevs.com/topic/1574-gameinputondown-question/)
 * TODO: more touch input examples (http://www.html5gamedevs.com/topic/1556-mobile-touch-event/)
-* TODO: addMarker hh:mm:ss:ms
+* TODO: Sound.addMarker hh:mm:ss:ms
 * TODO: swap state (non-destructive shift)
 * TODO: rotation offset
 * TODO: check stage bgc on droid (http://www.html5gamedevs.com/topic/1629-stage-background-color-not-working-on-android-chrome/)
-
-
-Version 1.0.6 (September 24th 2013)
-
-* Added check into Pointer.move to always consider a Sprite that has pixelPerfect enabled, regardless of render ID.
-* BUG: The pixel perfect click check doesn't work if the sprite is part of a texture atlas yet.
-* Fixed issue with anti-alias in the Game constructor not being set correctly (thanks luizbills)
-* Added support for the Graphics game object back in and two examples (thanks earok for spotting)
-* New: Tweens can now be chained via multiple to() calls + example created (thanks to powerfear for adding)
-* Fixed Math.wrap (thanks TheJare)
-* New: When loading a Sprite Sheet you can now pass negative values for the frame sizes which specifies the number of rows/columns to load instead (thanks TheJare)
-* New: BitmapText now supports anchor and has fixed box dimensions (thanks TheJare)
-* Fixed bug where if a State contains an empty Preloader the Update will not be called (thanks TheJare)
-* Several new examples added (cameras, tweens, etc)
-* Added in extra checks to halt collision if it involves an empty Group (thanks cang)
-* Added time smoothing to Animation update to help frames hopefully not get too out of sync during long animations with high frame rates.
-* Added frame skip to Animation.update. If it gets too far behind it will now skip frames to try and catch up.
-
-Version 1.0.5 (September 20th 2013)
-
-* Fixed issue in FrameData.getFrameIndexes where the input array was being ignored.
-* Added Math.numberArray - Returns an Array containing the numbers from min to max (inclusive), useful for animation frame construction.
-* Fixed a horrendously sneaky bug: If a new tween was created in the onComplete callback of a tween about to be deleted, it would get automatically spliced.
-* Added a pendingDelete property to Tween to stop tweens that were removed during a callback from causing update errors during the TweenManager loop.
-* Added Group.length property.
-* Added explicit x/y attributes to Phaser.Text to make it work with the camera system (thanks cocoademon).
-* Fixed issue stopping multiple animations from playing, only the most recent would play (frames array was being overwritten, thanks Legrandk)
-* Updated Debug.renderSpriteBounds() so it doesn't use the deprecated Sprite.worldView any more (thanks MikeMnD)
-* Added 2 new properties to the Text object: Text.text and Text.style, both are getter/setters and don't flag dirty unless changed, so safe for core loop use.
-* Removed the exists check from Group.callAll, it now runs on all children (as the name implies)
-* Added Group.callAllExists - you can now call a function on all children who have exists = the provided boolean.
-* Finished off the Breakout example game - now fully playable, proper rebound, scoring, lives, etc.
-* Removed Group.sort dummy entry until it's working.
-* Removed ArcadePhysics.postUpdate.
-* Updated Sprite.update to set renderable to false when the object goes out of Camera, not 'visible' false, otherwise it stops the transform being updated by Pixi.
-* BUG: There is a known issue where the wrong rect coordinates are given to the QuadTree if the Sprite is a child of a Group or another Sprite which has an x/y offset.
-
-Version 1.0.4 (September 18th 2013)
-
-* Small fix to Phaser.Canvas to stop it from setting overflow hidden if the parent DOM element doesn't exist.
-* Added Loader.setPreloadSprite(sprite, direction) - this will automatically apply a crop rect to the Sprite which is updated in line with the load progress.
-* A lot of changes inside the StateManager. State functions are now passed through link() which automatically creates the key Game properties (load, input, etc)
-* Fixed a bug in getFrameByName that wouldn't return the first frame in the array.
-* Updated Phaser.Rectangle.intersects to use x and y instead of left and top so it can be used to check Physics bodies overlapping.
-* Fixed issue in Cache where the Frame index wasn't being set correctly (thanks Cameron)
-* Fixed issue in Sprite where boundsY wasn't set (thanks Cameron)
-* For some reason there were 2 copies of the Canvas class in the build file - fixed, a few KB saved :)
-
-Version 1.0.3 (September 17th 2013)
-
-* FrameData.getFrameIndexes and getFrameIndexesByName refactored into a more versatile getFrames function.
-* Various fixes to looping parameters in the Sound system.
-* Documentation started across most classes. Keep track of progress in the Docs folder.
-* Optimised AnimationManager.add so it will only get the required frames rather than all of them and is now faster at parsing the frame data.
-* Fixed Phaser.Text and Phaser.BitmapText so they now render correctly and added several Text examples.
-
-Version 1.0.2 (September 16th 2013)
-
-* Added optional parameter to Animation.stop: resetFrame. If true the animation will be stopped and then the current frame reset to the first frame in the animation.
-* Fixed an issue causing 'explode' particle bursts to ignore the quantity parameter.
-* Added 'collideWorldBounds' to Emitter.makeParticles function.
-* Added Emitter.angularDrag
-* Changed Emitter.bounce from a number to a Point, so now set its x/y properties to control different amounts of bounce per axis.
-* Fixed a bug in the AnimationManager where useNumericIndex was always set to true
-* Added in lots of Particle examples
-* Added in the start of a Breakout game
-* Added in the start of a Platformer game
-
-Version 1.0.1 (September 15th 2013)
-
-* Added checks into every Group function to ensure that the Group has children before running them.
-* Added optional flag to Group.create which allows you to set the default exists state of the Sprites.
-* Sprite.animation.stop no longer needs an animation name parameter, will default to stopping the current animation.
-* Fixed the license in package.json
-* Fixed a logic bug in the separateTileX function that would sometimes cause tunneling of big sprites through small tiles.
 
 Requirements
 ------------
