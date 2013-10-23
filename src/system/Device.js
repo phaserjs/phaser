@@ -324,6 +324,16 @@ Phaser.Device.prototype = {
         this.file = !!window['File'] && !!window['FileReader'] && !!window['FileList'] && !!window['Blob'];
         this.fileSystem = !!window['requestFileSystem'];
         this.webGL = ( function () { try { var canvas = document.createElement( 'canvas' ); return !! window.WebGLRenderingContext && ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ); } catch( e ) { return false; } } )();
+
+        if (this.webGL === null)
+        {
+            this.webGL = false;
+        }
+        else
+        {
+            this.webGL = true;
+        }
+
         this.worker = !!window['Worker'];
         
         if ('ontouchstart' in document.documentElement || window.navigator.msPointerEnabled) {

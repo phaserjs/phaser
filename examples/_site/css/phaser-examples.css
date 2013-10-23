@@ -166,7 +166,7 @@ ul.right-controls > li{margin:0;padding:0; display: inline-block; vertical-align
 .reset-button{width: 121px; height:52px; display:inline-block; background: url('../../_site/images/reset-button.png') no-repeat;}
 .pause-button:hover, .mute-button:hover, .reset-button:hover{cursor: pointer;}
 .filler{height: 720px;}
-.code-block{font-family: Courier; font-size: 12px; width:750px; height:auto; overflow: scroll; margin:0 auto; border-radius: 10px; background:#fdfdfd; border:0 !important; box-shadow: inset 0 5px 15px rgba(0,0,0,0.15), 0 0 10px rgba(106,200,248,0.5); padding: 25px !important;display: block; margin-bottom: 20px; margin-top: 30px;}
+.code-block{font-family: Courier; font-size: 12px; color: #fff; width:750px; height:auto; overflow: scroll; margin:0 auto; border-radius: 10px; background:#fdfdfd; border:0 !important; box-shadow: inset 0 5px 15px rgba(0,0,0,0.15), 0 0 10px rgba(106,200,248,0.5); padding: 25px !important;display: block; margin-bottom: 20px; margin-top: 30px;}
 .px800{width:800px; clear:both; display: block; margin:0 auto; line-height: 1.5em;}
 .gradient p{color:#333;}
 
