@@ -137,7 +137,8 @@ Version 1.1
 * The default Game.antialias value is now 'true', so graphics will be smoothed automatically in canvas. Disable it via the Game constructor or Canvas utils.
 * Added Physics.overlap(sprite1, sprite2) for quick body vs. body overlap tests with no separation performed.
 * Fixed Issue 111 - calling Kill on a Phaser.Graphics instance causes error on undefined events.
-
+* Phaser.Group now automatically calls updateTransform on any child added to it (avoids temp. frame glitches when new objects are rendered on their first frame).
+* Phaser.Time physicsElapsed delta timer clamp added. Stops rogue iOS / slow mobile timer errors causing crazy high deltas.
 
 
 Outstanding Tasks

@@ -202,6 +202,12 @@ Phaser.Time.prototype = {
         this.lastTime = time + this.timeToCall;
 		this.physicsElapsed = 1.0 * (this.elapsed / 1000);
 
+		//	Clamp the delta
+		if (this.physicsElapsed > 1)
+		{
+			this.physicsElapsed = 1;
+		}
+
 		//  Paused?
 		if (this.game.paused)
 		{

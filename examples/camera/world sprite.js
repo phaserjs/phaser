@@ -3,8 +3,6 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-    game.world.setBounds(0, 0, 1920, 1200);
-
     game.load.image('backdrop', 'assets/pics/remember-me.jpg');
     game.load.image('card', 'assets/sprites/mana_card.png');
 
@@ -14,6 +12,8 @@ var card;
 var Keys = Phaser.Keyboard;
 
 function create() {
+
+    game.world.setBounds(0, 0, 1920, 1200);
 
     game.add.sprite(0, 0, 'backdrop');
 

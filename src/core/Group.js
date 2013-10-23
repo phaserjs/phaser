@@ -50,15 +50,18 @@ Phaser.Group = function (game, parent, name, useStage) {
 			if (parent instanceof Phaser.Group)
 			{
 				parent._container.addChild(this._container);
+				parent._container.updateTransform();
 			}
 			else
 			{
 				parent.addChild(this._container);
+				parent.updateTransform();
 			}
 		}
 		else
 		{
 			this.game.stage._stage.addChild(this._container);
+			this.game.stage._stage.updateTransform();
 		}
 	}
 
@@ -106,6 +109,8 @@ Phaser.Group.prototype = {
 			}
 
 			this._container.addChild(child);
+
+			child.updateTransform();
 		}
 
 		return child;
@@ -133,6 +138,8 @@ Phaser.Group.prototype = {
 			}
 
 			this._container.addChildAt(child, index);
+
+			child.updateTransform();
 		}
 
 		return child;
@@ -182,6 +189,8 @@ Phaser.Group.prototype = {
 		}
 
 		this._container.addChild(child);
+			
+		child.updateTransform();
 
 		return child;
 
@@ -217,6 +226,8 @@ Phaser.Group.prototype = {
 			}
 
 			this._container.addChild(child);
+			child.updateTransform();
+
 		}
 
 	},
@@ -408,6 +419,7 @@ Phaser.Group.prototype = {
 			this._container.removeChild(oldChild);
 			this._container.addChildAt(newChild, index);
 			newChild.events.onAddedToGroup.dispatch(newChild, this);
+			newChild.updateTransform();
 		}
 
 	},
