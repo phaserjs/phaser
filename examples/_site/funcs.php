@@ -1,5 +1,4 @@
 <?php
-
     //  Global
     $files = dirToArray(dirname(__FILE__));
     $total = 0;
@@ -33,7 +32,7 @@
 
     function dirToArray($dir) { 
 
-        $ignore = array('.', '..', 'html', 'assets', 'states');
+        $ignore = array('.', '..', '_site', 'assets', 'states');
         $result = array(); 
         $root = scandir($dir); 
         $dirs = array_diff($root, $ignore);

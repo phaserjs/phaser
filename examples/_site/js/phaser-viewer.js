@@ -10,13 +10,37 @@ $(document).ready(function(){
 
 	$.getScript(dir + "/" + file)
 
-	.done(function(script, textStatus){
+	.done(function(script, textStatus) {
 
-		// $.get(dir + "/" + file, function(data) {
-		// 	console.log(typeof data);
-		// 	console.log(data);
-			// $("#sourcecode").text(data);
-		// });
+		$.ajax({ url: dir + "/" + file, dataType: "text" }).done(function(data) { $("#sourcecode").text(data); });
+
+		//	Hook up the control panel
+
+		$(".pause-button").click(function() {
+			if (game.paused)
+			{
+				game.paused = false;
+			}
+			else
+			{
+				game.paused = true;
+			}
+		});
+
+		$(".mute-button").click(function() {
+			if (game.sound.mute)
+			{
+				game.sound.mute = false;
+			}
+			else
+			{
+				game.sound.mute = true;
+			}
+		});
+
+		$(".reset-button").click(function() {
+			document.location.reload(true);
+		});
 
   	})
 
