@@ -11,6 +11,7 @@ $(document).ready(function(){
 
 		directories.splice(directories.indexOf('basics'), 1);
 		directories.splice(directories.indexOf('games'), 1);
+		directories.sort();
 		directories.unshift('basics', 'games');
 
 		directories.forEach(function(dir)
