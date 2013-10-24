@@ -7,8 +7,15 @@ $(document).ready(function(){
 		var i = 0;
 		var node = '';
 
-		$.each(data, function(dir, files)
+		var directories = Object.keys(data);
+
+		directories.splice(directories.indexOf('basics'), 1);
+		directories.splice(directories.indexOf('games'), 1);
+		directories.unshift('basics', 'games');
+
+		directories.forEach(function(dir)
 		{
+			var files = data[dir];
 			node = '<h2>' + dir + '</h2>';
 
 			for (var e = 0; e < files.length; e++)

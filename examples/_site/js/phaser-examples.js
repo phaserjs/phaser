@@ -10,8 +10,15 @@ $(document).ready(function(){
 		var node = '';
 		var laser = '';
 
-		$.each(data, function(dir, files)
+		var directories = Object.keys(data);
+
+		directories.splice(directories.indexOf('basics'), 1);
+		directories.splice(directories.indexOf('games'), 1);
+		directories.unshift('basics', 'games');
+
+		directories.forEach(function(dir)
 		{
+			var files = data[dir];
 			len = Math.floor(files.length / 4) + 1;
 
 			if ((files.length / 4) % 1 == 0)
@@ -75,7 +82,7 @@ $(document).ready(function(){
 		node += '<p>Did you open this html file locally?</p>';
 		node += '<p>It needs to be opened via a web server, or due to browser security permissions<br />it will be unable to load local resources such as images and json data.</p>';
 		node += '<p>Please see our <a href="#">Getting Started guide</a> for details.</p>';
-		
+
 		node += '</div>';
 		node += '</div>';
 
