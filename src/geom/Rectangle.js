@@ -104,6 +104,19 @@ Phaser.Rectangle.prototype = {
     },
  
     /**
+    * Runs Math.floor() on the x, y, width and height values of this Rectangle.
+    * @method Phaser.Rectangle#floorAll
+    **/
+    floorAll: function () {
+
+        this.x = Math.floor(this.x);
+        this.y = Math.floor(this.y);
+        this.width = Math.floor(this.width);
+        this.height = Math.floor(this.height);
+
+    },
+
+    /**
     * Copies the x, y, width and height properties from any given object to this Rectangle.
     * @method Phaser.Rectangle#copyFrom
     * @param {any} source - The object to copy from.

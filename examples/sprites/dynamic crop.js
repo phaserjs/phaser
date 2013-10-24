@@ -1,29 +1,35 @@
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
     game.load.image('trsi', 'assets/pics/trsipic1_lazur.jpg');
 }
 
-var r;
 var pic;
 
 function create() {
 
     pic = game.add.sprite(0, 0, 'trsi');
 
-    r = new Phaser.Rectangle(0, 0, 200, 200);
+    pic.cropEnabled = true;
+
+    pic.crop.width = 128;
+    pic.crop.height = 128;
 
 }
 
 function update() {
 
-    r.x = game.input.x;
-    r.y = game.input.y;
     pic.x = game.input.x;
     pic.y = game.input.y;
 
-    //  Apply the new crop Rectangle to the sprite
-    pic.crop = r;
+    pic.crop.x = game.input.x;
+    pic.crop.y = game.input.y;
+
+}
+
+function render() {
+
+    game.debug.renderText('x: ' + game.input.x + ' y: ' + game.input.y, 32, 32);
 
 }

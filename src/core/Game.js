@@ -426,6 +426,10 @@ Phaser.Game.prototype = {
     */
     destroy: function () {
 
+		this.raf.stop();
+
+    	this.input.destroy();
+
     	this.state.destroy();
 
         this.state = null;

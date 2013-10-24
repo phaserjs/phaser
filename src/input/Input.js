@@ -397,6 +397,19 @@ Phaser.Input.prototype = {
 
     },
 
+    /**
+    * Stops all of the Input Managers from running.
+    * @method Phaser.Input#destroy
+    */
+    destroy: function () {
+
+        this.mouse.stop();
+        this.keyboard.stop();
+        this.touch.stop();
+        this.mspointer.stop();
+
+    },
+
 	/**
     * Add a new Pointer object to the Input Manager. By default Input creates 3 pointer objects: mousePointer, pointer1 and pointer2.
     * If you need more then use this to create a new one, up to a maximum of 10.
@@ -681,28 +694,6 @@ Phaser.Input.prototype = {
 
         return null;
 
-    },
-
-	/**
-    * Get the distance between two Pointer objects.
-    * @method Phaser.Input#getDistance
-    * @param {Pointer} pointer1
-    * @param {Pointer} pointer2
-    * @return {Description} Description.
-    */
-    getDistance: function (pointer1, pointer2) {
-        // return Phaser.Vec2Utils.distance(pointer1.position, pointer2.position);
-    },
-
-	/**
-    * Get the angle between two Pointer objects.
-    * @method Phaser.Input#getAngle
-    * @param {Pointer} pointer1
-    * @param {Pointer} pointer2
-    * @return {Description} Description.
-    */
-    getAngle: function (pointer1, pointer2) {
-        // return Phaser.Vec2Utils.angle(pointer1.position, pointer2.position);
     }
 
 };

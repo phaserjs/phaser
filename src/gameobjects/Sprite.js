@@ -145,20 +145,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.anchor = new Phaser.Point();
 
     /**
-    * @property {Description} _cropUUID - Description.
-    * @private
-    * @default
-    */
-    this._cropUUID = null;
-    
-    /**
-    * @property {Description} _cropUUID - Description.
-    * @private
-    * @default
-    */
-    this._cropRect = null;
-
-    /**
     * @property {number} x - Description.
     */
     this.x = x;
@@ -225,7 +211,10 @@ Phaser.Sprite = function (game, x, y, key, frame) {
         boundsX: 0, boundsY: 0,
 
         //  If this sprite visible to the camera (regardless of being set to visible or not)
-        cameraVisible: true
+        cameraVisible: true,
+
+        //  Crop cache
+        cropX: 0, cropY: 0, cropWidth: this.currentFrame.sourceSizeW, cropHeight: this.currentFrame.sourceSizeH
 
     };
   
@@ -305,6 +294,9 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */
     this.fixedToCamera = false;
 
+    this.crop = new Phaser.Rectangle(0, 0, this._cache.width, this._cache.height);
+    this.cropEnabled = false;
+
 };
 
 //  Needed to keep the PIXI.Sprite constructor in the prototype chain (as the core pixi renderer uses an instanceof check sadly)
@@ -351,6 +343,11 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     this.updateCache();
     this.updateAnimation();
+
+    if (this.cropEnabled)
+    {
+        this.updateCrop();
+    }
 
     //  Re-run the camera visibility check
     if (this._cache.dirty)
@@ -433,6 +430,37 @@ Phaser.Sprite.prototype.updateAnimation = function() {
 
         this.updateBounds();
     }
+
+}
+
+Phaser.Sprite.prototype.updateCrop = function() {
+
+    //  This only runs if crop is enabled
+    if (this.crop.width != this._cache.cropWidth || this.crop.height != this._cache.cropHeight || this.crop.x != this._cache.cropX || this.crop.y != this._cache.cropY)
+    {
+        this.crop.floorAll();
+
+        this._cache.cropX = this.crop.x;
+        this._cache.cropY = this.crop.y;
+        this._cache.cropWidth = this.crop.width;
+        this._cache.cropHeight = this.crop.height;
+
+        this.texture.frame = this.crop;
+        this.texture.width = this.crop.width;
+        this.texture.height = this.crop.height;
+
+        this.texture.updateFrame = true;
+
+        PIXI.Texture.frameUpdates.push(this.texture);
+    }
+
+}
+
+Phaser.Sprite.prototype.resetCrop = function() {
+
+    this.crop = new Phaser.Rectangle(0, 0, this._cache.width, this._cache.height);
+    this.texture.setFrame(this.crop);
+    this.cropEnabled = false;
 
 }
 
@@ -586,9 +614,20 @@ Phaser.Sprite.prototype.destroy = function() {
         this.group.remove(this);
     }
 
-    this.input.destroy();
-    this.events.destroy();
-    this.animations.destroy();
+    if (this.input)
+    {
+        this.input.destroy();
+    }
+
+    if (this.events)
+    {
+        this.events.destroy();
+    }
+
+    if (this.animations)
+    {
+        this.animations.destroy();
+    }
 
     this.alive = false;
     this.exists = false;
@@ -847,56 +886,39 @@ Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
 });
 
 /**
-* Get the input enabled state of this Sprite.
-* @returns {Description}
-*//**
-* Set the ability for this sprite to receive input events.
-* @param {Description} value - Description
-*/
-Object.defineProperty(Phaser.Sprite.prototype, "crop", {
+ * The width of the sprite, setting this will actually modify the scale to acheive the value set
+ *
+ * @property width
+ * @type Number
+ */
+Object.defineProperty(Phaser.Sprite.prototype, 'width', {
 
-    get: function () {
-
-        return this._cropRect;
-
+    get: function() {
+        return this.scale.x * this.currentFrame.width;
     },
 
-    set: function (value) {
+    set: function(value) {
+        this.scale.x = value / this.currentFrame.width
+        this._width = value;
+    }
 
-        if (value instanceof Phaser.Rectangle)
-        {
-            if (this._cropUUID == null)
-            {
-                this._cropUUID = this.game.rnd.uuid();
+});
 
-                PIXI.TextureCache[this._cropUUID] = new PIXI.Texture(PIXI.BaseTextureCache[this.key], {
-                    x: Math.floor(value.x),
-                    y: Math.floor(value.y),
-                    width: Math.floor(value.width),
-                    height: Math.floor(value.height)
-                });
-            }
-            else
-            {
-                PIXI.TextureCache[this._cropUUID].frame = value;
-            }
+/**
+ * The height of the sprite, setting this will actually modify the scale to acheive the value set
+ *
+ * @property height
+ * @type Number
+ */
+Object.defineProperty(Phaser.Sprite.prototype, 'height', {
 
-            this._cropRect = value;
-            this.setTexture(PIXI.TextureCache[this._cropUUID]);
-        }
-        else
-        {
-            this._cropRect = null;
+    get: function() {
+        return  this.scale.y * this.currentFrame.height;
+    },
 
-            if (this.animations.isLoaded)
-            {
-                this.animations.refreshFrame();
-            }
-            else
-            {
-                this.setTexture(PIXI.TextureCache[this.key]);
-            }
-        }
+    set: function(value) {
+        this.scale.y = value / this.currentFrame.height
+        this._height = value;
     }
 
 });

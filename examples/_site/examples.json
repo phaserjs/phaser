@@ -1,632 +1,192 @@
 {
-  "animation": [
-    {
-      "file": "change+texture+on+click.js",
-      "title": "change texture on click"
-    },
-    {
-      "file": "local+json+object.js",
-      "title": "local json object"
-    },
-    {
-      "file": "looped+animation.js",
-      "title": "looped animation"
-    },
-    {
-      "file": "multiple+anims.js",
-      "title": "multiple anims"
-    },
-    {
-      "file": "sprite+sheet.js",
-      "title": "sprite sheet"
-    },
-    {
-      "file": "texture+packer+json+hash.js",
-      "title": "texture packer json hash"
-    }
-  ],
-  "audio": [
-    {
-      "file": "loop.js",
-      "title": "loop"
-    },
-    {
-      "file": "play+music.js",
-      "title": "play music"
-    }
-  ],
-  "basics": [
-    {
-      "file": "01+-+load+an+image.js",
-      "title": "01 - load an image"
-    }
-  ],
-  "buttons": [
-    {
-      "file": "action+on+click.js",
-      "title": "action on click"
-    },
-    {
-      "file": "changing+the+frames.js",
-      "title": "changing the frames"
-    },
-    {
-      "file": "rotated+buttons.js",
-      "title": "rotated buttons"
-    }
-  ],
-  "camera": [
-    {
-      "file": "basic+follow.js",
-      "title": "basic follow"
-    },
-    {
-      "file": "camera+cull.js",
-      "title": "camera cull"
-    },
-    {
-      "file": "follow+styles.js",
-      "title": "follow styles"
-    },
-    {
-      "file": "moving+the+camera.js",
-      "title": "moving the camera"
-    },
-    {
-      "file": "world+sprite.js",
-      "title": "world sprite"
-    }
-  ],
-  "collision": [
-    {
-      "file": "bounding+box.js",
-      "title": "bounding box"
-    },
-    {
-      "file": "group+vs+group.js",
-      "title": "group vs group"
-    },
-    {
-      "file": "larger+bounding+box.js",
-      "title": "larger bounding box"
-    },
-    {
-      "file": "offset+bounding+box.js",
-      "title": "offset bounding box"
-    },
-    {
-      "file": "sprite+tiles.js",
-      "title": "sprite tiles"
-    },
-    {
-      "file": "sprite+vs+group.js",
-      "title": "sprite vs group"
-    },
-    {
-      "file": "sprite+vs+sprite+custom.js",
-      "title": "sprite vs sprite custom"
-    },
-    {
-      "file": "sprite+vs+sprite.js",
-      "title": "sprite vs sprite"
-    },
-    {
-      "file": "transform.js",
-      "title": "transform"
-    },
-    {
-      "file": "vertical+collision.js",
-      "title": "vertical collision"
-    }
-  ],
-  "display": [
-    {
-      "file": "fullscreen.js",
-      "title": "fullscreen"
-    },
-    {
-      "file": "graphics.js",
-      "title": "graphics"
-    },
-    {
-      "file": "render+crisp.js",
-      "title": "render crisp"
-    }
-  ],
-  "games": [
-    {
-      "file": "breakout.js",
-      "title": "breakout"
-    },
-    {
-      "file": "invaders.js",
-      "title": "invaders"
-    },
-    {
-      "file": "starstruck.js",
-      "title": "starstruck"
-    },
-    {
-      "file": "tanks.js",
-      "title": "tanks"
-    }
-  ],
-  "geometry": [
-    {
-      "file": "circle.js",
-      "title": "circle"
-    },
-    {
-      "file": "line.js",
-      "title": "line"
-    },
-    {
-      "file": "playing+with+points.js",
-      "title": "playing with points"
-    },
-    {
-      "file": "rectangle.js",
-      "title": "rectangle"
-    },
-    {
-      "file": "rotate+point.js",
-      "title": "rotate point"
-    }
-  ],
-  "groups": [
-    {
-      "file": "add+a+sprite+to+group.js",
-      "title": "add a sprite to group"
-    },
-    {
-      "file": "bring+a+child+to+top.js",
-      "title": "bring a child to top"
-    },
-    {
-      "file": "bring+a+group+to+top.js",
-      "title": "bring a group to top"
-    },
-    {
-      "file": "call+all.js",
-      "title": "call all"
-    },
-    {
-      "file": "create+group.js",
-      "title": "create group"
-    },
-    {
-      "file": "create+sprite+in+a+group.js",
-      "title": "create sprite in a group"
-    },
-    {
-      "file": "display+order.js",
-      "title": "display order"
-    },
-    {
-      "file": "for+each.js",
-      "title": "for each"
-    },
-    {
-      "file": "get+first.js",
-      "title": "get first"
-    },
-    {
-      "file": "group+as+layer.js",
-      "title": "group as layer"
-    },
-    {
-      "file": "group+transform+-+rotate.js",
-      "title": "group transform - rotate"
-    },
-    {
-      "file": "group+transform+-+tween.js",
-      "title": "group transform - tween"
-    },
-    {
-      "file": "group+transform.js",
-      "title": "group transform"
-    },
-    {
-      "file": "recyling.js",
-      "title": "recyling"
-    },
-    {
-      "file": "remove.js",
-      "title": "remove"
-    },
-    {
-      "file": "replace.js",
-      "title": "replace"
-    },
-    {
-      "file": "set+All.js",
-      "title": "set All"
-    },
-    {
-      "file": "sub+groups+-+group+length.js",
-      "title": "sub groups - group length"
-    },
-    {
-      "file": "swap+children+in+a+group.js",
-      "title": "swap children in a group"
-    }
-  ],
-  "input": [
-    {
-      "file": "cursor+key+movement.js",
-      "title": "cursor key movement"
-    },
-    {
-      "file": "drag+several+sprites.js",
-      "title": "drag several sprites"
-    },
-    {
-      "file": "drag.js",
-      "title": "drag"
-    },
-    {
-      "file": "drop+limitation.js",
-      "title": "drop limitation"
-    },
-    {
-      "file": "follow+mouse.js",
-      "title": "follow mouse"
-    },
-    {
-      "file": "game+scale.js",
-      "title": "game scale"
-    },
-    {
-      "file": "key.js",
-      "title": "key"
-    },
-    {
-      "file": "keyboard+hotkeys.js",
-      "title": "keyboard hotkeys"
-    },
-    {
-      "file": "keyboard+justpressed.js",
-      "title": "keyboard justpressed"
-    },
-    {
-      "file": "keyboard.js",
-      "title": "keyboard"
-    },
-    {
-      "file": "motion+lock+-+horizontal.js",
-      "title": "motion lock - horizontal"
-    },
-    {
-      "file": "motion+lock+-+vertical.js",
-      "title": "motion lock - vertical"
-    },
-    {
-      "file": "multi+touch.js",
-      "title": "multi touch"
-    },
-    {
-      "file": "override+default+controls.js",
-      "title": "override default controls"
-    },
-    {
-      "file": "pixel+perfect+click+detection.js",
-      "title": "pixel perfect click detection"
-    },
-    {
-      "file": "pixelpick+-+scrolling+effect.js",
-      "title": "pixelpick - scrolling effect"
-    },
-    {
-      "file": "pixelpick+-+spritesheet.js",
-      "title": "pixelpick - spritesheet"
-    },
-    {
-      "file": "snap+on+drag.js",
-      "title": "snap on drag"
-    }
-  ],
-  "loader": [
-    {
-      "file": "pick+images+from+cache.js",
-      "title": "pick images from cache"
-    }
-  ],
-  "misc": [
-    {
-      "file": "net.js",
-      "title": "net"
-    },
-    {
-      "file": "random+generators.js",
-      "title": "random generators"
-    },
-    {
-      "file": "repeatable+random+numbers.js",
-      "title": "repeatable random numbers"
-    }
-  ],
-  "particles": [
-    {
-      "file": "click+burst.js",
-      "title": "click burst"
-    },
-    {
-      "file": "collision.js",
-      "title": "collision"
-    },
-    {
-      "file": "diamond+burst.js",
-      "title": "diamond burst"
-    },
-    {
-      "file": "no+rotation.js",
-      "title": "no rotation"
-    },
-    {
-      "file": "random+sprite.js",
-      "title": "random sprite"
-    },
-    {
-      "file": "when+particles+collide.js",
-      "title": "when particles collide"
-    },
-    {
-      "file": "zero+gravity.js",
-      "title": "zero gravity"
-    }
-  ],
-  "physics": [
-    {
-      "file": "accelerate+to+pointer.js",
-      "title": "accelerate to pointer"
-    },
-    {
-      "file": "angle+between.js",
-      "title": "angle between"
-    },
-    {
-      "file": "angle+to+pointer.js",
-      "title": "angle to pointer"
-    },
-    {
-      "file": "angular+acceleration.js",
-      "title": "angular acceleration"
-    },
-    {
-      "file": "angular+velocity.js",
-      "title": "angular velocity"
-    },
-    {
-      "file": "mass+velocity+test.js",
-      "title": "mass velocity test"
-    },
-    {
-      "file": "move+towards+object.js",
-      "title": "move towards object"
-    },
-    {
-      "file": "multi+angle+to+pointer.js",
-      "title": "multi angle to pointer"
-    },
-    {
-      "file": "quadtree+-+collision+infos.js",
-      "title": "quadtree - collision infos"
-    },
-    {
-      "file": "quadtree+-+ids.js",
-      "title": "quadtree - ids"
-    },
-    {
-      "file": "shoot+the+pointer.js",
-      "title": "shoot the pointer"
-    },
-    {
-      "file": "sprite+bounds.js",
-      "title": "sprite bounds"
-    }
-  ],
-  "sprites": [
-    {
-      "file": "add+a+sprite.js",
-      "title": "add a sprite"
-    },
-    {
-      "file": "add+several+sprites.js",
-      "title": "add several sprites"
-    },
-    {
-      "file": "collide+world+bounds.js",
-      "title": "collide world bounds"
-    },
-    {
-      "file": "destroy.js",
-      "title": "destroy"
-    },
-    {
-      "file": "dynamic+crop.js",
-      "title": "dynamic crop"
-    },
-    {
-      "file": "extending+sprite+demo+1.js",
-      "title": "extending sprite demo 1"
-    },
-    {
-      "file": "extending+sprite+demo+2.js",
-      "title": "extending sprite demo 2"
-    },
-    {
-      "file": "horizontal+crop.js",
-      "title": "horizontal crop"
-    },
-    {
-      "file": "move+a+sprite.js",
-      "title": "move a sprite"
-    },
-    {
-      "file": "out+of+bounds.js",
-      "title": "out of bounds"
-    },
-    {
-      "file": "scale+a+sprite.js",
-      "title": "scale a sprite"
-    },
-    {
-      "file": "shared+sprite+textures.js",
-      "title": "shared sprite textures"
-    },
-    {
-      "file": "sprite+rotation.js",
-      "title": "sprite rotation"
-    },
-    {
-      "file": "spritesheet.js",
-      "title": "spritesheet"
-    },
-    {
-      "file": "vertical+crop.js",
-      "title": "vertical crop"
-    }
-  ],
-  "text": [
-    {
-      "file": "bitmap+fonts.js",
-      "title": "bitmap fonts"
-    },
-    {
-      "file": "hello+arial.js",
-      "title": "hello arial"
-    },
-    {
-      "file": "kern+of+duty.js",
-      "title": "kern of duty"
-    },
-    {
-      "file": "remove+text.js",
-      "title": "remove text"
-    },
-    {
-      "file": "text+stroke.js",
-      "title": "text stroke"
-    }
-  ],
-  "tile sprites": [
-    {
-      "file": "animated+tiling+sprite.js",
-      "title": "animated tiling sprite"
-    },
-    {
-      "file": "tiling+sprite.js",
-      "title": "tiling sprite"
-    }
-  ],
-  "tilemaps": [
-    {
-      "file": "fill+tiles.js",
-      "title": "fill tiles"
-    },
-    {
-      "file": "mapcollide.js",
-      "title": "mapcollide"
-    },
-    {
-      "file": "mario.js",
-      "title": "mario"
-    },
-    {
-      "file": "mariotogether.js",
-      "title": "mariotogether"
-    },
-    {
-      "file": "paint+tiles.js",
-      "title": "paint tiles"
-    },
-    {
-      "file": "randomise+tiles.js",
-      "title": "randomise tiles"
-    },
-    {
-      "file": "replace+tiles.js",
-      "title": "replace tiles"
-    },
-    {
-      "file": "sci+fly.js",
-      "title": "sci fly"
-    },
-    {
-      "file": "supermario.js",
-      "title": "supermario"
-    },
-    {
-      "file": "supermario2.js",
-      "title": "supermario2"
-    },
-    {
-      "file": "swap+tiles.js",
-      "title": "swap tiles"
-    },
-    {
-      "file": "wip1.js",
-      "title": "wip1"
-    },
-    {
-      "file": "wip2.js",
-      "title": "wip2"
-    },
-    {
-      "file": "wip3.js",
-      "title": "wip3"
-    },
-    {
-      "file": "wip4.js",
-      "title": "wip4"
-    }
-  ],
-  "tweens": [
-    {
-      "file": "bounce.js",
-      "title": "bounce"
-    },
-    {
-      "file": "bubbles.js",
-      "title": "bubbles"
-    },
-    {
-      "file": "chained+tweens.js",
-      "title": "chained tweens"
-    },
-    {
-      "file": "combined+tweens.js",
-      "title": "combined tweens"
-    },
-    {
-      "file": "easing+spritesheets.js",
-      "title": "easing spritesheets"
-    },
-    {
-      "file": "easing.js",
-      "title": "easing"
-    },
-    {
-      "file": "fading+in+a+sprite.js",
-      "title": "fading in a sprite"
-    },
-    {
-      "file": "pause+tween.js",
-      "title": "pause tween"
-    },
-    {
-      "file": "tween+several+properties.js",
-      "title": "tween several properties"
-    }
-  ],
-  "world": [
-    {
-      "file": "fixed+to+camera.js",
-      "title": "fixed to camera"
-    },
-    {
-      "file": "move+around+world.js",
-      "title": "move around world"
-    }
-  ]
+"basics": [
+    { "file": "01+-+load+an+image.js", "title": "01 - load an image" }
+],
+"games": [
+    { "file": "breakout.js", "title": "breakout" },
+    { "file": "invaders.js", "title": "invaders" },
+    { "file": "starstruck.js", "title": "starstruck" },
+    { "file": "tanks.js", "title": "tanks" }
+],
+"animation": [
+    { "file": "change+texture+on+click.js", "title": "change texture on click" },
+    { "file": "local+json+object.js", "title": "local json object" },
+    { "file": "looped+animation.js", "title": "looped animation" },
+    { "file": "multiple+anims.js", "title": "multiple anims" },
+    { "file": "sprite+sheet.js", "title": "sprite sheet" },
+    { "file": "texture+packer+json+hash.js", "title": "texture packer json hash" }
+],
+"audio": [
+    { "file": "loop.js", "title": "loop" },
+    { "file": "pause+and+resume.js", "title": "pause and resume" },
+    { "file": "play+music.js", "title": "play music" }
+],
+"buttons": [
+    { "file": "action+on+click.js", "title": "action on click" },
+    { "file": "changing+the+frames.js", "title": "changing the frames" },
+    { "file": "rotated+buttons.js", "title": "rotated buttons" }
+],
+"camera": [
+    { "file": "basic+follow.js", "title": "basic follow" },
+    { "file": "camera+cull.js", "title": "camera cull" },
+    { "file": "follow+styles.js", "title": "follow styles" },
+    { "file": "moving+the+camera.js", "title": "moving the camera" },
+    { "file": "world+sprite.js", "title": "world sprite" }
+],
+"collision": [
+    { "file": "bounding+box.js", "title": "bounding box" },
+    { "file": "group+vs+group.js", "title": "group vs group" },
+    { "file": "larger+bounding+box.js", "title": "larger bounding box" },
+    { "file": "offset+bounding+box.js", "title": "offset bounding box" },
+    { "file": "sprite+tiles.js", "title": "sprite tiles" },
+    { "file": "sprite+vs+group.js", "title": "sprite vs group" },
+    { "file": "sprite+vs+sprite+custom.js", "title": "sprite vs sprite custom" },
+    { "file": "sprite+vs+sprite.js", "title": "sprite vs sprite" },
+    { "file": "transform.js", "title": "transform" },
+    { "file": "vertical+collision.js", "title": "vertical collision" }
+],
+"display": [
+    { "file": "fullscreen.js", "title": "fullscreen" },
+    { "file": "graphics.js", "title": "graphics" },
+    { "file": "render+crisp.js", "title": "render crisp" }
+],
+"geometry": [
+    { "file": "circle.js", "title": "circle" },
+    { "file": "line.js", "title": "line" },
+    { "file": "playing+with+points.js", "title": "playing with points" },
+    { "file": "rectangle.js", "title": "rectangle" },
+    { "file": "rotate+point.js", "title": "rotate point" }
+],
+"groups": [
+    { "file": "add+a+sprite+to+group.js", "title": "add a sprite to group" },
+    { "file": "bring+a+child+to+top.js", "title": "bring a child to top" },
+    { "file": "bring+a+group+to+top.js", "title": "bring a group to top" },
+    { "file": "call+all.js", "title": "call all" },
+    { "file": "create+group.js", "title": "create group" },
+    { "file": "create+sprite+in+a+group.js", "title": "create sprite in a group" },
+    { "file": "display+order.js", "title": "display order" },
+    { "file": "for+each.js", "title": "for each" },
+    { "file": "get+first.js", "title": "get first" },
+    { "file": "group+as+layer.js", "title": "group as layer" },
+    { "file": "group+transform+-+rotate.js", "title": "group transform - rotate" },
+    { "file": "group+transform+-+tween.js", "title": "group transform - tween" },
+    { "file": "group+transform.js", "title": "group transform" },
+    { "file": "recyling.js", "title": "recyling" },
+    { "file": "remove.js", "title": "remove" },
+    { "file": "replace.js", "title": "replace" },
+    { "file": "set+All.js", "title": "set All" },
+    { "file": "sub+groups+-+group+length.js", "title": "sub groups - group length" },
+    { "file": "swap+children+in+a+group.js", "title": "swap children in a group" }
+],
+"input": [
+    { "file": "cursor+key+movement.js", "title": "cursor key movement" },
+    { "file": "drag+several+sprites.js", "title": "drag several sprites" },
+    { "file": "drag.js", "title": "drag" },
+    { "file": "drop+limitation.js", "title": "drop limitation" },
+    { "file": "follow+mouse.js", "title": "follow mouse" },
+    { "file": "game+scale.js", "title": "game scale" },
+    { "file": "key.js", "title": "key" },
+    { "file": "keyboard+hotkeys.js", "title": "keyboard hotkeys" },
+    { "file": "keyboard+justpressed.js", "title": "keyboard justpressed" },
+    { "file": "keyboard.js", "title": "keyboard" },
+    { "file": "motion+lock+-+horizontal.js", "title": "motion lock - horizontal" },
+    { "file": "motion+lock+-+vertical.js", "title": "motion lock - vertical" },
+    { "file": "multi+touch.js", "title": "multi touch" },
+    { "file": "override+default+controls.js", "title": "override default controls" },
+    { "file": "pixel+perfect+click+detection.js", "title": "pixel perfect click detection" },
+    { "file": "pixelpick+-+scrolling+effect.js", "title": "pixelpick - scrolling effect" },
+    { "file": "pixelpick+-+spritesheet.js", "title": "pixelpick - spritesheet" },
+    { "file": "snap+on+drag.js", "title": "snap on drag" }
+],
+"loader": [
+    { "file": "pick+images+from+cache.js", "title": "pick images from cache" }
+],
+"misc": [
+    { "file": "net.js", "title": "net" },
+    { "file": "random+generators.js", "title": "random generators" },
+    { "file": "repeatable+random+numbers.js", "title": "repeatable random numbers" }
+],
+"particles": [
+    { "file": "click+burst.js", "title": "click burst" },
+    { "file": "collision.js", "title": "collision" },
+    { "file": "diamond+burst.js", "title": "diamond burst" },
+    { "file": "no+rotation.js", "title": "no rotation" },
+    { "file": "random+sprite.js", "title": "random sprite" },
+    { "file": "when+particles+collide.js", "title": "when particles collide" },
+    { "file": "zero+gravity.js", "title": "zero gravity" }
+],
+"physics": [
+    { "file": "accelerate+to+pointer.js", "title": "accelerate to pointer" },
+    { "file": "angle+between.js", "title": "angle between" },
+    { "file": "angle+to+pointer.js", "title": "angle to pointer" },
+    { "file": "angular+acceleration.js", "title": "angular acceleration" },
+    { "file": "angular+velocity.js", "title": "angular velocity" },
+    { "file": "mass+velocity+test.js", "title": "mass velocity test" },
+    { "file": "move+towards+object.js", "title": "move towards object" },
+    { "file": "multi+angle+to+pointer.js", "title": "multi angle to pointer" },
+    { "file": "quadtree+-+collision+infos.js", "title": "quadtree - collision infos" },
+    { "file": "quadtree+-+ids.js", "title": "quadtree - ids" },
+    { "file": "shoot+the+pointer.js", "title": "shoot the pointer" },
+    { "file": "sprite+bounds.js", "title": "sprite bounds" }
+],
+"sprites": [
+    { "file": "add+a+sprite.js", "title": "add a sprite" },
+    { "file": "add+several+sprites.js", "title": "add several sprites" },
+    { "file": "collide+world+bounds.js", "title": "collide world bounds" },
+    { "file": "destroy.js", "title": "destroy" },
+    { "file": "dynamic+crop.js", "title": "dynamic crop" },
+    { "file": "extending+sprite+demo+1.js", "title": "extending sprite demo 1" },
+    { "file": "extending+sprite+demo+2.js", "title": "extending sprite demo 2" },
+    { "file": "horizontal+crop.js", "title": "horizontal crop" },
+    { "file": "move+a+sprite.js", "title": "move a sprite" },
+    { "file": "out+of+bounds.js", "title": "out of bounds" },
+    { "file": "scale+a+sprite.js", "title": "scale a sprite" },
+    { "file": "shared+sprite+textures.js", "title": "shared sprite textures" },
+    { "file": "sprite+rotation.js", "title": "sprite rotation" },
+    { "file": "spritesheet.js", "title": "spritesheet" },
+    { "file": "vertical+crop.js", "title": "vertical crop" }
+],
+"text": [
+    { "file": "bitmap+fonts.js", "title": "bitmap fonts" },
+    { "file": "hello+arial.js", "title": "hello arial" },
+    { "file": "kern+of+duty.js", "title": "kern of duty" },
+    { "file": "remove+text.js", "title": "remove text" },
+    { "file": "text+stroke.js", "title": "text stroke" }
+],
+"tile sprites": [
+    { "file": "animated+tiling+sprite.js", "title": "animated tiling sprite" },
+    { "file": "tiling+sprite.js", "title": "tiling sprite" }
+],
+"tilemaps": [
+    { "file": "fill+tiles.js", "title": "fill tiles" },
+    { "file": "mapcollide.js", "title": "mapcollide" },
+    { "file": "mario.js", "title": "mario" },
+    { "file": "mariotogether.js", "title": "mariotogether" },
+    { "file": "paint+tiles.js", "title": "paint tiles" },
+    { "file": "randomise+tiles.js", "title": "randomise tiles" },
+    { "file": "replace+tiles.js", "title": "replace tiles" },
+    { "file": "sci+fly.js", "title": "sci fly" },
+    { "file": "supermario.js", "title": "supermario" },
+    { "file": "supermario2.js", "title": "supermario2" },
+    { "file": "swap+tiles.js", "title": "swap tiles" },
+    { "file": "wip1.js", "title": "wip1" },
+    { "file": "wip2.js", "title": "wip2" },
+    { "file": "wip3.js", "title": "wip3" },
+    { "file": "wip4.js", "title": "wip4" }
+],
+"tweens": [
+    { "file": "bounce.js", "title": "bounce" },
+    { "file": "bubbles.js", "title": "bubbles" },
+    { "file": "chained+tweens.js", "title": "chained tweens" },
+    { "file": "combined+tweens.js", "title": "combined tweens" },
+    { "file": "easing+spritesheets.js", "title": "easing spritesheets" },
+    { "file": "easing.js", "title": "easing" },
+    { "file": "fading+in+a+sprite.js", "title": "fading in a sprite" },
+    { "file": "pause+tween.js", "title": "pause tween" },
+    { "file": "tween+several+properties.js", "title": "tween several properties" }
+],
+"world": [
+    { "file": "fixed+to+camera.js", "title": "fixed to camera" },
+    { "file": "move+around+world.js", "title": "move around world" }
+]
 }

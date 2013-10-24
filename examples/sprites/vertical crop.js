@@ -1,27 +1,23 @@
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create });
 
 function preload() {
     game.load.image('trsi', 'assets/pics/trsipic1_lazur.jpg');
 }
 
-var r;
-var pic;
-
 function create() {
 
-    pic = game.add.sprite(game.world.centerX, 550, 'trsi');
+    var pic = game.add.sprite(game.world.centerX, 550, 'trsi');
+
     pic.anchor.setTo(0.5, 1);
 
-    r = new Phaser.Rectangle(0, 0, pic.width, 0);
+    //	By default Sprites ignore the crop setting, you have to explicitly enable it like this:
+    pic.cropEnabled = true;
 
-    game.add.tween(r).to( { height: pic.height }, 3000, Phaser.Easing.Bounce.Out, true, 0, 1000, true);
+    //	Set the crop rect height to zero
+    pic.crop.height = 0;
 
-}
-
-function update() {
-
-    //  Apply the new crop Rectangle to the sprite
-    pic.crop = r;
+    //	Here we'll tween the crop rect, from a height of zero to full height, and back again
+    game.add.tween(pic.crop).to( { height: pic.height }, 3000, Phaser.Easing.Bounce.Out, true, 0, 1000, true);
 
 }

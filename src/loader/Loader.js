@@ -161,6 +161,7 @@ Phaser.Loader.prototype = {
 		}
 
 		sprite.crop = this.preloadSprite.crop;
+		sprite.cropEnabled = true;
 
 	},
 
@@ -935,7 +936,7 @@ Phaser.Loader.prototype = {
 				break;
 
 			case 'text':
-				file.data = this._xhr.response;
+				file.data = this._xhr.responseText;
 				this.game.cache.addText(file.key, file.url, file.data);
 				break;
 		}
@@ -955,7 +956,7 @@ Phaser.Loader.prototype = {
 	*/
 	jsonLoadComplete: function (key) {
 
-		var data = JSON.parse(this._xhr.response);
+		var data = JSON.parse(this._xhr.responseText);
 		var file = this._fileList[key];
 
 		if (file.type == 'tilemap')
@@ -979,7 +980,7 @@ Phaser.Loader.prototype = {
 	*/
 	csvLoadComplete: function (key) {
 
-		var data = this._xhr.response;
+		var data = this._xhr.responseText;
 		var file = this._fileList[key];
 
 		this.game.cache.addTilemap(file.key, file.url, data, file.format);
@@ -1014,7 +1015,7 @@ Phaser.Loader.prototype = {
 	*/
 	xmlLoadComplete: function (key) {
 
-		var data = this._xhr.response;
+		var data = this._xhr.responseText;
 		var xml;
 
 		try

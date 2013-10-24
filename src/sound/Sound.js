@@ -118,8 +118,7 @@ Phaser.Sound = function (game, key, volume, loop) {
     
     /**
     * Description.
-    * @property {number} autoplay
-    * @default
+    * @property {number} stopTime
     */
     this.stopTime = 0;
     
@@ -130,6 +129,18 @@ Phaser.Sound = function (game, key, volume, loop) {
     */
     this.paused = false;
     
+    /**
+    * Description.
+    * @property {number} pausedPosition
+    */
+    this.pausedPosition = 0;
+
+    /**
+    * Description.
+    * @property {number} pausedTime
+    */
+    this.pausedTime = 0;
+
     /**
     * Description.
     * @property {boolean} isPlaying
@@ -627,10 +638,13 @@ Phaser.Sound.prototype = {
             this.stop();
             this.isPlaying = false;
             this.paused = true;
+            this.pausedPosition = this.currentTime;
+            this.pausedTime = this.game.time.now;
             this.onPause.dispatch(this);
         }
 
     },
+
     /**
     * Resumes the sound
     * @method Phaser.Sound#resume
@@ -641,14 +655,20 @@ Phaser.Sound.prototype = {
         {
             if (this.usingWebAudio)
             {
+                var p = this.position + (this.pausedPosition / 1000);
+
+                this._sound = this.context.createBufferSource();
+                this._sound.buffer = this._buffer;
+                this._sound.connect(this.gainNode);
+
                 if (typeof this._sound.start === 'undefined')
                 {
-                    this._sound.noteGrainOn(0, this.position, this.duration);
+                    this._sound.noteGrainOn(0, p, this.duration);
                     //this._sound.noteOn(0); // the zero is vitally important, crashes iOS6 without it
 				}
 				else
 				{
-                    this._sound.start(0, this.position, this.duration);
+                    this._sound.start(0, p, this.duration);
                 }
             }
             else
@@ -658,6 +678,7 @@ Phaser.Sound.prototype = {
 
             this.isPlaying = true;
             this.paused = false;
+            this.startTime += (this.game.time.now - this.pausedTime);
             this.onResume.dispatch(this);
         }
 

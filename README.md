@@ -43,6 +43,8 @@ Version 1.1
 * JSDoc is go! We've added jsdoc3 blocks to every property and function, in every file.
 * Brand new Example system (no more php!) and over 150 examples to learn from too.
 * New TypeScript definitions file generated (in the build folder).
+* New Grunt based build system added for those that prefer Grunt over php (thanks to Florent Cailhol)
+
 * Added World.postUpdate - all sprite position changes, as a result of physics, happen here before the render.
 * Complete overhaul of Physics.Arcade.Body - now significantly more stable and faster too.
 * Updated ArcadePhysics.separateX/Y to use new body system - much better results now.
@@ -139,6 +141,15 @@ Version 1.1
 * Fixed Issue 111 - calling Kill on a Phaser.Graphics instance causes error on undefined events.
 * Phaser.Group now automatically calls updateTransform on any child added to it (avoids temp. frame glitches when new objects are rendered on their first frame).
 * Phaser.Time physicsElapsed delta timer clamp added. Stops rogue iOS / slow mobile timer errors causing crazy high deltas.
+* Animation.generateFrameNames can now work in reverse, so the start/stop values can create frames that increment or decrement respectively.
+* Loader updated to use xhr.responseText when loading json, csv or text files. xhr.response is still used for Web Audio binary files (thanks bubba)
+* Input.onDown and onUp events now dispatch the original event that triggered them (i.e. a MouseEvent or TouchEvent) as the 2nd parameter, after the Pointer (thanks rezoner)
+* Game.destroy will now stop the raf from running as well as close down all input related event listeners (issue 92, thanks astrism)
+* Fixed issue 105 where a dragged object that was destroyed would cause an Input error (thanks onedayitwillmake)
+* Updated Sprite.crop significantly. Values are now cached, stopping constant Texture frame updates and you can do sprite.crop.width++ for example (thanks haden)
+* Change: Sprite.crop needs to be enabled with sprite.cropEnabled = true.
+* Added Rectangle.floorAll to floor all values in a Rectangle (x, y, width and height).
+* Fixed Sound.resume so it now correctly resumes playback from the point it was paused (fixes issue 51, thanks Yora).
 
 
 Outstanding Tasks
@@ -151,6 +162,7 @@ Outstanding Tasks
 * TODO: Sound.addMarker hh:mm:ss:ms
 * TODO: swap state (non-destructive shift)
 * TODO: rotation offset
+* TODO: Look at HiDPI Canvas settings
 
 Requirements
 ------------

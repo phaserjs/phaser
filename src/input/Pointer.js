@@ -281,7 +281,7 @@ Phaser.Pointer.prototype = {
             this.game.input.x = this.x * this.game.input.scale.x;
             this.game.input.y = this.y * this.game.input.scale.y;
             this.game.input.position.setTo(this.x, this.y);
-            this.game.input.onDown.dispatch(this);
+            this.game.input.onDown.dispatch(this, event);
             this.game.input.resetSpeed(this.x, this.y);
         }
 
@@ -506,7 +506,7 @@ Phaser.Pointer.prototype = {
 
         if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
         {
-            this.game.input.onUp.dispatch(this);
+            this.game.input.onUp.dispatch(this, event);
 
             //  Was it a tap?
             if (this.duration >= 0 && this.duration <= this.game.input.tapRate)

@@ -406,33 +406,55 @@ Object.defineProperty(Phaser.Animation.prototype, "frame", {
 *
 * @method Phaser.Animation.generateFrameNames
 * @param {string} prefix - The start of the filename. If the filename was 'explosion_0001-large' the prefix would be 'explosion_'.
-* @param {number} min - The number to start sequentially counting from. If your frames are named 'explosion_0001' to 'explosion_0034' the min is 1.
-* @param {number} max - The number to count up to. If your frames are named 'explosion_0001' to 'explosion_0034' the max is 34.
+* @param {number} start - The number to start sequentially counting from. If your frames are named 'explosion_0001' to 'explosion_0034' the start is 1.
+* @param {number} stop - The number to count to. If your frames are named 'explosion_0001' to 'explosion_0034' the stop value is 34.
 * @param {string} [suffix=''] - The end of the filename. If the filename was 'explosion_0001-large' the prefix would be '-large'.
 * @param {number} [zeroPad=0] - The number of zeroes to pad the min and max values with. If your frames are named 'explosion_0001' to 'explosion_0034' then the zeroPad is 4.
 */
-Phaser.Animation.generateFrameNames = function (prefix, min, max, suffix, zeroPad) {
+Phaser.Animation.generateFrameNames = function (prefix, start, stop, suffix, zeroPad) {
 
     if (typeof suffix == 'undefined') { suffix = ''; }
 
     var output = [];
     var frame = '';
 
-    for (var i = min; i <= max; i++)
+    if (start < stop)
     {
-        if (typeof zeroPad == 'number')
+        for (var i = start; i <= stop; i++)
         {
-            //  str, len, pad, dir
-            frame = Phaser.Utils.pad(i.toString(), zeroPad, '0', 1);
+            if (typeof zeroPad == 'number')
+            {
+                //  str, len, pad, dir
+                frame = Phaser.Utils.pad(i.toString(), zeroPad, '0', 1);
+            }
+            else
+            {
+                frame = i.toString();
+            }
+
+            frame = prefix + frame + suffix;
+
+            output.push(frame);
         }
-        else
+    }
+    else
+    {
+        for (var i = start; i >= stop; i--)
         {
-            frame = i.toString();
+            if (typeof zeroPad == 'number')
+            {
+                //  str, len, pad, dir
+                frame = Phaser.Utils.pad(i.toString(), zeroPad, '0', 1);
+            }
+            else
+            {
+                frame = i.toString();
+            }
+
+            frame = prefix + frame + suffix;
+
+            output.push(frame);
         }
-
-        frame = prefix + frame + suffix;
-
-        output.push(frame);
     }
 
     return output;

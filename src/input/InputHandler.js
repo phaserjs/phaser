@@ -306,10 +306,13 @@ Phaser.InputHandler.prototype = {
 
         if (this.enabled)
         {
+            this.enabled = false;
+
+            this.game.input.interactiveItems.remove(this);
+
         	this.stop();
-        	//	Null everything
+
         	this.sprite = null;
-        	//	etc
         }
     },
 
@@ -615,7 +618,10 @@ Phaser.InputHandler.prototype = {
             this.game.stage.canvas.style.cursor = "default";
         }
 
-        this.sprite.events.onInputOut.dispatch(this.sprite, pointer);
+        if (this.sprite && this.sprite.events)
+        {
+            this.sprite.events.onInputOut.dispatch(this.sprite, pointer);
+        }
 
     },
 
