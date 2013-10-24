@@ -20,18 +20,40 @@ module.exports = function(grunt) {
     });
 
     this.files.forEach(function(f) {
+      if (grunt.option('verbose')) {
+        if (grunt.file.exists(f.dest)) {
+          grunt.verbose.writeln();
+          grunt.verbose.warn('Destination file "%s" will be overridden.', f.dest);
+        }
+        grunt.verbose.writeln();
+      }
+
       var results = {};
-      f.src.filter(function(filepath) {
+      var files = f.src.filter(function(filepath) {
         if (!grunt.file.exists(filepath)) {
           grunt.log.warn('Source file "' + filepath + '" not found.');
           return false;
         } else {
           filepath = path.relative(options.base, filepath);
           return options.excludes.every(function(dir) {
-            return filepath.indexOf(dir + '/') < 0;
+            var keep = filepath.indexOf(dir + '/') < 0;
+            if (!keep) {
+              grunt.verbose.writeln('Skipping %s%s...', (dir + '/').inverse.red, filepath.substr(dir.length + 1));
+            }
+            return keep;
           });
         }
-      }).map(function(filepath) {
+      });
+
+      if (grunt.option('verbose')) {
+        grunt.verbose.writeln();
+        grunt.verbose.writeln('Found ' + files.length.toString().cyan + ' examples:');
+        files.forEach(function(file) {
+          grunt.verbose.writeln(' * '.cyan + file);
+        });
+      }
+
+      files.map(function(filepath) {
         return pathToArray(path.relative(options.base, filepath).split('/'));
       }).forEach(function(parts) {
         _.merge(results, parts, function(a, b) {
@@ -43,7 +65,19 @@ module.exports = function(grunt) {
         });
       });
 
+      if (grunt.option('verbose')) {
+        var categories = Object.keys(results);
+        grunt.verbose.writeln();
+        grunt.verbose.writeln('Extracted ' + categories.length.toString().cyan + ' categories:');
+        categories.forEach(function(cat) {
+          grunt.verbose.writeln(' * '.cyan + cat);
+        });
+      }
+
+      grunt.verbose.writeln();
+      grunt.verbose.or.write('Writing ' + f.dest + '...');
       grunt.file.write(f.dest, JSON.stringify(results, null, '  '));
+      grunt.verbose.or.ok();
     });
   });
 };
