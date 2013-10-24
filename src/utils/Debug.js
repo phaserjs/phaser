@@ -206,7 +206,7 @@ Phaser.Utils.Debug.prototype = {
 
         if (showBounds)
         {
-            this.context.strokeStyle = 'rgba(255,0,255,0.5)';
+            this.context.strokeStyle = 'rgba(0,255,0,0.8)';
             this.context.strokeRect(sprite.bounds.x, sprite.bounds.y, sprite.bounds.width, sprite.bounds.height);
             this.context.stroke();
         }

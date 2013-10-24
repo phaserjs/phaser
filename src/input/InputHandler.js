@@ -484,27 +484,48 @@ Phaser.InputHandler.prototype = {
         {
             this.sprite.getLocalUnmodifiedPosition(this._tempPoint, pointer.x, pointer.y);
 
-            //  Check against bounds first (move these to private vars)
-            var x1 = -(this.sprite.texture.frame.width) * this.sprite.anchor.x;
-            var y1;
-            
-            if (this._tempPoint.x > x1 && this._tempPoint.x < x1 + this.sprite.texture.frame.width)
+            //  The unmodified position is being offset by the anchor, i.e. into negative space
+
+            // var x = this.sprite.anchor.x * this.sprite.width;
+            // var y = this.sprite.anchor.y * this.sprite.height;
+            var x = 0;
+            var y = 0;
+
+            //  check world transform
+            if (this.sprite.worldTransform[3] == 0 && this.sprite.worldTransform[1] == 0)
             {
-                y1 = -(this.sprite.texture.frame.height) * this.sprite.anchor.y;
-            
-                if (this._tempPoint.y > y1 && this._tempPoint.y < y1 + this.sprite.texture.frame.height)
+                //  Un-rotated (but potentially scaled)
+                // if (this._tempPoint.x >= 0 && this._tempPoint.x <= this.sprite.width && this._tempPoint.y >= 0 && this._tempPoint.y <= this.sprite.height)
+                if (this._tempPoint.x >= x && this._tempPoint.x <= this.sprite.width && this._tempPoint.y >= y && this._tempPoint.y <= this.sprite.height)
                 {
-                    if (this.pixelPerfect)
-                    {
-                        return this.checkPixel(this._tempPoint.x, this._tempPoint.y);
-                    }
-                    else
-                    {
                         return true;
-                    }
+                }
+            }
+            else
+            {
+                //  Rotated (and could be scaled too)
+                // if (this._tempPoint.x >= 0 && this._tempPoint.x <= this.sprite.currentFrame.width && this._tempPoint.y >= 0 && this._tempPoint.y <= this.sprite.currentFrame.height)
+                if (this._tempPoint.x >= x && this._tempPoint.x <= this.sprite.currentFrame.width && this._tempPoint.y >= y && this._tempPoint.y <= this.sprite.currentFrame.height)
+                {
+                        return true;
                 }
             }
         }
+
+                //         if (this.pixelPerfect)
+                //         {
+                //             return this.checkPixel(this._tempPoint.x, this._tempPoint.y);
+                //         }
+                //         else
+                //         {
+                //             return true;
+                //         }
+                //     }
+                // }
+
+        //     }
+
+        // }
 
         return false;
 

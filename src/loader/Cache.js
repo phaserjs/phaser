@@ -263,7 +263,8 @@ Phaser.Cache.prototype = {
     addImage: function (key, url, data) {
 
         this._images[key] = { url: url, data: data, spriteSheet: false };
-        this._images[key].frame = new Phaser.Frame(0, 0, 0, data.width, data.height, '', '');
+
+        this._images[key].frame = new Phaser.Frame(0, 0, 0, data.width, data.height, key, this.game.rnd.uuid());
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);

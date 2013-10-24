@@ -150,6 +150,7 @@ Version 1.1
 * Change: Sprite.crop needs to be enabled with sprite.cropEnabled = true.
 * Added Rectangle.floorAll to floor all values in a Rectangle (x, y, width and height).
 * Fixed Sound.resume so it now correctly resumes playback from the point it was paused (fixes issue 51, thanks Yora).
+* Sprite.loadTexture now works correctly with static images, RenderTextures and Animations.
 
 
 Outstanding Tasks

@@ -13,17 +13,17 @@ function create() {
 
     ball = game.add.sprite(300, 0, 'ball');
 
-    startBounceTween();
+	TweenLite.to(ball, 10, { y: 400 });    
 }
 
 function startBounceTween() {
 
-    ball.y = 0;
+    // ball.y = 0;
 
-    var bounce=game.add.tween(ball);
+    // var bounce=game.add.tween(ball);
 
-    bounce.to({ y: game.world.height-ball.height }, 1000 + Math.random() * 3000, Phaser.Easing.Bounce.In);
-    bounce.onComplete.add(startBounceTween, this);
-    bounce.start();
+    // bounce.to({ y: game.world.height-ball.height }, 1000 + Math.random() * 3000, Phaser.Easing.Bounce.In);
+    // bounce.onComplete.add(startBounceTween, this);
+    // bounce.start();
 
 }

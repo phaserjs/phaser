@@ -108,6 +108,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
         if (key == null || this.game.cache.checkImageKey(key) == false)
         {
             key = '__default';
+            this.key = key;
         }
 
         PIXI.Sprite.call(this, PIXI.TextureCache[key]);
@@ -199,11 +200,17 @@ Phaser.Sprite = function (game, x, y, key, frame) {
         //  The actual scale values based on the worldTransform
         scaleX: 1, scaleY: 1,
 
+        //  cache scale check
+        realScaleX: 1, realScaleY: 1,
+
         //  The width/height of the image, based on the un-modified frame size multiplied by the final calculated scale size
         width: this.currentFrame.sourceSizeW, height: this.currentFrame.sourceSizeH,
 
         //  The actual width/height of the image if from a trimmed atlas, multiplied by the final calculated scale size
         halfWidth: Math.floor(this.currentFrame.sourceSizeW / 2), halfHeight: Math.floor(this.currentFrame.sourceSizeH / 2),
+
+        //  The width/height of the image, based on the un-modified frame size multiplied by the final calculated scale size
+        calcWidth: -1, calcHeight: -1,
 
         //  The current frame details
         frameID: this.currentFrame.uuid, frameWidth: this.currentFrame.width, frameHeight: this.currentFrame.height,
@@ -352,6 +359,8 @@ Phaser.Sprite.prototype.preUpdate = function() {
     //  Re-run the camera visibility check
     if (this._cache.dirty)
     {
+        this.updateBounds();
+
         this._cache.cameraVisible = Phaser.Rectangle.intersects(this.game.world.camera.screenView, this.bounds, 0);
 
         if (this.autoCull == true)
@@ -379,6 +388,44 @@ Phaser.Sprite.prototype.updateCache = function() {
     //  |a c tx|
     //  |b d ty|
     //  |0 0  1|
+
+
+    // this._cache.width = Math.floor(this.currentFrame.sourceSizeW);
+    // this._cache.height = Math.floor(this.currentFrame.sourceSizeH);
+    // this._cache.halfWidth = Math.floor(this._cache.width / 2);
+    // this._cache.halfHeight = Math.floor(this._cache.height / 2);
+
+
+    // this._cache.scaleX = this.scale.x;
+    // this._cache.scaleY = this.scale.y;
+
+    /*
+    if (this.scale.x !== this._cache.realScaleX || this.scale.y !== this._cache.realScaleY)
+    {
+        console.log('rescale', this.name);
+        this._cache.width = this.width;
+        this._cache.height = this.height;
+        this._cache.halfWidth = Math.floor(this._cache.width / 2);
+        this._cache.halfHeight = Math.floor(this._cache.height / 2);
+        this._cache.realScaleX = this.scale.x;
+        this._cache.realScaleY = this.scale.y;
+        this.updateFrame = true;
+        this._cache.dirty = true;
+    }
+    */
+
+    if (this._cache.calcWidth !== this.width || this._cache.calcHeight !== this.height)
+    {
+        console.log('calc', this.name);
+        this._cache.width = Math.floor(this.currentFrame.sourceSizeW);
+        this._cache.height = Math.floor(this.currentFrame.sourceSizeH);
+        this._cache.halfWidth = Math.floor(this._cache.width / 2);
+        this._cache.halfHeight = Math.floor(this._cache.height / 2);
+        this._cache.frameWidth = this.texture.frame.width;
+        this._cache.frameHeight = this.texture.frame.height;
+        this._cache.frameID = this.currentFrame.uuid;
+        this._cache.dirty = true;
+    }
 
     if (this.worldTransform[1] != this._cache.i01 || this.worldTransform[3] != this._cache.i10)
     {
@@ -412,23 +459,149 @@ Phaser.Sprite.prototype.updateAnimation = function() {
 
     if (this.currentFrame && this.currentFrame.uuid != this._cache.frameID)
     {
-        this._cache.frameWidth = this.texture.frame.width;
-        this._cache.frameHeight = this.texture.frame.height;
-        this._cache.frameID = this.currentFrame.uuid;
+        // console.log('ua frame 1 change', this.name);
+        // this._cache.frameWidth = this.texture.frame.width;
+        // this._cache.frameHeight = this.texture.frame.height;
+        // this._cache.frameID = this.currentFrame.uuid;
         this._cache.dirty = true;
     }
 
     if (this._cache.dirty && this.currentFrame)
     {
-        this._cache.width = Math.floor(this.currentFrame.sourceSizeW * this._cache.scaleX);
-        this._cache.height = Math.floor(this.currentFrame.sourceSizeH * this._cache.scaleY);
-        this._cache.halfWidth = Math.floor(this._cache.width / 2);
-        this._cache.halfHeight = Math.floor(this._cache.height / 2);
+        console.log('ua frame 2 change', this.name);
+        // this._cache.width = Math.floor(this.currentFrame.sourceSizeW * this._cache.scaleX);
+        // this._cache.height = Math.floor(this.currentFrame.sourceSizeH * this._cache.scaleY);
+        // this._cache.width = this.currentFrame.width;
+        // // this._cache.height = this.currentFrame.height;
+        // this._cache.width = Math.floor(this.currentFrame.sourceSizeW);
+        // this._cache.height = Math.floor(this.currentFrame.sourceSizeH);
+        // this._cache.halfWidth = Math.floor(this._cache.width / 2);
+        // this._cache.halfHeight = Math.floor(this._cache.height / 2);
 
         this._cache.id = 1 / (this._cache.a00 * this._cache.a11 + this._cache.a01 * -this._cache.a10);
         this._cache.idi = 1 / (this._cache.a00 * this._cache.a11 + this._cache.i01 * -this._cache.i10);
+    }
 
-        this.updateBounds();
+}
+
+/**
+* Description.
+*   
+* @method Phaser.Sprite.prototype.updateBounds
+*/
+Phaser.Sprite.prototype.updateBounds = function() {
+
+    //  Update the edge points
+    console.log('updateBounds', this.name);
+
+    this.offset.setTo(this._cache.a02 - (this.anchor.x * this._cache.width), this._cache.a12 - (this.anchor.y * this._cache.height));
+
+    this.getLocalPosition(this.center, this.offset.x + this._cache.halfWidth, this.offset.y + this._cache.halfHeight);
+    this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
+    this.getLocalPosition(this.topRight, this.offset.x + this._cache.width, this.offset.y);
+    this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this._cache.height);
+    this.getLocalPosition(this.bottomRight, this.offset.x + this._cache.width, this.offset.y + this._cache.height);
+
+    this._cache.left = Phaser.Math.min(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
+    this._cache.right = Phaser.Math.max(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
+    this._cache.top = Phaser.Math.min(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
+    this._cache.bottom = Phaser.Math.max(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
+
+    this.bounds.setTo(this._cache.left, this._cache.top, this._cache.right - this._cache.left, this._cache.bottom - this._cache.top);
+
+    //  This is the coordinate the Sprite was at when the last bounds was created
+    this._cache.boundsX = this._cache.x;
+    this._cache.boundsY = this._cache.y;
+
+    this._cache.calcWidth = this.width;
+    this._cache.calcHeight = this.height;
+        
+    this.updateFrame = true;
+
+    if (this.inWorld == false)
+    {
+        //  Sprite WAS out of the screen, is it still?
+        this.inWorld = Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds, this.inWorldThreshold);
+
+        if (this.inWorld)
+        {
+            //  It's back again, reset the OOB check
+            this._outOfBoundsFired = false;
+        }
+    }
+    else
+    {
+        //   Sprite WAS in the screen, has it now left?
+        this.inWorld = Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds, this.inWorldThreshold);
+
+        if (this.inWorld == false)
+        {
+            this.events.onOutOfBounds.dispatch(this);
+            this._outOfBoundsFired = true;
+
+            if (this.outOfBoundsKill)
+            {
+                this.kill();
+            }
+        }
+    }
+
+}
+
+/**
+* Description.
+*   
+* @method Phaser.Sprite.prototype.updateBounds
+*/
+Phaser.Sprite.prototype.DEADupdateBounds = function() {
+
+    //  Update the edge points
+
+    this.offset.setTo(this._cache.a02 - (this.anchor.x * this.width), this._cache.a12 - (this.anchor.y * this.height));
+
+    this.getLocalPosition(this.center, this.offset.x + this._cache.halfWidth, this.offset.y + this._cache.halfHeight);
+    this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
+    this.getLocalPosition(this.topRight, this.offset.x + this._cache.width, this.offset.y);
+    this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this._cache.height);
+    this.getLocalPosition(this.bottomRight, this.offset.x + this._cache.width, this.offset.y + this._cache.height);
+
+    this._cache.left = Phaser.Math.min(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
+    this._cache.right = Phaser.Math.max(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
+    this._cache.top = Phaser.Math.min(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
+    this._cache.bottom = Phaser.Math.max(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
+
+    this.bounds.setTo(this._cache.left, this._cache.top, this._cache.right - this._cache.left, this._cache.bottom - this._cache.top);
+
+    //  This is the coordinate the Sprite was at when the last bounds was created
+    this._cache.boundsX = this._cache.x;
+    this._cache.boundsY = this._cache.y;
+
+    if (this.inWorld == false)
+    {
+        //  Sprite WAS out of the screen, is it still?
+        this.inWorld = Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds, this.inWorldThreshold);
+
+        if (this.inWorld)
+        {
+            //  It's back again, reset the OOB check
+            this._outOfBoundsFired = false;
+        }
+    }
+    else
+    {
+        //   Sprite WAS in the screen, has it now left?
+        this.inWorld = Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds, this.inWorldThreshold);
+
+        if (this.inWorld == false)
+        {
+            this.events.onOutOfBounds.dispatch(this);
+            this._outOfBoundsFired = true;
+
+            if (this.outOfBoundsKill)
+            {
+                this.kill();
+            }
+        }
     }
 
 }
@@ -502,18 +675,23 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
     {
         this.currentFrame = this.game.cache.getTextureFrame(key.name);
     }
+    else if (key instanceof PIXI.Texture)
+    {
+        this.currentFrame = frame;
+    }
     else
     {
-        if (key == null || this.game.cache.checkImageKey(key) == false)
+        if (typeof key === 'undefined' || this.game.cache.checkImageKey(key) === false)
         {
             key = '__default';
+            this.key = key;
         }
 
         if (this.game.cache.isSpriteSheet(key))
         {
             this.animations.loadFrameData(this.game.cache.getFrameData(key));
 
-            if (frame !== null)
+            if (typeof frame !== 'undefined')
             {
                 if (typeof frame === 'string')
                 {
@@ -528,10 +706,9 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         else
         {
             this.currentFrame = this.game.cache.getFrame(key);
+            this.setTexture(PIXI.TextureCache[key]);
         }
     }
-
-    this.updateAnimation();
 
 }
 
@@ -686,64 +863,6 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
 
 /**
 * Description.
-*   
-* @method Phaser.Sprite.prototype.updateBounds
-*/
-Phaser.Sprite.prototype.updateBounds = function() {
-
-    //  Update the edge points
-
-    this.offset.setTo(this._cache.a02 - (this.anchor.x * this._cache.width), this._cache.a12 - (this.anchor.y * this._cache.height));
-
-    this.getLocalPosition(this.center, this.offset.x + this._cache.halfWidth, this.offset.y + this._cache.halfHeight);
-    this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
-    this.getLocalPosition(this.topRight, this.offset.x + this._cache.width, this.offset.y);
-    this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this._cache.height);
-    this.getLocalPosition(this.bottomRight, this.offset.x + this._cache.width, this.offset.y + this._cache.height);
-
-    this._cache.left = Phaser.Math.min(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
-    this._cache.right = Phaser.Math.max(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
-    this._cache.top = Phaser.Math.min(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
-    this._cache.bottom = Phaser.Math.max(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
-
-    this.bounds.setTo(this._cache.left, this._cache.top, this._cache.right - this._cache.left, this._cache.bottom - this._cache.top);
-
-    //  This is the coordinate the Sprite was at when the last bounds was created
-    this._cache.boundsX = this._cache.x;
-    this._cache.boundsY = this._cache.y;
-
-    if (this.inWorld == false)
-    {
-        //  Sprite WAS out of the screen, is it still?
-        this.inWorld = Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds, this.inWorldThreshold);
-
-        if (this.inWorld)
-        {
-            //  It's back again, reset the OOB check
-            this._outOfBoundsFired = false;
-        }
-    }
-    else
-    {
-        //   Sprite WAS in the screen, has it now left?
-        this.inWorld = Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds, this.inWorldThreshold);
-
-        if (this.inWorld == false)
-        {
-            this.events.onOutOfBounds.dispatch(this);
-            this._outOfBoundsFired = true;
-
-            if (this.outOfBoundsKill)
-            {
-                this.kill();
-            }
-        }
-    }
-
-}
-
-/**
-* Description.
 * 
 * @method Phaser.Sprite.prototype.getLocalPosition
 * @param {Description} p - Description.
@@ -753,8 +872,26 @@ Phaser.Sprite.prototype.updateBounds = function() {
 */
 Phaser.Sprite.prototype.getLocalPosition = function(p, x, y) {
 
-    p.x = ((this._cache.a11 * this._cache.id * x + -this._cache.a01 * this._cache.id * y + (this._cache.a12 * this._cache.a01 - this._cache.a02 * this._cache.a11) * this._cache.id) * this._cache.scaleX) + this._cache.a02;
-    p.y = ((this._cache.a00 * this._cache.id * y + -this._cache.a10 * this._cache.id * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.a10) * this._cache.id) * this._cache.scaleY) + this._cache.a12;
+    // p.x = ((this._cache.a11 * this._cache.id * x + -this._cache.a01 * this._cache.id * y + (this._cache.a12 * this._cache.a01 - this._cache.a02 * this._cache.a11) * this._cache.id) * this.scale.x) + this._cache.a02;
+    // p.y = ((this._cache.a00 * this._cache.id * y + -this._cache.a10 * this._cache.id * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.a10) * this._cache.id) * this.scale.y) + this._cache.a12;
+
+    if (this.worldTransform[0] == 1)
+    {
+        p.x = ((this._cache.a11 * this._cache.id * x + -this._cache.a01 * this._cache.id * y + (this._cache.a12 * this._cache.a01 - this._cache.a02 * this._cache.a11) * this._cache.id) * 1) + this._cache.a02;
+    }
+    else
+    {
+        p.x = ((this._cache.a11 * this._cache.id * x + -this._cache.a01 * this._cache.id * y + (this._cache.a12 * this._cache.a01 - this._cache.a02 * this._cache.a11) * this._cache.id) * this.scale.x) + this._cache.a02;
+    }
+
+    if (this.worldTransform[4] == 1)
+    {
+        p.y = ((this._cache.a00 * this._cache.id * y + -this._cache.a10 * this._cache.id * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.a10) * this._cache.id) * 1) + this._cache.a12;
+    }
+    else
+    {
+        p.y = ((this._cache.a00 * this._cache.id * y + -this._cache.a10 * this._cache.id * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.a10) * this._cache.id) * this.scale.y) + this._cache.a12;
+    }
 
     return p;
 
@@ -773,6 +910,10 @@ Phaser.Sprite.prototype.getLocalUnmodifiedPosition = function(p, x, y) {
 
     p.x = this._cache.a11 * this._cache.idi * x + -this._cache.i01 * this._cache.idi * y + (this._cache.a12 * this._cache.i01 - this._cache.a02 * this._cache.a11) * this._cache.idi;
     p.y = this._cache.a00 * this._cache.idi * y + -this._cache.i10 * this._cache.idi * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.i10) * this._cache.idi;
+
+    //  apply anchor
+    p.x += (this.anchor.x * this.width);
+    p.y += (this.anchor.y * this.height);
 
     return p;
 
@@ -886,7 +1027,8 @@ Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
 });
 
 /**
- * The width of the sprite, setting this will actually modify the scale to acheive the value set
+ * The width of the sprite, setting this will actually modify the scale to acheive the value set.
+ * If you wish to crop the Sprite instead see the Sprite.crop value.
  *
  * @property width
  * @type Number
@@ -898,14 +1040,18 @@ Object.defineProperty(Phaser.Sprite.prototype, 'width', {
     },
 
     set: function(value) {
-        this.scale.x = value / this.currentFrame.width
+
+        this.scale.x = value / this.currentFrame.width;
+        this._cache.scaleX = value / this.currentFrame.width;
         this._width = value;
+
     }
 
 });
 
 /**
  * The height of the sprite, setting this will actually modify the scale to acheive the value set
+ * If you wish to crop the Sprite instead see the Sprite.crop value.
  *
  * @property height
  * @type Number
@@ -913,12 +1059,15 @@ Object.defineProperty(Phaser.Sprite.prototype, 'width', {
 Object.defineProperty(Phaser.Sprite.prototype, 'height', {
 
     get: function() {
-        return  this.scale.y * this.currentFrame.height;
+        return this.scale.y * this.currentFrame.height;
     },
 
     set: function(value) {
-        this.scale.y = value / this.currentFrame.height
+
+        this.scale.y = value / this.currentFrame.height;
+        this._cache.scaleY = value / this.currentFrame.height;
         this._height = value;
+
     }
 
 });

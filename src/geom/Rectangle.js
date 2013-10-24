@@ -519,7 +519,7 @@ Phaser.Rectangle.inflate = function (a, dx, dy) {
 * @return {Phaser.Rectangle} The Rectangle object.
 */
 Phaser.Rectangle.inflatePoint = function (a, point) {
-    return Phaser.Phaser.Rectangle.inflate(a, point.x, point.y);
+    return Phaser.Rectangle.inflate(a, point.x, point.y);
 };
 
 /**
@@ -558,6 +558,10 @@ Phaser.Rectangle.contains = function (a, x, y) {
     return (x >= a.x && x <= a.right && y >= a.y && y <= a.bottom);
 };
 
+Phaser.Rectangle.containsRaw = function (rx, ry, rw, rh, x, y) {
+    return (x >= rx && x <= (rx + rw) && y >= ry && y <= (ry + rh));
+};
+
 /**
 * Determines whether the specified point is contained within the rectangular region defined by this Rectangle object. This method is similar to the Rectangle.contains() method, except that it takes a Point object as a parameter.
 * @method Phaser.Rectangle.containsPoint
@@ -566,7 +570,7 @@ Phaser.Rectangle.contains = function (a, x, y) {
 * @return {boolean} A value of true if the Rectangle object contains the specified point; otherwise false.
 */
 Phaser.Rectangle.containsPoint = function (a, point) {
-    return Phaser.Phaser.Rectangle.contains(a, point.x, point.y);
+    return Phaser.Rectangle.contains(a, point.x, point.y);
 };
 
 /**
