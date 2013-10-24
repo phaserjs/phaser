@@ -1,4 +1,3 @@
-var path = require('path');
 var _ = require('lodash');
 
 function pathToArray(parts) {
@@ -34,11 +33,10 @@ module.exports = function(grunt) {
           grunt.log.warn('Source file "' + filepath + '" not found.');
           return false;
         } else {
-          filepath = path.relative(options.base, filepath);
           return options.excludes.every(function(dir) {
-            var keep = filepath.indexOf(dir + '/') < 0;
+            var keep = filepath.indexOf(options.base + '/' + dir + '/') < 0;
             if (!keep) {
-              grunt.verbose.writeln('Skipping %s%s...', (dir + '/').inverse.red, filepath.substr(dir.length + 1));
+              grunt.verbose.writeln('Skipping %s/%s/%s...', options.base, dir.inverse.red, filepath.substr(options.base.length + dir.length + 2));
             }
             return keep;
           });
@@ -54,7 +52,7 @@ module.exports = function(grunt) {
       }
 
       files.map(function(filepath) {
-        return pathToArray(path.relative(options.base, filepath).split('/'));
+        return pathToArray(filepath.substr(options.base.length + 1).split('/'));
       }).forEach(function(parts) {
         _.merge(results, parts, function(a, b) {
           var example = {
