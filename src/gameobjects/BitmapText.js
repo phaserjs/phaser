@@ -5,9 +5,7 @@
 */
 
 /**
-* An Animation instance contains a single animation and the controls to play it.
-* It is created by the AnimationManager, consists of Animation.Frame objects and belongs to a single Game Object such as a Sprite.
-*
+* Creates a new <code>BitmapText</code>.
 * @class Phaser.BitmapText
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.

@@ -98,7 +98,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Creates a new group to be added on the display list
+    * A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
     *
     * @method group
     * @param {*} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
@@ -112,7 +112,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-     * Description.
+     * Creates a new instance of the Sound class.
      *
      * @method audio
      * @param {string} key - The Game.cache key of the sound that this object will use.
@@ -127,7 +127,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-     * Description.
+     * Creates a new <code>TileSprite</code>.
      *
      * @method tileSprite
      * @param {number} x - X position of the new tileSprite.
@@ -145,7 +145,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-     * Description.
+     * Creates a new <code>Text</code>.
      *
      * @method text
      * @param {number} x - X position of the new text object.
@@ -161,7 +161,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Description.
+    * Creates a new <code>Button</code> object.
     *
     * @method button
     * @param {number} [x] X position of the new button object.
@@ -181,7 +181,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-     * Description.
+     * Creates a new <code>Graphics</code> object.
      *
      * @method graphics
      * @param {number} x - X position of the new graphics object.
@@ -195,7 +195,9 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Description.
+    * Emitter is a lightweight particle emitter. It can be used for one-time explosions or for
+    * continuous effects like rain and fire. All it really does is launch Particle objects out
+    * at set intervals, and fixes their positions and velocities accorindgly.
     *
     * @method emitter
     * @param {number} [x=0] - The x coordinate within the Emitter that the particles are emitted from.
@@ -210,7 +212,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Description.
+    * * Create a new <code>BitmapText</code>.
     *
     * @method bitmapText
     * @param {number} x - X position of the new bitmapText object.
@@ -268,7 +270,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Description.
+    * A dynamic initially blank canvas to which images can be drawn
     *
     * @method renderTexture
     * @param {string} key - Asset key for the render texture.

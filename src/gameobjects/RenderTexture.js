@@ -5,7 +5,7 @@
 */
 
 /**
-* Description of constructor.
+* A dynamic initially blank canvas to which images can be drawn
 * @class Phaser.RenderTexture
 * @constructor
 * @param {Phaser.Game} game - Current game instance.

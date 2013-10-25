@@ -5,7 +5,7 @@
 */
 
 /**
-* Description.
+* Creates a new <code>Graphics</code> object.
 * 
 * @class Phaser.Graphics
 * @constructor
