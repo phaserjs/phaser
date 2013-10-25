@@ -43,6 +43,8 @@ function create() {
     button3 = game.add.button(100, 300, 'button', changeSky, this, 2, 1, 0);
     button3.name = 'sky3';
     button3.width = 300;
+    button3.anchor.setTo(0, 0.5);
+    // button3.angle = 0.1;
 
     //  Scaled button
     button4 = game.add.button(300, 450, 'button', changeSky, this, 2, 1, 0);
@@ -85,7 +87,8 @@ function render () {
 
     // game.debug.renderWorldTransformInfo(button1, 32, 132);
     // game.debug.renderText('sx: ' + button3.scale.x + ' sy: ' + button3.scale.y + ' w: ' + button3.width + ' cw: ' + button3._cache.width, 32, 20);
-    // game.debug.renderPoint(button2.input._tempPoint);
-    // game.debug.renderPoint(button6.input._tempPoint);
+    game.debug.renderText('ox: ' + game.stage.offset.x + ' oy: ' + game.stage.offset.y, 32, 20);
+    game.debug.renderPoint(button3.input._tempPoint);
+    game.debug.renderPoint(button6.input._tempPoint);
 
 }

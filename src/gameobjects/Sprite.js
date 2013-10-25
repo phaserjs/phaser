@@ -392,6 +392,7 @@ Phaser.Sprite.prototype.updateCache = function() {
 
     if (this.worldTransform[1] != this._cache.i01 || this.worldTransform[3] != this._cache.i10)
     {
+        console.log('updateCache wt', this.name);
         this._cache.a00 = this.worldTransform[0];  //  scaleX         a
         this._cache.a01 = this.worldTransform[1];  //  skewY          c
         this._cache.a10 = this.worldTransform[3];  //  skewX          b
@@ -430,13 +431,8 @@ Phaser.Sprite.prototype.updateAnimation = function() {
 
     if (this._cache.dirty && this.currentFrame)
     {
-        console.log('ua frame 2 change', this.name);
-        // this._cache.width = Math.floor(this.currentFrame.sourceSizeW * this._cache.scaleX);
-        // this._cache.height = Math.floor(this.currentFrame.sourceSizeH * this._cache.scaleY);
         this._cache.width = this.currentFrame.width;
         this._cache.height = this.currentFrame.height;
-        // this._cache.width = Math.floor(this.currentFrame.sourceSizeW);
-        // this._cache.height = Math.floor(this.currentFrame.sourceSizeH);
         this._cache.halfWidth = Math.floor(this._cache.width / 2);
         this._cache.halfHeight = Math.floor(this._cache.height / 2);
 
@@ -540,14 +536,16 @@ Phaser.Sprite.prototype.getLocalPosition = function(p, x, y, sx, sy) {
 * @param {number} y - Description.
 * @return {Description} Description.
 */
-Phaser.Sprite.prototype.getLocalUnmodifiedPosition = function(p, x, y) {
+Phaser.Sprite.prototype.getLocalUnmodifiedPosition = function(p, gx, gy) {
 
-    p.x = this._cache.a11 * this._cache.idi * x + -this._cache.i01 * this._cache.idi * y + (this._cache.a12 * this._cache.i01 - this._cache.a02 * this._cache.a11) * this._cache.idi;
-    p.y = this._cache.a00 * this._cache.idi * y + -this._cache.i10 * this._cache.idi * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.i10) * this._cache.idi;
+    var a00 = this.worldTransform[0], a01 = this.worldTransform[1], a02 = this.worldTransform[2],
+        a10 = this.worldTransform[3], a11 = this.worldTransform[4], a12 = this.worldTransform[5],
+        id = 1 / (a00 * a11 + a01 * -a10),
+        x = a11 * id * gx + -a01 * id * gy + (a12 * a01 - a02 * a11) * id,
+        y = a00 * id * gy + -a10 * id * gx + (-a12 * a00 + a02 * a10) * id;
 
-    //  apply anchor
-    p.x += (this.anchor.x * this._cache.width);
-    p.y += (this.anchor.y * this._cache.height);
+    p.x = x + (this.anchor.x * this._cache.width);
+    p.y = y + (this.anchor.y * this._cache.height);
 
     return p;
 

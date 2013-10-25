@@ -11,7 +11,10 @@ var b;
 
 function create() {
 
+    Phaser.Canvas.setSmoothingEnabled(game.context, false);
+
     b = game.add.sprite(game.world.centerX, game.world.centerY, 'mummy');
+
     b.anchor.setTo(0.5, 0.5);
     b.scale.setTo(6, 6);
     b.animations.add('walk');
@@ -42,5 +45,7 @@ function outSprite() {
 function render() {
 
     game.debug.renderSpriteInputInfo(b, 32, 32);
+    game.debug.renderSpriteCorners(b);
+    game.debug.renderPoint(b.input._tempPoint);
 
 }

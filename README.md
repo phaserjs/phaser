@@ -151,13 +151,13 @@ Version 1.1
 * Added Rectangle.floorAll to floor all values in a Rectangle (x, y, width and height).
 * Fixed Sound.resume so it now correctly resumes playback from the point it was paused (fixes issue 51, thanks Yora).
 * Sprite.loadTexture now works correctly with static images, RenderTextures and Animations.
-
+* Lots of fixes within Sprite.bounds. The bounds is now correct regardless of rotation, anchor or scale of the Sprite or any of its parent objects.
+* On a busy page it's possible for the game to boot with an incorrect stage offset x/y which can cause input events to be calculated wrong. A new property has been added to Stage to combat this issue: Stage.checkOffsetInterval. By default it will check the canvas offset every 2500ms and adjust it accordingly. You can set the value to 'false' to disable the check entirely, or set a higher or lower value. We recommend that you get the value quite low during your games preloader, but once the game has fully loaded hopefully the containing page will have settled down, so it's probably safe to disable the check entirely.
+* Pixel Perfect click detection now works even if the Sprite is part of a texture atlas.
 
 Outstanding Tasks
 -----------------
 
-* BUG: The pixel perfect click check doesn't work if the sprite is part of a texture atlas yet.
-* TODO: look at Sprite.crop (http://www.html5gamedevs.com/topic/1617-error-in-spritecrop/)
 * TODO: d-pad example (http://www.html5gamedevs.com/topic/1574-gameinputondown-question/)
 * TODO: more touch input examples (http://www.html5gamedevs.com/topic/1556-mobile-touch-event/)
 * TODO: Sound.addMarker hh:mm:ss:ms

@@ -206,25 +206,27 @@ Phaser.Utils.Debug.prototype = {
 
         if (showBounds)
         {
-            this.context.strokeStyle = 'rgba(255,0,0,1)';
+            this.context.beginPath();
+            this.context.strokeStyle = 'rgba(0, 255, 0, 0.7)';
             this.context.strokeRect(sprite.bounds.x, sprite.bounds.y, sprite.bounds.width, sprite.bounds.height);
+            this.context.closePath();
             this.context.stroke();
         }
 
-        // this.context.beginPath();
-        // this.context.moveTo(sprite.topLeft.x, sprite.topLeft.y);
-        // this.context.lineTo(sprite.topRight.x, sprite.topRight.y);
-        // this.context.lineTo(sprite.bottomRight.x, sprite.bottomRight.y);
-        // this.context.lineTo(sprite.bottomLeft.x, sprite.bottomLeft.y);
-        // this.context.closePath();
-        // this.context.strokeStyle = 'rgba(255,0,0,1)';
-        // this.context.stroke();
+        this.context.beginPath();
+        this.context.moveTo(sprite.topLeft.x, sprite.topLeft.y);
+        this.context.lineTo(sprite.topRight.x, sprite.topRight.y);
+        this.context.lineTo(sprite.bottomRight.x, sprite.bottomRight.y);
+        this.context.lineTo(sprite.bottomLeft.x, sprite.bottomLeft.y);
+        this.context.closePath();
+        this.context.strokeStyle = 'rgba(255, 0, 255, 0.7)';
+        this.context.stroke();
 
         this.renderPoint(sprite.center);
-        this.renderPoint(sprite.topLeft, 'rgb(255,255,0)');
-        this.renderPoint(sprite.topRight, 'rgb(255,0,0)');
-        this.renderPoint(sprite.bottomLeft, 'rgb(0,0,255)');
-        this.renderPoint(sprite.bottomRight, 'rgb(255,255,255)');
+        this.renderPoint(sprite.topLeft);
+        this.renderPoint(sprite.topRight);
+        this.renderPoint(sprite.bottomLeft);
+        this.renderPoint(sprite.bottomRight);
 
         if (showText)
         {

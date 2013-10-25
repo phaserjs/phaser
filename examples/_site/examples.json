@@ -321,6 +321,10 @@
       "title": "pixel perfect click detection"
     },
     {
+      "file": "pixelpick+-+atlas.js",
+      "title": "pixelpick - atlas"
+    },
+    {
       "file": "pixelpick+-+scrolling+effect.js",
       "title": "pixelpick - scrolling effect"
     },

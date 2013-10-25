@@ -61,6 +61,18 @@ Phaser.Stage = function (game, width, height) {
      */
     this.aspectRatio = width / height;
 
+    /**
+    * @property {number} _nextOffsetCheck - The time to run the next offset check.
+    * @private
+    */
+    this._nextOffsetCheck = 0;
+
+    /**
+    * @property {number|false} checkOffsetInterval - The time (in ms) between which the stage should check to see if it has moved.
+    * @default
+    */
+    this.checkOffsetInterval = 2500;
+
 };
 
 Phaser.Stage.prototype = {
@@ -92,6 +104,24 @@ Phaser.Stage.prototype = {
 
         window.onblur = this._onChange;
         window.onfocus = this._onChange;
+
+    },
+
+    /**
+    * Runs Stage processes that need periodic updates, such as the offset checks.
+    * @method Phaser.Stage#update
+    */
+    update: function () {
+
+        if (this.checkOffsetInterval !== false)
+        {
+            if (this.game.time.now > this._nextOffsetCheck)
+            {
+                Phaser.Canvas.getOffset(this.canvas, this.offset);
+                this._nextOffsetCheck = this.game.time.now + this.checkOffsetInterval;
+            }
+
+        }
 
     },
 

@@ -484,46 +484,18 @@ Phaser.InputHandler.prototype = {
         {
             this.sprite.getLocalUnmodifiedPosition(this._tempPoint, pointer.x, pointer.y);
 
-            //  The unmodified position is being offset by the anchor, i.e. into negative space
-
-            // var x = this.sprite.anchor.x * this.sprite.width;
-            // var y = this.sprite.anchor.y * this.sprite.height;
-            var x = 0;
-            var y = 0;
-
-            //  check world transform
-            if (this.sprite.worldTransform[3] == 0 && this.sprite.worldTransform[1] == 0)
+            if (this._tempPoint.x >= 0 && this._tempPoint.x <= this.sprite.currentFrame.width && this._tempPoint.y >= 0 && this._tempPoint.y <= this.sprite.currentFrame.height)
             {
-                //  Un-rotated (but potentially scaled)
-                if (this._tempPoint.x >= x && this._tempPoint.x <= this.sprite.width && this._tempPoint.y >= y && this._tempPoint.y <= this.sprite.height)
+                if (this.pixelPerfect)
                 {
-                    return true;
+                    return this.checkPixel(this._tempPoint.x, this._tempPoint.y);
                 }
-            }
-            else
-            {
-                //  Rotated (and could be scaled too)
-                if (this._tempPoint.x >= x && this._tempPoint.x <= this.sprite.currentFrame.width && this._tempPoint.y >= y && this._tempPoint.y <= this.sprite.currentFrame.height)
+                else
                 {
                     return true;
                 }
             }
         }
-
-                //         if (this.pixelPerfect)
-                //         {
-                //             return this.checkPixel(this._tempPoint.x, this._tempPoint.y);
-                //         }
-                //         else
-                //         {
-                //             return true;
-                //         }
-                //     }
-                // }
-
-        //     }
-
-        // }
 
         return false;
 
@@ -538,16 +510,16 @@ Phaser.InputHandler.prototype = {
      */
     checkPixel: function (x, y) {
 
-        x += (this.sprite.texture.frame.width * this.sprite.anchor.x);
-        y += (this.sprite.texture.frame.height * this.sprite.anchor.y);
-
         //  Grab a pixel from our image into the hitCanvas and then test it
-
         if (this.sprite.texture.baseTexture.source)
         {
             this.game.input.hitContext.clearRect(0, 0, 1, 1);
 
             //  This will fail if the image is part of a texture atlas - need to modify the x/y values here
+
+            x += this.sprite.texture.frame.x;
+            y += this.sprite.texture.frame.y;
+
             this.game.input.hitContext.drawImage(this.sprite.texture.baseTexture.source, x, y, 1, 1, 0, 0, 1, 1);
             
             var rgb = this.game.input.hitContext.getImageData(0, 0, 1, 1);
