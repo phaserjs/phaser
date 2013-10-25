@@ -390,7 +390,13 @@ Phaser.Sprite.prototype.updateCache = function() {
     //  |b d ty|
     //  |0 0  1|
 
-    if (this.worldTransform[1] != this._cache.i01 || this.worldTransform[3] != this._cache.i10)
+    //if (this.worldTransform[1] != this._cache.i01 || this.worldTransform[3] != this._cache.i10)
+    if (
+            this.worldTransform[0] != this._cache.a00 ||
+            this.worldTransform[4] != this._cache.a11 ||
+            this.worldTransform[1] != this._cache.i01 ||
+            this.worldTransform[3] != this._cache.i10
+            )    
     {
         this._cache.a00 = this.worldTransform[0];  //  scaleX         a
         this._cache.a01 = this.worldTransform[1];  //  skewY          c
