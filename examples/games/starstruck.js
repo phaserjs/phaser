@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create,update:update});
 
 function preload() {
 
@@ -28,25 +28,23 @@ function create() {
     bg = game.add.tileSprite(0, 0, 800, 600, 'background');
     bg.fixedToCamera = true;
 
-    map = new Phaser.Tilemap(game, 'level1');
+    map = game.add.tilemap('level1');
 
-    tileset = game.cache.getTileset('tiles');
+    tileset = game.add.tileset('tiles');
 
     tileset.setCollisionRange(0, tileset.total - 1, true, true, true, true);
 
-    tileset.setCollisionRange(12, 17, false, false, false, false);
-    tileset.setCollisionRange(46, 51, false, false, false, false);
+    // tileset.setCollisionRange(12, 16, false, false, false, false);
+    // tileset.setCollisionRange(46, 50, false, false, false, false);
 
-    layer = new Phaser.TilemapLayer(game, 0, 0, 800, 600, tileset, map, 0);
+    layer = game.add.tilemapLayer(0, 0, 800, 600, tileset, map, 0);
     layer.resizeWorld();
-
-    game.world.add(layer.sprite);
 
     player = game.add.sprite(32, 32, 'dude');
     player.body.bounce.y = 0.2;
     player.body.collideWorldBounds = true;
     player.body.gravity.y = 6;
-    player.body.setSize(16, 32, 8, 16);
+    // player.body.setSize(16, 32, 8, 16);
 
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('turn', [4], 20, true);
@@ -54,28 +52,16 @@ function create() {
 
     game.camera.follow(player);
 
+
+
 }
 
 function update() {
 
-    layer.update();
 
-    //    getTiles: function (x, y, width, height, collides, layer) {
-    overlap = layer.getTiles(player.body.x, player.body.y, player.body.width, player.body.height, true);
-
-    if (overlap.length > 1)
-    {
-        for (var i = 1; i < overlap.length; i++)
-        {
-            game.physics.separateTile(player.body, overlap[i]);
-        }
-    }
-
-    // game.physics.collide(player, map);
+    game.physics.collide(player, layer);
 
     player.body.velocity.x = 0;
-    // player.body.velocity.y = 0;
-    // player.body.acceleration.y = 500;
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
     {
@@ -124,16 +110,5 @@ function update() {
             jumpTimer = game.time.now + 750;
         }
     }
-
-}
-
-function render() {
-
-    layer.render();
-
-    // game.debug.renderSpriteBody(player);
-
-    // game.debug.renderSpriteInfo(player, 32, 32);
-    // game.debug.renderSpriteCollision(player, 32, 320);
 
 }
