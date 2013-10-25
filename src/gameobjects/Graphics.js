@@ -2,18 +2,17 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Graphics
 */
 
 /**
-* Description.
+* Creates a new <code>Graphics</code> object.
 * 
 * @class Phaser.Graphics
 * @constructor
 *
 * @param {Phaser.Game} game Current game instance.
-* @param {number} [x] X position of Description.
-* @param {number} [y] Y position of Description.
+* @param {number} x - X position of the new graphics object.
+* @param {number} y - Y position of the new graphics object.
 */
 Phaser.Graphics = function (game, x, y) {
 

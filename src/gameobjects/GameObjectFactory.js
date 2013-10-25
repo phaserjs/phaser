@@ -2,7 +2,6 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.GameObjectFactory
 */
 
 /**
@@ -43,8 +42,8 @@ Phaser.GameObjectFactory.prototype = {
     /**
     * Description.
     * @method existing.
-    * @param {object} - Description.
-    * @return {boolean} Description.
+    * @param {*} object - An instance of Phaser.Sprite, Phaser.Button or any other display object..
+    * @return {*} The child that was added to the Group.
     */
     existing: function (object) {
 
@@ -58,9 +57,9 @@ Phaser.GameObjectFactory.prototype = {
     * @method sprite
     * @param {number} x - X position of the new sprite.
     * @param {number} y - Y position of the new sprite.
-    * @param {string|RenderTexture} [key] - The image key as defined in the Game.Cache to use as the texture for this sprite OR a RenderTexture.
+    * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
     * @param {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-    * @returns {Description} Description.
+    * @returns {Phaser.Sprite} the newly created sprite object.
     */
     sprite: function (x, y, key, frame) {
 
@@ -77,7 +76,7 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} y - Y position of the new sprite.
     * @param {string|RenderTexture} [key] - The image key as defined in the Game.Cache to use as the texture for this sprite OR a RenderTexture.
     * @param  {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-    * @returns {Description} Description.
+    * @returns {Phaser.Sprite} the newly created sprite object.
     */
     child: function (group, x, y, key, frame) {
 
@@ -90,7 +89,7 @@ Phaser.GameObjectFactory.prototype = {
     *
     * @method tween
     * @param {object} obj - Object the tween will be run on.
-    * @return {Description} Description.
+    * @return {Phaser.Tween} Description.
     */
     tween: function (obj) {
 
@@ -99,12 +98,12 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Description.
+    * A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
     *
     * @method group
-    * @param {Description} parent - Description.
-    * @param {Description} name - Description.
-    * @return {Description} Description.
+    * @param {*} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
+    * @param {string} [name=group] - A name for this Group. Not used internally but useful for debugging.
+    * @return {Phaser.Group} The newly created group.
     */
     group: function (parent, name) {
 
@@ -113,13 +112,13 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-     * Description.
+     * Creates a new instance of the Sound class.
      *
      * @method audio
-     * @param {Description} key - Description.
-     * @param {Description} volume - Description.
-     * @param {Description} loop - Description.
-     * @return {Description} Description.
+     * @param {string} key - The Game.cache key of the sound that this object will use.
+     * @param {number} volume - The volume at which the sound will be played.
+     * @param {boolean} loop - Whether or not the sound will loop.
+     * @return {Phaser.Sound} The newly created text object.
      */
     audio: function (key, volume, loop) {
 
@@ -128,16 +127,16 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-     * Description.
+     * Creates a new <code>TileSprite</code>.
      *
      * @method tileSprite
-     * @param {Description} x - Description.
-     * @param {Description} y - Description.
-     * @param {Description} width - Description.
-     * @param {Description} height - Description.
-     * @param {Description} key - Description.
-     * @param {Description} frame - Description.
-     * @return {Description} Description.
+     * @param {number} x - X position of the new tileSprite.
+     * @param {number} y - Y position of the new tileSprite.
+     * @param {number} width - the width of the tilesprite.
+     * @param {number} height - the height of the tilesprite.
+     * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+     * @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+     * @return {Phaser.TileSprite} The newly created tileSprite object.
      */
     tileSprite: function (x, y, width, height, key, frame) {
 
@@ -146,13 +145,14 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-     * Description.
+     * Creates a new <code>Text</code>.
      *
      * @method text
-     * @param {Description} x - Description.
-     * @param {Description} y - Description.
-     * @param {Description} text - Description.
-     * @param {Description} style - Description.
+     * @param {number} x - X position of the new text object.
+     * @param {number} y - Y position of the new text object.
+     * @param {string} text - The actual text that will be written.
+     * @param {object} style - The style object containing style attributes like font, font size , etc.
+     * @return {Phaser.Text} The newly created text object.
      */
     text: function (x, y, text, style) {
 
@@ -161,17 +161,18 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Description.
+    * Creates a new <code>Button</code> object.
     *
     * @method button
-    * @param {Description} x - Description.
-    * @param {Description} y - Description.
-    * @param {Description} callback - Description.
-    * @param {Description} callbackContext - Description.
-    * @param {Description} overFrame - Description.
-    * @param {Description} outFrame - Description.
-    * @param {Description} downFrame - Description.
-    * @return {Description} Description.
+    * @param {number} [x] X position of the new button object.
+    * @param {number} [y] Y position of the new button object.
+    * @param {string} [key] The image key as defined in the Game.Cache to use as the texture for this button.
+    * @param {function} [callback] The function to call when this button is pressed
+    * @param {object} [callbackContext] The context in which the callback will be called (usually 'this')
+    * @param {string|number} [overFrame] This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
+    * @param {string|number} [outFrame] This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
+    * @param {string|number} [downFrame] This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
+    * @return {Phaser.Button} The newly created button object.
     */
     button: function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame) {
 
@@ -180,12 +181,12 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-     * Description.
+     * Creates a new <code>Graphics</code> object.
      *
      * @method graphics
-     * @param {Description} x - Description.
-     * @param {Description} y - Description.
-     * @return {Description} Description.
+     * @param {number} x - X position of the new graphics object.
+     * @param {number} y - Y position of the new graphics object.
+     * @return {Phaser.Graphics} The newly created graphics object.
      */
     graphics: function (x, y) {
 
@@ -194,13 +195,15 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Description.
+    * Emitter is a lightweight particle emitter. It can be used for one-time explosions or for
+    * continuous effects like rain and fire. All it really does is launch Particle objects out
+    * at set intervals, and fixes their positions and velocities accorindgly.
     *
     * @method emitter
-    * @param {Description} x - Description.
-    * @param {Description} y - Description.
-    * @param {Description} maxParticles - Description.
-    * @return {Description} Description.
+    * @param {number} [x=0] - The x coordinate within the Emitter that the particles are emitted from.
+    * @param {number} [y=0] - The y coordinate within the Emitter that the particles are emitted from.
+    * @param {number} [maxParticles=50] - The total number of particles in this emitter.
+    * @return {Phaser.Emitter} The newly created emitter object.
     */
     emitter: function (x, y, maxParticles) {
 
@@ -209,14 +212,14 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Description.
+    * * Create a new <code>BitmapText</code>.
     *
     * @method bitmapText
-    * @param {Description} x - Description.
-    * @param {Description} y - Description.
-    * @param {Description} text - Description.
-    * @param {Description} style - Description.
-    * @return {Description} Description.
+    * @param {number} x - X position of the new bitmapText object.
+    * @param {number} y - Y position of the new bitmapText object.
+    * @param {string} text - The actual text that will be written.
+    * @param {object} style - The style object containing style attributes like font, font size , etc.
+    * @return {Phaser.BitmapText} The newly created bitmapText object.
     */
     bitmapText: function (x, y, text, style) {
 
@@ -228,8 +231,8 @@ Phaser.GameObjectFactory.prototype = {
     * Description.
     *
     * @method tilemap
-    * @param {Description} key - Description.
-    * @return {Description} Description.
+    * @param {string} key - Asset key for the JSON file.
+    * @return {Phaser.Tilemap} The newly created tilemap object.
     */
     tilemap: function (key) {
 
@@ -240,9 +243,9 @@ Phaser.GameObjectFactory.prototype = {
     /**
     * Description.
     *
-    * @method tilemap
-    * @param {Description} key - Description.
-    * @return {Description} Description.
+    * @method tileset
+    * @param {string} key - The image key as defined in the Game.Cache to use as the tileset.
+    * @return {Phaser.Tileset} The newly created tileset object.
     */
     tileset: function (key) {
 
@@ -253,14 +256,12 @@ Phaser.GameObjectFactory.prototype = {
     /**
      * Description.
      *
-     * @method tileSprite
-     * @param {Description} x - Description.
-     * @param {Description} y - Description.
-     * @param {Description} width - Description.
-     * @param {Description} height - Description.
-     * @param {Description} key - Description.
-     * @param {Description} frame - Description.
-     * @return {Description} Description.
+     * @method tilemaplayer
+     * @param {number} x - X position of the new tilemapLayer.
+     * @param {number} y - Y position of the new tilemapLayer.
+     * @param {number} width - the width of the tilemapLayer.
+     * @param {number} height - the height of the tilemapLayer.
+     * @return {Phaser.TilemapLayer} The newly created tilemaplayer object.
      */
     tilemapLayer: function (x, y, width, height, tileset, tilemap, layer) {
 
@@ -269,13 +270,13 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Description.
+    * A dynamic initially blank canvas to which images can be drawn
     *
     * @method renderTexture
-    * @param {Description} key - Description.
-    * @param {Description} width - Description.
-    * @param {Description} height - Description.
-    * @return {Description} Description.
+    * @param {string} key - Asset key for the render texture.
+    * @param {number} width - the width of the render texture.
+    * @param {number} height - the height of the render texture.
+    * @return {Phaser.RenderTexture} The newly created renderTexture object.
     */
     renderTexture: function (key, width, height) {
 
