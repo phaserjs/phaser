@@ -58,7 +58,7 @@ Phaser.GameObjectFactory.prototype = {
     * @method sprite
     * @param {number} x - X position of the new sprite.
     * @param {number} y - Y position of the new sprite.
-    * @param {string|RenderTexture} [key] - The image key as defined in the Game.Cache to use as the texture for this sprite OR a RenderTexture.
+    * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
     * @param {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
     * @returns {Description} Description.
     */
@@ -90,7 +90,7 @@ Phaser.GameObjectFactory.prototype = {
     *
     * @method tween
     * @param {object} obj - Object the tween will be run on.
-    * @return {Description} Description.
+    * @return {Phaser.Tween} Description.
     */
     tween: function (obj) {
 
@@ -99,12 +99,12 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Description.
+    * Creates a new group to be added on the display list
     *
     * @method group
     * @param {Description} parent - Description.
     * @param {Description} name - Description.
-    * @return {Description} Description.
+    * @return {Phaser.Group} The newly created group.
     */
     group: function (parent, name) {
 
@@ -116,10 +116,10 @@ Phaser.GameObjectFactory.prototype = {
      * Description.
      *
      * @method audio
-     * @param {Description} key - Description.
-     * @param {Description} volume - Description.
-     * @param {Description} loop - Description.
-     * @return {Description} Description.
+     * @param {string} key - The Game.cache key of the sound that this object will use.
+     * @param {number} volume - The volume at which the sound will be played.
+     * @param {boolean} loop - Whether or not the sound will loop.
+     * @return {Phaser.Audio} The audio object.
      */
     audio: function (key, volume, loop) {
 
@@ -131,11 +131,11 @@ Phaser.GameObjectFactory.prototype = {
      * Description.
      *
      * @method tileSprite
-     * @param {Description} x - Description.
-     * @param {Description} y - Description.
-     * @param {Description} width - Description.
-     * @param {Description} height - Description.
-     * @param {Description} key - Description.
+     * @param {number} x - X position of the new tileSprite.
+     * @param {number} y - Y position of the new tileSprite.
+     * @param {Description} width - the width of the tilesprite.
+     * @param {Description} height - the height of the tilesprite.
+     * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
      * @param {Description} frame - Description.
      * @return {Description} Description.
      */
@@ -149,10 +149,10 @@ Phaser.GameObjectFactory.prototype = {
      * Description.
      *
      * @method text
-     * @param {Description} x - Description.
-     * @param {Description} y - Description.
-     * @param {Description} text - Description.
-     * @param {Description} style - Description.
+     * @param {number} x - X position of the new text object.
+     * @param {number} y - Y position of the new text object.
+     * @param {string} text - The actual text that will be written.
+     * @param {object} style - The style object containing style attributes like font, font size , etc.
      */
     text: function (x, y, text, style) {
 
