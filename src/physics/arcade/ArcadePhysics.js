@@ -49,8 +49,6 @@ Phaser.Physics.Arcade = function (game) {
     */
     this.OVERLAP_BIAS = 4;
 
-    // this.TILE_OVERLAP = false;
-
     /**
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
     */

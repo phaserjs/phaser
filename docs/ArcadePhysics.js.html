@@ -227,6 +227,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Plugin.html">Plugin</a>
 						</li>
 						
@@ -345,39 +349,7 @@
 					<ul class="dropdown-menu ">
 						
 						<li>
-							<a href="global.html#audio">audio</a>
-						</li>
-						
-						<li>
-							<a href="global.html#bitmapText">bitmapText</a>
-						</li>
-						
-						<li>
 							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#button">button</a>
-						</li>
-						
-						<li>
-							<a href="global.html#child">child</a>
-						</li>
-						
-						<li>
-							<a href="global.html#emitter">emitter</a>
-						</li>
-						
-						<li>
-							<a href="global.html#existing.">existing.</a>
-						</li>
-						
-						<li>
-							<a href="global.html#graphics">graphics</a>
-						</li>
-						
-						<li>
-							<a href="global.html#group">group</a>
 						</li>
 						
 						<li>
@@ -385,39 +357,7 @@
 						</li>
 						
 						<li>
-							<a href="global.html#renderTexture">renderTexture</a>
-						</li>
-						
-						<li>
 							<a href="global.html#right">right</a>
-						</li>
-						
-						<li>
-							<a href="global.html#sprite">sprite</a>
-						</li>
-						
-						<li>
-							<a href="global.html#text">text</a>
-						</li>
-						
-						<li>
-							<a href="global.html#tilemap">tilemap</a>
-						</li>
-						
-						<li>
-							<a href="global.html#tilemaplayer">tilemaplayer</a>
-						</li>
-						
-						<li>
-							<a href="global.html#tileset">tileset</a>
-						</li>
-						
-						<li>
-							<a href="global.html#tileSprite">tileSprite</a>
-						</li>
-						
-						<li>
-							<a href="global.html#tween">tween</a>
 						</li>
 						
 
@@ -462,45 +402,142 @@ Phaser.Physics = {};
 */
 Phaser.Physics.Arcade = function (game) {
     
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
     this.game = game;
 
+    /**
+    * @property {Phaser.Point} gravity - The World gravity setting. Defaults to x: 0, y: 0, or no gravity.
+    */
     this.gravity = new Phaser.Point;
+
+    /**
+    * @property {Phaser.Rectangle} bounds - The bounds inside of which the physics world exists. Defaults to match the world bounds.
+    */
     this.bounds = new Phaser.Rectangle(0, 0, game.world.width, game.world.height);
 
     /**
-    * Used by the QuadTree to set the maximum number of objects
-    * @type {number}
+    * @property {number} maxObjects - Used by the QuadTree to set the maximum number of objects per quad.
     */
     this.maxObjects = 10;
 
     /**
-    * Used by the QuadTree to set the maximum number of levels
-    * @type {number}
+    * @property {number} maxLevels - Used by the QuadTree to set the maximum number of iteration levels.
     */
     this.maxLevels = 4;
 
+    /**
+    * @property {number} OVERLAP_BIAS - A value added to the delta values during collision checks.
+    */
     this.OVERLAP_BIAS = 4;
-    this.TILE_OVERLAP = false;
 
+    /**
+    * @property {Phaser.QuadTree} quadTree - The world QuadTree.
+    */
     this.quadTree = new Phaser.QuadTree(this, this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
+
+    /**
+    * @property {number} quadTreeID - The QuadTree ID.
+    */
     this.quadTreeID = 0;
 
     //  Avoid gc spikes by caching these values for re-use
+
+    /**
+    * @property {Phaser.Rectangle} _bounds1 - Internal cache var.
+    * @private
+    */
     this._bounds1 = new Phaser.Rectangle;
+
+    /**
+    * @property {Phaser.Rectangle} _bounds2 - Internal cache var.
+    * @private
+    */
     this._bounds2 = new Phaser.Rectangle;
+
+    /**
+    * @property {number} _overlap - Internal cache var.
+    * @private
+    */
     this._overlap = 0;
+
+    /**
+    * @property {number} _maxOverlap - Internal cache var.
+    * @private
+    */
     this._maxOverlap = 0;
+
+    /**
+    * @property {number} _velocity1 - Internal cache var.
+    * @private
+    */
     this._velocity1 = 0;
+
+    /**
+    * @property {number} _velocity2 - Internal cache var.
+    * @private
+    */
     this._velocity2 = 0;
+
+    /**
+    * @property {number} _newVelocity1 - Internal cache var.
+    * @private
+    */
     this._newVelocity1 = 0;
+
+    /**
+    * @property {number} _newVelocity2 - Internal cache var.
+    * @private
+    */
     this._newVelocity2 = 0;
+
+    /**
+    * @property {number} _average - Internal cache var.
+    * @private
+    */
     this._average = 0;
+
+    /**
+    * @property {Array} _mapData - Internal cache var.
+    * @private
+    */
     this._mapData = [];
+
+    /**
+    * @property {number} _mapTiles - Internal cache var.
+    * @private
+    */
     this._mapTiles = 0;
+
+    /**
+    * @property {boolean} _result - Internal cache var.
+    * @private
+    */
     this._result = false;
+
+    /**
+    * @property {number} _total - Internal cache var.
+    * @private
+    */
     this._total = 0;
+
+    /**
+    * @property {number} _angle - Internal cache var.
+    * @private
+    */
     this._angle = 0;
+
+    /**
+    * @property {number} _dx - Internal cache var.
+    * @private
+    */
     this._dx = 0;
+
+    /**
+    * @property {number} _dy - Internal cache var.
+    * @private
+    */
     this._dy = 0;
 
 };
@@ -1735,7 +1772,7 @@ Phaser.Physics.Arcade.prototype = {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Fri Oct 25 2013 16:16:43 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Oct 25 2013 17:05:24 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

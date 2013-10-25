@@ -5,7 +5,7 @@
     "source": {
         "include": [ 
             "../../src/Phaser.js", 
-            "../../src/Intro.js", 
+            "../../src/IntroDocs.js", 
             "../../src/animation/", 
             "../../src/core/", 
             "../../src/gameobjects/", 

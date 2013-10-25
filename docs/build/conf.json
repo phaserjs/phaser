@@ -5,7 +5,7 @@
     "source": {
         "include": [ 
             "../../src/Phaser.js", 
-            "../../src/Intro.js", 
+            "../../src/IntroDocs.js", 
             "../../src/animation/", 
             "../../src/core/", 
             "../../src/gameobjects/", 
@@ -15,10 +15,9 @@
             "../../src/math/", 
             "../../src/net/", 
             "../../src/particles/", 
-            "../../src/physics/", 
+            "../../src/physics/arcade/", 
             "../../src/sound/", 
             "../../src/system/", 
-            "../../src/tilemap/", 
             "../../src/time/", 
             "../../src/tween/", 
             "../../src/utils/" 

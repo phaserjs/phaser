@@ -5,7 +5,7 @@
 */
 
 /**
-* Description.
+* The Game Object Factory is a quick way to create all of the different sorts of core objects that Phaser uses.
 *
 * @class Phaser.GameObjectFactory
 * @constructor
@@ -28,20 +28,8 @@ Phaser.GameObjectFactory = function (game) {
 Phaser.GameObjectFactory.prototype = {
 
     /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    * @default
-    */
-	game: null,
-	
-    /**
-	* @property {Phaser.World} world - A reference to the game world.
-	* @default
-	*/
-    world: null,
-
-    /**
-    * Description.
-    * @method existing.
+    * Adds an existing object to the game world.
+    * @method Phaser.GameObjectFactory#existing
     * @param {*} object - An instance of Phaser.Sprite, Phaser.Button or any other display object..
     * @return {*} The child that was added to the Group.
     */
@@ -54,7 +42,7 @@ Phaser.GameObjectFactory.prototype = {
 	/**
     * Create a new Sprite with specific position and sprite sheet key.
     *
-    * @method sprite
+    * @method Phaser.GameObjectFactory#sprite
     * @param {number} x - X position of the new sprite.
     * @param {number} y - Y position of the new sprite.
     * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
@@ -70,7 +58,7 @@ Phaser.GameObjectFactory.prototype = {
     /**
     * Create a new Sprite with specific position and sprite sheet key that will automatically be added as a child of the given parent.
     *
-    * @method child
+    * @method Phaser.GameObjectFactory#child
     * @param {Phaser.Group} group - The Group to add this child to.
     * @param {number} x - X position of the new sprite.
     * @param {number} y - Y position of the new sprite.
@@ -87,7 +75,7 @@ Phaser.GameObjectFactory.prototype = {
     /**
     * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
     *
-    * @method tween
+    * @method Phaser.GameObjectFactory#tween
     * @param {object} obj - Object the tween will be run on.
     * @return {Phaser.Tween} Description.
     */
@@ -100,7 +88,7 @@ Phaser.GameObjectFactory.prototype = {
     /**
     * A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
     *
-    * @method group
+    * @method Phaser.GameObjectFactory#group
     * @param {*} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
     * @param {string} [name=group] - A name for this Group. Not used internally but useful for debugging.
     * @return {Phaser.Group} The newly created group.
@@ -114,7 +102,7 @@ Phaser.GameObjectFactory.prototype = {
     /**
      * Creates a new instance of the Sound class.
      *
-     * @method audio
+    * @method Phaser.GameObjectFactory#audio
      * @param {string} key - The Game.cache key of the sound that this object will use.
      * @param {number} volume - The volume at which the sound will be played.
      * @param {boolean} loop - Whether or not the sound will loop.
@@ -129,7 +117,7 @@ Phaser.GameObjectFactory.prototype = {
     /**
      * Creates a new <code>TileSprite</code>.
      *
-     * @method tileSprite
+    * @method Phaser.GameObjectFactory#tileSprite
      * @param {number} x - X position of the new tileSprite.
      * @param {number} y - Y position of the new tileSprite.
      * @param {number} width - the width of the tilesprite.
@@ -147,7 +135,7 @@ Phaser.GameObjectFactory.prototype = {
     /**
      * Creates a new <code>Text</code>.
      *
-     * @method text
+    * @method Phaser.GameObjectFactory#text
      * @param {number} x - X position of the new text object.
      * @param {number} y - Y position of the new text object.
      * @param {string} text - The actual text that will be written.
@@ -163,7 +151,7 @@ Phaser.GameObjectFactory.prototype = {
     /**
     * Creates a new <code>Button</code> object.
     *
-    * @method button
+    * @method Phaser.GameObjectFactory#button
     * @param {number} [x] X position of the new button object.
     * @param {number} [y] Y position of the new button object.
     * @param {string} [key] The image key as defined in the Game.Cache to use as the texture for this button.
@@ -183,7 +171,7 @@ Phaser.GameObjectFactory.prototype = {
     /**
      * Creates a new <code>Graphics</code> object.
      *
-     * @method graphics
+    * @method Phaser.GameObjectFactory#graphics
      * @param {number} x - X position of the new graphics object.
      * @param {number} y - Y position of the new graphics object.
      * @return {Phaser.Graphics} The newly created graphics object.
@@ -199,7 +187,7 @@ Phaser.GameObjectFactory.prototype = {
     * continuous effects like rain and fire. All it really does is launch Particle objects out
     * at set intervals, and fixes their positions and velocities accorindgly.
     *
-    * @method emitter
+    * @method Phaser.GameObjectFactory#emitter
     * @param {number} [x=0] - The x coordinate within the Emitter that the particles are emitted from.
     * @param {number} [y=0] - The y coordinate within the Emitter that the particles are emitted from.
     * @param {number} [maxParticles=50] - The total number of particles in this emitter.
@@ -214,7 +202,7 @@ Phaser.GameObjectFactory.prototype = {
     /**
     * * Create a new <code>BitmapText</code>.
     *
-    * @method bitmapText
+    * @method Phaser.GameObjectFactory#bitmapText
     * @param {number} x - X position of the new bitmapText object.
     * @param {number} y - Y position of the new bitmapText object.
     * @param {string} text - The actual text that will be written.
@@ -228,9 +216,9 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Description.
+    * Creates a new Tilemap object.
     *
-    * @method tilemap
+    * @method Phaser.GameObjectFactory#tilemap
     * @param {string} key - Asset key for the JSON file.
     * @return {Phaser.Tilemap} The newly created tilemap object.
     */
@@ -241,9 +229,9 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Description.
+    * Creates a new Tileset object.
     *
-    * @method tileset
+    * @method Phaser.GameObjectFactory#tileset
     * @param {string} key - The image key as defined in the Game.Cache to use as the tileset.
     * @return {Phaser.Tileset} The newly created tileset object.
     */
@@ -254,15 +242,15 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-     * Description.
-     *
-     * @method tilemaplayer
-     * @param {number} x - X position of the new tilemapLayer.
-     * @param {number} y - Y position of the new tilemapLayer.
-     * @param {number} width - the width of the tilemapLayer.
-     * @param {number} height - the height of the tilemapLayer.
-     * @return {Phaser.TilemapLayer} The newly created tilemaplayer object.
-     */
+    * Creates a new Tilemap Layer object.
+    *
+    * @method Phaser.GameObjectFactory#tilemapLayer
+    * @param {number} x - X position of the new tilemapLayer.
+    * @param {number} y - Y position of the new tilemapLayer.
+    * @param {number} width - the width of the tilemapLayer.
+    * @param {number} height - the height of the tilemapLayer.
+    * @return {Phaser.TilemapLayer} The newly created tilemaplayer object.
+    */
     tilemapLayer: function (x, y, width, height, tileset, tilemap, layer) {
 
         return this.world.add(new Phaser.TilemapLayer(this.game, x, y, width, height, tileset, tilemap, layer));
@@ -270,9 +258,9 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * A dynamic initially blank canvas to which images can be drawn
+    * A dynamic initially blank canvas to which images can be drawn.
     *
-    * @method renderTexture
+    * @method Phaser.GameObjectFactory#renderTexture
     * @param {string} key - Asset key for the render texture.
     * @param {number} width - the width of the render texture.
     * @param {number} height - the height of the render texture.
@@ -286,6 +274,6 @@ Phaser.GameObjectFactory.prototype = {
 
         return texture;
 
-    },
+    }
 
 };
