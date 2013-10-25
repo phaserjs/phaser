@@ -19,10 +19,6 @@
     {
       "file": "sprite+sheet.js",
       "title": "sprite sheet"
-    },
-    {
-      "file": "texture+packer+json+hash.js",
-      "title": "texture packer json hash"
     }
   ],
   "audio": [
@@ -43,6 +39,26 @@
     {
       "file": "01+-+load+an+image.js",
       "title": "01 - load an image"
+    },
+    {
+      "file": "02+-+click+on+an+image.js",
+      "title": "02 - click on an image"
+    },
+    {
+      "file": "03+-+move+an+image.js",
+      "title": "03 - move an image"
+    },
+    {
+      "file": "04+-+image+follow+input.js",
+      "title": "04 - image follow input"
+    },
+    {
+      "file": "05+-+load+an+animation.js",
+      "title": "05 - load an animation"
+    },
+    {
+      "file": "06+-+render+text.js",
+      "title": "06 - render text"
     }
   ],
   "buttons": [
@@ -505,10 +521,6 @@
       "title": "bitmap fonts"
     },
     {
-      "file": "hello+arial.js",
-      "title": "hello arial"
-    },
-    {
       "file": "kern+of+duty.js",
       "title": "kern of duty"
     },
@@ -575,22 +587,6 @@
     {
       "file": "swap+tiles.js",
       "title": "swap tiles"
-    },
-    {
-      "file": "wip1.js",
-      "title": "wip1"
-    },
-    {
-      "file": "wip2.js",
-      "title": "wip2"
-    },
-    {
-      "file": "wip3.js",
-      "title": "wip3"
-    },
-    {
-      "file": "wip4.js",
-      "title": "wip4"
     }
   ],
   "tweens": [
