@@ -2,19 +2,21 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Sprite
 */
 
 /**
-* Create a new <code>Sprite</code>.
+* Create a new <code>Sprite</code> object. Sprites are the lifeblood of your game, used for nearly everything visual.
+* At its most basic a Sprite consists of a set of coordinates and a texture that is rendered to the canvas.
+* They also contain additional properties allowing for physics motion (via Sprite.body), input handling (via Sprite.input),
+* events (via Sprite.events), animation (via Sprite.animations), camera culling and more. Please see the Examples for use cases.
+*
 * @class Phaser.Sprite
-* @classdesc Description of class.
 * @constructor
-* @param {Phaser.Game} game - Current game instance.
-* @param {Description} x - Description.
-* @param {Description} y - Description.
-* @param {string} key - Description.
-* @param {Description} frame - Description.
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {number} x - The x coordinate (in world space) to position the Sprite at.
+* @param {number} y - The y coordinate (in world space) to position the Sprite at.
+* @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+* @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
 Phaser.Sprite = function (game, x, y, key, frame) {
 
@@ -41,8 +43,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.alive = true;
 
 	/**
-    * @property {Description} group - Description.
-   	* @default
+    * @property {Phaser.Group} group - The parent Group of this Sprite. This is usually set after Sprite instantiation by the parent.
    	*/
     this.group = null;
 
@@ -53,12 +54,13 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.name = '';
 
     /**
-	* @property {Description} type - Description.
+	* @property {number} type - The const type of this object.
+    * @default
 	*/
     this.type = Phaser.SPRITE;
 
     /**
-	* @property {number} renderOrderID - Description.
+	* @property {number} renderOrderID - Used by the Renderer and Input Manager to control picking order.
 	* @default
 	*/
     this.renderOrderID = -1;
@@ -72,12 +74,12 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.lifespan = 0;
 
     /**
-    * @property {Events} events - The Signals you can subscribe to that are dispatched when certain things happen on this Sprite or its components
+    * @property {Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
     */
     this.events = new Phaser.Events(this);
 
     /**
-    * @property {Phaser.AnimationManager} animations - This manages animations of the sprite. You can modify animations through it. (see Phaser.AnimationManager)
+    * @property {Phaser.AnimationManager} animations - This manages animations of the sprite. You can modify animations through it (see Phaser.AnimationManager)
     */
     this.animations = new Phaser.AnimationManager(this);
 
@@ -87,9 +89,14 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.input = new Phaser.InputHandler(this);
 
     /**
-    *  @property {Description} key - Description.
+    *  @property {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
     */
     this.key = key;
+
+    /**
+    *  @property {Phaser.Frame} currentFrame - A reference to the currently displayed frame.
+    */
+    this.currentFrame = null;
 
     if (key instanceof Phaser.RenderTexture)
     {
@@ -146,26 +153,21 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.anchor = new Phaser.Point();
 
     /**
-    * @property {number} x - Description.
+    * @property {number} x - The x coordinate (in world space) of this Sprite.
     */
     this.x = x;
     
     /**
-    * @property {number} y - Description.
+    * @property {number} y - The y coordinate (in world space) of this Sprite.
     */
     this.y = y;
 
-    /**
-    * @property {Description} position - Description.
-    */
 	this.position.x = x;
 	this.position.y = y;
 
     /**
     * Should this Sprite be automatically culled if out of range of the camera?
-    * A culled sprite has its visible property set to 'false'.
-    * Note that this check doesn't look at this Sprites children, which may still be in camera range.
-    * So you should set autoCull to false if the Sprite will have children likely to still be in camera range.
+    * A culled sprite has its renderable property set to 'false'.
     *
     * @property {boolean} autoCull
     * @default
@@ -173,7 +175,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.autoCull = false;
 
     /**
-    * @property {Phaser.Point} scale - Replaces the PIXI.Point with a slightly more flexible one.
+    * @property {Phaser.Point} scale - The scale of the Sprite when rendered. By default it's set to 1 (no scale). You can modify it via scale.x or scale.y or scale.setTo(x, y). A value of 1 means no change to the scale, 0.5 means "half the size", 2 means "twice the size", etc.
     */ 
     this.scale = new Phaser.Point(1, 1);
 
@@ -227,42 +229,45 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     };
   
     /**
-    * @property {Phaser.Point} offset - Corner point defaults.
+    * @property {Phaser.Point} offset - Corner point defaults. Should not typically be modified.
     */    
     this.offset = new Phaser.Point;
     
     /**
-    * @property {Phaser.Point} center - Description.
+    * @property {Phaser.Point} center - A Point containing the center coordinate of the Sprite. Takes rotation and scale into account.
     */
     this.center = new Phaser.Point(x + Math.floor(this._cache.width / 2), y + Math.floor(this._cache.height / 2));
    
     /**
-    * @property {Phaser.Point} topLeft - Description.
+    * @property {Phaser.Point} topLeft - A Point containing the top left coordinate of the Sprite. Takes rotation and scale into account.
     */
     this.topLeft = new Phaser.Point(x, y);
     
     /**
-    * @property {Phaser.Point} topRight - Description.
+    * @property {Phaser.Point} topRight - A Point containing the top right coordinate of the Sprite. Takes rotation and scale into account.
     */
     this.topRight = new Phaser.Point(x + this._cache.width, y);
     
     /**
-    * @property {Phaser.Point} bottomRight - Description.
+    * @property {Phaser.Point} bottomRight - A Point containing the bottom right coordinate of the Sprite. Takes rotation and scale into account.
     */
     this.bottomRight = new Phaser.Point(x + this._cache.width, y + this._cache.height);
     
     /**
-    * @property {Phaser.Point} bottomLeft - Description.
+    * @property {Phaser.Point} bottomLeft - A Point containing the bottom left coordinate of the Sprite. Takes rotation and scale into account.
     */
     this.bottomLeft = new Phaser.Point(x, y + this._cache.height);
     
     /**
-    * @property {Phaser.Rectangle} bounds - Description.
+    * This Rectangle object fully encompasses the Sprite and is updated in real-time.
+    * The bounds is the full bounding area after rotation and scale have been taken into account. It should not be modified directly.
+    * It's used for Camera culling and physics body alignment.
+    * @property {Phaser.Rectangle} bounds
     */
     this.bounds = new Phaser.Rectangle(x, y, this._cache.width, this._cache.height);
     
     /**
-    * @property {Phaser.Physics.Arcade.Body} body - Set-up the physics body.
+    * @property {Phaser.Physics.Arcade.Body} body - By default Sprites have a Phaser.Physics Body attached to them. You can operate physics actions via this property, or null it to skip all physics updates.
     */
     this.body = new Phaser.Physics.Arcade.Body(this);
 
@@ -272,24 +277,24 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.health = 1;
 
     /**
-    * @property {Description} inWorld - World bounds check.
+    * @property {boolean} inWorld - This value is set to true if the Sprite is positioned within the World, otherwise false.
     */
     this.inWorld = Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds);
     
     /**
-    * @property {number} inWorldThreshold - World bounds check.
+    * @property {number} inWorldThreshold - A threshold value applied to the inWorld check. If you don't want a Sprite to be considered "out of the world" until at least 100px away for example then set it to 100.
     * @default
     */
     this.inWorldThreshold = 0;
 
     /**
-    * @property {boolean} outOfBoundsKill - Kills this sprite as soon as it goes outside of the World bounds.
+    * @property {boolean} outOfBoundsKill - If true the Sprite is killed as soon as Sprite.inWorld is false.
     * @default
     */
     this.outOfBoundsKill = false;
     
     /**
-    * @property {boolean} _outOfBoundsFired - Description.
+    * @property {boolean} _outOfBoundsFired - Internal flag.
     * @private
     * @default
     */
@@ -302,7 +307,18 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */
     this.fixedToCamera = false;
 
+    /**
+    * You can crop the Sprites texture by modifying the crop properties. For example crop.width = 50 would set the Sprite to only render 50px wide.
+    * The crop is only applied if you have set Sprite.cropEnabled to true.
+    * @property {Phaser.Rectangle} crop
+    * @default
+    */
     this.crop = new Phaser.Rectangle(0, 0, this._cache.width, this._cache.height);
+
+    /**
+    * @property {boolean} cropEnabled - If true the Sprite.crop property is used to crop the texture before render. Set to false to disable.
+    * @default
+    */
     this.cropEnabled = false;
 
 };
@@ -312,8 +328,10 @@ Phaser.Sprite.prototype = Object.create(PIXI.Sprite.prototype);
 Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 
 /**
-* Automatically called by World.preUpdate. You can create your own update in Objects that extend Phaser.Sprite.
-* @method Phaser.Sprite.prototype.preUpdate
+* Automatically called by World.preUpdate. Handles cache updates, lifespan checks, animation updates and physics updates.
+*
+* @method Phaser.Sprite#preUpdate
+* @memberof Phaser.Sprite
 */
 Phaser.Sprite.prototype.preUpdate = function() {
 
@@ -384,6 +402,12 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
 }
 
+/**
+* Internal function called by preUpdate.
+*
+* @method Phaser.Sprite#updateCache
+* @memberof Phaser.Sprite
+*/
 Phaser.Sprite.prototype.updateCache = function() {
 
     //  |a c tx|
@@ -418,6 +442,12 @@ Phaser.Sprite.prototype.updateCache = function() {
 
 }
 
+/**
+* Internal function called by preUpdate.
+*
+* @method Phaser.Sprite#updateAnimation
+* @memberof Phaser.Sprite
+*/
 Phaser.Sprite.prototype.updateAnimation = function() {
 
     if (this.currentFrame && this.currentFrame.uuid != this._cache.frameID)
@@ -442,9 +472,10 @@ Phaser.Sprite.prototype.updateAnimation = function() {
 }
 
 /**
-* Description.
-*   
-* @method Phaser.Sprite.prototype.updateBounds
+* Internal function called by preUpdate.
+*
+* @method Phaser.Sprite#updateBounds
+* @memberof Phaser.Sprite
 */
 Phaser.Sprite.prototype.updateBounds = function() {
 
@@ -509,13 +540,17 @@ Phaser.Sprite.prototype.updateBounds = function() {
 }
 
 /**
-* Description.
+* Gets the local position of a coordinate relative to the Sprite, factoring in rotation and scale.
+* Mostly only used internally.
 * 
-* @method Phaser.Sprite.prototype.getLocalPosition
-* @param {Description} p - Description.
-* @param {number} x - Description.
-* @param {number} y - Description.
-* @return {Description} Description.
+* @method Phaser.Sprite#getLocalPosition
+* @memberof Phaser.Sprite
+* @param {Phaser.Point} p - The Point object to store the results in.
+* @param {number} x - x coordinate within the Sprite to translate.
+* @param {number} y - x coordinate within the Sprite to translate.
+* @param {number} sx - Scale factor to be applied.
+* @param {number} sy - Scale factor to be applied.
+* @return {Phaser.Point} The translated point.
 */
 Phaser.Sprite.prototype.getLocalPosition = function(p, x, y, sx, sy) {
 
@@ -527,13 +562,15 @@ Phaser.Sprite.prototype.getLocalPosition = function(p, x, y, sx, sy) {
 }
 
 /**
-* Description.
+* Gets the local unmodified position of a coordinate relative to the Sprite, factoring in rotation and scale.
+* Mostly only used internally by the Input Manager, but also useful for custom hit detection.
 * 
-* @method Phaser.Sprite.prototype.getLocalUnmodifiedPosition
-* @param {Description} p - Description.
-* @param {number} x - Description.
-* @param {number} y - Description.
-* @return {Description} Description.
+* @method Phaser.Sprite#getLocalUnmodifiedPosition
+* @memberof Phaser.Sprite
+* @param {Phaser.Point} p - The Point object to store the results in.
+* @param {number} x - x coordinate within the Sprite to translate.
+* @param {number} y - x coordinate within the Sprite to translate.
+* @return {Phaser.Point} The translated point.
 */
 Phaser.Sprite.prototype.getLocalUnmodifiedPosition = function(p, gx, gy) {
 
@@ -550,6 +587,12 @@ Phaser.Sprite.prototype.getLocalUnmodifiedPosition = function(p, gx, gy) {
 
 }
 
+/**
+* Internal function called by preUpdate.
+*
+* @method Phaser.Sprite#updateCrop
+* @memberof Phaser.Sprite
+*/
 Phaser.Sprite.prototype.updateCrop = function() {
 
     //  This only runs if crop is enabled
@@ -573,6 +616,12 @@ Phaser.Sprite.prototype.updateCrop = function() {
 
 }
 
+/**
+* Resets the Sprite.crop value back to the frame dimensions.
+*
+* @method Phaser.Sprite#resetCrop
+* @memberof Phaser.Sprite
+*/
 Phaser.Sprite.prototype.resetCrop = function() {
 
     this.crop = new Phaser.Rectangle(0, 0, this._cache.width, this._cache.height);
@@ -581,6 +630,12 @@ Phaser.Sprite.prototype.resetCrop = function() {
 
 }
 
+/**
+* Internal function called by the World postUpdate cycle.
+*
+* @method Phaser.Sprite#postUpdate
+* @memberof Phaser.Sprite
+*/
 Phaser.Sprite.prototype.postUpdate = function() {
 
     if (this.exists)
@@ -611,6 +666,15 @@ Phaser.Sprite.prototype.postUpdate = function() {
 
 }
 
+/**
+* Changes the Texture the Sprite is using entirely. The old texture is removed and the new one is referenced or fetched from the Cache.
+* This causes a WebGL texture update, so use sparingly or in low-intensity portions of your game.
+*
+* @method Phaser.Sprite#loadTexture
+* @memberof Phaser.Sprite
+* @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+* @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+*/
 Phaser.Sprite.prototype.loadTexture = function (key, frame) {
 
     this.key = key;
@@ -656,41 +720,77 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
 
 }
 
+/**
+* Returns the absolute delta x value.
+*
+* @method Phaser.Sprite#deltaAbsX
+* @memberof Phaser.Sprite
+* @return {number} The absolute delta value.
+*/
 Phaser.Sprite.prototype.deltaAbsX = function () {
     return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
 }
 
+/**
+* Returns the absolute delta y value.
+*
+* @method Phaser.Sprite#deltaAbsY
+* @memberof Phaser.Sprite
+* @return {number} The absolute delta value.
+*/
 Phaser.Sprite.prototype.deltaAbsY = function () {
     return (this.deltaY() > 0 ? this.deltaY() : -this.deltaY());
 }
 
+/**
+* Returns the delta x value.
+*
+* @method Phaser.Sprite#deltaX
+* @memberof Phaser.Sprite
+* @return {number} The delta value.
+*/
 Phaser.Sprite.prototype.deltaX = function () {
     return this.x - this.prevX;
 }
 
+/**
+* Returns the delta y value.
+*
+* @method Phaser.Sprite#deltaY
+* @memberof Phaser.Sprite
+* @return {number} The delta value.
+*/
 Phaser.Sprite.prototype.deltaY = function () {
     return this.y - this.prevY;
 }
 
 /**
 * Moves the sprite so its center is located on the given x and y coordinates.
-* Doesn't change the origin of the sprite.
+* Doesn't change the anchor point of the sprite.
 * 
-* @method Phaser.Sprite.prototype.centerOn
-* @param {number} x - Description.
-* @param {number} y - Description.
+* @method Phaser.Sprite#centerOn
+* @memberof Phaser.Sprite
+* @param {number} x - The x coordinate (in world space) to position the Sprite at.
+* @param {number} y - The y coordinate (in world space) to position the Sprite at.
+* @return (Phaser.Sprite) This instance.
 */
 Phaser.Sprite.prototype.centerOn = function(x, y) {
 
     this.x = x + (this.x - this.center.x);
     this.y = y + (this.y - this.center.y);
+    return this;
 
 }
 
 /**
-* Description.
+* Brings a 'dead' Sprite back to life, optionally giving it the health value specified.
+* A resurrected Sprite has its alive, exists and visible properties all set to true.
+* It will dispatch the onRevived event, you can listen to Sprite.events.onRevived for the signal.
 * 
-* @method Phaser.Sprite.prototype.revive
+* @method Phaser.Sprite#revive
+* @memberof Phaser.Sprite
+* @param {number} [health=1] - The health to give the Sprite.
+* @return (Phaser.Sprite) This instance.
 */
 Phaser.Sprite.prototype.revive = function(health) {
 
@@ -701,14 +801,24 @@ Phaser.Sprite.prototype.revive = function(health) {
     this.visible = true;
     this.health = health;
 
-    this.events.onRevived.dispatch(this);
+    if (this.events)
+    {
+        this.events.onRevived.dispatch(this);
+    }
+
+    return this;
 
 }
 
 /**
-* Description.
+* Kills a Sprite. A killed Sprite has its alive, exists and visible properties all set to false.
+* It will dispatch the onKilled event, you can listen to Sprite.events.onKilled for the signal.
+* Note that killing a Sprite is a way for you to quickly recycle it in a Sprite pool, it doesn't free it up from memory.
+* If you don't need this Sprite any more you should call Sprite.destroy instead.
 * 
-* @method Phaser.Sprite.prototype.kill
+* @method Phaser.Sprite#kill
+* @memberof Phaser.Sprite
+* @return (Phaser.Sprite) This instance.
 */
 Phaser.Sprite.prototype.kill = function() {
 
@@ -721,12 +831,16 @@ Phaser.Sprite.prototype.kill = function() {
         this.events.onKilled.dispatch(this);
     }
 
+    return this;
+
 }
 
 /**
-* Description.
+* Destroys the Sprite. This removes it from its parent group, destroys the input, event and animation handlers if present
+* and nulls its reference to game, freeing it up for garbage collection.
 * 
-* @method Phaser.Sprite.prototype.destroy
+* @method Phaser.Sprite#destroy
+* @memberof Phaser.Sprite
 */
 Phaser.Sprite.prototype.destroy = function() {
 
@@ -759,9 +873,13 @@ Phaser.Sprite.prototype.destroy = function() {
 }
 
 /**
-* Description.
+* Damages the Sprite, this removes the given amount from the Sprites health property.
+* If health is then taken below zero Sprite.kill is called.
 * 
-* @method Phaser.Sprite.prototype.kill
+* @method Phaser.Sprite#damage
+* @memberof Phaser.Sprite
+* @param {number} amount - The amount to subtract from the Sprite.health value.
+* @return (Phaser.Sprite) This instance.
 */
 Phaser.Sprite.prototype.damage = function(amount) {
 
@@ -775,12 +893,21 @@ Phaser.Sprite.prototype.damage = function(amount) {
         }
     }
 
+    return this;
+
 }
 
 /**
-* Description.
+* Resets the Sprite. This places the Sprite at the given x/y world coordinates and then
+* sets alive, exists, visible and renderable all to true. Also resets the outOfBounds state and health values.
+* If the Sprite has a physics body that too is reset.
 * 
-* @method Phaser.Sprite.prototype.reset
+* @method Phaser.Sprite#reset
+* @memberof Phaser.Sprite
+* @param {number} x - The x coordinate (in world space) to position the Sprite at.
+* @param {number} y - The y coordinate (in world space) to position the Sprite at.
+* @param {number} [health=1] - The health to give the Sprite.
+* @return (Phaser.Sprite) This instance.
 */
 Phaser.Sprite.prototype.reset = function(x, y, health) {
 
@@ -802,13 +929,18 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
     {
         this.body.reset();
     }
+
+    return this;
     
 }
 
 /**
-* Description.
+* Brings the Sprite to the top of the display list it is a child of. Sprites that are members of a Phaser.Group are only
+* bought to the top of that Group, not the entire display list.
 * 
-* @method Phaser.Sprite.prototype.bringToTop
+* @method Phaser.Sprite#bringToTop
+* @memberof Phaser.Sprite
+* @return (Phaser.Sprite) This instance.
 */
 Phaser.Sprite.prototype.bringToTop = function() {
 
@@ -821,16 +953,19 @@ Phaser.Sprite.prototype.bringToTop = function() {
         this.game.world.bringToTop(this);
     }
 
+    return this;
+
 }
 
 /**
 * Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()
 * If the requested animation is already playing this request will be ignored. If you need to reset an already running animation do so directly on the Animation object itself.
 * 
-* @method play
-* @param {String} name The name of the animation to be played, e.g. "fire", "walk", "jump".
-* @param {number} [frameRate=null] The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
-* @param {boolean} [loop=false] Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
+* @method Phaser.Sprite#play
+* @memberof Phaser.Sprite
+* @param {string} name - The name of the animation to be played, e.g. "fire", "walk", "jump".
+* @param {number} [frameRate=null] - The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
+* @param {boolean} [loop=false] - Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
 * @param {boolean} [killOnComplete=false] - If set to true when the animation completes (only happens if loop=false) the parent Sprite will be killed.
 * @return {Phaser.Animation} A reference to playing Animation instance.
 */
@@ -838,7 +973,7 @@ Phaser.Sprite.prototype.play = function (name, frameRate, loop, killOnComplete) 
 
     if (this.animations)
     {
-        this.animations.play(name, frameRate, loop, killOnComplete);
+        return this.animations.play(name, frameRate, loop, killOnComplete);
     }
 
 }
@@ -863,11 +998,8 @@ Object.defineProperty(Phaser.Sprite.prototype, 'angle', {
 });
 
 /**
-* Get the animation frame number.
-* @returns {Description}
-*//**
-* Set the animation frame by frame number.
-* @param {Description} value - Description
+* @name Phaser.Sprite#frame
+* @property {number} frame - Gets or sets the current frame index and updates the Texture Cache for display.
 */
 Object.defineProperty(Phaser.Sprite.prototype, "frame", {
     
@@ -882,11 +1014,8 @@ Object.defineProperty(Phaser.Sprite.prototype, "frame", {
 });
 
 /**
-* Get the animation frame name.
-* @returns {Description}
-*//**
-* Set the animation frame by frame name.
-* @param {Description} value - Description
+* @name Phaser.Sprite#frameName
+* @property {string} frameName - Gets or sets the current frame name and updates the Texture Cache for display.
 */
 Object.defineProperty(Phaser.Sprite.prototype, "frameName", {
     
@@ -901,8 +1030,9 @@ Object.defineProperty(Phaser.Sprite.prototype, "frameName", {
 });
 
 /**
-* Is this sprite visible to the camera or not?
-* @returns {boolean}
+* @name Phaser.Sprite#inCamera
+* @property {boolean} inCamera - Is this sprite visible to the camera or not?
+* @readonly
 */
 Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
     
@@ -913,12 +1043,12 @@ Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
 });
 
 /**
- * The width of the sprite, setting this will actually modify the scale to acheive the value set.
- * If you wish to crop the Sprite instead see the Sprite.crop value.
- *
- * @property width
- * @type Number
- */
+* The width of the sprite in pixels, setting this will actually modify the scale to acheive the value desired.
+* If you wish to crop the Sprite instead see the Sprite.crop value.
+*
+* @name Phaser.Sprite#width
+* @property {number} width - The width of the Sprite in pixels.
+*/
 Object.defineProperty(Phaser.Sprite.prototype, 'width', {
 
     get: function() {
@@ -936,12 +1066,12 @@ Object.defineProperty(Phaser.Sprite.prototype, 'width', {
 });
 
 /**
- * The height of the sprite, setting this will actually modify the scale to acheive the value set
- * If you wish to crop the Sprite instead see the Sprite.crop value.
- *
- * @property height
- * @type Number
- */
+* The height of the sprite in pixels, setting this will actually modify the scale to acheive the value desired.
+* If you wish to crop the Sprite instead see the Sprite.crop value.
+*
+* @name Phaser.Sprite#height
+* @property {number} height - The height of the Sprite in pixels.
+*/
 Object.defineProperty(Phaser.Sprite.prototype, 'height', {
 
     get: function() {
@@ -959,11 +1089,11 @@ Object.defineProperty(Phaser.Sprite.prototype, 'height', {
 });
 
 /**
-* Get the input enabled state of this Sprite.
-* @returns {Description}
-*//**
-* Set the ability for this sprite to receive input events.
-* @param {Description} value - Description
+* By default a Sprite won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
+* activated for this Sprite instance and it will then start to process click/touch events and more.
+*
+* @name Phaser.Sprite#inputEnabled
+* @property {boolean} inputEnabled - Set to true to allow this Sprite to receive input events, otherwise false.
 */
 Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
     
