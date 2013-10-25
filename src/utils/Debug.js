@@ -221,10 +221,10 @@ Phaser.Utils.Debug.prototype = {
         // this.context.stroke();
 
         this.renderPoint(sprite.center);
-        this.renderPoint(sprite.topLeft);
-        this.renderPoint(sprite.topRight);
-        this.renderPoint(sprite.bottomLeft);
-        this.renderPoint(sprite.bottomRight);
+        this.renderPoint(sprite.topLeft, 'rgb(255,255,0)');
+        this.renderPoint(sprite.topRight, 'rgb(255,0,0)');
+        this.renderPoint(sprite.bottomLeft, 'rgb(0,0,255)');
+        this.renderPoint(sprite.bottomRight, 'rgb(255,255,255)');
 
         if (showText)
         {

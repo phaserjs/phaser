@@ -422,7 +422,6 @@ Phaser.Sprite.prototype.updateAnimation = function() {
 
     if (this.currentFrame && this.currentFrame.uuid != this._cache.frameID)
     {
-        console.log('ua frame 1 change', this.name);
         this._cache.frameWidth = this.texture.frame.width;
         this._cache.frameHeight = this.texture.frame.height;
         this._cache.frameID = this.currentFrame.uuid;
@@ -454,22 +453,22 @@ Phaser.Sprite.prototype.updateAnimation = function() {
 */
 Phaser.Sprite.prototype.updateBounds = function() {
 
-    //  Update the edge points
+    var sx = 1;
+    var sy = 1;
 
-    this.offset.setTo(this._cache.a02 - (this.anchor.x * this._cache.width), this._cache.a12 - (this.anchor.y * this._cache.height));
+    if (this.worldTransform[3] !== 0 || this.worldTransform[1] !== 0)
+    {
+        sx = this.scale.x;
+        sy = this.scale.y;
+    }
 
-    // this.offset.setTo(this._cache.a02 - (this.anchor.x * this.currentFrame.width), this._cache.a12 - (this.anchor.y * this.currentFrame.height));
-    // this.offset.setTo(this._cache.a02 - (this.anchor.x * this.width), this._cache.a12 - (this.anchor.y * this.height));
+    this.offset.setTo(this._cache.a02 - (this.anchor.x * this.width), this._cache.a12 - (this.anchor.y * this.height));
 
-    // this.offset.setTo(this._cache.a02 - (this.anchor.x * this._cache.width), this._cache.a12 - (this.anchor.y * this._cache.height));
-
-    console.log('updateBounds', this.name, this.offset.x, this.offset.y);
-
-    this.getLocalPosition(this.center, this.offset.x + this._cache.halfWidth, this.offset.y + this._cache.halfHeight);
-    this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
-    this.getLocalPosition(this.topRight, this.offset.x + this._cache.width, this.offset.y);
-    this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this._cache.height);
-    this.getLocalPosition(this.bottomRight, this.offset.x + this._cache.width, this.offset.y + this._cache.height);
+    this.getLocalPosition(this.center, this.offset.x + (this.width / 2), this.offset.y + (this.height / 2), sx, sy);
+    this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y, sx, sy);
+    this.getLocalPosition(this.topRight, this.offset.x + this.width, this.offset.y, sx, sy);
+    this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this.height, sx, sy);
+    this.getLocalPosition(this.bottomRight, this.offset.x + this.width, this.offset.y + this.height, sx, sy);
 
     this._cache.left = Phaser.Math.min(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
     this._cache.right = Phaser.Math.max(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
@@ -481,9 +480,6 @@ Phaser.Sprite.prototype.updateBounds = function() {
     //  This is the coordinate the Sprite was at when the last bounds was created
     this._cache.boundsX = this._cache.x;
     this._cache.boundsY = this._cache.y;
-
-    // this._cache.calcWidth = this.width;
-    // this._cache.calcHeight = this.height;
         
     this.updateFrame = true;
 
@@ -519,59 +515,44 @@ Phaser.Sprite.prototype.updateBounds = function() {
 
 /**
 * Description.
-*   
-* @method Phaser.Sprite.prototype.updateBounds
+* 
+* @method Phaser.Sprite.prototype.getLocalPosition
+* @param {Description} p - Description.
+* @param {number} x - Description.
+* @param {number} y - Description.
+* @return {Description} Description.
 */
-Phaser.Sprite.prototype.DEADupdateBounds = function() {
+Phaser.Sprite.prototype.getLocalPosition = function(p, x, y, sx, sy) {
 
-    //  Update the edge points
+    // p.x = ((this._cache.a11 * this._cache.id * x + -this._cache.a01 * this._cache.id * y + (this._cache.a12 * this._cache.a01 - this._cache.a02 * this._cache.a11) * this._cache.id) * this.scale.x) + this._cache.a02;
+    // p.y = ((this._cache.a00 * this._cache.id * y + -this._cache.a10 * this._cache.id * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.a10) * this._cache.id) * this.scale.y) + this._cache.a12;
 
-    this.offset.setTo(this._cache.a02 - (this.anchor.x * this.width), this._cache.a12 - (this.anchor.y * this.height));
+    p.x = ((this._cache.a11 * this._cache.id * x + -this._cache.a01 * this._cache.id * y + (this._cache.a12 * this._cache.a01 - this._cache.a02 * this._cache.a11) * this._cache.id) * sx) + this._cache.a02;
+    p.y = ((this._cache.a00 * this._cache.id * y + -this._cache.a10 * this._cache.id * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.a10) * this._cache.id) * sy) + this._cache.a12;
 
-    this.getLocalPosition(this.center, this.offset.x + this._cache.halfWidth, this.offset.y + this._cache.halfHeight);
-    this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
-    this.getLocalPosition(this.topRight, this.offset.x + this._cache.width, this.offset.y);
-    this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this._cache.height);
-    this.getLocalPosition(this.bottomRight, this.offset.x + this._cache.width, this.offset.y + this._cache.height);
+    return p;
 
-    this._cache.left = Phaser.Math.min(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
-    this._cache.right = Phaser.Math.max(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
-    this._cache.top = Phaser.Math.min(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
-    this._cache.bottom = Phaser.Math.max(this.topLeft.y, this.topRight.y, this.bottomLeft.y, this.bottomRight.y);
+}
 
-    this.bounds.setTo(this._cache.left, this._cache.top, this._cache.right - this._cache.left, this._cache.bottom - this._cache.top);
+/**
+* Description.
+* 
+* @method Phaser.Sprite.prototype.getLocalUnmodifiedPosition
+* @param {Description} p - Description.
+* @param {number} x - Description.
+* @param {number} y - Description.
+* @return {Description} Description.
+*/
+Phaser.Sprite.prototype.getLocalUnmodifiedPosition = function(p, x, y) {
 
-    //  This is the coordinate the Sprite was at when the last bounds was created
-    this._cache.boundsX = this._cache.x;
-    this._cache.boundsY = this._cache.y;
+    p.x = this._cache.a11 * this._cache.idi * x + -this._cache.i01 * this._cache.idi * y + (this._cache.a12 * this._cache.i01 - this._cache.a02 * this._cache.a11) * this._cache.idi;
+    p.y = this._cache.a00 * this._cache.idi * y + -this._cache.i10 * this._cache.idi * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.i10) * this._cache.idi;
 
-    if (this.inWorld == false)
-    {
-        //  Sprite WAS out of the screen, is it still?
-        this.inWorld = Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds, this.inWorldThreshold);
+    //  apply anchor
+    p.x += (this.anchor.x * this.width);
+    p.y += (this.anchor.y * this.height);
 
-        if (this.inWorld)
-        {
-            //  It's back again, reset the OOB check
-            this._outOfBoundsFired = false;
-        }
-    }
-    else
-    {
-        //   Sprite WAS in the screen, has it now left?
-        this.inWorld = Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds, this.inWorldThreshold);
-
-        if (this.inWorld == false)
-        {
-            this.events.onOutOfBounds.dispatch(this);
-            this._outOfBoundsFired = true;
-
-            if (this.outOfBoundsKill)
-            {
-                this.kill();
-            }
-        }
-    }
+    return p;
 
 }
 
@@ -828,66 +809,6 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
         this.body.reset();
     }
     
-}
-
-/**
-* Description.
-* 
-* @method Phaser.Sprite.prototype.getLocalPosition
-* @param {Description} p - Description.
-* @param {number} x - Description.
-* @param {number} y - Description.
-* @return {Description} Description.
-*/
-Phaser.Sprite.prototype.getLocalPosition = function(p, x, y) {
-
-    p.x = ((this._cache.a11 * this._cache.id * x + -this._cache.a01 * this._cache.id * y + (this._cache.a12 * this._cache.a01 - this._cache.a02 * this._cache.a11) * this._cache.id) * this.scale.x) + this._cache.a02;
-    p.y = ((this._cache.a00 * this._cache.id * y + -this._cache.a10 * this._cache.id * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.a10) * this._cache.id) * this.scale.y) + this._cache.a12;
-
-    /*
-    if (this.worldTransform[0] == 1)
-    {
-        p.x = ((this._cache.a11 * this._cache.id * x + -this._cache.a01 * this._cache.id * y + (this._cache.a12 * this._cache.a01 - this._cache.a02 * this._cache.a11) * this._cache.id) * 1) + this._cache.a02;
-    }
-    else
-    {
-        p.x = ((this._cache.a11 * this._cache.id * x + -this._cache.a01 * this._cache.id * y + (this._cache.a12 * this._cache.a01 - this._cache.a02 * this._cache.a11) * this._cache.id) * this.scale.x) + this._cache.a02;
-    }
-
-    if (this.worldTransform[4] == 1)
-    {
-        p.y = ((this._cache.a00 * this._cache.id * y + -this._cache.a10 * this._cache.id * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.a10) * this._cache.id) * 1) + this._cache.a12;
-    }
-    else
-    {
-        p.y = ((this._cache.a00 * this._cache.id * y + -this._cache.a10 * this._cache.id * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.a10) * this._cache.id) * this.scale.y) + this._cache.a12;
-    }
-    */
-
-    return p;
-
-}
-
-/**
-* Description.
-* 
-* @method Phaser.Sprite.prototype.getLocalUnmodifiedPosition
-* @param {Description} p - Description.
-* @param {number} x - Description.
-* @param {number} y - Description.
-* @return {Description} Description.
-*/
-Phaser.Sprite.prototype.getLocalUnmodifiedPosition = function(p, x, y) {
-
-    p.x = this._cache.a11 * this._cache.idi * x + -this._cache.i01 * this._cache.idi * y + (this._cache.a12 * this._cache.i01 - this._cache.a02 * this._cache.a11) * this._cache.idi;
-    p.y = this._cache.a00 * this._cache.idi * y + -this._cache.i10 * this._cache.idi * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.i10) * this._cache.idi;
-
-    //  apply anchor
-    p.x += (this.anchor.x * this.width);
-    p.y += (this.anchor.y * this.height);
-
-    return p;
-
 }
 
 /**

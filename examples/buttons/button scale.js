@@ -55,14 +55,12 @@ function create() {
     button5.scale.setTo(0.5, 0.5);
 
     //  Scaled and Rotated button
-    button6 = game.add.button(600, 200, 'button', changeSky, this, 2, 1, 0);
+    button6 = game.add.button(570, 200, 'button', changeSky, this, 2, 1, 0); // anchor 0.5
+    // button6 = game.add.button(470, 100, 'button', changeSky, this, 2, 1, 0); // anchor 0
     button6.name = 'sky6';
     button6.angle = 32;
     button6.scale.setTo(2, 2);
     button6.anchor.setTo(0.5, 0.5);
-    //  scale + anchor works fine
-    //  angle + anchor works fine
-    //  scale + angle + anchor falls over
 
 
     // game.world.setBounds(0, 0, 2000, 2000);
@@ -87,8 +85,8 @@ function render () {
     game.debug.renderSpriteCorners(button5, false, true);
     game.debug.renderSpriteCorners(button6, false, true);
 
-    // game.debug.renderLocalTransformInfo(button3, 32, 132);
-    // game.debug.renderText('ox: ' + button1.offset.x + ' oy: ' + button1.offset.y, 32, 200);
+    // game.debug.renderWorldTransformInfo(button1, 32, 132);
+    // game.debug.renderText('sx: ' + button3.scale.x + ' sy: ' + button3.scale.y + ' w: ' + button3.width + ' cw: ' + button3._cache.width, 32, 20);
     game.debug.renderPoint(button6.input._tempPoint);
 
 }
