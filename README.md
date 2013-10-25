@@ -5,7 +5,7 @@ Phaser 1.1
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 1.1 - Released: October 24th 2013
+Version: 1.1 - Released: October 25th 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -42,8 +42,8 @@ Version 1.1
 
 * JSDoc is go! We've added jsdoc3 blocks to every property and function, in every file.
 * Brand new Example system (no more php!) and over 150 examples to learn from too.
-* New TypeScript definitions file generated (in the build folder).
-* New Grunt based build system added for those that prefer Grunt over php (thanks to Florent Cailhol)
+* New TypeScript definitions file generated (in the build folder - thanks to TomTom1229 for manually enhancing this).
+* New Grunt based build system added (thanks to Florent Cailhol)
 
 * Added World.postUpdate - all sprite position changes, as a result of physics, happen here before the render.
 * Complete overhaul of Physics.Arcade.Body - now significantly more stable and faster too.
@@ -244,22 +244,23 @@ Although Phaser 1.0 is a brand new release it is born from years of experience b
 
 ![Phaser Particles](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_particles.png)
 
-Future Plans
-------------
+Road Map
+--------
 
-The following list is not exhaustive and is subject to change:
+The 1.1 release was a massive under-taking, but we're really happy with how Phaser is progressing. It's becoming more solid and versatile with each iteration. Here is what's on our road map for future versions:
 
-* Integrate Advanced Physics system.
-* Integrate Advanced Particle system.
-* Better sound controls and audio effects.
-* Google Play Game Services.
-* Ability to layer another DOM object and have it controlled by the game.
-* More GUI components: checkbox, radio button, window, etc.
-* Tilemap: more advanced Tiled support and support for DAME tilemaps.
-* Joypad support.
-* Gestures input class.
-* Flash CC html output support.
-* Game parameters read from Google Docs.
+* Integration with an advanced physics system. We've been experimenting with p2.js but have yet to conclude our research.
+* A more advanced Particle system, one that can render to a single canvas (rather than spawn hundreds of Sprites), more advanced effects, etc.
+* Massively enhance the audio side of Phaser. Although it does what it does well, it could do with taking more advantage of Web Audio - echo effects, positional sound, etc.
+* Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.
+* Integration with third party services like Google Play Game Services and Amazon JS SDK.
+* Ability to control DOM elements from the core game and layer them into the game.
+* Touch Gestures.
+* Virtual d-pad support and also support for the Joypad API.
+* Test out packaging with Node-webkit.
+* Flash CC HTML5 export integration.
+* Game parameters stored in Google Docs.
+* More advanced tile map features. Better support for advanced Tiled features and also I want to add full support for DAME tilemaps.
 
 Learn By Example
 ----------------
