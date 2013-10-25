@@ -495,19 +495,17 @@ Phaser.InputHandler.prototype = {
             if (this.sprite.worldTransform[3] == 0 && this.sprite.worldTransform[1] == 0)
             {
                 //  Un-rotated (but potentially scaled)
-                // if (this._tempPoint.x >= 0 && this._tempPoint.x <= this.sprite.width && this._tempPoint.y >= 0 && this._tempPoint.y <= this.sprite.height)
                 if (this._tempPoint.x >= x && this._tempPoint.x <= this.sprite.width && this._tempPoint.y >= y && this._tempPoint.y <= this.sprite.height)
                 {
-                        return true;
+                    return true;
                 }
             }
             else
             {
                 //  Rotated (and could be scaled too)
-                // if (this._tempPoint.x >= 0 && this._tempPoint.x <= this.sprite.currentFrame.width && this._tempPoint.y >= 0 && this._tempPoint.y <= this.sprite.currentFrame.height)
                 if (this._tempPoint.x >= x && this._tempPoint.x <= this.sprite.currentFrame.width && this._tempPoint.y >= y && this._tempPoint.y <= this.sprite.currentFrame.height)
                 {
-                        return true;
+                    return true;
                 }
             }
         }

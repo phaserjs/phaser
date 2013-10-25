@@ -213,7 +213,8 @@ Phaser.Sprite = function (game, x, y, key, frame) {
         calcWidth: -1, calcHeight: -1,
 
         //  The current frame details
-        frameID: this.currentFrame.uuid, frameWidth: this.currentFrame.width, frameHeight: this.currentFrame.height,
+        // frameID: this.currentFrame.uuid, frameWidth: this.currentFrame.width, frameHeight: this.currentFrame.height,
+        frameID: -1, frameWidth: this.currentFrame.width, frameHeight: this.currentFrame.height,
 
         boundsX: 0, boundsY: 0,
 
@@ -389,44 +390,6 @@ Phaser.Sprite.prototype.updateCache = function() {
     //  |b d ty|
     //  |0 0  1|
 
-
-    // this._cache.width = Math.floor(this.currentFrame.sourceSizeW);
-    // this._cache.height = Math.floor(this.currentFrame.sourceSizeH);
-    // this._cache.halfWidth = Math.floor(this._cache.width / 2);
-    // this._cache.halfHeight = Math.floor(this._cache.height / 2);
-
-
-    // this._cache.scaleX = this.scale.x;
-    // this._cache.scaleY = this.scale.y;
-
-    /*
-    if (this.scale.x !== this._cache.realScaleX || this.scale.y !== this._cache.realScaleY)
-    {
-        console.log('rescale', this.name);
-        this._cache.width = this.width;
-        this._cache.height = this.height;
-        this._cache.halfWidth = Math.floor(this._cache.width / 2);
-        this._cache.halfHeight = Math.floor(this._cache.height / 2);
-        this._cache.realScaleX = this.scale.x;
-        this._cache.realScaleY = this.scale.y;
-        this.updateFrame = true;
-        this._cache.dirty = true;
-    }
-    */
-
-    if (this._cache.calcWidth !== this.width || this._cache.calcHeight !== this.height)
-    {
-        console.log('calc', this.name);
-        this._cache.width = Math.floor(this.currentFrame.sourceSizeW);
-        this._cache.height = Math.floor(this.currentFrame.sourceSizeH);
-        this._cache.halfWidth = Math.floor(this._cache.width / 2);
-        this._cache.halfHeight = Math.floor(this._cache.height / 2);
-        this._cache.frameWidth = this.texture.frame.width;
-        this._cache.frameHeight = this.texture.frame.height;
-        this._cache.frameID = this.currentFrame.uuid;
-        this._cache.dirty = true;
-    }
-
     if (this.worldTransform[1] != this._cache.i01 || this.worldTransform[3] != this._cache.i10)
     {
         this._cache.a00 = this.worldTransform[0];  //  scaleX         a
@@ -459,10 +422,10 @@ Phaser.Sprite.prototype.updateAnimation = function() {
 
     if (this.currentFrame && this.currentFrame.uuid != this._cache.frameID)
     {
-        // console.log('ua frame 1 change', this.name);
-        // this._cache.frameWidth = this.texture.frame.width;
-        // this._cache.frameHeight = this.texture.frame.height;
-        // this._cache.frameID = this.currentFrame.uuid;
+        console.log('ua frame 1 change', this.name);
+        this._cache.frameWidth = this.texture.frame.width;
+        this._cache.frameHeight = this.texture.frame.height;
+        this._cache.frameID = this.currentFrame.uuid;
         this._cache.dirty = true;
     }
 
@@ -471,12 +434,12 @@ Phaser.Sprite.prototype.updateAnimation = function() {
         console.log('ua frame 2 change', this.name);
         // this._cache.width = Math.floor(this.currentFrame.sourceSizeW * this._cache.scaleX);
         // this._cache.height = Math.floor(this.currentFrame.sourceSizeH * this._cache.scaleY);
-        // this._cache.width = this.currentFrame.width;
-        // // this._cache.height = this.currentFrame.height;
+        this._cache.width = this.currentFrame.width;
+        this._cache.height = this.currentFrame.height;
         // this._cache.width = Math.floor(this.currentFrame.sourceSizeW);
         // this._cache.height = Math.floor(this.currentFrame.sourceSizeH);
-        // this._cache.halfWidth = Math.floor(this._cache.width / 2);
-        // this._cache.halfHeight = Math.floor(this._cache.height / 2);
+        this._cache.halfWidth = Math.floor(this._cache.width / 2);
+        this._cache.halfHeight = Math.floor(this._cache.height / 2);
 
         this._cache.id = 1 / (this._cache.a00 * this._cache.a11 + this._cache.a01 * -this._cache.a10);
         this._cache.idi = 1 / (this._cache.a00 * this._cache.a11 + this._cache.i01 * -this._cache.i10);
@@ -492,9 +455,15 @@ Phaser.Sprite.prototype.updateAnimation = function() {
 Phaser.Sprite.prototype.updateBounds = function() {
 
     //  Update the edge points
-    console.log('updateBounds', this.name);
 
     this.offset.setTo(this._cache.a02 - (this.anchor.x * this._cache.width), this._cache.a12 - (this.anchor.y * this._cache.height));
+
+    // this.offset.setTo(this._cache.a02 - (this.anchor.x * this.currentFrame.width), this._cache.a12 - (this.anchor.y * this.currentFrame.height));
+    // this.offset.setTo(this._cache.a02 - (this.anchor.x * this.width), this._cache.a12 - (this.anchor.y * this.height));
+
+    // this.offset.setTo(this._cache.a02 - (this.anchor.x * this._cache.width), this._cache.a12 - (this.anchor.y * this._cache.height));
+
+    console.log('updateBounds', this.name, this.offset.x, this.offset.y);
 
     this.getLocalPosition(this.center, this.offset.x + this._cache.halfWidth, this.offset.y + this._cache.halfHeight);
     this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
@@ -513,8 +482,8 @@ Phaser.Sprite.prototype.updateBounds = function() {
     this._cache.boundsX = this._cache.x;
     this._cache.boundsY = this._cache.y;
 
-    this._cache.calcWidth = this.width;
-    this._cache.calcHeight = this.height;
+    // this._cache.calcWidth = this.width;
+    // this._cache.calcHeight = this.height;
         
     this.updateFrame = true;
 
@@ -872,9 +841,10 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
 */
 Phaser.Sprite.prototype.getLocalPosition = function(p, x, y) {
 
-    // p.x = ((this._cache.a11 * this._cache.id * x + -this._cache.a01 * this._cache.id * y + (this._cache.a12 * this._cache.a01 - this._cache.a02 * this._cache.a11) * this._cache.id) * this.scale.x) + this._cache.a02;
-    // p.y = ((this._cache.a00 * this._cache.id * y + -this._cache.a10 * this._cache.id * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.a10) * this._cache.id) * this.scale.y) + this._cache.a12;
+    p.x = ((this._cache.a11 * this._cache.id * x + -this._cache.a01 * this._cache.id * y + (this._cache.a12 * this._cache.a01 - this._cache.a02 * this._cache.a11) * this._cache.id) * this.scale.x) + this._cache.a02;
+    p.y = ((this._cache.a00 * this._cache.id * y + -this._cache.a10 * this._cache.id * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.a10) * this._cache.id) * this.scale.y) + this._cache.a12;
 
+    /*
     if (this.worldTransform[0] == 1)
     {
         p.x = ((this._cache.a11 * this._cache.id * x + -this._cache.a01 * this._cache.id * y + (this._cache.a12 * this._cache.a01 - this._cache.a02 * this._cache.a11) * this._cache.id) * 1) + this._cache.a02;
@@ -892,6 +862,7 @@ Phaser.Sprite.prototype.getLocalPosition = function(p, x, y) {
     {
         p.y = ((this._cache.a00 * this._cache.id * y + -this._cache.a10 * this._cache.id * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.a10) * this._cache.id) * this.scale.y) + this._cache.a12;
     }
+    */
 
     return p;
 
