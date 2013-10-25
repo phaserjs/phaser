@@ -13,7 +13,7 @@ View the [Official Website](http://phaser.io)<br />
 Follow on [Twitter](https://twitter.com/photonstorm)<br />
 Read the [Development Blog](http://www.photonstorm.com)<br />
 Join the [Forum](http://www.html5gamedevs.com/forum/14-phaser/)<br />
-Try out the [Phaser Test Suite](http://gametest.mobi/phaser/)
+Try out 150+ [Phaser Examples](http://gametest.mobi/phaser/examples/)
 
 [Un-official Getting Started with Phaser](http://www.antonoffplus.com/coding-an-html5-game-for-30-minutes-or-an-introduction-to-the-phaser-framework)
 
