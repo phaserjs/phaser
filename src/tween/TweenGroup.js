@@ -13,7 +13,7 @@
 * @param {Phaser.Game} game - Current game instance.
 * @param {number} delay - Delay before this tween will start, defaults to 0 (no delay).
 * @param {number} repeat - How many time should the TweenGroup repeat itself. Infinity can be used for infinite repetition.
-* @param {Phaser.Tween} yoyo - Description.
+* @param {Phaser.Tween} yoyo - Whether this TweenGroup will reverse on completion.
 * @param {boolean} autoStart - Whether this TweenGroup will start automatically or not.
 */
 Phaser.TweenGroup = function (game, delay, repeat, yoyo, autoStart) {
@@ -110,7 +110,7 @@ Phaser.TweenGroup = function (game, delay, repeat, yoyo, autoStart) {
 	this._pausedTime = 0;
 
 	/**
-	* @property {boolean} pendingDelete - If this tween is ready to be deleted by the TweenManager.
+	* @property {boolean} pendingDelete - If this TweenGroup is ready to be deleted by the TweenManager.
 	* @default
 	*/
 	this.pendingDelete = false;
@@ -149,6 +149,12 @@ Phaser.TweenGroup = function (game, delay, repeat, yoyo, autoStart) {
 	*/
 	this._add = [];
 
+	/**
+	* @property {boolean} _dirty - Description.
+	* @private
+	*/
+	this._dirty = false;
+
 	if (autoStart) {
 		this.start();
 	}
@@ -182,7 +188,7 @@ Phaser.TweenGroup.prototype = {
 	},
 
 	/**
-	* Starts the tween running. Can also be called by the autoStart parameter of Tween.to.
+	* Starts the TweenGroup.
 	*
 	* @method Phaser.TweenGroup#start
 	* @return {Phaser.TweenGroup} Itself.
@@ -204,7 +210,7 @@ Phaser.TweenGroup.prototype = {
 	},
 
 	/**
-	* Stops the tween if running and removes it from the TweenManager. If there are any onComplete callbacks or events they are not dispatched.
+	* Stops the TweenGroup if running and removes it from the TweenManager. If there are any onComplete callbacks or events they are not dispatched.
 	*
 	* @method Phaser.TweenGroup#stop
 	* @return {Phaser.TweenGroup} Itself.
@@ -332,9 +338,42 @@ Phaser.TweenGroup.prototype = {
 	*/
 	update: function ( time ) {
 		var i = 0,
-			numTweens = this._tweens.length;
+			numTweens = this._tweens.length,
+			tween = null;
 
 		var rtime = 0;
+
+		if ( this._onStartCallbackFired === false ) {
+
+			if ( this._onStartCallback !== null ) {
+
+				this._onStartCallback.call(this);
+
+			}
+
+			this.onStart.dispatch(this);
+
+			this._onStartCallbackFired = true;
+
+		}
+
+		if ( this._dirty && numTweens > 0) {
+
+			var max = 0;
+
+			for (var j = numTweens - 1; j >= 0; j--) {
+				tween = this._tweens[j];
+
+				if ( max < ( tween._startTime + tween._duration ) ) {
+					max = tween._startTime + tween._duration;
+				}
+			}
+
+			this._duration = max;
+
+			this._dirty = false;
+
+		}
 
 		while ( i < numTweens ) {
 
@@ -348,12 +387,6 @@ Phaser.TweenGroup.prototype = {
 			}
 
 			rtime = time - tween._startTime;
-
-			/*if ( !this._reversed ) {
-				rtime = time - tween._startTime;
-			} else {
-				rtime = tween._duration - (time - tween._startTime);
-			}*/
 
 			tween.update( rtime );
 
@@ -402,11 +435,11 @@ Phaser.TweenGroup.prototype = {
 	},
 
 	/**
-	* Add a new tween into the TweenManager.
+	* Add a new tween into the TweenGroup.
 	*
-	* @method Phaser.TweenManager#add
+	* @method Phaser.TweenGroup#add
 	* @param {Phaser.Tween} tween - The tween object you want to add.
-	* @returns {Phaser.Tween} The tween object you added to the manager.
+	* @returns {Phaser.Tween} The tween object you added to the group.
 	*/
 	add: function ( tween ) {
 
@@ -418,16 +451,18 @@ Phaser.TweenGroup.prototype = {
 
 		tween._startTime = this._duration + tween._delayTime;
 
-		console.log(tween._startTime);
+		if ( ( tween._startTime + tween._duration ) > this._duration ) {
+			this._duration = tween._startTime + tween._duration;
+		}
 
-		this._duration = tween._startTime + tween._duration;
+		this._dirty = true;
 
 	},
 
 	/**
-	* Remove a tween from this manager.
+	* Remove a tween from this TweenGroup.
 	*
-	* @method Phaser.TweenManager#remove
+	* @method Phaser.TweenGroup#remove
 	* @param {Phaser.Tween} tween - The tween object you want to remove.
 	*/
 	remove: function ( tween ) {
@@ -439,6 +474,8 @@ Phaser.TweenGroup.prototype = {
 			this._tweens[i].pendingDelete = true;
 
 		}
+
+		this._dirty = true;
 
 	}
 	

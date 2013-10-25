@@ -152,11 +152,6 @@ Phaser.Tween = function (object, game) {
 	* @default
 	*/
 	this.pendingDelete = false;
-
-	// Set all starting values present on the target object TODO revamp this
-	for ( var field in object ) {
-		this._valuesStart[ field ] = parseFloat(object[field], 10);
-	}
 	
 	/**
 	* @property {Phaser.Signal} onStart - Description.
@@ -254,8 +249,6 @@ Phaser.Tween.prototype = {
 		}
 
 		this._manager.add(this);
-
-		this.onStart.dispatch(this._object);
 
 		this.isRunning = true;
 
@@ -457,6 +450,8 @@ Phaser.Tween.prototype = {
 
 			}
 
+			this.onStart.dispatch(this._object);
+
 			this._onStartCallbackFired = true;
 
 			for ( var property in this._valuesEnd ) {
@@ -523,7 +518,7 @@ Phaser.Tween.prototype = {
 
 		}
 
-		if ( ( ( elapsed == 1 ) && !reversed ) || ( ( elapsed == 1) && reversed ) ) {
+		if ( ( ( elapsed == 1 ) && !reversed ) || ( ( elapsed == 0) && reversed ) ) {
 
 			this.onComplete.dispatch(this._object);
 
