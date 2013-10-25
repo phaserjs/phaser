@@ -392,7 +392,6 @@ Phaser.Sprite.prototype.updateCache = function() {
 
     if (this.worldTransform[1] != this._cache.i01 || this.worldTransform[3] != this._cache.i10)
     {
-        console.log('updateCache wt', this.name);
         this._cache.a00 = this.worldTransform[0];  //  scaleX         a
         this._cache.a01 = this.worldTransform[1];  //  skewY          c
         this._cache.a10 = this.worldTransform[3];  //  skewX          b
