@@ -41,7 +41,7 @@ Version 1.1
 
 What's New:
 
-* JSDoc is go! We've added jsdoc3 blocks to every property and function, in every file.
+* JSDoc is go! We've added jsdoc3 blocks to every property and function, in every file and published the API docs to the docs folder.
 * Brand new Example system (no more php!) and over 150 examples to learn from too.
 * New TypeScript definitions file generated (in the build folder - thanks to TomTom1229 for manually enhancing this).
 * New Grunt based build system added (thanks to Florent Cailhol)
