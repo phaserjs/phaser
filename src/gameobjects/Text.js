@@ -2,19 +2,17 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Text
 */
 
 /**
 * Create a new <code>Text</code>.
 * @class Phaser.Text
-* @classdesc Description of class.
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
-* @param {Description} x - Description.
-* @param {Description} y - Description.
-* @param {string} text - Description.
-* @param {string} style - Description.
+* @param {number} x - X position of the new text object.
+* @param {number} y - Y position of the new text object.
+* @param {string} text - The actual text that will be written.
+* @param {object} style - The style object containing style attributes like font, font size ,
 */
 Phaser.Text = function (game, x, y, text, style) {
 

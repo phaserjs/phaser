@@ -2,7 +2,6 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.Bullet
 */
 
 /**
@@ -15,13 +14,12 @@
 * animation, all input events, crop support, health/damage, loadTexture
 *
 * @class Phaser.Bullet
-* @classdesc Description of class.
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
-* @param {Description} x - Description.
-* @param {Description} y - Description.
-* @param {string} key - Description.
-* @param {Description} frame - Description.
+* @param {number} x - X position of the new bullet.
+* @param {number} y - Y position of the new bullet.
+* @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+* @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
 Phaser.Bullet = function (game, x, y, key, frame) {
 

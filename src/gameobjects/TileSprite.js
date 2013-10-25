@@ -2,21 +2,19 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.TileSprite
 */
 
 /**
 * Create a new <code>TileSprite</code>.
 * @class Phaser.Tilemap
-* @classdesc Class description.
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
-* @param {object} x - Description.
-* @param {object} y - Description.
-* @param {number} width - Description.
-* @param {number} height - Description.
-* @param {string} key - Description.
-* @param {Description} frame - Description.
+* @param {number} x - X position of the new tileSprite.
+* @param {number} y - Y position of the new tileSprite.
+* @param {number} width - the width of the tilesprite.
+* @param {number} height - the height of the tilesprite.
+* @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+* @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
 Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
 

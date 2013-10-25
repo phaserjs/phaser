@@ -2,18 +2,16 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.RenderTexture
 */
 
 /**
 * Description of constructor.
 * @class Phaser.RenderTexture
-* @classdesc Description of class.
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
-* @param {string} key - Description.
-* @param {number} width - Description.
-* @param {number} height - Description.
+* @param {string} key - Asset key for the render texture.
+* @param {number} width - the width of the render texture.
+* @param {number} height - the height of the render texture.
 */
 Phaser.RenderTexture = function (game, key, width, height) {
 
@@ -23,19 +21,19 @@ Phaser.RenderTexture = function (game, key, width, height) {
 	this.game = game;
 
 	/**
-    * @property {Description} name - Description. 
+    * @property {string} name - the name of the object. 
 	*/
     this.name = key;
 
 	PIXI.EventTarget.call( this );
 
 	/**
-	* @property {number} width - Description. 
+	* @property {number} width - the width. 
     */
 	this.width = width || 100;
 	
 	/**
-	* @property {number} height - Description. 
+	* @property {number} height - the height. 
     */
 	this.height = height || 100;
 

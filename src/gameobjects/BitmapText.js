@@ -2,7 +2,6 @@
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
-* @module       Phaser.BitmapText
 */
 
 /**
@@ -12,10 +11,10 @@
 * @class Phaser.BitmapText
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {number} x - X position of Description.
-* @param {number} y - Y position of Description.
-* @param {string} text - Description.
-* @param {string} style - Description.
+* @param {number} x - X position of the new bitmapText object.
+* @param {number} y - Y position of the new bitmapText object.
+* @param {string} text - The actual text that will be written.
+* @param {object} style - The style object containing style attributes like font, font size , etc.
 */
 Phaser.BitmapText = function (game, x, y, text, style) {
 
