@@ -524,9 +524,6 @@ Phaser.Sprite.prototype.updateBounds = function() {
 */
 Phaser.Sprite.prototype.getLocalPosition = function(p, x, y, sx, sy) {
 
-    // p.x = ((this._cache.a11 * this._cache.id * x + -this._cache.a01 * this._cache.id * y + (this._cache.a12 * this._cache.a01 - this._cache.a02 * this._cache.a11) * this._cache.id) * this.scale.x) + this._cache.a02;
-    // p.y = ((this._cache.a00 * this._cache.id * y + -this._cache.a10 * this._cache.id * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.a10) * this._cache.id) * this.scale.y) + this._cache.a12;
-
     p.x = ((this._cache.a11 * this._cache.id * x + -this._cache.a01 * this._cache.id * y + (this._cache.a12 * this._cache.a01 - this._cache.a02 * this._cache.a11) * this._cache.id) * sx) + this._cache.a02;
     p.y = ((this._cache.a00 * this._cache.id * y + -this._cache.a10 * this._cache.id * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.a10) * this._cache.id) * sy) + this._cache.a12;
 
@@ -549,8 +546,8 @@ Phaser.Sprite.prototype.getLocalUnmodifiedPosition = function(p, x, y) {
     p.y = this._cache.a00 * this._cache.idi * y + -this._cache.i10 * this._cache.idi * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.i10) * this._cache.idi;
 
     //  apply anchor
-    p.x += (this.anchor.x * this.width);
-    p.y += (this.anchor.y * this.height);
+    p.x += (this.anchor.x * this._cache.width);
+    p.y += (this.anchor.y * this._cache.height);
 
     return p;
 

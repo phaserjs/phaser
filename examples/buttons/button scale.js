@@ -56,15 +56,13 @@ function create() {
 
     //  Scaled and Rotated button
     button6 = game.add.button(570, 200, 'button', changeSky, this, 2, 1, 0); // anchor 0.5
-    // button6 = game.add.button(470, 100, 'button', changeSky, this, 2, 1, 0); // anchor 0
     button6.name = 'sky6';
     button6.angle = 32;
     button6.scale.setTo(2, 2);
     button6.anchor.setTo(0.5, 0.5);
 
-
-    // game.world.setBounds(0, 0, 2000, 2000);
     //  works regardless of world angle, parent angle or camera position
+    // game.world.setBounds(0, 0, 2000, 2000);
     // game.world.angle = 10;
     // game.camera.x = 300;
 
@@ -87,6 +85,7 @@ function render () {
 
     // game.debug.renderWorldTransformInfo(button1, 32, 132);
     // game.debug.renderText('sx: ' + button3.scale.x + ' sy: ' + button3.scale.y + ' w: ' + button3.width + ' cw: ' + button3._cache.width, 32, 20);
-    game.debug.renderPoint(button6.input._tempPoint);
+    // game.debug.renderPoint(button2.input._tempPoint);
+    // game.debug.renderPoint(button6.input._tempPoint);
 
 }
