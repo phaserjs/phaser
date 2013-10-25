@@ -182,6 +182,23 @@ Phaser.TweenManager.prototype = {
     		this._tweens[i].resume();
     	};
 
+    },
+
+    /**
+    * Checks to see if a particular Sprite is currently being tweened.
+    *
+    * @method Phaser.TweenManager#isTweening
+    * @param {Phaser.Sprite} object - The Sprite you're searching for.
+    * @returns {boolean} Returns true if the Sprite is currently being tweened, false if not.
+    */
+    isTweening: function(object) {
+    	for (var i = this._tweens.length - 1; i >= 0; i--) {
+    		if (this._tweens[i]._object === object) {
+    			return true;
+    		}
+    	}
+
+    	return false;
     }
 
 };
