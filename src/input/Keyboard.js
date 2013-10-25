@@ -107,6 +107,9 @@ Phaser.Keyboard.prototype = {
     addKey: function (keycode) {
 
         this._hotkeys[keycode] = new Phaser.Key(this.game, keycode);
+
+        this.addKeyCapture(keycode);
+
         return this._hotkeys[keycode];
 
     },

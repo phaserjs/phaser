@@ -308,11 +308,11 @@ Phaser.Game.prototype = {
 
 			if (this.renderType == Phaser.CANVAS)
 			{
-				console.log('%cPhaser ' + Phaser.VERSION + ' initialized. Rendering to Canvas', 'color: #ffff33; background: #000000');
+				console.log('%cPhaser initialized. Rendering to Canvas.', 'color: #ffff33; background: #000000');
 			}
 			else
 			{
-				console.log('%cPhaser ' + Phaser.VERSION + ' initialized. Rendering to WebGL', 'color: #ffff33; background: #000000');
+				console.log('%cPhaser initialized. Rendering to WebGL.', 'color: #ffff33; background: #000000');
 			}
 
 			var pos = Phaser.VERSION.indexOf('-');
