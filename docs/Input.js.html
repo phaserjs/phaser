@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Phaser Source: input/Input.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+	
+</head>
+
+<body>
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top navbar-inverse">
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">Phaser</a>
+			<ul class="nav">
+				
+				<li class="dropdown">
+					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="Phaser.html">Phaser</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="Phaser.Animation.html">Animation</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.AnimationManager.html">AnimationManager</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.AnimationParser.html">AnimationParser</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.BitmapText.html">BitmapText</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Bullet.html">Bullet</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Button.html">Button</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Cache.html">Cache</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Camera.html">Camera</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Canvas.html">Canvas</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Circle.html">Circle</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Color.html">Color</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Device.html">Device</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.html">Easing</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Back.html">Back</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Bounce.html">Bounce</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Circular.html">Circular</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Cubic.html">Cubic</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Elastic.html">Elastic</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Exponential.html">Exponential</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Linear.html">Linear</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Quadratic.html">Quadratic</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Quartic.html">Quartic</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Quintic.html">Quintic</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Frame.html">Frame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.FrameData.html">FrameData</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Game.html">Game</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Graphics.html">Graphics</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Input.html">Input</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.InputHandler.html">InputHandler</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Key.html">Key</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.LinkedList.html">LinkedList</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Loader.html">Loader</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.LoaderParser.html">LoaderParser</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Math.html">Math</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Mouse.html">Mouse</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.MSPointer.html">MSPointer</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Net.html">Net</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Particles.html">Particles</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Particles.Arcade.Emitter.html">Emitter</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.html">Physics</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Arcade.html">Arcade</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Plugin.html">Plugin</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.PluginManager.html">PluginManager</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Point.html">Point</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Pointer.html">Pointer</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.QuadTree.html">QuadTree</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Rectangle.html">Rectangle</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RenderTexture.html">RenderTexture</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.RequestAnimationFrame.html">RequestAnimationFrame</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Signal.html">Signal</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Sound.html">Sound</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.SoundManager.html">SoundManager</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Sprite.html">Sprite</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Stage.html">Stage</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.StageScaleMode.html">StageScaleMode</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.State.html">State</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.StateManager.html">StateManager</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Text.html">Text</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TileSprite.html">TileSprite</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Touch.html">Touch</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tween.html">Tween</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TweenManager.html">TweenManager</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Utils.html">Utils</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Utils.Debug.html">Debug</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.World.html">World</a>
+						</li>
+						
+						<li>
+							<a href="SignalBinding.html">SignalBinding</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="global.html#bottom">bottom</a>
+						</li>
+						
+						<li>
+							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
+						</li>
+						
+						<li>
+							<a href="global.html#right">right</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+		
+			<div class="span12">
+				
+				<div id="main">
+					
+
+
+		<h1 class="page-title">Source: input/Input.js</h1>
+    
+    <section>
+        <article>
+            <pre class="sunlight-highlight-javascript linenums">/**
+* @author       Richard Davey &lt;rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* Constructor for Phaser Input.
+* @class Phaser.Input
+* @classdesc A game specific Input manager that looks after the mouse, keyboard and touch objects.
+* This is updated by the core game loop.
+* @constructor
+* @param {Phaser.Game} game - Current game instance.
+*/
+Phaser.Input = function (game) {
+
+	/**
+	* @property {Phaser.Game} game - A reference to the currently running game. 
+	*/
+	this.game = game;
+
+	/**
+    * @property {Description} hitCanvas - Description. 
+    * @default
+	*/
+    this.hitCanvas = null;
+    
+	/**
+     * @property {Description} hitContext - Description. 
+     * @default
+ 	*/
+    this.hitContext = null;
+	
+};
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Input.MOUSE_OVERRIDES_TOUCH = 0;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Input.TOUCH_OVERRIDES_MOUSE = 1;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Input.MOUSE_TOUCH_COMBINE = 2;
+
+Phaser.Input.prototype = {
+
+    /** 
+    * @property {Phaser.Game} game
+    */	
+    game: null,
+
+    /**
+    * How often should the input pointers be checked for updates?
+    * A value of 0 means every single frame (60fps), a value of 1 means every other frame (30fps) and so on.
+    * @property {number} pollRate 
+    * @default
+    */
+    pollRate: 0,
+    
+    /**
+     * @property {number} _pollCounter - Description.
+     * @private
+     * @default
+     */
+    _pollCounter: 0,
+
+    /**
+    * A vector object representing the previous position of the Pointer.
+    * @property {Vec2} vector
+    * @private
+    * @default 
+    */
+    _oldPosition: null,
+
+    /**
+    * X coordinate of the most recent Pointer event
+    * @property {number} _x
+    * @private
+    * @default
+    */
+    _x: 0,
+
+    /**
+    * Y coordinate of the most recent Pointer event
+    * @property {number} _y
+    * @private
+    * @default
+    */
+    _y: 0,
+
+    /**
+    * You can disable all Input by setting Input.disabled: true. While set all new input related events will be ignored.
+    * If you need to disable just one type of input, for example mouse, use Input.mouse.disabled: true instead
+    * @property {boolean} disabled
+    * @default
+    */
+    disabled: false,
+
+    /**
+    * Controls the expected behaviour when using a mouse and touch together on a multi-input device.
+    * @property {Description} multiInputOverride
+    */
+    multiInputOverride: Phaser.Input.MOUSE_TOUCH_COMBINE,
+
+    /**
+    * A vector object representing the current position of the Pointer.
+    * @property {Phaser.Point} position
+    * @default 
+    */
+    position: null,
+
+    /**
+    * A vector object representing the speed of the Pointer. Only really useful in single Pointer games,
+    * otherwise see the Pointer objects directly.
+    * @property {Phaser.Point} speed
+    * @default 
+    */
+    speed: null,
+
+    /**
+    * A Circle object centered on the x/y screen coordinates of the Input.
+    * Default size of 44px (Apples recommended "finger tip" size) but can be changed to anything.
+    * @property {Phaser.Circle} circle
+    * @default
+    */
+    circle: null,
+
+    /**
+    * The scale by which all input coordinates are multiplied, calculated by the StageScaleMode.
+    * In an un-scaled game the values will be x: 1 and y: 1.
+    * @property {Phaser.Point} scale
+    * @default
+    */
+    scale: null,
+
+    /**
+    * The maximum number of Pointers allowed to be active at any one time.
+    * For lots of games it's useful to set this to 1.
+    * @property {number} maxPointers
+    * @default
+    */
+    maxPointers: 10,
+
+    /**
+    * The current number of active Pointers.
+    * @property {number} currentPointers
+    * @default
+    */
+    currentPointers: 0,
+
+    /**
+    * The number of milliseconds that the Pointer has to be pressed down and then released to be considered a tap or clicke
+    * @property {number} tapRate
+    * @default
+    */
+    tapRate: 200,
+
+    /**
+    * The number of milliseconds between taps of the same Pointer for it to be considered a double tap / click
+    * @property {number} doubleTapRate
+    * @default
+    */
+    doubleTapRate: 300,
+
+    /**
+    * The number of milliseconds that the Pointer has to be pressed down for it to fire a onHold event
+    * @property {number} holdRate
+    * @default
+    */
+    holdRate: 2000,
+
+    /**
+    * The number of milliseconds below which the Pointer is considered justPressed
+    * @property {number} justPressedRate
+    * @default
+    */
+    justPressedRate: 200,
+
+    /**
+    * The number of milliseconds below which the Pointer is considered justReleased 
+    * @property {number} justReleasedRate
+    * @default
+    */
+    justReleasedRate: 200,
+
+    /**
+    * Sets if the Pointer objects should record a history of x/y coordinates they have passed through.
+    * The history is cleared each time the Pointer is pressed down.
+    * The history is updated at the rate specified in Input.pollRate
+    * @property {boolean} recordPointerHistory
+    * @default
+    */
+    recordPointerHistory: false,
+
+    /**
+    * The rate in milliseconds at which the Pointer objects should update their tracking history
+    * @property {number} recordRate
+    * @default
+    */
+    recordRate: 100,
+
+    /**
+    * The total number of entries that can be recorded into the Pointer objects tracking history.
+    * If the Pointer is tracking one event every 100ms, then a trackLimit of 100 would store the last 10 seconds worth of history.
+    * @property {number} recordLimit
+    * @default
+    */
+    recordLimit: 100,
+
+    /**
+    * A Pointer object
+    * @property {Phaser.Pointer} pointer1
+    */
+    pointer1: null,
+
+    /**
+    * A Pointer object
+    * @property {Phaser.Pointer} pointer2
+    */
+    pointer2: null,
+
+    /**
+    * A Pointer object  
+    * @property {Phaser.Pointer} pointer3
+    */
+    pointer3: null,
+
+    /**
+    * A Pointer object
+    * @property {Phaser.Pointer} pointer4
+    */
+    pointer4: null,
+
+    /**
+    * A Pointer object
+    * @property {Phaser.Pointer} pointer5
+    */
+    pointer5: null,
+
+    /**
+    * A Pointer object
+    * @property {Phaser.Pointer} pointer6
+    */
+    pointer6: null,
+
+    /**
+    * A Pointer object  
+    * @property {Phaser.Pointer} pointer7
+    */
+    pointer7: null,
+
+    /**
+    * A Pointer object
+    * @property {Phaser.Pointer} pointer8
+    */
+    pointer8: null,
+
+    /**
+    * A Pointer object
+    * @property {Phaser.Pointer} pointer9
+    */ 
+    pointer9: null,
+
+    /**
+    * A Pointer object.
+    * @property {Phaser.Pointer} pointer10
+    */
+    pointer10: null,
+
+    /**
+    * The most recently active Pointer object.
+    * When you've limited max pointers to 1 this will accurately be either the first finger touched or mouse.
+    * @property {Phaser.Pointer} activePointer
+    * @default
+    */
+    activePointer: null,
+
+    /**
+    * The mouse has its own unique Phaser.Pointer object which you can use if making a desktop specific game.
+    * @property {Pointer} mousePointer
+    * @default
+    */
+    mousePointer: null,
+    
+    /**
+    * The Mouse Input manager.
+    * @property {Phaser.Mouse} mouse - The Mouse Input manager.
+    * @default
+    */
+    mouse: null,
+    
+    /**
+    * The Keyboard Input manager.
+    * @property {Phaser.Keyboard} keyboard - The Keyboard Input manager.
+    * @default
+    */
+    keyboard: null,
+    
+    /**
+    * The Touch Input manager.
+    * @property {Phaser.Touch} touch - the Touch Input manager.
+    * @default
+    */
+    touch: null,
+    
+    /**
+    * The MSPointer Input manager.
+    * @property {Phaser.MSPointer} mspointer - The MSPointer Input manager.
+    * @default
+    */
+    mspointer: null,
+
+    /**
+    * A Signal that is dispatched each time a pointer is pressed down.
+    * @property {Phaser.Signal} onDown
+    * @default
+    */
+    onDown: null,
+    
+    /**
+    * A Signal that is dispatched each time a pointer is released.
+    * @property {Phaser.Signal} onUp
+    * @default
+    */
+    onUp: null,
+    
+    /**
+    * A Signal that is dispatched each time a pointer is tapped.
+    * @property {Phaser.Signal} onTap
+    * @default
+    */
+    onTap: null,
+    
+    /**
+    * A Signal that is dispatched each time a pointer is held down.
+    * @property {Phaser.Signal} onHold
+    * @default
+    */
+    onHold: null,
+
+    /**
+    * A linked list of interactive objects, the InputHandler components (belonging to Sprites) register themselves with this.
+    * @property {Phaser.LinkedList} interactiveItems
+    */
+    interactiveItems: new Phaser.LinkedList(),
+
+	/**
+    * Starts the Input Manager running.
+    * @method Phaser.Input#boot
+    * @protected
+    */
+    boot: function () {
+
+	    this.mousePointer = new Phaser.Pointer(this.game, 0);
+	    this.pointer1 = new Phaser.Pointer(this.game, 1);
+	    this.pointer2 = new Phaser.Pointer(this.game, 2);
+
+	    this.mouse = new Phaser.Mouse(this.game);
+	    this.keyboard = new Phaser.Keyboard(this.game);
+	    this.touch = new Phaser.Touch(this.game);
+	    this.mspointer = new Phaser.MSPointer(this.game);
+
+	    this.onDown = new Phaser.Signal();
+	    this.onUp = new Phaser.Signal();
+	    this.onTap = new Phaser.Signal();
+	    this.onHold = new Phaser.Signal();
+
+	    this.scale = new Phaser.Point(1, 1);
+	    this.speed = new Phaser.Point();
+	    this.position = new Phaser.Point();
+	    this._oldPosition = new Phaser.Point();
+
+	    this.circle = new Phaser.Circle(0, 0, 44);
+
+	    this.activePointer = this.mousePointer;
+	    this.currentPointers = 0;
+
+	    this.hitCanvas = document.createElement('canvas');
+	    this.hitCanvas.width = 1;
+	    this.hitCanvas.height = 1;
+        this.hitContext = this.hitCanvas.getContext('2d');
+
+        this.mouse.start();
+        this.keyboard.start();
+        this.touch.start();
+        this.mspointer.start();
+        this.mousePointer.active = true;
+
+    },
+
+    /**
+    * Stops all of the Input Managers from running.
+    * @method Phaser.Input#destroy
+    */
+    destroy: function () {
+
+        this.mouse.stop();
+        this.keyboard.stop();
+        this.touch.stop();
+        this.mspointer.stop();
+
+    },
+
+	/**
+    * Add a new Pointer object to the Input Manager. By default Input creates 3 pointer objects: mousePointer, pointer1 and pointer2.
+    * If you need more then use this to create a new one, up to a maximum of 10.
+    * @method Phaser.Input#addPointer
+    * @return {Phaser.Pointer} A reference to the new Pointer object that was created.
+    */
+    addPointer: function () {
+
+        var next = 0;
+
+        for (var i = 10; i > 0; i--)
+        {
+            if (this['pointer' + i] === null)
+            {
+                next = i;
+            }
+        }
+
+        if (next == 0)
+        {
+            console.warn("You can only have 10 Pointer objects");
+            return null;
+        }
+        else
+        {
+            this['pointer' + next] = new Phaser.Pointer(this.game, next);
+            return this['pointer' + next];
+        }
+
+    },
+
+	/**
+    * Updates the Input Manager. Called by the core Game loop.
+    * @method Phaser.Input#update
+    * @protected
+    */
+    update: function () {
+
+        if (this.pollRate > 0 && this._pollCounter &lt; this.pollRate)
+        {
+            this._pollCounter++;
+            return;
+        }
+
+        this.speed.x = this.position.x - this._oldPosition.x;
+        this.speed.y = this.position.y - this._oldPosition.y;
+
+        this._oldPosition.copyFrom(this.position);
+        this.mousePointer.update();
+
+        this.pointer1.update();
+        this.pointer2.update();
+
+        if (this.pointer3) { this.pointer3.update(); }
+        if (this.pointer4) { this.pointer4.update(); }
+        if (this.pointer5) { this.pointer5.update(); }
+        if (this.pointer6) { this.pointer6.update(); }
+        if (this.pointer7) { this.pointer7.update(); }
+        if (this.pointer8) { this.pointer8.update(); }
+        if (this.pointer9) { this.pointer9.update(); }
+        if (this.pointer10) { this.pointer10.update(); }
+
+        this._pollCounter = 0;
+    },
+
+	/**
+    * Reset all of the Pointers and Input states
+    * @method Phaser.Input#reset
+    * @param {boolean} hard - A soft reset (hard = false) won't reset any Signals that might be bound. A hard reset will.
+    */
+    reset: function (hard) {
+
+        if (this.game.isBooted == false)
+        {
+            return;
+        }
+
+        if (typeof hard == 'undefined') { hard = false; }
+
+        this.keyboard.reset();
+        this.mousePointer.reset();
+
+        for (var i = 1; i &lt;= 10; i++)
+        {
+            if (this['pointer' + i])
+            {
+                this['pointer' + i].reset();
+            }
+        }
+
+        this.currentPointers = 0;
+        this.game.stage.canvas.style.cursor = "default";
+
+        if (hard == true)
+        {
+            this.onDown.dispose();
+            this.onUp.dispose();
+            this.onTap.dispose();
+            this.onHold.dispose();
+            this.onDown = new Phaser.Signal();
+            this.onUp = new Phaser.Signal();
+            this.onTap = new Phaser.Signal();
+            this.onHold = new Phaser.Signal();
+
+            this.interactiveItems.callAll('reset');
+        }
+
+        this._pollCounter = 0;
+
+    },
+
+    /**
+    * Resets the speed and old position properties.
+    * @method Phaser.Input#resetSpeed
+    * @param {number} x - Sets the oldPosition.x value.
+    * @param {number} y - Sets the oldPosition.y value.
+    */
+    resetSpeed: function (x, y) {
+
+        this._oldPosition.setTo(x, y);
+        this.speed.setTo(0, 0);
+
+    },
+
+	/**
+    * Find the first free Pointer object and start it, passing in the event data. This is called automatically by Phaser.Touch and Phaser.MSPointer.
+    * @method Phaser.Input#startPointer
+    * @param {Any} event - The event data from the Touch event.
+    * @return {Phaser.Pointer} The Pointer object that was started or null if no Pointer object is available.
+    */
+    startPointer: function (event) {
+
+        if (this.maxPointers &lt; 10 && this.totalActivePointers == this.maxPointers)
+        {
+            return null;
+        }
+
+        if (this.pointer1.active == false)
+        {
+            return this.pointer1.start(event);
+        }
+        else if (this.pointer2.active == false)
+        {
+            return this.pointer2.start(event);
+        }
+        else
+        {
+            for (var i = 3; i &lt;= 10; i++)
+            {
+                if (this['pointer' + i] && this['pointer' + i].active == false)
+                {
+                    return this['pointer' + i].start(event);
+                }
+            }
+        }
+
+        return null;
+
+    },
+
+	/**
+    * Updates the matching Pointer object, passing in the event data. This is called automatically and should not normally need to be invoked.
+    * @method Phaser.Input#updatePointer
+    * @param {Any} event - The event data from the Touch event.
+    * @return {Phaser.Pointer} The Pointer object that was updated or null if no Pointer object is available.
+    */
+    updatePointer: function (event) {
+
+        if (this.pointer1.active && this.pointer1.identifier == event.identifier)
+        {
+            return this.pointer1.move(event);
+        }
+        else if (this.pointer2.active && this.pointer2.identifier == event.identifier)
+        {
+            return this.pointer2.move(event);
+        }
+        else
+        {
+            for (var i = 3; i &lt;= 10; i++)
+            {
+                if (this['pointer' + i] && this['pointer' + i].active && this['pointer' + i].identifier == event.identifier)
+                {
+                    return this['pointer' + i].move(event);
+                }
+            }
+        }
+
+        return null;
+
+    },
+
+	/**
+    * Stops the matching Pointer object, passing in the event data.
+    * @method Phaser.Input#stopPointer
+    * @param {Any} event - The event data from the Touch event.
+    * @return {Phaser.Pointer} The Pointer object that was stopped or null if no Pointer object is available.
+    */
+    stopPointer: function (event) {
+
+        if (this.pointer1.active && this.pointer1.identifier == event.identifier)
+        {
+            return this.pointer1.stop(event);
+        }
+        else if (this.pointer2.active && this.pointer2.identifier == event.identifier)
+        {
+            return this.pointer2.stop(event);
+        }
+        else
+        {
+            for (var i = 3; i &lt;= 10; i++)
+            {
+                if (this['pointer' + i] && this['pointer' + i].active && this['pointer' + i].identifier == event.identifier)
+                {
+                    return this['pointer' + i].stop(event);
+                }
+            }
+        }
+
+        return null;
+
+    },
+
+	/**
+    * Get the next Pointer object whos active property matches the given state
+    * @method Phaser.Input#getPointer
+    * @param {boolean} state - The state the Pointer should be in (false for inactive, true for active).
+    * @return {Phaser.Pointer} A Pointer object or null if no Pointer object matches the requested state.
+    */
+    getPointer: function (state) {
+
+        state = state || false;
+
+        if (this.pointer1.active == state)
+        {
+            return this.pointer1;
+        }
+        else if (this.pointer2.active == state)
+        {
+            return this.pointer2;
+        }
+        else
+        {
+            for (var i = 3; i &lt;= 10; i++)
+            {
+                if (this['pointer' + i] && this['pointer' + i].active == state)
+                {
+                    return this['pointer' + i];
+                }
+            }
+        }
+
+        return null;
+
+    },
+
+	/**
+    * Get the Pointer object whos identified property matches the given identifier value.
+    * @method Phaser.Input#getPointerFromIdentifier
+    * @param {number} identifier - The Pointer.identifier value to search for.
+    * @return {Phaser.Pointer} A Pointer object or null if no Pointer object matches the requested identifier.
+    */
+    getPointerFromIdentifier: function (identifier) {
+
+        if (this.pointer1.identifier == identifier)
+        {
+            return this.pointer1;
+        }
+        else if (this.pointer2.identifier == identifier)
+        {
+            return this.pointer2;
+        }
+        else
+        {
+            for (var i = 3; i &lt;= 10; i++)
+            {
+                if (this['pointer' + i] && this['pointer' + i].identifier == identifier)
+                {
+                    return this['pointer' + i];
+                }
+            }
+        }
+
+        return null;
+
+    }
+
+};
+
+/**
+* The X coordinate of the most recently active pointer. This value takes game scaling into account automatically. See Pointer.screenX/clientX for source values.
+* @name Phaser.Input#x
+* @property {number} x - The X coordinate of the most recently active pointer.
+*/
+Object.defineProperty(Phaser.Input.prototype, "x", {
+
+    get: function () {
+        return this._x;
+    },
+
+    set: function (value) {
+        this._x = Math.floor(value);
+    }
+
+});
+
+/**
+* The Y coordinate of the most recently active pointer. This value takes game scaling into account automatically. See Pointer.screenY/clientY for source values.
+* @name Phaser.Input#y
+* @property {number} y - The Y coordinate of the most recently active pointer.
+*/
+Object.defineProperty(Phaser.Input.prototype, "y", {
+    
+    get: function () {
+        return this._y;
+    },
+
+    set: function (value) {
+        this._y = Math.floor(value);
+    }
+
+});
+
+/**
+* @name Phaser.Input#pollLocked
+* @property {boolean} pollLocked - True if the Input is currently poll rate locked.
+* @readonly
+*/
+Object.defineProperty(Phaser.Input.prototype, "pollLocked", {
+
+    get: function () {
+        return (this.pollRate > 0 && this._pollCounter &lt; this.pollRate);
+    }
+
+});
+
+/**
+* The total number of inactive Pointers
+* @name Phaser.Input#totalInactivePointers
+* @property {number} totalInactivePointers - The total number of inactive Pointers.
+* @readonly
+*/
+Object.defineProperty(Phaser.Input.prototype, "totalInactivePointers", {
+
+    get: function () {
+        return 10 - this.currentPointers;
+    }
+
+});
+
+/**
+* The total number of active Pointers
+* @name Phaser.Input#totalActivePointers
+* @property {number} totalActivePointers - The total number of active Pointers.
+* @readonly
+*/
+Object.defineProperty(Phaser.Input.prototype, "totalActivePointers", {
+    
+    get: function () {
+
+        this.currentPointers = 0;
+
+        for (var i = 1; i &lt;= 10; i++)
+        {
+            if (this['pointer' + i] && this['pointer' + i].active)
+            {
+                this.currentPointers++;
+            }
+        }
+
+        return this.currentPointers;
+
+    }
+
+});
+
+/**
+* The world X coordinate of the most recently active pointer.
+* @name Phaser.Input#worldX
+* @property {number} worldX - The world X coordinate of the most recently active pointer.
+*/
+Object.defineProperty(Phaser.Input.prototype, "worldX", {
+
+    get: function () {
+		return this.game.camera.view.x + this.x;
+    }
+
+});
+
+/**
+* The world Y coordinate of the most recently active pointer.
+* @name Phaser.Input#worldY
+* @property {number} worldY - The world Y coordinate of the most recently active pointer.
+*/
+Object.defineProperty(Phaser.Input.prototype, "worldY", {
+
+    get: function () {
+		return this.game.camera.view.y + this.y;
+    }
+
+});
+</pre>
+        </article>
+    </section>
+
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+					
+					
+		<span class="copyright">
+		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		</span>
+					<br />
+					
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
+		on Fri Oct 25 2013 17:05:24 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+			
+			<br clear="both">
+		</div>
+
+	</div>
+	<script src="scripts/sunlight.js"></script>
+	<script src="scripts/sunlight.javascript.js"></script>
+	<script src="scripts/sunlight-plugin.doclinks.js"></script>
+	<script src="scripts/sunlight-plugin.linenumbers.js"></script>
+	<script src="scripts/sunlight-plugin.menu.js"></script>
+	<script src="scripts/jquery.min.js"></script>
+	<script src="scripts/jquery.scrollTo.js"></script>
+	<script src="scripts/jquery.localScroll.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+
+	<script>  Sunlight.highlightAll({lineNumbers:true,  showMenu: true, enableDoclinks :true}); </script>
+
+	<script>
+		$( function () {
+			$( "#toc" ).toc( {
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : 60
+			} );
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+
+		} );
+	</script>
+
+	
+
+</body>
+</html>

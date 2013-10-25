@@ -1,96 +1,86 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
-* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
-* @module       Phaser.Stage
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
-*
 * The Stage controls the canvas on which everything is displayed. It handles display within the browser,
 * focus handling, game resizing, scaling and the pause, boot and orientation screens.
 *
-* @class Stage
+* @class Phaser.Stage
 * @constructor
-* @param {Phaser.Game} game Game reference to the currently running game.
-* @param {number} width Width of the canvas element
-* @param {number} height Height of the canvas element
+* @param {Phaser.Game} game - Game reference to the currently running game.
+* @param {number} width - Width of the canvas element.
+* @param {number} height - Height of the canvas element.
  */
 Phaser.Stage = function (game, width, height) {
 
-	/**
-    * A reference to the currently running Game.
-    * @property game
-    * @public
-    * @type {Phaser.Game}
-    */
+    /**
+	* @property {Phaser.Game} game - A reference to the currently running Game.
+	*/
 	this.game = game;
 
     /**
-    * Background color of the stage (defaults to black). Set via the public backgroundColor property.
-    * @property _backgroundColor
-    * @private
-    * @type {string}
-    */
+	* @property {string} game - Background color of the stage (defaults to black). Set via the public backgroundColor property.
+	* @private
+	* @default 'rgb(0,0,0)'
+	*/
     this._backgroundColor = 'rgb(0,0,0)';
 
     /**
-    * Get the offset values (for input and other things)
-    * @property offset
-    * @public
-    * @type {Phaser.Point}
-    */
+	* @property {Phaser.Point} offset - Get the offset values (for input and other things).
+	*/
 	this.offset = new Phaser.Point;
     
     /**
-    * reference to the newly created <canvas> element
-    * @property canvas
-    * @public
-    * @type {HTMLCanvasElement}
+    * @property {HTMLCanvasElement} canvas - Reference to the newly created &lt;canvas&gt; element.
     */
-    this.canvas = Phaser.Canvas.create(width, height);    
+    this.canvas = Phaser.Canvas.create(width, height); 
     this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
     
     /**
-    * The Pixi Stage which is hooked to the renderer
-    * @property _stage
+    * @property {PIXI.Stage} _stage - The Pixi Stage which is hooked to the renderer.
     * @private
-    * @type {PIXI.Stage}
     */
     this._stage = new PIXI.Stage(0x000000, false);
     this._stage.name = '_stage_root';
 
     /**
-    * The current scaleMode
-    * @property scaleMode
-    * @public
-    * @type {number}
-    */
+    * @property {number} scaleMode - The current scaleMode.
+    */    
     this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
 
     /**
-    * The scale of the current running game
-    * @property scale
-    * @public
-    * @type {Phaser.StageScaleMode}
+    * @property {Phaser.StageScaleMode} scale - The scale of the current running game.
     */
     this.scale = new Phaser.StageScaleMode(this.game, width, height);
 
     /**
-    * aspect ratio
-    * @property aspectRatio
-    * @public
-    * @type {number}
-    */
+     * @property {number} aspectRatio - Aspect ratio.
+     */
     this.aspectRatio = width / height;
+
+    /**
+    * @property {number} _nextOffsetCheck - The time to run the next offset check.
+    * @private
+    */
+    this._nextOffsetCheck = 0;
+
+    /**
+    * @property {number|false} checkOffsetInterval - The time (in ms) between which the stage should check to see if it has moved.
+    * @default
+    */
+    this.checkOffsetInterval = 2500;
 
 };
 
 Phaser.Stage.prototype = {
 
     /**
-    * Initialises the stage and adds the event listeners
-    * @method boot
+    * Initialises the stage and adds the event listeners.
+    * @method Phaser.Stage#boot
+    * @private
     */
     boot: function () {
 
@@ -104,6 +94,9 @@ Phaser.Stage.prototype = {
             return _this.visibilityChange(event);
         }
 
+        Phaser.Canvas.setUserSelect(this.canvas, 'none');
+        Phaser.Canvas.setTouchAction(this.canvas, 'none');
+
         document.addEventListener('visibilitychange', this._onChange, false);
         document.addEventListener('webkitvisibilitychange', this._onChange, false);
         document.addEventListener('pagehide', this._onChange, false);
@@ -114,10 +107,28 @@ Phaser.Stage.prototype = {
 
     },
 
+    /**
+    * Runs Stage processes that need periodic updates, such as the offset checks.
+    * @method Phaser.Stage#update
+    */
+    update: function () {
+
+        if (this.checkOffsetInterval !== false)
+        {
+            if (this.game.time.now > this._nextOffsetCheck)
+            {
+                Phaser.Canvas.getOffset(this.canvas, this.offset);
+                this._nextOffsetCheck = this.game.time.now + this.checkOffsetInterval;
+            }
+
+        }
+
+    },
+
 	/**
     * This method is called when the document visibility is changed.
-    * @method visibilityChange
-    * @param {Event} event Its type will be used to decide whether the game should be paused or not
+    * @method Phaser.Stage#visibilityChange
+    * @param {Event} event - Its type will be used to decide whether the game should be paused or not.
     */
     visibilityChange: function (event) {
 
@@ -128,12 +139,10 @@ Phaser.Stage.prototype = {
 
         if (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true)
         {
-	        // console.log('visibilityChange - hidden', event);
 	        this.game.paused = true;
         }
         else
         {
-	        // console.log('visibilityChange - shown', event);
 	        this.game.paused = false;
         }
 
@@ -141,21 +150,16 @@ Phaser.Stage.prototype = {
 
 };
 
+/**
+* @name Phaser.Stage#backgroundColor
+* @property {number|string} paused - Gets and sets the background color of the stage. The color can be given as a number: 0xff0000 or a hex string: '#ff0000'
+*/
 Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 
-    /**
-    * @method backgroundColor
-    * @return {string} returns the background color of the stage
-    */
     get: function () {
         return this._backgroundColor;
     },
 
-    /**
-    * @method backgroundColor
-    * @param {string} the background color you want the stage to have
-    * @return {string} returns the background color of the stage
-    */
     set: function (color) {
 
         this._backgroundColor = color;

@@ -7,8 +7,8 @@
  *
  * @class Point
  * @constructor 
- * @param x {Number} position of the point
- * @param y {Number} position of the point
+ * @param x {number} position of the point
+ * @param y {number} position of the point
  */
 PIXI.Point = function(x, y)
 {

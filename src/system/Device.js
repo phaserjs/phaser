@@ -1,184 +1,190 @@
 /**
-* Phaser - Device
-*
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
 * Detects device support capabilities. Using some elements from System.js by MrDoob and Modernizr
-* https://github.com/Modernizr/Modernizr/blob/master/feature-detects/audio.js
+*
+* @class Phaser.Device
+* @constructor
 */
 
 Phaser.Device = function () {
 
     /**
-    * An optional 'fix' for the horrendous Android stock browser bug
-    * https://code.google.com/p/android/issues/detail?id=39247
-    * @type {boolean}
+    * An optional 'fix' for the horrendous Android stock browser bug https://code.google.com/p/android/issues/detail?id=39247
+    * @property {boolean} patchAndroidClearRectBug - Description.
+    * @default
     */
     this.patchAndroidClearRectBug = false;
 
     //  Operating System
 
     /**
-    * Is running desktop?
-    * @type {boolean}
+    * @property {boolean} desktop - Is running desktop?
+    * @default
     */
     this.desktop = false;
 
     /**
-    * Is running on iOS?
-    * @type {boolean}
+    * @property {boolean} iOS - Is running on iOS?
+    * @default
     */
     this.iOS = false;
 
     /**
-    * Is running on android?
-    * @type {boolean}
+    * @property {boolean} android - Is running on android?
+    * @default
     */
     this.android = false;
 
     /**
-    * Is running on chromeOS?
-    * @type {boolean}
+    * @property {boolean} chromeOS - Is running on chromeOS?
+    * @default
     */
     this.chromeOS = false;
 
     /**
-    * Is running on linux?
-    * @type {boolean}
+    * @property {boolean} linux - Is running on linux?
+    * @default
     */
     this.linux = false;
 
     /**
-    * Is running on maxOS?
-    * @type {boolean}
+    * @property {boolean} macOS - Is running on macOS?
+    * @default
     */
     this.macOS = false;
 
     /**
-    * Is running on windows?
-    * @type {boolean}
+    * @property {boolean} windows - Is running on windows?
+    * @default
     */
     this.windows = false;
 
     //  Features
 
     /**
-    * Is canvas available?
-    * @type {boolean}
+    * @property {boolean} canvas - Is canvas available?
+    * @default
     */
     this.canvas = false;
 
     /**
-    * Is file available?
-    * @type {boolean}
+    * @property {boolean} file - Is file available?
+    * @default
     */
     this.file = false;
 
     /**
-    * Is fileSystem available?
-    * @type {boolean}
+    * @property {boolean} fileSystem - Is fileSystem available?
+    * @default
     */
     this.fileSystem = false;
 
     /**
-    * Is localStorage available?
-    * @type {boolean}
+    * @property {boolean} localStorage - Is localStorage available?
+    * @default
     */
     this.localStorage = false;
 
     /**
-    * Is webGL available?
-    * @type {boolean}
+    * @property {boolean} webGL - Is webGL available?
+    * @default
     */
     this.webGL = false;
 
     /**
-    * Is worker available?
-    * @type {boolean}
+    * @property {boolean} worker - Is worker available?
+    * @default
     */
     this.worker = false;
 
     /**
-    * Is touch available?
-    * @type {boolean}
+    * @property {boolean} touch - Is touch available?
+    * @default
     */
     this.touch = false;
 
     /**
-    * Is mspointer available?
-    * @type {boolean}
+    * @property {boolean} mspointer - Is mspointer available?
+    * @default
     */
     this.mspointer = false;
 
     /**
-    * Is css3D available?
-    * @type {boolean}
+    * @property {boolean} css3D - Is css3D available?
+    * @default
     */
     this.css3D = false;
 
-    /**
-    * Is Pointer Lock available?
-    * @type {boolean}
+    /** 
+    * @property {boolean} pointerLock - Is Pointer Lock available?
+    * @default
     */
     this.pointerLock = false;
 
     //  Browser
 
     /**
-    * Is running in arora?
-    * @type {boolean}
+    * @property {boolean} arora - Is running in arora?
+    * @default
     */
     this.arora = false;
 
     /**
-    * Is running in chrome?
-    * @type {boolean}
+    * @property {boolean} chrome - Is running in chrome?
+    * @default
     */
     this.chrome = false;
 
     /**
-    * Is running in epiphany?
-    * @type {boolean}
+    * @property {boolean} epiphany - Is running in epiphany?
+    * @default
     */
     this.epiphany = false;
 
     /**
-    * Is running in firefox?
-    * @type {boolean}
+    * @property {boolean} firefox - Is running in firefox?
+    * @default
     */
     this.firefox = false;
 
     /**
-    * Is running in ie?
-    * @type {boolean}
+    * @property {boolean} ie - Is running in ie?
+    * @default
     */
     this.ie = false;
 
     /**
-    * Version of ie?
-    * @type Number
+    * @property {number} ieVersion - Version of ie?
+    * @default
     */
     this.ieVersion = 0;
 
     /**
-    * Is running in mobileSafari?
-    * @type {boolean}
+    * @property {boolean} mobileSafari - Is running in mobileSafari?
+    * @default
     */
     this.mobileSafari = false;
 
     /**
-    * Is running in midori?
-    * @type {boolean}
+    * @property {boolean} midori - Is running in midori?
+    * @default
     */
     this.midori = false;
 
     /**
-    * Is running in opera?
-    * @type {boolean}
+    * @property {boolean} opera - Is running in opera?
+    * @default
     */
     this.opera = false;
 
     /**
-    * Is running in safari?
-    * @type {boolean}
+    * @property {boolean} safari - Is running in safari?
+    * @default
     */
     this.safari = false;
     this.webApp = false;
@@ -186,75 +192,76 @@ Phaser.Device = function () {
     //  Audio
 
     /**
-    * Are Audio tags available?
-    * @type {boolean}
+    * @property {boolean} audioData - Are Audio tags available?
+    * @default
     */
     this.audioData = false;
 
     /**
-    * Is the WebAudio API available?
-    * @type {boolean}
+    * @property {boolean} webAudio - Is the WebAudio API available?
+    * @default
     */
     this.webAudio = false;
 
     /**
-    * Can this device play ogg files?
-    * @type {boolean}
+    * @property {boolean} ogg - Can this device play ogg files?
+    * @default
     */
     this.ogg = false;
 
     /**
-    * Can this device play opus files?
-    * @type {boolean}
+    * @property {boolean} opus - Can this device play opus files?
+    * @default
     */
     this.opus = false;
 
     /**
-    * Can this device play mp3 files?
-    * @type {boolean}
+    * @property {boolean} mp3 - Can this device play mp3 files?
+    * @default
     */
     this.mp3 = false;
 
     /**
-    * Can this device play wav files?
-    * @type {boolean}
+    * @property {boolean} wav - Can this device play wav files?
+    * @default
     */
     this.wav = false;
     /**
     * Can this device play m4a files?
-    * @type {boolean}
+    * @property {boolean} m4a - True if this device can play m4a files.
+    * @default
     */
     this.m4a = false;
 
     /**
-    * Can this device play webm files?
-    * @type {boolean}
+    * @property {boolean} webm - Can this device play webm files?
+    * @default
     */
     this.webm = false;
 
     //  Device
 
     /**
-    * Is running on iPhone?
-    * @type {boolean}
+    * @property {boolean} iPhone - Is running on iPhone?
+    * @default
     */
     this.iPhone = false;
 
     /**
-    * Is running on iPhone4?
-    * @type {boolean}
+    * @property {boolean} iPhone4 - Is running on iPhone4?
+    * @default
     */
     this.iPhone4 = false;
 
-    /**
-    * Is running on iPad?
-    * @type {boolean}
+    /** 
+    * @property {boolean} iPad - Is running on iPad?
+    * @default
     */
     this.iPad = false;
 
     /**
-    * PixelRatio of the host device?
-    * @type Number
+    * @property {number} pixelRatio - PixelRatio of the host device?
+    * @default
     */
     this.pixelRatio = 0;
 
@@ -272,6 +279,7 @@ Phaser.Device.prototype = {
 
     /**
     * Check which OS is game running on.
+    * @method Phaser.Device#_checkOS
     * @private
     */
     _checkOS: function () {
@@ -300,6 +308,7 @@ Phaser.Device.prototype = {
 
     /**
     * Check HTML5 features of the host environment.
+    * @method Phaser.Device#_checkFeatures
     * @private
     */
     _checkFeatures: function () {
@@ -314,8 +323,17 @@ Phaser.Device.prototype = {
 
         this.file = !!window['File'] && !!window['FileReader'] && !!window['FileList'] && !!window['Blob'];
         this.fileSystem = !!window['requestFileSystem'];
-        this.webGL = ( function () { try { return !! window.WebGLRenderingContext && !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' ); } catch( e ) { return false; } } )();
-        // this.webGL = !!window['WebGLRenderingContext'];
+        this.webGL = ( function () { try { var canvas = document.createElement( 'canvas' ); return !! window.WebGLRenderingContext && ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ); } catch( e ) { return false; } } )();
+
+        if (this.webGL === null)
+        {
+            this.webGL = false;
+        }
+        else
+        {
+            this.webGL = true;
+        }
+
         this.worker = !!window['Worker'];
         
         if ('ontouchstart' in document.documentElement || window.navigator.msPointerEnabled) {
@@ -332,6 +350,7 @@ Phaser.Device.prototype = {
 
     /**
     * Check what browser is game running in.
+    * @method Phaser.Device#_checkBrowser
     * @private
     */
     _checkBrowser: function () {
@@ -368,6 +387,7 @@ Phaser.Device.prototype = {
 
     /**
     * Check audio support.
+    * @method Phaser.Device#_checkAudio
     * @private
     */
     _checkAudio: function () {
@@ -414,6 +434,7 @@ Phaser.Device.prototype = {
 
     /**
     * Check PixelRatio of devices.
+    * @method Phaser.Device#_checkDevice
     * @private
     */
     _checkDevice: function () {
@@ -427,9 +448,11 @@ Phaser.Device.prototype = {
 
     /**
     * Check whether the host environment support 3D CSS.
+    * @method Phaser.Device#_checkCSS3D
     * @private
     */
     _checkCSS3D: function () {
+
         var el = document.createElement('p');
         var has3d;
         var transforms = {
@@ -439,6 +462,7 @@ Phaser.Device.prototype = {
             'MozTransform': '-moz-transform',
             'transform': 'transform'
         };
+
         // Add it to the body to get the computed style.
         document.body.insertBefore(el, null);
 
@@ -448,22 +472,38 @@ Phaser.Device.prototype = {
                 has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
             }
         }
+        
         document.body.removeChild(el);
         this.css3D = (has3d !== undefined && has3d.length > 0 && has3d !== "none");
 
     },
 
+    /**
+    * Check whether the host environment can play audio.
+    * @method Phaser.Device#canPlayAudio
+    * @param {string} type - One of 'mp3, 'ogg', 'm4a', 'wav', 'webm'.
+    * @return {boolean} True if the given file type is supported by the browser, otherwise false.
+    */
     canPlayAudio: function (type) {
 
-        if (type == 'mp3' && this.mp3) {
+        if (type == 'mp3' && this.mp3)
+        {
             return true;
-        } else if (type == 'ogg' && (this.ogg || this.opus)) {
+        }
+        else if (type == 'ogg' && (this.ogg || this.opus))
+        {
             return true;
-        } else if (type == 'm4a' && this.m4a) {
+        }
+        else if (type == 'm4a' && this.m4a)
+        {
             return true;
-        } else if (type == 'wav' && this.wav) {
+        }
+        else if (type == 'wav' && this.wav)
+        {
             return true;
-        } else if (type == 'webm' && this.webm) {
+        }
+        else if (type == 'webm' && this.webm)
+        {
             return true;
         }
 
@@ -471,17 +511,25 @@ Phaser.Device.prototype = {
 
     },
 
+    /**
+    * Check whether the console is open.
+    * @method Phaser.Device#isConsoleOpen
+    * @return {boolean} True if the browser dev console is open.
+    */
     isConsoleOpen: function () {
 
-        if (window.console && window.console['firebug']) {
+        if (window.console && window.console['firebug'])
+        {
             return true;
         }
 
-        if (window.console) {
+        if (window.console)
+        {
             console.profile();
             console.profileEnd();
 
-            if (console.clear) {
+            if (console.clear)
+            {
                 console.clear();
             }
 

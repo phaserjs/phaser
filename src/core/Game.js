@@ -1,28 +1,26 @@
 /**
-* Phaser.Game
-*
-* This is where the magic happens. The Game object is the heart of your game,
-* providing quick access to common functions and handling the boot process.
-*
-* "Hell, there are no rules here - we're trying to accomplish something."
-*                                                       Thomas A. Edison
-*
-* @package    Phaser.Game
-* @author     Richard Davey <rich@photonstorm.com>
-* @copyright  2013 Photon Storm Ltd.
-* @license    https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
 * Game constructor
 *
 * Instantiate a new <code>Phaser.Game</code> object.
-*
+* @class Phaser.Game
+* @classdesc This is where the magic happens. The Game object is the heart of your game,
+* providing quick access to common functions and handling the boot process.
+* <p>"Hell, there are no rules here - we're trying to accomplish something."</p><br>
+*                                                       Thomas A. Edison
 * @constructor
-* @param width {number} The width of your game in game pixels.
-* @param height {number} The height of your game in game pixels.
-* @param renderer {number} Which renderer to use (canvas or webgl)
-* @param parent {string} ID of its parent DOM element.
+* @param {number} width - The width of your game in game pixels.
+* @param {number} height - The height of your game in game pixels.
+* @param {number} renderer -Which renderer to use (canvas or webgl)
+* @param {HTMLElement} parent -The Games DOM parent.
+* @param {Description} state - Description.
+* @param {boolean} transparent - Use a transparent canvas background or not.
+* @param  {boolean} antialias - Anti-alias graphics.
 */
 Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias) {
 
@@ -31,206 +29,201 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 	renderer = renderer || Phaser.AUTO;
 	parent = parent || '';
 	state = state || null;
-	transparent = transparent || false;
-	antialias = typeof antialias === 'undefined' ? true : antialias;
+
+	if (typeof transparent == 'undefined') { transparent = false; }
+	if (typeof antialias == 'undefined') { antialias = true; }
 
 	/**
-	* Phaser Game ID (for when Pixi supports multiple instances)
-	* @type {number}
+	* @property {number} id - Phaser Game ID (for when Pixi supports multiple instances).
 	*/
 	this.id = Phaser.GAMES.push(this) - 1;
 
 	/**
-	* The Games DOM parent.
-	* @type {HTMLElement}
+	* @property {HTMLElement} parent - The Games DOM parent.
 	*/
 	this.parent = parent;
 
 	//	Do some more intelligent size parsing here, so they can set "100%" for example, maybe pass the scale mode in here too?
 
 	/**
-	* The Game width (in pixels).
-	* @type {number}
+	* @property {number} width - The Game width (in pixels).
 	*/
 	this.width = width;
 
 	/**
-	* The Game height (in pixels).
-	* @type {number}
+	* @property {number} height - The Game height (in pixels).
 	*/
 	this.height = height;
 
 	/**
-	* Use a transparent canvas background or not.
-	* @type {boolean}
+	* @property {boolean} transparent - Use a transparent canvas background or not.
 	*/
 	this.transparent = transparent;
 
 	/**
-	* Anti-alias graphics (in WebGL this helps with edges, in Canvas2D it retains pixel-art quality)
-	* @type {boolean}
+	* @property {boolean} antialias - Anti-alias graphics (in WebGL this helps with edges, in Canvas2D it retains pixel-art quality).
 	*/
 	this.antialias = antialias;
 
 	/**
-	* The Pixi Renderer
-	* @type {number}
+	* @property {number} renderer - The Pixi Renderer
+	* @default
 	*/
 	this.renderer = null;
 
-    /**
-     * The StateManager.
-     * @type {Phaser.StateManager}
-     */
+	/**
+	* @property {number} state - The StateManager.
+	*/
 	this.state = new Phaser.StateManager(this, state);
 
 	/**
-	* Is game paused?
-	* @type {bool}
+	* @property {boolean} _paused - Is game paused?
+	* @private
+	* @default
 	*/
 	this._paused = false;
 
 	/**
-	* The Renderer this Phaser.Game will use. Either Phaser.RENDERER_AUTO, Phaser.RENDERER_CANVAS or Phaser.RENDERER_WEBGL
-	* @type {number}
+	* @property {number} renderType - The Renderer this Phaser.Game will use. Either Phaser.RENDERER_AUTO, Phaser.RENDERER_CANVAS or Phaser.RENDERER_WEBGL.
 	*/
 	this.renderType = renderer;
 
 	/**
-	* Whether load complete loading or not.
-	* @type {bool}
+	* @property {boolean} _loadComplete - Whether load complete loading or not.
+	* @private
+	* @default
 	*/
 	this._loadComplete = false;
 
 	/**
-	* Whether the game engine is booted, aka available.
-	* @type {bool}
+	* @property {boolean} isBooted - Whether the game engine is booted, aka available.
+	* @default
 	*/
 	this.isBooted = false;
 
 	/**
-	* Is game running or paused?
-	* @type {bool}
+	* @property {boolean} id -Is game running or paused?
+	* @default
 	*/
 	this.isRunning = false;
 
 	/**
-	* Automatically handles the core game loop via requestAnimationFrame or setTimeout
-     * @type {Phaser.RequestAnimationFrame}
+	* @property {Phaser.RequestAnimationFrame} raf - Automatically handles the core game loop via requestAnimationFrame or setTimeout
+	* @default
 	*/
 	this.raf = null;
 
-    /**
-     * Reference to the GameObject Factory.
-     * @type {Phaser.GameObjectFactory}
-     */
+	/**
+	* @property {Phaser.GameObjectFactory} add - Reference to the GameObject Factory.
+	* @default
+	*/
     this.add = null;
 
     /**
-     * Reference to the assets cache.
-     * @type {Phaser.Cache}
-     */
+	* @property {Phaser.Cache} cache - Reference to the assets cache.
+	* @default
+	*/
     this.cache = null;
 
     /**
-     * Reference to the input manager
-     * @type {Phaser.Input}
-     */
+	* @property {Phaser.Input} input - Reference to the input manager
+	* @default
+	*/
     this.input = null;
 
     /**
-     * Reference to the assets loader.
-     * @type {Phaser.Loader}
-     */
+	* @property {Phaser.Loader} load - Reference to the assets loader.
+	* @default
+	*/
     this.load = null;
 
     /**
-     * Reference to the math helper.
-     * @type {Phaser.GameMath}
-     */
+	* @property {Phaser.GameMath} math - Reference to the math helper.
+	* @default
+	*/
     this.math = null;
 
     /**
-     * Reference to the network class.
-     * @type {Phaser.Net}
-     */
+	* @property {Phaser.Net} net - Reference to the network class.
+	* @default
+	*/
     this.net = null;
 
     /**
-     * Reference to the sound manager.
-     * @type {Phaser.SoundManager}
-     */
+	* @property {Phaser.SoundManager} sound - Reference to the sound manager.
+	* @default
+	*/
     this.sound = null;
 
     /**
-     * Reference to the stage.
-     * @type {Phaser.Stage}
-     */
+	* @property {Phaser.Stage} stage - Reference to the stage.
+	* @default
+	*/
     this.stage = null;
 
     /**
-     * Reference to game clock.
-     * @type {Phaser.TimeManager}
-     */
+	* @property {Phaser.TimeManager} time - Reference to game clock.
+	* @default
+	*/
     this.time = null;
 
     /**
-     * Reference to the tween manager.
-     * @type {Phaser.TweenManager}
-     */
+	* @property {Phaser.TweenManager} tweens - Reference to the tween manager.
+	* @default
+	*/
     this.tweens = null;
 
     /**
-     * Reference to the world.
-     * @type {Phaser.World}
-     */
+	* @property {Phaser.World} world - Reference to the world.
+	* @default
+	*/
     this.world = null;
 
     /**
-     * Reference to the physics manager.
-     * @type {Phaser.Physics.PhysicsManager}
-     */
+	* @property {Phaser.Physics.PhysicsManager} physics - Reference to the physics manager.
+	* @default
+	*/
     this.physics = null;
 
     /**
-     * Instance of repeatable random data generator helper.
-     * @type {Phaser.RandomDataGenerator}
-     */
+	* @property {Phaser.RandomDataGenerator} rnd - Instance of repeatable random data generator helper.
+	* @default
+	*/
     this.rnd = null;
 
     /**
-     * Contains device information and capabilities.
-     * @type {Phaser.Device}
-     */
+	* @property {Phaser.Device} device - Contains device information and capabilities.
+	* @default
+	*/
     this.device = null;
 
-	/**
-	* A handy reference to world.camera
-	* @type {Phaser.Camera}
+    /**
+	* @property {Phaser.Physics.PhysicsManager} camera - A handy reference to world.camera.
+	* @default
 	*/
 	this.camera = null;
 
-	/**
-	* A handy reference to renderer.view
-	* @type {HTMLCanvasElement}
+	   /**
+	* @property {HTMLCanvasElement} canvas - A handy reference to renderer.view.
+	* @default
 	*/
 	this.canvas = null;
 
 	/**
-	* A handy reference to renderer.context (only set for CANVAS games)
-	* @type {Context}
+	* @property {Context} context - A handy reference to renderer.context (only set for CANVAS games)
+	* @default
 	*/
 	this.context = null;
 
-	/**
-	* A set of useful debug utilities
-	* @type {Phaser.Utils.Debug}
+    /**
+	* @property {Phaser.Utils.Debug} debug - A set of useful debug utilitie.
+	* @default
 	*/
 	this.debug = null;
 
 	/**
-	* The Particle Manager
-	* @type {Phaser.Particles}
+	* @property {Phaser.Particles} particles - The Particle Manager.
+	* @default
 	*/
 	this.particles = null;
 
@@ -258,9 +251,9 @@ Phaser.Game.prototype = {
 
 	/**
 	* Initialize engine sub modules and start the game.
-	* @param parent {string} ID of parent Dom element.
-	* @param width {number} Width of the game screen.
-	* @param height {number} Height of the game screen.
+	*
+	* @method Phaser.Game#boot
+	* @protected
 	*/
 	boot: function () {
 
@@ -305,13 +298,13 @@ Phaser.Game.prototype = {
 			this.net = new Phaser.Net(this);
 			this.debug = new Phaser.Utils.Debug(this);
 
-			this.load.onLoadComplete.add(this.loadComplete, this);
-
 			this.stage.boot();
 			this.world.boot();
 			this.input.boot();
 			this.sound.boot();
 			this.state.boot();
+
+			this.load.onLoadComplete.add(this.loadComplete, this);
 
 			if (this.renderType == Phaser.CANVAS)
 			{
@@ -321,6 +314,14 @@ Phaser.Game.prototype = {
 			{
 				console.log('%cPhaser ' + Phaser.VERSION + ' initialized. Rendering to WebGL', 'color: #ffff33; background: #000000');
 			}
+
+			var pos = Phaser.VERSION.indexOf('-');
+            var versionQualifier = (pos >= 0) ? Phaser.VERSION.substr(pos + 1) : null;
+            if (versionQualifier)
+            {
+                var article = ['a', 'e', 'i', 'o', 'u', 'y'].indexOf(versionQualifier.charAt(0)) >= 0 ? 'an' : 'a';
+                console.warn('You are using %s %s version of Phaser. Some things may not work.', article, versionQualifier);
+            }
 
 	        this.isRunning = true;
             this._loadComplete = false;
@@ -332,6 +333,12 @@ Phaser.Game.prototype = {
 
 	},
 
+	/**
+	* Checks if the device is capable of using the requested renderer and sets it up or an alternative if not.
+	*
+	* @method Phaser.Game#setUpRenderer
+	* @protected
+	*/
 	setUpRenderer: function () {
 
 		if (this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && this.device.webGL == false))
@@ -365,6 +372,9 @@ Phaser.Game.prototype = {
 
 	/**
     * Called when the load has finished, after preload was run.
+    *
+    * @method Phaser.Game#loadComplete
+    * @protected
     */
     loadComplete: function () {
 
@@ -374,6 +384,13 @@ Phaser.Game.prototype = {
 
     },
 
+	/**
+    * The core game loop.
+    *
+    * @method Phaser.Game#update
+    * @protected
+	* @param {number} time - The current time as provided by RequestAnimationFrame.
+    */
 	update: function (time) {
 
 		this.time.update(time);
@@ -383,6 +400,7 @@ Phaser.Game.prototype = {
 	        this.plugins.preUpdate();
 	        this.physics.preUpdate();
 
+	        this.stage.update();
 	        this.input.update();
 	        this.tweens.update();
 	        this.sound.update();
@@ -390,6 +408,8 @@ Phaser.Game.prototype = {
 			this.particles.update();
 			this.state.update();
 	        this.plugins.update();
+
+			this.world.postUpdate();
 
 			this.renderer.render(this.stage._stage);
 			this.plugins.render();
@@ -402,8 +422,14 @@ Phaser.Game.prototype = {
 
 	/**
     * Nuke the entire game from orbit
+    *
+    * @method Phaser.Game#destroy
     */
     destroy: function () {
+
+		this.raf.stop();
+
+    	this.input.destroy();
 
     	this.state.destroy();
 
@@ -421,6 +447,12 @@ Phaser.Game.prototype = {
 
 };
 
+/**
+* The paused state of the Game. A paused game doesn't update any of its subsystems.
+* When a game is paused the onPause event is dispatched. When it is resumed the onResume event is dispatched.
+* @name Phaser.Game#paused
+* @property {boolean} paused - Gets and sets the paused state of the Game.
+*/
 Object.defineProperty(Phaser.Game.prototype, "paused", {
 
     get: function () {
@@ -450,3 +482,6 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
 
 });
 
+/**
+* "Deleted code is debugged code." - Jeff Sickel
+*/

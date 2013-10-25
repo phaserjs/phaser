@@ -1,32 +1,88 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* A collection of mathematical methods.
+*
+* @class Phaser.Math
+*/
 Phaser.Math = {
 
+	/**
+	* = 2 &pi;
+	* @method Phaser.Math#PI2
+	*/
 	PI2: Math.PI * 2,
 
+	/**
+	* Two number are fuzzyEqual if their difference is less than &epsilon;. 
+	* @method Phaser.Math#fuzzyEqual
+	* @param {number} a
+	* @param {number} b
+	* @param {number} epsilon 
+	* @return {boolean} True if |a-b|<&epsilon;
+	*/
     fuzzyEqual: function (a, b, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
         return Math.abs(a - b) < epsilon;
     },
 
+	/**
+	* a is fuzzyLessThan b if it is less than b + &epsilon;. 
+	* @method Phaser.Math#fuzzyEqual
+	* @param {number} a
+	* @param {number} b
+	* @param {number} epsilon 
+	* @return {boolean} True if a<b+&epsilon;
+	*/
     fuzzyLessThan: function (a, b, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
         return a < b + epsilon;
     },
 
+	/**
+	* a is fuzzyGreaterThan b if it is more than b - &epsilon;.  
+	* @method Phaser.Math#fuzzyGreaterThan
+	* @param {number} a
+	* @param {number} b
+	* @param {number} epsilon 
+	* @return {boolean} True if a>b+&epsilon;
+	*/
     fuzzyGreaterThan: function (a, b, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
         return a > b - epsilon;
     },
 
+	/** 
+	* @method Phaser.Math#fuzzyCeil
+	* @param {number} val
+	* @param {number} epsilon 
+	* @return {boolean} ceiling(val-&epsilon;)
+	*/
     fuzzyCeil: function (val, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
         return Math.ceil(val - epsilon);
     },
 
+	/** 
+	* @method Phaser.Math#fuzzyFloor
+	* @param {number} val
+	* @param {number} epsilon 
+	* @return {boolean} floor(val-&epsilon;)
+	*/
     fuzzyFloor: function (val, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
         return Math.floor(val + epsilon);
     },
 
+	/** 
+    * Averages all values passed to the function and returns the result. You can pass as many parameters as you like.
+	* @method Phaser.Math#average
+    * @return {number} The average of all given values.
+	*/
     average: function () {
 
         var args = [];
@@ -45,10 +101,20 @@ Phaser.Math = {
 
     },
 
+	/** 
+	* @method Phaser.Math#truncate
+    * @param {number} n
+    * @return {number}
+	*/
     truncate: function (n) {
         return (n > 0) ? Math.floor(n) : Math.ceil(n);
     },
 
+	/** 
+	* @method Phaser.Math#shear
+	* @param {number} n
+	* @return {number} n mod 1
+	*/
     shear: function (n) {
         return n % 1;
     },
@@ -56,11 +122,13 @@ Phaser.Math = {
 	/**
 	* Snap a value to nearest grid slice, using rounding.
 	*
-	* example if you have an interval gap of 5 and a position of 12... you will snap to 10. Where as 14 will snap to 15
+	* Example: if you have an interval gap of 5 and a position of 12... you will snap to 10 whereas 14 will snap to 15.
 	*
-	* @param input - the value to snap
-	* @param gap - the interval gap of the grid
-	* @param [start] - optional starting offset for gap
+	* @method Phaser.Math#snapTo
+	* @param {number} input - The value to snap.
+	* @param {number} gap - The interval gap of the grid.
+	* @param {number} [start] - Optional starting offset for gap.
+    * @return {number}
 	*/
     snapTo: function (input, gap, start) {
 
@@ -80,11 +148,13 @@ Phaser.Math = {
 	/**
     * Snap a value to nearest grid slice, using floor.
     *
-    * example if you have an interval gap of 5 and a position of 12... you will snap to 10. As will 14 snap to 10... but 16 will snap to 15
+    * Example: if you have an interval gap of 5 and a position of 12... you will snap to 10. As will 14 snap to 10... but 16 will snap to 15
     *
-    * @param input - the value to snap
-    * @param gap - the interval gap of the grid
-    * @param [start] - optional starting offset for gap
+    * @method Phaser.Math#snapToFloor
+    * @param {number} input - The value to snap.
+    * @param {number} gap - The interval gap of the grid.
+    * @param {number} [start] - Optional starting offset for gap.
+    * @return {number}
     */
     snapToFloor: function (input, gap, start) {
 
@@ -104,11 +174,13 @@ Phaser.Math = {
 	/**
 	* Snap a value to nearest grid slice, using ceil.
 	*
-	* example if you have an interval gap of 5 and a position of 12... you will snap to 15. As will 14 will snap to 15... but 16 will snap to 20
+	* Example: if you have an interval gap of 5 and a position of 12... you will snap to 15. As will 14 will snap to 15... but 16 will snap to 20.
 	*
-	* @param input - the value to snap
-	* @param gap - the interval gap of the grid
-	* @param [start] - optional starting offset for gap
+    * @method Phaser.Math#snapToCeil
+    * @param {number} input - The value to snap.
+    * @param {number} gap - The interval gap of the grid.
+    * @param {number} [start] - Optional starting offset for gap.
+    * @return {number}
 	*/
     snapToCeil: function (input, gap, start) {
 
@@ -128,6 +200,11 @@ Phaser.Math = {
 
 	/**
 	* Snaps a value to the nearest value in an array.
+	* @method Phaser.Math#snapToInArray
+	* @param {number} input
+	* @param {array} arr 
+	* @param {boolean} sort - True if the array needs to be sorted.
+    * @return {number}
 	*/
     snapToInArray: function (input, arr, sort) {
 
@@ -155,16 +232,10 @@ Phaser.Math = {
     },
 
 	/**
-	* roundTo some place comparative to a 'base', default is 10 for decimal place
+	* Round to some place comparative to a 'base', default is 10 for decimal place.
 	*
 	* 'place' is represented by the power applied to 'base' to get that place
-	*
-	* @param value - the value to round
-	* @param place - the place to round to
-	* @param base - the base to round in... default is 10 for decimal
-	*
 	* e.g.
-	*
 	* 2000/7 ~= 285.714285714285714285714 ~= (bin)100011101.1011011011011011
 	*
 	* roundTo(2000/7,3) == 0
@@ -187,8 +258,14 @@ Phaser.Math = {
 	* roundTo(2000/7,-4,2) == 285.6875  -- 100011101.1011
 	* roundTo(2000/7,-5,2) == 285.71875 -- 100011101.10111
 	*
-	* note what occurs when we round to the 3rd space (8ths place), 100100000, this is to be assumed
+	* Note what occurs when we round to the 3rd space (8ths place), 100100000, this is to be assumed
 	* because we are rounding 100011.1011011011011011 which rounds up.
+	* 
+	* @method Phaser.Math#roundTo
+	* @param {number} value - The value to round.
+	* @param {number} place - The place to round to.
+	* @param {number} base - The base to round in... default is 10 for decimal.
+    * @return {number}
 	*/
     roundTo: function (value, place, base) {
 
@@ -201,6 +278,13 @@ Phaser.Math = {
 
     },
 
+    /**
+	* @method Phaser.Math#floorTo
+	* @param {number} value - The value to round.
+	* @param {number} place - The place to round to.
+	* @param {number} base - The base to round in... default is 10 for decimal.
+    * @return {number}
+	*/
     floorTo: function (value, place, base) {
 
         if (typeof place === "undefined") { place = 0; }
@@ -212,6 +296,13 @@ Phaser.Math = {
 
     },
 
+    /**
+	* @method Phaser.Math#ceilTo
+	* @param {number} value - The value to round.
+	* @param {number} place - The place to round to.
+	* @param {number} base - The base to round in... default is 10 for decimal.
+    * @return {number}
+	*/
     ceilTo: function (value, place, base) {
 
         if (typeof place === "undefined") { place = 0; }
@@ -224,34 +315,54 @@ Phaser.Math = {
     },
 
 	/**
-	* a one dimensional linear interpolation of a value.
+	* A one dimensional linear interpolation of a value.
+	* @method Phaser.Math#interpolateFloat
+	* @param {number} a
+	* @param {number} b
+	* @param {number} weight 
+    * @return {number}
 	*/
     interpolateFloat: function (a, b, weight) {
         return (b - a) * weight + a;
     },
 
 	/**
-	* Find the angle of a segment from (x1, y1) -> (x2, y2 )
+	* Find the angle of a segment from (x1, y1) -> (x2, y2 ).
+	* @method Phaser.Math#angleBetween
+	* @param {number} x1
+	* @param {number} y1
+	* @param {number} x2
+	* @param {number} y2
+    * @return {number}
 	*/
     angleBetween: function (x1, y1, x2, y2) {
         return Math.atan2(y2 - y1, x2 - x1);
     },
 
 	/**
-	* set an angle within the bounds of -PI to PI
+	* Set an angle  within the bounds of -&pi; to&pi;.
+	* @method Phaser.Math#normalizeAngle
+	* @param {number} angle
+	* @param {boolean} radians - True if angle size is expressed in radians.
+    * @return {number}
 	*/
     normalizeAngle: function (angle, radians) {
 
         if (typeof radians === "undefined") { radians = true; }
 
-        var rd = (radians) ? Math.PI : 180;
-        return this.wrap(angle, -rd, rd);
+        var rd = (radians) ? GameMath.PI : 180;
+        return this.wrap(angle, rd, -rd);
         
     },
 
 	/**
-	* closest angle between two angles from a1 to a2
+	* Closest angle between two angles from a1 to a2
 	* absolute value the return for exact angle
+	* @method Phaser.Math#nearestAngleBetween
+	* @param {number} a1
+	* @param {number} a2
+	* @param {boolean} radians - True if angle sizes are expressed in radians.
+    * @return {number}
 	*/
     nearestAngleBetween: function (a1, a2, radians) {
 
@@ -276,7 +387,14 @@ Phaser.Math = {
     },
 
 	/**
-	* interpolate across the shortest arc between two angles
+	* Interpolate across the shortest arc between two angles.
+	* @method Phaser.Math#interpolateAngles
+	* @param {number} a1 - Description.
+	* @param {number} a2 - Description.
+	* @param {number} weight - Description.
+	* @param {boolean} radians - True if angle sizes are expressed in radians.
+	* @param {Description} ease - Description.
+    * @return {number}
 	*/
     interpolateAngles: function (a1, a2, weight, radians, ease) {
 
@@ -291,13 +409,14 @@ Phaser.Math = {
     },
 
 	/**
-	* Generate a random bool result based on the chance value
+	* Generate a random bool result based on the chance value.
 	* <p>
 	* Returns true or false based on the chance value (default 50%). For example if you wanted a player to have a 30% chance
 	* of getting a bonus, call chanceRoll(30) - true means the chance passed, false means it failed.
 	* </p>
-	* @param chance The chance of receiving the value. A number between 0 and 100 (effectively 0% to 100%)
-	* @return true if the roll passed, or false
+	* @method Phaser.Math#chanceRoll
+	* @param {number} chance - The chance of receiving the value. A number between 0 and 100 (effectively 0% to 100%).
+	* @return {boolean} True if the roll passed, or false otherwise.
 	*/
     chanceRoll: function (chance) {
 
@@ -326,11 +445,12 @@ Phaser.Math = {
     },
 
     /**
-    * Returns an Array containing the numbers from min to max (inclusive)
+    * Returns an Array containing the numbers from min to max (inclusive).
     *
-    * @param min The minimum value the array starts with
-    * @param max The maximum value the array contains
-    * @return The array of number values
+    * @method Phaser.Math#numberArray
+    * @param {number} min - The minimum value the array starts with.
+    * @param {number} max - The maximum value the array contains.
+    * @return {array} The array of number values.
     */
     numberArray: function (min, max) {
 
@@ -346,12 +466,13 @@ Phaser.Math = {
     },
 
 	/**
-	* Adds the given amount to the value, but never lets the value go over the specified maximum
+	* Adds the given amount to the value, but never lets the value go over the specified maximum.
 	*
-	* @param value The value to add the amount to
-	* @param amount The amount to add to the value
-	* @param max The maximum the value is allowed to be
-	* @return The new value
+	* @method Phaser.Math#maxAdd
+	* @param {number} value - The value to add the amount to.
+	* @param {number} amount - The amount to add to the value.
+	* @param {number} max- The maximum the value is allowed to be.
+    * @return {number}
 	*/
     maxAdd: function (value, amount, max) {
 
@@ -367,12 +488,13 @@ Phaser.Math = {
     },
 
 	/**
-	* Subtracts the given amount from the value, but never lets the value go below the specified minimum
+	* Subtracts the given amount from the value, but never lets the value go below the specified minimum.
 	*
-	* @param value The base value
-	* @param amount The amount to subtract from the base value
-	* @param min The minimum the value is allowed to be
-	* @return The new value
+	* @method Phaser.Math#minSub
+	* @param {number} value - The base value.
+	* @param {number} amount - The amount to subtract from the base value.
+	* @param {number} min - The minimum the value is allowed to be.
+	* @return {number} The new value.
 	*/
     minSub: function (value, amount, min) {
 
@@ -391,34 +513,41 @@ Phaser.Math = {
     * Ensures that the value always stays between min and max, by wrapping the value around.
     * <p>max should be larger than min, or the function will return 0</p>
     *
+    * @method Phaser.Math#wrap
     * @param value The value to wrap
     * @param min The minimum the value is allowed to be
     * @param max The maximum the value is allowed to be
-    * @return The wrapped value
+    * @return {number} The wrapped value
     */
     wrap: function (value, min, max) {
 
         var range = max - min;
+
         if (range <= 0)
         {
             return 0;
         }
+
         var result = (value - min) % range;
+
         if (result < 0)
         {
             result += range;
         }
+        
         return result + min;
+
     },
 
     /**
     * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
     * <p>Values must be positive integers, and are passed through Math.abs</p>
     *
-    * @param value The value to add the amount to
-    * @param amount The amount to add to the value
-    * @param max The maximum the value is allowed to be
-    * @return The wrapped value
+	* @method Phaser.Math#wrapValue
+	* @param {number} value - The value to add the amount to.
+	* @param {number} amount - The amount to add to the value.
+	* @param {number} max - The maximum the value is allowed to be.
+	* @return {number} The wrapped value.
     */
     wrapValue: function (value, amount, max) {
 
@@ -433,9 +562,10 @@ Phaser.Math = {
     },
 
 	/**
-	* Randomly returns either a 1 or -1
+	* Randomly returns either a 1 or -1.
 	*
-	* @return	1 or -1
+	* @method Phaser.Math#randomSign
+	* @return {number}	1 or -1
 	*/
     randomSign: function () {
         return (Math.random() > 0.5) ? 1 : -1;
@@ -444,9 +574,9 @@ Phaser.Math = {
 	/**
 	* Returns true if the number given is odd.
 	*
-	* @param	n	The number to check
-	*
-	* @return	True if the given number is odd. False if the given number is even.
+	* @method Phaser.Math#isOdd
+	* @param {number} n - The number to check.
+	* @return {boolean} True if the given number is odd. False if the given number is even.
 	*/
     isOdd: function (n) {
 
@@ -457,9 +587,9 @@ Phaser.Math = {
 	/**
 	* Returns true if the number given is even.
 	*
-	* @param	n	The number to check
-	*
-	* @return	True if the given number is even. False if the given number is odd.
+	* @method Phaser.Math#isEven
+	* @param {number} n - The number to check.
+	* @return {boolean} True if the given number is even. False if the given number is odd.
 	*/
     isEven: function (n) {
 
@@ -478,7 +608,8 @@ Phaser.Math = {
     * Significantly faster version of Math.max
     * See http://jsperf.com/math-s-min-max-vs-homemade/5
     *
-    * @return   The highest value from those given.
+    * @method Phaser.Math#max
+    * @return {number} The highest value from those given.
     */
     max: function () {
 
@@ -498,7 +629,8 @@ Phaser.Math = {
     * Significantly faster version of Math.min
     * See http://jsperf.com/math-s-min-max-vs-homemade/5
     *
-    * @return   The lowest value from those given.
+    * @method Phaser.Math#min
+    * @return {number} The lowest value from those given.
     */
     min: function () {
 
@@ -518,9 +650,9 @@ Phaser.Math = {
 	* Keeps an angle value between -180 and +180<br>
 	* Should be called whenever the angle is updated on the Sprite to stop it from going insane.
 	*
-	* @param	angle	The angle value to check
-	*
-	* @return	The new angle value, returns the same as the input angle if it was within bounds
+	* @method Phaser.Math#wrapAngle
+	* @param {number} angle - The angle value to check
+	* @return {number} The new angle value, returns the same as the input angle if it was within bounds.
 	*/
     wrapAngle: function (angle) {
 
@@ -545,63 +677,86 @@ Phaser.Math = {
     },
 
 	/**
-	* Keeps an angle value between the given min and max values
+	* Keeps an angle value between the given min and max values.
 	*
-	* @param	angle	The angle value to check. Must be between -180 and +180
-	* @param	min		The minimum angle that is allowed (must be -180 or greater)
-	* @param	max		The maximum angle that is allowed (must be 180 or less)
+	* @method Phaser.Math#angleLimit
+	* @param {number} angle - The angle value to check. Must be between -180 and +180.
+	* @param {number} min - The minimum angle that is allowed (must be -180 or greater).
+	* @param {number} max - The maximum angle that is allowed (must be 180 or less).
 	*
-	* @return	The new angle value, returns the same as the input angle if it was within bounds
+	* @return {number} The new angle value, returns the same as the input angle if it was within bounds
 	*/
     angleLimit: function (angle, min, max) {
+
         var result = angle;
-        if (angle > max) {
+
+        if (angle > max)
+        {
             result = max;
-        } else if (angle < min) {
+        }
+        else if (angle < min)
+        {
             result = min;
         }
+
         return result;
+
     },
 
 	/**
-	* @method linearInterpolation
-	* @param {Any} v
-	* @param {Any} k
-	* @public
+	* Description.
+	* @method Phaser.Math#linearInterpolation
+	* @param {number} v
+	* @param {number} k
+	* @return {number} 
 	*/
     linearInterpolation: function (v, k) {
+
         var m = v.length - 1;
         var f = m * k;
         var i = Math.floor(f);
-        if (k < 0) {
+
+        if (k < 0)
+        {
             return this.linear(v[0], v[1], f);
         }
-        if (k > 1) {
+
+        if (k > 1)
+        {
             return this.linear(v[m], v[m - 1], m - f);
         }
+
         return this.linear(v[i], v[i + 1 > m ? m : i + 1], f - i);
+
     },
 
 	/**
-	* @method bezierInterpolation
-	* @param {Any} v
-	* @param {Any} k
-	* @public
+	* Description.
+	* @method Phaser.Math#bezierInterpolation
+	* @param {number} v
+	* @param {number} k
+	* @return {number}
 	*/
     bezierInterpolation: function (v, k) {
+
         var b = 0;
         var n = v.length - 1;
-        for (var i = 0; i <= n; i++) {
+
+        for (var i = 0; i <= n; i++)
+        {
             b += Math.pow(1 - k, n - i) * Math.pow(k, i) * v[i] * this.bernstein(n, i);
         }
+
         return b;
+
     },
 
 	/**
-	* @method catmullRomInterpolation
-	* @param {Any} v
-	* @param {Any} k
-	* @public
+	* Description.
+	* @method Phaser.Math#catmullRomInterpolation
+	* @param {number} v
+	* @param {number} k
+	* @return {number}
 	*/
     catmullRomInterpolation: function (v, k) {
 
@@ -609,57 +764,79 @@ Phaser.Math = {
         var f = m * k;
         var i = Math.floor(f);
 
-        if (v[0] === v[m]) {
-            if (k < 0) {
+        if (v[0] === v[m])
+        {
+            if (k < 0)
+            {
                 i = Math.floor(f = m * (1 + k));
             }
+
             return this.catmullRom(v[(i - 1 + m) % m], v[i], v[(i + 1) % m], v[(i + 2) % m], f - i);
-        } else {
-            if (k < 0) {
+
+        }
+        else
+        {
+            if (k < 0)
+            {
                 return v[0] - (this.catmullRom(v[0], v[0], v[1], v[1], -f) - v[0]);
             }
-            if (k > 1) {
+
+            if (k > 1)
+            {
                 return v[m] - (this.catmullRom(v[m], v[m], v[m - 1], v[m - 1], f - m) - v[m]);
             }
+
             return this.catmullRom(v[i ? i - 1 : 0], v[i], v[m < i + 1 ? m : i + 1], v[m < i + 2 ? m : i + 2], f - i);
         }
+
     },
 
 	/**
-	* @method Linear
-	* @param {Any} p0
-	* @param {Any} p1
-	* @param {Any} t
-	* @public
+	* Description.
+	* @method Phaser.Math#Linear
+	* @param {number} p0
+	* @param {number} p1
+	* @param {number} t
+	* @return {number}
 	*/
     linear: function (p0, p1, t) {
         return (p1 - p0) * t + p0;
     },
 
 	/**
-	* @method bernstein
-	* @param {Any} n
-	* @param {Any} i
-	* @public
+	* @method Phaser.Math#bernstein
+	* @param {number} n
+	* @param {number} i
+	* @return {number}
 	*/
     bernstein: function (n, i) {
         return this.factorial(n) / this.factorial(i) / this.factorial(n - i);
     },
 
 	/**
-	* @method catmullRom
-	* @param {Any} p0
-	* @param {Any} p1
-	* @param {Any} p2
-	* @param {Any} p3
-	* @param {Any} t
-	* @public
+	* Description.
+	* @method Phaser.Math#catmullRom
+	* @param {number} p0
+	* @param {number} p1
+	* @param {number} p2
+	* @param {number} p3
+	* @param {number} t
+	* @return {number} 
 	*/
     catmullRom: function (p0, p1, p2, p3, t) {
+
         var v0 = (p2 - p0) * 0.5, v1 = (p3 - p1) * 0.5, t2 = t * t, t3 = t * t2;
+
         return (2 * p1 - 2 * p2 + v0 + v1) * t3 + (-3 * p1 + 3 * p2 - 2 * v0 - v1) * t2 + v0 * t + p1;
+
     },
 
+    /**
+    * @method Phaser.Math#difference
+    * @param {number} a
+    * @param {number} b
+    * @return {number}
+    */
     difference: function (a, b) {
         return Math.abs(a - b);
     },
@@ -668,11 +845,11 @@ Phaser.Math = {
 	* Fetch a random entry from the given array.
 	* Will return null if random selection is missing, or array has no entries.
 	*
-	* @param	objects		An array of objects.
-	* @param	startIndex	Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-	* @param	length		Optional restriction on the number of values you want to randomly select from.
-	*
-	* @return	The random object that was selected.
+	* @method Phaser.Math#getRandom
+	* @param {array} objects - An array of objects.
+	* @param {number} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+	* @param {number} length - Optional restriction on the number of values you want to randomly select from.
+	* @return {object} The random object that was selected.
 	*/
     getRandom: function (objects, startIndex, length) {
 
@@ -701,9 +878,9 @@ Phaser.Math = {
 	/**
 	* Round down to the next whole number. E.g. floor(1.7) == 1, and floor(-2.7) == -2.
 	*
-	* @param	Value	Any number.
-	*
-	* @return	The rounded value of that number.
+	* @method Phaser.Math#floor
+	* @param {number} Value	Any number.
+	* @return {number} The rounded value of that number.
 	*/
     floor: function (value) {
 
@@ -716,9 +893,9 @@ Phaser.Math = {
 	/**
 	* Round up to the next whole number.  E.g. ceil(1.3) == 2, and ceil(-2.3) == -3.
 	*
-	* @param	Value	Any number.
-	*
-	* @return	The rounded value of that number.
+    * @method Phaser.Math#ceil
+	* @param {number} value - Any number.
+	* @return {number} The rounded value of that number.
 	*/
     ceil: function (value) {
         var n = value | 0;
@@ -731,13 +908,12 @@ Phaser.Math = {
     * The parameters allow you to specify the length, amplitude and frequency of the wave. Once you have called this function
     * you should get the results via getSinTable() and getCosTable(). This generator is fast enough to be used in real-time.
     * </p>
-    * @param length 		The length of the wave
-    * @param sinAmplitude 	The amplitude to apply to the sine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
-    * @param cosAmplitude 	The amplitude to apply to the cosine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
-    * @param frequency 	The frequency of the sine and cosine table data
-    * @return	Returns the sine table
-    * @see getSinTable
-    * @see getCosTable
+    * @method Phaser.Math#sinCosGenerator
+    * @param {number} length - The length of the wave
+    * @param {number} sinAmplitude - The amplitude to apply to the sine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
+    * @param {number} cosAmplitude - The amplitude to apply to the cosine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
+    * @param {number} frequency  - The frequency of the sine and cosine table data
+    * @return {Array} Returns the sine table
     */
     sinCosGenerator: function (length, sinAmplitude, cosAmplitude, frequency) {
 
@@ -768,9 +944,11 @@ Phaser.Math = {
 
 	/**
 	* Removes the top element from the stack and re-inserts it onto the bottom, then returns it.
-	* The original stack is modified in the process.
-    * This effectively moves the position of the data from the start to the end of the table.
-    * @return	The value.
+	* The original stack is modified in the process. This effectively moves the position of the data from the start to the end of the table.
+    * 
+    * @method Phaser.Math#shift
+    * @param {array} stack - The array to shift.
+    * @return {any} The shifted value.
     */
     shift: function (stack) {
 
@@ -783,8 +961,9 @@ Phaser.Math = {
 
 	/**
     * Shuffles the data in the given array into a new order
-    * @param array The array to shuffle
-    * @return The array
+    * @method Phaser.Math#shuffleArray
+    * @param {array} array - The array to shuffle
+    * @return {array} The array
     */
     shuffleArray: function (array) {
 
@@ -802,12 +981,13 @@ Phaser.Math = {
 
 	/**
     * Returns the distance between the two given set of coordinates.
-    * @method distance
-    * @param {Number} x1
-    * @param {Number} y1
-    * @param {Number} x2
-    * @param {Number} y2
-    * @return {Number} The distance between this Point object and the destination Point object.
+    * 
+    * @method Phaser.Math#distance
+    * @param {number} x1
+    * @param {number} y1
+    * @param {number} x2
+    * @param {number} y2
+    * @return {number} The distance between this Point object and the destination Point object.
     **/
     distance: function (x1, y1, x2, y2) {
 
@@ -818,6 +998,16 @@ Phaser.Math = {
 
     },
 
+    /**
+    * Returns the rounded distance between the two given set of coordinates.
+    * 
+    * @method Phaser.Math#distanceRounded
+    * @param {number} x1
+    * @param {number} y1
+    * @param {number} x2
+    * @param {number} y2
+    * @return {number} The distance between this Point object and the destination Point object.
+    **/
     distanceRounded: function (x1, y1, x2, y2) {
 
     	return Math.round(Phaser.Math.distance(x1, y1, x2, y2));
@@ -825,34 +1015,77 @@ Phaser.Math = {
     },
 
 	/**
-	* force a value within the boundaries of two values
-	*
+	* Force a value within the boundaries of two values.
 	* Clamp value to range <a, b>
+	* 
+	* @method Phaser.Math#clamp
+	* @param {number} x
+	* @param {number} a
+	* @param {number} b
+    * @return {number}
 	*/
 	clamp: function ( x, a, b ) {
 
 		return ( x < a ) ? a : ( ( x > b ) ? b : x );
 
 	},
-
-	// Clamp value to range <a, inf)
-
+ 
+	/**
+	* Clamp value to range <a, inf).
+	* 
+	* @method Phaser.Math#clampBottom
+	* @param {number} x
+	* @param {number} a
+    * @return {number}
+	*/
 	clampBottom: function ( x, a ) {
 
 		return x < a ? a : x;
 
 	},
 
-	// Linear mapping from range <a1, a2> to range <b1, b2>
+    /**
+    * Checks if two values are within the given tolerance of each other.
+    * 
+    * @method Phaser.Math#within
+    * @param {number} a - The first number to check
+    * @param {number} b - The second number to check
+    * @param {number} tolerance - The tolerance. Anything equal to or less than this is considered within the range.
+    * @return {boolean} True if a is <= tolerance of b.
+    */
+    within: function ( a, b, tolerance ) {
 
+        return (Math.abs(a - b) <= tolerance);
+
+    },
+ 
+	/**
+	* Linear mapping from range <a1, a2> to range <b1, b2>
+	* 
+	* @method Phaser.Math#mapLinear
+	* @param {number} x
+	* @param {number} a1
+	* @param {number} a1
+	* @param {number} a2
+	* @param {number} b1
+	* @param {number} b2
+	* @return {number}
+	*/
 	mapLinear: function ( x, a1, a2, b1, b2 ) {
 
 		return b1 + ( x - a1 ) * ( b2 - b1 ) / ( a2 - a1 );
 
 	},
 
-	// http://en.wikipedia.org/wiki/Smoothstep
-
+	/**
+	* Smoothstep function as detailed at http://en.wikipedia.org/wiki/Smoothstep
+	* 
+	* @method Phaser.Math#smoothstep
+	* @param {number} x
+	* @param {number} min
+	* @param {number} max
+	* @return {number}
+	*/
 	smoothstep: function ( x, min, max ) {
 
 		if ( x <= min ) return 0;
@@ -864,6 +1097,15 @@ Phaser.Math = {
 
 	},
 
+	/**
+    * Smootherstep function as detailed at http://en.wikipedia.org/wiki/Smoothstep
+	* 
+	* @method Phaser.Math#smootherstep
+	* @param {number} x
+	* @param {number} min
+	* @param {number} max
+	* @return {number}
+	*/
 	smootherstep: function ( x, min, max ) {
 
 		if ( x <= min ) return 0;
@@ -876,8 +1118,12 @@ Phaser.Math = {
 	},
 
 	/**
-	* a value representing the sign of the value.
+	* A value representing the sign of the value.
 	* -1 for negative, +1 for positive, 0 if value is 0
+	* 
+	* @method Phaser.Math#sign
+	* @param {number} x
+	* @return {number}
 	*/
 	sign: function ( x ) {
 
@@ -885,6 +1131,12 @@ Phaser.Math = {
 
 	},
 
+	/**
+	* Convert degrees to radians.
+	* 
+	* @method Phaser.Math#degToRad
+	* @return {function}
+	*/
 	degToRad: function() {
 
 		var degreeToRadiansFactor = Math.PI / 180;
@@ -897,6 +1149,12 @@ Phaser.Math = {
 
 	}(),
 
+	/**
+	* Convert degrees to radians.
+	* 
+	* @method Phaser.Math#radToDeg
+	* @return {function}
+	*/
 	radToDeg: function() {
 
 		var radianToDegreesFactor = 180 / Math.PI;

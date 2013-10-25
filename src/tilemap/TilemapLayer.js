@@ -1,540 +1,532 @@
-/**
-* Phaser - TilemapLayer
-*
-* A Tilemap Layer. Tiled format maps can have multiple overlapping layers.
-*/
+//  Maybe should extend Sprite?
+Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, tilemap, layer) {
 
-/**
-* TilemapLayer constructor
-* Create a new <code>TilemapLayer</code>.
-*
-* @param parent {Tilemap} The tilemap that contains this layer.
-* @param id {number} The ID of this layer within the Tilemap array.
-* @param key {string} Asset key for this map.
-* @param mapFormat {number} Format of this map data, available: Tilemap.CSV or Tilemap.JSON.
-* @param name {string} Name of this layer, so you can get this layer by its name.
-* @param tileWidth {number} Width of tiles in this map.
-* @param tileHeight {number} Height of tiles in this map.
-*/
-Phaser.TilemapLayer = function (parent, id, key, mapFormat, name, tileWidth, tileHeight) {
+	/**
+	* @property {Phaser.Game} game - Description.
+	*/ 
+    this.game = game;
+    
+	/**
+	* @property {Description} canvas - Description.
+	* @default
+	*/
+    this.canvas = Phaser.Canvas.create(renderWidth, renderHeight);
+    
+	/**
+	* @property {Description} context - Description.
+	* @default
+	*/
+    this.context = this.canvas.getContext('2d');
+    
+	/**
+	* @property {Description} baseTexture - Description.
+	* @default
+	*/
+    this.baseTexture = new PIXI.BaseTexture(this.canvas);
+    
+	/**
+	* @property {Description} texture - Description.
+	* @default
+	*/
+    this.texture = new PIXI.Texture(this.baseTexture);
+    
+    this.textureFrame = new Phaser.Frame(0, 0, 0, renderWidth, renderHeight, 'tilemaplayer', game.rnd.uuid());
+
+    Phaser.Sprite.call(this, this.game, x, y, this.texture, this.textureFrame);
+
+    this.type = Phaser.TILEMAPLAYER;
+
+    this.fixedToCamera = true;
 
     /**
-    * Controls whether update() and draw() are automatically called.
-    * @type {bool}
+    * @property {Description} tileset - Description.
     */
-    this.exists = true;
+    this.tileset = null;
+
+    this.tileWidth = 0;
+    this.tileHeight = 0;
+    this.tileMargin = 0;
+    this.tileSpacing = 0;
 
     /**
-    * Controls whether draw() are automatically called.
-    * @type {bool}
-    */
-    this.visible = true;
-
-    /**
-    * How many tiles in each row.
     * Read-only variable, do NOT recommend changing after the map is loaded!
-    * @type {number}
-    */
-    this.widthInTiles = 0;
-
-    /**
-    * How many tiles in each column.
-    * Read-only variable, do NOT recommend changing after the map is loaded!
-    * @type {number}
-    */
-    this.heightInTiles = 0;
-
-    /**
-    * Read-only variable, do NOT recommend changing after the map is loaded!
-    * @type {number}
+    * @property {number} widthInPixels
+    * @default
     */
     this.widthInPixels = 0;
 
     /**
     * Read-only variable, do NOT recommend changing after the map is loaded!
-    * @type {number}
+    * @property {number} heightInPixels
+    * @default
     */
     this.heightInPixels = 0;
 
-    /**
-    * Distance between REAL tiles to the tileset texture bound.
-    * @type {number}
-    */
-    this.tileMargin = 0;
+
+    this.renderWidth = renderWidth;
+    this.renderHeight = renderHeight;
 
     /**
-    * Distance between every 2 neighbor tile in the tileset texture.
-    * @type {number}
+    * @property {number} _ga - Local render loop var to help avoid gc spikes.
+    * @private 
     */
-    this.tileSpacing = 0;
-
-    this.parent = parent;
-    this.game = parent.game;
-    this.ID = id;
-    this.name = name;
-    this.key = key;
-    this.type = Phaser.TILEMAPLAYER;
-
-    this.mapFormat = mapFormat;
-    this.tileWidth = tileWidth;
-    this.tileHeight = tileHeight;
-
-    this.boundsInTiles = new Phaser.Rectangle();
-
-    var map = this.game.cache.getTilemap(key);
-
-    this.tileset = map.data;
-
-    this._alpha = 1;
-
-    this.canvas = null;
-    this.context = null;
-    this.baseTexture = null;
-    this.texture = null;
-    this.sprite = null;
-
-    this.mapData = [];
-    this._tempTileBlock = [];
-    this._tempBlockResults = [];
-
-};
-
-Phaser.TilemapLayer.prototype = {
-
-	/**
-    * Set a specific tile with its x and y in tiles.
-    * @param x {number} X position of this tile in world coordinates.
-    * @param y {number} Y position of this tile in world coordinates.
-    * @param index {number} The index of this tile type in the core map data.
+    this._ga = 1;
+    
+    /**
+    * @property {number} _dx - Local render loop var to help avoid gc spikes.
+    * @private 
     */
-    putTileWorldXY: function (x, y, index) {
-
-        x = this.game.math.snapToFloor(x, this.tileWidth) / this.tileWidth;
-        y = this.game.math.snapToFloor(y, this.tileHeight) / this.tileHeight;
-
-        if (y >= 0 && y < this.mapData.length)
-        {
-            if (x >= 0 && x < this.mapData[y].length)
-            {
-                this.mapData[y][x] = index;
-            }
-        }
-
-    },
-
-	/**
-    * Set a specific tile with its x and y in tiles.
-    * @param x {number} X position of this tile.
-    * @param y {number} Y position of this tile.
-    * @param index {number} The index of this tile type in the core map data.
+    this._dx = 0;
+    
+    /**
+    * @property {number} _dy - Local render loop var to help avoid gc spikes.
+    * @private 
     */
-    putTile: function (x, y, index) {
-
-        if (y >= 0 && y < this.mapData.length)
-        {
-            if (x >= 0 && x < this.mapData[y].length)
-            {
-                this.mapData[y][x] = index;
-            }
-        }
-
-    },
-
-	/**
-    * Swap tiles with 2 kinds of indexes.
-    * @param tileA {number} First tile index.
-    * @param tileB {number} Second tile index.
-    * @param [x] {number} specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
-    * @param [y] {number} specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
-    * @param [width] {number} specify a Rectangle of tiles to operate. The width in tiles.
-    * @param [height] {number} specify a Rectangle of tiles to operate. The height in tiles.
+    this._dy = 0;
+    
+    /**
+    * @property {number} _dw - Local render loop var to help avoid gc spikes.
+    * @private 
     */
-    swapTile: function (tileA, tileB, x, y, width, height) {
-
-        x = x || 0;
-        y = y || 0;
-        width = width || this.widthInTiles;
-        height = height || this.heightInTiles;
-        
-        this.getTempBlock(x, y, width, height);
-
-        for (var r = 0; r < this._tempTileBlock.length; r++)
-        {
-            //  First sweep marking tileA as needing a new index
-            if (this._tempTileBlock[r].tile.index == tileA)
-            {
-                this._tempTileBlock[r].newIndex = true;
-            }
-
-            //  In the same pass we can swap tileB to tileA
-            if (this._tempTileBlock[r].tile.index == tileB)
-            {
-                this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = tileA;
-            }
-        }
-
-        for (var r = 0; r < this._tempTileBlock.length; r++)
-        {
-            //  And now swap our newIndex tiles for tileB
-            if (this._tempTileBlock[r].newIndex == true)
-            {
-                this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = tileB;
-            }
-        }
-
-    },
-
-	/**
-    * Fill a tile block with a specific tile index.
-    * @param index {number} Index of tiles you want to fill with.
-    * @param [x] {number} x position (in tiles) of block's left-top corner.
-    * @param [y] {number} y position (in tiles) of block's left-top corner.
-    * @param [width] {number} width of block.
-    * @param [height] {number} height of block.
+    this._dw = 0;
+    
+    /**
+    * @property {number} _dh - Local render loop var to help avoid gc spikes.
+    * @private 
     */
-    fillTile: function (index, x, y, width, height) {
-
-        x = x || 0;
-        y = y || 0;
-        width = width || this.widthInTiles;
-        height = height || this.heightInTiles;
-
-        this.getTempBlock(x, y, width, height);
-
-        for (var r = 0; r < this._tempTileBlock.length; r++)
-        {
-            this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = index;
-        }
-
-    },
-
-	/**
-    * Set random tiles to a specific tile block.
-    * @param tiles {number[]} Tiles with indexes in this array will be randomly set to the given block.
-    * @param [x] {number} x position (in tiles) of block's left-top corner.
-    * @param [y] {number} y position (in tiles) of block's left-top corner.
-    * @param [width] {number} width of block.
-    * @param [height] {number} height of block.
+    this._dh = 0;
+    
+    /**
+    * @property {number} _tx - Local render loop var to help avoid gc spikes.
+    * @private 
     */
-    randomiseTiles: function (tiles, x, y, width, height) {
-
-        x = x || 0;
-        y = y || 0;
-        width = width || this.widthInTiles;
-        height = height || this.heightInTiles;
-
-        this.getTempBlock(x, y, width, height);
-
-        for (var r = 0; r < this._tempTileBlock.length; r++)
-        {
-            this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = this.game.math.getRandom(tiles);
-        }
-
-    },
-
-	/**
-    * Replace one kind of tiles to another kind.
-    * @param tileA {number} Index of tiles you want to replace.
-    * @param tileB {number} Index of tiles you want to set.
-    * @param [x] {number} x position (in tiles) of block's left-top corner.
-    * @param [y] {number} y position (in tiles) of block's left-top corner.
-    * @param [width] {number} width of block.
-    * @param [height] {number} height of block.
+    this._tx = 0;
+    
+    /**
+    * @property {number} _ty - Local render loop var to help avoid gc spikes.
+    * @private 
     */
-    replaceTile: function (tileA, tileB, x, y, width, height) {
+    this._ty = 0;
 
-        x = x || 0;
-        y = y || 0;
-        width = width || this.widthInTiles;
-        height = height || this.heightInTiles;
+    this._results = [];
 
-        this.getTempBlock(x, y, width, height);
-
-        for (var r = 0; r < this._tempTileBlock.length; r++)
-        {
-            if (this._tempTileBlock[r].tile.index == tileA)
-            {
-                this.mapData[this._tempTileBlock[r].y][this._tempTileBlock[r].x] = tileB;
-            }
-        }
-
-    },
-
-	/**
-    * Get a tile block with specific position and size.(both are in tiles)
-    * @param x {number} X position of block's left-top corner.
-    * @param y {number} Y position of block's left-top corner.
-    * @param width {number} Width of block.
-    * @param height {number} Height of block.
+    this._tw = 0;
+    this._th = 0;
+    
+    /**
+    * @property {number} _tl - Local render loop var to help avoid gc spikes.
+    * @private 
     */
-    getTileBlock: function (x, y, width, height) {
-
-        var output = [];
-
-        this.getTempBlock(x, y, width, height);
-
-        for (var r = 0; r < this._tempTileBlock.length; r++)
-        {
-            output.push({
-                x: this._tempTileBlock[r].x,
-                y: this._tempTileBlock[r].y,
-                tile: this._tempTileBlock[r].tile
-            });
-        }
-
-        return output;
-
-    },
-
-	/**
-    * Get a tile with specific position (in world coordinate). (thus you give a position of a point which is within the tile)
-    * @param x {number} X position of the point in target tile.
-    * @param x {number} Y position of the point in target tile.
+    this._tl = 0;
+    
+    /**
+    * @property {number} _maxX - Local render loop var to help avoid gc spikes.
+    * @private 
     */
-    getTileFromWorldXY: function (x, y) {
-
-        x = Phaser.Math.snapToFloor(x, this.tileWidth) / this.tileWidth;
-        y = Phaser.Math.snapToFloor(y, this.tileHeight) / this.tileHeight;
-
-        return this.getTileIndex(x, y);
-
-    },
-
-	/**
-    * Get tiles overlaps the given object.
-    * @param object {GameObject} Tiles you want to get that overlaps this.
-    * @return {array} Array with tiles informations. (Each contains x, y and the tile.)
+    this._maxX = 0;
+    
+    /**
+    * @property {number} _maxY - Local render loop var to help avoid gc spikes.
+    * @private 
     */
-    getTileOverlaps: function (object) {
-
-        this._tempBlockResults.length = 0;
-
-        //  If the object is outside of the world coordinates then abort the check (tilemap has to exist within world bounds)
-        if (object.body.x < 0 || object.body.x > this.widthInPixels || object.body.y < 0 || object.body.bottom > this.heightInPixels)
-        {
-            return this._tempBlockResults;
-        }
-
-        //  What tiles do we need to check against?
-        this._tempTileX = this.game.math.snapToFloor(object.body.x, this.tileWidth) / this.tileWidth;
-        this._tempTileY = this.game.math.snapToFloor(object.body.y, this.tileHeight) / this.tileHeight;
-        this._tempTileW = (this.game.math.snapToCeil(object.body.width, this.tileWidth) + this.tileWidth) / this.tileWidth;
-        this._tempTileH = (this.game.math.snapToCeil(object.body.height, this.tileHeight) + this.tileHeight) / this.tileHeight;
-
-        //  Loop through the tiles we've got and check overlaps accordingly (the results are stored in this._tempTileBlock)
-        this.getTempBlock(this._tempTileX, this._tempTileY, this._tempTileW, this._tempTileH, true);
-
-        for (var r = 0; r < this._tempTileBlock.length; r++)
-        {
-            //  separateTile: function (object, x, y, width, height, mass, collideLeft, collideRight, collideUp, collideDown, separateX, separateY)            
-            if (this.game.physics.separateTile(object, this._tempTileBlock[r].x * this.tileWidth, this._tempTileBlock[r].y * this.tileHeight, this.tileWidth, this.tileHeight, this._tempTileBlock[r].tile.mass, this._tempTileBlock[r].tile.collideLeft, this._tempTileBlock[r].tile.collideRight, this._tempTileBlock[r].tile.collideUp, this._tempTileBlock[r].tile.collideDown, this._tempTileBlock[r].tile.separateX, this._tempTileBlock[r].tile.separateY))
-            {
-                this._tempBlockResults.push({ x: this._tempTileBlock[r].x, y: this._tempTileBlock[r].y, tile: this._tempTileBlock[r].tile });
-            }
-        }
-
-        return this._tempBlockResults;
-
-    },
-
-	/**
-    * Get a tile block with its position and size. (This method does not return, it'll set result to _tempTileBlock)
-    * @param x {number} X position of block's left-top corner.
-    * @param y {number} Y position of block's left-top corner.
-    * @param width {number} Width of block.
-    * @param height {number} Height of block.
-    * @param collisionOnly {bool} Whethor or not ONLY return tiles which will collide (its allowCollisions value is not Collision.NONE).
+    this._maxY = 0;
+    
+    /**
+    * @property {number} _startX - Local render loop var to help avoid gc spikes.
+    * @private 
     */
-    getTempBlock: function (x, y, width, height, collisionOnly) {
-
-        if (typeof collisionOnly === "undefined") { collisionOnly = false; }
-
-        if (x < 0)
-        {
-            x = 0;
-        }
-
-        if (y < 0)
-        {
-            y = 0;
-        }
-
-        if (width > this.widthInTiles)
-        {
-            width = this.widthInTiles;
-        }
-
-        if (height > this.heightInTiles)
-        {
-            height = this.heightInTiles;
-        }
-
-        this._tempTileBlock = [];
-
-        for (var ty = y; ty < y + height; ty++)
-        {
-            for (var tx = x; tx < x + width; tx++)
-            {
-                if (collisionOnly)
-                {
-                    //  We only want to consider the tile for checking if you can actually collide with it
-                    if (this.mapData[ty] && this.mapData[ty][tx] && this.parent.tiles[this.mapData[ty][tx]].collideNone == false)
-                    {
-                        this._tempTileBlock.push({
-                            x: tx,
-                            y: ty,
-                            tile: this.parent.tiles[this.mapData[ty][tx]]
-                        });
-                    }
-                }
-                else
-                {
-                    if (this.mapData[ty] && this.mapData[ty][tx])
-                    {
-                        this._tempTileBlock.push({
-                            x: tx,
-                            y: ty,
-                            tile: this.parent.tiles[this.mapData[ty][tx]]
-                        });
-                    }
-                }
-            }
-        }
-    },
-
-	/**
-    * Get the tile index of specific position (in tiles).
-    * @param x {number} X position of the tile.
-    * @param y {number} Y position of the tile.
-    * @return {number} Index of the tile at that position. Return null if there isn't a tile there.
+    this._startX = 0;
+    
+    /**
+    * @property {number} _startY - Local render loop var to help avoid gc spikes.
+    * @private 
     */
-    getTileIndex: function (x, y) {
+    this._startY = 0;
 
-        if (y >= 0 && y < this.mapData.length)
-        {
-            if (x >= 0 && x < this.mapData[y].length)
-            {
-                return this.mapData[y][x];
-            }
-        }
+    this.tilemap = null;
+    this.layer = null;
+    this.index = 0;
 
-        return null;
+    this._x = 0;
+    this._y = 0;
+    this._prevX = 0;
+    this._prevY = 0;
 
-    },
+    this.dirty = true;
 
-	/**
-    * Add a column of tiles into the layer.
-    * @param column {string[]/number[]} An array of tile indexes to be added.
-    */
-    addColumn: function (column) {
+    if (tileset instanceof Phaser.Tileset || typeof tileset === 'string')
+    {
+        this.updateTileset(tileset);
+    }
 
-        var data = [];
-
-        for (var c = 0; c < column.length; c++)
-        {
-            data[c] = parseInt(column[c]);
-        }
-
-        if (this.widthInTiles == 0)
-        {
-            this.widthInTiles = data.length;
-            this.widthInPixels = this.widthInTiles * this.tileWidth;
-        }
-
-        this.mapData.push(data);
-
-        this.heightInTiles++;
-        this.heightInPixels += this.tileHeight;
-
-    },
-
-    createCanvas: function () {
-
-        var width = this.game.width;
-        var height = this.game.height;
-
-        if (this.widthInPixels < width)
-        {
-            width = this.widthInPixels;
-        }
-
-        if (this.heightInPixels < height)
-        {
-            height = this.heightInPixels;
-        }
-
-        this.canvas = Phaser.Canvas.create(width, height);
-        this.context = this.canvas.getContext('2d');
-
-        this.baseTexture = new PIXI.BaseTexture(this.canvas);
-        this.texture = new PIXI.Texture(this.baseTexture);
-        this.sprite = new PIXI.Sprite(this.texture);
-
-        this.parent.addChild(this.sprite);
-
-    },
-
-	/**
-    * Update boundsInTiles with widthInTiles and heightInTiles.
-    */
-    updateBounds: function () {
-
-        this.boundsInTiles.setTo(0, 0, this.widthInTiles, this.heightInTiles);
-
-    },
-
-	/**
-    * Parse tile offsets from map data.
-    * Basically this creates a large array of objects that contain the x/y coordinates to grab each tile from
-    * for the entire map. Yes we could calculate this at run-time by using the tile index and some math, but we're
-    * trading a quite small bit of memory here to not have to process that in our main render loop.
-    * @return {number} length of tileOffsets array.
-    */
-    parseTileOffsets: function () {
-
-        this.tileOffsets = [];
-
-        var i = 0;
-
-        if (this.mapFormat == Phaser.Tilemap.JSON)
-        {
-            //  For some reason Tiled counts from 1 not 0
-            this.tileOffsets[0] = null;
-            i = 1;
-        }
-
-        for (var ty = this.tileMargin; ty < this.tileset.height; ty += (this.tileHeight + this.tileSpacing))
-        {
-            for (var tx = this.tileMargin; tx < this.tileset.width; tx += (this.tileWidth + this.tileSpacing))
-            {
-                this.tileOffsets[i] = {
-                    x: tx,
-                    y: ty
-                };
-                i++;
-            }
-        }
-
-        return this.tileOffsets.length;
-
+    if (tilemap instanceof Phaser.Tilemap)
+    {
+        this.updateMapData(tilemap, layer);
     }
 
 };
 
-Object.defineProperty(Phaser.TilemapLayer.prototype, 'alpha', {
+Phaser.TilemapLayer.prototype = Phaser.Utils.extend(true, Phaser.Sprite.prototype, PIXI.Sprite.prototype);
+Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 
-    get: function() {
-        return this._alpha;
+
+Phaser.TilemapLayer.prototype.update = function () {
+
+    this.scrollX = this.game.camera.x;
+    this.scrollY = this.game.camera.y;
+
+    this.render();
+
+}
+
+Phaser.TilemapLayer.prototype.resizeWorld = function () {
+
+    this.game.world.setBounds(0, 0, this.widthInPixels, this.heightInPixels);
+
+}
+
+Phaser.TilemapLayer.prototype.updateTileset = function (tileset) {
+
+    if (tileset instanceof Phaser.Tileset)
+    {
+        this.tileset = tileset;
+    }
+    else if (typeof tileset === 'string')
+    {
+        this.tileset = this.game.cache.getTileset('tiles');
+    }
+    else
+    {
+        return;
+    }
+
+    this.tileWidth = this.tileset.tileWidth;
+    this.tileHeight = this.tileset.tileHeight;
+    this.tileMargin = this.tileset.tileMargin;
+    this.tileSpacing = this.tileset.tileSpacing;
+
+    this.updateMax();
+
+}
+
+Phaser.TilemapLayer.prototype.updateMapData = function (tilemap, layer) {
+
+    if (typeof layer === 'undefined')
+    {
+        layer = 0;
+    }
+
+    if (tilemap instanceof Phaser.Tilemap)
+    {
+        this.tilemap = tilemap;
+        this.layer = this.tilemap.layers[layer];
+        this.index = layer;
+        this.updateMax();
+        this.tilemap.dirty = true;
+    }
+
+}
+
+/**
+* Convert a pixel value to a tile coordinate.
+* @param {number} x - X position of the point in target tile.
+* @param {number} [layer] - layer of this tile located.
+* @return {number} The tile with specific properties.
+*/
+Phaser.TilemapLayer.prototype.getTileX = function (x) {
+
+    var tileWidth = this.tileWidth * this.scale.x;
+
+    return this.game.math.snapToFloor(x, tileWidth) / tileWidth;
+
+}
+
+/**
+* Convert a pixel value to a tile coordinate.
+* @param {number} x - X position of the point in target tile.
+* @param {number} [layer] - layer of this tile located.
+* @return {number} The tile with specific properties.
+*/
+Phaser.TilemapLayer.prototype.getTileY = function (y) {
+
+    var tileHeight = this.tileHeight * this.scale.y;
+
+    return this.game.math.snapToFloor(y, tileHeight) / tileHeight;
+
+}
+
+Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
+
+    point.x = this.getTileX(x);
+    point.y = this.getTileY(y);
+
+    return point;
+
+}
+
+/**
+* 
+* @method getTileOverlaps
+* @param {GameObject} object - Tiles you want to get that overlaps this.
+* @return {array} Array with tiles informations (each contains x, y, and the tile).
+*/
+Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides) {
+
+    if (this.tilemap === null)
+    {
+        return;
+    }
+
+    //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
+    if (typeof collides === 'undefined') { collides = false; }
+
+    //  Cap the values
+
+    if (x < 0)
+    {
+        x = 0;
+    }
+
+    if (y < 0)
+    {
+        y = 0;
+    }
+
+    if (width > this.widthInPixels)
+    {
+        width = this.widthInPixels;
+    }
+
+    if (height > this.heightInPixels)
+    {
+        height = this.heightInPixels;
+    }
+
+    var tileWidth = this.tileWidth * this.scale.x;
+    var tileHeight = this.tileHeight * this.scale.y;
+
+    //  Convert the pixel values into tile coordinates
+    this._tx = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
+    this._ty = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
+    this._tw = (this.game.math.snapToCeil(width, tileWidth) + tileWidth) / tileWidth;
+    this._th = (this.game.math.snapToCeil(height, tileHeight) + tileHeight) / tileHeight;
+
+    this._results.length = 0;
+
+    //  pretty sure we don't use this any more?
+    this._results.push( { x: x, y: y, width: width, height: height, tx: this._tx, ty: this._ty, tw: this._tw, th: this._th });
+
+    var _index = 0;
+    var _tile = null;
+    var sx = 0;
+    var sy = 0;
+
+    for (var wy = this._ty; wy < this._ty + this._th; wy++)
+    {
+        for (var wx = this._tx; wx < this._tx + this._tw; wx++)
+        {
+            if (this.layer.data[wy] && this.layer.data[wy][wx])
+            {
+                //  Could combine
+                _index = this.layer.data[wy][wx] - 1;
+                _tile = this.tileset.getTile(_index);
+
+                sx = _tile.width * this.scale.x;
+                sy = _tile.height * this.scale.y;
+
+                if (collides == false || (collides && _tile.collideNone == false))
+                {
+                    this._results.push({ x: wx * sx, right: (wx * sx) + sx, y: wy * sy, bottom: (wy * sy) + sy, width: sx, height: sy, tx: wx, ty: wy, tile: _tile });
+                }
+            }
+        }
+    }
+
+    return this._results;
+
+}
+
+Phaser.TilemapLayer.prototype.updateMax = function () {
+
+    this._maxX = this.game.math.ceil(this.canvas.width / this.tileWidth) + 1;
+    this._maxY = this.game.math.ceil(this.canvas.height / this.tileHeight) + 1;
+
+    if (this.layer)
+    {
+        if (this._maxX > this.layer.width)
+        {
+            this._maxX = this.layer.width;
+        }
+
+        if (this._maxY > this.layer.height)
+        {
+            this._maxY = this.layer.height;
+        }
+
+        this.widthInPixels = this.layer.width * this.tileWidth;
+        this.heightInPixels = this.layer.height * this.tileHeight;
+    }
+
+    this.dirty = true;
+
+}
+
+Phaser.TilemapLayer.prototype.render = function () {
+
+    if (this.tilemap && this.tilemap.dirty)
+    {
+        this.dirty = true;
+    }
+
+    if (!this.dirty || !this.tileset || !this.tilemap || !this.visible)
+    {
+        return;
+    }
+
+    this._prevX = this._dx;
+    this._prevY = this._dy;
+
+    this._dx = -(this._x - (this._startX * this.tileWidth));
+    this._dy = -(this._y - (this._startY * this.tileHeight));
+
+    this._tx = this._dx;
+    this._ty = this._dy;
+
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    for (var y = this._startY; y < this._startY + this._maxY; y++)
+    {
+        this._column = this.layer.data[y];
+
+        for (var x = this._startX; x < this._startX + this._maxX; x++)
+        {
+            //  only -1 on TILED maps, not CSV
+            var tile = this.tileset.tiles[this._column[x]-1];
+
+            if (tile)
+            {
+                this.context.drawImage(
+                    this.tileset.image,
+                    tile.x,
+                    tile.y,
+                    this.tileWidth,
+                    this.tileHeight,
+                    Math.floor(this._tx),
+                    Math.floor(this._ty),
+                    this.tileWidth,
+                    this.tileHeight
+                );
+            }
+
+            this._tx += this.tileWidth;
+
+        }
+
+        this._tx = this._dx;
+        this._ty += this.tileHeight;
+    }
+
+    //  Only needed if running in WebGL, otherwise this array will never get cleared down I don't think!
+    if (this.game.renderType == Phaser.WEBGL)
+    {
+        PIXI.texturesToUpdate.push(this.baseTexture);
+    }
+
+    this.dirty = false;
+
+    if (this.tilemap.dirty)
+    {
+        this.tilemap.dirty = false;
+    }
+
+    return true;
+
+}
+
+Phaser.TilemapLayer.prototype.deltaAbsX = function () {
+    return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
+}
+
+Phaser.TilemapLayer.prototype.deltaAbsY = function () {
+    return (this.deltaY() > 0 ? this.deltaY() : -this.deltaY());
+}
+
+Phaser.TilemapLayer.prototype.deltaX = function () {
+    return this._dx - this._prevX;
+}
+
+Phaser.TilemapLayer.prototype.deltaY = function () {
+    return this._dy - this._prevY;
+}
+
+Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollX", {
+    
+    get: function () {
+        return this._x;
     },
 
-    set: function(value) {
+    set: function (value) {
 
-        if (this.sprite)
+        if (value !== this._x && value >= 0 && this.layer)
         {
-            this.sprite.alpha = value;
+            this._x = value;
+
+            if (this._x > (this.widthInPixels - this.renderWidth))
+            {
+                this._x = this.widthInPixels - this.renderWidth;
+            }
+
+            this._startX = this.game.math.floor(this._x / this.tileWidth);
+
+            if (this._startX < 0)
+            {
+                this._startX = 0;
+            }
+
+            if (this._startX + this._maxX > this.layer.width)
+            {
+                this._startX = this.layer.width - this._maxX;
+            }
+
+            this.dirty = true;
         }
-        
-        this._alpha = value;
+
+    }
+
+});
+
+Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
+    
+    get: function () {
+        return this._y;
+    },
+
+    set: function (value) {
+
+        if (value !== this._y && value >= 0 && this.layer)
+        {
+            this._y = value;
+
+            if (this._y > (this.heightInPixels - this.renderHeight))
+            {
+                this._y = this.heightInPixels - this.renderHeight;
+            }
+
+            this._startY = this.game.math.floor(this._y / this.tileHeight);
+
+            if (this._startY < 0)
+            {
+                this._startY = 0;
+            }
+
+            if (this._startY + this._maxY > this.layer.height)
+            {
+                this._startY = this.layer.height - this._maxY;
+            }
+
+            this.dirty = true;
+        }
+
     }
 
 });

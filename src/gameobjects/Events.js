@@ -1,6 +1,17 @@
 /**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+
+/**
 * The Events component is a collection of events fired by the parent game object and its components.
-* @param parent The game object using this Input component
+* 
+* @class Phaser.Events
+* @constructor
+*
+* @param {Phaser.Sprite} sprite - A reference to Description.
 */
 Phaser.Events = function (sprite) {
 	
@@ -21,5 +32,37 @@ Phaser.Events = function (sprite) {
 	this.onAnimationStart = null;
 	this.onAnimationComplete = null;
 	this.onAnimationLoop = null;
+
+};
+
+Phaser.Events.prototype = {
+
+	destroy: function () {
+
+		this.parent = null;
+		this.onAddedToGroup.dispose();
+		this.onRemovedFromGroup.dispose();
+		this.onKilled.dispose();
+		this.onRevived.dispose();
+		this.onOutOfBounds.dispose();
+
+		if (this.onInputOver)
+		{
+		    this.onInputOver.dispose();
+		    this.onInputOut.dispose();
+		    this.onInputDown.dispose();
+		    this.onInputUp.dispose();
+		    this.onDragStart.dispose();
+		    this.onDragStop.dispose();
+		}
+
+		if (this.onAnimationStart)
+		{
+			this.onAnimationStart.dispose();
+			this.onAnimationComplete.dispose();
+			this.onAnimationLoop.dispose();
+		}
+
+	}
 
 };

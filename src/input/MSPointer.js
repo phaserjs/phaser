@@ -1,38 +1,86 @@
 /**
-* Phaser.MSPointer
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* Phaser - MSPointer constructor.
 *
-* The MSPointer class handles touch interactions with the game and the resulting Pointer objects.
+* @class Phaser.MSPointer
+* @classdesc The MSPointer class handles touch interactions with the game and the resulting Pointer objects.
 * It will work only in Internet Explorer 10 and Windows Store or Windows Phone 8 apps using JavaScript.
 * http://msdn.microsoft.com/en-us/library/ie/hh673557(v=vs.85).aspx
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
 */
 Phaser.MSPointer = function (game) {
 
+	/**
+	* @property {Phaser.Game} game - Local reference to game.
+	*/
 	this.game = game;
+	
+	/**
+	* @property {Phaser.Game} callbackContext - Description.
+	*/
 	this.callbackContext = this.game;
 
+	/**
+	* @property {Description} mouseDownCallback - Description.
+	* @default
+	*/
 	this.mouseDownCallback = null;
+	
+	/**
+	* @property {Description} mouseMoveCallback - Description.
+	* @default
+	*/
 	this.mouseMoveCallback = null;
+	
+	/**
+	* @property {Description} mouseUpCallback - Description.
+	* @default
+	*/
 	this.mouseUpCallback = null;
+
+    /**
+    * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
+    * @property {boolean} disabled
+    */
+    this.disabled = false;
+
+    /**
+    * Description.
+    * @property {Description} _onMSPointerDown
+    * @private
+    * @default
+    */
+    this._onMSPointerDown = null;
+    
+    /**
+    * Description.
+    * @property {Description} _onMSPointerMove
+    * @private
+    * @default
+    */
+    this._onMSPointerMove = null;
+    
+    /**
+    * Description.
+    * @property {Description} _onMSPointerUp
+    * @private
+    * @default
+    */
+    this._onMSPointerUp = null;
 
 };
 
 Phaser.MSPointer.prototype = {
 
-	game: null,
-
-    /**
-    * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-    * @type {bool}
-    */
-	disabled: false,
-
-    _onMSPointerDown: null,
-    _onMSPointerMove: null,
-    _onMSPointerUp: null,
-
 	/**
-    * Starts the event listeners running
-    * @method start
+    * Starts the event listeners running.
+    * @method Phaser.MSPointer#start
     */
     start: function () {
 
@@ -64,7 +112,8 @@ Phaser.MSPointer.prototype = {
     },
 
     /**
-    * @method onPointerDown
+    * Description.
+    * @method Phaser.MSPointer#onPointerDown
     * @param {Any} event
     **/
     onPointerDown: function (event) {
@@ -82,7 +131,8 @@ Phaser.MSPointer.prototype = {
     },
 
     /**
-    * @method onPointerMove
+    * Description.
+    * @method Phaser.MSPointer#onPointerMove
     * @param {Any} event
     **/
     onPointerMove: function (event) {
@@ -100,7 +150,8 @@ Phaser.MSPointer.prototype = {
     },
 
     /**
-    * @method onPointerUp
+    * Description.
+    * @method Phaser.MSPointer#onPointerUp
     * @param {Any} event
     **/
     onPointerUp: function (event) {
@@ -118,8 +169,8 @@ Phaser.MSPointer.prototype = {
     },
 
 	/**
-    * Stop the event listeners
-    * @method stop
+    * Stop the event listeners.
+    * @method Phaser.MSPointer#stop
     */
     stop: function () {
 

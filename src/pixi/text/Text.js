@@ -14,9 +14,9 @@
  * @param [style.fill="black"] {Object} A canvas fillstyle that will be used on the text eg "red", "#00FF00"
  * @param [style.align="left"] {String} An alignment of the multiline text ("left", "center" or "right")
  * @param [style.stroke] {String} A canvas fillstyle that will be used on the text stroke eg "blue", "#FCFF00"
- * @param [style.strokeThickness=0] {Number} A number that represents the thickness of the stroke. Default is 0 (no stroke)
+ * @param [style.strokeThickness=0] {number} A number that represents the thickness of the stroke. Default is 0 (no stroke)
  * @param [style.wordWrap=false] {Boolean} Indicates if word wrap should be used
- * @param [style.wordWrapWidth=100] {Number} The width at which text will wrap
+ * @param [style.wordWrapWidth=100] {number} The width at which text will wrap
  */
 PIXI.Text = function(text, style)
 {
@@ -44,9 +44,9 @@ PIXI.Text.prototype.constructor = PIXI.Text;
  * @param [style.fill="black"] {Object} A canvas fillstyle that will be used on the text eg "red", "#00FF00"
  * @param [style.align="left"] {String} An alignment of the multiline text ("left", "center" or "right")
  * @param [style.stroke="black"] {String} A canvas fillstyle that will be used on the text stroke eg "blue", "#FCFF00"
- * @param [style.strokeThickness=0] {Number} A number that represents the thickness of the stroke. Default is 0 (no stroke)
+ * @param [style.strokeThickness=0] {number} A number that represents the thickness of the stroke. Default is 0 (no stroke)
  * @param [style.wordWrap=false] {Boolean} Indicates if word wrap should be used
- * @param [style.wordWrapWidth=100] {Number} The width at which text will wrap
+ * @param [style.wordWrapWidth=100] {number} The width at which text will wrap
  */
 PIXI.Text.prototype.setStyle = function(style)
 {

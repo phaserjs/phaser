@@ -1,28 +1,40 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
-* @license      https://github.com/photonstorm/phaser/blob/master/license.txt  MIT License
-* @module       Phaser.Utils
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
-* 
-* @class Utils
+* @class Phaser.Utils
 * @static
 */
 Phaser.Utils = {
 	
+	shuffle: function (array) {
+
+	    for (var i = array.length - 1; i > 0; i--)
+	    {
+	        var j = Math.floor(Math.random() * (i + 1));
+	        var temp = array[i];
+	        array[i] = array[j];
+	        array[j] = temp;
+	    }
+
+	    return array;
+	    
+	},
+
 	/**
-	*  Javascript string pad
-	*  http://www.webtoolkit.info/
-	* pad = the string to pad it out with (defaults to a space)
+	* Javascript string pad http://www.webtoolkit.info/.
+	* pad = the string to pad it out with (defaults to a space)<br>
 	* dir = 1 (left), 2 (right), 3 (both)
-	* @method pad
-	* @param {string} str the target string 
-	* @param {number} pad the string to pad it out with (defaults to a space)
-	* @param {number} len 
-	* @param {number} [dir=3] the direction dir = 1 (left), 2 (right), 3 (both)
-	**/
+	* @method Phaser.Utils.pad
+	* @param {string} str - The target string. 
+	* @param {number} len - Description.
+	* @param {number} pad - the string to pad it out with (defaults to a space).
+	* @param {number} [dir=3] the direction dir = 1 (left), 2 (right), 3 (both).
+	* @return {string}
+	*/
 	pad: function (str, len, pad, dir) {
 
 	    if (typeof(len) == "undefined") { var len = 0; }
@@ -53,10 +65,11 @@ Phaser.Utils = {
 
 	},
 
-	/**
-    * This is a slightly modified version of jQuery.isPlainObject
-    * @method isPlainObject
-    * @param {object} obj
+    /**
+    * This is a slightly modified version of jQuery.isPlainObject. A plain object is an object whose internal class property is [object Object].
+    * @method Phaser.Utils.isPlainObject
+    * @param {object} obj - The object to inspect.
+    * @return {boolean} - true if the object is plain, otherwise false.
     */
 	isPlainObject: function (obj) {
 
@@ -87,12 +100,19 @@ Phaser.Utils = {
 		return true;
 	},
 
-	/**
-    * This is a slightly modified version of jQuery.extend (http://api.jquery.com/jQuery.extend/)
-    * @method extend
-    * @param {bool} [deep] If true, the merge becomes recursive (aka. deep copy).
-    * @param {object} target The object to add to
-    * @param {object} objets Objects to recurse and copy from
+
+	//	deep, target, objects to copy to the target object
+	//	This is a slightly modified version of {@link http://api.jquery.com/jQuery.extend/|jQuery.extend}
+	//	deep (boolean)
+	//	target (object to add to)
+	//	objects ... (objects to recurse and copy from)
+
+    /**
+    * This is a slightly modified version of http://api.jquery.com/jQuery.extend/
+    * @method Phaser.Utils.extend
+    * @param {boolean} deep - Perform a deep copy?
+    * @param {object} target - The target object to copy to.
+    * @return {object} The extended object.
     */
 	extend: function () {
 
@@ -172,8 +192,7 @@ Phaser.Utils = {
  /**
  * Converts a hex color number to an [R, G, B] array
  *
- * @method HEXtoRGB
- * @param {Number} hex 
+ * @param {number} hex 
  * @return {array}
  */
 function HEXtoRGB(hex) {
@@ -182,8 +201,6 @@ function HEXtoRGB(hex) {
 
  /**
  * A polyfill for Function.prototype.bind
- *
- * @method bind
  */
 if (typeof Function.prototype.bind != 'function') {
   Function.prototype.bind = (function () {

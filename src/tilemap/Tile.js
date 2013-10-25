@@ -1,103 +1,158 @@
 /**
-* Phaser - Tile
-*
-* A Tile is a single representation of a tile within a Tilemap
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+* @module       Phaser.Tile
 */
+
 
 /**
-* Tile constructor
 * Create a new <code>Tile</code>.
 *
-* @param tilemap {Tilemap} the tilemap this tile belongs to.
-* @param index {number} The index of this tile type in the core map data.
-* @param width {number} Width of the tile.
-* @param height number} Height of the tile.
+* @class Phaser.Tile
+* @classdesc A Tile is a single representation of a tile within a Tilemap.
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {Tilemap} tilemap - The tilemap this tile belongs to.
+* @param {number}  index - The index of this tile type in the core map data.
+* @param {number}  width - Width of the tile.
+* @param {number}  height - Height of the tile.
 */
-Phaser.Tile = function (game, tilemap, index, width, height) {
+Phaser.Tile = function (tileset, index, x, y, width, height) {
 
     /**
-    * The virtual mass of the tile.
-    * @type {number}
+    * @property {string} tileset - The tileset this tile belongs to.
+    */
+    this.tileset = tileset;
+    
+    /**
+    * @property {number} index - The index of this tile within the tileset.
+    */
+    this.index = index;
+    
+    /**
+    * @property {number} width - The width of the tile in pixels.
+    */
+    this.width = width;
+    
+    /**
+    * @property {number} height - The height of the tile in pixels.
+    */
+    this.height = height;
+
+    /**
+    * @property {number} x - The top-left corner of the tile within the tileset.
+    */
+    this.x = x;
+    
+    /**
+    * @property {number} y - The top-left corner of the tile within the tileset.
+    */
+    this.y = y;
+
+    //  Any extra meta data info we need here
+
+    /**
+    * @property {number} mass - The virtual mass of the tile.
+    * @default
     */
     this.mass = 1.0;
 
     /**
-    * Indicating this Tile doesn't collide at all.
-    * @type {bool}
+    * @property {boolean} collideNone - Indicating this Tile doesn't collide at all.
+    * @default
     */
     this.collideNone = true;
 
     /**
-    * Indicating collide with any object on the left.
-    * @type {bool}
+    * @property {boolean} collideLeft - Indicating collide with any object on the left.
+    * @default
     */
     this.collideLeft = false;
 
     /**
-    * Indicating collide with any object on the right.
-    * @type {bool}
+    * @property {boolean} collideRight - Indicating collide with any object on the right.
+    * @default
     */
     this.collideRight = false;
 
     /**
-    * Indicating collide with any object on the top.
-    * @type {bool}
+    * @property {boolean} collideUp - Indicating collide with any object on the top.
+    * @default
     */
     this.collideUp = false;
 
     /**
-    * Indicating collide with any object on the bottom.
-    * @type {bool}
+    * @property {boolean} collideDown - Indicating collide with any object on the bottom.
+    * @default
     */
     this.collideDown = false;
 
     /**
-    * Enable separation at x-axis.
-    * @type {bool}
+    * @property {boolean} separateX - Enable separation at x-axis. 
+    * @default
     */
     this.separateX = true;
 
     /**
-    * Enable separation at y-axis.
-    * @type {bool}
+    * @property {boolean} separateY - Enable separation at y-axis. 
+    * @default
     */
     this.separateY = true;
 
-    this.game = game;
-    this.tilemap = tilemap;
-    this.index = index;
-    this.width = width;
-    this.height = height;
+    /**
+    * @property {boolean} collisionCallback - Tilemap collision callback.
+    * @default
+    */
+    this.collisionCallback = null;
+
+    /**
+    * @property {boolean} collisionCallback - Tilemap collision callback.
+    * @default
+    */
+    this.collisionCallbackContext = this;
 
 };
 
 Phaser.Tile.prototype = {
 
-	/**
-    * Clean up memory.
+    /**
+    * Set callback to be called when this tilemap collides.
+    * 
+    * @method Phaser.Tilemap.prototype.setCollisionCallback
+    * @param {Function} callback - Callback function.
+    * @param {object} context - Callback will be called with this context.
     */
-    destroy: function () {
-        this.tilemap = null;
+    setCollisionCallback: function (callback, context) {
+
+        this.collisionCallbackContext = context;
+        this.collisionCallback = callback;
+
     },
 
-	/**
-    * Set collision configs.
-    * @param collision {number} Bit field of flags. (see Tile.allowCollision)
-    * @param resetCollisions {bool} Reset collision flags before set.
-    * @param separateX {bool} Enable seprate at x-axis.
-    * @param separateY {bool} Enable seprate at y-axis.
+    /**
+    * Clean up memory.
+    * @method destroy
     */
-    setCollision: function (left, right, up, down, reset, separateX, separateY) {
+    destroy: function () {
 
-        if (reset)
-        {
-            this.resetCollision();
-        }
+        this.tileset = null;
+        
+    },
 
-        this.separateX = separateX;
-        this.separateY = separateY;
+    /**
+    * Set collision configs.
+    * @method setCollision
+    * @param {boolean}   left - Indicating collide with any object on the left.
+    * @param {boolean}   right - Indicating collide with any object on the right.
+    * @param {boolean}   up - Indicating collide with any object on the top.
+    * @param {boolean}   down - Indicating collide with any object on the bottom.
+    * @param {boolean}   reset - Description. 
+    * @param {boolean}   separateX - Separate at x-axis.
+    * @param {boolean}   separateY - Separate at y-axis.
+    */
+    setCollision: function (left, right, up, down) {
 
-        this.collideNone = true;
         this.collideLeft = left;
         this.collideRight = right;
         this.collideUp = up;
@@ -107,11 +162,16 @@ Phaser.Tile.prototype = {
         {
             this.collideNone = false;
         }
+        else
+        {
+            this.collideNone = true;
+        }
 
     },
 
-	/**
+    /**
     * Reset collision status flags.
+    * @method resetCollision
     */
     resetCollision: function () {
 
@@ -121,18 +181,33 @@ Phaser.Tile.prototype = {
         this.collideUp = false;
         this.collideDown = false;
 
-    },
-
-	/**
-    * Returns a string representation of this object.
-    * @method toString
-    * @return {string} a string representation of the object.
-    **/
-    toString: function () {
-
-        // return "[{Tile (index=" + this.index + " collisions=" + this.allowCollisions + " width=" + this.width + " height=" + this.height + ")}]";
-        return '';
-
     }
 
 };
+
+Object.defineProperty(Phaser.Tile.prototype, "bottom", {
+    
+    /**
+    * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
+    * @method bottom
+    * @return {number}
+    **/
+    get: function () {
+        return this.y + this.height;
+    }
+
+});
+
+Object.defineProperty(Phaser.Tile.prototype, "right", {
+    
+    /**
+    * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
+    * However it does affect the width property.
+    * @method right
+    * @return {number}
+    **/    
+    get: function () {
+        return this.x + this.width;
+    }
+
+});

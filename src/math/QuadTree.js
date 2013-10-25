@@ -1,4 +1,10 @@
-/*
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
  * Javascript QuadTree 
  * @version 1.0
  * @author Timo Hausmann
@@ -12,35 +18,45 @@
  * Original version at https://github.com/timohausmann/quadtree-js/
  */
  
-/*
- Copyright © 2012 Timo Hausmann
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+/**
+* @copyright © 2012 Timo Hausmann
+*
+* Permission is hereby granted, free of charge, to any person obtaining
+* a copy of this software and associated documentation files (the
+* "Software"), to deal in the Software without restriction, including
+* without limitation the rights to use, copy, modify, merge, publish,
+* distribute, sublicense, and/or sell copies of the Software, and to
+* permit persons to whom the Software is furnished to do so, subject to
+* the following conditions:
+*
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+* LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+* WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-/*
-* QuadTree Constructor
-* @param Integer maxObjects		(optional) max objects a node can hold before splitting into 4 subnodes (default: 10)
-* @param Integer maxLevels		(optional) total max levels inside root QuadTree (default: 4) 
-* @param Integer level		(optional) deepth level, required for subnodes  
-*/
+/**
+ * QuadTree Constructor
+ * 
+ * @class Phaser.QuadTree
+ * @classdesc A QuadTree implementation. The original code was a conversion of the Java code posted to GameDevTuts. However I've tweaked
+ * it massively to add node indexing, removed lots of temp. var creation and significantly increased performance as a result. Original version at https://github.com/timohausmann/quadtree-js/
+ * @constructor
+ * @param {Description} physicsManager - Description.
+ * @param {Description} x - Description.
+ * @param {Description} y - Description.
+ * @param {number} width - The width of your game in game pixels.
+ * @param {number} height - The height of your game in game pixels.
+ * @param {number} maxObjects - Description.
+ * @param {number} maxLevels - Description.
+ * @param {number} level - Description.
+ */
 Phaser.QuadTree = function (physicsManager, x, y, width, height, maxObjects, maxLevels, level) {
 		
 	this.physicsManager = physicsManager;
@@ -70,8 +86,10 @@ Phaser.QuadTree = function (physicsManager, x, y, width, height, maxObjects, max
 Phaser.QuadTree.prototype = {
 
 	/*
-	 * Split the node into 4 subnodes
-	 */
+	* Split the node into 4 subnodes
+	* 
+	* @method Phaser.QuadTree#split
+	*/
 	split: function() {
 
 		this.level++;
@@ -94,7 +112,9 @@ Phaser.QuadTree.prototype = {
 	 * Insert the object into the node. If the node
 	 * exceeds the capacity, it will split and add all
 	 * objects to their corresponding subnodes.
-	 * @param Object pRect		bounds of the object to be added, with x, y, width, height
+	 * 
+	 * @method Phaser.QuadTree#insert
+	 * @param {object} body - Description.
 	 */
 	insert: function (body) {
 		
@@ -142,9 +162,11 @@ Phaser.QuadTree.prototype = {
 	 },
 	 
 	/*
-	 * Determine which node the object belongs to
-	 * @param Object pRect		bounds of the area to be checked, with x, y, width, height
-	 * @return Integer		index of the subnode (0-3), or -1 if pRect cannot completely fit within a subnode and is part of the parent node
+	 * Determine which node the object belongs to.
+	 * 
+	 * @method Phaser.QuadTree#getIndex
+	 * @param {object} rect	- Description.
+	 * @return {number} index -	Index of the subnode (0-3), or -1 if rect cannot completely fit within a subnode and is part of the parent node.
 	 */
 	getIndex: function (rect) {
 		
@@ -184,9 +206,11 @@ Phaser.QuadTree.prototype = {
 	},
 
 	 /*
-	 * Return all objects that could collide with the given object
-	 * @param Object pRect		bounds of the object to be checked, with x, y, width, height
-	 * @Return Array		array with all detected objects
+	 * Return all objects that could collide with the given object.
+	 * 
+	 * @method Phaser.QuadTree#retrieve
+	 * @param {object} rect	- Description.
+	 * @Return {array} - Array with all detected objects.
 	 */
 	retrieve: function (sprite) {
 	 	
@@ -219,7 +243,8 @@ Phaser.QuadTree.prototype = {
 	},
 
 	/*
-	 * Clear the quadtree
+	 * Clear the quadtree.
+	 * @method Phaser.QuadTree#clear
 	 */
 	clear: function () {
 		

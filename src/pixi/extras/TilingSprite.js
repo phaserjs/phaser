@@ -9,8 +9,8 @@
  * @extends DisplayObjectContainer
  * @constructor
  * @param texture {Texture} the texture of the tiling sprite
- * @param width {Number}  the width of the tiling sprite
- * @param height {Number} the height of the tiling sprite
+ * @param width {number}  the width of the tiling sprite
+ * @param height {number} the height of the tiling sprite
  */
 PIXI.TilingSprite = function(texture, width, height)
 {

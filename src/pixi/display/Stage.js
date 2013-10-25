@@ -8,7 +8,7 @@
  * @class Stage
  * @extends DisplayObjectContainer
  * @constructor
- * @param backgroundColor {Number} the background color of the stage, easiest way to pass this in is in hex format
+ * @param backgroundColor {number} the background color of the stage, easiest way to pass this in is in hex format
  *		like: 0xFFFFFF for white
  * @param interactive {Boolean} enable / disable interaction (default is false)
  */
@@ -99,7 +99,7 @@ PIXI.Stage.prototype.updateTransform = function()
  * Sets the background color for the stage
  *
  * @method setBackgroundColor
- * @param backgroundColor {Number} the color of the background, easiest way to pass this in is in hex format
+ * @param backgroundColor {number} the color of the background, easiest way to pass this in is in hex format
  *		like: 0xFFFFFF for white
  */
 PIXI.Stage.prototype.setBackgroundColor = function(backgroundColor)

@@ -1,427 +1,495 @@
-/**
-* Phaser - Tilemap
-*
-* This GameObject allows for the display of a tilemap within the game world. Tile maps consist of an image, tile data and a size.
-* Internally it creates a TilemapLayer for each layer in the tilemap.
-*/
+Phaser.Tilemap = function (game, key) {
 
-/**
-* Tilemap constructor
-* Create a new <code>Tilemap</code>.
-*
-* @param game {Phaser.Game} Current game instance.
-* @param key {string} Asset key for this map.
-* @param mapData {string} Data of this map. (a big 2d array, normally in csv)
-* @param format {number} Format of this map data, available: Tilemap.CSV or Tilemap.JSON.
-* @param resizeWorld {bool} Resize the world bound automatically based on this tilemap?
-* @param tileWidth {number} Width of tiles in this map (used for CSV maps).
-* @param tileHeight {number} Height of tiles in this map (used for CSV maps).
-*/
-Phaser.Tilemap = function (game, key, x, y, resizeWorld, tileWidth, tileHeight) {
-
-    if (typeof resizeWorld === "undefined") { resizeWorld = true; }
-    if (typeof tileWidth === "undefined") { tileWidth = 0; }
-    if (typeof tileHeight === "undefined") { tileHeight = 0; }
-
+	/**
+	* @property {Phaser.Game} game - Description.
+	*/ 
     this.game = game;
-    this.group = null;
-    this.name = '';
-    this.key = key;
 
     /**
-    * Render iteration counter
+    * @property {array} layers - Description.
     */
-    this.renderOrderID = 0;
+	this.layers;
 
-    /**
-    * Tilemap collision callback.
-    * @type {function}
-    */
-    this.collisionCallback = null;
-
-    this.exists = true;
-    this.visible = true;
-
-    this.tiles = [];
-    this.layers = [];
-
-    var map = this.game.cache.getTilemap(key);
-
-    PIXI.DisplayObjectContainer.call(this);
-    this.position.x = x;
-    this.position.y = y;
-
-    this.type = Phaser.TILEMAP;
-
-    this.renderer = new Phaser.TilemapRenderer(this.game);
-
-    this.mapFormat = map.format;
-
-    switch (this.mapFormat)
+    if (typeof key === 'string')
     {
-        case Phaser.Tilemap.CSV:
-            this.parseCSV(map.mapData, key, tileWidth, tileHeight);
-            break;
+    	this.key = key;
 
-        case Phaser.Tilemap.JSON:
-            this.parseTiledJSON(map.mapData, key);
-            break;
+		this.layers = game.cache.getTilemapData(key).layers;
+        this.calculateIndexes();
+    }
+    else
+    {
+	    this.layers = [];
     }
 
-    if (this.currentLayer && resizeWorld)
-    {
-        this.game.world.setSize(this.currentLayer.widthInPixels, this.currentLayer.heightInPixels, true);
-    }
-	
+    this.currentLayer = 0;
+
+    this.debugMap = [];
+
+    this.dirty = false;
+
+    this._results = [];
+    this._tempA = 0;
+    this._tempB = 0;
+
 };
-
-//  Needed to keep the PIXI.Sprite constructor in the prototype chain (as the core pixi renderer uses an instanceof check sadly)
-Phaser.Tilemap.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
-Phaser.Tilemap.prototype.constructor = Phaser.Tilemap;
 
 Phaser.Tilemap.CSV = 0;
-Phaser.Tilemap.JSON = 1;
+Phaser.Tilemap.TILED_JSON = 1;
 
-/**
-* Parset csv map data and generate tiles.
-* @param data {string} CSV map data.
-* @param key {string} Asset key for tileset image.
-* @param tileWidth {number} Width of its tile.
-* @param tileHeight {number} Height of its tile.
-*/
-Phaser.Tilemap.prototype.parseCSV = function (data, key, tileWidth, tileHeight) {
+Phaser.Tilemap.prototype = {
 
-    var layer = new Phaser.TilemapLayer(this, 0, key, Phaser.Tilemap.CSV, 'TileLayerCSV' + this.layers.length.toString(), tileWidth, tileHeight);
+    create: function (name, width, height) {
 
-    //  Trim any rogue whitespace from the data
-    data = data.trim();
+        var data = [];
 
-    var rows = data.split("\n");
-
-    for (var i = 0; i < rows.length; i++)
-    {
-        var column = rows[i].split(",");
-
-        if (column.length > 0)
+        for (var y = 0; y < height; y++)
         {
-            layer.addColumn(column);
-        }
-    }
+            data[y] = [];
 
-    layer.updateBounds();
-    layer.createCanvas();
-
-    var tileQuantity = layer.parseTileOffsets();
-
-    this.currentLayer = layer;
-    this.collisionLayer = layer;
-    this.layers.push(layer);
-
-    this.generateTiles(tileQuantity);
-
-};
-
-/**
-* Parse JSON map data and generate tiles.
-* @param data {string} JSON map data.
-* @param key {string} Asset key for tileset image.
-*/
-Phaser.Tilemap.prototype.parseTiledJSON = function (json, key) {
-
-    for (var i = 0; i < json.layers.length; i++)
-    {
-        var layer = new Phaser.TilemapLayer(this, i, key, Phaser.Tilemap.JSON, json.layers[i].name, json.tilewidth, json.tileheight);
-
-        //  Check it's a data layer
-        if (!json.layers[i].data)
-        {
-            continue;
-        }
-
-        layer.alpha = json.layers[i].opacity;
-        layer.visible = json.layers[i].visible;
-        layer.tileMargin = json.tilesets[0].margin;
-        layer.tileSpacing = json.tilesets[0].spacing;
-
-        var c = 0;
-        var row;
-
-        for (var t = 0; t < json.layers[i].data.length; t++)
-        {
-            if (c == 0)
+            for (var x = 0; x < width; x++)
             {
-                row = [];
-            }
-
-            row.push(json.layers[i].data[t]);
-            c++;
-
-            if (c == json.layers[i].width)
-            {
-                layer.addColumn(row);
-                c = 0;
+                data[y][x] = 0;
             }
         }
 
-        layer.updateBounds();
-        layer.createCanvas();
-        
-        var tileQuantity = layer.parseTileOffsets();
-        
-        this.currentLayer = layer;
-        this.collisionLayer = layer;
-        this.layers.push(layer);
-    }
+        this.currentLayer = this.layers.push({
 
-    this.generateTiles(tileQuantity);
+			name: name, 
+			width: width, 
+			height: height, 
+			alpha: 1, 
+			visible: true, 
+			tileMargin: 0, 
+			tileSpacing: 0,
+			format: Phaser.Tilemap.CSV,
+			data: data,
+            indexes: []
 
-};
+        });
 
-/**
-* Create tiles of given quantity.
-* @param qty {number} Quentity of tiles to be generated.
-*/
-Phaser.Tilemap.prototype.generateTiles = function (qty) {
+        this.dirty = true;
 
-    for (var i = 0; i < qty; i++)
-    {
-        this.tiles.push(new Phaser.Tile(this.game, this, i, this.currentLayer.tileWidth, this.currentLayer.tileHeight));
-    }
+    },
 
-};
+    calculateIndexes: function () {
 
-/**
-* Set callback to be called when this tilemap collides.
-* @param context {object} Callback will be called with this context.
-* @param callback {function} Callback function.
-*/
-Phaser.Tilemap.prototype.setCollisionCallback = function (context, callback) {
-
-    this.collisionCallbackContext = context;
-    this.collisionCallback = callback;
-
-};
-
-/**
-* Set collision configs of tiles in a range index.
-* @param start {number} First index of tiles.
-* @param end {number} Last index of tiles.
-* @param collision {number} Bit field of flags. (see Tile.allowCollision)
-* @param resetCollisions {bool} Reset collision flags before set.
-* @param separateX {bool} Enable seprate at x-axis.
-* @param separateY {bool} Enable seprate at y-axis.
-*/
-Phaser.Tilemap.prototype.setCollisionRange = function (start, end, left, right, up, down, resetCollisions, separateX, separateY) {
-
-    if (typeof resetCollisions === "undefined") { resetCollisions = false; }
-    if (typeof separateX === "undefined") { separateX = true; }
-    if (typeof separateY === "undefined") { separateY = true; }
-
-    for (var i = start; i < end; i++)
-    {
-        this.tiles[i].setCollision(left, right, up, down, resetCollisions, separateX, separateY);
-    }
-
-};
-
-/**
-* Set collision configs of tiles with given index.
-* @param values {number[]} Index array which contains all tile indexes. The tiles with those indexes will be setup with rest parameters.
-* @param collision {number} Bit field of flags. (see Tile.allowCollision)
-* @param resetCollisions {bool} Reset collision flags before set.
-* @param separateX {bool} Enable seprate at x-axis.
-* @param separateY {bool} Enable seprate at y-axis.
-*/
-Phaser.Tilemap.prototype.setCollisionByIndex = function (values, left, right, up, down, resetCollisions, separateX, separateY) {
-
-    if (typeof resetCollisions === "undefined") { resetCollisions = false; }
-    if (typeof separateX === "undefined") { separateX = true; }
-    if (typeof separateY === "undefined") { separateY = true; }
-
-    for (var i = 0; i < values.length; i++)
-    {
-        this.tiles[values[i]].setCollision(left, right, up, down, resetCollisions, separateX, separateY);
-    }
-
-};
-
-//  Tile Management
-
-/**
-* Get the tile by its index.
-* @param value {number} Index of the tile you want to get.
-* @return {Tile} The tile with given index.
-*/
-Phaser.Tilemap.prototype.getTileByIndex = function (value) {
-
-    if (this.tiles[value])
-    {
-        return this.tiles[value];
-    }
-
-    return null;
-
-};
-
-/**
-* Get the tile located at specific position and layer.
-* @param x {number} X position of this tile located.
-* @param y {number} Y position of this tile located.
-* @param [layer] {number} layer of this tile located.
-* @return {Tile} The tile with specific properties.
-*/
-Phaser.Tilemap.prototype.getTile = function (x, y, layer) {
-
-    if (typeof layer === "undefined") { layer = this.currentLayer.ID; }
-
-    return this.tiles[this.layers[layer].getTileIndex(x, y)];
-
-};
-
-/**
-* Get the tile located at specific position (in world coordinate) and layer. (thus you give a position of a point which is within the tile)
-* @param x {number} X position of the point in target tile.
-* @param x {number} Y position of the point in target tile.
-* @param [layer] {number} layer of this tile located.
-* @return {Tile} The tile with specific properties.
-*/
-Phaser.Tilemap.prototype.getTileFromWorldXY = function (x, y, layer) {
-
-    if (typeof layer === "undefined") { layer = this.currentLayer.ID; }
-
-    return this.tiles[this.layers[layer].getTileFromWorldXY(x, y)];
-
-};
-
-/**
-* Gets the tile underneath the Input.x/y position
-* @param layer The layer to check, defaults to 0
-* @returns {Tile}
-*/
-Phaser.Tilemap.prototype.getTileFromInputXY = function (layer) {
-
-    if (typeof layer === "undefined") { layer = this.currentLayer.ID; }
-
-    return this.tiles[this.layers[layer].getTileFromWorldXY(this.game.input.worldX, this.game.input.worldY)];
-
-};
-
-/**
-* Get tiles overlaps the given object.
-* @param object {GameObject} Tiles you want to get that overlaps this.
-* @return {array} Array with tiles information. (Each contains x, y and the tile.)
-*/
-Phaser.Tilemap.prototype.getTileOverlaps = function (object) {
-
-    return this.currentLayer.getTileOverlaps(object);
-
-};
-
-//  COLLIDE
-
-/**
-* Check whether this tilemap collides with the given game object or group of objects.
-* @param objectOrGroup {function} Target object of group you want to check.
-* @param callback {function} This is called if objectOrGroup collides the tilemap.
-* @param context {object} Callback will be called with this context.
-* @return {bool} Return true if this collides with given object, otherwise return false.
-*/
-Phaser.Tilemap.prototype.collide = function (objectOrGroup, callback, context) {
-
-    objectOrGroup = objectOrGroup || this.game.world.group;
-    callback = callback || null;
-    context = context || null;
-
-    if (callback && context)
-    {
-        this.collisionCallback = callback;
-        this.collisionCallbackContext = context;
-    }
-
-    if (objectOrGroup instanceof Phaser.Group)
-    {
-        objectOrGroup.forEachAlive(this.collideGameObject, this);
-    }
-    else
-    {
-        this.collideGameObject(objectOrGroup);
-    }
-
-};
-
-/**
-* Check whether this tilemap collides with the given game object.
-* @param object {GameObject} Target object you want to check.
-* @return {bool} Return true if this collides with given object, otherwise return false.
-*/
-Phaser.Tilemap.prototype.collideGameObject = function (object) {
-
-    if (object instanceof Phaser.Group || object instanceof Phaser.Tilemap)
-    {
-        return false;
-    }
-
-    if (object.exists && object.body.allowCollision.none == false)
-    {
-        this._tempCollisionData = this.collisionLayer.getTileOverlaps(object);
-
-        if (this.collisionCallback && this._tempCollisionData.length > 0)
+        for (var layer = 0; layer < this.layers.length; layer++)
         {
-            this.collisionCallback.call(this.collisionCallbackContext, object, this._tempCollisionData);
+            this.layers[layer].indexes = [];
+
+            for (var y = 0; y < this.layers[layer].height ; y++)
+            {
+                for (var x = 0; x < this.layers[layer].width; x++)
+                {
+                    var idx = this.layers[layer].data[y][x];
+
+                    if (this.layers[layer].indexes.indexOf(idx) === -1)
+                    {
+                        this.layers[layer].indexes.push(idx);
+                    }
+                }
+            }
         }
 
-        return true;
-    }
-    else
-    {
-        return false;
+    },
+
+    setLayer: function (layer) {
+
+    	if (this.layers[layer])
+    	{
+    		this.currentLayer = layer;
+    	}
+
+    },
+
+    /**
+    * Set a specific tile with its x and y in tiles.
+    * @method putTile
+    * @param {number} x - X position of this tile.
+    * @param {number} y - Y position of this tile.
+    * @param {number} index - The index of this tile type in the core map data.
+    */
+    putTile: function (index, x, y, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+    	if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+    	{
+    		this.layers[this.currentLayer].data[y][x] = index;
+    	}
+
+        this.dirty = true;
+
+    },
+
+    getTile: function (x, y, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+        {
+            return this.layers[this.currentLayer].data[y][x];
+        }
+
+    },
+
+    getTileWorldXY: function (x, y, tileWidth, tileHeight, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
+        y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
+
+        if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+        {
+            return this.layers[this.currentLayer].data[y][x];
+        }
+
+    },
+
+    /**
+    * Set a specific tile with its x and y in tiles.
+    * @method putTileWorldXY
+    * @param {number} x - X position of this tile in world coordinates.
+    * @param {number} y - Y position of this tile in world coordinates.
+    * @param {number} index - The index of this tile type in the core map data.
+    */
+    putTileWorldXY: function (index, x, y, tileWidth, tileHeight, layer) {
+
+        x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
+        y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
+
+        if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+        {
+            this.layers[this.currentLayer].data[y][x] = index;
+        }
+
+        this.dirty = true;
+
+    },
+
+    //  Values are in TILEs, not pixels.
+    copy: function (x, y, width, height, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        if (!this.layers[layer])
+        {
+            this._results.length = 0;
+            return;
+        }
+
+        if (typeof x === "undefined") { x = 0; }
+        if (typeof y === "undefined") { y = 0; }
+        if (typeof width === "undefined") { width = this.layers[layer].width; }
+        if (typeof height === "undefined") { height = this.layers[layer].height; }
+
+        if (x < 0)
+        {
+            x = 0;
+        }
+
+        if (y < 0)
+        {
+            y = 0;
+        }
+
+        if (width > this.layers[layer].width)
+        {
+            width = this.layers[layer].width;
+        }
+
+        if (height > this.layers[layer].height)
+        {
+            height = this.layers[layer].height;
+        }
+
+        this._results.length = 0;
+
+        this._results.push( { x: x, y: y, width: width, height: height, layer: layer });
+
+        for (var ty = y; ty < y + height; ty++)
+        {
+            for (var tx = x; tx < x + width; tx++)
+            {
+                this._results.push({ x: tx, y: ty, index: this.layers[layer].data[ty][tx] });
+            }
+        }
+
+        return this._results;
+
+    },
+
+    paste: function (x, y, tileblock, layer) {
+
+        if (typeof x === "undefined") { x = 0; }
+        if (typeof y === "undefined") { y = 0; }
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        if (!tileblock || tileblock.length < 2)
+        {
+            return;
+        }
+
+        //  Find out the difference between tileblock[1].x/y and x/y and use it as an offset, as it's the top left of the block to paste
+        var diffX = tileblock[1].x - x;
+        var diffY = tileblock[1].y - y;
+
+        for (var i = 1; i < tileblock.length; i++)
+        {
+            this.layers[layer].data[ diffY + tileblock[i].y ][ diffX + tileblock[i].x ] = tileblock[i].index;
+        }
+
+        this.dirty = true;
+
+    },
+
+    /**
+    * Swap tiles with 2 kinds of indexes.
+    * @method swapTile
+    * @param {number} tileA - First tile index.
+    * @param {number} tileB - Second tile index.
+    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
+    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
+    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
+    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    */
+    swap: function (tileA, tileB, x, y, width, height, layer) {
+
+        this.copy(x, y, width, height, layer);
+
+        if (this._results.length < 2)
+        {
+            return;
+        }
+
+        this._tempA = tileA;
+        this._tempB = tileB;
+
+        this._results.forEach(this.swapHandler, this);
+
+        this.paste(x, y, this._results);
+
+    },
+
+    swapHandler: function (value, index, array) {
+
+        if (value.index === this._tempA)
+        {
+            this._results[index].index = this._tempB;
+        }
+        else if (value.index === this._tempB)
+        {
+            this._results[index].index = this._tempA;
+        }
+
+    },
+
+    /**
+    * Swap tiles with 2 kinds of indexes.
+    * @method swapTile
+    * @param {number} tileA - First tile index.
+    * @param {number} tileB - Second tile index.
+    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
+    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
+    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
+    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    */
+    forEach: function (callback, context, x, y, width, height, layer) {
+
+        this.copy(x, y, width, height, layer);
+
+        if (this._results.length < 2)
+        {
+            return;
+        }
+
+        this._results.forEach(callback, context);
+
+        this.paste(x, y, this._results);
+
+    },
+
+    /**
+    * Replaces one type of tile with another.
+    * @method replace
+    * @param {number} tileA - First tile index.
+    * @param {number} tileB - Second tile index.
+    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
+    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
+    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
+    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    */
+    replace: function (tileA, tileB, x, y, width, height, layer) {
+
+        this.copy(x, y, width, height, layer);
+
+        if (this._results.length < 2)
+        {
+            return;
+        }
+
+        for (var i = 1; i < this._results.length; i++)
+        {
+            if (this._results[i].index === tileA)
+            {
+                this._results[i].index = tileB;
+            }
+        }
+
+        this.paste(x, y, this._results);
+
+    },
+
+    /**
+    * Randomises a set of tiles in a given area. It will only randomise the tiles in that area, so if they're all the same nothing will appear to have changed!
+    * @method random
+    * @param {number} tileA - First tile index.
+    * @param {number} tileB - Second tile index.
+    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
+    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
+    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
+    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    */
+    random: function (x, y, width, height, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        this.copy(x, y, width, height, layer);
+
+        if (this._results.length < 2)
+        {
+            return;
+        }
+
+        var indexes = [];
+
+        for (var t = 1; t < this._results.length; t++)
+        {
+            var idx = this._results[t].index;
+
+            if (indexes.indexOf(idx) === -1)
+            {
+                indexes.push(idx);
+            }
+        }
+
+        for (var i = 1; i < this._results.length; i++)
+        {
+            this._results[i].index = this.game.rnd.pick(indexes);
+        }
+
+        this.paste(x, y, this._results);
+
+    },
+
+    /**
+    * Randomises a set of tiles in a given area. It will only randomise the tiles in that area, so if they're all the same nothing will appear to have changed!
+    * @method random
+    * @param {number} tileA - First tile index.
+    * @param {number} tileB - Second tile index.
+    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
+    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
+    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
+    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    */
+    shuffle: function (x, y, width, height, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        this.copy(x, y, width, height, layer);
+
+        if (this._results.length < 2)
+        {
+            return;
+        }
+
+        var header = this._results.shift();
+
+        Phaser.Utils.shuffle(this._results);
+
+        this._results.unshift(header);
+
+        this.paste(x, y, this._results);
+
+    },
+
+    /**
+    * Fill a tile block with a specific tile index.
+    * @method fill
+    * @param {number} index - Index of tiles you want to fill with.
+    * @param {number} [x] - X position (in tiles) of block's left-top corner.
+    * @param {number} [y] - Y position (in tiles) of block's left-top corner.
+    * @param {number} [width] - width of block.
+    * @param {number} [height] - height of block.
+    */
+    fill: function (index, x, y, width, height, layer) {
+
+        this.copy(x, y, width, height, layer);
+
+        if (this._results.length < 2)
+        {
+            return;
+        }
+
+        for (var i = 1; i < this._results.length; i++)
+        {
+            this._results[i].index = index;
+        }
+
+        this.paste(x, y, this._results);
+
+    },
+
+    removeAllLayers: function () {
+
+        this.layers.length = 0;
+        this.currentLayer = 0;
+
+    },
+
+    dump: function () {
+
+        var txt = '';
+        var args = [''];
+
+        for (var y = 0; y < this.layers[this.currentLayer].height; y++)
+        {
+            for (var x = 0; x < this.layers[this.currentLayer].width; x++)
+            {
+                txt += "%c  ";
+
+                if (this.layers[this.currentLayer].data[y][x] > 1)
+                {
+                	if (this.debugMap[this.layers[this.currentLayer].data[y][x]])
+                	{
+	                    args.push("background: " + this.debugMap[this.layers[this.currentLayer].data[y][x]]);
+                	}
+                	else
+                	{
+	                    args.push("background: #ffffff");
+                	}
+                }
+                else
+                {
+                    args.push("background: rgb(0, 0, 0)");
+                }
+            }
+
+            txt += "\n";
+        }
+
+        args[0] = txt;
+        console.log.apply(console, args);
+
+    },
+
+    destroy: function () {
+
+        this.removeAllLayers();
+        this.game = null;
+
     }
 
 };
-
-/**
-* Set a tile to a specific layer.
-* @param x {number} X position of this tile.
-* @param y {number} Y position of this tile.
-* @param index {number} The index of this tile type in the core map data.
-* @param [layer] {number} which layer you want to set the tile to.
-*/
-Phaser.Tilemap.prototype.putTile = function (x, y, index, layer) {
-
-    if (typeof layer === "undefined") { layer = this.currentLayer.ID; }
-    
-    this.layers[layer].putTile(x, y, index);
-
-};
-
-/**
-* Calls the renderer
-*/
-Phaser.Tilemap.prototype.update = function () {
-
-    this.renderer.render(this);
-
-};
-
-Phaser.Tilemap.prototype.destroy = function () {
-
-    this.tiles.length = 0;
-    this.layers.length = 0;
-
-};
-
-Object.defineProperty(Phaser.Tilemap.prototype, "widthInPixels", {
-
-    get: function () {
-        return this.currentLayer.widthInPixels;
-    }
-
-});
-
-Object.defineProperty(Phaser.Tilemap.prototype, "heightInPixels", {
-
-    get: function () {
-        return this.currentLayer.heightInPixels;
-    }
-
-});

@@ -1,16 +1,58 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* A basic linked list data structure.
+*
+* @class Phaser.LinkedList
+* @constructor
+*/
 Phaser.LinkedList = function () {
 
+    /**
+	* @property {object} next - Next element in the list.
+	* @default
+	*/
     this.next = null;
+
+    /**
+	* @property {object} prev - Previous element in the list.
+	* @default
+	*/
     this.prev = null;
+
+    /**
+	* @property {object} first - First element in the list.
+	* @default
+	*/
     this.first = null;
+
+    /**
+	* @property {object} last - Last element in the list.
+	* @default
+	*/
     this.last = null;
+    
+    /**
+	* @property {object} game - Number of elements in the list.
+	* @default
+	*/
     this.total = 0;
 
 };
 
 Phaser.LinkedList.prototype = {
 
-
+	/**
+    * Adds a new element to this linked list.
+	* 
+	* @method Phaser.LinkedList#add
+	* @param {object} child - The element to add to this list. Can be a Phaser.Sprite or any other object you need to quickly iterate through.
+	* @return {object} The child that was added.
+    */
     add: function (child) {
 
     	//	If the list is empty
@@ -21,7 +63,7 @@ Phaser.LinkedList.prototype = {
 	    	this.next = child;
 	    	child.prev = this;
 	    	this.total++;
-    		return;
+    		return child;
     	}
 
     	//	Get gets appended to the end of the list, regardless of anything, and it won't have any children of its own (non-nested list)
@@ -37,40 +79,55 @@ Phaser.LinkedList.prototype = {
 
     },
 
+	/**
+    * Removes the given element from this linked list if it exists.
+ 	* 
+ 	* @method Phaser.LinkedList#remove
+ 	* @param {object} child - The child to be removed from the list.
+    */
     remove: function (child) {
 
-    	//	If the list is empty
-    	if (this.first == null && this.last == null)
+    	if (child == this.first)
     	{
-    		return;
-    	}
+			// It was 'first', make 'first' point to first.next
+    		this.first = this.first.next;
+    	}      
+		else if (child == this.last)
+		{
+			// It was 'last', make 'last' point to last.prev
+			this.last = this.last.prev;
+		} 
+
+		if (child.prev)
+		{
+			// make child.prev.next point to childs.next instead of child
+			child.prev.next = child.next; 
+		} 
+
+		if (child.next)
+		{
+			// make child.next.prev point to child.prev instead of child
+			child.next.prev = child.prev;
+		}
+
+		child.next = child.prev = null;
+
+		if (this.first == null )
+		{
+			this.last = null;
+		}
 
 		this.total--;
 
-    	//	The only node?
-    	if (this.first == child && this.last == child)
-    	{
-    		this.first = null;
-    		this.last = null;
-    		this.next = null;
-    		child.next = null;
-    		child.prev = null;
-    		return;
-    	}
-
-		var childPrev = child.prev;
-
-    	//	Tail node?
-    	if (child.next)
-    	{
-			//	Has another node after it?
-	    	child.next.prev = child.prev;
-    	}
-
-    	childPrev.next = child.next;
-
     },
 
+	/**
+    * Calls a function on all members of this list, using the member as the context for the callback.
+    * The function must exist on the member.
+  	* 
+  	* @method Phaser.LinkedList#callAll
+  	* @param {function} callback - The function to call.
+    */
     callAll: function (callback) {
 
     	if (!this.first || !this.last)
@@ -92,79 +149,6 @@ Phaser.LinkedList.prototype = {
 		}
 		while(entity != this.last.next)			
 
-    },
-
-	dump: function () {
-
-		var spacing = 20;
-
-		var output = "\n" + Phaser.Utils.pad('Node', spacing) + "|" + Phaser.Utils.pad('Next', spacing) + "|" + Phaser.Utils.pad('Previous', spacing) + "|" + Phaser.Utils.pad('First', spacing) + "|" + Phaser.Utils.pad('Last', spacing);
-		console.log(output);
-
-		var output = Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing);
-		console.log(output);
-
-		var entity = this;
-
-		var testObject = entity.last.next;
-		entity = entity.first;
-		
-		do	
-		{
-			var name = entity.sprite.name || '*';
-			var nameNext = '-';
-			var namePrev = '-';
-			var nameFirst = '-';
-			var nameLast = '-';
-
-			if (entity.next)
-			{
-				nameNext = entity.next.sprite.name;
-			}
-
-			if (entity.prev)
-			{
-				namePrev = entity.prev.sprite.name;
-			}
-
-			if (entity.first)
-			{
-				nameFirst = entity.first.sprite.name;
-			}
-
-			if (entity.last)
-			{
-				nameLast = entity.last.sprite.name;
-			}
-
-			if (typeof nameNext === 'undefined')
-			{
-				nameNext = '-';
-			}
-
-			if (typeof namePrev === 'undefined')
-			{
-				namePrev = '-';
-			}
-
-			if (typeof nameFirst === 'undefined')
-			{
-				nameFirst = '-';
-			}
-
-			if (typeof nameLast === 'undefined')
-			{
-				nameLast = '-';
-			}
-
-			var output = Phaser.Utils.pad(name, spacing) + "|" + Phaser.Utils.pad(nameNext, spacing) + "|" + Phaser.Utils.pad(namePrev, spacing) + "|" + Phaser.Utils.pad(nameFirst, spacing) + "|" + Phaser.Utils.pad(nameLast, spacing);
-			console.log(output);
-
-			entity = entity.next;
-
-		}
-		while(entity != testObject)
-
-	}
+    }
 
 };
