@@ -39,6 +39,12 @@ Phaser.TweenManager = function (game) {
 	*/
 	this._add = [];
 
+	/**
+	* @property {array} _pausedTweens - Description.
+	* @private
+	*/
+	this._pausedTweens = [];
+
 	this.game.onPause.add(this.pauseAll, this);
 	this.game.onResume.add(this.resumeAll, this);
 
@@ -128,12 +134,29 @@ Phaser.TweenManager.prototype = {
 
 		if ( this._tweens.length === 0 && this._add.length === 0 ) return false;
 
-		var i = 0;
-		var numTweens = this._tweens.length;
+		var i = 0,
+			numTweens = this._tweens.length,
+			tween = null,
+			time = 0;
 
 		while ( i < numTweens ) {
 
-			if ( this._tweens[ i ].update( this.game.time.now ) ) {
+			tween = this._tweens[ i ];
+
+			time = this.game.time.now;
+
+			if (time < tween._startTime || tween._paused) {
+				i++
+				continue;
+			}
+
+			if ( !tween._reversed ) {
+				time -= tween._startTime;
+			} else {
+				time = tween._duration - (time - tween._startTime);
+			}
+
+			if ( tween.update( time ) ) {
 
 				i++;
 
@@ -164,9 +187,15 @@ Phaser.TweenManager.prototype = {
 	* @method Phaser.TweenManager#update
 	*/
 	pauseAll: function () {
+		var tween, i;
 
-    	for (var i = this._tweens.length - 1; i >= 0; i--) {
-    		this._tweens[i].pause();
+    	for (i = this._tweens.length - 1; i >= 0; i--) {
+    		tween = this._tweens[i];
+
+    		if (!tween._paused) {
+    			this._pausedTweens.push(tween);
+    			tween.pause();
+    		}
     	};
 
     },
@@ -178,9 +207,11 @@ Phaser.TweenManager.prototype = {
 	*/
    	resumeAll: function () {
 
-    	for (var i = this._tweens.length - 1; i >= 0; i--) {
+    	for (var i = this._pausedTweens.length - 1; i >= 0; i--) {
     		this._tweens[i].resume();
     	};
+
+    	this._pausedTweens.length = 0;
 
     }
 
