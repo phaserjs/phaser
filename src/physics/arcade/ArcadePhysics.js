@@ -1,52 +1,174 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* @class Phaser.Physics
+*/
 Phaser.Physics = {};
 
+/**
+* Arcade Physics constructor.
+*
+* @class Phaser.Physics.Arcade
+* @classdesc Arcade Physics Constructor
+* @constructor
+* @param {Phaser.Game} game reference to the current game instance.
+*/
 Phaser.Physics.Arcade = function (game) {
     
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
     this.game = game;
 
+    /**
+    * @property {Phaser.Point} gravity - The World gravity setting. Defaults to x: 0, y: 0, or no gravity.
+    */
     this.gravity = new Phaser.Point;
+
+    /**
+    * @property {Phaser.Rectangle} bounds - The bounds inside of which the physics world exists. Defaults to match the world bounds.
+    */
     this.bounds = new Phaser.Rectangle(0, 0, game.world.width, game.world.height);
 
     /**
-    * Used by the QuadTree to set the maximum number of objects
-    * @type {number}
+    * @property {number} maxObjects - Used by the QuadTree to set the maximum number of objects per quad.
     */
     this.maxObjects = 10;
 
     /**
-    * Used by the QuadTree to set the maximum number of levels
-    * @type {number}
+    * @property {number} maxLevels - Used by the QuadTree to set the maximum number of iteration levels.
     */
     this.maxLevels = 4;
 
+    /**
+    * @property {number} OVERLAP_BIAS - A value added to the delta values during collision checks.
+    */
     this.OVERLAP_BIAS = 4;
-    this.TILE_OVERLAP = false;
 
+    // this.TILE_OVERLAP = false;
+
+    /**
+    * @property {Phaser.QuadTree} quadTree - The world QuadTree.
+    */
     this.quadTree = new Phaser.QuadTree(this, this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
+
+    /**
+    * @property {number} quadTreeID - The QuadTree ID.
+    */
     this.quadTreeID = 0;
 
     //  Avoid gc spikes by caching these values for re-use
+
+    /**
+    * @property {Phaser.Rectangle} _bounds1 - Internal cache var.
+    * @private
+    */
     this._bounds1 = new Phaser.Rectangle;
+
+    /**
+    * @property {Phaser.Rectangle} _bounds2 - Internal cache var.
+    * @private
+    */
     this._bounds2 = new Phaser.Rectangle;
+
+    /**
+    * @property {number} _overlap - Internal cache var.
+    * @private
+    */
     this._overlap = 0;
+
+    /**
+    * @property {number} _maxOverlap - Internal cache var.
+    * @private
+    */
     this._maxOverlap = 0;
+
+    /**
+    * @property {number} _velocity1 - Internal cache var.
+    * @private
+    */
     this._velocity1 = 0;
+
+    /**
+    * @property {number} _velocity2 - Internal cache var.
+    * @private
+    */
     this._velocity2 = 0;
+
+    /**
+    * @property {number} _newVelocity1 - Internal cache var.
+    * @private
+    */
     this._newVelocity1 = 0;
+
+    /**
+    * @property {number} _newVelocity2 - Internal cache var.
+    * @private
+    */
     this._newVelocity2 = 0;
+
+    /**
+    * @property {number} _average - Internal cache var.
+    * @private
+    */
     this._average = 0;
+
+    /**
+    * @property {Array} _mapData - Internal cache var.
+    * @private
+    */
     this._mapData = [];
+
+    /**
+    * @property {number} _mapTiles - Internal cache var.
+    * @private
+    */
     this._mapTiles = 0;
+
+    /**
+    * @property {boolean} _result - Internal cache var.
+    * @private
+    */
     this._result = false;
+
+    /**
+    * @property {number} _total - Internal cache var.
+    * @private
+    */
     this._total = 0;
+
+    /**
+    * @property {number} _angle - Internal cache var.
+    * @private
+    */
     this._angle = 0;
+
+    /**
+    * @property {number} _dx - Internal cache var.
+    * @private
+    */
     this._dx = 0;
+
+    /**
+    * @property {number} _dy - Internal cache var.
+    * @private
+    */
     this._dy = 0;
 
 };
 
 Phaser.Physics.Arcade.prototype = {
 
+    /**
+    * Called automatically by a Physics body, it updates all motion related values on the Body.
+    *
+    * @method Phaser.Physics.Arcade#updateMotion
+    * @param {Phaser.Physics.Arcade.Body} The Body object to be updated.
+    */
     updateMotion: function (body) {
 
         //  If you're wondering why the velocity is halved and applied twice, read this: http://www.niksula.hut.fi/~hkankaan/Homepages/gravity.html
@@ -74,11 +196,13 @@ Phaser.Physics.Arcade.prototype = {
     /**
     * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
     *
-    * @param {number} Velocity Any component of velocity (e.g. 20).
-    * @param {number} Acceleration Rate at which the velocity is changing.
-    * @param {number} Drag Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
-    * @param {number} Max An absolute value cap for the velocity.
-    *
+    * @method Phaser.Physics.Arcade#computeVelocity
+    * @param {number} axis - 1 for horizontal, 2 for vertical.
+    * @param {Phaser.Physics.Arcade.Body} body - The Body object to be updated.
+    * @param {number} velocity - Any component of velocity (e.g. 20).
+    * @param {number} acceleration - Rate at which the velocity is changing.
+    * @param {number} drag - Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
+    * @param {number} mMax - An absolute value cap for the velocity.
     * @return {number} The altered Velocity value.
     */
     computeVelocity: function (axis, body, velocity, acceleration, drag, max) {
@@ -129,6 +253,12 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
+    /**
+    * Called automatically by the core game loop.
+    *
+    * @method Phaser.Physics.Arcade#preUpdate
+    * @protected
+    */
     preUpdate: function () {
 
         //  Clear the tree
@@ -140,6 +270,12 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
+    /**
+    * Called automatically by the core game loop.
+    *
+    * @method Phaser.Physics.Arcade#postUpdate
+    * @protected
+    */
     postUpdate: function () {
 
         //  Clear the tree ready for the next update
@@ -148,12 +284,13 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-    * Checks if two Sprite objects intersect.
+    * Checks if two Sprite objects overlap.
     *
-    * @param object1 The first object to check. Can be an instance of Phaser.Sprite or anything that extends it.
-    * @param object2 The second object to check. Can be an instance of Phaser.Sprite or anything that extends it.
+    * @method Phaser.Physics.Arcade#overlap
+    * @param {Phaser.Sprite} object1 - The first object to check. Can be an instance of Phaser.Sprite or anything that extends it.
+    * @param {Phaser.Sprite} object2 - The second object to check. Can be an instance of Phaser.Sprite or anything that extends it.
     * @returns {boolean} true if the two objects overlap.
-    **/
+    */
     overlap: function (object1, object2) {
 
         //  Only test valid objects
@@ -169,14 +306,16 @@ Phaser.Physics.Arcade.prototype = {
     /**
     * Checks for collision between two game objects. The objects can be Sprites, Groups, Emitters or Tilemaps.
     * You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap or Group vs. Tilemap collisions.
+    * The objects are also automatically separated.
     *
-    * @param object1 The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap
-    * @param object2 The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap
-    * @param collideCallback An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
-    * @param processCallback A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collideCallback will only be called if processCallback returns true.
-    * @param callbackContext The context in which to run the callbacks.
-    * @returns {boolean} true if any collisions were detected, otherwise false.
-    **/
+    * @method Phaser.Physics.Arcade#collide
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object2 - The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap
+    * @param {function} [collideCallback=null] - An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
+    * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collideCallback will only be called if processCallback returns true.
+    * @param {object} [callbackContext] - The context in which to run the callbacks.
+    * @returns {number} The number of collisions that were processed.
+    */
     collide: function (object1, object2, collideCallback, processCallback, callbackContext) {
 
         collideCallback = collideCallback || null;
@@ -257,6 +396,12 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    *
+    * @method Phaser.Physics.Arcade#collideSpriteVsTilemapLayer
+    * @private
+    */
     collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext) {
 
         this._mapData = tilemapLayer.getTiles(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height, true);
@@ -297,6 +442,12 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    *
+    * @method Phaser.Physics.Arcade#collideGroupVsTilemapLayer
+    * @private
+    */
     collideGroupVsTilemapLayer: function (group, tilemapLayer, collideCallback, processCallback, callbackContext) {
 
         if (group.length == 0)
@@ -321,6 +472,12 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    *
+    * @method Phaser.Physics.Arcade#collideSpriteVsSprite
+    * @private
+    */
     collideSpriteVsSprite: function (sprite1, sprite2, collideCallback, processCallback, callbackContext) {
 
         this.separate(sprite1.body, sprite2.body);
@@ -353,6 +510,12 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    *
+    * @method Phaser.Physics.Arcade#collideSpriteVsGroup
+    * @private
+    */
     collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext) {
 
         if (group.length == 0)
@@ -389,6 +552,12 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    *
+    * @method Phaser.Physics.Arcade#collideGroupVsGroup
+    * @private
+    */
     collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext) {
 
         if (group1.length == 0 || group2.length == 0)
@@ -413,12 +582,13 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
-     /**
-     * The core separation function to separate two physics bodies.
-     * @param body1 The first Sprite.Body to separate
-     * @param body2 The second Sprite.Body to separate
-     * @returns {boolean} Returns true if the bodies were separated, otherwise false.
-     */
+    /**
+    * The core separation function to separate two physics bodies.
+    * @method Phaser.Physics.Arcade#separate
+    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
+    * @param {Phaser.Physics.Arcade.Body} body2 - The Body object to separate.
+    * @returns {boolean} Returns true if the bodies were separated, otherwise false.
+    */
     separate: function (body1, body2) {
 
         this._result = (this.separateX(body1, body2) || this.separateY(body1, body2));
@@ -426,11 +596,12 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-     * Separates the two physics bodies on their X axis
-     * @param body1 The first Sprite.Body to separate
-     * @param body2 The second Sprite.Body to separate
-     * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
-     */
+    * The core separation function to separate two physics bodies on the x axis.
+    * @method Phaser.Physics.Arcade#separateX
+    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
+    * @param {Phaser.Physics.Arcade.Body} body2 - The Body object to separate.
+    * @returns {boolean} Returns true if the bodies were separated, otherwise false.
+    */
     separateX: function (body1, body2) {
 
         //  Can't separate two immovable bodies
@@ -533,11 +704,12 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-     * Separates the two physics bodies on their Y axis
-     * @param body1 The first Sprite.Body to separate
-     * @param body2 The second Sprite.Body to separate
-     * @returns {boolean} Whether the bodys in fact touched and were separated along the Y axis.
-     */
+    * The core separation function to separate two physics bodies on the y axis.
+    * @method Phaser.Physics.Arcade#separateY
+    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
+    * @param {Phaser.Physics.Arcade.Body} body2 - The Body object to separate.
+    * @returns {boolean} Returns true if the bodies were separated, otherwise false.
+    */
     separateY: function (body1, body2) {
 
         //  Can't separate two immovable or non-existing bodys
@@ -652,12 +824,13 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
-     /**
-     * The core Collision separation function used by Collision.overlap.
-     * @param object1 The first GameObject to separate
-     * @param object2 The second GameObject to separate
-     * @returns {boolean} Returns true if the objects were separated, otherwise false.
-     */
+    /**
+    * The core separation function to separate a physics body and a tile.
+    * @method Phaser.Physics.Arcade#separateTile
+    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
+    * @param {Phaser.Tile} tile - The tile to collide against.
+    * @returns {boolean} Returns true if the bodies were separated, otherwise false.
+    */
     separateTile: function (body, tile) {
 
         this._result = (this.separateTileX(body, tile, true) || this.separateTileY(body, tile, true));
@@ -665,11 +838,12 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-     * Separates the two objects on their x axis
-     * @param object The GameObject to separate
-     * @param tile The Tile to separate
-     * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
-     */
+    * The core separation function to separate a physics body and a tile on the x axis.
+    * @method Phaser.Physics.Arcade#separateTileX
+    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
+    * @param {Phaser.Tile} tile - The tile to collide against.
+    * @returns {boolean} Returns true if the bodies were separated, otherwise false.
+    */
     separateTileX: function (body, tile, separate) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
@@ -748,11 +922,12 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-     * Separates the two objects on their x axis
-     * @param object The GameObject to separate
-     * @param tile The Tile to separate
-     * @returns {boolean} Whether the objects in fact touched and were separated along the X axis.
-     */
+    * The core separation function to separate a physics body and a tile on the x axis.
+    * @method Phaser.Physics.Arcade#separateTileY
+    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
+    * @param {Phaser.Tile} tile - The tile to collide against.
+    * @returns {boolean} Returns true if the bodies were separated, otherwise false.
+    */
     separateTileY: function (body, tile, separate) {
 
         //  Can't separate two immovable objects (tiles are always immovable)

@@ -5,7 +5,7 @@
 */
 
 /**
-* Create a new <code>Bullet</code>.
+* Warning: Bullet is an experimental object that we don't advise using for now.
 *
 * A Bullet is like a stripped-down Sprite, useful for when you just need to get something moving around the screen quickly with little of the extra
 * features that a Sprite supports.

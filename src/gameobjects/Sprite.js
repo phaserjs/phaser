@@ -5,7 +5,7 @@
 */
 
 /**
-* Create a new <code>Sprite</code> object. Sprites are the lifeblood of your game, used for nearly everything visual.
+* Create a new `Sprite` object. Sprites are the lifeblood of your game, used for nearly everything visual.
 * At its most basic a Sprite consists of a set of coordinates and a texture that is rendered to the canvas.
 * They also contain additional properties allowing for physics motion (via Sprite.body), input handling (via Sprite.input),
 * events (via Sprite.events), animation (via Sprite.animations), camera culling and more. Please see the Examples for use cases.
@@ -68,7 +68,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     /**
     * If you would like the Sprite to have a lifespan once 'born' you can set this to a positive value. Handy for particles, bullets, etc.
 	* The lifespan is decremented by game.time.elapsed each update, once it reaches zero the kill() function is called.
-	* @property {number} lifespan
+	* @property {number} lifespan - The lifespan of the Sprite (in ms) before it will be killed.
 	* @default
 	*/    
     this.lifespan = 0;
@@ -148,7 +148,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * Setting than anchor to 0.5,0.5 means the textures origin is centered
     * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right
     *
-    * @property {Phaser.Point} anchor
+    * @property {Phaser.Point} anchor - The anchor around with Sprite rotation and scaling takes place.
     */
     this.anchor = new Phaser.Point();
 
@@ -169,7 +169,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * Should this Sprite be automatically culled if out of range of the camera?
     * A culled sprite has its renderable property set to 'false'.
     *
-    * @property {boolean} autoCull
+    * @property {boolean} autoCull - A flag indicating if the Sprite should be automatically camera culled or not.
     * @default
     */
     this.autoCull = false;
@@ -310,7 +310,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     /**
     * You can crop the Sprites texture by modifying the crop properties. For example crop.width = 50 would set the Sprite to only render 50px wide.
     * The crop is only applied if you have set Sprite.cropEnabled to true.
-    * @property {Phaser.Rectangle} crop
+    * @property {Phaser.Rectangle} crop - The crop Rectangle applied to the Sprite texture before rendering.
     * @default
     */
     this.crop = new Phaser.Rectangle(0, 0, this._cache.width, this._cache.height);
