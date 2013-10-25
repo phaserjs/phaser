@@ -86,15 +86,9 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-<<<<<<< HEAD
     * Create a new TweenGroup
     * 
     * @method Phaser.GameObjectFactory#tweenGroup
-=======
-    * Create a TweenGroup.
-    *
-    * @method tweenGroup
->>>>>>> f582f89a7e39244ce3d3dde350ab303cb5d865c0
     * @param {number} delay - Delay before this tween will start, defaults to 0 (no delay).
     * @param {number} repeat - How many time should the TweenGroup repeat itself. Infinity can be used for infinite repetition.
     * @param {Phaser.Tween} yoyo - Description.
@@ -108,12 +102,8 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-<<<<<<< HEAD
     * A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
     * Create a TweenGroup.
-=======
-    * Description.
->>>>>>> f582f89a7e39244ce3d3dde350ab303cb5d865c0
     *
     * @method Phaser.GameObjectFactory#group
     * @param {*} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
