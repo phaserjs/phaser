@@ -315,14 +315,6 @@ Phaser.Game.prototype = {
 				console.log('%cPhaser initialized. Rendering to WebGL.', 'color: #ffff33; background: #000000');
 			}
 
-			var pos = Phaser.VERSION.indexOf('-');
-            var versionQualifier = (pos >= 0) ? Phaser.VERSION.substr(pos + 1) : null;
-            if (versionQualifier)
-            {
-                var article = ['a', 'e', 'i', 'o', 'u', 'y'].indexOf(versionQualifier.charAt(0)) >= 0 ? 'an' : 'a';
-                console.warn('You are using %s %s version of Phaser. Some things may not work.', article, versionQualifier);
-            }
-
 	        this.isRunning = true;
             this._loadComplete = false;
 

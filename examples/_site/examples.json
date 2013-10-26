@@ -535,6 +535,10 @@
     {
       "file": "text+stroke.js",
       "title": "text stroke"
+    },
+    {
+      "file": "update+text.js",
+      "title": "update text"
     }
   ],
   "tile sprites": [

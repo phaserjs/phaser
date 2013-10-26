@@ -325,7 +325,7 @@ Phaser.Device.prototype = {
         this.fileSystem = !!window['requestFileSystem'];
         this.webGL = ( function () { try { var canvas = document.createElement( 'canvas' ); return !! window.WebGLRenderingContext && ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ); } catch( e ) { return false; } } )();
 
-        if (this.webGL === null)
+        if (this.webGL === null || this.webGL === false)
         {
             this.webGL = false;
         }

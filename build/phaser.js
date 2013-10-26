@@ -18,7 +18,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v1.1.0 - Built at: Fri Oct 25 2013 18:25:28
+* v1.1.1 - Built at: Sat Oct 26 2013 19:10:41
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -57,7 +57,7 @@ var PIXI = PIXI || {};
 */
 var Phaser = Phaser || {
 
-	VERSION: '1.1.0',
+	VERSION: '1.1.1',
 	GAMES: [],
 	AUTO: 0,
 	CANVAS: 1,
@@ -11271,20 +11271,12 @@ Phaser.Game.prototype = {
 
 			if (this.renderType == Phaser.CANVAS)
 			{
-				console.log('%cPhaser ' + Phaser.VERSION + ' initialized. Rendering to Canvas', 'color: #ffff33; background: #000000');
+				console.log('%cPhaser initialized. Rendering to Canvas.', 'color: #ffff33; background: #000000');
 			}
 			else
 			{
-				console.log('%cPhaser ' + Phaser.VERSION + ' initialized. Rendering to WebGL', 'color: #ffff33; background: #000000');
+				console.log('%cPhaser initialized. Rendering to WebGL.', 'color: #ffff33; background: #000000');
 			}
-
-			var pos = Phaser.VERSION.indexOf('-');
-            var versionQualifier = (pos >= 0) ? Phaser.VERSION.substr(pos + 1) : null;
-            if (versionQualifier)
-            {
-                var article = ['a', 'e', 'i', 'o', 'u', 'y'].indexOf(versionQualifier.charAt(0)) >= 0 ? 'an' : 'a';
-                console.warn('You are using %s %s version of Phaser. Some things may not work.', article, versionQualifier);
-            }
 
 	        this.isRunning = true;
             this._loadComplete = false;
@@ -12543,6 +12535,9 @@ Phaser.Keyboard.prototype = {
     addKey: function (keycode) {
 
         this._hotkeys[keycode] = new Phaser.Key(this.game, keycode);
+
+        this.addKeyCapture(keycode);
+
         return this._hotkeys[keycode];
 
     },
@@ -19059,7 +19054,7 @@ Phaser.Device.prototype = {
         this.fileSystem = !!window['requestFileSystem'];
         this.webGL = ( function () { try { var canvas = document.createElement( 'canvas' ); return !! window.WebGLRenderingContext && ( canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) ); } catch( e ) { return false; } } )();
 
-        if (this.webGL === null)
+        if (this.webGL === null || this.webGL === false)
         {
             this.webGL = false;
         }
