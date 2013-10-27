@@ -351,6 +351,10 @@
     {
       "file": "snap+on+drag.js",
       "title": "snap on drag"
+    },
+    {
+      "file": "touch+joystick.js",
+      "title": "touch joystick"
     }
   ],
   "loader": [
