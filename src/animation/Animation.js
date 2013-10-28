@@ -151,6 +151,7 @@ Phaser.Animation.prototype = {
 
         this.isPlaying = true;
         this.isFinished = false;
+        this.paused = false;
 
         this._timeLastFrame = this.game.time.now;
         this._timeNextFrame = this.game.time.now + this.delay;
@@ -179,6 +180,7 @@ Phaser.Animation.prototype = {
 
         this.isPlaying = true;
         this.isFinished = false;
+        this.paused = false;
 
         this._timeLastFrame = this.game.time.now;
         this._timeNextFrame = this.game.time.now + this.delay;
@@ -202,6 +204,7 @@ Phaser.Animation.prototype = {
 
         this.isPlaying = false;
         this.isFinished = true;
+        this.paused = false;
 
         if (resetFrame)
         {
@@ -304,6 +307,7 @@ Phaser.Animation.prototype = {
 
         this.isPlaying = false;
         this.isFinished = true;
+        this.paused = false;
 
         if (this._parent.events)
         {

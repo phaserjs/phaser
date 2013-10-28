@@ -39,8 +39,12 @@ Change Log
 
 Version 1.1.2
 
+* New: You'll now find a complete Basic project Template in the resources/Project Templates folder. Will add more complex ones soon.
 * Fixed issue 135 - Added typeof checks into most ArcadePhysics functions to avoid errors with zero values.
 * Fixed issue 136 - distanceTo using worldX/Y instead of x/y.
+* Added init method to plugins, to be called as they are added to the PluginManager (thanks beeglebug)
+* If you pause an Animation, when you next play it it'll resume (un-pause itself).
+
 
 
 

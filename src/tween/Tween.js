@@ -298,8 +298,9 @@ Phaser.Tween.prototype = {
 	*/
 	stop: function () {
 
-		this._manager.remove(this);
         this.isRunning = false;
+
+		this._manager.remove(this);
 
 		return this;
 

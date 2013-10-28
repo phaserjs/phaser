@@ -192,12 +192,14 @@ Phaser.AnimationManager.prototype = {
 			{
 				if (this.currentAnim.isPlaying == false)
 				{
+			        this.currentAnim.paused = false;
 					return this.currentAnim.play(frameRate, loop, killOnComplete);
 				}
 			}
 			else
 			{
 				this.currentAnim = this._anims[name];
+			    this.currentAnim.paused = false;
 				return this.currentAnim.play(frameRate, loop, killOnComplete);
 			}
 		}
