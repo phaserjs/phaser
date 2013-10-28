@@ -103,6 +103,13 @@ Phaser.PluginManager.prototype = {
             }
 
             this._pluginsLength = this.plugins.push(plugin);
+
+            // Allows plugins to run potentially destructive code outside of the constructor, and only if being added to the PluginManager
+            if (typeof plugin['init'] === 'function')
+            {
+                plugin.init();
+            }
+
             return plugin;
         }
         else
