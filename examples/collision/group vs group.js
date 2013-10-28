@@ -44,6 +44,9 @@ function create() {
 
     sprite = game.add.sprite(400, 550, 'phaser');
 
+    //  Stop the following keys from propagating up to the browser
+    game.input.keyboard.addKeyCapture([ Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.SPACEBAR ]);
+
 }
 
 function update() {

@@ -404,28 +404,25 @@ Phaser.Physics.Arcade.prototype = {
 
         this._mapData = tilemapLayer.getTiles(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height, true);
 
-        if (this._mapData.length > 1)
+        // console.log('getTiles', this._tx, this._ty);
+        if (this.game.input.keyboard.isDown(Phaser.Keyboard.SHIFT))
         {
-            for (var i = 1; i < this._mapData.length; i++)
+            console.log('cst', this._mapData, sprite.body.x, sprite.body.y);
+        }
+
+        if (this._mapData.length == 0)
+        {
+            return;
+        }
+
+        for (var i = 0; i < this._mapData.length; i++)
+        {
+            if (this.separateTile(sprite.body, this._mapData[i]))
             {
-                this.separateTile(sprite.body, this._mapData[i]);
-
-                if (this._result)
+                //  They collided, is there a custom process callback?
+                if (processCallback)
                 {
-                    //  They collided, is there a custom process callback?
-                    if (processCallback)
-                    {
-                        if (processCallback.call(callbackContext, sprite, this._mapData[i]))
-                        {
-                            this._total++;
-
-                            if (collideCallback)
-                            {
-                                collideCallback.call(callbackContext, sprite, this._mapData[i]);
-                            }
-                        }
-                    }
-                    else
+                    if (processCallback.call(callbackContext, sprite, this._mapData[i]))
                     {
                         this._total++;
 
@@ -433,6 +430,15 @@ Phaser.Physics.Arcade.prototype = {
                         {
                             collideCallback.call(callbackContext, sprite, this._mapData[i]);
                         }
+                    }
+                }
+                else
+                {
+                    this._total++;
+
+                    if (collideCallback)
+                    {
+                        collideCallback.call(callbackContext, sprite, this._mapData[i]);
                     }
                 }
             }
@@ -1025,8 +1031,8 @@ Phaser.Physics.Arcade.prototype = {
     */
     moveToObject: function (displayObject, destination, speed, maxTime) {
 
-        speed = speed || 60;
-        maxTime = maxTime || 0;
+        if (typeof speed === 'undefined') { speed = 60; }
+        if (typeof maxTime === 'undefined') { maxTime = 0; }
 
         this._angle = Math.atan2(destination.y - displayObject.y, destination.x - displayObject.x);
         
@@ -1059,9 +1065,9 @@ Phaser.Physics.Arcade.prototype = {
     */
     moveToPointer: function (displayObject, speed, pointer, maxTime) {
 
-        speed = speed || 60;
+        if (typeof speed === 'undefined') { speed = 60; }
         pointer = pointer || this.game.input.activePointer;
-        maxTime = maxTime || 0;
+        if (typeof maxTime === 'undefined') { maxTime = 0; }
 
         this._angle = this.angleToPointer(displayObject, pointer);
         
@@ -1096,8 +1102,8 @@ Phaser.Physics.Arcade.prototype = {
     */
     moveToXY: function (displayObject, x, y, speed, maxTime) {
 
-        speed = speed || 60;
-        maxTime = maxTime || 0;
+        if (typeof speed === 'undefined') { speed = 60; }
+        if (typeof maxTime === 'undefined') { maxTime = 0; }
 
         this._angle = Math.atan2(y - displayObject.y, x - displayObject.x);
         
@@ -1126,7 +1132,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     velocityFromAngle: function (angle, speed, point) {
 
-        speed = speed || 60;
+        if (typeof speed === 'undefined') { speed = 60; }
         point = point || new Phaser.Point;
 
         return point.setTo((Math.cos(this.game.math.degToRad(angle)) * speed), (Math.sin(this.game.math.degToRad(angle)) * speed));
@@ -1145,7 +1151,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     velocityFromRotation: function (rotation, speed, point) {
 
-        speed = speed || 60;
+        if (typeof speed === 'undefined') { speed = 60; }
         point = point || new Phaser.Point;
 
         return point.setTo((Math.cos(rotation) * speed), (Math.sin(rotation) * speed));
@@ -1164,7 +1170,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     accelerationFromRotation: function (rotation, speed, point) {
 
-        speed = speed || 60;
+        if (typeof speed === 'undefined') { speed = 60; }
         point = point || new Phaser.Point;
 
         return point.setTo((Math.cos(rotation) * speed), (Math.sin(rotation) * speed));
@@ -1311,8 +1317,8 @@ Phaser.Physics.Arcade.prototype = {
 
         pointer = pointer || this.game.input.activePointer;
 
-        this._dx = displayObject.worldX - pointer.x;
-        this._dy = displayObject.worldY - pointer.y;
+        this._dx = displayObject.x - pointer.x;
+        this._dy = displayObject.y - pointer.y;
         
         return Math.sqrt(this._dx * this._dx + this._dy * this._dy);
 

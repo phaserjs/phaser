@@ -52,7 +52,7 @@ function test2 () {
     sprite1.body.immovable = true;
     // sprite1.body.setSize(100, 100, 0, 0);
 
-    sprite2 = game.add.sprite(-100, 150, 'mushroom');
+    sprite2 = game.add.sprite(-100, 140, 'mushroom');
     sprite2.name = 'mushroom';
 
     sprite3 = game.add.sprite(-200, 150, 'flectrum');

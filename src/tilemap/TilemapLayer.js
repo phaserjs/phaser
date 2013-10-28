@@ -311,10 +311,13 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     this._tw = (this.game.math.snapToCeil(width, tileWidth) + tileWidth) / tileWidth;
     this._th = (this.game.math.snapToCeil(height, tileHeight) + tileHeight) / tileHeight;
 
-    this._results.length = 0;
+    //  This should apply the layer x/y here
+
+    // this._results.length = 0;
+    this._results = [];
 
     //  pretty sure we don't use this any more?
-    this._results.push( { x: x, y: y, width: width, height: height, tx: this._tx, ty: this._ty, tw: this._tw, th: this._th });
+    // this._results.push( { x: x, y: y, width: width, height: height, tx: this._tx, ty: this._ty, tw: this._tw, th: this._th });
 
     var _index = 0;
     var _tile = null;

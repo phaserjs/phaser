@@ -39,6 +39,9 @@ Change Log
 
 Version 1.1.2
 
+* Fixed issue 135 - Added typeof checks into most ArcadePhysics functions to avoid errors with zero values.
+* Fixed issue 136 - distanceTo using worldX/Y instead of x/y.
+
 
 
 Version 1.1.1 - October 26th 2013

@@ -350,6 +350,8 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 	    this.embedded = false;
 
+
+
 		this.screenX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
 		this.screenY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 

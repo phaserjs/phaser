@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
@@ -54,7 +54,7 @@ function create() {
     sprite.anchor.setTo(0.5, 0.5);
 
     game.camera.follow(sprite);
-    game.camera.deadzone = new Phaser.Rectangle(160, 160, layer.renderWidth-320, layer.renderHeight-320);
+    // game.camera.deadzone = new Phaser.Rectangle(160, 160, layer.renderWidth-320, layer.renderHeight-320);
 
     cursors = game.input.keyboard.createCursorKeys();
 
@@ -80,7 +80,7 @@ function particleBurst() {
 
 function update() {
 
-    game.physics.collide(sprite, layer);
+    // game.physics.collide(sprite, layer);
     game.physics.collide(emitter, layer);
 
     sprite.body.velocity.x = 0;
@@ -88,7 +88,7 @@ function update() {
 
     if (cursors.up.isDown)
     {
-         sprite.body.velocity.y = -150;
+        sprite.body.velocity.y = -150;
     }
     else if (cursors.down.isDown)
     {
@@ -105,5 +105,14 @@ function update() {
         sprite.body.velocity.x = 150;
         sprite.scale.x = 1;
     }
+
+}
+
+
+function render() {
+
+    // game.debug.renderSpriteCorners(sprite);
+    // game.debug.renderSpriteInfo(sprite, 32, 32);
+    game.debug.renderSpriteCoords(sprite, 32, 32);
 
 }

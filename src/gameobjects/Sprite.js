@@ -364,8 +364,16 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this.renderOrderID = this.game.world.currentRenderOrderID++;
     }
 
-    this.prevX = this.x;
-    this.prevY = this.y;
+    if (this.fixedToCamera)
+    {
+        this.prevX = this.game.camera.view.x + this.x;
+        this.prevY = this.game.camera.view.y + this.y;
+    }
+    else
+    {
+        this.prevX = this.x;
+        this.prevY = this.y;
+    }
 
     this.updateCache();
     this.updateAnimation();

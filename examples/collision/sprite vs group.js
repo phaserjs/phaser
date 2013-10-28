@@ -37,6 +37,8 @@ function create() {
         c.body.immovable = true;
     }
 
+    game.input.keyboard.addKeyCapture([ Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.UP, Phaser.Keyboard.DOWN ]);
+
 }
 
 function update() {

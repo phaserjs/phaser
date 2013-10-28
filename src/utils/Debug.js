@@ -559,6 +559,8 @@ Phaser.Utils.Debug.prototype = {
         this.line(sprite.name);
         this.line('x: ' + sprite.x);
         this.line('y: ' + sprite.y);
+        this.line('pos x: ' + sprite.position.x);
+        this.line('pos y: ' + sprite.position.y);
         this.line('local x: ' + sprite.localTransform[2]);
         this.line('local y: ' + sprite.localTransform[5]);
         this.line('world x: ' + sprite.worldTransform[2]);
