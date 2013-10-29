@@ -306,6 +306,8 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * @default
     */
     this.fixedToCamera = false;
+    this.cameraOffset = new Phaser.Point;
+    this.world = new Phaser.Point;
 
     /**
     * You can crop the Sprites texture by modifying the crop properties. For example crop.width = 50 would set the Sprite to only render 50px wide.
@@ -364,16 +366,18 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this.renderOrderID = this.game.world.currentRenderOrderID++;
     }
 
+    this.prevX = this.x;
+    this.prevY = this.y;
+
     if (this.fixedToCamera)
     {
-        this.prevX = this.game.camera.view.x + this.x;
-        this.prevY = this.game.camera.view.y + this.y;
+        this.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.y = this.game.camera.view.y + this.cameraOffset.y;
+        // this.prevX = this.game.camera.view.x + this.x;
+        // this.prevY = this.game.camera.view.y + this.y;
     }
-    else
-    {
-        this.prevX = this.x;
-        this.prevY = this.y;
-    }
+
+    this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
 
     this.updateCache();
     this.updateAnimation();
@@ -656,8 +660,8 @@ Phaser.Sprite.prototype.postUpdate = function() {
 
         if (this.fixedToCamera)
         {
-            this._cache.x = this.game.camera.view.x + this.x;
-            this._cache.y = this.game.camera.view.y + this.y;
+            this._cache.x = this.game.camera.view.x + this.cameraOffset.x;
+            this._cache.y = this.game.camera.view.y + this.cameraOffset.y;
         }
         else
         {
@@ -665,11 +669,10 @@ Phaser.Sprite.prototype.postUpdate = function() {
             this._cache.y = this.y;
         }
 
-        if (this.position.x != this._cache.x || this.position.y != this._cache.y)
-        {
-            this.position.x = this._cache.x;
-            this.position.y = this._cache.y;
-        }
+        this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
+
+        this.position.x = this._cache.x;
+        this.position.y = this._cache.y;
     }
 
 }

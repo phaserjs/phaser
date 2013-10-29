@@ -80,7 +80,7 @@ function particleBurst() {
 
 function update() {
 
-    // game.physics.collide(sprite, layer);
+    game.physics.collide(sprite, layer);
     game.physics.collide(emitter, layer);
 
     sprite.body.velocity.x = 0;
@@ -111,7 +111,7 @@ function update() {
 
 function render() {
 
-    // game.debug.renderSpriteCorners(sprite);
+    game.debug.renderSpriteCorners(sprite);
     // game.debug.renderSpriteInfo(sprite, 32, 32);
     game.debug.renderSpriteCoords(sprite, 32, 32);
 

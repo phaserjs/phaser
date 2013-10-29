@@ -1,60 +1,72 @@
 
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
-var baddie;
-var keys = Phaser.Keyboard;
-
 function preload() {
 
     game.load.image('background','assets/misc/starfield.jpg');
-    game.load.image('ufo','assets/sprites/ufo.png');
-    game.load.image('baddie','assets/sprites/space-baddie.png');
+    game.load.image('ufo','assets/sprites/space-baddie.png');
+    game.load.image('player','assets/sprites/phaser-dude.png');
 
 }
+
+var player;
+var fixed;
+var cursors;
 
 function create() {
 
     game.add.tileSprite(0, 0, 2000, 2000, 'background');
 
-    game.world.setBounds(0, 0, 1400,1400);
+    game.world.setBounds(0, 0, 1400, 1400);
 
-    for (var i = 0; i < 10; i++)
+    for (var i = 0; i < 100; i++)
     {
         game.add.sprite(game.world.randomX, game.world.randomY, 'ufo');
     }
 
-    baddie = game.add.sprite(150, 320, 'baddie');
+    fixed = game.add.sprite(300, 320, 'player');
+    fixed.fixedToCamera = true;
+    fixed.cameraOffset.x = 300;
+    fixed.cameraOffset.y = 300;
 
-    game.camera.follow(baddie);
+    player = game.add.sprite(150, 320, 'player');
+
+    cursors = game.input.keyboard.createCursorKeys();
+
+    game.camera.follow(player);
 
 }
 
 function update() {
 
-    baddie.body.velocity.setTo(0, 0);
+    player.body.velocity.setTo(0, 0);
 
-    if (game.input.keyboard.isDown(keys.LEFT) && !game.input.keyboard.isDown(keys.RIGHT))
+    if (cursors.up.isDown)
     {
-        baddie.body.velocity.x = -155;
+        player.body.velocity.y = -200;
     }
-    else if (game.input.keyboard.isDown(keys.RIGHT) && !game.input.keyboard.isDown(keys.LEFT))
+    else if (cursors.down.isDown)
     {
-        baddie.body.velocity.x = 155;
+        player.body.velocity.y = 200;
     }
-    else if (game.input.keyboard.isDown(keys.UP) && !game.input.keyboard.isDown(keys.DOWN))
+
+    if (cursors.left.isDown)
     {
-        baddie.angle = 90;
-        baddie.body.velocity.y = -155;
+        player.body.velocity.x = -200;
     }
-    else if (game.input.keyboard.isDown(keys.DOWN) && !game.input.keyboard.isDown(keys.UP))
+    else if (cursors.right.isDown)
     {
-        baddie.angle = 90;
-        baddie.body.velocity.y = 155;
+        player.body.velocity.x = 200;
     }
+
 }
 
 function render() {
 
     game.debug.renderCameraInfo(game.camera, 32, 32);
+    game.debug.renderSpriteCoords(player, 32, 200);
+    game.debug.renderSpriteCoords(fixed, 600, 200);
+
+    game.debug.renderSpriteCoords(game.world._container, 32, 400);
 
 }

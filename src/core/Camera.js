@@ -195,15 +195,8 @@ Phaser.Camera.prototype = {
             this.checkBounds();
         }
 
-        if (this.view.x !== -this.displayObject.position.x)
-        {
-            this.displayObject.position.x = -this.view.x;
-        }
-
-        if (this.view.y !== -this.displayObject.position.y)
-        {
-            this.displayObject.position.y = -this.view.y;
-        }
+        this.displayObject.position.x = -this.view.x;
+        this.displayObject.position.y = -this.view.y;
 
     },
 
