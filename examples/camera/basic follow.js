@@ -67,6 +67,6 @@ function render() {
     game.debug.renderSpriteCoords(player, 32, 200);
     game.debug.renderSpriteCoords(fixed, 600, 200);
 
-    game.debug.renderSpriteCoords(game.world._container, 32, 400);
+    // game.debug.renderSpriteCoords(game.world._container, 32, 400);
 
 }

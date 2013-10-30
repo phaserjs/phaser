@@ -40,13 +40,15 @@ Change Log
 Version 1.1.2
 
 * New: You'll now find a complete Basic project Template in the resources/Project Templates folder. Will add more complex ones soon.
+* New: Phaser.Button now has the ability to set over/out/up/down sound effects so they play automatically based on those events.
+* Updated: Fixed a few final bugs in the Sprite body and bounds calculations, in turn this resolved the Tilemap collision issues in the 1.1 release.
+* Updated: Finished documentation for the Phaser.Button class.
 * Fixed issue 135 - Added typeof checks into most ArcadePhysics functions to avoid errors with zero values.
 * Fixed issue 136 - distanceTo using worldX/Y instead of x/y.
 * Added init method to plugins, to be called as they are added to the PluginManager (thanks beeglebug)
 * If you pause an Animation, when you next play it it'll resume (un-pause itself).
-* Started work on fixing the body / camera / tilemap issue - pretty much sorted now I think, more tests needed.
-
-
+* New: Physics.Body now has a center property (issue 142, thanks MikeMnD)
+* Updated: Fixed the Invaders game sample and enhanced it, also fixed lots of "cursor key moves the page" examples.
 
 
 Version 1.1.1 - October 26th 2013

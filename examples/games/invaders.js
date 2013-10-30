@@ -7,6 +7,8 @@ function preload() {
     game.load.image('bullet', 'assets/misc/bullet0.png');
     game.load.image('alien', 'assets/sprites/space-baddie.png');
     game.load.image('ship', 'assets/sprites/shmup-ship.png');
+    game.load.spritesheet('kaboom', 'assets/games/tanks/explosion.png', 64, 64, 23);
+    game.load.image('starfield', 'assets/misc/starfield.jpg');
 
 }
 
@@ -14,8 +16,13 @@ var player;
 var aliens;
 var bullets;
 var bulletTime = 0;
+var cursors;
+var fireButton;
+var explosions;
 
 function create() {
+
+    s = game.add.tileSprite(0, 0, 800, 600, 'starfield');
 
     player = game.add.sprite(400, 500, 'ship');
     player.anchor.setTo(0.5, 0.5);
@@ -33,20 +40,28 @@ function create() {
     aliens.x = 100;
     aliens.y = 50;
 
-    bullets = game.add.group(null, 'bullets');
+    //  Our bullet group
+    bullets = game.add.group();
+    bullets.createMultiple(30, 'bullet');
+    bullets.setAll('anchor.x', 0.5);
+    bullets.setAll('anchor.y', 1);
+    bullets.setAll('outOfBoundsKill', true);
+
+    //  Explosion pool
+    explosions = game.add.group();
 
     for (var i = 0; i < 10; i++)
     {
-        var b = bullets.create(0, 0, 'bullet');
-        b.name = 'bullet' + i;
-        b.exists = false;
-        b.visible = false;
-        b.anchor.setTo(0.5, 1);
-        b.events.onOutOfBounds.add(resetBullet, this);
+        var explosionAnimation = explosions.create(0, 0, 'kaboom', [0], false);
+        explosionAnimation.anchor.setTo(0.5, 0.5);
+        explosionAnimation.animations.add('kaboom');
     }
 
     var tween = game.add.tween(aliens).to({x: 200}, 3000, Phaser.Easing.Linear.None, true, 0, 1000, true);
     tween.onComplete.add(descend, this);
+
+    cursors = game.input.keyboard.createCursorKeys();
+    fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
 }
 
@@ -60,16 +75,16 @@ function update() {
     player.body.velocity.x = 0;
     player.body.velocity.y = 0;
 
-    if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+    if (cursors.left.isDown)
     {
         player.body.velocity.x = -200;
     }
-    else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+    else if (cursors.right.isDown)
     {
         player.body.velocity.x = 200;
     }
 
-    if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
+    if (fireButton.isDown)
     {
         fireBullet();
     }
@@ -104,16 +119,11 @@ function collisionHandler (bullet, alien) {
     bullet.kill();
     alien.kill();
 
+    var explosionAnimation = explosions.getFirstDead();
+    explosionAnimation.reset(alien.body.x, alien.body.y);
+    explosionAnimation.play('kaboom', 30, false, true);
+
 }
 
 function render () {
-
-    // aliens.forEach(renderBounds, this);
-
-    game.debug.renderQuadTree(game.physics.quadTree);
-
-}
-
-function renderBounds(s) {
-    game.debug.renderSpriteBounds(s, 'rgba(0,0,255,0.4)', true);
 }

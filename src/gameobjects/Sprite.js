@@ -202,9 +202,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
         //  The actual scale values based on the worldTransform
         scaleX: 1, scaleY: 1,
 
-        //  cache scale check
-        realScaleX: 1, realScaleY: 1,
-
         //  The width/height of the image, based on the un-modified frame size multiplied by the final calculated scale size
         width: this.currentFrame.sourceSizeW, height: this.currentFrame.sourceSizeH,
 
@@ -217,8 +214,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
         //  The current frame details
         // frameID: this.currentFrame.uuid, frameWidth: this.currentFrame.width, frameHeight: this.currentFrame.height,
         frameID: -1, frameWidth: this.currentFrame.width, frameHeight: this.currentFrame.height,
-
-        boundsX: 0, boundsY: 0,
 
         //  If this sprite visible to the camera (regardless of being set to visible or not)
         cameraVisible: true,
@@ -306,7 +301,15 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * @default
     */
     this.fixedToCamera = false;
+
+    /**
+    * @property {Phaser.Point} cameraOffset - If this Sprite is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.
+    */
     this.cameraOffset = new Phaser.Point;
+
+    /**
+    * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
+    */
     this.world = new Phaser.Point;
 
     /**
@@ -322,6 +325,9 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * @default
     */
     this.cropEnabled = false;
+
+    this.updateCache();
+    this.updateBounds();
 
 };
 
@@ -356,55 +362,21 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     this._cache.dirty = false;
 
-    if (this.animations.update())
-    {
-        this._cache.dirty = true;
-    }
-
     if (this.visible)
     {
         this.renderOrderID = this.game.world.currentRenderOrderID++;
     }
 
-    this.prevX = this.x;
-    this.prevY = this.y;
-
-    if (this.fixedToCamera)
-    {
-        this.x = this.game.camera.view.x + this.cameraOffset.x;
-        this.y = this.game.camera.view.y + this.cameraOffset.y;
-        // this.prevX = this.game.camera.view.x + this.x;
-        // this.prevY = this.game.camera.view.y + this.y;
-    }
-
-    this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
-
     this.updateCache();
+
     this.updateAnimation();
 
-    if (this.cropEnabled)
-    {
-        this.updateCrop();
-    }
+    this.updateCrop();
 
     //  Re-run the camera visibility check
-    if (this._cache.dirty)
+    if (this._cache.dirty || this.world.x !== this.prevX || this.world.y !== this.prevY)
     {
         this.updateBounds();
-
-        this._cache.cameraVisible = Phaser.Rectangle.intersects(this.game.world.camera.screenView, this.bounds, 0);
-
-        if (this.autoCull == true)
-        {
-            //  Won't get rendered but will still get its transform updated
-            this.renderable = this._cache.cameraVisible;
-        }
-
-        //  Update our physics bounds
-        if (this.body)
-        {
-            this.body.updateBounds(this.center.x, this.center.y, this._cache.scaleX, this._cache.scaleY);
-        }
     }
 
     if (this.body)
@@ -422,15 +394,22 @@ Phaser.Sprite.prototype.preUpdate = function() {
 */
 Phaser.Sprite.prototype.updateCache = function() {
 
-    //  |a c tx|
-    //  |b d ty|
-    //  |0 0  1|
+    this.prevX = this.world.x;
+    this.prevY = this.world.y;
 
-    if (this.worldTransform[1] != this._cache.i01 || this.worldTransform[3] != this._cache.i10)
+    if (this.fixedToCamera)
     {
-        this._cache.a00 = this.worldTransform[0];  //  scaleX         a
-        this._cache.a01 = this.worldTransform[1];  //  skewY          c
-        this._cache.a10 = this.worldTransform[3];  //  skewX          b
+        this.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
+
+    this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
+
+    if (this.worldTransform[1] != this._cache.i01 || this.worldTransform[3] != this._cache.i10 || this.worldTransform[0] != this._cache.a00 || this.worldTransform[41] != this._cache.a11)
+    {
+        this._cache.a00 = this.worldTransform[0];  //  scaleX         a     |a c tx|
+        this._cache.a01 = this.worldTransform[1];  //  skewY          c     |b d ty|
+        this._cache.a10 = this.worldTransform[3];  //  skewX          b     |0 0  1|
         this._cache.a11 = this.worldTransform[4];  //  scaleY         d
 
         this._cache.i01 = this.worldTransform[1];  //  skewY          c (remains non-modified for input checks)
@@ -442,15 +421,14 @@ Phaser.Sprite.prototype.updateCache = function() {
         this._cache.a01 *= -1;
         this._cache.a10 *= -1;
 
+        this._cache.id = 1 / (this._cache.a00 * this._cache.a11 + this._cache.a01 * -this._cache.a10);
+        this._cache.idi = 1 / (this._cache.a00 * this._cache.a11 + this._cache.i01 * -this._cache.i10);
+
         this._cache.dirty = true;
     }
 
-    if (this.worldTransform[2] != this._cache.a02 || this.worldTransform[5] != this._cache.a12)
-    {
-        this._cache.a02 = this.worldTransform[2];  //  translateX     tx
-        this._cache.a12 = this.worldTransform[5];  //  translateY     ty
-        this._cache.dirty = true;
-    }
+    this._cache.a02 = this.worldTransform[2];  //  translateX     tx
+    this._cache.a12 = this.worldTransform[5];  //  translateY     ty
 
 }
 
@@ -462,23 +440,50 @@ Phaser.Sprite.prototype.updateCache = function() {
 */
 Phaser.Sprite.prototype.updateAnimation = function() {
 
-    if (this.currentFrame && this.currentFrame.uuid != this._cache.frameID)
+    if (this.animations.update() || (this.currentFrame && this.currentFrame.uuid != this._cache.frameID))
     {
+        this._cache.frameID = this.currentFrame.uuid;
+
         this._cache.frameWidth = this.texture.frame.width;
         this._cache.frameHeight = this.texture.frame.height;
-        this._cache.frameID = this.currentFrame.uuid;
-        this._cache.dirty = true;
-    }
 
-    if (this._cache.dirty && this.currentFrame)
-    {
         this._cache.width = this.currentFrame.width;
         this._cache.height = this.currentFrame.height;
+
         this._cache.halfWidth = Math.floor(this._cache.width / 2);
         this._cache.halfHeight = Math.floor(this._cache.height / 2);
 
-        this._cache.id = 1 / (this._cache.a00 * this._cache.a11 + this._cache.a01 * -this._cache.a10);
-        this._cache.idi = 1 / (this._cache.a00 * this._cache.a11 + this._cache.i01 * -this._cache.i10);
+        this._cache.dirty = true;
+
+    }
+
+}
+
+/**
+* Internal function called by preUpdate.
+*
+* @method Phaser.Sprite#updateCrop
+* @memberof Phaser.Sprite
+*/
+Phaser.Sprite.prototype.updateCrop = function() {
+
+    //  This only runs if crop is enabled
+    if (this.cropEnabled && (this.crop.width != this._cache.cropWidth || this.crop.height != this._cache.cropHeight || this.crop.x != this._cache.cropX || this.crop.y != this._cache.cropY))
+    {
+        this.crop.floorAll();
+
+        this._cache.cropX = this.crop.x;
+        this._cache.cropY = this.crop.y;
+        this._cache.cropWidth = this.crop.width;
+        this._cache.cropHeight = this.crop.height;
+
+        this.texture.frame = this.crop;
+        this.texture.width = this.crop.width;
+        this.texture.height = this.crop.height;
+
+        this.texture.updateFrame = true;
+
+        PIXI.Texture.frameUpdates.push(this.texture);
     }
 
 }
@@ -491,22 +496,13 @@ Phaser.Sprite.prototype.updateAnimation = function() {
 */
 Phaser.Sprite.prototype.updateBounds = function() {
 
-    var sx = 1;
-    var sy = 1;
-
-    if (this.worldTransform[3] !== 0 || this.worldTransform[1] !== 0)
-    {
-        sx = this.scale.x;
-        sy = this.scale.y;
-    }
-
     this.offset.setTo(this._cache.a02 - (this.anchor.x * this.width), this._cache.a12 - (this.anchor.y * this.height));
 
-    this.getLocalPosition(this.center, this.offset.x + (this.width / 2), this.offset.y + (this.height / 2), sx, sy);
-    this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y, sx, sy);
-    this.getLocalPosition(this.topRight, this.offset.x + this.width, this.offset.y, sx, sy);
-    this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this.height, sx, sy);
-    this.getLocalPosition(this.bottomRight, this.offset.x + this.width, this.offset.y + this.height, sx, sy);
+    this.getLocalPosition(this.center, this.offset.x + (this.width / 2), this.offset.y + (this.height / 2));
+    this.getLocalPosition(this.topLeft, this.offset.x, this.offset.y);
+    this.getLocalPosition(this.topRight, this.offset.x + this.width, this.offset.y);
+    this.getLocalPosition(this.bottomLeft, this.offset.x, this.offset.y + this.height);
+    this.getLocalPosition(this.bottomRight, this.offset.x + this.width, this.offset.y + this.height);
 
     this._cache.left = Phaser.Math.min(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
     this._cache.right = Phaser.Math.max(this.topLeft.x, this.topRight.x, this.bottomLeft.x, this.bottomRight.x);
@@ -515,10 +511,6 @@ Phaser.Sprite.prototype.updateBounds = function() {
 
     this.bounds.setTo(this._cache.left, this._cache.top, this._cache.right - this._cache.left, this._cache.bottom - this._cache.top);
 
-    //  This is the coordinate the Sprite was at when the last bounds was created
-    this._cache.boundsX = this._cache.x;
-    this._cache.boundsY = this._cache.y;
-        
     this.updateFrame = true;
 
     if (this.inWorld == false)
@@ -549,6 +541,20 @@ Phaser.Sprite.prototype.updateBounds = function() {
         }
     }
 
+    this._cache.cameraVisible = Phaser.Rectangle.intersects(this.game.world.camera.screenView, this.bounds, 0);
+
+    if (this.autoCull)
+    {
+        //  Won't get rendered but will still get its transform updated
+        this.renderable = this._cache.cameraVisible;
+    }
+
+    //  Update our physics bounds
+    if (this.body)
+    {
+        this.body.updateBounds(this.center.x, this.center.y, this._cache.scaleX, this._cache.scaleY);
+    }
+
 }
 
 /**
@@ -564,10 +570,10 @@ Phaser.Sprite.prototype.updateBounds = function() {
 * @param {number} sy - Scale factor to be applied.
 * @return {Phaser.Point} The translated point.
 */
-Phaser.Sprite.prototype.getLocalPosition = function(p, x, y, sx, sy) {
+Phaser.Sprite.prototype.getLocalPosition = function(p, x, y) {
 
-    p.x = ((this._cache.a11 * this._cache.id * x + -this._cache.a01 * this._cache.id * y + (this._cache.a12 * this._cache.a01 - this._cache.a02 * this._cache.a11) * this._cache.id) * sx) + this._cache.a02;
-    p.y = ((this._cache.a00 * this._cache.id * y + -this._cache.a10 * this._cache.id * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.a10) * this._cache.id) * sy) + this._cache.a12;
+    p.x = ((this._cache.a11 * this._cache.id * x + -this._cache.a01 * this._cache.id * y + (this._cache.a12 * this._cache.a01 - this._cache.a02 * this._cache.a11) * this._cache.id) * this.scale.x) + this._cache.a02;
+    p.y = ((this._cache.a00 * this._cache.id * y + -this._cache.a10 * this._cache.id * x + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.a10) * this._cache.id) * this.scale.y) + this._cache.a12;
 
     return p;
 
@@ -586,47 +592,13 @@ Phaser.Sprite.prototype.getLocalPosition = function(p, x, y, sx, sy) {
 */
 Phaser.Sprite.prototype.getLocalUnmodifiedPosition = function(p, gx, gy) {
 
-    var a00 = this.worldTransform[0], a01 = this.worldTransform[1], a02 = this.worldTransform[2],
-        a10 = this.worldTransform[3], a11 = this.worldTransform[4], a12 = this.worldTransform[5],
-        id = 1 / (a00 * a11 + a01 * -a10),
-        x = a11 * id * gx + -a01 * id * gy + (a12 * a01 - a02 * a11) * id,
-        y = a00 * id * gy + -a10 * id * gx + (-a12 * a00 + a02 * a10) * id;
-
-    p.x = x + (this.anchor.x * this._cache.width);
-    p.y = y + (this.anchor.y * this._cache.height);
+    p.x = (this._cache.a11 * this._cache.idi * gx + -this._cache.i01 * this._cache.idi * gy + (this._cache.a12 * this._cache.i01 - this._cache.a02 * this._cache.a11) * this._cache.idi) + (this.anchor.x * this._cache.width);
+    p.y = (this._cache.a00 * this._cache.idi * gy + -this._cache.i10 * this._cache.idi * gx + (-this._cache.a12 * this._cache.a00 + this._cache.a02 * this._cache.i10) * this._cache.idi) + (this.anchor.y * this._cache.height);
 
     return p;
 
 }
 
-/**
-* Internal function called by preUpdate.
-*
-* @method Phaser.Sprite#updateCrop
-* @memberof Phaser.Sprite
-*/
-Phaser.Sprite.prototype.updateCrop = function() {
-
-    //  This only runs if crop is enabled
-    if (this.crop.width != this._cache.cropWidth || this.crop.height != this._cache.cropHeight || this.crop.x != this._cache.cropX || this.crop.y != this._cache.cropY)
-    {
-        this.crop.floorAll();
-
-        this._cache.cropX = this.crop.x;
-        this._cache.cropY = this.crop.y;
-        this._cache.cropWidth = this.crop.width;
-        this._cache.cropHeight = this.crop.height;
-
-        this.texture.frame = this.crop;
-        this.texture.width = this.crop.width;
-        this.texture.height = this.crop.height;
-
-        this.texture.updateFrame = true;
-
-        PIXI.Texture.frameUpdates.push(this.texture);
-    }
-
-}
 
 /**
 * Resets the Sprite.crop value back to the frame dimensions.

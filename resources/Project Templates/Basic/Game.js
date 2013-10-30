@@ -1,3 +1,4 @@
+
 BasicGame.Game = function (game) {
 
 	//	Honestly, just about anything could go here.

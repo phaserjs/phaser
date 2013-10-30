@@ -1,3 +1,4 @@
+BasicGame = {};
 
 BasicGame.Boot = function (game) {
 
