@@ -48,6 +48,11 @@ Phaser.Color = {
     hexToRGB: function (h) {
 
         var hex16 = (h.charAt(0) == "#") ? h.substring(1, 7) : h;
+
+        if (hex16.length==3) {
+            hex16 = hex16.charAt(0) + hex16.charAt(0) + hex16.charAt(1) + hex16.charAt(1) + hex16.charAt(2) + hex16.charAt(2);
+        }
+
         var red = parseInt(hex16.substring(0, 2), 16);
         var green = parseInt(hex16.substring(2, 4), 16);
         var blue = parseInt(hex16.substring(4, 6), 16);
