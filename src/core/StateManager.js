@@ -269,7 +269,7 @@ Phaser.StateManager.prototype = {
 			//	Already got a state running?
 			if (this.current)
 			{
-				this.onShutDownCallback.call(this.callbackContext);
+				this.onShutDownCallback.call(this.callbackContext, this.game);
 			}
 
 	        if (clearWorld)
@@ -291,7 +291,7 @@ Phaser.StateManager.prototype = {
         {
 	    	// console.log('Preload Callback found');
             this.game.load.reset();
-            this.onPreloadCallback.call(this.callbackContext);
+            this.onPreloadCallback.call(this.callbackContext, this.game);
 
             //  Is the loader empty?
             if (this.game.load.queueSize == 0)
@@ -418,7 +418,7 @@ Phaser.StateManager.prototype = {
 		this.current = key;
 		this._created = false;
 
-		this.onInitCallback.call(this.callbackContext);
+		this.onInitCallback.call(this.callbackContext, this.game);
 
 	},
 
@@ -434,7 +434,7 @@ Phaser.StateManager.prototype = {
         {
 			// console.log('Create callback found');
 	        this._created = true;
-            this.onCreateCallback.call(this.callbackContext);
+            this.onCreateCallback.call(this.callbackContext, this.game);
         }
         else
         {
@@ -451,13 +451,13 @@ Phaser.StateManager.prototype = {
 
     	if (this._created && this.onUpdateCallback)
     	{
-			this.onUpdateCallback.call(this.callbackContext);
+			this.onUpdateCallback.call(this.callbackContext, this.game);
     	}
     	else
     	{
 		    if (this.onLoadUpdateCallback)
 		    {
-		    	this.onLoadUpdateCallback.call(this.callbackContext);
+		    	this.onLoadUpdateCallback.call(this.callbackContext, this.game);
 			}
 		}
 
@@ -471,7 +471,7 @@ Phaser.StateManager.prototype = {
 
 	    if (this.onPreRenderCallback)
 	    {
-	    	this.onPreRenderCallback.call(this.callbackContext);
+	    	this.onPreRenderCallback.call(this.callbackContext, this.game);
 		}
 
     },
@@ -484,13 +484,13 @@ Phaser.StateManager.prototype = {
 
     	if (this._created && this.onRenderCallback)
     	{
-			this.onRenderCallback.call(this.callbackContext);
+			this.onRenderCallback.call(this.callbackContext, this.game);
     	}
     	else
     	{
 		    if (this.onLoadRenderCallback)
 		    {
-		    	this.onLoadRenderCallback.call(this.callbackContext);
+		    	this.onLoadRenderCallback.call(this.callbackContext, this.game);
 			}
 		}
 
