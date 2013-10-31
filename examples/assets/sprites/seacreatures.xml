@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<TextureAtlas imagePath="seacreatures.png">
+	<!-- Created with Adobe Flash CS6 version 12.0.0.481 -->
+	<!-- http://www.adobe.com/products/flash.html -->
+	<SubTexture name="blueJellyfish0000" x="659" y="1572" width="64" height="64" frameX="0" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0001" x="725" y="1574" width="63" height="65" frameX="-1" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0002" x="258" y="1685" width="62" height="65" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0003" x="130" y="1694" width="62" height="65" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0004" x="194" y="1694" width="62" height="65" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0005" x="920" y="1574" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0006" x="350" y="1579" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0007" x="414" y="1579" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0008" x="2" y="1596" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0009" x="66" y="1596" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0010" x="478" y="1611" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0011" x="258" y="1617" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0012" x="130" y="1626" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0013" x="194" y="1626" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0014" x="659" y="1638" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0015" x="606" y="1706" width="62" height="65" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0016" x="790" y="1574" width="63" height="65" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0017" x="593" y="1572" width="64" height="65" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0018" x="855" y="1574" width="63" height="65" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0019" x="514" y="1707" width="62" height="65" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0020" x="542" y="1639" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0021" x="723" y="1641" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0022" x="787" y="1641" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0023" x="851" y="1641" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0024" x="915" y="1642" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0025" x="322" y="1647" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0026" x="386" y="1647" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0027" x="2" y="1664" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0028" x="66" y="1664" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0029" x="450" y="1679" width="62" height="66" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0030" x="670" y="1709" width="62" height="65" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0031" x="734" y="1709" width="62" height="65" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="blueJellyfish0032" x="798" y="1709" width="62" height="65" frameX="-2" frameY="0" frameWidth="66" frameHeight="66"/>
+	<SubTexture name="crab10000" x="2" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10001" x="2" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10002" x="152" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10003" x="152" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10004" x="2" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10005" x="2" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10006" x="2" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10007" x="2" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10008" x="152" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10009" x="152" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10010" x="2" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10011" x="2" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10012" x="2" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10013" x="2" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10014" x="2" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10015" x="2" y="1512" width="148" height="82"/>
+	<SubTexture name="crab10016" x="2" y="1512" width="148" height="82"/>
+	<SubTexture name="crab10017" x="2" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10018" x="2" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10019" x="2" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10020" x="2" y="1512" width="148" height="82"/>
+	<SubTexture name="crab10021" x="2" y="1512" width="148" height="82"/>
+	<SubTexture name="crab10022" x="2" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10023" x="2" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10024" x="2" y="1428" width="148" height="82"/>
+	<SubTexture name="crab10025" x="2" y="1428" width="148" height="82"/>
+	<SubTexture name="crab20000" x="554" y="648" width="166" height="108"/>
+	<SubTexture name="flyingFish0000" x="392" y="775" width="149" height="103"/>
+	<SubTexture name="flyingFish0001" x="392" y="775" width="149" height="103"/>
+	<SubTexture name="greenFish0000" x="276" y="1551" width="72" height="64"/>
+	<SubTexture name="greenJellyfish0000" x="392" y="880" width="120" height="109" frameX="0" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0001" x="514" y="946" width="118" height="110" frameX="-2" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0002" x="634" y="1002" width="116" height="111" frameX="-4" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0003" x="234" y="963" width="115" height="112" frameX="-5" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0004" x="870" y="1053" width="113" height="113" frameX="-7" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0005" x="116" y="1078" width="111" height="114" frameX="-9" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0006" x="807" y="1168" width="109" height="114" frameX="-11" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0007" x="2" y="1187" width="108" height="115" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0008" x="229" y="1192" width="108" height="115" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0009" x="112" y="1194" width="108" height="115" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0010" x="339" y="1221" width="108" height="115" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0011" x="572" y="1231" width="108" height="115" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0012" x="682" y="1282" width="108" height="115" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0013" x="792" y="1284" width="108" height="115" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0014" x="902" y="1284" width="108" height="115" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0015" x="449" y="1289" width="108" height="115" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0016" x="583" y="1115" width="110" height="114" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0017" x="2" y="1072" width="112" height="113" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0018" x="2" y="957" width="114" height="113" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0019" x="738" y="888" width="116" height="112" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0020" x="738" y="775" width="118" height="111" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0021" x="856" y="939" width="116" height="112" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0022" x="118" y="963" width="114" height="113" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0023" x="234" y="1077" width="112" height="113" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0024" x="695" y="1166" width="110" height="114" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0025" x="442" y="1406" width="108" height="114" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0026" x="2" y="1304" width="108" height="115" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0027" x="222" y="1309" width="108" height="115" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0028" x="112" y="1311" width="108" height="115" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0029" x="332" y="1338" width="108" height="115" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0030" x="559" y="1348" width="108" height="115" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0031" x="669" y="1399" width="108" height="115" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0032" x="779" y="1401" width="108" height="115" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0033" x="889" y="1401" width="108" height="115" frameX="-12" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0034" x="461" y="1173" width="109" height="114" frameX="-11" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0035" x="348" y="1105" width="111" height="114" frameX="-9" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0036" x="468" y="1058" width="113" height="113" frameX="-7" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0037" x="351" y="991" width="115" height="112" frameX="-5" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0038" x="752" y="1053" width="116" height="111" frameX="-4" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="greenJellyfish0039" x="858" y="826" width="118" height="111" frameX="-2" frameY="0" frameWidth="130" frameHeight="115"/>
+	<SubTexture name="hammerHead0000" x="2" y="2" width="260" height="152"/>
+	<SubTexture name="octopus0000" x="552" y="1465" width="82" height="88" frameX="0" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0001" x="552" y="1465" width="82" height="88" frameX="0" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0002" x="918" y="1168" width="78" height="94" frameX="-2" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0003" x="918" y="1168" width="78" height="94" frameX="-2" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0004" x="302" y="1455" width="77" height="94" frameX="-3" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0005" x="302" y="1455" width="77" height="94" frameX="-3" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0006" x="370" y="188" width="67" height="94" frameX="-8" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0007" x="370" y="188" width="67" height="94" frameX="-8" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0008" x="554" y="349" width="60" height="95" frameX="-11" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0009" x="554" y="349" width="60" height="95" frameX="-11" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0010" x="554" y="349" width="60" height="95" frameX="-11" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0011" x="554" y="349" width="60" height="95" frameX="-11" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0012" x="554" y="349" width="60" height="95" frameX="-11" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0013" x="554" y="349" width="60" height="95" frameX="-11" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0014" x="554" y="349" width="60" height="95" frameX="-11" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0015" x="554" y="349" width="60" height="95" frameX="-11" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0016" x="554" y="349" width="60" height="95" frameX="-11" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0017" x="370" y="188" width="67" height="94" frameX="-8" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0018" x="370" y="188" width="67" height="94" frameX="-8" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0019" x="302" y="1455" width="77" height="94" frameX="-3" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0020" x="302" y="1455" width="77" height="94" frameX="-3" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0021" x="918" y="1168" width="78" height="94" frameX="-2" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0022" x="918" y="1168" width="78" height="94" frameX="-2" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0023" x="552" y="1465" width="82" height="88" frameX="0" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="octopus0024" x="552" y="1465" width="82" height="88" frameX="0" frameY="0" frameWidth="82" frameHeight="95"/>
+	<SubTexture name="prawn0000" x="738" y="508" width="64" height="70"/>
+	<SubTexture name="purpleFish0000" x="764" y="1518" width="112" height="54" frameX="-14" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0001" x="764" y="1518" width="112" height="54" frameX="-14" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0002" x="636" y="1516" width="126" height="54" frameX="0" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0003" x="636" y="1516" width="126" height="54" frameX="0" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0004" x="487" y="1555" width="104" height="54" frameX="-22" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0005" x="487" y="1555" width="104" height="54" frameX="-22" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0006" x="487" y="1555" width="104" height="54" frameX="-22" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0007" x="487" y="1555" width="104" height="54" frameX="-22" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0008" x="487" y="1555" width="104" height="54" frameX="-22" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0009" x="878" y="1518" width="110" height="54" frameX="-16" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0010" x="878" y="1518" width="110" height="54" frameX="-16" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0011" x="152" y="1512" width="122" height="56" frameX="-4" frameY="0" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0012" x="152" y="1512" width="122" height="56" frameX="-4" frameY="0" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0013" x="487" y="1555" width="104" height="54" frameX="-22" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0014" x="487" y="1555" width="104" height="54" frameX="-22" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0015" x="487" y="1555" width="104" height="54" frameX="-22" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0016" x="152" y="1570" width="104" height="54" frameX="-22" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0017" x="152" y="1570" width="104" height="54" frameX="-22" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0018" x="381" y="1522" width="104" height="55" frameX="-22" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0019" x="381" y="1522" width="104" height="55" frameX="-22" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="purpleFish0020" x="487" y="1555" width="104" height="54" frameX="-22" frameY="-2" frameWidth="126" frameHeight="57"/>
+	<SubTexture name="seahorse0000" x="922" y="638" width="90" height="186"/>
+	<SubTexture name="seahorse0001" x="554" y="758" width="90" height="186"/>
+	<SubTexture name="seahorse0002" x="646" y="758" width="90" height="186"/>
+	<SubTexture name="seahorse0003" x="2" y="769" width="90" height="186"/>
+	<SubTexture name="seahorse0004" x="94" y="769" width="90" height="186"/>
+	<SubTexture name="seahorse0005" x="186" y="775" width="90" height="186"/>
+	<SubTexture name="squid0000" x="278" y="775" width="112" height="146"/>
+	<SubTexture name="squid0001" x="278" y="775" width="112" height="146"/>
+	<SubTexture name="squid0002" x="278" y="775" width="112" height="146"/>
+	<SubTexture name="squid0003" x="278" y="775" width="112" height="146"/>
+	<SubTexture name="squid0004" x="278" y="775" width="112" height="146"/>
+	<SubTexture name="squid0005" x="278" y="775" width="112" height="146"/>
+	<SubTexture name="squid0006" x="278" y="775" width="112" height="146"/>
+	<SubTexture name="squid0007" x="278" y="775" width="112" height="146"/>
+	<SubTexture name="squid0008" x="278" y="775" width="112" height="146"/>
+	<SubTexture name="squid0009" x="278" y="775" width="112" height="146"/>
+	<SubTexture name="squid0010" x="278" y="775" width="112" height="146"/>
+	<SubTexture name="squid0011" x="278" y="775" width="112" height="146"/>
+	<SubTexture name="squid0012" x="278" y="775" width="112" height="146"/>
+	<SubTexture name="squid0013" x="278" y="775" width="112" height="146"/>
+	<SubTexture name="squid0014" x="278" y="775" width="112" height="146"/>
+	<SubTexture name="squid0015" x="278" y="775" width="112" height="146"/>
+	<SubTexture name="starfish0000" x="370" y="284" width="36" height="36"/>
+	<SubTexture name="stingray0000" x="2" y="329" width="182" height="154" frameX="0" frameY="-16" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0001" x="186" y="349" width="182" height="147" frameX="0" frameY="-20" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0002" x="370" y="349" width="182" height="144" frameX="0" frameY="-20" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0003" x="804" y="494" width="182" height="142" frameX="0" frameY="-20" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0004" x="186" y="498" width="182" height="139" frameX="0" frameY="-20" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0005" x="554" y="508" width="182" height="138" frameX="0" frameY="-20" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0006" x="2" y="631" width="182" height="136" frameX="0" frameY="-20" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0007" x="370" y="638" width="182" height="135" frameX="0" frameY="-20" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0008" x="738" y="638" width="182" height="135" frameX="0" frameY="-20" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0009" x="186" y="639" width="182" height="134" frameX="0" frameY="-20" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0010" x="554" y="508" width="182" height="138" frameX="0" frameY="-20" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0011" x="370" y="495" width="182" height="141" frameX="0" frameY="-20" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0012" x="2" y="485" width="182" height="144" frameX="0" frameY="-20" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0013" x="804" y="344" width="182" height="148" frameX="0" frameY="-19" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0014" x="2" y="329" width="182" height="154" frameX="0" frameY="-16" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0015" x="632" y="182" width="182" height="160" frameX="0" frameY="-13" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0016" x="816" y="176" width="182" height="166" frameX="0" frameY="-10" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0017" x="816" y="2" width="182" height="172" frameX="0" frameY="-7" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0018" x="448" y="2" width="182" height="178" frameX="0" frameY="-3" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0019" x="264" y="2" width="182" height="184"/>
+	<SubTexture name="stingray0020" x="632" y="2" width="182" height="178" frameX="0" frameY="-3" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0021" x="2" y="156" width="182" height="171" frameX="0" frameY="-7" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0022" x="448" y="182" width="182" height="165" frameX="0" frameY="-10" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="stingray0023" x="186" y="188" width="182" height="159" frameX="0" frameY="-13" frameWidth="182" frameHeight="184"/>
+	<SubTexture name="yellowFish0000" x="632" y="344" width="170" height="162"/>
+</TextureAtlas>

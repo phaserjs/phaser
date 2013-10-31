@@ -111,8 +111,8 @@ function update() {
 
 function render() {
 
-    game.debug.renderSpriteCorners(sprite);
+    // game.debug.renderSpriteCorners(sprite);
     // game.debug.renderSpriteInfo(sprite, 32, 32);
-    game.debug.renderSpriteCoords(sprite, 32, 32);
+    // game.debug.renderSpriteCoords(sprite, 32, 32);
 
 }

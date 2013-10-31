@@ -259,55 +259,61 @@ Phaser.AnimationParser = {
         var data = new Phaser.FrameData();
         var frames = xml.getElementsByTagName('SubTexture');
         var newFrame;
+
+        var uuid;
+        var frame;
+        var x;
+        var y;
+        var width;
+        var height;
+        var frameX;
+        var frameY;
+        var frameWidth;
+        var frameHeight;
         
         for (var i = 0; i < frames.length; i++)
         {
-            var uuid = game.rnd.uuid();
+            uuid = game.rnd.uuid();
 
-            var frame = frames[i].attributes;
+            frame = frames[i].attributes;
 
-            newFrame = data.addFrame(new Phaser.Frame(
-                i,
-            	frame.x.nodeValue, 
-            	frame.y.nodeValue, 
-            	frame.width.nodeValue, 
-            	frame.height.nodeValue, 
-            	frame.name.nodeValue,
-                uuid
-            ));
+            name = frame.name.nodeValue;
+            x = parseInt(frame.x.nodeValue);
+            y = parseInt(frame.y.nodeValue);
+            width = parseInt(frame.width.nodeValue);
+            height = parseInt(frame.height.nodeValue);
+
+            frameX = null;
+            frameY = null;
+
+            if (frame.frameX)
+            {
+                frameX = Math.abs(parseInt(frame.frameX.nodeValue));
+                frameY = Math.abs(parseInt(frame.frameY.nodeValue));
+                frameWidth = parseInt(frame.frameWidth.nodeValue);
+                frameHeight = parseInt(frame.frameHeight.nodeValue);
+            }
+
+            newFrame = data.addFrame(new Phaser.Frame(i, x, y, width, height, name, uuid));
 
             PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
-                x: frame.x.nodeValue,
-                y: frame.y.nodeValue,
-                width: frame.width.nodeValue,
-                height: frame.height.nodeValue
+                x: x,
+                y: y,
+                width: width,
+                height: height
             });
 
             //  Trimmed?
-            if (frame.frameX.nodeValue != '-0' || frame.frameY.nodeValue != '-0')
+            if (frameX !== null || frameY !== null)
             {
-                newFrame.setTrim(
-                	true, 
-                	frame.width.nodeValue, 
-                	frame.height.nodeValue, 
-                	Math.abs(frame.frameX.nodeValue), 
-                	Math.abs(frame.frameY.nodeValue), 
-                	frame.frameWidth.nodeValue, 
-                	frame.frameHeight.nodeValue
-                );
+                newFrame.setTrim(true, width, height, frameX, frameY, frameWidth, frameHeight);
 
-                PIXI.TextureCache[uuid].realSize = {
-                    x: Math.abs(frame.frameX.nodeValue),
-                    y: Math.abs(frame.frameY.nodeValue),
-                    w: frame.frameWidth.nodeValue,
-                    h: frame.frameHeight.nodeValue
-                };
+                PIXI.TextureCache[uuid].realSize = { x: frameX, y: frameY, w: frameWidth, h: frameHeight };
 
                 //  We had to hack Pixi to get this to work :(
                 PIXI.TextureCache[uuid].trimmed = true;
-                PIXI.TextureCache[uuid].trim.x = Math.abs(frame.frameX.nodeValue);
-                PIXI.TextureCache[uuid].trim.y = Math.abs(frame.frameY.nodeValue);
-
+                PIXI.TextureCache[uuid].trim.x = frameX;
+                PIXI.TextureCache[uuid].trim.y = frameY;
             }
         }
 

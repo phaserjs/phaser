@@ -54,6 +54,9 @@ Version 1.1.2
 * Fixed issue 135 - Added typeof checks into most ArcadePhysics functions to avoid errors with zero values.
 * Fixed issue 136 - distanceTo using worldX/Y instead of x/y.
 * Fixed lots of examples where the cursor keys / space bar were not locked from moving the browser page (if you find any more, please tell us!)
+* Fixed issue 149 - Starling XML files now load properly again, also created an Example to show use of them (thanks haden)
+* Fixed an issue where if the Starling XML file didn't contain a frameX/Y value it would crash on import.
+* Fixed the Multiple Animations Example - it's now a lovely underwater scene :)
 
 
 

@@ -864,14 +864,15 @@ Phaser.Physics.Arcade.prototype = {
         this._overlap = 0;
 
         //  The hulls overlap, let's process it
-        this._maxOverlap = body.deltaAbsX() + this.OVERLAP_BIAS;
+        // this._maxOverlap = body.deltaAbsX() + this.OVERLAP_BIAS;
 
         if (body.deltaX() < 0)
         {
             //  Moving left
             this._overlap = tile.right - body.hullX.x;
 
-            if ((this._overlap > this._maxOverlap) || body.allowCollision.left == false || tile.tile.collideRight == false)
+            // if ((this._overlap > this._maxOverlap) || body.allowCollision.left == false || tile.tile.collideRight == false)
+            if (body.allowCollision.left == false || tile.tile.collideRight == false)
             {
                 this._overlap = 0;
             }
@@ -885,7 +886,8 @@ Phaser.Physics.Arcade.prototype = {
             //  Moving right
             this._overlap = body.hullX.right - tile.x;
 
-            if ((this._overlap > this._maxOverlap) || body.allowCollision.right == false || tile.tile.collideLeft == false)
+            // if ((this._overlap > this._maxOverlap) || body.allowCollision.right == false || tile.tile.collideLeft == false)
+            if (body.allowCollision.right == false || tile.tile.collideLeft == false)
             {
                 this._overlap = 0;
             }
@@ -948,14 +950,15 @@ Phaser.Physics.Arcade.prototype = {
         this._overlap = 0;
 
         //  The hulls overlap, let's process it
-        this._maxOverlap = body.deltaAbsY() + this.OVERLAP_BIAS;
+        // this._maxOverlap = body.deltaAbsY() + this.OVERLAP_BIAS;
 
         if (body.deltaY() < 0)
         {
             //  Moving up
             this._overlap = tile.bottom - body.hullY.y;
 
-            if ((this._overlap > this._maxOverlap) || body.allowCollision.up == false || tile.tile.collideDown == false)
+            // if ((this._overlap > this._maxOverlap) || body.allowCollision.up == false || tile.tile.collideDown == false)
+            if (body.allowCollision.up == false || tile.tile.collideDown == false)
             {
                 this._overlap = 0;
             }
@@ -969,7 +972,8 @@ Phaser.Physics.Arcade.prototype = {
             //  Moving down
             this._overlap = body.hullY.bottom - tile.y;
 
-            if ((this._overlap > this._maxOverlap) || body.allowCollision.down == false || tile.tile.collideUp == false)
+            // if ((this._overlap > this._maxOverlap) || body.allowCollision.down == false || tile.tile.collideUp == false)
+            if (body.allowCollision.down == false || tile.tile.collideUp == false)
             {
                 this._overlap = 0;
             }

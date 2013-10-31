@@ -19,6 +19,10 @@
     {
       "file": "sprite+sheet.js",
       "title": "sprite sheet"
+    },
+    {
+      "file": "starling+atlas.js",
+      "title": "starling atlas"
     }
   ],
   "audio": [
