@@ -41,19 +41,23 @@ Version 1.1.2
 
 * New: You'll now find a complete Basic project Template in the resources/Project Templates folder. Will add more complex ones soon.
 * New: Phaser.Button now has the ability to set over/out/up/down sound effects so they play automatically based on those events.
+* New: Added init method to plugins, to be called as they are added to the PluginManager (thanks beeglebug)
+* New: Physics.Body now has a center property (issue 142, thanks MikeMnD)
 * Updated: Fixed a few final bugs in the Sprite body and bounds calculations, in turn this resolved the Tilemap collision issues in the 1.1 release.
 * Updated: Finished documentation for the Phaser.Button class.
+* Updated: Fixed the Invaders game sample and enhanced it.
+* Updated: Fixed the Star Struck game sample and enhanced it.
+* Updated: If you pause an Animation, when you next play it it'll resume (un-pause itself).
+* Updated: hexToRGB now accepts short hex codes (#EEE) (thanks beeglebug)
 * Fixed issue 135 - Added typeof checks into most ArcadePhysics functions to avoid errors with zero values.
 * Fixed issue 136 - distanceTo using worldX/Y instead of x/y.
-* Added init method to plugins, to be called as they are added to the PluginManager (thanks beeglebug)
-* If you pause an Animation, when you next play it it'll resume (un-pause itself).
-* New: Physics.Body now has a center property (issue 142, thanks MikeMnD)
-* Updated: Fixed the Invaders game sample and enhanced it, also fixed lots of "cursor key moves the page" examples.
+* Fixed lots of examples where the cursor keys / space bar were not locked from moving the browser page (if you find any more, please tell us!)
+
 
 
 Version 1.1.1 - October 26th 2013
 
-* Quick patch to get Phaser.AUTO working again on Firefox.
+* Quick patch to get Phaser.AUTO working again on Firefox / Android.
 * Any key added via addKey now automatically adds it to the capture list.
 
 Version 1.1 - October 25th 2013

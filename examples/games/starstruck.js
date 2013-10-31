@@ -19,6 +19,8 @@ var layer;
 var player;
 var facing = 'left';
 var jumpTimer = 0;
+var cursors;
+var jumpButton;
 var bg;
 
 function create() {
@@ -34,8 +36,8 @@ function create() {
 
     tileset.setCollisionRange(0, tileset.total - 1, true, true, true, true);
 
-    // tileset.setCollisionRange(12, 16, false, false, false, false);
-    // tileset.setCollisionRange(46, 50, false, false, false, false);
+    tileset.setCollisionRange(12, 16, false, false, false, false);
+    tileset.setCollisionRange(46, 50, false, false, false, false);
 
     layer = game.add.tilemapLayer(0, 0, 800, 600, tileset, map, 0);
     layer.resizeWorld();
@@ -44,7 +46,7 @@ function create() {
     player.body.bounce.y = 0.2;
     player.body.collideWorldBounds = true;
     player.body.gravity.y = 6;
-    // player.body.setSize(16, 32, 8, 16);
+    player.body.setSize(16, 32, 8, 16);
 
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('turn', [4], 20, true);
@@ -52,18 +54,18 @@ function create() {
 
     game.camera.follow(player);
 
-
+    cursors = game.input.keyboard.createCursorKeys();
+    jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
 }
 
 function update() {
 
-
     game.physics.collide(player, layer);
 
     player.body.velocity.x = 0;
 
-    if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+    if (cursors.left.isDown)
     {
         player.body.velocity.x = -150;
 
@@ -73,7 +75,7 @@ function update() {
             facing = 'left';
         }
     }
-    else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+    else if (cursors.right.isDown)
     {
         player.body.velocity.x = 150;
 
@@ -102,13 +104,10 @@ function update() {
         }
     }
     
-    if (game.input.keyboard.isDown(Phaser.Keyboard.UP) || game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
+    if (jumpButton.isDown && player.body.touching.down && game.time.now > jumpTimer)
     {
-        if (player.body.touching.down && game.time.now > jumpTimer)
-        {
-            player.body.velocity.y = -250;
-            jumpTimer = game.time.now + 750;
-        }
+        player.body.velocity.y = -250;
+        jumpTimer = game.time.now + 750;
     }
 
 }

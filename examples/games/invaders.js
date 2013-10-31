@@ -20,7 +20,14 @@ var cursors;
 var fireButton;
 var explosions;
 
+function loadUpdate() {
+
+    console.log('state loadUpdate');
+
+}
+
 function create() {
+
 
     s = game.add.tileSprite(0, 0, 800, 600, 'starfield');
 
