@@ -152,7 +152,7 @@ Phaser.Stage.prototype = {
 
 /**
 * @name Phaser.Stage#backgroundColor
-* @property {number|string} paused - Gets and sets the background color of the stage. The color can be given as a number: 0xff0000 or a hex string: '#ff0000'
+* @property {number|string} backgroundColor - Gets and sets the background color of the stage. The color can be given as a number: 0xff0000 or a hex string: '#ff0000'
 */
 Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 
@@ -164,12 +164,20 @@ Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 
         this._backgroundColor = color;
 
-        if (typeof color === 'string')
+        if (this.game.renderType == Phaser.CANVAS)
         {
-            color = Phaser.Color.hexToRGB(color);
+            //  Set it directly, this allows us to use rgb alpha values in Canvas mode.
+            this._stage.backgroundColorString = color;
         }
+        else
+        {
+            if (typeof color === 'string')
+            {
+                color = Phaser.Color.hexToRGB(color);
+            }
 
-        this._stage.setBackgroundColor(color);
+            this._stage.setBackgroundColor(color);
+        }
 
     }
 

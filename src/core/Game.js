@@ -11,16 +11,16 @@
 * @class Phaser.Game
 * @classdesc This is where the magic happens. The Game object is the heart of your game,
 * providing quick access to common functions and handling the boot process.
-* <p>"Hell, there are no rules here - we're trying to accomplish something."</p><br>
+* "Hell, there are no rules here - we're trying to accomplish something."
 *                                                       Thomas A. Edison
 * @constructor
-* @param {number} width - The width of your game in game pixels.
-* @param {number} height - The height of your game in game pixels.
-* @param {number} renderer -Which renderer to use (canvas or webgl)
-* @param {HTMLElement} parent -The Games DOM parent.
-* @param {Description} state - Description.
-* @param {boolean} transparent - Use a transparent canvas background or not.
-* @param  {boolean} antialias - Anti-alias graphics.
+* @param {number} [width=800] - The width of your game in game pixels.
+* @param {number} [height=600] - The height of your game in game pixels.
+* @param {number} [renderer=Phaser.AUTO] - Which renderer to use (canvas or webgl)
+* @param {HTMLElement} [parent=''] - The Games DOM parent.
+* @param {any} [state=null] - Description.
+* @param {boolean} [transparent=false] - Use a transparent canvas background or not.
+* @param  {boolean} [antialias=true] - Anti-alias graphics.
 */
 Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias) {
 

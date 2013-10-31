@@ -49,6 +49,8 @@ Version 1.1.2
 * Updated: Fixed the Star Struck game sample and enhanced it.
 * Updated: If you pause an Animation, when you next play it it'll resume (un-pause itself).
 * Updated: hexToRGB now accepts short hex codes (#EEE) (thanks beeglebug)
+* Updated: State functions (preload, update, render, etc) are now passed the current game as a parameter (thanks beeglebug)
+* Updated: If your game is running in Canvas (not WebGL) you can now set Stage.backgroundColor to rgba style CSS strings, allowing for semi-transparent game backgrounds.
 * Fixed issue 135 - Added typeof checks into most ArcadePhysics functions to avoid errors with zero values.
 * Fixed issue 136 - distanceTo using worldX/Y instead of x/y.
 * Fixed lots of examples where the cursor keys / space bar were not locked from moving the browser page (if you find any more, please tell us!)
