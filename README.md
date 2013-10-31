@@ -57,6 +57,7 @@ Version 1.1.2
 * Fixed issue 149 - Starling XML files now load properly again, also created an Example to show use of them (thanks haden)
 * Fixed an issue where if the Starling XML file didn't contain a frameX/Y value it would crash on import.
 * Fixed the Multiple Animations Example - it's now a lovely underwater scene :)
+* Fixed issue 141 - If a Sprite is dragged and you release the Pointer while not over the Sprite, it will think it's still over it (thanks Paratron)
 
 
 
