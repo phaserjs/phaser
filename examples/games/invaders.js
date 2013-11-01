@@ -21,12 +21,19 @@ var cursors;
 var fireButton;
 var explosions;
 var starfield;
+var score=0;
+var scoreString='';
+var scoreText;
+var lives ;
+var enemyBullet;
+var firingTimer=0;
+var stateText;
 
 function create() {
 
     //  The scrolling starfield background
     starfield = game.add.tileSprite(0, 0, 800, 600, 'starfield');
-    // game.add.tileSprite(0, 0, 800, 600, 'background');
+
 
     //  Our bullet group
     bullets = game.add.group();
@@ -35,18 +42,65 @@ function create() {
     bullets.setAll('anchor.y', 1);
     bullets.setAll('outOfBoundsKill', true);
 
+    // The enemy's bullets
+    enemyBullets = game.add.group();
+    enemyBullets.createMultiple(30, 'enemyBullet');
+    enemyBullets.setAll('anchor.x', 0.5);
+    enemyBullets.setAll('anchor.y', 1);
+    enemyBullets.setAll('outOfBoundsKill', true);
+
     //  The hero!
     player = game.add.sprite(400, 500, 'ship');
     player.anchor.setTo(0.5, 0.5);
 
     //  The baddies!
+
     aliens = game.add.group();
 
-    for (var y = 0; y < 4; y++)
+    createAliens();
+
+    // The score : 
+
+    scoreString='Score : ';
+    scoreText=game.add.text(10,10,scoreString+score,{fontSize : '34px',fill : '#fff'});
+
+    // Lives 
+    lives=game.add.group();
+    game.add.text(game.world.width-100,10,'Lives : ',{fontSize : '34px',fill : '#fff'});
+
+    //state text
+    stateText=game.add.text(game.world.centerX,game.world.centerY,'',{fontSize : '84px',fill : '#fff'});
+    stateText.anchor.setTo(0.5,0.5);
+    stateText.visible=false;
+
+    
+
+    for (var i = 0; i < 3; i++) {
+
+        var ship=lives.create(game.world.width-100+(30*i),60,'ship');
+        ship.anchor.setTo(0.5,0.5);
+        ship.angle=90;
+        ship.alpha=0.4;
+    };
+
+    //  An explosion pool
+    explosions = game.add.group();
+    explosions.createMultiple(30, 'kaboom');
+    explosions.forEach(setupInvader, this);
+
+    //  And some controls to play the game with
+    cursors = game.input.keyboard.createCursorKeys();
+    fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+}
+
+function createAliens () {
+        for (var y = 0; y < 4; y++)
     {
         for (var x = 0; x < 10; x++)
         {
             var alien = aliens.create(x * 48, y * 50, 'invader');
+            alien.anchor.setTo(0.5,0.5);
             alien.animations.add('fly', [0,1,2,3], 20, true);
             alien.play('fly');
         }
@@ -55,21 +109,11 @@ function create() {
     aliens.x = 100;
     aliens.y = 50;
 
-    //  An explosion pool
-    explosions = game.add.group();
-    explosions.createMultiple(30, 'kaboom');
-    explosions.forEach(setupInvader, this);
-
-    //  All this does is basically start the invaders moving. Notice we're move the Group they belong to, rather than the invaders directly.
+    //  All this does is basically start the invaders moving. Notice we're moving the Group they belong to, rather than the invaders directly.
     var tween = game.add.tween(aliens).to({x: 200}, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
 
     //  When the tween completes it calls descend, before looping again
     tween.onComplete.add(descend, this);
-
-    //  And some controls to play the game with
-    cursors = game.input.keyboard.createCursorKeys();
-    fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
 }
 
 function setupInvader (invader) {
@@ -109,9 +153,77 @@ function update() {
         fireBullet();
     }
 
+    if(game.time.now>firingTimer){
+        enemyFires();
+    }
+
     //  Run collision
     game.physics.collide(bullets, aliens, collisionHandler, null, this);
+    game.physics.collide(enemyBullets, player, enemyHitsPlayer, null, this);
 
+
+}
+
+function enemyHitsPlayer (player,bullet) {
+    
+    bullet.kill();
+
+    live=lives.getFirstAlive();
+
+    if(live){
+        live.kill();
+    }
+
+
+    //  And create an explosion :)
+    var explosion = explosions.getFirstDead();
+    explosion.reset(player.body.x, player.body.y);
+    explosion.play('kaboom', 30, false, true);
+
+    if(lives.countLiving()<1){
+        
+            player.kill();
+            enemyBullets.callAll('kill',this);
+            stateText.content=" GAME OVER \n Click to restart";
+            stateText.visible=true;
+
+            game.input.onTap.addOnce(restart,this);
+
+
+    }
+
+}
+
+function restart () {
+    
+
+    lives.callAll('revive');
+    //  And brings the aliens back from the dead :)
+    aliens.removeAll();
+
+    createAliens();
+
+    player.revive();
+
+    stateText.visible=false;
+
+
+}
+
+function enemyFires () {
+
+        //  Grab the first bullet we can from the pool
+        enemyBullet = enemyBullets.getFirstExists(false);
+
+        if (enemyBullet){
+
+            var shooter=aliens.getRandom();
+            //  And fire it
+            enemyBullet.reset(shooter.body.x, shooter.body.y);
+            // enemyBullet.body.velocity.y = 400;
+            game.physics.moveToObject(enemyBullet,player,120);
+            firingTimer = game.time.now + 2000;
+        }
 }
 
 function fireBullet () {
@@ -147,10 +259,27 @@ function collisionHandler (bullet, alien) {
     alien.kill();
 
     //  Increase the score
+    score+=20;
+    scoreText.content=scoreString+score;
 
     //  And create an explosion :)
     var explosion = explosions.getFirstDead();
     explosion.reset(alien.body.x, alien.body.y);
     explosion.play('kaboom', 30, false, true);
+
+    if (aliens.countLiving() == 0){
+        //  New level starts
+        score += 1000;
+        scoreText.content = scoreString + score;
+
+        enemyBullets.callAll('kill',this);
+        stateText.content=" You Won, \n Click to restart";
+        stateText.visible=true;
+
+        game.input.onTap.addOnce(restart,this);
+
+        
+
+    }
 
 }
