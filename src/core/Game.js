@@ -306,14 +306,7 @@ Phaser.Game.prototype = {
 
 			this.load.onLoadComplete.add(this.loadComplete, this);
 
-			if (this.renderType == Phaser.CANVAS)
-			{
-				console.log('%cPhaser initialized. Rendering to Canvas.', 'color: #ffff33; background: #000000');
-			}
-			else
-			{
-				console.log('%cPhaser initialized. Rendering to WebGL.', 'color: #ffff33; background: #000000');
-			}
+			this.showDebugHeader();
 
 	        this.isRunning = true;
             this._loadComplete = false;
@@ -321,6 +314,48 @@ Phaser.Game.prototype = {
 			this.raf = new Phaser.RequestAnimationFrame(this);
 			this.raf.start();
 
+		}
+
+	},
+
+	/**
+    * Displays a Phaser version debug header in the console.
+    *
+    * @method Phaser.Game#showDebugHeader
+    * @protected
+    */
+	showDebugHeader: function () {
+
+		var v = Phaser.DEV_VERSION;
+		var r = 'Canvas';
+		var a = 'HTML Audio';
+
+		if (this.renderType == Phaser.WEBGL)
+		{
+			r = 'WebGL';
+		}
+
+		if (this.device.webAudio)
+		{
+			a = 'WebAudio';
+		}
+
+		if (this.device.chrome)
+		{
+			var args = [ 
+				'%c %c %c  Phaser v' + v + ' - Renderer: ' + r + ' - Audio: ' + a + '  %c %c ',
+				'background: #00bff3',
+				'background: #0072bc',
+				'color: #ffffff; background: #003471',
+				'background: #0072bc',
+				'background: #00bff3'
+			];
+
+			console.log.apply(console, args);
+		}
+		else
+		{
+			console.log('Phaser v' + v + ' - Renderer: ' + r + ' - Audio: ' + a);
 		}
 
 	},

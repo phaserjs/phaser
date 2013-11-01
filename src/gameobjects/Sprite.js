@@ -143,6 +143,12 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     }
 
     /**
+    * The rectangular area from the texture that will be rendered.
+    * @property {Phaser.Rectangle} textureRegion
+    */
+    this.textureRegion = new Phaser.Rectangle(this.texture.frame.x, this.texture.frame.y, this.texture.frame.width, this.texture.frame.height);
+
+    /**
     * The anchor sets the origin point of the texture.
     * The default is 0,0 this means the textures origin is the top left 
     * Setting than anchor to 0.5,0.5 means the textures origin is centered
