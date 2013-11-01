@@ -47,7 +47,7 @@ Version 1.1.2
 * New: Added Group.cursor. This points to the first item added to a Group. You can move the cursor with Group.next() and Group.previous().
 * New: Added Tween.isTweening(object) to check if an object is currently being tweened or not (thanks mikehamil10)
 * New: Added getMagnitude, setMagnitude, normalize and isZero methods to Point (thanks beeglebug)
-* New: Group.callAll now supports nested functions and a context, making it really powerful!
+* New/Change: Group.callAll now supports nested functions and a context, making it really powerful!
 * Updated: Fixed a few final bugs in the Sprite body and bounds calculations, in turn this resolved the Tilemap collision issues in the 1.1 release.
 * Updated: Finished documentation for the Phaser.Button class.
 * Updated: Fixed the Invaders game sample and enhanced it.

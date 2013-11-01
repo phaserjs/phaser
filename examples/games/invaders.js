@@ -183,7 +183,7 @@ function enemyHitsPlayer (player,bullet) {
     if(lives.countLiving()<1){
         
             player.kill();
-            enemyBullets.callAll('kill',this);
+            enemyBullets.callAll('kill');
             stateText.content=" GAME OVER \n Click to restart";
             stateText.visible=true;
 
