@@ -164,7 +164,7 @@ function ballHitBrick (_ball, _brick) {
         ball.animations.stop();
 
         //  And bring the bricks back from the dead :)
-        bricks.callAll('revive', this);
+        bricks.callAll('revive');
     }
 
 }

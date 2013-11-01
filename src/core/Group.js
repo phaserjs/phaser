@@ -524,7 +524,9 @@ Phaser.Group.prototype = {
 		//	3 = Multiply
 		//	4 = Divide
 
-		if (key.length == 1)
+		var len = key.length;
+
+		if (len == 1)
 		{
 			if (operation == 0) { child[key[0]] = value; }
 			else if (operation == 1) { child[key[0]] += value; }
@@ -532,7 +534,7 @@ Phaser.Group.prototype = {
 			else if (operation == 3) { child[key[0]] *= value; }
 			else if (operation == 4) { child[key[0]] /= value; }
 		}
-		else if (key.length == 2)
+		else if (len == 2)
 		{
 			if (operation == 0) { child[key[0]][key[1]] = value; }
 			else if (operation == 1) { child[key[0]][key[1]] += value; }
@@ -540,7 +542,7 @@ Phaser.Group.prototype = {
 			else if (operation == 3) { child[key[0]][key[1]] *= value; }
 			else if (operation == 4) { child[key[0]][key[1]] /= value; }
 		}
-		else if (key.length == 3)
+		else if (len == 3)
 		{
 			if (operation == 0) { child[key[0]][key[1]][key[2]] = value; }
 			else if (operation == 1) { child[key[0]][key[1]][key[2]] += value; }
@@ -548,7 +550,7 @@ Phaser.Group.prototype = {
 			else if (operation == 3) { child[key[0]][key[1]][key[2]] *= value; }
 			else if (operation == 4) { child[key[0]][key[1]][key[2]] /= value; }
 		}
-		else if (key.length == 4)
+		else if (len == 4)
 		{
 			if (operation == 0) { child[key[0]][key[1]][key[2]][key[3]] = value; }
 			else if (operation == 1) { child[key[0]][key[1]][key[2]][key[3]] += value; }
@@ -698,31 +700,118 @@ Phaser.Group.prototype = {
 	},
 
 	/**
+    * Calls a function on all of the children that have exists=true in this Group.
+    * 
+    * @method Phaser.Group#callbackFromArray
+    * @param {object} child - The object to inspect.
+    * @param {array} callback - The array of function names.
+    * @param {number} length - The size of the array (pre-calculated in callAll).
+    * @protected
+    */
+	callbackFromArray: function (child, callback, length) {
+
+		//	Kinda looks like a Christmas tree
+
+		if (length == 1)
+		{
+			if (child[callback[0]])
+			{
+				return child[callback[0]];
+			}
+		}
+		else if (length == 2)
+		{
+			if (child[callback[0]][callback[1]])
+			{
+				return child[callback[0]][callback[1]];
+			}
+		}
+		else if (length == 3)
+		{
+			if (child[callback[0]][callback[1]][callback[2]])
+			{
+				return child[callback[0]][callback[1]][callback[2]];
+			}
+		}
+		else if (length == 4)
+		{
+			if (child[callback[0]][callback[1]][callback[2]][callback[3]])
+			{
+				return child[callback[0]][callback[1]][callback[2]][callback[3]];
+			}
+		}
+		else
+		{
+			if (child[callback])
+			{
+				return child[callback];
+			}
+		}
+
+		return false;
+
+	},
+
+	/**
     * Calls a function on all of the children regardless if they are dead or alive (see callAllExists if you need control over that)
-    * After the callback parameter you can add as many extra parameters as you like, which will all be passed to the child.
+    * After the method parameter you can add as many extra parameters as you like, which will all be passed to the child.
     * 
     * @method Phaser.Group#callAll
-    * @param {function} callback - The function that exists on the children that will be called.
-    * @param {...*} parameter - Additional parameters that will be passed to the callback.
+    * @param {string} method - A string containing the name of the function that will be called. The function must exist on the child.
+    * @param {string} [context=''] - A string containing the context under which the method will be executed. Leave to '' to default to the child.
+    * @param {...*} parameter - Additional parameters that will be passed to the method.
     */
-	callAll: function (callback) {
+	callAll: function (method, context) {
 
-		var args = Array.prototype.splice.call(arguments, 1);
+		if (typeof method == 'undefined')
+		{
+			return;
+		}
+
+		//	Extract the method into an array
+		method = method.split('.');
+
+		var methodLength = method.length;
+
+		if (typeof context == 'undefined')
+		{
+			context = null;
+		}
+		else
+		{
+			//	Extract the context into an array
+			context = context.split('.');
+			var contextLength = context.length;
+		}
+
+		var args = Array.prototype.splice.call(arguments, 2);
+		var callback = null;
 
 		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
-			var currentNode = this._container.first._iNext;
+			var child = this._container.first._iNext;
 				
 			do	
 			{
-				if (currentNode[callback])
+				callback = this.callbackFromArray(child, method, methodLength);
+
+				if (context && callback)
 				{
-					currentNode[callback].apply(currentNode, args);
+					callbackContext = this.callbackFromArray(child, context, contextLength);
+	
+					if (callback)
+					{
+						callback.apply(callbackContext, args);
+					}
+				}
+				else if (callback)
+				{
+					callback.apply(child, args);
 				}
 
-				currentNode = currentNode._iNext;
+				child = child._iNext;
 			}
-			while (currentNode != this._container.last._iNext)
+			while (child != this._container.last._iNext)
 
 		}
 

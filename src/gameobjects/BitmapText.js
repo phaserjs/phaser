@@ -5,7 +5,10 @@
 */
 
 /**
-* Creates a new <code>BitmapText</code>.
+* Creates a new `BitmapText` object. BitmapText work by taking a texture file and an XML file that describes the font layout.
+* On Windows you can use the free app BMFont: http://www.angelcode.com/products/bmfont/
+* On OS X we recommend Glyph Designer: http://www.71squared.com/en/glyphdesigner
+*
 * @class Phaser.BitmapText
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
