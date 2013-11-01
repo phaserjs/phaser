@@ -9,7 +9,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v1.1.1 - Released October 26th 2013.
+* v1.1.2 - Released November 1st 2013.
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *

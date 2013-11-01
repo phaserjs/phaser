@@ -763,7 +763,7 @@ Phaser.Group.prototype = {
     */
 	callAll: function (method, context) {
 
-		if (typeof method == 'undefined')
+		if (typeof method === 'undefined')
 		{
 			return;
 		}
@@ -773,15 +773,18 @@ Phaser.Group.prototype = {
 
 		var methodLength = method.length;
 
-		if (typeof context == 'undefined')
+		if (typeof context === 'undefined')
 		{
 			context = null;
 		}
 		else
 		{
 			//	Extract the context into an array
-			context = context.split('.');
-			var contextLength = context.length;
+			if (typeof context === 'string')
+			{
+				context = context.split('.');
+				var contextLength = context.length;
+			}
 		}
 
 		var args = Array.prototype.splice.call(arguments, 2);

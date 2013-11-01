@@ -569,10 +569,6 @@
       "title": "mario"
     },
     {
-      "file": "mariotogether.js",
-      "title": "mariotogether"
-    },
-    {
       "file": "paint+tiles.js",
       "title": "paint tiles"
     },
@@ -587,14 +583,6 @@
     {
       "file": "sci+fly.js",
       "title": "sci fly"
-    },
-    {
-      "file": "supermario.js",
-      "title": "supermario"
-    },
-    {
-      "file": "supermario2.js",
-      "title": "supermario2"
     },
     {
       "file": "swap+tiles.js",

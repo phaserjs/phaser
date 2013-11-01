@@ -5,7 +5,7 @@ Phaser 1.1
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 1.1.2 - Released: in development
+Version: 1.1.2 - Released: November 1st 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -37,7 +37,7 @@ Phaser is everything we ever wanted from an HTML5 game framework. It powers all 
 Change Log
 ----------
 
-Version 1.1.2
+Version 1.1.2 - November 1st 2013
 
 * New: You'll now find a complete Basic project Template in the resources/Project Templates folder. Will add more complex ones soon.
 * New: Phaser.Button now has the ability to set over/out/up/down sound effects so they play automatically based on those events.
@@ -68,10 +68,6 @@ Version 1.1.2
 * Fixed issue 141 - If a Sprite is dragged and you release the Pointer while not over the Sprite, it will think it's still over it (thanks Paratron)
 * Fixed issue 88 - Incorrect game.input.x/y values on click with scaled stage (thanks DrHackenstein)
 * Fixed issue 143 - Entering full screen mode made the Input x/y coordinates go wrong.
-
-
-
-
 
 Version 1.1.1 - October 26th 2013
 

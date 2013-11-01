@@ -59,10 +59,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Bullet.html">Bullet</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.Button.html">Button</a>
 						</li>
 						
@@ -406,7 +402,12 @@
     
     
     <div class="description">
-        <p>Create a new &lt;code&gt;Button&lt;/code&gt; object.</p>
+        <p>Create a new <code>Button</code> object. A Button is a special type of Sprite that is set-up to handle Pointer events automatically. The four states a Button responds to are:
+'Over' - when the Pointer moves over the Button. This is also commonly known as 'hover'.
+'Out' - when the Pointer that was previously over the Button moves out of it.
+'Down' - when the Pointer is pressed down on the Button. I.e. touched on a touch enabled device or clicked with the mouse.
+'Up' - when the Pointer that was pressed down on the Button is released again.
+You can set a unique texture frame and Sound for any of these states.</p>
     </div>
     
 
@@ -499,7 +500,7 @@
 
             
 
-            <td class="description last"><p>X position of the button.</p></td>
+            <td class="description last"><p>X position of the Button.</p></td>
         </tr>
 
 	
@@ -532,7 +533,7 @@
 
             
 
-            <td class="description last"><p>Y position of the button.</p></td>
+            <td class="description last"><p>Y position of the Button.</p></td>
         </tr>
 
 	
@@ -565,7 +566,7 @@
 
             
 
-            <td class="description last"><p>The image key as defined in the Game.Cache to use as the texture for this button.</p></td>
+            <td class="description last"><p>The image key as defined in the Game.Cache to use as the texture for this Button.</p></td>
         </tr>
 
 	
@@ -598,7 +599,7 @@
 
             
 
-            <td class="description last"><p>The function to call when this button is pressed</p></td>
+            <td class="description last"><p>The function to call when this Button is pressed.</p></td>
         </tr>
 
 	
@@ -631,7 +632,7 @@
 
             
 
-            <td class="description last"><p>The context in which the callback will be called (usually 'this')</p></td>
+            <td class="description last"><p>The context in which the callback will be called (usually 'this').</p></td>
         </tr>
 
 	
@@ -771,7 +772,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-23">line 23</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-28">line 28</a>
     </li></ul></dd>
     
 
@@ -813,6 +814,315 @@
         <h3 class="subsection-title">Members</h3>
 
         <dl>
+            
+<dt>
+    <h4 class="name" id="freezeFrames"><span class="type-signature"></span>freezeFrames<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>freezeFrames</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>When true the Button will cease to change texture frame on all events (over, out, up, down).</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-170">line 170</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onDownSound"><span class="type-signature"></span>onDownSound<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>onDownSound</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Sound.html">Phaser.Sound</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Sound to be played when this Buttons Down state is activated.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-115">line 115</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onDownSoundMarker"><span class="type-signature"></span>onDownSoundMarker<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>onDownSoundMarker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Sound Marker used in conjunction with the onDownSound.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-139">line 139</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
             
 <dt>
     <h4 class="name" id="onInputDown"><span class="type-signature"></span>onInputDown<span class="type-signature"></span></h4>
@@ -870,7 +1180,7 @@
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The Signal (or event) dispatched when this Button is in an Down state.</p></td>
         </tr>
 
 	
@@ -899,7 +1209,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-108">line 108</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-160">line 160</a>
     </li></ul></dd>
     
 
@@ -972,7 +1282,7 @@
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The Signal (or event) dispatched when this Button is in an Out state.</p></td>
         </tr>
 
 	
@@ -1001,7 +1311,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-103">line 103</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-155">line 155</a>
     </li></ul></dd>
     
 
@@ -1074,7 +1384,7 @@
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The Signal (or event) dispatched when this Button is in an Over state.</p></td>
         </tr>
 
 	
@@ -1103,7 +1413,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-98">line 98</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-150">line 150</a>
     </li></ul></dd>
     
 
@@ -1176,7 +1486,7 @@
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The Signal (or event) dispatched when this Button is in an Up state.</p></td>
         </tr>
 
 	
@@ -1205,7 +1515,628 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-113">line 113</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-165">line 165</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onOutSound"><span class="type-signature"></span>onOutSound<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>onOutSound</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Sound.html">Phaser.Sound</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Sound to be played when this Buttons Out state is activated.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-109">line 109</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onOutSoundMarker"><span class="type-signature"></span>onOutSoundMarker<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>onOutSoundMarker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Sound Marker used in conjunction with the onOutSound.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-133">line 133</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onOverSound"><span class="type-signature"></span>onOverSound<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>onOverSound</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Sound.html">Phaser.Sound</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Sound to be played when this Buttons Over state is activated.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-103">line 103</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onOverSoundMarker"><span class="type-signature"></span>onOverSoundMarker<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>onOverSoundMarker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Sound Marker used in conjunction with the onOverSound.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-127">line 127</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onUpSound"><span class="type-signature"></span>onUpSound<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>onUpSound</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Sound.html">Phaser.Sound</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Sound to be played when this Buttons Up state is activated.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-121">line 121</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onUpSoundMarker"><span class="type-signature"></span>onUpSoundMarker<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>onUpSoundMarker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Sound Marker used in conjunction with the onUpSound.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-145">line 145</a>
     </li></ul></dd>
     
 
@@ -1268,7 +2199,7 @@
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">number</span>
 
 
             
@@ -1278,7 +2209,7 @@
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The Phaser Object Type.</p></td>
         </tr>
 
 	
@@ -1307,7 +2238,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-36">line 36</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-41">line 41</a>
     </li></ul></dd>
     
 
@@ -1331,7 +2262,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="onInputDownHandler"><span class="type-signature"></span>onInputDownHandler<span class="signature">(pointer)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="onInputOverHandler"><span class="type-signature">&lt;protected> </span>onInputOverHandler<span class="signature">(pointer)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1339,7 +2270,7 @@
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Internal function that handles input events.</p>
     </div>
     
 
@@ -1379,7 +2310,7 @@
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
 
 
             
@@ -1389,7 +2320,7 @@
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The Pointer that activated the Button.</p></td>
         </tr>
 
 	
@@ -1421,7 +2352,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-270">line 270</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-394">line 394</a>
     </li></ul></dd>
     
 
@@ -1449,7 +2380,7 @@
         
             
 <dt>
-    <h4 class="name" id="onInputOutHandler"><span class="type-signature"></span>onInputOutHandler<span class="signature">(pointer)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="onInputOverHandler"><span class="type-signature">&lt;protected> </span>onInputOverHandler<span class="signature">(pointer)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1457,7 +2388,7 @@
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Internal function that handles input events.</p>
     </div>
     
 
@@ -1497,7 +2428,7 @@
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
 
 
             
@@ -1507,7 +2438,7 @@
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The Pointer that activated the Button.</p></td>
         </tr>
 
 	
@@ -1539,7 +2470,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-244">line 244</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-426">line 426</a>
     </li></ul></dd>
     
 
@@ -1567,7 +2498,7 @@
         
             
 <dt>
-    <h4 class="name" id="onInputOverHandler"><span class="type-signature"></span>onInputOverHandler<span class="signature">(pointer)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="onInputOverHandler"><span class="type-signature">&lt;protected> </span>onInputOverHandler<span class="signature">(pointer)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1575,7 +2506,7 @@
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Internal function that handles input events.</p>
     </div>
     
 
@@ -1615,7 +2546,7 @@
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
 
 
             
@@ -1625,7 +2556,7 @@
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The Pointer that activated the Button.</p></td>
         </tr>
 
 	
@@ -1657,7 +2588,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-218">line 218</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-458">line 458</a>
     </li></ul></dd>
     
 
@@ -1685,7 +2616,7 @@
         
             
 <dt>
-    <h4 class="name" id="onInputUpHandler"><span class="type-signature"></span>onInputUpHandler<span class="signature">(pointer)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="onInputOverHandler"><span class="type-signature">&lt;protected> </span>onInputOverHandler<span class="signature">(pointer)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1693,7 +2624,7 @@
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Internal function that handles input events.</p>
     </div>
     
 
@@ -1733,7 +2664,7 @@
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
 
 
             
@@ -1743,7 +2674,7 @@
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The Pointer that activated the Button.</p></td>
         </tr>
 
 	
@@ -1775,7 +2706,168 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-296">line 296</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-490">line 490</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setDownSound"><span class="type-signature"></span>setDownSound<span class="signature">(sound, <span class="optional">marker</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>The Sound to be played when a Pointer clicks on this Button.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>sound</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Sound.html">Phaser.Sound</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The Sound that will be played.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>marker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>A Sound Marker that will be used in the playback.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-370">line 370</a>
     </li></ul></dd>
     
 
@@ -1981,7 +3073,853 @@ exactly like setting them in the constructor.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-137">line 137</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-193">line 193</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setOutSound"><span class="type-signature"></span>setOutSound<span class="signature">(sound, <span class="optional">marker</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>The Sound to be played when a Pointer moves out of this Button.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>sound</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Sound.html">Phaser.Sound</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The Sound that will be played.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>marker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>A Sound Marker that will be used in the playback.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-322">line 322</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setOverSound"><span class="type-signature"></span>setOverSound<span class="signature">(sound, <span class="optional">marker</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>The Sound to be played when a Pointer moves over this Button.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>sound</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Sound.html">Phaser.Sound</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The Sound that will be played.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>marker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>A Sound Marker that will be used in the playback.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-298">line 298</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setSounds"><span class="type-signature"></span>setSounds<span class="signature">(<span class="optional">overSound</span>, <span class="optional">overMarker</span>, <span class="optional">downSound</span>, <span class="optional">downMarker</span>, <span class="optional">outSound</span>, <span class="optional">outMarker</span>, <span class="optional">upSound</span>, <span class="optional">upMarker</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Sets the sounds to be played whenever this Button is interacted with. Sounds can be either full Sound objects, or markers pointing to a section of a Sound object.
+The most common forms of sounds are 'hover' effects and 'click' effects, which is why the order of the parameters is overSound then downSound.
+Call this function with no parameters at all to reset all sounds on this Button.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>overSound</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Sound.html">Phaser.Sound</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Over Button Sound.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>overMarker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Over Button Sound Marker.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>downSound</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Sound.html">Phaser.Sound</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Down Button Sound.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>downMarker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Down Button Sound Marker.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>outSound</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Sound.html">Phaser.Sound</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Out Button Sound.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>outMarker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Out Button Sound Marker.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>upSound</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Sound.html">Phaser.Sound</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Up Button Sound.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>upMarker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Up Button Sound Marker.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-274">line 274</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setUpSound"><span class="type-signature"></span>setUpSound<span class="signature">(sound, <span class="optional">marker</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>The Sound to be played when a Pointer clicks on this Button.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>sound</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Sound.html">Phaser.Sound</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The Sound that will be played.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>marker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>A Sound Marker that will be used in the playback.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-346">line 346</a>
     </li></ul></dd>
     
 
@@ -2032,7 +3970,7 @@ exactly like setting them in the constructor.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Fri Oct 25 2013 17:05:25 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Nov 01 2013 18:16:09 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
