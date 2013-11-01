@@ -44,6 +44,7 @@ Version 1.1.2
 * New: Added init method to plugins, to be called as they are added to the PluginManager (thanks beeglebug)
 * New: Physics.Body now has a center property (issue 142, thanks MikeMnD)
 * New: Lots of fixes across Full Screen Mode support. Input now works, scaling restores properly, world scale is correct and anti-alias support added.
+* New: Added Group.cursor. This points to the first item added to a Group. You can move the cursor with Group.next() and Group.previous().
 * Updated: Fixed a few final bugs in the Sprite body and bounds calculations, in turn this resolved the Tilemap collision issues in the 1.1 release.
 * Updated: Finished documentation for the Phaser.Button class.
 * Updated: Fixed the Invaders game sample and enhanced it.

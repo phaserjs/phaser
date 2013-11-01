@@ -83,7 +83,9 @@ Phaser.Group = function (game, parent, name, useStage) {
     this.scale = new Phaser.Point(1, 1);
 
     /**
-    * @property {any} cursor - The current display object that the Group cursor is pointing to. You can move the cursor with Group.next and Group.previous.
+    * The cursor is a simple way to iterate through the objects in a Group using the Group.next and Group.previous functions.
+    * The cursor is set to the first child added to the Group and doesn't change unless you call next, previous or set it directly with Group.cursor.
+    * @property {any} cursor - The current display object that the Group cursor is pointing to.
     */ 
     this.cursor = null;
 
@@ -116,6 +118,11 @@ Phaser.Group.prototype = {
 			this._container.addChild(child);
 
 			child.updateTransform();
+
+			if (this.cursor === null)
+			{
+				this.cursor = child;
+			}
 		}
 
 		return child;
@@ -145,6 +152,11 @@ Phaser.Group.prototype = {
 			this._container.addChildAt(child, index);
 
 			child.updateTransform();
+
+			if (this.cursor === null)
+			{
+				this.cursor = child;
+			}
 		}
 
 		return child;
@@ -197,6 +209,11 @@ Phaser.Group.prototype = {
 			
 		child.updateTransform();
 
+		if (this.cursor === null)
+		{
+			this.cursor = child;
+		}
+
 		return child;
 
 	},
@@ -233,6 +250,55 @@ Phaser.Group.prototype = {
 			this._container.addChild(child);
 			child.updateTransform();
 
+			if (this.cursor === null)
+			{
+				this.cursor = child;
+			}
+
+		}
+
+	},
+
+    /**
+	* Advances the Group cursor to the next object in the Group. If it's at the end of the Group it wraps around to the first object.
+	*
+    * @method Phaser.Group#next
+	*/
+	next: function () {
+
+		if (this.cursor)
+		{
+			//	Wrap the cursor?
+			if (this.cursor == this._container.last)
+			{
+				this.cursor = this._container._iNext;
+			}
+			else
+			{
+				this.cursor = this.cursor._iNext;
+			}
+		}
+
+	},
+
+    /**
+	* Moves the Group cursor to the previous object in the Group. If it's at the start of the Group it wraps around to the last object.
+	*
+    * @method Phaser.Group#previous
+	*/
+	previous: function () {
+
+		if (this.cursor)
+		{
+			//	Wrap the cursor?
+			if (this.cursor == this._container._iNext)
+			{
+				this.cursor = this._container.last;
+			}
+			else
+			{
+				this.cursor = this.cursor._iPrev;
+			}
 		}
 
 	},
@@ -423,8 +489,14 @@ Phaser.Group.prototype = {
 
 			this._container.removeChild(oldChild);
 			this._container.addChildAt(newChild, index);
+
 			newChild.events.onAddedToGroup.dispatch(newChild, this);
 			newChild.updateTransform();
+
+			if (this.cursor == oldChild)
+			{
+				this.cursor = this._container._iNext;
+			}
 		}
 
 	},
@@ -960,6 +1032,18 @@ Phaser.Group.prototype = {
 
 		this._container.removeChild(child);
 
+		if (this.cursor == child)
+		{
+			if (this._container._iNext)
+			{
+				this.cursor = this._container._iNext;
+			}
+			else
+			{
+				this.cursor = null;
+			}
+		}
+
 		child.group = null;
 
 	},
@@ -987,6 +1071,8 @@ Phaser.Group.prototype = {
 		}
 		while (this._container.children.length > 0);
 
+		this.cursor = null;
+
 	},
 
 	/**
@@ -1013,6 +1099,18 @@ Phaser.Group.prototype = {
 			var child = this._container.children[i];
 			child.events.onRemovedFromGroup.dispatch(child, this);
 			this._container.removeChild(child);
+	
+			if (this.cursor == child)
+			{
+				if (this._container._iNext)
+				{
+					this.cursor = this._container._iNext;
+				}
+				else
+				{
+					this.cursor = null;
+				}
+			}
 		}
 
 	},
@@ -1033,6 +1131,8 @@ Phaser.Group.prototype = {
 		this.game = null;
 
 		this.exists = false;
+
+		this.cursor = null;
 
 	},
 
@@ -1071,6 +1171,12 @@ Phaser.Group.prototype = {
 		do	
 		{
 			var name = displayObject.name || '*';
+
+			if (this.cursor == displayObject)
+			{
+				var name = '> ' + name;
+			}
+
 			var nameNext = '-';
 			var namePrev = '-';
 			var nameFirst = '-';
