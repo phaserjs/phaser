@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
 
 function preload() {
 
@@ -21,12 +21,12 @@ var cursors;
 var fireButton;
 var explosions;
 var starfield;
-var score=0;
-var scoreString='';
+var score = 0;
+var scoreString = '';
 var scoreText;
-var lives ;
+var lives;
 var enemyBullet;
-var firingTimer=0;
+var firingTimer = 0;
 var stateText;
 
 function create() {
@@ -54,34 +54,33 @@ function create() {
     player.anchor.setTo(0.5, 0.5);
 
     //  The baddies!
-
     aliens = game.add.group();
 
     createAliens();
 
     // The score : 
-
-    scoreString='Score : ';
-    scoreText=game.add.text(10,10,scoreString+score,{fontSize : '34px',fill : '#fff'});
+    scoreString = 'Score : ';
+    scoreText = game.add.text(10,10,scoreString+score,{fontSize : '34px',fill : '#fff'});
 
     // Lives 
-    lives=game.add.group();
+    lives = game.add.group();
     game.add.text(game.world.width-100,10,'Lives : ',{fontSize : '34px',fill : '#fff'});
 
     //state text
-    stateText=game.add.text(game.world.centerX,game.world.centerY,'',{fontSize : '84px',fill : '#fff'});
+    stateText = game.add.text(game.world.centerX,game.world.centerY,'',{fontSize : '84px',fill : '#fff'});
     stateText.anchor.setTo(0.5,0.5);
     stateText.visible=false;
 
     
 
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i < 3; i++) 
+    {
 
-        var ship=lives.create(game.world.width-100+(30*i),60,'ship');
+        var ship = lives.create(game.world.width-100+(30*i),60,'ship');
         ship.anchor.setTo(0.5,0.5);
-        ship.angle=90;
-        ship.alpha=0.4;
-    };
+        ship.angle = 90;
+        ship.alpha = 0.4;
+    }
 
     //  An explosion pool
     explosions = game.add.group();
@@ -95,7 +94,8 @@ function create() {
 }
 
 function createAliens () {
-        for (var y = 0; y < 4; y++)
+
+    for (var y = 0; y < 4; y++)
     {
         for (var x = 0; x < 10; x++)
         {
@@ -153,7 +153,8 @@ function update() {
         fireBullet();
     }
 
-    if(game.time.now>firingTimer){
+    if(game.time.now > firingTimer)
+    {
         enemyFires();
     }
 
@@ -164,13 +165,47 @@ function update() {
 
 }
 
+function collisionHandler (bullet, alien) {
+
+    //  When a bullet hits an alien we kill them both
+    bullet.kill();
+    alien.kill();
+
+    //  Increase the score
+    score+=20;
+    scoreText.content=scoreString+score;
+
+    //  And create an explosion :)
+    var explosion = explosions.getFirstDead();
+    explosion.reset(alien.body.x, alien.body.y);
+    explosion.play('kaboom', 30, false, true);
+
+    if (aliens.countLiving() == 0)
+    {
+        
+        score += 1000;
+        scoreText.content = scoreString + score;
+
+        enemyBullets.callAll('kill',this);
+        stateText.content = " You Won, \n Click to restart";
+        stateText.visible = true;
+
+        //the "click to restart" handler
+        game.input.onTap.addOnce(restart,this);
+
+        
+    }
+
+}
+
 function enemyHitsPlayer (player,bullet) {
     
     bullet.kill();
 
-    live=lives.getFirstAlive();
+    live = lives.getFirstAlive();
 
-    if(live){
+    if(live)
+    {
         live.kill();
     }
 
@@ -180,50 +215,38 @@ function enemyHitsPlayer (player,bullet) {
     explosion.reset(player.body.x, player.body.y);
     explosion.play('kaboom', 30, false, true);
 
-    if(lives.countLiving()<1){
+    // When the player dies
+    if(lives.countLiving() < 1)
+    {
         
-            player.kill();
-            enemyBullets.callAll('kill');
-            stateText.content=" GAME OVER \n Click to restart";
-            stateText.visible=true;
+        player.kill();
+        enemyBullets.callAll('kill');
 
-            game.input.onTap.addOnce(restart,this);
+        stateText.content=" GAME OVER \n Click to restart";
+        stateText.visible = true;
+
+        //the "click to restart" handler
+        game.input.onTap.addOnce(restart,this);
 
 
     }
 
 }
 
-function restart () {
-    
-
-    lives.callAll('revive');
-    //  And brings the aliens back from the dead :)
-    aliens.removeAll();
-
-    createAliens();
-
-    player.revive();
-
-    stateText.visible=false;
-
-
-}
-
 function enemyFires () {
 
-        //  Grab the first bullet we can from the pool
-        enemyBullet = enemyBullets.getFirstExists(false);
+    //  Grab the first bullet we can from the pool
+    enemyBullet = enemyBullets.getFirstExists(false);
 
-        if (enemyBullet){
-
-            var shooter=aliens.getRandom();
-            //  And fire it
-            enemyBullet.reset(shooter.body.x, shooter.body.y);
-            // enemyBullet.body.velocity.y = 400;
-            game.physics.moveToObject(enemyBullet,player,120);
-            firingTimer = game.time.now + 2000;
-        }
+    if (enemyBullet)
+    {
+        var shooter=aliens.getRandom();
+        //  And fire it
+        enemyBullet.reset(shooter.body.x, shooter.body.y);
+        // enemyBullet.body.velocity.y = 400;
+        game.physics.moveToObject(enemyBullet,player,120);
+        firingTimer = game.time.now + 2000;
+    }
 }
 
 function fireBullet () {
@@ -252,34 +275,19 @@ function resetBullet (bullet) {
 
 }
 
-function collisionHandler (bullet, alien) {
+function restart () {
 
-    //  When a bullet hits an alien we kill them both
-    bullet.kill();
-    alien.kill();
+    //  A new level starts
+    
+    //resets the life count
+    lives.callAll('revive');
+    //  And brings the aliens back from the dead :)
+    aliens.removeAll();
+    createAliens();
 
-    //  Increase the score
-    score+=20;
-    scoreText.content=scoreString+score;
-
-    //  And create an explosion :)
-    var explosion = explosions.getFirstDead();
-    explosion.reset(alien.body.x, alien.body.y);
-    explosion.play('kaboom', 30, false, true);
-
-    if (aliens.countLiving() == 0){
-        //  New level starts
-        score += 1000;
-        scoreText.content = scoreString + score;
-
-        enemyBullets.callAll('kill',this);
-        stateText.content=" You Won, \n Click to restart";
-        stateText.visible=true;
-
-        game.input.onTap.addOnce(restart,this);
-
-        
-
-    }
+    //revives the player
+    player.revive();
+    //hides the text
+    stateText.visible = false;
 
 }
