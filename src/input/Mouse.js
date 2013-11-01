@@ -117,6 +117,8 @@ Phaser.Mouse.prototype = {
     */
     onMouseDown: function (event) {
 
+        event.preventDefault();
+
         if (this.mouseDownCallback)
         {
             this.mouseDownCallback.call(this.callbackContext, event);
@@ -140,6 +142,8 @@ Phaser.Mouse.prototype = {
     */
     onMouseMove: function (event) {
 
+        event.preventDefault();
+
         if (this.mouseMoveCallback)
         {
             this.mouseMoveCallback.call(this.callbackContext, event);
@@ -162,6 +166,8 @@ Phaser.Mouse.prototype = {
     * @param {MouseEvent} event
     */
     onMouseUp: function (event) {
+
+        event.preventDefault();
 
         if (this.mouseUpCallback)
         {

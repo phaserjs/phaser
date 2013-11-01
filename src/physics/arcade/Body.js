@@ -547,7 +547,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     /**
-    * Returns the delta x value.
+    * Returns the delta x value. The difference between Body.x now and in the previous step.
     *
     * @method Phaser.Physics.Arcade.Body#deltaX
     * @return {number} The delta value.
@@ -557,7 +557,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     /**
-    * Returns the delta y value.
+    * Returns the delta y value. The difference between Body.y now and in the previous step.
     *
     * @method Phaser.Physics.Arcade.Body#deltaY
     * @return {number} The delta value.

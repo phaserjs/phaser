@@ -404,12 +404,6 @@ Phaser.Physics.Arcade.prototype = {
 
         this._mapData = tilemapLayer.getTiles(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height, true);
 
-        // console.log('getTiles', this._tx, this._ty);
-        if (this.game.input.keyboard.isDown(Phaser.Keyboard.SHIFT))
-        {
-            console.log('cst', this._mapData, sprite.body.x, sprite.body.y);
-        }
-
         if (this._mapData.length == 0)
         {
             return;

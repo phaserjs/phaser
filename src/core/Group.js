@@ -82,6 +82,11 @@ Phaser.Group = function (game, parent, name, useStage) {
     */ 
     this.scale = new Phaser.Point(1, 1);
 
+    /**
+    * @property {any} cursor - The current display object that the Group cursor is pointing to. You can move the cursor with Group.next and Group.previous.
+    */ 
+    this.cursor = null;
+
 };
 
 Phaser.Group.prototype = {

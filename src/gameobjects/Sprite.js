@@ -166,6 +166,11 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 	this.position.y = y;
 
     /**
+    * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
+    */
+    this.world = new Phaser.Point(x, y);
+
+    /**
     * Should this Sprite be automatically culled if out of range of the camera?
     * A culled sprite has its renderable property set to 'false'.
     *
@@ -195,6 +200,9 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
         //  Bounds check
         left: null, right: null, top: null, bottom: null, 
+
+        //  delta cache
+        prevX: x, prevY: y,
 
         //  The previous calculated position
         x: -1, y: -1,
@@ -308,11 +316,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.cameraOffset = new Phaser.Point;
 
     /**
-    * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
-    */
-    this.world = new Phaser.Point;
-
-    /**
     * You can crop the Sprites texture by modifying the crop properties. For example crop.width = 50 would set the Sprite to only render 50px wide.
     * The crop is only applied if you have set Sprite.cropEnabled to true.
     * @property {Phaser.Rectangle} crop - The crop Rectangle applied to the Sprite texture before rendering.
@@ -374,7 +377,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
     this.updateCrop();
 
     //  Re-run the camera visibility check
-    if (this._cache.dirty || this.world.x !== this.prevX || this.world.y !== this.prevY)
+    if (this._cache.dirty || this.world.x !== this._cache.prevX || this.world.y !== this._cache.prevY)
     {
         this.updateBounds();
     }
@@ -384,7 +387,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this.body.preUpdate();
     }
 
-}
+};
 
 /**
 * Internal function called by preUpdate.
@@ -394,8 +397,8 @@ Phaser.Sprite.prototype.preUpdate = function() {
 */
 Phaser.Sprite.prototype.updateCache = function() {
 
-    this.prevX = this.world.x;
-    this.prevY = this.world.y;
+    this._cache.prevX = this.world.x;
+    this._cache.prevY = this.world.y;
 
     if (this.fixedToCamera)
     {
@@ -430,7 +433,7 @@ Phaser.Sprite.prototype.updateCache = function() {
     this._cache.a02 = this.worldTransform[2];  //  translateX     tx
     this._cache.a12 = this.worldTransform[5];  //  translateY     ty
 
-}
+};
 
 /**
 * Internal function called by preUpdate.
@@ -457,7 +460,7 @@ Phaser.Sprite.prototype.updateAnimation = function() {
 
     }
 
-}
+};
 
 /**
 * Internal function called by preUpdate.
@@ -486,7 +489,7 @@ Phaser.Sprite.prototype.updateCrop = function() {
         PIXI.Texture.frameUpdates.push(this.texture);
     }
 
-}
+};
 
 /**
 * Internal function called by preUpdate.
@@ -555,7 +558,7 @@ Phaser.Sprite.prototype.updateBounds = function() {
         this.body.updateBounds(this.center.x, this.center.y, this._cache.scaleX, this._cache.scaleY);
     }
 
-}
+};
 
 /**
 * Gets the local position of a coordinate relative to the Sprite, factoring in rotation and scale.
@@ -577,7 +580,7 @@ Phaser.Sprite.prototype.getLocalPosition = function(p, x, y) {
 
     return p;
 
-}
+};
 
 /**
 * Gets the local unmodified position of a coordinate relative to the Sprite, factoring in rotation and scale.
@@ -597,8 +600,7 @@ Phaser.Sprite.prototype.getLocalUnmodifiedPosition = function(p, gx, gy) {
 
     return p;
 
-}
-
+};
 
 /**
 * Resets the Sprite.crop value back to the frame dimensions.
@@ -612,7 +614,7 @@ Phaser.Sprite.prototype.resetCrop = function() {
     this.texture.setFrame(this.crop);
     this.cropEnabled = false;
 
-}
+};
 
 /**
 * Internal function called by the World postUpdate cycle.
@@ -647,7 +649,7 @@ Phaser.Sprite.prototype.postUpdate = function() {
         this.position.y = this._cache.y;
     }
 
-}
+};
 
 /**
 * Changes the Texture the Sprite is using entirely. The old texture is removed and the new one is referenced or fetched from the Cache.
@@ -701,51 +703,7 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         }
     }
 
-}
-
-/**
-* Returns the absolute delta x value.
-*
-* @method Phaser.Sprite#deltaAbsX
-* @memberof Phaser.Sprite
-* @return {number} The absolute delta value.
-*/
-Phaser.Sprite.prototype.deltaAbsX = function () {
-    return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
-}
-
-/**
-* Returns the absolute delta y value.
-*
-* @method Phaser.Sprite#deltaAbsY
-* @memberof Phaser.Sprite
-* @return {number} The absolute delta value.
-*/
-Phaser.Sprite.prototype.deltaAbsY = function () {
-    return (this.deltaY() > 0 ? this.deltaY() : -this.deltaY());
-}
-
-/**
-* Returns the delta x value.
-*
-* @method Phaser.Sprite#deltaX
-* @memberof Phaser.Sprite
-* @return {number} The delta value.
-*/
-Phaser.Sprite.prototype.deltaX = function () {
-    return this.x - this.prevX;
-}
-
-/**
-* Returns the delta y value.
-*
-* @method Phaser.Sprite#deltaY
-* @memberof Phaser.Sprite
-* @return {number} The delta value.
-*/
-Phaser.Sprite.prototype.deltaY = function () {
-    return this.y - this.prevY;
-}
+};
 
 /**
 * Moves the sprite so its center is located on the given x and y coordinates.
@@ -763,7 +721,7 @@ Phaser.Sprite.prototype.centerOn = function(x, y) {
     this.y = y + (this.y - this.center.y);
     return this;
 
-}
+};
 
 /**
 * Brings a 'dead' Sprite back to life, optionally giving it the health value specified.
@@ -791,7 +749,7 @@ Phaser.Sprite.prototype.revive = function(health) {
 
     return this;
 
-}
+};
 
 /**
 * Kills a Sprite. A killed Sprite has its alive, exists and visible properties all set to false.
@@ -816,7 +774,7 @@ Phaser.Sprite.prototype.kill = function() {
 
     return this;
 
-}
+};
 
 /**
 * Destroys the Sprite. This removes it from its parent group, destroys the input, event and animation handlers if present
@@ -853,7 +811,7 @@ Phaser.Sprite.prototype.destroy = function() {
 
     this.game = null;
 
-}
+};
 
 /**
 * Damages the Sprite, this removes the given amount from the Sprites health property.
@@ -878,7 +836,7 @@ Phaser.Sprite.prototype.damage = function(amount) {
 
     return this;
 
-}
+};
 
 /**
 * Resets the Sprite. This places the Sprite at the given x/y world coordinates and then
@@ -915,7 +873,7 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
 
     return this;
     
-}
+};
 
 /**
 * Brings the Sprite to the top of the display list it is a child of. Sprites that are members of a Phaser.Group are only
@@ -938,7 +896,7 @@ Phaser.Sprite.prototype.bringToTop = function() {
 
     return this;
 
-}
+};
 
 /**
 * Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()
@@ -959,7 +917,7 @@ Phaser.Sprite.prototype.play = function (name, frameRate, loop, killOnComplete) 
         return this.animations.play(name, frameRate, loop, killOnComplete);
     }
 
-}
+};
 
 /**
 * Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.

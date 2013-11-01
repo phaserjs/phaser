@@ -85,15 +85,27 @@ Phaser.StageScaleMode = function (game, width, height) {
 
     /**
     * @property {number} width - Width of the stage after calculation.
-    * @default
     */
-    this.width = 0;
+    this.width = width;
 
     /**
     * @property {number} height - Height of the stage after calculation.
-    * @default
     */
-    this.height = 0;
+    this.height = height;
+
+    /**
+    * @property {number} _width - Cached stage width for full screen mode.
+    * @default
+    * @private
+    */
+    this._width = 0;
+
+    /**
+    * @property {number} _height - Cached stage height for full screen mode.
+    * @default
+    * @private
+    */
+    this._height = 0;
 
     /**
     * @property {number} maxIterations - The maximum number of times it will try to resize the canvas to fill the browser.
@@ -152,6 +164,18 @@ Phaser.StageScaleMode = function (game, width, height) {
     window.addEventListener('resize', function (event) {
         return _this.checkResize(event);
     }, false);
+
+    document.addEventListener('webkitfullscreenchange', function (event) {
+        return _this.fullScreenChange(event);
+    }, false);
+
+    document.addEventListener('mozfullscreenchange', function (event) {
+        return _this.fullScreenChange(event);
+    }, false);
+
+    document.addEventListener('fullscreenchange', function (event) {
+        return _this.fullScreenChange(event);
+    }, false);
 	
 };
 
@@ -179,16 +203,27 @@ Phaser.StageScaleMode.prototype = {
     * Tries to enter the browser into full screen mode.
     * Please note that this needs to be supported by the web browser and isn't the same thing as setting your game to fill the browser.
     * @method Phaser.StageScaleMode#startFullScreen
+    * @param {boolean} antialias - You can toggle the anti-alias feature of the canvas before jumping in to full screen (false = retain pixel art, true = smooth art)
     */
-    startFullScreen: function () {
+    startFullScreen: function (antialias) {
 
         if (this.isFullScreen)
         {
             return;
         }
 
+        if (typeof antialias !== 'undefined')
+        {
+            Phaser.Canvas.setSmoothingEnabled(this.game.context, antialias);
+        }
+
         var element = this.game.canvas;
         
+        this._width = this.width;
+        this._height = this.height;
+
+        console.log('startFullScreen', this._width, this._height);
+
         if (element['requestFullScreen'])
         {
             element['requestFullScreen']();
@@ -201,9 +236,6 @@ Phaser.StageScaleMode.prototype = {
         {
             element['webkitRequestFullScreen'](Element.ALLOW_KEYBOARD_INPUT);
         }
-
-        this.game.stage.canvas.style['width'] = '100%';
-        this.game.stage.canvas.style['height'] = '100%';
 
     },
 
@@ -224,6 +256,44 @@ Phaser.StageScaleMode.prototype = {
         else if (document['webkitCancelFullScreen'])
         {
             document['webkitCancelFullScreen']();
+        }
+
+    },
+
+    /**
+    * Called automatically when the browser enters of leaves full screen mode.
+    * @method Phaser.StageScaleMode#fullScreenChange
+    * @param {Event} event - The fullscreenchange event
+    * @protected
+    */
+    fullScreenChange: function (event) {
+
+        if (this.isFullScreen)
+        {
+            this.game.stage.canvas.style['width'] = '100%';
+            this.game.stage.canvas.style['height'] = '100%';
+
+            this.setMaximum();
+
+            this.game.input.scale.setTo(this.game.width / this.width, this.game.height / this.height);
+
+            this.aspectRatio = this.width / this.height;
+            this.scaleFactor.x = this.game.width / this.width;
+            this.scaleFactor.y = this.game.height / this.height;
+        }
+        else
+        {
+            this.game.stage.canvas.style['width'] = this.game.width + 'px';
+            this.game.stage.canvas.style['height'] = this.game.height + 'px';
+
+            this.width = this._width;
+            this.height = this._height;
+
+            this.game.input.scale.setTo(this.game.width / this.width, this.game.height / this.height);
+
+            this.aspectRatio = this.width / this.height;
+            this.scaleFactor.x = this.game.width / this.width;
+            this.scaleFactor.y = this.game.height / this.height;
         }
 
     },
@@ -495,8 +565,8 @@ Phaser.StageScaleMode.prototype = {
     */
     setExactFit: function () {
 
-        var availableWidth = window.innerWidth - 0;
-        var availableHeight = window.innerHeight - 5;
+        var availableWidth = window.innerWidth;
+        var availableHeight = window.innerHeight;
 
         // console.log('available', availableWidth, availableHeight);
 
@@ -518,8 +588,6 @@ Phaser.StageScaleMode.prototype = {
             this.height = availableHeight;
         }
 
-        console.log('setExactFit', this.width, this.height, this.game.stage.offset);
-
     }
 
 };
@@ -533,12 +601,7 @@ Object.defineProperty(Phaser.StageScaleMode.prototype, "isFullScreen", {
 
     get: function () {
 
-        if (document['fullscreenElement'] === null || document['mozFullScreenElement'] === null || document['webkitFullscreenElement'] === null)
-        {
-            return false;
-        }
-
-        return true;
+        return (document['fullscreenElement'] || document['mozFullScreenElement'] || document['webkitFullscreenElement'])
 
     }
 
