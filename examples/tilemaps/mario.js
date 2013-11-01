@@ -1,41 +1,59 @@
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
 
 function preload() {
 
-    game.load.tilemap('mario', 'assets/maps/mario1.png', 'assets/maps/mario1.json', null, Phaser.Tilemap.JSON);
+    game.load.tilemap('mario', 'assets/maps/mario1.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.tileset('tiles', 'assets/maps/mario1.png',16,16);
+    game.load.image('player', 'assets/sprites/phaser-dude.png');
 
 }
+
+var map;
+var tileset;
+var layer;
+var p;
+var cursors;
 
 function create() {
 
     game.stage.backgroundColor = '#787878';
 
-    game.add.tilemap(0, 0, 'mario');
+    map = game.add.tilemap('mario');
+
+
+    
+    tileset = game.add.tileset('tiles');
+
+
+    layer = game.add.tilemapLayer(0, 0, map.layers[0].width*tileset.tileWidth, 600, tileset, map, 0);
+
+    layer.fixedToCamera=false;
+ 
+    layer.resizeWorld();
+
+    cursors=game.input.keyboard.createCursorKeys();
 
 }
 
 function update() {
 
-    if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+    if (cursors.left.isDown)
     {
         game.camera.x -= 8;
     }
-    else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+    else if (cursors.right.isDown)
     {
         game.camera.x += 8;
     }
 
-    if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
+    if (cursors.up.isDown)
     {
         game.camera.y -= 8;
     }
-    else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
+    else if (cursors.down.isDown)
     {
         game.camera.y += 8;
     }
 
-}
-
-function render() {
 }
