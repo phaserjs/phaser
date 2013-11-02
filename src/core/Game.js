@@ -437,6 +437,7 @@ Phaser.Game.prototype = {
 	        this.plugins.update();
 
 			this.world.postUpdate();
+            this.plugins.postUpdate();
 
 			this.renderer.render(this.stage._stage);
 			this.plugins.render();
