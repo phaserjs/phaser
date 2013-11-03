@@ -131,7 +131,7 @@ Phaser.Mouse.prototype = {
         event.preventDefault();
 
         if (event.which === 1) this.mouseTypeDown = Phaser.Mouse.LEFT_BUTTON;
-        else if (event.which === 2) this.mouseTypeDown = Phaser.Mouse.MIDDLE_BUTON;
+        else if (event.which === 2) this.mouseTypeDown = Phaser.Mouse.MIDDLE_BUTTON;
         else if (event.which === 3) this.mouseTypeDown = Phaser.Mouse.RIGHT_BUTTON;
 
         if (this.mouseDownCallback)
