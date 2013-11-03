@@ -67,6 +67,11 @@ Phaser.Mouse = function (game) {
 * @constant
 * @type {number}
 */
+Phaser.Mouse.NO_BUTTON = -1;
+/**
+* @constant
+* @type {number}
+*/
 Phaser.Mouse.LEFT_BUTTON = 0;
 
 /**
@@ -80,6 +85,7 @@ Phaser.Mouse.MIDDLE_BUTTON = 1;
 * @type {number}
 */
 Phaser.Mouse.RIGHT_BUTTON = 2;
+
 
 Phaser.Mouse.prototype = {
 
@@ -124,7 +130,9 @@ Phaser.Mouse.prototype = {
 
         event.preventDefault();
 
-	this.mouseTypeDown = event.which - 1;
+        if (event.which === 1) this.mouseTypeDown = Phaser.Mouse.LEFT_BUTTON;
+        else if (event.which === 2) this.mouseTypeDown = Phaser.Mouse.MIDDLE_BUTON;
+        else if (event.which === 3) this.mouseTypeDown = Phaser.Mouse.RIGHT_BUTTON;
 
         if (this.mouseDownCallback)
         {
@@ -176,7 +184,7 @@ Phaser.Mouse.prototype = {
 
         event.preventDefault();
 
-	this.mouseTypeDown = -1;
+	this.mouseTypeDown = Phaser.Mouse.NO_BUTTON;
 
         if (this.mouseUpCallback)
         {
