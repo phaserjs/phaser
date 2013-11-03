@@ -41,6 +41,11 @@ Phaser.Mouse = function (game) {
 	* @default
 	*/
 	this.mouseUpCallback = null;
+	/**
+	* @property {Description} mouseTypeDown - The type of click. -1 for not clicking
+	* @default
+	*/
+	this.mouseTypeDown = -1;
 
     /**
     * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
@@ -119,6 +124,8 @@ Phaser.Mouse.prototype = {
 
         event.preventDefault();
 
+	this.mouseTypeDown = event.which - 1;
+
         if (this.mouseDownCallback)
         {
             this.mouseDownCallback.call(this.callbackContext, event);
@@ -168,6 +175,8 @@ Phaser.Mouse.prototype = {
     onMouseUp: function (event) {
 
         event.preventDefault();
+
+	this.mouseTypeDown = -1;
 
         if (this.mouseUpCallback)
         {
