@@ -238,9 +238,9 @@ Phaser.Mouse.prototype = {
 
         document.exitPointerLock();
 
-        document.removeEventListener('pointerlockchange', this._pointerLockChange);
-        document.removeEventListener('mozpointerlockchange', this._pointerLockChange);
-        document.removeEventListener('webkitpointerlockchange', this._pointerLockChange);
+        document.removeEventListener('pointerlockchange', this._pointerLockChange, false);
+        document.removeEventListener('mozpointerlockchange', this._pointerLockChange, false);
+        document.removeEventListener('webkitpointerlockchange', this._pointerLockChange, false);
 
     },
 
@@ -250,9 +250,9 @@ Phaser.Mouse.prototype = {
     */
     stop: function () {
 
-        this.game.stage.canvas.removeEventListener('mousedown', this._onMouseDown);
-        this.game.stage.canvas.removeEventListener('mousemove', this._onMouseMove);
-        this.game.stage.canvas.removeEventListener('mouseup', this._onMouseUp);
+        this.game.stage.canvas.removeEventListener('mousedown', this._onMouseDown, true);
+        this.game.stage.canvas.removeEventListener('mousemove', this._onMouseMove, true);
+        this.game.stage.canvas.removeEventListener('mouseup', this._onMouseUp, true);
 
     }
 
