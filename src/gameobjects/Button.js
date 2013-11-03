@@ -62,13 +62,6 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     this._onDownFrameName = null;
     
 	/** 
-	* @property {string} _onUpFrameName - Internal variable.
-	* @private
-	* @default
-	*/
-    this._onUpFrameName = null;
-    
-	/** 
 	* @property {number} _onOverFrameID - Internal variable.
 	* @private
 	* @default
@@ -89,13 +82,6 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
 	*/
     this._onDownFrameID = null;
     
-	/** 
-	* @property {number} _onUpFrameID - Internal variable.
-	* @private
-	* @default
-	*/
-    this._onUpFrameID = null;
-
     /** 
     * @property {Phaser.Sound} onOverSound - The Sound to be played when this Buttons Over state is activated.
     * @default
@@ -227,7 +213,6 @@ Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
         if (typeof outFrame === 'string')
         {
             this._onOutFrameName = outFrame;
-            this._onUpFrameName = outFrame;
 
             if (this.input.pointerOver() == false)
             {
@@ -237,7 +222,6 @@ Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
         else
         {
             this._onOutFrameID = outFrame;
-            this._onUpFrameID = outFrame;
 
             if (this.input.pointerOver() == false)
             {
@@ -497,13 +481,25 @@ Phaser.Button.prototype.onInputUpHandler = function (pointer) {
 
     if (this.freezeFrames == false)
     {
-        if (this._onUpFrameName != null)
+        if (this.input.pointerOver())
         {
-            this.frameName = this._onUpFrameName;
-        }
-        else if (this._onUpFrameID != null)
-        {
-            this.frame = this._onUpFrameID;
+            if (this._onOverFrameName != null)
+            {
+                this.frameName = this._onOverFrameName;
+            }
+            else if (this._onOverFrameID != null)
+            {
+                this.frame = this._onOverFrameID;
+            }
+        } else {
+            if (this._onOutFrameName != null)
+            {
+                this.frameName = this._onOutFrameName;
+            }
+            else if (this._onOutFrameID != null)
+            {
+                this.frame = this._onOutFrameID;
+            }
         }
     }
 
