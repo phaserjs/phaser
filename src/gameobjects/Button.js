@@ -253,7 +253,7 @@ Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
         {
             this._onDownFrameName = downFrame;
 
-            if (this.input.pointerOver())
+            if (this.input.pointerDown())
             {
                 this.frameName = downFrame;
             }
@@ -262,7 +262,7 @@ Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
         {
             this._onDownFrameID = downFrame;
 
-            if (this.input.pointerOver())
+            if (this.input.pointerDown())
             {
                 this.frame = downFrame;
             }
