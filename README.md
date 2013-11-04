@@ -39,7 +39,9 @@ Change Log
 
 Version 1.1.3 - in build
 
-* 
+* New: Sprite.animations.getAnimation will return an animation instance which was added by name.
+* Updated: RequestAnimationFrame now retains the callbackID which is passed to cancelRequestAnimationFrame.
+
 
 Version 1.1.2 - November 1st 2013
 

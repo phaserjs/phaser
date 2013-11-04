@@ -261,6 +261,27 @@ Phaser.AnimationManager.prototype = {
 
 	},
 
+	/**
+	* Returns an animation that was previously added by name.
+	*
+	* @method Phaser.AnimationManager#getAnimation
+	* @param {string} name - The name of the animation to be returned, e.g. "fire".
+    * @return {Phaser.Animation|boolean} The Animation instance, if found, otherwise false.
+	*/
+	getAnimation: function (name) {
+
+		if (typeof name == 'string')
+		{
+			if (this._anims[name])
+			{
+				return this._anims[name];
+			}
+		}
+
+		return false;
+
+	},
+
     /**
     * Refreshes the current frame data back to the parent Sprite and also resets the texture data.
     *
