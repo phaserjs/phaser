@@ -397,7 +397,6 @@ Phaser.Pointer.prototype = {
             }
 
             return this;
-
         }
 
         //  Work out which object is on the top

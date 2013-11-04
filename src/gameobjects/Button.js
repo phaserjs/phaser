@@ -169,6 +169,13 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     */
     this.freezeFrames = false;
 
+    /**
+    * When the Button is clicked you can optionally force the state to "out".
+    * @property {boolean} forceOut
+    * @default
+    */
+    this.forceOut = true;
+
     this.setFrames(overFrame, outFrame, downFrame);
 
     if (callback !== null)
@@ -513,8 +520,21 @@ Phaser.Button.prototype.onInputUpHandler = function (pointer) {
         this.onUpSound.play(this.onUpSoundMarker);
     }
 
+    if (this.forceOut && this.freezeFrames == false)
+    {
+        if (this._onOutFrameName != null)
+        {
+            this.frameName = this._onOutFrameName;
+        }
+        else if (this._onOutFrameID != null)
+        {
+            this.frame = this._onOutFrameID;
+        }
+    }
+
     if (this.onInputUp)
     {
         this.onInputUp.dispatch(this, pointer);
     }
+
 };
