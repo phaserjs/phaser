@@ -40,7 +40,13 @@ Change Log
 Version 1.1.3 - in build
 
 * New: Sprite.animations.getAnimation will return an animation instance which was added by name.
+* New: Added Mouse.button which is set to the button that was pressed: Phaser.Mouse.LEFT_BUTTON, MIDDLE_BUTTON or RIGHT_BUTTON (thanks wKLV)
+* New: Added Mouse.pointerLock signal which you can listen to whenever the browser enters or leaves pointer lock mode.
+* Fixed: Mouse.stop now uses the true useCapture, which means the event listeners stop listening correctly (thanks beeglebug)
 * Updated: RequestAnimationFrame now retains the callbackID which is passed to cancelRequestAnimationFrame.
+* Updated: Button now goes back to over state when setFrames used in action (thanks beeglebug)
+* Updated: plugins now have a postUpdate callback (thanks cocoademon)
+
 
 
 Version 1.1.2 - November 1st 2013
