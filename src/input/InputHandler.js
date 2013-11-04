@@ -410,20 +410,25 @@ Phaser.InputHandler.prototype = {
     */
     pointerOver: function (index) {
 
-        if (typeof index === 'undefined')
+        if (this.enabled)
         {
-            for (var i = 0; i < 10; i++)
+            if (typeof index === 'undefined')
             {
-                if (this._pointerData[i].isOver)
+                for (var i = 0; i < 10; i++)
                 {
-                    return true;
+                    if (this._pointerData[i].isOver)
+                    {
+                        return true;
+                    }
                 }
             }
+            else
+            {
+                return this._pointerData[index].isOver;
+            }
         }
-        else
-        {
-            return this._pointerData[index].isOver;
-        }
+
+        return false;
 
     },
 
@@ -435,20 +440,25 @@ Phaser.InputHandler.prototype = {
     */
     pointerOut: function (pointer) {
 
-        if (typeof index === 'undefined')
+        if (this.enabled)
         {
-            for (var i = 0; i < 10; i++)
+            if (typeof index === 'undefined')
             {
-                if (this._pointerData[i].isOut)
+                for (var i = 0; i < 10; i++)
                 {
-                    return true;
+                    if (this._pointerData[i].isOut)
+                    {
+                        return true;
+                    }
                 }
             }
+            else
+            {
+                return this._pointerData[index].isOut;
+            }
         }
-        else
-        {
-            return this._pointerData[index].isOut;
-        }
+
+        return false;
 
     },
 
@@ -568,8 +578,6 @@ Phaser.InputHandler.prototype = {
             this._pointerOutHandler(pointer);
             return false;
         }
-
-        //  For an enabled sprite that may have been clicked
 
         if (this.draggable && this._draggedPointerID == pointer.id)
         {
