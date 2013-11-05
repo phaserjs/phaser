@@ -1,4 +1,3 @@
-
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 var ufo;
@@ -59,7 +58,7 @@ function update() {
         ufo.angle = -15;
         leftBtn.alpha = 0.6;
     }
-    else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)
+    else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
     {
         ufo.x += speed;
         ufo.angle = 15;
