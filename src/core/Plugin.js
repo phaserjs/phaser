@@ -50,6 +50,12 @@ Phaser.Plugin = function (game, parent) {
 	* @default
 	*/
     this.hasUpdate = false;
+
+    /**
+    * @property {boolean} hasPostUpdate - A flag to indicate if this plugin has a postUpdate method.
+    * @default
+    */
+    this.hasPostUpdate = false;
     
     /**
 	* @property {boolean} hasRender - A flag to indicate if this plugin has a render method.

@@ -405,28 +405,60 @@ Phaser.InputHandler.prototype = {
 	/**
     * Is the Pointer over this Sprite?
     * @method Phaser.InputHandler#pointerOver
-    * @param {Pointer} pointer
-    * @return {bool
+    * @param {number} [index] - The ID number of a Pointer to check. If you don't provide a number it will check all Pointers.
+    * @return {boolean} True if the given pointer (if a index was given, or any pointer if not) is over this object.
     */
-    pointerOver: function (pointer) {
+    pointerOver: function (index) {
 
-    	pointer = pointer || 0;
+        if (this.enabled)
+        {
+            if (typeof index === 'undefined')
+            {
+                for (var i = 0; i < 10; i++)
+                {
+                    if (this._pointerData[i].isOver)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                return this._pointerData[index].isOver;
+            }
+        }
 
-        return this._pointerData[pointer].isOver;
+        return false;
 
     },
 
 	/**
     * Is the Pointer outside of this Sprite?
     * @method Phaser.InputHandler#pointerOut
-    * @param {Pointer} pointer
-    * @return {boolean}
+    * @param {number} [index] - The ID number of a Pointer to check. If you don't provide a number it will check all Pointers.
+    * @return {boolean} True if the given pointer (if a index was given, or any pointer if not) is out of this object.
     */
     pointerOut: function (pointer) {
 
-    	pointer = pointer || 0;
+        if (this.enabled)
+        {
+            if (typeof index === 'undefined')
+            {
+                for (var i = 0; i < 10; i++)
+                {
+                    if (this._pointerData[i].isOut)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                return this._pointerData[index].isOut;
+            }
+        }
 
-        return this._pointerData[pointer].isOut;
+        return false;
 
     },
 
