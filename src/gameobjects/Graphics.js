@@ -50,6 +50,18 @@ Phaser.Graphics.prototype.destroy = function() {
 
 }
 
+/*
+* Draws a {Phaser.Polygon} or a {PIXI.Polygon} filled
+*/
+Phaser.Graphics.prototype.drawPolygon = function (poly) {
+
+    graphics.moveTo(poly.points[0].x, poly.points[0].y);
+    for (var i = 1; i < poly.points.length; i += 1) {
+        graphics.lineTo(poly.points[i].x, poly.points[i].y);
+    }
+    graphics.lineTo(poly.points[0].x, poly.points[0].y);
+}
+
 Object.defineProperty(Phaser.Graphics.prototype, 'angle', {
 
     get: function() {
