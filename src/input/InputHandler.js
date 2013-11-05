@@ -534,20 +534,19 @@ Phaser.InputHandler.prototype = {
     },
 
 	/**
-     * Description.
-     * @method Phaser.InputHandler#checkPixel
-     * @param {Description} x - Description.
-     * @param {Description} y - Description.
-     * @return {boolean}
-     */
+    * Runs a pixel perfect check against the given x/y coordinates of the Sprite this InputHandler is bound to.
+    * It compares the alpha value of the pixel and if >= InputHandler.pixelPerfectAlpha it returns true.
+    * @method Phaser.InputHandler#checkPixel
+    * @param {number} x - The x coordinate to check.
+    * @param {number} y - The y coordinate to check.
+    * @return {boolean} true if there is the alpha of the pixel is >= InputHandler.pixelPerfectAlpha
+    */
     checkPixel: function (x, y) {
 
         //  Grab a pixel from our image into the hitCanvas and then test it
         if (this.sprite.texture.baseTexture.source)
         {
             this.game.input.hitContext.clearRect(0, 0, 1, 1);
-
-            //  This will fail if the image is part of a texture atlas - need to modify the x/y values here
 
             x += this.sprite.texture.frame.x;
             y += this.sprite.texture.frame.y;
