@@ -425,6 +425,8 @@ Phaser.Game.prototype = {
 		if (this._paused)
 		{
 			this.renderer.render(this.stage._stage);
+			this.plugins.render();
+			this.state.render();
 		}
 		else
 		{

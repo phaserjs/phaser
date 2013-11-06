@@ -46,6 +46,7 @@ Version 1.1.3 - in build
 * New: StageScaleMode.forceOrientation allows you to lock your game to one orientation and display a Sprite (i.e. a "please rotate" screen) when incorrect.
 * New: World.visible boolean added, toggles rendering of the world on/off entirely.
 * New: Polygon class & drawPolygon method added to Graphics (thanks rjimenezda)
+* New: Added Group.iterate, a powerful way to count or return child that match a certain criteria. Refactored Group to use iterate, lots of repeated code cut.
 * Fixed: Mouse.stop now uses the true useCapture, which means the event listeners stop listening correctly (thanks beeglebug)
 * Fixed: Input Keyboard example fix (thanks Atrodilla)
 * Updated: ArcadePhysics.updateMotion applies the dt to the velocity calculations as well as position now (thanks jcs)
