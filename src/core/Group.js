@@ -388,7 +388,7 @@ Phaser.Group.prototype = {
 
 		if (child1 === child2 || !child1.parent || !child2.parent)
 		{
-			console.log('cannot swap these')
+			console.log('aborting');
 			return false;
 		}
 
@@ -402,13 +402,13 @@ Phaser.Group.prototype = {
 		var endNode = this._container.last;
 		var currentNode = this.game.stage._stage;
 
-		console.log('start do while. start node: ', currentNode.name);
-		console.log(typeof endNode);
+		// console.log('start do while. start node: ', currentNode.name);
+		// console.log(typeof endNode);
 
-		if (endNode)
-		{
-			console.log('end node: ', endNode.name);
-		}
+		// if (endNode)
+		// {
+		// 	console.log('end node: ', endNode.name);
+		// }
 			
 		do
 		{
@@ -437,14 +437,12 @@ Phaser.Group.prototype = {
 		}
 		while (currentNode != endNode)
 
-		console.log('end do while');
-
 		if (child1._iNext == child2)
 		{
 			//	This is a downward (A to B) neighbour swap
-			console.log('downward A to B');
-			this.childTest('1', child1);
-			this.childTest('2', child2);
+			// console.log('downward A to B');
+			// this.childTest('1', child1);
+			// this.childTest('2', child2);
 
 			child1._iNext = child2Next;
 			child1._iPrev = child2;
@@ -469,9 +467,9 @@ Phaser.Group.prototype = {
 		else if (child2._iNext == child1)
 		{
 			//	This is an upward (B to A) neighbour swap
-			console.log('upward B to A');
-			this.childTest('1', child1);
-			this.childTest('2', child2);
+			// console.log('upward B to A');
+			// this.childTest('1', child1);
+			// this.childTest('2', child2);
 
 			child1._iNext = child2;
 			child1._iPrev = child2Prev;
@@ -496,10 +494,10 @@ Phaser.Group.prototype = {
 		else
 		{
 			//	Children are far apart
-			console.log('far apart A to B');
+			// console.log('far apart A to B');
 
-			this.childTest('1', child1);
-			this.childTest('2', child2);
+			// this.childTest('1', child1);
+			// this.childTest('2', child2);
 
 			child1._iNext = child2Next;
 			child1._iPrev = child2Prev;
@@ -1032,6 +1030,8 @@ Phaser.Group.prototype = {
 
 		console.log('-vvv--------------------------------------------------------------------------------');
 
+		this.dump(true);
+
 		for (var i = 0; i < this._sortCache.length; i++)
 		{
 			console.log(i + ' = ' + this._sortCache[i].name + ' at y: ' + this._sortCache[i].y);
@@ -1041,6 +1041,8 @@ Phaser.Group.prototype = {
 
 		this._sortCache.sort(this.sortHandler.bind(this));
 
+		//	Should do an array compare here, no need to rebuild the display list if the arrays are the same
+
 		for (var i = 0; i < this._sortCache.length; i++)
 		{
 			console.log(i + ' = ' + this._sortCache[i].name + ' at y: ' + this._sortCache[i].y);
@@ -1048,17 +1050,19 @@ Phaser.Group.prototype = {
 
 		for (var i = 0; i < this._sortCache.length; i++)
 		{
-			if (this._container.children[i] !== this._sortCache[i])
-			{
-				console.log('swapped:', this._container.children[i].name,'with',this._sortCache[i].name);
+			// if (this._container.children[i] !== this._sortCache[i])
+			// {
+				// console.log('swapped:', this._container.children[i].name,'with',this._sortCache[i].name);
 				this.swap(this._container.children[i], this._sortCache[i]);
-			}
+			// }
 		}
 
 		//	Now put it back again
 		this._container.children = this._sortCache.slice();
 
 		this._container.updateTransform();
+
+		this.dump(true);
 
 		console.log('-^^^--------------------------------------------------------------------------------');
 
