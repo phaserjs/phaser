@@ -19,9 +19,9 @@ function create() {
 
     group = game.add.group();
 
-    for (var i = 0; i < 10; i++)
+    for (var i = 0; i < 500; i++)
     {
-        var c = group.create(100 + Math.random() * 700, game.world.randomY, 'veggies', game.rnd.integerInRange(0, 36));
+        var c = group.create(game.world.randomX, game.world.randomY, 'veggies', game.rnd.integerInRange(0, 36));
         c.name = 'veg' + i;
     }
 
@@ -53,9 +53,9 @@ function update() {
 
         if (a.name !== b.name)
         {
-            console.log('************************ NEW ROUND *********************');
-            group.dump(true);
-            console.log('Group Size: ' + group.length);
+            // console.log('************************ NEW ROUND *********************');
+            // group.dump(true);
+            // console.log('Group Size: ' + group.length);
             group.swap(a, b);
             swapCount++;
 
@@ -77,7 +77,7 @@ function update() {
 
         }
 
-        time = game.time.now + 100;
+        // time = game.time.now + 50;
     }
 
 }

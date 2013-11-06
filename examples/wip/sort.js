@@ -25,7 +25,7 @@ function create() {
 
     for (var i = 0; i < 10; i++)
     {
-        var c = group.create(100 + Math.random() * 700, game.world.randomY, 'veggies', game.rnd.integerInRange(0, 36));
+        var c = group.create(game.world.randomX, game.world.randomY, 'veggies', game.rnd.integerInRange(0, 36));
         c.name = 'veg' + i;
     }
 
@@ -37,8 +37,9 @@ function create() {
 function sortGroup () {
 
     console.log('%c                                                                                                ', 'background: #efefef');
+    // group.dump(true);
     group.sort();
-    group.dump(false);
+    // group.dump(true);
 
 }
 
@@ -76,7 +77,7 @@ function update() {
 
 function render() {
 
-    // game.debug.renderText(group.cursor.name, 32, 32);
+    game.debug.renderText(sprite.y, 32, 32);
     // game.debug.renderInputInfo(32, 32);
 
 }
