@@ -29,18 +29,6 @@ PIXI.DisplayObjectContainer = function()
 PIXI.DisplayObjectContainer.prototype = Object.create( PIXI.DisplayObject.prototype );
 PIXI.DisplayObjectContainer.prototype.constructor = PIXI.DisplayObjectContainer;
 
-//TODO make visible a getter setter
-/*
-Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'visible', {
-    get: function() {
-        return this._visible;
-    },
-    set: function(value) {
-        this._visible = value;
-        
-    }
-});*/
-
 /**
  * Adds a child to the container.
  *
@@ -84,7 +72,7 @@ PIXI.DisplayObjectContainer.prototype.addChild = function(child)
 	var previousObject;
 	
 	// this could be wrong if there is a filter??
-	if(this.filter)
+	if(this._filters || this._mask)
 	{
 		previousObject =  this.last._iPrev;
 	}
@@ -134,7 +122,7 @@ PIXI.DisplayObjectContainer.prototype.addChild = function(child)
  *
  * @method addChildAt
  * @param child {DisplayObject} The child to add
- * @param index {number} The index to place the child in
+ * @param index {Number} The index to place the child in
  */
 PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
 {
@@ -269,7 +257,7 @@ PIXI.DisplayObjectContainer.prototype.swapChildren = function(child, child2)
  * Returns the Child at the specified index
  *
  * @method getChildAt
- * @param index {number} The index to get the child from
+ * @param index {Number} The index to get the child from
  */
 PIXI.DisplayObjectContainer.prototype.getChildAt = function(index)
 {

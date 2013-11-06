@@ -39,6 +39,7 @@ Change Log
 
 Version 1.1.3 - in build
 
+* New: Updated to use the latest version of Pixi.js - which means you can now use all the sexy new WebGL filters they added :)
 * New: Sprite.animations.getAnimation will return an animation instance which was added by name.
 * New: Added Mouse.button which is set to the button that was pressed: Phaser.Mouse.LEFT_BUTTON, MIDDLE_BUTTON or RIGHT_BUTTON (thanks wKLV)
 * New: Added Mouse.pointerLock signal which you can listen to whenever the browser enters or leaves pointer lock mode.
@@ -54,8 +55,6 @@ Version 1.1.3 - in build
 
 You can view the complete Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
 
-![Tanks](http://www.photonstorm.com/wp-content/uploads/2013/10/phaser_tanks-640x480.png)
-
 How to Build
 ------------
 
@@ -64,6 +63,8 @@ We provide a fully compiled version of Phaser in the `build` directory, in both 
 We also provide a Grunt script that will build Phaser from source along with all the examples.
 
 Run `grunt` in the phaser folder for a list of command-line options.
+
+![Tanks](http://www.photonstorm.com/wp-content/uploads/2013/10/phaser_tanks-640x480.png)
 
 Requirements
 ------------

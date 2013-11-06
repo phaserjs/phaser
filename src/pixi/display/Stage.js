@@ -8,11 +8,10 @@
  * @class Stage
  * @extends DisplayObjectContainer
  * @constructor
- * @param backgroundColor {number} the background color of the stage, easiest way to pass this in is in hex format
+ * @param backgroundColor {Number} the background color of the stage, easiest way to pass this in is in hex format
  *		like: 0xFFFFFF for white
- * @param interactive {Boolean} enable / disable interaction (default is false)
  */
-PIXI.Stage = function(backgroundColor, interactive)
+PIXI.Stage = function(backgroundColor)
 {
 	PIXI.DisplayObjectContainer.call( this );
 
@@ -32,7 +31,7 @@ PIXI.Stage = function(backgroundColor, interactive)
 	 * @property interactive
 	 * @type Boolean
 	 */
-	this.interactive = interactive;
+	this.interactive = true;
 
 	/**
 	 * The interaction manage for this stage, manages all interactive activity on the stage
@@ -68,6 +67,18 @@ PIXI.Stage = function(backgroundColor, interactive)
 PIXI.Stage.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
 PIXI.Stage.prototype.constructor = PIXI.Stage;
 
+/**
+ * Sets another DOM element which can receive mouse/touch interactions instead of the default Canvas element.
+ * This is useful for when you have other DOM elements ontop of the Canvas element.
+ *
+ * @method setInteractionDelegate
+ * @param domElement {DOMElement} This new domElement which will receive mouse/touch events
+ */
+PIXI.Stage.prototype.setInteractionDelegate = function(domElement)
+{
+	this.interactionManager.setTargetDomElement( domElement );
+}
+
 /*
  * Updates the object transform for rendering
  *
@@ -99,7 +110,7 @@ PIXI.Stage.prototype.updateTransform = function()
  * Sets the background color for the stage
  *
  * @method setBackgroundColor
- * @param backgroundColor {number} the color of the background, easiest way to pass this in is in hex format
+ * @param backgroundColor {Number} the color of the background, easiest way to pass this in is in hex format
  *		like: 0xFFFFFF for white
  */
 PIXI.Stage.prototype.setBackgroundColor = function(backgroundColor)

@@ -45,6 +45,7 @@ Phaser.Stage = function (game, width, height) {
     */
     this._stage = new PIXI.Stage(0x000000, false);
     this._stage.name = '_stage_root';
+    this._stage.interactive = false;
 
     /**
     * @property {number} scaleMode - The current scaleMode.
