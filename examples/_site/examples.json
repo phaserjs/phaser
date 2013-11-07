@@ -227,6 +227,10 @@
       "title": "create sprite in a group"
     },
     {
+      "file": "depth+sort.js",
+      "title": "depth sort"
+    },
+    {
       "file": "display+order.js",
       "title": "display order"
     },

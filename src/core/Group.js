@@ -985,22 +985,16 @@ Phaser.Group.prototype = {
 
 	/**
 	* Call this function to sort the group according to a particular value and order.
-	* For example, to sort game objects for Zelda-style overlaps you might call
-	* <code>myGroup.sort("y",Group.ASCENDING)</code> at the bottom of your
-	* <code>State.update()</code> override.  To sort all existing objects after
-	* a big explosion or bomb attack, you might call <code>myGroup.sort("exists",Group.DESCENDING)</code>.
+	* For example to depth sort Sprites for Zelda-style game you might call `group.sort('y', Phaser.Group.SORT_ASCENDING)` at the bottom of your `State.update()`.
 	*
-	* @param {string} index The <code>string</code> name of the member variable you want to sort on.  Default value is "z".
-	* @param {number} order A <code>Group</code> constant that defines the sort order.  Possible values are <code>Group.ASCENDING</code> and <code>Group.DESCENDING</code>.  Default value is <code>Group.ASCENDING</code>.
+	* @method Phaser.Group#sort
+	* @param {string} [index='y'] - The `string` name of the property you want to sort on.
+	* @param {number} [order=Phaser.Group.SORT_ASCENDING] - The `Group` constant that defines the sort order. Possible values are Phaser.Group.SORT_ASCENDING and Phaser.Group.SORT_DESCENDING.
 	*/
 	sort: function (index, order) {
 
 		if (typeof index === 'undefined') { index = 'y'; }
 		if (typeof order === 'undefined') { order = Phaser.Group.SORT_ASCENDING; }
-
-		console.log('-vvv--------------------------------------------------------------------------------');
-
-		this.dump(true);
 
 		var swapped;
 		var temp;
@@ -1035,10 +1029,6 @@ Phaser.Group.prototype = {
 	        	}
 	        }
 	    } while (swapped);
-
-		this.dump(true);
-
-		console.log('-^^^--------------------------------------------------------------------------------');
 
 	},
 
