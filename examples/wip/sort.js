@@ -23,10 +23,13 @@ function create() {
     sprite = group.create(300, 200, 'phaser');
     sprite.name = 'phaser-dude';
 
-    for (var i = 0; i < 10; i++)
+    var names = [ 'cherries', 'orange', 'swede', 'apple', 'pepper', 'dick', 'carrot', 'cucum', 'strawb', 'broc', 'pineapl', 'melon', 'white', 'spud', 'banana', 'lettuce'];
+
+    for (var i = 0; i < names.length - 1; i++)
     {
-        var c = group.create(game.world.randomX, game.world.randomY, 'veggies', game.rnd.integerInRange(0, 36));
-        c.name = 'veg' + i;
+        // var c = group.create(game.world.randomX, game.world.randomY, 'veggies', game.rnd.integerInRange(0, 36));
+        var c = group.create(game.world.randomX, game.world.randomY, 'veggies', i);
+        c.name = names[i];
     }
 
     game.input.onUp.add(sortGroup, this);
