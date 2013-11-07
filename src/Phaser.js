@@ -28,6 +28,7 @@ var Phaser = Phaser || {
 	TILEMAP: 9,
 	TILEMAPLAYER: 10,
 	EMITTER: 11,
+	POLYGON: 12,
 
 	NONE: 0,
 	LEFT: 1,
