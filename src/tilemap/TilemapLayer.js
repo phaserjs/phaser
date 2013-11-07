@@ -143,6 +143,21 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     */
     this._startY = 0;
 
+    /**
+    * @property {number} scrollFactorX - speed at which this layer scrolls
+	* horizontally, relative to the camera (e.g. scrollFactorX of 0.5 scrolls
+	* half as quickly as the 'normal' camera-locked layers do)
+	* @default 1
+    */
+	this.scrollFactorX = 1;
+    /**
+    * @property {number} scrollFactorY - speed at which this layer scrolls
+	* vertically, relative to the camera (e.g. scrollFactorY of 0.5 scrolls
+	* half as quickly as the 'normal' camera-locked layers do)
+	* @default 1
+    */
+	this.scrollFactorY = 1;
+
     this.tilemap = null;
     this.layer = null;
     this.index = 0;
@@ -173,8 +188,8 @@ Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 
 Phaser.TilemapLayer.prototype.update = function () {
 
-    this.scrollX = this.game.camera.x;
-    this.scrollY = this.game.camera.y;
+    this.scrollX = this.game.camera.x * this.scrollFactorX;
+    this.scrollY = this.game.camera.y * this.scrollFactorY;
 
     this.render();
 
@@ -229,6 +244,59 @@ Phaser.TilemapLayer.prototype.updateMapData = function (tilemap, layer) {
 }
 
 /**
+ * Take an x coordinate that doesn't account for scrollFactorY and 'fix' it 
+ * into a scrolled local space. Used primarily internally
+ * @param {number} x - x coordinate in camera space
+ * @return {number} x coordinate in scrollFactor-adjusted dimensions
+ */
+Phaser.TilemapLayer.prototype._fixX = function( x )
+{
+	if( this.scrollFactorX === 1 )
+		return x;
+	var left_edge = x - (this._x / this.scrollFactorX);
+	return this._x + left_edge;
+};
+/**
+ * Take an x coordinate that _does_ account for scrollFactorY and 'unfix' it 
+ * back to camera space. Used primarily internally
+ * @param {number} x - x coordinate in scrollFactor-adjusted dimensions
+ * @return {number} x coordinate in camera space
+ */
+Phaser.TilemapLayer.prototype._unfixX = function( x )
+{
+	if( this.scrollFactorX === 1 )
+		return x;
+	var left_edge = x - this._x;
+	return (this._x / this.scrollFactorX) + left_edge;
+};
+/**
+ * Take a y coordinate that doesn't account for scrollFactorY and 'fix' it 
+ * into a scrolled local space. Used primarily internally
+ * @param {number} y - y coordinate in camera space
+ * @return {number} y coordinate in scrollFactor-adjusted dimensions
+ */
+Phaser.TilemapLayer.prototype._fixY = function( y )
+{
+	if( this.scrollFactorY === 1 )
+		return y;
+	var top_edge = y - (this._y / this.scrollFactorY);
+	return this._y + top_edge;
+};
+/**
+ * Take a y coordinate that _does_ account for scrollFactorY and 'unfix' it 
+ * back to camera space. Used primarily internally
+ * @param {number} y - y coordinate in scrollFactor-adjusted dimensions
+ * @return {number} y coordinate in camera space
+ */
+Phaser.TilemapLayer.prototype._unfixY = function( y )
+{
+	if( this.scrollFactorY === 1 )
+		return y;
+	var top_edge = y - this._y;
+	return (this._y / this.scrollFactorY) + top_edge;
+};
+
+/**
 * Convert a pixel value to a tile coordinate.
 * @param {number} x - X position of the point in target tile.
 * @param {number} [layer] - layer of this tile located.
@@ -238,7 +306,7 @@ Phaser.TilemapLayer.prototype.getTileX = function (x) {
 
     var tileWidth = this.tileWidth * this.scale.x;
 
-    return this.game.math.snapToFloor(x, tileWidth) / tileWidth;
+	return this.game.math.snapToFloor(this._fixX(x), tileWidth) / tileWidth;
 
 }
 
@@ -252,7 +320,7 @@ Phaser.TilemapLayer.prototype.getTileY = function (y) {
 
     var tileHeight = this.tileHeight * this.scale.y;
 
-    return this.game.math.snapToFloor(y, tileHeight) / tileHeight;
+	return this.game.math.snapToFloor(this._fixY(y), tileHeight) / tileHeight;
 
 }
 
@@ -292,6 +360,10 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     {
         y = 0;
     }
+
+	// adjust the x,y coordinates for scrollFactor
+	x = this._fixX( x );
+	y = this._fixY( y );
 
     if (width > this.widthInPixels)
     {
@@ -340,7 +412,10 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
 
                 if (collides == false || (collides && _tile.collideNone == false))
                 {
-                    this._results.push({ x: wx * sx, right: (wx * sx) + sx, y: wy * sy, bottom: (wy * sy) + sy, width: sx, height: sy, tx: wx, ty: wy, tile: _tile });
+					// convert tile coordinates back to camera space for return
+					var _wx = this._unfixX( wx*sx ) / tileWidth;
+					var _wy = this._unfixY( wy*sy ) / tileHeight;
+                    this._results.push({ x: _wx * sx, right: (_wx * sx) + sx, y: _wy * sy, bottom: (_wy * sy) + sy, width: sx, height: sy, tx: _wx, ty: _wy, tile: _tile });
                 }
             }
         }
