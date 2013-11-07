@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create,update:update});
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
@@ -109,5 +109,14 @@ function update() {
         player.body.velocity.y = -250;
         jumpTimer = game.time.now + 750;
     }
+
+    // player.scale.x += 0.001;
+    // player.scale.y += 0.001;
+
+}
+
+function render () {
+
+    game.debug.renderSpriteBody(player);
 
 }

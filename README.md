@@ -47,8 +47,10 @@ Version 1.1.3 - in build
 * New: World.visible boolean added, toggles rendering of the world on/off entirely.
 * New: Polygon class & drawPolygon method added to Graphics (thanks rjimenezda)
 * New: Added Group.iterate, a powerful way to count or return child that match a certain criteria. Refactored Group to use iterate, lots of repeated code cut.
+* New: Added Group.sort, can sort the Group based on any given numeric property (x, y, health), finally you can do depth-sorting :)
 * Fixed: Mouse.stop now uses the true useCapture, which means the event listeners stop listening correctly (thanks beeglebug)
 * Fixed: Input Keyboard example fix (thanks Atrodilla)
+* Fixed: BitmapText.destroy now checks if it has a canvas before calling parentNode on it.
 * Updated: ArcadePhysics.updateMotion applies the dt to the velocity calculations as well as position now (thanks jcs)
 * Updated: RequestAnimationFrame now retains the callbackID which is passed to cancelRequestAnimationFrame.
 * Updated: Button now goes back to over state when setFrames used in action (thanks beeglebug)
