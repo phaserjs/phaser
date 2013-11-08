@@ -114,9 +114,9 @@ Phaser.Tilemap.prototype = {
 
         if (typeof layer === "undefined") { layer = this.currentLayer; }
 
-    	if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+    	if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
     	{
-    		this.layers[this.currentLayer].data[y][x] = index;
+    		this.layers[layer].data[y][x] = index;
     	}
 
         this.dirty = true;
@@ -127,9 +127,9 @@ Phaser.Tilemap.prototype = {
 
         if (typeof layer === "undefined") { layer = this.currentLayer; }
 
-        if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+        if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
         {
-            return this.layers[this.currentLayer].data[y][x];
+            return this.layers[layer].data[y][x];
         }
 
     },
@@ -141,9 +141,9 @@ Phaser.Tilemap.prototype = {
         x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
         y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
 
-        if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+        if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
         {
-            return this.layers[this.currentLayer].data[y][x];
+            return this.layers[layer].data[y][x];
         }
 
     },
@@ -160,9 +160,9 @@ Phaser.Tilemap.prototype = {
         x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
         y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
 
-        if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+        if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
         {
-            this.layers[this.currentLayer].data[y][x] = index;
+            this.layers[layer].data[y][x] = index;
         }
 
         this.dirty = true;
