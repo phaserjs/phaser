@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8" />
 	<title>Phaser Basic Project Template</title>
+	<script src="phaser.min.js"></script>
 	<script src="Boot.js"></script>
 	<script src="Preloader.js"></script>
 	<script src="MainMenu.js"></script>
@@ -17,7 +18,7 @@
 window.onload = function() {
 
 	//	Create your Phaser game and inject it into the gameContainer div.
-	//	We did it in a window.onload event, but you can do it anywhere (requireJS load, anonymous function, jQuery dom ready, etc - whatever floats your boat)
+	//	We did it in a window.onload event, but you can do it anywhere (requireJS load, anonymous function, jQuery dom ready, - whatever floats your boat)
 	var game = new Phaser.Game(1024, 768, Phaser.AUTO, 'gameContainer');
 
 	//	Add the States your game has.

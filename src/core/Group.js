@@ -91,6 +91,36 @@ Phaser.Group = function (game, parent, name, useStage) {
 
 };
 
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Group.RETURN_NONE = 0;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Group.RETURN_TOTAL = 1;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Group.RETURN_CHILD = 2;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Group.SORT_ASCENDING = -1;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Group.SORT_DESCENDING = 1;
+
 Phaser.Group.prototype = {
 
     /**
@@ -303,8 +333,48 @@ Phaser.Group.prototype = {
 
 	},
 
+	childTest: function (prefix, child) {
+
+		var s = prefix + ' next: ';
+
+		if (child._iNext)
+		{
+			s = s + child._iNext.name;
+		}
+		else
+		{
+			s = s + '-null-';
+		}
+
+		s = s + ' ' + prefix + ' prev: ';
+
+		if (child._iPrev)
+		{
+			s = s + child._iPrev.name;
+		}
+		else
+		{
+			s = s + '-null-';
+		}
+
+		console.log(s);
+
+	},
+
+	swapIndex: function (index1, index2) {
+
+		var child1 = this.getAt(index1);
+		var child2 = this.getAt(index2);
+
+		console.log('swapIndex ', index1, ' with ', index2);
+
+		this.swap(child1, child2);
+
+	},
+
 	/**
-	* Swaps the position of two children in this Group.
+	* Swaps the position of two children in this Group. Both children must be in this Group.
+	* You cannot swap a child with itself, or swap un-parented children, doing so will return false.
 	*
     * @method Phaser.Group#swap
 	* @param {*} child1 - The first child to swap.
@@ -313,9 +383,8 @@ Phaser.Group.prototype = {
 	*/
 	swap: function (child1, child2) {
 
-		if (child1 === child2 || !child1.parent || !child2.parent)
+		if (child1 === child2 || !child1.parent || !child2.parent || child1.group !== this || child2.group !== this)
 		{
-			console.warn('You cannot swap a child with itself or swap un-parented children');
 			return false;
 		}
 
@@ -387,7 +456,7 @@ Phaser.Group.prototype = {
 			child2._iPrev = child1;
 
 			if (child2Prev) { child2Prev._iNext = child1; }
-			if (child1Next) { child2Next._iPrev = child2; }
+			if (child1Next) { child1Next._iPrev = child2; }
 
 			if (child1.__renderGroup)
 			{
@@ -754,7 +823,7 @@ Phaser.Group.prototype = {
 
 	/**
     * Calls a function on all of the children regardless if they are dead or alive (see callAllExists if you need control over that)
-    * After the method parameter you can add as many extra parameters as you like, which will all be passed to the child.
+    * After the method parameter and context you can add as many extra parameters as you like, which will all be passed to the child.
     * 
     * @method Phaser.Group#callAll
     * @param {string} method - A string containing the name of the function that will be called. The function must exist on the child.
@@ -869,28 +938,30 @@ Phaser.Group.prototype = {
 	* @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
     * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
 	*/
+	forEachExists: function (callback, callbackContext) {
+
+		var args = Array.prototype.splice.call(arguments, 2);
+		args.unshift(null);
+
+		this.iterate('exists', true, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
+
+	},
+
+	/**
+	* Allows you to call your own function on each alive member of this Group (where child.alive=true). You must pass the callback and context in which it will run.
+   	* You can add as many parameters as you like, which will all be passed to the callback along with the child.
+   	* For example: Group.forEachAlive(causeDamage, this, 500)
+	* 
+	* @method Phaser.Group#forEachAlive
+	* @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
+    * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
+	*/
 	forEachAlive: function (callback, callbackContext) {
 
 		var args = Array.prototype.splice.call(arguments, 2);
 		args.unshift(null);
 
-		if (this._container.children.length > 0 && this._container.first._iNext)
-		{
-			var currentNode = this._container.first._iNext;
-				
-			do	
-			{
-				if (currentNode.alive)
-				{
-					args[0] = currentNode;
-					callback.apply(callbackContext, args);
-				}
-
-				currentNode = currentNode._iNext;
-			}
-			while (currentNode != this._container.last._iNext);
-
-		}
+		this.iterate('alive', true, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
 
 	},
 
@@ -908,23 +979,121 @@ Phaser.Group.prototype = {
 		var args = Array.prototype.splice.call(arguments, 2);
 		args.unshift(null);
 
+		this.iterate('alive', false, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
+
+	},
+
+	/**
+	* Call this function to sort the group according to a particular value and order.
+	* For example to depth sort Sprites for Zelda-style game you might call `group.sort('y', Phaser.Group.SORT_ASCENDING)` at the bottom of your `State.update()`.
+	*
+	* @method Phaser.Group#sort
+	* @param {string} [index='y'] - The `string` name of the property you want to sort on.
+	* @param {number} [order=Phaser.Group.SORT_ASCENDING] - The `Group` constant that defines the sort order. Possible values are Phaser.Group.SORT_ASCENDING and Phaser.Group.SORT_DESCENDING.
+	*/
+	sort: function (index, order) {
+
+		if (typeof index === 'undefined') { index = 'y'; }
+		if (typeof order === 'undefined') { order = Phaser.Group.SORT_ASCENDING; }
+
+		var swapped;
+		var temp;
+
+	    do {
+
+	        swapped = false;
+
+	        for (var i = 0, len = this._container.children.length - 1; i < len; i++)
+	        {
+	        	if (order == Phaser.Group.SORT_ASCENDING)
+	        	{
+		            if (this._container.children[i][index] > this._container.children[i + 1][index])
+		            {
+		            	this.swap(this.getAt(i), this.getAt(i + 1));
+		                temp = this._container.children[i];
+		                this._container.children[i] = this._container.children[i + 1];
+		                this._container.children[i + 1] = temp;
+		                swapped = true;
+		            }
+	        	}
+	        	else
+	        	{
+		            if (this._container.children[i][index] < this._container.children[i + 1][index])
+		            {
+		            	this.swap(this.getAt(i), this.getAt(i + 1));
+		                temp = this._container.children[i];
+		                this._container.children[i] = this._container.children[i + 1];
+		                this._container.children[i + 1] = temp;
+		                swapped = true;
+		            }
+	        	}
+	        }
+	    } while (swapped);
+
+	},
+
+	/**
+	* Iterates over the children of the Group. When a child has a property matching key that equals the given value, it is considered as a match.
+	* Matched children can be sent to the optional callback, or simply returned or counted.
+   	* You can add as many callback parameters as you like, which will all be passed to the callback along with the child, after the callbackContext parameter.
+	* 
+	* @method Phaser.Group#iterate
+	* @param {string} key - The child property to check, i.e. 'exists', 'alive', 'health'
+	* @param {any} value - If child.key === this value it will be considered a match. Note that a strict comparison is used.
+	* @param {number} returnType - How to return the data from this method. Either Phaser.Group.RETURN_NONE, Phaser.Group.RETURN_TOTAL or Phaser.Group.RETURN_CHILD.
+	* @param {function} [callback=null] - Optional function that will be called on each matching child. Each child of the Group will be passed to it as its first parameter.
+    * @param {Object} [callbackContext] - The context in which the function should be called (usually 'this').
+	*/
+	iterate: function (key, value, returnType, callback, callbackContext, args) {
+
+		if (returnType == Phaser.Group.RETURN_TOTAL && this._container.children.length == 0)
+		{
+			return -1;
+		}
+
+		if (typeof callback === 'undefined')
+		{
+			callback = false;
+		}
+
+		var total = 0;
+
 		if (this._container.children.length > 0 && this._container.first._iNext)
 		{
 			var currentNode = this._container.first._iNext;
 				
 			do	
 			{
-				if (currentNode.alive == false)
+				if (currentNode[key] === value)
 				{
-					args[0] = currentNode;
-					callback.apply(callbackContext, args);
+					total++;
+
+					if (callback)
+					{
+						args[0] = currentNode;
+						callback.apply(callbackContext, args);
+					}
+
+					if (returnType == Phaser.Group.RETURN_CHILD)
+					{
+						return currentNode;
+					}
 				}
 
 				currentNode = currentNode._iNext;
 			}
 			while (currentNode != this._container.last._iNext);
-
 		}
+
+		if (returnType == Phaser.Group.RETURN_TOTAL)
+		{
+			return total;
+		}
+		else if (returnType == Phaser.Group.RETURN_CHILD)
+		{
+			return null;
+		}
+
 	},
 
 	/**
@@ -941,23 +1110,7 @@ Phaser.Group.prototype = {
 			state = true;
 		}
 
-		if (this._container.children.length > 0 && this._container.first._iNext)
-		{
-			var currentNode = this._container.first._iNext;
-				
-			do	
-			{
-				if (currentNode.exists === state)
-				{
-					return currentNode;
-				}
-
-				currentNode = currentNode._iNext;
-			}
-			while (currentNode != this._container.last._iNext);
-		}
-
-		return null;
+		return this.iterate('exists', state, Phaser.Group.RETURN_CHILD);
 
 	},
 
@@ -970,23 +1123,7 @@ Phaser.Group.prototype = {
     */
 	getFirstAlive: function () {
 
-		if (this._container.children.length > 0 && this._container.first._iNext)
-		{
-			var currentNode = this._container.first._iNext;
-				
-			do	
-			{
-				if (currentNode.alive)
-				{
-					return currentNode;
-				}
-
-				currentNode = currentNode._iNext;
-			}
-			while (currentNode != this._container.last._iNext);
-		}
-
-		return null;
+		return this.iterate('alive', true, Phaser.Group.RETURN_CHILD);
 
 	},
 
@@ -999,23 +1136,7 @@ Phaser.Group.prototype = {
     */
 	getFirstDead: function () {
 
-		if (this._container.children.length > 0 && this._container.first._iNext)
-		{
-			var currentNode = this._container.first._iNext;
-				
-			do	
-			{
-				if (!currentNode.alive)
-				{
-					return currentNode;
-				}
-
-				currentNode = currentNode._iNext;
-			}
-			while (currentNode != this._container.last._iNext);
-		}
-
-		return null;
+		return this.iterate('alive', false, Phaser.Group.RETURN_CHILD);
 
 	},
 
@@ -1027,29 +1148,7 @@ Phaser.Group.prototype = {
     */
 	countLiving: function () {
 
-		var total = 0;
-
-		if (this._container.children.length > 0 && this._container.first._iNext)
-		{
-			var currentNode = this._container.first._iNext;
-				
-			do	
-			{
-				if (currentNode.alive)
-				{
-					total++;
-				}
-
-				currentNode = currentNode._iNext;
-			}
-			while (currentNode != this._container.last._iNext);
-		}
-		else
-		{
-			total = -1;
-		}
-
-		return total;
+		return this.iterate('alive', true, Phaser.Group.RETURN_TOTAL);
 
 	},
 
@@ -1061,29 +1160,7 @@ Phaser.Group.prototype = {
     */
 	countDead: function () {
 
-		var total = 0;
-
-		if (this._container.children.length > 0 && this._container.first._iNext)
-		{
-			var currentNode = this._container.first._iNext;
-				
-			do	
-			{
-				if (!currentNode.alive)
-				{
-					total++;
-				}
-
-				currentNode = currentNode._iNext;
-			}
-			while (currentNode != this._container.last._iNext);
-		}
-		else
-		{
-			total = -1;
-		}
-
-		return total;
+		return this.iterate('alive', false, Phaser.Group.RETURN_TOTAL);
 
 	},
 
@@ -1228,6 +1305,48 @@ Phaser.Group.prototype = {
 
 	},
 
+	validate: function () {
+
+		var testObject = this.game.stage._stage.last._iNext;
+		var displayObject = this.game.stage._stage;
+		var nextObject = null;
+		var prevObject = null;
+		var count = 0;
+
+		do	
+		{
+			if (count > 0)
+			{
+				//	check next
+				if (displayObject !== nextObject)
+				{
+					console.log('check next fail');
+					return false;
+				}
+
+				//	check previous
+				if (displayObject._iPrev !== prevObject)
+				{
+					console.log('check previous fail');
+					return false;
+				}
+			}
+
+			//	Set the next object
+			nextObject = displayObject._iNext;
+			prevObject = displayObject;
+
+			displayObject = displayObject._iNext;
+
+			count++;
+
+		}
+		while(displayObject != testObject)
+
+		return true;
+
+	},
+
 	/**
 	* Dumps out a list of Group children and their index positions to the browser console. Useful for group debugging.
 	*
@@ -1334,7 +1453,8 @@ Phaser.Group.prototype = {
 Object.defineProperty(Phaser.Group.prototype, "total", {
 
     get: function () {
-        return this._container.children.length;
+    	return this.iterate('exists', true, Phaser.Group.RETURN_TOTAL);
+        // return this._container.children.length;
     }
 
 });
@@ -1347,7 +1467,8 @@ Object.defineProperty(Phaser.Group.prototype, "total", {
 Object.defineProperty(Phaser.Group.prototype, "length", {
 
     get: function () {
-        return this._container.children.length;
+    	return this.iterate('exists', true, Phaser.Group.RETURN_TOTAL);
+        // return this._container.children.length;
     }
 
 });

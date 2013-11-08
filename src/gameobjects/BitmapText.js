@@ -155,7 +155,7 @@ Phaser.BitmapText.prototype.destroy = function() {
         this.group.remove(this);
     }
 
-    if (this.canvas.parentNode)
+    if (this.canvas && this.canvas.parentNode)
     {
         this.canvas.parentNode.removeChild(this.canvas);
     }

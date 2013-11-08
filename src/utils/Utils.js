@@ -10,6 +10,12 @@
 */
 Phaser.Utils = {
 	
+	/**
+	* A standard Fisher-Yates Array shuffle implementation.
+	* @method Phaser.Utils.shuffle
+	* @param {array} array - The array to shuffle.
+	* @return {array} The shuffled array.
+	*/
 	shuffle: function (array) {
 
 	    for (var i = array.length - 1; i > 0; i--)
@@ -26,14 +32,14 @@ Phaser.Utils = {
 
 	/**
 	* Javascript string pad http://www.webtoolkit.info/.
-	* pad = the string to pad it out with (defaults to a space)<br>
+	* pad = the string to pad it out with (defaults to a space)
 	* dir = 1 (left), 2 (right), 3 (both)
 	* @method Phaser.Utils.pad
 	* @param {string} str - The target string. 
 	* @param {number} len - Description.
 	* @param {number} pad - the string to pad it out with (defaults to a space).
 	* @param {number} [dir=3] the direction dir = 1 (left), 2 (right), 3 (both).
-	* @return {string}
+	* @return {string} The padded string
 	*/
 	pad: function (str, len, pad, dir) {
 

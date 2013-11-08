@@ -405,28 +405,60 @@ Phaser.InputHandler.prototype = {
 	/**
     * Is the Pointer over this Sprite?
     * @method Phaser.InputHandler#pointerOver
-    * @param {Pointer} pointer
-    * @return {bool
+    * @param {number} [index] - The ID number of a Pointer to check. If you don't provide a number it will check all Pointers.
+    * @return {boolean} True if the given pointer (if a index was given, or any pointer if not) is over this object.
     */
-    pointerOver: function (pointer) {
+    pointerOver: function (index) {
 
-    	pointer = pointer || 0;
+        if (this.enabled)
+        {
+            if (typeof index === 'undefined')
+            {
+                for (var i = 0; i < 10; i++)
+                {
+                    if (this._pointerData[i].isOver)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                return this._pointerData[index].isOver;
+            }
+        }
 
-        return this._pointerData[pointer].isOver;
+        return false;
 
     },
 
 	/**
     * Is the Pointer outside of this Sprite?
     * @method Phaser.InputHandler#pointerOut
-    * @param {Pointer} pointer
-    * @return {boolean}
+    * @param {number} [index] - The ID number of a Pointer to check. If you don't provide a number it will check all Pointers.
+    * @return {boolean} True if the given pointer (if a index was given, or any pointer if not) is out of this object.
     */
     pointerOut: function (pointer) {
 
-    	pointer = pointer || 0;
+        if (this.enabled)
+        {
+            if (typeof index === 'undefined')
+            {
+                for (var i = 0; i < 10; i++)
+                {
+                    if (this._pointerData[i].isOut)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                return this._pointerData[index].isOut;
+            }
+        }
 
-        return this._pointerData[pointer].isOut;
+        return false;
 
     },
 
@@ -502,20 +534,19 @@ Phaser.InputHandler.prototype = {
     },
 
 	/**
-     * Description.
-     * @method Phaser.InputHandler#checkPixel
-     * @param {Description} x - Description.
-     * @param {Description} y - Description.
-     * @return {boolean}
-     */
+    * Runs a pixel perfect check against the given x/y coordinates of the Sprite this InputHandler is bound to.
+    * It compares the alpha value of the pixel and if >= InputHandler.pixelPerfectAlpha it returns true.
+    * @method Phaser.InputHandler#checkPixel
+    * @param {number} x - The x coordinate to check.
+    * @param {number} y - The y coordinate to check.
+    * @return {boolean} true if there is the alpha of the pixel is >= InputHandler.pixelPerfectAlpha
+    */
     checkPixel: function (x, y) {
 
         //  Grab a pixel from our image into the hitCanvas and then test it
         if (this.sprite.texture.baseTexture.source)
         {
             this.game.input.hitContext.clearRect(0, 0, 1, 1);
-
-            //  This will fail if the image is part of a texture atlas - need to modify the x/y values here
 
             x += this.sprite.texture.frame.x;
             y += this.sprite.texture.frame.y;

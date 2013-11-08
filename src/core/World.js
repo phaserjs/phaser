@@ -258,3 +258,19 @@ Object.defineProperty(Phaser.World.prototype, "randomY", {
     }
 
 });
+
+/**
+* @name Phaser.World#visible
+* @property {boolean} visible - Gets or sets the visible state of the World.
+*/
+Object.defineProperty(Phaser.World.prototype, "visible", {
+
+    get: function () {
+        return this._container.visible;
+    },
+
+    set: function (value) {
+        this._container.visible = value;
+    }
+
+});

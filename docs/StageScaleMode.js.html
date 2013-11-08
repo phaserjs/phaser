@@ -243,6 +243,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Polygon.html">Polygon</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.QuadTree.html">QuadTree</a>
 						</li>
 						
@@ -396,45 +400,19 @@
 Phaser.StageScaleMode = function (game, width, height) {
 
     /**
-    * @property {number} _startHeight - Stage height when starting the game.
-    * @default
-    * @private
+    * @property {Phaser.Game} game - A reference to the currently running game.
     */
-    this._startHeight = 0;
+    this.game = game;
 
     /**
-    * @property {boolean} forceLandscape - If the game should be forced to use Landscape mode, this is set to true by Game.Stage
-    * @default
+    * @property {number} width - Width of the stage after calculation.
     */
-    this.forceLandscape = false;
+    this.width = width;
 
     /**
-    * @property {boolean} forcePortrait - If the game should be forced to use Portrait mode, this is set to true by Game.Stage
-    * @default
+    * @property {number} height - Height of the stage after calculation.
     */
-     this.forcePortrait = false;
-
-    /**
-    * @property {boolean} incorrectOrientation - If the game should be forced to use a specific orientation and the device currently isn't in that orientation this is set to true.
-    * @default
-    */
-    this.incorrectOrientation = false;
-
-    /**
-    * @property {boolean} pageAlignHorizontally - If you wish to align your game in the middle of the page then you can set this value to true.
-    &lt;ul>&lt;li>It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.&lt;/li>
-    &lt;li>It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.&lt;/li>&lt;/ul>
-    * @default
-    */
-    this.pageAlignHorizontally = false;
-
-    /**
-    * @property {boolean} pageAlignVertically - If you wish to align your game in the middle of the page then you can set this value to true.
-    &lt;ul>&lt;li>It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.
-    &lt;li>It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.&lt;/li>&lt;/ul>
-    * @default
-    */
-    this.pageAlignVertically = false;
+    this.height = height;
 
     /**
     * @property {number} minWidth - Minimum width the canvas should be scaled to (in pixels).
@@ -463,14 +441,45 @@ Phaser.StageScaleMode = function (game, width, height) {
     this.maxHeight = null;
 
     /**
-    * @property {number} width - Width of the stage after calculation.
+    * @property {number} _startHeight - Stage height when starting the game.
+    * @default
+    * @private
     */
-    this.width = width;
+    this._startHeight = 0;
 
     /**
-    * @property {number} height - Height of the stage after calculation.
+    * @property {boolean} forceLandscape - If the game should be forced to use Landscape mode, this is set to true by Game.Stage
+    * @default
     */
-    this.height = height;
+    this.forceLandscape = false;
+
+    /**
+    * @property {boolean} forcePortrait - If the game should be forced to use Portrait mode, this is set to true by Game.Stage
+    * @default
+    */
+     this.forcePortrait = false;
+
+    /**
+    * @property {boolean} incorrectOrientation - If the game should be forced to use a specific orientation and the device currently isn't in that orientation this is set to true.
+    * @default
+    */
+    this.incorrectOrientation = false;
+
+    /**
+    * @property {boolean} pageAlignHorizontally - If you wish to align your game in the middle of the page then you can set this value to true.
+    * It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.
+    * It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.
+    * @default
+    */
+    this.pageAlignHorizontally = false;
+
+    /**
+    * @property {boolean} pageAlignVertically - If you wish to align your game in the middle of the page then you can set this value to true.
+    * It will place a re-calculated margin-left pixel value onto the canvas element which is updated on orientation/resizing.
+    * It doesn't care about any other DOM element that may be on the page, it literally just sets the margin.
+    * @default
+    */
+    this.pageAlignVertically = false;
 
     /**
     * @property {number} _width - Cached stage width for full screen mode.
@@ -492,18 +501,20 @@ Phaser.StageScaleMode = function (game, width, height) {
     */
     this.maxIterations = 5;
     
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running game.
-    */
-    this.game = game;
 
     /**
-    * @property {Description} enterLandscape - Description.
+    * @property {PIXI.Sprite} orientationSprite - The Sprite that is optionally displayed if the browser enters an unsupported orientation.
+    * @default
+    */
+    this.orientationSprite = null;
+
+    /**
+    * @property {Phaser.Signal} enterLandscape - The event that is dispatched when the browser enters landscape orientation.
     */
     this.enterLandscape = new Phaser.Signal();
 
     /**
-    * @property {Description} enterPortrait - Description.
+    * @property {Phaser.Signal} enterPortrait - The event that is dispatched when the browser enters horizontal orientation.
     */
     this.enterPortrait = new Phaser.Signal();
 
@@ -524,7 +535,7 @@ Phaser.StageScaleMode = function (game, width, height) {
     }
 
     /**
-    * @property {Description} scaleFactor - Description.
+    * @property {Phaser.Point} scaleFactor - The scale factor based on the game dimensions vs. the scaled dimensions.
     */
     this.scaleFactor = new Phaser.Point(1, 1);
 
@@ -678,6 +689,54 @@ Phaser.StageScaleMode.prototype = {
     },
 
     /**
+    * If you need your game to run in only one orientation you can force that to happen.
+    * The optional orientationImage is displayed when the game is in the incorrect orientation.
+    * @method Phaser.StageScaleMode#forceOrientation
+    * @param {boolean} forceLandscape - true if the game should run in landscape mode only.
+    * @param {boolean} forcePortrait - true if the game should run in portrait mode only.
+    * @param {string} [forcePortrait=''] - The string of an image in the Phaser.Cache to display when this game is in the incorrect orientation.
+    */
+    forceOrientation: function (forceLandscape, forcePortrait, orientationImage) {
+
+        this.forceLandscape = forceLandscape;
+
+        if (typeof forcePortrait === 'undefined')
+        {
+            this.forcePortrait = false;
+        }
+
+        if (typeof orientationImage !== 'undefined')
+        {
+            if (orientationImage == null || this.game.cache.checkImageKey(orientationImage) == false)
+            {
+                orientationImage = '__default';
+            }
+
+            this.orientationSprite = new PIXI.Sprite(PIXI.TextureCache[orientationImage]);
+            this.orientationSprite.anchor.x = 0.5;
+            this.orientationSprite.anchor.y = 0.5;
+            this.orientationSprite.position.x = this.game.width / 2;
+            this.orientationSprite.position.y = this.game.height / 2;
+
+            this.checkOrientationState();
+
+            if (this.incorrectOrientation)
+            {
+                this.orientationSprite.visible = true;
+                this.game.world.visible = false;
+            }
+            else
+            {
+                this.orientationSprite.visible = false;
+                this.game.world.visible = true;
+            }
+
+            this.game.stage._stage.addChild(this.orientationSprite);
+        }
+
+    },
+
+    /**
     * Checks if the browser is in the correct orientation for your game (if forceLandscape or forcePortrait have been set)
     * @method Phaser.StageScaleMode#checkOrientationState
     */
@@ -691,6 +750,13 @@ Phaser.StageScaleMode.prototype = {
                 //  Back to normal
                 this.game.paused = false;
                 this.incorrectOrientation = false;
+
+                if (this.orientationSprite)
+                {
+                    this.orientationSprite.visible = false;
+                    this.game.world.visible = true;
+                }
+
                 this.refresh();
             }
         }
@@ -701,6 +767,13 @@ Phaser.StageScaleMode.prototype = {
                 //  Show orientation screen
                 this.game.paused = true;
                 this.incorrectOrientation = true;
+
+                if (this.orientationSprite && this.orientationSprite.visible == false)
+                {
+                    this.orientationSprite.visible = true;
+                    this.game.world.visible = false;
+                }
+
                 this.refresh();
             }
         }
@@ -760,6 +833,9 @@ Phaser.StageScaleMode.prototype = {
         {
             this.refresh();
         }
+
+        this.checkOrientationState();
+
     },
 
     /**
@@ -799,7 +875,7 @@ Phaser.StageScaleMode.prototype = {
 
     /**
     * Set screen size automatically based on the scaleMode.
-    * @param {Description} force - If force is true it will try to resize the game regardless of the document dimensions.
+    * @param {boolean} force - If force is true it will try to resize the game regardless of the document dimensions.
     */
     setScreenSize: function (force) {
 
@@ -911,6 +987,8 @@ Phaser.StageScaleMode.prototype = {
         
         this.scaleFactor.x = this.game.width / this.width;
         this.scaleFactor.y = this.game.height / this.height;
+
+        this.checkOrientationState();
 
     },
 
@@ -1032,7 +1110,7 @@ Object.defineProperty(Phaser.StageScaleMode.prototype, "isLandscape", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Fri Nov 01 2013 18:16:08 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Nov 07 2013 06:07:33 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

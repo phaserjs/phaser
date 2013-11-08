@@ -77,6 +77,12 @@ Phaser.PluginManager.prototype = {
             result = true;
         }
 
+        if (typeof plugin['postUpdate'] === 'function')
+        {
+            plugin.hasPostUpdate = true;
+            result = true;
+        }
+
         if (typeof plugin['render'] === 'function')
         {
             plugin.hasRender = true;
@@ -171,6 +177,30 @@ Phaser.PluginManager.prototype = {
             if (this.plugins[this._p].active && this.plugins[this._p].hasUpdate)
             {
                 this.plugins[this._p].update();
+            }
+        }
+
+    },
+
+    /**
+    * PostUpdate is the last thing to be called before the world render.
+    * In particular, it is called after the world postUpdate, which means the camera has been adjusted.
+    * It only calls plugins who have active=true.
+    * 
+    * @method Phaser.PluginManager#postUpdate
+    */
+    postUpdate: function () {
+        
+        if (this._pluginsLength == 0)
+        {
+            return;
+        }
+
+        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        {
+            if (this.plugins[this._p].active && this.plugins[this._p].hasPostUpdate)
+            {
+                this.plugins[this._p].postUpdate();
             }
         }
 

@@ -50,6 +50,13 @@ Phaser.RequestAnimationFrame = function(game) {
 	*/
 	this._onLoop = null;
 
+	/**
+	* The callback ID used when calling cancel
+	* @property _timeOutID
+	* @private
+	*/
+	this._timeOutID = null;
+
 };
 
 Phaser.RequestAnimationFrame.prototype = {
@@ -83,7 +90,7 @@ Phaser.RequestAnimationFrame.prototype = {
                 return _this.updateRAF(time);
             };
 
-			window.requestAnimationFrame(this._onLoop);
+			this._timeOutID = window.requestAnimationFrame(this._onLoop);
 		}
 
 	},
@@ -97,7 +104,7 @@ Phaser.RequestAnimationFrame.prototype = {
 
 		this.game.update(time);
 
-		window.requestAnimationFrame(this._onLoop);
+		this._timeOutID = window.requestAnimationFrame(this._onLoop);
 
 	},
 
@@ -125,7 +132,7 @@ Phaser.RequestAnimationFrame.prototype = {
 		}
 		else
 		{
-			window.cancelAnimationFrame;
+			window.cancelAnimationFrame(this._timeOutID);
 		}
 
 		this.isRunning = false;

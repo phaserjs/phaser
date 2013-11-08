@@ -27,8 +27,8 @@
  @class RenderTexture
  @extends Texture
  @constructor
- @param width {number} The width of the render texture
- @param height {number} The height of the render texture
+ @param width {Number} The width of the render texture
+ @param height {Number} The height of the render texture
  */
 PIXI.RenderTexture = function(width, height)
 {
@@ -91,12 +91,10 @@ PIXI.RenderTexture.prototype.initWebGL = function()
 	gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.baseTexture._glTexture, 0);
 
 	// create a projection matrix..
-	this.projection = new PIXI.Point(this.width/2 , this.height/2);
+	this.projection = new PIXI.Point(this.width/2 , -this.height/2);
 
 	// set the correct render function..
 	this.render = this.renderWebGL;
-
-	
 }
 
 
@@ -109,7 +107,7 @@ PIXI.RenderTexture.prototype.resize = function(width, height)
 	if(PIXI.gl)
 	{
 		this.projection.x = this.width/2
-		this.projection.y = this.height/2;
+		this.projection.y = -this.height/2;
 	
 		var gl = PIXI.gl;
 		gl.bindTexture(gl.TEXTURE_2D, this.baseTexture._glTexture);
@@ -173,9 +171,8 @@ PIXI.RenderTexture.prototype.renderWebGL = function(displayObject, position, cle
 	displayObject.worldTransform = PIXI.mat3.create();//sthis.indetityMatrix;
 	// modify to flip...
 	displayObject.worldTransform[4] = -1;
-	displayObject.worldTransform[5] = this.projection.y * 2;
+	displayObject.worldTransform[5] = this.projection.y * -2;
 
-	
 	if(position)
 	{
 		displayObject.worldTransform[2] = position.x;
@@ -196,20 +193,20 @@ PIXI.RenderTexture.prototype.renderWebGL = function(displayObject, position, cle
 	{
 		if(displayObject == renderGroup.root)
 		{
-			renderGroup.render(this.projection);
+			renderGroup.render(this.projection, this.glFramebuffer);
 		}
 		else
 		{
-			renderGroup.renderSpecific(displayObject, this.projection);
+			renderGroup.renderSpecific(displayObject, this.projection, this.glFramebuffer);
 		}
 	}
 	else
 	{
 		if(!this.renderGroup)this.renderGroup = new PIXI.WebGLRenderGroup(gl);
 		this.renderGroup.setRenderable(displayObject);
-		this.renderGroup.render(this.projection);
+		this.renderGroup.render(this.projection, this.glFramebuffer);
 	}
-
+	
 	displayObject.worldTransform = originalWorldTransform;
 }
 
@@ -249,4 +246,3 @@ PIXI.RenderTexture.prototype.renderCanvas = function(displayObject, position, cl
 
   //  PIXI.texturesToUpdate.push(this.baseTexture);
 }
-

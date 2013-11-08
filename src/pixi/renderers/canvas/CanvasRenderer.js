@@ -9,8 +9,8 @@
  *
  * @class CanvasRenderer
  * @constructor
- * @param width=0 {number} the width of the canvas view
- * @param height=0 {number} the height of the canvas view
+ * @param width=0 {Number} the width of the canvas view
+ * @param height=0 {Number} the height of the canvas view
  * @param view {Canvas} the canvas to use as a view, optional
  * @param transparent=false {Boolean} the transparency of the render view, default false
  */
@@ -114,8 +114,8 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
  * resizes the canvas view to the specified width and height
  *
  * @method resize
- * @param width {number} the new width of the canvas view
- * @param height {number} the new height of the canvas view
+ * @param width {Number} the new width of the canvas view
+ * @param height {Number} the new height of the canvas view
  */
 PIXI.CanvasRenderer.prototype.resize = function(width, height)
 {
@@ -163,9 +163,10 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
 		
 		if(displayObject instanceof PIXI.Sprite)
 		{
+				
 			var frame = displayObject.texture.frame;
 			
-			if(frame)
+			if(frame && frame.width && frame.height)
 			{
 				context.globalAlpha = displayObject.worldAlpha;
 				
@@ -194,6 +195,7 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
 		}
 		else if(displayObject instanceof PIXI.CustomRenderable)
 		{
+			context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5]);
 			displayObject.renderCanvas(this);
 		}
 		else if(displayObject instanceof PIXI.Graphics)
@@ -203,27 +205,36 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
 		}
 		else if(displayObject instanceof PIXI.FilterBlock)
 		{
-			if(displayObject.open)
-			{
-				context.save();
-				
-				var cacheAlpha = displayObject.mask.alpha;
-				var maskTransform = displayObject.mask.worldTransform;
-				
-				context.setTransform(maskTransform[0], maskTransform[3], maskTransform[1], maskTransform[4], maskTransform[2], maskTransform[5])
-				
-				displayObject.mask.worldAlpha = 0.5;
-				
-				context.worldAlpha = 0;
-				
-				PIXI.CanvasGraphics.renderGraphicsMask(displayObject.mask, context);
-				context.clip();
-				
-				displayObject.mask.worldAlpha = cacheAlpha;
+			if(displayObject.data instanceof PIXI.Graphics)
+ 			{
+				var mask = displayObject.data;
+
+				if(displayObject.open)
+				{
+					context.save();
+					
+					var cacheAlpha = mask.alpha;
+					var maskTransform = mask.worldTransform;
+					
+					context.setTransform(maskTransform[0], maskTransform[3], maskTransform[1], maskTransform[4], maskTransform[2], maskTransform[5])
+					
+					mask.worldAlpha = 0.5;
+					
+					context.worldAlpha = 0;
+					
+					PIXI.CanvasGraphics.renderGraphicsMask(mask, context);
+					context.clip();
+					
+					mask.worldAlpha = cacheAlpha;
+				}
+				else
+				{
+					context.restore();
+				}
 			}
 			else
 			{
-				context.restore();
+				// only masks supported right now!
 			}
 		}
 	//	count++

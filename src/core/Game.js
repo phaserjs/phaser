@@ -422,7 +422,13 @@ Phaser.Game.prototype = {
 
 		this.time.update(time);
 
-		if (!this._paused)
+		if (this._paused)
+		{
+			this.renderer.render(this.stage._stage);
+			this.plugins.render();
+			this.state.render();
+		}
+		else
 		{
 	        this.plugins.preUpdate();
 	        this.physics.preUpdate();
@@ -437,6 +443,7 @@ Phaser.Game.prototype = {
 	        this.plugins.update();
 
 			this.world.postUpdate();
+            this.plugins.postUpdate();
 
 			this.renderer.render(this.stage._stage);
 			this.plugins.render();

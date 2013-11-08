@@ -10,7 +10,7 @@
 var Phaser = Phaser || {
 
 	VERSION: '<%= version %>',
-	DEV_VERSION: '1.1.2',
+	DEV_VERSION: '1.1.3',
 	GAMES: [],
 	AUTO: 0,
 	CANVAS: 1,
@@ -28,6 +28,7 @@ var Phaser = Phaser || {
 	TILEMAP: 9,
 	TILEMAPLAYER: 10,
 	EMITTER: 11,
+	POLYGON: 12,
 
 	NONE: 0,
 	LEFT: 1,
