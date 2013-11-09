@@ -270,7 +270,11 @@ Phaser.Animation.prototype = {
             else
             {
                 this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-				this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+                if (this.currentFrame)
+                {
+                    this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+                }
             }
 
             return true;

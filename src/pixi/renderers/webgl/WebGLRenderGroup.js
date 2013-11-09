@@ -25,7 +25,6 @@ PIXI.WebGLRenderGroup = function(gl, transparent)
 	
 	this.batchs = [];
 	this.toRemove = [];
-	console.log(this.transparent)
 	this.filterManager = new PIXI.WebGLFilterManager(this.transparent);
 }
 

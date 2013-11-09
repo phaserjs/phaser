@@ -93,7 +93,6 @@ PIXI._CompileShader = function(gl, shaderSrc, shaderType)
   gl.compileShader(shader);
 
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.log(gl.getShaderInfoLog(shader));
     return null;
   }
 

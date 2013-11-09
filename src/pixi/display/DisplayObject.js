@@ -474,7 +474,6 @@ PIXI.DisplayObject.prototype.removeFilter = function(data)
 {
 	//if(!this.filter)return;
 	//this.filter = false;
-	console.log("YUOIO")
 	// modify the list..
 	var startBlock = data.start;
 	

@@ -17,6 +17,8 @@ Try out 150+ [Phaser Examples](http://gametest.mobi/phaser/examples/)
 
 [Un-official Getting Started with Phaser](http://www.antonoffplus.com/coding-an-html5-game-for-30-minutes-or-an-introduction-to-the-phaser-framework)
 
+[Subscribe to our new Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E). We'll email you when new versions are released as well as send you our regular Phaser game making magazine.
+
 "Being negative is not how we make progress" - Larry Page, Google
 
 Welcome to Phaser
