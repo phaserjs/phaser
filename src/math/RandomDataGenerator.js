@@ -13,7 +13,7 @@
 * Random number generator from http://baagoe.org/en/wiki/Better_random_numbers_for_javascript
 * 
 * @constructor
-* @param {array} seeds
+* @param {array} [seeds]
 */
 Phaser.RandomDataGenerator = function (seeds) {
 	
@@ -71,7 +71,7 @@ Phaser.RandomDataGenerator.prototype = {
 	* Reset the seed of the random data generator.
 	* 
 	* @method Phaser.RandomDataGenerator#sow
-	* @param {array} seeds
+	* @param {array} [seeds]
 	*/
 	sow: function (seeds) {
 

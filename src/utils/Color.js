@@ -141,7 +141,7 @@ Phaser.Color = {
     * @param {number} color2 - Description.
     * @param {number} steps - Description.
     * @param {number} currentStep - Description.
-    * @param {number} alpha - Description.
+    * @param {number} [alpha=255] - Description.
     * @returns {number} The interpolated color value.
     */
     interpolateColor: function (color1, color2, steps, currentStep, alpha) {
@@ -209,9 +209,9 @@ Phaser.Color = {
     * <p>Set the max value to restrict the maximum color used per channel</p>
     *
     * @method Phaser.Color.getRandomColor
-    * @param {number} min - The lowest value to use for the color.
-    * @param {number} max - The highest value to use for the color.
-    * @param {number} alpha - The alpha value of the returning color (default 255 = fully opaque).
+    * @param {number} [min=0] - The lowest value to use for the color.
+    * @param {number} [max=255] - The highest value to use for the color.
+    * @param {number} [alpha=255] - The alpha value of the returning color (default 255 = fully opaque).
     * @returns {number} 32-bit color value with alpha.
     */
     getRandomColor: function (min, max, alpha) {

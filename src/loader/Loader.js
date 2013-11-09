@@ -241,7 +241,7 @@ Phaser.Loader.prototype = {
 	* @method Phaser.Loader#image
 	* @param {string} key - Unique asset key of this image file.
 	* @param {string} url - URL of image file.
-	* @param {boolean} overwrite - If an entry with a matching key already exists this will over-write it
+	* @param {boolean} [overwrite=false] - If an entry with a matching key already exists this will over-write it
 	*/
 	image: function (key, url, overwrite) {
 
@@ -262,7 +262,7 @@ Phaser.Loader.prototype = {
 	* @method Phaser.Loader#text
 	* @param {string} key - Unique asset key of the text file.
 	* @param {string} url - URL of the text file.
-	* @param {boolean} overwrite - True if Description.
+	* @param {boolean} [overwrite=false] - True if Description.
 	*/
 	text: function (key, url, overwrite) {
 
@@ -333,7 +333,7 @@ Phaser.Loader.prototype = {
 	* @method Phaser.Loader#audio
 	* @param {string} key - Unique asset key of the audio file.
 	* @param {Array} urls - An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ].
-	* @param {boolean} autoDecode - When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
+	* @param {boolean} [autoDecode=true] - When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
 	*/
 	audio: function (key, urls, autoDecode) {
 
@@ -354,8 +354,8 @@ Phaser.Loader.prototype = {
 	* @method Phaser.Loader#tilemap
 	* @param {string} key - Unique asset key of the tilemap data.
 	* @param {string} tilesetURL - The url of the tile set image file.
-	* @param {string} [mapDataURL] - The url of the map data file (csv/json)
-	* @param {object} [mapData] - An optional JSON data object (can be given in place of a URL).
+	* @param {string} [mapDataURL=null] - The url of the map data file (csv/json)
+	* @param {object} [mapData=null] - An optional JSON data object (can be given in place of a URL).
 	* @param {string} [format] - The format of the map data.
 	*/
 	tilemap: function (key, mapDataURL, mapData, format) {
@@ -411,8 +411,8 @@ Phaser.Loader.prototype = {
 	* @method Phaser.Loader#bitmapFont
 	* @param {string} key - Unique asset key of the bitmap font.
 	* @param {string} textureURL - The url of the font image file.
-	* @param {string} [xmlURL] - The url of the font data file (xml/fnt)
-	* @param {object} [xmlData] - An optional XML data object.
+	* @param {string} [xmlURL=null] - The url of the font data file (xml/fnt)
+	* @param {object} [xmlData=null] - An optional XML data object.
 	*/
 	bitmapFont: function (key, textureURL, xmlURL, xmlData) {
 
@@ -515,8 +515,8 @@ Phaser.Loader.prototype = {
 	* @method Phaser.Loader#atlas
 	* @param {string} key - Unique asset key of the texture atlas file.
 	* @param {string} textureURL - The url of the texture atlas image file.
-	* @param {string} [atlasURL] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
-	* @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
+	* @param {string} [atlasURL=null] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
+	* @param {object} [atlasData=null] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
 	* @param {number} [format] - A value describing the format of the data, the default is Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY.
 	*/
 	atlas: function (key, textureURL, atlasURL, atlasData, format) {

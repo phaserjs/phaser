@@ -58,8 +58,8 @@ Phaser.Net.prototype = {
 	* @method Phaser.Net#updateQueryString
 	* @param {string} key - The querystring key to update.
 	* @param {string} value - The new value to be set. If it already exists it will be replaced.
-	* @param {boolean} redirect - If true the browser will issue a redirect to the url with the new querystring.
-	* @param {string} url - The URL to modify. If none is given it uses window.location.href.
+	* @param {boolean} [redirect=false] - If true the browser will issue a redirect to the url with the new querystring.
+	* @param {string} [url=''] - The URL to modify. If none is given it uses window.location.href.
 	* @return {string} If redirect is false then the modified url and query string is returned.
 	*/
 	updateQueryString: function (key, value, redirect, url) {
