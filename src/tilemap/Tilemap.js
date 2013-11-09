@@ -109,6 +109,7 @@ Phaser.Tilemap.prototype = {
     * @param {number} x - X position of this tile.
     * @param {number} y - Y position of this tile.
     * @param {number} index - The index of this tile type in the core map data.
+    * @param {TilemapLayer} [layer]
     */
     putTile: function (index, x, y, layer) {
 
@@ -345,12 +346,11 @@ Phaser.Tilemap.prototype = {
     /**
     * Randomises a set of tiles in a given area. It will only randomise the tiles in that area, so if they're all the same nothing will appear to have changed!
     * @method random
-    * @param {number} tileA - First tile index.
-    * @param {number} tileB - Second tile index.
     * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
     * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
     * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
     * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    * @param {TilemapLayer} [layer]
     */
     random: function (x, y, width, height, layer) {
 
@@ -387,12 +387,11 @@ Phaser.Tilemap.prototype = {
     /**
     * Randomises a set of tiles in a given area. It will only randomise the tiles in that area, so if they're all the same nothing will appear to have changed!
     * @method random
-    * @param {number} tileA - First tile index.
-    * @param {number} tileB - Second tile index.
     * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
     * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
     * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
     * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    * @param {TilemapLayer} [layer]
     */
     shuffle: function (x, y, width, height, layer) {
 

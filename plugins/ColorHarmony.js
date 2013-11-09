@@ -34,7 +34,7 @@ Phaser.Plugins.ColorHarmony.prototype = {
     *
     * @method getAnalogousHarmony
     * @param {Number} color The color to base the harmony on.
-    * @param {Number} threshold Control how adjacent the colors will be (default +- 30 degrees)
+    * @param {Number} [threshold=30] Control how adjacent the colors will be (default +- 30 degrees)
     * @return {Object} Object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
     */
     getAnalogousHarmony: function (color, threshold) {
@@ -62,7 +62,7 @@ Phaser.Plugins.ColorHarmony.prototype = {
     *
     * @method getSplitComplementHarmony
     * @param {Number} color The color to base the harmony on
-    * @param {Number} threshold Control how adjacent the colors will be to the Complement (default +- 30 degrees)
+    * @param {Number} [threshold=30] Control how adjacent the colors will be to the Complement (default +- 30 degrees)
     * @return {Object} An object containing 3 properties: color1 (the original color), color2 (the warmer analogous color) and color3 (the colder analogous color)
     */
     getSplitComplementHarmony: function (color, threshold) {
@@ -132,7 +132,7 @@ Phaser.Plugins.ColorHarmony.prototype = {
     * @param {Number} h Hue degree, between 0 and 359
     * @param {Number} s Saturation, between 0.0 (grey) and 1.0
     * @param {Number} v Value, between 0.0 (black) and 1.0
-    * @param {Number} alpha Alpha value to set per color (between 0 and 255)
+    * @param {Number} [alpha=255] Alpha value to set per color (between 0 and 255)
     * @return {Number} 32-bit ARGB color value (0xAARRGGBB)
     */
     HSVtoRGB: function (h, s, v, alpha) {

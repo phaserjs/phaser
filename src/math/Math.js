@@ -22,7 +22,7 @@ Phaser.Math = {
 	* @method Phaser.Math#fuzzyEqual
 	* @param {number} a
 	* @param {number} b
-	* @param {number} epsilon 
+	* @param {number} [epsilon=0.0001]
 	* @return {boolean} True if |a-b|<&epsilon;
 	*/
     fuzzyEqual: function (a, b, epsilon) {
@@ -35,7 +35,7 @@ Phaser.Math = {
 	* @method Phaser.Math#fuzzyEqual
 	* @param {number} a
 	* @param {number} b
-	* @param {number} epsilon 
+	* @param {number} [epsilon=0.0001]
 	* @return {boolean} True if a<b+&epsilon;
 	*/
     fuzzyLessThan: function (a, b, epsilon) {
@@ -48,7 +48,7 @@ Phaser.Math = {
 	* @method Phaser.Math#fuzzyGreaterThan
 	* @param {number} a
 	* @param {number} b
-	* @param {number} epsilon 
+	* @param {number} [epsilon=0.0001]
 	* @return {boolean} True if a>b+&epsilon;
 	*/
     fuzzyGreaterThan: function (a, b, epsilon) {
@@ -59,7 +59,7 @@ Phaser.Math = {
 	/** 
 	* @method Phaser.Math#fuzzyCeil
 	* @param {number} val
-	* @param {number} epsilon 
+	* @param {number} [epsilon=0.0001]
 	* @return {boolean} ceiling(val-&epsilon;)
 	*/
     fuzzyCeil: function (val, epsilon) {
@@ -70,7 +70,7 @@ Phaser.Math = {
 	/** 
 	* @method Phaser.Math#fuzzyFloor
 	* @param {number} val
-	* @param {number} epsilon 
+	* @param {number} [epsilon=0.0001]
 	* @return {boolean} floor(val-&epsilon;)
 	*/
     fuzzyFloor: function (val, epsilon) {
@@ -127,7 +127,7 @@ Phaser.Math = {
 	* @method Phaser.Math#snapTo
 	* @param {number} input - The value to snap.
 	* @param {number} gap - The interval gap of the grid.
-	* @param {number} [start] - Optional starting offset for gap.
+	* @param {number} [start=0] - Optional starting offset for gap.
     * @return {number}
 	*/
     snapTo: function (input, gap, start) {
@@ -153,7 +153,7 @@ Phaser.Math = {
     * @method Phaser.Math#snapToFloor
     * @param {number} input - The value to snap.
     * @param {number} gap - The interval gap of the grid.
-    * @param {number} [start] - Optional starting offset for gap.
+    * @param {number} [start=0] - Optional starting offset for gap.
     * @return {number}
     */
     snapToFloor: function (input, gap, start) {
@@ -179,7 +179,7 @@ Phaser.Math = {
     * @method Phaser.Math#snapToCeil
     * @param {number} input - The value to snap.
     * @param {number} gap - The interval gap of the grid.
-    * @param {number} [start] - Optional starting offset for gap.
+    * @param {number} [start=0] - Optional starting offset for gap.
     * @return {number}
 	*/
     snapToCeil: function (input, gap, start) {
@@ -203,7 +203,7 @@ Phaser.Math = {
 	* @method Phaser.Math#snapToInArray
 	* @param {number} input
 	* @param {array} arr 
-	* @param {boolean} sort - True if the array needs to be sorted.
+	* @param {boolean} [sort=true] - True if the array needs to be sorted.
     * @return {number}
 	*/
     snapToInArray: function (input, arr, sort) {
@@ -263,8 +263,8 @@ Phaser.Math = {
 	* 
 	* @method Phaser.Math#roundTo
 	* @param {number} value - The value to round.
-	* @param {number} place - The place to round to.
-	* @param {number} base - The base to round in... default is 10 for decimal.
+	* @param {number} [place=0] - The place to round to.
+	* @param {number} [base=10] - The base to round in... default is 10 for decimal.
     * @return {number}
 	*/
     roundTo: function (value, place, base) {
@@ -281,8 +281,8 @@ Phaser.Math = {
     /**
 	* @method Phaser.Math#floorTo
 	* @param {number} value - The value to round.
-	* @param {number} place - The place to round to.
-	* @param {number} base - The base to round in... default is 10 for decimal.
+	* @param {number} [place=0] - The place to round to.
+	* @param {number} [base=10] - The base to round in... default is 10 for decimal.
     * @return {number}
 	*/
     floorTo: function (value, place, base) {
@@ -299,8 +299,8 @@ Phaser.Math = {
     /**
 	* @method Phaser.Math#ceilTo
 	* @param {number} value - The value to round.
-	* @param {number} place - The place to round to.
-	* @param {number} base - The base to round in... default is 10 for decimal.
+	* @param {number} [place=0] - The place to round to.
+	* @param {number} [base=10] - The base to round in... default is 10 for decimal.
     * @return {number}
 	*/
     ceilTo: function (value, place, base) {
@@ -343,7 +343,7 @@ Phaser.Math = {
 	* Set an angle  within the bounds of -&pi; to&pi;.
 	* @method Phaser.Math#normalizeAngle
 	* @param {number} angle
-	* @param {boolean} radians - True if angle size is expressed in radians.
+	* @param {boolean} [radians=true] - True if angle size is expressed in radians.
     * @return {number}
 	*/
     normalizeAngle: function (angle, radians) {
@@ -361,7 +361,7 @@ Phaser.Math = {
 	* @method Phaser.Math#nearestAngleBetween
 	* @param {number} a1
 	* @param {number} a2
-	* @param {boolean} radians - True if angle sizes are expressed in radians.
+	* @param {boolean} [radians=true] - True if angle sizes are expressed in radians.
     * @return {number}
 	*/
     nearestAngleBetween: function (a1, a2, radians) {
@@ -392,8 +392,8 @@ Phaser.Math = {
 	* @param {number} a1 - Description.
 	* @param {number} a2 - Description.
 	* @param {number} weight - Description.
-	* @param {boolean} radians - True if angle sizes are expressed in radians.
-	* @param {Description} ease - Description.
+	* @param {boolean} [radians=true] - True if angle sizes are expressed in radians.
+	* @param {Description} [ease=null] - Description.
     * @return {number}
 	*/
     interpolateAngles: function (a1, a2, weight, radians, ease) {
@@ -415,7 +415,7 @@ Phaser.Math = {
 	* of getting a bonus, call chanceRoll(30) - true means the chance passed, false means it failed.
 	* </p>
 	* @method Phaser.Math#chanceRoll
-	* @param {number} chance - The chance of receiving the value. A number between 0 and 100 (effectively 0% to 100%).
+	* @param {number} [chance=50] - The chance of receiving the value. A number between 0 and 100 (effectively 0% to 100%).
 	* @return {boolean} True if the roll passed, or false otherwise.
 	*/
     chanceRoll: function (chance) {
@@ -847,8 +847,8 @@ Phaser.Math = {
 	*
 	* @method Phaser.Math#getRandom
 	* @param {array} objects - An array of objects.
-	* @param {number} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-	* @param {number} length - Optional restriction on the number of values you want to randomly select from.
+	* @param {number} [startIndex=0] - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+	* @param {number} [length=0] - Optional restriction on the number of values you want to randomly select from.
 	* @return {object} The random object that was selected.
 	*/
     getRandom: function (objects, startIndex, length) {
@@ -910,9 +910,9 @@ Phaser.Math = {
     * </p>
     * @method Phaser.Math#sinCosGenerator
     * @param {number} length - The length of the wave
-    * @param {number} sinAmplitude - The amplitude to apply to the sine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
-    * @param {number} cosAmplitude - The amplitude to apply to the cosine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
-    * @param {number} frequency  - The frequency of the sine and cosine table data
+    * @param {number} [sinAmplitude=1.0] - The amplitude to apply to the sine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
+    * @param {number} [cosAmplitude=1.0] - The amplitude to apply to the cosine table (default 1.0) if you need values between say -+ 125 then give 125 as the value
+    * @param {number} [frequency=1.0] - The frequency of the sine and cosine table data
     * @return {Array} Returns the sine table
     */
     sinCosGenerator: function (length, sinAmplitude, cosAmplitude, frequency) {

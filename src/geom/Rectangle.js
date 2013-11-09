@@ -655,7 +655,7 @@ Phaser.Rectangle.intersects = function (a, b) {
 * @param {number} right - Description.
 * @param {number} top - Description.
 * @param {number} bottom - Description.
-* @param {number} tolerance - A tolerance value to allow for an intersection test with padding, default to 0
+* @param {number} [tolerance=0] - A tolerance value to allow for an intersection test with padding, default to 0
 * @return {boolean} A value of true if the specified object intersects with the Rectangle; otherwise false.
 */
 Phaser.Rectangle.intersectsRaw = function (a, left, right, top, bottom, tolerance) {

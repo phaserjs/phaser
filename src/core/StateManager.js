@@ -160,7 +160,7 @@ Phaser.StateManager.prototype = {
     * @method Phaser.StateManager#add
     * @param key {string} - A unique key you use to reference this state, i.e. "MainMenu", "Level1".
     * @param state {State} - The state you want to switch to.
-    * @param autoStart {boolean} - Start the state immediately after creating it? (default true)
+    * @param [autoStart=false] {boolean} - Start the state immediately after creating it? (default true)
     */
     add: function (key, state, autoStart) {
 
@@ -241,8 +241,8 @@ Phaser.StateManager.prototype = {
     * Start the given state
     * @method Phaser.StateManager#start
     * @param {string} key - The key of the state you want to start.
-    * @param {boolean} [clearWorld] - clear everything in the world? (Default to true)
-    * @param {boolean} [clearCache] - clear asset cache? (Default to false and ONLY available when clearWorld=true)
+    * @param {boolean} [clearWorld=true] - clear everything in the world? (Default to true)
+    * @param {boolean} [clearCache=false] - clear asset cache? (Default to false and ONLY available when clearWorld=true)
     */
     start: function (key, clearWorld, clearCache) {
 
