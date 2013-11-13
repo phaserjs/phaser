@@ -62,7 +62,7 @@ declare module Phaser {
             world: Phaser.World;
             particles: Phaser.Particles;
             physics: Phaser.Physics.Arcade;
-            load();
+            load: Phaser.Loader;
             preload();
             create();
             render(); 
@@ -87,9 +87,9 @@ declare module Phaser {
             onPausedCallback(): void;
             onShutDownCallback(): void;
             boot(): void;
-            add(key: string, state: Phaser.State, autoStart: boolean): void;
+            add(key: string, state: typeof Phaser.State, autoStart: boolean): void;
             remove(key: string): void;
-            start(key: string, clearWorld: boolean, clearCache: boolean): void;
+            start(key: string, clearWorld?: boolean, clearCache?: boolean): void;
             dummy(): void;
             checkState(key: string): boolean;
             link(key: string): void;
@@ -253,7 +253,7 @@ declare module Phaser {
       }
 
       class Game {
-            constructor(width: number, height: number, renderer: number, parent: string, state: object, transparent: boolean, antialias: boolean);
+            constructor(width: number, height: number, renderer: number, parent: string, state: Object, transparent: boolean, antialias: boolean);
             id: number;
             width: number;
             height: number;
@@ -709,6 +709,7 @@ declare module Phaser {
             frameName: string;
             inCamera: boolean;
             crop: boolean;
+            cropEnabled: boolean;
             inputEnabled: boolean;
             preUpdate(): void;
             postUpdate(): void;
@@ -754,7 +755,7 @@ declare module Phaser {
       }
 
       class Button {
-            constructor(game: Phaser.Game, x: number, y: number, key: string, callback: Function, overFrame: number, outFrame: number, downFrame: number);
+            constructor(game: Phaser.Game, x: number, y: number, key: string, callback: typeof Function, overFrame: number, outFrame: number, downFrame: number);
             input: Phaser.InputHandler;
             onInputUp: Phaser.Signal;
             onInputDown: Phaser.Signal;
@@ -804,6 +805,8 @@ declare module Phaser {
             pageAlignVeritcally: boolean;
             minWidth: number;
             maxWidth: number;
+            minHeight: number;
+            maxHeight: number;
             width: number;
             height: number;
             maxIterations: number;
