@@ -16,7 +16,7 @@ var d;
 function create() {
 
     //  Modify the world and camera bounds
-    game.world.setBounds(-1000, -1000, 2000, 2000);
+    game.world.setBounds(-1000, -1000, 1000, 1000);
 
     for (var i = 0; i < 100; i++)
     {

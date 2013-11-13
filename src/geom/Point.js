@@ -426,7 +426,7 @@ Phaser.Point.rotate = function (a, x, y, angle, asDegrees, distance) {
 
     if (asDegrees)
     {
-        angle = Phaser.Math.radToDeg(angle);
+        angle = Phaser.Math.degToRad(angle);
     }
 
     //  Get distance from origin (cx/cy) to this point

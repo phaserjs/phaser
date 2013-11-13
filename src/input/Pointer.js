@@ -57,28 +57,6 @@ Phaser.Pointer = function (game, id) {
     this._stateReset = false;
 
     /**
-    * A Vector object containing the initial position when the Pointer was engaged with the screen.
-    * @property {Vec2} positionDown
-    * @default 
-    **/
-    this.positionDown = null;
-
-    /**
-    * A Vector object containing the current position of the Pointer on the screen.
-    * @property {Vec2} position
-    * @default
-    **/
-    this.position = null;
-
-    /**
-    * A Circle object centered on the x/y screen coordinates of the Pointer.
-    * Default size of 44px (Apple's recommended "finger tip" size).
-    * @property {Circle} circle
-    * @default
-    **/
-    this.circle = null;
-
-    /**
     * Description.
     * @property {boolean} withinGame
     */
@@ -204,26 +182,27 @@ Phaser.Pointer = function (game, id) {
     this.targetObject = null;
 
     /**
-    * Description.
-    * @property {boolean} isDown - Description.
+    * An active pointer is one that is currently pressed down on the display. A Mouse is always active.
+    * @property {boolean} active
     * @default
     */
     this.active = false;
 
     /**
-    * Description
+    * A Phaser.Point object containing the current x/y values of the pointer on the display.
     * @property {Phaser.Point} position
     */
     this.position = new Phaser.Point();
     
     /**
-    * Description
+    * A Phaser.Point object containing the x/y values of the pointer when it was last in a down state on the display.
     * @property {Phaser.Point} positionDown
     */
     this.positionDown = new Phaser.Point();
 
     /**
-    * Description
+    * A Phaser.Circle that is centered on the x/y coordinates of this pointer, useful for hit detection.
+    * The Circle size is 44px (Apples recommended "finger tip" size).
     * @property {Phaser.Circle} circle
     */
     this.circle = new Phaser.Circle(0, 0, 44);

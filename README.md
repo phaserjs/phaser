@@ -41,6 +41,10 @@ Change Log
 
 Version 1.1.3 - in build
 
+* New: RenderTexture.render now takes a Phaser.Group. Also added renderXY for when you don't want to make a new Point object.
+* New: Implementing PluginManager.remove, added PluginManager.removeAll (thanks crazysam)
+* New: Added scrollFactorX/scrollFactorY to TilemapLayers (thanks jcd-as)
+* New: Phaser.Game parent can now be a HTMLElement (thanks beeglebug)
 * New: Updated to use the latest version of Pixi.js - which means you can now use all the sexy new WebGL filters they added :)
 * New: Sprite.animations.getAnimation will return an animation instance which was added by name.
 * New: Added Mouse.button which is set to the button that was pressed: Phaser.Mouse.LEFT_BUTTON, MIDDLE_BUTTON or RIGHT_BUTTON (thanks wKLV)
@@ -50,14 +54,23 @@ Version 1.1.3 - in build
 * New: Polygon class & drawPolygon method added to Graphics (thanks rjimenezda)
 * New: Added Group.iterate, a powerful way to count or return child that match a certain criteria. Refactored Group to use iterate, lots of repeated code cut.
 * New: Added Group.sort. You can now sort the Group based on any given numeric property (x, y, health), finally you can do depth-sorting :) Example created to show.
+* New: Enhanced renderTexture so it can accept a Phaser.Group object and improved documentation and examples.
+* Fixed: Tilemap commands use specified layer when one given (thanks Izzimach)
 * Fixed: Mouse.stop now uses the true useCapture, which means the event listeners stop listening correctly (thanks beeglebug)
 * Fixed: Input Keyboard example fix (thanks Atrodilla)
 * Fixed: BitmapText.destroy now checks if it has a canvas before calling parentNode on it.
 * Fixed: Group.swap had a hellish to find bug that only manifested when B-A upward swaps occured. Hours of debugging later = bug crushed.
+* Fixed: Point.rotate asDegrees fixed (thanks BorisKozo)
 * Updated: ArcadePhysics.updateMotion applies the dt to the velocity calculations as well as position now (thanks jcs)
 * Updated: RequestAnimationFrame now retains the callbackID which is passed to cancelRequestAnimationFrame.
 * Updated: Button now goes back to over state when setFrames used in action (thanks beeglebug)
 * Updated: plugins now have a postUpdate callback (thanks cocoademon)
+* Updated: Tided up the Graphics object (thanks BorisKozo)
+* Updated: If running in Canvas mode and you have a render function it will save the context and reset the transform before running your render function
+* Updated: Sprite will now check the exists property of the Group it is in, if the Group.exists = false the Sprite won't update.
+* Updated: Lots of small documentation tweaks across various files such as Pointer.
+
+
 
 You can view the complete Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
 
@@ -184,11 +197,13 @@ Learn By Example
 
 Phaser comes with an ever growing suite of Examples. Personally I feel that we learn better by looking at small refined code examples, so we created over 150 of them and create new ones to test every new feature added. Inside the `examples` folder you'll find the current set. If you write a particularly good example then please send it to us.
 
-The examples need running through a local web server (to avoid file access permission errors from your browser).
+The examples need to be run through a local web server (in order to avoid file access permission errors from your browser). You can use your own web server, or start the included web server using grunt.
 
-Browse to the examples folder via your web server.
+Using a locally installed web server browse to the examples folder:
 
     examples/index.html
+
+Alternatively in order to start the included web server, after you've cloned the repo, run npm install to install all dependencies, then run grunt connect to start a local server. After running this command, you should be able to access your local webserver at `http://127.0.0.1:8000`. Then browse to the examples folder: `http://127.0.0.1:8000/examples/index.html`
 
 There is a new 'Side View' example viewer as well. This loads all the examples into a left-hand frame for faster navigation.
 
