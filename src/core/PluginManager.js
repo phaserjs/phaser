@@ -130,10 +130,36 @@ Phaser.PluginManager.prototype = {
      * @param {Phaser.Plugin} plugin - The plugin to be removed.
      */
     remove: function (plugin) {
+        
+        if (this._pluginsLength == 0)
+        {
+            return;
+        }
 
-        //  TODO
-        this._pluginsLength--;
+        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        {
+            if (this.plugins[this._p] === plugin)
+            {
+                plugin.destroy();
+                this.plugins.splice(this._p, 1);
+                this._pluginsLength--;
+                return;
+            }
+        }
+    },
 
+    /**
+     * Removes all Plugins from the PluginManager.
+     * @method Phaser.PluginManager#removeAll
+     */
+    removeAll: function() {
+        
+        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        {
+            this.plugins[this._p].destroy();
+        }
+        this.plugins.length = 0;
+        this._pluginsLength = 0;
     },
 
     /**
