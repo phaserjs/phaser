@@ -59,7 +59,6 @@
 
     <script src="../src/pixi/textures/BaseTexture.js"></script>
     <script src="../src/pixi/textures/Texture.js"></script>
-    <script src="../src/pixi/textures/RenderTexture.js"></script>
 
     <script src="../src/pixi/utils/EventTarget.js"></script>
     <script src="../src/pixi/utils/Polyk.js"></script>
@@ -91,6 +90,7 @@
 	<script src="../src/gameobjects/Sprite.js"></script>
 	<script src="../src/gameobjects/TileSprite.js"></script>
 	<script src="../src/gameobjects/Text.js"></script>
+	<script src="../src/gameobjects/BitmapData.js"></script>
 	<script src="../src/gameobjects/BitmapText.js"></script>
 	<script src="../src/gameobjects/Button.js"></script>
 	<script src="../src/gameobjects/Graphics.js"></script>

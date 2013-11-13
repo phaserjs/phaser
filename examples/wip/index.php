@@ -77,7 +77,6 @@
         <meta charset="UTF-8" />
         <title>phaser</title>
         <base href="../"></base>
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.10.3/TweenMax.min.js"></script>
         <?php
             require('../../build/config.php');
 

@@ -62,6 +62,12 @@ Phaser.Cache = function (game) {
     */
     this._tilesets = {};
 
+    /**
+    * @property {object} _bitmapDatas - BitmapData key-value container.
+    * @private
+    */
+    this._bitmapDatas = {};
+
     this.addDefaultImage();
 
     /**
@@ -87,11 +93,26 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    * Add a BitmapData object in to the cache.
+    * @method Phaser.Cache#addBitmapData
+    * @param {string} key - Asset key for this BitmapData.
+    * @param {Phaser.BitmapData} bitmapData - The BitmapData object to be addded to the cache.
+    * @return {Phaser.BitmapData} The BitmapData object to be addded to the cache.
+    */
+    addBitmapData: function (key, bitmapData) {
+
+        this._bitmapDatas[key] = bitmapData;
+
+        return bitmapData;
+
+    },
+
+    /**
     * Add a new Phaser.RenderTexture in to the cache.
     *
     * @method Phaser.Cache#addRenderTexture
     * @param {string} key - The unique key by which you will reference this object.
-    * @param {Phaser.Texture} textue - The texture to use as the base of the RenderTexture.
+    * @param {Phaser.Texture} texture - The texture to use as the base of the RenderTexture.
     */
     addRenderTexture: function (key, texture) {
 
@@ -364,7 +385,7 @@ Phaser.Cache.prototype = {
     },
 
 	/**
-	* Get acanvas object from the cache by its key.
+	* Get a canvas object from the cache by its key.
     *
     * @method Phaser.Cache#getCanvas
 	* @param {string} key - Asset key of the canvas you want.
@@ -378,6 +399,25 @@ Phaser.Cache.prototype = {
         }
 
         return null;
+
+    },
+
+    /**
+    * Get a BitmapData object from the cache by its key.
+    *
+    * @method Phaser.Cache#getBitmapData
+    * @param {string} key - Asset key of the BitmapData object you want.
+    * @return {Phaser.BitmapData} The requested BitmapData object if found, or null if not.
+    */
+    getBitmapData: function (key) {
+
+        if (this._bitmapDatas[key])
+        {
+            return this._bitmapDatas[key];
+        }
+
+        return null;
+
     },
 
     /**
@@ -413,6 +453,7 @@ Phaser.Cache.prototype = {
         }
 
         return null;
+
     },
 
     /**

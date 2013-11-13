@@ -249,52 +249,75 @@ Phaser.TilemapLayer.prototype.updateMapData = function (tilemap, layer) {
  * @param {number} x - x coordinate in camera space
  * @return {number} x coordinate in scrollFactor-adjusted dimensions
  */
-Phaser.TilemapLayer.prototype._fixX = function( x )
-{
-	if( this.scrollFactorX === 1 )
-		return x;
+Phaser.TilemapLayer.prototype._fixX = function(x) {
+
+	if (this.scrollFactorX === 1)
+    {
+        return x;
+    }
+
 	var left_edge = x - (this._x / this.scrollFactorX);
+
 	return this._x + left_edge;
-};
+
+}
+
 /**
  * Take an x coordinate that _does_ account for scrollFactorY and 'unfix' it 
  * back to camera space. Used primarily internally
  * @param {number} x - x coordinate in scrollFactor-adjusted dimensions
  * @return {number} x coordinate in camera space
  */
-Phaser.TilemapLayer.prototype._unfixX = function( x )
-{
-	if( this.scrollFactorX === 1 )
-		return x;
+Phaser.TilemapLayer.prototype._unfixX = function(x) {
+
+	if (this.scrollFactorX === 1)
+    {
+        return x;
+    }
+
 	var left_edge = x - this._x;
+
 	return (this._x / this.scrollFactorX) + left_edge;
-};
+
+}
+
 /**
  * Take a y coordinate that doesn't account for scrollFactorY and 'fix' it 
  * into a scrolled local space. Used primarily internally
  * @param {number} y - y coordinate in camera space
  * @return {number} y coordinate in scrollFactor-adjusted dimensions
  */
-Phaser.TilemapLayer.prototype._fixY = function( y )
-{
-	if( this.scrollFactorY === 1 )
-		return y;
+Phaser.TilemapLayer.prototype._fixY = function(y) {
+
+	if (this.scrollFactorY === 1)
+    {
+        return y;
+    }
+
 	var top_edge = y - (this._y / this.scrollFactorY);
+
 	return this._y + top_edge;
-};
+
+}
+
 /**
  * Take a y coordinate that _does_ account for scrollFactorY and 'unfix' it 
  * back to camera space. Used primarily internally
  * @param {number} y - y coordinate in scrollFactor-adjusted dimensions
  * @return {number} y coordinate in camera space
  */
-Phaser.TilemapLayer.prototype._unfixY = function( y )
-{
-	if( this.scrollFactorY === 1 )
-		return y;
+Phaser.TilemapLayer.prototype._unfixY = function(y) {
+
+	if (this.scrollFactorY === 1)
+    {
+        return y;
+    }
+
 	var top_edge = y - this._y;
+
 	return (this._y / this.scrollFactorY) + top_edge;
-};
+
+}
 
 /**
 * Convert a pixel value to a tile coordinate.

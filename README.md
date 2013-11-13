@@ -41,6 +41,8 @@ Change Log
 
 Version 1.1.3 - in build
 
+* New: The object returned by Math.sinCosGenerator now contains a length property.
+* New: Phaser.BitmapData object. Can be used as a texture for a Sprite or Tiling Sprite. See the new examples and docs for details.
 * New: RenderTexture.render now takes a Phaser.Group. Also added renderXY for when you don't want to make a new Point object.
 * New: Implementing PluginManager.remove, added PluginManager.removeAll (thanks crazysam)
 * New: Added scrollFactorX/scrollFactorY to TilemapLayers (thanks jcd-as)
