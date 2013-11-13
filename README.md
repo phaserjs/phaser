@@ -184,11 +184,13 @@ Learn By Example
 
 Phaser comes with an ever growing suite of Examples. Personally I feel that we learn better by looking at small refined code examples, so we created over 150 of them and create new ones to test every new feature added. Inside the `examples` folder you'll find the current set. If you write a particularly good example then please send it to us.
 
-The examples need running through a local web server (to avoid file access permission errors from your browser).
+The examples need to be run through a local web server (in order to avoid file access permission errors from your browser). You can use your own web server, or start the included web server using grunt.
 
-Browse to the examples folder via your web server.
+In order to start the included web server, after you've cloned the repo, run `npm install` to install all dependencies, then run `grunt connect` to start a local server. After running this command, you should be able to access your local webserver at `http://127.0.0.1:8000`.
 
-    examples/index.html
+Once you've got a web server running, browse to the examples folder:
+
+    http://127.0.0.1:8000/examples/index.html
 
 There is a new 'Side View' example viewer as well. This loads all the examples into a left-hand frame for faster navigation.
 
