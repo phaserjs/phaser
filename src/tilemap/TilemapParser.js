@@ -27,7 +27,7 @@ Phaser.TilemapParser = {
 	    var row = Math.round(width / tileWidth);
 	    var column = Math.round(height / tileHeight);
 	    var total = row * column;
-	    
+
 	    if (tileMax !== -1)
 	    {
 	        total = tileMax;
@@ -78,7 +78,7 @@ Phaser.TilemapParser = {
 
 	/**
 	* Parse csv map data and generate tiles.
-	* 
+	*
 	* @method Phaser.Tilemap.prototype.parseCSV
 	* @param {string} data - CSV map data.
 	*/
@@ -113,9 +113,9 @@ Phaser.TilemapParser = {
 
 	},
 
-	/**
+		/**
 	* Parse JSON map data and generate tiles.
-	* 
+	*
 	* @method Phaser.Tilemap.prototype.parseTiledJSON
 	* @param {string} data - JSON map data.
 	* @param {string} key - Asset key for tileset image.
@@ -124,60 +124,103 @@ Phaser.TilemapParser = {
 
 		var layers = [];
 
-	    for (var i = 0; i < json.layers.length; i++)
-	    {
-	        //  Check it's a data layer
-	        if (!json.layers[i].data)
-	        {
-	            continue;
-	        }
+			for (var i = 0; i < json.layers.length; i++)
+			{
+					//  Check it's a data layer
+					if (json.layers[i].data)
+					{
+				//	json.tilewidth
+				//	json.tileheight
 
-			//	json.tilewidth
-			//	json.tileheight
+						var layer = {
 
-	        var layer = {
+							type: 'data',
+							name: json.layers[i].name,
+							width: json.layers[i].width,
+							height: json.layers[i].height,
+							alpha: json.layers[i].opacity,
+							visible: json.layers[i].visible,
+							indexes: [],
 
-		        name: json.layers[i].name,
-		        width: json.layers[i].width,
-		        height: json.layers[i].height,
-		        alpha: json.layers[i].opacity,
-		        visible: json.layers[i].visible,
-		        indexes: [],
+							tileMargin: json.tilesets[0].margin,
+							tileSpacing: json.tilesets[0].spacing,
 
-		        tileMargin: json.tilesets[0].margin,
-		        tileSpacing: json.tilesets[0].spacing,
+						};
 
-	        };
+						var output = [];
+						var c = 0;
+						var row;
 
-	        var output = [];
-	        var c = 0;
-	        var row;
+						for (var t = 0; t < json.layers[i].data.length; t++)
+						{
+							if (c == 0)
+								{
+									row = [];
+								}
 
-	        for (var t = 0; t < json.layers[i].data.length; t++)
-	        {
-	            if (c == 0)
-	            {
-	                row = [];
-	            }
+								row.push(json.layers[i].data[t]);
+								c++;
 
-	            row.push(json.layers[i].data[t]);
-	            c++;
+								if (c == json.layers[i].width)
+								{
+									output.push(row);
+								c = 0;
+							}
+						}
 
-	            if (c == json.layers[i].width)
-	            {
-	            	output.push(row);
-	                c = 0;
-	            }
-	        }
+						layer.data = output;
 
-	        layer.data = output;
-	        
-	        layers.push(layer);
+						layers.push(layer);
+					}
+					else if (json.layers[i].objects)
+					{
+						var layer = {
+							type: 'objects',
+							name: json.layers[i].name
+						};
 
-	    }
+						var output = [];
+						var tobject;
+						for (var j=0; j<json.layers[i].objects.length; j++)
+						{
+							tobject = {
+								x: json.layers[i].objects[j].x,
+								y: json.layers[i].objects[j].y,
+								type: json.layers[i].objects[j].type,
+								immovable: true
+							};
 
-	    return layers;
+							if (json.layers[i].objects[j].properties.hasOwnProperty('immovable')) {
+								tobject.immovable = (json.layers[i].objects[j].properties.hasOwnProperty('immovable') === 'true');
+							}
 
+							if (json.layers[i].objects[j].properties.hitBoxOffsetX &&
+								json.layers[i].objects[j].properties.hitBoxOffsetY &&
+								json.layers[i].objects[j].properties.hitBoxWidth &&
+								json.layers[i].objects[j].properties.hitBoxHeight)
+							{
+								tobject.hitbox = {
+									width: json.layers[i].objects[j].properties.hitBoxWidth,
+									height: json.layers[i].objects[j].properties.hitBoxHeight,
+									offsetX: json.layers[i].objects[j].properties.hitBoxOffsetX,
+									offsetY: json.layers[i].objects[j].properties.hitBoxOffsetY
+								};
+							}
+
+							output.push(tobject);
+						}
+
+						layer.data = output;
+						layers.push(layer);
+					}
+					else
+					{
+						continue;
+					}
+
+			}
+
+			return layers;
 	}
 
 }
