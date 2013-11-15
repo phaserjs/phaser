@@ -87,7 +87,7 @@ declare module Phaser {
             onPausedCallback(): void;
             onShutDownCallback(): void;
             boot(): void;
-            add(key: string, state: typeof Phaser.State, autoStart: boolean): void;
+            add(key: string, state: typeof Phaser.State, autoStart?: boolean): void;
             remove(key: string): void;
             start(key: string, clearWorld?: boolean, clearCache?: boolean): void;
             dummy(): void;
@@ -120,10 +120,10 @@ declare module Phaser {
             memorize: boolean;
             active: boolean;
             validateListener(listener: Function, fnName: string): void;
-            has(listener: Function, context?: Object): boolean;
-            add(listener: Function, listenerContext?: Object, priority?: number): Phaser.SignalBinding;
-            addOnce(listener: Function, listenerContext?: Object, priority?: number): Phaser.SignalBinding;
-            remove(listener: Function, context?: Object): Function;
+            has(listener: Function, context?: any): boolean;
+            add(listener: Function, listenerContext?: any, priority?: number): Phaser.SignalBinding;
+            addOnce(listener: Function, listenerContext?: any, priority?: number): Phaser.SignalBinding;
+            remove(listener: Function, context?: any): Function;
             removeAll(): void;
             getNumListeners(): number;
             halt(): void;
@@ -185,6 +185,7 @@ declare module Phaser {
             scale: Phaser.StageScaleMode;
             aspectRatio: number;
             backgroundColor: string;
+            disableVisibilityChange: boolean;
             boot(): void;
             visibilityChange(event: Event): void;
       }
@@ -205,7 +206,7 @@ declare module Phaser {
             add(child: any): any;
             addAt(child: any, index: number): any;
             getAt(index: number): any;
-            create(x: number, y: number, key: string, frame: string, exists: boolean): any;
+            create(x: number, y: number, key: string, frame: string, exists?: boolean): any;
             swap(child1: any, child2: any): boolean;
             bringToTop(child: any): any;
             getIndex(child: any): number;
@@ -216,7 +217,7 @@ declare module Phaser {
             multiplyAll(key: string, value: number, checkAlive: boolean, checkVisible: boolean, operation: number): void;
             divideAll(key: string, value: number, checkAlive: boolean, checkVisible: boolean, operation: number): void;
             callAllExists(callback: Function, callbackContext: Object, existsValue: boolean): void;
-            callAll(callback: Function, callbackContext: Object): void;
+            callAll(callback: string, callbackContext?: Object): void;
             forEach(callback: Function, callbackContext: Object, checkExists: boolean): void;
             forEachAlive(callback: Function, callbackContext: Object): void;
             forEachDead(callback: Function, callbackContext: Object): void;
@@ -343,10 +344,10 @@ declare module Phaser {
             touch: Phaser.Touch;
             mspointer: Phaser.MSPointer;
             interactiveItems: Phaser.LinkedList;
-            onDown(): void;
-            onUp(): void;
-            onTap(): void;
-            onHold(): void;
+            onDown: Phaser.Signal;
+            onUp: Phaser.Signal;
+            onTap: Phaser.Signal;
+            onHold: Phaser.Signal;
             boot(): void;
             update(): void;
             reset(hard?: boolean);
@@ -655,14 +656,14 @@ declare module Phaser {
             game: Phaser.Game;
             world: Phaser.World;
             existing(object: any): boolean;
-            sprite(x: number, y: number, key?: string, frame?: number): Phaser.Sprite;
+            sprite(x: number, y: number, key?: string, frame?: any): Phaser.Sprite;
             child(parent: any, x: number, y: number, key?: string, frame?: number): Phaser.Sprite;
             tween(obj: Object): Phaser.Tween;
-            group(parent: any, name: string): Phaser.Group;
-            audio(key: string, volume: number, loop: boolean): Phaser.Sound;
+            group(parent?: any, name?: string): Phaser.Group;
+            audio(key: string, volume?: number, loop?: boolean): Phaser.Sound;
             tileSprite(x: number, y: number, width: number, height: number, key?: string, frame?: number): Phaser.TileSprite;
-            text(x: number, y: number, text: string, style: string): Phaser.Text;
-            button(x: number, y: number, key: string, callback: Function, callbackContext: Object, overFrame?: number, outFrame?: number, downFrame?: number): Phaser.Button;
+            text(x: number, y: number, text: string, style: any): Phaser.Text;
+            button(x: number, y: number, key: string, callback: Function, callbackContext: Object, overFrame?: any, outFrame?: any, downFrame?: any): Phaser.Button;
             graphics(x: number, y: number): Phaser.Graphics;
             emitter(x: number, y: number, maxParticles: number): Phaser.Particles.Arcade.Emitter;
             bitmapText(x: number, y: number, text: string, style: string): Phaser.BitmapText;
@@ -737,12 +738,14 @@ declare module Phaser {
             exists: boolean;
             alive: boolean;
             group: Phaser.Group;
+            content: string;
             name: string;
             game: Phaser.Game;
             type: number;
             text: string;
             angle: number;
             style: string;
+            visible: boolean;
             position: Phaser.Point;
             anchor: Phaser.Point;
             scale: Phaser.Point;
@@ -755,7 +758,7 @@ declare module Phaser {
       }
 
       class Button {
-            constructor(game: Phaser.Game, x: number, y: number, key: string, callback: typeof Function, overFrame: number, outFrame: number, downFrame: number);
+            constructor(game: Phaser.Game, x: number, y: number, key: string, callback: Function, overFrame: number, outFrame: number, downFrame: number);
             input: Phaser.InputHandler;
             onInputUp: Phaser.Signal;
             onInputDown: Phaser.Signal;
@@ -1383,7 +1386,7 @@ declare module Phaser {
             onFileError: Phaser.Signal; 
             onLoadStart: Phaser.Signal;
             onLoadComplete: Phaser.Signal;
-            setPreloadSprite(sprite: Phaser.Sprite, direction: number): void;
+            setPreloadSprite(sprite: Phaser.Sprite, direction?: number): void;
             checkKeyExists(key: string): boolean;
             reset(): void;
             addToFileList(type: string, key: string, url: string, properties: Array): void;
@@ -1454,7 +1457,7 @@ declare module Phaser {
             addMarker(name: string, start: number, stop: number, volume?: number, loop?: boolean): void;
             removeMarker(name: string): void;
             update(): void;
-            play(marker: string, position: number, volume?: number, loop?: boolean): Phaser.Sound;
+            play(marker?: string, position?: number, volume?: number, loop?: boolean): Phaser.Sound;
             restart(marker: string, position: number, volume?: number, loop?: boolean): void;
             pause(): void;
             resume(): void; 
