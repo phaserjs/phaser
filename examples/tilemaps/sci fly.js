@@ -52,6 +52,7 @@ function create() {
 
     sprite = game.add.sprite(450, 80, 'phaser');
     sprite.anchor.setTo(0.5, 0.5);
+    sprite.angle = 45;
 
     game.camera.follow(sprite);
     // game.camera.deadzone = new Phaser.Rectangle(160, 160, layer.renderWidth-320, layer.renderHeight-320);
@@ -111,7 +112,7 @@ function update() {
 
 function render() {
 
-    // game.debug.renderSpriteCorners(sprite);
+    game.debug.renderSpriteBounds(sprite);
     // game.debug.renderSpriteInfo(sprite, 32, 32);
     // game.debug.renderSpriteCoords(sprite, 32, 32);
 

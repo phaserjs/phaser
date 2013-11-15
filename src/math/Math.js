@@ -938,7 +938,7 @@ Phaser.Math = {
 
         }
 
-        return { sin: sinTable, cos: cosTable };
+        return { sin: sinTable, cos: cosTable, length: length };
 
     },
 

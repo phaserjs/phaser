@@ -41,6 +41,8 @@ Change Log
 
 Version 1.1.3 - in build
 
+* New: The object returned by Math.sinCosGenerator now contains a length property.
+* New: Phaser.BitmapData object. Can be used as a texture for a Sprite or Tiling Sprite. See the new examples and docs for details.
 * New: RenderTexture.render now takes a Phaser.Group. Also added renderXY for when you don't want to make a new Point object.
 * New: Implementing PluginManager.remove, added PluginManager.removeAll (thanks crazysam)
 * New: Added scrollFactorX/scrollFactorY to TilemapLayers (thanks jcd-as)
@@ -69,6 +71,8 @@ Version 1.1.3 - in build
 * Updated: If running in Canvas mode and you have a render function it will save the context and reset the transform before running your render function
 * Updated: Sprite will now check the exists property of the Group it is in, if the Group.exists = false the Sprite won't update.
 * Updated: Lots of small documentation tweaks across various files such as Pointer.
+* Updated: If you specify 'null' as a Group parent it will now revert to using the World as the parent (before only 'undefined' worked)
+
 
 
 

@@ -15,7 +15,7 @@
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} x - The x coordinate (in world space) to position the Sprite at.
 * @param {number} y - The y coordinate (in world space) to position the Sprite at.
-* @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
 * @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
 Phaser.Sprite = function (game, x, y, key, frame) {
@@ -89,7 +89,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.input = new Phaser.InputHandler(this);
 
     /**
-    *  @property {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+    *  @property {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
     */
     this.key = key;
 
@@ -103,6 +103,12 @@ Phaser.Sprite = function (game, x, y, key, frame) {
         PIXI.Sprite.call(this, key);
 
         this.currentFrame = this.game.cache.getTextureFrame(key.name);
+    }
+    else if (key instanceof Phaser.BitmapData)
+    {
+        PIXI.Sprite.call(this, key.texture, key.textureFrame);
+
+        this.currentFrame = key.textureFrame;
     }
     else if (key instanceof PIXI.Texture)
     {

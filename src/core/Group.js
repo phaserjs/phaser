@@ -16,7 +16,7 @@
 */
 Phaser.Group = function (game, parent, name, useStage) {
 
-	if (typeof parent === 'undefined')
+	if (typeof parent === 'undefined' || typeof parent === null)
 	{
 		parent = game.world;
 	}

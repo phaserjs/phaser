@@ -274,6 +274,23 @@ Phaser.GameObjectFactory.prototype = {
 
         return texture;
 
+    },
+
+    /**
+    * A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
+    *
+    * @method Phaser.GameObjectFactory#bitmapData
+    * @param {string} [key] - A key the BitmapData will use when added to the Phaser.Cache. If none is given a UUID is generated.
+    * @param {number} [width=256] - The width of the BitmapData in pixels.
+    * @param {number} [height=256] - The height of the BitmapData in pixels.
+    * @return {Phaser.BitmapData} The newly created BitmapData object.
+    */
+    bitmapData: function (key, width, height) {
+
+        var bmd = new Phaser.BitmapData(this.game, key, width, height);
+
+        return this.game.cache.addBitmapData(bmd.name, bmd);
+
     }
 
 };
