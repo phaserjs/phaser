@@ -19,14 +19,14 @@ var BasicGame;
             this.background = this.add.sprite(0.0, 0.0, "preloaderBackground");
             this.preloadBar = this.add.sprite(300, 400, "preloaderBar");
 
-            this.load.setPreloadSprite(this.preloadBar, 0);
+            this.load.setPreloadSprite(this.preloadBar);
 
-            this.load.image("titlepage", "assets/title.jpg", false);
-            this.load.image("playButton", "assets/play_button.png", false);
-            this.load.audio("titleMusic", ["assets/main_menu.mp3", "assets/main_menu.ogg"], false);
+            this.load.image("titlepage", "assets/title.gif");
+            this.load.image("playButton", "assets/play_button.png");
+            this.load.audio("titleMusic", ["assets/main_menu.mp3", "assets/main_menu.ogg"]);
 
             this.load.atlas("breakout", "assets/breakout.png", "assets/breakout.json");
-            this.load.image("starfield", "assets/starfield.jpg", false);
+            this.load.image("starfield", "assets/starfield.jpg");
         };
 
         Preloader.prototype.create = function () {

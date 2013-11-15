@@ -13,17 +13,17 @@ var BasicGame;
             _super.apply(this, arguments);
         }
         MainMenu.prototype.create = function () {
-            this.music = this.add.audio("titleMusic", 1, false);
-            this.music.play("titleMusic", 0);
+            this.music = this.add.audio("titleMusic");
+            this.music.play();
 
             this.add.sprite(0, 0, "titlepage");
 
-            this.playButton = this.add.button(200, 300, "playButton", this.startGame, 1, 1, 1);
+            this.playButton = this.add.button(200, 300, "playButton", this.startGame, this);
         };
 
         MainMenu.prototype.startGame = function () {
             this.music.stop();
-            alert("START THE GAME!");
+            this.game.state.start("GameState");
         };
         return MainMenu;
     })(Phaser.State);

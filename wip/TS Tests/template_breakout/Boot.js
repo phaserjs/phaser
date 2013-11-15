@@ -13,11 +13,12 @@ var BasicGame;
             _super.apply(this, arguments);
         }
         Boot.prototype.preload = function () {
-            this.load.image("preloaderBackground", "assets/preloader_background.gif", false);
-            this.load.image("preloaderBar", "assets/preloadr_bar.png", false);
+            this.load.image("preloaderBackground", "assets/preloader_background.gif");
+            this.load.image("preloaderBar", "assets/preloadr_bar.png");
         };
         Boot.prototype.create = function () {
             this.game.input.maxPointers = 1;
+            this.game.stage.disableVisibilityChange = true;
 
             if (this.game.device.desktop) {
                 this.game.stage.scale.pageAlignHorizontally = true;

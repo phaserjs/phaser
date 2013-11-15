@@ -3,12 +3,12 @@ module BasicGame
 {
 	export class Boot extends Phaser.State{
 		preload() {
-			this.load.image("preloaderBackground","assets/preloader_background.gif",false);
-			this.load.image("preloaderBar","assets/preloadr_bar.png",false);
+			this.load.image("preloaderBackground","assets/preloader_background.gif");
+			this.load.image("preloaderBar","assets/preloadr_bar.png");
 		}
 		create() {
 			this.game.input.maxPointers = 1;
-			//this.game.stage.  disableVisibilityChange is missing
+			this.game.stage.disableVisibilityChange = true;
 
 			if( this.game.device.desktop )
 			{
