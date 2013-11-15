@@ -71,6 +71,8 @@ Version 1.1.3 - in build
 * Updated: If running in Canvas mode and you have a render function it will save the context and reset the transform before running your render function
 * Updated: Sprite will now check the exists property of the Group it is in, if the Group.exists = false the Sprite won't update.
 * Updated: Lots of small documentation tweaks across various files such as Pointer.
+* Updated: If you specify 'null' as a Group parent it will now revert to using the World as the parent (before only 'undefined' worked)
+
 
 
 

@@ -87,10 +87,10 @@
 
 	<script src="../src/gameobjects/Events.js"></script>
 	<script src="../src/gameobjects/GameObjectFactory.js"></script>
+	<script src="../src/gameobjects/BitmapData.js"></script>
 	<script src="../src/gameobjects/Sprite.js"></script>
 	<script src="../src/gameobjects/TileSprite.js"></script>
 	<script src="../src/gameobjects/Text.js"></script>
-	<script src="../src/gameobjects/BitmapData.js"></script>
 	<script src="../src/gameobjects/BitmapText.js"></script>
 	<script src="../src/gameobjects/Button.js"></script>
 	<script src="../src/gameobjects/Graphics.js"></script>
