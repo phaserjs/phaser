@@ -46,7 +46,7 @@ Version 1.1.3 - in build
 * New: RenderTexture.render now takes a Phaser.Group. Also added renderXY for when you don't want to make a new Point object.
 * New: Implementing PluginManager.remove, added PluginManager.removeAll (thanks crazysam)
 * New: Added scrollFactorX/scrollFactorY to TilemapLayers (thanks jcd-as)
-* New: Phaser.Game parent can now be a HTMLElement (thanks beeglebug)
+* New: Phaser.Game parent can now be an HTMLElement or a string (thanks beeglebug)
 * New: Updated to use the latest version of Pixi.js - which means you can now use all the sexy new WebGL filters they added :)
 * New: Sprite.animations.getAnimation will return an animation instance which was added by name.
 * New: Added Mouse.button which is set to the button that was pressed: Phaser.Mouse.LEFT_BUTTON, MIDDLE_BUTTON or RIGHT_BUTTON (thanks wKLV)
@@ -54,21 +54,23 @@ Version 1.1.3 - in build
 * New: StageScaleMode.forceOrientation allows you to lock your game to one orientation and display a Sprite (i.e. a "please rotate" screen) when incorrect.
 * New: World.visible boolean added, toggles rendering of the world on/off entirely.
 * New: Polygon class & drawPolygon method added to Graphics (thanks rjimenezda)
-* New: Added Group.iterate, a powerful way to count or return child that match a certain criteria. Refactored Group to use iterate, lots of repeated code cut.
+* New: Added Group.iterate, a powerful way to count or return children that match a certain criteria. Refactored Group to use iterate, lots of repeated code cut.
 * New: Added Group.sort. You can now sort the Group based on any given numeric property (x, y, health), finally you can do depth-sorting :) Example created to show.
 * New: Enhanced renderTexture so it can accept a Phaser.Group object and improved documentation and examples.
+* Fixed: Lots of fixes to the TypeScript definitions file (many thanks gltovar)
 * Fixed: Tilemap commands use specified layer when one given (thanks Izzimach)
 * Fixed: Mouse.stop now uses the true useCapture, which means the event listeners stop listening correctly (thanks beeglebug)
 * Fixed: Input Keyboard example fix (thanks Atrodilla)
 * Fixed: BitmapText.destroy now checks if it has a canvas before calling parentNode on it.
 * Fixed: Group.swap had a hellish to find bug that only manifested when B-A upward swaps occured. Hours of debugging later = bug crushed.
 * Fixed: Point.rotate asDegrees fixed (thanks BorisKozo)
+* Fixed: ArcadePhysics.separateTile wasn't returning the value, so the custom process callback wasn't getting called (thanks flameiguana)
 * Updated: ArcadePhysics.updateMotion applies the dt to the velocity calculations as well as position now (thanks jcs)
 * Updated: RequestAnimationFrame now retains the callbackID which is passed to cancelRequestAnimationFrame.
 * Updated: Button now goes back to over state when setFrames used in action (thanks beeglebug)
 * Updated: plugins now have a postUpdate callback (thanks cocoademon)
 * Updated: Tided up the Graphics object (thanks BorisKozo)
-* Updated: If running in Canvas mode and you have a render function it will save the context and reset the transform before running your render function
+* Updated: If running in Canvas mode and you have a render function it will save the context and reset the transform before running your render function.
 * Updated: Sprite will now check the exists property of the Group it is in, if the Group.exists = false the Sprite won't update.
 * Updated: Lots of small documentation tweaks across various files such as Pointer.
 * Updated: If you specify 'null' as a Group parent it will now revert to using the World as the parent (before only 'undefined' worked)

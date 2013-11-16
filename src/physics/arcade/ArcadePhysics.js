@@ -302,8 +302,8 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-    * Checks for collision between two game objects. The objects can be Sprites, Groups, Emitters or Tilemaps.
-    * You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap or Group vs. Tilemap collisions.
+    * Checks for collision between two game objects. The objects can be Sprites, Groups, Emitters or Tilemap Layers.
+    * You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap Layer or Group vs. Tilemap Layer collisions.
     * The objects are also automatically separated.
     *
     * @method Phaser.Physics.Arcade#collide
@@ -837,6 +837,8 @@ Phaser.Physics.Arcade.prototype = {
     separateTile: function (body, tile) {
 
         this._result = (this.separateTileX(body, tile, true) || this.separateTileY(body, tile, true));
+
+        return this._result;
 
     },
 
