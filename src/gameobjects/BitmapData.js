@@ -26,6 +26,17 @@ Phaser.BitmapData = function (game, key, width, height) {
 	this.game = game;
 
 	/**
+	* @property {boolean} exists - If exists = false then the BitmapData isn't updated by the core game loop.
+	* @default
+	*/
+    this.exists = true;
+
+	/**
+    * @property {Phaser.Group} group - The parent Group of this BitmapData.
+   	*/
+    this.group = null;
+
+	/**
     * @property {string} name - The name of the BitmapData.
 	*/
     this.name = key;
@@ -120,6 +131,8 @@ Phaser.BitmapData = function (game, key, width, height) {
 	*/
 	this.globalCompositeOperation = null;
 
+	this._dirty = false;
+
 }
 
 Phaser.BitmapData.prototype = {
@@ -127,6 +140,8 @@ Phaser.BitmapData.prototype = {
 	clear: function () {
 
 	    this.context.clearRect(0, 0, this.width, this.height);
+	
+		this._dirty = true;
 
 	},
 
@@ -157,6 +172,8 @@ Phaser.BitmapData.prototype = {
     		this.imageData.data.set(this.data8);
 
     		this.context.putImageData(this.imageData, 0, 0);
+
+			this._dirty = true;
     	}
 
     },
@@ -229,13 +246,18 @@ Phaser.BitmapData.prototype = {
 
     },
 
-	render: function () {
+	postUpdate: function () {
 
-	    //  Only needed if running in WebGL, otherwise this array will never get cleared down I don't think!
-	    if (this.game.renderType == Phaser.WEBGL)
-	    {
-	        PIXI.texturesToUpdate.push(this.baseTexture);
-	    }
+		if (this._dirty)
+		{
+		    //  Only needed if running in WebGL, otherwise this array will never get cleared down I don't think!
+		    if (this.game.renderType == Phaser.WEBGL)
+		    {
+		        PIXI.texturesToUpdate.push(this.baseTexture);
+		    }
+
+			this._dirty = false;
+		}
 
 	}
 

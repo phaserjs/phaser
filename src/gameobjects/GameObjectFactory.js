@@ -287,9 +287,11 @@ Phaser.GameObjectFactory.prototype = {
     */
     bitmapData: function (key, width, height) {
 
-        var bmd = new Phaser.BitmapData(this.game, key, width, height);
+        // var bmd = new Phaser.BitmapData(this.game, key, width, height);
 
-        return this.game.cache.addBitmapData(bmd.name, bmd);
+        // return this.game.cache.addBitmapData(bmd.name, bmd);
+
+        return this.world.add(new Phaser.BitmapData(this.game, x, y, width, height, tileset, tilemap, layer));
 
     }
 

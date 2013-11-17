@@ -21,7 +21,7 @@ function create() {
     //  And apply it to 100 randomly positioned sprites
     for (var i = 0; i < 100; i++)
     {
-    	bmd.setPixel(game.world.randomX, game.world.randomY, Math.random() * 255, Math.random() * 255, 255);
+    	//bmd.setPixel(game.world.randomX, game.world.randomY, 100 + Math.random() * 155, 100 + Math.random() * 155, 255);
     }
 
     bmd.context.fillStyle = '#ffffff';
@@ -33,15 +33,20 @@ function create() {
 
 function update() {
 
-	// bmd.clear();
+    // bmd.context.fillRect(game.world.randomX,game.world.randomY,4,4);
 
-	// updateWobblyBall();
+    //console.log('b');
+
+
+    // bmd.setPixel(game.world.randomX, game.world.randomY, 250, 250, 250);
+    
+    bmd.setPixel(game.input.x, game.input.y, 255, 255, 255);
 
 }
 
 
 function render() {
 
-	// bmd.render();
+	bmd.render();
 
 }
