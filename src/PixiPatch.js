@@ -1,116 +1,139 @@
 /**
- * We're replacing a couple of Pixi's methods here to fix or add some vital functionality:
+* We're replacing a couple of Pixi's methods here to fix or add some vital functionality:
+*
+* 1) Added support for Trimmed sprite sheets
+* 2) Skip display objects with an alpha of zero
+* 3) Avoid Style Recalculation from the incorrect bgcolor value
+*
+* Hopefully we can remove this once Pixi has been updated to support these things.
+*/
+
+/**
+ * Renders the stage to its canvas view
  *
- * 1) Added support for Trimmed sprite sheets
- * 2) Skip display objects with an alpha of zero
- *
- * Hopefully we can remove this once Pixi has been updated to support these things.
+ * @method render
+ * @param stage {Stage} the Stage element to be rendered
  */
+PIXI.CanvasRenderer.prototype.render = function(stage)
+{
+	PIXI.texturesToUpdate.length = 0;
+	PIXI.texturesToDestroy.length = 0;
+	
+	PIXI.visibleCount++;
+	stage.updateTransform();
+	
+	// update the background color
+	// if(this.view.style.backgroundColor!=stage.backgroundColorString && !this.transparent)this.view.style.backgroundColor = stage.backgroundColorString;
+
+	this.context.setTransform(1, 0, 0, 1, 0, 0); 
+	this.context.clearRect(0, 0, this.width, this.height)
+    this.renderDisplayObject(stage);
+   
+	//	Remove frame updates
+	if (PIXI.Texture.frameUpdates.length > 0)
+	{
+		PIXI.Texture.frameUpdates.length = 0;
+	}
+	
+}
 
 PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
 {
-	// no loger recurrsive!
-	var transform;
-	var context = this.context;
-	
-	context.globalCompositeOperation = 'source-over';
-	
-	// one the display object hits this. we can break the loop	
+	// Once the display object hits this we can break the loop	
 	var testObject = displayObject.last._iNext;
 	displayObject = displayObject.first;
 	
 	do	
 	{
-		transform = displayObject.worldTransform;
+		//transform = displayObject.worldTransform;
 		
-		if(!displayObject.visible)
+		if (!displayObject.visible)
 		{
 			displayObject = displayObject.last._iNext;
 			continue;
 		}
 		
-		if(!displayObject.renderable || displayObject.alpha == 0)
+		if (!displayObject.renderable || displayObject.alpha == 0)
 		{
 			displayObject = displayObject._iNext;
 			continue;
 		}
 		
-		if(displayObject instanceof PIXI.Sprite)
+		if (displayObject instanceof PIXI.Sprite)
 		{
-			var frame = displayObject.texture.frame;
+			// var frame = displayObject.texture.frame;
 			
-			if(frame)
+			if (displayObject.texture.frame)
 			{
-				context.globalAlpha = displayObject.worldAlpha;
+				this.context.globalAlpha = displayObject.worldAlpha;
 				
 				if (displayObject.texture.trimmed)
 				{
-					context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2] + displayObject.texture.trim.x, transform[5] + displayObject.texture.trim.y);
+					this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2] + displayObject.texture.trim.x, displayObject.worldTransform[5] + displayObject.texture.trim.y);
 				}
 				else
 				{
-					context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5]);
+					this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2], displayObject.worldTransform[5]);
 				}
 					
-				context.drawImage(displayObject.texture.baseTexture.source, 
-								   frame.x,
-								   frame.y,
-								   frame.width,
-								   frame.height,
-								   (displayObject.anchor.x) * -frame.width, 
-								   (displayObject.anchor.y) * -frame.height,
-								   frame.width,
-								   frame.height);
+				this.context.drawImage(
+					displayObject.texture.baseTexture.source, 
+					displayObject.texture.frame.x,
+					displayObject.texture.frame.y,
+					displayObject.texture.frame.width,
+					displayObject.texture.frame.height,
+					(displayObject.anchor.x) * -displayObject.texture.frame.width, 
+					(displayObject.anchor.y) * -displayObject.texture.frame.height,
+					displayObject.texture.frame.width,
+					displayObject.texture.frame.height);
 			}					   
 	   	}
-	   	else if(displayObject instanceof PIXI.Strip)
+	   	else if (displayObject instanceof PIXI.Strip)
 		{
-			context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5])
+			this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2], displayObject.worldTransform[5])
 			this.renderStrip(displayObject);
 		}
-		else if(displayObject instanceof PIXI.TilingSprite)
+		else if (displayObject instanceof PIXI.TilingSprite)
 		{
-			context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5])
+			this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2], displayObject.worldTransform[5])
 			this.renderTilingSprite(displayObject);
 		}
-		else if(displayObject instanceof PIXI.CustomRenderable)
+		else if (displayObject instanceof PIXI.CustomRenderable)
 		{
 			displayObject.renderCanvas(this);
 		}
-		else if(displayObject instanceof PIXI.Graphics)
+		else if (displayObject instanceof PIXI.Graphics)
 		{
-			context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5])
-			PIXI.CanvasGraphics.renderGraphics(displayObject, context);
+			this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2], displayObject.worldTransform[5])
+			PIXI.CanvasGraphics.renderGraphics(displayObject, this.context);
 		}
-		else if(displayObject instanceof PIXI.FilterBlock)
+		else if (displayObject instanceof PIXI.FilterBlock)
 		{
-			if(displayObject.open)
+			if (displayObject.open)
 			{
-				context.save();
+				this.context.save();
 				
 				var cacheAlpha = displayObject.mask.alpha;
 				var maskTransform = displayObject.mask.worldTransform;
 				
-				context.setTransform(maskTransform[0], maskTransform[3], maskTransform[1], maskTransform[4], maskTransform[2], maskTransform[5])
+				this.context.setTransform(maskTransform[0], maskTransform[3], maskTransform[1], maskTransform[4], maskTransform[2], maskTransform[5])
 				
 				displayObject.mask.worldAlpha = 0.5;
 				
-				context.worldAlpha = 0;
+				this.context.worldAlpha = 0;
 				
-				PIXI.CanvasGraphics.renderGraphicsMask(displayObject.mask, context);
-				context.clip();
+				PIXI.CanvasGraphics.renderGraphicsMask(displayObject.mask, this.context);
+				this.context.clip();
 				
 				displayObject.mask.worldAlpha = cacheAlpha;
 			}
 			else
 			{
-				context.restore();
+				this.context.restore();
 			}
 		}
-	//	count++
+		//	count++
 		displayObject = displayObject._iNext;
-		
-		
 	}
 	while(displayObject != testObject)
 	

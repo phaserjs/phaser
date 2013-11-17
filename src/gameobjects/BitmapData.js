@@ -54,29 +54,31 @@ Phaser.BitmapData = function (game, width, height) {
 	* @property {array} imageData - The canvas image data.
 	*/
 	this.imageData = this.context.getImageData(0, 0, width, height);
-    
+
+	this.pixels = new Int32Array(this.imageData.data.buffer);
+
 	/**
 	* @property {Uint8ClampedArray} data8 - A uint8 clamped view on the buffer.
 	*/
-	this.data8 = new Uint8ClampedArray(this.imageData.buffer);
+	// this.data8 = new Uint8ClampedArray(this.imageData.buffer);
 
 	/**
 	* @property {Uint32Array} data32 - A Uint32 view on the buffer.
 	*/
-	this.data32 = new Uint32Array(this.imageData.buffer);
+	// this.data32 = new Uint32Array(this.imageData.buffer);
 
 	// Little or big-endian?
-	this.data32[1] = 0x0a0b0c0d;
+	// this.data32[1] = 0x0a0b0c0d;
     
 	/**
 	* @property {boolean} isLittleEndian - .
 	*/
 	this.isLittleEndian = true;
 
-	if (this.data32[4] === 0x0a && this.data32[5] === 0x0b && this.data32[6] === 0x0c && this.data32[7] === 0x0d)
-	{
-    	this.isLittleEndian = false;
-	}
+	// if (this.data32[4] === 0x0a && this.data32[5] === 0x0b && this.data32[6] === 0x0c && this.data32[7] === 0x0d)
+	// {
+ //    	this.isLittleEndian = false;
+	// }
     
 	/**
 	* @property {PIXI.BaseTexture} baseTexture - The PIXI.BaseTexture.
@@ -150,8 +152,10 @@ Phaser.BitmapData.prototype = {
 	refreshBuffer: function () {
 
 		this.imageData = this.context.getImageData(0, 0, this.width, this.height);
-		this.data8 = new Uint8ClampedArray(this.imageData.buffer);
-		this.data32 = new Uint32Array(this.imageData.buffer);
+		this.pixels = new Int32Array(this.imageData.data.buffer);
+
+		// this.data8 = new Uint8ClampedArray(this.imageData.buffer);
+		// this.data32 = new Uint32Array(this.imageData.buffer);
 
 	},
 
@@ -169,6 +173,9 @@ Phaser.BitmapData.prototype = {
 
     	if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
     	{
+			this.pixels[y * this.width + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
+
+    		/*
     		if (this.isLittleEndian)
     		{
 				this.data32[y * this.width + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
@@ -177,8 +184,9 @@ Phaser.BitmapData.prototype = {
     		{
 				this.data32[y * this.width + x] = (red << 24) | (green << 16) | (blue << 8) | alpha;
     		}
+    		*/
 
-    		this.imageData.data.set(this.data8);
+    		// this.imageData.data.set(this.data8);
 
     		this.context.putImageData(this.imageData, 0, 0);
 

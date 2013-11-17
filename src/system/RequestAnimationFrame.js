@@ -13,21 +13,15 @@
 */
 Phaser.RequestAnimationFrame = function(game) {
 	
-     /**
-     * @property {Phaser.Game} game - The currently running game.
-     */
+	/**
+	* @property {Phaser.Game} game - The currently running game.
+	*/
 	this.game = game;
 
-     /**
-     * @property {boolean} _isSetTimeOut  - Description.
-     * @private
-     */
-	this._isSetTimeOut = false;
-     
-     /**
-     * @property {boolean} isRunning - Description.
-     * @default
-     */
+	/**
+	* @property {boolean} isRunning - true if RequestAnimationFrame is running, otherwise false.
+	* @default
+	*/
 	this.isRunning = false;
 
 	var vendors = [
@@ -44,15 +38,19 @@ Phaser.RequestAnimationFrame = function(game) {
 	}
 
 	/**
-	* The function called by the update
-	* @property _onLoop
+	* @property {boolean} _isSetTimeOut  - true if the browser is using setTimeout instead of raf.
+	* @private
+	*/
+	this._isSetTimeOut = false;
+
+	/**
+	* @property {function} _onLoop - The function called by the update.
 	* @private
 	*/
 	this._onLoop = null;
 
 	/**
-	* The callback ID used when calling cancel
-	* @property _timeOutID
+	* @property {number} _timeOutID - The callback ID used when calling cancel.
 	* @private
 	*/
 	this._timeOutID = null;
@@ -60,7 +58,6 @@ Phaser.RequestAnimationFrame = function(game) {
 };
 
 Phaser.RequestAnimationFrame.prototype = {
-
 
 	/**
 	* Starts the requestAnimatioFrame running or setTimeout if unavailable in browser

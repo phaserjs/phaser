@@ -69,6 +69,30 @@ Phaser.Mouse = function (game) {
     */
     this.pointerLock = new Phaser.Signal;
 
+    /**
+    * The browser mouse event.
+    * @property {MouseEvent} event
+    */
+    this.event;
+
+    /**
+    * @property {function} _onMouseDown
+    * @private
+    */
+    this._onMouseDown;
+
+    /**
+    * @property {function} _onMouseMove
+    * @private
+    */
+    this._onMouseMove;
+
+    /**
+    * @property {function} _onMouseUp
+    * @private
+    */
+    this._onMouseUp;
+
 };
 
 /**
@@ -122,9 +146,13 @@ Phaser.Mouse.prototype = {
             return _this.onMouseUp(event);
         };
 
-        this.game.renderer.view.addEventListener('mousedown', this._onMouseDown, true);
-        this.game.renderer.view.addEventListener('mousemove', this._onMouseMove, true);
-        this.game.renderer.view.addEventListener('mouseup', this._onMouseUp, true);
+        // this.game.renderer.view.addEventListener('mousedown', this._onMouseDown, true);
+        // this.game.renderer.view.addEventListener('mousemove', this._onMouseMove, true);
+        // this.game.renderer.view.addEventListener('mouseup', this._onMouseUp, true);
+
+        document.addEventListener('mousedown', this._onMouseDown, true);
+        document.addEventListener('mousemove', this._onMouseMove, true);
+        document.addEventListener('mouseup', this._onMouseUp, true);
 
     },
 
@@ -135,20 +163,11 @@ Phaser.Mouse.prototype = {
     */
     onMouseDown: function (event) {
 
+        this.event = event;
+
         event.preventDefault();
 
-        if (event.which === 1)
-        {
-            this.button = Phaser.Mouse.LEFT_BUTTON;
-        } 
-        else if (event.which === 2)
-        {
-            this.button = Phaser.Mouse.MIDDLE_BUTTON;
-        } 
-        else if (event.which === 3)
-        {
-            this.button = Phaser.Mouse.RIGHT_BUTTON;
-        }
+        this.button = event.which;
 
         if (this.mouseDownCallback)
         {
@@ -172,6 +191,8 @@ Phaser.Mouse.prototype = {
     * @param {MouseEvent} event
     */
     onMouseMove: function (event) {
+
+        this.event = event;
 
         event.preventDefault();
 
@@ -197,6 +218,8 @@ Phaser.Mouse.prototype = {
     * @param {MouseEvent} event
     */
     onMouseUp: function (event) {
+
+        this.event = event;
 
         event.preventDefault();
 
@@ -293,9 +316,13 @@ Phaser.Mouse.prototype = {
     */
     stop: function () {
 
-        this.game.stage.canvas.removeEventListener('mousedown', this._onMouseDown, true);
-        this.game.stage.canvas.removeEventListener('mousemove', this._onMouseMove, true);
-        this.game.stage.canvas.removeEventListener('mouseup', this._onMouseUp, true);
+        // this.game.stage.canvas.removeEventListener('mousedown', this._onMouseDown, true);
+        // this.game.stage.canvas.removeEventListener('mousemove', this._onMouseMove, true);
+        // this.game.stage.canvas.removeEventListener('mouseup', this._onMouseUp, true);
+
+        document.removeEventListener('mousedown', this._onMouseDown, true);
+        document.removeEventListener('mousemove', this._onMouseMove, true);
+        document.removeEventListener('mouseup', this._onMouseUp, true);
 
     }
 
