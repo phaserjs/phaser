@@ -636,6 +636,11 @@ Phaser.Sprite.prototype.resetCrop = function() {
 */
 Phaser.Sprite.prototype.postUpdate = function() {
 
+    if (this.key instanceof Phaser.BitmapData && this.key._dirty)
+    {
+        this.key.render();
+    }
+
     if (this.exists)
     {
         //  The sprite is positioned in this call, after taking into consideration motion updates and collision
@@ -669,7 +674,7 @@ Phaser.Sprite.prototype.postUpdate = function() {
 *
 * @method Phaser.Sprite#loadTexture
 * @memberof Phaser.Sprite
-* @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
 * @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
 Phaser.Sprite.prototype.loadTexture = function (key, frame) {
@@ -679,6 +684,11 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
     if (key instanceof Phaser.RenderTexture)
     {
         this.currentFrame = this.game.cache.getTextureFrame(key.name);
+    }
+    else if (key instanceof Phaser.BitmapData)
+    {
+        this.setTexture(key.texture);
+        this.currentFrame = key.textureFrame;
     }
     else if (key instanceof PIXI.Texture)
     {

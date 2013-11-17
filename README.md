@@ -57,6 +57,7 @@ Version 1.1.3 - in build
 * New: Added Group.iterate, a powerful way to count or return children that match a certain criteria. Refactored Group to use iterate, lots of repeated code cut.
 * New: Added Group.sort. You can now sort the Group based on any given numeric property (x, y, health), finally you can do depth-sorting :) Example created to show.
 * New: Enhanced renderTexture so it can accept a Phaser.Group object and improved documentation and examples.
+
 * Fixed: Lots of fixes to the TypeScript definitions file (many thanks gltovar)
 * Fixed: Tilemap commands use specified layer when one given (thanks Izzimach)
 * Fixed: Mouse.stop now uses the true useCapture, which means the event listeners stop listening correctly (thanks beeglebug)
@@ -65,6 +66,7 @@ Version 1.1.3 - in build
 * Fixed: Group.swap had a hellish to find bug that only manifested when B-A upward swaps occured. Hours of debugging later = bug crushed.
 * Fixed: Point.rotate asDegrees fixed (thanks BorisKozo)
 * Fixed: ArcadePhysics.separateTile wasn't returning the value, so the custom process callback wasn't getting called (thanks flameiguana)
+
 * Updated: ArcadePhysics.updateMotion applies the dt to the velocity calculations as well as position now (thanks jcs)
 * Updated: RequestAnimationFrame now retains the callbackID which is passed to cancelRequestAnimationFrame.
 * Updated: Button now goes back to over state when setFrames used in action (thanks beeglebug)
@@ -72,7 +74,7 @@ Version 1.1.3 - in build
 * Updated: Tided up the Graphics object (thanks BorisKozo)
 * Updated: If running in Canvas mode and you have a render function it will save the context and reset the transform before running your render function.
 * Updated: Sprite will now check the exists property of the Group it is in, if the Group.exists = false the Sprite won't update.
-* Updated: Lots of small documentation tweaks across various files such as Pointer.
+* Updated: Lots of documentation tweaks across various files such as Pointer and Color.
 * Updated: If you specify 'null' as a Group parent it will now revert to using the World as the parent (before only 'undefined' worked)
 
 

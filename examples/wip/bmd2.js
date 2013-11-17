@@ -14,18 +14,23 @@ var bmd;
 
 function create() {
 
-	//game.stage.backgroundColor = '#450034';
+	bmd = game.add.bitmapData(800, 600);
 
-	bmd = game.add.bitmapData('bob', 800, 600);
+    console.log('isLittleEndian', bmd.isLittleEndian);
+    bmd.isLittleEndian = false;
 
-    //  And apply it to 100 randomly positioned sprites
+    bmd.beginPath();
+    bmd.beginLinearGradientFill(["#ff0000", "#ffff00"], [0, 1], 0, 0, 0, 600);
+    bmd.rect(0, 0, 800, 600);
+    bmd.closePath();
+    bmd.fill();
+
+    bmd.refreshBuffer();
+
     for (var i = 0; i < 100; i++)
     {
-    	//bmd.setPixel(game.world.randomX, game.world.randomY, 100 + Math.random() * 155, 100 + Math.random() * 155, 255);
+    	bmd.setPixel(game.world.randomX, game.world.randomY, 0, 0, 0);
     }
-
-    bmd.context.fillStyle = '#ffffff';
-    bmd.context.fillRect(20,20,16,16);
 
     var d = game.add.sprite(0, 0, bmd);
 
@@ -33,14 +38,8 @@ function create() {
 
 function update() {
 
-    // bmd.context.fillRect(game.world.randomX,game.world.randomY,4,4);
-
-    //console.log('b');
-
-
-    // bmd.setPixel(game.world.randomX, game.world.randomY, 250, 250, 250);
-    
-    bmd.setPixel(game.input.x, game.input.y, 255, 255, 255);
+    bmd.refreshBuffer();
+    bmd.setPixel(game.input.x, game.input.y, 0, 0, 0);
 
 }
 
