@@ -310,17 +310,15 @@ Phaser.StageScaleMode.prototype = {
     * The optional orientationImage is displayed when the game is in the incorrect orientation.
     * @method Phaser.StageScaleMode#forceOrientation
     * @param {boolean} forceLandscape - true if the game should run in landscape mode only.
-    * @param {boolean} forcePortrait - true if the game should run in portrait mode only.
-    * @param {string} [forcePortrait=''] - The string of an image in the Phaser.Cache to display when this game is in the incorrect orientation.
+    * @param {boolean} [forcePortrait=false] - true if the game should run in portrait mode only.
+    * @param {string} [orientationImage=''] - The string of an image in the Phaser.Cache to display when this game is in the incorrect orientation.
     */
     forceOrientation: function (forceLandscape, forcePortrait, orientationImage) {
 
-        this.forceLandscape = forceLandscape;
+        if (typeof forcePortrait === 'undefined') { forcePortrait = false; }
 
-        if (typeof forcePortrait === 'undefined')
-        {
-            this.forcePortrait = false;
-        }
+        this.forceLandscape = forceLandscape;
+        this.forcePortrait = forcePortrait;
 
         if (typeof orientationImage !== 'undefined')
         {

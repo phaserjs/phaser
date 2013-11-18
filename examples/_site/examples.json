@@ -149,6 +149,10 @@
   ],
   "display": [
     {
+      "file": "bitmapdata+wobble.js",
+      "title": "bitmapdata wobble"
+    },
+    {
       "file": "fullscreen.js",
       "title": "fullscreen"
     },
@@ -159,6 +163,18 @@
     {
       "file": "render+crisp.js",
       "title": "render crisp"
+    },
+    {
+      "file": "render+texture+mirror.js",
+      "title": "render texture mirror"
+    },
+    {
+      "file": "render+texture+starfield.js",
+      "title": "render texture starfield"
+    },
+    {
+      "file": "render+texture+trail.js",
+      "title": "render texture trail"
     }
   ],
   "games": [

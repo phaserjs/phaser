@@ -84,6 +84,7 @@ module.exports = function (grunt) {
         'src/input/InputHandler.js',
         'src/gameobjects/Events.js',
         'src/gameobjects/GameObjectFactory.js',
+        'src/gameobjects/BitmapData.js',
         'src/gameobjects/Sprite.js',
         'src/gameobjects/TileSprite.js',
         'src/gameobjects/Text.js',

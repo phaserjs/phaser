@@ -55,31 +55,11 @@ Phaser.BitmapData = function (game, width, height) {
 	*/
 	this.imageData = this.context.getImageData(0, 0, width, height);
 
-	this.pixels = new Int32Array(this.imageData.data.buffer);
-
 	/**
-	* @property {Uint8ClampedArray} data8 - A uint8 clamped view on the buffer.
+	* @property {UInt8Clamped} pixels - A reference to the context imageData buffer.
 	*/
-	// this.data8 = new Uint8ClampedArray(this.imageData.buffer);
+	this.pixels = this.imageData.data.buffer;
 
-	/**
-	* @property {Uint32Array} data32 - A Uint32 view on the buffer.
-	*/
-	// this.data32 = new Uint32Array(this.imageData.buffer);
-
-	// Little or big-endian?
-	// this.data32[1] = 0x0a0b0c0d;
-    
-	/**
-	* @property {boolean} isLittleEndian - .
-	*/
-	this.isLittleEndian = true;
-
-	// if (this.data32[4] === 0x0a && this.data32[5] === 0x0b && this.data32[6] === 0x0c && this.data32[7] === 0x0d)
-	// {
- //    	this.isLittleEndian = false;
-	// }
-    
 	/**
 	* @property {PIXI.BaseTexture} baseTexture - The PIXI.BaseTexture.
 	* @default

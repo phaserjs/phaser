@@ -265,6 +265,12 @@ Phaser.Device = function () {
     */
     this.pixelRatio = 0;
 
+    /**
+    * @property {boolean} littleEndian - Is the device big or little endian? (only detected if the browser supports TypedArrays)
+    * @default
+    */
+    this.littleEndian = false;
+
     //  Run the checks
     this._checkAudio();
     this._checkBrowser();
@@ -443,6 +449,11 @@ Phaser.Device.prototype = {
         this.iPhone = navigator.userAgent.toLowerCase().indexOf('iphone') != -1;
         this.iPhone4 = (this.pixelRatio == 2 && this.iPhone);
         this.iPad = navigator.userAgent.toLowerCase().indexOf('ipad') != -1;
+
+        if (typeof Int8Array !== 'undefined')
+        {
+            this.littleEndian = new Int8Array(new Int16Array([1]).buffer)[0] > 0;
+        }
 
     },
 

@@ -18,7 +18,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v1.1.3 - Built at: Thu Nov 07 2013 06:09:12
+* v1.1.3 - Built at: Mon Nov 18 2013 20:26:29
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -77,6 +77,7 @@ var Phaser = Phaser || {
 	TILEMAPLAYER: 10,
 	EMITTER: 11,
 	POLYGON: 12,
+	BITMAPDATA: 13,
 
 	NONE: 0,
 	LEFT: 1,
@@ -1304,7 +1305,6 @@ PIXI.DisplayObject.prototype.removeFilter = function(data)
 {
 	//if(!this.filter)return;
 	//this.filter = false;
-	console.log("YUOIO")
 	// modify the list..
 	var startBlock = data.start;
 	
@@ -6722,7 +6722,6 @@ PIXI.WebGLRenderGroup = function(gl, transparent)
 	
 	this.batchs = [];
 	this.toRemove = [];
-	console.log(this.transparent)
 	this.filterManager = new PIXI.WebGLFilterManager(this.transparent);
 }
 
@@ -7822,7 +7821,6 @@ PIXI._CompileShader = function(gl, shaderSrc, shaderType)
   gl.compileShader(shader);
 
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.log(gl.getShaderInfoLog(shader));
     return null;
   }
 
@@ -10168,7 +10166,18 @@ Phaser.StateManager.prototype = {
 
     	if (this._created && this.onRenderCallback)
     	{
+    		if (this.game.renderType === Phaser.CANVAS)
+    		{
+		        this.game.context.save();
+		        this.game.context.setTransform(1, 0, 0, 1, 0, 0);
+    		}
+
 			this.onRenderCallback.call(this.callbackContext, this.game);
+
+    		if (this.game.renderType === Phaser.CANVAS)
+    		{
+		        this.game.context.restore();
+    		}			
     	}
     	else
     	{
@@ -11077,10 +11086,36 @@ Phaser.PluginManager.prototype = {
      * @param {Phaser.Plugin} plugin - The plugin to be removed.
      */
     remove: function (plugin) {
+        
+        if (this._pluginsLength == 0)
+        {
+            return;
+        }
 
-        //  TODO
-        this._pluginsLength--;
+        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        {
+            if (this.plugins[this._p] === plugin)
+            {
+                plugin.destroy();
+                this.plugins.splice(this._p, 1);
+                this._pluginsLength--;
+                return;
+            }
+        }
+    },
 
+    /**
+     * Removes all Plugins from the PluginManager.
+     * @method Phaser.PluginManager#removeAll
+     */
+    removeAll: function() {
+        
+        for (this._p = 0; this._p < this._pluginsLength; this._p++)
+        {
+            this.plugins[this._p].destroy();
+        }
+        this.plugins.length = 0;
+        this._pluginsLength = 0;
     },
 
     /**
@@ -11419,7 +11454,7 @@ Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 */
 Phaser.Group = function (game, parent, name, useStage) {
 
-	if (typeof parent === 'undefined')
+	if (typeof parent === 'undefined' || typeof parent === null)
 	{
 		parent = game.world;
 	}
@@ -15332,6 +15367,30 @@ Phaser.Mouse = function (game) {
     */
     this.pointerLock = new Phaser.Signal;
 
+    /**
+    * The browser mouse event.
+    * @property {MouseEvent} event
+    */
+    this.event;
+
+    /**
+    * @property {function} _onMouseDown
+    * @private
+    */
+    this._onMouseDown;
+
+    /**
+    * @property {function} _onMouseMove
+    * @private
+    */
+    this._onMouseMove;
+
+    /**
+    * @property {function} _onMouseUp
+    * @private
+    */
+    this._onMouseUp;
+
 };
 
 /**
@@ -15385,9 +15444,13 @@ Phaser.Mouse.prototype = {
             return _this.onMouseUp(event);
         };
 
-        this.game.renderer.view.addEventListener('mousedown', this._onMouseDown, true);
-        this.game.renderer.view.addEventListener('mousemove', this._onMouseMove, true);
-        this.game.renderer.view.addEventListener('mouseup', this._onMouseUp, true);
+        // this.game.renderer.view.addEventListener('mousedown', this._onMouseDown, true);
+        // this.game.renderer.view.addEventListener('mousemove', this._onMouseMove, true);
+        // this.game.renderer.view.addEventListener('mouseup', this._onMouseUp, true);
+
+        document.addEventListener('mousedown', this._onMouseDown, true);
+        document.addEventListener('mousemove', this._onMouseMove, true);
+        document.addEventListener('mouseup', this._onMouseUp, true);
 
     },
 
@@ -15398,20 +15461,11 @@ Phaser.Mouse.prototype = {
     */
     onMouseDown: function (event) {
 
+        this.event = event;
+
         event.preventDefault();
 
-        if (event.which === 1)
-        {
-            this.button = Phaser.Mouse.LEFT_BUTTON;
-        } 
-        else if (event.which === 2)
-        {
-            this.button = Phaser.Mouse.MIDDLE_BUTTON;
-        } 
-        else if (event.which === 3)
-        {
-            this.button = Phaser.Mouse.RIGHT_BUTTON;
-        }
+        this.button = event.which;
 
         if (this.mouseDownCallback)
         {
@@ -15435,6 +15489,8 @@ Phaser.Mouse.prototype = {
     * @param {MouseEvent} event
     */
     onMouseMove: function (event) {
+
+        this.event = event;
 
         event.preventDefault();
 
@@ -15460,6 +15516,8 @@ Phaser.Mouse.prototype = {
     * @param {MouseEvent} event
     */
     onMouseUp: function (event) {
+
+        this.event = event;
 
         event.preventDefault();
 
@@ -15556,9 +15614,13 @@ Phaser.Mouse.prototype = {
     */
     stop: function () {
 
-        this.game.stage.canvas.removeEventListener('mousedown', this._onMouseDown, true);
-        this.game.stage.canvas.removeEventListener('mousemove', this._onMouseMove, true);
-        this.game.stage.canvas.removeEventListener('mouseup', this._onMouseUp, true);
+        // this.game.stage.canvas.removeEventListener('mousedown', this._onMouseDown, true);
+        // this.game.stage.canvas.removeEventListener('mousemove', this._onMouseMove, true);
+        // this.game.stage.canvas.removeEventListener('mouseup', this._onMouseUp, true);
+
+        document.removeEventListener('mousedown', this._onMouseDown, true);
+        document.removeEventListener('mousemove', this._onMouseMove, true);
+        document.removeEventListener('mouseup', this._onMouseUp, true);
 
     }
 
@@ -15806,28 +15868,6 @@ Phaser.Pointer = function (game, id) {
     this._stateReset = false;
 
     /**
-    * A Vector object containing the initial position when the Pointer was engaged with the screen.
-    * @property {Vec2} positionDown
-    * @default 
-    **/
-    this.positionDown = null;
-
-    /**
-    * A Vector object containing the current position of the Pointer on the screen.
-    * @property {Vec2} position
-    * @default
-    **/
-    this.position = null;
-
-    /**
-    * A Circle object centered on the x/y screen coordinates of the Pointer.
-    * Default size of 44px (Apple's recommended "finger tip" size).
-    * @property {Circle} circle
-    * @default
-    **/
-    this.circle = null;
-
-    /**
     * Description.
     * @property {boolean} withinGame
     */
@@ -15953,26 +15993,27 @@ Phaser.Pointer = function (game, id) {
     this.targetObject = null;
 
     /**
-    * Description.
-    * @property {boolean} isDown - Description.
+    * An active pointer is one that is currently pressed down on the display. A Mouse is always active.
+    * @property {boolean} active
     * @default
     */
     this.active = false;
 
     /**
-    * Description
+    * A Phaser.Point object containing the current x/y values of the pointer on the display.
     * @property {Phaser.Point} position
     */
     this.position = new Phaser.Point();
     
     /**
-    * Description
+    * A Phaser.Point object containing the x/y values of the pointer when it was last in a down state on the display.
     * @property {Phaser.Point} positionDown
     */
     this.positionDown = new Phaser.Point();
 
     /**
-    * Description
+    * A Phaser.Circle that is centered on the x/y coordinates of this pointer, useful for hit detection.
+    * The Circle size is 44px (Apples recommended "finger tip" size).
     * @property {Phaser.Circle} circle
     */
     this.circle = new Phaser.Circle(0, 0, 44);
@@ -18200,9 +18241,1124 @@ Phaser.GameObjectFactory.prototype = {
 
         return texture;
 
+    },
+
+    /**
+    * A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
+    *
+    * @method Phaser.GameObjectFactory#bitmapData
+    * @param {number} [width=256] - The width of the BitmapData in pixels.
+    * @param {number} [height=256] - The height of the BitmapData in pixels.
+    * @return {Phaser.BitmapData} The newly created BitmapData object.
+    */
+    bitmapData: function (width, height) {
+
+        return new Phaser.BitmapData(this.game, width, height);
+
     }
 
 };
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* Creates a new `BitmapData` object.
+*
+* @class Phaser.BitmapData
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {number} [width=256] - The width of the BitmapData in pixels.
+* @param {number} [height=256] - The height of the BitmapData in pixels.
+*/
+Phaser.BitmapData = function (game, width, height) {
+
+	if (typeof width === 'undefined') { width = 256; }
+	if (typeof height === 'undefined') { height = 256; }
+
+	/**
+	* @property {Phaser.Game} game - A reference to the currently running game. 
+	*/
+	this.game = game;
+
+	/**
+    * @property {string} name - The name of the BitmapData.
+	*/
+    this.name = '';
+
+	/**
+	* @property {number} width - The width of the BitmapData in pixels.
+    */
+	this.width = width;
+	
+	/**
+	* @property {number} height - The height of the BitmapData in pixels.
+    */
+	this.height = height;
+
+	/**
+	* @property {HTMLCanvasElement} canvas - The canvas to which this BitmapData draws.
+	* @default
+	*/
+    this.canvas = Phaser.Canvas.create(width, height);
+    
+	/**
+	* @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
+	* @default
+	*/
+    this.context = this.canvas.getContext('2d');
+
+	/**
+	* @property {array} imageData - The canvas image data.
+	*/
+	this.imageData = this.context.getImageData(0, 0, width, height);
+
+	/**
+	* @property {UInt8Clamped} pixels - A reference to the context imageData buffer.
+	*/
+	this.pixels = this.imageData.data.buffer;
+
+	/**
+	* @property {PIXI.BaseTexture} baseTexture - The PIXI.BaseTexture.
+	* @default
+	*/
+    this.baseTexture = new PIXI.BaseTexture(this.canvas);
+    
+	/**
+	* @property {PIXI.Texture} texture - The PIXI.Texture.
+	* @default
+	*/
+    this.texture = new PIXI.Texture(this.baseTexture);
+    
+	/**
+	* @property {Phaser.Frame} textureFrame - The Frame this BitmapData uses for rendering.
+	* @default
+	*/
+    this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'bitmapData', game.rnd.uuid());
+
+    /**
+	* @property {number} type - The const type of this object.
+    * @default
+	*/
+    this.type = Phaser.BITMAPDATA;
+
+	this._dirty = false;
+
+}
+
+Phaser.BitmapData.prototype = {
+
+	/**
+	* Updates the given Sprite so that it uses this BitmapData as its texture.
+	* @method Phaser.BitmapData.add
+	* @param {Phaser.Sprite} sprite - The sprite to apply this texture to.
+	*/
+	add: function (sprite) {
+
+		sprite.loadTexture(this);
+
+	},
+
+	/**
+	* Given an array of Sprites it will update each of them so that their Textures reference this BitmapData.
+	* @method Phaser.BitmapData.addTo
+	* @param {Phaser.Sprite[]} sprites - An array of Sprites to apply this texture to.
+	*/
+	addTo: function (sprites) {
+
+		for (var i = 0; i < objects.length; i++)
+		{
+		    if (objects[i].texture)
+		    {
+		    }
+		}
+
+	},
+
+	/**
+	* Clears the BitmapData.
+	* @method Phaser.BitmapData.clear
+	*/
+	clear: function () {
+
+	    this.context.clearRect(0, 0, this.width, this.height);
+	
+		this._dirty = true;
+
+	},
+
+	refreshBuffer: function () {
+
+		this.imageData = this.context.getImageData(0, 0, this.width, this.height);
+		this.pixels = new Int32Array(this.imageData.data.buffer);
+
+		// this.data8 = new Uint8ClampedArray(this.imageData.buffer);
+		// this.data32 = new Uint32Array(this.imageData.buffer);
+
+	},
+
+	/**
+	* Sets the color of the given pixel to the specified red, green, blue and alpha values.
+	* @method Phaser.BitmapData.setPixel32
+	* @param {number} x - The X coordinate of the pixel to be set.
+	* @param {number} y - The Y coordinate of the pixel to be set.
+	* @param {number} red - The red color value, between 0 and 0xFF (255).
+	* @param {number} green - The green color value, between 0 and 0xFF (255).
+	* @param {number} blue - The blue color value, between 0 and 0xFF (255).
+	* @param {number} alpha - The alpha color value, between 0 and 0xFF (255).
+	*/
+    setPixel32: function (x, y, red, green, blue, alpha) {
+
+    	if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
+    	{
+			this.pixels[y * this.width + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
+
+    		/*
+    		if (this.isLittleEndian)
+    		{
+				this.data32[y * this.width + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
+    		}
+    		else
+    		{
+				this.data32[y * this.width + x] = (red << 24) | (green << 16) | (blue << 8) | alpha;
+    		}
+    		*/
+
+    		// this.imageData.data.set(this.data8);
+
+    		this.context.putImageData(this.imageData, 0, 0);
+
+			this._dirty = true;
+    	}
+
+    },
+
+	/**
+	* Sets the color of the given pixel to the specified red, green and blue values.
+	* @method Phaser.BitmapData.setPixel
+	* @param {number} x - The X coordinate of the pixel to be set.
+	* @param {number} y - The Y coordinate of the pixel to be set.
+	* @param {number} red - The red color value (between 0 and 255)
+	* @param {number} green - The green color value (between 0 and 255)
+	* @param {number} blue - The blue color value (between 0 and 255)
+	*/
+    setPixel: function (x, y, red, green, blue) {
+
+    	this.setPixel32(x, y, red, green, blue, 255);
+
+    },
+
+	/**
+	* Get a color of a specific pixel.
+	* @param {number} x - The X coordinate of the pixel to get.
+	* @param {number} y - The Y coordinate of the pixel to get.
+	* @return {number} A native color value integer (format: 0xRRGGBB)
+	*/
+    getPixel: function (x, y) {
+
+    	if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
+    	{
+			return this.data32[y * this.width + x];
+    	}
+
+    },
+
+	/**
+	* Get a color of a specific pixel (including alpha value).
+	* @param {number} x - The X coordinate of the pixel to get.
+	* @param {number} y - The Y coordinate of the pixel to get.
+	* @return {number} A native color value integer (format: 0xAARRGGBB)
+	*/
+    getPixel32: function (x, y) {
+
+    	if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
+    	{
+			return this.data32[y * this.width + x];
+    	}
+
+    },
+
+    /**
+     * Get pixels in array in a specific Rectangle.
+     * @param rect {Rectangle} The specific Rectangle.
+     * @return {array} CanvasPixelArray.
+     */
+    getPixels: function (rect) {
+
+        // return this.context.getImageData(rect.x, rect.y, rect.width, rect.height);
+
+    },
+
+	/**
+	* Adds an arc to the path which is centered at (x, y) position with radius r starting at startAngle and ending at endAngle 
+	* going in the given direction by anticlockwise (defaulting to clockwise).
+	* @method Phaser.BitmapData.arc
+	* @param {number} x - The x axis of the coordinate for the arc's center
+	* @param {number} y - The y axis of the coordinate for the arc's center
+	* @param {number} radius - The arc's radius
+	* @param {number} startAngle - The starting point, measured from the x axis, from which it will be drawn, expressed in radians.
+	* @param {number} endAngle - The end arc's angle to which it will be drawn, expressed in radians.
+	* @param {boolean} [anticlockwise=true] - true draws the arc anticlockwise, otherwise in a clockwise direction.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	arc: function (x, y, radius, startAngle, endAngle, anticlockwise) {
+
+		if (typeof anticlockwise === 'undefined') { anticlockwise = false; }
+
+		this._dirty = true;
+		this.context.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+		return this;
+
+	},
+
+	/**
+	* Adds an arc with the given control points and radius, connected to the previous point by a straight line.
+	* @method Phaser.BitmapData.arcTo
+	* @param {number} x1
+	* @param {number} y1
+	* @param {number} x2
+	* @param {number} y2
+	* @param {number} radius
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	arcTo: function (x1, y1, x2, y2, radius) {
+
+		this._dirty = true;
+		this.context.arcTo(x1, y1, x2, y2, radius);
+		return this;
+
+	},
+
+	/**
+	* Begins a fill with the specified color. This ends the current sub-path.
+	* @method Phaser.BitmapData.beginFill
+	* @param {string} color - A CSS compatible color value (ex. "red", "#FF0000", or "rgba(255,0,0,0.5)"). Setting to null will result in no fill.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	beginFill: function (color) {
+
+		this.fillStyle(color);
+
+		return this;
+
+	},
+
+	/**
+	* Begins a linear gradient fill defined by the line (x0, y0) to (x1, y1). This ends the current sub-path. For
+	* example, the following code defines a black to white vertical gradient ranging from 20px to 120px, and draws a square to display it:
+	*
+	*      ```myGraphics.beginLinearGradientFill(["#000","#FFF"], [0, 1], 0, 20, 0, 120).rect(20, 20, 120, 120);```
+	*
+	* @method Phaser.BitmapData.beginLinearGradientFill
+	* @param {Array} colors - An array of CSS compatible color values. For example, ["#F00","#00F"] would define a gradient drawing from red to blue.
+	* @param {Array} ratios - An array of gradient positions which correspond to the colors. For example, [0.1, 0.9] would draw the first color to 10% then interpolating to the second color at 90%.
+	* @param {number} x0 - The position of the first point defining the line that defines the gradient direction and size.
+	* @param {number} y0 - The position of the first point defining the line that defines the gradient direction and size.
+	* @param {number} x1 - The position of the second point defining the line that defines the gradient direction and size.
+	* @param {number} y1 - The position of the second point defining the line that defines the gradient direction and size.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	beginLinearGradientFill: function (colors, ratios, x0, y0, x1, y1) {
+
+		var gradient = this.createLinearGradient(x0, y0, x1, y1);
+
+		for (var i = 0, len = colors.length; i < len; i++)
+		{
+			gradient.addColorStop(ratios[i], colors[i]);
+		}
+
+		this.fillStyle(gradient);
+
+		return this;
+
+	},
+
+	/**
+	* Begins a linear gradient stroke defined by the line (x0, y0) to (x1, y1). This ends the current sub-path. For
+	* example, the following code defines a black to white vertical gradient ranging from 20px to 120px, and draws a
+	* square to display it:
+	*
+	*      ```myGraphics.setStrokeStyle(10).beginLinearGradientStroke(["#000","#FFF"], [0, 1], 0, 20, 0, 120).drawRect(20, 20, 120, 120);```
+	*
+	* @method Phaser.BitmapData.beginLinearGradientStroke
+	* @param {Array} colors - An array of CSS compatible color values. For example, ["#F00","#00F"] would define a gradient drawing from red to blue.
+	* @param {Array} ratios - An array of gradient positions which correspond to the colors. For example, [0.1, 0.9] would draw the first color to 10% then interpolating to the second color at 90%.
+	* @param {number} x0 - The position of the first point defining the line that defines the gradient direction and size.
+	* @param {number} y0 - The position of the first point defining the line that defines the gradient direction and size.
+	* @param {number} x1 - The position of the second point defining the line that defines the gradient direction and size.
+	* @param {number} y1 - The position of the second point defining the line that defines the gradient direction and size.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	beginLinearGradientStroke: function (colors, ratios, x0, y0, x1, y1) {
+
+		var gradient = this.createLinearGradient(x0, y0, x1, y1);
+
+		for (var i = 0, len = colors.length; i < len; i++)
+		{
+			gradient.addColorStop(ratios[i], colors[i]);
+		}
+
+		this.strokeStyle(gradient);
+
+		return this;
+
+	},
+
+	/**
+	* Begins a radial gradient stroke. This ends the current sub-path. For example, the following code defines a red to
+	* blue radial gradient centered at (100, 100), with a radius of 50, and draws a rectangle to display it:
+	*
+	*      myGraphics.setStrokeStyle(10)
+	*          .beginRadialGradientStroke(["#F00","#00F"], [0, 1], 100, 100, 0, 100, 100, 50)
+	*          .drawRect(50, 90, 150, 110);
+	*
+	* @method Phaser.BitmapData.beginRadialGradientStroke
+	* @param {Array} colors - An array of CSS compatible color values. For example, ["#F00","#00F"] would define a gradient drawing from red to blue.
+	* @param {Array} ratios - An array of gradient positions which correspond to the colors. For example, [0.1, 0.9] would draw the first color to 10% then interpolating to the second color at 90%.
+	* @param {number} x0 - Center position of the inner circle that defines the gradient.
+	* @param {number} y0 - Center position of the inner circle that defines the gradient.
+	* @param {number} r0 - Radius of the inner circle that defines the gradient.
+	* @param {number} x1 - Center position of the outer circle that defines the gradient.
+	* @param {number} y1 - Center position of the outer circle that defines the gradient.
+	* @param {number} r1 - Radius of the outer circle that defines the gradient.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	beginRadialGradientStroke: function (colors, ratios, x0, y0, r0, x1, y1, r1) {
+
+		var gradient = this.createRadialGradient(x0, y0, r0, x1, y1, r1);
+
+		for (var i = 0, len = colors.length; i < len; i++)
+		{
+			gradient.addColorStop(ratios[i], colors[i]);
+		}
+
+		this.strokeStyle(gradient);
+
+		return this;
+
+	},
+
+	/**
+	* Starts a new path by resetting the list of sub-paths. Call this method when you want to create a new path.
+	* @method Phaser.BitmapData.beginPath
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	beginPath: function () {
+
+		this.context.beginPath();
+		return this;
+
+	},
+
+	/**
+	* Begins a stroke with the specified color. This ends the current sub-path.
+	* @method Phaser.BitmapData.beginStroke
+	* @param {String} color A CSS compatible color value (ex. "#FF0000", "red", or "rgba(255,0,0,0.5)"). Setting to null will result in no stroke.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	beginStroke: function (color) {
+
+		this.strokeStyle(color);
+		return this;
+
+	},
+
+	/**
+	* Adds a bezier curve from the current context point to (x, y) using the control points (cp1x, cp1y) and (cp2x, cp2y).
+	* @method Phaser.BitmapData.bezierCurveTo
+	* @param {number} cp1x - The x axis of control point 1.
+	* @param {number} cp1y - The y axis of control point 1.
+	* @param {number} cp2x - The x axis of control point 2.
+	* @param {number} cp2y - The y axis of control point 2.
+	* @param {number} x - The x axis of the ending point.
+	* @param {number} y - The y axis of the ending point.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	bezierCurveTo: function (cp1x, cp1y, cp2x, cp2y, x, y) {
+
+		this._dirty = true;
+		this.context.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+		return this;
+
+	},
+
+	/**
+	* Draws a circle with the specified radius at (x, y).
+	* @method Phaser.BitmapData.circle
+	* @param {number} x - x coordinate center point of circle.
+	* @param {number} y - y coordinate center point of circle.
+	* @param {number} radius - Radius of circle in radians.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	circle: function (x, y, radius) {
+
+		this.arc(x, y, radius, 0, Math.PI*2);
+		return this;
+
+	},
+
+	/**
+	* Sets all pixels in the rectangle defined by starting point (x, y) and size (width, height) to transparent black.
+	* @method Phaser.BitmapData.clearRect
+	* @param {number} x - The x axis of the coordinate for the rectangle starting point.
+	* @param {number} y - The y axis of the coordinate for the rectangle starting point.
+	* @param {number} width - The rectangles width.
+	* @param {number} height - The rectangles height.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	clearRect: function (x, y, width, height) {
+
+		this._dirty = true;
+		this.context.clearRect(x, y, width, height);
+		return this;
+
+	},
+
+	/**
+	* Creates a clipping path from the current sub-paths. Everything drawn after clip() is called appears inside the clipping path only.
+	* @method Phaser.BitmapData.clip
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	clip: function (x, y, width, height) {
+
+		this._dirty = true;
+		this.context.clip();
+		return this;
+
+	},
+
+	/**
+	* Tries to draw a straight line from the current point to the start. If the shape has already been closed or has only one point, this function does nothing.
+	* @method Phaser.BitmapData.closePath
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	closePath: function () {
+
+		this._dirty = true;
+		this.context.closePath();
+		return this;
+
+	},
+
+	/**
+	* Creates a linear gradient with defined by an imaginary line which implies the direction of the gradient.
+	* Once the gradient is created colors can be inserted using the addColorStop method.
+	* @method Phaser.BitmapData.createLinearGradient
+	* @param {number} x - The x axis of the coordinate for the gradients starting point.
+	* @param {number} y - The y axis of the coordinate for the gradients starting point.
+	* @param {number} width - The width of the gradient.
+	* @param {number} height - The height of the gradient.
+	* @return {CanvasGradient} The Linear Gradient.
+	*/
+	createLinearGradient: function (x, y, width, height) {
+
+		return this.context.createLinearGradient(x, y, width, height);
+
+	},
+
+	//	createPattern
+
+	/**
+	* Creates a radial gradient.
+	* @method Phaser.BitmapData.createRadialGradient
+	* @param {number} x0
+	* @param {number} y0
+	* @param {number} r0
+	* @param {number} x1
+	* @param {number} y1
+	* @param {number} r1
+	* @return {CanvasGradient} The Radial Gradient.
+	*/
+	createRadialGradient: function (x, y, width, height) {
+
+		return this.context.createRadialGradient(x0, y0, r0, x1, y1, r1);
+
+	},
+
+	//	drawImage
+	//	drawSystemFocusRing (?)
+
+	/**
+	* Draws an ellipse (oval) with a specified width (w) and height (h).
+	* @method Phaser.BitmapData.ellipse
+	* @param {number} x - x coordinate center point of ellipse.
+	* @param {number} y - y coordinate center point of ellipse.
+	* @param {number} w - height (horizontal diameter) of ellipse. The horizontal radius will be half of this number.
+	* @param {number} h - width (vertical diameter) of ellipse. The vertical radius will be half of this number.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	ellipse: function (x, y, w, h) {
+
+		var k = 0.5522848;
+		var ox = (w / 2) * k;
+		var oy = (h / 2) * k;
+		var xe = x + w;
+		var ye = y + h;
+		var xm = x + w / 2;
+		var ym = y + h / 2;
+			
+		this.moveTo(x, ym);
+		this.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+		this.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+		this.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+		this.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+
+		return this;
+
+	},
+
+	/**
+	* Fills the subpaths with the current fill style.
+	* @method Phaser.BitmapData.fill
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	fill: function () {
+
+		this._dirty = true;
+		this.context.fill();
+		return this;
+
+	},
+
+	/**
+	* Draws a filled rectangle at (x, y) position whose size is determined by width and height.
+	* @method Phaser.BitmapData.fillRect
+	* @param {number} x - The x axis of the coordinate for the rectangle starting point.
+	* @param {number} y - The y axis of the coordinate for the rectangle starting point.
+	* @param {number} width - The rectangles width.
+	* @param {number} height - The rectangles height.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	fillRect: function (x, y, width, height) {
+
+		this._dirty = true;
+		this.context.fillRect(x, y, width, height);
+		return this;
+
+	},
+
+	/**
+	* Sets the fill style.
+	* @method Phaser.BitmapData.fillStyle
+	* @param {string} color - The fill color value in CSS format: #RRGGBB or rgba(r,g,b,a)
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	fillStyle: function (color) {
+
+		this.context.fillStyle = color;
+		return this;
+
+	},
+
+	//	fillText
+
+	/**
+	* Sets the font.
+	* @method Phaser.BitmapData.font
+	* @param {DOMString} font - The font to be used for any text rendering. Default value 10px sans-serif.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	font: function (font) {
+
+		this.context.font = font;
+		return this;
+
+	},
+
+	/**
+	* Alpha value that is applied to shapes and images before they are composited onto the canvas. Default 1.0 (opaque).
+	* @method Phaser.BitmapData.globalAlpha
+	* @param {number} alpha - Alpha value that is applied to shapes and images before they are composited onto the canvas. Default 1.0 (opaque).
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	globalAlpha: function (alpha) {
+
+		this.context.globalAlpha = alpha;
+		return this;
+
+	},
+
+	/**
+	* With globalAlpha applied this sets how shapes and images are drawn onto the existing bitmap. Possible values: source-atop, source-in, source-out,
+	* source-over (default), destination-atop, destination-in, destination-out, destination-over, lighter, darker, copy and xor.
+	* @method Phaser.BitmapData.globalCompositeOperation
+	* @param {DOMString} operation - The composite operation to apply.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	globalCompositeOperation: function (operation) {
+
+		this.context.globalCompositeOperation = operation;
+		return this;
+
+	},
+
+	/**
+	* Type of endings on the end of lines. Possible values: butt (default), round, square.
+	* @method Phaser.BitmapData.lineCap
+	* @param {DOMString} style - Possible values: butt (default), round, square
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	lineCap: function (style) {
+
+		this.context.lineCap = style;
+		return this;
+
+	},
+
+	/**
+	* Specifies where to start a dasharray on a line.
+	* @method Phaser.BitmapData.lineDashOffset
+	* @param {number} offset - Specifies where to start a dasharray on a line.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	lineDashOffset: function (offset) {
+
+		this.context.lineDashOffset = offset;
+		return this;
+
+	},
+
+	/**
+	* Defines the type of corners where two lines meet. Possible values: round, bevel, miter (default)
+	* @method Phaser.BitmapData.lineJoin
+	* @param {DOMString} join - Possible values: round, bevel, miter (default)
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	lineJoin: function (join) {
+
+		this.context.lineJoin = join;
+		return this;
+
+	},
+
+	/**
+	* Width of lines. Default 1.0
+	* @method Phaser.BitmapData.lineWidth
+	* @param {number} width - Width of lines. Default 1.0
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	lineWidth: function (width) {
+
+		this.context.lineWidth = width;
+		return this;
+
+	},
+
+	/**
+	* Default 10.
+	* @method Phaser.BitmapData.miterLimit
+	* @param {number} limit - Default 10.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	miterLimit: function (limit) {
+
+		this.context.miterLimit = limit;
+		return this;
+
+	},
+
+	//	getImageData
+	//	getLineDash
+	//	isPointInPath
+	//	isPointInStroke
+
+	/**
+	* Connects the last point in the subpath to the x, y coordinates with a straight line.
+	* @method Phaser.BitmapData.lineTo
+	* @param {number} x - The x axis of the coordinate for the end of the line.
+	* @param {number} y - The y axis of the coordinate for the end of the line.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	lineTo: function (x, y) {
+
+		this._dirty = true;
+		this.context.lineTo(x, y);
+		return this;
+
+	},
+
+	//	measureText
+
+	/**
+	* Moves the starting point of a new subpath to the (x, y) coordinates.
+	* @method Phaser.BitmapData.moveTo
+	* @param {number} x - The x axis of the point.
+	* @param {number} y - The y axis of the point.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	moveTo: function (x, y) {
+
+		this.context.moveTo(x, y);
+		return this;
+
+	},
+
+	//	putImageData
+
+	/**
+	* Draws a quadratic curve from the current drawing point to (x, y) using the control point (cpx, cpy).
+	* @method Phaser.BitmapData.quadraticCurveTo
+	* @param {Number} cpx - The x axis of the control point.
+	* @param {Number} cpy - The y axis of the control point.
+	* @param {Number} x - The x axis of the ending point.
+	* @param {Number} y - The y axis of the ending point.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	quadraticCurveTo: function(cpx, cpy, x, y) {
+
+		this._dirty = true;
+		this.context.quadraticCurveTo(cpx, cpy, x, y);
+		return this;
+
+	},
+
+	/**
+	* Draws a rectangle at (x, y) position whose size is determined by width and height.
+	* @method Phaser.BitmapData.rect
+	* @param {number} x - The x axis of the coordinate for the rectangle starting point.
+	* @param {number} y - The y axis of the coordinate for the rectangle starting point.
+	* @param {number} width - The rectangles width.
+	* @param {number} height - The rectangles height.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	rect: function (x, y, width, height) {
+
+		this._dirty = true;
+		this.context.rect(x, y, width, height);
+		return this;
+
+	},
+	
+	/**
+	* Restores the drawing style state to the last element on the 'state stack' saved by save().
+	* @method Phaser.BitmapData.restore
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	restore: function () {
+
+		this._dirty = true;
+		this.context.restore();
+		return this;
+
+	},
+
+	/**
+	* Rotates the drawing context values by r radians.
+	* @method Phaser.BitmapData.rotate
+	* @param {number} angle - The angle of rotation given in radians.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	rotate: function (angle) {
+
+		this._dirty = true;
+		this.context.rotate(angle);
+		return this;
+
+	},
+
+	/**
+	* Sets the stroke style for the current sub-path. Like all drawing methods, this can be chained, so you can define
+	* the stroke style and color in a single line of code like so:
+	*
+	*      ```myGraphics.setStrokeStyle(8,"round").beginStroke("#F00");```
+	*
+	* @method Phaser.BitmapData.setStrokeStyle
+	* @param {number} thickness - The width of the stroke.
+	* @param {string|number} [caps=0] - Indicates the type of caps to use at the end of lines. One of butt, round, or square. Defaults to "butt". Also accepts the values 0 (butt), 1 (round), and 2 (square) for use with he tiny API.
+	* @param {string|number} [joints=0] Specifies the type of joints that should be used where two lines meet. One of bevel, round, or miter. Defaults to "miter". Also accepts the values 0 (miter), 1 (round), and 2 (bevel) for use with the tiny API.
+	* @param {number} [miterLimit=10] - If joints is set to "miter", then you can specify a miter limit ratio which controls at what point a mitered joint will be clipped.
+	* @param {boolean} [ignoreScale=false] - If true, the stroke will be drawn at the specified thickness regardless of active transformations.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	setStrokeStyle: function (thickness, caps, joints, miterLimit, ignoreScale) {
+
+		if (typeof thickness === 'undefined') { thickness = 1; }
+		if (typeof caps === 'undefined') { caps = 'butt'; }
+		if (typeof joints === 'undefined') { joints = 'miter'; }
+		if (typeof miterLimit === 'undefined') { miterLimit = 10; }
+
+		this.lineWidth(thickness);
+		this.lineCap(caps);
+		this.lineJoin(joints);
+		this.miterLimit(miterLimit);
+
+		return this;
+
+	},
+
+	/**
+	* Saves the current drawing style state using a stack so you can revert any change you make to it using restore().
+	* @method Phaser.BitmapData.save
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	save: function () {
+
+		this._dirty = true;
+		this.context.save();
+		return this;
+
+	},
+
+	/**
+	* Scales the current drawing context.
+	* @method Phaser.BitmapData.scale
+	* @param {number} x
+	* @param {number} y
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	scale: function (x, y) {
+
+		this._dirty = true;
+		this.context.scale(x, y);
+		return this;
+
+	},
+
+	/**
+	* 
+	* @method Phaser.BitmapData.scrollPathIntoView
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	scrollPathIntoView: function () {
+
+		this._dirty = true;
+		this.context.scrollPathIntoView();
+		return this;
+
+	},
+
+	//	setLineDash
+	//	setTransform
+
+	/**
+	* Strokes the subpaths with the current stroke style.
+	* @method Phaser.BitmapData.stroke
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	stroke: function () {
+
+		this._dirty = true;
+		this.context.stroke();
+		return this;
+
+	},
+
+	/**
+	* Paints a rectangle which has a starting point at (x, y) and has a w width and an h height onto the canvas, using the current stroke style.
+	* @method Phaser.BitmapData.strokeRect
+	* @param {number} x - The x axis for the starting point of the rectangle.
+	* @param {number} y - The y axis for the starting point of the rectangle.
+	* @param {number} width - The rectangles width.
+	* @param {number} height - The rectangles height.
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	strokeRect: function () {
+
+		this._dirty = true;
+		this.context.strokeRect(x, y, width, height);
+		return this;
+
+	},
+
+	/**
+	* Color or style to use for the lines around shapes. Default #000 (black).
+	* @method Phaser.BitmapData.strokeStyle
+	* @param {string} style - Color or style to use for the lines around shapes. Default #000 (black).
+	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+	*/
+	strokeStyle: function (style) {
+
+		this.context.strokeStyle = style;
+		return this;
+
+	},
+
+	//	strokeText
+	//	transform
+	//	translate
+
+	/**
+	* If the game is running in WebGL this will push the texture up to the GPU if it's dirty.
+	* This is called automatically if the BitmapData is being used by a Sprite, otherwise you need to remember to call it in your render function.
+	* @method Phaser.BitmapData.render
+	*/
+	render: function () {
+
+		if (this._dirty)
+		{
+		    //  Only needed if running in WebGL, otherwise this array will never get cleared down
+		    if (this.game.renderType == Phaser.WEBGL)
+		    {
+		        PIXI.texturesToUpdate.push(this.baseTexture);
+		    }
+
+			this._dirty = false;
+		}
+
+	}
+
+}
+
+//	EaselJS Tiny API emulation
+
+/**
+* Shortcut to moveTo.
+* @method Phaser.BitmapData.prototype.mt
+*/
+Phaser.BitmapData.prototype.mt = Phaser.BitmapData.prototype.moveTo;
+
+/**
+* Shortcut to lineTo.
+* @method Phaser.BitmapData.prototype.mt
+*/
+Phaser.BitmapData.prototype.lt = Phaser.BitmapData.prototype.lineTo;
+
+/**
+* Shortcut to arcTo.
+* @method Phaser.BitmapData.prototype.at
+*/
+Phaser.BitmapData.prototype.at = Phaser.BitmapData.prototype.arcTo;
+
+/**
+* Shortcut to bezierCurveTo.
+* @method Phaser.BitmapData.prototype.bt
+*/
+Phaser.BitmapData.prototype.bt = Phaser.BitmapData.prototype.bezierCurveTo;
+	
+/**
+* Shortcut to quadraticCurveTo.
+* @method Phaser.BitmapData.prototype.qt
+*/
+Phaser.BitmapData.prototype.qt = Phaser.BitmapData.prototype.quadraticCurveTo;
+	
+/**
+* Shortcut to arc.
+* @method Phaser.BitmapData.prototype.a
+*/
+Phaser.BitmapData.prototype.a = Phaser.BitmapData.prototype.arc;
+
+/**
+* Shortcut to rect.
+* @method Phaser.BitmapData.prototype.r
+*/
+Phaser.BitmapData.prototype.r = Phaser.BitmapData.prototype.rect;
+	
+/**
+* Shortcut to closePath.
+* @method Phaser.BitmapData.prototype.cp
+*/
+Phaser.BitmapData.prototype.cp = Phaser.BitmapData.prototype.closePath;
+
+/**
+* Shortcut to clear.
+* @method Phaser.BitmapData.prototype.c
+*/
+Phaser.BitmapData.prototype.c = Phaser.BitmapData.prototype.clear;
+	
+/**
+* Shortcut to beginFill.
+* @method Phaser.BitmapData.prototype.f
+*/
+Phaser.BitmapData.prototype.f = Phaser.BitmapData.prototype.beginFill;
+
+/**
+* Shortcut to beginLinearGradientFill.
+* @method Phaser.BitmapData.prototype.lf
+*/
+Phaser.BitmapData.prototype.lf = Phaser.BitmapData.prototype.beginLinearGradientFill;
+	
+/**
+* Shortcut to beginRadialGradientFill.
+* @method Phaser.BitmapData.prototype.rf
+*/
+Phaser.BitmapData.prototype.rf = Phaser.BitmapData.prototype.beginRadialGradientFill;
+	
+/**
+* Shortcut to beginBitmapFill.
+* @method Phaser.BitmapData.prototype.bf
+*/
+//Phaser.BitmapData.prototype.bf = Phaser.BitmapData.prototype.beginBitmapFill;
+	
+/**
+* Shortcut to endFill.
+* @method Phaser.BitmapData.prototype.ef
+*/
+Phaser.BitmapData.prototype.ef = Phaser.BitmapData.prototype.endFill;
+
+/**
+* Shortcut to setStrokeStyle.
+* @method Phaser.BitmapData.prototype.ss
+*/
+Phaser.BitmapData.prototype.ss = Phaser.BitmapData.prototype.setStrokeStyle;
+	
+/**
+* Shortcut to beginStroke.
+* @method Phaser.BitmapData.prototype.s
+*/
+Phaser.BitmapData.prototype.s = Phaser.BitmapData.prototype.beginStroke;
+	
+/**
+* Shortcut to beginLinearGradientStroke.
+* @method Phaser.BitmapData.prototype.ls
+*/
+Phaser.BitmapData.prototype.ls = Phaser.BitmapData.prototype.beginLinearGradientStroke;
+
+/**
+* Shortcut to beginRadialGradientStroke.
+* @method Phaser.BitmapData.prototype.rs
+*/
+Phaser.BitmapData.prototype.rs = Phaser.BitmapData.prototype.beginRadialGradientStroke;
+	
+/**
+* Shortcut to beginBitmapStroke.
+* @method Phaser.BitmapData.prototype.bs
+*/
+// Phaser.BitmapData.prototype.bs = Phaser.BitmapData.prototype.beginBitmapStroke;
+	
+/**
+* Shortcut to endStroke.
+* @method Phaser.BitmapData.prototype.es
+*/
+// Phaser.BitmapData.prototype.es = Phaser.BitmapData.prototype.endStroke;
+	
+/**
+* Shortcut to rect.
+* @method Phaser.BitmapData.prototype.dr
+*/
+Phaser.BitmapData.prototype.dr = Phaser.BitmapData.prototype.rect;
+	
+/**
+* Shortcut to drawRoundRect.
+* @method Phaser.BitmapData.prototype.rr
+*/
+// Phaser.BitmapData.prototype.rr = Phaser.BitmapData.prototype.drawRoundRect;
+	
+/**
+* Shortcut to drawRoundRectComplex.
+* @method Phaser.BitmapData.prototype.rc
+*/
+// Phaser.BitmapData.prototype.rc = Phaser.BitmapData.prototype.drawRoundRectComplex;
+
+/**
+* Shortcut to drawCircle.
+* @method Phaser.BitmapData.prototype.dc
+*/
+Phaser.BitmapData.prototype.dc = Phaser.BitmapData.prototype.circle;
+	
+/**
+* Shortcut to drawEllipse.
+* @method Phaser.BitmapData.prototype.de
+*/
+Phaser.BitmapData.prototype.de = Phaser.BitmapData.prototype.ellipse;
+	
+/**
+* Shortcut to drawPolyStar.
+* @method Phaser.BitmapData.prototype.dp
+*/
+// Phaser.BitmapData.prototype.dp = Phaser.BitmapData.prototype.drawPolyStar;
+
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
@@ -18220,7 +19376,7 @@ Phaser.GameObjectFactory.prototype = {
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} x - The x coordinate (in world space) to position the Sprite at.
 * @param {number} y - The y coordinate (in world space) to position the Sprite at.
-* @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
 * @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
 Phaser.Sprite = function (game, x, y, key, frame) {
@@ -18294,7 +19450,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.input = new Phaser.InputHandler(this);
 
     /**
-    *  @property {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+    *  @property {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
     */
     this.key = key;
 
@@ -18308,6 +19464,12 @@ Phaser.Sprite = function (game, x, y, key, frame) {
         PIXI.Sprite.call(this, key);
 
         this.currentFrame = this.game.cache.getTextureFrame(key.name);
+    }
+    else if (key instanceof Phaser.BitmapData)
+    {
+        PIXI.Sprite.call(this, key.texture, key.textureFrame);
+
+        this.currentFrame = key.textureFrame;
     }
     else if (key instanceof PIXI.Texture)
     {
@@ -18557,7 +19719,7 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 */
 Phaser.Sprite.prototype.preUpdate = function() {
 
-    if (!this.exists)
+    if (!this.exists || (this.group && !this.group.exists))
     {
         this.renderOrderID = -1;
         return;
@@ -18835,6 +19997,11 @@ Phaser.Sprite.prototype.resetCrop = function() {
 */
 Phaser.Sprite.prototype.postUpdate = function() {
 
+    if (this.key instanceof Phaser.BitmapData && this.key._dirty)
+    {
+        this.key.render();
+    }
+
     if (this.exists)
     {
         //  The sprite is positioned in this call, after taking into consideration motion updates and collision
@@ -18868,7 +20035,7 @@ Phaser.Sprite.prototype.postUpdate = function() {
 *
 * @method Phaser.Sprite#loadTexture
 * @memberof Phaser.Sprite
-* @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
 * @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
 Phaser.Sprite.prototype.loadTexture = function (key, frame) {
@@ -18878,6 +20045,11 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
     if (key instanceof Phaser.RenderTexture)
     {
         this.currentFrame = this.game.cache.getTextureFrame(key.name);
+    }
+    else if (key instanceof Phaser.BitmapData)
+    {
+        this.setTexture(key.texture);
+        this.currentFrame = key.textureFrame;
     }
     else if (key instanceof PIXI.Texture)
     {
@@ -20354,6 +21526,9 @@ Phaser.Graphics = function (game, x, y) {
 	*/
     this.type = Phaser.GRAPHICS;
 
+    this.position.x = x;
+    this.position.y = y;    
+
 };
 
 Phaser.Graphics.prototype = Object.create(PIXI.Graphics.prototype);
@@ -20385,10 +21560,14 @@ Phaser.Graphics.prototype.destroy = function() {
 Phaser.Graphics.prototype.drawPolygon = function (poly) {
 
     graphics.moveTo(poly.points[0].x, poly.points[0].y);
-    for (var i = 1; i < poly.points.length; i += 1) {
+
+    for (var i = 1; i < poly.points.length; i += 1)
+    {
         graphics.lineTo(poly.points[i].x, poly.points[i].y);
     }
+
     graphics.lineTo(poly.points[0].x, poly.points[0].y);
+    
 }
 
 Object.defineProperty(Phaser.Graphics.prototype, 'angle', {
@@ -20434,7 +21613,7 @@ Object.defineProperty(Phaser.Graphics.prototype, 'y', {
 */
 
 /**
-* A dynamic initially blank canvas to which images can be drawn
+* A RenderTexture is a special texture that allows any displayObject to be rendered to it.
 * @class Phaser.RenderTexture
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
@@ -20454,7 +21633,7 @@ Phaser.RenderTexture = function (game, key, width, height) {
 	*/
     this.name = key;
 
-	PIXI.EventTarget.call( this );
+	PIXI.EventTarget.call(this);
 
 	/**
 	* @property {number} width - the width. 
@@ -20467,21 +21646,21 @@ Phaser.RenderTexture = function (game, key, width, height) {
 	this.height = height || 100;
 
 	/**
-	* I know this has a typo in it, but it's because the PIXI.RenderTexture does and we need to pair-up with it
-	* once they update pixi to fix the typo, we'll fix it here too :)
-    * @property {Description} indetityMatrix - Description. 
+    * @property {PIXI.mat3} indetityMatrix - Matrix object. 
  	*/
 	this.indetityMatrix = PIXI.mat3.create();
 
 	/**
-	* @property {Description} frame - Description. 
+	* @property {PIXI.Rectangle} frame - The frame for this texture. 
     */
 	this.frame = new PIXI.Rectangle(0, 0, this.width, this.height);	
 
 	/**
-	* @property {Description} type - Description. 
+	* @property {number} type - Base Phaser object type. 
     */
 	this.type = Phaser.RENDERTEXTURE;
+
+	this._tempPoint = { x: 0, y: 0 };
 
 	if (PIXI.gl)
 	{
@@ -20494,8 +21673,250 @@ Phaser.RenderTexture = function (game, key, width, height) {
 	
 };
 
-Phaser.RenderTexture.prototype = Phaser.Utils.extend(true, PIXI.RenderTexture.prototype);
-Phaser.RenderTexture.prototype.constructor = Phaser.RenderTexture;
+Phaser.RenderTexture.prototype = Object.create(PIXI.Texture.prototype);
+Phaser.RenderTexture.prototype.constructor = PIXI.RenderTexture;
+
+/**
+* This function will draw the display object to the texture. If the display object is a Group or has children it will
+* draw all children as well.
+*
+* @method render
+* @param {DisplayObject} displayObject - The display object to render this texture on.
+* @param {Phaser.Point} [position] - Where to draw the display object.
+* @param {boolean} [clear=false] - If true the texture will be cleared before the displayObject is drawn.
+*/
+Phaser.RenderTexture.prototype.render = function(displayObject, position, clear) {
+
+	if (typeof position === 'undefined') { position = false; }
+	if (typeof clear === 'undefined') { clear = false; }
+
+	if (displayObject instanceof Phaser.Group)
+	{
+		displayObject = displayObject._container;
+	}
+
+	if (PIXI.gl)
+	{
+		this.renderWebGL(displayObject, position, clear);
+	}
+	else
+	{
+		this.renderCanvas(displayObject, position, clear);
+	}
+
+}
+
+/**
+* This function will draw the display object to the texture at the given x/y coordinates.
+* If the display object is a Group or has children it will draw all children as well.
+*
+* @method renderXY
+* @param {DisplayObject} displayObject - The display object to render this texture on.
+* @param {number} x - The x coordinate to draw the display object at.
+* @param {number} y - The y coordinate to draw the display object at.
+* @param {boolean} [clear=false] - If true the texture will be cleared before the displayObject is drawn.
+*/
+Phaser.RenderTexture.prototype.renderXY = function(displayObject, x, y, clear) {
+
+	this._tempPoint.x = x;
+	this._tempPoint.y = y;
+
+	this.render(displayObject, this._tempPoint, clear);
+
+}
+
+/**
+ * Initializes the webgl data for this texture
+ *
+ * @method initWebGL
+ * @private
+ */
+Phaser.RenderTexture.prototype.initWebGL = function()
+{
+	var gl = PIXI.gl;
+	this.glFramebuffer = gl.createFramebuffer();
+
+   	gl.bindFramebuffer(gl.FRAMEBUFFER, this.glFramebuffer );
+
+    this.glFramebuffer.width = this.width;
+    this.glFramebuffer.height = this.height;	
+
+	this.baseTexture = new PIXI.BaseTexture();
+
+	this.baseTexture.width = this.width;
+	this.baseTexture.height = this.height;
+
+    this.baseTexture._glTexture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, this.baseTexture._glTexture);
+
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  this.width,  this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+	this.baseTexture.isRender = true;
+
+	gl.bindFramebuffer(gl.FRAMEBUFFER, this.glFramebuffer );
+	gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.baseTexture._glTexture, 0);
+
+	// create a projection matrix..
+	this.projection = new PIXI.Point(this.width/2 , -this.height/2);
+
+	// set the correct render function..
+	// this.render = this.renderWebGL;
+}
+
+
+Phaser.RenderTexture.prototype.resize = function(width, height)
+{
+
+	this.width = width;
+	this.height = height;
+	
+	if(PIXI.gl)
+	{
+		this.projection.x = this.width/2
+		this.projection.y = -this.height/2;
+	
+		var gl = PIXI.gl;
+		gl.bindTexture(gl.TEXTURE_2D, this.baseTexture._glTexture);
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  this.width,  this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+	}
+	else
+	{
+		
+		this.frame.width = this.width
+		this.frame.height = this.height;
+		this.renderer.resize(this.width, this.height);
+	}
+}
+
+/**
+ * Initializes the canvas data for this texture
+ *
+ * @method initCanvas
+ * @private
+ */
+Phaser.RenderTexture.prototype.initCanvas = function()
+{
+	this.renderer = new PIXI.CanvasRenderer(this.width, this.height, null, 0);
+
+	this.baseTexture = new PIXI.BaseTexture(this.renderer.view);
+	this.frame = new PIXI.Rectangle(0, 0, this.width, this.height);
+
+	// this.render = this.renderCanvas;
+}
+
+/**
+ * This function will draw the display object to the texture.
+ *
+ * @method renderWebGL
+ * @param displayObject {DisplayObject} The display object to render this texture on
+ * @param clear {Boolean} If true the texture will be cleared before the displayObject is drawn
+ * @private
+ */
+Phaser.RenderTexture.prototype.renderWebGL = function(displayObject, position, clear)
+{
+	var gl = PIXI.gl;
+
+	// enable the alpha color mask..
+	gl.colorMask(true, true, true, true); 
+
+	gl.viewport(0, 0, this.width, this.height);	
+
+	gl.bindFramebuffer(gl.FRAMEBUFFER, this.glFramebuffer );
+
+	if(clear)
+	{
+		gl.clearColor(0,0,0, 0);     
+		gl.clear(gl.COLOR_BUFFER_BIT);
+	}
+
+	// THIS WILL MESS WITH HIT TESTING!
+	var children = displayObject.children;
+
+	//TODO -? create a new one??? dont think so!
+	var originalWorldTransform = displayObject.worldTransform;
+	displayObject.worldTransform = PIXI.mat3.create();//sthis.indetityMatrix;
+	// modify to flip...
+	displayObject.worldTransform[4] = -1;
+	displayObject.worldTransform[5] = this.projection.y * -2;
+
+	if(position)
+	{
+		displayObject.worldTransform[2] = position.x;
+		displayObject.worldTransform[5] -= position.y;
+	}
+	
+	PIXI.visibleCount++;
+	displayObject.vcount = PIXI.visibleCount;
+	
+	for(var i=0,j=children.length; i<j; i++)
+	{
+		children[i].updateTransform();	
+	}
+
+	var renderGroup = displayObject.__renderGroup;
+
+	if(renderGroup)
+	{
+		if(displayObject == renderGroup.root)
+		{
+			renderGroup.render(this.projection, this.glFramebuffer);
+		}
+		else
+		{
+			renderGroup.renderSpecific(displayObject, this.projection, this.glFramebuffer);
+		}
+	}
+	else
+	{
+		if(!this.renderGroup)this.renderGroup = new PIXI.WebGLRenderGroup(gl);
+		this.renderGroup.setRenderable(displayObject);
+		this.renderGroup.render(this.projection, this.glFramebuffer);
+	}
+	
+	displayObject.worldTransform = originalWorldTransform;
+}
+
+
+/**
+ * This function will draw the display object to the texture.
+ *
+ * @method renderCanvas
+ * @param displayObject {DisplayObject} The display object to render this texture on
+ * @param clear {Boolean} If true the texture will be cleared before the displayObject is drawn
+ * @private
+ */
+Phaser.RenderTexture.prototype.renderCanvas = function(displayObject, position, clear)
+{
+	var children = displayObject.children;
+
+	displayObject.worldTransform = PIXI.mat3.create();
+	
+	if(position)
+	{
+		displayObject.worldTransform[2] = position.x;
+		displayObject.worldTransform[5] = position.y;
+	}
+	
+
+	for(var i=0,j=children.length; i<j; i++)
+	{
+		children[i].updateTransform();	
+	}
+
+	if(clear)this.renderer.context.clearRect(0,0, this.width, this.height);
+	
+    this.renderer.renderDisplayObject(displayObject);
+    
+    this.renderer.context.setTransform(1,0,0,1,0,0); 
+    
+
+  //  PIXI.texturesToUpdate.push(this.baseTexture);
+}
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
@@ -20636,36 +22057,42 @@ Phaser.Canvas = {
     *
     * @method Phaser.Canvas.addToDOM
     * @param {HTMLCanvasElement} canvas - The canvas to set the touch action on.
-    * @param {string} parent - The DOM element to add the canvas to. Defaults to ''.
+    * @param {string|HTMLElement} parent - The DOM element to add the canvas to. Defaults to ''.
     * @param {boolean} overflowHidden - If set to true it will add the overflow='hidden' style to the parent DOM element.
     * @return {HTMLCanvasElement} Returns the source canvas.
     */
     addToDOM: function (canvas, parent, overflowHidden) {
 
-        parent = parent || '';
+        var target;
 
         if (typeof overflowHidden === 'undefined') { overflowHidden = true; }
 
-        if (parent !== '')
+        if (parent)
         {
-            if (document.getElementById(parent))
+            // hopefully an element ID
+            if (typeof parent === 'string')
             {
-                document.getElementById(parent).appendChild(canvas);
+                target = document.getElementById(parent);
+            }
+            // quick test for a HTMLelement
+            else if (typeof parent === 'object' && parent.nodeType === 1)
+            {
+                target = parent;
+            }
 
-                if (overflowHidden)
-                {
-                    document.getElementById(parent).style.overflow = 'hidden';
-                }
-            }
-            else
+            if (overflowHidden)
             {
-                document.body.appendChild(canvas);
+                target.style.overflow = 'hidden';
             }
         }
-        else
+
+        // fallback, covers an invalid ID and a none HTMLelement object
+        if(!target)
         {
-            document.body.appendChild(canvas);
+            target = document.body;
         }
+
+        target.appendChild(canvas);
 
         return canvas;
 
@@ -21066,17 +22493,15 @@ Phaser.StageScaleMode.prototype = {
     * The optional orientationImage is displayed when the game is in the incorrect orientation.
     * @method Phaser.StageScaleMode#forceOrientation
     * @param {boolean} forceLandscape - true if the game should run in landscape mode only.
-    * @param {boolean} forcePortrait - true if the game should run in portrait mode only.
-    * @param {string} [forcePortrait=''] - The string of an image in the Phaser.Cache to display when this game is in the incorrect orientation.
+    * @param {boolean} [forcePortrait=false] - true if the game should run in portrait mode only.
+    * @param {string} [orientationImage=''] - The string of an image in the Phaser.Cache to display when this game is in the incorrect orientation.
     */
     forceOrientation: function (forceLandscape, forcePortrait, orientationImage) {
 
-        this.forceLandscape = forceLandscape;
+        if (typeof forcePortrait === 'undefined') { forcePortrait = false; }
 
-        if (typeof forcePortrait === 'undefined')
-        {
-            this.forcePortrait = false;
-        }
+        this.forceLandscape = forceLandscape;
+        this.forcePortrait = forcePortrait;
 
         if (typeof orientationImage !== 'undefined')
         {
@@ -21730,6 +23155,12 @@ Phaser.Device = function () {
     */
     this.pixelRatio = 0;
 
+    /**
+    * @property {boolean} littleEndian - Is the device big or little endian? (only detected if the browser supports TypedArrays)
+    * @default
+    */
+    this.littleEndian = false;
+
     //  Run the checks
     this._checkAudio();
     this._checkBrowser();
@@ -21909,6 +23340,11 @@ Phaser.Device.prototype = {
         this.iPhone4 = (this.pixelRatio == 2 && this.iPhone);
         this.iPad = navigator.userAgent.toLowerCase().indexOf('ipad') != -1;
 
+        if (typeof Int8Array !== 'undefined')
+        {
+            this.littleEndian = new Int8Array(new Int16Array([1]).buffer)[0] > 0;
+        }
+
     },
 
     /**
@@ -22022,21 +23458,15 @@ Phaser.Device.prototype = {
 */
 Phaser.RequestAnimationFrame = function(game) {
 	
-     /**
-     * @property {Phaser.Game} game - The currently running game.
-     */
+	/**
+	* @property {Phaser.Game} game - The currently running game.
+	*/
 	this.game = game;
 
-     /**
-     * @property {boolean} _isSetTimeOut  - Description.
-     * @private
-     */
-	this._isSetTimeOut = false;
-     
-     /**
-     * @property {boolean} isRunning - Description.
-     * @default
-     */
+	/**
+	* @property {boolean} isRunning - true if RequestAnimationFrame is running, otherwise false.
+	* @default
+	*/
 	this.isRunning = false;
 
 	var vendors = [
@@ -22053,15 +23483,19 @@ Phaser.RequestAnimationFrame = function(game) {
 	}
 
 	/**
-	* The function called by the update
-	* @property _onLoop
+	* @property {boolean} _isSetTimeOut  - true if the browser is using setTimeout instead of raf.
+	* @private
+	*/
+	this._isSetTimeOut = false;
+
+	/**
+	* @property {function} _onLoop - The function called by the update.
 	* @private
 	*/
 	this._onLoop = null;
 
 	/**
-	* The callback ID used when calling cancel
-	* @property _timeOutID
+	* @property {number} _timeOutID - The callback ID used when calling cancel.
 	* @private
 	*/
 	this._timeOutID = null;
@@ -22069,7 +23503,6 @@ Phaser.RequestAnimationFrame = function(game) {
 };
 
 Phaser.RequestAnimationFrame.prototype = {
-
 
 	/**
 	* Starts the requestAnimatioFrame running or setTimeout if unavailable in browser
@@ -23354,7 +24787,7 @@ Phaser.Math = {
 
         }
 
-        return { sin: sinTable, cos: cosTable };
+        return { sin: sinTable, cos: cosTable, length: length };
 
     },
 
@@ -24749,7 +26182,7 @@ Phaser.Point.rotate = function (a, x, y, angle, asDegrees, distance) {
 
     if (asDegrees)
     {
-        angle = Phaser.Math.radToDeg(angle);
+        angle = Phaser.Math.degToRad(angle);
     }
 
     //  Get distance from origin (cx/cy) to this point
@@ -27992,7 +29425,11 @@ Phaser.Animation.prototype = {
             else
             {
                 this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-				this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+                if (this.currentFrame)
+                {
+                    this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+                }
             }
 
             return true;
@@ -28975,6 +30412,12 @@ Phaser.Cache = function (game) {
     */
     this._tilesets = {};
 
+    /**
+    * @property {object} _bitmapDatas - BitmapData key-value container.
+    * @private
+    */
+    this._bitmapDatas = {};
+
     this.addDefaultImage();
 
     /**
@@ -29000,11 +30443,26 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    * Add a BitmapData object in to the cache.
+    * @method Phaser.Cache#addBitmapData
+    * @param {string} key - Asset key for this BitmapData.
+    * @param {Phaser.BitmapData} bitmapData - The BitmapData object to be addded to the cache.
+    * @return {Phaser.BitmapData} The BitmapData object to be addded to the cache.
+    */
+    addBitmapData: function (key, bitmapData) {
+
+        this._bitmapDatas[key] = bitmapData;
+
+        return bitmapData;
+
+    },
+
+    /**
     * Add a new Phaser.RenderTexture in to the cache.
     *
     * @method Phaser.Cache#addRenderTexture
     * @param {string} key - The unique key by which you will reference this object.
-    * @param {Phaser.Texture} textue - The texture to use as the base of the RenderTexture.
+    * @param {Phaser.Texture} texture - The texture to use as the base of the RenderTexture.
     */
     addRenderTexture: function (key, texture) {
 
@@ -29277,7 +30735,7 @@ Phaser.Cache.prototype = {
     },
 
 	/**
-	* Get acanvas object from the cache by its key.
+	* Get a canvas object from the cache by its key.
     *
     * @method Phaser.Cache#getCanvas
 	* @param {string} key - Asset key of the canvas you want.
@@ -29291,6 +30749,25 @@ Phaser.Cache.prototype = {
         }
 
         return null;
+
+    },
+
+    /**
+    * Get a BitmapData object from the cache by its key.
+    *
+    * @method Phaser.Cache#getBitmapData
+    * @param {string} key - Asset key of the BitmapData object you want.
+    * @return {Phaser.BitmapData} The requested BitmapData object if found, or null if not.
+    */
+    getBitmapData: function (key) {
+
+        if (this._bitmapDatas[key])
+        {
+            return this._bitmapDatas[key];
+        }
+
+        return null;
+
     },
 
     /**
@@ -29326,6 +30803,7 @@ Phaser.Cache.prototype = {
         }
 
         return null;
+
     },
 
     /**
@@ -33077,6 +34555,7 @@ Phaser.Color = {
     * Given an alpha and 3 color values this will return an integer representation of it.
     *
     * @method Phaser.Color.getColor32
+    * @static
     * @param {number} alpha - The Alpha value (between 0 and 255).
     * @param {number} red - The Red channel value (between 0 and 255).
     * @param {number} green - The Green channel value (between 0 and 255).
@@ -33091,6 +34570,7 @@ Phaser.Color = {
     * Given 3 color values this will return an integer representation of it.
     *
     * @method Phaser.Color.getColor
+    * @static
     * @param {number} red - The Red channel value (between 0 and 255).
     * @param {number} green - The Green channel value (between 0 and 255).
     * @param {number} blue - The Blue channel value (between 0 and 255).
@@ -33101,17 +34581,19 @@ Phaser.Color = {
     },
 
     /**
-    * Converts the given hex string into an object containing the RGB values.
+    * Converts the given hex string into an integer color value.
     *
     * @method Phaser.Color.hexToRGB
+    * @static
     * @param {string} h - The string hex color to convert.
-    * @returns {object} An object with 3 properties: r,g and b.
+    * @returns {number} The rgb color value.
     */
     hexToRGB: function (h) {
 
         var hex16 = (h.charAt(0) == "#") ? h.substring(1, 7) : h;
 
-        if (hex16.length==3) {
+        if (hex16.length==3)
+        {
             hex16 = hex16.charAt(0) + hex16.charAt(0) + hex16.charAt(1) + hex16.charAt(1) + hex16.charAt(2) + hex16.charAt(2);
         }
 
@@ -33128,6 +34610,7 @@ Phaser.Color = {
     * RGB format information and HSL information. Each section starts on a newline, 3 lines in total.
     *
     * @method Phaser.Color.getColorInfo
+    * @static
     * @param {number} color - A color value in the format 0xAARRGGBB.
     * @returns {string} String containing the 3 lines of information.
     */
@@ -33153,6 +34636,7 @@ Phaser.Color = {
     * Return a string representation of the color in the format 0xAARRGGBB.
     *
     * @method Phaser.Color.RGBtoHexstring
+    * @static
     * @param {number} color - The color to get the string representation for
     * @returns {string} A string of length 10 characters in the format 0xAARRGGBB
     */
@@ -33168,6 +34652,7 @@ Phaser.Color = {
     * Return a string representation of the color in the format #RRGGBB.
     *
     * @method Phaser.Color.RGBtoWebstring
+    * @static
     * @param {number} color - The color to get the string representation for.
     * @returns {string} A string of length 10 characters in the format 0xAARRGGBB.
     */
@@ -33183,6 +34668,7 @@ Phaser.Color = {
     * Return a string containing a hex representation of the given color.
     *
     * @method Phaser.Color.colorToHexstring
+    * @static
     * @param {number} color - The color channel to get the hex value for, must be a value between 0 and 255).
     * @returns {string} A string of length 2 characters, i.e. 255 = FF, 0 = 00.
     */
@@ -33199,11 +34685,12 @@ Phaser.Color = {
     /**
     * Interpolates the two given colours based on the supplied step and currentStep properties.
     * @method Phaser.Color.interpolateColor
-    * @param {number} color1 - Description.
-    * @param {number} color2 - Description.
-    * @param {number} steps - Description.
-    * @param {number} currentStep - Description.
-    * @param {number} alpha - Description.
+    * @static
+    * @param {number} color1 - The first color value.
+    * @param {number} color2 - The second color value.
+    * @param {number} steps - The number of steps to run the interpolation over.
+    * @param {number} currentStep - The currentStep value. If the interpolation will take 100 steps, a currentStep value of 50 would be half-way between the two.
+    * @param {number} alpha - The alpha of the returned color.
     * @returns {number} The interpolated color value.
     */
     interpolateColor: function (color1, color2, steps, currentStep, alpha) {
@@ -33223,12 +34710,13 @@ Phaser.Color = {
     /**
     * Interpolates the two given colours based on the supplied step and currentStep properties.
     * @method Phaser.Color.interpolateColorWithRGB
-    * @param {number} color - Description.
-    * @param {number} r - Description.
-    * @param {number} g - Description.
-    * @param {number} b - Description.
-    * @param {number} steps - Description.
-    * @param {number} currentStep - Description.
+    * @static
+    * @param {number} color - The first color value.
+    * @param {number} r - The red color value, between 0 and 0xFF (255).
+    * @param {number} g - The green color value, between 0 and 0xFF (255).
+    * @param {number} b - The blue color value, between 0 and 0xFF (255).
+    * @param {number} steps - The number of steps to run the interpolation over.
+    * @param {number} currentStep - The currentStep value. If the interpolation will take 100 steps, a currentStep value of 50 would be half-way between the two.
     * @returns {number} The interpolated color value.
     */
     interpolateColorWithRGB: function (color, r, g, b, steps, currentStep) {
@@ -33245,14 +34733,15 @@ Phaser.Color = {
     /**
     * Interpolates the two given colours based on the supplied step and currentStep properties.
     * @method Phaser.Color.interpolateRGB
-    * @param {number} r1 - Description.
-    * @param {number} g1 - Description.
-    * @param {number} b1 - Description.
-    * @param {number} r2 - Description.
-    * @param {number} g2 - Description.
-    * @param {number} b2 - Description.
-    * @param {number} steps - Description.
-    * @param {number} currentStep - Description.
+    * @static
+    * @param {number} r1 - The red color value, between 0 and 0xFF (255).
+    * @param {number} g1 - The green color value, between 0 and 0xFF (255).
+    * @param {number} b1 - The blue color value, between 0 and 0xFF (255).
+    * @param {number} r2 - The red color value, between 0 and 0xFF (255).
+    * @param {number} g2 - The green color value, between 0 and 0xFF (255).
+    * @param {number} b2 - The blue color value, between 0 and 0xFF (255).
+    * @param {number} steps - The number of steps to run the interpolation over.
+    * @param {number} currentStep - The currentStep value. If the interpolation will take 100 steps, a currentStep value of 50 would be half-way between the two.
     * @returns {number} The interpolated color value.
     */
     interpolateRGB: function (r1, g1, b1, r2, g2, b2, steps, currentStep) {
@@ -33267,10 +34756,11 @@ Phaser.Color = {
 
     /**
     * Returns a random color value between black and white
-    * <p>Set the min value to start each channel from the given offset.</p>
-    * <p>Set the max value to restrict the maximum color used per channel</p>
+    * Set the min value to start each channel from the given offset.
+    * Set the max value to restrict the maximum color used per channel.
     *
     * @method Phaser.Color.getRandomColor
+    * @static
     * @param {number} min - The lowest value to use for the color.
     * @param {number} max - The highest value to use for the color.
     * @param {number} alpha - The alpha value of the returning color (default 255 = fully opaque).
@@ -33302,9 +34792,10 @@ Phaser.Color = {
     /**
     * Return the component parts of a color as an Object with the properties alpha, red, green, blue
     *
-    * <p>Alpha will only be set if it exist in the given color (0xAARRGGBB)</p>
+    * Alpha will only be set if it exist in the given color (0xAARRGGBB)
     *
     * @method Phaser.Color.getRGB
+    * @static
     * @param {number} color - Color in RGB (0xRRGGBB) or ARGB format (0xAARRGGBB).
     * @returns {object} An Object with properties: alpha, red, green, blue.
     */
@@ -33322,6 +34813,7 @@ Phaser.Color = {
     /**
     * Returns a CSS friendly string value from the given color.
     * @method Phaser.Color.getWebRGB
+    * @static
     * @param {number} color
     * @returns {string}A string in the format: 'rgba(r,g,b,a)'
     */
@@ -33340,6 +34832,7 @@ Phaser.Color = {
     * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component, as a value between 0 and 255.
     *
     * @method Phaser.Color.getAlpha
+    * @static
     * @param {number} color - In the format 0xAARRGGBB.
     * @returns {number} The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent)).
     */
@@ -33351,6 +34844,7 @@ Phaser.Color = {
     * Given a native color value (in the format 0xAARRGGBB) this will return the Alpha component as a value between 0 and 1.
     *
     * @method Phaser.Color.getAlphaFloat
+    * @static
     * @param {number} color - In the format 0xAARRGGBB.
     * @returns {number} The Alpha component of the color, will be between 0 and 1 (0 being no Alpha (opaque), 1 full Alpha (transparent)).
     */
@@ -33362,6 +34856,7 @@ Phaser.Color = {
     * Given a native color value (in the format 0xAARRGGBB) this will return the Red component, as a value between 0 and 255.
     *
     * @method Phaser.Color.getRed
+    * @static
     * @param {number} color In the format 0xAARRGGBB.
     * @returns {number} The Red component of the color, will be between 0 and 255 (0 being no color, 255 full Red).
     */
@@ -33373,6 +34868,7 @@ Phaser.Color = {
     * Given a native color value (in the format 0xAARRGGBB) this will return the Green component, as a value between 0 and 255.
     *
     * @method Phaser.Color.getGreen
+    * @static
     * @param {number} color - In the format 0xAARRGGBB.
     * @returns {number} The Green component of the color, will be between 0 and 255 (0 being no color, 255 full Green).
     */
@@ -33384,6 +34880,7 @@ Phaser.Color = {
     * Given a native color value (in the format 0xAARRGGBB) this will return the Blue component, as a value between 0 and 255.
     *
     * @method Phaser.Color.getBlue
+    * @static
     * @param {number} color - In the format 0xAARRGGBB.
     * @returns {number} The Blue component of the color, will be between 0 and 255 (0 being no color, 255 full Blue).
     */
@@ -33697,8 +35194,8 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-    * Checks for collision between two game objects. The objects can be Sprites, Groups, Emitters or Tilemaps.
-    * You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap or Group vs. Tilemap collisions.
+    * Checks for collision between two game objects. The objects can be Sprites, Groups, Emitters or Tilemap Layers.
+    * You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap Layer or Group vs. Tilemap Layer collisions.
     * The objects are also automatically separated.
     *
     * @method Phaser.Physics.Arcade#collide
@@ -34232,6 +35729,8 @@ Phaser.Physics.Arcade.prototype = {
     separateTile: function (body, tile) {
 
         this._result = (this.separateTileX(body, tile, true) || this.separateTileY(body, tile, true));
+
+        return this._result;
 
     },
 
@@ -36500,9 +37999,9 @@ Phaser.Tilemap.prototype = {
 
         if (typeof layer === "undefined") { layer = this.currentLayer; }
 
-    	if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+    	if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
     	{
-    		this.layers[this.currentLayer].data[y][x] = index;
+    		this.layers[layer].data[y][x] = index;
     	}
 
         this.dirty = true;
@@ -36513,9 +38012,9 @@ Phaser.Tilemap.prototype = {
 
         if (typeof layer === "undefined") { layer = this.currentLayer; }
 
-        if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+        if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
         {
-            return this.layers[this.currentLayer].data[y][x];
+            return this.layers[layer].data[y][x];
         }
 
     },
@@ -36527,9 +38026,9 @@ Phaser.Tilemap.prototype = {
         x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
         y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
 
-        if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+        if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
         {
-            return this.layers[this.currentLayer].data[y][x];
+            return this.layers[layer].data[y][x];
         }
 
     },
@@ -36546,9 +38045,9 @@ Phaser.Tilemap.prototype = {
         x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
         y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
 
-        if (x >= 0 && x < this.layers[this.currentLayer].width && y >= 0 && y < this.layers[this.currentLayer].height)
+        if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
         {
-            this.layers[this.currentLayer].data[y][x] = index;
+            this.layers[layer].data[y][x] = index;
         }
 
         this.dirty = true;
@@ -37025,6 +38524,21 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     */
     this._startY = 0;
 
+    /**
+    * @property {number} scrollFactorX - speed at which this layer scrolls
+	* horizontally, relative to the camera (e.g. scrollFactorX of 0.5 scrolls
+	* half as quickly as the 'normal' camera-locked layers do)
+	* @default 1
+    */
+	this.scrollFactorX = 1;
+    /**
+    * @property {number} scrollFactorY - speed at which this layer scrolls
+	* vertically, relative to the camera (e.g. scrollFactorY of 0.5 scrolls
+	* half as quickly as the 'normal' camera-locked layers do)
+	* @default 1
+    */
+	this.scrollFactorY = 1;
+
     this.tilemap = null;
     this.layer = null;
     this.index = 0;
@@ -37055,8 +38569,8 @@ Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 
 Phaser.TilemapLayer.prototype.update = function () {
 
-    this.scrollX = this.game.camera.x;
-    this.scrollY = this.game.camera.y;
+    this.scrollX = this.game.camera.x * this.scrollFactorX;
+    this.scrollY = this.game.camera.y * this.scrollFactorY;
 
     this.render();
 
@@ -37111,6 +38625,82 @@ Phaser.TilemapLayer.prototype.updateMapData = function (tilemap, layer) {
 }
 
 /**
+ * Take an x coordinate that doesn't account for scrollFactorY and 'fix' it 
+ * into a scrolled local space. Used primarily internally
+ * @param {number} x - x coordinate in camera space
+ * @return {number} x coordinate in scrollFactor-adjusted dimensions
+ */
+Phaser.TilemapLayer.prototype._fixX = function(x) {
+
+	if (this.scrollFactorX === 1)
+    {
+        return x;
+    }
+
+	var left_edge = x - (this._x / this.scrollFactorX);
+
+	return this._x + left_edge;
+
+}
+
+/**
+ * Take an x coordinate that _does_ account for scrollFactorY and 'unfix' it 
+ * back to camera space. Used primarily internally
+ * @param {number} x - x coordinate in scrollFactor-adjusted dimensions
+ * @return {number} x coordinate in camera space
+ */
+Phaser.TilemapLayer.prototype._unfixX = function(x) {
+
+	if (this.scrollFactorX === 1)
+    {
+        return x;
+    }
+
+	var left_edge = x - this._x;
+
+	return (this._x / this.scrollFactorX) + left_edge;
+
+}
+
+/**
+ * Take a y coordinate that doesn't account for scrollFactorY and 'fix' it 
+ * into a scrolled local space. Used primarily internally
+ * @param {number} y - y coordinate in camera space
+ * @return {number} y coordinate in scrollFactor-adjusted dimensions
+ */
+Phaser.TilemapLayer.prototype._fixY = function(y) {
+
+	if (this.scrollFactorY === 1)
+    {
+        return y;
+    }
+
+	var top_edge = y - (this._y / this.scrollFactorY);
+
+	return this._y + top_edge;
+
+}
+
+/**
+ * Take a y coordinate that _does_ account for scrollFactorY and 'unfix' it 
+ * back to camera space. Used primarily internally
+ * @param {number} y - y coordinate in scrollFactor-adjusted dimensions
+ * @return {number} y coordinate in camera space
+ */
+Phaser.TilemapLayer.prototype._unfixY = function(y) {
+
+	if (this.scrollFactorY === 1)
+    {
+        return y;
+    }
+
+	var top_edge = y - this._y;
+
+	return (this._y / this.scrollFactorY) + top_edge;
+
+}
+
+/**
 * Convert a pixel value to a tile coordinate.
 * @param {number} x - X position of the point in target tile.
 * @param {number} [layer] - layer of this tile located.
@@ -37120,7 +38710,7 @@ Phaser.TilemapLayer.prototype.getTileX = function (x) {
 
     var tileWidth = this.tileWidth * this.scale.x;
 
-    return this.game.math.snapToFloor(x, tileWidth) / tileWidth;
+	return this.game.math.snapToFloor(this._fixX(x), tileWidth) / tileWidth;
 
 }
 
@@ -37134,7 +38724,7 @@ Phaser.TilemapLayer.prototype.getTileY = function (y) {
 
     var tileHeight = this.tileHeight * this.scale.y;
 
-    return this.game.math.snapToFloor(y, tileHeight) / tileHeight;
+	return this.game.math.snapToFloor(this._fixY(y), tileHeight) / tileHeight;
 
 }
 
@@ -37174,6 +38764,10 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     {
         y = 0;
     }
+
+	// adjust the x,y coordinates for scrollFactor
+	x = this._fixX( x );
+	y = this._fixY( y );
 
     if (width > this.widthInPixels)
     {
@@ -37222,7 +38816,10 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
 
                 if (collides == false || (collides && _tile.collideNone == false))
                 {
-                    this._results.push({ x: wx * sx, right: (wx * sx) + sx, y: wy * sy, bottom: (wy * sy) + sy, width: sx, height: sy, tx: wx, ty: wy, tile: _tile });
+					// convert tile coordinates back to camera space for return
+					var _wx = this._unfixX( wx*sx ) / tileWidth;
+					var _wy = this._unfixY( wy*sy ) / tileHeight;
+                    this._results.push({ x: _wx * sx, right: (_wx * sx) + sx, y: _wy * sy, bottom: (_wy * sy) + sy, width: sx, height: sy, tx: _wx, ty: _wy, tile: _tile });
                 }
             }
         }
@@ -37705,118 +39302,141 @@ Object.defineProperty(Phaser.Tileset.prototype, "total", {
 });
 
 /**
- * We're replacing a couple of Pixi's methods here to fix or add some vital functionality:
+* We're replacing a couple of Pixi's methods here to fix or add some vital functionality:
+*
+* 1) Added support for Trimmed sprite sheets
+* 2) Skip display objects with an alpha of zero
+* 3) Avoid Style Recalculation from the incorrect bgcolor value
+*
+* Hopefully we can remove this once Pixi has been updated to support these things.
+*/
+
+/**
+ * Renders the stage to its canvas view
  *
- * 1) Added support for Trimmed sprite sheets
- * 2) Skip display objects with an alpha of zero
- *
- * Hopefully we can remove this once Pixi has been updated to support these things.
+ * @method render
+ * @param stage {Stage} the Stage element to be rendered
  */
+PIXI.CanvasRenderer.prototype.render = function(stage)
+{
+	PIXI.texturesToUpdate.length = 0;
+	PIXI.texturesToDestroy.length = 0;
+	
+	PIXI.visibleCount++;
+	stage.updateTransform();
+	
+	// update the background color
+	// if(this.view.style.backgroundColor!=stage.backgroundColorString && !this.transparent)this.view.style.backgroundColor = stage.backgroundColorString;
+
+	this.context.setTransform(1, 0, 0, 1, 0, 0); 
+	this.context.clearRect(0, 0, this.width, this.height)
+    this.renderDisplayObject(stage);
+   
+	//	Remove frame updates
+	if (PIXI.Texture.frameUpdates.length > 0)
+	{
+		PIXI.Texture.frameUpdates.length = 0;
+	}
+	
+}
 
 PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
 {
-	// no loger recurrsive!
-	var transform;
-	var context = this.context;
-	
-	context.globalCompositeOperation = 'source-over';
-	
-	// one the display object hits this. we can break the loop	
+	// Once the display object hits this we can break the loop	
 	var testObject = displayObject.last._iNext;
 	displayObject = displayObject.first;
 	
 	do	
 	{
-		transform = displayObject.worldTransform;
+		//transform = displayObject.worldTransform;
 		
-		if(!displayObject.visible)
+		if (!displayObject.visible)
 		{
 			displayObject = displayObject.last._iNext;
 			continue;
 		}
 		
-		if(!displayObject.renderable || displayObject.alpha == 0)
+		if (!displayObject.renderable || displayObject.alpha == 0)
 		{
 			displayObject = displayObject._iNext;
 			continue;
 		}
 		
-		if(displayObject instanceof PIXI.Sprite)
+		if (displayObject instanceof PIXI.Sprite)
 		{
-			var frame = displayObject.texture.frame;
+			// var frame = displayObject.texture.frame;
 			
-			if(frame)
+			if (displayObject.texture.frame)
 			{
-				context.globalAlpha = displayObject.worldAlpha;
+				this.context.globalAlpha = displayObject.worldAlpha;
 				
 				if (displayObject.texture.trimmed)
 				{
-					context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2] + displayObject.texture.trim.x, transform[5] + displayObject.texture.trim.y);
+					this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2] + displayObject.texture.trim.x, displayObject.worldTransform[5] + displayObject.texture.trim.y);
 				}
 				else
 				{
-					context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5]);
+					this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2], displayObject.worldTransform[5]);
 				}
 					
-				context.drawImage(displayObject.texture.baseTexture.source, 
-								   frame.x,
-								   frame.y,
-								   frame.width,
-								   frame.height,
-								   (displayObject.anchor.x) * -frame.width, 
-								   (displayObject.anchor.y) * -frame.height,
-								   frame.width,
-								   frame.height);
+				this.context.drawImage(
+					displayObject.texture.baseTexture.source, 
+					displayObject.texture.frame.x,
+					displayObject.texture.frame.y,
+					displayObject.texture.frame.width,
+					displayObject.texture.frame.height,
+					(displayObject.anchor.x) * -displayObject.texture.frame.width, 
+					(displayObject.anchor.y) * -displayObject.texture.frame.height,
+					displayObject.texture.frame.width,
+					displayObject.texture.frame.height);
 			}					   
 	   	}
-	   	else if(displayObject instanceof PIXI.Strip)
+	   	else if (displayObject instanceof PIXI.Strip)
 		{
-			context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5])
+			this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2], displayObject.worldTransform[5])
 			this.renderStrip(displayObject);
 		}
-		else if(displayObject instanceof PIXI.TilingSprite)
+		else if (displayObject instanceof PIXI.TilingSprite)
 		{
-			context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5])
+			this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2], displayObject.worldTransform[5])
 			this.renderTilingSprite(displayObject);
 		}
-		else if(displayObject instanceof PIXI.CustomRenderable)
+		else if (displayObject instanceof PIXI.CustomRenderable)
 		{
 			displayObject.renderCanvas(this);
 		}
-		else if(displayObject instanceof PIXI.Graphics)
+		else if (displayObject instanceof PIXI.Graphics)
 		{
-			context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5])
-			PIXI.CanvasGraphics.renderGraphics(displayObject, context);
+			this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2], displayObject.worldTransform[5])
+			PIXI.CanvasGraphics.renderGraphics(displayObject, this.context);
 		}
-		else if(displayObject instanceof PIXI.FilterBlock)
+		else if (displayObject instanceof PIXI.FilterBlock)
 		{
-			if(displayObject.open)
+			if (displayObject.open)
 			{
-				context.save();
+				this.context.save();
 				
 				var cacheAlpha = displayObject.mask.alpha;
 				var maskTransform = displayObject.mask.worldTransform;
 				
-				context.setTransform(maskTransform[0], maskTransform[3], maskTransform[1], maskTransform[4], maskTransform[2], maskTransform[5])
+				this.context.setTransform(maskTransform[0], maskTransform[3], maskTransform[1], maskTransform[4], maskTransform[2], maskTransform[5])
 				
 				displayObject.mask.worldAlpha = 0.5;
 				
-				context.worldAlpha = 0;
+				this.context.worldAlpha = 0;
 				
-				PIXI.CanvasGraphics.renderGraphicsMask(displayObject.mask, context);
-				context.clip();
+				PIXI.CanvasGraphics.renderGraphicsMask(displayObject.mask, this.context);
+				this.context.clip();
 				
 				displayObject.mask.worldAlpha = cacheAlpha;
 			}
 			else
 			{
-				context.restore();
+				this.context.restore();
 			}
 		}
-	//	count++
+		//	count++
 		displayObject = displayObject._iNext;
-		
-		
 	}
 	while(displayObject != testObject)
 	

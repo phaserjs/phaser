@@ -57,6 +57,7 @@ Version 1.1.3 - in build
 * New: Added Group.iterate, a powerful way to count or return children that match a certain criteria. Refactored Group to use iterate, lots of repeated code cut.
 * New: Added Group.sort. You can now sort the Group based on any given numeric property (x, y, health), finally you can do depth-sorting :) Example created to show.
 * New: Enhanced renderTexture so it can accept a Phaser.Group object and improved documentation and examples.
+* New: Device.littleEndian boolean added. Only safe to use if the browser supports TypedArrays (which IE9 doesn't, but nearly all others do)
 
 * Fixed: Lots of fixes to the TypeScript definitions file (many thanks gltovar)
 * Fixed: Tilemap commands use specified layer when one given (thanks Izzimach)
@@ -66,6 +67,7 @@ Version 1.1.3 - in build
 * Fixed: Group.swap had a hellish to find bug that only manifested when B-A upward swaps occured. Hours of debugging later = bug crushed.
 * Fixed: Point.rotate asDegrees fixed (thanks BorisKozo)
 * Fixed: ArcadePhysics.separateTile wasn't returning the value, so the custom process callback wasn't getting called (thanks flameiguana)
+* Fixed: StageScaleMode.forceOrientation now correctly stores the forcePortrait value (thanks haden)
 
 * Updated: ArcadePhysics.updateMotion applies the dt to the velocity calculations as well as position now (thanks jcs)
 * Updated: RequestAnimationFrame now retains the callbackID which is passed to cancelRequestAnimationFrame.
