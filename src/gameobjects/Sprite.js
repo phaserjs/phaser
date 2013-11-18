@@ -358,7 +358,7 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 */
 Phaser.Sprite.prototype.preUpdate = function() {
 
-    if (!this.exists || !this.group.exists)
+    if (!this.exists || (this.group && !this.group.exists))
     {
         this.renderOrderID = -1;
         return;
