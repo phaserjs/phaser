@@ -361,7 +361,9 @@ Phaser.Sprite.prototype.preUpdate = function() {
     if (!this.exists || (this.group && !this.group.exists))
     {
         this.renderOrderID = -1;
-        return;
+        
+        // Skip children if not exists
+        return false;
     }
 
     if (this.lifespan > 0)
@@ -371,7 +373,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
         if (this.lifespan <= 0)
         {
             this.kill();
-            return;
+            return false;
         }
     }
 
@@ -398,6 +400,8 @@ Phaser.Sprite.prototype.preUpdate = function() {
     {
         this.body.preUpdate();
     }
+
+    return true;
 
 };
 

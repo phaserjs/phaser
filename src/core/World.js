@@ -72,24 +72,31 @@ Phaser.World.prototype.boot = function () {
 Phaser.World.prototype.update = function () {
 
 	this.currentRenderOrderID = 0;
-
+    
 	if (this.game.stage._stage.first._iNext)
 	{
 		var currentNode = this.game.stage._stage.first._iNext;
+        var skipChildren = false;
 		
 		do
 		{
 			if (currentNode['preUpdate'])
 			{
-				currentNode.preUpdate();
+				skipChildren = (currentNode.preUpdate() == false);
 			}
 
 			if (currentNode['update'])
 			{
-				currentNode.update();
+				skipChildren = (currentNode.update() == false) || skipChildren;
 			}
 			
-			currentNode = currentNode._iNext;
+            if(skipChildren)
+            {
+                currentNode = currentNode.last._iNext;
+            } else {
+                currentNode = currentNode._iNext;    
+            }
+			
 		}
 		while (currentNode != this.game.stage._stage.last._iNext)
 	}
