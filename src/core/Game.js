@@ -138,7 +138,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.load = null;
 
     /**
-	* @property {Phaser.GameMath} math - Reference to the math helper.
+	* @property {Phaser.Math} math - Reference to the math helper.
 	* @default
 	*/
     this.math = null;

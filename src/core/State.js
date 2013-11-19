@@ -50,7 +50,7 @@ Phaser.State = function () {
     this.load = null;
     
     /**
-	* @property {Phaser.GameMath} math - Reference to the math helper.
+	* @property {Phaser.Math} math - Reference to the math helper.
 	* @default
 	*/
     this.math = null;
