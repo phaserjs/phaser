@@ -58,26 +58,23 @@ function create() {
 
     createAliens();
 
-    // The score : 
+    //  The score
     scoreString = 'Score : ';
-    scoreText = game.add.text(10,10,scoreString+score,{fontSize : '34px',fill : '#fff'});
+    scoreText = game.add.text(10, 10, scoreString + score, { fontSize: '34px', fill: '#fff' });
 
-    // Lives 
+    //  Lives
     lives = game.add.group();
-    game.add.text(game.world.width-100,10,'Lives : ',{fontSize : '34px',fill : '#fff'});
+    game.add.text(game.world.width - 100, 10, 'Lives : ', { fontSize: '34px', fill: '#fff' });
 
-    //state text
-    stateText = game.add.text(game.world.centerX,game.world.centerY,'',{fontSize : '84px',fill : '#fff'});
-    stateText.anchor.setTo(0.5,0.5);
-    stateText.visible=false;
-
-    
+    //  Text
+    stateText = game.add.text(game.world.centerX,game.world.centerY,'', { fontSize: '84px', fill: '#fff' });
+    stateText.anchor.setTo(0.5, 0.5);
+    stateText.visible = false;
 
     for (var i = 0; i < 3; i++) 
     {
-
-        var ship = lives.create(game.world.width-100+(30*i),60,'ship');
-        ship.anchor.setTo(0.5,0.5);
+        var ship = lives.create(game.world.width - 100 + (30 * i), 60, 'ship');
+        ship.anchor.setTo(0.5, 0.5);
         ship.angle = 90;
         ship.alpha = 0.4;
     }
@@ -90,7 +87,6 @@ function create() {
     //  And some controls to play the game with
     cursors = game.input.keyboard.createCursorKeys();
     fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
 }
 
 function createAliens () {
@@ -100,8 +96,8 @@ function createAliens () {
         for (var x = 0; x < 10; x++)
         {
             var alien = aliens.create(x * 48, y * 50, 'invader');
-            alien.anchor.setTo(0.5,0.5);
-            alien.animations.add('fly', [0,1,2,3], 20, true);
+            alien.anchor.setTo(0.5, 0.5);
+            alien.animations.add('fly', [ 0, 1, 2, 3 ], 20, true);
             alien.play('fly');
         }
     }
@@ -110,7 +106,7 @@ function createAliens () {
     aliens.y = 50;
 
     //  All this does is basically start the invaders moving. Notice we're moving the Group they belong to, rather than the invaders directly.
-    var tween = game.add.tween(aliens).to({x: 200}, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+    var tween = game.add.tween(aliens).to( { x: 200 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
 
     //  When the tween completes it calls descend, before looping again
     tween.onComplete.add(descend, this);
@@ -153,7 +149,7 @@ function update() {
         fireBullet();
     }
 
-    if(game.time.now > firingTimer)
+    if (game.time.now > firingTimer)
     {
         enemyFires();
     }
@@ -161,7 +157,6 @@ function update() {
     //  Run collision
     game.physics.collide(bullets, aliens, collisionHandler, null, this);
     game.physics.collide(enemyBullets, player, enemyHitsPlayer, null, this);
-
 
 }
 
@@ -182,7 +177,6 @@ function collisionHandler (bullet, alien) {
 
     if (aliens.countLiving() == 0)
     {
-        
         score += 1000;
         scoreText.content = scoreString + score;
 
@@ -192,8 +186,6 @@ function collisionHandler (bullet, alien) {
 
         //the "click to restart" handler
         game.input.onTap.addOnce(restart,this);
-
-        
     }
 
 }
@@ -204,11 +196,10 @@ function enemyHitsPlayer (player,bullet) {
 
     live = lives.getFirstAlive();
 
-    if(live)
+    if (live)
     {
         live.kill();
     }
-
 
     //  And create an explosion :)
     var explosion = explosions.getFirstDead();
@@ -216,9 +207,8 @@ function enemyHitsPlayer (player,bullet) {
     explosion.play('kaboom', 30, false, true);
 
     // When the player dies
-    if(lives.countLiving() < 1)
+    if (lives.countLiving() < 1)
     {
-        
         player.kill();
         enemyBullets.callAll('kill');
 
@@ -227,8 +217,6 @@ function enemyHitsPlayer (player,bullet) {
 
         //the "click to restart" handler
         game.input.onTap.addOnce(restart,this);
-
-
     }
 
 }
@@ -247,6 +235,7 @@ function enemyFires () {
         game.physics.moveToObject(enemyBullet,player,120);
         firingTimer = game.time.now + 2000;
     }
+
 }
 
 function fireBullet () {
