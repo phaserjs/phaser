@@ -1,4 +1,4 @@
-PIXI.RayTracedBallsFilter = function(width, height, texture)
+PIXI.FireFilter = function(width, height, texture)
 {
 	PIXI.AbstractFilter.call( this );
 	
@@ -83,10 +83,10 @@ PIXI.RayTracedBallsFilter = function(width, height, texture)
 
 }
 
-PIXI.RayTracedBallsFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.RayTracedBallsFilter.prototype.constructor = PIXI.RayTracedBallsFilter;
+PIXI.FireFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
+PIXI.FireFilter.prototype.constructor = PIXI.FireFilter;
 
-Object.defineProperty(PIXI.RayTracedBallsFilter.prototype, 'iGlobalTime', {
+Object.defineProperty(PIXI.FireFilter.prototype, 'iGlobalTime', {
     get: function() {
         return this.uniforms.time.value;
     },
@@ -112,7 +112,7 @@ function create() {
 	sprite.width = 800;
 	sprite.height = 600;
 
-	filter = new PIXI.RayTracedBallsFilter(sprite.width, sprite.height, sprite.texture);
+	filter = new PIXI.FireFilter(sprite.width, sprite.height, sprite.texture);
 
 	sprite.filters = [filter];
 

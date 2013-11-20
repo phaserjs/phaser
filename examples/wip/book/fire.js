@@ -1,4 +1,4 @@
-PIXI.RayTracedBallsFilter = function(width, height, texture)
+PIXI.FireFilter = function(width, height, texture)
 {
 	PIXI.AbstractFilter.call( this );
 	
@@ -83,10 +83,10 @@ PIXI.RayTracedBallsFilter = function(width, height, texture)
 
 }
 
-PIXI.RayTracedBallsFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.RayTracedBallsFilter.prototype.constructor = PIXI.RayTracedBallsFilter;
+PIXI.FireFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
+PIXI.FireFilter.prototype.constructor = PIXI.FireFilter;
 
-Object.defineProperty(PIXI.RayTracedBallsFilter.prototype, 'iGlobalTime', {
+Object.defineProperty(PIXI.FireFilter.prototype, 'iGlobalTime', {
     get: function() {
         return this.uniforms.time.value;
     },
@@ -94,37 +94,3 @@ Object.defineProperty(PIXI.RayTracedBallsFilter.prototype, 'iGlobalTime', {
     	this.uniforms.time.value = value;
     }
 });
-
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
-
-function preload() {
-
-    game.load.image('texture', 'wip/tex01.jpg');
-
-}
-
-var filter;
-var sprite;
-
-function create() {
-
-	sprite = game.add.sprite(0, 0, 'texture');
-	sprite.width = 800;
-	sprite.height = 600;
-
-	filter = new PIXI.RayTracedBallsFilter(sprite.width, sprite.height, sprite.texture);
-
-	sprite.filters = [filter];
-
-}
-
-function update() {
-
-	filter.iGlobalTime = game.time.totalElapsedSeconds();
-	filter.uniforms.mouse.value.x = game.input.x;
-	filter.uniforms.mouse.value.y = game.input.y;
-
-}
-
-function render() {
-}

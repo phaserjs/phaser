@@ -18,7 +18,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v1.1.3 - Built at: Mon Nov 18 2013 20:26:29
+* v1.1.3 - Built at: Wed Nov 20 2013 06:21:52
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -289,19 +289,54 @@ Phaser.Utils = {
 
 //	Global functions that PIXI needs
 
- /**
- * Converts a hex color number to an [R, G, B] array
- *
- * @param {number} hex 
- * @return {array}
- */
+(function() {
+    var consoleDisabled = false;
+    if (consoleDisabled) {
+        window.console = undefined;
+    }
+    if (window.console == undefined) {
+        window.console = {
+            debug: function() {
+                return true;
+            },
+            info: function() {
+                return false;
+            },
+            warn: function() {
+                return false;
+            },
+            log: function() {
+                return false;
+            }
+        }
+    }
+    debug = (function(args) {
+        window.console.debug(args);
+    });
+    info = (function(args) {
+        window.console.info(args);
+    });
+    warn = (function(args) {
+        window.console.warn(args);
+    });
+    log = (function(args) {
+        window.console.log(args);
+    });
+})();
+
+/**
+* Converts a hex color number to an [R, G, B] array
+*
+* @param {number} hex 
+* @return {array}
+*/
 function HEXtoRGB(hex) {
 	return [(hex >> 16 & 0xFF) / 255, ( hex >> 8 & 0xFF) / 255, (hex & 0xFF)/ 255];
 }
 
- /**
- * A polyfill for Function.prototype.bind
- */
+/**
+* A polyfill for Function.prototype.bind
+*/
 if (typeof Function.prototype.bind != 'function') {
   Function.prototype.bind = (function () {
     var slice = Array.prototype.slice;
@@ -1305,6 +1340,7 @@ PIXI.DisplayObject.prototype.removeFilter = function(data)
 {
 	//if(!this.filter)return;
 	//this.filter = false;
+	console.log("YUOIO")
 	// modify the list..
 	var startBlock = data.start;
 	
@@ -4487,7 +4523,7 @@ PIXI.PixiShader.prototype.init = function()
 	var program = PIXI.compileProgram(this.vertexSrc || PIXI.PixiShader.defaultVertexSrc, this.fragmentSrc)
 	
 	var gl = PIXI.gl;
-	
+
     gl.useProgram(program);
 	
 	// get and store the uniforms for the shader
@@ -4525,18 +4561,62 @@ PIXI.PixiShader.prototype.syncUniforms = function()
     	var type = this.uniforms[key].type;
     	
     	// need to grow this!
+
+/*
+    http://www.khronos.org/registry/webgl/specs/latest/1.0/
+    http://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf
+
+    void uniform1f(WebGLUniformLocation? location, GLfloat x);
+    void uniform1fv(WebGLUniformLocation? location, Float32Array v);
+    void uniform1fv(WebGLUniformLocation? location, sequence<GLfloat> v);
+    void uniform1i(WebGLUniformLocation? location, GLint x);
+    void uniform1iv(WebGLUniformLocation? location, Int32Array v);
+    void uniform1iv(WebGLUniformLocation? location, sequence<long> v);
+    void uniform2f(WebGLUniformLocation? location, GLfloat x, GLfloat y);
+    void uniform2fv(WebGLUniformLocation? location, Float32Array v);
+    void uniform2fv(WebGLUniformLocation? location, sequence<GLfloat> v);
+    void uniform2i(WebGLUniformLocation? location, GLint x, GLint y);
+    void uniform2iv(WebGLUniformLocation? location, Int32Array v);
+    void uniform2iv(WebGLUniformLocation? location, sequence<long> v);
+    void uniform3f(WebGLUniformLocation? location, GLfloat x, GLfloat y, GLfloat z);
+    void uniform3fv(WebGLUniformLocation? location, Float32Array v);
+    void uniform3fv(WebGLUniformLocation? location, sequence<GLfloat> v);
+    void uniform3i(WebGLUniformLocation? location, GLint x, GLint y, GLint z);
+    void uniform3iv(WebGLUniformLocation? location, Int32Array v);
+    void uniform3iv(WebGLUniformLocation? location, sequence<long> v);
+    void uniform4f(WebGLUniformLocation? location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+    void uniform4fv(WebGLUniformLocation? location, Float32Array v);
+    void uniform4fv(WebGLUniformLocation? location, sequence<GLfloat> v);
+    void uniform4i(WebGLUniformLocation? location, GLint x, GLint y, GLint z, GLint w);
+    void uniform4iv(WebGLUniformLocation? location, Int32Array v);
+    void uniform4iv(WebGLUniformLocation? location, sequence<long> v);
+
+    void uniformMatrix2fv(WebGLUniformLocation? location, GLboolean transpose, Float32Array value);
+    void uniformMatrix2fv(WebGLUniformLocation? location, GLboolean transpose, sequence<GLfloat> value);
+    void uniformMatrix3fv(WebGLUniformLocation? location, GLboolean transpose, Float32Array value);
+    void uniformMatrix3fv(WebGLUniformLocation? location, GLboolean transpose, sequence<GLfloat> value);
+    void uniformMatrix4fv(WebGLUniformLocation? location, GLboolean transpose, Float32Array value);
+    void uniformMatrix4fv(WebGLUniformLocation? location, GLboolean transpose, sequence<GLfloat> value);
+*/
+
     	if(type == "f")
     	{
 			gl.uniform1f(this.uniforms[key].uniformLocation, this.uniforms[key].value);
     	}
     	if(type == "f2")
     	{
-    	//	console.log(this.program[key])
 			gl.uniform2f(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y);
     	}
+        else if(type == "f3")
+        {
+            gl.uniform3f(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y, this.uniforms[key].value.z);
+        }
+        else if(type == "f3v")
+        {
+            gl.uniform3fv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
         else if(type == "f4")
         {
-           // console.log(this.uniforms[key].value)
             gl.uniform4fv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
         }
     	else if(type == "mat4")
@@ -4545,13 +4625,50 @@ PIXI.PixiShader.prototype.syncUniforms = function()
     	}
     	else if(type == "sampler2D")
     	{
-    		// first texture...
-    		var texture = this.uniforms[key].value;
-    		
-    		gl.activeTexture(gl.TEXTURE1);
-	    	gl.bindTexture(gl.TEXTURE_2D, texture.baseTexture._glTexture);
-	    	
-    		gl.uniform1i(this.uniforms[key].uniformLocation, 1);
+            var texture = this.uniforms[key].value.baseTexture._glTexture;
+    		var image = this.uniforms[key].value.baseTexture.source;
+            var format = gl.RGBA;
+
+            if (this.uniforms[key].format && this.uniforms[key].format == 'luminance')
+            {
+                format = gl.LUMINANCE;
+            }
+
+            gl.activeTexture(gl.TEXTURE1);
+
+            if (this.uniforms[key].wrap)
+            {
+                if (this.uniforms[key].wrap == 'no-repeat' || this.uniforms[key].wrap === false)
+                {
+                    this.createGLTextureLinear(gl, image, texture);
+                }
+                else if (this.uniforms[key].wrap == 'repeat' || this.uniforms[key].wrap === true)
+                {
+                    this.createGLTexture(gl, image, format, texture);
+                }
+                else if (this.uniforms[key].wrap == 'nearest-repeat')
+                {
+                    this.createGLTextureNearestRepeat(gl, image, texture);
+                }
+                else if (this.uniforms[key].wrap == 'nearest')
+                {
+                    this.createGLTextureNearest(gl, image, texture);
+                }
+                else if (this.uniforms[key].wrap == 'audio')
+                {
+                    this.createAudioTexture(gl, texture);
+                }
+                else if (this.uniforms[key].wrap == 'keyboard')
+                {
+                    this.createKeyboardTexture(gl, texture);
+                }
+            }
+            else
+            {
+                this.createGLTextureLinear(gl, image, texture);
+            }
+
+            gl.uniform1i(this.uniforms[key].uniformLocation, 1);
     		
     		// activate texture..
     		// gl.uniformMatrix4fv(this.program[key], false, this.uniforms[key].value);
@@ -4559,6 +4676,71 @@ PIXI.PixiShader.prototype.syncUniforms = function()
     	}
     }
     
+};
+
+PIXI.PixiShader.prototype.createGLTexture = function(gl, image, format, texture)
+{
+    gl.bindTexture(   gl.TEXTURE_2D, texture);
+    gl.pixelStorei(   gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage2D(    gl.TEXTURE_2D, 0, format, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    gl.generateMipmap(gl.TEXTURE_2D);
+}
+
+PIXI.PixiShader.prototype.createGLTextureLinear = function(gl, image, texture)
+{
+    gl.bindTexture(  gl.TEXTURE_2D, texture);
+    gl.pixelStorei(  gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage2D(   gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+}
+
+PIXI.PixiShader.prototype.createGLTextureNearestRepeat = function(gl, image, texture)
+{
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+}
+
+PIXI.PixiShader.prototype.createGLTextureNearest = function(gl, image, texture)
+{
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+}
+
+PIXI.PixiShader.prototype.createAudioTexture = function(gl, texture)
+{
+    gl.bindTexture(   gl.TEXTURE_2D, texture );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE) ;
+    gl.texImage2D(    gl.TEXTURE_2D, 0, gl.LUMINANCE, 512, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, null);
+}
+
+PIXI.PixiShader.prototype.createKeyboardTexture = function(gl, texture)
+{
+    gl.bindTexture(   gl.TEXTURE_2D, texture );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE) ;
+    gl.texImage2D(    gl.TEXTURE_2D, 0, gl.LUMINANCE, 256, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, null);
 }
 
 PIXI.PixiShader.defaultVertexSrc = [
@@ -6722,6 +6904,7 @@ PIXI.WebGLRenderGroup = function(gl, transparent)
 	
 	this.batchs = [];
 	this.toRemove = [];
+	console.log(this.transparent)
 	this.filterManager = new PIXI.WebGLFilterManager(this.transparent);
 }
 
@@ -7821,6 +8004,7 @@ PIXI._CompileShader = function(gl, shaderSrc, shaderType)
   gl.compileShader(shader);
 
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    console.log(gl.getShaderInfoLog(shader));
     return null;
   }
 
@@ -13089,24 +13273,31 @@ Phaser.World.prototype.boot = function () {
 Phaser.World.prototype.update = function () {
 
 	this.currentRenderOrderID = 0;
-
+    
 	if (this.game.stage._stage.first._iNext)
 	{
 		var currentNode = this.game.stage._stage.first._iNext;
+        var skipChildren = false;
 		
 		do
 		{
 			if (currentNode['preUpdate'])
 			{
-				currentNode.preUpdate();
+				skipChildren = (currentNode.preUpdate() == false);
 			}
 
 			if (currentNode['update'])
 			{
-				currentNode.update();
+				skipChildren = (currentNode.update() == false) || skipChildren;
 			}
 			
-			currentNode = currentNode._iNext;
+            if(skipChildren)
+            {
+                currentNode = currentNode.last._iNext;
+            } else {
+                currentNode = currentNode._iNext;    
+            }
+			
 		}
 		while (currentNode != this.game.stage._stage.last._iNext)
 	}
@@ -18318,7 +18509,14 @@ Phaser.BitmapData = function (game, width, height) {
 	/**
 	* @property {UInt8Clamped} pixels - A reference to the context imageData buffer.
 	*/
-	this.pixels = this.imageData.data.buffer;
+	if (this.imageData.data.buffer)
+	{
+		this.pixels = this.imageData.data.buffer;
+	}
+	else
+	{
+		this.pixels = this.imageData.data;
+	}
 
 	/**
 	* @property {PIXI.BaseTexture} baseTexture - The PIXI.BaseTexture.
@@ -19722,7 +19920,9 @@ Phaser.Sprite.prototype.preUpdate = function() {
     if (!this.exists || (this.group && !this.group.exists))
     {
         this.renderOrderID = -1;
-        return;
+        
+        // Skip children if not exists
+        return false;
     }
 
     if (this.lifespan > 0)
@@ -19732,7 +19932,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
         if (this.lifespan <= 0)
         {
             this.kill();
-            return;
+            return false;
         }
     }
 
@@ -19759,6 +19959,8 @@ Phaser.Sprite.prototype.preUpdate = function() {
     {
         this.body.preUpdate();
     }
+
+    return true;
 
 };
 
@@ -22318,6 +22520,16 @@ Phaser.StageScaleMode = function (game, width, height) {
     */
     this.enterPortrait = new Phaser.Signal();
 
+    /**
+    * @property {Phaser.Signal} enterIncorrectOrientation - The event that is dispatched when the browser enters an incorrect orientation, as defined by forceOrientation.
+    */
+    this.enterIncorrectOrientation = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} leaveIncorrectOrientation - The event that is dispatched when the browser leaves an incorrect orientation, as defined by forceOrientation.
+    */
+    this.leaveIncorrectOrientation = new Phaser.Signal();
+
     if (window['orientation'])
     {
         this.orientation = window['orientation'];
@@ -22548,6 +22760,7 @@ Phaser.StageScaleMode.prototype = {
                 //  Back to normal
                 this.game.paused = false;
                 this.incorrectOrientation = false;
+                this.leaveIncorrectOrientation.dispatch();
 
                 if (this.orientationSprite)
                 {
@@ -22565,6 +22778,7 @@ Phaser.StageScaleMode.prototype = {
                 //  Show orientation screen
                 this.game.paused = true;
                 this.incorrectOrientation = true;
+                this.enterIncorrectOrientation.dispatch();
 
                 if (this.orientationSprite && this.orientationSprite.visible == false)
                 {
@@ -23016,67 +23230,78 @@ Phaser.Device = function () {
     */
     this.pointerLock = false;
 
+    /**
+    * @property {boolean} typedArray - Does the browser support TypedArrays?
+    * @default
+    */
+    this.typedArray = false;
+
     //  Browser
 
     /**
-    * @property {boolean} arora - Is running in arora?
+    * @property {boolean} arora - Set to true if running in Arora.
     * @default
     */
     this.arora = false;
 
     /**
-    * @property {boolean} chrome - Is running in chrome?
+    * @property {boolean} chrome - Set to true if running in Chrome.
     * @default
     */
     this.chrome = false;
 
     /**
-    * @property {boolean} epiphany - Is running in epiphany?
+    * @property {boolean} epiphany - Set to true if running in Epiphany.
     * @default
     */
     this.epiphany = false;
 
     /**
-    * @property {boolean} firefox - Is running in firefox?
+    * @property {boolean} firefox - Set to true if running in Firefox.
     * @default
     */
     this.firefox = false;
 
     /**
-    * @property {boolean} ie - Is running in ie?
+    * @property {boolean} ie - Set to true if running in Internet Explorer.
     * @default
     */
     this.ie = false;
 
     /**
-    * @property {number} ieVersion - Version of ie?
+    * @property {number} ieVersion - If running in Internet Explorer this will contain the major version number.
     * @default
     */
     this.ieVersion = 0;
 
     /**
-    * @property {boolean} mobileSafari - Is running in mobileSafari?
+    * @property {boolean} mobileSafari - Set to true if running in Mobile Safari.
     * @default
     */
     this.mobileSafari = false;
 
     /**
-    * @property {boolean} midori - Is running in midori?
+    * @property {boolean} midori - Set to true if running in Midori.
     * @default
     */
     this.midori = false;
 
     /**
-    * @property {boolean} opera - Is running in opera?
+    * @property {boolean} opera - Set to true if running in Opera.
     * @default
     */
     this.opera = false;
 
     /**
-    * @property {boolean} safari - Is running in safari?
+    * @property {boolean} safari - Set to true if running in Safari.
     * @default
     */
     this.safari = false;
+
+    /**
+    * @property {boolean} webApp - Set to true if running as a WebApp, i.e. within a WebView
+    * @default
+    */
     this.webApp = false;
 
     //  Audio
@@ -23116,6 +23341,7 @@ Phaser.Device = function () {
     * @default
     */
     this.wav = false;
+
     /**
     * Can this device play m4a files?
     * @property {boolean} m4a - True if this device can play m4a files.
@@ -23343,6 +23569,12 @@ Phaser.Device.prototype = {
         if (typeof Int8Array !== 'undefined')
         {
             this.littleEndian = new Int8Array(new Int16Array([1]).buffer)[0] > 0;
+            this.typedArray = true;
+        }
+        else
+        {
+            this.littleEndian = false;
+            this.typedArray = false;
         }
 
     },
@@ -33214,6 +33446,8 @@ Object.defineProperty(Phaser.Sound.prototype, "volume", {
 
 /**
 * Sound Manager constructor.
+* The Sound Manager is responsible for playing back audio via either the Legacy HTML Audio tag or via Web Audio if the browser supports it.
+* Note: On Firefox 25+ on Linux if you have media.gstreamer disabled in about:config then it cannot play back mp3 or m4a files.
 *
 * @class Phaser.SoundManager
 * @classdesc Phaser Sound Manager.
