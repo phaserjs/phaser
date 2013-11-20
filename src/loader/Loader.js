@@ -744,6 +744,10 @@ Phaser.Loader.prototype = {
 						return _this.csvLoadComplete(file.key);
 					};
 				}
+				else
+				{
+					throw new Error("Phaser.Loader. Invalid Tilemap format: " + file.format);
+				}
 
 				this._xhr.onerror = function () {
 					return _this.dataLoadError(file.key);
@@ -872,6 +876,10 @@ Phaser.Loader.prototype = {
 						this._xhr.onload = function () {
 							return _this.xmlLoadComplete(file.key);
 						};
+					}
+					else
+					{
+						throw new Error("Phaser.Loader. Invalid Texture Atlas format: " + file.format);
 					}
 
 					this._xhr.onerror = function () {
