@@ -1,4 +1,4 @@
-PIXI.StarNestFilter = function(width, height, texture)
+PIXI.HypnoticRipplesFilter = function(width, height, texture)
 {
 	PIXI.AbstractFilter.call( this );
 	
@@ -20,7 +20,7 @@ PIXI.StarNestFilter = function(width, height, texture)
 		iChannel0: { type: 'sampler2D', value: texture }
 	};
 
-	//	Shader by Kali (https://www.shadertoy.com/view/4dfGDM)
+	//	Shader by Cha (https://www.shadertoy.com/view/ldX3zr)
 	this.fragmentSrc = [
 		"precision mediump float;",
 		"uniform vec3      iResolution;",
@@ -32,49 +32,42 @@ PIXI.StarNestFilter = function(width, height, texture)
 		"uniform sampler2D iChannel0;",
 		"// add any extra uniforms here",
 
-		"#define M_PI 3.1415926535897932384626433832795",
 
-		"float rand(vec2 co)",
-		"{",
-			"return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);",
-		"}",
+		"vec2 center = vec2(0.5,0.5);",
+		"float speed = 0.035;",
+		"float invAr = iResolution.y / iResolution.x;",
 
 		"void main(void)",
 		"{",
-			"float size = 30.0;",
-			"float prob = 0.95;",
+			"vec2 uv = gl_FragCoord.xy / iResolution.xy;",
 
-			"vec2 pos = floor(1.0 / size * gl_FragCoord.xy);",
+			"vec3 col = vec4(uv,0.5+0.5*sin(iGlobalTime),1.0).xyz;",
 
-			"float color = 0.0;",
-			"float starValue = rand(pos);",
+			"vec3 texcol;",
 
-			"if (starValue > prob)",
-			"{",
-				"vec2 center = size * pos + vec2(size, size) * 0.5;",
+			"float x = (center.x-uv.x);",
+			"float y = (center.y-uv.y) *invAr;",
 
-				"float t = 0.9 + 0.2 * sin(iGlobalTime + (starValue - prob) / (1.0 - prob) * 45.0);",
+			"//float r = -sqrt(x*x + y*y); //uncoment this line to symmetric ripples",
+			"float r = -(x*x + y*y);",
+			"float z = 1.0 + 0.5*sin((r+iGlobalTime*speed)/0.013);",
 
-				"color = 1.0 - distance(gl_FragCoord.xy, center) / (0.5 * size);",
-				"color = color * t / (abs(gl_FragCoord.y - center.y)) * t / (abs(gl_FragCoord.x - center.x));",
-			"}",
-			"else if (rand(gl_FragCoord.xy / iResolution.xy) > 0.996)",
-			"{",
-				"float r = rand(gl_FragCoord.xy);",
-				"color = r * (0.25 * sin(iGlobalTime * (r * 5.0) + 720.0 * r) + 0.75);",
-			"}",
+			"texcol.x = z;",
+			"texcol.y = z;",
+			"texcol.z = z;",
 
-			"gl_FragColor = vec4(vec3(color), 1.0);",
+			"gl_FragColor = vec4(col*texcol,1.0);",
+			"//gl_FragColor = vec4(texcol,1.0);",
 		"}"];
-	
+
 
 
 }
 
-PIXI.StarNestFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.StarNestFilter.prototype.constructor = PIXI.StarNestFilter;
+PIXI.HypnoticRipplesFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
+PIXI.HypnoticRipplesFilter.prototype.constructor = PIXI.HypnoticRipplesFilter;
 
-Object.defineProperty(PIXI.StarNestFilter.prototype, 'iGlobalTime', {
+Object.defineProperty(PIXI.HypnoticRipplesFilter.prototype, 'iGlobalTime', {
     get: function() {
         return this.uniforms.iGlobalTime.value;
     },
@@ -88,7 +81,7 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: p
 function preload() {
 
     // game.load.image('texture', 'wip/64x64.png');
-    game.load.image('texture', 'wip/tex08.jpg');
+    game.load.image('texture', 'wip/tex16.png');
 
 }
 
@@ -101,7 +94,7 @@ function create() {
 	sprite.width = 800;
 	sprite.height = 600;
 
-	filter = new PIXI.StarNestFilter(sprite.width, sprite.height, sprite.texture);
+	filter = new PIXI.HypnoticRipplesFilter(sprite.width, sprite.height, sprite.texture);
 
 	sprite.filters = [filter];
 

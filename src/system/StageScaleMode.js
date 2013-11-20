@@ -135,6 +135,16 @@ Phaser.StageScaleMode = function (game, width, height) {
     */
     this.enterPortrait = new Phaser.Signal();
 
+    /**
+    * @property {Phaser.Signal} enterIncorrectOrientation - The event that is dispatched when the browser enters an incorrect orientation, as defined by forceOrientation.
+    */
+    this.enterIncorrectOrientation = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} leaveIncorrectOrientation - The event that is dispatched when the browser leaves an incorrect orientation, as defined by forceOrientation.
+    */
+    this.leaveIncorrectOrientation = new Phaser.Signal();
+
     if (window['orientation'])
     {
         this.orientation = window['orientation'];
@@ -365,6 +375,7 @@ Phaser.StageScaleMode.prototype = {
                 //  Back to normal
                 this.game.paused = false;
                 this.incorrectOrientation = false;
+                this.leaveIncorrectOrientation.dispatch();
 
                 if (this.orientationSprite)
                 {
@@ -382,6 +393,7 @@ Phaser.StageScaleMode.prototype = {
                 //  Show orientation screen
                 this.game.paused = true;
                 this.incorrectOrientation = true;
+                this.enterIncorrectOrientation.dispatch();
 
                 if (this.orientationSprite && this.orientationSprite.visible == false)
                 {

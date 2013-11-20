@@ -58,7 +58,14 @@ Phaser.BitmapData = function (game, width, height) {
 	/**
 	* @property {UInt8Clamped} pixels - A reference to the context imageData buffer.
 	*/
-	this.pixels = this.imageData.data.buffer;
+	if (this.imageData.data.buffer)
+	{
+		this.pixels = this.imageData.data.buffer;
+	}
+	else
+	{
+		this.pixels = this.imageData.data;
+	}
 
 	/**
 	* @property {PIXI.BaseTexture} baseTexture - The PIXI.BaseTexture.

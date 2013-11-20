@@ -1,4 +1,4 @@
-PIXI.StarNestFilter = function(width, height, texture)
+PIXI.StarsBackgroundFilter = function(width, height, texture)
 {
 	PIXI.AbstractFilter.call( this );
 	
@@ -20,7 +20,7 @@ PIXI.StarNestFilter = function(width, height, texture)
 		iChannel0: { type: 'sampler2D', value: texture }
 	};
 
-	//	Shader by Kali (https://www.shadertoy.com/view/4dfGDM)
+	//	Shader by urraka (https://www.shadertoy.com/view/lsfGWH)
 	this.fragmentSrc = [
 		"precision mediump float;",
 		"uniform vec3      iResolution;",
@@ -66,15 +66,15 @@ PIXI.StarNestFilter = function(width, height, texture)
 
 			"gl_FragColor = vec4(vec3(color), 1.0);",
 		"}"];
-	
+
 
 
 }
 
-PIXI.StarNestFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.StarNestFilter.prototype.constructor = PIXI.StarNestFilter;
+PIXI.StarsBackgroundFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
+PIXI.StarsBackgroundFilter.prototype.constructor = PIXI.StarsBackgroundFilter;
 
-Object.defineProperty(PIXI.StarNestFilter.prototype, 'iGlobalTime', {
+Object.defineProperty(PIXI.StarsBackgroundFilter.prototype, 'iGlobalTime', {
     get: function() {
         return this.uniforms.iGlobalTime.value;
     },
@@ -101,7 +101,7 @@ function create() {
 	sprite.width = 800;
 	sprite.height = 600;
 
-	filter = new PIXI.StarNestFilter(sprite.width, sprite.height, sprite.texture);
+	filter = new PIXI.StarsBackgroundFilter(sprite.width, sprite.height, sprite.texture);
 
 	sprite.filters = [filter];
 

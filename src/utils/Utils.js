@@ -195,19 +195,54 @@ Phaser.Utils = {
 
 //	Global functions that PIXI needs
 
- /**
- * Converts a hex color number to an [R, G, B] array
- *
- * @param {number} hex 
- * @return {array}
- */
+(function() {
+    var consoleDisabled = false;
+    if (consoleDisabled) {
+        window.console = undefined;
+    }
+    if (window.console == undefined) {
+        window.console = {
+            debug: function() {
+                return true;
+            },
+            info: function() {
+                return false;
+            },
+            warn: function() {
+                return false;
+            },
+            log: function() {
+                return false;
+            }
+        }
+    }
+    debug = (function(args) {
+        window.console.debug(args);
+    });
+    info = (function(args) {
+        window.console.info(args);
+    });
+    warn = (function(args) {
+        window.console.warn(args);
+    });
+    log = (function(args) {
+        window.console.log(args);
+    });
+})();
+
+/**
+* Converts a hex color number to an [R, G, B] array
+*
+* @param {number} hex 
+* @return {array}
+*/
 function HEXtoRGB(hex) {
 	return [(hex >> 16 & 0xFF) / 255, ( hex >> 8 & 0xFF) / 255, (hex & 0xFF)/ 255];
 }
 
- /**
- * A polyfill for Function.prototype.bind
- */
+/**
+* A polyfill for Function.prototype.bind
+*/
 if (typeof Function.prototype.bind != 'function') {
   Function.prototype.bind = (function () {
     var slice = Array.prototype.slice;

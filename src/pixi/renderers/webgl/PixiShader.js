@@ -25,7 +25,7 @@ PIXI.PixiShader.prototype.init = function()
 	var program = PIXI.compileProgram(this.vertexSrc || PIXI.PixiShader.defaultVertexSrc, this.fragmentSrc)
 	
 	var gl = PIXI.gl;
-	
+
     gl.useProgram(program);
 	
 	// get and store the uniforms for the shader
@@ -63,6 +63,44 @@ PIXI.PixiShader.prototype.syncUniforms = function()
     	var type = this.uniforms[key].type;
     	
     	// need to grow this!
+
+/*
+    http://www.khronos.org/registry/webgl/specs/latest/1.0/
+    http://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf
+
+    void uniform1f(WebGLUniformLocation? location, GLfloat x);
+    void uniform1fv(WebGLUniformLocation? location, Float32Array v);
+    void uniform1fv(WebGLUniformLocation? location, sequence<GLfloat> v);
+    void uniform1i(WebGLUniformLocation? location, GLint x);
+    void uniform1iv(WebGLUniformLocation? location, Int32Array v);
+    void uniform1iv(WebGLUniformLocation? location, sequence<long> v);
+    void uniform2f(WebGLUniformLocation? location, GLfloat x, GLfloat y);
+    void uniform2fv(WebGLUniformLocation? location, Float32Array v);
+    void uniform2fv(WebGLUniformLocation? location, sequence<GLfloat> v);
+    void uniform2i(WebGLUniformLocation? location, GLint x, GLint y);
+    void uniform2iv(WebGLUniformLocation? location, Int32Array v);
+    void uniform2iv(WebGLUniformLocation? location, sequence<long> v);
+    void uniform3f(WebGLUniformLocation? location, GLfloat x, GLfloat y, GLfloat z);
+    void uniform3fv(WebGLUniformLocation? location, Float32Array v);
+    void uniform3fv(WebGLUniformLocation? location, sequence<GLfloat> v);
+    void uniform3i(WebGLUniformLocation? location, GLint x, GLint y, GLint z);
+    void uniform3iv(WebGLUniformLocation? location, Int32Array v);
+    void uniform3iv(WebGLUniformLocation? location, sequence<long> v);
+    void uniform4f(WebGLUniformLocation? location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+    void uniform4fv(WebGLUniformLocation? location, Float32Array v);
+    void uniform4fv(WebGLUniformLocation? location, sequence<GLfloat> v);
+    void uniform4i(WebGLUniformLocation? location, GLint x, GLint y, GLint z, GLint w);
+    void uniform4iv(WebGLUniformLocation? location, Int32Array v);
+    void uniform4iv(WebGLUniformLocation? location, sequence<long> v);
+
+    void uniformMatrix2fv(WebGLUniformLocation? location, GLboolean transpose, Float32Array value);
+    void uniformMatrix2fv(WebGLUniformLocation? location, GLboolean transpose, sequence<GLfloat> value);
+    void uniformMatrix3fv(WebGLUniformLocation? location, GLboolean transpose, Float32Array value);
+    void uniformMatrix3fv(WebGLUniformLocation? location, GLboolean transpose, sequence<GLfloat> value);
+    void uniformMatrix4fv(WebGLUniformLocation? location, GLboolean transpose, Float32Array value);
+    void uniformMatrix4fv(WebGLUniformLocation? location, GLboolean transpose, sequence<GLfloat> value);
+*/
+
     	if(type == "f")
     	{
 			gl.uniform1f(this.uniforms[key].uniformLocation, this.uniforms[key].value);
@@ -72,6 +110,16 @@ PIXI.PixiShader.prototype.syncUniforms = function()
     	//	console.log(this.program[key])
 			gl.uniform2f(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y);
     	}
+        else if(type == "f3")
+        {
+           // console.log(this.uniforms[key].value)
+            gl.uniform3f(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y, this.uniforms[key].value.z);
+        }
+        else if(type == "f3v")
+        {
+           // console.log(this.uniforms[key].value)
+            gl.uniform3fv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
         else if(type == "f4")
         {
            // console.log(this.uniforms[key].value)

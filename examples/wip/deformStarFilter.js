@@ -1,4 +1,4 @@
-PIXI.StarNestFilter = function(width, height, texture)
+PIXI.DeformStarFilter = function(width, height, texture)
 {
 	PIXI.AbstractFilter.call( this );
 	
@@ -20,7 +20,7 @@ PIXI.StarNestFilter = function(width, height, texture)
 		iChannel0: { type: 'sampler2D', value: texture }
 	};
 
-	//	Shader by Kali (https://www.shadertoy.com/view/4dfGDM)
+	//	Shader by iq (https://www.shadertoy.com/view/4dXGRn)
 	this.fragmentSrc = [
 		"precision mediump float;",
 		"uniform vec3      iResolution;",
@@ -32,49 +32,39 @@ PIXI.StarNestFilter = function(width, height, texture)
 		"uniform sampler2D iChannel0;",
 		"// add any extra uniforms here",
 
-		"#define M_PI 3.1415926535897932384626433832795",
+		"// Created by inigo quilez - iq/2013",
+		"// License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.",
 
-		"float rand(vec2 co)",
-		"{",
-			"return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);",
-		"}",
-
+		"vec3 sqr( vec3 x ) { return x*x; }",
 		"void main(void)",
 		"{",
-			"float size = 30.0;",
-			"float prob = 0.95;",
+			"vec2 p = -1.0 + 2.0 * gl_FragCoord.xy / iResolution.xy;",
+			"float a = atan(p.y,p.x);",
+			"float r = sqrt(dot(p,p));",
+			"float s = r * (1.0+0.5*cos(iGlobalTime*0.5));",
 
-			"vec2 pos = floor(1.0 / size * gl_FragCoord.xy);",
+			"vec2 uv = 0.02*p;",
+			"uv.x +=                  .03*cos(-iGlobalTime+a*4.0)/s;",
+			"uv.y += .02*iGlobalTime +.03*sin(-iGlobalTime+a*4.0)/s;",
+			"uv.y += r*r*0.025*sin(2.0*r);",
 
-			"float color = 0.0;",
-			"float starValue = rand(pos);",
+			"vec3 col = texture2D( iChannel0, 0.5*uv).xyz  * vec3(1.0,0.8,0.6);",
+			"col += sqr(texture2D( iChannel0, 1.0*uv).xxx) * vec3(0.7,1.0,1.0);",
 
-			"if (starValue > prob)",
-			"{",
-				"vec2 center = size * pos + vec2(size, size) * 0.5;",
+			"float w = 2.0*r;",
+			"w *= 0.5 + 0.5*pow(clamp(1.0-0.75*r,0.0,1.0),0.5);",
 
-				"float t = 0.9 + 0.2 * sin(iGlobalTime + (starValue - prob) / (1.0 - prob) * 45.0);",
-
-				"color = 1.0 - distance(gl_FragCoord.xy, center) / (0.5 * size);",
-				"color = color * t / (abs(gl_FragCoord.y - center.y)) * t / (abs(gl_FragCoord.x - center.x));",
-			"}",
-			"else if (rand(gl_FragCoord.xy / iResolution.xy) > 0.996)",
-			"{",
-				"float r = rand(gl_FragCoord.xy);",
-				"color = r * (0.25 * sin(iGlobalTime * (r * 5.0) + 720.0 * r) + 0.75);",
-			"}",
-
-			"gl_FragColor = vec4(vec3(color), 1.0);",
+			"gl_FragColor = vec4(col*w,1.0);",
 		"}"];
-	
+
 
 
 }
 
-PIXI.StarNestFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.StarNestFilter.prototype.constructor = PIXI.StarNestFilter;
+PIXI.DeformStarFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
+PIXI.DeformStarFilter.prototype.constructor = PIXI.DeformStarFilter;
 
-Object.defineProperty(PIXI.StarNestFilter.prototype, 'iGlobalTime', {
+Object.defineProperty(PIXI.DeformStarFilter.prototype, 'iGlobalTime', {
     get: function() {
         return this.uniforms.iGlobalTime.value;
     },
@@ -101,7 +91,7 @@ function create() {
 	sprite.width = 800;
 	sprite.height = 600;
 
-	filter = new PIXI.StarNestFilter(sprite.width, sprite.height, sprite.texture);
+	filter = new PIXI.DeformStarFilter(sprite.width, sprite.height, sprite.texture);
 
 	sprite.filters = [filter];
 

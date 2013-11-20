@@ -78,6 +78,7 @@ Version 1.1.3 - in build
 * Updated: Sprite will now check the exists property of the Group it is in, if the Group.exists = false the Sprite won't update.
 * Updated: Lots of documentation tweaks across various files such as Pointer and Color.
 * Updated: If you specify 'null' as a Group parent it will now revert to using the World as the parent (before only 'undefined' worked)
+* Updated: Skip preupdate/update for PIXI hierarchies in which an ancestor doesn't exist (thanks cocoademon)
 
 
 

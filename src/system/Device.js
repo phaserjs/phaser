@@ -126,67 +126,78 @@ Phaser.Device = function () {
     */
     this.pointerLock = false;
 
+    /**
+    * @property {boolean} typedArray - Does the browser support TypedArrays?
+    * @default
+    */
+    this.typedArray = false;
+
     //  Browser
 
     /**
-    * @property {boolean} arora - Is running in arora?
+    * @property {boolean} arora - Set to true if running in Arora.
     * @default
     */
     this.arora = false;
 
     /**
-    * @property {boolean} chrome - Is running in chrome?
+    * @property {boolean} chrome - Set to true if running in Chrome.
     * @default
     */
     this.chrome = false;
 
     /**
-    * @property {boolean} epiphany - Is running in epiphany?
+    * @property {boolean} epiphany - Set to true if running in Epiphany.
     * @default
     */
     this.epiphany = false;
 
     /**
-    * @property {boolean} firefox - Is running in firefox?
+    * @property {boolean} firefox - Set to true if running in Firefox.
     * @default
     */
     this.firefox = false;
 
     /**
-    * @property {boolean} ie - Is running in ie?
+    * @property {boolean} ie - Set to true if running in Internet Explorer.
     * @default
     */
     this.ie = false;
 
     /**
-    * @property {number} ieVersion - Version of ie?
+    * @property {number} ieVersion - If running in Internet Explorer this will contain the major version number.
     * @default
     */
     this.ieVersion = 0;
 
     /**
-    * @property {boolean} mobileSafari - Is running in mobileSafari?
+    * @property {boolean} mobileSafari - Set to true if running in Mobile Safari.
     * @default
     */
     this.mobileSafari = false;
 
     /**
-    * @property {boolean} midori - Is running in midori?
+    * @property {boolean} midori - Set to true if running in Midori.
     * @default
     */
     this.midori = false;
 
     /**
-    * @property {boolean} opera - Is running in opera?
+    * @property {boolean} opera - Set to true if running in Opera.
     * @default
     */
     this.opera = false;
 
     /**
-    * @property {boolean} safari - Is running in safari?
+    * @property {boolean} safari - Set to true if running in Safari.
     * @default
     */
     this.safari = false;
+
+    /**
+    * @property {boolean} webApp - Set to true if running as a WebApp, i.e. within a WebView
+    * @default
+    */
     this.webApp = false;
 
     //  Audio
@@ -226,6 +237,7 @@ Phaser.Device = function () {
     * @default
     */
     this.wav = false;
+
     /**
     * Can this device play m4a files?
     * @property {boolean} m4a - True if this device can play m4a files.
@@ -453,6 +465,12 @@ Phaser.Device.prototype = {
         if (typeof Int8Array !== 'undefined')
         {
             this.littleEndian = new Int8Array(new Int16Array([1]).buffer)[0] > 0;
+            this.typedArray = true;
+        }
+        else
+        {
+            this.littleEndian = false;
+            this.typedArray = false;
         }
 
     },
