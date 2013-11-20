@@ -76,18 +76,20 @@ Phaser.World.prototype.update = function () {
 	if (this.game.stage._stage.first._iNext)
 	{
 		var currentNode = this.game.stage._stage.first._iNext;
-        var skipChildren = false;
+        var skipChildren;
 		
 		do
 		{
+            skipChildren = false;
+
 			if (currentNode['preUpdate'])
 			{
-				skipChildren = (currentNode.preUpdate() == false);
+				skipChildren = (currentNode.preUpdate() === false);
 			}
 
 			if (currentNode['update'])
 			{
-				skipChildren = (currentNode.update() == false) || skipChildren;
+				skipChildren = (currentNode.update() === false) || skipChildren;
 			}
 			
             if(skipChildren)
