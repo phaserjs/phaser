@@ -1,4 +1,4 @@
-PIXI.StarNestFilter = function(width, height, texture)
+PIXI.TunnelFilter = function(width, height, texture)
 {
 	PIXI.AbstractFilter.call( this );
 	
@@ -20,7 +20,7 @@ PIXI.StarNestFilter = function(width, height, texture)
 		iChannel0: { type: 'sampler2D', value: texture, wrap: 'repeat' }
 	};
 
-	//	Shader by Kali (https://www.shadertoy.com/view/4dfGDM)
+	//	Shader by 4rknova (https://www.shadertoy.com/view/lssGDn)
 	this.fragmentSrc = [
 		"precision mediump float;",
 		"uniform vec3      iResolution;",
@@ -36,40 +36,25 @@ PIXI.StarNestFilter = function(width, height, texture)
 		"precision highp float;",
 		"#endif",
 
-		"#define PI 3.1416",
+		"#define S 0.79577471545 // Precalculated 2.5 / PI",
+		"#define E 0.0001",
 
 		"void main(void)",
 		"{",
-			"//map the xy pixel co-ordinates to be between -1.0 to +1.0 on x and y axes",
-			"//and alter the x value according to the aspect ratio so it isn't 'stretched'",
 			"vec2 p = (2.0 * gl_FragCoord.xy / iResolution.xy - 1.0)",
 			"* vec2(iResolution.x / iResolution.y, 1.0);",
+			"vec2 t = vec2(S * atan(p.x, p.y), 1.0 / max(length(p), E));",
+			"vec3 c = texture2D(iChannel0, t + vec2(iGlobalTime * 0.1, iGlobalTime)).xyz;",
+			"gl_FragColor = vec4(c / (t.y + 0.5), 1.0);",
+		"}"
+	];
 
-			"//now, this is the usual part that uses the formula for texture mapping a ray-",
-			"//traced cylinder using the vector p that describes the position of the pixel",
-			"//from the centre.",
-			"vec2 uv = vec2(atan(p.y, p.x) * 1.0/PI, 1.0 / sqrt(dot(p, p))) * vec2(2.0, 1.0);",
-
-
-			"//now this just 'warps' the texture read by altering the u coordinate depending on",
-			"//the val of the v coordinate and the current time",
-			"uv.x += sin(2.0 * uv.y + iGlobalTime * 0.5);",
-
-			"vec3 c = texture2D(iChannel0, uv).xyz",
-
-			"//this divison makes the color value 'darker' into the distance, otherwise",
-			"//everything will be a uniform brightness and no sense of depth will be present.",
-			"/ (uv.y * 0.5 + 1.0);",
-
-			"gl_FragColor = vec4(c, 1.0);",
-		"}"];
-	
 }
 
-PIXI.StarNestFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.StarNestFilter.prototype.constructor = PIXI.StarNestFilter;
+PIXI.TunnelFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
+PIXI.TunnelFilter.prototype.constructor = PIXI.TunnelFilter;
 
-Object.defineProperty(PIXI.StarNestFilter.prototype, 'iGlobalTime', {
+Object.defineProperty(PIXI.TunnelFilter.prototype, 'iGlobalTime', {
     get: function() {
         return this.uniforms.iGlobalTime.value;
     },
@@ -95,7 +80,7 @@ function create() {
 	sprite.width = 800;
 	sprite.height = 600;
 
-	filter = new PIXI.StarNestFilter(sprite.width, sprite.height, sprite.texture);
+	filter = new PIXI.TunnelFilter(sprite.width, sprite.height, sprite.texture);
 
 	sprite.filters = [filter];
 

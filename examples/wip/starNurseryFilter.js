@@ -17,7 +17,7 @@ PIXI.StarNurseryFilter = function(width, height, texture)
 		iResolution: { type: 'f3', value: { x: width, y: height, z: 0 }},
 		iGlobalTime: { type: 'f', value: 1 },
 		iDate: { type: 'f4', value: dates },
-		iChannel0: { type: 'sampler2D', value: texture }
+		iChannel0: { type: 'sampler2D', value: texture, wrap: 'repeat' }
 	};
 
 	//	Shader by Dave Hoskins (https://www.shadertoy.com/view/XsfGzH)
@@ -206,7 +206,7 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: p
 function preload() {
 
     // game.load.image('texture', 'wip/64x64.png');
-    game.load.image('texture', 'wip/tex16.png');
+    game.load.image('texture', 'wip/tex12.png');
 
 }
 

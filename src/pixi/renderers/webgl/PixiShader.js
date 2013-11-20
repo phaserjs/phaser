@@ -107,22 +107,18 @@ PIXI.PixiShader.prototype.syncUniforms = function()
     	}
     	if(type == "f2")
     	{
-    	//	console.log(this.program[key])
 			gl.uniform2f(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y);
     	}
         else if(type == "f3")
         {
-           // console.log(this.uniforms[key].value)
             gl.uniform3f(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y, this.uniforms[key].value.z);
         }
         else if(type == "f3v")
         {
-           // console.log(this.uniforms[key].value)
             gl.uniform3fv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
         }
         else if(type == "f4")
         {
-           // console.log(this.uniforms[key].value)
             gl.uniform4fv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
         }
     	else if(type == "mat4")
@@ -131,13 +127,50 @@ PIXI.PixiShader.prototype.syncUniforms = function()
     	}
     	else if(type == "sampler2D")
     	{
-    		// first texture...
-    		var texture = this.uniforms[key].value;
-    		
-    		gl.activeTexture(gl.TEXTURE1);
-	    	gl.bindTexture(gl.TEXTURE_2D, texture.baseTexture._glTexture);
-	    	
-    		gl.uniform1i(this.uniforms[key].uniformLocation, 1);
+            var texture = this.uniforms[key].value.baseTexture._glTexture;
+    		var image = this.uniforms[key].value.baseTexture.source;
+            var format = gl.RGBA;
+
+            if (this.uniforms[key].format && this.uniforms[key].format == 'luminance')
+            {
+                format = gl.LUMINANCE;
+            }
+
+            gl.activeTexture(gl.TEXTURE1);
+
+            if (this.uniforms[key].wrap)
+            {
+                if (this.uniforms[key].wrap == 'no-repeat' || this.uniforms[key].wrap === false)
+                {
+                    this.createGLTextureLinear(gl, image, texture);
+                }
+                else if (this.uniforms[key].wrap == 'repeat' || this.uniforms[key].wrap === true)
+                {
+                    this.createGLTexture(gl, image, format, texture);
+                }
+                else if (this.uniforms[key].wrap == 'nearest-repeat')
+                {
+                    this.createGLTextureNearestRepeat(gl, image, texture);
+                }
+                else if (this.uniforms[key].wrap == 'nearest')
+                {
+                    this.createGLTextureNearest(gl, image, texture);
+                }
+                else if (this.uniforms[key].wrap == 'audio')
+                {
+                    this.createAudioTexture(gl, texture);
+                }
+                else if (this.uniforms[key].wrap == 'keyboard')
+                {
+                    this.createKeyboardTexture(gl, texture);
+                }
+            }
+            else
+            {
+                this.createGLTextureLinear(gl, image, texture);
+            }
+
+            gl.uniform1i(this.uniforms[key].uniformLocation, 1);
     		
     		// activate texture..
     		// gl.uniformMatrix4fv(this.program[key], false, this.uniforms[key].value);
@@ -145,6 +178,71 @@ PIXI.PixiShader.prototype.syncUniforms = function()
     	}
     }
     
+};
+
+PIXI.PixiShader.prototype.createGLTexture = function(gl, image, format, texture)
+{
+    gl.bindTexture(   gl.TEXTURE_2D, texture);
+    gl.pixelStorei(   gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage2D(    gl.TEXTURE_2D, 0, format, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    gl.generateMipmap(gl.TEXTURE_2D);
+}
+
+PIXI.PixiShader.prototype.createGLTextureLinear = function(gl, image, texture)
+{
+    gl.bindTexture(  gl.TEXTURE_2D, texture);
+    gl.pixelStorei(  gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage2D(   gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+}
+
+PIXI.PixiShader.prototype.createGLTextureNearestRepeat = function(gl, image, texture)
+{
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+}
+
+PIXI.PixiShader.prototype.createGLTextureNearest = function(gl, image, texture)
+{
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+}
+
+PIXI.PixiShader.prototype.createAudioTexture = function(gl, texture)
+{
+    gl.bindTexture(   gl.TEXTURE_2D, texture );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE) ;
+    gl.texImage2D(    gl.TEXTURE_2D, 0, gl.LUMINANCE, 512, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, null);
+}
+
+PIXI.PixiShader.prototype.createKeyboardTexture = function(gl, texture)
+{
+    gl.bindTexture(   gl.TEXTURE_2D, texture );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
+    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE) ;
+    gl.texImage2D(    gl.TEXTURE_2D, 0, gl.LUMINANCE, 256, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, null);
 }
 
 PIXI.PixiShader.defaultVertexSrc = [

@@ -17,7 +17,7 @@ PIXI.StarFieldFilter = function(width, height, texture)
 		iResolution: { type: 'f3', value: { x: width, y: height, z: 0 }},
 		iGlobalTime: { type: 'f', value: 1 },
 		iDate: { type: 'f4', value: dates },
-		iChannel0: { type: 'sampler2D', value: texture }
+		iChannel0: { type: 'sampler2D', value: texture, wrap: 'repeat' }
 	};
 
 	//	Shader by Rebb / TRSI (https://www.shadertoy.com/view/XdX3Wn)
@@ -125,8 +125,8 @@ var sprite;
 function create() {
 
 	sprite = game.add.sprite(0, 0, 'texture');
-	sprite.width = 512;
-	sprite.height = 512;
+	sprite.width = 800;
+	sprite.height = 600;
 
 	filter = new PIXI.StarFieldFilter(sprite.width, sprite.height, sprite.texture);
 

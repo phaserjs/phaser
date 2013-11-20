@@ -17,7 +17,7 @@ PIXI.DeformStarFilter = function(width, height, texture)
 		iResolution: { type: 'f3', value: { x: width, y: height, z: 0 }},
 		iGlobalTime: { type: 'f', value: 1 },
 		iDate: { type: 'f4', value: dates },
-		iChannel0: { type: 'sampler2D', value: texture }
+		iChannel0: { type: 'sampler2D', value: texture, wrap: 'repeat' }
 	};
 
 	//	Shader by iq (https://www.shadertoy.com/view/4dXGRn)
