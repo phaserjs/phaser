@@ -30,6 +30,8 @@ var Phaser = Phaser || {
 	EMITTER: 11,
 	POLYGON: 12,
 	BITMAPDATA: 13,
+	CANVAS_FILTER: 14,
+	WEBGL_FILTER: 15,
 
 	NONE: 0,
 	LEFT: 1,

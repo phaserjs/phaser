@@ -41,6 +41,8 @@ Change Log
 
 Version 1.1.3 - in build
 
+* New: Added a new in-built texture. Sprites now use __default if no texture was provided (a 32x32 transparent PNG) or __missing if one was given but not found (a 32x32 black box with a green cross through it)
+* New: Added Phaser.Filter. A new way to use the new WebGL shaders/filters that the new version of Pixi supports.
 * New: The object returned by Math.sinCosGenerator now contains a length property.
 * New: Phaser.BitmapData object. Can be used as a texture for a Sprite or Tiling Sprite. See the new examples and docs for details.
 * New: RenderTexture.render now takes a Phaser.Group. Also added renderXY for when you don't want to make a new Point object.
@@ -68,6 +70,7 @@ Version 1.1.3 - in build
 * Fixed: Point.rotate asDegrees fixed (thanks BorisKozo)
 * Fixed: ArcadePhysics.separateTile wasn't returning the value, so the custom process callback wasn't getting called (thanks flameiguana)
 * Fixed: StageScaleMode.forceOrientation now correctly stores the forcePortrait value (thanks haden)
+* Fixed: Fixes to Math and Loader (thanks theJare)
 
 * Updated: ArcadePhysics.updateMotion applies the dt to the velocity calculations as well as position now (thanks jcs)
 * Updated: RequestAnimationFrame now retains the callbackID which is passed to cancelRequestAnimationFrame.

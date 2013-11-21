@@ -118,9 +118,14 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     }
     else
     {
-        if (key == null || this.game.cache.checkImageKey(key) == false)
+        if (key === null || typeof key === 'undefined')
         {
             key = '__default';
+            this.key = key;
+        }
+        else if (typeof key === 'string' && this.game.cache.checkImageKey(key) == false)
+        {
+            key = '__missing';
             this.key = key;
         }
 

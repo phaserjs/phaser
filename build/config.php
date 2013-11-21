@@ -31,7 +31,7 @@
     <script src="../src/pixi/filters/DisplacementFilter.js"></script>
     <script src="../src/pixi/filters/DotScreenFilter.js"></script>
     <script src="../src/pixi/filters/FilterBlock.js"></script>
-    <script src="../src/pixi/filters/GreyFilter.js"></script>
+    <script src="../src/pixi/filters/GrayFilter.js"></script>
     <script src="../src/pixi/filters/InvertFilter.js"></script>
     <script src="../src/pixi/filters/PixelateFilter.js"></script>
     <script src="../src/pixi/filters/RGBSplitFilter.js"></script>
@@ -69,6 +69,7 @@
 	<script src="../src/core/LinkedList.js"></script>
 	<script src="../src/core/Signal.js"></script>
 	<script src="../src/core/SignalBinding.js"></script>
+	<script src="../src/core/Filter.js"></script>
 	<script src="../src/core/Plugin.js"></script>
 	<script src="../src/core/PluginManager.js"></script>
 	<script src="../src/core/Stage.js"></script>

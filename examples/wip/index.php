@@ -85,6 +85,10 @@
                 $f = $_GET['f'];
         ?>
         <script src="wip/<?php echo $f?>" type="text/javascript"></script>
+        <script src="../filters/SampleFilter.js" type="text/javascript"></script>
+        <script src="../filters/BinarySerpents.js" type="text/javascript"></script>
+        <script src="../filters/Tunnel.js" type="text/javascript"></script>
+        <script src="../filters/ColorBars.js" type="text/javascript"></script>
         <?php
             }
         ?>

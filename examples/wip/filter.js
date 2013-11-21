@@ -14,9 +14,9 @@ PIXI.RayTracedBallsFilter = function(width, height, texture)
 	];
 
 	this.uniforms = {
-		resolution: { type: 'f2', value: { x: width, y: height }},
-		mouse: { type: 'f2', value: { x: 0, y: 0 }},
-		time: { type: 'f', value: 1 }
+		resolution: { type: '2f', value: { x: width, y: height }},
+		mouse: { type: '2f', value: { x: 0, y: 0 }},
+		time: { type: '1f', value: 1 }
 	};
 
 	//	http://glsl.heroku.com/e#11707.0

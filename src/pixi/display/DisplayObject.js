@@ -368,10 +368,6 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'filters', {
  */
 PIXI.DisplayObject.prototype.addFilter = function(data)
 {
-	//if(this.filter)return;
-	//this.filter = true;
-//	data[0].target = this;
-	
 
 	// insert a filter block..
 	// TODO Onject pool thease bad boys..

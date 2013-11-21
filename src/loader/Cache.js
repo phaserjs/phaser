@@ -69,6 +69,7 @@ Phaser.Cache = function (game) {
     this._bitmapDatas = {};
 
     this.addDefaultImage();
+    this.addMissingImage();
 
     /**
 	* @property {Phaser.Signal} onSoundUnlock - Description.
@@ -239,20 +240,38 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Adds a default image to be used when a key is wrong / missing. Is mapped to the key __default.
+    * Adds a default image to be used in special cases such as WebGL Filters. Is mapped to the key __default.
     *
     * @method Phaser.Cache#addDefaultImage
     */
     addDefaultImage: function () {
 
         var img = new Image();
-        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJ9JREFUeNq01ssOwyAMRFG46v//Mt1ESmgh+DFmE2GPOBARKb2NVjo+17PXLD8a1+pl5+A+wSgFygymWYHBb0FtsKhJDdZlncG2IzJ4ayoMDv20wTmSMzClEgbWYNTAkQ0Z+OJ+A/eWnAaR9+oxCF4Os0H8htsMUp+pwcgBBiMNnAwF8GqIgL2hAzaGFFgZauDPKABmowZ4GL369/0rwACp2yA/ttmvsQAAAABJRU5ErkJggg==";
+        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQMAAABJtOi3AAAAA1BMVEX///+nxBvIAAAAAXRSTlMAQObYZgAAABVJREFUeF7NwIEAAAAAgKD9qdeocAMAoAABm3DkcAAAAABJRU5ErkJggg==";
 
         this._images['__default'] = { url: null, data: img, spriteSheet: false };
         this._images['__default'].frame = new Phaser.Frame(0, 0, 0, 32, 32, '', '');
 
         PIXI.BaseTextureCache['__default'] = new PIXI.BaseTexture(img);
         PIXI.TextureCache['__default'] = new PIXI.Texture(PIXI.BaseTextureCache['__default']);
+
+    },
+
+    /**
+    * Adds an image to be used when a key is wrong / missing. Is mapped to the key __missing.
+    *
+    * @method Phaser.Cache#addMissingImage
+    */
+    addMissingImage: function () {
+
+        var img = new Image();
+        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJ9JREFUeNq01ssOwyAMRFG46v//Mt1ESmgh+DFmE2GPOBARKb2NVjo+17PXLD8a1+pl5+A+wSgFygymWYHBb0FtsKhJDdZlncG2IzJ4ayoMDv20wTmSMzClEgbWYNTAkQ0Z+OJ+A/eWnAaR9+oxCF4Os0H8htsMUp+pwcgBBiMNnAwF8GqIgL2hAzaGFFgZauDPKABmowZ4GL369/0rwACp2yA/ttmvsQAAAABJRU5ErkJggg==";
+
+        this._images['__missing'] = { url: null, data: img, spriteSheet: false };
+        this._images['__missing'].frame = new Phaser.Frame(0, 0, 0, 32, 32, '', '');
+
+        PIXI.BaseTextureCache['__missing'] = new PIXI.BaseTexture(img);
+        PIXI.TextureCache['__missing'] = new PIXI.Texture(PIXI.BaseTextureCache['__missing']);
 
     },
 
