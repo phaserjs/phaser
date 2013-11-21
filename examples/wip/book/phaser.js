@@ -18,7 +18,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v1.1.3 - Built at: Wed Nov 20 2013 06:21:52
+* v1.1.3 - Built at: Thu Nov 21 2013 05:29:46
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -78,6 +78,8 @@ var Phaser = Phaser || {
 	EMITTER: 11,
 	POLYGON: 12,
 	BITMAPDATA: 13,
+	CANVAS_FILTER: 14,
+	WEBGL_FILTER: 15,
 
 	NONE: 0,
 	LEFT: 1,
@@ -1234,10 +1236,6 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'filters', {
  */
 PIXI.DisplayObject.prototype.addFilter = function(data)
 {
-	//if(this.filter)return;
-	//this.filter = true;
-//	data[0].target = this;
-	
 
 	// insert a filter block..
 	// TODO Onject pool thease bad boys..
@@ -2556,9 +2554,9 @@ PIXI.TilingSprite.prototype.onTextureUpdate = function(event)
  * @class AbstractFilter
  * @constructor
  * @param fragmentSrc
- * @param unifroms  
+ * @param uniforms  
  */
-PIXI.AbstractFilter = function(fragmentSrc, unifroms)
+PIXI.AbstractFilter = function(fragmentSrc, uniforms)
 {
 	/**
 	* An array of passes - some filters contain a few steps this array simply stores the steps in a liniear fashion.
@@ -2577,7 +2575,7 @@ PIXI.AbstractFilter = function(fragmentSrc, unifroms)
 	@property uniforms
 	@private
 	*/
-	this.uniforms = unifroms || {};
+	this.uniforms = uniforms || {};
 	
 	this.fragmentSrc = fragmentSrc || [];
 }
@@ -2668,7 +2666,7 @@ PIXI.BlurXFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		blur: {type: 'f', value: 1/512},
+		blur: {type: '1f', value: 1/512},
 	};
 	
 	this.fragmentSrc = [
@@ -2725,7 +2723,7 @@ PIXI.BlurYFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		blur: {type: 'f', value: 1/512},
+		blur: {type: '1f', value: 1/512},
 	};
 	
 	this.fragmentSrc = [
@@ -2839,7 +2837,7 @@ PIXI.CrossHatchFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		blur: {type: 'f', value: 1/512},
+		blur: {type: '1f', value: 1/512},
 	};
 	
 	this.fragmentSrc = [
@@ -2920,10 +2918,10 @@ PIXI.DisplacementFilter = function(texture)
 	//console.log()
 	this.uniforms = {
 		displacementMap: {type: 'sampler2D', value:texture},
-		scale:			 {type: 'f2', value:{x:30, y:30}},
-		offset:			 {type: 'f2', value:{x:0, y:0}},
-		mapDimensions:   {type: 'f2', value:{x:1, y:5112}},
-		dimensions:   {type: 'f4', value:[0,0,0,0]}
+		scale:			 {type: '2f', value:{x:30, y:30}},
+		offset:			 {type: '2f', value:{x:0, y:0}},
+		mapDimensions:   {type: '2f', value:{x:1, y:5112}},
+		dimensions:   {type: '4fv', value:[0,0,0,0]}
 	};
 	
 
@@ -3049,9 +3047,9 @@ PIXI.DotScreenFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		scale: {type: 'f', value:1},
-		angle: {type: 'f', value:5},
-		dimensions:   {type: 'f4', value:[0,0,0,0]}
+		scale: {type: '1f', value:1},
+		angle: {type: '1f', value:5},
+		dimensions:   {type: '4fv', value:[0,0,0,0]}
 	};
 
 	this.fragmentSrc = [
@@ -3131,58 +3129,6 @@ PIXI.FilterBlock = function()
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
-
-/**
- * 
- * This turns your displayObjects to black and white.
- * @class GreyFilter
- * @contructor
- */
-PIXI.GreyFilter = function()
-{
-	PIXI.AbstractFilter.call( this );
-	
-	this.passes = [this];
-	
-	// set the uniforms
-	this.uniforms = {
-		grey: {type: 'f', value: 1},
-	};
-	
-	this.fragmentSrc = [
-	  "precision mediump float;",
-	  "varying vec2 vTextureCoord;",
-	  "varying float vColor;",
-	  "uniform sampler2D uSampler;",
-	  "uniform float grey;",
-	  "void main(void) {",
-	    "gl_FragColor = texture2D(uSampler, vTextureCoord);",
-		"gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.2126*gl_FragColor.r + 0.7152*gl_FragColor.g + 0.0722*gl_FragColor.b), grey);",
-	    "gl_FragColor = gl_FragColor * vColor;",
-	  "}"
-	];
-}
-
-PIXI.GreyFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.GreyFilter.prototype.constructor = PIXI.GreyFilter;
-
-/**
-The strength of the grey. 1 will make the object black and white, 0 will make the object its normal color
-@property grey
-*/
-Object.defineProperty(PIXI.GreyFilter.prototype, 'grey', {
-    get: function() {
-        return this.uniforms.grey.value;
-    },
-    set: function(value) {
-    	this.uniforms.grey.value = value;
-    }
-});
-
-/**
- * @author Mat Groves http://matgroves.com/ @Doormat23
- */
-
 /**
  * 
  * This inverts your displayObjects colors.
@@ -3197,7 +3143,7 @@ PIXI.InvertFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		invert: {type: 'f', value: 1},
+		invert: {type: '1f', value: 1},
 	};
 	
 	this.fragmentSrc = [
@@ -3249,9 +3195,9 @@ PIXI.PixelateFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		invert: {type: 'f', value: 0},
-		dimensions: {type: 'f4', value:new Float32Array([10000, 100, 10, 10])},
-		pixelSize: {type: 'f2', value:{x:10, y:10}},
+		invert: {type: '1f', value: 0},
+		dimensions: {type: '4fv', value:new Float32Array([10000, 100, 10, 10])},
+		pixelSize: {type: '2f', value:{x:10, y:10}},
 	};
 
 	this.fragmentSrc = [
@@ -3307,10 +3253,10 @@ PIXI.RGBSplitFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		red: {type: 'f2', value: {x:20, y:20}},
-		green: {type: 'f2', value: {x:-20, y:20}},
-		blue: {type: 'f2', value: {x:20, y:-20}},
-		dimensions:   {type: 'f4', value:[0,0,0,0]}
+		red: {type: '2f', value: {x:20, y:20}},
+		green: {type: '2f', value: {x:-20, y:20}},
+		blue: {type: '2f', value: {x:20, y:-20}},
+		dimensions:   {type: '4fv', value:[0,0,0,0]}
 	};
 	
 	this.fragmentSrc = [
@@ -3364,7 +3310,7 @@ PIXI.SepiaFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		sepia: {type: 'f', value: 1},
+		sepia: {type: '1f', value: 1},
 	};
 	
 	this.fragmentSrc = [
@@ -3414,7 +3360,7 @@ PIXI.SmartBlurFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		blur: {type: 'f', value: 1/512},
+		blur: {type: '1f', value: 1/512},
 	};
 	
 	this.fragmentSrc = [
@@ -3483,9 +3429,9 @@ PIXI.TwistFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		radius: {type: 'f', value:0.5},
-		angle: {type: 'f', value:5},
-		offset: {type: 'f2', value:{x:0.5, y:0.5}},
+		radius: {type: '1f', value:0.5},
+		angle: {type: '1f', value:5},
+		offset: {type: '2f', value:{x:0.5, y:0.5}},
 	};
 
 	this.fragmentSrc = [
@@ -4498,209 +4444,295 @@ PIXI.CanvasRenderer.prototype.renderStrip = function(strip)
 
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
+ * @author Richard Davey http://www.photonstorm.com @photonstorm
  */
 
-
+/**
+* @class PIXI.PixiShader
+* @constructor
+*/
 PIXI.PixiShader = function()
 {
-	// the webGL program..
-	this.program;
-	
-	this.fragmentSrc = [
-	  "precision lowp float;",
-	  "varying vec2 vTextureCoord;",
-	  "varying float vColor;",
-	  "uniform sampler2D uSampler;",
-	  "void main(void) {",
-	    "gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;",
-	  "}"
-	];
-	
+    /**
+    * @property {any} program - The WebGL program.
+    */
+    this.program;
+    
+    /**
+    * @property {array} fragmentSrc - The fragment shader.
+    */
+    this.fragmentSrc = [
+        "precision lowp float;",
+        "varying vec2 vTextureCoord;",
+        "varying float vColor;",
+        "uniform sampler2D uSampler;",
+        "void main(void) {",
+            "gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;",
+        "}"
+    ];
+
+    /**
+    * @property {number} textureCount - A local texture counter for multi-texture shaders.
+    */
+    this.textureCount = 0;
+    
 }
 
+/**
+* @method PIXI.PixiShader#init
+*/
 PIXI.PixiShader.prototype.init = function()
 {
-	var program = PIXI.compileProgram(this.vertexSrc || PIXI.PixiShader.defaultVertexSrc, this.fragmentSrc)
-	
-	var gl = PIXI.gl;
+    var program = PIXI.compileProgram(this.vertexSrc || PIXI.PixiShader.defaultVertexSrc, this.fragmentSrc)
+    
+    var gl = PIXI.gl;
 
     gl.useProgram(program);
-	
-	// get and store the uniforms for the shader
-	this.uSampler = gl.getUniformLocation(program, "uSampler");
-	this.projectionVector = gl.getUniformLocation(program, "projectionVector");
-	this.offsetVector = gl.getUniformLocation(program, "offsetVector");
-    //this.dimensions = gl.getUniformLocation(this.program, "dimensions");
+    
+    // get and store the uniforms for the shader
+    this.uSampler = gl.getUniformLocation(program, "uSampler");
+    this.projectionVector = gl.getUniformLocation(program, "projectionVector");
+    this.offsetVector = gl.getUniformLocation(program, "offsetVector");
+    // this.dimensions = gl.getUniformLocation(program, "dimensions");
     
     // get and store the attributes
     this.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
-	this.colorAttribute = gl.getAttribLocation(program, "aColor");
-	this.aTextureCoord = gl.getAttribLocation(program, "aTextureCoord");
-	  
+    this.colorAttribute = gl.getAttribLocation(program, "aColor");
+    this.aTextureCoord = gl.getAttribLocation(program, "aTextureCoord");
+      
     // add those custom shaders!
     for (var key in this.uniforms)
     {
-       
-    	// get the uniform locations..
-	//	program[key] = 
+        // get the uniform locations..
         this.uniforms[key].uniformLocation = gl.getUniformLocation(program, key);
-
-      
     }
   
-	this.program = program;
+    this.program = program;
 }
 
+/**
+* Updates the shader uniform values.
+* Uniforms are specified in the GLSL_ES Specification: http://www.khronos.org/registry/webgl/specs/latest/1.0/
+* http://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf
+*
+* @method PIXI.PixiShader#syncUniforms
+*/
 PIXI.PixiShader.prototype.syncUniforms = function()
 {
-	var gl = PIXI.gl;
-	
-	for (var key in this.uniforms) 
+    this.textureCount = 1;
+
+    var gl = PIXI.gl;
+    
+    for (var key in this.uniforms) 
     {
-    	//var 
-    	var type = this.uniforms[key].type;
-    	
-    	// need to grow this!
+        var type = this.uniforms[key].type;
+        var transpose = false;
 
-/*
-    http://www.khronos.org/registry/webgl/specs/latest/1.0/
-    http://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf
-
-    void uniform1f(WebGLUniformLocation? location, GLfloat x);
-    void uniform1fv(WebGLUniformLocation? location, Float32Array v);
-    void uniform1fv(WebGLUniformLocation? location, sequence<GLfloat> v);
-    void uniform1i(WebGLUniformLocation? location, GLint x);
-    void uniform1iv(WebGLUniformLocation? location, Int32Array v);
-    void uniform1iv(WebGLUniformLocation? location, sequence<long> v);
-    void uniform2f(WebGLUniformLocation? location, GLfloat x, GLfloat y);
-    void uniform2fv(WebGLUniformLocation? location, Float32Array v);
-    void uniform2fv(WebGLUniformLocation? location, sequence<GLfloat> v);
-    void uniform2i(WebGLUniformLocation? location, GLint x, GLint y);
-    void uniform2iv(WebGLUniformLocation? location, Int32Array v);
-    void uniform2iv(WebGLUniformLocation? location, sequence<long> v);
-    void uniform3f(WebGLUniformLocation? location, GLfloat x, GLfloat y, GLfloat z);
-    void uniform3fv(WebGLUniformLocation? location, Float32Array v);
-    void uniform3fv(WebGLUniformLocation? location, sequence<GLfloat> v);
-    void uniform3i(WebGLUniformLocation? location, GLint x, GLint y, GLint z);
-    void uniform3iv(WebGLUniformLocation? location, Int32Array v);
-    void uniform3iv(WebGLUniformLocation? location, sequence<long> v);
-    void uniform4f(WebGLUniformLocation? location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
-    void uniform4fv(WebGLUniformLocation? location, Float32Array v);
-    void uniform4fv(WebGLUniformLocation? location, sequence<GLfloat> v);
-    void uniform4i(WebGLUniformLocation? location, GLint x, GLint y, GLint z, GLint w);
-    void uniform4iv(WebGLUniformLocation? location, Int32Array v);
-    void uniform4iv(WebGLUniformLocation? location, sequence<long> v);
-
-    void uniformMatrix2fv(WebGLUniformLocation? location, GLboolean transpose, Float32Array value);
-    void uniformMatrix2fv(WebGLUniformLocation? location, GLboolean transpose, sequence<GLfloat> value);
-    void uniformMatrix3fv(WebGLUniformLocation? location, GLboolean transpose, Float32Array value);
-    void uniformMatrix3fv(WebGLUniformLocation? location, GLboolean transpose, sequence<GLfloat> value);
-    void uniformMatrix4fv(WebGLUniformLocation? location, GLboolean transpose, Float32Array value);
-    void uniformMatrix4fv(WebGLUniformLocation? location, GLboolean transpose, sequence<GLfloat> value);
-*/
-
-    	if(type == "f")
-    	{
-			gl.uniform1f(this.uniforms[key].uniformLocation, this.uniforms[key].value);
-    	}
-    	if(type == "f2")
-    	{
-			gl.uniform2f(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y);
-    	}
-        else if(type == "f3")
+        if (this.uniforms[key].transpose)
         {
+            transpose = this.uniforms[key].transpose;
+        }
+
+        if (type == "1f")
+        {
+            // void uniform1f(WebGLUniformLocation? location, GLfloat x);
+            gl.uniform1f(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
+        else if (type == "1fv")
+        {
+            // void uniform1fv(WebGLUniformLocation? location, Float32Array v);
+            // void uniform1fv(WebGLUniformLocation? location, sequence<GLfloat> v);
+            gl.uniform1fv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
+        else if (type == "1i")
+        {
+            // void uniform1i(WebGLUniformLocation? location, GLint x);
+            gl.uniform1i(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
+        else if (type == "1iv")
+        {
+            // void uniform1iv(WebGLUniformLocation? location, Int32Array v);
+            // void uniform1iv(WebGLUniformLocation? location, sequence<long> v);
+            gl.uniform1i(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
+        else if (type == "2f")
+        {
+            // void uniform2f(WebGLUniformLocation? location, GLfloat x, GLfloat y);
+            gl.uniform2f(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y);
+        }
+        else if (type == "2fv")
+        {
+            // void uniform2fv(WebGLUniformLocation? location, Float32Array v);
+            // void uniform2fv(WebGLUniformLocation? location, sequence<GLfloat> v);
+            gl.uniform2fv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
+        else if (type == "2i")
+        {
+            // void uniform2i(WebGLUniformLocation? location, GLint x, GLint y);
+            gl.uniform2i(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y);
+        }
+        else if (type == "2iv")
+        {
+            // void uniform2iv(WebGLUniformLocation? location, Int32Array v);
+            // void uniform2iv(WebGLUniformLocation? location, sequence<long> v);
+            gl.uniform2iv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
+        else if (type == "3f")
+        {
+            // void uniform3f(WebGLUniformLocation? location, GLfloat x, GLfloat y, GLfloat z);
             gl.uniform3f(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y, this.uniforms[key].value.z);
         }
-        else if(type == "f3v")
+        else if (type == "3fv")
         {
+            // void uniform3fv(WebGLUniformLocation? location, Float32Array v);
+            // void uniform3fv(WebGLUniformLocation? location, sequence<GLfloat> v);
             gl.uniform3fv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
         }
-        else if(type == "f4")
+        else if (type == "3i")
         {
+            // void uniform3i(WebGLUniformLocation? location, GLint x, GLint y, GLint z);
+            gl.uniform3i(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y, this.uniforms[key].value.z);
+        }
+        else if (type == "3iv")
+        {
+            // void uniform3iv(WebGLUniformLocation? location, Int32Array v);
+            // void uniform3iv(WebGLUniformLocation? location, sequence<long> v);
+            gl.uniform3iv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
+        else if (type == "4f")
+        {
+            // void uniform4f(WebGLUniformLocation? location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+            gl.uniform4f(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y, this.uniforms[key].value.z, this.uniforms[key].value.w);
+        }
+        else if (type == "4fv")
+        {
+            // void uniform4fv(WebGLUniformLocation? location, Float32Array v);
+            // void uniform4fv(WebGLUniformLocation? location, sequence<GLfloat> v);
             gl.uniform4fv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
         }
-    	else if(type == "mat4")
-    	{
-    		gl.uniformMatrix4fv(this.uniforms[key].uniformLocation, false, this.uniforms[key].value);
-    	}
-    	else if(type == "sampler2D")
-    	{
-            var texture = this.uniforms[key].value.baseTexture._glTexture;
-    		var image = this.uniforms[key].value.baseTexture.source;
-            var format = gl.RGBA;
-
-            if (this.uniforms[key].format && this.uniforms[key].format == 'luminance')
+        else if (type == "4i")
+        {
+            // void uniform4i(WebGLUniformLocation? location, GLint x, GLint y, GLint z, GLint w);
+            gl.uniform4i(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y, this.uniforms[key].value.z, this.uniforms[key].value.w);
+        }
+        else if (type == "4iv")
+        {
+            // void uniform4iv(WebGLUniformLocation? location, Int32Array v);
+            // void uniform4iv(WebGLUniformLocation? location, sequence<long> v);
+            gl.uniform4iv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
+        else if (type == "mat2")
+        {
+            // void uniformMatrix2fv(WebGLUniformLocation? location, GLboolean transpose, Float32Array value);
+            // void uniformMatrix2fv(WebGLUniformLocation? location, GLboolean transpose, sequence<GLfloat> value);
+            gl.uniformMatrix2fv(this.uniforms[key].uniformLocation, transpose, this.uniforms[key].value);
+        }
+        else if (type == "mat3")
+        {
+            // void uniformMatrix3fv(WebGLUniformLocation? location, GLboolean transpose, Float32Array value);
+            // void uniformMatrix3fv(WebGLUniformLocation? location, GLboolean transpose, sequence<GLfloat> value);
+            gl.uniformMatrix3fv(this.uniforms[key].uniformLocation, transpose, this.uniforms[key].value);
+        }
+        else if (type == "mat4")
+        {
+            // void uniformMatrix4fv(WebGLUniformLocation? location, GLboolean transpose, Float32Array value);
+            // void uniformMatrix4fv(WebGLUniformLocation? location, GLboolean transpose, sequence<GLfloat> value);
+            gl.uniformMatrix4fv(this.uniforms[key].uniformLocation, transpose, this.uniforms[key].value);
+        }
+        else if (type == "sampler2D")
+        {
+            if (this.uniforms[key].value && this.uniforms[key].value.baseTexture.hasLoaded)
             {
-                format = gl.LUMINANCE;
-            }
+                var texture = this.uniforms[key].value.baseTexture._glTexture;
+                var image = this.uniforms[key].value.baseTexture.source;
+                var format = gl.RGBA;
 
-            gl.activeTexture(gl.TEXTURE1);
+                if (this.uniforms[key].format && this.uniforms[key].format == 'luminance')
+                {
+                    format = gl.LUMINANCE;
+                }
 
-            if (this.uniforms[key].wrap)
-            {
-                if (this.uniforms[key].wrap == 'no-repeat' || this.uniforms[key].wrap === false)
+                gl.activeTexture(gl['TEXTURE' + this.textureCount]);
+
+                if (this.uniforms[key].wrap)
+                {
+                    if (this.uniforms[key].wrap == 'no-repeat' || this.uniforms[key].wrap === false)
+                    {
+                        this.createGLTextureLinear(gl, image, texture);
+                    }
+                    else if (this.uniforms[key].wrap == 'repeat' || this.uniforms[key].wrap === true)
+                    {
+                        this.createGLTexture(gl, image, format, texture);
+                    }
+                    else if (this.uniforms[key].wrap == 'nearest-repeat')
+                    {
+                        this.createGLTextureNearestRepeat(gl, image, texture);
+                    }
+                    else if (this.uniforms[key].wrap == 'nearest')
+                    {
+                        this.createGLTextureNearest(gl, image, texture);
+                    }
+                    else if (this.uniforms[key].wrap == 'audio')
+                    {
+                        this.createAudioTexture(gl, texture);
+                    }
+                    else if (this.uniforms[key].wrap == 'keyboard')
+                    {
+                        this.createKeyboardTexture(gl, texture);
+                    }
+                }
+                else
                 {
                     this.createGLTextureLinear(gl, image, texture);
                 }
-                else if (this.uniforms[key].wrap == 'repeat' || this.uniforms[key].wrap === true)
-                {
-                    this.createGLTexture(gl, image, format, texture);
-                }
-                else if (this.uniforms[key].wrap == 'nearest-repeat')
-                {
-                    this.createGLTextureNearestRepeat(gl, image, texture);
-                }
-                else if (this.uniforms[key].wrap == 'nearest')
-                {
-                    this.createGLTextureNearest(gl, image, texture);
-                }
-                else if (this.uniforms[key].wrap == 'audio')
-                {
-                    this.createAudioTexture(gl, texture);
-                }
-                else if (this.uniforms[key].wrap == 'keyboard')
-                {
-                    this.createKeyboardTexture(gl, texture);
-                }
-            }
-            else
-            {
-                this.createGLTextureLinear(gl, image, texture);
-            }
 
-            gl.uniform1i(this.uniforms[key].uniformLocation, 1);
-    		
-    		// activate texture..
-    		// gl.uniformMatrix4fv(this.program[key], false, this.uniforms[key].value);
-    		// gl.uniformMatrix4fv(this.program[key], false, this.uniforms[key].value);
-    	}
+                gl.uniform1i(this.uniforms[key].uniformLocation, this.textureCount);
+
+                this.textureCount++;
+            }
+        }
     }
     
 };
 
+/**
+* Binds the given texture and image data. The texture is set to REPEAT.
+* Code based on Effects.js from ShaderToy.com
+* @method PIXI.PixiShader#createGLTexture
+*/
 PIXI.PixiShader.prototype.createGLTexture = function(gl, image, format, texture)
 {
-    gl.bindTexture(   gl.TEXTURE_2D, texture);
-    gl.pixelStorei(   gl.UNPACK_FLIP_Y_WEBGL, false);
-    gl.texImage2D(    gl.TEXTURE_2D, 0, format, gl.RGBA, gl.UNSIGNED_BYTE, image);
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage2D(gl.TEXTURE_2D, 0, format, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
     gl.generateMipmap(gl.TEXTURE_2D);
 }
 
+/**
+* Binds the given texture and image data. The texture is set to CLAMP_TO_EDGE.
+* Code based on Effects.js from ShaderToy.com
+* @method PIXI.PixiShader#createGLTextureLinear
+*/
 PIXI.PixiShader.prototype.createGLTextureLinear = function(gl, image, texture)
 {
-    gl.bindTexture(  gl.TEXTURE_2D, texture);
-    gl.pixelStorei(  gl.UNPACK_FLIP_Y_WEBGL, false);
-    gl.texImage2D(   gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 }
 
+/**
+* Binds the given texture and image data. The texture is set to REPEAT with NEAREST.
+* Code based on Effects.js from ShaderToy.com
+* @method PIXI.PixiShader#createGLTextureNearestRepeat
+*/
 PIXI.PixiShader.prototype.createGLTextureNearestRepeat = function(gl, image, texture)
 {
     gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -4712,6 +4744,11 @@ PIXI.PixiShader.prototype.createGLTextureNearestRepeat = function(gl, image, tex
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 }
 
+/**
+* Binds the given texture and image data. The texture is set to CLAMP_TO_EDGE with NEAREST.
+* Code based on Effects.js from ShaderToy.com
+* @method PIXI.PixiShader#createGLTextureNearest
+*/
 PIXI.PixiShader.prototype.createGLTextureNearest = function(gl, image, texture)
 {
     gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -4723,43 +4760,55 @@ PIXI.PixiShader.prototype.createGLTextureNearest = function(gl, image, texture)
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 }
 
+/**
+* Binds the given texture data. The texture is set to CLAMP_TO_EDGE with LUMINANCE. Designed for use with real-time audio data.
+* Code based on Effects.js from ShaderToy.com
+* @method PIXI.PixiShader#createAudioTexture
+*/
 PIXI.PixiShader.prototype.createAudioTexture = function(gl, texture)
 {
-    gl.bindTexture(   gl.TEXTURE_2D, texture );
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE) ;
-    gl.texImage2D(    gl.TEXTURE_2D, 0, gl.LUMINANCE, 512, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, null);
+    gl.bindTexture(gl.TEXTURE_2D, texture );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE) ;
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, 512, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, null);
 }
 
+/**
+* Binds the given texture data. The texture is set to CLAMP_TO_EDGE with LUMINANCE. Designed for use with keyboard input data.
+* Code based on Effects.js from ShaderToy.com
+* @method PIXI.PixiShader#createKeyboardTexture
+*/
 PIXI.PixiShader.prototype.createKeyboardTexture = function(gl, texture)
 {
-    gl.bindTexture(   gl.TEXTURE_2D, texture );
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST );
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST );
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
-    gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE) ;
-    gl.texImage2D(    gl.TEXTURE_2D, 0, gl.LUMINANCE, 256, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, null);
+    gl.bindTexture(gl.TEXTURE_2D, texture );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE) ;
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, 256, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, null);
 }
 
 PIXI.PixiShader.defaultVertexSrc = [
-  "attribute vec2 aVertexPosition;",
-  "attribute vec2 aTextureCoord;",
-  "attribute float aColor;",
-  
-  "uniform vec2 projectionVector;",
- "uniform vec2 offsetVector;",
-  "varying vec2 vTextureCoord;",
-  
-  "varying float vColor;",
+    
+    "attribute vec2 aVertexPosition;",
+    "attribute vec2 aTextureCoord;",
+    "attribute float aColor;",
 
-  "const vec2 center = vec2(-1.0, 1.0);",
-  "void main(void) {",
-    "gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center , 0.0, 1.0);",
-    "vTextureCoord = aTextureCoord;",
-    "vColor = aColor;",
-  "}"
+    "uniform vec2 projectionVector;",
+    "uniform vec2 offsetVector;",
+    "varying vec2 vTextureCoord;",
+
+    "varying float vColor;",
+
+    "const vec2 center = vec2(-1.0, 1.0);",
+    
+    "void main(void) {",
+        "gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center , 0.0, 1.0);",
+        "vTextureCoord = aTextureCoord;",
+        "vColor = aColor;",
+    "}"
 ];
 
 /**
@@ -6904,7 +6953,7 @@ PIXI.WebGLRenderGroup = function(gl, transparent)
 	
 	this.batchs = [];
 	this.toRemove = [];
-	console.log(this.transparent)
+	// console.log(this.transparent)
 	this.filterManager = new PIXI.WebGLFilterManager(this.transparent);
 }
 
@@ -9746,7 +9795,7 @@ Phaser.State = function () {
     this.load = null;
     
     /**
-	* @property {Phaser.GameMath} math - Reference to the math helper.
+	* @property {Phaser.Math} math - Reference to the math helper.
 	* @default
 	*/
     this.math = null;
@@ -11015,6 +11064,134 @@ Phaser.SignalBinding.prototype = {
     }
 
 };
+
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/** 
+* This is a base Filter template to use for any Phaser filter development.
+* 
+* @class Phaser.Filter
+* @classdesc Phaser - Filter
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {Object} uniforms - Uniform mappings object
+* @param {Array} fragmentSrc - The fragment shader code.
+*/
+Phaser.Filter = function (game, uniforms, fragmentSrc) {
+
+	/**
+	* @property {Phaser.Game} game - A reference to the currently running game.
+	*/
+    this.game = game;
+
+    /**
+    * @property {number} type - The const type of this object, either Phaser.WEBGL_FILTER or Phaser.CANVAS_FILTER.
+    * @default
+    */
+    this.type =  Phaser.WEBGL_FILTER;
+    
+    /**
+    * An array of passes - some filters contain a few steps this array simply stores the steps in a linear fashion.
+    * For example the blur filter has two passes blurX and blurY.
+    * @property {array} passes - An array of filter objects.
+    * @private
+    */
+    this.passes = [this];
+    
+    /**
+    * @property {boolean} dirty - Internal PIXI var.
+    * @default
+    */
+    this.dirty = true;
+
+    /**
+    * @property {number} padding - Internal PIXI var.
+    * @default
+    */
+    this.padding = 0;
+
+    /**
+    * @property {object} uniforms - Default uniform mappings.
+    */
+    this.uniforms = {
+
+        resolution: { type: '3f', value: { x: 256, y: 256, z: 0 }},
+        time: { type: '1f', value: 0 },
+        mouse: { type: '4f', value: { x: 0, y: 0, z: 0, w: 0 }}
+
+    };
+    
+    /**
+    * @property {array} fragmentSrc - The fragment shader code.
+    */
+    this.fragmentSrc = fragmentSrc || [];
+
+};
+
+Phaser.Filter.prototype = {
+
+    init: function () {
+        //  This should be over-ridden. Will receive a variable number of arguments.
+    },
+
+    setResolution: function (width, height) {
+
+        this.uniforms.resolution.value.x = width;
+        this.uniforms.resolution.value.y = height;
+
+    },
+
+    update: function (pointer) {
+
+        if (typeof pointer !== 'undefined')
+        {
+            this.uniforms.mouse.x = pointer.x;
+            this.uniforms.mouse.y = pointer.y;
+        }
+
+        this.uniforms.time.value = this.game.time.totalElapsedSeconds(); 
+
+    },
+
+    /**
+    * Clear down this Filter and null out references
+    * @method Phaser.Filter#destroy
+    */
+    destroy: function () {
+
+        this.game = null;
+        
+    }
+
+};
+
+Object.defineProperty(Phaser.Filter.prototype, 'width', {
+
+    get: function() {
+        return this.uniforms.resolution.value.x;
+    },
+
+    set: function(value) {
+        this.uniforms.resolution.value.x = value;
+    }
+
+});
+
+Object.defineProperty(Phaser.Filter.prototype, 'height', {
+
+    get: function() {
+        return this.uniforms.resolution.value.y;
+    },
+
+    set: function(value) {
+        this.uniforms.resolution.value.y = value;
+    }
+
+});
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
@@ -13277,25 +13454,29 @@ Phaser.World.prototype.update = function () {
 	if (this.game.stage._stage.first._iNext)
 	{
 		var currentNode = this.game.stage._stage.first._iNext;
-        var skipChildren = false;
+        var skipChildren;
 		
 		do
 		{
+            skipChildren = false;
+
 			if (currentNode['preUpdate'])
 			{
-				skipChildren = (currentNode.preUpdate() == false);
+				skipChildren = (currentNode.preUpdate() === false);
 			}
 
 			if (currentNode['update'])
 			{
-				skipChildren = (currentNode.update() == false) || skipChildren;
+				skipChildren = (currentNode.update() === false) || skipChildren;
 			}
 			
-            if(skipChildren)
+            if (skipChildren)
             {
                 currentNode = currentNode.last._iNext;
-            } else {
-                currentNode = currentNode._iNext;    
+            }
+            else
+            {
+                currentNode = currentNode._iNext;
             }
 			
 		}
@@ -13623,7 +13804,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.load = null;
 
     /**
-	* @property {Phaser.GameMath} math - Reference to the math helper.
+	* @property {Phaser.Math} math - Reference to the math helper.
 	* @default
 	*/
     this.math = null;
@@ -18446,6 +18627,26 @@ Phaser.GameObjectFactory.prototype = {
 
         return new Phaser.BitmapData(this.game, width, height);
 
+    },
+
+    /**
+    * A WebGL shader/filter that can be applied to Sprites.
+    *
+    * @method Phaser.GameObjectFactory#filter
+    * @param {string} filter - The name of the filter you wish to create, for example "HueRotate" or "SineWave"
+    * @param {...} - Whatever parameters are needed to be passed to the filter init function.
+    * @return {Phaser.Filter} The newly created Phaser.Filter object.
+    */
+    filter: function (filter) {
+
+        var args = Array.prototype.splice.call(arguments, 1);
+
+        var f = new Phaser.Filter[filter](this.game);
+
+        f.init.apply(f, args);
+
+        return f;
+
     }
 
 };
@@ -19677,9 +19878,14 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     }
     else
     {
-        if (key == null || this.game.cache.checkImageKey(key) == false)
+        if (key === null || typeof key === 'undefined')
         {
             key = '__default';
+            this.key = key;
+        }
+        else if (typeof key === 'string' && this.game.cache.checkImageKey(key) == false)
+        {
+            key = '__missing';
             this.key = key;
         }
 
@@ -24431,7 +24637,7 @@ Phaser.Math = {
 
         if (typeof radians === "undefined") { radians = true; }
 
-        var rd = (radians) ? GameMath.PI : 180;
+        var rd = (radians) ? Math.PI : 180;
         return this.wrap(angle, rd, -rd);
         
     },
@@ -30651,6 +30857,7 @@ Phaser.Cache = function (game) {
     this._bitmapDatas = {};
 
     this.addDefaultImage();
+    this.addMissingImage();
 
     /**
 	* @property {Phaser.Signal} onSoundUnlock - Description.
@@ -30821,20 +31028,38 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Adds a default image to be used when a key is wrong / missing. Is mapped to the key __default.
+    * Adds a default image to be used in special cases such as WebGL Filters. Is mapped to the key __default.
     *
     * @method Phaser.Cache#addDefaultImage
     */
     addDefaultImage: function () {
 
         var img = new Image();
-        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJ9JREFUeNq01ssOwyAMRFG46v//Mt1ESmgh+DFmE2GPOBARKb2NVjo+17PXLD8a1+pl5+A+wSgFygymWYHBb0FtsKhJDdZlncG2IzJ4ayoMDv20wTmSMzClEgbWYNTAkQ0Z+OJ+A/eWnAaR9+oxCF4Os0H8htsMUp+pwcgBBiMNnAwF8GqIgL2hAzaGFFgZauDPKABmowZ4GL369/0rwACp2yA/ttmvsQAAAABJRU5ErkJggg==";
+        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQMAAABJtOi3AAAAA1BMVEX///+nxBvIAAAAAXRSTlMAQObYZgAAABVJREFUeF7NwIEAAAAAgKD9qdeocAMAoAABm3DkcAAAAABJRU5ErkJggg==";
 
         this._images['__default'] = { url: null, data: img, spriteSheet: false };
         this._images['__default'].frame = new Phaser.Frame(0, 0, 0, 32, 32, '', '');
 
         PIXI.BaseTextureCache['__default'] = new PIXI.BaseTexture(img);
         PIXI.TextureCache['__default'] = new PIXI.Texture(PIXI.BaseTextureCache['__default']);
+
+    },
+
+    /**
+    * Adds an image to be used when a key is wrong / missing. Is mapped to the key __missing.
+    *
+    * @method Phaser.Cache#addMissingImage
+    */
+    addMissingImage: function () {
+
+        var img = new Image();
+        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJ9JREFUeNq01ssOwyAMRFG46v//Mt1ESmgh+DFmE2GPOBARKb2NVjo+17PXLD8a1+pl5+A+wSgFygymWYHBb0FtsKhJDdZlncG2IzJ4ayoMDv20wTmSMzClEgbWYNTAkQ0Z+OJ+A/eWnAaR9+oxCF4Os0H8htsMUp+pwcgBBiMNnAwF8GqIgL2hAzaGFFgZauDPKABmowZ4GL369/0rwACp2yA/ttmvsQAAAABJRU5ErkJggg==";
+
+        this._images['__missing'] = { url: null, data: img, spriteSheet: false };
+        this._images['__missing'].frame = new Phaser.Frame(0, 0, 0, 32, 32, '', '');
+
+        PIXI.BaseTextureCache['__missing'] = new PIXI.BaseTexture(img);
+        PIXI.TextureCache['__missing'] = new PIXI.Texture(PIXI.BaseTextureCache['__missing']);
 
     },
 
@@ -32165,6 +32390,10 @@ Phaser.Loader.prototype = {
 						return _this.csvLoadComplete(file.key);
 					};
 				}
+				else
+				{
+					throw new Error("Phaser.Loader. Invalid Tilemap format: " + file.format);
+				}
 
 				this._xhr.onerror = function () {
 					return _this.dataLoadError(file.key);
@@ -32293,6 +32522,10 @@ Phaser.Loader.prototype = {
 						this._xhr.onload = function () {
 							return _this.xmlLoadComplete(file.key);
 						};
+					}
+					else
+					{
+						throw new Error("Phaser.Loader. Invalid Texture Atlas format: " + file.format);
 					}
 
 					this._xhr.onerror = function () {
@@ -32527,6 +32760,7 @@ Phaser.Loader.prototype = {
 	}
 
 };
+
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.

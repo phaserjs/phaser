@@ -92,11 +92,13 @@ Phaser.World.prototype.update = function () {
 				skipChildren = (currentNode.update() === false) || skipChildren;
 			}
 			
-            if(skipChildren)
+            if (skipChildren)
             {
                 currentNode = currentNode.last._iNext;
-            } else {
-                currentNode = currentNode._iNext;    
+            }
+            else
+            {
+                currentNode = currentNode._iNext;
             }
 			
 		}

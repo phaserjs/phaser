@@ -68,6 +68,7 @@ module.exports = function (grunt) {
         'src/core/LinkedList.js',
         'src/core/Signal.js',
         'src/core/SignalBinding.js',
+        'src/core/Filter.js',
         'src/core/Plugin.js',
         'src/core/PluginManager.js',
         'src/core/Stage.js',
