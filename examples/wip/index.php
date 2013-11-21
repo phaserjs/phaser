@@ -89,6 +89,7 @@
         <script src="../filters/BinarySerpents.js" type="text/javascript"></script>
         <script src="../filters/Tunnel.js" type="text/javascript"></script>
         <script src="../filters/ColorBars.js" type="text/javascript"></script>
+        <script src="../filters/Fire.js" type="text/javascript"></script>
         <?php
             }
         ?>
