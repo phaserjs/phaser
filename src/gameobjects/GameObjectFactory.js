@@ -17,7 +17,7 @@ Phaser.GameObjectFactory = function (game) {
 	* @property {Phaser.Game} game - A reference to the currently running Game.
 	*/
 	this.game = game;
-	
+
     /**
 	* @property {Phaser.World} world - A reference to the game world.
 	*/
@@ -100,6 +100,49 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
+    * This method makes a method out of a Tiled-Map Object-Layer
+    *
+    * @method Phaser.GameObjectFactory#groupFromObjectMapLayer
+    * @param {Phaser.Map} - The Map to be used
+    * @param {int} - The index of the layer
+    * @param {*} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
+    * @param {string} [name=group] - A name for this Group. Not used internally but useful for debugging.
+    * @return {Phaser.Group} The newly created group.
+    */
+    groupFromObjectMapLayer: function (map, layerIndex, parent, name) {
+
+        var out = new Phaser.Group(this.game, parent, name);
+
+        for (var i=0; i<map.layers[layerIndex].data.length; i++)
+        {
+            var object = map.layers[layerIndex].data[i];
+
+            var height = 0;
+            if(game.cache.checkImageKey(object.type)) {
+                height = game.cache.getImage(object.type).height;
+            }
+            var newSprite = new Phaser.Sprite(game, object.x, object.y - height, object.type);
+
+            newSprite.body.immovable = object.immovable;
+            if (object.hitbox)
+            {
+                newSprite.body.setSize(
+                    parseInt(object.hitbox.width, 10),
+                    parseInt(object.hitbox.height, 10),
+                    parseInt(object.hitbox.offsetX, 10),
+                    parseInt(object.hitbox.offsetY, 10)
+                );
+            }
+
+            out.add(newSprite);
+
+        }
+
+        return out;
+
+    },
+
+    /**
      * Creates a new instance of the Sound class.
      *
     * @method Phaser.GameObjectFactory#audio
@@ -111,7 +154,7 @@ Phaser.GameObjectFactory.prototype = {
     audio: function (key, volume, loop) {
 
         return this.game.sound.add(key, volume, loop);
-        
+
     },
 
     /**
