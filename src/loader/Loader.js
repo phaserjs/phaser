@@ -780,6 +780,8 @@ Phaser.Loader.prototype = {
 
     var extension;
 
+    if (typeof urls === 'string') { urls = [urls]; }
+
     for (var i = 0; i < urls.length; i++)
     {
       extension = urls[i].toLowerCase();
