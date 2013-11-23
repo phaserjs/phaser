@@ -1,0 +1,74 @@
+{
+  // Ignore Environment Globals
+  "browser"       : true,   // Standard browser globals e.g. `window`, `document`.
+  "couch"         : false,
+  "dojo"          : false,
+  "jquery"        : true,
+  "mootools"      : false,
+  "node"          : false,
+  "nonstandard"   : false,
+  "phantom"       : false,
+  "prototypejs"   : false,
+  "rhino"         : false,
+  "worker"        : false,
+  "wsh"           : true,   // Windows Scripting Host.
+  "yui"           : false,
+
+  // Development
+  "debug"         : true,  // Allow debugger statements e.g. browser breakpoints.
+  "devel"         : true,   // Allow developments statements e.g. `console.log();`.
+
+  // ECMAScript Support
+  "es3"           : true,   // Support legacy browser and javascript environments.
+  "esnext"        : false,  // This option tells JSHint that your code uses ECMAScript 6 specific syntax.
+  "strict"        : false,  // Require `use strict` pragma in every file.
+  "globalstrict"  : false,  // Allow global "use strict" (also enables 'strict').
+
+  // Functionality
+  "asi"           : true,   // Tolerate Automatic Semicolon Insertion (no semicolons).
+  "bitwise"       : false,  // Prohibit bitwise operators (&, |, ^, etc.).
+  "boss"          : true,   // Tolerate assignments inside if, for & while. Usually conditions & loops are for comparison, not assignments.
+  "camelcase"     : false,  // Force all variable names to use either camelCase style or UPPER_CASE with underscores.
+  "curly"         : false,  // Require {} for every new block or scope.
+  "eqeqeq"        : false,  // Require triple equals i.e. `===`.
+  "eqnull"        : true,   // Tolerate use of `== null`.
+  "evil"          : true,   // Tolerate use of `eval`.
+  "expr"          : true,   // Tolerate `ExpressionStatement` as Programs.
+  "forin"         : true,   // Tolerate `for in` loops without `hasOwnPrototype`.
+  "freeze"        : false,  // Prohibits overwriting prototypes of native objects such as Array and Date.
+  "funcscope"     : true,   // This option suppresses warnings about declaring variables inside of control structures while accessing them later from the outside.
+  "immed"         : false,  // Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`
+  "iterator"      : true,   // This option suppresses warnings about the __iterator__ property.
+  "lastsemic"     : true,   // This option suppresses warnings about missing semicolons, but only when the semicolon is omitted for the last statement in a one-line block.
+  "latedef"       : false,  // Prohipit variable use before definition.
+  "laxbreak"      : true,   // Tolerate unsafe line breaks e.g. `return [\n] x` without semicolons.
+  "laxcomma"      : true,   // This option suppresses warnings about comma-first coding style.
+  "loopfunc"      : true,   // Allow functions to be defined within loops.
+  // "maxcomplexity" : 10,      // This option lets you control cyclomatic complexity throughout your code.
+  // "maxdepth"      : 2,      // This option lets you control how nested do you want your blocks to be.
+  // "maxlen"        : 80,     // This option lets you set the maximum length of a line.
+  // "maxparams"     : 5,      // This option lets you set the max number of formal parameters allowed per function.
+  // "maxstatements" : 25,      // This option lets you set the max number of statements allowed per function.This option lets you set the max number of formal parameters allowed per function.
+  "moz"           : false,  // This options tells JSHint that your code uses Mozilla JavaScript extensions.
+  "multistr"      : true,   // This option suppresses warnings about multi-line strings.
+  "noarg"         : false,  // Prohibit use of `arguments.caller` and `arguments.callee`.
+  "notypeof"      : false,  // This option suppresses warnings about invalid typeof operator values.
+  "proto"         : true,   // This option suppresses warnings about the __proto__ property.
+  "scripturl"     : true,   // Tolerate script-targeted URLs.
+  "shadow"        : true,   // Allows re-define variables later in code e.g. `var x=1; x=2;`.
+  "smarttabs"     : false,  // This option suppresses warnings about mixed tabs and spaces when the latter are used for alignmnent only.
+  "supernew"      : false,  // Tolerate `new function () { ... };` and `new Object;`.
+  "undef"         : false,  // Require all non-global variables be declared before they are used.
+  "unused"        : true,   // This option warns when you define and never use your variables.
+  "validthis"     : true,   // This option suppresses warnings about possible strict violations when the code is running in strict mode and you use this in a non-constructor function.
+
+  // Styling
+  "indent"        : 2,      // Specify indentation spacing
+  "newcap"        : true,   // Require capitalization of all constructor functions e.g. `new F()`.
+  "noempty"       : true,   // Prohibit use of empty blocks.
+  "nonew"         : true,   // Prohibit use of constructors for side-effects.
+  "plusplus"      : false,  // Prohibit use of `++` & `--`.
+  "quotmark"      : true,   // This option enforces the consistency of quotation marks used throughout your code.
+  "sub"           : true,   // Tolerate all forms of subscript notation besides dot notation e.g. `dict['key']` instead of `dict.key`.
+  "trailing"      : true    // Prohibit trailing whitespaces.
+}
