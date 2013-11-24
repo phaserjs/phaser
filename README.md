@@ -234,6 +234,8 @@ If you find a bug (highly likely!) then please report it on github or our forum.
 
 If you have a feature request, or have written a small game or demo that shows Phaser in use, then please get in touch. We'd love to hear from you.
 
+Before submitting a pull request, please run your code through [JSHint](http://www.jshint.com/) to check for stylistic or formatting errors. To use JSHint, first install it by running `npm install jshint`, then test your code by running `jshint src`.
+
 You can do this on the Phaser board that is part of the [HTML5 Game Devs forum](http://www.html5gamedevs.com/forum/14-phaser/) or email: rich@photonstorm.com
 
 Bugs?
