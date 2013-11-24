@@ -23,13 +23,13 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
-	this.game = game;
+    this.game = game;
 
     /**
     * @property {Phaser.Sprite} _parent - A reference to the parent Sprite that owns this Animation.
     * @private
     */
-	this._parent = parent;
+    this._parent = parent;
 
     /**
     * @property {Phaser.FrameData} _frameData - The FrameData the Animation uses.
@@ -46,18 +46,18 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     * @property {object} _frames
     * @private
     */
-	this._frames = [];
+    this._frames = [];
     this._frames = this._frames.concat(frames);
 
     /**
     * @property {number} delay - The delay in ms between each frame of the Animation.
     */
-	this.delay = 1000 / delay;
+    this.delay = 1000 / delay;
 
     /**
     * @property {boolean} looped - The loop state of the Animation.
     */
-	this.looped = looped;
+    this.looped = looped;
 
     /**
     * @property {boolean} looped - The loop state of the Animation.
@@ -68,13 +68,13 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     * @property {boolean} isFinished - The finished state of the Animation. Set to true once playback completes, false during playback.
     * @default
     */
-	this.isFinished = false;
+    this.isFinished = false;
 
     /**
     * @property {boolean} isPlaying - The playing state of the Animation. Set to false once playback completes, true during playback.
     * @default
     */
-	this.isPlaying = false;
+    this.isPlaying = false;
 
     /**
     * @property {boolean} isPaused - The paused state of the Animation.
@@ -94,7 +94,7 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     * @private
     * @default
     */
-	this._frameIndex = 0;
+    this._frameIndex = 0;
 
     /**
     * @property {number} _frameDiff
@@ -113,8 +113,8 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     /**
     * @property {Phaser.Frame} currentFrame - The currently displayed frame of the Animation.
     */
-	this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-	
+    this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+    
 };
 
 Phaser.Animation.prototype = {
@@ -159,7 +159,7 @@ Phaser.Animation.prototype = {
         this._frameIndex = 0;
 
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-		this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+        this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
 
         if (this._parent.events)
         {
@@ -226,7 +226,7 @@ Phaser.Animation.prototype = {
             return false;
         }
 
-        if (this.isPlaying == true && this.game.time.now >= this._timeNextFrame)
+        if (this.isPlaying === true && this.game.time.now >= this._timeNextFrame)
         {
             this._frameSkip = 1;
 
@@ -331,7 +331,7 @@ Phaser.Animation.prototype = {
 * @name Phaser.Animation#paused
 * @property {boolean} paused - Gets and sets the paused state of this Animation.
 */
-Object.defineProperty(Phaser.Animation.prototype, "paused", {
+Object.defineProperty(Phaser.Animation.prototype, 'paused', {
 
     get: function () {
 
@@ -366,7 +366,7 @@ Object.defineProperty(Phaser.Animation.prototype, "paused", {
 * @property {number} frameTotal - The total number of frames in the currently loaded FrameData, or -1 if no FrameData is loaded.
 * @readonly
 */
-Object.defineProperty(Phaser.Animation.prototype, "frameTotal", {
+Object.defineProperty(Phaser.Animation.prototype, 'frameTotal', {
 
     get: function () {
         return this._frames.length;
@@ -378,7 +378,7 @@ Object.defineProperty(Phaser.Animation.prototype, "frameTotal", {
 * @name Phaser.Animation#frame
 * @property {number} frame - Gets or sets the current frame index and updates the Texture Cache for display.
 */
-Object.defineProperty(Phaser.Animation.prototype, "frame", {
+Object.defineProperty(Phaser.Animation.prototype, 'frame', {
 
     get: function () {
 
@@ -400,7 +400,7 @@ Object.defineProperty(Phaser.Animation.prototype, "frame", {
         if (this.currentFrame !== null)
         {
             this._frameIndex = value;
-			this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+            this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
         }
 
     }

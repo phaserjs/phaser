@@ -1,4 +1,5 @@
 {
+  "globals"       : { "Phaser": false, "PIXI": false },
   // Ignore Environment Globals
   "browser"       : true,   // Standard browser globals e.g. `window`, `document`.
   "couch"         : false,
@@ -28,21 +29,21 @@
   "asi"           : true,   // Tolerate Automatic Semicolon Insertion (no semicolons).
   "bitwise"       : false,  // Prohibit bitwise operators (&, |, ^, etc.).
   "boss"          : true,   // Tolerate assignments inside if, for & while. Usually conditions & loops are for comparison, not assignments.
-  "camelcase"     : false,  // Force all variable names to use either camelCase style or UPPER_CASE with underscores.
-  "curly"         : false,  // Require {} for every new block or scope.
+  "camelcase"     : true,  // Force all variable names to use either camelCase style or UPPER_CASE with underscores.
+  "curly"         : true,  // Require {} for every new block or scope.
   "eqeqeq"        : false,  // Require triple equals i.e. `===`.
   "eqnull"        : true,   // Tolerate use of `== null`.
-  "evil"          : true,   // Tolerate use of `eval`.
-  "expr"          : true,   // Tolerate `ExpressionStatement` as Programs.
+  "evil"          : false,   // Tolerate use of `eval`.
+  "expr"          : false,   // Tolerate `ExpressionStatement` as Programs.
   "forin"         : true,   // Tolerate `for in` loops without `hasOwnPrototype`.
-  "freeze"        : false,  // Prohibits overwriting prototypes of native objects such as Array and Date.
+  "freeze"        : true,  // Prohibits overwriting prototypes of native objects such as Array and Date.
   "funcscope"     : true,   // This option suppresses warnings about declaring variables inside of control structures while accessing them later from the outside.
   "immed"         : false,  // Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`
   "iterator"      : true,   // This option suppresses warnings about the __iterator__ property.
   "lastsemic"     : true,   // This option suppresses warnings about missing semicolons, but only when the semicolon is omitted for the last statement in a one-line block.
   "latedef"       : false,  // Prohipit variable use before definition.
-  "laxbreak"      : true,   // Tolerate unsafe line breaks e.g. `return [\n] x` without semicolons.
-  "laxcomma"      : true,   // This option suppresses warnings about comma-first coding style.
+  "laxbreak"      : false,   // Tolerate unsafe line breaks e.g. `return [\n] x` without semicolons.
+  "laxcomma"      : false,   // This option suppresses warnings about comma-first coding style.
   "loopfunc"      : true,   // Allow functions to be defined within loops.
   // "maxcomplexity" : 10,      // This option lets you control cyclomatic complexity throughout your code.
   // "maxdepth"      : 2,      // This option lets you control how nested do you want your blocks to be.
@@ -51,19 +52,19 @@
   // "maxstatements" : 25,      // This option lets you set the max number of statements allowed per function.This option lets you set the max number of formal parameters allowed per function.
   "moz"           : false,  // This options tells JSHint that your code uses Mozilla JavaScript extensions.
   "multistr"      : true,   // This option suppresses warnings about multi-line strings.
-  "noarg"         : false,  // Prohibit use of `arguments.caller` and `arguments.callee`.
+  "noarg"         : true,  // Prohibit use of `arguments.caller` and `arguments.callee`.
   "notypeof"      : false,  // This option suppresses warnings about invalid typeof operator values.
   "proto"         : true,   // This option suppresses warnings about the __proto__ property.
   "scripturl"     : true,   // Tolerate script-targeted URLs.
   "shadow"        : true,   // Allows re-define variables later in code e.g. `var x=1; x=2;`.
   "smarttabs"     : false,  // This option suppresses warnings about mixed tabs and spaces when the latter are used for alignmnent only.
   "supernew"      : false,  // Tolerate `new function () { ... };` and `new Object;`.
-  "undef"         : false,  // Require all non-global variables be declared before they are used.
+  "undef"         : true,  // Require all non-global variables be declared before they are used.
   "unused"        : true,   // This option warns when you define and never use your variables.
   "validthis"     : true,   // This option suppresses warnings about possible strict violations when the code is running in strict mode and you use this in a non-constructor function.
 
   // Styling
-  "indent"        : 2,      // Specify indentation spacing
+  "indent"        : 4,      // Specify indentation spacing
   "newcap"        : true,   // Require capitalization of all constructor functions e.g. `new F()`.
   "noempty"       : true,   // Prohibit use of empty blocks.
   "nonew"         : true,   // Prohibit use of constructors for side-effects.

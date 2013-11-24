@@ -83,24 +83,10 @@
 
 		if (game.renderType === Phaser.WEBGL)
 		{
-			sky.visible = false;
-
-			var t = game.add.sprite(0, 0);
-			t.width = 1024;
-			t.height = 672;
-
-			filter2 = game.add.filter('BinarySerpents', 1024, 672);
-			filter2.alpha = 0.0;
-			t.filters = [filter2];
-
-			var t2 = game.add.sprite(0, 0);
-			t2.width = 1024;
-			t2.height = 672;
-
 			filter = game.add.filter('Fire', 1024, 672);
 			filter.shift = 2.0;
 			filter.alpha = 0.0;
-			t2.filters = [filter];
+			sky.filters = [filter];
 		}
 
 		land = game.add.tileSprite(0, 544, 1024, 128, 'land');

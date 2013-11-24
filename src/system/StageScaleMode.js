@@ -5,14 +5,13 @@
 */
 
 /**
-* An Animation instance contains a single animation and the controls to play it.
-* It is created by the AnimationManager, consists of Animation.Frame objects and belongs to a single Game Object such as a Sprite.
+* The StageScaleMode object is responsible for helping you manage the scaling, resizing and alignment of your game within the browser.
 *
 * @class Phaser.StageScaleMode 
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {number} width - Description.
-* @param {number} height - Description.
+* @param {number} width - The native width of the game.
+* @param {number} height - The native height of the game.
 */
 Phaser.StageScaleMode = function (game, width, height) {
 
