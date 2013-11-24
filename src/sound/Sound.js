@@ -17,7 +17,7 @@
 */
 Phaser.Sound = function (game, key, volume, loop) {
 	
-	volume = volume || 1;
+    if (typeof volume == 'undefined') { volume = 1; }
 	if (typeof loop == 'undefined') { loop = false; }
 
     /**
@@ -416,18 +416,19 @@ Phaser.Sound.prototype = {
     * @method Phaser.Sound#play
     * @param {string} [marker=''] - If you want to play a marker then give the key here, otherwise leave blank to play the full sound.
     * @param {number} [position=0] - The starting position to play the sound from - this is ignored if you provide a marker.
-    * @param {number} [volume=1] - Volume of the sound you want to play.
+    * @param {number} [volume=1] - Volume of the sound you want to play. If none is given it will use the volume given to the Sound when it was created (which defaults to 1 if none was specified).
     * @param {boolean} [loop=false] - Loop when it finished playing?
     * @param {boolean} [forceRestart=true] - If the sound is already playing you can set forceRestart to restart it from the beginning.
-    * @return {Sound} The playing sound object.
+    * @return {Phaser.Sound} This sound instance.
     */
     play: function (marker, position, volume, loop, forceRestart) {
 
     	marker = marker || '';
     	position = position || 0;
-    	volume = volume || 1;
-    	if (typeof loop == 'undefined') { loop = false; }
-    	if (typeof forceRestart == 'undefined') { forceRestart = true; }
+
+        if (typeof volume === 'undefined') { volume = this._volume; }
+    	if (typeof loop === 'undefined') { loop = false; }
+    	if (typeof forceRestart === 'undefined') { forceRestart = true; }
 
         // console.log(this.name + ' play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop, 'force', forceRestart);
 

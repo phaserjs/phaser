@@ -146,7 +146,7 @@ Phaser.Time = function (game) {
 	this.game.onResume.add(this.gameResumed, this);
 
 	/**
-	* Description.
+	* Internal value used to recover from the game pause state.
 	* @property {boolean} _justResumed
     * @default
 	*/
@@ -155,15 +155,6 @@ Phaser.Time = function (game) {
 };
 
 Phaser.Time.prototype = {
-
-	/**
-	* The number of seconds that have elapsed since the game was started.
-	* @method Phaser.Time#totalElapsedSeconds
-	* @return {number}
-	*/
-	totalElapsedSeconds: function() {
-		return (this.now - this._started) * 0.001;
-	},
 
 	/**
 	* Updates the game clock and calculate the fps. This is called automatically by Phaser.Game.
@@ -239,6 +230,15 @@ Phaser.Time.prototype = {
 		this.pauseDuration = this.pausedTime;
 		this._justResumed = true;
 
+	},
+
+	/**
+	* The number of seconds that have elapsed since the game was started.
+	* @method Phaser.Time#totalElapsedSeconds
+	* @return {number}
+	*/
+	totalElapsedSeconds: function() {
+		return (this.now - this._started) * 0.001;
 	},
 
 	/**

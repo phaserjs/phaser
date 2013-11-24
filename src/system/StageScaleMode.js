@@ -117,7 +117,6 @@ Phaser.StageScaleMode = function (game, width, height) {
     * @default
     */
     this.maxIterations = 5;
-    
 
     /**
     * @property {PIXI.Sprite} orientationSprite - The Sprite that is optionally displayed if the browser enters an unsupported orientation.
@@ -145,6 +144,11 @@ Phaser.StageScaleMode = function (game, width, height) {
     */
     this.leaveIncorrectOrientation = new Phaser.Signal();
 
+    /**
+    * @property {Phaser.Signal} hasResized - The event that is dispatched when the game scale changes.
+    */
+    this.hasResized = new Phaser.Signal();
+
     if (window['orientation'])
     {
         this.orientation = window['orientation'];
@@ -163,8 +167,21 @@ Phaser.StageScaleMode = function (game, width, height) {
 
     /**
     * @property {Phaser.Point} scaleFactor - The scale factor based on the game dimensions vs. the scaled dimensions.
+    * @readonly
     */
     this.scaleFactor = new Phaser.Point(1, 1);
+
+    /**
+    * @property {Phaser.Point} scaleFactorInversed - The inversed scale factor. The displayed dimensions divided by the game dimensions.
+    * @readonly
+    */
+    this.scaleFactorInversed = new Phaser.Point(1, 1);
+
+    /**
+    * @property {Phaser.Point} margin - If the game canvas is seto to align by adjusting the margin, the margin calculation values are stored in this Point.
+    * @readonly
+    */
+    this.margin = new Phaser.Point(0, 0);
 
     /**
     * @property {number} aspectRatio - Aspect ratio.
@@ -471,14 +488,9 @@ Phaser.StageScaleMode.prototype = {
     */
     refresh: function () {
 
-        var _this = this;
-        
         //  We can't do anything about the status bars in iPads, web apps or desktops
         if (this.game.device.iPad == false && this.game.device.webApp == false && this.game.device.desktop == false)
         {
-            // document.documentElement['style'].minHeight = '2000px';
-            // this._startHeight = window.innerHeight;
-
             if (this.game.device.android && this.game.device.chrome == false)
             {
                 window.scrollTo(0, 1);
@@ -492,9 +504,13 @@ Phaser.StageScaleMode.prototype = {
         if (this._check == null && this.maxIterations > 0)
         {
             this._iterations = this.maxIterations;
+
+            var _this = this;
+
             this._check = window.setInterval(function () {
                 return _this.setScreenSize();
             }, 10);
+
             this.setScreenSize();
         }
 
@@ -588,10 +604,12 @@ Phaser.StageScaleMode.prototype = {
         {
             if (this.width < window.innerWidth && this.incorrectOrientation == false)
             {
-                this.game.canvas.style.marginLeft = Math.round((window.innerWidth - this.width) / 2) + 'px';
+                this.margin.x = Math.round((window.innerWidth - this.width) / 2);
+                this.game.canvas.style.marginLeft = this.margin.x + 'px';
             }
             else
             {
+                this.margin.x = 0;
                 this.game.canvas.style.marginLeft = '0px';
             }
         }
@@ -600,10 +618,12 @@ Phaser.StageScaleMode.prototype = {
         {
             if (this.height < window.innerHeight && this.incorrectOrientation == false)
             {
-                this.game.canvas.style.marginTop = Math.round((window.innerHeight - this.height) / 2) + 'px';
+                this.margin.y = Math.round((window.innerHeight - this.height) / 2);
+                this.game.canvas.style.marginTop = this.margin.y + 'px';
             }
             else
             {
+                this.margin.y = 0;
                 this.game.canvas.style.marginTop = '0px';
             }
         }
@@ -614,6 +634,11 @@ Phaser.StageScaleMode.prototype = {
         
         this.scaleFactor.x = this.game.width / this.width;
         this.scaleFactor.y = this.game.height / this.height;
+
+        this.scaleFactorInversed.x = this.width / this.game.width;
+        this.scaleFactorInversed.y = this.height / this.game.height;
+
+        this.hasResized.dispatch(this.width, this.height);
 
         this.checkOrientationState();
 

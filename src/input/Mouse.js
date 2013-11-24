@@ -42,6 +42,11 @@ Phaser.Mouse = function (game) {
 	*/
 	this.mouseUpCallback = null;
 
+    /**
+    * @property {boolean} capture - If true the DOM mouse events will have event.preventDefault applied to them, if false they will propogate fully.
+    */
+    this.capture = true;
+
 	/**
 	* @property {number} button- The type of click, either: Phaser.Mouse.NO_BUTTON, Phaser.Mouse.LEFT_BUTTON, Phaser.Mouse.MIDDLE_BUTTON or Phaser.Mouse.RIGHT_BUTTON.
 	* @default
@@ -165,7 +170,10 @@ Phaser.Mouse.prototype = {
 
         this.event = event;
 
-        event.preventDefault();
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
 
         this.button = event.which;
 
@@ -194,7 +202,10 @@ Phaser.Mouse.prototype = {
 
         this.event = event;
 
-        event.preventDefault();
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
 
         if (this.mouseMoveCallback)
         {
@@ -221,7 +232,10 @@ Phaser.Mouse.prototype = {
 
         this.event = event;
 
-        event.preventDefault();
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
 
     	this.button = Phaser.Mouse.NO_BUTTON;
 

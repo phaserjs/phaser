@@ -60,6 +60,8 @@ Version 1.1.3 - in build
 * New: Added Group.sort. You can now sort the Group based on any given numeric property (x, y, health), finally you can do depth-sorting :) Example created to show.
 * New: Enhanced renderTexture so it can accept a Phaser.Group object and improved documentation and examples.
 * New: Device.littleEndian boolean added. Only safe to use if the browser supports TypedArrays (which IE9 doesn't, but nearly all others do)
+* New: You can now call game.sound.play() and simply pass it a key. The sound will play if the audio system is unlocked and optionally destroy itself on complete.
+* New: Mouse.capture is a boolean. If set to true then DOM mouse events will have event.preventDefault() applied, if false they will propogate fully.
 
 * Fixed: Lots of fixes to the TypeScript definitions file (many thanks gltovar)
 * Fixed: Tilemap commands use specified layer when one given (thanks Izzimach)
@@ -79,7 +81,7 @@ Version 1.1.3 - in build
 * Updated: Tided up the Graphics object (thanks BorisKozo)
 * Updated: If running in Canvas mode and you have a render function it will save the context and reset the transform before running your render function.
 * Updated: Sprite will now check the exists property of the Group it is in, if the Group.exists = false the Sprite won't update.
-* Updated: Lots of documentation tweaks across various files such as Pointer and Color.
+* Updated: Lots of documentation tweaks across various files such as Pointer, Sound and Color.
 * Updated: If you specify 'null' as a Group parent it will now revert to using the World as the parent (before only 'undefined' worked)
 * Updated: Skip preupdate/update for PIXI hierarchies in which an ancestor doesn't exist (thanks cocoademon)
 

@@ -324,15 +324,37 @@ Phaser.SoundManager.prototype = {
     * @param {string} key - Asset key for the sound.
     * @param {number} [volume=1] - Default value for the volume.
     * @param {boolean} [loop=false] - Whether or not the sound will loop.
+    * @return {Phaser.Sound} The new sound instance.
     */
     add: function (key, volume, loop) {
 
-    	volume = volume || 1;
-    	if (typeof loop == 'undefined') { loop = false; }
+        if (typeof volume === 'undefined') { volume = 1; }
+    	if (typeof loop === 'undefined') { loop = false; }
 
         var sound = new Phaser.Sound(this.game, key, volume, loop);
 
         this._sounds.push(sound);
+
+        return sound;
+
+    },
+
+    /**
+    * Adds a new Sound into the SoundManager and starts it playing.
+    * @method Phaser.SoundManager#play
+    * @param {string} key - Asset key for the sound.
+    * @param {number} [volume=1] - Default value for the volume.
+    * @param {boolean} [loop=false] - Whether or not the sound will loop.
+    * @param {boolean} [destroyOnComplete=false] - If true the Sound will destroy itself once it has finished playing, or is stopped.
+    * @return {Phaser.Sound} The new sound instance.
+    */
+    play: function (key, volume, loop, destroyOnComplete) {
+
+        if (typeof destroyOnComplete == 'undefined') { destroyOnComplete = false; }
+
+        var sound = this.add(key, volume, loop);
+
+        sound.play();
 
         return sound;
 
