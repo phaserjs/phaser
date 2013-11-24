@@ -74,7 +74,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.lifespan = 0;
 
     /**
-    * @property {Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
+    * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
     */
     this.events = new Phaser.Events(this);
 
@@ -84,7 +84,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.animations = new Phaser.AnimationManager(this);
 
     /**
-    * @property {InputHandler} input - The Input Handler Component.
+    * @property {Phaser.InputHandler} input - The Input Handler Component.
     */
     this.input = new Phaser.InputHandler(this);
 

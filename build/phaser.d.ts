@@ -17,6 +17,9 @@ declare class Phaser {
       static TILEMAP: number;
       static TILEMAPLAYER: number;
       static EMITTER: number;
+      static BITMAPDATA: number;
+      static CANVAS_FILTER: number;
+      static WEBGL_FILTER: number;
 }
 
 declare module Phaser {
@@ -31,11 +34,12 @@ declare module Phaser {
             height: number;
             view: Phaser.Rectangle;
             screenView: Phaser.Rectangle;
+            bounds: Phaser.Rectangle;
             deadzone: Phaser.Rectangle;
             visible: boolean;
             atLimit: { x: boolean; y: boolean; };
             target: Phaser.Sprite;
-            _edge: number;
+            private _edge: number;
             static FOLLOW_LOCKON: number;
             static FOLLOW_PLATFORMER: number;
             static FOLLOW_TOPDOWN: number;
@@ -54,19 +58,22 @@ declare module Phaser {
             camera: Phaser.Camera;
             cache: Phaser.Cache;
             input: Phaser.Input;
+            load: Phaser.Loader;
             stage: Phaser.Stage;
             math: Phaser.Math;
             sound: Phaser.SoundManager;
+            stage: Phaser.Stage;
             time: Phaser.Time;
             tweens: Phaser.TweenManager;
             world: Phaser.World;
             particles: Phaser.Particles;
             physics: Phaser.Physics.Arcade;
-            load: Phaser.Loader;
             preload();
+            loadUpdate();
+            loadRender();
             create();
-            render(); 
             update();
+            render(); 
             paused();
             destroy();
       }
