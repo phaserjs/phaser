@@ -585,6 +585,7 @@ Phaser.Tween.prototype = {
 
 			} else {
 
+				this.isRunning = false;
 				this.onComplete.dispatch(this._object);
 
 				if ( this._onCompleteCallback !== null ) {

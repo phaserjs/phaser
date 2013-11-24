@@ -74,6 +74,8 @@ Version 1.1.3 - in build
 * Fixed: ArcadePhysics.separateTile wasn't returning the value, so the custom process callback wasn't getting called (thanks flameiguana)
 * Fixed: StageScaleMode.forceOrientation now correctly stores the forcePortrait value (thanks haden)
 * Fixed: Fixes to Math and Loader (thanks theJare)
+* Fixed: Tween - isRunning not reset when non-looped tween completes (thanks crazysam + kevinthompson)
+* Fixed: Math.normalizeAngle and Math.wrapAngle (thanks theJare)
 
 * Updated: ArcadePhysics.updateMotion applies the dt to the velocity calculations as well as position now (thanks jcs)
 * Updated: RequestAnimationFrame now retains the callbackID which is passed to cancelRequestAnimationFrame.
@@ -85,7 +87,7 @@ Version 1.1.3 - in build
 * Updated: Lots of documentation tweaks across various files such as Pointer, Sound and Color.
 * Updated: If you specify 'null' as a Group parent it will now revert to using the World as the parent (before only 'undefined' worked)
 * Updated: Skip preupdate/update for PIXI hierarchies in which an ancestor doesn't exist (thanks cocoademon)
-
+* Updated: Loader.audio can now accept either an array of URL strings or a single URL string (thanks crazysam + kevinthompson)
 
 
 

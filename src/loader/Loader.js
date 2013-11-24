@@ -332,7 +332,7 @@ Phaser.Loader.prototype = {
 	*
 	* @method Phaser.Loader#audio
 	* @param {string} key - Unique asset key of the audio file.
-	* @param {Array} urls - An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ].
+	* @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ] or a single string containing just one URL.
 	* @param {boolean} autoDecode - When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
 	*/
 	audio: function (key, urls, autoDecode) {
@@ -773,12 +773,14 @@ Phaser.Loader.prototype = {
 	/**
 	* Private method ONLY used by loader.
 	* @method Phaser.Loader#getAudioURL
-	* @param {Description} urls - Description.
+	* @param {array|string} urls - Either an array of audio file URLs or a string containing a single URL path.
 	* @private
 	*/
 	getAudioURL: function (urls) {
 
 		var extension;
+
+		if (typeof urls === 'string') { urls = [urls]; }
 
 		for (var i = 0; i < urls.length; i++)
 		{
