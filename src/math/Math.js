@@ -351,7 +351,7 @@ Phaser.Math = {
         if (typeof radians === "undefined") { radians = true; }
 
         var rd = (radians) ? Math.PI : 180;
-        return this.wrap(angle, rd, -rd);
+        return this.wrap(angle, -rd, rd);
         
     },
 
@@ -656,23 +656,7 @@ Phaser.Math = {
 	*/
     wrapAngle: function (angle) {
 
-        var result = angle;
-
-        //  Nothing needs to change
-        if (angle >= -180 && angle <= 180)
-        {
-            return angle;
-        }
-
-        //  Else normalise it to -180, 180
-        result = (angle + 180) % 360;
-
-        if (result < 0)
-        {
-            result += 360;
-        }
-
-        return result - 180;
+        return this.wrap(angle, -180, 180);
 
     },
 
