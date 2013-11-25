@@ -14,24 +14,24 @@ module.exports = Convex;
 function Convex(vertices){
 
     /**
-     * Vertices defined in the local frame.
-     * @property vertices
-     * @type {Array}
-     */
+    * Vertices defined in the local frame.
+    * @property vertices
+    * @type {Array}
+    */
     this.vertices = vertices || [];
 
     /**
-     * The center of mass of the Convex
-     * @property centerOfMass
-     * @type {Float32Array}
-     */
+    * The center of mass of the Convex
+    * @property centerOfMass
+    * @type {Float32Array}
+    */
     this.centerOfMass = vec2.fromValues(0,0);
 
     /**
-     * Triangulated version of this convex. The structure is Array of 3-Arrays, and each subarray contains 3 integers, referencing the vertices.
-     * @property triangles
-     * @type {Array}
-     */
+    * Triangulated version of this convex. The structure is Array of 3-Arrays, and each subarray contains 3 integers, referencing the vertices.
+    * @property triangles
+    * @type {Array}
+    */
     this.triangles = [];
 
     if(this.vertices.length){
@@ -40,10 +40,10 @@ function Convex(vertices){
     }
 
     /**
-     * The bounding radius of the convex
-     * @property boundingRadius
-     * @type {Number}
-     */
+    * The bounding radius of the convex
+    * @property boundingRadius
+    * @type {Number}
+    */
     this.boundingRadius = 0;
     this.updateBoundingRadius();
 

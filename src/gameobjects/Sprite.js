@@ -165,17 +165,17 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * Setting than anchor to 0.5,0.5 means the textures origin is centered
     * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right
     *
-    * @property {Phaser.Point} anchor - The anchor around with Sprite rotation and scaling takes place.
+    * @property {Phaser.Point} anchor - The anchor around which rotation and scaling takes place.
     */
     this.anchor = new Phaser.Point();
 
     /**
-    * @property {number} x - The x coordinate (in world space) of this Sprite.
+    * @property {number} x - The x coordinate in world space of this Sprite.
     */
     this.x = x;
     
     /**
-    * @property {number} y - The y coordinate (in world space) of this Sprite.
+    * @property {number} y - The y coordinate in world space of this Sprite.
     */
     this.y = y;
 

@@ -73,14 +73,14 @@ Phaser.Signal.prototype = {
     },
 
     /**
-     * @method Phaser.Signal#_registerListener
-     * @param {function} listener - Signal handler function.
-     * @param {boolean} isOnce - Description.
-     * @param {object} [listenerContext] - Description.
-     * @param {number} [priority] - The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0).
-     * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
-     * @private
-     */
+    * @method Phaser.Signal#_registerListener
+    * @param {function} listener - Signal handler function.
+    * @param {boolean} isOnce - Description.
+    * @param {object} [listenerContext] - Description.
+    * @param {number} [priority] - The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0).
+    * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
+    * @private
+    */
     _registerListener: function (listener, isOnce, listenerContext, priority) {
 
         var prevIndex = this._indexOfListener(listener, listenerContext),
@@ -104,10 +104,10 @@ Phaser.Signal.prototype = {
     },
 
     /**
-     * @method Phaser.Signal#_addBinding 
-     * @param {Phaser.SignalBinding} binding - An Object representing the binding between the Signal and listener.
-     * @private
-     */
+    * @method Phaser.Signal#_addBinding 
+    * @param {Phaser.SignalBinding} binding - An Object representing the binding between the Signal and listener.
+    * @private
+    */
     _addBinding: function (binding) {
         //simplified insertion sort
         var n = this._bindings.length;
@@ -116,11 +116,11 @@ Phaser.Signal.prototype = {
     },
 
     /**
-     * @method Phaser.Signal#_indexOfListener
-     * @param {function} listener - Signal handler function.
-     * @return {number} Description.
-     * @private
-     */
+    * @method Phaser.Signal#_indexOfListener
+    * @param {function} listener - Signal handler function.
+    * @return {number} Description.
+    * @private
+    */
     _indexOfListener: function (listener, context) {
         var n = this._bindings.length,
             cur;
@@ -134,26 +134,26 @@ Phaser.Signal.prototype = {
     },
 
     /**
-     * Check if listener was attached to Signal.
-     * 
-     * @method Phaser.Signal#has
-     * @param {Function} listener - Signal handler function.
-     * @param {Object} [context] - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-     * @return {boolean} If Signal has the specified listener.
-     */
+    * Check if listener was attached to Signal.
+    * 
+    * @method Phaser.Signal#has
+    * @param {Function} listener - Signal handler function.
+    * @param {Object} [context] - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+    * @return {boolean} If Signal has the specified listener.
+    */
     has: function (listener, context) {
         return this._indexOfListener(listener, context) !== -1;
     },
 
     /**
-     * Add a listener to the signal.
-     * 
-     * @method Phaser.Signal#add
-     * @param {function} listener - Signal handler function.
-     * @param {object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-     * @param {number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0).
-     * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
-     */
+    * Add a listener to the signal.
+    * 
+    * @method Phaser.Signal#add
+    * @param {function} listener - Signal handler function.
+    * @param {object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+    * @param {number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0).
+    * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
+    */
     add: function (listener, listenerContext, priority) {
         this.validateListener(listener, 'add');
         return this._registerListener(listener, false, listenerContext, priority);

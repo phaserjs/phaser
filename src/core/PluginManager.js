@@ -127,10 +127,10 @@ Phaser.PluginManager.prototype = {
     },
 
     /**
-     * Remove a Plugin from the PluginManager.
-     * @method Phaser.PluginManager#remove
-     * @param {Phaser.Plugin} plugin - The plugin to be removed.
-     */
+    * Remove a Plugin from the PluginManager.
+    * @method Phaser.PluginManager#remove
+    * @param {Phaser.Plugin} plugin - The plugin to be removed.
+    */
     remove: function (plugin) {
         
         if (this._pluginsLength === 0)
@@ -151,9 +151,9 @@ Phaser.PluginManager.prototype = {
     },
 
     /**
-     * Removes all Plugins from the PluginManager.
-     * @method Phaser.PluginManager#removeAll
-     */
+    * Removes all Plugins from the PluginManager.
+    * @method Phaser.PluginManager#removeAll
+    */
     removeAll: function() {
         
         for (this._p = 0; this._p < this._pluginsLength; this._p++)

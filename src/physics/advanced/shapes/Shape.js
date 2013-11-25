@@ -9,56 +9,56 @@ function Shape(type){
     this.type = type;
 
     /**
-     * Bounding circle radius of this shape
-     * @property boundingRadius
-     * @type {Number}
-     */
+    * Bounding circle radius of this shape
+    * @property boundingRadius
+    * @type {Number}
+    */
     this.boundingRadius = 0;
 
     /**
-     * Collision group that this shape belongs to (bit mask). See <a href="http://www.aurelienribon.com/blog/2011/07/box2d-tutorial-collision-filtering/">this tutorial</a>.
-     * @property collisionGroup
-     * @type {Number}
-     * @example
-     *     // Setup bits for each available group
-     *     var PLAYER = Math.pow(2,0),
-     *         ENEMY =  Math.pow(2,1),
-     *         GROUND = Math.pow(2,2)
-     *
-     *     // Put shapes into their groups
-     *     player1Shape.collisionGroup = PLAYER;
-     *     player2Shape.collisionGroup = PLAYER;
-     *     enemyShape  .collisionGroup = ENEMY;
-     *     groundShape .collisionGroup = GROUND;
-     *
-     *     // Assign groups that each shape collide with.
-     *     // Note that the players can collide with ground and enemies, but not with other players.
-     *     player1Shape.collisionMask = ENEMY | GROUND;
-     *     player2Shape.collisionMask = ENEMY | GROUND;
-     *     enemyShape  .collisionMask = PLAYER | GROUND;
-     *     groundShape .collisionMask = PLAYER | ENEMY;
-     *
-     * @example
-     *     // How collision check is done
-     *     if(shapeA.collisionGroup & shapeB.collisionMask)!=0 && (shapeB.collisionGroup & shapeA.collisionMask)!=0){
-     *         // The shapes will collide
-     *     }
-     */
+    * Collision group that this shape belongs to (bit mask). See <a href="http://www.aurelienribon.com/blog/2011/07/box2d-tutorial-collision-filtering/">this tutorial</a>.
+    * @property collisionGroup
+    * @type {Number}
+    * @example
+    *     // Setup bits for each available group
+    *     var PLAYER = Math.pow(2,0),
+    *         ENEMY =  Math.pow(2,1),
+    *         GROUND = Math.pow(2,2)
+    *
+    *     // Put shapes into their groups
+    *     player1Shape.collisionGroup = PLAYER;
+    *     player2Shape.collisionGroup = PLAYER;
+    *     enemyShape  .collisionGroup = ENEMY;
+    *     groundShape .collisionGroup = GROUND;
+    *
+    *     // Assign groups that each shape collide with.
+    *     // Note that the players can collide with ground and enemies, but not with other players.
+    *     player1Shape.collisionMask = ENEMY | GROUND;
+    *     player2Shape.collisionMask = ENEMY | GROUND;
+    *     enemyShape  .collisionMask = PLAYER | GROUND;
+    *     groundShape .collisionMask = PLAYER | ENEMY;
+    *
+    * @example
+    *     // How collision check is done
+    *     if(shapeA.collisionGroup & shapeB.collisionMask)!=0 && (shapeB.collisionGroup & shapeA.collisionMask)!=0){
+    *         // The shapes will collide
+    *     }
+    */
     this.collisionGroup = 1;
 
     /**
-     * Collision mask of this shape. See .collisionGroup.
-     * @property collisionMask
-     * @type {Number}
-     */
+    * Collision mask of this shape. See .collisionGroup.
+    * @property collisionMask
+    * @type {Number}
+    */
     this.collisionMask =  1;
     if(type) this.updateBoundingRadius();
 
     /**
-     * Material to use in collisions for this Shape. If this is set to null, the world will use default material properties instead.
-     * @property material
-     * @type {Material}
-     */
+    * Material to use in collisions for this Shape. If this is set to null, the world will use default material properties instead.
+    * @property material
+    * @type {Material}
+    */
     this.material = null;
 };
 

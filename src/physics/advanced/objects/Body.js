@@ -25,155 +25,155 @@ function Body(options){
     options = options || {};
 
     /**
-     * The body identifyer
-     * @property id
-     * @type {Number}
-     */
+    * The body identifyer
+    * @property id
+    * @type {Number}
+    */
     this.id = ++Body._idCounter;
 
     /**
-     * The shapes of the body. The local transform of the shape in .shapes[i] is
-     * defined by .shapeOffsets[i] and .shapeAngles[i].
-     *
-     * @property shapes
-     * @type {Array}
-     */
+    * The shapes of the body. The local transform of the shape in .shapes[i] is
+    * defined by .shapeOffsets[i] and .shapeAngles[i].
+    *
+    * @property shapes
+    * @type {Array}
+    */
     this.shapes = [];
 
     /**
-     * The local shape offsets, relative to the body center of mass. This is an
-     * array of Float32Array.
-     * @property shapeOffsets
-     * @type {Array}
-     */
+    * The local shape offsets, relative to the body center of mass. This is an
+    * array of Float32Array.
+    * @property shapeOffsets
+    * @type {Array}
+    */
     this.shapeOffsets = [];
 
     /**
-     * The body-local shape angle transforms. This is an array of numbers (angles).
-     * @property shapeAngles
-     * @type {Array}
-     */
+    * The body-local shape angle transforms. This is an array of numbers (angles).
+    * @property shapeAngles
+    * @type {Array}
+    */
     this.shapeAngles = [];
 
     /**
-     * The mass of the body.
-     * @property mass
-     * @type {number}
-     */
+    * The mass of the body.
+    * @property mass
+    * @type {number}
+    */
     this.mass = options.mass || 0;
 
     /**
-     * The inverse mass of the body.
-     * @property invMass
-     * @type {number}
-     */
+    * The inverse mass of the body.
+    * @property invMass
+    * @type {number}
+    */
     this.invMass = 0;
 
     /**
-     * The inertia of the body around the Z axis.
-     * @property inertia
-     * @type {number}
-     */
+    * The inertia of the body around the Z axis.
+    * @property inertia
+    * @type {number}
+    */
     this.inertia = 0;
 
     /**
-     * The inverse inertia of the body.
-     * @property invInertia
-     * @type {number}
-     */
+    * The inverse inertia of the body.
+    * @property invInertia
+    * @type {number}
+    */
     this.invInertia = 0;
 
     this.updateMassProperties();
 
     /**
-     * The position of the body
-     * @property position
-     * @type {Float32Array}
-     */
+    * The position of the body
+    * @property position
+    * @type {Float32Array}
+    */
     this.position = vec2.fromValues(0,0);
     if(options.position) vec2.copy(this.position, options.position);
 
     /**
-     * The velocity of the body
-     * @property velocity
-     * @type {Float32Array}
-     */
+    * The velocity of the body
+    * @property velocity
+    * @type {Float32Array}
+    */
     this.velocity = vec2.fromValues(0,0);
     if(options.velocity) vec2.copy(this.velocity, options.velocity);
 
     /**
-     * Constraint velocity that was added to the body during the last step.
-     * @property vlambda
-     * @type {Float32Array}
-     */
+    * Constraint velocity that was added to the body during the last step.
+    * @property vlambda
+    * @type {Float32Array}
+    */
     this.vlambda = vec2.fromValues(0,0);
 
     /**
-     * Angular constraint velocity that was added to the body during last step.
-     * @property wlambda
-     * @type {Float32Array}
-     */
+    * Angular constraint velocity that was added to the body during last step.
+    * @property wlambda
+    * @type {Float32Array}
+    */
     this.wlambda = 0;
 
     /**
-     * The angle of the body
-     * @property angle
-     * @type {number}
-     */
+    * The angle of the body
+    * @property angle
+    * @type {number}
+    */
     this.angle = options.angle || 0;
 
     /**
-     * The angular velocity of the body
-     * @property angularVelocity
-     * @type {number}
-     */
+    * The angular velocity of the body
+    * @property angularVelocity
+    * @type {number}
+    */
     this.angularVelocity = options.angularVelocity || 0;
 
     /**
-     * The force acting on the body
-     * @property force
-     * @type {Float32Array}
-     */
+    * The force acting on the body
+    * @property force
+    * @type {Float32Array}
+    */
     this.force = vec2.create();
     if(options.force) vec2.copy(this.force, options.force);
 
     /**
-     * The angular force acting on the body
-     * @property angularForce
-     * @type {number}
-     */
+    * The angular force acting on the body
+    * @property angularForce
+    * @type {number}
+    */
     this.angularForce = options.angularForce || 0;
 
     /**
-     * The type of motion this body has. Should be one of: Body.STATIC (the body
-     * does not move), Body.DYNAMIC (body can move and respond to collisions)
-     * and Body.KINEMATIC (only moves according to its .velocity).
-     *
-     * @property motionState
-     * @type {number}
-     *
-     * @example
-     *     // This body will move and interact with other bodies
-     *     var dynamicBody = new Body();
-     *     dynamicBody.motionState = Body.DYNAMIC;
-     *
-     * @example
-     *     // This body will not move at all
-     *     var staticBody = new Body();
-     *     staticBody.motionState = Body.STATIC;
-     *
-     * @example
-     *     // This body will only move if you change its velocity
-     *     var kinematicBody = new Body();
-     *     kinematicBody.motionState = Body.KINEMATIC;
-     */
+    * The type of motion this body has. Should be one of: Body.STATIC (the body
+    * does not move), Body.DYNAMIC (body can move and respond to collisions)
+    * and Body.KINEMATIC (only moves according to its .velocity).
+    *
+    * @property motionState
+    * @type {number}
+    *
+    * @example
+    *     // This body will move and interact with other bodies
+    *     var dynamicBody = new Body();
+    *     dynamicBody.motionState = Body.DYNAMIC;
+    *
+    * @example
+    *     // This body will not move at all
+    *     var staticBody = new Body();
+    *     staticBody.motionState = Body.STATIC;
+    *
+    * @example
+    *     // This body will only move if you change its velocity
+    *     var kinematicBody = new Body();
+    *     kinematicBody.motionState = Body.KINEMATIC;
+    */
     this.motionState = this.mass === 0 ? Body.STATIC : Body.DYNAMIC;
 
     /**
-     * Bounding circle radius
-     * @property boundingRadius
-     * @type {Number}
-     */
+    * Bounding circle radius
+    * @property boundingRadius
+    * @type {Number}
+    */
     this.boundingRadius = 0;
 };
 

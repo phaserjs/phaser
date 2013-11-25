@@ -58,8 +58,8 @@ Phaser.Stage = function (game, width, height) {
     this.scale = new Phaser.StageScaleMode(this.game, width, height);
 
     /**
-     * @property {number} aspectRatio - Aspect ratio.
-     */
+    * @property {number} aspectRatio - Aspect ratio.
+    */
     this.aspectRatio = width / height;
 
     /**

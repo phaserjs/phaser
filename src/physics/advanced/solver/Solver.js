@@ -10,11 +10,11 @@ module.exports = Solver;
 function Solver(){
 
     /**
-     * Current equations in the solver.
-     *
-     * @property equations
-     * @type {Array}
-     */
+    * Current equations in the solver.
+    *
+    * @property equations
+    * @type {Array}
+    */
     this.equations = [];
 };
 

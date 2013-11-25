@@ -20,124 +20,91 @@ Phaser.Time = function (game) {
 	this.game = game;
 
 	/**
-	* The time at which the Game instance started.
-	* @property {number} _started
+	* @property {number} _started - The time at which the Game instance started.
 	* @private
-	* @default
 	*/
 	this._started = 0;
 
 	/**
-	* The time (in ms) that the last second counter ticked over.
-	* @property {number} _timeLastSecond
+	* @property {number} _timeLastSecond - The time (in ms) that the last second counter ticked over.
 	* @private
-	* @default
 	*/
 	this._timeLastSecond = 0;
 
 	/**
-	* The time the game started being paused.
-	* @property {number} _pauseStarted
+	* @property {number} _pauseStarted - The time the game started being paused.
 	* @private
-	* @default
 	*/
 	this._pauseStarted = 0;
 
 	/**
-	* The elapsed time calculated for the physics motion updates.
-	* @property {number} physicsElapsed
-	* @default
+	* @property {number} physicsElapsed - The elapsed time calculated for the physics motion updates.
 	*/
 	this.physicsElapsed = 0;
 
 	/**
-	* Game time counter.
-	* @property {number} time
-	* @default
+	* @property {number} time - Game time counter.
 	*/
 	this.time = 0;
 
 	/**
-	* Records how long the game has been paused for. Is reset each time the game pauses.
-	* @property {number} pausedTime
-	* @default
+	* @property {number} pausedTime - Records how long the game has been paused for. Is reset each time the game pauses.
 	*/
 	this.pausedTime = 0;
 
 	/**
-	* The time right now.
-	* @property {number} now
-    * @default
+	* @property {number} now - The time right now.
 	*/
 	this.now = 0;
 
 	/**
-	* Elapsed time since the last frame.
-	* @property {number} elapsed
-	* @default
+	* @property {number} elapsed - Elapsed time since the last frame.
 	*/
 	this.elapsed = 0;
 
 	/**
-	* Frames per second.
-	* @property {number} fps
-	* @default
+	* @property {number} fps - Frames per second.
 	*/
 	this.fps = 0;
 
 	/**
-	* The lowest rate the fps has dropped to.
-	* @property {number} fpsMin
-	* @default
+	* @property {number} fpsMin - The lowest rate the fps has dropped to.
 	*/
 	this.fpsMin = 1000;
 
 	/**
-	* The highest rate the fps has reached (usually no higher than 60fps).
-	* @property {number} fpsMax
-	* @default
+	* @property {number} fpsMax - The highest rate the fps has reached (usually no higher than 60fps).
 	*/
 	this.fpsMax = 0;
 
 	/**
-	* The minimum amount of time the game has taken between two frames.
-	* @property {number} msMin
+	* @property {number} msMin - The minimum amount of time the game has taken between two frames.
 	* @default
 	*/
 	this.msMin = 1000;
 
 	/**
-	* The maximum amount of time the game has taken between two frames.
-	* @property {number} msMax
-	* @default
+	* @property {number} msMax - The maximum amount of time the game has taken between two frames.
 	*/
 	this.msMax = 0;
 
 	/**
-	* The number of frames record in the last second.
-	* @property {number} frames
-	* @default
+	* @property {number} frames - The number of frames record in the last second.
 	*/
 	this.frames = 0;
 
 	/**
-	* Records how long the game was paused for in miliseconds.
-	* @property {number} pauseDuration
-	* @default
+	* @property {number} pauseDuration - Records how long the game was paused for in miliseconds.
 	*/
 	this.pauseDuration = 0;
 
 	/**
-	* The value that setTimeout needs to work out when to next update
-	* @property {number} timeToCall
-	* @default
+	* @property {number} timeToCall - The value that setTimeout needs to work out when to next update
 	*/
 	this.timeToCall = 0;
 
 	/**
-	* Internal value used by timeToCall as part of the setTimeout loop
-	* @property {number} lastTime
-	* @default
+	* @property {number} lastTime - Internal value used by timeToCall as part of the setTimeout loop
 	*/
 	this.lastTime = 0;
 
@@ -146,9 +113,8 @@ Phaser.Time = function (game) {
 	this.game.onResume.add(this.gameResumed, this);
 
 	/**
-	* Internal value used to recover from the game pause state.
-	* @property {boolean} _justResumed
-    * @default
+	* @property {boolean} _justResumed - Internal value used to recover from the game pause state.
+    * @private
 	*/
 	this._justResumed = false;
 

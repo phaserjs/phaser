@@ -172,7 +172,7 @@ Phaser.BitmapData.prototype = {
             {
                 this.data32[y * this.width + x] = (red << 24) | (green << 16) | (blue << 8) | alpha;
             }
-            */
+           */
 
             // this.imageData.data.set(this.data8);
 
@@ -229,10 +229,10 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
-     * Get pixels in array in a specific Rectangle.
-     * @param rect {Rectangle} The specific Rectangle.
-     * @return {array} CanvasPixelArray.
-     */
+    * Get pixels in array in a specific Rectangle.
+    * @param rect {Rectangle} The specific Rectangle.
+    * @return {array} CanvasPixelArray.
+    */
     getPixels: function (rect) {
 
         return this.context.getImageData(rect.x, rect.y, rect.width, rect.height);

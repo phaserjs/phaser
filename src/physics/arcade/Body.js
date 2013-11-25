@@ -18,91 +18,91 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     /**
     * @property {Phaser.Sprite} sprite - Reference to the parent Sprite.
     */
-	this.sprite = sprite;
+    this.sprite = sprite;
 
     /**
     * @property {Phaser.Game} game - Local reference to game.
     */
-	this.game = sprite.game;
+    this.game = sprite.game;
 
     /**
     * @property {Phaser.Point} offset - The offset of the Physics Body from the Sprite x/y position.
     */
-	this.offset = new Phaser.Point;
+    this.offset = new Phaser.Point();
 
     /**
     * @property {number} x - The x position of the physics body.
     * @readonly
     */
-	this.x = sprite.x;
+    this.x = sprite.x;
 
     /**
     * @property {number} y - The y position of the physics body.
     * @readonly
     */
-	this.y = sprite.y;
+    this.y = sprite.y;
 
     /**
     * @property {number} preX - The previous x position of the physics body.
     * @readonly
     */
-	this.preX = sprite.x;
+    this.preX = sprite.x;
 
     /**
     * @property {number} preY - The previous y position of the physics body.
     * @readonly
     */
-	this.preY = sprite.y;
+    this.preY = sprite.y;
 
     /**
     * @property {number} preRotation - The previous rotation of the physics body.
     * @readonly
     */
-	this.preRotation = sprite.angle;
+    this.preRotation = sprite.angle;
 
     /**
     * @property {number} screenX - The x position of the physics body translated to screen space.
     * @readonly
     */
-	this.screenX = sprite.x;
+    this.screenX = sprite.x;
 
     /**
     * @property {number} screenY - The y position of the physics body translated to screen space.
     * @readonly
     */
-	this.screenY = sprite.y;
+    this.screenY = sprite.y;
 
     /**
     * @property {number} sourceWidth - The un-scaled original size.
     * @readonly
     */
-	this.sourceWidth = sprite.currentFrame.sourceSizeW;
+    this.sourceWidth = sprite.currentFrame.sourceSizeW;
 
     /**
     * @property {number} sourceHeight - The un-scaled original size.
     * @readonly
     */
-	this.sourceHeight = sprite.currentFrame.sourceSizeH;
+    this.sourceHeight = sprite.currentFrame.sourceSizeH;
 
     /**
     * @property {number} width - The calculated width of the physics body.
     */
-	this.width = sprite.currentFrame.sourceSizeW;
+    this.width = sprite.currentFrame.sourceSizeW;
 
     /**
     * @property .numInternal ID cache
     */
-	this.height = sprite.currentFrame.sourceSizeH;
+    this.height = sprite.currentFrame.sourceSizeH;
 
     /**
     * @property {number} halfWidth - The calculated width / 2 of the physics body.
     */
-	this.halfWidth = Math.floor(sprite.currentFrame.sourceSizeW / 2);
+    this.halfWidth = Math.floor(sprite.currentFrame.sourceSizeW / 2);
 
     /**
     * @property {number} halfHeight - The calculated height / 2 of the physics body.
     */
-	this.halfHeight = Math.floor(sprite.currentFrame.sourceSizeH / 2);
+    this.halfHeight = Math.floor(sprite.currentFrame.sourceSizeH / 2);
 
     /**
     * @property {Phaser.Point} center - The center coordinate of the Physics Body.
@@ -113,38 +113,38 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @property {number} _sx - Internal cache var.
     * @private
     */
-	this._sx = sprite.scale.x;
+    this._sx = sprite.scale.x;
 
     /**
     * @property {number} _sy - Internal cache var.
     * @private
     */
-	this._sy = sprite.scale.y;
+    this._sy = sprite.scale.y;
 
     /**
     * @property {Phaser.Point} velocity - The velocity in pixels per second sq. of the Body.
     */
-    this.velocity = new Phaser.Point;
+    this.velocity = new Phaser.Point();
 
     /**
     * @property {Phaser.Point} acceleration - The velocity in pixels per second sq. of the Body.
     */
-    this.acceleration = new Phaser.Point;
+    this.acceleration = new Phaser.Point();
 
     /**
     * @property {Phaser.Point} drag - The drag applied to the motion of the Body.
     */
-    this.drag = new Phaser.Point;
+    this.drag = new Phaser.Point();
 
     /**
     * @property {Phaser.Point} gravity - A private Gravity setting for the Body.
     */
-    this.gravity = new Phaser.Point;
+    this.gravity = new Phaser.Point();
 
     /**
     * @property {Phaser.Point} bounce - The elasticitiy of the Body when colliding. bounce.x/y = 1 means full rebound, bounce.x/y = 0.5 means 50% rebound velocity.
     */
-    this.bounce = new Phaser.Point;
+    this.bounce = new Phaser.Point();
 
     /**
     * @property {Phaser.Point} maxVelocity - The maximum velocity in pixels per second sq. that the Body can reach.
@@ -200,7 +200,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this.quadTreeIndex = -1;
 
-    //	Allow collision
+    //  Allow collision
 
     /**
     * Set the allowCollision properties to control which directions collision is processed for this Body.
@@ -318,20 +318,20 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade#updateBounds
     * @protected
     */
-	updateBounds: function (centerX, centerY, scaleX, scaleY) {
+    updateBounds: function (centerX, centerY, scaleX, scaleY) {
 
-		if (scaleX != this._sx || scaleY != this._sy)
-		{
-			this.width = this.sourceWidth * scaleX;
-			this.height = this.sourceHeight * scaleY;
-			this.halfWidth = Math.floor(this.width / 2);
-			this.halfHeight = Math.floor(this.height / 2);
-			this._sx = scaleX;
-			this._sy = scaleY;
+        if (scaleX != this._sx || scaleY != this._sy)
+        {
+            this.width = this.sourceWidth * scaleX;
+            this.height = this.sourceHeight * scaleY;
+            this.halfWidth = Math.floor(this.width / 2);
+            this.halfHeight = Math.floor(this.height / 2);
+            this._sx = scaleX;
+            this._sy = scaleY;
             this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
-		}
+        }
 
-	},
+    },
 
     /**
     * Internal method.
@@ -339,55 +339,55 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade#preUpdate
     * @protected
     */
-	preUpdate: function () {
+    preUpdate: function () {
 
-		//	Store and reset collision flags
-	    this.wasTouching.none = this.touching.none;
-	    this.wasTouching.up = this.touching.up;
-	    this.wasTouching.down = this.touching.down;
-	    this.wasTouching.left = this.touching.left;
-	    this.wasTouching.right = this.touching.right;
+        //  Store and reset collision flags
+        this.wasTouching.none = this.touching.none;
+        this.wasTouching.up = this.touching.up;
+        this.wasTouching.down = this.touching.down;
+        this.wasTouching.left = this.touching.left;
+        this.wasTouching.right = this.touching.right;
 
-	    this.touching.none = true;
-	    this.touching.up = false;
-	    this.touching.down = false;
-	    this.touching.left = false;
-	    this.touching.right = false;
+        this.touching.none = true;
+        this.touching.up = false;
+        this.touching.down = false;
+        this.touching.left = false;
+        this.touching.right = false;
 
-	    this.embedded = false;
+        this.embedded = false;
 
-		this.screenX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		this.screenY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+        this.screenX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+        this.screenY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 
         this.preX = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
         this.preY = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
 
-		this.preRotation = this.sprite.angle;
+        this.preRotation = this.sprite.angle;
 
-		this.x = this.preX;
-		this.y = this.preY;
-		this.rotation = this.preRotation;
+        this.x = this.preX;
+        this.y = this.preY;
+        this.rotation = this.preRotation;
 
-		if (this.moves)
-		{
-			this.game.physics.updateMotion(this);
+        if (this.moves)
+        {
+            this.game.physics.updateMotion(this);
 
-			if (this.collideWorldBounds)
-			{
-				this.checkWorldBounds();
-			}
+            if (this.collideWorldBounds)
+            {
+                this.checkWorldBounds();
+            }
 
-			this.updateHulls();
+            this.updateHulls();
         }
 
-		if (this.skipQuadTree === false && this.allowCollision.none === false && this.sprite.visible && this.sprite.alive)
-		{
-		    this.quadTreeIDs = [];
-		    this.quadTreeIndex = -1;
-			this.game.physics.quadTree.insert(this);
-		}
+        if (this.skipQuadTree === false && this.allowCollision.none === false && this.sprite.visible && this.sprite.alive)
+        {
+            this.quadTreeIDs = [];
+            this.quadTreeIndex = -1;
+            this.game.physics.quadTree.insert(this);
+        }
 
-	},
+    },
 
     /**
     * Internal method.
@@ -395,25 +395,25 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade#postUpdate
     * @protected
     */
-	postUpdate: function () {
+    postUpdate: function () {
 
-		if (this.deltaX() < 0)
-		{
-			this.facing = Phaser.LEFT;
-		}
-		else if (this.deltaX() > 0)
-		{
-			this.facing = Phaser.RIGHT;
-		}
+        if (this.deltaX() < 0)
+        {
+            this.facing = Phaser.LEFT;
+        }
+        else if (this.deltaX() > 0)
+        {
+            this.facing = Phaser.RIGHT;
+        }
 
-		if (this.deltaY() < 0)
-		{
-			this.facing = Phaser.UP;
-		}
-		else if (this.deltaY() > 0)
-		{
-			this.facing = Phaser.DOWN;
-		}
+        if (this.deltaY() < 0)
+        {
+            this.facing = Phaser.UP;
+        }
+        else if (this.deltaY() > 0)
+        {
+            this.facing = Phaser.DOWN;
+        }
 
         if (this.deltaX() !== 0 || this.deltaY() !== 0)
         {
@@ -422,12 +422,12 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
         }
 
-		if (this.allowRotation)
-		{
-			this.sprite.angle += this.deltaZ();
-		}
+        if (this.allowRotation)
+        {
+            this.sprite.angle += this.deltaZ();
+        }
 
-	},
+    },
 
     /**
     * Internal method.
@@ -435,12 +435,12 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade#updateHulls
     * @protected
     */
-	updateHulls: function () {
+    updateHulls: function () {
 
-		this.hullX.setTo(this.x, this.preY, this.width, this.height);
-		this.hullY.setTo(this.preX, this.y, this.width, this.height);
+        this.hullX.setTo(this.x, this.preY, this.width, this.height);
+        this.hullY.setTo(this.preX, this.y, this.width, this.height);
 
-	},
+    },
 
     /**
     * Internal method.
@@ -448,31 +448,31 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade#checkWorldBounds
     * @protected
     */
-	checkWorldBounds: function () {
+    checkWorldBounds: function () {
 
-		if (this.x < this.game.world.bounds.x)
-		{
-			this.x = this.game.world.bounds.x;
-			this.velocity.x *= -this.bounce.x;
-		}
-		else if (this.right > this.game.world.bounds.right)
-		{
-			this.x = this.game.world.bounds.right - this.width;
-			this.velocity.x *= -this.bounce.x;
-		}
+        if (this.x < this.game.world.bounds.x)
+        {
+            this.x = this.game.world.bounds.x;
+            this.velocity.x *= -this.bounce.x;
+        }
+        else if (this.right > this.game.world.bounds.right)
+        {
+            this.x = this.game.world.bounds.right - this.width;
+            this.velocity.x *= -this.bounce.x;
+        }
 
-		if (this.y < this.game.world.bounds.y)
-		{
-			this.y = this.game.world.bounds.y;
-			this.velocity.y *= -this.bounce.y;
-		}
-		else if (this.bottom > this.game.world.bounds.bottom)
-		{
-			this.y = this.game.world.bounds.bottom - this.height;
-			this.velocity.y *= -this.bounce.y;
-		}
+        if (this.y < this.game.world.bounds.y)
+        {
+            this.y = this.game.world.bounds.y;
+            this.velocity.y *= -this.bounce.y;
+        }
+        else if (this.bottom > this.game.world.bounds.bottom)
+        {
+            this.y = this.game.world.bounds.bottom - this.height;
+            this.velocity.y *= -this.bounce.y;
+        }
 
-	},
+    },
 
     /**
     * You can modify the size of the physics Body to be any dimension you need.
@@ -485,46 +485,46 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @param {number} offsetX - The X offset of the Body from the Sprite position.
     * @param {number} offsetY - The Y offset of the Body from the Sprite position.
     */
-	setSize: function (width, height, offsetX, offsetY) {
+    setSize: function (width, height, offsetX, offsetY) {
 
-		offsetX = offsetX || this.offset.x;
-		offsetY = offsetY || this.offset.y;
+        offsetX = offsetX || this.offset.x;
+        offsetY = offsetY || this.offset.y;
 
-		this.sourceWidth = width;
-		this.sourceHeight = height;
-		this.width = this.sourceWidth * this._sx;
-		this.height = this.sourceHeight * this._sy;
-		this.halfWidth = Math.floor(this.width / 2);
-		this.halfHeight = Math.floor(this.height / 2);
-		this.offset.setTo(offsetX, offsetY);
+        this.sourceWidth = width;
+        this.sourceHeight = height;
+        this.width = this.sourceWidth * this._sx;
+        this.height = this.sourceHeight * this._sy;
+        this.halfWidth = Math.floor(this.width / 2);
+        this.halfHeight = Math.floor(this.height / 2);
+        this.offset.setTo(offsetX, offsetY);
 
         this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
 
-	},
+    },
 
     /**
     * Resets all Body values (velocity, acceleration, rotation, etc)
     *
     * @method Phaser.Physics.Arcade#reset
     */
-	reset: function () {
+    reset: function () {
 
-		this.velocity.setTo(0, 0);
-		this.acceleration.setTo(0, 0);
+        this.velocity.setTo(0, 0);
+        this.acceleration.setTo(0, 0);
 
-	    this.angularVelocity = 0;
-	    this.angularAcceleration = 0;
+        this.angularVelocity = 0;
+        this.angularAcceleration = 0;
         this.preX = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
         this.preY = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
-		this.preRotation = this.sprite.angle;
+        this.preRotation = this.sprite.angle;
 
-		this.x = this.preX;
-		this.y = this.preY;
-		this.rotation = this.preRotation;
+        this.x = this.preX;
+        this.y = this.preY;
+        this.rotation = this.preRotation;
         
         this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
 
-	},
+    },
 
     /**
     * Returns the absolute delta x value.
@@ -591,7 +591,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
     * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
     * @method bottom
     * @param {number} value
-    */    
+    */
     set: function (value) {
 
         if (value <= this.y)
@@ -618,7 +618,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
     * However it does affect the width property.
     * @method right
     * @return {number}
-    */    
+    */
     get: function () {
         return this.x + this.width;
     },

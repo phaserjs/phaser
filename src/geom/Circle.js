@@ -39,9 +39,9 @@ Phaser.Circle = function (x, y, diameter) {
     if (diameter > 0)
     {
         /**
-        * @property {number} _radius - The radius of the circle.
-        * @private
-        */
+       * @property {number} _radius - The radius of the circle.
+       * @private
+       */
         this._radius = diameter * 0.5;
     }
     else

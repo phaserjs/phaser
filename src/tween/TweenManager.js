@@ -22,180 +22,183 @@
 */
 Phaser.TweenManager = function (game) {
 
-	/**
-	* @property {Phaser.Game} game - Local reference to game.
-	*/
-	this.game = game;
-	
-	/**
-	* @property {array} _tweens - Description.
-	* @private
-	*/
-	this._tweens = [];
-	
-	/**
-	* @property {array} _add - Description.
-	* @private
-	*/
-	this._add = [];
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
+    this.game = game;
+    
+    /**
+    * @property {array} _tweens - Description.
+    * @private
+    */
+    this._tweens = [];
+    
+    /**
+    * @property {array} _add - Description.
+    * @private
+    */
+    this._add = [];
 
-	this.game.onPause.add(this.pauseAll, this);
-	this.game.onResume.add(this.resumeAll, this);
+    this.game.onPause.add(this.pauseAll, this);
+    this.game.onResume.add(this.resumeAll, this);
 
 };
 
 Phaser.TweenManager.prototype = {
 
-	/**
-	* Version number of this library.
-	* @property {string} REVISION
-	* @default 
-	*/	
-	REVISION: '11dev',
+    /**
+    * Version number of this library.
+    * @property {string} REVISION
+    * @default 
+    */
+    REVISION: '11dev',
 
-	/**
-	* Get all the tween objects in an array.
-	* @method Phaser.TweenManager#getAll
-	* @returns {Phaser.Tween[]} Array with all tween objects.
-	*/
-	getAll: function () {
+    /**
+    * Get all the tween objects in an array.
+    * @method Phaser.TweenManager#getAll
+    * @returns {Phaser.Tween[]} Array with all tween objects.
+    */
+    getAll: function () {
 
-		return this._tweens;
+        return this._tweens;
 
-	},
+    },
 
-	/**
-	* Remove all tween objects.
-	* @method Phaser.TweenManager#removeAll
-	*/
-	removeAll: function () {
+    /**
+    * Remove all tween objects.
+    * @method Phaser.TweenManager#removeAll
+    */
+    removeAll: function () {
 
-		this._tweens = [];
+        this._tweens = [];
 
-	},
+    },
 
-	/**
-	* Add a new tween into the TweenManager.
-	*
-	* @method Phaser.TweenManager#add
-	* @param {Phaser.Tween} tween - The tween object you want to add.
-	* @returns {Phaser.Tween} The tween object you added to the manager.
-	*/
-	add: function ( tween ) {
+    /**
+    * Add a new tween into the TweenManager.
+    *
+    * @method Phaser.TweenManager#add
+    * @param {Phaser.Tween} tween - The tween object you want to add.
+    * @returns {Phaser.Tween} The tween object you added to the manager.
+    */
+    add: function ( tween ) {
 
-		this._add.push( tween );
+        this._add.push( tween );
 
-	},
+    },
 
-	/**
-	* Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite. 
-	*
-	* @method Phaser.TweenManager#create
-	* @param {Object} object - Object the tween will be run on.
-	* @returns {Phaser.Tween} The newly created tween object.
-	*/
+    /**
+    * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite. 
+    *
+    * @method Phaser.TweenManager#create
+    * @param {Object} object - Object the tween will be run on.
+    * @returns {Phaser.Tween} The newly created tween object.
+    */
     create: function (object) {
 
         return new Phaser.Tween(object, this.game);
 
     },
 
-	/**
-	* Remove a tween from this manager.
-	*
-	* @method Phaser.TweenManager#remove
-	* @param {Phaser.Tween} tween - The tween object you want to remove.
-	*/
-	remove: function ( tween ) {
+    /**
+    * Remove a tween from this manager.
+    *
+    * @method Phaser.TweenManager#remove
+    * @param {Phaser.Tween} tween - The tween object you want to remove.
+    */
+    remove: function ( tween ) {
 
-		var i = this._tweens.indexOf( tween );
+        var i = this._tweens.indexOf( tween );
 
-		if ( i !== -1 ) {
+        if ( i !== -1 ) {
 
-			this._tweens[i].pendingDelete = true;
+            this._tweens[i].pendingDelete = true;
 
-		}
-
-	},
-
-	/**
-	* Update all the tween objects you added to this manager.
-	*
-	* @method Phaser.TweenManager#update
-	* @returns {boolean} Return false if there's no tween to update, otherwise return true.
-	*/
-	update: function () {
-
-		if ( this._tweens.length === 0 && this._add.length === 0 ) return false;
-
-		var i = 0;
-		var numTweens = this._tweens.length;
-
-		while ( i < numTweens ) {
-
-			if ( this._tweens[ i ].update( this.game.time.now ) ) {
-
-				i++;
-
-			} else {
-
-				this._tweens.splice( i, 1 );
-
-				numTweens--;
-
-			}
-
-		}
-
-		//	If there are any new tweens to be added, do so now - otherwise they can be spliced out of the array before ever running
-		if (this._add.length > 0)
-		{
-			this._tweens = this._tweens.concat(this._add);
-			this._add.length = 0;
-		}
-
-		return true;
-
-	},
-
-	/**
-	* Checks to see if a particular Sprite is currently being tweened.
-	*
-	* @method Phaser.TweenManager#isTweening
-	* @param {object} object - The object to check for tweens against.
-	* @returns {boolean} Returns true if the object is currently being tweened, false if not.
-	*/
-	isTweening: function(object) {	
-
-		return this._tweens.some(function(tween) {
-			return tween._object === object;
-		});
-
-	},
-
-	/**
-	* Pauses all currently running tweens.
-	*
-	* @method Phaser.TweenManager#update
-	*/
-	pauseAll: function () {
-
-    	for (var i = this._tweens.length - 1; i >= 0; i--) {
-    		this._tweens[i].pause();
-    	};
+        }
 
     },
 
-	/**
-	* Pauses all currently paused tweens.
-	*
-	* @method Phaser.TweenManager#resumeAll
-	*/
-   	resumeAll: function () {
+    /**
+    * Update all the tween objects you added to this manager.
+    *
+    * @method Phaser.TweenManager#update
+    * @returns {boolean} Return false if there's no tween to update, otherwise return true.
+    */
+    update: function () {
 
-    	for (var i = this._tweens.length - 1; i >= 0; i--) {
-    		this._tweens[i].resume();
-    	};
+        if ( this._tweens.length === 0 && this._add.length === 0 )
+        {
+            return false;
+        }
+
+        var i = 0;
+        var numTweens = this._tweens.length;
+
+        while ( i < numTweens ) {
+
+            if ( this._tweens[ i ].update( this.game.time.now ) ) {
+
+                i++;
+
+            } else {
+
+                this._tweens.splice( i, 1 );
+
+                numTweens--;
+
+            }
+
+        }
+
+        //  If there are any new tweens to be added, do so now - otherwise they can be spliced out of the array before ever running
+        if (this._add.length > 0)
+        {
+            this._tweens = this._tweens.concat(this._add);
+            this._add.length = 0;
+        }
+
+        return true;
+
+    },
+
+    /**
+    * Checks to see if a particular Sprite is currently being tweened.
+    *
+    * @method Phaser.TweenManager#isTweening
+    * @param {object} object - The object to check for tweens against.
+    * @returns {boolean} Returns true if the object is currently being tweened, false if not.
+    */
+    isTweening: function(object) {
+
+        return this._tweens.some(function(tween) {
+            return tween._object === object;
+        });
+
+    },
+
+    /**
+    * Pauses all currently running tweens.
+    *
+    * @method Phaser.TweenManager#update
+    */
+    pauseAll: function () {
+
+        for (var i = this._tweens.length - 1; i >= 0; i--) {
+            this._tweens[i].pause();
+        }
+
+    },
+
+    /**
+    * Pauses all currently paused tweens.
+    *
+    * @method Phaser.TweenManager#resumeAll
+    */
+    resumeAll: function () {
+
+        for (var i = this._tweens.length - 1; i >= 0; i--) {
+            this._tweens[i].resume();
+        }
 
     }
 

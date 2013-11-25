@@ -21,9 +21,13 @@ Phaser.BitmapText = function (game, x, y, text, style) {
 
     x = x || 0;
     y = y || 0;
-
     text = text || '';
     style = style || '';
+
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
+    this.game = game;
 
     /** 
     * @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
@@ -38,53 +42,51 @@ Phaser.BitmapText = function (game, x, y, text, style) {
     this.alive = true;
 
     /**
-    * @property {Description} group - Description.
-    * @default
+    * @property {Phaser.Group} group - The parent Group of this BitmapText.
     */
     this.group = null;
 
     /**
-    * @property {string} name - Description.
+    * @property {string} name - The user defined name given to this BitmapText.
     * @default
     */
     this.name = '';
 
     /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
+    * @property {number} type - The const type of this object.
+    * @readonly
     */
-    this.game = game;
+    this.type = Phaser.BITMAPTEXT;
 
     PIXI.BitmapText.call(this, text, style);
 
     /**
-    * @property {Description} type - Description.
-    */
-    this.type = Phaser.BITMAPTEXT;
-
-    /**
-    * @property {number} position.x - Description.
+    * @property {number} position.x - The x position of this object.
     */
     this.position.x = x;
     
     /**
-    * @property {number} position.y - Description.
+    * @property {number} position.y - The y position of this object.
     */
     this.position.y = y;
 
-    //  Replaces the PIXI.Point with a slightly more flexible one
     /**
-    * @property {Phaser.Point} anchor - Description.
+    * The anchor sets the origin point of the texture.
+    * The default is 0,0 this means the textures origin is the top left 
+    * Setting than anchor to 0.5,0.5 means the textures origin is centered
+    * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right
+    *
+    * @property {Phaser.Point} anchor - The anchor around which rotation and scaling takes place.
     */
     this.anchor = new Phaser.Point();
     
     /**
-    * @property {Phaser.Point} scale - Description.
+    * @property {Phaser.Point} scale - The scale of the object when rendered. By default it's set to 1 (no scale). You can modify it via scale.x or scale.y or scale.setTo(x, y). A value of 1 means no change to the scale, 0.5 means "half the size", 2 means "twice the size", etc.
     */
     this.scale = new Phaser.Point(1, 1);
 
-    //  A mini cache for storing all of the calculated values
     /**
-    * @property {function} _cache - Description.
+    * @property {object} _cache - A mini cache for storing all of the calculated values.
     * @private
     */
     this._cache = {
@@ -114,15 +116,13 @@ Phaser.BitmapText = function (game, x, y, text, style) {
     this._cache.y = this.y;
 
     /**
-    * @property {boolean} renderable - Description.
-    * @private
+    * @property {boolean} renderable - A renderable object will be rendered to the context each frame.
     */
     this.renderable = true;
 
 };
 
 Phaser.BitmapText.prototype = Object.create(PIXI.BitmapText.prototype);
-// Phaser.BitmapText.prototype = Phaser.Utils.extend(true, PIXI.BitmapText.prototype);
 Phaser.BitmapText.prototype.constructor = Phaser.BitmapText;
 
 /**
@@ -180,11 +180,11 @@ Phaser.BitmapText.prototype.destroy = function() {
 }
 
 /**
-* Get
-* @returns {Description}
-*//**
-* Set
-* @param {Description} value - Description
+* Indicates the rotation of the BitmapText, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+* Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
+* If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
+* @name Phaser.BitmapText#angle
+* @property {number} angle - Gets or sets the angle of rotation in degrees.
 */
 Object.defineProperty(Phaser.BitmapText.prototype, 'angle', {
 
@@ -199,11 +199,9 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'angle', {
 });
 
 /**
-* Get
-* @returns {Description}
-*//**
-* Set
-* @param {Description} value - Description
+* The x coordinate of this object in world space.
+* @name Phaser.BitmapText#x
+* @property {number} x - The x coordinate of this object in world space.
 */
 Object.defineProperty(Phaser.BitmapText.prototype, 'x', {
 
@@ -218,11 +216,9 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'x', {
 });
 
 /**
-* Get
-* @returns {Description}
-*//**
-* Set
-* @param {Description} value - Description
+* The y coordinate of this object in world space.
+* @name Phaser.BitmapText#y
+* @property {number} y - The y coordinate of this object in world space.
 */
 Object.defineProperty(Phaser.BitmapText.prototype, 'y', {
 

@@ -48,110 +48,110 @@ function World(options){
     options = options || {};
 
     /**
-     * All springs in the world.
-     *
-     * @property springs
-     * @type {Array}
-     */
+    * All springs in the world.
+    *
+    * @property springs
+    * @type {Array}
+    */
     this.springs = [];
 
     /**
-     * All bodies in the world.
-     *
-     * @property bodies
-     * @type {Array}
-     */
+    * All bodies in the world.
+    *
+    * @property bodies
+    * @type {Array}
+    */
     this.bodies = [];
 
     /**
-     * The solver used to satisfy constraints and contacts.
-     *
-     * @property solver
-     * @type {Solver}
-     */
+    * The solver used to satisfy constraints and contacts.
+    *
+    * @property solver
+    * @type {Solver}
+    */
     this.solver = options.solver || new GSSolver();
 
     /**
-     * The nearphase to use to generate contacts.
-     *
-     * @property nearphase
-     * @type {Nearphase}
-     */
+    * The nearphase to use to generate contacts.
+    *
+    * @property nearphase
+    * @type {Nearphase}
+    */
     this.nearphase = new Nearphase();
 
     /**
-     * Gravity in the world. This is applied on all bodies in the beginning of each step().
-     *
-     * @property
-     * @type {Float32Array}
-     */
+    * Gravity in the world. This is applied on all bodies in the beginning of each step().
+    *
+    * @property
+    * @type {Float32Array}
+    */
     this.gravity = options.gravity || vec2.fromValues(0, -9.78);
 
     /**
-     * Whether to do timing measurements during the step() or not.
-     *
-     * @property doPofiling
-     * @type {Boolean}
-     */
+    * Whether to do timing measurements during the step() or not.
+    *
+    * @property doPofiling
+    * @type {Boolean}
+    */
     this.doProfiling = options.doProfiling || false;
 
     /**
-     * How many millisecconds the last step() took. This is updated each step if .doProfiling is set to true.
-     *
-     * @property lastStepTime
-     * @type {Number}
-     */
+    * How many millisecconds the last step() took. This is updated each step if .doProfiling is set to true.
+    *
+    * @property lastStepTime
+    * @type {Number}
+    */
     this.lastStepTime = 0.0;
 
     /**
-     * The broadphase algorithm to use.
-     *
-     * @property broadphase
-     * @type {Broadphase}
-     */
+    * The broadphase algorithm to use.
+    *
+    * @property broadphase
+    * @type {Broadphase}
+    */
     this.broadphase = options.broadphase || new NaiveBroadphase();
 
     /**
-     * User-added constraints.
-     *
-     * @property constraints
-     * @type {Array}
-     */
+    * User-added constraints.
+    *
+    * @property constraints
+    * @type {Array}
+    */
     this.constraints = [];
 
     /**
-     * Friction between colliding bodies. This value is used if no matching ContactMaterial is found for the body pair.
-     * @property defaultFriction
-     * @type {Number}
-     */
+    * Friction between colliding bodies. This value is used if no matching ContactMaterial is found for the body pair.
+    * @property defaultFriction
+    * @type {Number}
+    */
     this.defaultFriction = 0.1;
 
     /**
-     * For keeping track of what time step size we used last step
-     * @property lastTimeStep
-     * @type {Number}
-     */
+    * For keeping track of what time step size we used last step
+    * @property lastTimeStep
+    * @type {Number}
+    */
     this.lastTimeStep = 1/60;
 
     /**
-     * Enable to automatically apply spring forces each step.
-     * @property applySpringForces
-     * @type {Boolean}
-     */
+    * Enable to automatically apply spring forces each step.
+    * @property applySpringForces
+    * @type {Boolean}
+    */
     this.applySpringForces = true;
 
     /**
-     * Enable/disable constraint solving in each step.
-     * @property solveConstraints
-     * @type {Boolean}
-     */
+    * Enable/disable constraint solving in each step.
+    * @property solveConstraints
+    * @type {Boolean}
+    */
     this.solveConstraints = true;
 
     /**
-     * The ContactMaterials added to the World.
-     * @property contactMaterials
-     * @type {Array}
-     */
+    * The ContactMaterials added to the World.
+    * @property contactMaterials
+    * @type {Array}
+    */
     this.contactMaterials = [];
 
     // Id counters

@@ -16,28 +16,28 @@
 */
 Phaser.SoundManager = function (game) {
 
-	/**
-	* @property {Phaser.Game} game - Local reference to game.
-	*/
-	this.game = game;
-	
-	/**
-	* @property {Phaser.Signal} onSoundDecode - Description.
-	*/
-	this.onSoundDecode = new Phaser.Signal;
-	
-	/**
-	* @property {boolean} _muted - Description.
-	* @private
-	* @default
-	*/
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
+    this.game = game;
+    
+    /**
+    * @property {Phaser.Signal} onSoundDecode - The event dispatched when a sound decodes (typically only for mp3 files)
+    */
+    this.onSoundDecode = new Phaser.Signal();
+    
+    /**
+    * @property {boolean} _muted - Internal mute tracking var.
+    * @private
+    * @default
+    */
     this._muted = false;
    
-	/**
-	* @property {Description} _unlockSource - Description.
-	* @private
-	* @default
-	*/
+    /**
+    * @property {Description} _unlockSource - Internal unlock tracking var.
+    * @private
+    * @default
+    */
     this._unlockSource = null;
 
     /**
@@ -55,41 +55,41 @@ Phaser.SoundManager = function (game) {
     this._sounds = [];
 
     /**
-    * @property {Description} context - Description. 
+    * @property {AudioContext} context - The AudioContext being used for playback.
     * @default
     */
     this.context = null;
     
-	/**
-	* @property {boolean} usingWebAudio - Description.
-	* @default
-	*/
+    /**
+    * @property {boolean} usingWebAudio - true if this sound is being played with Web Audio.
+    * @readonly
+    */
     this.usingWebAudio = true;
     
-	/**
-	* @property {boolean} usingAudioTag - Description.
-	* @default
-	*/
+    /**
+    * @property {boolean} usingAudioTag - true if the sound is being played via the Audio tag.
+    * @readonly
+    */
     this.usingAudioTag = false;
     
-	/**
-	* @property {boolean} noAudio - Description.
-	* @default
-	*/
+    /**
+    * @property {boolean} noAudio - Has audio been disabled via the PhaserGlobal object? Useful if you need to use a 3rd party audio library instead.
+    * @default
+    */
     this.noAudio = false;
 
-	/**
-	* @property {boolean} touchLocked - Description.
-	* @default
-	*/
+    /**
+    * @property {boolean} touchLocked - true if the audio system is currently locked awaiting a touch event.
+    * @default
+    */
     this.touchLocked = false;
 
-	/**
-	* @property {number} channels - Description.
-	* @default
-	*/
+    /**
+    * @property {number} channels - The number of audio channels to use in playback.
+    * @default
+    */
     this.channels = 32;
-	
+    
 };
 
 Phaser.SoundManager.prototype = {
@@ -257,9 +257,9 @@ Phaser.SoundManager.prototype = {
             }
         }
    
-	},
+    },
 
-	/**
+    /**
     * Decode a sound by its assets key.
     * @method Phaser.SoundManager#decode
     * @param {string} key - Assets key of the sound to be decoded.
@@ -329,7 +329,7 @@ Phaser.SoundManager.prototype = {
     add: function (key, volume, loop) {
 
         if (typeof volume === 'undefined') { volume = 1; }
-    	if (typeof loop === 'undefined') { loop = false; }
+        if (typeof loop === 'undefined') { loop = false; }
 
         var sound = new Phaser.Sound(this.game, key, volume, loop);
 

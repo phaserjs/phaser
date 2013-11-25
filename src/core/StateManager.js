@@ -172,10 +172,10 @@ Phaser.StateManager.prototype = {
     },
 
     /**
-     * Delete the given state.
-     * @method Phaser.StateManager#remove
-     * @param {string} key - A unique key you use to reference this state, i.e. "MainMenu", "Level1".
-     */
+    * Delete the given state.
+    * @method Phaser.StateManager#remove
+    * @param {string} key - A unique key you use to reference this state, i.e. "MainMenu", "Level1".
+    */
     remove: function (key) {
 
         if (this.current == key)

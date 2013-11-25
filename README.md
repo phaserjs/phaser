@@ -42,6 +42,7 @@ Change Log
 Version 1.1.3 - in build
 
 * New: Added a .jshintrc so contributions can be run through JSHint to help retain formatting across the library (thanks kevinthompson)
+* New: The entire Phaser library has been updated to match the new JSHint configuration.
 * New: Added a new in-built texture. Sprites now use __default if no texture was provided (a 32x32 transparent PNG) or __missing if one was given but not found (a 32x32 black box with a green cross through it)
 * New: Added Phaser.Filter. A new way to use the new WebGL shaders/filters that the new version of Pixi supports.
 * New: The object returned by Math.sinCosGenerator now contains a length property.
@@ -84,12 +85,11 @@ Version 1.1.3 - in build
 * Updated: Tided up the Graphics object (thanks BorisKozo)
 * Updated: If running in Canvas mode and you have a render function it will save the context and reset the transform before running your render function.
 * Updated: Sprite will now check the exists property of the Group it is in, if the Group.exists = false the Sprite won't update.
-* Updated: Lots of documentation tweaks across various files such as Pointer, Sound and Color.
+* Updated: Lots of documentation fixes and updates across nearly all files.
 * Updated: If you specify 'null' as a Group parent it will now revert to using the World as the parent (before only 'undefined' worked)
 * Updated: Skip preupdate/update for PIXI hierarchies in which an ancestor doesn't exist (thanks cocoademon)
 * Updated: Loader.audio can now accept either an array of URL strings or a single URL string (thanks crazysam + kevinthompson)
 * Updated: MSPointer updated to support IE11 by dropping the prefix from the event listeners.
-
 
 You can view the complete Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
 

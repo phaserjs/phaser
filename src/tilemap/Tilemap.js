@@ -1,25 +1,25 @@
 Phaser.Tilemap = function (game, key) {
 
-	/**
-	* @property {Phaser.Game} game - Description.
-	*/ 
+    /**
+    * @property {Phaser.Game} game - Description.
+    */
     this.game = game;
 
     /**
     * @property {array} layers - Description.
     */
-	this.layers;
+    this.layers = null;
 
     if (typeof key === 'string')
     {
-    	this.key = key;
+        this.key = key;
 
-		this.layers = game.cache.getTilemapData(key).layers;
+        this.layers = game.cache.getTilemapData(key).layers;
         this.calculateIndexes();
     }
     else
     {
-	    this.layers = [];
+        this.layers = [];
     }
 
     this.currentLayer = 0;
@@ -55,15 +55,15 @@ Phaser.Tilemap.prototype = {
 
         this.currentLayer = this.layers.push({
 
-			name: name, 
-			width: width, 
-			height: height, 
-			alpha: 1, 
-			visible: true, 
-			tileMargin: 0, 
-			tileSpacing: 0,
-			format: Phaser.Tilemap.CSV,
-			data: data,
+            name: name,
+            width: width,
+            height: height,
+            alpha: 1,
+            visible: true,
+            tileMargin: 0,
+            tileSpacing: 0,
+            format: Phaser.Tilemap.CSV,
+            data: data,
             indexes: []
 
         });
@@ -96,10 +96,10 @@ Phaser.Tilemap.prototype = {
 
     setLayer: function (layer) {
 
-    	if (this.layers[layer])
-    	{
-    		this.currentLayer = layer;
-    	}
+        if (this.layers[layer])
+        {
+            this.currentLayer = layer;
+        }
 
     },
 
@@ -114,10 +114,10 @@ Phaser.Tilemap.prototype = {
 
         if (typeof layer === "undefined") { layer = this.currentLayer; }
 
-    	if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
-    	{
-    		this.layers[layer].data[y][x] = index;
-    	}
+        if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
+        {
+            this.layers[layer].data[y][x] = index;
+        }
 
         this.dirty = true;
 
@@ -273,7 +273,7 @@ Phaser.Tilemap.prototype = {
 
     },
 
-    swapHandler: function (value, index, array) {
+    swapHandler: function (value, index) {
 
         if (value.index === this._tempA)
         {
@@ -462,14 +462,14 @@ Phaser.Tilemap.prototype = {
 
                 if (this.layers[this.currentLayer].data[y][x] > 1)
                 {
-                	if (this.debugMap[this.layers[this.currentLayer].data[y][x]])
-                	{
-	                    args.push("background: " + this.debugMap[this.layers[this.currentLayer].data[y][x]]);
-                	}
-                	else
-                	{
-	                    args.push("background: #ffffff");
-                	}
+                    if (this.debugMap[this.layers[this.currentLayer].data[y][x]])
+                    {
+                        args.push("background: " + this.debugMap[this.layers[this.currentLayer].data[y][x]]);
+                    }
+                    else
+                    {
+                        args.push("background: #ffffff");
+                    }
                 }
                 else
                 {

@@ -62,10 +62,10 @@ Phaser.Input.prototype = {
     pollRate: 0,
     
     /**
-     * @property {number} _pollCounter - Internal var holding the current poll counter.
-     * @private
-     * @default
-     */
+    * @property {number} _pollCounter - Internal var holding the current poll counter.
+    * @private
+    * @default
+    */
     _pollCounter: 0,
 
     /**

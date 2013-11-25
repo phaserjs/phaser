@@ -387,7 +387,7 @@ Phaser.Device.prototype = {
             this.mobileSafari = true;
         } else if (/MSIE (\d+\.\d+);/.test(ua)) {
             this.ie = true;
-            this.ieVersion = parseInt(RegExp.$1);
+            this.ieVersion = parseInt(RegExp.$1, 10);
         } else if (/Midori/.test(ua)) {
             this.midori = true;
         } else if (/Opera/.test(ua)) {

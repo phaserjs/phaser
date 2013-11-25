@@ -16,9 +16,9 @@
 * @param {boolean} [loop=false] - Whether or not the sound will loop.
 */
 Phaser.Sound = function (game, key, volume, loop) {
-	
+    
     if (typeof volume == 'undefined') { volume = 1; }
-	if (typeof loop == 'undefined') { loop = false; }
+    if (typeof loop == 'undefined') { loop = false; }
 
     /**
     * A reference to the currently running Game.
@@ -27,157 +27,128 @@ Phaser.Sound = function (game, key, volume, loop) {
     this.game = game;
 
     /**
-    * Name of the sound.
-    * @property {string} name
-    * @default
+    * @property {string} name - Name of the sound.
     */
     this.name = key;
 
     /**
-    * Asset key for the sound.
-    * @property {string} key
+    * @property {string} key - Asset key for the sound.
     */
     this.key = key;
 
     /**
-    * Whether or not the sound will loop.
-    * @property {boolean} loop
+    * @property {boolean} loop - Whether or not the sound will loop.
     */
     this.loop = loop;
 
     /**
-    * The global audio volume. A value between 0 (silence) and 1 (full volume).
-    * @property {number} _volume
+    * @property {number} _volume - The global audio volume. A value between 0 (silence) and 1 (full volume).
     * @private
     */
     this._volume = volume;
 
     /**
-    * The sound markers, empty by default.
-    * @property {object} markers
+    * @property {object} markers - The sound markers.
     */
     this.markers = {};
-
     
     /**
-    * Reference to AudioContext instance.
-    * @property {AudioContext} context
-    * @default
+    * @property {AudioContext} context - Reference to the AudioContext instance.
     */
     this.context = null;
 
     /**
-    * Decoded data buffer / Audio tag.
-    * @property {Description} _buffer
+    * @property {Description} _buffer - Decoded data buffer / Audio tag.
     * @private
     */
     this._buffer = null;
 
     /**
-    * Boolean indicating whether the game is on "mute". 
-    * @property {boolean} _muted
+    * @property {boolean} _muted - Boolean indicating whether the sound is muted or not.
     * @private
     * @default
     */
     this._muted = false;
 
     /**
-    * Boolean indicating whether the sound should start automatically.
-    * @property {boolean} autoplay
-    * @private
+    * @property {boolean} autoplay - Boolean indicating whether the sound should start automatically.
     */
     this.autoplay = false;
 
     /**
-    * The total duration of the sound, in milliseconds
-    * @property {number} totalDuration
-    * @default
+    * @property {number} totalDuration - The total duration of the sound, in milliseconds
     */
     this.totalDuration = 0;
    
     /**
-    * Description.
-    * @property {number} startTime
+    * @property {number} startTime - The time the Sound starts at (typically 0 unless starting from a marker)
     * @default
     */
     this.startTime = 0;
     
     /**
-    * Description.
-    * @property {number} currentTime
-    * @default
+    * @property {number} currentTime - The current time the sound is at.
     */
     this.currentTime = 0;
     
     /**
-    * Description.
-    * @property {number} duration
-    * @default
+    * @property {number} duration - The duration of the sound.
     */
     this.duration = 0;
     
     /**
-    * Description.
-    * @property {number} stopTime
+    * @property {number} stopTime - The time the sound stopped.
     */
     this.stopTime = 0;
     
     /**
-    * Description.
-    * @property {boolean} paused
+    * @property {boolean} paused - true if the sound is paused, otherwise false.
     * @default
     */
     this.paused = false;
     
     /**
-    * Description.
-    * @property {number} pausedPosition
+    * @property {number} pausedPosition - The position the sound had reached when it was paused.
     */
     this.pausedPosition = 0;
 
     /**
-    * Description.
-    * @property {number} pausedTime
+    * @property {number} pausedTime - The game time at which the sound was paused.
     */
     this.pausedTime = 0;
 
     /**
-    * Description.
-    * @property {boolean} isPlaying
+    * @property {boolean} isPlaying - true if the sound is currently playing, otherwise false.
     * @default
     */
     this.isPlaying = false;
     
     /**
-    * Description.
-    * @property {string} currentMarker
+    * @property {string} currentMarker - The string ID of the currently playing marker, if any.
     * @default
     */
     this.currentMarker = '';
     
     /**
-    * Description.
-    * @property {boolean} pendingPlayback
-    * @default
+    * @property {boolean} pendingPlayback - true if the sound file is pending playback
+    * @readonly
     */
     this.pendingPlayback = false;
     
     /**
-    * Description.
-    * @property {boolean} override
+    * @property {boolean} override - if true when you play this sound it will always start from the beginning.
     * @default
     */
     this.override = false;
     
     /**
-    * Description.
-    * @property {boolean} usingWebAudio
+    * @property {boolean} usingWebAudio - true if this sound is being played with Web Audio.
+    * @readonly
     */
     this.usingWebAudio = this.game.sound.usingWebAudio;
     
     /**
-    * Description.
-    * @property {Description} usingAudioTag
+    * @property {boolean} usingAudioTag - true if the sound is being played via the Audio tag.
     */
     this.usingAudioTag = this.game.sound.usingAudioTag;
 
@@ -217,63 +188,55 @@ Phaser.Sound = function (game, key, volume, loop) {
     }
 
     /**
-    * Description.
-    * @property {Phaser.Signal} onDecoded
+    * @property {Phaser.Signal} onDecoded - The onDecoded event is dispatched when the sound has finished decoding (typically for mp3 files)
     */
-    this.onDecoded = new Phaser.Signal;
+    this.onDecoded = new Phaser.Signal();
     
     /**
-    * Description.
-    * @property {Phaser.Signal} onPlay
+    * @property {Phaser.Signal} onPlay - The onPlay event is dispatched each time this sound is played.
     */
-    this.onPlay = new Phaser.Signal;
+    this.onPlay = new Phaser.Signal();
     
     /**
-    * Description.
-    * @property {Phaser.Signal} onPause
+    * @property {Phaser.Signal} onPause - The onPause event is dispatched when this sound is paused.
     */
-    this.onPause = new Phaser.Signal;
+    this.onPause = new Phaser.Signal();
     
     /**
-    * Description.
-    * @property {Phaser.Signal} onResume
+    * @property {Phaser.Signal} onResume - The onResume event is dispatched when this sound is resumed from a paused state.
     */
-    this.onResume = new Phaser.Signal;
+    this.onResume = new Phaser.Signal();
     
     /**
-    * Description.
-    * @property {Phaser.Signal} onLoop
+    * @property {Phaser.Signal} onLoop - The onLoop event is dispatched when this sound loops during playback.
     */
-    this.onLoop = new Phaser.Signal;
+    this.onLoop = new Phaser.Signal();
     
     /**
-    * Description.
-    * @property {Phaser.Signal} onStop
+    * @property {Phaser.Signal} onStop - The onStop event is dispatched when this sound stops playback.
     */
-    this.onStop = new Phaser.Signal;
+    this.onStop = new Phaser.Signal();
     
     /**
-    * Description.
-    * @property {Phaser.Signal} onMute
+    * @property {Phaser.Signal} onMute - The onMouse event is dispatched when this sound is muted.
     */
-    this.onMute = new Phaser.Signal;
+    this.onMute = new Phaser.Signal();
     
     /**
-    * Description.
-    * @property {Phaser.Signal} onMarkerComplete
+    * @property {Phaser.Signal} onMarkerComplete - The onMarkerComplete event is dispatched when a marker within this sound completes playback.
     */
-    this.onMarkerComplete = new Phaser.Signal;
+    this.onMarkerComplete = new Phaser.Signal();
 
 };
 
 Phaser.Sound.prototype = {
 
-	/**
+    /**
     * Called automatically when this sound is unlocked.
-	* @method Phaser.Sound#soundHasUnlocked
-	* @param {string} key - Description.
+    * @method Phaser.Sound#soundHasUnlocked
+    * @param {string} key - The Phaser.Cache key of the sound file to check for decoding.
     * @protected
-	*/
+    */
     soundHasUnlocked: function (key) {
 
         if (key == this.key)
@@ -281,22 +244,22 @@ Phaser.Sound.prototype = {
             this._sound = this.game.cache.getSoundData(this.key);
             this.totalDuration = this._sound.duration;
             // console.log('sound has unlocked' + this._sound);
-	    }
+        }
 
-	},
+    },
 
-	/**
-	 * Description.
-	 * @method Phaser.Sound#addMarker
-	 * @param {string} name - Description.
-	 * @param {Description} start - Description.
-	 * @param {Description} stop - Description.
-	 * @param {Description} volume - Description.
-	 * @param {Description} loop - Description.
+    /**
+     * Description.
+     * @method Phaser.Sound#addMarker
+     * @param {string} name - Description.
+     * @param {Description} start - Description.
+     * @param {Description} stop - Description.
+     * @param {Description} volume - Description.
+     * @param {Description} loop - Description.
     addMarker: function (name, start, stop, volume, loop) {
 
-    	volume = volume || 1;
-    	if (typeof loop == 'undefined') { loop = false; }
+        volume = volume || 1;
+        if (typeof loop == 'undefined') { loop = false; }
 
         this.markers[name] = {
             name: name,
@@ -338,22 +301,22 @@ Phaser.Sound.prototype = {
 
     },
 
-	/**
-	* Removes a marker from the sound.
-	* @method Phaser.Sound#removeMarker
-	* @param {string} name - The key of the marker to remove.
-	*/
+    /**
+    * Removes a marker from the sound.
+    * @method Phaser.Sound#removeMarker
+    * @param {string} name - The key of the marker to remove.
+    */
     removeMarker: function (name) {
 
         delete this.markers[name];
 
     },
 
-	/**
-	* Called automatically by Phaser.SoundManager.
-	* @method Phaser.Sound#update
+    /**
+    * Called automatically by Phaser.SoundManager.
+    * @method Phaser.Sound#update
     * @protected
-	*/
+    */
     update: function () {
 
         if (this.pendingPlayback && this.game.cache.isSoundReady(this.key))
@@ -377,7 +340,7 @@ Phaser.Sound.prototype = {
                         //  won't work with markers, needs to reset the position
                         this.onLoop.dispatch(this);
 
-                        if (this.currentMarker == '')
+                        if (this.currentMarker === '')
                         {
                             //console.log('loop2');
                             this.currentTime = 0;
@@ -411,7 +374,7 @@ Phaser.Sound.prototype = {
         }
     },
 
-	/**
+    /**
     * Play this sound, or a marked section of it.
     * @method Phaser.Sound#play
     * @param {string} [marker=''] - If you want to play a marker then give the key here, otherwise leave blank to play the full sound.
@@ -423,12 +386,12 @@ Phaser.Sound.prototype = {
     */
     play: function (marker, position, volume, loop, forceRestart) {
 
-    	marker = marker || '';
-    	position = position || 0;
+        marker = marker || '';
+        position = position || 0;
 
         if (typeof volume === 'undefined') { volume = this._volume; }
-    	if (typeof loop === 'undefined') { loop = false; }
-    	if (typeof forceRestart === 'undefined') { forceRestart = true; }
+        if (typeof loop === 'undefined') { loop = false; }
+        if (typeof forceRestart === 'undefined') { forceRestart = true; }
 
         // console.log(this.name + ' play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop, 'force', forceRestart);
 
@@ -524,7 +487,7 @@ Phaser.Sound.prototype = {
                     this.durationMS = this.totalDuration * 1000;
                 }
 
-                if (this.loop && marker == '')
+                if (this.loop && marker === '')
                 {
                     this._sound.loop = true;
                 }
@@ -535,9 +498,9 @@ Phaser.Sound.prototype = {
                     this._sound.noteGrainOn(0, this.position, this.duration);
                     // this._sound.noteGrainOn(0, this.position, this.duration / 1000);
                     //this._sound.noteOn(0); // the zero is vitally important, crashes iOS6 without it
-				}
-				else
-				{
+                }
+                else
+                {
                     // this._sound.start(0, this.position, this.duration / 1000);
                     this._sound.start(0, this.position, this.duration);
                 }
@@ -547,9 +510,9 @@ Phaser.Sound.prototype = {
                 this.currentTime = 0;
                 this.stopTime = this.startTime + this.durationMS;
                 this.onPlay.dispatch(this);
-			}
-			else
-			{
+            }
+            else
+            {
                 this.pendingPlayback = true;
 
                 if (this.game.cache.getSound(this.key) && this.game.cache.getSound(this.key).isDecoding === false)
@@ -619,10 +582,10 @@ Phaser.Sound.prototype = {
     */
     restart: function (marker, position, volume, loop) {
 
-    	marker = marker || '';
-    	position = position || 0;
-    	volume = volume || 1;
-    	if (typeof loop == 'undefined') { loop = false; }
+        marker = marker || '';
+        position = position || 0;
+        volume = volume || 1;
+        if (typeof loop == 'undefined') { loop = false; }
 
         this.play(marker, position, volume, loop, true);
 
@@ -666,9 +629,9 @@ Phaser.Sound.prototype = {
                 {
                     this._sound.noteGrainOn(0, p, this.duration);
                     //this._sound.noteOn(0); // the zero is vitally important, crashes iOS6 without it
-				}
-				else
-				{
+                }
+                else
+                {
                     this._sound.start(0, p, this.duration);
                 }
             }
@@ -685,7 +648,7 @@ Phaser.Sound.prototype = {
 
     },
 
-	/**
+    /**
     * Stop playing this sound.
     * @method Phaser.Sound#stop
     */
@@ -752,14 +715,14 @@ Object.defineProperty(Phaser.Sound.prototype, "isDecoded", {
 * @property {boolean} mute - Gets or sets the muted state of this sound.
 */
 Object.defineProperty(Phaser.Sound.prototype, "mute", {
-	
+    
     get: function () {
         return this._muted;
     },
  
     set: function (value) {
 
-    	value = value || null;
+        value = value || null;
 
         if (value)
         {

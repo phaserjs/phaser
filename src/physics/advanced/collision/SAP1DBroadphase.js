@@ -19,24 +19,24 @@ function SAP1DBroadphase(world){
     Broadphase.apply(this);
 
     /**
-     * List of bodies currently in the broadphase.
-     * @property axisList
-     * @type {Array}
-     */
+    * List of bodies currently in the broadphase.
+    * @property axisList
+    * @type {Array}
+    */
     this.axisList = world.bodies.slice(0);
 
     /**
-     * The world to search in.
-     * @property world
-     * @type {World}
-     */
+    * The world to search in.
+    * @property world
+    * @type {World}
+    */
     this.world = world;
 
     /**
-     * Axis to sort the bodies along. Set to 0 for x axis, and 1 for y axis. For best performance, choose an axis that the bodies are spread out more on.
-     * @property axisIndex
-     * @type {Number}
-     */
+    * Axis to sort the bodies along. Set to 0 for x axis, and 1 for y axis. For best performance, choose an axis that the bodies are spread out more on.
+    * @property axisIndex
+    * @type {Number}
+    */
     this.axisIndex = 0;
 
     // Add listeners to update the list of bodies.

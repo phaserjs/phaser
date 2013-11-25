@@ -472,6 +472,6 @@
 
     PolyK._tp = [];
     for(var i=0; i<10; i++) PolyK._tp.push(new PolyK._P(0,0));
-        */
+       */
 
 module.exports = PolyK;

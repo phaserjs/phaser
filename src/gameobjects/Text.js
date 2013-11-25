@@ -27,24 +27,24 @@ Phaser.Text = function (game, x, y, text, style) {
     this.game = game;
  
     /**
-    * @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
+    * @property {boolean} exists - If exists = false then the Text isn't updated by the core game loop.
     * @default
     */
     this.exists = true;
 
     /**
-    * @property {boolean} alive - This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering.
+    * @property {boolean} alive - This is a handy little var your game can use to determine if an object is alive or not, it doesn't effect rendering.
     * @default
     */
     this.alive = true;
 
     /**
-    * @property {Phaser.Group} group - The parent Group of this Sprite. This is usually set after Sprite instantiation by the parent.
+    * @property {Phaser.Group} group - The parent Group of this Text object.
     */
     this.group = null;
 
     /**
-    * @property {string} name - The user defined name given to this Sprite.
+    * @property {string} name - The user defined name given to this object.
     * @default
     */
     this.name = '';
@@ -70,8 +70,8 @@ Phaser.Text = function (game, x, y, text, style) {
     PIXI.Text.call(this, text, style);
 
     /**
-     * @property {Phaser.Point} position - The position of this Text object in world space.
-     */
+    * @property {Phaser.Point} position - The position of this Text object in world space.
+    */
     this.position.x = this.x = x;
     this.position.y = this.y = y;
 
@@ -81,7 +81,7 @@ Phaser.Text = function (game, x, y, text, style) {
     * Setting than anchor to 0.5,0.5 means the textures origin is centered
     * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right
     *
-    * @property {Phaser.Point} anchor - The anchor around with Sprite rotation and scaling takes place.
+    * @property {Phaser.Point} anchor - The anchor around which rotation and scaling takes place.
     */
     this.anchor = new Phaser.Point();
     
@@ -182,11 +182,11 @@ Phaser.Text.prototype.destroy = function() {
 }
 
 /**
-* Get
-* @returns {Description}
-*//**
-* Set
-* @param {Description} value - Description
+* Indicates the rotation of the Text, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+* Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
+* If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
+* @name Phaser.Text#angle
+* @property {number} angle - Gets or sets the angle of rotation in degrees.
 */
 Object.defineProperty(Phaser.Text.prototype, 'angle', {
 
@@ -200,6 +200,45 @@ Object.defineProperty(Phaser.Text.prototype, 'angle', {
 
 });
 
+/**
+* The x coordinate of this object in world space.
+* @name Phaser.BitmapText#x
+* @property {number} x - The x coordinate of this object in world space.
+*/
+Object.defineProperty(Phaser.BitmapText.prototype, 'x', {
+
+    get: function() {
+        return this.position.x;
+    },
+
+    set: function(value) {
+        this.position.x = value;
+    }
+
+});
+
+/**
+* The y coordinate of this object in world space.
+* @name Phaser.BitmapText#y
+* @property {number} y - The y coordinate of this object in world space.
+*/
+Object.defineProperty(Phaser.BitmapText.prototype, 'y', {
+
+    get: function() {
+        return this.position.y;
+    },
+
+    set: function(value) {
+        this.position.y = value;
+    }
+
+});
+
+/**
+* The string to be rendered by this Text object.
+* @name Phaser.Text#content
+* @property {string} content - The string to be rendered by this Text object.
+*/
 Object.defineProperty(Phaser.Text.prototype, 'content', {
 
     get: function() {
@@ -219,6 +258,11 @@ Object.defineProperty(Phaser.Text.prototype, 'content', {
 
 });
 
+/**
+* The font the text will be rendered in.
+* @name Phaser.Text#font
+* @property {string} font - The font the text will be rendered in.
+*/
 Object.defineProperty(Phaser.Text.prototype, 'font', {
 
     get: function() {

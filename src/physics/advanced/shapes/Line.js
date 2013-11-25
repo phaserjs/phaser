@@ -11,10 +11,10 @@ module.exports = Line;
 function Line(length){
 
     /**
-     * Length of this line
-     * @property length
-     * @type {Number}
-     */
+    * Length of this line
+    * @property length
+    * @type {Number}
+    */
     this.length = length;
 
     Shape.call(this,Shape.LINE);

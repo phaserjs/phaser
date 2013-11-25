@@ -100,14 +100,14 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-     * Creates a new instance of the Sound class.
-     *
+    * Creates a new instance of the Sound class.
+    *
     * @method Phaser.GameObjectFactory#audio
-     * @param {string} key - The Game.cache key of the sound that this object will use.
-     * @param {number} volume - The volume at which the sound will be played.
-     * @param {boolean} loop - Whether or not the sound will loop.
-     * @return {Phaser.Sound} The newly created text object.
-     */
+    * @param {string} key - The Game.cache key of the sound that this object will use.
+    * @param {number} volume - The volume at which the sound will be played.
+    * @param {boolean} loop - Whether or not the sound will loop.
+    * @return {Phaser.Sound} The newly created text object.
+    */
     audio: function (key, volume, loop) {
 
         return this.game.sound.add(key, volume, loop);
@@ -115,17 +115,17 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-     * Creates a new <code>TileSprite</code>.
-     *
+    * Creates a new <code>TileSprite</code>.
+    *
     * @method Phaser.GameObjectFactory#tileSprite
-     * @param {number} x - X position of the new tileSprite.
-     * @param {number} y - Y position of the new tileSprite.
-     * @param {number} width - the width of the tilesprite.
-     * @param {number} height - the height of the tilesprite.
-     * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
-     * @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
-     * @return {Phaser.TileSprite} The newly created tileSprite object.
-     */
+    * @param {number} x - X position of the new tileSprite.
+    * @param {number} y - Y position of the new tileSprite.
+    * @param {number} width - the width of the tilesprite.
+    * @param {number} height - the height of the tilesprite.
+    * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+    * @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+    * @return {Phaser.TileSprite} The newly created tileSprite object.
+    */
     tileSprite: function (x, y, width, height, key, frame) {
 
         return this.world.add(new Phaser.TileSprite(this.game, x, y, width, height, key, frame));
@@ -133,15 +133,15 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-     * Creates a new <code>Text</code>.
-     *
+    * Creates a new <code>Text</code>.
+    *
     * @method Phaser.GameObjectFactory#text
-     * @param {number} x - X position of the new text object.
-     * @param {number} y - Y position of the new text object.
-     * @param {string} text - The actual text that will be written.
-     * @param {object} style - The style object containing style attributes like font, font size , etc.
-     * @return {Phaser.Text} The newly created text object.
-     */
+    * @param {number} x - X position of the new text object.
+    * @param {number} y - Y position of the new text object.
+    * @param {string} text - The actual text that will be written.
+    * @param {object} style - The style object containing style attributes like font, font size , etc.
+    * @return {Phaser.Text} The newly created text object.
+    */
     text: function (x, y, text, style) {
 
         return this.world.add(new Phaser.Text(this.game, x, y, text, style));
@@ -169,13 +169,13 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-     * Creates a new <code>Graphics</code> object.
-     *
+    * Creates a new <code>Graphics</code> object.
+    *
     * @method Phaser.GameObjectFactory#graphics
-     * @param {number} x - X position of the new graphics object.
-     * @param {number} y - Y position of the new graphics object.
-     * @return {Phaser.Graphics} The newly created graphics object.
-     */
+    * @param {number} x - X position of the new graphics object.
+    * @param {number} y - Y position of the new graphics object.
+    * @return {Phaser.Graphics} The newly created graphics object.
+    */
     graphics: function (x, y) {
 
         return this.world.add(new Phaser.Graphics(this.game, x, y));

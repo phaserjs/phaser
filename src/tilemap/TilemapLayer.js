@@ -1,33 +1,33 @@
 //  Maybe should extend Sprite?
 Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, tilemap, layer) {
 
-	/**
-	* @property {Phaser.Game} game - Description.
-	*/ 
+    /**
+    * @property {Phaser.Game} game - Description.
+    */
     this.game = game;
     
-	/**
-	* @property {Description} canvas - Description.
-	* @default
-	*/
+    /**
+    * @property {Description} canvas - Description.
+    * @default
+    */
     this.canvas = Phaser.Canvas.create(renderWidth, renderHeight);
     
-	/**
-	* @property {Description} context - Description.
-	* @default
-	*/
+    /**
+    * @property {Description} context - Description.
+    * @default
+    */
     this.context = this.canvas.getContext('2d');
     
-	/**
-	* @property {Description} baseTexture - Description.
-	* @default
-	*/
+    /**
+    * @property {Description} baseTexture - Description.
+    * @default
+    */
     this.baseTexture = new PIXI.BaseTexture(this.canvas);
     
-	/**
-	* @property {Description} texture - Description.
-	* @default
-	*/
+    /**
+    * @property {Description} texture - Description.
+    * @default
+    */
     this.texture = new PIXI.Texture(this.baseTexture);
     
     this.textureFrame = new Phaser.Frame(0, 0, 0, renderWidth, renderHeight, 'tilemaplayer', game.rnd.uuid());
@@ -145,18 +145,18 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
 
     /**
     * @property {number} scrollFactorX - speed at which this layer scrolls
-	* horizontally, relative to the camera (e.g. scrollFactorX of 0.5 scrolls
-	* half as quickly as the 'normal' camera-locked layers do)
-	* @default 1
+    * horizontally, relative to the camera (e.g. scrollFactorX of 0.5 scrolls
+    * half as quickly as the 'normal' camera-locked layers do)
+    * @default 1
     */
-	this.scrollFactorX = 1;
+    this.scrollFactorX = 1;
     /**
     * @property {number} scrollFactorY - speed at which this layer scrolls
-	* vertically, relative to the camera (e.g. scrollFactorY of 0.5 scrolls
-	* half as quickly as the 'normal' camera-locked layers do)
-	* @default 1
+    * vertically, relative to the camera (e.g. scrollFactorY of 0.5 scrolls
+    * half as quickly as the 'normal' camera-locked layers do)
+    * @default 1
     */
-	this.scrollFactorY = 1;
+    this.scrollFactorY = 1;
 
     this.tilemap = null;
     this.layer = null;
@@ -251,14 +251,14 @@ Phaser.TilemapLayer.prototype.updateMapData = function (tilemap, layer) {
  */
 Phaser.TilemapLayer.prototype._fixX = function(x) {
 
-	if (this.scrollFactorX === 1)
+    if (this.scrollFactorX === 1)
     {
         return x;
     }
 
-	var left_edge = x - (this._x / this.scrollFactorX);
+    var leftEdge = x - (this._x / this.scrollFactorX);
 
-	return this._x + left_edge;
+    return this._x + leftEdge;
 
 }
 
@@ -270,14 +270,14 @@ Phaser.TilemapLayer.prototype._fixX = function(x) {
  */
 Phaser.TilemapLayer.prototype._unfixX = function(x) {
 
-	if (this.scrollFactorX === 1)
+    if (this.scrollFactorX === 1)
     {
         return x;
     }
 
-	var left_edge = x - this._x;
+    var leftEdge = x - this._x;
 
-	return (this._x / this.scrollFactorX) + left_edge;
+    return (this._x / this.scrollFactorX) + leftEdge;
 
 }
 
@@ -289,14 +289,14 @@ Phaser.TilemapLayer.prototype._unfixX = function(x) {
  */
 Phaser.TilemapLayer.prototype._fixY = function(y) {
 
-	if (this.scrollFactorY === 1)
+    if (this.scrollFactorY === 1)
     {
         return y;
     }
 
-	var top_edge = y - (this._y / this.scrollFactorY);
+    var topEdge = y - (this._y / this.scrollFactorY);
 
-	return this._y + top_edge;
+    return this._y + topEdge;
 
 }
 
@@ -308,14 +308,14 @@ Phaser.TilemapLayer.prototype._fixY = function(y) {
  */
 Phaser.TilemapLayer.prototype._unfixY = function(y) {
 
-	if (this.scrollFactorY === 1)
+    if (this.scrollFactorY === 1)
     {
         return y;
     }
 
-	var top_edge = y - this._y;
+    var topEdge = y - this._y;
 
-	return (this._y / this.scrollFactorY) + top_edge;
+    return (this._y / this.scrollFactorY) + topEdge;
 
 }
 
@@ -329,7 +329,7 @@ Phaser.TilemapLayer.prototype.getTileX = function (x) {
 
     var tileWidth = this.tileWidth * this.scale.x;
 
-	return this.game.math.snapToFloor(this._fixX(x), tileWidth) / tileWidth;
+    return this.game.math.snapToFloor(this._fixX(x), tileWidth) / tileWidth;
 
 }
 
@@ -343,7 +343,7 @@ Phaser.TilemapLayer.prototype.getTileY = function (y) {
 
     var tileHeight = this.tileHeight * this.scale.y;
 
-	return this.game.math.snapToFloor(this._fixY(y), tileHeight) / tileHeight;
+    return this.game.math.snapToFloor(this._fixY(y), tileHeight) / tileHeight;
 
 }
 
@@ -384,9 +384,9 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
         y = 0;
     }
 
-	// adjust the x,y coordinates for scrollFactor
-	x = this._fixX( x );
-	y = this._fixY( y );
+    // adjust the x,y coordinates for scrollFactor
+    x = this._fixX( x );
+    y = this._fixY( y );
 
     if (width > this.widthInPixels)
     {
@@ -435,9 +435,9 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
 
                 if (collides === false || (collides && _tile.collideNone === false))
                 {
-					// convert tile coordinates back to camera space for return
-					var _wx = this._unfixX( wx*sx ) / tileWidth;
-					var _wy = this._unfixY( wy*sy ) / tileHeight;
+                    // convert tile coordinates back to camera space for return
+                    var _wx = this._unfixX( wx*sx ) / tileWidth;
+                    var _wy = this._unfixY( wy*sy ) / tileHeight;
                     this._results.push({ x: _wx * sx, right: (_wx * sx) + sx, y: _wy * sy, bottom: (_wy * sy) + sy, width: sx, height: sy, tx: _wx, ty: _wy, tile: _tile });
                 }
             }

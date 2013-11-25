@@ -30,31 +30,31 @@ function GSSolver(options){
     this.invCs =  new ARRAY_TYPE(this.arrayStep);
 
     /**
-     * Whether to use .stiffness and .relaxation parameters from the Solver instead of each Equation individually.
-     * @type {Boolean}
-     * @property useGlobalEquationParameters
-     */
+    * Whether to use .stiffness and .relaxation parameters from the Solver instead of each Equation individually.
+    * @type {Boolean}
+    * @property useGlobalEquationParameters
+    */
     this.useGlobalEquationParameters = true;
 
     /**
-     * Global equation stiffness.
-     * @property stiffness
-     * @type {Number}
-     */
+    * Global equation stiffness.
+    * @property stiffness
+    * @type {Number}
+    */
     this.stiffness = 1e6;
 
     /**
-     * Global equation relaxation.
-     * @property relaxation
-     * @type {Number}
-     */
+    * Global equation relaxation.
+    * @property relaxation
+    * @type {Number}
+    */
     this.relaxation = 4;
 
     /**
-     * Set to true to set all right hand side terms to zero when solving. Can be handy for a few applications.
-     * @property useZeroRHS
-     * @type {Boolean}
-     */
+    * Set to true to set all right hand side terms to zero when solving. Can be handy for a few applications.
+    * @property useZeroRHS
+    * @type {Boolean}
+    */
     this.useZeroRHS = false;
 };
 GSSolver.prototype = new Solver();

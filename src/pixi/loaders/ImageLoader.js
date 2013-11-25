@@ -18,18 +18,18 @@ PIXI.ImageLoader = function(url, crossorigin)
     PIXI.EventTarget.call(this);
 
     /**
-     * The texture being loaded
-     *
-     * @property texture
-     * @type Texture
-     */
+    * The texture being loaded
+    *
+    * @property texture
+    * @type Texture
+    */
     this.texture = PIXI.Texture.fromImage(url, crossorigin);
 
     /**
-     * if the image is loaded with loadFramedSpriteSheet
-     * frames will contain the sprite sheet frames
-     *
-     */
+    * if the image is loaded with loadFramedSpriteSheet
+    * frames will contain the sprite sheet frames
+    *
+    */
     this.frames = [];
 };
 

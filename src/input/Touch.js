@@ -273,7 +273,7 @@ Phaser.Touch.prototype = {
         {
             //console.log('touch enter');
         }
-        */
+       */
 
     },
 
@@ -302,7 +302,7 @@ Phaser.Touch.prototype = {
         {
             //console.log('touch leave');
         }
-        */
+       */
 
     },
 

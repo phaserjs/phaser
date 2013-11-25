@@ -12,24 +12,24 @@ module.exports = Constraint;
 function Constraint(bodyA,bodyB){
 
     /**
-     * Equations to be solved in this constraint
-     * @property equations
-     * @type {Array}
-     */
+    * Equations to be solved in this constraint
+    * @property equations
+    * @type {Array}
+    */
     this.equations = [];
 
     /**
-     * First body participating in the constraint.
-     * @property bodyA
-     * @type {Body}
-     */
+    * First body participating in the constraint.
+    * @property bodyA
+    * @type {Body}
+    */
     this.bodyA = bodyA;
 
     /**
-     * Second body participating in the constraint.
-     * @property bodyB
-     * @type {Body}
-     */
+    * Second body participating in the constraint.
+    * @property bodyB
+    * @type {Body}
+    */
     this.bodyB = bodyB;
 };
 

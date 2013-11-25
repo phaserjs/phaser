@@ -233,29 +233,29 @@ Phaser.Point.prototype = {
     },
 
     /**
-     * Calculates the length of the vector
-     * @method Phaser.Point#getMagnitude
-     * @return {number} the length of the vector
-     */
+    * Calculates the length of the vector
+    * @method Phaser.Point#getMagnitude
+    * @return {number} the length of the vector
+    */
     getMagnitude: function() {
         return Math.sqrt((this.x * this.x) + (this.y * this.y));
     },
 
     /**
-     * Alters the length of the vector without changing the direction
-     * @method Phaser.Point#getMagnitude
-     * @param {number} magnitude the desired magnitude of the resulting vector
-     * @return {Phaser.Point} the modified original vector
-     */
+    * Alters the length of the vector without changing the direction
+    * @method Phaser.Point#getMagnitude
+    * @param {number} magnitude the desired magnitude of the resulting vector
+    * @return {Phaser.Point} the modified original vector
+    */
     setMagnitude: function(magnitude) {
         return this.normalize().multiply(magnitude, magnitude);
     },
 
     /**
-     * Alters the vector so that its length is 1, but it retains the same direction
-     * @method Phaser.Point#normalize
-     * @return {Phaser.Point} the modified original vector
-     */
+    * Alters the vector so that its length is 1, but it retains the same direction
+    * @method Phaser.Point#normalize
+    * @return {Phaser.Point} the modified original vector
+    */
     normalize: function() {
 
         if(!this.isZero()) {
@@ -269,10 +269,10 @@ Phaser.Point.prototype = {
     },
 
     /**
-     * Determine if this point is at 0,0
-     * @method Phaser.Point#isZero
-     * @return {boolean} True if this Point is 0,0, otherwise false
-     */
+    * Determine if this point is at 0,0
+    * @method Phaser.Point#isZero
+    * @return {boolean} True if this Point is 0,0, otherwise false
+    */
     isZero: function() {
         return (this.x === 0 && this.y === 0);
     },

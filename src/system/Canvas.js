@@ -40,10 +40,10 @@ Phaser.Canvas = {
     * @param {HTMLElement} element - The targeted element that we want to retrieve the offset.
     * @param {Phaser.Point} [point] - The point we want to take the x/y values of the offset.
     * @return {Phaser.Point} - A point objet with the offsetX and Y as its properties.
-    */    
+    */
     getOffset: function (element, point) {
 
-        point = point || new Phaser.Point;
+        point = point || new Phaser.Point();
 
         var box = element.getBoundingClientRect();
         var clientTop = element.clientTop || document.body.clientTop || 0;
@@ -64,7 +64,7 @@ Phaser.Canvas = {
     * @method Phaser.Canvas.getAspectRatio
     * @param {HTMLCanvasElement} canvas - The canvas to get the aspect ratio from.
     * @return {number} The ratio between canvas' width and height.
-    */        
+    */
     getAspectRatio: function (canvas) {
         return canvas.width / canvas.height;
     },

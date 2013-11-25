@@ -19,45 +19,45 @@ PIXI.Graphics = function()
 	this.renderable = true;
 
     /**
-     * The alpha of the fill of this graphics object
-     *
-     * @property fillAlpha
-     * @type Number
-     */
+    * The alpha of the fill of this graphics object
+    *
+    * @property fillAlpha
+    * @type Number
+    */
 	this.fillAlpha = 1;
 
     /**
-     * The width of any lines drawn
-     *
-     * @property lineWidth
-     * @type Number
-     */
+    * The width of any lines drawn
+    *
+    * @property lineWidth
+    * @type Number
+    */
 	this.lineWidth = 0;
 
     /**
-     * The color of any lines drawn
-     *
-     * @property lineColor
-     * @type String
-     */
+    * The color of any lines drawn
+    *
+    * @property lineColor
+    * @type String
+    */
 	this.lineColor = "black";
 
     /**
-     * Graphics data
-     *
-     * @property graphicsData
-     * @type Array
-     * @private
-     */
+    * Graphics data
+    *
+    * @property graphicsData
+    * @type Array
+    * @private
+    */
 	this.graphicsData = [];
 
     /**
-     * Current path
-     *
-     * @property currentPath
-     * @type Object
-     * @private
-     */
+    * Current path
+    *
+    * @property currentPath
+    * @type Object
+    * @private
+    */
 	this.currentPath = {points:[]};
 }
 

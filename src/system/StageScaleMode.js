@@ -73,7 +73,7 @@ Phaser.StageScaleMode = function (game, width, height) {
     * @property {boolean} forcePortrait - If the game should be forced to use Portrait mode, this is set to true by Game.Stage
     * @default
     */
-     this.forcePortrait = false;
+    this.forcePortrait = false;
 
     /**
     * @property {boolean} incorrectOrientation - If the game should be forced to use a specific orientation and the device currently isn't in that orientation this is set to true.
@@ -188,6 +188,11 @@ Phaser.StageScaleMode = function (game, width, height) {
     */
     this.aspectRatio = 0;
 
+    /**
+    * @property {any} event- The native browser events from full screen API changes.
+    */
+    this.event = null;
+
     var _this = this;
 
     window.addEventListener('orientationchange', function (event) {
@@ -209,7 +214,7 @@ Phaser.StageScaleMode = function (game, width, height) {
     document.addEventListener('fullscreenchange', function (event) {
         return _this.fullScreenChange(event);
     }, false);
-	
+    
 };
 
 /**
@@ -300,6 +305,8 @@ Phaser.StageScaleMode.prototype = {
     * @protected
     */
     fullScreenChange: function (event) {
+
+        this.event = event;
 
         if (this.isFullScreen)
         {
@@ -429,6 +436,8 @@ Phaser.StageScaleMode.prototype = {
     */
     checkOrientation: function (event) {
 
+        this.event = event;
+
         this.orientation = window['orientation'];
 
         if (this.isLandscape)
@@ -453,6 +462,8 @@ Phaser.StageScaleMode.prototype = {
     * @param {Event} event - The resize event data.
     */
     checkResize: function (event) {
+
+        this.event = event;
 
         if (window.outerWidth > window.outerHeight)
         {
@@ -526,7 +537,7 @@ Phaser.StageScaleMode.prototype = {
             force = false;
         }
         
-        if (this.game.device.iPad === false && this.game.device.webApp === false && this.game.device.desktop === false) 
+        if (this.game.device.iPad === false && this.game.device.webApp === false && this.game.device.desktop === false)
         {
             if (this.game.device.android && this.game.device.chrome === false)
             {

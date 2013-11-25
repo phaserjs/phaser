@@ -10,14 +10,14 @@
 * @class Phaser.LoaderParser
 */
 Phaser.LoaderParser = {
-	
+    
     /**
     * Parse frame data from an XML file.
     * @method Phaser.LoaderParser.bitmapFont
     * @param {object} xml - XML data you want to parse.
     * @return {FrameData} Generated FrameData object.
     */
-	bitmapFont: function (game, xml, cacheKey) {
+    bitmapFont: function (game, xml, cacheKey) {
 
         //  Malformed?
         if (!xml.getElementsByTagName('font'))
@@ -50,8 +50,8 @@ Phaser.LoaderParser = {
                 height: parseInt(letters[i].attributes.getNamedItem("height").nodeValue, 10)
             };
 
-            //	Note: This means you can only have 1 BitmapFont loaded at once!
-            //	Need to replace this with our own handler soon.
+            //  Note: This means you can only have 1 BitmapFont loaded at once!
+            //  Need to replace this with our own handler soon.
             PIXI.TextureCache[charCode] = new PIXI.Texture(texture, textureRect);
 
             data.chars[charCode] = {
@@ -69,9 +69,9 @@ Phaser.LoaderParser = {
 
         for (i = 0; i < kernings.length; i++)
         {
-           var first = parseInt(kernings[i].attributes.getNamedItem("first").nodeValue, 10);
-           var second = parseInt(kernings[i].attributes.getNamedItem("second").nodeValue, 10);
-           var amount = parseInt(kernings[i].attributes.getNamedItem("amount").nodeValue, 10);
+            var first = parseInt(kernings[i].attributes.getNamedItem("first").nodeValue, 10);
+            var second = parseInt(kernings[i].attributes.getNamedItem("second").nodeValue, 10);
+            var amount = parseInt(kernings[i].attributes.getNamedItem("amount").nodeValue, 10);
 
             data.chars[second].kerning[first] = amount;
         }

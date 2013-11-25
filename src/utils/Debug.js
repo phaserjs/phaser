@@ -15,47 +15,47 @@
 Phaser.Utils.Debug = function (game) {
 
     /**
-	* @property {Phaser.Game} game - A reference to the currently running Game.
-	*/
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
     this.game = game;
   
-	/**
-	* @property {Context} context - The canvas context on which to render the debug information.
-	*/
+    /**
+    * @property {Context} context - The canvas context on which to render the debug information.
+    */
     this.context = game.context;
 
-	/**
-	* @property {string} font - The font that the debug information is rendered in.
-	* @default '14px Courier'
-	*/
+    /**
+    * @property {string} font - The font that the debug information is rendered in.
+    * @default '14px Courier'
+    */
     this.font = '14px Courier';
    
-	/**
-	* @property {number} lineHeight - The line height between the debug text.
-	*/
+    /**
+    * @property {number} lineHeight - The line height between the debug text.
+    */
     this.lineHeight = 16;
     
-	/**
-	* @property {boolean} renderShadow - Should the text be rendered with a slight shadow? Makes it easier to read on different types of background.
-	*/
+    /**
+    * @property {boolean} renderShadow - Should the text be rendered with a slight shadow? Makes it easier to read on different types of background.
+    */
     this.renderShadow = true;
     
-	/**
-	* @property {Context} currentX - The current X position the debug information will be rendered at.
-	* @default
-	*/
+    /**
+    * @property {Context} currentX - The current X position the debug information will be rendered at.
+    * @default
+    */
     this.currentX = 0;
     
-	/**
-	* @property {number} currentY - The current Y position the debug information will be rendered at.
-	* @default
-	*/
+    /**
+    * @property {number} currentY - The current Y position the debug information will be rendered at.
+    * @default
+    */
     this.currentY = 0;
     
-	/**
-	* @property {number} currentAlpha - The current alpha the debug information will be rendered at.
-	* @default
-	*/
+    /**
+    * @property {number} currentAlpha - The current alpha the debug information will be rendered at.
+    * @default
+    */
     this.currentAlpha = 1;
 
 };
@@ -184,13 +184,13 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-     * Renders the corners and point information of the given Sprite.
-     * @method Phaser.Utils.Debug#renderSpriteCorners
-     * @param {Phaser.Sprite} sprite - The sprite to be rendered.
-     * @param {boolean} [showText=false] - If true the x/y coordinates of each point will be rendered.
-     * @param {boolean} [showBounds=false] - If true the bounds will be rendered over the top of the sprite.
-     * @param {string} [color='rgb(255,0,255)'] - The color the text is rendered in.
-     */
+    * Renders the corners and point information of the given Sprite.
+    * @method Phaser.Utils.Debug#renderSpriteCorners
+    * @param {Phaser.Sprite} sprite - The sprite to be rendered.
+    * @param {boolean} [showText=false] - If true the x/y coordinates of each point will be rendered.
+    * @param {boolean} [showBounds=false] - If true the bounds will be rendered over the top of the sprite.
+    * @param {string} [color='rgb(255,0,255)'] - The color the text is rendered in.
+    */
     renderSpriteCorners: function (sprite, showText, showBounds, color) {
 
         if (this.context == null)
@@ -372,7 +372,7 @@ Phaser.Utils.Debug.prototype = {
     * @param {number} x - X position of the debug info to be rendered.
     * @param {number} y - Y position of the debug info to be rendered.
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
-    */    
+    */
     renderSpriteInputInfo: function (sprite, x, y, color) {
 
         color = color || 'rgb(255,255,255)';
@@ -388,13 +388,13 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-     * Render Sprite collision.
-     * @method Phaser.Utils.Debug#renderSpriteCollision
-     * @param {Phaser.Sprite} sprite - The sprite to be rendered.
-     * @param {number} x - X position of the debug info to be rendered.
-     * @param {number} y - Y position of the debug info to be rendered.
+    * Render Sprite collision.
+    * @method Phaser.Utils.Debug#renderSpriteCollision
+    * @param {Phaser.Sprite} sprite - The sprite to be rendered.
+    * @param {number} x - X position of the debug info to be rendered.
+    * @param {number} y - Y position of the debug info to be rendered.
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
-     */ 
+    */
     renderSpriteCollision: function (sprite, x, y, color) {
 
         color = color || 'rgb(255,255,255)';
@@ -779,7 +779,7 @@ Phaser.Utils.Debug.prototype = {
     * @param {number} y - Y position of the debug info to be rendered.
     * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
     * @param {string} font - The font of text to draw.
-    */    
+    */
     renderText: function (text, x, y, color, font) {
 
         if (this.context == null)
@@ -819,7 +819,7 @@ Phaser.Utils.Debug.prototype = {
         var testObject = entity.last.next;
         entity = entity.first;
         
-        do  
+        do
         {
             var name = entity.sprite.name || '*';
             var nameNext = '-';

@@ -61,7 +61,7 @@ Phaser.Tileset.prototype = {
 
     checkTileIndex: function (index) {
 
-    	return (this.tiles[index]);
+        return (this.tiles[index]);
 
     },
 
@@ -84,7 +84,7 @@ Phaser.Tileset.prototype = {
             this.tiles[index].setCollision(left, right, up, down);
         }
 
-    },
+    }
 
 }
 

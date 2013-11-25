@@ -79,13 +79,13 @@ Phaser.Color = {
         var argb = Phaser.Color.getRGB(color);
         var hsl = Phaser.Color.RGBtoHSV(color);
         
-        //	Hex format
+        //  Hex format
         var result = Phaser.Color.RGBtoHexstring(color) + "\n";
         
-        //	RGB format
+        //  RGB format
         result = result.concat("Alpha: " + argb.alpha + " Red: " + argb.red + " Green: " + argb.green + " Blue: " + argb.blue) + "\n";
         
-        //	HSL info
+        //  HSL info
         result = result.concat("Hue: " + hsl.hue + " Saturation: " + hsl.saturation + " Lightnes: " + hsl.lightness);
 
         return result;
@@ -232,7 +232,7 @@ Phaser.Color = {
         if (typeof max === "undefined") { max = 255; }
         if (typeof alpha === "undefined") { alpha = 255; }
 
-        //	Sanity checks
+        //  Sanity checks
         if (max > 255) {
             return Phaser.Color.getColor(255, 255, 255);
         }
@@ -347,5 +347,5 @@ Phaser.Color = {
     getBlue: function (color) {
         return color & 0xFF;
     }
-	
+    
 };

@@ -19,17 +19,17 @@ function IslandSolver(subsolver){
     var that = this;
 
     /**
-     * The solver used in the workers.
-     * @property subsolver
-     * @type {Solver}
-     */
+    * The solver used in the workers.
+    * @property subsolver
+    * @type {Solver}
+    */
     this.subsolver = subsolver;
 
     /**
-     * Number of islands
-     * @property numIslands
-     * @type {number}
-     */
+    * Number of islands
+    * @property numIslands
+    * @type {number}
+    */
     this.numIslands = 0;
 
     // Pooling of node objects saves some GC load

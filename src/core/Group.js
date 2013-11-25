@@ -571,14 +571,14 @@ Phaser.Group.prototype = {
     },
 
     /**
-     * Sets the given property to the given value on the child. The operation controls the assignment of the value.
-     *
-     * @method Phaser.Group#setProperty
-     * @param {*} child - The child to set the property value on.
-     * @param {array} key - An array of strings that make up the property that will be set.
-     * @param {*} value - The value that will be set.
-     * @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
-     */
+    * Sets the given property to the given value on the child. The operation controls the assignment of the value.
+    *
+    * @method Phaser.Group#setProperty
+    * @param {*} child - The child to set the property value on.
+    * @param {array} key - An array of strings that make up the property that will be set.
+    * @param {*} value - The value that will be set.
+    * @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+    */
     setProperty: function (child, key, value, operation) {
 
         operation = operation || 0;
@@ -633,16 +633,16 @@ Phaser.Group.prototype = {
     },
 
     /**
-     * This function allows you to quickly set the same property across all children of this Group to a new value.
-     * The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
-     *
-     * @method Phaser.Group#setAll
-     * @param {string} key - The property, as a string, to be set. For example: 'body.velocity.x'
-     * @param {*} value - The value that will be set.
-     * @param {boolean} [checkAlive=false] - If set then only children with alive=true will be updated.
-     * @param {boolean} [checkVisible=false] - If set then only children with visible=true will be updated.
-     * @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
-     */
+    * This function allows you to quickly set the same property across all children of this Group to a new value.
+    * The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
+    *
+    * @method Phaser.Group#setAll
+    * @param {string} key - The property, as a string, to be set. For example: 'body.velocity.x'
+    * @param {*} value - The value that will be set.
+    * @param {boolean} [checkAlive=false] - If set then only children with alive=true will be updated.
+    * @param {boolean} [checkVisible=false] - If set then only children with visible=true will be updated.
+    * @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+    */
     setAll: function (key, value, checkAlive, checkVisible, operation) {
 
         key = key.split('.');
@@ -671,15 +671,15 @@ Phaser.Group.prototype = {
     },
 
     /**
-     * Adds the amount to the given property on all children in this Group.
-     * Group.addAll('x', 10) will add 10 to the child.x value.
-     *
-     * @method Phaser.Group#addAll
-     * @param {string} property - The property to increment, for example 'body.velocity.x' or 'angle'.
-     * @param {number} amount - The amount to increment the property by. If child.x = 10 then addAll('x', 40) would make child.x = 50.
-     * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
-     * @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
-     */
+    * Adds the amount to the given property on all children in this Group.
+    * Group.addAll('x', 10) will add 10 to the child.x value.
+    *
+    * @method Phaser.Group#addAll
+    * @param {string} property - The property to increment, for example 'body.velocity.x' or 'angle'.
+    * @param {number} amount - The amount to increment the property by. If child.x = 10 then addAll('x', 40) would make child.x = 50.
+    * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
+    * @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
+    */
     addAll: function (property, amount, checkAlive, checkVisible) {
 
         this.setAll(property, amount, checkAlive, checkVisible, 1);
@@ -687,15 +687,15 @@ Phaser.Group.prototype = {
     },
 
     /**
-     * Subtracts the amount from the given property on all children in this Group.
-     * Group.subAll('x', 10) will minus 10 from the child.x value.
-     *
-     * @method Phaser.Group#subAll
-     * @param {string} property - The property to decrement, for example 'body.velocity.x' or 'angle'.
-     * @param {number} amount - The amount to subtract from the property. If child.x = 50 then subAll('x', 40) would make child.x = 10.
-     * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
-     * @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
-     */
+    * Subtracts the amount from the given property on all children in this Group.
+    * Group.subAll('x', 10) will minus 10 from the child.x value.
+    *
+    * @method Phaser.Group#subAll
+    * @param {string} property - The property to decrement, for example 'body.velocity.x' or 'angle'.
+    * @param {number} amount - The amount to subtract from the property. If child.x = 50 then subAll('x', 40) would make child.x = 10.
+    * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
+    * @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
+    */
     subAll: function (property, amount, checkAlive, checkVisible) {
 
         this.setAll(property, amount, checkAlive, checkVisible, 2);
@@ -703,15 +703,15 @@ Phaser.Group.prototype = {
     },
 
     /**
-     * Multiplies the given property by the amount on all children in this Group.
-     * Group.multiplyAll('x', 2) will x2 the child.x value.
-     *
-     * @method Phaser.Group#multiplyAll
-     * @param {string} property - The property to multiply, for example 'body.velocity.x' or 'angle'.
-     * @param {number} amount - The amount to multiply the property by. If child.x = 10 then multiplyAll('x', 2) would make child.x = 20.
-     * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
-     * @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
-     */
+    * Multiplies the given property by the amount on all children in this Group.
+    * Group.multiplyAll('x', 2) will x2 the child.x value.
+    *
+    * @method Phaser.Group#multiplyAll
+    * @param {string} property - The property to multiply, for example 'body.velocity.x' or 'angle'.
+    * @param {number} amount - The amount to multiply the property by. If child.x = 10 then multiplyAll('x', 2) would make child.x = 20.
+    * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
+    * @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
+    */
     multiplyAll: function (property, amount, checkAlive, checkVisible) {
 
         this.setAll(property, amount, checkAlive, checkVisible, 3);
@@ -719,15 +719,15 @@ Phaser.Group.prototype = {
     },
 
     /**
-     * Divides the given property by the amount on all children in this Group.
-     * Group.divideAll('x', 2) will half the child.x value.
-     *
-     * @method Phaser.Group#divideAll
-     * @param {string} property - The property to divide, for example 'body.velocity.x' or 'angle'.
-     * @param {number} amount - The amount to divide the property by. If child.x = 100 then divideAll('x', 2) would make child.x = 50.
-     * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
-     * @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
-     */
+    * Divides the given property by the amount on all children in this Group.
+    * Group.divideAll('x', 2) will half the child.x value.
+    *
+    * @method Phaser.Group#divideAll
+    * @param {string} property - The property to divide, for example 'body.velocity.x' or 'angle'.
+    * @param {number} amount - The amount to divide the property by. If child.x = 100 then divideAll('x', 2) would make child.x = 50.
+    * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
+    * @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
+    */
     divideAll: function (property, amount, checkAlive, checkVisible) {
 
         this.setAll(property, amount, checkAlive, checkVisible, 4);

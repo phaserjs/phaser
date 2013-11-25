@@ -12,45 +12,45 @@ module.exports = Equation;
 function Equation(bi,bj,minForce,maxForce){
 
     /**
-     * Minimum force to apply when solving
-     * @property minForce
-     * @type {Number}
-     */
+    * Minimum force to apply when solving
+    * @property minForce
+    * @type {Number}
+    */
     this.minForce = typeof(minForce)=="undefined" ? -1e6 : minForce;
 
     /**
-     * Max force to apply when solving
-     * @property maxForce
-     * @type {Number}
-     */
+    * Max force to apply when solving
+    * @property maxForce
+    * @type {Number}
+    */
     this.maxForce = typeof(maxForce)=="undefined" ? 1e6 : maxForce;
 
     /**
-     * First body participating in the constraint
-     * @property bi
-     * @type {Body}
-     */
+    * First body participating in the constraint
+    * @property bi
+    * @type {Body}
+    */
     this.bi = bi;
 
     /**
-     * Second body participating in the constraint
-     * @property bj
-     * @type {Body}
-     */
+    * Second body participating in the constraint
+    * @property bj
+    * @type {Body}
+    */
     this.bj = bj;
 
     /**
-     * The stiffness of this equation. Typically chosen to a large number (~1e7), but can be chosen somewhat freely to get a stable simulation.
-     * @property stiffness
-     * @type {Number}
-     */
+    * The stiffness of this equation. Typically chosen to a large number (~1e7), but can be chosen somewhat freely to get a stable simulation.
+    * @property stiffness
+    * @type {Number}
+    */
     this.stiffness = 1e6;
 
     /**
-     * The number of time steps needed to stabilize the constraint equation. Typically between 3 and 5 time steps.
-     * @property relaxation
-     * @type {Number}
-     */
+    * The number of time steps needed to stabilize the constraint equation. Typically between 3 and 5 time steps.
+    * @property relaxation
+    * @type {Number}
+    */
     this.relaxation = 4;
 
     this.a = 0;

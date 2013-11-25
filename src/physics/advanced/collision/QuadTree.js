@@ -27,10 +27,10 @@ function QuadTree(bounds, pointQuad, maxDepth, maxChildren){
     }
 
     /**
-     * The root node of the QuadTree which covers the entire area being segmented.
-     * @property root
-     * @type Node
-     */
+    * The root node of the QuadTree which covers the entire area being segmented.
+    * @property root
+    * @type Node
+    */
     this.root = node;
 }
 
@@ -299,7 +299,7 @@ BoundsNode.prototype.insert = function(item){
         console.log("radius:",item.boundingRadius);
         console.log("item x:",item.position[0] - item.boundingRadius,"x range:",node.bounds.x,node.bounds.x+node.bounds.width);
         console.log("item y:",item.position[1] - item.boundingRadius,"y range:",node.bounds.y,node.bounds.y+node.bounds.height);
-        */
+       */
 
         //todo: make _bounds bounds
         if( !(item instanceof Plane) && // Plane is infinite.. Make it a "stuck" child

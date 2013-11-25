@@ -5,7 +5,6 @@
 * @module       Phaser.Tile
 */
 
-
 /**
 * Create a new <code>Tile</code>.
 *
@@ -205,7 +204,7 @@ Object.defineProperty(Phaser.Tile.prototype, "right", {
     * However it does affect the width property.
     * @method right
     * @return {number}
-    */    
+    */
     get: function () {
         return this.x + this.width;
     }

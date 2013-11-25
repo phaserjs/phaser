@@ -12,10 +12,10 @@ module.exports = Circle;
 function Circle(radius){
 
     /**
-     * The radius of the circle.
-     * @property radius
-     * @type {number}
-     */
+    * The radius of the circle.
+    * @property radius
+    * @type {number}
+    */
     this.radius = radius || 1;
 
     Shape.call(this,Shape.CIRCLE);

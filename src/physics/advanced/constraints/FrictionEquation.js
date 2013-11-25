@@ -31,24 +31,24 @@ function FrictionEquation(bi,bj,slipForce){
     Equation.call(this,bi,bj,-slipForce,slipForce);
 
     /**
-     * Relative vector from center of body i to the contact point, in world coords.
-     * @property ri
-     * @type {Float32Array}
-     */
+    * Relative vector from center of body i to the contact point, in world coords.
+    * @property ri
+    * @type {Float32Array}
+    */
     this.ri = vec2.create();
 
     /**
-     * Relative vector from center of body j to the contact point, in world coords.
-     * @property rj
-     * @type {Float32Array}
-     */
+    * Relative vector from center of body j to the contact point, in world coords.
+    * @property rj
+    * @type {Float32Array}
+    */
     this.rj = vec2.create();
 
     /**
-     * Tangent vector that the friction force will act along, in world coords.
-     * @property t
-     * @type {Float32Array}
-     */
+    * Tangent vector that the friction force will act along, in world coords.
+    * @property t
+    * @type {Float32Array}
+    */
     this.t = vec2.create();
 
     this.rixt = 0;

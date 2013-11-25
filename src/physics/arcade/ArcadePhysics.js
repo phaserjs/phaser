@@ -27,7 +27,7 @@ Phaser.Physics.Arcade = function (game) {
     /**
     * @property {Phaser.Point} gravity - The World gravity setting. Defaults to x: 0, y: 0, or no gravity.
     */
-    this.gravity = new Phaser.Point;
+    this.gravity = new Phaser.Point();
 
     /**
     * @property {Phaser.Rectangle} bounds - The bounds inside of which the physics world exists. Defaults to match the world bounds.
@@ -65,13 +65,13 @@ Phaser.Physics.Arcade = function (game) {
     * @property {Phaser.Rectangle} _bounds1 - Internal cache var.
     * @private
     */
-    this._bounds1 = new Phaser.Rectangle;
+    this._bounds1 = new Phaser.Rectangle();
 
     /**
     * @property {Phaser.Rectangle} _bounds2 - Internal cache var.
     * @private
     */
-    this._bounds2 = new Phaser.Rectangle;
+    this._bounds2 = new Phaser.Rectangle();
 
     /**
     * @property {number} _overlap - Internal cache var.
@@ -462,7 +462,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             var currentNode = group._container.first._iNext;
                 
-            do  
+            do
             {
                 if (currentNode.exists)
                 {
@@ -572,7 +572,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             var currentNode = group1._container.first._iNext;
                 
-            do  
+            do
             {
                 if (currentNode.exists)
                 {
@@ -658,7 +658,7 @@ Phaser.Physics.Arcade.prototype = {
             }
 
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
-            if (this._overlap != 0)
+            if (this._overlap !== 0)
             {
                 body1.overlapX = this._overlap;
                 body2.overlapX = this._overlap;
@@ -766,7 +766,7 @@ Phaser.Physics.Arcade.prototype = {
             }
 
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
-            if (this._overlap != 0)
+            if (this._overlap !== 0)
             {
                 body1.overlapY = this._overlap;
                 body2.overlapY = this._overlap;
@@ -894,7 +894,7 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         //  Then adjust their positions and velocities accordingly (if there was any overlap)
-        if (this._overlap != 0)
+        if (this._overlap !== 0)
         {
             if (separate)
             {
@@ -980,7 +980,7 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         //  Then adjust their positions and velocities accordingly (if there was any overlap)
-        if (this._overlap != 0)
+        if (this._overlap !== 0)
         {
             if (separate)
             {
@@ -1133,7 +1133,7 @@ Phaser.Physics.Arcade.prototype = {
     velocityFromAngle: function (angle, speed, point) {
 
         if (typeof speed === 'undefined') { speed = 60; }
-        point = point || new Phaser.Point;
+        point = point || new Phaser.Point();
 
         return point.setTo((Math.cos(this.game.math.degToRad(angle)) * speed), (Math.sin(this.game.math.degToRad(angle)) * speed));
 
@@ -1152,7 +1152,7 @@ Phaser.Physics.Arcade.prototype = {
     velocityFromRotation: function (rotation, speed, point) {
 
         if (typeof speed === 'undefined') { speed = 60; }
-        point = point || new Phaser.Point;
+        point = point || new Phaser.Point();
 
         return point.setTo((Math.cos(rotation) * speed), (Math.sin(rotation) * speed));
 
@@ -1171,7 +1171,7 @@ Phaser.Physics.Arcade.prototype = {
     accelerationFromRotation: function (rotation, speed, point) {
 
         if (typeof speed === 'undefined') { speed = 60; }
-        point = point || new Phaser.Point;
+        point = point || new Phaser.Point();
 
         return point.setTo((Math.cos(rotation) * speed), (Math.sin(rotation) * speed));
 
