@@ -433,7 +433,7 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
                 sx = _tile.width * this.scale.x;
                 sy = _tile.height * this.scale.y;
 
-                if (collides == false || (collides && _tile.collideNone == false))
+                if (collides === false || (collides && _tile.collideNone === false))
                 {
 					// convert tile coordinates back to camera space for return
 					var _wx = this._unfixX( wx*sx ) / tileWidth;

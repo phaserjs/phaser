@@ -588,7 +588,7 @@ Phaser.Cache.prototype = {
     */
     getFrame: function (key) {
 
-        if (this._images[key] && this._images[key].spriteSheet == false)
+        if (this._images[key] && this._images[key].spriteSheet === false)
         {
             return this._images[key].frame;
         }
@@ -692,7 +692,7 @@ Phaser.Cache.prototype = {
 	*/
     isSoundReady: function (key) {
 
-        return (this._sounds[key] && this._sounds[key].decoded && this.game.sound.touchLocked == false);
+        return (this._sounds[key] && this._sounds[key].decoded && this.game.sound.touchLocked === false);
 
     },
 

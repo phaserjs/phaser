@@ -26,51 +26,51 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     frame = frame || null;
     
     /**
-	* @property {Phaser.Game} game - A reference to the currently running Game.
-	*/
-	this.game = game;
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
+    this.game = game;
  
-	/**
-	* @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
-	* @default
-	*/
+    /**
+    * @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
+    * @default
+    */
     this.exists = true;
 
-	/**
+    /**
     * @property {boolean} alive - This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering.
-   	* @default
-   	*/
+    * @default
+    */
     this.alive = true;
 
-	/**
+    /**
     * @property {Phaser.Group} group - The parent Group of this Sprite. This is usually set after Sprite instantiation by the parent.
-   	*/
+    */
     this.group = null;
 
     /**
-     * @property {string} name - The user defined name given to this Sprite.
-     * @default
-     */
+    * @property {string} name - The user defined name given to this Sprite.
+    * @default
+    */
     this.name = '';
 
     /**
-	* @property {number} type - The const type of this object.
-    * @default
-	*/
+    * @property {number} type - The const type of this object.
+    * @readonly
+    */
     this.type = Phaser.SPRITE;
 
     /**
-	* @property {number} renderOrderID - Used by the Renderer and Input Manager to control picking order.
-	* @default
-	*/
+    * @property {number} renderOrderID - Used by the Renderer and Input Manager to control picking order.
+    * @default
+    */
     this.renderOrderID = -1;
 
     /**
     * If you would like the Sprite to have a lifespan once 'born' you can set this to a positive value. Handy for particles, bullets, etc.
-	* The lifespan is decremented by game.time.elapsed each update, once it reaches zero the kill() function is called.
-	* @property {number} lifespan - The lifespan of the Sprite (in ms) before it will be killed.
-	* @default
-	*/    
+    * The lifespan is decremented by game.time.elapsed each update, once it reaches zero the kill() function is called.
+    * @property {number} lifespan - The lifespan of the Sprite (in ms) before it will be killed.
+    * @default
+    */
     this.lifespan = 0;
 
     /**
@@ -123,7 +123,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
             key = '__default';
             this.key = key;
         }
-        else if (typeof key === 'string' && this.game.cache.checkImageKey(key) == false)
+        else if (typeof key === 'string' && this.game.cache.checkImageKey(key) === false)
         {
             key = '__missing';
             this.key = key;
@@ -179,8 +179,8 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */
     this.y = y;
 
-	this.position.x = x;
-	this.position.y = y;
+    this.position.x = x;
+    this.position.y = y;
 
     /**
     * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
@@ -198,60 +198,82 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     /**
     * @property {Phaser.Point} scale - The scale of the Sprite when rendered. By default it's set to 1 (no scale). You can modify it via scale.x or scale.y or scale.setTo(x, y). A value of 1 means no change to the scale, 0.5 means "half the size", 2 means "twice the size", etc.
-    */ 
+    */
     this.scale = new Phaser.Point(1, 1);
 
     /**
-    * @property {Phaser.Point} _cache - A mini cache for storing all of the calculated values.
+    * @property {object} _cache - A mini cache for storing all of the calculated values.
     * @private
     */
-    this._cache = { 
+    this._cache = {
 
         dirty: false,
 
         //  Transform cache
-        a00: -1, a01: -1, a02: -1, a10: -1, a11: -1, a12: -1, id: -1, 
+        a00: -1,
+        a01: -1,
+        a02: -1,
+        a10: -1,
+        a11: -1,
+        a12: -1,
+        id: -1,
 
         //  Input specific transform cache
-        i01: -1, i10: -1, idi: -1,
+        i01: -1,
+        i10: -1,
+        idi: -1,
 
         //  Bounds check
-        left: null, right: null, top: null, bottom: null, 
+        left: null,
+        right: null,
+        top: null,
+        bottom: null,
 
         //  delta cache
-        prevX: x, prevY: y,
+        prevX: x,
+        prevY: y,
 
         //  The previous calculated position
-        x: -1, y: -1,
+        x: -1,
+        y: -1,
 
         //  The actual scale values based on the worldTransform
-        scaleX: 1, scaleY: 1,
+        scaleX: 1,
+        scaleY: 1,
 
         //  The width/height of the image, based on the un-modified frame size multiplied by the final calculated scale size
-        width: this.currentFrame.sourceSizeW, height: this.currentFrame.sourceSizeH,
+        width: this.currentFrame.sourceSizeW,
+        height: this.currentFrame.sourceSizeH,
 
         //  The actual width/height of the image if from a trimmed atlas, multiplied by the final calculated scale size
-        halfWidth: Math.floor(this.currentFrame.sourceSizeW / 2), halfHeight: Math.floor(this.currentFrame.sourceSizeH / 2),
+        halfWidth: Math.floor(this.currentFrame.sourceSizeW / 2),
+        halfHeight: Math.floor(this.currentFrame.sourceSizeH / 2),
 
         //  The width/height of the image, based on the un-modified frame size multiplied by the final calculated scale size
-        calcWidth: -1, calcHeight: -1,
+        calcWidth: -1,
+        calcHeight: -1,
 
         //  The current frame details
         // frameID: this.currentFrame.uuid, frameWidth: this.currentFrame.width, frameHeight: this.currentFrame.height,
-        frameID: -1, frameWidth: this.currentFrame.width, frameHeight: this.currentFrame.height,
+        frameID: -1,
+        frameWidth: this.currentFrame.width,
+        frameHeight: this.currentFrame.height,
 
         //  If this sprite visible to the camera (regardless of being set to visible or not)
         cameraVisible: true,
 
         //  Crop cache
-        cropX: 0, cropY: 0, cropWidth: this.currentFrame.sourceSizeW, cropHeight: this.currentFrame.sourceSizeH
+        cropX: 0,
+        cropY: 0,
+        cropWidth: this.currentFrame.sourceSizeW,
+        cropHeight: this.currentFrame.sourceSizeH
 
     };
   
     /**
     * @property {Phaser.Point} offset - Corner point defaults. Should not typically be modified.
-    */    
-    this.offset = new Phaser.Point;
+    */
+    this.offset = new Phaser.Point();
     
     /**
     * @property {Phaser.Point} center - A Point containing the center coordinate of the Sprite. Takes rotation and scale into account.
@@ -293,7 +315,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     /**
     * @property {number} health - Health value. Used in combination with damage() to allow for quick killing of Sprites.
-    */    
+    */
     this.health = 1;
 
     /**
@@ -330,7 +352,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     /**
     * @property {Phaser.Point} cameraOffset - If this Sprite is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.
     */
-    this.cameraOffset = new Phaser.Point;
+    this.cameraOffset = new Phaser.Point();
 
     /**
     * You can crop the Sprites texture by modifying the crop properties. For example crop.width = 50 would set the Sprite to only render 50px wide.
@@ -537,7 +559,7 @@ Phaser.Sprite.prototype.updateBounds = function() {
 
     this.updateFrame = true;
 
-    if (this.inWorld == false)
+    if (this.inWorld === false)
     {
         //  Sprite WAS out of the screen, is it still?
         this.inWorld = Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds, this.inWorldThreshold);
@@ -553,7 +575,7 @@ Phaser.Sprite.prototype.updateBounds = function() {
         //   Sprite WAS in the screen, has it now left?
         this.inWorld = Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds, this.inWorldThreshold);
 
-        if (this.inWorld == false)
+        if (this.inWorld === false)
         {
             this.events.onOutOfBounds.dispatch(this);
             this._outOfBoundsFired = true;
@@ -1079,7 +1101,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
 
         if (value)
         {
-            if (this.input.enabled == false)
+            if (this.input.enabled === false)
             {
                 this.input.start();
             }

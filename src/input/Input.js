@@ -5,32 +5,32 @@
 */
 
 /**
-* Constructor for Phaser Input.
+* Phaser.Input is the Input Manager for all types of Input across Phaser, including mouse, keyboard, touch and MSPointer.
+* The Input manager is updated automatically by the core game loop.
+*
 * @class Phaser.Input
-* @classdesc A game specific Input manager that looks after the mouse, keyboard and touch objects.
-* This is updated by the core game loop.
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
 */
 Phaser.Input = function (game) {
 
-	/**
-	* @property {Phaser.Game} game - A reference to the currently running game. 
-	*/
-	this.game = game;
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game. 
+    */
+    this.game = game;
 
-	/**
-    * @property {Description} hitCanvas - Description. 
+    /**
+    * @property {HTMLCanvasElement} hitCanvas - The canvas to which single pixels are drawn in order to perform pixel-perfect hit detection.
     * @default
-	*/
+    */
     this.hitCanvas = null;
     
-	/**
-     * @property {Description} hitContext - Description. 
-     * @default
- 	*/
+    /**
+    * @property {CanvasRenderingContext2D} hitContext - The context of the pixel perfect hit canvas.
+    * @default
+    */
     this.hitContext = null;
-	
+    
 };
 
 /**
@@ -53,11 +53,6 @@ Phaser.Input.MOUSE_TOUCH_COMBINE = 2;
 
 Phaser.Input.prototype = {
 
-    /** 
-    * @property {Phaser.Game} game
-    */	
-    game: null,
-
     /**
     * How often should the input pointers be checked for updates?
     * A value of 0 means every single frame (60fps), a value of 1 means every other frame (30fps) and so on.
@@ -67,31 +62,28 @@ Phaser.Input.prototype = {
     pollRate: 0,
     
     /**
-     * @property {number} _pollCounter - Description.
+     * @property {number} _pollCounter - Internal var holding the current poll counter.
      * @private
      * @default
      */
     _pollCounter: 0,
 
     /**
-    * A vector object representing the previous position of the Pointer.
-    * @property {Vec2} vector
+    * @property {Phaser.Point} _oldPosition - A point object representing the previous position of the Pointer.
     * @private
     * @default 
     */
     _oldPosition: null,
 
     /**
-    * X coordinate of the most recent Pointer event
-    * @property {number} _x
+    * @property {number} _x - x coordinate of the most recent Pointer event
     * @private
     * @default
     */
     _x: 0,
 
     /**
-    * Y coordinate of the most recent Pointer event
-    * @property {number} _y
+    * @property {number} _y - Y coordinate of the most recent Pointer event
     * @private
     * @default
     */
@@ -112,17 +104,14 @@ Phaser.Input.prototype = {
     multiInputOverride: Phaser.Input.MOUSE_TOUCH_COMBINE,
 
     /**
-    * A vector object representing the current position of the Pointer.
-    * @property {Phaser.Point} position
+    * @property {Phaser.Point} position - A point object representing the current position of the Pointer.
     * @default 
     */
     position: null,
 
     /**
-    * A vector object representing the speed of the Pointer. Only really useful in single Pointer games,
-    * otherwise see the Pointer objects directly.
+    * A point object representing the speed of the Pointer. Only really useful in single Pointer games, otherwise see the Pointer objects directly.
     * @property {Phaser.Point} speed
-    * @default 
     */
     speed: null,
 
@@ -130,7 +119,6 @@ Phaser.Input.prototype = {
     * A Circle object centered on the x/y screen coordinates of the Input.
     * Default size of 44px (Apples recommended "finger tip" size) but can be changed to anything.
     * @property {Phaser.Circle} circle
-    * @default
     */
     circle: null,
 
@@ -138,7 +126,6 @@ Phaser.Input.prototype = {
     * The scale by which all input coordinates are multiplied, calculated by the StageScaleMode.
     * In an un-scaled game the values will be x: 1 and y: 1.
     * @property {Phaser.Point} scale
-    * @default
     */
     scale: null,
 
@@ -267,7 +254,7 @@ Phaser.Input.prototype = {
     /**
     * A Pointer object
     * @property {Phaser.Pointer} pointer9
-    */ 
+    */
     pointer9: null,
 
     /**
@@ -353,40 +340,40 @@ Phaser.Input.prototype = {
     */
     interactiveItems: new Phaser.LinkedList(),
 
-	/**
+    /**
     * Starts the Input Manager running.
     * @method Phaser.Input#boot
     * @protected
     */
     boot: function () {
 
-	    this.mousePointer = new Phaser.Pointer(this.game, 0);
-	    this.pointer1 = new Phaser.Pointer(this.game, 1);
-	    this.pointer2 = new Phaser.Pointer(this.game, 2);
+        this.mousePointer = new Phaser.Pointer(this.game, 0);
+        this.pointer1 = new Phaser.Pointer(this.game, 1);
+        this.pointer2 = new Phaser.Pointer(this.game, 2);
 
-	    this.mouse = new Phaser.Mouse(this.game);
-	    this.keyboard = new Phaser.Keyboard(this.game);
-	    this.touch = new Phaser.Touch(this.game);
-	    this.mspointer = new Phaser.MSPointer(this.game);
+        this.mouse = new Phaser.Mouse(this.game);
+        this.keyboard = new Phaser.Keyboard(this.game);
+        this.touch = new Phaser.Touch(this.game);
+        this.mspointer = new Phaser.MSPointer(this.game);
 
-	    this.onDown = new Phaser.Signal();
-	    this.onUp = new Phaser.Signal();
-	    this.onTap = new Phaser.Signal();
-	    this.onHold = new Phaser.Signal();
+        this.onDown = new Phaser.Signal();
+        this.onUp = new Phaser.Signal();
+        this.onTap = new Phaser.Signal();
+        this.onHold = new Phaser.Signal();
 
-	    this.scale = new Phaser.Point(1, 1);
-	    this.speed = new Phaser.Point();
-	    this.position = new Phaser.Point();
-	    this._oldPosition = new Phaser.Point();
+        this.scale = new Phaser.Point(1, 1);
+        this.speed = new Phaser.Point();
+        this.position = new Phaser.Point();
+        this._oldPosition = new Phaser.Point();
 
-	    this.circle = new Phaser.Circle(0, 0, 44);
+        this.circle = new Phaser.Circle(0, 0, 44);
 
-	    this.activePointer = this.mousePointer;
-	    this.currentPointers = 0;
+        this.activePointer = this.mousePointer;
+        this.currentPointers = 0;
 
-	    this.hitCanvas = document.createElement('canvas');
-	    this.hitCanvas.width = 1;
-	    this.hitCanvas.height = 1;
+        this.hitCanvas = document.createElement('canvas');
+        this.hitCanvas.width = 1;
+        this.hitCanvas.height = 1;
         this.hitContext = this.hitCanvas.getContext('2d');
 
         this.mouse.start();
@@ -410,7 +397,7 @@ Phaser.Input.prototype = {
 
     },
 
-	/**
+    /**
     * Add a new Pointer object to the Input Manager. By default Input creates 3 pointer objects: mousePointer, pointer1 and pointer2.
     * If you need more then use this to create a new one, up to a maximum of 10.
     * @method Phaser.Input#addPointer
@@ -428,7 +415,7 @@ Phaser.Input.prototype = {
             }
         }
 
-        if (next == 0)
+        if (next === 0)
         {
             console.warn("You can only have 10 Pointer objects");
             return null;
@@ -441,7 +428,7 @@ Phaser.Input.prototype = {
 
     },
 
-	/**
+    /**
     * Updates the Input Manager. Called by the core Game loop.
     * @method Phaser.Input#update
     * @protected
@@ -475,14 +462,14 @@ Phaser.Input.prototype = {
         this._pollCounter = 0;
     },
 
-	/**
+    /**
     * Reset all of the Pointers and Input states
     * @method Phaser.Input#reset
     * @param {boolean} hard - A soft reset (hard = false) won't reset any Signals that might be bound. A hard reset will.
     */
     reset: function (hard) {
 
-        if (this.game.isBooted == false)
+        if (this.game.isBooted === false)
         {
             return;
         }
@@ -503,7 +490,7 @@ Phaser.Input.prototype = {
         this.currentPointers = 0;
         this.game.stage.canvas.style.cursor = "default";
 
-        if (hard == true)
+        if (hard === true)
         {
             this.onDown.dispose();
             this.onUp.dispose();
@@ -534,7 +521,7 @@ Phaser.Input.prototype = {
 
     },
 
-	/**
+    /**
     * Find the first free Pointer object and start it, passing in the event data. This is called automatically by Phaser.Touch and Phaser.MSPointer.
     * @method Phaser.Input#startPointer
     * @param {Any} event - The event data from the Touch event.
@@ -547,11 +534,11 @@ Phaser.Input.prototype = {
             return null;
         }
 
-        if (this.pointer1.active == false)
+        if (this.pointer1.active === false)
         {
             return this.pointer1.start(event);
         }
-        else if (this.pointer2.active == false)
+        else if (this.pointer2.active === false)
         {
             return this.pointer2.start(event);
         }
@@ -559,7 +546,7 @@ Phaser.Input.prototype = {
         {
             for (var i = 3; i <= 10; i++)
             {
-                if (this['pointer' + i] && this['pointer' + i].active == false)
+                if (this['pointer' + i] && this['pointer' + i].active === false)
                 {
                     return this['pointer' + i].start(event);
                 }
@@ -570,7 +557,7 @@ Phaser.Input.prototype = {
 
     },
 
-	/**
+    /**
     * Updates the matching Pointer object, passing in the event data. This is called automatically and should not normally need to be invoked.
     * @method Phaser.Input#updatePointer
     * @param {Any} event - The event data from the Touch event.
@@ -601,7 +588,7 @@ Phaser.Input.prototype = {
 
     },
 
-	/**
+    /**
     * Stops the matching Pointer object, passing in the event data.
     * @method Phaser.Input#stopPointer
     * @param {Any} event - The event data from the Touch event.
@@ -632,7 +619,7 @@ Phaser.Input.prototype = {
 
     },
 
-	/**
+    /**
     * Get the next Pointer object whos active property matches the given state
     * @method Phaser.Input#getPointer
     * @param {boolean} state - The state the Pointer should be in (false for inactive, true for active).
@@ -665,7 +652,7 @@ Phaser.Input.prototype = {
 
     },
 
-	/**
+    /**
     * Get the Pointer object whos identified property matches the given identifier value.
     * @method Phaser.Input#getPointerFromIdentifier
     * @param {number} identifier - The Pointer.identifier value to search for.
@@ -793,7 +780,7 @@ Object.defineProperty(Phaser.Input.prototype, "totalActivePointers", {
 Object.defineProperty(Phaser.Input.prototype, "worldX", {
 
     get: function () {
-		return this.game.camera.view.x + this.x;
+        return this.game.camera.view.x + this.x;
     }
 
 });
@@ -806,7 +793,7 @@ Object.defineProperty(Phaser.Input.prototype, "worldX", {
 Object.defineProperty(Phaser.Input.prototype, "worldY", {
 
     get: function () {
-		return this.game.camera.view.y + this.y;
+        return this.game.camera.view.y + this.y;
     }
 
 });

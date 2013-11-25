@@ -12,17 +12,17 @@
 */
 Phaser.FrameData = function () {
 
-	/**
-	* @property {Array} _frames - Local array of frames.
-	* @private
-	*/
+    /**
+    * @property {Array} _frames - Local array of frames.
+    * @private
+    */
     this._frames = [];
 
 
-	/**
-	* @property {Array} _frameNames - Local array of frame names for name to index conversions.
-	* @private
-	*/
+    /**
+    * @property {Array} _frameNames - Local array of frame names for name to index conversions.
+    * @private
+    */
     this._frameNames = [];
 
 };
@@ -51,13 +51,13 @@ Phaser.FrameData.prototype = {
 
     },
 
-	/**
-	* Get a Frame by its numerical index.
+    /**
+    * Get a Frame by its numerical index.
     *
     * @method Phaser.FrameData#getFrame
-	* @param {number} index - The index of the frame you want to get.
-	* @return {Phaser.Frame} The frame, if found.
-	*/
+    * @param {number} index - The index of the frame you want to get.
+    * @return {Phaser.Frame} The frame, if found.
+    */
     getFrame: function (index) {
 
         if (this._frames.length > index)
@@ -105,15 +105,15 @@ Phaser.FrameData.prototype = {
         
     },
 
-	/**
-	* Returns a range of frames based on the given start and end frame indexes and returns them in an Array.
+    /**
+    * Returns a range of frames based on the given start and end frame indexes and returns them in an Array.
     *
     * @method Phaser.FrameData#getFrameRange
     * @param {number} start - The starting frame index.
-	* @param {number} end - The ending frame index.
-	* @param {Array} [output] - If given the results will be appended to the end of this array otherwise a new array will be created.
-	* @return {Array} An array of Frames between the start and end index values, or an empty array if none were found.
-	*/
+    * @param {number} end - The ending frame index.
+    * @param {Array} [output] - If given the results will be appended to the end of this array otherwise a new array will be created.
+    * @return {Array} An array of Frames between the start and end index values, or an empty array if none were found.
+    */
     getFrameRange: function (start, end, output) {
         
         if (typeof output === "undefined") { output = []; }
@@ -127,8 +127,8 @@ Phaser.FrameData.prototype = {
 
     },
 
-	/**
-	* Returns all of the Frames in this FrameData set where the frame index is found in the input array.
+    /**
+    * Returns all of the Frames in this FrameData set where the frame index is found in the input array.
     * The frames are returned in the output array, or if none is provided in a new Array object.
     *
     * @method Phaser.FrameData#getFrames
@@ -136,13 +136,13 @@ Phaser.FrameData.prototype = {
     * @param {boolean} [useNumericIndex=true] - Are the given frames using numeric indexes (default) or strings? (false)
     * @param {Array} [output] - If given the results will be appended to the end of this array otherwise a new array will be created.
     * @return {Array} An array of all Frames in this FrameData set matching the given names or IDs.
-	*/
+    */
     getFrames: function (frames, useNumericIndex, output) {
 
         if (typeof useNumericIndex === "undefined") { useNumericIndex = true; }
         if (typeof output === "undefined") { output = []; }
 
-        if (typeof frames === "undefined" || frames.length == 0)
+        if (typeof frames === "undefined" || frames.length === 0)
         {
             //  No input array, so we loop through all frames
             for (var i = 0; i < this._frames.length; i++)
@@ -189,7 +189,7 @@ Phaser.FrameData.prototype = {
         if (typeof useNumericIndex === "undefined") { useNumericIndex = true; }
         if (typeof output === "undefined") { output = []; }
 
-        if (typeof frames === "undefined" || frames.length == 0)
+        if (typeof frames === "undefined" || frames.length === 0)
         {
             //  No frames array, so we loop through all frames
             for (var i = 0, len = this._frames.length; i < len; i++)

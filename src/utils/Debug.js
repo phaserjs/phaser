@@ -326,7 +326,7 @@ Phaser.Utils.Debug.prototype = {
         upColor = upColor || 'rgba(255,0,0,0.5)';
         color = color || 'rgb(255,255,255)';
 
-        if (hideIfUp == true && pointer.isUp == true)
+        if (hideIfUp === true && pointer.isUp === true)
         {
             return;
         }

@@ -1,3 +1,5 @@
+/* jshint newcap: false */
+
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
@@ -5,7 +7,7 @@
 */
 
 /** 
-* Description.
+* The Plugin Manager is responsible for the loading, running and unloading of Phaser Plugins.
 * 
 * @class Phaser.PluginManager
 * @classdesc Phaser - PluginManager
@@ -15,27 +17,27 @@
 */
 Phaser.PluginManager = function(game, parent) {
 
-	/**
-	* @property {Phaser.Game} game - A reference to the currently running game.
-	*/
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game.
+    */
     this.game = game;
     
     /**
-	* @property {Description} _parent - Description.
-	* @private
-	*/
+    * @property {Description} _parent - Description.
+    * @private
+    */
     this._parent = parent;
     
     /**
-	* @property {array} plugins - Description.
-	*/
+    * @property {array} plugins - Description.
+    */
     this.plugins = [];
     
     /**
-	* @property {array} _pluginsLength - Description.
-	* @private
-	* @default
-	*/
+    * @property {array} _pluginsLength - Description.
+    * @private
+    * @default
+    */
     this._pluginsLength = 0;
 
 };
@@ -131,7 +133,7 @@ Phaser.PluginManager.prototype = {
      */
     remove: function (plugin) {
         
-        if (this._pluginsLength == 0)
+        if (this._pluginsLength === 0)
         {
             return;
         }
@@ -170,7 +172,7 @@ Phaser.PluginManager.prototype = {
     */
     preUpdate: function () {
 
-        if (this._pluginsLength == 0)
+        if (this._pluginsLength === 0)
         {
             return;
         }
@@ -193,7 +195,7 @@ Phaser.PluginManager.prototype = {
     */
     update: function () {
         
-        if (this._pluginsLength == 0)
+        if (this._pluginsLength === 0)
         {
             return;
         }
@@ -217,7 +219,7 @@ Phaser.PluginManager.prototype = {
     */
     postUpdate: function () {
         
-        if (this._pluginsLength == 0)
+        if (this._pluginsLength === 0)
         {
             return;
         }
@@ -240,7 +242,7 @@ Phaser.PluginManager.prototype = {
     */
     render: function () {
 
-        if (this._pluginsLength == 0)
+        if (this._pluginsLength === 0)
         {
             return;
         }
@@ -263,7 +265,7 @@ Phaser.PluginManager.prototype = {
     */
     postRender: function () {
 
-        if (this._pluginsLength == 0)
+        if (this._pluginsLength === 0)
         {
             return;
         }

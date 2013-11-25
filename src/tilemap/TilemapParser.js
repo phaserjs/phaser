@@ -34,7 +34,7 @@ Phaser.TilemapParser = {
 	    }
 
 	    //  Zero or smaller than tile sizes?
-	    if (width == 0 || height == 0 || width < tileWidth || height < tileHeight || total === 0)
+	    if (width === 0 || height === 0 || width < tileWidth || height < tileHeight || total === 0)
 	    {
 	        console.warn("Phaser.TilemapParser.tileSet: width/height zero or width/height < given tileWidth/tileHeight");
 	        return null;
@@ -103,7 +103,7 @@ Phaser.TilemapParser = {
 	            output[i][c] = parseInt(column[c]);
 	        }
 
-            if (width == 0)
+            if (width === 0)
             {
             	width = column.length;
             }
@@ -155,7 +155,7 @@ Phaser.TilemapParser = {
 
 	        for (var t = 0; t < json.layers[i].data.length; t++)
 	        {
-	            if (c == 0)
+	            if (c === 0)
 	            {
 	                row = [];
 	            }

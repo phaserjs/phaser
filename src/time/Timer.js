@@ -98,7 +98,7 @@ Phaser.Timer.prototype = {
 
 			for (var i = 0, len = this.events.length; i < len; i++)
 			{
-				if (this.events[i].dispatched == false && seconds >= this.events[i].delay)
+				if (this.events[i].dispatched === false && seconds >= this.events[i].delay)
 				{
 					this.events[i].dispatched = true;	
 					// this.events[i].callback.apply(this.events[i].callbackContext, this.events[i].args);

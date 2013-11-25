@@ -191,7 +191,7 @@ Object.defineProperty(Phaser.Tile.prototype, "bottom", {
     * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
     * @method bottom
     * @return {number}
-    **/
+    */
     get: function () {
         return this.y + this.height;
     }
@@ -205,7 +205,7 @@ Object.defineProperty(Phaser.Tile.prototype, "right", {
     * However it does affect the width property.
     * @method right
     * @return {number}
-    **/    
+    */    
     get: function () {
         return this.x + this.width;
     }

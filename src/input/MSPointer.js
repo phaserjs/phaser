@@ -16,33 +16,15 @@
 */
 Phaser.MSPointer = function (game) {
 
-	/**
-	* @property {Phaser.Game} game - Local reference to game.
-	*/
-	this.game = game;
-	
-	/**
-	* @property {Phaser.Game} callbackContext - Description.
-	*/
-	this.callbackContext = this.game;
-
-	/**
-	* @property {Description} mouseDownCallback - Description.
-	* @default
-	*/
-	this.mouseDownCallback = null;
-	
-	/**
-	* @property {Description} mouseMoveCallback - Description.
-	* @default
-	*/
-	this.mouseMoveCallback = null;
-	
-	/**
-	* @property {Description} mouseUpCallback - Description.
-	* @default
-	*/
-	this.mouseUpCallback = null;
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game.
+    */
+    this.game = game;
+    
+    /**
+    * @property {Object} callbackContext - The context under which callbacks are called (defaults to game).
+    */
+    this.callbackContext = this.game;
 
     /**
     * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
@@ -51,26 +33,20 @@ Phaser.MSPointer = function (game) {
     this.disabled = false;
 
     /**
-    * Description.
-    * @property {Description} _onMSPointerDown
+    * @property {function} _onMSPointerDown - Internal function to handle MSPointer events.
     * @private
-    * @default
     */
     this._onMSPointerDown = null;
     
     /**
-    * Description.
-    * @property {Description} _onMSPointerMove
+    * @property {function} _onMSPointerMove - Internal function to handle MSPointer events.
     * @private
-    * @default
     */
     this._onMSPointerMove = null;
     
     /**
-    * Description.
-    * @property {Description} _onMSPointerUp
+    * @property {function} _onMSPointerUp - Internal function to handle MSPointer events.
     * @private
-    * @default
     */
     this._onMSPointerUp = null;
 
@@ -78,7 +54,7 @@ Phaser.MSPointer = function (game) {
 
 Phaser.MSPointer.prototype = {
 
-	/**
+    /**
     * Starts the event listeners running.
     * @method Phaser.MSPointer#start
     */
@@ -86,7 +62,7 @@ Phaser.MSPointer.prototype = {
 
         var _this = this;
 
-        if (this.game.device.mspointer == true)
+        if (this.game.device.mspointer === true)
         {
             this._onMSPointerDown = function (event) {
                 return _this.onPointerDown(event);
@@ -104,6 +80,11 @@ Phaser.MSPointer.prototype = {
             this.game.renderer.view.addEventListener('MSPointerMove', this._onMSPointerMove, false);
             this.game.renderer.view.addEventListener('MSPointerUp', this._onMSPointerUp, false);
 
+            //  IE11+ uses non-prefix events
+            this.game.renderer.view.addEventListener('pointerDown', this._onMSPointerDown, false);
+            this.game.renderer.view.addEventListener('pointerMove', this._onMSPointerMove, false);
+            this.game.renderer.view.addEventListener('pointerUp', this._onMSPointerUp, false);
+
             this.game.renderer.view.style['-ms-content-zooming'] = 'none';
             this.game.renderer.view.style['-ms-touch-action'] = 'none';
 
@@ -112,10 +93,10 @@ Phaser.MSPointer.prototype = {
     },
 
     /**
-    * Description.
+    * The function that handles the PointerDown event.
     * @method Phaser.MSPointer#onPointerDown
-    * @param {Any} event
-    **/
+    * @param {PointerEvent} event
+    */
     onPointerDown: function (event) {
 
         if (this.game.input.disabled || this.disabled)
@@ -131,10 +112,10 @@ Phaser.MSPointer.prototype = {
     },
 
     /**
-    * Description.
+    * The function that handles the PointerMove event.
     * @method Phaser.MSPointer#onPointerMove
-    * @param {Any} event
-    **/
+    * @param {PointerEvent } event
+    */
     onPointerMove: function (event) {
 
         if (this.game.input.disabled || this.disabled)
@@ -150,10 +131,10 @@ Phaser.MSPointer.prototype = {
     },
 
     /**
-    * Description.
+    * The function that handles the PointerUp event.
     * @method Phaser.MSPointer#onPointerUp
-    * @param {Any} event
-    **/
+    * @param {PointerEvent} event
+    */
     onPointerUp: function (event) {
 
         if (this.game.input.disabled || this.disabled)
@@ -168,7 +149,7 @@ Phaser.MSPointer.prototype = {
 
     },
 
-	/**
+    /**
     * Stop the event listeners.
     * @method Phaser.MSPointer#stop
     */
@@ -177,6 +158,10 @@ Phaser.MSPointer.prototype = {
         this.game.stage.canvas.removeEventListener('MSPointerDown', this._onMSPointerDown);
         this.game.stage.canvas.removeEventListener('MSPointerMove', this._onMSPointerMove);
         this.game.stage.canvas.removeEventListener('MSPointerUp', this._onMSPointerUp);
+
+        this.game.stage.canvas.removeEventListener('pointerDown', this._onMSPointerDown);
+        this.game.stage.canvas.removeEventListener('pointerMove', this._onMSPointerMove);
+        this.game.stage.canvas.removeEventListener('pointerUp', this._onMSPointerUp);
 
     }
 

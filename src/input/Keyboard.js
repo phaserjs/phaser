@@ -5,36 +5,35 @@
 */
 
 /**
-* Phaser - Keyboard constructor.
+* The Keyboard class handles looking after keyboard input for your game. It will recognise and respond to key presses and dispatch the required events.
 *
 * @class Phaser.Keyboard
-* @classdesc A Keyboard object Description.
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
 Phaser.Keyboard = function (game) {
 
-	/**
-	* @property {Phaser.Game} game - Local reference to game.
-	*/
-	this.game = game;
-	
-	/**
-	* @property {Description} _keys - Description.
-	* @private
-	*/
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
+    this.game = game;
+    
+    /**
+    * @property {object} _keys - The object the key values are stored in.
+    * @private
+    */
     this._keys = {};
     
     /**
-    * @property {Description} _hotkeys - Description.
+    * @property {object} _hotkeys - The object the hot keys are stored in.
     * @private
     */
     this._hotkeys = {};
 
-	/**
-	* @property {Description} _capture - Description.
-	* @private
-	*/
+    /**
+    * @property {object} _capture - The object the key capture values are stored in.
+    * @private
+    */
     this._capture = {};
 
     /**
@@ -72,7 +71,7 @@ Phaser.Keyboard = function (game) {
     * @property {function} onUpCallback - This callback is invoked every time a key is released.
     */
     this.onUpCallback = null;
-	
+    
 };
 
 Phaser.Keyboard.prototype = {
@@ -134,10 +133,10 @@ Phaser.Keyboard.prototype = {
     */
     createCursorKeys: function () {
 
-        return { 
-            up: this.addKey(Phaser.Keyboard.UP), 
-            down: this.addKey(Phaser.Keyboard.DOWN), 
-            left: this.addKey(Phaser.Keyboard.LEFT), 
+        return {
+            up: this.addKey(Phaser.Keyboard.UP),
+            down: this.addKey(Phaser.Keyboard.DOWN),
+            left: this.addKey(Phaser.Keyboard.LEFT),
             right: this.addKey(Phaser.Keyboard.RIGHT)
         }
 
@@ -178,7 +177,7 @@ Phaser.Keyboard.prototype = {
 
     },
 
-	/**
+    /**
     * By default when a key is pressed Phaser will not stop the event from propagating up to the browser.
     * There are some keys this can be annoying for, like the arrow keys or space bar, which make the browser window scroll.
     * You can use addKeyCapture to consume the keyboard event for specific keys so it doesn't bubble up to the the browser.
@@ -201,9 +200,9 @@ Phaser.Keyboard.prototype = {
         }
     },
 
-	/**
-	* Removes an existing key capture.
-	* @method Phaser.Keyboard#removeKeyCapture
+    /**
+    * Removes an existing key capture.
+    * @method Phaser.Keyboard#removeKeyCapture
     * @param {number} keycode
     */
     removeKeyCapture: function (keycode) {
@@ -212,9 +211,9 @@ Phaser.Keyboard.prototype = {
 
     },
 
-	/**
-	* Clear all set key captures.
-	* @method Phaser.Keyboard#clearCaptures
+    /**
+    * Clear all set key captures.
+    * @method Phaser.Keyboard#clearCaptures
     */
     clearCaptures: function () {
 
@@ -222,12 +221,12 @@ Phaser.Keyboard.prototype = {
 
     },
 
-	/**
-	* Process the keydown event.
-	* @method Phaser.Keyboard#processKeyDown
+    /**
+    * Process the keydown event.
+    * @method Phaser.Keyboard#processKeyDown
     * @param {KeyboardEvent} event
     * @protected
-    */    
+    */
     processKeyDown: function (event) {
 
         if (this.game.input.disabled || this.disabled)
@@ -278,9 +277,9 @@ Phaser.Keyboard.prototype = {
 
     },
 
-	/**
-	* Process the keyup event.
-	* @method Phaser.Keyboard#processKeyUp
+    /**
+    * Process the keyup event.
+    * @method Phaser.Keyboard#processKeyUp
     * @param {KeyboardEvent} event
     * @protected
     */
@@ -324,9 +323,9 @@ Phaser.Keyboard.prototype = {
 
     },
 
-	/**
-	* Reset the "isDown" state of all keys.
-	* @method Phaser.Keyboard#reset
+    /**
+    * Reset the "isDown" state of all keys.
+    * @method Phaser.Keyboard#reset
     */
     reset: function () {
 
@@ -390,7 +389,7 @@ Phaser.Keyboard.prototype = {
             return this._keys[keycode].isDown;
         }
 
-		return false;
+        return false;
 
     }
 

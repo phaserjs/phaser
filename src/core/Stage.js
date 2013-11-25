@@ -17,26 +17,26 @@
 Phaser.Stage = function (game, width, height) {
 
     /**
-	* @property {Phaser.Game} game - A reference to the currently running Game.
-	*/
-	this.game = game;
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
+    this.game = game;
 
     /**
-	* @property {string} game - Background color of the stage (defaults to black). Set via the public backgroundColor property.
-	* @private
-	* @default 'rgb(0,0,0)'
-	*/
+    * @property {string} game - Background color of the stage (defaults to black). Set via the public backgroundColor property.
+    * @private
+    * @default 'rgb(0,0,0)'
+    */
     this._backgroundColor = 'rgb(0,0,0)';
 
     /**
-	* @property {Phaser.Point} offset - Get the offset values (for input and other things).
-	*/
-	this.offset = new Phaser.Point;
+    * @property {Phaser.Point} offset - Get the offset values (for input and other things).
+    */
+    this.offset = new Phaser.Point();
     
     /**
     * @property {HTMLCanvasElement} canvas - Reference to the newly created &lt;canvas&gt; element.
     */
-    this.canvas = Phaser.Canvas.create(width, height); 
+    this.canvas = Phaser.Canvas.create(width, height);
     this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
     
     /**
@@ -49,7 +49,7 @@ Phaser.Stage = function (game, width, height) {
 
     /**
     * @property {number} scaleMode - The current scaleMode.
-    */    
+    */
     this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
 
     /**
@@ -126,7 +126,7 @@ Phaser.Stage.prototype = {
 
     },
 
-	/**
+    /**
     * This method is called when the document visibility is changed.
     * @method Phaser.Stage#visibilityChange
     * @param {Event} event - Its type will be used to decide whether the game should be paused or not.
@@ -138,16 +138,16 @@ Phaser.Stage.prototype = {
             return;
         }
 
-        if (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true)
+        if (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] === true || document['webkitHidden'] === true)
         {
-	        this.game.paused = true;
+            this.game.paused = true;
         }
         else
         {
-	        this.game.paused = false;
+            this.game.paused = false;
         }
 
-    },
+    }
 
 };
 

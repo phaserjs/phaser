@@ -104,7 +104,7 @@ GridBroadphase.prototype.getCollisionPairs = function(world){
             }
         } else if(si instanceof Plane){
             // Put in all bins for now
-            if(bi.angle == 0){
+            if(bi.angle === 0){
                 var y = bi.position[1];
                 for(var j=0; j!==Nbins && ymin+binsizeY*(j-1)<y; j++){
                     for(var k=0; k<nx; k++){

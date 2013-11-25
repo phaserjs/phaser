@@ -15,86 +15,86 @@
 Phaser.State = function () {
 
     /**
-	* @property {Phaser.Game} game - A reference to the currently running Game.
-	*/
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
     this.game = null;
     
-	/**
-	* @property {Phaser.GameObjectFactory} add - Reference to the GameObjectFactory.
-	* @default
-	*/
+    /**
+    * @property {Phaser.GameObjectFactory} add - Reference to the GameObjectFactory.
+    * @default
+    */
     this.add = null;
     
     /**
-	* @property {Phaser.Physics.PhysicsManager} camera - A handy reference to world.camera.
-	* @default
-	*/
+    * @property {Phaser.Camera} camera - A handy reference to world.camera.
+    * @default
+    */
     this.camera = null;
     
     /**
-	* @property {Phaser.Cache} cache - Reference to the assets cache.
-	* @default
-	*/
+    * @property {Phaser.Cache} cache - Reference to the assets cache.
+    * @default
+    */
     this.cache = null;
     
     /**
-	* @property {Phaser.Input} input - Reference to the input manager
-	* @default
-	*/
+    * @property {Phaser.Input} input - Reference to the input manager
+    * @default
+    */
     this.input = null;
     
     /**
-	* @property {Phaser.Loader} load - Reference to the assets loader.
-	* @default
-	*/
+    * @property {Phaser.Loader} load - Reference to the assets loader.
+    * @default
+    */
     this.load = null;
     
     /**
-	* @property {Phaser.Math} math - Reference to the math helper.
-	* @default
-	*/
+    * @property {Phaser.Math} math - Reference to the math helper.
+    * @default
+    */
     this.math = null;
     
     /**
-	* @property {Phaser.SoundManager} sound - Reference to the sound manager.
-	* @default
-	*/
+    * @property {Phaser.SoundManager} sound - Reference to the sound manager.
+    * @default
+    */
     this.sound = null;
     
     /**
-	* @property {Phaser.Stage} stage - Reference to the stage.
-	* @default
-	*/
+    * @property {Phaser.Stage} stage - Reference to the stage.
+    * @default
+    */
     this.stage = null;
     
     /**
-	* @property {Phaser.TimeManager} time - Reference to game clock.
-	* @default
-	*/
+    * @property {Phaser.TimeManager} time - Reference to game clock.
+    * @default
+    */
     this.time = null;
     
     /**
-	* @property {Phaser.TweenManager} tweens - Reference to the tween manager.
-	* @default
-	*/
+    * @property {Phaser.TweenManager} tweens - Reference to the tween manager.
+    * @default
+    */
     this.tweens = null;
     
     /**
-	* @property {Phaser.World} world - Reference to the world.
-	* @default
-	*/
+    * @property {Phaser.World} world - Reference to the world.
+    * @default
+    */
     this.world = null;
     
-	/**
-	* @property {Description} add - Description.
-	* @default
-	*/
+    /**
+    * @property {Phaser.Particles} particles - The Particle Manager for the game. It is called during the game update loop and in turn updates any Emitters attached to it.
+    * @default
+    */
     this.particles = null;
     
     /**
-	* @property {Phaser.Physics.PhysicsManager} physics - Reference to the physics manager.
-	* @default
-	*/
+    * @property {Phaser.Physics.PhysicsManager} physics - Reference to the physics manager.
+    * @default
+    */
     this.physics = null;
 
 };

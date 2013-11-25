@@ -432,7 +432,7 @@ Phaser.Sound.prototype = {
 
         // console.log(this.name + ' play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop, 'force', forceRestart);
 
-        if (this.isPlaying == true && forceRestart == false && this.override == false)
+        if (this.isPlaying === true && forceRestart === false && this.override === false)
         {
             //  Use Restart instead
             return;
@@ -517,7 +517,7 @@ Phaser.Sound.prototype = {
                 this._sound.connect(this.gainNode);
                 this.totalDuration = this._sound.buffer.duration;
 
-                if (this.duration == 0)
+                if (this.duration === 0)
                 {
                     // console.log('duration reset');
                     this.duration = this.totalDuration;
@@ -552,7 +552,7 @@ Phaser.Sound.prototype = {
 			{
                 this.pendingPlayback = true;
 
-                if (this.game.cache.getSound(this.key) && this.game.cache.getSound(this.key).isDecoding == false)
+                if (this.game.cache.getSound(this.key) && this.game.cache.getSound(this.key).isDecoding === false)
                 {
                     this.game.sound.decode(this.key, this);
                 }
@@ -576,7 +576,7 @@ Phaser.Sound.prototype = {
                     //  This doesn't become available until you call play(), wonderful ...
                     this.totalDuration = this._sound.duration;
 
-                    if (this.duration == 0)
+                    if (this.duration === 0)
                     {
                         this.duration = this.totalDuration;
                         this.durationMS = this.totalDuration * 1000;

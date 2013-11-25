@@ -404,7 +404,7 @@ Phaser.Physics.Arcade.prototype = {
 
         this._mapData = tilemapLayer.getTiles(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height, true);
 
-        if (this._mapData.length == 0)
+        if (this._mapData.length === 0)
         {
             return;
         }
@@ -448,12 +448,12 @@ Phaser.Physics.Arcade.prototype = {
     */
     collideGroupVsTilemapLayer: function (group, tilemapLayer, collideCallback, processCallback, callbackContext) {
 
-        if (group.length == 0)
+        if (group.length === 0)
         {
             return;
         }
 
-        if (group.length == 0)
+        if (group.length === 0)
         {
             return;
         }
@@ -521,7 +521,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext) {
 
-        if (group.length == 0)
+        if (group.length === 0)
         {
             return;
         }
@@ -563,7 +563,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext) {
 
-        if (group1.length == 0 || group2.length == 0)
+        if (group1.length === 0 || group2.length === 0)
         {
             return;
         }
@@ -620,7 +620,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             this._maxOverlap = body1.deltaAbsX() + body2.deltaAbsX() + this.OVERLAP_BIAS;
 
-            if (body1.deltaX() == 0 && body2.deltaX() == 0)
+            if (body1.deltaX() === 0 && body2.deltaX() === 0)
             {
                 //  They overlap but neither of them are moving
                 body1.embedded = true;
@@ -631,7 +631,7 @@ Phaser.Physics.Arcade.prototype = {
                 //  Body1 is moving right and/or Body2 is moving left
                 this._overlap = body1.x + body1.width - body2.x;
 
-                if ((this._overlap > this._maxOverlap) || body1.allowCollision.right == false || body2.allowCollision.left == false)
+                if ((this._overlap > this._maxOverlap) || body1.allowCollision.right === false || body2.allowCollision.left === false)
                 {
                     this._overlap = 0;
                 }
@@ -646,7 +646,7 @@ Phaser.Physics.Arcade.prototype = {
                 //  Body1 is moving left and/or Body2 is moving right
                 this._overlap = body1.x - body2.width - body2.x;
 
-                if ((-this._overlap > this._maxOverlap) || body1.allowCollision.left == false || body2.allowCollision.right == false)
+                if ((-this._overlap > this._maxOverlap) || body1.allowCollision.left === false || body2.allowCollision.right === false)
                 {
                     this._overlap = 0;
                 }
@@ -728,7 +728,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             this._maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + this.OVERLAP_BIAS;
 
-            if (body1.deltaY() == 0 && body2.deltaY() == 0)
+            if (body1.deltaY() === 0 && body2.deltaY() === 0)
             {
                 //  They overlap but neither of them are moving
                 body1.embedded = true;
@@ -739,7 +739,7 @@ Phaser.Physics.Arcade.prototype = {
                 //  Body1 is moving down and/or Body2 is moving up
                 this._overlap = body1.y + body1.height - body2.y;
 
-                if ((this._overlap > this._maxOverlap) || body1.allowCollision.down == false || body2.allowCollision.up == false)
+                if ((this._overlap > this._maxOverlap) || body1.allowCollision.down === false || body2.allowCollision.up === false)
                 {
                     this._overlap = 0;
                 }
@@ -754,7 +754,7 @@ Phaser.Physics.Arcade.prototype = {
                 //  Body1 is moving up and/or Body2 is moving down
                 this._overlap = body1.y - body2.height - body2.y;
 
-                if ((-this._overlap > this._maxOverlap) || body1.allowCollision.up == false || body2.allowCollision.down == false)
+                if ((-this._overlap > this._maxOverlap) || body1.allowCollision.up === false || body2.allowCollision.down === false)
                 {
                     this._overlap = 0;
                 }
@@ -852,7 +852,7 @@ Phaser.Physics.Arcade.prototype = {
     separateTileX: function (body, tile, separate) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
-        if (body.immovable || body.deltaX() == 0 || Phaser.Rectangle.intersects(body.hullX, tile) == false)
+        if (body.immovable || body.deltaX() === 0 || Phaser.Rectangle.intersects(body.hullX, tile) === false)
         {
             return false;
         }
@@ -867,8 +867,8 @@ Phaser.Physics.Arcade.prototype = {
             //  Moving left
             this._overlap = tile.right - body.hullX.x;
 
-            // if ((this._overlap > this._maxOverlap) || body.allowCollision.left == false || tile.tile.collideRight == false)
-            if (body.allowCollision.left == false || tile.tile.collideRight == false)
+            // if ((this._overlap > this._maxOverlap) || body.allowCollision.left === false || tile.tile.collideRight === false)
+            if (body.allowCollision.left === false || tile.tile.collideRight === false)
             {
                 this._overlap = 0;
             }
@@ -882,8 +882,8 @@ Phaser.Physics.Arcade.prototype = {
             //  Moving right
             this._overlap = body.hullX.right - tile.x;
 
-            // if ((this._overlap > this._maxOverlap) || body.allowCollision.right == false || tile.tile.collideLeft == false)
-            if (body.allowCollision.right == false || tile.tile.collideLeft == false)
+            // if ((this._overlap > this._maxOverlap) || body.allowCollision.right === false || tile.tile.collideLeft === false)
+            if (body.allowCollision.right === false || tile.tile.collideLeft === false)
             {
                 this._overlap = 0;
             }
@@ -907,7 +907,7 @@ Phaser.Physics.Arcade.prototype = {
                     body.x = body.x - this._overlap;
                 }
 
-                if (body.bounce.x == 0)
+                if (body.bounce.x === 0)
                 {
                     body.velocity.x = 0;
                 }
@@ -938,7 +938,7 @@ Phaser.Physics.Arcade.prototype = {
     separateTileY: function (body, tile, separate) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
-        if (body.immovable || body.deltaY() == 0 || Phaser.Rectangle.intersects(body.hullY, tile) == false)
+        if (body.immovable || body.deltaY() === 0 || Phaser.Rectangle.intersects(body.hullY, tile) === false)
         {
             return false;
         }
@@ -953,8 +953,8 @@ Phaser.Physics.Arcade.prototype = {
             //  Moving up
             this._overlap = tile.bottom - body.hullY.y;
 
-            // if ((this._overlap > this._maxOverlap) || body.allowCollision.up == false || tile.tile.collideDown == false)
-            if (body.allowCollision.up == false || tile.tile.collideDown == false)
+            // if ((this._overlap > this._maxOverlap) || body.allowCollision.up === false || tile.tile.collideDown === false)
+            if (body.allowCollision.up === false || tile.tile.collideDown === false)
             {
                 this._overlap = 0;
             }
@@ -968,8 +968,8 @@ Phaser.Physics.Arcade.prototype = {
             //  Moving down
             this._overlap = body.hullY.bottom - tile.y;
 
-            // if ((this._overlap > this._maxOverlap) || body.allowCollision.down == false || tile.tile.collideUp == false)
-            if (body.allowCollision.down == false || tile.tile.collideUp == false)
+            // if ((this._overlap > this._maxOverlap) || body.allowCollision.down === false || tile.tile.collideUp === false)
+            if (body.allowCollision.down === false || tile.tile.collideUp === false)
             {
                 this._overlap = 0;
             }
@@ -993,7 +993,7 @@ Phaser.Physics.Arcade.prototype = {
                     body.y = body.y - this._overlap;
                 }
 
-                if (body.bounce.y == 0)
+                if (body.bounce.y === 0)
                 {
                     body.velocity.y = 0;
                 }

@@ -101,7 +101,7 @@ Phaser.SoundManager.prototype = {
     */
     boot: function () {
 
-        if (this.game.device.iOS && this.game.device.webAudio == false)
+        if (this.game.device.iOS && this.game.device.webAudio === false)
         {
             this.channels = 1;
         }
@@ -123,7 +123,7 @@ Phaser.SoundManager.prototype = {
         if (window['PhaserGlobal'])
         {
             //  Check to see if all audio playback is disabled (i.e. handled by a 3rd party class)
-            if (window['PhaserGlobal'].disableAudio == true)
+            if (window['PhaserGlobal'].disableAudio === true)
             {
                 this.usingWebAudio = false;
                 this.noAudio = true;
@@ -131,7 +131,7 @@ Phaser.SoundManager.prototype = {
             }
 
             //  Check if the Web Audio API is disabled (for testing Audio Tag playback during development)
-            if (window['PhaserGlobal'].disableWebAudio == true)
+            if (window['PhaserGlobal'].disableWebAudio === true)
             {
                 this.usingWebAudio = false;
                 this.usingAudioTag = true;
@@ -183,13 +183,13 @@ Phaser.SoundManager.prototype = {
     */
     unlock: function () {
 
-        if (this.touchLocked == false)
+        if (this.touchLocked === false)
         {
             return;
         }
 
         //  Global override (mostly for Audio Tag testing)
-        if (this.game.device.webAudio == false || (window['PhaserGlobal'] && window['PhaserGlobal'].disableWebAudio == true))
+        if (this.game.device.webAudio === false || (window['PhaserGlobal'] && window['PhaserGlobal'].disableWebAudio === true))
         {
             //  Create an Audio tag?
             this.touchLocked = false;
@@ -404,7 +404,7 @@ Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
         }
         else
         {
-            if (this._muted == false)
+            if (this._muted === false)
             {
                 return;
             }

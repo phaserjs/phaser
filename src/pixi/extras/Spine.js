@@ -296,7 +296,7 @@ spine.Animation.prototype = {
 spine.binarySearch = function (values, target, step) {
 	var low = 0;
 	var high = Math.floor(values.length / step) - 2;
-	if (high == 0) return step;
+	if (high === 0) return step;
 	var current = high >>> 1;
 	while (true) {
 		if (values[(current + 1) * step] <= target)
@@ -368,7 +368,7 @@ spine.Curves.prototype = {
 				var lastY = y - dfy;
 				return lastY + (y - lastY) * (percent - lastX) / (x - lastX);
 			}
-			if (i == 0) break;
+			if (i === 0) break;
 			i--;
 			dfx += ddfx;
 			dfy += ddfy;
@@ -711,7 +711,7 @@ spine.Skeleton.prototype = {
 	},
 	/** @return May return null. */
 	getRootBone: function () {
-		return this.bones.length == 0 ? null : this.bones[0];
+		return this.bones.length === 0 ? null : this.bones[0];
 	},
 	/** @return May be null. */
 	findBone: function (boneName) {
@@ -983,7 +983,7 @@ spine.AnimationState.prototype = {
 		entry.loop = loop;
 
 		if (!delay || delay <= 0) {
-			var previousAnimation = this.queue.length == 0 ? this.current : this.queue[this.queue.length - 1].animation;
+			var previousAnimation = this.queue.length === 0 ? this.current : this.queue[this.queue.length - 1].animation;
 			if (previousAnimation != null)
 				delay = previousAnimation.duration - this.data.getMix(previousAnimation, animation) + (delay || 0);
 			else
@@ -1232,7 +1232,7 @@ spine.Atlas = function (atlasText, textureLoader) {
 		var line = reader.readLine();
 		if (line == null) break;
 		line = reader.trim(line);
-		if (line.length == 0)
+		if (line.length === 0)
 			page = null;
 		else if (!page) {
 			page = new spine.AtlasPage();
@@ -1421,7 +1421,7 @@ spine.AtlasReader.prototype = {
 		for (; i < 3; i++) {
 			var comma = line.indexOf(",", lastMatch);
 			if (comma == -1) {
-				if (i == 0) throw "Invalid line: " + line;
+				if (i === 0) throw "Invalid line: " + line;
 				break;
 			}
 			tuple[i] = this.trim(line.substr(lastMatch, comma - lastMatch));

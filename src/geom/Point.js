@@ -11,20 +11,20 @@
 * @constructor
 * @param {number} x The horizontal position of this Point (default 0)
 * @param {number} y The vertical position of this Point (default 0)
-**/
+*/
 Phaser.Point = function (x, y) {
 
     x = x || 0;
     y = y || 0;
 
     /**
-     * @property {number} x - The x coordinate of the point.
-     **/
+    * @property {number} x - The x coordinate of the point.
+    */
     this.x = x;
     
     /**
-     * @property {number} y - The y coordinate of the point.
-     **/
+    * @property {number} y - The y coordinate of the point.
+    */
     this.y = y;
 
 };
@@ -36,7 +36,7 @@ Phaser.Point.prototype = {
     * @method Phaser.Point#copyFrom
     * @param {any} source - The object to copy from.
     * @return {Point} This Point object.
-    **/
+    */
     copyFrom: function (source) {
         return this.setTo(source.x, source.y);
     },
@@ -45,7 +45,7 @@ Phaser.Point.prototype = {
     * Inverts the x and y values of this Point
     * @method Phaser.Point#invert
     * @return {Point} This Point object.
-    **/
+    */
     invert: function () {
         return this.setTo(this.y, this.x);
     },
@@ -56,7 +56,7 @@ Phaser.Point.prototype = {
     * @param {number} x - The horizontal position of this point.
     * @param {number} y - The vertical position of this point.
     * @return {Point} This Point object. Useful for chaining method calls.
-    **/        
+    */
     setTo: function (x, y) {
 
         this.x = x;
@@ -71,7 +71,7 @@ Phaser.Point.prototype = {
     * @param {number} x - The value to add to Point.x.
     * @param {number} y - The value to add to Point.y.
     * @return {Phaser.Point} This Point object. Useful for chaining method calls.
-    **/        
+    */
     add: function (x, y) {
 
         this.x += x;
@@ -86,7 +86,7 @@ Phaser.Point.prototype = {
     * @param {number} x - The value to subtract from Point.x.
     * @param {number} y - The value to subtract from Point.y.
     * @return {Phaser.Point} This Point object. Useful for chaining method calls.
-    **/        
+    */
     subtract: function (x, y) {
 
         this.x -= x;
@@ -101,7 +101,7 @@ Phaser.Point.prototype = {
     * @param {number} x - The value to multiply Point.x by.
     * @param {number} y - The value to multiply Point.x by.
     * @return {Phaser.Point} This Point object. Useful for chaining method calls.
-    **/        
+    */
     multiply: function (x, y) {
 
         this.x *= x;
@@ -116,7 +116,7 @@ Phaser.Point.prototype = {
     * @param {number} x - The value to divide Point.x by.
     * @param {number} y - The value to divide Point.x by.
     * @return {Phaser.Point} This Point object. Useful for chaining method calls.
-    **/        
+    */
     divide: function (x, y) {
 
         this.x /= x;
@@ -176,20 +176,10 @@ Phaser.Point.prototype = {
     */
     clone: function (output) {
 
-        if (typeof output === "undefined") { output = new Phaser.Point; }
+        if (typeof output === "undefined") { output = new Phaser.Point(); }
 
         return output.setTo(this.x, this.y);
 
-    },
-
-    /**
-    * Copies the x and y properties from any given object to this Point.
-    * @method Phaser.Point#copyFrom
-    * @param {any} source - The object to copy from.
-    * @return {Point} This Point object.
-    **/
-    copyFrom: function (source) {
-        return this.setTo(source.x, source.y);
     },
 
     /**
@@ -197,11 +187,11 @@ Phaser.Point.prototype = {
     * @method Phaser.Point#copyTo
     * @param {any} dest - The object to copy to.
     * @return {Object} The dest object.
-    **/
+    */
     copyTo: function(dest) {
 
-        dest[x] = this.x;
-        dest[y] = this.y;
+        dest.x = this.x;
+        dest.y = this.y;
 
         return dest;
 
@@ -291,7 +281,7 @@ Phaser.Point.prototype = {
     * Returns a string representation of this object.
     * @method Phaser.Point#toString
     * @return {string} A string representation of the instance.
-    **/
+    */
     toString: function () {
         return '[{Point (x=' + this.x + ' y=' + this.y + ')}]';
     }
@@ -406,7 +396,7 @@ Phaser.Point.distance = function (a, b, round) {
         return Phaser.Math.distance(a.x, a.y, b.x, b.y);
     }
 
-},
+};
 
 /**
 * Rotates a Point around the x/y coordinates given to the desired angle.

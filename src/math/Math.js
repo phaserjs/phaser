@@ -134,7 +134,7 @@ Phaser.Math = {
 
         if (typeof start === "undefined") { start = 0; }
 
-        if (gap == 0) {
+        if (gap === 0) {
             return input;
         }
 
@@ -160,7 +160,7 @@ Phaser.Math = {
 
         if (typeof start === "undefined") { start = 0; }
 
-        if (gap == 0) {
+        if (gap === 0) {
             return input;
         }
 
@@ -186,7 +186,7 @@ Phaser.Math = {
 
         if (typeof start === "undefined") { start = 0; }
 
-        if (gap == 0) {
+        if (gap === 0) {
             return input;
         }
 
@@ -238,7 +238,7 @@ Phaser.Math = {
 	* e.g.
 	* 2000/7 ~= 285.714285714285714285714 ~= (bin)100011101.1011011011011011
 	*
-	* roundTo(2000/7,3) == 0
+	* roundTo(2000/7,3) === 0
 	* roundTo(2000/7,2) == 300
 	* roundTo(2000/7,1) == 290
 	* roundTo(2000/7,0) == 286
@@ -844,7 +844,7 @@ Phaser.Math = {
 
             var l = length;
 
-            if ((l == 0) || (l > objects.length - startIndex))
+            if ((l === 0) || (l > objects.length - startIndex))
             {
                 l = objects.length - startIndex;
             }
@@ -972,7 +972,7 @@ Phaser.Math = {
     * @param {number} x2
     * @param {number} y2
     * @return {number} The distance between this Point object and the destination Point object.
-    **/
+    */
     distance: function (x1, y1, x2, y2) {
 
         var dx = x1 - x2;
@@ -991,7 +991,7 @@ Phaser.Math = {
     * @param {number} x2
     * @param {number} y2
     * @return {number} The distance between this Point object and the destination Point object.
-    **/
+    */
     distanceRounded: function (x1, y1, x2, y2) {
 
     	return Math.round(Phaser.Math.distance(x1, y1, x2, y2));

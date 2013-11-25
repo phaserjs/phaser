@@ -166,7 +166,7 @@ PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
 				updateLast = updateLast.parent;
 			}
 		}
-		else if(index == 0)
+		else if(index === 0)
 		{
 			previousObject = this;
 		}

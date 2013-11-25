@@ -13,87 +13,87 @@
 */
 Phaser.Key = function (game, keycode) {
 
-	/**
-	* @property {Phaser.Game} game - A reference to the currently running game. 
-	*/
-	this.game = game;
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game. 
+    */
+    this.game = game;
 
-	/**
-	* @property {boolean} isDown - The "down" state of the key.
-	* @default
-	*/
-	this.isDown = false;
+    /**
+    * @property {boolean} isDown - The "down" state of the key.
+    * @default
+    */
+    this.isDown = false;
 
-	/**
-	* @property {boolean} isUp - The "up" state of the key.
-	* @default
-	*/
-	this.isUp = false;
+    /**
+    * @property {boolean} isUp - The "up" state of the key.
+    * @default
+    */
+    this.isUp = false;
 
-	/**
-	* @property {boolean} altKey - The down state of the ALT key, if pressed at the same time as this key.
-	* @default
-	*/
-	this.altKey = false;
+    /**
+    * @property {boolean} altKey - The down state of the ALT key, if pressed at the same time as this key.
+    * @default
+    */
+    this.altKey = false;
 
-	/**
-	* @property {boolean} ctrlKey - The down state of the CTRL key, if pressed at the same time as this key.
-	* @default
-	*/
-	this.ctrlKey = false;
+    /**
+    * @property {boolean} ctrlKey - The down state of the CTRL key, if pressed at the same time as this key.
+    * @default
+    */
+    this.ctrlKey = false;
 
-	/**
-	* @property {boolean} shiftKey - The down state of the SHIFT key, if pressed at the same time as this key.
-	* @default
-	*/
-	this.shiftKey = false;
+    /**
+    * @property {boolean} shiftKey - The down state of the SHIFT key, if pressed at the same time as this key.
+    * @default
+    */
+    this.shiftKey = false;
 
-	/**
-	* @property {number} timeDown - The timestamp when the key was last pressed down.
-	* @default
-	*/
-	this.timeDown = 0;
+    /**
+    * @property {number} timeDown - The timestamp when the key was last pressed down.
+    * @default
+    */
+    this.timeDown = 0;
 
-	/**
-	* If the key is down this value holds the duration of that key press and is constantly updated.
-	* If the key is up it holds the duration of the previous down session.
-	* @property {number} duration - The number of milliseconds this key has been held down for.
-	* @default
-	*/
-	this.duration = 0;
+    /**
+    * If the key is down this value holds the duration of that key press and is constantly updated.
+    * If the key is up it holds the duration of the previous down session.
+    * @property {number} duration - The number of milliseconds this key has been held down for.
+    * @default
+    */
+    this.duration = 0;
 
-	/**
-	* @property {number} timeUp - The timestamp when the key was last released.
-	* @default
-	*/
-	this.timeUp = 0;
+    /**
+    * @property {number} timeUp - The timestamp when the key was last released.
+    * @default
+    */
+    this.timeUp = 0;
 
-	/**
-	* @property {number} repeats - If a key is held down this holds down the number of times the key has 'repeated'.
-	* @default
-	*/
-	this.repeats = 0;
+    /**
+    * @property {number} repeats - If a key is held down this holds down the number of times the key has 'repeated'.
+    * @default
+    */
+    this.repeats = 0;
 
-	/**
-	* @property {number} keyCode - The keycode of this key.
-	*/
-	this.keyCode = keycode;
+    /**
+    * @property {number} keyCode - The keycode of this key.
+    */
+    this.keyCode = keycode;
 
-	/**
-	* @property {Phaser.Signal} onDown - This Signal is dispatched every time this Key is pressed down. It is only dispatched once (until the key is released again).
-	*/
+    /**
+    * @property {Phaser.Signal} onDown - This Signal is dispatched every time this Key is pressed down. It is only dispatched once (until the key is released again).
+    */
     this.onDown = new Phaser.Signal();
 
-	/**
-	* @property {Phaser.Signal} onUp - This Signal is dispatched every time this Key is pressed down. It is only dispatched once (until the key is released again).
-	*/
+    /**
+    * @property {Phaser.Signal} onUp - This Signal is dispatched every time this Key is pressed down. It is only dispatched once (until the key is released again).
+    */
     this.onUp = new Phaser.Signal();
-	
+    
 };
 
 Phaser.Key.prototype = {
 
-	/**
+    /**
     * Called automatically by Phaser.Keyboard.
     * @method Phaser.Key#processKeyDown
     * @param {KeyboardEvent} event.
@@ -124,7 +124,7 @@ Phaser.Key.prototype = {
 
     },
 
-	/**
+    /**
     * Called automatically by Phaser.Keyboard.
     * @method Phaser.Key#processKeyUp
     * @param {KeyboardEvent} event.
@@ -140,8 +140,8 @@ Phaser.Key.prototype = {
 
     },
 
-	/**
-	* Returns the "just pressed" state of the Key. Just pressed is considered true if the key was pressed down within the duration given (default 250ms)
+    /**
+    * Returns the "just pressed" state of the Key. Just pressed is considered true if the key was pressed down within the duration given (default 250ms)
     * @method Phaser.Key#justPressed
     * @param {number} [duration=250] - The duration below which the key is considered as being just pressed.
     * @return {boolean} True if the key is just pressed otherwise false.
@@ -154,8 +154,8 @@ Phaser.Key.prototype = {
 
     },
 
-	/**
-	* Returns the "just released" state of the Key. Just released is considered as being true if the key was released within the duration given (default 250ms)
+    /**
+    * Returns the "just released" state of the Key. Just released is considered as being true if the key was released within the duration given (default 250ms)
     * @method Phaser.Key#justPressed
     * @param {number} [duration=250] - The duration below which the key is considered as being just released.
     * @return {boolean} True if the key is just released otherwise false.
@@ -164,7 +164,7 @@ Phaser.Key.prototype = {
 
         if (typeof duration === "undefined") { duration = 250; }
 
-        return (this.isDown == false && (this.game.time.now - this.timeUp < duration));
+        return (this.isDown === false && (this.game.time.now - this.timeUp < duration));
 
     }
 

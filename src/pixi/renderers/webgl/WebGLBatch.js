@@ -9,7 +9,7 @@ PIXI._batchs = [];
  */
 PIXI._getBatch = function(gl)
 {
-	if(PIXI._batchs.length == 0)
+	if(PIXI._batchs.length === 0)
 	{
 		return new PIXI.WebGLBatch(gl);
 	}
@@ -189,7 +189,7 @@ PIXI.WebGLBatch.prototype.remove = function(sprite)
 {
 	this.size--;
 
-	if(this.size == 0)
+	if(this.size === 0)
 	{
 		sprite.batch = null;
 		sprite.__prev = null;
@@ -522,7 +522,7 @@ PIXI.WebGLBatch.prototype.render = function(start, end)
 		this.dirty = false;
 	}
 
-	if (this.size == 0)return;
+	if (this.size === 0)return;
 
 	this.update();
 	var gl = this.gl;

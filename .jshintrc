@@ -35,7 +35,7 @@
   "eqnull"        : true,   // Tolerate use of `== null`.
   "evil"          : false,   // Tolerate use of `eval`.
   "expr"          : false,   // Tolerate `ExpressionStatement` as Programs.
-  "forin"         : true,   // Tolerate `for in` loops without `hasOwnPrototype`.
+  "forin"         : false,   // Tolerate `for in` loops without `hasOwnPrototype`.
   "freeze"        : true,  // Prohibits overwriting prototypes of native objects such as Array and Date.
   "funcscope"     : true,   // This option suppresses warnings about declaring variables inside of control structures while accessing them later from the outside.
   "immed"         : false,  // Require immediate invocations to be wrapped in parens e.g. `( function(){}() );`
@@ -69,7 +69,7 @@
   "noempty"       : true,   // Prohibit use of empty blocks.
   "nonew"         : true,   // Prohibit use of constructors for side-effects.
   "plusplus"      : false,  // Prohibit use of `++` & `--`.
-  "quotmark"      : true,   // This option enforces the consistency of quotation marks used throughout your code.
+  "quotmark"      : false,   // This option enforces the consistency of quotation marks used throughout your code.
   "sub"           : true,   // Tolerate all forms of subscript notation besides dot notation e.g. `dict['key']` instead of `dict.key`.
   "trailing"      : true    // Prohibit trailing whitespaces.
 }

@@ -25,33 +25,33 @@
 Phaser.SignalBinding = function (signal, listener, isOnce, listenerContext, priority) {
 
     /**
-	* @property {Phaser.Game} _listener - Handler function bound to the signal.
-	* @private
-	*/
+    * @property {Phaser.Game} _listener - Handler function bound to the signal.
+    * @private
+    */
     this._listener = listener;
 
     /**
-	* @property {boolean} _isOnce - If binding should be executed just once.
-	* @private
-	*/
+    * @property {boolean} _isOnce - If binding should be executed just once.
+    * @private
+    */
     this._isOnce = isOnce;
 
     /**
-	* @property {object|undefined|null} context - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-	* @memberof SignalBinding.prototype
-	*/
+    * @property {object|undefined|null} context - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+    * @memberof SignalBinding.prototype
+    */
     this.context = listenerContext;
 
     /**
-	* @property {Signal} _signal - Reference to Signal object that listener is currently bound to.
-	* @private
-	*/
+    * @property {Signal} _signal - Reference to Signal object that listener is currently bound to.
+    * @private
+    */
     this._signal = signal;
 
     /**
-	* @property {number} _priority - Listener priority.
-	* @private
-	*/
+    * @property {number} _priority - Listener priority.
+    * @private
+    */
     this._priority = priority || 0;
 
 };
@@ -62,7 +62,7 @@ Phaser.SignalBinding.prototype = {
     * If binding is active and should be executed.
     * @property {boolean} active
     * @default
-    */ 
+    */
     active: true,
 
     /**

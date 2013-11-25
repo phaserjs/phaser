@@ -167,7 +167,7 @@ function Body(options){
      *     var kinematicBody = new Body();
      *     kinematicBody.motionState = Body.KINEMATIC;
      */
-    this.motionState = this.mass == 0 ? Body.STATIC : Body.DYNAMIC;
+    this.motionState = this.mass === 0 ? Body.STATIC : Body.DYNAMIC;
 
     /**
      * Bounding circle radius

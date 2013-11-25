@@ -111,7 +111,7 @@ PIXI.WebGLRenderer.prototype.constructor = PIXI.WebGLRenderer;
  */
 PIXI.WebGLRenderer.getBatch = function()
 {
-	if(PIXI._batchs.length == 0)
+	if(PIXI._batchs.length === 0)
 	{
 		return new PIXI.WebGLBatch(PIXI.WebGLRenderer.gl);
 	}

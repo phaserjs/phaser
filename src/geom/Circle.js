@@ -13,7 +13,7 @@
 * @param {number} [y] The y coordinate of the center of the circle.
 * @param {number} [diameter] The diameter of the circle.
 * @return {Phaser.Circle} This circle object
-**/
+*/
 Phaser.Circle = function (x, y, diameter) {
 
     x = x || 0;
@@ -22,26 +22,26 @@ Phaser.Circle = function (x, y, diameter) {
 
     /**
     * @property {number} x - The x coordinate of the center of the circle.
-    **/
+    */
     this.x = x;
 
     /**
     * @property {number} y - The y coordinate of the center of the circle.
-    **/
+    */
     this.y = y;
 
     /**
     * @property {number} _diameter - The diameter of the circle.
     * @private
-    **/
+    */
     this._diameter = diameter;
 
     if (diameter > 0)
     {
-    	/**
-    	* @property {number} _radius - The radius of the circle.
-    	* @private
-        **/
+        /**
+        * @property {number} _radius - The radius of the circle.
+        * @private
+        */
         this._radius = diameter * 0.5;
     }
     else
@@ -57,7 +57,7 @@ Phaser.Circle.prototype = {
     * The circumference of the circle.
     * @method Phaser.Circle#circumference
     * @return {number}
-    **/
+    */
     circumference: function () {
         return 2 * (Math.PI * this._radius);
     },
@@ -69,7 +69,7 @@ Phaser.Circle.prototype = {
     * @param {number} y - The y coordinate of the center of the circle.
     * @param {number} diameter - The diameter of the circle in pixels.
     * @return {Circle} This circle object.
-    **/
+    */
     setTo: function (x, y, diameter) {
         this.x = x;
         this.y = y;
@@ -83,7 +83,7 @@ Phaser.Circle.prototype = {
     * @method Phaser.Circle#copyFrom
     * @param {any} source - The object to copy from.
     * @return {Circle} This Circle object.
-    **/
+    */
     copyFrom: function (source) {
         return this.setTo(source.x, source.y, source.diameter);
     },
@@ -93,11 +93,11 @@ Phaser.Circle.prototype = {
     * @method Phaser.Circle#copyTo
     * @param {any} dest - The object to copy to.
     * @return {Object} This dest object.
-    **/
+    */
     copyTo: function(dest) {
-        dest[x] = this.x;
-        dest[y] = this.y;
-        dest[diameter] = this._diameter;
+        dest.x = this.x;
+        dest.y = this.y;
+        dest.diameter = this._diameter;
         return dest;
     },
 
@@ -134,7 +134,7 @@ Phaser.Circle.prototype = {
 
         if (typeof out === "undefined") { out = new Phaser.Circle(); }
 
-        return out.setTo(a.x, a.y, a.diameter);
+        return out.setTo(this.x, this.y, this.diameter);
 
     },
 
@@ -167,7 +167,7 @@ Phaser.Circle.prototype = {
     * @param {number} dx - Moves the x value of the Circle object by this amount.
     * @param {number} dy - Moves the y value of the Circle object by this amount.
     * @return {Circle} This Circle object.
-    **/
+    */
     offset: function (dx, dy) {
         this.x += dx;
         this.y += dy;
@@ -179,7 +179,7 @@ Phaser.Circle.prototype = {
     * @method Phaser.Circle#offsetPoint
     * @param {Point} point A Point object to use to offset this Circle object (or any valid object with exposed x and y properties).
     * @return {Circle} This Circle object.
-    **/
+    */
     offsetPoint: function (point) {
         return this.offset(point.x, point.y);
     },
@@ -188,7 +188,7 @@ Phaser.Circle.prototype = {
     * Returns a string representation of this object.
     * @method Phaser.Circle#toString
     * @return {string} a string representation of the instance.
-    **/
+    */
     toString: function () {
         return "[{Phaser.Circle (x=" + this.x + " y=" + this.y + " diameter=" + this.diameter + " radius=" + this.radius + ")}]";
     }
@@ -351,11 +351,16 @@ Object.defineProperty(Phaser.Circle.prototype, "area", {
 Object.defineProperty(Phaser.Circle.prototype, "empty", {
 
     get: function () {
-        return (this._diameter == 0);
+        return (this._diameter === 0);
     },
 
     set: function (value) {
-        this.setTo(0, 0, 0);
+
+        if (value === true)
+        {
+            this.setTo(0, 0, 0);
+        }
+
     }
 
 });

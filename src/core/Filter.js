@@ -16,9 +16,9 @@
 */
 Phaser.Filter = function (game, uniforms, fragmentSrc) {
 
-	/**
-	* @property {Phaser.Game} game - A reference to the currently running game.
-	*/
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game.
+    */
     this.game = game;
 
     /**
@@ -86,7 +86,7 @@ Phaser.Filter.prototype = {
             this.uniforms.mouse.y = pointer.y;
         }
 
-        this.uniforms.time.value = this.game.time.totalElapsedSeconds(); 
+        this.uniforms.time.value = this.game.time.totalElapsedSeconds();
 
     },
 

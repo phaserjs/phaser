@@ -15,70 +15,102 @@
 Phaser.Touch = function (game) {
 
     /**
-    * @property {Phaser.Game} game - Local reference to game.
+    * @property {Phaser.Game} game - A reference to the currently running game.
     */
     this.game = game;
     
     /**
-    * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-    * @method Phaser.Touch#disabled
+    * @property {boolean} disabled - You can disable all Touch events by setting disabled = true. While set all new touch events will be ignored.
     * @return {boolean}
     */
     this.disabled = false;
 
     /**
-    * @property {Phaser.Game} callbackContext - Description.
+    * @property {Object} callbackContext - The context under which callbacks are called.
     */
     this.callbackContext = this.game;
 
     /**
-    * @property {Phaser.Game} touchStartCallback - Description.
-    * @default
+    * @property {function} touchStartCallback - A callback that can be fired on a touchStart event.
     */
     this.touchStartCallback = null;
     
     /**
-    * @property {Phaser.Game} touchMoveCallback - Description.
-    * @default
+    * @property {function} touchMoveCallback - A callback that can be fired on a touchMove event.
     */
     this.touchMoveCallback = null;
     
     /**
-    * @property {Phaser.Game} touchEndCallback - Description.
-    * @default
+    * @property {function} touchEndCallback - A callback that can be fired on a touchEnd event.
     */
     this.touchEndCallback = null;
     
     /**
-    * @property {Phaser.Game} touchEnterCallback - Description.
-    * @default
+    * @property {function} touchEnterCallback - A callback that can be fired on a touchEnter event.
     */
     this.touchEnterCallback = null;
     
     /**
-    * @property {Phaser.Game} touchLeaveCallback - Description.
-    * @default
+    * @property {function} touchLeaveCallback - A callback that can be fired on a touchLeave event.
     */
     this.touchLeaveCallback = null;
     
     /**
-    * @property {Description} touchCancelCallback - Description.
-    * @default
+    * @property {function} touchCancelCallback - A callback that can be fired on a touchCancel event.
     */
     this.touchCancelCallback = null;
     
     /**
-    * @property {boolean} preventDefault - Description.
+    * @property {boolean} preventDefault - If true the TouchEvent will have prevent.default called on it.
     * @default
     */
     this.preventDefault = true;
 
+    /**
+    * @property {TouchEvent} event - The browser touch event.
+    */
+    this.event = null;
+
+    /**
+    * @property {function} _onTouchStart - Internal event handler reference.
+    * @private
+    */
     this._onTouchStart = null;
+
+    /**
+    * @property {function} _onTouchMove - Internal event handler reference.
+    * @private
+    */
     this._onTouchMove = null;
+
+    /**
+    * @property {function} _onTouchEnd - Internal event handler reference.
+    * @private
+    */
     this._onTouchEnd = null;
+
+    /**
+    * @property {function} _onTouchEnter - Internal event handler reference.
+    * @private
+    */
     this._onTouchEnter = null;
+
+    /**
+    * @property {function} _onTouchLeave - Internal event handler reference.
+    * @private
+    */
     this._onTouchLeave = null;
+
+    /**
+    * @property {function} _onTouchCancel - Internal event handler reference.
+    * @private
+    */
     this._onTouchCancel = null;
+
+    /**
+    * @property {function} _onTouchMove - Internal event handler reference.
+    * @private
+    */
     this._onTouchMove = null;
 
 };
@@ -144,11 +176,13 @@ Phaser.Touch.prototype = {
     },
 
     /**
-    * Description.
+    * The internal method that handles the touchstart event from the browser.
     * @method Phaser.Touch#onTouchStart
-    * @param {Any} event
+    * @param {TouchEvent} event - The native event from the browser. This gets stored in Touch.event.
     */
     onTouchStart: function (event) {
+
+        this.event = event;
 
         if (this.touchStartCallback)
         {
@@ -179,9 +213,11 @@ Phaser.Touch.prototype = {
     * Touch cancel - touches that were disrupted (perhaps by moving into a plugin or browser chrome).
     * Occurs for example on iOS when you put down 4 fingers and the app selector UI appears.
     * @method Phaser.Touch#onTouchCancel
-    * @param {Any} event
+    * @param {TouchEvent} event - The native event from the browser. This gets stored in Touch.event.
     */
     onTouchCancel: function (event) {
+
+        this.event = event;
 
         if (this.touchCancelCallback)
         {
@@ -211,9 +247,11 @@ Phaser.Touch.prototype = {
     * For touch enter and leave its a list of the touch points that have entered or left the target.
     * Doesn't appear to be supported by most browsers on a canvas element yet.
     * @method Phaser.Touch#onTouchEnter
-    * @param {Any} event
+    * @param {TouchEvent} event - The native event from the browser. This gets stored in Touch.event.
     */
     onTouchEnter: function (event) {
+
+        this.event = event;
 
         if (this.touchEnterCallback)
         {
@@ -230,10 +268,12 @@ Phaser.Touch.prototype = {
             event.preventDefault();
         }
 
+        /*
         for (var i = 0; i < event.changedTouches.length; i++)
         {
             //console.log('touch enter');
         }
+        */
 
     },
 
@@ -241,9 +281,11 @@ Phaser.Touch.prototype = {
     * For touch enter and leave its a list of the touch points that have entered or left the target.
     * Doesn't appear to be supported by most browsers on a canvas element yet.
     * @method Phaser.Touch#onTouchLeave
-    * @param {Any} event
-    */    
+    * @param {TouchEvent} event - The native event from the browser. This gets stored in Touch.event.
+    */
     onTouchLeave: function (event) {
+
+        this.event = event;
 
         if (this.touchLeaveCallback)
         {
@@ -255,19 +297,23 @@ Phaser.Touch.prototype = {
             event.preventDefault();
         }
 
+        /*
         for (var i = 0; i < event.changedTouches.length; i++)
         {
             //console.log('touch leave');
         }
+        */
 
     },
 
     /**
-    * Description.
+    * The handler for the touchmove events.
     * @method Phaser.Touch#onTouchMove
-    * @param {Any} event
+    * @param {TouchEvent} event - The native event from the browser. This gets stored in Touch.event.
     */
     onTouchMove: function (event) {
+
+        this.event = event;
 
         if (this.touchMoveCallback)
         {
@@ -287,11 +333,13 @@ Phaser.Touch.prototype = {
     },
 
     /**
-    * Description.
+    * The handler for the touchend events.
     * @method Phaser.Touch#onTouchEnd
-    * @param {Any} event
+    * @param {TouchEvent} event - The native event from the browser. This gets stored in Touch.event.
     */
     onTouchEnd: function (event) {
+
+        this.event = event;
 
         if (this.touchEndCallback)
         {

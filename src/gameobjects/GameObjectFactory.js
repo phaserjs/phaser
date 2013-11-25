@@ -14,14 +14,14 @@
 Phaser.GameObjectFactory = function (game) {
 
     /**
-	* @property {Phaser.Game} game - A reference to the currently running Game.
-	*/
-	this.game = game;
-	
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
+    this.game = game;
+    
     /**
-	* @property {Phaser.World} world - A reference to the game world.
-	*/
-	this.world = this.game.world;
+    * @property {Phaser.World} world - A reference to the game world.
+    */
+    this.world = this.game.world;
 
 };
 
@@ -39,7 +39,7 @@ Phaser.GameObjectFactory.prototype = {
 
     },
 
-	/**
+    /**
     * Create a new Sprite with specific position and sprite sheet key.
     *
     * @method Phaser.GameObjectFactory#sprite

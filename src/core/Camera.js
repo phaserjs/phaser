@@ -19,35 +19,35 @@
 */
 Phaser.Camera = function (game, id, x, y, width, height) {
     
-	/**
-	* @property {Phaser.Game} game - A reference to the currently running Game.
-	*/
-	this.game = game;
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
+    this.game = game;
 
-	/**
-	* @property {Phaser.World} world - A reference to the game world.
-	*/
-	this.world = game.world;
+    /**
+    * @property {Phaser.World} world - A reference to the game world.
+    */
+    this.world = game.world;
 
-	/**
-	* @property {number} id - Reserved for future multiple camera set-ups.
-	* @default
-	*/
-	this.id = 0; 
+    /**
+    * @property {number} id - Reserved for future multiple camera set-ups.
+    * @default
+    */
+    this.id = 0;
 
-	/**
-	* Camera view. 
-	* The view into the world we wish to render (by default the game dimensions).
+    /**
+    * Camera view. 
+    * The view into the world we wish to render (by default the game dimensions).
     * The x/y values are in world coordinates, not screen coordinates, the width/height is how many pixels to render.
     * Objects outside of this view are not rendered (unless set to ignore the Camera, i.e. UI?).
-	* @property {Phaser.Rectangle} view
-	*/
+    * @property {Phaser.Rectangle} view
+    */
     this.view = new Phaser.Rectangle(x, y, width, height);
 
     /**
-	* @property {Phaser.Rectangle} screenView - Used by Sprites to work out Camera culling.
-	*/
-	this.screenView = new Phaser.Rectangle(x, y, width, height);
+    * @property {Phaser.Rectangle} screenView - Used by Sprites to work out Camera culling.
+    */
+    this.screenView = new Phaser.Rectangle(x, y, width, height);
 
     /**
     * The Camera is bound to this Rectangle and cannot move outside of it. By default it is enabled and set to the size of the World.
@@ -58,36 +58,36 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     this.bounds = new Phaser.Rectangle(x, y, width, height);
 
     /**
-	* @property {Phaser.Rectangle} deadzone - Moving inside this Rectangle will not cause camera moving.
-	*/
+    * @property {Phaser.Rectangle} deadzone - Moving inside this Rectangle will not cause camera moving.
+    */
     this.deadzone = null;
 
-	/**
-	* @property {boolean} visible - Whether this camera is visible or not.
-	* @default
-	*/
+    /**
+    * @property {boolean} visible - Whether this camera is visible or not.
+    * @default
+    */
     this.visible = true;
 
-	/**
-	* @property {boolean} atLimit - Whether this camera is flush with the World Bounds or not.
+    /**
+    * @property {boolean} atLimit - Whether this camera is flush with the World Bounds or not.
     */
     this.atLimit = { x: false, y: false };
 
-	/**
-	* @property {Phaser.Sprite} target - If the camera is tracking a Sprite, this is a reference to it, otherwise null.
+    /**
+    * @property {Phaser.Sprite} target - If the camera is tracking a Sprite, this is a reference to it, otherwise null.
     * @default
     */
     this.target = null;
 
-	/**
-	* @property {number} edge - Edge property.
+    /**
+    * @property {number} edge - Edge property.
     * @private
     * @default
     */
     this._edge = 0;
 
     this.displayObject = null;
-	
+    
 };
 
 /**
@@ -116,7 +116,7 @@ Phaser.Camera.FOLLOW_TOPDOWN_TIGHT = 3;
 
 Phaser.Camera.prototype = {
 
-	/**
+    /**
     * Tells this camera which sprite to follow.
     * @method Phaser.Camera#follow
     * @param {Phaser.Sprite} target - The object you want the camera to track. Set to null to not follow anything.
@@ -149,6 +149,9 @@ Phaser.Camera.prototype = {
                 break;
 
             case Phaser.Camera.FOLLOW_LOCKON:
+                this.deadzone = null;
+                break;
+
             default:
                 this.deadzone = null;
                 break;
@@ -167,7 +170,7 @@ Phaser.Camera.prototype = {
 
     },
 
-	/**
+    /**
     * Move the camera focus on a location instantly.
     * @method Phaser.Camera#focusOnXY
     * @param {number} x - X position.
@@ -179,7 +182,7 @@ Phaser.Camera.prototype = {
 
     },
 
-	/**
+    /**
     * Update focusing and scrolling.
     * @method Phaser.Camera#update
     */
@@ -348,7 +351,7 @@ Object.defineProperty(Phaser.Camera.prototype, "x", {
 * @property {number} y - Gets or sets the cameras y position.
 */
 Object.defineProperty(Phaser.Camera.prototype, "y", {
-	
+    
     get: function () {
         return this.view.y;
     },

@@ -17,38 +17,38 @@ Phaser.Plugin = function (game, parent) {
 
     if (typeof parent === 'undefined') { parent = null; }
 
-	/**
-	* @property {Phaser.Game} game - A reference to the currently running game.
-	*/
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game.
+    */
     this.game = game;
     
     /**
-	* @property {Any} parent - The parent of this plugin. If added to the PluginManager the parent will be set to that, otherwise it will be null.
-	*/
+    * @property {Any} parent - The parent of this plugin. If added to the PluginManager the parent will be set to that, otherwise it will be null.
+    */
     this.parent = parent;
     
     /**
-	* @property {boolean} active - A Plugin with active=true has its preUpdate and update methods called by the parent, otherwise they are skipped.
-	* @default
-	*/
+    * @property {boolean} active - A Plugin with active=true has its preUpdate and update methods called by the parent, otherwise they are skipped.
+    * @default
+    */
     this.active = false;
     
     /**
-	* @property {boolean} visible - A Plugin with visible=true has its render and postRender methods called by the parent, otherwise they are skipped.
-	* @default
-	*/
+    * @property {boolean} visible - A Plugin with visible=true has its render and postRender methods called by the parent, otherwise they are skipped.
+    * @default
+    */
     this.visible = false;
     
     /**
-	* @property {boolean} hasPreUpdate - A flag to indicate if this plugin has a preUpdate method.
-	* @default
-	*/
+    * @property {boolean} hasPreUpdate - A flag to indicate if this plugin has a preUpdate method.
+    * @default
+    */
     this.hasPreUpdate = false;
     
     /**
-	* @property {boolean} hasUpdate - A flag to indicate if this plugin has an update method.
-	* @default
-	*/
+    * @property {boolean} hasUpdate - A flag to indicate if this plugin has an update method.
+    * @default
+    */
     this.hasUpdate = false;
 
     /**
@@ -58,15 +58,15 @@ Phaser.Plugin = function (game, parent) {
     this.hasPostUpdate = false;
     
     /**
-	* @property {boolean} hasRender - A flag to indicate if this plugin has a render method.
-	* @default
-	*/
+    * @property {boolean} hasRender - A flag to indicate if this plugin has a render method.
+    * @default
+    */
     this.hasRender = false;
     
     /**
-	* @property {boolean} hasPostRender - A flag to indicate if this plugin has a postRender method.
-	* @default
-	*/
+    * @property {boolean} hasPostRender - A flag to indicate if this plugin has a postRender method.
+    * @default
+    */
     this.hasPostRender = false;
 
 };

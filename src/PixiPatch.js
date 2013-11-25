@@ -53,7 +53,7 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
 			continue;
 		}
 		
-		if (!displayObject.renderable || displayObject.alpha == 0)
+		if (!displayObject.renderable || displayObject.alpha === 0)
 		{
 			displayObject = displayObject._iNext;
 			continue;

@@ -11,10 +11,10 @@
 * @constructor
 * @param {number} x - The x coordinate of the top-left corner of the Rectangle.
 * @param {number} y - The y coordinate of the top-left corner of the Rectangle.
-* @param {number} width - The width of the Rectangle in pixels.
-* @param {number} height - The height of the Rectangle in pixels.
+* @param {number} width - The width of the Rectangle.
+* @param {number} height - The height of the Rectangle.
 * @return {Rectangle} This Rectangle object.
-**/
+*/
 Phaser.Rectangle = function (x, y, width, height) {
 
     x = x || 0;
@@ -23,22 +23,22 @@ Phaser.Rectangle = function (x, y, width, height) {
     height = height || 0;
 
     /**
-    * @property {number} x - Description.
+    * @property {number} x - The x coordinate of the top-left corner of the Rectangle.
     */
     this.x = x;
     
     /**
-    * @property {number} y - Description.
+    * @property {number} y - The y coordinate of the top-left corner of the Rectangle.
     */
     this.y = y;
     
     /**
-    * @property {number} width - Description.
+    * @property {number} width - The width of the Rectangle.
     */
     this.width = width;
     
     /**
-    * @property {number} height - Description.
+    * @property {number} height - The height of the Rectangle.
     */
     this.height = height;
 
@@ -52,7 +52,7 @@ Phaser.Rectangle.prototype = {
     * @param {number} dx - Moves the x value of the Rectangle object by this amount.
     * @param {number} dy - Moves the y value of the Rectangle object by this amount.
     * @return {Rectangle} This Rectangle object.
-    **/
+    */
     offset: function (dx, dy) {
 
         this.x += dx;
@@ -67,7 +67,7 @@ Phaser.Rectangle.prototype = {
     * @method Phaser.Rectangle#offsetPoint
     * @param {Point} point - A Point object to use to offset this Rectangle object.
     * @return {Rectangle} This Rectangle object.
-    **/
+    */
     offsetPoint: function (point) {
         return this.offset(point.x, point.y);
     },
@@ -80,7 +80,7 @@ Phaser.Rectangle.prototype = {
     * @param {number} width - The width of the Rectangle in pixels.
     * @param {number} height - The height of the Rectangle in pixels.
     * @return {Rectangle} This Rectangle object
-    **/
+    */
     setTo: function (x, y, width, height) {
 
         this.x = x;
@@ -95,7 +95,7 @@ Phaser.Rectangle.prototype = {
     /**
     * Runs Math.floor() on both the x and y values of this Rectangle.
     * @method Phaser.Rectangle#floor
-    **/
+    */
     floor: function () {
 
         this.x = Math.floor(this.x);
@@ -106,7 +106,7 @@ Phaser.Rectangle.prototype = {
     /**
     * Runs Math.floor() on the x, y, width and height values of this Rectangle.
     * @method Phaser.Rectangle#floorAll
-    **/
+    */
     floorAll: function () {
 
         this.x = Math.floor(this.x);
@@ -121,7 +121,7 @@ Phaser.Rectangle.prototype = {
     * @method Phaser.Rectangle#copyFrom
     * @param {any} source - The object to copy from.
     * @return {Rectangle} This Rectangle object.
-    **/
+    */
     copyFrom: function (source) {
         return this.setTo(source.x, source.y, source.width, source.height);
     },
@@ -131,7 +131,7 @@ Phaser.Rectangle.prototype = {
     * @method Phaser.Rectangle#copyTo
     * @param {any} source - The object to copy to.
     * @return {object} This object.
-    **/
+    */
     copyTo: function (dest) {
 
         dest.x = this.x;
@@ -215,7 +215,7 @@ Phaser.Rectangle.prototype = {
     * @return {Phaser.Rectangle} A Rectangle object that equals the area of intersection. If the Rectangles do not intersect, this method returns an empty Rectangle object; that is, a Rectangle with its x, y, width, and height properties set to 0.
     */
     intersection: function (b, out) {
-        return Phaser.Rectangle.intersection(this, b, output);
+        return Phaser.Rectangle.intersection(this, b, out);
     },
 
     /**
@@ -259,7 +259,7 @@ Phaser.Rectangle.prototype = {
     * Returns a string representation of this object.
     * @method Phaser.Rectangle#toString
     * @return {string} A string representation of the instance.
-    **/
+    */
     toString: function () {
         return "[{Rectangle (x=" + this.x + " y=" + this.y + " width=" + this.width + " height=" + this.height + " empty=" + this.empty + ")}]";
     }
@@ -490,7 +490,12 @@ Object.defineProperty(Phaser.Rectangle.prototype, "empty", {
     },
 
     set: function (value) {
-        this.setTo(0, 0, 0, 0);
+
+        if (value === true)
+        {
+            this.setTo(0, 0, 0, 0);
+        }
+        
     }
 
 });
@@ -615,7 +620,7 @@ Phaser.Rectangle.equals = function (a, b) {
 */
 Phaser.Rectangle.intersection = function (a, b, out) {
 
-    out  = out || new Phaser.Rectangle;
+    out  = out || new Phaser.Rectangle();
 
     if (Phaser.Rectangle.intersects(a, b))
     {

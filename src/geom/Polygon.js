@@ -20,8 +20,8 @@ Phaser.Polygon = function (points) {
     PIXI.Polygon.call(this, points);
 
     /**
-	* @property {number} type - The base object type.
-	*/
+    * @property {number} type - The base object type.
+    */
     this.type = Phaser.POLYGON;
 
 };

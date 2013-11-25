@@ -88,7 +88,7 @@ Version 1.1.3 - in build
 * Updated: If you specify 'null' as a Group parent it will now revert to using the World as the parent (before only 'undefined' worked)
 * Updated: Skip preupdate/update for PIXI hierarchies in which an ancestor doesn't exist (thanks cocoademon)
 * Updated: Loader.audio can now accept either an array of URL strings or a single URL string (thanks crazysam + kevinthompson)
-
+* Updated: MSPointer updated to support IE11 by dropping the prefix from the event listeners.
 
 
 You can view the complete Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md

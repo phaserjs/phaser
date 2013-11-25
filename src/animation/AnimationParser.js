@@ -55,7 +55,7 @@ Phaser.AnimationParser = {
         }
 
         //  Zero or smaller than frame sizes?
-        if (width == 0 || height == 0 || width < frameWidth || height < frameHeight || total === 0)
+        if (width === 0 || height === 0 || width < frameWidth || height < frameHeight || total === 0)
         {
             console.warn("Phaser.AnimationParser.spriteSheet: width/height zero or width/height < given frameWidth/frameHeight");
             return null;
@@ -124,13 +124,13 @@ Phaser.AnimationParser = {
 
             newFrame = data.addFrame(new Phaser.Frame(
                 i,
-            	frames[i].frame.x, 
-            	frames[i].frame.y, 
-            	frames[i].frame.w, 
-            	frames[i].frame.h, 
-            	frames[i].filename,
+                frames[i].frame.x,
+                frames[i].frame.y,
+                frames[i].frame.w,
+                frames[i].frame.h,
+                frames[i].filename,
                 uuid
-			));
+            ));
 
             PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
                 x: frames[i].frame.x,
@@ -142,12 +142,12 @@ Phaser.AnimationParser = {
             if (frames[i].trimmed)
             {
                 newFrame.setTrim(
-                    frames[i].trimmed, 
-                    frames[i].sourceSize.w, 
-                    frames[i].sourceSize.h, 
-                    frames[i].spriteSourceSize.x, 
-                    frames[i].spriteSourceSize.y, 
-                    frames[i].spriteSourceSize.w, 
+                    frames[i].trimmed,
+                    frames[i].sourceSize.w,
+                    frames[i].sourceSize.h,
+                    frames[i].spriteSourceSize.x,
+                    frames[i].spriteSourceSize.y,
+                    frames[i].spriteSourceSize.w,
                     frames[i].spriteSourceSize.h
                 );
 
@@ -196,10 +196,10 @@ Phaser.AnimationParser = {
 
             newFrame = data.addFrame(new Phaser.Frame(
                 i,
-                frames[key].frame.x, 
-                frames[key].frame.y, 
-                frames[key].frame.w, 
-                frames[key].frame.h, 
+                frames[key].frame.x,
+                frames[key].frame.y,
+                frames[key].frame.w,
+                frames[key].frame.h,
                 key,
                 uuid
             ));
@@ -214,12 +214,12 @@ Phaser.AnimationParser = {
             if (frames[key].trimmed)
             {
                 newFrame.setTrim(
-                    frames[key].trimmed, 
-                    frames[key].sourceSize.w, 
-                    frames[key].sourceSize.h, 
-                    frames[key].spriteSourceSize.x, 
-                    frames[key].spriteSourceSize.y, 
-                    frames[key].spriteSourceSize.w, 
+                    frames[key].trimmed,
+                    frames[key].sourceSize.w,
+                    frames[key].sourceSize.h,
+                    frames[key].spriteSourceSize.x,
+                    frames[key].spriteSourceSize.y,
+                    frames[key].spriteSourceSize.w,
                     frames[key].spriteSourceSize.h
                 );
 
@@ -261,6 +261,7 @@ Phaser.AnimationParser = {
         var newFrame;
 
         var uuid;
+        var name;
         var frame;
         var x;
         var y;
@@ -278,20 +279,20 @@ Phaser.AnimationParser = {
             frame = frames[i].attributes;
 
             name = frame.name.nodeValue;
-            x = parseInt(frame.x.nodeValue);
-            y = parseInt(frame.y.nodeValue);
-            width = parseInt(frame.width.nodeValue);
-            height = parseInt(frame.height.nodeValue);
+            x = parseInt(frame.x.nodeValue, 10);
+            y = parseInt(frame.y.nodeValue, 10);
+            width = parseInt(frame.width.nodeValue, 10);
+            height = parseInt(frame.height.nodeValue, 10);
 
             frameX = null;
             frameY = null;
 
             if (frame.frameX)
             {
-                frameX = Math.abs(parseInt(frame.frameX.nodeValue));
-                frameY = Math.abs(parseInt(frame.frameY.nodeValue));
-                frameWidth = parseInt(frame.frameWidth.nodeValue);
-                frameHeight = parseInt(frame.frameHeight.nodeValue);
+                frameX = Math.abs(parseInt(frame.frameX.nodeValue, 10));
+                frameY = Math.abs(parseInt(frame.frameY.nodeValue, 10));
+                frameWidth = parseInt(frame.frameWidth.nodeValue, 10);
+                frameHeight = parseInt(frame.frameHeight.nodeValue, 10);
             }
 
             newFrame = data.addFrame(new Phaser.Frame(i, x, y, width, height, name, uuid));

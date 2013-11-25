@@ -348,7 +348,7 @@ Phaser.StageScaleMode.prototype = {
 
         if (typeof orientationImage !== 'undefined')
         {
-            if (orientationImage == null || this.game.cache.checkImageKey(orientationImage) == false)
+            if (orientationImage == null || this.game.cache.checkImageKey(orientationImage) === false)
             {
                 orientationImage = '__default';
             }
@@ -411,7 +411,7 @@ Phaser.StageScaleMode.prototype = {
                 this.incorrectOrientation = true;
                 this.enterIncorrectOrientation.dispatch();
 
-                if (this.orientationSprite && this.orientationSprite.visible == false)
+                if (this.orientationSprite && this.orientationSprite.visible === false)
                 {
                     this.orientationSprite.visible = true;
                     this.game.world.visible = false;
@@ -488,9 +488,9 @@ Phaser.StageScaleMode.prototype = {
     refresh: function () {
 
         //  We can't do anything about the status bars in iPads, web apps or desktops
-        if (this.game.device.iPad == false && this.game.device.webApp == false && this.game.device.desktop == false)
+        if (this.game.device.iPad === false && this.game.device.webApp === false && this.game.device.desktop === false)
         {
-            if (this.game.device.android && this.game.device.chrome == false)
+            if (this.game.device.android && this.game.device.chrome === false)
             {
                 window.scrollTo(0, 1);
             }
@@ -526,9 +526,9 @@ Phaser.StageScaleMode.prototype = {
             force = false;
         }
         
-        if (this.game.device.iPad == false && this.game.device.webApp == false && this.game.device.desktop == false) 
+        if (this.game.device.iPad === false && this.game.device.webApp === false && this.game.device.desktop === false) 
         {
-            if (this.game.device.android && this.game.device.chrome == false)
+            if (this.game.device.android && this.game.device.chrome === false)
             {
                 window.scrollTo(0, 1);
             }
@@ -545,7 +545,7 @@ Phaser.StageScaleMode.prototype = {
             // Set minimum height of content to new window height
             document.documentElement['style'].minHeight = window.innerHeight + 'px';
         
-            if (this.incorrectOrientation == true)
+            if (this.incorrectOrientation === true)
             {
                 this.setMaximum();
             }
@@ -571,7 +571,7 @@ Phaser.StageScaleMode.prototype = {
     */
     setSize: function () {
 
-        if (this.incorrectOrientation == false)
+        if (this.incorrectOrientation === false)
         {
             if (this.maxWidth && this.width > this.maxWidth)
             {
@@ -601,7 +601,7 @@ Phaser.StageScaleMode.prototype = {
 
         if (this.pageAlignHorizontally)
         {
-            if (this.width < window.innerWidth && this.incorrectOrientation == false)
+            if (this.width < window.innerWidth && this.incorrectOrientation === false)
             {
                 this.margin.x = Math.round((window.innerWidth - this.width) / 2);
                 this.game.canvas.style.marginLeft = this.margin.x + 'px';
@@ -615,7 +615,7 @@ Phaser.StageScaleMode.prototype = {
 
         if (this.pageAlignVertically)
         {
-            if (this.height < window.innerHeight && this.incorrectOrientation == false)
+            if (this.height < window.innerHeight && this.incorrectOrientation === false)
             {
                 this.margin.y = Math.round((window.innerHeight - this.height) / 2);
                 this.game.canvas.style.marginTop = this.margin.y + 'px';
@@ -723,7 +723,7 @@ Object.defineProperty(Phaser.StageScaleMode.prototype, "isFullScreen", {
 Object.defineProperty(Phaser.StageScaleMode.prototype, "isPortrait", {
 
     get: function () {
-        return this.orientation == 0 || this.orientation == 180;
+        return this.orientation === 0 || this.orientation == 180;
     }
 
 });

@@ -21,7 +21,7 @@ Phaser.World = function (game) {
 
     /**
     * @property {Phaser.Point} scale - Replaces the PIXI.Point with a slightly more flexible one.
-    */ 
+    */
     this.scale = new Phaser.Point(1, 1);
 
     /**
@@ -29,20 +29,20 @@ Phaser.World = function (game) {
     * By default we set the Bounds to be from 0,0 to Game.width,Game.height. I.e. it will match the size given to the game constructor with 0,0 representing the top-left of the display.
     * However 0,0 is actually the center of the world, and if you rotate or scale the world all of that will happen from 0,0.
     * So if you want to make a game in which the world itself will rotate you should adjust the bounds so that 0,0 is the center point, i.e. set them to -1000,-1000,2000,2000 for a 2000x2000 sized world centered around 0,0.
-	* @property {Phaser.Rectangle} bounds - Bound of this world that objects can not escape from.
-	*/
-	this.bounds = new Phaser.Rectangle(0, 0, game.width, game.height);
+    * @property {Phaser.Rectangle} bounds - Bound of this world that objects can not escape from.
+    */
+    this.bounds = new Phaser.Rectangle(0, 0, game.width, game.height);
 
     /**
-	* @property {Phaser.Camera} camera - Camera instance.
-	*/
-	this.camera = null;
+    * @property {Phaser.Camera} camera - Camera instance.
+    */
+    this.camera = null;
 
     /**
-	* @property {number} currentRenderOrderID - Reset each frame, keeps a count of the total number of objects updated.
-	*/
-	this.currentRenderOrderID = 0;
-	
+    * @property {number} currentRenderOrderID - Reset each frame, keeps a count of the total number of objects updated.
+    */
+    this.currentRenderOrderID = 0;
+    
 };
 
 Phaser.World.prototype = Object.create(Phaser.Group.prototype);
@@ -71,27 +71,27 @@ Phaser.World.prototype.boot = function () {
 */
 Phaser.World.prototype.update = function () {
 
-	this.currentRenderOrderID = 0;
+    this.currentRenderOrderID = 0;
     
-	if (this.game.stage._stage.first._iNext)
-	{
-		var currentNode = this.game.stage._stage.first._iNext;
+    if (this.game.stage._stage.first._iNext)
+    {
+        var currentNode = this.game.stage._stage.first._iNext;
         var skipChildren;
-		
-		do
-		{
+        
+        do
+        {
             skipChildren = false;
 
-			if (currentNode['preUpdate'])
-			{
-				skipChildren = (currentNode.preUpdate() === false);
-			}
+            if (currentNode['preUpdate'])
+            {
+                skipChildren = (currentNode.preUpdate() === false);
+            }
 
-			if (currentNode['update'])
-			{
-				skipChildren = (currentNode.update() === false) || skipChildren;
-			}
-			
+            if (currentNode['update'])
+            {
+                skipChildren = (currentNode.update() === false) || skipChildren;
+            }
+            
             if (skipChildren)
             {
                 currentNode = currentNode.last._iNext;
@@ -100,10 +100,10 @@ Phaser.World.prototype.update = function () {
             {
                 currentNode = currentNode._iNext;
             }
-			
-		}
-		while (currentNode != this.game.stage._stage.last._iNext)
-	}
+            
+        }
+        while (currentNode != this.game.stage._stage.last._iNext)
+    }
 
 }
 
@@ -119,7 +119,7 @@ Phaser.World.prototype.postUpdate = function () {
     {
         var currentNode = this.game.stage._stage.first._iNext;
         
-        do  
+        do
         {
             if (currentNode['postUpdate'])
             {

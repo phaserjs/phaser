@@ -4,7 +4,6 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-
 /**
 * The Events component is a collection of events fired by the parent game object and its components.
 * 
@@ -14,13 +13,13 @@
 * @param {Phaser.Sprite} sprite - A reference to Description.
 */
 Phaser.Events = function (sprite) {
-	
-	this.parent = sprite;
-	this.onAddedToGroup = new Phaser.Signal;
-	this.onRemovedFromGroup = new Phaser.Signal;
-	this.onKilled = new Phaser.Signal;
-	this.onRevived = new Phaser.Signal;
-	this.onOutOfBounds = new Phaser.Signal;
+    
+    this.parent = sprite;
+    this.onAddedToGroup = new Phaser.Signal();
+    this.onRemovedFromGroup = new Phaser.Signal();
+    this.onKilled = new Phaser.Signal();
+    this.onRevived = new Phaser.Signal();
+    this.onOutOfBounds = new Phaser.Signal();
 
     this.onInputOver = null;
     this.onInputOut = null;
@@ -29,40 +28,40 @@ Phaser.Events = function (sprite) {
     this.onDragStart = null;
     this.onDragStop = null;
 
-	this.onAnimationStart = null;
-	this.onAnimationComplete = null;
-	this.onAnimationLoop = null;
+    this.onAnimationStart = null;
+    this.onAnimationComplete = null;
+    this.onAnimationLoop = null;
 
 };
 
 Phaser.Events.prototype = {
 
-	destroy: function () {
+    destroy: function () {
 
-		this.parent = null;
-		this.onAddedToGroup.dispose();
-		this.onRemovedFromGroup.dispose();
-		this.onKilled.dispose();
-		this.onRevived.dispose();
-		this.onOutOfBounds.dispose();
+        this.parent = null;
+        this.onAddedToGroup.dispose();
+        this.onRemovedFromGroup.dispose();
+        this.onKilled.dispose();
+        this.onRevived.dispose();
+        this.onOutOfBounds.dispose();
 
-		if (this.onInputOver)
-		{
-		    this.onInputOver.dispose();
-		    this.onInputOut.dispose();
-		    this.onInputDown.dispose();
-		    this.onInputUp.dispose();
-		    this.onDragStart.dispose();
-		    this.onDragStop.dispose();
-		}
+        if (this.onInputOver)
+        {
+            this.onInputOver.dispose();
+            this.onInputOut.dispose();
+            this.onInputDown.dispose();
+            this.onInputUp.dispose();
+            this.onDragStart.dispose();
+            this.onDragStop.dispose();
+        }
 
-		if (this.onAnimationStart)
-		{
-			this.onAnimationStart.dispose();
-			this.onAnimationComplete.dispose();
-			this.onAnimationLoop.dispose();
-		}
+        if (this.onAnimationStart)
+        {
+            this.onAnimationStart.dispose();
+            this.onAnimationComplete.dispose();
+            this.onAnimationLoop.dispose();
+        }
 
-	}
+    }
 
 };

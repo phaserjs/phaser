@@ -5,8 +5,9 @@
 */
 
 /**
-* Create a new <code>TileSprite</code>.
+* A TileSprite is a Sprite whos texture is set to repeat and can be scrolled. As it scrolls the texture repeats (wraps) on the edges.
 * @class Phaser.Tilemap
+* @extends Phaser.Sprite
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
 * @param {number} x - X position of the new tileSprite.
@@ -25,33 +26,33 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
     key = key || null;
     frame = frame || null;
 
-	Phaser.Sprite.call(this, game, x, y, key, frame);
+    Phaser.Sprite.call(this, game, x, y, key, frame);
 
-	/**
-	* @property {Description} texture - Description. 
+    /**
+    * @property {PIXI.Texture} texture - The texture that the sprite renders with.
     */
     this.texture = PIXI.TextureCache[key];
 
-	PIXI.TilingSprite.call(this, this.texture, width, height);
+    PIXI.TilingSprite.call(this, this.texture, width, height);
 
-	/**
-	* @property {Description} type - Description. 
+    /**
+    * @property {number} type - The const type of this object.
+    * @readonly
     */
-	this.type = Phaser.TILESPRITE;
+    this.type = Phaser.TILESPRITE;
 
-	/**
-	* @property {Point} tileScale - The scaling of the image that is being tiled.
-	*/	
-	this.tileScale = new Phaser.Point(1, 1);
+    /**
+    * @property {Phaser.Point} tileScale - The scaling of the image that is being tiled.
+    */
+    this.tileScale = new Phaser.Point(1, 1);
 
-	/**
-	* @property {Point} tilePosition - The offset position of the image that is being tiled.
-	*/	
-	this.tilePosition = new Phaser.Point(0, 0);
+    /**
+    * @property {Phaser.Point} tilePosition - The offset position of the image that is being tiled.
+    */
+    this.tilePosition = new Phaser.Point(0, 0);
 
 };
 
 Phaser.TileSprite.prototype = Phaser.Utils.extend(true, PIXI.TilingSprite.prototype, Phaser.Sprite.prototype);
 Phaser.TileSprite.prototype.constructor = Phaser.TileSprite;
 
-//  Add our own custom methods

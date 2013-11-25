@@ -25,28 +25,28 @@ Phaser.BitmapText = function (game, x, y, text, style) {
     text = text || '';
     style = style || '';
 
-	/** 
-	* @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
-	* @default
-	*/
+    /** 
+    * @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
+    * @default
+    */
     this.exists = true;
 
-	/**
+    /**
     * @property {boolean} alive - This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering.
-	* @default
-	*/
+    * @default
+    */
     this.alive = true;
 
-	/**
+    /**
     * @property {Description} group - Description.
- 	* @default
- 	*/
+    * @default
+    */
     this.group = null;
 
-	/**
+    /**
     * @property {string} name - Description.
-  	* @default
-  	*/
+    * @default
+    */
     this.name = '';
 
     /**
@@ -61,54 +61,62 @@ Phaser.BitmapText = function (game, x, y, text, style) {
     */
     this.type = Phaser.BITMAPTEXT;
 
-	/**
-	* @property {number} position.x - Description.
-	*/
+    /**
+    * @property {number} position.x - Description.
+    */
     this.position.x = x;
     
-	/**
-	* @property {number} position.y - Description.
-	*/
+    /**
+    * @property {number} position.y - Description.
+    */
     this.position.y = y;
 
     //  Replaces the PIXI.Point with a slightly more flexible one
-	/**
-	* @property {Phaser.Point} anchor - Description.
-	*/
+    /**
+    * @property {Phaser.Point} anchor - Description.
+    */
     this.anchor = new Phaser.Point();
     
-	/**
-	* @property {Phaser.Point} scale - Description.
-	*/
+    /**
+    * @property {Phaser.Point} scale - Description.
+    */
     this.scale = new Phaser.Point(1, 1);
 
     //  A mini cache for storing all of the calculated values
-	/**
-	* @property {function} _cache - Description.
-	* @private
-	*/
-    this._cache = { 
+    /**
+    * @property {function} _cache - Description.
+    * @private
+    */
+    this._cache = {
 
         dirty: false,
 
         //  Transform cache
-        a00: 1, a01: 0, a02: x, a10: 0, a11: 1, a12: y, id: 1, 
+        a00: 1,
+        a01: 0,
+        a02: x,
+        a10: 0,
+        a11: 1,
+        a12: y,
+        id: 1,
 
         //  The previous calculated position
-        x: -1, y: -1,
+        x: -1,
+        y: -1,
 
         //  The actual scale values based on the worldTransform
-        scaleX: 1, scaleY: 1
+        scaleX: 1,
+        scaleY: 1
 
     };
 
     this._cache.x = this.x;
     this._cache.y = this.y;
 
-	/**
-	* @property {boolean} renderable - Description.
-	* @private
-	*/
+    /**
+    * @property {boolean} renderable - Description.
+    * @private
+    */
     this.renderable = true;
 
 };

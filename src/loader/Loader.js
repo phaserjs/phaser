@@ -149,7 +149,7 @@ Phaser.Loader.prototype = {
 
 		this.preloadSprite = { sprite: sprite, direction: direction, width: sprite.width, height: sprite.height, crop: null };
 
-		if (direction == 0)
+		if (direction === 0)
 		{
 			//	Horizontal crop
 			this.preloadSprite.crop = new Phaser.Rectangle(0, 0, 1, sprite.height);
@@ -247,7 +247,7 @@ Phaser.Loader.prototype = {
 
 		if (typeof overwrite === "undefined") { overwrite = false; }
 
-		if (overwrite || this.checkKeyExists(key) == false)
+		if (overwrite || this.checkKeyExists(key) === false)
 		{
 			this.addToFileList('image', key, url);
 		}
@@ -268,7 +268,7 @@ Phaser.Loader.prototype = {
 
 		if (typeof overwrite === "undefined") { overwrite = false; }
 
-		if (overwrite || this.checkKeyExists(key) == false)
+		if (overwrite || this.checkKeyExists(key) === false)
 		{
 			this.addToFileList('text', key, url);
 		}
@@ -1085,7 +1085,7 @@ Phaser.Loader.prototype = {
 
 		if (this.preloadSprite !== null)
 		{
-			if (this.preloadSprite.direction == 0)
+			if (this.preloadSprite.direction === 0)
 			{
 				this.preloadSprite.crop.width = Math.floor((this.preloadSprite.width / 100) * this.progress);
 			}
