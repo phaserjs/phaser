@@ -98,6 +98,8 @@ Phaser.Stage.prototype = {
         Phaser.Canvas.setUserSelect(this.canvas, 'none');
         Phaser.Canvas.setTouchAction(this.canvas, 'none');
 
+        this.backgroundColor = '#000';
+
         document.addEventListener('visibilitychange', this._onChange, false);
         document.addEventListener('webkitvisibilitychange', this._onChange, false);
         document.addEventListener('pagehide', this._onChange, false);
@@ -165,19 +167,23 @@ Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 
         this._backgroundColor = color;
 
-        if (this.game.renderType == Phaser.CANVAS)
+        if (this.game.transparent === false)
         {
-            //  Set it directly, this allows us to use rgb alpha values in Canvas mode.
-            this._stage.backgroundColorString = color;
-        }
-        else
-        {
-            if (typeof color === 'string')
+            if (this.game.renderType == Phaser.CANVAS)
             {
-                color = Phaser.Color.hexToRGB(color);
+                //  Set it directly, this allows us to use rgb alpha values in Canvas mode.
+                this.game.canvas.style.backgroundColor = color;
+            }
+            else
+            {
+                if (typeof color === 'string')
+                {
+                    color = Phaser.Color.hexToRGB(color);
+                }
+
+                this._stage.setBackgroundColor(color);
             }
 
-            this._stage.setBackgroundColor(color);
         }
 
     }

@@ -160,8 +160,8 @@ Phaser.Keyboard.prototype = {
             return _this.processKeyUp(event);
         };
 
-        document.body.addEventListener('keydown', this._onKeyDown, false);
-        document.body.addEventListener('keyup', this._onKeyUp, false);
+        window.addEventListener('keydown', this._onKeyDown, false);
+        window.addEventListener('keyup', this._onKeyUp, false);
 
     },
 
@@ -172,8 +172,8 @@ Phaser.Keyboard.prototype = {
     */
     stop: function () {
 
-        document.body.removeEventListener('keydown', this._onKeyDown);
-        document.body.removeEventListener('keyup', this._onKeyUp);
+        window.removeEventListener('keydown', this._onKeyDown);
+        window.removeEventListener('keyup', this._onKeyUp);
 
     },
 

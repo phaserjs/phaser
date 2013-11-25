@@ -21,12 +21,9 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
     
     PIXI.visibleCount++;
     stage.updateTransform();
-    
-    // update the background color
-    // if(this.view.style.backgroundColor!=stage.backgroundColorString && !this.transparent)this.view.style.backgroundColor = stage.backgroundColorString;
 
     this.context.setTransform(1, 0, 0, 1, 0, 0);
-    // this.context.clearRect(0, 0, this.width, this.height)
+    this.context.clearRect(0, 0, this.width, this.height)
     this.renderDisplayObject(stage);
    
     //  Remove frame updates

@@ -18,7 +18,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v1.1.3 - Built at: Mon Nov 18 2013 20:26:29
+* v1.1.3 - Built at: Mon Nov 25 2013 13:10:47
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -78,6 +78,8 @@ var Phaser = Phaser || {
 	EMITTER: 11,
 	POLYGON: 12,
 	BITMAPDATA: 13,
+	CANVAS_FILTER: 14,
+	WEBGL_FILTER: 15,
 
 	NONE: 0,
 	LEFT: 1,
@@ -92,6 +94,8 @@ PIXI.InteractionManager = function (dummy) {
 	//	however the Stage object expects a reference to it, so here is a dummy entry.
 };
 
+/* jshint supernew: true */
+
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
@@ -103,67 +107,69 @@ PIXI.InteractionManager = function (dummy) {
 * @static
 */
 Phaser.Utils = {
-	
-	/**
-	* A standard Fisher-Yates Array shuffle implementation.
-	* @method Phaser.Utils.shuffle
-	* @param {array} array - The array to shuffle.
-	* @return {array} The shuffled array.
-	*/
-	shuffle: function (array) {
+    
+    /**
+    * A standard Fisher-Yates Array shuffle implementation.
+    * @method Phaser.Utils.shuffle
+    * @param {array} array - The array to shuffle.
+    * @return {array} The shuffled array.
+    */
+    shuffle: function (array) {
 
-	    for (var i = array.length - 1; i > 0; i--)
-	    {
-	        var j = Math.floor(Math.random() * (i + 1));
-	        var temp = array[i];
-	        array[i] = array[j];
-	        array[j] = temp;
-	    }
+        for (var i = array.length - 1; i > 0; i--)
+        {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
 
-	    return array;
-	    
-	},
+        return array;
+        
+    },
 
-	/**
-	* Javascript string pad http://www.webtoolkit.info/.
-	* pad = the string to pad it out with (defaults to a space)
-	* dir = 1 (left), 2 (right), 3 (both)
-	* @method Phaser.Utils.pad
-	* @param {string} str - The target string. 
-	* @param {number} len - Description.
-	* @param {number} pad - the string to pad it out with (defaults to a space).
-	* @param {number} [dir=3] the direction dir = 1 (left), 2 (right), 3 (both).
-	* @return {string} The padded string
-	*/
-	pad: function (str, len, pad, dir) {
+    /**
+    * Javascript string pad http://www.webtoolkit.info/.
+    * pad = the string to pad it out with (defaults to a space)
+    * dir = 1 (left), 2 (right), 3 (both)
+    * @method Phaser.Utils.pad
+    * @param {string} str - The target string. 
+    * @param {number} len - Description.
+    * @param {number} pad - the string to pad it out with (defaults to a space).
+    * @param {number} [dir=3] the direction dir = 1 (left), 2 (right), 3 (both).
+    * @return {string} The padded string
+    */
+    pad: function (str, len, pad, dir) {
 
-	    if (typeof(len) == "undefined") { var len = 0; }
-	    if (typeof(pad) == "undefined") { var pad = ' '; }
-	    if (typeof(dir) == "undefined") { var dir = 3; }
+        if (typeof(len) == "undefined") { var len = 0; }
+        if (typeof(pad) == "undefined") { var pad = ' '; }
+        if (typeof(dir) == "undefined") { var dir = 3; }
 
-	    if (len + 1 >= str.length)
-	    {
-	        switch (dir)
-	        {
-	            case 1:
-	                str = Array(len + 1 - str.length).join(pad) + str;
-		            break;
+        var padlen = 0;
 
-	            case 3:
-	                var right = Math.ceil((padlen = len - str.length) / 2);
-	                var left = padlen - right;
-	                str = Array(left+1).join(pad) + str + Array(right+1).join(pad);
-		            break;
+        if (len + 1 >= str.length)
+        {
+            switch (dir)
+            {
+                case 1:
+                    str = Array(len + 1 - str.length).join(pad) + str;
+                    break;
 
-	            default:
-	                str = str + Array(len + 1 - str.length).join(pad);
-		            break;
-	        }
-	    }
+                case 3:
+                    var right = Math.ceil((padlen = len - str.length) / 2);
+                    var left = padlen - right;
+                    str = Array(left+1).join(pad) + str + Array(right+1).join(pad);
+                    break;
 
-	    return str;
+                default:
+                    str = str + Array(len + 1 - str.length).join(pad);
+                    break;
+            }
+        }
 
-	},
+        return str;
+
+    },
 
     /**
     * This is a slightly modified version of jQuery.isPlainObject. A plain object is an object whose internal class property is [object Object].
@@ -171,41 +177,41 @@ Phaser.Utils = {
     * @param {object} obj - The object to inspect.
     * @return {boolean} - true if the object is plain, otherwise false.
     */
-	isPlainObject: function (obj) {
+    isPlainObject: function (obj) {
 
-		// Not plain objects:
-		// - Any object or value whose internal [[Class]] property is not "[object Object]"
-		// - DOM nodes
-		// - window
-		if (typeof(obj) !== "object" || obj.nodeType || obj === obj.window)
-		{
-			return false;
-		}
+        // Not plain objects:
+        // - Any object or value whose internal [[Class]] property is not "[object Object]"
+        // - DOM nodes
+        // - window
+        if (typeof(obj) !== "object" || obj.nodeType || obj === obj.window)
+        {
+            return false;
+        }
 
-		// Support: Firefox <20
-		// The try/catch suppresses exceptions thrown when attempting to access
-		// the "constructor" property of certain host objects, ie. |window.location|
-		// https://bugzilla.mozilla.org/show_bug.cgi?id=814622
-		try {
-			if (obj.constructor && !hasOwn.call(obj.constructor.prototype, "isPrototypeOf"))
-			{
-				return false;
-			}
-		} catch (e) {
-			return false;
-		}
+        // Support: Firefox <20
+        // The try/catch suppresses exceptions thrown when attempting to access
+        // the "constructor" property of certain host objects, ie. |window.location|
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=814622
+        try {
+            if (obj.constructor && !hasOwn.call(obj.constructor.prototype, "isPrototypeOf"))
+            {
+                return false;
+            }
+        } catch (e) {
+            return false;
+        }
 
-		// If the function hasn't returned already, we're confident that
-		// |obj| is a plain object, created by {} or constructed with new Object
-		return true;
-	},
+        // If the function hasn't returned already, we're confident that
+        // |obj| is a plain object, created by {} or constructed with new Object
+        return true;
+    },
 
 
-	//	deep, target, objects to copy to the target object
-	//	This is a slightly modified version of {@link http://api.jquery.com/jQuery.extend/|jQuery.extend}
-	//	deep (boolean)
-	//	target (object to add to)
-	//	objects ... (objects to recurse and copy from)
+    //  deep, target, objects to copy to the target object
+    //  This is a slightly modified version of {@link http://api.jquery.com/jQuery.extend/|jQuery.extend}
+    //  deep (boolean)
+    //  target (object to add to)
+    //  objects ... (objects to recurse and copy from)
 
     /**
     * This is a slightly modified version of http://api.jquery.com/jQuery.extend/
@@ -214,117 +220,162 @@ Phaser.Utils = {
     * @param {object} target - The target object to copy to.
     * @return {object} The extended object.
     */
-	extend: function () {
+    extend: function () {
 
-		var options, name, src, copy, copyIsArray, clone,
-			target = arguments[0] || {},
-			i = 1,
-			length = arguments.length,
-			deep = false;
+        var options, name, src, copy, copyIsArray, clone,
+            target = arguments[0] || {},
+            i = 1,
+            length = arguments.length,
+            deep = false;
 
-		// Handle a deep copy situation
-		if (typeof target === "boolean")
-		{
-			deep = target;
-			target = arguments[1] || {};
-			// skip the boolean and the target
-			i = 2;
-		}
+        // Handle a deep copy situation
+        if (typeof target === "boolean")
+        {
+            deep = target;
+            target = arguments[1] || {};
+            // skip the boolean and the target
+            i = 2;
+        }
 
-		// extend Phaser if only one argument is passed
-		if (length === i)
-		{
-			target = this;
-			--i;
-		}
+        // extend Phaser if only one argument is passed
+        if (length === i)
+        {
+            target = this;
+            --i;
+        }
 
-		for ( ; i < length; i++ )
-		{
-			// Only deal with non-null/undefined values
-			if ((options = arguments[i]) != null)
-			{
-				// Extend the base object
-				for (name in options)
-				{
-					src = target[name];
-					copy = options[name];
+        for ( ; i < length; i++ )
+        {
+            // Only deal with non-null/undefined values
+            if ((options = arguments[i]) != null)
+            {
+                // Extend the base object
+                for (name in options)
+                {
+                    src = target[name];
+                    copy = options[name];
 
-					// Prevent never-ending loop
-					if (target === copy)
-					{
-						continue;
-					}
+                    // Prevent never-ending loop
+                    if (target === copy)
+                    {
+                        continue;
+                    }
 
-					// Recurse if we're merging plain objects or arrays
-					if (deep && copy && (Phaser.Utils.isPlainObject(copy) || (copyIsArray = Array.isArray(copy))))
-					{
-						if (copyIsArray)
-						{
-							copyIsArray = false;
-							clone = src && Array.isArray(src) ? src : [];
-						}
-						else
-						{
-							clone = src && Phaser.Utils.isPlainObject(src) ? src : {};
-						}
+                    // Recurse if we're merging plain objects or arrays
+                    if (deep && copy && (Phaser.Utils.isPlainObject(copy) || (copyIsArray = Array.isArray(copy))))
+                    {
+                        if (copyIsArray)
+                        {
+                            copyIsArray = false;
+                            clone = src && Array.isArray(src) ? src : [];
+                        }
+                        else
+                        {
+                            clone = src && Phaser.Utils.isPlainObject(src) ? src : {};
+                        }
 
-						// Never move original objects, clone them
-						target[name] = Phaser.Utils.extend(deep, clone, copy);
+                        // Never move original objects, clone them
+                        target[name] = Phaser.Utils.extend(deep, clone, copy);
 
-					// Don't bring in undefined values
-					}
-					else if (copy !== undefined)
-					{
-						target[name] = copy;
-					}
-				}
-			}
-		}
+                    // Don't bring in undefined values
+                    }
+                    else if (copy !== undefined)
+                    {
+                        target[name] = copy;
+                    }
+                }
+            }
+        }
 
-		// Return the modified object
-		return target;
-	}
+        // Return the modified object
+        return target;
+    }
 
 };
 
-//	Global functions that PIXI needs
+//  Global functions that PIXI needs
 
- /**
- * Converts a hex color number to an [R, G, B] array
- *
- * @param {number} hex 
- * @return {array}
- */
+(function() {
+    var consoleDisabled = false;
+    if (consoleDisabled) {
+        window.console = undefined;
+    }
+    if (window.console === undefined) {
+        window.console = {
+            debug: function() {
+                return true;
+            },
+            info: function() {
+                return false;
+            },
+            warn: function() {
+                return false;
+            },
+            log: function() {
+                return false;
+            }
+        }
+    }
+    debug = (function(args) {
+        window.console.debug(args);
+    });
+    info = (function(args) {
+        window.console.info(args);
+    });
+    warn = (function(args) {
+        window.console.warn(args);
+    });
+    log = (function(args) {
+        window.console.log(args);
+    });
+})();
+
+/**
+* Converts a hex color number to an [R, G, B] array
+*
+* @param {number} hex 
+* @return {array}
+*/
 function HEXtoRGB(hex) {
-	return [(hex >> 16 & 0xFF) / 255, ( hex >> 8 & 0xFF) / 255, (hex & 0xFF)/ 255];
+    return [(hex >> 16 & 0xFF) / 255, ( hex >> 8 & 0xFF) / 255, (hex & 0xFF)/ 255];
 }
 
- /**
- * A polyfill for Function.prototype.bind
- */
+/**
+* A polyfill for Function.prototype.bind
+*/
 if (typeof Function.prototype.bind != 'function') {
-  Function.prototype.bind = (function () {
-    var slice = Array.prototype.slice;
-    return function (thisArg) {
-      var target = this, boundArgs = slice.call(arguments, 1);
- 
-      if (typeof target != 'function') throw new TypeError();
- 
-      function bound() {
-	var args = boundArgs.concat(slice.call(arguments));
-	target.apply(this instanceof bound ? this : thisArg, args);
-      }
- 
-      bound.prototype = (function F(proto) {
-          proto && (F.prototype = proto);
-          if (!(this instanceof F)) return new F;          
-	})(target.prototype);
- 
-      return bound;
-    };
-  })();
-}
 
+    Function.prototype.bind = (function () {
+
+        var slice = Array.prototype.slice;
+
+        return function (thisArg) {
+
+            var target = this, boundArgs = slice.call(arguments, 1);
+ 
+            if (typeof target != 'function')
+            {
+                throw new TypeError();
+            }
+ 
+            function bound() {
+                var args = boundArgs.concat(slice.call(arguments));
+                target.apply(this instanceof bound ? this : thisArg, args);
+            }
+ 
+            bound.prototype = (function F(proto) {
+                proto && (F.prototype = proto);
+
+                if (!(this instanceof F))
+                {
+                    return new F;
+                }
+            })(target.prototype);
+ 
+            return bound;
+        };
+    })();
+}
 
 
 
@@ -1199,10 +1250,6 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'filters', {
  */
 PIXI.DisplayObject.prototype.addFilter = function(data)
 {
-	//if(this.filter)return;
-	//this.filter = true;
-//	data[0].target = this;
-	
 
 	// insert a filter block..
 	// TODO Onject pool thease bad boys..
@@ -1305,6 +1352,7 @@ PIXI.DisplayObject.prototype.removeFilter = function(data)
 {
 	//if(!this.filter)return;
 	//this.filter = false;
+	console.log("YUOIO")
 	// modify the list..
 	var startBlock = data.start;
 	
@@ -1569,7 +1617,7 @@ PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
 				updateLast = updateLast.parent;
 			}
 		}
-		else if(index == 0)
+		else if(index === 0)
 		{
 			previousObject = this;
 		}
@@ -1785,9 +1833,9 @@ PIXI.Sprite = function(texture)
 	 * Setting than anchor to 0.5,0.5 means the textures origin is centered
 	 * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right
 	 *
-     * @property anchor
-     * @type Point
-     */
+    * @property anchor
+    * @type Point
+    */
 	this.anchor = new PIXI.Point();
 
 	/**
@@ -2520,9 +2568,9 @@ PIXI.TilingSprite.prototype.onTextureUpdate = function(event)
  * @class AbstractFilter
  * @constructor
  * @param fragmentSrc
- * @param unifroms  
+ * @param uniforms  
  */
-PIXI.AbstractFilter = function(fragmentSrc, unifroms)
+PIXI.AbstractFilter = function(fragmentSrc, uniforms)
 {
 	/**
 	* An array of passes - some filters contain a few steps this array simply stores the steps in a liniear fashion.
@@ -2541,7 +2589,7 @@ PIXI.AbstractFilter = function(fragmentSrc, unifroms)
 	@property uniforms
 	@private
 	*/
-	this.uniforms = unifroms || {};
+	this.uniforms = uniforms || {};
 	
 	this.fragmentSrc = fragmentSrc || [];
 }
@@ -2632,7 +2680,7 @@ PIXI.BlurXFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		blur: {type: 'f', value: 1/512},
+		blur: {type: '1f', value: 1/512},
 	};
 	
 	this.fragmentSrc = [
@@ -2689,7 +2737,7 @@ PIXI.BlurYFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		blur: {type: 'f', value: 1/512},
+		blur: {type: '1f', value: 1/512},
 	};
 	
 	this.fragmentSrc = [
@@ -2803,7 +2851,7 @@ PIXI.CrossHatchFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		blur: {type: 'f', value: 1/512},
+		blur: {type: '1f', value: 1/512},
 	};
 	
 	this.fragmentSrc = [
@@ -2820,25 +2868,25 @@ PIXI.CrossHatchFilter = function()
 		"    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);",
 		"     ",
 		"    if (lum < 1.00) {",
-		"        if (mod(gl_FragCoord.x + gl_FragCoord.y, 10.0) == 0.0) {",
+		"        if (mod(gl_FragCoord.x + gl_FragCoord.y, 10.0) === 0.0) {",
 		"            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);",
 		"        }",
 		"    }",
 		"     ",
 		"    if (lum < 0.75) {",
-		"        if (mod(gl_FragCoord.x - gl_FragCoord.y, 10.0) == 0.0) {",
+		"        if (mod(gl_FragCoord.x - gl_FragCoord.y, 10.0) === 0.0) {",
 		"            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);",
 		"        }",
 		"    }",
 		"     ",
 		"    if (lum < 0.50) {",
-		"        if (mod(gl_FragCoord.x + gl_FragCoord.y - 5.0, 10.0) == 0.0) {",
+		"        if (mod(gl_FragCoord.x + gl_FragCoord.y - 5.0, 10.0) === 0.0) {",
 		"            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);",
 		"        }",
 		"    }",
 		"     ",
 		"    if (lum < 0.3) {",
-		"        if (mod(gl_FragCoord.x - gl_FragCoord.y - 5.0, 10.0) == 0.0) {",
+		"        if (mod(gl_FragCoord.x - gl_FragCoord.y - 5.0, 10.0) === 0.0) {",
 		"            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);",
 		"        }",
 		"    }",
@@ -2884,10 +2932,10 @@ PIXI.DisplacementFilter = function(texture)
 	//console.log()
 	this.uniforms = {
 		displacementMap: {type: 'sampler2D', value:texture},
-		scale:			 {type: 'f2', value:{x:30, y:30}},
-		offset:			 {type: 'f2', value:{x:0, y:0}},
-		mapDimensions:   {type: 'f2', value:{x:1, y:5112}},
-		dimensions:   {type: 'f4', value:[0,0,0,0]}
+		scale:			 {type: '2f', value:{x:30, y:30}},
+		offset:			 {type: '2f', value:{x:0, y:0}},
+		mapDimensions:   {type: '2f', value:{x:1, y:5112}},
+		dimensions:   {type: '4fv', value:[0,0,0,0]}
 	};
 	
 
@@ -3013,9 +3061,9 @@ PIXI.DotScreenFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		scale: {type: 'f', value:1},
-		angle: {type: 'f', value:5},
-		dimensions:   {type: 'f4', value:[0,0,0,0]}
+		scale: {type: '1f', value:1},
+		angle: {type: '1f', value:5},
+		dimensions:   {type: '4fv', value:[0,0,0,0]}
 	};
 
 	this.fragmentSrc = [
@@ -3095,58 +3143,6 @@ PIXI.FilterBlock = function()
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
 
-
-/**
- * 
- * This turns your displayObjects to black and white.
- * @class GreyFilter
- * @contructor
- */
-PIXI.GreyFilter = function()
-{
-	PIXI.AbstractFilter.call( this );
-	
-	this.passes = [this];
-	
-	// set the uniforms
-	this.uniforms = {
-		grey: {type: 'f', value: 1},
-	};
-	
-	this.fragmentSrc = [
-	  "precision mediump float;",
-	  "varying vec2 vTextureCoord;",
-	  "varying float vColor;",
-	  "uniform sampler2D uSampler;",
-	  "uniform float grey;",
-	  "void main(void) {",
-	    "gl_FragColor = texture2D(uSampler, vTextureCoord);",
-		"gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.2126*gl_FragColor.r + 0.7152*gl_FragColor.g + 0.0722*gl_FragColor.b), grey);",
-	    "gl_FragColor = gl_FragColor * vColor;",
-	  "}"
-	];
-}
-
-PIXI.GreyFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.GreyFilter.prototype.constructor = PIXI.GreyFilter;
-
-/**
-The strength of the grey. 1 will make the object black and white, 0 will make the object its normal color
-@property grey
-*/
-Object.defineProperty(PIXI.GreyFilter.prototype, 'grey', {
-    get: function() {
-        return this.uniforms.grey.value;
-    },
-    set: function(value) {
-    	this.uniforms.grey.value = value;
-    }
-});
-
-/**
- * @author Mat Groves http://matgroves.com/ @Doormat23
- */
-
 /**
  * 
  * This inverts your displayObjects colors.
@@ -3161,7 +3157,7 @@ PIXI.InvertFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		invert: {type: 'f', value: 1},
+		invert: {type: '1f', value: 1},
 	};
 	
 	this.fragmentSrc = [
@@ -3213,9 +3209,9 @@ PIXI.PixelateFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		invert: {type: 'f', value: 0},
-		dimensions: {type: 'f4', value:new Float32Array([10000, 100, 10, 10])},
-		pixelSize: {type: 'f2', value:{x:10, y:10}},
+		invert: {type: '1f', value: 0},
+		dimensions: {type: '4fv', value:new Float32Array([10000, 100, 10, 10])},
+		pixelSize: {type: '2f', value:{x:10, y:10}},
 	};
 
 	this.fragmentSrc = [
@@ -3271,10 +3267,10 @@ PIXI.RGBSplitFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		red: {type: 'f2', value: {x:20, y:20}},
-		green: {type: 'f2', value: {x:-20, y:20}},
-		blue: {type: 'f2', value: {x:20, y:-20}},
-		dimensions:   {type: 'f4', value:[0,0,0,0]}
+		red: {type: '2f', value: {x:20, y:20}},
+		green: {type: '2f', value: {x:-20, y:20}},
+		blue: {type: '2f', value: {x:20, y:-20}},
+		dimensions:   {type: '4fv', value:[0,0,0,0]}
 	};
 	
 	this.fragmentSrc = [
@@ -3328,7 +3324,7 @@ PIXI.SepiaFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		sepia: {type: 'f', value: 1},
+		sepia: {type: '1f', value: 1},
 	};
 	
 	this.fragmentSrc = [
@@ -3378,7 +3374,7 @@ PIXI.SmartBlurFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		blur: {type: 'f', value: 1/512},
+		blur: {type: '1f', value: 1/512},
 	};
 	
 	this.fragmentSrc = [
@@ -3447,9 +3443,9 @@ PIXI.TwistFilter = function()
 	
 	// set the uniforms
 	this.uniforms = {
-		radius: {type: 'f', value:0.5},
-		angle: {type: 'f', value:5},
-		offset: {type: 'f2', value:{x:0.5, y:0.5}},
+		radius: {type: '1f', value:0.5},
+		angle: {type: '1f', value:5},
+		offset: {type: '2f', value:{x:0.5, y:0.5}},
 	};
 
 	this.fragmentSrc = [
@@ -3553,45 +3549,45 @@ PIXI.Graphics = function()
 	this.renderable = true;
 
     /**
-     * The alpha of the fill of this graphics object
-     *
-     * @property fillAlpha
-     * @type Number
-     */
+    * The alpha of the fill of this graphics object
+    *
+    * @property fillAlpha
+    * @type Number
+    */
 	this.fillAlpha = 1;
 
     /**
-     * The width of any lines drawn
-     *
-     * @property lineWidth
-     * @type Number
-     */
+    * The width of any lines drawn
+    *
+    * @property lineWidth
+    * @type Number
+    */
 	this.lineWidth = 0;
 
     /**
-     * The color of any lines drawn
-     *
-     * @property lineColor
-     * @type String
-     */
+    * The color of any lines drawn
+    *
+    * @property lineColor
+    * @type String
+    */
 	this.lineColor = "black";
 
     /**
-     * Graphics data
-     *
-     * @property graphicsData
-     * @type Array
-     * @private
-     */
+    * Graphics data
+    *
+    * @property graphicsData
+    * @type Array
+    * @private
+    */
 	this.graphicsData = [];
 
     /**
-     * Current path
-     *
-     * @property currentPath
-     * @type Object
-     * @private
-     */
+    * Current path
+    *
+    * @property currentPath
+    * @type Object
+    * @private
+    */
 	this.currentPath = {points:[]};
 }
 
@@ -3609,7 +3605,7 @@ PIXI.Graphics.prototype.constructor = PIXI.Graphics;
  */
 PIXI.Graphics.prototype.lineStyle = function(lineWidth, color, alpha)
 {
-	if(this.currentPath.points.length == 0)this.graphicsData.pop();
+	if(this.currentPath.points.length === 0)this.graphicsData.pop();
 
 	this.lineWidth = lineWidth || 0;
 	this.lineColor = color || 0;
@@ -3630,7 +3626,7 @@ PIXI.Graphics.prototype.lineStyle = function(lineWidth, color, alpha)
  */
 PIXI.Graphics.prototype.moveTo = function(x, y)
 {
-	if(this.currentPath.points.length == 0)this.graphicsData.pop();
+	if(this.currentPath.points.length === 0)this.graphicsData.pop();
 
 	this.currentPath = this.currentPath = {lineWidth:this.lineWidth, lineColor:this.lineColor, lineAlpha:this.lineAlpha,
 						fillColor:this.fillColor, fillAlpha:this.fillAlpha, fill:this.filling, points:[], type:PIXI.Graphics.POLY};
@@ -3691,7 +3687,7 @@ PIXI.Graphics.prototype.endFill = function()
  */
 PIXI.Graphics.prototype.drawRect = function( x, y, width, height )
 {
-	if(this.currentPath.points.length == 0)this.graphicsData.pop();
+	if(this.currentPath.points.length === 0)this.graphicsData.pop();
 
 	this.currentPath = {lineWidth:this.lineWidth, lineColor:this.lineColor, lineAlpha:this.lineAlpha,
 						fillColor:this.fillColor, fillAlpha:this.fillAlpha, fill:this.filling,
@@ -3711,7 +3707,7 @@ PIXI.Graphics.prototype.drawRect = function( x, y, width, height )
  */
 PIXI.Graphics.prototype.drawCircle = function( x, y, radius)
 {
-	if(this.currentPath.points.length == 0)this.graphicsData.pop();
+	if(this.currentPath.points.length === 0)this.graphicsData.pop();
 
 	this.currentPath = {lineWidth:this.lineWidth, lineColor:this.lineColor, lineAlpha:this.lineAlpha,
 						fillColor:this.fillColor, fillAlpha:this.fillAlpha, fill:this.filling,
@@ -3732,7 +3728,7 @@ PIXI.Graphics.prototype.drawCircle = function( x, y, radius)
  */
 PIXI.Graphics.prototype.drawElipse = function( x, y, width, height)
 {
-	if(this.currentPath.points.length == 0)this.graphicsData.pop();
+	if(this.currentPath.points.length === 0)this.graphicsData.pop();
 
 	this.currentPath = {lineWidth:this.lineWidth, lineColor:this.lineColor, lineAlpha:this.lineAlpha,
 						fillColor:this.fillColor, fillAlpha:this.fillAlpha, fill:this.filling,
@@ -4462,122 +4458,371 @@ PIXI.CanvasRenderer.prototype.renderStrip = function(strip)
 
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
+ * @author Richard Davey http://www.photonstorm.com @photonstorm
  */
 
-
+/**
+* @class PIXI.PixiShader
+* @constructor
+*/
 PIXI.PixiShader = function()
 {
-	// the webGL program..
-	this.program;
-	
-	this.fragmentSrc = [
-	  "precision lowp float;",
-	  "varying vec2 vTextureCoord;",
-	  "varying float vColor;",
-	  "uniform sampler2D uSampler;",
-	  "void main(void) {",
-	    "gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;",
-	  "}"
-	];
-	
+    /**
+    * @property {any} program - The WebGL program.
+    */
+    this.program;
+    
+    /**
+    * @property {array} fragmentSrc - The fragment shader.
+    */
+    this.fragmentSrc = [
+        "precision lowp float;",
+        "varying vec2 vTextureCoord;",
+        "varying float vColor;",
+        "uniform sampler2D uSampler;",
+        "void main(void) {",
+            "gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;",
+        "}"
+    ];
+
+    /**
+    * @property {number} textureCount - A local texture counter for multi-texture shaders.
+    */
+    this.textureCount = 0;
+    
 }
 
+/**
+* @method PIXI.PixiShader#init
+*/
 PIXI.PixiShader.prototype.init = function()
 {
-	var program = PIXI.compileProgram(this.vertexSrc || PIXI.PixiShader.defaultVertexSrc, this.fragmentSrc)
-	
-	var gl = PIXI.gl;
-	
+    var program = PIXI.compileProgram(this.vertexSrc || PIXI.PixiShader.defaultVertexSrc, this.fragmentSrc)
+    
+    var gl = PIXI.gl;
+
     gl.useProgram(program);
-	
-	// get and store the uniforms for the shader
-	this.uSampler = gl.getUniformLocation(program, "uSampler");
-	this.projectionVector = gl.getUniformLocation(program, "projectionVector");
-	this.offsetVector = gl.getUniformLocation(program, "offsetVector");
-    //this.dimensions = gl.getUniformLocation(this.program, "dimensions");
+    
+    // get and store the uniforms for the shader
+    this.uSampler = gl.getUniformLocation(program, "uSampler");
+    this.projectionVector = gl.getUniformLocation(program, "projectionVector");
+    this.offsetVector = gl.getUniformLocation(program, "offsetVector");
+    // this.dimensions = gl.getUniformLocation(program, "dimensions");
     
     // get and store the attributes
     this.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
-	this.colorAttribute = gl.getAttribLocation(program, "aColor");
-	this.aTextureCoord = gl.getAttribLocation(program, "aTextureCoord");
-	  
+    this.colorAttribute = gl.getAttribLocation(program, "aColor");
+    this.aTextureCoord = gl.getAttribLocation(program, "aTextureCoord");
+      
     // add those custom shaders!
     for (var key in this.uniforms)
     {
-       
-    	// get the uniform locations..
-	//	program[key] = 
+        // get the uniform locations..
         this.uniforms[key].uniformLocation = gl.getUniformLocation(program, key);
-
-      
     }
   
-	this.program = program;
+    this.program = program;
 }
 
+/**
+* Updates the shader uniform values.
+* Uniforms are specified in the GLSL_ES Specification: http://www.khronos.org/registry/webgl/specs/latest/1.0/
+* http://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf
+*
+* @method PIXI.PixiShader#syncUniforms
+*/
 PIXI.PixiShader.prototype.syncUniforms = function()
 {
-	var gl = PIXI.gl;
-	
-	for (var key in this.uniforms) 
+    this.textureCount = 1;
+
+    var gl = PIXI.gl;
+    
+    for (var key in this.uniforms) 
     {
-    	//var 
-    	var type = this.uniforms[key].type;
-    	
-    	// need to grow this!
-    	if(type == "f")
-    	{
-			gl.uniform1f(this.uniforms[key].uniformLocation, this.uniforms[key].value);
-    	}
-    	if(type == "f2")
-    	{
-    	//	console.log(this.program[key])
-			gl.uniform2f(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y);
-    	}
-        else if(type == "f4")
+        var type = this.uniforms[key].type;
+        var transpose = false;
+
+        if (this.uniforms[key].transpose)
         {
-           // console.log(this.uniforms[key].value)
+            transpose = this.uniforms[key].transpose;
+        }
+
+        if (type == "1f")
+        {
+            // void uniform1f(WebGLUniformLocation? location, GLfloat x);
+            gl.uniform1f(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
+        else if (type == "1fv")
+        {
+            // void uniform1fv(WebGLUniformLocation? location, Float32Array v);
+            // void uniform1fv(WebGLUniformLocation? location, sequence<GLfloat> v);
+            gl.uniform1fv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
+        else if (type == "1i")
+        {
+            // void uniform1i(WebGLUniformLocation? location, GLint x);
+            gl.uniform1i(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
+        else if (type == "1iv")
+        {
+            // void uniform1iv(WebGLUniformLocation? location, Int32Array v);
+            // void uniform1iv(WebGLUniformLocation? location, sequence<long> v);
+            gl.uniform1i(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
+        else if (type == "2f")
+        {
+            // void uniform2f(WebGLUniformLocation? location, GLfloat x, GLfloat y);
+            gl.uniform2f(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y);
+        }
+        else if (type == "2fv")
+        {
+            // void uniform2fv(WebGLUniformLocation? location, Float32Array v);
+            // void uniform2fv(WebGLUniformLocation? location, sequence<GLfloat> v);
+            gl.uniform2fv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
+        else if (type == "2i")
+        {
+            // void uniform2i(WebGLUniformLocation? location, GLint x, GLint y);
+            gl.uniform2i(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y);
+        }
+        else if (type == "2iv")
+        {
+            // void uniform2iv(WebGLUniformLocation? location, Int32Array v);
+            // void uniform2iv(WebGLUniformLocation? location, sequence<long> v);
+            gl.uniform2iv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
+        else if (type == "3f")
+        {
+            // void uniform3f(WebGLUniformLocation? location, GLfloat x, GLfloat y, GLfloat z);
+            gl.uniform3f(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y, this.uniforms[key].value.z);
+        }
+        else if (type == "3fv")
+        {
+            // void uniform3fv(WebGLUniformLocation? location, Float32Array v);
+            // void uniform3fv(WebGLUniformLocation? location, sequence<GLfloat> v);
+            gl.uniform3fv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
+        else if (type == "3i")
+        {
+            // void uniform3i(WebGLUniformLocation? location, GLint x, GLint y, GLint z);
+            gl.uniform3i(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y, this.uniforms[key].value.z);
+        }
+        else if (type == "3iv")
+        {
+            // void uniform3iv(WebGLUniformLocation? location, Int32Array v);
+            // void uniform3iv(WebGLUniformLocation? location, sequence<long> v);
+            gl.uniform3iv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
+        else if (type == "4f")
+        {
+            // void uniform4f(WebGLUniformLocation? location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+            gl.uniform4f(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y, this.uniforms[key].value.z, this.uniforms[key].value.w);
+        }
+        else if (type == "4fv")
+        {
+            // void uniform4fv(WebGLUniformLocation? location, Float32Array v);
+            // void uniform4fv(WebGLUniformLocation? location, sequence<GLfloat> v);
             gl.uniform4fv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
         }
-    	else if(type == "mat4")
-    	{
-    		gl.uniformMatrix4fv(this.uniforms[key].uniformLocation, false, this.uniforms[key].value);
-    	}
-    	else if(type == "sampler2D")
-    	{
-    		// first texture...
-    		var texture = this.uniforms[key].value;
-    		
-    		gl.activeTexture(gl.TEXTURE1);
-	    	gl.bindTexture(gl.TEXTURE_2D, texture.baseTexture._glTexture);
-	    	
-    		gl.uniform1i(this.uniforms[key].uniformLocation, 1);
-    		
-    		// activate texture..
-    		// gl.uniformMatrix4fv(this.program[key], false, this.uniforms[key].value);
-    		// gl.uniformMatrix4fv(this.program[key], false, this.uniforms[key].value);
-    	}
+        else if (type == "4i")
+        {
+            // void uniform4i(WebGLUniformLocation? location, GLint x, GLint y, GLint z, GLint w);
+            gl.uniform4i(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y, this.uniforms[key].value.z, this.uniforms[key].value.w);
+        }
+        else if (type == "4iv")
+        {
+            // void uniform4iv(WebGLUniformLocation? location, Int32Array v);
+            // void uniform4iv(WebGLUniformLocation? location, sequence<long> v);
+            gl.uniform4iv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
+        }
+        else if (type == "mat2")
+        {
+            // void uniformMatrix2fv(WebGLUniformLocation? location, GLboolean transpose, Float32Array value);
+            // void uniformMatrix2fv(WebGLUniformLocation? location, GLboolean transpose, sequence<GLfloat> value);
+            gl.uniformMatrix2fv(this.uniforms[key].uniformLocation, transpose, this.uniforms[key].value);
+        }
+        else if (type == "mat3")
+        {
+            // void uniformMatrix3fv(WebGLUniformLocation? location, GLboolean transpose, Float32Array value);
+            // void uniformMatrix3fv(WebGLUniformLocation? location, GLboolean transpose, sequence<GLfloat> value);
+            gl.uniformMatrix3fv(this.uniforms[key].uniformLocation, transpose, this.uniforms[key].value);
+        }
+        else if (type == "mat4")
+        {
+            // void uniformMatrix4fv(WebGLUniformLocation? location, GLboolean transpose, Float32Array value);
+            // void uniformMatrix4fv(WebGLUniformLocation? location, GLboolean transpose, sequence<GLfloat> value);
+            gl.uniformMatrix4fv(this.uniforms[key].uniformLocation, transpose, this.uniforms[key].value);
+        }
+        else if (type == "sampler2D")
+        {
+            if (this.uniforms[key].value && this.uniforms[key].value.baseTexture.hasLoaded)
+            {
+                var texture = this.uniforms[key].value.baseTexture._glTexture;
+                var image = this.uniforms[key].value.baseTexture.source;
+                var format = gl.RGBA;
+
+                if (this.uniforms[key].format && this.uniforms[key].format == 'luminance')
+                {
+                    format = gl.LUMINANCE;
+                }
+
+                gl.activeTexture(gl['TEXTURE' + this.textureCount]);
+
+                if (this.uniforms[key].wrap)
+                {
+                    if (this.uniforms[key].wrap == 'no-repeat' || this.uniforms[key].wrap === false)
+                    {
+                        this.createGLTextureLinear(gl, image, texture);
+                    }
+                    else if (this.uniforms[key].wrap == 'repeat' || this.uniforms[key].wrap === true)
+                    {
+                        this.createGLTexture(gl, image, format, texture);
+                    }
+                    else if (this.uniforms[key].wrap == 'nearest-repeat')
+                    {
+                        this.createGLTextureNearestRepeat(gl, image, texture);
+                    }
+                    else if (this.uniforms[key].wrap == 'nearest')
+                    {
+                        this.createGLTextureNearest(gl, image, texture);
+                    }
+                    else if (this.uniforms[key].wrap == 'audio')
+                    {
+                        this.createAudioTexture(gl, texture);
+                    }
+                    else if (this.uniforms[key].wrap == 'keyboard')
+                    {
+                        this.createKeyboardTexture(gl, texture);
+                    }
+                }
+                else
+                {
+                    this.createGLTextureLinear(gl, image, texture);
+                }
+
+                gl.uniform1i(this.uniforms[key].uniformLocation, this.textureCount);
+
+                this.textureCount++;
+            }
+        }
     }
     
+};
+
+/**
+* Binds the given texture and image data. The texture is set to REPEAT.
+* Code based on Effects.js from ShaderToy.com
+* @method PIXI.PixiShader#createGLTexture
+*/
+PIXI.PixiShader.prototype.createGLTexture = function(gl, image, format, texture)
+{
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage2D(gl.TEXTURE_2D, 0, format, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    gl.generateMipmap(gl.TEXTURE_2D);
+}
+
+/**
+* Binds the given texture and image data. The texture is set to CLAMP_TO_EDGE.
+* Code based on Effects.js from ShaderToy.com
+* @method PIXI.PixiShader#createGLTextureLinear
+*/
+PIXI.PixiShader.prototype.createGLTextureLinear = function(gl, image, texture)
+{
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+}
+
+/**
+* Binds the given texture and image data. The texture is set to REPEAT with NEAREST.
+* Code based on Effects.js from ShaderToy.com
+* @method PIXI.PixiShader#createGLTextureNearestRepeat
+*/
+PIXI.PixiShader.prototype.createGLTextureNearestRepeat = function(gl, image, texture)
+{
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+}
+
+/**
+* Binds the given texture and image data. The texture is set to CLAMP_TO_EDGE with NEAREST.
+* Code based on Effects.js from ShaderToy.com
+* @method PIXI.PixiShader#createGLTextureNearest
+*/
+PIXI.PixiShader.prototype.createGLTextureNearest = function(gl, image, texture)
+{
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+}
+
+/**
+* Binds the given texture data. The texture is set to CLAMP_TO_EDGE with LUMINANCE. Designed for use with real-time audio data.
+* Code based on Effects.js from ShaderToy.com
+* @method PIXI.PixiShader#createAudioTexture
+*/
+PIXI.PixiShader.prototype.createAudioTexture = function(gl, texture)
+{
+    gl.bindTexture(gl.TEXTURE_2D, texture );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE) ;
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, 512, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, null);
+}
+
+/**
+* Binds the given texture data. The texture is set to CLAMP_TO_EDGE with LUMINANCE. Designed for use with keyboard input data.
+* Code based on Effects.js from ShaderToy.com
+* @method PIXI.PixiShader#createKeyboardTexture
+*/
+PIXI.PixiShader.prototype.createKeyboardTexture = function(gl, texture)
+{
+    gl.bindTexture(gl.TEXTURE_2D, texture );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE) ;
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, 256, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, null);
 }
 
 PIXI.PixiShader.defaultVertexSrc = [
-  "attribute vec2 aVertexPosition;",
-  "attribute vec2 aTextureCoord;",
-  "attribute float aColor;",
-  
-  "uniform vec2 projectionVector;",
- "uniform vec2 offsetVector;",
-  "varying vec2 vTextureCoord;",
-  
-  "varying float vColor;",
+    
+    "attribute vec2 aVertexPosition;",
+    "attribute vec2 aTextureCoord;",
+    "attribute float aColor;",
 
-  "const vec2 center = vec2(-1.0, 1.0);",
-  "void main(void) {",
-    "gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center , 0.0, 1.0);",
-    "vTextureCoord = aTextureCoord;",
-    "vColor = aColor;",
-  "}"
+    "uniform vec2 projectionVector;",
+    "uniform vec2 offsetVector;",
+    "varying vec2 vTextureCoord;",
+
+    "varying float vColor;",
+
+    "const vec2 center = vec2(-1.0, 1.0);",
+    
+    "void main(void) {",
+        "gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center , 0.0, 1.0);",
+        "vTextureCoord = aTextureCoord;",
+        "vColor = aColor;",
+    "}"
 ];
 
 /**
@@ -4715,7 +4960,7 @@ PIXI._batchs = [];
  */
 PIXI._getBatch = function(gl)
 {
-	if(PIXI._batchs.length == 0)
+	if(PIXI._batchs.length === 0)
 	{
 		return new PIXI.WebGLBatch(gl);
 	}
@@ -4895,7 +5140,7 @@ PIXI.WebGLBatch.prototype.remove = function(sprite)
 {
 	this.size--;
 
-	if(this.size == 0)
+	if(this.size === 0)
 	{
 		sprite.batch = null;
 		sprite.__prev = null;
@@ -5228,7 +5473,7 @@ PIXI.WebGLBatch.prototype.render = function(start, end)
 		this.dirty = false;
 	}
 
-	if (this.size == 0)return;
+	if (this.size === 0)return;
 
 	this.update();
 	var gl = this.gl;
@@ -6080,7 +6325,7 @@ PIXI.WebGLGraphics.buildLine = function(graphicsData, webGLData)
 	
 	var wrap = true;
 	var points = graphicsData.points;
-	if(points.length == 0)return;
+	if(points.length === 0)return;
 	
 	// if the line width is an odd number add 0.5 to align to a whole pixel
 	if(graphicsData.lineWidth%2)
@@ -6444,7 +6689,7 @@ PIXI.WebGLRenderer.prototype.constructor = PIXI.WebGLRenderer;
  */
 PIXI.WebGLRenderer.getBatch = function()
 {
-	if(PIXI._batchs.length == 0)
+	if(PIXI._batchs.length === 0)
 	{
 		return new PIXI.WebGLBatch(PIXI.WebGLRenderer.gl);
 	}
@@ -6722,6 +6967,7 @@ PIXI.WebGLRenderGroup = function(gl, transparent)
 	
 	this.batchs = [];
 	this.toRemove = [];
+	// console.log(this.transparent)
 	this.filterManager = new PIXI.WebGLFilterManager(this.transparent);
 }
 
@@ -7471,7 +7717,7 @@ PIXI.WebGLRenderGroup.prototype.removeObject = function(displayObject)
 		
 		// ok so.. check to see if you adjacent batchs should be joined.
 		// TODO may optimise?
-		if(index == 0 || index == this.batchs.length-1)
+		if(index === 0 || index == this.batchs.length-1)
 		{
 			// wha - eva! just get of the empty batch!
 			this.batchs.splice(index, 1);
@@ -7544,7 +7790,7 @@ PIXI.WebGLRenderGroup.prototype.initTilingSprite = function(sprite)
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, sprite._indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sprite.indices, gl.STATIC_DRAW);
     
-//    return ( (x > 0) && ((x & (x - 1)) == 0) );
+//    return ( (x > 0) && ((x & (x - 1)) === 0) );
 
 	if(sprite.texture.baseTexture._glTexture)
 	{
@@ -7821,6 +8067,7 @@ PIXI._CompileShader = function(gl, shaderSrc, shaderType)
   gl.compileShader(shader);
 
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    console.log(gl.getShaderInfoLog(shader));
     return null;
   }
 
@@ -9130,35 +9377,35 @@ PIXI.PolyK._convex = function(ax, ay, bx, by, cx, cy, sign)
 */
 Phaser.Camera = function (game, id, x, y, width, height) {
     
-	/**
-	* @property {Phaser.Game} game - A reference to the currently running Game.
-	*/
-	this.game = game;
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
+    this.game = game;
 
-	/**
-	* @property {Phaser.World} world - A reference to the game world.
-	*/
-	this.world = game.world;
+    /**
+    * @property {Phaser.World} world - A reference to the game world.
+    */
+    this.world = game.world;
 
-	/**
-	* @property {number} id - Reserved for future multiple camera set-ups.
-	* @default
-	*/
-	this.id = 0; 
+    /**
+    * @property {number} id - Reserved for future multiple camera set-ups.
+    * @default
+    */
+    this.id = 0;
 
-	/**
-	* Camera view. 
-	* The view into the world we wish to render (by default the game dimensions).
+    /**
+    * Camera view. 
+    * The view into the world we wish to render (by default the game dimensions).
     * The x/y values are in world coordinates, not screen coordinates, the width/height is how many pixels to render.
     * Objects outside of this view are not rendered (unless set to ignore the Camera, i.e. UI?).
-	* @property {Phaser.Rectangle} view
-	*/
+    * @property {Phaser.Rectangle} view
+    */
     this.view = new Phaser.Rectangle(x, y, width, height);
 
     /**
-	* @property {Phaser.Rectangle} screenView - Used by Sprites to work out Camera culling.
-	*/
-	this.screenView = new Phaser.Rectangle(x, y, width, height);
+    * @property {Phaser.Rectangle} screenView - Used by Sprites to work out Camera culling.
+    */
+    this.screenView = new Phaser.Rectangle(x, y, width, height);
 
     /**
     * The Camera is bound to this Rectangle and cannot move outside of it. By default it is enabled and set to the size of the World.
@@ -9169,36 +9416,36 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     this.bounds = new Phaser.Rectangle(x, y, width, height);
 
     /**
-	* @property {Phaser.Rectangle} deadzone - Moving inside this Rectangle will not cause camera moving.
-	*/
+    * @property {Phaser.Rectangle} deadzone - Moving inside this Rectangle will not cause camera moving.
+    */
     this.deadzone = null;
 
-	/**
-	* @property {boolean} visible - Whether this camera is visible or not.
-	* @default
-	*/
+    /**
+    * @property {boolean} visible - Whether this camera is visible or not.
+    * @default
+    */
     this.visible = true;
 
-	/**
-	* @property {boolean} atLimit - Whether this camera is flush with the World Bounds or not.
+    /**
+    * @property {boolean} atLimit - Whether this camera is flush with the World Bounds or not.
     */
     this.atLimit = { x: false, y: false };
 
-	/**
-	* @property {Phaser.Sprite} target - If the camera is tracking a Sprite, this is a reference to it, otherwise null.
+    /**
+    * @property {Phaser.Sprite} target - If the camera is tracking a Sprite, this is a reference to it, otherwise null.
     * @default
     */
     this.target = null;
 
-	/**
-	* @property {number} edge - Edge property.
+    /**
+    * @property {number} edge - Edge property.
     * @private
     * @default
     */
     this._edge = 0;
 
     this.displayObject = null;
-	
+    
 };
 
 /**
@@ -9227,7 +9474,7 @@ Phaser.Camera.FOLLOW_TOPDOWN_TIGHT = 3;
 
 Phaser.Camera.prototype = {
 
-	/**
+    /**
     * Tells this camera which sprite to follow.
     * @method Phaser.Camera#follow
     * @param {Phaser.Sprite} target - The object you want the camera to track. Set to null to not follow anything.
@@ -9260,6 +9507,9 @@ Phaser.Camera.prototype = {
                 break;
 
             case Phaser.Camera.FOLLOW_LOCKON:
+                this.deadzone = null;
+                break;
+
             default:
                 this.deadzone = null;
                 break;
@@ -9278,7 +9528,7 @@ Phaser.Camera.prototype = {
 
     },
 
-	/**
+    /**
     * Move the camera focus on a location instantly.
     * @method Phaser.Camera#focusOnXY
     * @param {number} x - X position.
@@ -9290,7 +9540,7 @@ Phaser.Camera.prototype = {
 
     },
 
-	/**
+    /**
     * Update focusing and scrolling.
     * @method Phaser.Camera#update
     */
@@ -9459,7 +9709,7 @@ Object.defineProperty(Phaser.Camera.prototype, "x", {
 * @property {number} y - Gets or sets the cameras y position.
 */
 Object.defineProperty(Phaser.Camera.prototype, "y", {
-	
+    
     get: function () {
         return this.view.y;
     },
@@ -9527,86 +9777,86 @@ Object.defineProperty(Phaser.Camera.prototype, "height", {
 Phaser.State = function () {
 
     /**
-	* @property {Phaser.Game} game - A reference to the currently running Game.
-	*/
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
     this.game = null;
     
-	/**
-	* @property {Phaser.GameObjectFactory} add - Reference to the GameObjectFactory.
-	* @default
-	*/
+    /**
+    * @property {Phaser.GameObjectFactory} add - Reference to the GameObjectFactory.
+    * @default
+    */
     this.add = null;
     
     /**
-	* @property {Phaser.Physics.PhysicsManager} camera - A handy reference to world.camera.
-	* @default
-	*/
+    * @property {Phaser.Camera} camera - A handy reference to world.camera.
+    * @default
+    */
     this.camera = null;
     
     /**
-	* @property {Phaser.Cache} cache - Reference to the assets cache.
-	* @default
-	*/
+    * @property {Phaser.Cache} cache - Reference to the assets cache.
+    * @default
+    */
     this.cache = null;
     
     /**
-	* @property {Phaser.Input} input - Reference to the input manager
-	* @default
-	*/
+    * @property {Phaser.Input} input - Reference to the input manager
+    * @default
+    */
     this.input = null;
     
     /**
-	* @property {Phaser.Loader} load - Reference to the assets loader.
-	* @default
-	*/
+    * @property {Phaser.Loader} load - Reference to the assets loader.
+    * @default
+    */
     this.load = null;
     
     /**
-	* @property {Phaser.GameMath} math - Reference to the math helper.
-	* @default
-	*/
+    * @property {Phaser.Math} math - Reference to the math helper.
+    * @default
+    */
     this.math = null;
     
     /**
-	* @property {Phaser.SoundManager} sound - Reference to the sound manager.
-	* @default
-	*/
+    * @property {Phaser.SoundManager} sound - Reference to the sound manager.
+    * @default
+    */
     this.sound = null;
     
     /**
-	* @property {Phaser.Stage} stage - Reference to the stage.
-	* @default
-	*/
+    * @property {Phaser.Stage} stage - Reference to the stage.
+    * @default
+    */
     this.stage = null;
     
     /**
-	* @property {Phaser.TimeManager} time - Reference to game clock.
-	* @default
-	*/
+    * @property {Phaser.TimeManager} time - Reference to game clock.
+    * @default
+    */
     this.time = null;
     
     /**
-	* @property {Phaser.TweenManager} tweens - Reference to the tween manager.
-	* @default
-	*/
+    * @property {Phaser.TweenManager} tweens - Reference to the tween manager.
+    * @default
+    */
     this.tweens = null;
     
     /**
-	* @property {Phaser.World} world - Reference to the world.
-	* @default
-	*/
+    * @property {Phaser.World} world - Reference to the world.
+    * @default
+    */
     this.world = null;
     
-	/**
-	* @property {Description} add - Description.
-	* @default
-	*/
+    /**
+    * @property {Phaser.Particles} particles - The Particle Manager for the game. It is called during the game update loop and in turn updates any Emitters attached to it.
+    * @default
+    */
     this.particles = null;
     
     /**
-	* @property {Phaser.Physics.PhysicsManager} physics - Reference to the physics manager.
-	* @default
-	*/
+    * @property {Phaser.Physics.PhysicsManager} physics - Reference to the physics manager.
+    * @default
+    */
     this.physics = null;
 
 };
@@ -9680,6 +9930,8 @@ Phaser.State.prototype = {
 
 };
 
+/* jshint newcap: false */
+
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
@@ -9696,148 +9948,117 @@ Phaser.State.prototype = {
 */
 Phaser.StateManager = function (game, pendingState) {
 
-	/**
-	* A reference to the currently running game.
-	* @property {Phaser.Game} game.
-	*/
-	this.game = game;
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game.
+    */
+    this.game = game;
 
-	/**
-	* Description.
-	* @property {Description} states.
-	*/
-	this.states = {};
+    /**
+    * @property {Object} states - The object containing Phaser.States.
+    */
+    this.states = {};
 
-	if (pendingState !== null)
-	{
-		this._pendingState = pendingState;
-	}
+    /**
+    * @property {Phaser.State} _pendingState - The state to be switched to in the next frame.
+    * @private
+    */
+    this._pendingState = null;
+
+    if (pendingState !== null)
+    {
+        this._pendingState = pendingState;
+    }
+
+    /**
+    * @property {boolean} _created - Flag that sets if the State has been created or not.
+    * @private
+    */
+    this._created = false;
+
+    /**
+    * @property {string} current - The current active State object (defaults to null).
+    */
+    this.current = '';
+
+    /**
+    * @property {function} onInitCallback - This will be called when the state is started (i.e. set as the current active state).
+    */
+    this.onInitCallback = null;
+
+    /**
+    * @property {function} onPreloadCallback - This will be called when init states (loading assets...).
+    */
+    this.onPreloadCallback = null;
+    
+    /**
+    * @property {function} onCreateCallback - This will be called when create states (setup states...).
+    */
+    this.onCreateCallback = null;
+
+    /**
+    * @property {function} onUpdateCallback - This will be called when State is updated, this doesn't happen during load (@see onLoadUpdateCallback).
+    */
+    this.onUpdateCallback = null;
+
+    /**
+    * @property {function} onRenderCallback - This will be called when the State is rendered, this doesn't happen during load (see onLoadRenderCallback).
+    */
+    this.onRenderCallback = null;
+
+    /**
+    * @property {function} onPreRenderCallback - This will be called before the State is rendered and before the stage is cleared.
+    */
+    this.onPreRenderCallback = null;
+
+    /**
+    * @property {function} onLoadUpdateCallback - This will be called when the State is updated but only during the load process.
+    */
+    this.onLoadUpdateCallback = null;
+
+    /**
+    * @property {function} onLoadRenderCallback - This will be called when the State is rendered but only during the load process.
+    */
+    this.onLoadRenderCallback = null;
+
+    /**
+    * @property {function} onPausedCallback - This will be called when the state is paused.
+    */
+    this.onPausedCallback = null;
+
+    /**
+    * @property {function} onShutDownCallback - This will be called when the state is shut down (i.e. swapped to another state).
+    */
+    this.onShutDownCallback = null;
+
 
 };
 
 Phaser.StateManager.prototype = {
-	
-	/**
-	* A reference to the currently running game.
-	* @property {Phaser.Game} game.
-	*/
-	game: null,
 
-	/**
-	* The state to be switched to in the next frame.
-	* @property {State} _pendingState 
-	* @private
-	*/
-	_pendingState: null,
+    /**
+    * The Boot handler is called by Phaser.Game when it first starts up.
+    * @method Phaser.StateManager#boot
+    * @private
+    */
+    boot: function () {
 
-	/**
-	* Flag that sets if the State has been created or not.
-	* @property {boolean}_created
-	* @private
-	*/
-	_created: false,
+        if (this._pendingState !== null)
+        {
+            if (typeof this._pendingState === 'string')
+            {
+                //  State was already added, so just start it
+                this.start(this._pendingState, false, false);
+            }
+            else
+            {
+                this.add('default', this._pendingState, true);
+            }
 
-	/**
-	* The state to be switched to in the next frame.
-	* @property {Description} states
-	*/
-	states: {},
+        }
 
-	/**
-	* The current active State object (defaults to null).
-	* @property {string} current
-	*/
-	current: '',
-	
-	/**
-	* This will be called when the state is started (i.e. set as the current active state).
-	* @property {function} onInitCallback
-	*/
-	onInitCallback: null,
+    },
 
-	/**
-	* This will be called when init states (loading assets...).
-	* @property {function} onPreloadCallback
-	*/
-	onPreloadCallback: null,
-	
-	/**
-	* This will be called when create states (setup states...).
-	* @property {function} onCreateCallback
-	*/
-	onCreateCallback: null,
-
-	/**
-	* This will be called when State is updated, this doesn't happen during load (@see onLoadUpdateCallback).
-	* @property {function} onUpdateCallback
-	*/
-	onUpdateCallback: null,
-
-	/**
-	* This will be called when the State is rendered, this doesn't happen during load (see onLoadRenderCallback).
-	* @property {function} onRenderCallback
-	*/
-	onRenderCallback: null,
-
-	/**
-	* This will be called before the State is rendered and before the stage is cleared.
-	* @property {function} onPreRenderCallback
-	*/
-	onPreRenderCallback: null,
-
-	/**
-	* This will be called when the State is updated but only during the load process.
-	* @property {function} onLoadUpdateCallback
-	*/
-	onLoadUpdateCallback: null,
-
-	/**
-	* This will be called when the State is rendered but only during the load process.
-	* @property {function} onLoadRenderCallback
-	*/
-	onLoadRenderCallback: null,
-
-	/**
-	* This will be called when states paused.
-	* @property {function} onPausedCallback
-	*/
-	onPausedCallback: null,
-
-	/**
-	* This will be called when the state is shut down (i.e. swapped to another state).
-	* @property {function} onShutDownCallback
-	*/
-	onShutDownCallback: null,
-
-	/**
-	* Description.
-	* @method Phaser.StateManager#boot
-	* @private
-	*/
-	boot: function () {
-
-		// console.log('Phaser.StateManager.boot');
-
-		if (this._pendingState !== null)
-		{
-			// console.log('_pendingState found');
-			// console.log(typeof this._pendingState);
-
-			if (typeof this._pendingState === 'string')
-			{
-				//	State was already added, so just start it
-				this.start(this._pendingState, false, false);
-			}
-			else
-			{
-				this.add('default', this._pendingState, true);
-			}
-
-		}
-
-	},
-
-	/**
+    /**
     * Add a new State.
     * @method Phaser.StateManager#add
     * @param key {string} - A unique key you use to reference this state, i.e. "MainMenu", "Level1".
@@ -9848,78 +10069,69 @@ Phaser.StateManager.prototype = {
 
         if (typeof autoStart === "undefined") { autoStart = false; }
 
-		// console.log('Phaser.StateManager.addState', key);
-		// console.log(typeof state);
-		// console.log('autoStart?', autoStart);
+        var newState;
 
-		var newState;
+        if (state instanceof Phaser.State)
+        {
+            newState = state;
+        }
+        else if (typeof state === 'object')
+        {
+            newState = state;
+            newState.game = this.game;
+        }
+        else if (typeof state === 'function')
+        {
+            newState = new state(this.game);
+        }
 
-		if (state instanceof Phaser.State)
-		{
-			// console.log('Phaser.StateManager.addState: Phaser.State given');
-			newState = state;
-		}
-		else if (typeof state === 'object')
-		{
-			// console.log('Phaser.StateManager.addState: Object given');
-			newState = state;
-			newState.game = this.game;
-		}
-		else if (typeof state === 'function')
-		{
-			// console.log('Phaser.StateManager.addState: Function given');
-			newState = new state(this.game);
-		}
+        this.states[key] = newState;
 
-		this.states[key] = newState;
+        if (autoStart)
+        {
+            if (this.game.isBooted)
+            {
+                this.start(key);
+            }
+            else
+            {
+                this._pendingState = key;
+            }
+        }
 
-		if (autoStart)
-		{
-			if (this.game.isBooted)
-			{
-				// console.log('Game is booted, so we can start the state now');
-				this.start(key);
-			}
-			else
-			{
-				// console.log('Game is NOT booted, so set the current state as pending');
-				this._pendingState = key;
-			}
-		}
-
-		return newState;
+        return newState;
 
     },
 
-	/**
-     * Delete the given state.
-     * @method Phaser.StateManager#remove
-     * @param {string} key - A unique key you use to reference this state, i.e. "MainMenu", "Level1".
-     */
+    /**
+    * Delete the given state.
+    * @method Phaser.StateManager#remove
+    * @param {string} key - A unique key you use to reference this state, i.e. "MainMenu", "Level1".
+    */
     remove: function (key) {
 
-    	if (this.current == key)
-    	{
-	        this.callbackContext = null;
+        if (this.current == key)
+        {
+            this.callbackContext = null;
 
-	        this.onInitCallback = null;
-	        this.onShutDownCallback = null;
+            this.onInitCallback = null;
+            this.onShutDownCallback = null;
 
-	        this.onPreloadCallback = null;
-	        this.onLoadRenderCallback = null;
-	        this.onLoadUpdateCallback = null;
-	        this.onCreateCallback = null;
-	        this.onUpdateCallback = null;
-	        this.onRenderCallback = null;
-	        this.onPausedCallback = null;
-	        this.onDestroyCallback = null;
-    	}
+            this.onPreloadCallback = null;
+            this.onLoadRenderCallback = null;
+            this.onLoadUpdateCallback = null;
+            this.onCreateCallback = null;
+            this.onUpdateCallback = null;
+            this.onRenderCallback = null;
+            this.onPausedCallback = null;
+            this.onDestroyCallback = null;
+        }
 
-    	delete this.states[key];
+        delete this.states[key];
 
     },
 
-	/**
+    /**
     * Start the given state
     * @method Phaser.StateManager#start
     * @param {string} key - The key of the state you want to start.
@@ -9928,84 +10140,75 @@ Phaser.StateManager.prototype = {
     */
     start: function (key, clearWorld, clearCache) {
 
-    	// console.log('Phaser.StateManager.start', key);
-    	// console.log(this);
-    	// console.log(this.callbackContext);
-
         if (typeof clearWorld === "undefined") { clearWorld = true; }
         if (typeof clearCache === "undefined") { clearCache = false; }
 
-        if (this.game.isBooted == false)
+        if (this.game.isBooted === false)
         {
-			// console.log('Game is NOT booted, so set the requested state as pending');
-			this._pendingState = key;
-			return;
+            this._pendingState = key;
+            return;
         }
 
-		if (this.checkState(key) == false)
-		{
-			return;
-		}
-		else
-		{
-			//	Already got a state running?
-			if (this.current)
-			{
-				this.onShutDownCallback.call(this.callbackContext, this.game);
-			}
+        if (this.checkState(key) === false)
+        {
+            return;
+        }
+        else
+        {
+            //  Already got a state running?
+            if (this.current)
+            {
+                this.onShutDownCallback.call(this.callbackContext, this.game);
+            }
 
-	        if (clearWorld)
-	        {
-				this.game.tweens.removeAll();
+            if (clearWorld)
+            {
+                this.game.tweens.removeAll();
 
-	            this.game.world.destroy();
+                this.game.world.destroy();
 
-	            if (clearCache == true)
-	            {
-	                this.game.cache.destroy();
-	            }
-	        }
+                if (clearCache === true)
+                {
+                    this.game.cache.destroy();
+                }
+            }
 
-			this.setCurrentState(key);
-		}
+            this.setCurrentState(key);
+        }
 
         if (this.onPreloadCallback)
         {
-	    	// console.log('Preload Callback found');
             this.game.load.reset();
             this.onPreloadCallback.call(this.callbackContext, this.game);
 
             //  Is the loader empty?
-            if (this.game.load.queueSize == 0)
+            if (this.game.load.queueSize === 0)
             {
-		    	// console.log('Loader queue empty');
                 this.game.loadComplete();
             }
             else
             {
-		    	// console.log('Loader started');
                 //  Start the loader going as we have something in the queue
                 this.game.load.start();
             }
         }
         else
         {
-			// console.log('Preload callback not found');
             //  No init? Then there was nothing to load either
             this.game.loadComplete();
         }
 
     },
-	
-	/**
-	* Used by onInit and onShutdown when those functions don't exist on the state
+    
+    /**
+    * Used by onInit and onShutdown when those functions don't exist on the state
     * @method Phaser.StateManager#dummy
     * @private
     */
     dummy: function () {
     },
 
-	/**
+    /**
     * Description.
     * @method Phaser.StateManager#checkState
     * @param {string} key - The key of the state you want to check.
@@ -10013,37 +10216,37 @@ Phaser.StateManager.prototype = {
     */
     checkState: function (key) {
 
-		if (this.states[key])
-		{
-			var valid = false;
+        if (this.states[key])
+        {
+            var valid = false;
 
-			if (this.states[key]['preload']) { valid = true; }
+            if (this.states[key]['preload']) { valid = true; }
 
-			if (valid == false && this.states[key]['loadRender']) { valid = true; }
-			if (valid == false && this.states[key]['loadUpdate']) { valid = true; }
-			if (valid == false && this.states[key]['create']) { valid = true; }
-			if (valid == false && this.states[key]['update']) { valid = true; }
-			if (valid == false && this.states[key]['preRender']) { valid = true; }
-			if (valid == false && this.states[key]['render']) { valid = true; }
-			if (valid == false && this.states[key]['paused']) { valid = true; }
+            if (valid === false && this.states[key]['loadRender']) { valid = true; }
+            if (valid === false && this.states[key]['loadUpdate']) { valid = true; }
+            if (valid === false && this.states[key]['create']) { valid = true; }
+            if (valid === false && this.states[key]['update']) { valid = true; }
+            if (valid === false && this.states[key]['preRender']) { valid = true; }
+            if (valid === false && this.states[key]['render']) { valid = true; }
+            if (valid === false && this.states[key]['paused']) { valid = true; }
 
-        	if (valid == false)
-        	{
-	            console.warn("Invalid Phaser State object given. Must contain at least a one of the required functions.");
-	            return false;
-	        }
+            if (valid === false)
+            {
+                console.warn("Invalid Phaser State object given. Must contain at least a one of the required functions.");
+                return false;
+            }
 
-			return true;
-		}
-		else
-		{
-			console.warn("Phaser.StateManager - No state found with the key: " + key);
-			return false;
-		}
+            return true;
+        }
+        else
+        {
+            console.warn("Phaser.StateManager - No state found with the key: " + key);
+            return false;
+        }
 
     },
 
-	/**
+    /**
     * Links game properties to the State given by the key.
     * @method Phaser.StateManager#link
     * @param {string} key - State key.
@@ -10051,7 +10254,6 @@ Phaser.StateManager.prototype = {
     */
     link: function (key) {
 
-		// console.log('linked');
         this.states[key].game = this.game;
         this.states[key].add = this.game.add;
         this.states[key].camera = this.game.camera;
@@ -10070,19 +10272,19 @@ Phaser.StateManager.prototype = {
 
     },
 
-	/**
+    /**
     * Sets the current State. Should not be called directly (use StateManager.start)
     * @method Phaser.StateManager#setCurrentState
     * @param {string} key - State key.
     * @protected
     */
-	setCurrentState: function (key) {
+    setCurrentState: function (key) {
 
         this.callbackContext = this.states[key];
 
         this.link(key);
 
-        //	Used when the state is set as being the current active state
+        //  Used when the state is set as being the current active state
         this.onInitCallback = this.states[key]['init'] || this.dummy;
 
         this.onPreloadCallback = this.states[key]['preload'] || null;
@@ -10094,102 +10296,99 @@ Phaser.StateManager.prototype = {
         this.onRenderCallback = this.states[key]['render'] || null;
         this.onPausedCallback = this.states[key]['paused'] || null;
 
-        //	Used when the state is no longer the current active state
+        //  Used when the state is no longer the current active state
         this.onShutDownCallback = this.states[key]['shutdown'] || this.dummy;
 
-		this.current = key;
-		this._created = false;
+        this.current = key;
+        this._created = false;
 
-		this.onInitCallback.call(this.callbackContext, this.game);
+        this.onInitCallback.call(this.callbackContext, this.game);
 
-	},
+    },
 
-	/**
-	* @method Phaser.StateManager#loadComplete
+    /**
+    * @method Phaser.StateManager#loadComplete
     * @protected
-	*/
+    */
     loadComplete: function () {
 
-		// console.log('Phaser.StateManager.loadComplete');
-
-        if (this._created == false && this.onCreateCallback)
+        if (this._created === false && this.onCreateCallback)
         {
-			// console.log('Create callback found');
-	        this._created = true;
+            this._created = true;
             this.onCreateCallback.call(this.callbackContext, this.game);
         }
         else
         {
-	        this._created = true;
+            this._created = true;
         }
 
     },
 
-	/**
-	* @method Phaser.StateManager#update
+    /**
+    * @method Phaser.StateManager#update
     * @protected
-	*/
+    */
     update: function () {
 
-    	if (this._created && this.onUpdateCallback)
-    	{
-			this.onUpdateCallback.call(this.callbackContext, this.game);
-    	}
-    	else
-    	{
-		    if (this.onLoadUpdateCallback)
-		    {
-		    	this.onLoadUpdateCallback.call(this.callbackContext, this.game);
-			}
-		}
+        if (this._created && this.onUpdateCallback)
+        {
+            this.onUpdateCallback.call(this.callbackContext, this.game);
+        }
+        else
+        {
+            if (this.onLoadUpdateCallback)
+            {
+                this.onLoadUpdateCallback.call(this.callbackContext, this.game);
+            }
+        }
 
     },
 
-	/**
-	* @method Phaser.StateManager#preRender
+    /**
+    * @method Phaser.StateManager#preRender
     * @protected
-	*/
+    */
     preRender: function () {
 
-	    if (this.onPreRenderCallback)
-	    {
-	    	this.onPreRenderCallback.call(this.callbackContext, this.game);
-		}
+        if (this.onPreRenderCallback)
+        {
+            this.onPreRenderCallback.call(this.callbackContext, this.game);
+        }
 
     },
 
-	/**
-	* @method Phaser.StateManager#render
+    /**
+    * @method Phaser.StateManager#render
     * @protected
-	*/
+    */
     render: function () {
 
-    	if (this._created && this.onRenderCallback)
-    	{
-    		if (this.game.renderType === Phaser.CANVAS)
-    		{
-		        this.game.context.save();
-		        this.game.context.setTransform(1, 0, 0, 1, 0, 0);
-    		}
+        if (this._created && this.onRenderCallback)
+        {
+            if (this.game.renderType === Phaser.CANVAS)
+            {
+                this.game.context.save();
+                this.game.context.setTransform(1, 0, 0, 1, 0, 0);
+            }
 
-			this.onRenderCallback.call(this.callbackContext, this.game);
+            this.onRenderCallback.call(this.callbackContext, this.game);
 
-    		if (this.game.renderType === Phaser.CANVAS)
-    		{
-		        this.game.context.restore();
-    		}			
-    	}
-    	else
-    	{
-		    if (this.onLoadRenderCallback)
-		    {
-		    	this.onLoadRenderCallback.call(this.callbackContext, this.game);
-			}
-		}
+            if (this.game.renderType === Phaser.CANVAS)
+            {
+                this.game.context.restore();
+            }
+        }
+        else
+        {
+            if (this.onLoadRenderCallback)
+            {
+                this.onLoadRenderCallback.call(this.callbackContext, this.game);
+            }
+        }
 
     },
 
-	/**
+    /**
     * Nuke the entire game from orbit
     * @method Phaser.StateManager#destroy
     */
@@ -10232,141 +10431,141 @@ Phaser.StateManager.prototype = {
 Phaser.LinkedList = function () {
 
     /**
-	* @property {object} next - Next element in the list.
-	* @default
-	*/
+    * @property {object} next - Next element in the list.
+    * @default
+    */
     this.next = null;
 
     /**
-	* @property {object} prev - Previous element in the list.
-	* @default
-	*/
+    * @property {object} prev - Previous element in the list.
+    * @default
+    */
     this.prev = null;
 
     /**
-	* @property {object} first - First element in the list.
-	* @default
-	*/
+    * @property {object} first - First element in the list.
+    * @default
+    */
     this.first = null;
 
     /**
-	* @property {object} last - Last element in the list.
-	* @default
-	*/
+    * @property {object} last - Last element in the list.
+    * @default
+    */
     this.last = null;
     
     /**
-	* @property {object} game - Number of elements in the list.
-	* @default
-	*/
+    * @property {object} game - Number of elements in the list.
+    * @default
+    */
     this.total = 0;
 
 };
 
 Phaser.LinkedList.prototype = {
 
-	/**
+    /**
     * Adds a new element to this linked list.
-	* 
-	* @method Phaser.LinkedList#add
-	* @param {object} child - The element to add to this list. Can be a Phaser.Sprite or any other object you need to quickly iterate through.
-	* @return {object} The child that was added.
+    * 
+    * @method Phaser.LinkedList#add
+    * @param {object} child - The element to add to this list. Can be a Phaser.Sprite or any other object you need to quickly iterate through.
+    * @return {object} The child that was added.
     */
     add: function (child) {
 
-    	//	If the list is empty
-    	if (this.total == 0 && this.first == null && this.last == null)
-    	{
-    		this.first = child;
-    		this.last = child;
-	    	this.next = child;
-	    	child.prev = this;
-	    	this.total++;
-    		return child;
-    	}
+        //  If the list is empty
+        if (this.total === 0 && this.first == null && this.last == null)
+        {
+            this.first = child;
+            this.last = child;
+            this.next = child;
+            child.prev = this;
+            this.total++;
+            return child;
+        }
 
-    	//	Get gets appended to the end of the list, regardless of anything, and it won't have any children of its own (non-nested list)
-    	this.last.next = child;
+        //  Get gets appended to the end of the list, regardless of anything, and it won't have any children of its own (non-nested list)
+        this.last.next = child;
 
-    	child.prev = this.last;
+        child.prev = this.last;
 
-    	this.last = child;
+        this.last = child;
 
-		this.total++;
+        this.total++;
 
-		return child;
+        return child;
 
     },
 
-	/**
+    /**
     * Removes the given element from this linked list if it exists.
- 	* 
- 	* @method Phaser.LinkedList#remove
- 	* @param {object} child - The child to be removed from the list.
+    * 
+    * @method Phaser.LinkedList#remove
+    * @param {object} child - The child to be removed from the list.
     */
     remove: function (child) {
 
-    	if (child == this.first)
-    	{
-			// It was 'first', make 'first' point to first.next
-    		this.first = this.first.next;
-    	}      
-		else if (child == this.last)
-		{
-			// It was 'last', make 'last' point to last.prev
-			this.last = this.last.prev;
-		} 
+        if (child == this.first)
+        {
+            // It was 'first', make 'first' point to first.next
+            this.first = this.first.next;
+        }
+        else if (child == this.last)
+        {
+            // It was 'last', make 'last' point to last.prev
+            this.last = this.last.prev;
+        }
 
-		if (child.prev)
-		{
-			// make child.prev.next point to childs.next instead of child
-			child.prev.next = child.next; 
-		} 
+        if (child.prev)
+        {
+            // make child.prev.next point to childs.next instead of child
+            child.prev.next = child.next;
+        }
 
-		if (child.next)
-		{
-			// make child.next.prev point to child.prev instead of child
-			child.next.prev = child.prev;
-		}
+        if (child.next)
+        {
+            // make child.next.prev point to child.prev instead of child
+            child.next.prev = child.prev;
+        }
 
-		child.next = child.prev = null;
+        child.next = child.prev = null;
 
-		if (this.first == null )
-		{
-			this.last = null;
-		}
+        if (this.first == null )
+        {
+            this.last = null;
+        }
 
-		this.total--;
+        this.total--;
 
     },
 
-	/**
+    /**
     * Calls a function on all members of this list, using the member as the context for the callback.
     * The function must exist on the member.
-  	* 
-  	* @method Phaser.LinkedList#callAll
-  	* @param {function} callback - The function to call.
+    * 
+    * @method Phaser.LinkedList#callAll
+    * @param {function} callback - The function to call.
     */
     callAll: function (callback) {
 
-    	if (!this.first || !this.last)
-    	{
-    		return;
-    	}
+        if (!this.first || !this.last)
+        {
+            return;
+        }
 
-		var entity = this.first;
-		
-		do	
-		{
-			if (entity && entity[callback])
-			{
-				entity[callback].call(entity);
-			}
+        var entity = this.first;
+        
+        do
+        {
+            if (entity && entity[callback])
+            {
+                entity[callback].call(entity);
+            }
 
-			entity = entity.next;
+            entity = entity.next;
 
-		}
-		while(entity != this.last.next)			
+        }
+        while(entity != this.last.next)
 
     }
 
@@ -10385,287 +10584,292 @@ Phaser.LinkedList.prototype = {
 */
 Phaser.Signal = function () {
 
-	/**
-	* @property {Array.<Phaser.SignalBinding>} _bindings - Description.
-	* @private
-	*/
-	this._bindings = [];
-	
-	/**
-	* @property {Description} _prevParams - Description.
-	* @private
-	*/
-	this._prevParams = null;
+    /**
+    * @property {Array.<Phaser.SignalBinding>} _bindings - Description.
+    * @private
+    */
+    this._bindings = [];
+    
+    /**
+    * @property {Description} _prevParams - Description.
+    * @private
+    */
+    this._prevParams = null;
 
-	// enforce dispatch to aways work on same context (#47)
-	var self = this;
+    // enforce dispatch to aways work on same context (#47)
+    var self = this;
 
-	/**
-	* @property {Description} dispatch - Description.
-	*/
-	this.dispatch = function(){
-		Phaser.Signal.prototype.dispatch.apply(self, arguments);
-	};
+    /**
+    * @property {Description} dispatch - Description.
+    */
+    this.dispatch = function(){
+        Phaser.Signal.prototype.dispatch.apply(self, arguments);
+    };
 
 };
 
 Phaser.Signal.prototype = {
 
-	/**
+    /**
     * If Signal should keep record of previously dispatched parameters and
-	* automatically execute listener during `add()`/`addOnce()` if Signal was
-	* already dispatched before.
-	* @property {boolean} memorize
-	*/
-	memorize: false,
+    * automatically execute listener during `add()`/`addOnce()` if Signal was
+    * already dispatched before.
+    * @property {boolean} memorize
+    */
+    memorize: false,
 
-	/**
-	* @property {boolean} _shouldPropagate 
-	* @private
-	*/
-	_shouldPropagate: true,
+    /**
+    * @property {boolean} _shouldPropagate 
+    * @private
+    */
+    _shouldPropagate: true,
 
-	/**
-	* If Signal is active and should broadcast events.
-	* <p><strong>IMPORTANT:</strong> Setting this property during a dispatch will only affect the next dispatch, if you want to stop the propagation of a signal use `halt()` instead.</p>
-	* @property {boolean} active
+    /**
+    * If Signal is active and should broadcast events.
+    * <p><strong>IMPORTANT:</strong> Setting this property during a dispatch will only affect the next dispatch, if you want to stop the propagation of a signal use `halt()` instead.</p>
+    * @property {boolean} active
     * @default
     */
-	active: true,
+    active: true,
 
-	/**
-	* @method Phaser.Signal#validateListener
-	* @param {function} listener - Signal handler function.
-	* @param {Description} fnName - Description.
-	* @private
+    /**
+    * @method Phaser.Signal#validateListener
+    * @param {function} listener - Signal handler function.
+    * @param {Description} fnName - Description.
+    * @private
     */
-	validateListener: function (listener, fnName) {
-		if (typeof listener !== 'function') {
-			throw new Error( 'listener is a required param of {fn}() and should be a Function.'.replace('{fn}', fnName) );
-		}
-	},
+    validateListener: function (listener, fnName) {
+        if (typeof listener !== 'function') {
+            throw new Error( 'listener is a required param of {fn}() and should be a Function.'.replace('{fn}', fnName) );
+        }
+    },
 
-	/**
-	 * @method Phaser.Signal#_registerListener
-	 * @param {function} listener - Signal handler function.
-	 * @param {boolean} isOnce - Description.
-	 * @param {object} [listenerContext] - Description.
-	 * @param {number} [priority] - The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0).
-	 * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
-	 * @private
-	 */
-	_registerListener: function (listener, isOnce, listenerContext, priority) {
+    /**
+    * @method Phaser.Signal#_registerListener
+    * @param {function} listener - Signal handler function.
+    * @param {boolean} isOnce - Description.
+    * @param {object} [listenerContext] - Description.
+    * @param {number} [priority] - The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0).
+    * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
+    * @private
+    */
+    _registerListener: function (listener, isOnce, listenerContext, priority) {
 
-		var prevIndex = this._indexOfListener(listener, listenerContext),
-			binding;
+        var prevIndex = this._indexOfListener(listener, listenerContext),
+            binding;
 
-		if (prevIndex !== -1) {
-			binding = this._bindings[prevIndex];
-			if (binding.isOnce() !== isOnce) {
-				throw new Error('You cannot add'+ (isOnce? '' : 'Once') +'() then add'+ (!isOnce? '' : 'Once') +'() the same listener without removing the relationship first.');
-			}
-		} else {
-			binding = new Phaser.SignalBinding(this, listener, isOnce, listenerContext, priority);
-			this._addBinding(binding);
-		}
+        if (prevIndex !== -1) {
+            binding = this._bindings[prevIndex];
+            if (binding.isOnce() !== isOnce) {
+                throw new Error('You cannot add'+ (isOnce? '' : 'Once') +'() then add'+ (!isOnce? '' : 'Once') +'() the same listener without removing the relationship first.');
+            }
+        } else {
+            binding = new Phaser.SignalBinding(this, listener, isOnce, listenerContext, priority);
+            this._addBinding(binding);
+        }
 
-		if (this.memorize && this._prevParams){
-			binding.execute(this._prevParams);
-		}
+        if (this.memorize && this._prevParams){
+            binding.execute(this._prevParams);
+        }
 
-		return binding;
-	},
+        return binding;
+    },
 
-	/**
-	 * @method Phaser.Signal#_addBinding 
-	 * @param {Phaser.SignalBinding} binding - An Object representing the binding between the Signal and listener.
-	 * @private
-	 */
-	_addBinding: function (binding) {
-		//simplified insertion sort
-		var n = this._bindings.length;
-		do { --n; } while (this._bindings[n] && binding._priority <= this._bindings[n]._priority);
-		this._bindings.splice(n + 1, 0, binding);
-	},
+    /**
+    * @method Phaser.Signal#_addBinding 
+    * @param {Phaser.SignalBinding} binding - An Object representing the binding between the Signal and listener.
+    * @private
+    */
+    _addBinding: function (binding) {
+        //simplified insertion sort
+        var n = this._bindings.length;
+        do { --n; } while (this._bindings[n] && binding._priority <= this._bindings[n]._priority);
+        this._bindings.splice(n + 1, 0, binding);
+    },
 
-	/**
-	 * @method Phaser.Signal#_indexOfListener
-	 * @param {function} listener - Signal handler function.
-	 * @return {number} Description.
-	 * @private
-	 */
-	_indexOfListener: function (listener, context) {
-		var n = this._bindings.length,
-			cur;
-		while (n--) {
-			cur = this._bindings[n];
-			if (cur._listener === listener && cur.context === context) {
-				return n;
-			}
-		}
-		return -1;
-	},
+    /**
+    * @method Phaser.Signal#_indexOfListener
+    * @param {function} listener - Signal handler function.
+    * @return {number} Description.
+    * @private
+    */
+    _indexOfListener: function (listener, context) {
+        var n = this._bindings.length,
+            cur;
+        while (n--) {
+            cur = this._bindings[n];
+            if (cur._listener === listener && cur.context === context) {
+                return n;
+            }
+        }
+        return -1;
+    },
 
-	/**
-	 * Check if listener was attached to Signal.
-	 * 
-	 * @method Phaser.Signal#has
-	 * @param {Function} listener - Signal handler function.
-	 * @param {Object} [context] - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-	 * @return {boolean} If Signal has the specified listener.
-	 */
-	has: function (listener, context) {
-		return this._indexOfListener(listener, context) !== -1;
-	},
+    /**
+    * Check if listener was attached to Signal.
+    * 
+    * @method Phaser.Signal#has
+    * @param {Function} listener - Signal handler function.
+    * @param {Object} [context] - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+    * @return {boolean} If Signal has the specified listener.
+    */
+    has: function (listener, context) {
+        return this._indexOfListener(listener, context) !== -1;
+    },
 
-	/**
-	 * Add a listener to the signal.
-	 * 
-	 * @method Phaser.Signal#add
-	 * @param {function} listener - Signal handler function.
-	 * @param {object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-	 * @param {number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0).
-	 * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
-	 */
-	add: function (listener, listenerContext, priority) {
-		this.validateListener(listener, 'add');
-		return this._registerListener(listener, false, listenerContext, priority);
-	},
+    /**
+    * Add a listener to the signal.
+    * 
+    * @method Phaser.Signal#add
+    * @param {function} listener - Signal handler function.
+    * @param {object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+    * @param {number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0).
+    * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
+    */
+    add: function (listener, listenerContext, priority) {
+        this.validateListener(listener, 'add');
+        return this._registerListener(listener, false, listenerContext, priority);
+    },
 
-	/**
-	* Add listener to the signal that should be removed after first execution (will be executed only once).
-	*
-	* @method Phaser.Signal#addOnce
-	* @param {function} listener Signal handler function.
-	* @param {object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-	* @param {number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0)
-	* @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
-	*/
-	addOnce: function (listener, listenerContext, priority) {
-		this.validateListener(listener, 'addOnce');
-		return this._registerListener(listener, true, listenerContext, priority);
-	},
+    /**
+    * Add listener to the signal that should be removed after first execution (will be executed only once).
+    *
+    * @method Phaser.Signal#addOnce
+    * @param {function} listener Signal handler function.
+    * @param {object} [listenerContext] Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+    * @param {number} [priority] The priority level of the event listener. Listeners with higher priority will be executed before listeners with lower priority. Listeners with same priority level will be executed at the same order as they were added. (default = 0)
+    * @return {Phaser.SignalBinding} An Object representing the binding between the Signal and listener.
+    */
+    addOnce: function (listener, listenerContext, priority) {
+        this.validateListener(listener, 'addOnce');
+        return this._registerListener(listener, true, listenerContext, priority);
+    },
 
-	/**
-	* Remove a single listener from the dispatch queue.
-	*
-	* @method Phaser.Signal#remove
-	* @param {function} listener Handler function that should be removed.
-	* @param {object} [context] Execution context (since you can add the same handler multiple times if executing in a different context).
-	* @return {function} Listener handler function.
-	*/
-	remove: function (listener, context) {
+    /**
+    * Remove a single listener from the dispatch queue.
+    *
+    * @method Phaser.Signal#remove
+    * @param {function} listener Handler function that should be removed.
+    * @param {object} [context] Execution context (since you can add the same handler multiple times if executing in a different context).
+    * @return {function} Listener handler function.
+    */
+    remove: function (listener, context) {
 
-		this.validateListener(listener, 'remove');
+        this.validateListener(listener, 'remove');
 
-		var i = this._indexOfListener(listener, context);
+        var i = this._indexOfListener(listener, context);
 
-		if (i !== -1)
-		{
-			this._bindings[i]._destroy(); //no reason to a Phaser.SignalBinding exist if it isn't attached to a signal
-			this._bindings.splice(i, 1);
-		}
+        if (i !== -1)
+        {
+            this._bindings[i]._destroy(); //no reason to a Phaser.SignalBinding exist if it isn't attached to a signal
+            this._bindings.splice(i, 1);
+        }
 
-		return listener;
+        return listener;
 
-	},
+    },
 
-	/**
-	* Remove all listeners from the Signal.
-	*
-	* @method Phaser.Signal#removeAll
-	*/
-	removeAll: function () {
-		var n = this._bindings.length;
-		while (n--) {
-			this._bindings[n]._destroy();
-		}
-		this._bindings.length = 0;
-	},
+    /**
+    * Remove all listeners from the Signal.
+    *
+    * @method Phaser.Signal#removeAll
+    */
+    removeAll: function () {
+        var n = this._bindings.length;
+        while (n--) {
+            this._bindings[n]._destroy();
+        }
+        this._bindings.length = 0;
+    },
 
-	/**
-	* Gets the total number of listeneres attached to ths Signal.
-	*
-	* @method Phaser.Signal#getNumListeners
-	* @return {number} Number of listeners attached to the Signal.
-	*/
-	getNumListeners: function () {
-		return this._bindings.length;
-	},
+    /**
+    * Gets the total number of listeneres attached to ths Signal.
+    *
+    * @method Phaser.Signal#getNumListeners
+    * @return {number} Number of listeners attached to the Signal.
+    */
+    getNumListeners: function () {
+        return this._bindings.length;
+    },
 
-	/**
-	* Stop propagation of the event, blocking the dispatch to next listeners on the queue.
-	* <p><strong>IMPORTANT:</strong> should be called only during signal dispatch, calling it before/after dispatch won't affect signal broadcast.</p>
-	* @see Signal.prototype.disable
-	*
-	* @method Phaser.Signal#halt
-	*/
-	halt: function () {
-		this._shouldPropagate = false;
-	},
+    /**
+    * Stop propagation of the event, blocking the dispatch to next listeners on the queue.
+    * <p><strong>IMPORTANT:</strong> should be called only during signal dispatch, calling it before/after dispatch won't affect signal broadcast.</p>
+    * @see Signal.prototype.disable
+    *
+    * @method Phaser.Signal#halt
+    */
+    halt: function () {
+        this._shouldPropagate = false;
+    },
 
-	/**
-	* Dispatch/Broadcast Signal to all listeners added to the queue.
-	*
-	* @method Phaser.Signal#dispatch
-	* @param {any} [params] - Parameters that should be passed to each handler.
-	*/
-	dispatch: function (params) {
-		if (! this.active) {
-			return;
-		}
+    /**
+    * Dispatch/Broadcast Signal to all listeners added to the queue.
+    *
+    * @method Phaser.Signal#dispatch
+    * @param {...} [params] - Parameters that should be passed to each handler.
+    */
+    dispatch: function () {
 
-		var paramsArr = Array.prototype.slice.call(arguments),
-			n = this._bindings.length,
-			bindings;
+        if (!this.active)
+        {
+            return;
+        }
 
-		if (this.memorize) {
-			this._prevParams = paramsArr;
-		}
+        var paramsArr = Array.prototype.slice.call(arguments);
+        var n = this._bindings.length;
+        var bindings;
 
-		if (! n) {
-			//should come after memorize
-			return;
-		}
+        if (this.memorize)
+        {
+            this._prevParams = paramsArr;
+        }
 
-		bindings = this._bindings.slice(); //clone array in case add/remove items during dispatch
-		this._shouldPropagate = true; //in case `halt` was called before dispatch or during the previous dispatch.
+        if (!n)
+        {
+            //  Should come after memorize
+            return;
+        }
 
-		//execute all callbacks until end of the list or until a callback returns `false` or stops propagation
-		//reverse loop since listeners with higher priority will be added at the end of the list
-		do { n--; } while (bindings[n] && this._shouldPropagate && bindings[n].execute(paramsArr) !== false);
-	},
+        bindings = this._bindings.slice(); //clone array in case add/remove items during dispatch
+        this._shouldPropagate = true; //in case `halt` was called before dispatch or during the previous dispatch.
 
-	/**
-	* Forget memorized arguments.
-	* @see Signal.memorize
-	*
-	* @method Phaser.Signal#forget
- 	*/
-	forget: function(){
-		this._prevParams = null;
-	},
+        //execute all callbacks until end of the list or until a callback returns `false` or stops propagation
+        //reverse loop since listeners with higher priority will be added at the end of the list
+        do { n--; } while (bindings[n] && this._shouldPropagate && bindings[n].execute(paramsArr) !== false);
+        
+    },
 
-	/**
-	* Remove all bindings from signal and destroy any reference to external objects (destroy Signal object).
-	* <p><strong>IMPORTANT:</strong> calling any method on the signal instance after calling dispose will throw errors.</p>
-	*
-	* @method Phaser.Signal#dispose
-	*/
-	dispose: function () {
-		this.removeAll();
-		delete this._bindings;
-		delete this._prevParams;
-	},
+    /**
+    * Forget memorized arguments.
+    * @see Signal.memorize
+    *
+    * @method Phaser.Signal#forget
+    */
+    forget: function(){
+        this._prevParams = null;
+    },
 
-	/**
-	*
-	* @method Phaser.Signal#toString
-	* @return {string} String representation of the object.
-	*/
-	toString: function () {
-		return '[Phaser.Signal active:'+ this.active +' numListeners:'+ this.getNumListeners() +']';
-	}
+    /**
+    * Remove all bindings from signal and destroy any reference to external objects (destroy Signal object).
+    * <p><strong>IMPORTANT:</strong> calling any method on the signal instance after calling dispose will throw errors.</p>
+    *
+    * @method Phaser.Signal#dispose
+    */
+    dispose: function () {
+        this.removeAll();
+        delete this._bindings;
+        delete this._prevParams;
+    },
+
+    /**
+    *
+    * @method Phaser.Signal#toString
+    * @return {string} String representation of the object.
+    */
+    toString: function () {
+        return '[Phaser.Signal active:'+ this.active +' numListeners:'+ this.getNumListeners() +']';
+    }
 
 };
 
@@ -10696,33 +10900,33 @@ Phaser.Signal.prototype = {
 Phaser.SignalBinding = function (signal, listener, isOnce, listenerContext, priority) {
 
     /**
-	* @property {Phaser.Game} _listener - Handler function bound to the signal.
-	* @private
-	*/
+    * @property {Phaser.Game} _listener - Handler function bound to the signal.
+    * @private
+    */
     this._listener = listener;
 
     /**
-	* @property {boolean} _isOnce - If binding should be executed just once.
-	* @private
-	*/
+    * @property {boolean} _isOnce - If binding should be executed just once.
+    * @private
+    */
     this._isOnce = isOnce;
 
     /**
-	* @property {object|undefined|null} context - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-	* @memberof SignalBinding.prototype
-	*/
+    * @property {object|undefined|null} context - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+    * @memberof SignalBinding.prototype
+    */
     this.context = listenerContext;
 
     /**
-	* @property {Signal} _signal - Reference to Signal object that listener is currently bound to.
-	* @private
-	*/
+    * @property {Signal} _signal - Reference to Signal object that listener is currently bound to.
+    * @private
+    */
     this._signal = signal;
 
     /**
-	* @property {number} _priority - Listener priority.
-	* @private
-	*/
+    * @property {number} _priority - Listener priority.
+    * @private
+    */
     this._priority = priority || 0;
 
 };
@@ -10733,7 +10937,7 @@ Phaser.SignalBinding.prototype = {
     * If binding is active and should be executed.
     * @property {boolean} active
     * @default
-    */ 
+    */
     active: true,
 
     /**
@@ -10839,6 +11043,134 @@ Phaser.SignalBinding.prototype = {
 */
 
 /** 
+* This is a base Filter template to use for any Phaser filter development.
+* 
+* @class Phaser.Filter
+* @classdesc Phaser - Filter
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {Object} uniforms - Uniform mappings object
+* @param {Array} fragmentSrc - The fragment shader code.
+*/
+Phaser.Filter = function (game, uniforms, fragmentSrc) {
+
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game.
+    */
+    this.game = game;
+
+    /**
+    * @property {number} type - The const type of this object, either Phaser.WEBGL_FILTER or Phaser.CANVAS_FILTER.
+    * @default
+    */
+    this.type =  Phaser.WEBGL_FILTER;
+    
+    /**
+    * An array of passes - some filters contain a few steps this array simply stores the steps in a linear fashion.
+    * For example the blur filter has two passes blurX and blurY.
+    * @property {array} passes - An array of filter objects.
+    * @private
+    */
+    this.passes = [this];
+    
+    /**
+    * @property {boolean} dirty - Internal PIXI var.
+    * @default
+    */
+    this.dirty = true;
+
+    /**
+    * @property {number} padding - Internal PIXI var.
+    * @default
+    */
+    this.padding = 0;
+
+    /**
+    * @property {object} uniforms - Default uniform mappings.
+    */
+    this.uniforms = {
+
+        resolution: { type: '3f', value: { x: 256, y: 256, z: 0 }},
+        time: { type: '1f', value: 0 },
+        mouse: { type: '4f', value: { x: 0, y: 0, z: 0, w: 0 }}
+
+    };
+    
+    /**
+    * @property {array} fragmentSrc - The fragment shader code.
+    */
+    this.fragmentSrc = fragmentSrc || [];
+
+};
+
+Phaser.Filter.prototype = {
+
+    init: function () {
+        //  This should be over-ridden. Will receive a variable number of arguments.
+    },
+
+    setResolution: function (width, height) {
+
+        this.uniforms.resolution.value.x = width;
+        this.uniforms.resolution.value.y = height;
+
+    },
+
+    update: function (pointer) {
+
+        if (typeof pointer !== 'undefined')
+        {
+            this.uniforms.mouse.x = pointer.x;
+            this.uniforms.mouse.y = pointer.y;
+        }
+
+        this.uniforms.time.value = this.game.time.totalElapsedSeconds();
+
+    },
+
+    /**
+    * Clear down this Filter and null out references
+    * @method Phaser.Filter#destroy
+    */
+    destroy: function () {
+
+        this.game = null;
+        
+    }
+
+};
+
+Object.defineProperty(Phaser.Filter.prototype, 'width', {
+
+    get: function() {
+        return this.uniforms.resolution.value.x;
+    },
+
+    set: function(value) {
+        this.uniforms.resolution.value.x = value;
+    }
+
+});
+
+Object.defineProperty(Phaser.Filter.prototype, 'height', {
+
+    get: function() {
+        return this.uniforms.resolution.value.y;
+    },
+
+    set: function(value) {
+        this.uniforms.resolution.value.y = value;
+    }
+
+});
+
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/** 
 * This is a base Plugin template to use for any Phaser plugin development.
 * 
 * @class Phaser.Plugin
@@ -10851,38 +11183,38 @@ Phaser.Plugin = function (game, parent) {
 
     if (typeof parent === 'undefined') { parent = null; }
 
-	/**
-	* @property {Phaser.Game} game - A reference to the currently running game.
-	*/
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game.
+    */
     this.game = game;
     
     /**
-	* @property {Any} parent - The parent of this plugin. If added to the PluginManager the parent will be set to that, otherwise it will be null.
-	*/
+    * @property {Any} parent - The parent of this plugin. If added to the PluginManager the parent will be set to that, otherwise it will be null.
+    */
     this.parent = parent;
     
     /**
-	* @property {boolean} active - A Plugin with active=true has its preUpdate and update methods called by the parent, otherwise they are skipped.
-	* @default
-	*/
+    * @property {boolean} active - A Plugin with active=true has its preUpdate and update methods called by the parent, otherwise they are skipped.
+    * @default
+    */
     this.active = false;
     
     /**
-	* @property {boolean} visible - A Plugin with visible=true has its render and postRender methods called by the parent, otherwise they are skipped.
-	* @default
-	*/
+    * @property {boolean} visible - A Plugin with visible=true has its render and postRender methods called by the parent, otherwise they are skipped.
+    * @default
+    */
     this.visible = false;
     
     /**
-	* @property {boolean} hasPreUpdate - A flag to indicate if this plugin has a preUpdate method.
-	* @default
-	*/
+    * @property {boolean} hasPreUpdate - A flag to indicate if this plugin has a preUpdate method.
+    * @default
+    */
     this.hasPreUpdate = false;
     
     /**
-	* @property {boolean} hasUpdate - A flag to indicate if this plugin has an update method.
-	* @default
-	*/
+    * @property {boolean} hasUpdate - A flag to indicate if this plugin has an update method.
+    * @default
+    */
     this.hasUpdate = false;
 
     /**
@@ -10892,15 +11224,15 @@ Phaser.Plugin = function (game, parent) {
     this.hasPostUpdate = false;
     
     /**
-	* @property {boolean} hasRender - A flag to indicate if this plugin has a render method.
-	* @default
-	*/
+    * @property {boolean} hasRender - A flag to indicate if this plugin has a render method.
+    * @default
+    */
     this.hasRender = false;
     
     /**
-	* @property {boolean} hasPostRender - A flag to indicate if this plugin has a postRender method.
-	* @default
-	*/
+    * @property {boolean} hasPostRender - A flag to indicate if this plugin has a postRender method.
+    * @default
+    */
     this.hasPostRender = false;
 
 };
@@ -10954,6 +11286,8 @@ Phaser.Plugin.prototype = {
 
 };
 
+/* jshint newcap: false */
+
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
@@ -10961,7 +11295,7 @@ Phaser.Plugin.prototype = {
 */
 
 /** 
-* Description.
+* The Plugin Manager is responsible for the loading, running and unloading of Phaser Plugins.
 * 
 * @class Phaser.PluginManager
 * @classdesc Phaser - PluginManager
@@ -10971,27 +11305,27 @@ Phaser.Plugin.prototype = {
 */
 Phaser.PluginManager = function(game, parent) {
 
-	/**
-	* @property {Phaser.Game} game - A reference to the currently running game.
-	*/
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game.
+    */
     this.game = game;
     
     /**
-	* @property {Description} _parent - Description.
-	* @private
-	*/
+    * @property {Description} _parent - Description.
+    * @private
+    */
     this._parent = parent;
     
     /**
-	* @property {array} plugins - Description.
-	*/
+    * @property {array} plugins - Description.
+    */
     this.plugins = [];
     
     /**
-	* @property {array} _pluginsLength - Description.
-	* @private
-	* @default
-	*/
+    * @property {array} _pluginsLength - Description.
+    * @private
+    * @default
+    */
     this._pluginsLength = 0;
 
 };
@@ -11081,13 +11415,13 @@ Phaser.PluginManager.prototype = {
     },
 
     /**
-     * Remove a Plugin from the PluginManager.
-     * @method Phaser.PluginManager#remove
-     * @param {Phaser.Plugin} plugin - The plugin to be removed.
-     */
+    * Remove a Plugin from the PluginManager.
+    * @method Phaser.PluginManager#remove
+    * @param {Phaser.Plugin} plugin - The plugin to be removed.
+    */
     remove: function (plugin) {
         
-        if (this._pluginsLength == 0)
+        if (this._pluginsLength === 0)
         {
             return;
         }
@@ -11105,9 +11439,9 @@ Phaser.PluginManager.prototype = {
     },
 
     /**
-     * Removes all Plugins from the PluginManager.
-     * @method Phaser.PluginManager#removeAll
-     */
+    * Removes all Plugins from the PluginManager.
+    * @method Phaser.PluginManager#removeAll
+    */
     removeAll: function() {
         
         for (this._p = 0; this._p < this._pluginsLength; this._p++)
@@ -11126,7 +11460,7 @@ Phaser.PluginManager.prototype = {
     */
     preUpdate: function () {
 
-        if (this._pluginsLength == 0)
+        if (this._pluginsLength === 0)
         {
             return;
         }
@@ -11149,7 +11483,7 @@ Phaser.PluginManager.prototype = {
     */
     update: function () {
         
-        if (this._pluginsLength == 0)
+        if (this._pluginsLength === 0)
         {
             return;
         }
@@ -11173,7 +11507,7 @@ Phaser.PluginManager.prototype = {
     */
     postUpdate: function () {
         
-        if (this._pluginsLength == 0)
+        if (this._pluginsLength === 0)
         {
             return;
         }
@@ -11196,7 +11530,7 @@ Phaser.PluginManager.prototype = {
     */
     render: function () {
 
-        if (this._pluginsLength == 0)
+        if (this._pluginsLength === 0)
         {
             return;
         }
@@ -11219,7 +11553,7 @@ Phaser.PluginManager.prototype = {
     */
     postRender: function () {
 
-        if (this._pluginsLength == 0)
+        if (this._pluginsLength === 0)
         {
             return;
         }
@@ -11269,26 +11603,26 @@ Phaser.PluginManager.prototype = {
 Phaser.Stage = function (game, width, height) {
 
     /**
-	* @property {Phaser.Game} game - A reference to the currently running Game.
-	*/
-	this.game = game;
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
+    this.game = game;
 
     /**
-	* @property {string} game - Background color of the stage (defaults to black). Set via the public backgroundColor property.
-	* @private
-	* @default 'rgb(0,0,0)'
-	*/
+    * @property {string} game - Background color of the stage (defaults to black). Set via the public backgroundColor property.
+    * @private
+    * @default 'rgb(0,0,0)'
+    */
     this._backgroundColor = 'rgb(0,0,0)';
 
     /**
-	* @property {Phaser.Point} offset - Get the offset values (for input and other things).
-	*/
-	this.offset = new Phaser.Point;
+    * @property {Phaser.Point} offset - Get the offset values (for input and other things).
+    */
+    this.offset = new Phaser.Point();
     
     /**
     * @property {HTMLCanvasElement} canvas - Reference to the newly created &lt;canvas&gt; element.
     */
-    this.canvas = Phaser.Canvas.create(width, height); 
+    this.canvas = Phaser.Canvas.create(width, height);
     this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
     
     /**
@@ -11301,7 +11635,7 @@ Phaser.Stage = function (game, width, height) {
 
     /**
     * @property {number} scaleMode - The current scaleMode.
-    */    
+    */
     this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
 
     /**
@@ -11310,8 +11644,8 @@ Phaser.Stage = function (game, width, height) {
     this.scale = new Phaser.StageScaleMode(this.game, width, height);
 
     /**
-     * @property {number} aspectRatio - Aspect ratio.
-     */
+    * @property {number} aspectRatio - Aspect ratio.
+    */
     this.aspectRatio = width / height;
 
     /**
@@ -11350,6 +11684,8 @@ Phaser.Stage.prototype = {
         Phaser.Canvas.setUserSelect(this.canvas, 'none');
         Phaser.Canvas.setTouchAction(this.canvas, 'none');
 
+        this.backgroundColor = '#000';
+
         document.addEventListener('visibilitychange', this._onChange, false);
         document.addEventListener('webkitvisibilitychange', this._onChange, false);
         document.addEventListener('pagehide', this._onChange, false);
@@ -11378,7 +11714,7 @@ Phaser.Stage.prototype = {
 
     },
 
-	/**
+    /**
     * This method is called when the document visibility is changed.
     * @method Phaser.Stage#visibilityChange
     * @param {Event} event - Its type will be used to decide whether the game should be paused or not.
@@ -11390,16 +11726,16 @@ Phaser.Stage.prototype = {
             return;
         }
 
-        if (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] == true || document['webkitHidden'] == true)
+        if (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] === true || document['webkitHidden'] === true)
         {
-	        this.game.paused = true;
+            this.game.paused = true;
         }
         else
         {
-	        this.game.paused = false;
+            this.game.paused = false;
         }
 
-    },
+    }
 
 };
 
@@ -11417,19 +11753,23 @@ Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 
         this._backgroundColor = color;
 
-        if (this.game.renderType == Phaser.CANVAS)
+        if (this.game.transparent === false)
         {
-            //  Set it directly, this allows us to use rgb alpha values in Canvas mode.
-            this._stage.backgroundColorString = color;
-        }
-        else
-        {
-            if (typeof color === 'string')
+            if (this.game.renderType == Phaser.CANVAS)
             {
-                color = Phaser.Color.hexToRGB(color);
+                //  Set it directly, this allows us to use rgb alpha values in Canvas mode.
+                this.game.canvas.style.backgroundColor = color;
+            }
+            else
+            {
+                if (typeof color === 'string')
+                {
+                    color = Phaser.Color.hexToRGB(color);
+                }
+
+                this._stage.setBackgroundColor(color);
             }
 
-            this._stage.setBackgroundColor(color);
         }
 
     }
@@ -11454,77 +11794,77 @@ Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 */
 Phaser.Group = function (game, parent, name, useStage) {
 
-	if (typeof parent === 'undefined' || typeof parent === null)
-	{
-		parent = game.world;
-	}
+    if (typeof parent === 'undefined' || typeof parent === null)
+    {
+        parent = game.world;
+    }
 
-	if (typeof useStage === 'undefined')
-	{
-		useStage = false;
-	}
+    if (typeof useStage === 'undefined')
+    {
+        useStage = false;
+    }
 
     /**
-	* @property {Phaser.Game} game - A reference to the currently running Game.
-	*/
-	this.game = game;
-	
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
+    this.game = game;
+    
     /**
-	* @property {string} name - A name for this Group. Not used internally but useful for debugging.
-	*/
-	this.name = name || 'group';
+    * @property {string} name - A name for this Group. Not used internally but useful for debugging.
+    */
+    this.name = name || 'group';
 
-	if (useStage)
-	{
-		this._container = this.game.stage._stage;
-	}
-	else
-	{
-		this._container = new PIXI.DisplayObjectContainer();
-		this._container.name = this.name;
+    if (useStage)
+    {
+        this._container = this.game.stage._stage;
+    }
+    else
+    {
+        this._container = new PIXI.DisplayObjectContainer();
+        this._container.name = this.name;
 
-		if (parent)
-		{
-			if (parent instanceof Phaser.Group)
-			{
-				parent._container.addChild(this._container);
-				parent._container.updateTransform();
-			}
-			else
-			{
-				parent.addChild(this._container);
-				parent.updateTransform();
-			}
-		}
-		else
-		{
-			this.game.stage._stage.addChild(this._container);
-			this.game.stage._stage.updateTransform();
-		}
-	}
+        if (parent)
+        {
+            if (parent instanceof Phaser.Group)
+            {
+                parent._container.addChild(this._container);
+                parent._container.updateTransform();
+            }
+            else
+            {
+                parent.addChild(this._container);
+                parent.updateTransform();
+            }
+        }
+        else
+        {
+            this.game.stage._stage.addChild(this._container);
+            this.game.stage._stage.updateTransform();
+        }
+    }
 
-	/**
-	* @property {number} type - Internal Phaser Type value.
-	* @protected
-	*/
-	this.type = Phaser.GROUP;
+    /**
+    * @property {number} type - Internal Phaser Type value.
+    * @protected
+    */
+    this.type = Phaser.GROUP;
 
-	/**
-	* @property {boolean} exists - If exists is true the the Group is updated, otherwise it is skipped.
-	* @default
-	*/
-	this.exists = true;
+    /**
+    * @property {boolean} exists - If exists is true the the Group is updated, otherwise it is skipped.
+    * @default
+    */
+    this.exists = true;
 
     /**
     * @property {Phaser.Point} scale - Replaces the PIXI.Point with a slightly more flexible one.
-    */ 
+    */
     this.scale = new Phaser.Point(1, 1);
 
     /**
     * The cursor is a simple way to iterate through the objects in a Group using the Group.next and Group.previous functions.
     * The cursor is set to the first child added to the Group and doesn't change unless you call next, previous or set it directly with Group.cursor.
     * @property {any} cursor - The current display object that the Group cursor is pointing to.
-    */ 
+    */
     this.cursor = null;
 
 };
@@ -11569,612 +11909,610 @@ Phaser.Group.prototype = {
     * @see Phaser.Group#create
     * @see Phaser.Group#addAt
     * @method Phaser.Group#add
-	* @param {*} child - An instance of Phaser.Sprite, Phaser.Button or any other display object..
-	* @return {*} The child that was added to the Group.
+    * @param {*} child - An instance of Phaser.Sprite, Phaser.Button or any other display object..
+    * @return {*} The child that was added to the Group.
     */
-	add: function (child) {
+    add: function (child) {
 
-		if (child.group !== this)
-		{
-			child.group = this;
+        if (child.group !== this)
+        {
+            child.group = this;
 
-			if (child.events)
-			{
-				child.events.onAddedToGroup.dispatch(child, this);
-			}
+            if (child.events)
+            {
+                child.events.onAddedToGroup.dispatch(child, this);
+            }
 
-			this._container.addChild(child);
+            this._container.addChild(child);
 
-			child.updateTransform();
+            child.updateTransform();
 
-			if (this.cursor === null)
-			{
-				this.cursor = child;
-			}
-		}
+            if (this.cursor === null)
+            {
+                this.cursor = child;
+            }
+        }
 
-		return child;
+        return child;
 
-	},
+    },
 
     /**
     * Adds an existing object to this Group. The object can be an instance of Phaser.Sprite, Phaser.Button or any other display object.
     * The child is added to the Group at the location specified by the index value, this allows you to control child ordering.
-	*
+    *
     * @method Phaser.Group#addAt
-	* @param {*} child - An instance of Phaser.Sprite, Phaser.Button or any other display object..
-	* @param {number} index - The index within the Group to insert the child to.
-	* @return {*} The child that was added to the Group.
-	*/
-	addAt: function (child, index) {
+    * @param {*} child - An instance of Phaser.Sprite, Phaser.Button or any other display object..
+    * @param {number} index - The index within the Group to insert the child to.
+    * @return {*} The child that was added to the Group.
+    */
+    addAt: function (child, index) {
 
-		if (child.group !== this)
-		{
-			child.group = this;
+        if (child.group !== this)
+        {
+            child.group = this;
 
-			if (child.events)
-			{
-				child.events.onAddedToGroup.dispatch(child, this);
-			}
+            if (child.events)
+            {
+                child.events.onAddedToGroup.dispatch(child, this);
+            }
 
-			this._container.addChildAt(child, index);
+            this._container.addChildAt(child, index);
 
-			child.updateTransform();
+            child.updateTransform();
 
-			if (this.cursor === null)
-			{
-				this.cursor = child;
-			}
-		}
+            if (this.cursor === null)
+            {
+                this.cursor = child;
+            }
+        }
 
-		return child;
+        return child;
 
-	},
+    },
 
     /**
-	* Returns the child found at the given index within this Group.
-	*
+    * Returns the child found at the given index within this Group.
+    *
     * @method Phaser.Group#getAt
     * @memberof Phaser.Group
-	* @param {number} index - The index to return the child from.
-	* @return {*} The child that was found at the given index.
-	*/
-	getAt: function (index) {
+    * @param {number} index - The index to return the child from.
+    * @return {*} The child that was found at the given index.
+    */
+    getAt: function (index) {
 
-		return this._container.getChildAt(index);
+        return this._container.getChildAt(index);
 
-	},
+    },
 
     /**
-	* Automatically creates a new Phaser.Sprite object and adds it to the top of this Group.
-	* Useful if you don't need to create the Sprite instances before-hand.
-	*
+    * Automatically creates a new Phaser.Sprite object and adds it to the top of this Group.
+    * Useful if you don't need to create the Sprite instances before-hand.
+    *
     * @method Phaser.Group#create
-	* @param {number} x - The x coordinate to display the newly created Sprite at. The value is in relation to the Group.x point.
-	* @param {number} y - The y coordinate to display the newly created Sprite at. The value is in relation to the Group.y point.
-	* @param {string} key - The Game.cache key of the image that this Sprite will use.
-	* @param {number|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
-	* @param {boolean} [exists=true] - The default exists state of the Sprite.
-	* @return {Phaser.Sprite} The child that was created.
-	*/
-	create: function (x, y, key, frame, exists) {
+    * @param {number} x - The x coordinate to display the newly created Sprite at. The value is in relation to the Group.x point.
+    * @param {number} y - The y coordinate to display the newly created Sprite at. The value is in relation to the Group.y point.
+    * @param {string} key - The Game.cache key of the image that this Sprite will use.
+    * @param {number|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
+    * @param {boolean} [exists=true] - The default exists state of the Sprite.
+    * @return {Phaser.Sprite} The child that was created.
+    */
+    create: function (x, y, key, frame, exists) {
 
-		if (typeof exists == 'undefined') { exists = true; }
+        if (typeof exists == 'undefined') { exists = true; }
 
-		var child = new Phaser.Sprite(this.game, x, y, key, frame);
+        var child = new Phaser.Sprite(this.game, x, y, key, frame);
 
-		child.group = this;
-		child.exists = exists;
-		child.visible = exists;
-		child.alive = exists;
+        child.group = this;
+        child.exists = exists;
+        child.visible = exists;
+        child.alive = exists;
 
-		if (child.events)
-		{
-			child.events.onAddedToGroup.dispatch(child, this);
-		}
+        if (child.events)
+        {
+            child.events.onAddedToGroup.dispatch(child, this);
+        }
 
-		this._container.addChild(child);
-			
-		child.updateTransform();
+        this._container.addChild(child);
+            
+        child.updateTransform();
 
-		if (this.cursor === null)
-		{
-			this.cursor = child;
-		}
+        if (this.cursor === null)
+        {
+            this.cursor = child;
+        }
 
-		return child;
+        return child;
 
-	},
+    },
 
     /**
-	* Automatically creates multiple Phaser.Sprite objects and adds them to the top of this Group.
-	* Useful if you need to quickly generate a pool of identical sprites, such as bullets. By default the sprites will be set to not exist
-	* and will be positioned at 0, 0 (relative to the Group.x/y)
-	*
+    * Automatically creates multiple Phaser.Sprite objects and adds them to the top of this Group.
+    * Useful if you need to quickly generate a pool of identical sprites, such as bullets. By default the sprites will be set to not exist
+    * and will be positioned at 0, 0 (relative to the Group.x/y)
+    *
     * @method Phaser.Group#createMultiple
-	* @param {number} quantity - The number of Sprites to create.
-	* @param {string} key - The Game.cache key of the image that this Sprite will use.
-	* @param {number|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
-	* @param {boolean} [exists=false] - The default exists state of the Sprite.
-	*/
-	createMultiple: function (quantity, key, frame, exists) {
+    * @param {number} quantity - The number of Sprites to create.
+    * @param {string} key - The Game.cache key of the image that this Sprite will use.
+    * @param {number|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
+    * @param {boolean} [exists=false] - The default exists state of the Sprite.
+    */
+    createMultiple: function (quantity, key, frame, exists) {
 
-		if (typeof exists == 'undefined') { exists = false; }
+        if (typeof exists == 'undefined') { exists = false; }
 
-		for (var i = 0; i < quantity; i++)
-		{
-			var child = new Phaser.Sprite(this.game, 0, 0, key, frame);
+        for (var i = 0; i < quantity; i++)
+        {
+            var child = new Phaser.Sprite(this.game, 0, 0, key, frame);
 
-			child.group = this;
-			child.exists = exists;
-			child.visible = exists;
-			child.alive = exists;
+            child.group = this;
+            child.exists = exists;
+            child.visible = exists;
+            child.alive = exists;
 
-			if (child.events)
-			{
-				child.events.onAddedToGroup.dispatch(child, this);
-			}
+            if (child.events)
+            {
+                child.events.onAddedToGroup.dispatch(child, this);
+            }
 
-			this._container.addChild(child);
-			child.updateTransform();
+            this._container.addChild(child);
+            child.updateTransform();
 
-			if (this.cursor === null)
-			{
-				this.cursor = child;
-			}
+            if (this.cursor === null)
+            {
+                this.cursor = child;
+            }
 
-		}
+        }
 
-	},
+    },
 
     /**
-	* Advances the Group cursor to the next object in the Group. If it's at the end of the Group it wraps around to the first object.
-	*
+    * Advances the Group cursor to the next object in the Group. If it's at the end of the Group it wraps around to the first object.
+    *
     * @method Phaser.Group#next
-	*/
-	next: function () {
+    */
+    next: function () {
 
-		if (this.cursor)
-		{
-			//	Wrap the cursor?
-			if (this.cursor == this._container.last)
-			{
-				this.cursor = this._container._iNext;
-			}
-			else
-			{
-				this.cursor = this.cursor._iNext;
-			}
-		}
+        if (this.cursor)
+        {
+            //  Wrap the cursor?
+            if (this.cursor == this._container.last)
+            {
+                this.cursor = this._container._iNext;
+            }
+            else
+            {
+                this.cursor = this.cursor._iNext;
+            }
+        }
 
-	},
+    },
 
     /**
-	* Moves the Group cursor to the previous object in the Group. If it's at the start of the Group it wraps around to the last object.
-	*
+    * Moves the Group cursor to the previous object in the Group. If it's at the start of the Group it wraps around to the last object.
+    *
     * @method Phaser.Group#previous
-	*/
-	previous: function () {
+    */
+    previous: function () {
 
-		if (this.cursor)
-		{
-			//	Wrap the cursor?
-			if (this.cursor == this._container._iNext)
-			{
-				this.cursor = this._container.last;
-			}
-			else
-			{
-				this.cursor = this.cursor._iPrev;
-			}
-		}
+        if (this.cursor)
+        {
+            //  Wrap the cursor?
+            if (this.cursor == this._container._iNext)
+            {
+                this.cursor = this._container.last;
+            }
+            else
+            {
+                this.cursor = this.cursor._iPrev;
+            }
+        }
 
-	},
+    },
 
-	childTest: function (prefix, child) {
+    childTest: function (prefix, child) {
 
-		var s = prefix + ' next: ';
+        var s = prefix + ' next: ';
 
-		if (child._iNext)
-		{
-			s = s + child._iNext.name;
-		}
-		else
-		{
-			s = s + '-null-';
-		}
+        if (child._iNext)
+        {
+            s = s + child._iNext.name;
+        }
+        else
+        {
+            s = s + '-null-';
+        }
 
-		s = s + ' ' + prefix + ' prev: ';
+        s = s + ' ' + prefix + ' prev: ';
 
-		if (child._iPrev)
-		{
-			s = s + child._iPrev.name;
-		}
-		else
-		{
-			s = s + '-null-';
-		}
+        if (child._iPrev)
+        {
+            s = s + child._iPrev.name;
+        }
+        else
+        {
+            s = s + '-null-';
+        }
 
-		console.log(s);
+        console.log(s);
 
-	},
+    },
 
-	swapIndex: function (index1, index2) {
+    swapIndex: function (index1, index2) {
 
-		var child1 = this.getAt(index1);
-		var child2 = this.getAt(index2);
+        var child1 = this.getAt(index1);
+        var child2 = this.getAt(index2);
 
-		console.log('swapIndex ', index1, ' with ', index2);
+        console.log('swapIndex ', index1, ' with ', index2);
 
-		this.swap(child1, child2);
+        this.swap(child1, child2);
 
-	},
+    },
 
-	/**
-	* Swaps the position of two children in this Group. Both children must be in this Group.
-	* You cannot swap a child with itself, or swap un-parented children, doing so will return false.
-	*
+    /**
+    * Swaps the position of two children in this Group. Both children must be in this Group.
+    * You cannot swap a child with itself, or swap un-parented children, doing so will return false.
+    *
     * @method Phaser.Group#swap
-	* @param {*} child1 - The first child to swap.
-	* @param {*} child2 - The second child to swap.
+    * @param {*} child1 - The first child to swap.
+    * @param {*} child2 - The second child to swap.
     * @return {boolean} True if the swap was successful, otherwise false.
-	*/
-	swap: function (child1, child2) {
+    */
+    swap: function (child1, child2) {
 
-		if (child1 === child2 || !child1.parent || !child2.parent || child1.group !== this || child2.group !== this)
-		{
-			return false;
-		}
+        if (child1 === child2 || !child1.parent || !child2.parent || child1.group !== this || child2.group !== this)
+        {
+            return false;
+        }
 
-		//	Cache the values
-		var child1Prev = child1._iPrev;
-		var child1Next = child1._iNext;
-		var child2Prev = child2._iPrev;
-		var child2Next = child2._iNext;
+        //  Cache the values
+        var child1Prev = child1._iPrev;
+        var child1Next = child1._iNext;
+        var child2Prev = child2._iPrev;
+        var child2Next = child2._iNext;
 
-		var endNode = this._container.last._iNext;
-		var currentNode = this.game.stage._stage;
-			
-		do
-		{
-			if (currentNode !== child1 && currentNode !== child2)
-			{
-				if (currentNode.first === child1)
-				{
-					currentNode.first = child2;
-				}
-				else if (currentNode.first === child2)
-				{
-					currentNode.first = child1;
-				}
+        var endNode = this._container.last._iNext;
+        var currentNode = this.game.stage._stage;
+            
+        do
+        {
+            if (currentNode !== child1 && currentNode !== child2)
+            {
+                if (currentNode.first === child1)
+                {
+                    currentNode.first = child2;
+                }
+                else if (currentNode.first === child2)
+                {
+                    currentNode.first = child1;
+                }
 
-				if (currentNode.last === child1)
-				{
-					currentNode.last = child2;
-				}
-				else if (currentNode.last === child2)
-				{
-					currentNode.last = child1;
-				}
-			}
+                if (currentNode.last === child1)
+                {
+                    currentNode.last = child2;
+                }
+                else if (currentNode.last === child2)
+                {
+                    currentNode.last = child1;
+                }
+            }
 
-			currentNode = currentNode._iNext;
-		}
-		while (currentNode != endNode)
+            currentNode = currentNode._iNext;
+        }
+        while (currentNode != endNode)
 
-		if (child1._iNext == child2)
-		{
-			//	This is a downward (A to B) neighbour swap
-			child1._iNext = child2Next;
-			child1._iPrev = child2;
-			child2._iNext = child1;
-			child2._iPrev = child1Prev;
+        if (child1._iNext == child2)
+        {
+            //  This is a downward (A to B) neighbour swap
+            child1._iNext = child2Next;
+            child1._iPrev = child2;
+            child2._iNext = child1;
+            child2._iPrev = child1Prev;
 
-			if (child1Prev) { child1Prev._iNext = child2; }
-			if (child2Next) { child2Next._iPrev = child1; }
+            if (child1Prev) { child1Prev._iNext = child2; }
+            if (child2Next) { child2Next._iPrev = child1; }
 
-			if (child1.__renderGroup)
-			{
-				child1.__renderGroup.updateTexture(child1);
-			}
+            if (child1.__renderGroup)
+            {
+                child1.__renderGroup.updateTexture(child1);
+            }
 
-			if (child2.__renderGroup)
-			{
-				child2.__renderGroup.updateTexture(child2);
-			}
+            if (child2.__renderGroup)
+            {
+                child2.__renderGroup.updateTexture(child2);
+            }
 
-			return true;
-		}
-		else if (child2._iNext == child1)
-		{
-			//	This is an upward (B to A) neighbour swap
-			child1._iNext = child2;
-			child1._iPrev = child2Prev;
-			child2._iNext = child1Next;
-			child2._iPrev = child1;
+            return true;
+        }
+        else if (child2._iNext == child1)
+        {
+            //  This is an upward (B to A) neighbour swap
+            child1._iNext = child2;
+            child1._iPrev = child2Prev;
+            child2._iNext = child1Next;
+            child2._iPrev = child1;
 
-			if (child2Prev) { child2Prev._iNext = child1; }
-			if (child1Next) { child1Next._iPrev = child2; }
+            if (child2Prev) { child2Prev._iNext = child1; }
+            if (child1Next) { child1Next._iPrev = child2; }
 
-			if (child1.__renderGroup)
-			{
-				child1.__renderGroup.updateTexture(child1);
-			}
+            if (child1.__renderGroup)
+            {
+                child1.__renderGroup.updateTexture(child1);
+            }
 
-			if (child2.__renderGroup)
-			{
-				child2.__renderGroup.updateTexture(child2);
-			}
+            if (child2.__renderGroup)
+            {
+                child2.__renderGroup.updateTexture(child2);
+            }
 
-			return true;
-		}
-		else
-		{
-			//	Children are far apart
-			child1._iNext = child2Next;
-			child1._iPrev = child2Prev;
-			child2._iNext = child1Next;
-			child2._iPrev = child1Prev;
+            return true;
+        }
+        else
+        {
+            //  Children are far apart
+            child1._iNext = child2Next;
+            child1._iPrev = child2Prev;
+            child2._iNext = child1Next;
+            child2._iPrev = child1Prev;
 
-			if (child1Prev) { child1Prev._iNext = child2; }
-			if (child1Next) { child1Next._iPrev = child2; }
-			if (child2Prev) { child2Prev._iNext = child1; }
-			if (child2Next) { child2Next._iPrev = child1; }
+            if (child1Prev) { child1Prev._iNext = child2; }
+            if (child1Next) { child1Next._iPrev = child2; }
+            if (child2Prev) { child2Prev._iNext = child1; }
+            if (child2Next) { child2Next._iPrev = child1; }
 
-			if (child1.__renderGroup)
-			{
-				child1.__renderGroup.updateTexture(child1);
-			}
+            if (child1.__renderGroup)
+            {
+                child1.__renderGroup.updateTexture(child1);
+            }
 
-			if (child2.__renderGroup)
-			{
-				child2.__renderGroup.updateTexture(child2);
-			}
+            if (child2.__renderGroup)
+            {
+                child2.__renderGroup.updateTexture(child2);
+            }
 
-			return true;
-		}
+            return true;
+        }
 
-		return false;
-		
-	},
+        return false;
+        
+    },
 
-	/**
-	* Brings the given child to the top of this Group so it renders above all other children.
-	*
+    /**
+    * Brings the given child to the top of this Group so it renders above all other children.
+    *
     * @method Phaser.Group#bringToTop
-	* @param {*} child - The child to bring to the top of this Group.
+    * @param {*} child - The child to bring to the top of this Group.
     * @return {*} The child that was moved.
-	*/
-	bringToTop: function (child) {
+    */
+    bringToTop: function (child) {
 
-		if (child.group === this)
-		{
-			this.remove(child);
-			this.add(child);
-		}
+        if (child.group === this)
+        {
+            this.remove(child);
+            this.add(child);
+        }
 
-		return child;
+        return child;
 
-	},
+    },
 
-	/**
-	* Get the index position of the given child in this Group.
-	*
+    /**
+    * Get the index position of the given child in this Group.
+    *
     * @method Phaser.Group#getIndex
-	* @param {*} child - The child to get the index for.
+    * @param {*} child - The child to get the index for.
     * @return {number} The index of the child or -1 if it's not a member of this Group.
-	*/
-	getIndex: function (child) {
+    */
+    getIndex: function (child) {
 
-		return this._container.children.indexOf(child);
+        return this._container.children.indexOf(child);
 
-	},
+    },
 
-	/**
-	* Replaces a child of this Group with the given newChild. The newChild cannot be a member of this Group.
-	*
+    /**
+    * Replaces a child of this Group with the given newChild. The newChild cannot be a member of this Group.
+    *
     * @method Phaser.Group#replace
-	* @param {*} oldChild - The child in this Group that will be replaced.
-	* @param {*} newChild - The child to be inserted into this group.
-	*/
-	replace: function (oldChild, newChild) {
+    * @param {*} oldChild - The child in this Group that will be replaced.
+    * @param {*} newChild - The child to be inserted into this group.
+    */
+    replace: function (oldChild, newChild) {
 
-		if (!this._container.first._iNext)
-		{
-			return;
-		}
+        if (!this._container.first._iNext)
+        {
+            return;
+        }
 
-		var index = this.getIndex(oldChild);
-		
-		if (index != -1)
-		{
-			if (newChild.parent != undefined)
-			{
-				newChild.events.onRemovedFromGroup.dispatch(newChild, this);
-				newChild.parent.removeChild(newChild);
-			}
+        var index = this.getIndex(oldChild);
+        
+        if (index != -1)
+        {
+            if (newChild.parent !== undefined)
+            {
+                newChild.events.onRemovedFromGroup.dispatch(newChild, this);
+                newChild.parent.removeChild(newChild);
+            }
 
-			this._container.removeChild(oldChild);
-			this._container.addChildAt(newChild, index);
+            this._container.removeChild(oldChild);
+            this._container.addChildAt(newChild, index);
 
-			newChild.events.onAddedToGroup.dispatch(newChild, this);
-			newChild.updateTransform();
+            newChild.events.onAddedToGroup.dispatch(newChild, this);
+            newChild.updateTransform();
 
-			if (this.cursor == oldChild)
-			{
-				this.cursor = this._container._iNext;
-			}
-		}
+            if (this.cursor == oldChild)
+            {
+                this.cursor = this._container._iNext;
+            }
+        }
 
-	},
+    },
 
-	/**
-     * Sets the given property to the given value on the child. The operation controls the assignment of the value.
-     *
-     * @method Phaser.Group#setProperty
-     * @param {*} child - The child to set the property value on.
-     * @param {array} key - An array of strings that make up the property that will be set.
-     * @param {*} value - The value that will be set.
-     * @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
-     */
-	setProperty: function (child, key, value, operation) {
+    /**
+    * Sets the given property to the given value on the child. The operation controls the assignment of the value.
+    *
+    * @method Phaser.Group#setProperty
+    * @param {*} child - The child to set the property value on.
+    * @param {array} key - An array of strings that make up the property that will be set.
+    * @param {*} value - The value that will be set.
+    * @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+    */
+    setProperty: function (child, key, value, operation) {
 
-		operation = operation || 0;
+        operation = operation || 0;
 
-		//	As ugly as this approach looks, and although it's limited to a depth of only 4, it's extremely fast.
-		//	Much faster than a for loop or object iteration. There are no checks, so if the key isn't valid then it'll fail
-		//	but as you are likely to call this from inner loops that have to perform well, I'll take that trade off.
+        //  As ugly as this approach looks, and although it's limited to a depth of only 4, it's extremely fast.
+        //  Much faster than a for loop or object iteration. There are no checks, so if the key isn't valid then it'll fail
+        //  but as you are likely to call this from inner loops that have to perform well, I'll take that trade off.
 
-		//	0 = Equals
-		//	1 = Add
-		//	2 = Subtract
-		//	3 = Multiply
-		//	4 = Divide
+        //  0 = Equals
+        //  1 = Add
+        //  2 = Subtract
+        //  3 = Multiply
+        //  4 = Divide
 
-		var len = key.length;
+        var len = key.length;
 
-		if (len == 1)
-		{
-			if (operation == 0) { child[key[0]] = value; }
-			else if (operation == 1) { child[key[0]] += value; }
-			else if (operation == 2) { child[key[0]] -= value; }
-			else if (operation == 3) { child[key[0]] *= value; }
-			else if (operation == 4) { child[key[0]] /= value; }
-		}
-		else if (len == 2)
-		{
-			if (operation == 0) { child[key[0]][key[1]] = value; }
-			else if (operation == 1) { child[key[0]][key[1]] += value; }
-			else if (operation == 2) { child[key[0]][key[1]] -= value; }
-			else if (operation == 3) { child[key[0]][key[1]] *= value; }
-			else if (operation == 4) { child[key[0]][key[1]] /= value; }
-		}
-		else if (len == 3)
-		{
-			if (operation == 0) { child[key[0]][key[1]][key[2]] = value; }
-			else if (operation == 1) { child[key[0]][key[1]][key[2]] += value; }
-			else if (operation == 2) { child[key[0]][key[1]][key[2]] -= value; }
-			else if (operation == 3) { child[key[0]][key[1]][key[2]] *= value; }
-			else if (operation == 4) { child[key[0]][key[1]][key[2]] /= value; }
-		}
-		else if (len == 4)
-		{
-			if (operation == 0) { child[key[0]][key[1]][key[2]][key[3]] = value; }
-			else if (operation == 1) { child[key[0]][key[1]][key[2]][key[3]] += value; }
-			else if (operation == 2) { child[key[0]][key[1]][key[2]][key[3]] -= value; }
-			else if (operation == 3) { child[key[0]][key[1]][key[2]][key[3]] *= value; }
-			else if (operation == 4) { child[key[0]][key[1]][key[2]][key[3]] /= value; }
-		}
-		else
-		{
-			//	TODO - Deep property scane
-		}
+        if (len == 1)
+        {
+            if (operation === 0) { child[key[0]] = value; }
+            else if (operation == 1) { child[key[0]] += value; }
+            else if (operation == 2) { child[key[0]] -= value; }
+            else if (operation == 3) { child[key[0]] *= value; }
+            else if (operation == 4) { child[key[0]] /= value; }
+        }
+        else if (len == 2)
+        {
+            if (operation === 0) { child[key[0]][key[1]] = value; }
+            else if (operation == 1) { child[key[0]][key[1]] += value; }
+            else if (operation == 2) { child[key[0]][key[1]] -= value; }
+            else if (operation == 3) { child[key[0]][key[1]] *= value; }
+            else if (operation == 4) { child[key[0]][key[1]] /= value; }
+        }
+        else if (len == 3)
+        {
+            if (operation === 0) { child[key[0]][key[1]][key[2]] = value; }
+            else if (operation == 1) { child[key[0]][key[1]][key[2]] += value; }
+            else if (operation == 2) { child[key[0]][key[1]][key[2]] -= value; }
+            else if (operation == 3) { child[key[0]][key[1]][key[2]] *= value; }
+            else if (operation == 4) { child[key[0]][key[1]][key[2]] /= value; }
+        }
+        else if (len == 4)
+        {
+            if (operation === 0) { child[key[0]][key[1]][key[2]][key[3]] = value; }
+            else if (operation == 1) { child[key[0]][key[1]][key[2]][key[3]] += value; }
+            else if (operation == 2) { child[key[0]][key[1]][key[2]][key[3]] -= value; }
+            else if (operation == 3) { child[key[0]][key[1]][key[2]][key[3]] *= value; }
+            else if (operation == 4) { child[key[0]][key[1]][key[2]][key[3]] /= value; }
+        }
+        
+        //  TODO - Deep property scane
 
-	},
+    },
 
-	/**
-     * This function allows you to quickly set the same property across all children of this Group to a new value.
-     * The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
-     *
-     * @method Phaser.Group#setAll
-     * @param {string} key - The property, as a string, to be set. For example: 'body.velocity.x'
-     * @param {*} value - The value that will be set.
-     * @param {boolean} [checkAlive=false] - If set then only children with alive=true will be updated.
-     * @param {boolean} [checkVisible=false] - If set then only children with visible=true will be updated.
-     * @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
-     */
-	setAll: function (key, value, checkAlive, checkVisible, operation) {
+    /**
+    * This function allows you to quickly set the same property across all children of this Group to a new value.
+    * The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
+    *
+    * @method Phaser.Group#setAll
+    * @param {string} key - The property, as a string, to be set. For example: 'body.velocity.x'
+    * @param {*} value - The value that will be set.
+    * @param {boolean} [checkAlive=false] - If set then only children with alive=true will be updated.
+    * @param {boolean} [checkVisible=false] - If set then only children with visible=true will be updated.
+    * @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+    */
+    setAll: function (key, value, checkAlive, checkVisible, operation) {
 
-		key = key.split('.');
+        key = key.split('.');
 
-		if (typeof checkAlive === 'undefined') { checkAlive = false; }
-		if (typeof checkVisible === 'undefined') { checkVisible = false; }
+        if (typeof checkAlive === 'undefined') { checkAlive = false; }
+        if (typeof checkVisible === 'undefined') { checkVisible = false; }
 
-		operation = operation || 0;
+        operation = operation || 0;
 
-		if (this._container.children.length > 0 && this._container.first._iNext)
-		{
-			var currentNode = this._container.first._iNext;
-				
-			do	
-			{
-				if ((checkAlive == false || (checkAlive && currentNode.alive)) && (checkVisible == false || (checkVisible && currentNode.visible)))
-				{
-					this.setProperty(currentNode, key, value, operation);
-				}
+        if (this._container.children.length > 0 && this._container.first._iNext)
+        {
+            var currentNode = this._container.first._iNext;
+                
+            do
+            {
+                if ((checkAlive === false || (checkAlive && currentNode.alive)) && (checkVisible === false || (checkVisible && currentNode.visible)))
+                {
+                    this.setProperty(currentNode, key, value, operation);
+                }
 
-				currentNode = currentNode._iNext;
-			}
-			while (currentNode != this._container.last._iNext)
-		}
+                currentNode = currentNode._iNext;
+            }
+            while (currentNode != this._container.last._iNext)
+        }
 
-	},
+    },
 
-	/**
-     * Adds the amount to the given property on all children in this Group.
-     * Group.addAll('x', 10) will add 10 to the child.x value.
-     *
-     * @method Phaser.Group#addAll
-     * @param {string} property - The property to increment, for example 'body.velocity.x' or 'angle'.
-     * @param {number} amount - The amount to increment the property by. If child.x = 10 then addAll('x', 40) would make child.x = 50.
-     * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
-     * @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
-     */
-	addAll: function (property, amount, checkAlive, checkVisible) {
+    /**
+    * Adds the amount to the given property on all children in this Group.
+    * Group.addAll('x', 10) will add 10 to the child.x value.
+    *
+    * @method Phaser.Group#addAll
+    * @param {string} property - The property to increment, for example 'body.velocity.x' or 'angle'.
+    * @param {number} amount - The amount to increment the property by. If child.x = 10 then addAll('x', 40) would make child.x = 50.
+    * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
+    * @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
+    */
+    addAll: function (property, amount, checkAlive, checkVisible) {
 
-		this.setAll(property, amount, checkAlive, checkVisible, 1);
+        this.setAll(property, amount, checkAlive, checkVisible, 1);
 
-	},
+    },
 
-	/**
-     * Subtracts the amount from the given property on all children in this Group.
-     * Group.subAll('x', 10) will minus 10 from the child.x value.
-     *
-     * @method Phaser.Group#subAll
-     * @param {string} property - The property to decrement, for example 'body.velocity.x' or 'angle'.
-     * @param {number} amount - The amount to subtract from the property. If child.x = 50 then subAll('x', 40) would make child.x = 10.
-     * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
-     * @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
-     */
-	subAll: function (property, amount, checkAlive, checkVisible) {
+    /**
+    * Subtracts the amount from the given property on all children in this Group.
+    * Group.subAll('x', 10) will minus 10 from the child.x value.
+    *
+    * @method Phaser.Group#subAll
+    * @param {string} property - The property to decrement, for example 'body.velocity.x' or 'angle'.
+    * @param {number} amount - The amount to subtract from the property. If child.x = 50 then subAll('x', 40) would make child.x = 10.
+    * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
+    * @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
+    */
+    subAll: function (property, amount, checkAlive, checkVisible) {
 
-		this.setAll(property, amount, checkAlive, checkVisible, 2);
+        this.setAll(property, amount, checkAlive, checkVisible, 2);
 
-	},
+    },
 
-	/**
-     * Multiplies the given property by the amount on all children in this Group.
-     * Group.multiplyAll('x', 2) will x2 the child.x value.
-     *
-     * @method Phaser.Group#multiplyAll
-     * @param {string} property - The property to multiply, for example 'body.velocity.x' or 'angle'.
-     * @param {number} amount - The amount to multiply the property by. If child.x = 10 then multiplyAll('x', 2) would make child.x = 20.
-     * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
-     * @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
-     */
-	multiplyAll: function (property, amount, checkAlive, checkVisible) {
+    /**
+    * Multiplies the given property by the amount on all children in this Group.
+    * Group.multiplyAll('x', 2) will x2 the child.x value.
+    *
+    * @method Phaser.Group#multiplyAll
+    * @param {string} property - The property to multiply, for example 'body.velocity.x' or 'angle'.
+    * @param {number} amount - The amount to multiply the property by. If child.x = 10 then multiplyAll('x', 2) would make child.x = 20.
+    * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
+    * @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
+    */
+    multiplyAll: function (property, amount, checkAlive, checkVisible) {
 
-		this.setAll(property, amount, checkAlive, checkVisible, 3);
+        this.setAll(property, amount, checkAlive, checkVisible, 3);
 
-	},
+    },
 
-	/**
-     * Divides the given property by the amount on all children in this Group.
-     * Group.divideAll('x', 2) will half the child.x value.
-     *
-     * @method Phaser.Group#divideAll
-     * @param {string} property - The property to divide, for example 'body.velocity.x' or 'angle'.
-     * @param {number} amount - The amount to divide the property by. If child.x = 100 then divideAll('x', 2) would make child.x = 50.
-     * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
-     * @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
-     */
-	divideAll: function (property, amount, checkAlive, checkVisible) {
+    /**
+    * Divides the given property by the amount on all children in this Group.
+    * Group.divideAll('x', 2) will half the child.x value.
+    *
+    * @method Phaser.Group#divideAll
+    * @param {string} property - The property to divide, for example 'body.velocity.x' or 'angle'.
+    * @param {number} amount - The amount to divide the property by. If child.x = 100 then divideAll('x', 2) would make child.x = 50.
+    * @param {boolean} checkAlive - If true the property will only be changed if the child is alive.
+    * @param {boolean} checkVisible - If true the property will only be changed if the child is visible.
+    */
+    divideAll: function (property, amount, checkAlive, checkVisible) {
 
-		this.setAll(property, amount, checkAlive, checkVisible, 4);
+        this.setAll(property, amount, checkAlive, checkVisible, 4);
 
-	},
+    },
 
-	/**
+    /**
     * Calls a function on all of the children that have exists=true in this Group.
     * After the existsValue parameter you can add as many parameters as you like, which will all be passed to the child callback.
     * 
@@ -12183,30 +12521,30 @@ Phaser.Group.prototype = {
     * @param {boolean} existsValue - Only children with exists=existsValue will be called.
     * @param {...*} parameter - Additional parameters that will be passed to the callback.
     */
-	callAllExists: function (callback, existsValue) {
+    callAllExists: function (callback, existsValue) {
 
-		var args = Array.prototype.splice.call(arguments, 2);
+        var args = Array.prototype.splice.call(arguments, 2);
 
-		if (this._container.children.length > 0 && this._container.first._iNext)
-		{
-			var currentNode = this._container.first._iNext;
-				
-			do	
-			{
-				if (currentNode.exists == existsValue && currentNode[callback])
-				{
-					currentNode[callback].apply(currentNode, args);
-				}
+        if (this._container.children.length > 0 && this._container.first._iNext)
+        {
+            var currentNode = this._container.first._iNext;
+                
+            do
+            {
+                if (currentNode.exists == existsValue && currentNode[callback])
+                {
+                    currentNode[callback].apply(currentNode, args);
+                }
 
-				currentNode = currentNode._iNext;
-			}
-			while (currentNode != this._container.last._iNext)
+                currentNode = currentNode._iNext;
+            }
+            while (currentNode != this._container.last._iNext)
 
-		}
+        }
 
-	},
+    },
 
-	/**
+    /**
     * Calls a function on all of the children that have exists=true in this Group.
     * 
     * @method Phaser.Group#callbackFromArray
@@ -12215,51 +12553,51 @@ Phaser.Group.prototype = {
     * @param {number} length - The size of the array (pre-calculated in callAll).
     * @protected
     */
-	callbackFromArray: function (child, callback, length) {
+    callbackFromArray: function (child, callback, length) {
 
-		//	Kinda looks like a Christmas tree
+        //  Kinda looks like a Christmas tree
 
-		if (length == 1)
-		{
-			if (child[callback[0]])
-			{
-				return child[callback[0]];
-			}
-		}
-		else if (length == 2)
-		{
-			if (child[callback[0]][callback[1]])
-			{
-				return child[callback[0]][callback[1]];
-			}
-		}
-		else if (length == 3)
-		{
-			if (child[callback[0]][callback[1]][callback[2]])
-			{
-				return child[callback[0]][callback[1]][callback[2]];
-			}
-		}
-		else if (length == 4)
-		{
-			if (child[callback[0]][callback[1]][callback[2]][callback[3]])
-			{
-				return child[callback[0]][callback[1]][callback[2]][callback[3]];
-			}
-		}
-		else
-		{
-			if (child[callback])
-			{
-				return child[callback];
-			}
-		}
+        if (length == 1)
+        {
+            if (child[callback[0]])
+            {
+                return child[callback[0]];
+            }
+        }
+        else if (length == 2)
+        {
+            if (child[callback[0]][callback[1]])
+            {
+                return child[callback[0]][callback[1]];
+            }
+        }
+        else if (length == 3)
+        {
+            if (child[callback[0]][callback[1]][callback[2]])
+            {
+                return child[callback[0]][callback[1]][callback[2]];
+            }
+        }
+        else if (length == 4)
+        {
+            if (child[callback[0]][callback[1]][callback[2]][callback[3]])
+            {
+                return child[callback[0]][callback[1]][callback[2]][callback[3]];
+            }
+        }
+        else
+        {
+            if (child[callback])
+            {
+                return child[callback];
+            }
+        }
 
-		return false;
+        return false;
 
-	},
+    },
 
-	/**
+    /**
     * Calls a function on all of the children regardless if they are dead or alive (see callAllExists if you need control over that)
     * After the method parameter and context you can add as many extra parameters as you like, which will all be passed to the child.
     * 
@@ -12268,341 +12606,342 @@ Phaser.Group.prototype = {
     * @param {string} [context=''] - A string containing the context under which the method will be executed. Leave to '' to default to the child.
     * @param {...*} parameter - Additional parameters that will be passed to the method.
     */
-	callAll: function (method, context) {
+    callAll: function (method, context) {
 
-		if (typeof method === 'undefined')
-		{
-			return;
-		}
+        if (typeof method === 'undefined')
+        {
+            return;
+        }
 
-		//	Extract the method into an array
-		method = method.split('.');
+        //  Extract the method into an array
+        method = method.split('.');
 
-		var methodLength = method.length;
+        var methodLength = method.length;
 
-		if (typeof context === 'undefined')
-		{
-			context = null;
-		}
-		else
-		{
-			//	Extract the context into an array
-			if (typeof context === 'string')
-			{
-				context = context.split('.');
-				var contextLength = context.length;
-			}
-		}
+        if (typeof context === 'undefined')
+        {
+            context = null;
+        }
+        else
+        {
+            //  Extract the context into an array
+            if (typeof context === 'string')
+            {
+                context = context.split('.');
+                var contextLength = context.length;
+            }
+        }
 
-		var args = Array.prototype.splice.call(arguments, 2);
-		var callback = null;
+        var args = Array.prototype.splice.call(arguments, 2);
+        var callback = null;
+        var callbackContext = null;
 
-		if (this._container.children.length > 0 && this._container.first._iNext)
-		{
-			var child = this._container.first._iNext;
-				
-			do	
-			{
-				callback = this.callbackFromArray(child, method, methodLength);
+        if (this._container.children.length > 0 && this._container.first._iNext)
+        {
+            var child = this._container.first._iNext;
+                
+            do
+            {
+                callback = this.callbackFromArray(child, method, methodLength);
 
-				if (context && callback)
-				{
-					callbackContext = this.callbackFromArray(child, context, contextLength);
-	
-					if (callback)
-					{
-						callback.apply(callbackContext, args);
-					}
-				}
-				else if (callback)
-				{
-					callback.apply(child, args);
-				}
+                if (context && callback)
+                {
+                    callbackContext = this.callbackFromArray(child, context, contextLength);
+    
+                    if (callback)
+                    {
+                        callback.apply(callbackContext, args);
+                    }
+                }
+                else if (callback)
+                {
+                    callback.apply(child, args);
+                }
 
-				child = child._iNext;
-			}
-			while (child != this._container.last._iNext)
+                child = child._iNext;
+            }
+            while (child != this._container.last._iNext)
 
-		}
+        }
 
-	},
+    },
 
-	/**
-	* Allows you to call your own function on each member of this Group. You must pass the callback and context in which it will run.
-   	* After the checkExists parameter you can add as many parameters as you like, which will all be passed to the callback along with the child.
-   	* For example: Group.forEach(awardBonusGold, this, true, 100, 500)
-	* 
-	* @method Phaser.Group#forEach
-	* @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
+    /**
+    * Allows you to call your own function on each member of this Group. You must pass the callback and context in which it will run.
+    * After the checkExists parameter you can add as many parameters as you like, which will all be passed to the callback along with the child.
+    * For example: Group.forEach(awardBonusGold, this, true, 100, 500)
+    * 
+    * @method Phaser.Group#forEach
+    * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
     * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
     * @param {boolean} checkExists - If set only children with exists=true will be passed to the callback, otherwise all children will be passed.
-	*/
-	forEach: function (callback, callbackContext, checkExists) {
+    */
+    forEach: function (callback, callbackContext, checkExists) {
 
-		if (typeof checkExists === 'undefined')
-		{
-			checkExists = false;
-		}
+        if (typeof checkExists === 'undefined')
+        {
+            checkExists = false;
+        }
 
-		var args = Array.prototype.splice.call(arguments, 3);
-		args.unshift(null);
+        var args = Array.prototype.splice.call(arguments, 3);
+        args.unshift(null);
 
-		if (this._container.children.length > 0 && this._container.first._iNext)
-		{
-			var currentNode = this._container.first._iNext;
-				
-			do	
-			{
-				if (checkExists == false || (checkExists && currentNode.exists))
-				{
-					args[0] = currentNode;
-					callback.apply(callbackContext, args);
-				}
+        if (this._container.children.length > 0 && this._container.first._iNext)
+        {
+            var currentNode = this._container.first._iNext;
+                
+            do
+            {
+                if (checkExists === false || (checkExists && currentNode.exists))
+                {
+                    args[0] = currentNode;
+                    callback.apply(callbackContext, args);
+                }
 
-				currentNode = currentNode._iNext;
-			}
-			while (currentNode != this._container.last._iNext);
+                currentNode = currentNode._iNext;
+            }
+            while (currentNode != this._container.last._iNext);
 
-		}
+        }
 
-	},
+    },
 
-	/**
-	* Allows you to call your own function on each alive member of this Group (where child.alive=true). You must pass the callback and context in which it will run.
-   	* You can add as many parameters as you like, which will all be passed to the callback along with the child.
-   	* For example: Group.forEachAlive(causeDamage, this, 500)
-	* 
-	* @method Phaser.Group#forEachAlive
-	* @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
+    /**
+    * Allows you to call your own function on each alive member of this Group (where child.alive=true). You must pass the callback and context in which it will run.
+    * You can add as many parameters as you like, which will all be passed to the callback along with the child.
+    * For example: Group.forEachAlive(causeDamage, this, 500)
+    * 
+    * @method Phaser.Group#forEachAlive
+    * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
     * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
-	*/
-	forEachExists: function (callback, callbackContext) {
+    */
+    forEachExists: function (callback, callbackContext) {
 
-		var args = Array.prototype.splice.call(arguments, 2);
-		args.unshift(null);
+        var args = Array.prototype.splice.call(arguments, 2);
+        args.unshift(null);
 
-		this.iterate('exists', true, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
+        this.iterate('exists', true, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
 
-	},
+    },
 
-	/**
-	* Allows you to call your own function on each alive member of this Group (where child.alive=true). You must pass the callback and context in which it will run.
-   	* You can add as many parameters as you like, which will all be passed to the callback along with the child.
-   	* For example: Group.forEachAlive(causeDamage, this, 500)
-	* 
-	* @method Phaser.Group#forEachAlive
-	* @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
+    /**
+    * Allows you to call your own function on each alive member of this Group (where child.alive=true). You must pass the callback and context in which it will run.
+    * You can add as many parameters as you like, which will all be passed to the callback along with the child.
+    * For example: Group.forEachAlive(causeDamage, this, 500)
+    * 
+    * @method Phaser.Group#forEachAlive
+    * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
     * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
-	*/
-	forEachAlive: function (callback, callbackContext) {
+    */
+    forEachAlive: function (callback, callbackContext) {
 
-		var args = Array.prototype.splice.call(arguments, 2);
-		args.unshift(null);
+        var args = Array.prototype.splice.call(arguments, 2);
+        args.unshift(null);
 
-		this.iterate('alive', true, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
+        this.iterate('alive', true, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
 
-	},
+    },
 
-	/**
-	* Allows you to call your own function on each dead member of this Group (where alive=false). You must pass the callback and context in which it will run.
-   	* You can add as many parameters as you like, which will all be passed to the callback along with the child.
-   	* For example: Group.forEachDead(bringToLife, this)
-	* 
-	* @method Phaser.Group#forEachDead
-	* @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
+    /**
+    * Allows you to call your own function on each dead member of this Group (where alive=false). You must pass the callback and context in which it will run.
+    * You can add as many parameters as you like, which will all be passed to the callback along with the child.
+    * For example: Group.forEachDead(bringToLife, this)
+    * 
+    * @method Phaser.Group#forEachDead
+    * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
     * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
-	*/
-	forEachDead: function (callback, callbackContext) {
+    */
+    forEachDead: function (callback, callbackContext) {
 
-		var args = Array.prototype.splice.call(arguments, 2);
-		args.unshift(null);
+        var args = Array.prototype.splice.call(arguments, 2);
+        args.unshift(null);
 
-		this.iterate('alive', false, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
+        this.iterate('alive', false, Phaser.Group.RETURN_TOTAL, callback, callbackContext, args);
 
-	},
+    },
 
-	/**
-	* Call this function to sort the group according to a particular value and order.
-	* For example to depth sort Sprites for Zelda-style game you might call `group.sort('y', Phaser.Group.SORT_ASCENDING)` at the bottom of your `State.update()`.
-	*
-	* @method Phaser.Group#sort
-	* @param {string} [index='y'] - The `string` name of the property you want to sort on.
-	* @param {number} [order=Phaser.Group.SORT_ASCENDING] - The `Group` constant that defines the sort order. Possible values are Phaser.Group.SORT_ASCENDING and Phaser.Group.SORT_DESCENDING.
-	*/
-	sort: function (index, order) {
+    /**
+    * Call this function to sort the group according to a particular value and order.
+    * For example to depth sort Sprites for Zelda-style game you might call `group.sort('y', Phaser.Group.SORT_ASCENDING)` at the bottom of your `State.update()`.
+    *
+    * @method Phaser.Group#sort
+    * @param {string} [index='y'] - The `string` name of the property you want to sort on.
+    * @param {number} [order=Phaser.Group.SORT_ASCENDING] - The `Group` constant that defines the sort order. Possible values are Phaser.Group.SORT_ASCENDING and Phaser.Group.SORT_DESCENDING.
+    */
+    sort: function (index, order) {
 
-		if (typeof index === 'undefined') { index = 'y'; }
-		if (typeof order === 'undefined') { order = Phaser.Group.SORT_ASCENDING; }
+        if (typeof index === 'undefined') { index = 'y'; }
+        if (typeof order === 'undefined') { order = Phaser.Group.SORT_ASCENDING; }
 
-		var swapped;
-		var temp;
+        var swapped;
+        var temp;
 
-	    do {
+        do {
 
-	        swapped = false;
+            swapped = false;
 
-	        for (var i = 0, len = this._container.children.length - 1; i < len; i++)
-	        {
-	        	if (order == Phaser.Group.SORT_ASCENDING)
-	        	{
-		            if (this._container.children[i][index] > this._container.children[i + 1][index])
-		            {
-		            	this.swap(this.getAt(i), this.getAt(i + 1));
-		                temp = this._container.children[i];
-		                this._container.children[i] = this._container.children[i + 1];
-		                this._container.children[i + 1] = temp;
-		                swapped = true;
-		            }
-	        	}
-	        	else
-	        	{
-		            if (this._container.children[i][index] < this._container.children[i + 1][index])
-		            {
-		            	this.swap(this.getAt(i), this.getAt(i + 1));
-		                temp = this._container.children[i];
-		                this._container.children[i] = this._container.children[i + 1];
-		                this._container.children[i + 1] = temp;
-		                swapped = true;
-		            }
-	        	}
-	        }
-	    } while (swapped);
+            for (var i = 0, len = this._container.children.length - 1; i < len; i++)
+            {
+                if (order == Phaser.Group.SORT_ASCENDING)
+                {
+                    if (this._container.children[i][index] > this._container.children[i + 1][index])
+                    {
+                        this.swap(this.getAt(i), this.getAt(i + 1));
+                        temp = this._container.children[i];
+                        this._container.children[i] = this._container.children[i + 1];
+                        this._container.children[i + 1] = temp;
+                        swapped = true;
+                    }
+                }
+                else
+                {
+                    if (this._container.children[i][index] < this._container.children[i + 1][index])
+                    {
+                        this.swap(this.getAt(i), this.getAt(i + 1));
+                        temp = this._container.children[i];
+                        this._container.children[i] = this._container.children[i + 1];
+                        this._container.children[i + 1] = temp;
+                        swapped = true;
+                    }
+                }
+            }
+        } while (swapped);
 
-	},
+    },
 
-	/**
-	* Iterates over the children of the Group. When a child has a property matching key that equals the given value, it is considered as a match.
-	* Matched children can be sent to the optional callback, or simply returned or counted.
-   	* You can add as many callback parameters as you like, which will all be passed to the callback along with the child, after the callbackContext parameter.
-	* 
-	* @method Phaser.Group#iterate
-	* @param {string} key - The child property to check, i.e. 'exists', 'alive', 'health'
-	* @param {any} value - If child.key === this value it will be considered a match. Note that a strict comparison is used.
-	* @param {number} returnType - How to return the data from this method. Either Phaser.Group.RETURN_NONE, Phaser.Group.RETURN_TOTAL or Phaser.Group.RETURN_CHILD.
-	* @param {function} [callback=null] - Optional function that will be called on each matching child. Each child of the Group will be passed to it as its first parameter.
+    /**
+    * Iterates over the children of the Group. When a child has a property matching key that equals the given value, it is considered as a match.
+    * Matched children can be sent to the optional callback, or simply returned or counted.
+    * You can add as many callback parameters as you like, which will all be passed to the callback along with the child, after the callbackContext parameter.
+    * 
+    * @method Phaser.Group#iterate
+    * @param {string} key - The child property to check, i.e. 'exists', 'alive', 'health'
+    * @param {any} value - If child.key === this value it will be considered a match. Note that a strict comparison is used.
+    * @param {number} returnType - How to return the data from this method. Either Phaser.Group.RETURN_NONE, Phaser.Group.RETURN_TOTAL or Phaser.Group.RETURN_CHILD.
+    * @param {function} [callback=null] - Optional function that will be called on each matching child. Each child of the Group will be passed to it as its first parameter.
     * @param {Object} [callbackContext] - The context in which the function should be called (usually 'this').
-	*/
-	iterate: function (key, value, returnType, callback, callbackContext, args) {
+    */
+    iterate: function (key, value, returnType, callback, callbackContext, args) {
 
-		if (returnType == Phaser.Group.RETURN_TOTAL && this._container.children.length == 0)
-		{
-			return -1;
-		}
+        if (returnType == Phaser.Group.RETURN_TOTAL && this._container.children.length === 0)
+        {
+            return -1;
+        }
 
-		if (typeof callback === 'undefined')
-		{
-			callback = false;
-		}
+        if (typeof callback === 'undefined')
+        {
+            callback = false;
+        }
 
-		var total = 0;
+        var total = 0;
 
-		if (this._container.children.length > 0 && this._container.first._iNext)
-		{
-			var currentNode = this._container.first._iNext;
-				
-			do	
-			{
-				if (currentNode[key] === value)
-				{
-					total++;
+        if (this._container.children.length > 0 && this._container.first._iNext)
+        {
+            var currentNode = this._container.first._iNext;
+                
+            do
+            {
+                if (currentNode[key] === value)
+                {
+                    total++;
 
-					if (callback)
-					{
-						args[0] = currentNode;
-						callback.apply(callbackContext, args);
-					}
+                    if (callback)
+                    {
+                        args[0] = currentNode;
+                        callback.apply(callbackContext, args);
+                    }
 
-					if (returnType == Phaser.Group.RETURN_CHILD)
-					{
-						return currentNode;
-					}
-				}
+                    if (returnType == Phaser.Group.RETURN_CHILD)
+                    {
+                        return currentNode;
+                    }
+                }
 
-				currentNode = currentNode._iNext;
-			}
-			while (currentNode != this._container.last._iNext);
-		}
+                currentNode = currentNode._iNext;
+            }
+            while (currentNode != this._container.last._iNext);
+        }
 
-		if (returnType == Phaser.Group.RETURN_TOTAL)
-		{
-			return total;
-		}
-		else if (returnType == Phaser.Group.RETURN_CHILD)
-		{
-			return null;
-		}
+        if (returnType == Phaser.Group.RETURN_TOTAL)
+        {
+            return total;
+        }
+        else if (returnType == Phaser.Group.RETURN_CHILD)
+        {
+            return null;
+        }
 
-	},
+    },
 
-	/**
+    /**
     * Call this function to retrieve the first object with exists == (the given state) in the Group.
     *
     * @method Phaser.Group#getFirstExists
     * @param {boolean} state - True or false.
     * @return {Any} The first child, or null if none found.
     */
-	getFirstExists: function (state) {
+    getFirstExists: function (state) {
 
-		if (typeof state !== 'boolean')
-		{
-			state = true;
-		}
+        if (typeof state !== 'boolean')
+        {
+            state = true;
+        }
 
-		return this.iterate('exists', state, Phaser.Group.RETURN_CHILD);
+        return this.iterate('exists', state, Phaser.Group.RETURN_CHILD);
 
-	},
+    },
 
-	/**
-    * Call this function to retrieve the first object with alive == true in the group.
+    /**
+    * Call this function to retrieve the first object with alive === true in the group.
     * This is handy for checking if everything has been wiped out, or choosing a squad leader, etc.
     *
     * @method Phaser.Group#getFirstAlive
     * @return {Any} The first alive child, or null if none found.
     */
-	getFirstAlive: function () {
+    getFirstAlive: function () {
 
-		return this.iterate('alive', true, Phaser.Group.RETURN_CHILD);
+        return this.iterate('alive', true, Phaser.Group.RETURN_CHILD);
 
-	},
+    },
 
-	/**
-    * Call this function to retrieve the first object with alive == false in the group.
+    /**
+    * Call this function to retrieve the first object with alive === false in the group.
     * This is handy for checking if everything has been wiped out, or choosing a squad leader, etc.
     *
     * @method Phaser.Group#getFirstDead
     * @return {Any} The first dead child, or null if none found.
     */
-	getFirstDead: function () {
+    getFirstDead: function () {
 
-		return this.iterate('alive', false, Phaser.Group.RETURN_CHILD);
+        return this.iterate('alive', false, Phaser.Group.RETURN_CHILD);
 
-	},
+    },
 
-	/**
+    /**
     * Call this function to find out how many members of the group are alive.
     *
     * @method Phaser.Group#countLiving
     * @return {number} The number of children flagged as alive. Returns -1 if Group is empty.
     */
-	countLiving: function () {
+    countLiving: function () {
 
-		return this.iterate('alive', true, Phaser.Group.RETURN_TOTAL);
+        return this.iterate('alive', true, Phaser.Group.RETURN_TOTAL);
 
-	},
+    },
 
-	/**
+    /**
     * Call this function to find out how many members of the group are dead.
     *
     * @method Phaser.Group#countDead
     * @return {number} The number of children flagged as dead. Returns -1 if Group is empty.
     */
-	countDead: function () {
+    countDead: function () {
 
-		return this.iterate('alive', false, Phaser.Group.RETURN_TOTAL);
+        return this.iterate('alive', false, Phaser.Group.RETURN_TOTAL);
 
-	},
+    },
 
-	/**
+    /**
     * Returns a member at random from the group.
     *
     * @method Phaser.Group#getRandom
@@ -12610,276 +12949,276 @@ Phaser.Group.prototype = {
     * @param {number} length - Optional restriction on the number of values you want to randomly select from.
     * @return {Any} A random child of this Group.
     */
-	getRandom: function (startIndex, length) {
+    getRandom: function (startIndex, length) {
 
-		if (this._container.children.length == 0)
-		{
-			return null;
-		}
+        if (this._container.children.length === 0)
+        {
+            return null;
+        }
 
-		startIndex = startIndex || 0;
-		length = length || this._container.children.length;
+        startIndex = startIndex || 0;
+        length = length || this._container.children.length;
 
         return this.game.math.getRandom(this._container.children, startIndex, length);
 
-	},
+    },
 
-	/**
-	* Removes the given child from this Group and sets its group property to null.
-	*
-	* @method Phaser.Group#remove
-	* @param {Any} child - The child to remove.
-	*/
-	remove: function (child) {
+    /**
+    * Removes the given child from this Group and sets its group property to null.
+    *
+    * @method Phaser.Group#remove
+    * @param {Any} child - The child to remove.
+    */
+    remove: function (child) {
 
-		if (child.events)
-		{
-			child.events.onRemovedFromGroup.dispatch(child, this);
-		}
+        if (child.events)
+        {
+            child.events.onRemovedFromGroup.dispatch(child, this);
+        }
 
-		this._container.removeChild(child);
+        this._container.removeChild(child);
 
-		if (this.cursor == child)
-		{
-			if (this._container._iNext)
-			{
-				this.cursor = this._container._iNext;
-			}
-			else
-			{
-				this.cursor = null;
-			}
-		}
+        if (this.cursor == child)
+        {
+            if (this._container._iNext)
+            {
+                this.cursor = this._container._iNext;
+            }
+            else
+            {
+                this.cursor = null;
+            }
+        }
 
-		child.group = null;
+        child.group = null;
 
-	},
+    },
 
-	/**
-	* Removes all children from this Group, setting all group properties to null.
-	* The Group container remains on the display list.
-	*
-	* @method Phaser.Group#removeAll
-	*/
-	removeAll: function () {
+    /**
+    * Removes all children from this Group, setting all group properties to null.
+    * The Group container remains on the display list.
+    *
+    * @method Phaser.Group#removeAll
+    */
+    removeAll: function () {
 
-		if (this._container.children.length == 0)
-		{
-			return;
-		}
+        if (this._container.children.length === 0)
+        {
+            return;
+        }
 
-		do
-		{
-			if (this._container.children[0].events)
-			{
-				this._container.children[0].events.onRemovedFromGroup.dispatch(this._container.children[0], this);
-			}
-			this._container.removeChild(this._container.children[0]);
-		}
-		while (this._container.children.length > 0);
+        do
+        {
+            if (this._container.children[0].events)
+            {
+                this._container.children[0].events.onRemovedFromGroup.dispatch(this._container.children[0], this);
+            }
+            this._container.removeChild(this._container.children[0]);
+        }
+        while (this._container.children.length > 0);
 
-		this.cursor = null;
+        this.cursor = null;
 
-	},
+    },
 
-	/**
-	* Removes all children from this Group whos index falls beteen the given startIndex and endIndex values.
-	*
-	* @method Phaser.Group#removeBetween
-	* @param {number} startIndex - The index to start removing children from.
-	* @param {number} endIndex - The index to stop removing children from. Must be higher than startIndex and less than the length of the Group.
-	*/	
-	removeBetween: function (startIndex, endIndex) {
+    /**
+    * Removes all children from this Group whos index falls beteen the given startIndex and endIndex values.
+    *
+    * @method Phaser.Group#removeBetween
+    * @param {number} startIndex - The index to start removing children from.
+    * @param {number} endIndex - The index to stop removing children from. Must be higher than startIndex and less than the length of the Group.
+    */
+    removeBetween: function (startIndex, endIndex) {
 
-		if (this._container.children.length == 0)
-		{
-			return;
-		}
+        if (this._container.children.length === 0)
+        {
+            return;
+        }
 
-		if (startIndex > endIndex || startIndex < 0 || endIndex > this._container.children.length)
-		{
-			return false;
-		}
+        if (startIndex > endIndex || startIndex < 0 || endIndex > this._container.children.length)
+        {
+            return false;
+        }
 
-		for (var i = startIndex; i < endIndex; i++)
-		{
-			var child = this._container.children[i];
-			child.events.onRemovedFromGroup.dispatch(child, this);
-			this._container.removeChild(child);
-	
-			if (this.cursor == child)
-			{
-				if (this._container._iNext)
-				{
-					this.cursor = this._container._iNext;
-				}
-				else
-				{
-					this.cursor = null;
-				}
-			}
-		}
+        for (var i = startIndex; i < endIndex; i++)
+        {
+            var child = this._container.children[i];
+            child.events.onRemovedFromGroup.dispatch(child, this);
+            this._container.removeChild(child);
+    
+            if (this.cursor == child)
+            {
+                if (this._container._iNext)
+                {
+                    this.cursor = this._container._iNext;
+                }
+                else
+                {
+                    this.cursor = null;
+                }
+            }
+        }
 
-	},
+    },
 
-	/**
-	* Destroys this Group. Removes all children, then removes the container from the display list and nulls references.
-	*
-	* @method Phaser.Group#destroy
-	*/
-	destroy: function () {
+    /**
+    * Destroys this Group. Removes all children, then removes the container from the display list and nulls references.
+    *
+    * @method Phaser.Group#destroy
+    */
+    destroy: function () {
 
-		this.removeAll();
+        this.removeAll();
 
-		this._container.parent.removeChild(this._container);
+        this._container.parent.removeChild(this._container);
 
-		this._container = null;
+        this._container = null;
 
-		this.game = null;
+        this.game = null;
 
-		this.exists = false;
+        this.exists = false;
 
-		this.cursor = null;
+        this.cursor = null;
 
-	},
+    },
 
-	validate: function () {
+    validate: function () {
 
-		var testObject = this.game.stage._stage.last._iNext;
-		var displayObject = this.game.stage._stage;
-		var nextObject = null;
-		var prevObject = null;
-		var count = 0;
+        var testObject = this.game.stage._stage.last._iNext;
+        var displayObject = this.game.stage._stage;
+        var nextObject = null;
+        var prevObject = null;
+        var count = 0;
 
-		do	
-		{
-			if (count > 0)
-			{
-				//	check next
-				if (displayObject !== nextObject)
-				{
-					console.log('check next fail');
-					return false;
-				}
+        do
+        {
+            if (count > 0)
+            {
+                //  check next
+                if (displayObject !== nextObject)
+                {
+                    console.log('check next fail');
+                    return false;
+                }
 
-				//	check previous
-				if (displayObject._iPrev !== prevObject)
-				{
-					console.log('check previous fail');
-					return false;
-				}
-			}
+                //  check previous
+                if (displayObject._iPrev !== prevObject)
+                {
+                    console.log('check previous fail');
+                    return false;
+                }
+            }
 
-			//	Set the next object
-			nextObject = displayObject._iNext;
-			prevObject = displayObject;
+            //  Set the next object
+            nextObject = displayObject._iNext;
+            prevObject = displayObject;
 
-			displayObject = displayObject._iNext;
+            displayObject = displayObject._iNext;
 
-			count++;
+            count++;
 
-		}
-		while(displayObject != testObject)
+        }
+        while(displayObject != testObject)
 
-		return true;
+        return true;
 
-	},
+    },
 
-	/**
-	* Dumps out a list of Group children and their index positions to the browser console. Useful for group debugging.
-	*
-	* @method Phaser.Group#dump
-	* @param {boolean} [full=false] - If full the dump will include the entire display list, start from the Stage. Otherwise it will only include this container.
-	*/
-	dump: function (full) {
+    /**
+    * Dumps out a list of Group children and their index positions to the browser console. Useful for group debugging.
+    *
+    * @method Phaser.Group#dump
+    * @param {boolean} [full=false] - If full the dump will include the entire display list, start from the Stage. Otherwise it will only include this container.
+    */
+    dump: function (full) {
 
-		if (typeof full == 'undefined')
-		{
-			full = false;
-		}
+        if (typeof full == 'undefined')
+        {
+            full = false;
+        }
 
-		var spacing = 20;
-		var output = "\n" + Phaser.Utils.pad('Node', spacing) + "|" + Phaser.Utils.pad('Next', spacing) + "|" + Phaser.Utils.pad('Previous', spacing) + "|" + Phaser.Utils.pad('First', spacing) + "|" + Phaser.Utils.pad('Last', spacing);
+        var spacing = 20;
+        var output = "\n" + Phaser.Utils.pad('Node', spacing) + "|" + Phaser.Utils.pad('Next', spacing) + "|" + Phaser.Utils.pad('Previous', spacing) + "|" + Phaser.Utils.pad('First', spacing) + "|" + Phaser.Utils.pad('Last', spacing);
 
-		console.log(output);
+        console.log(output);
 
-		var output = Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing);
-		console.log(output);
+        var output = Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing);
+        console.log(output);
 
-		if (full)
-		{
-			var testObject = this.game.stage._stage.last._iNext;
-			var displayObject = this.game.stage._stage;
-		}
-		else
-		{
-			var testObject = this._container.last._iNext;
-			var displayObject = this._container;
-		}
-		
-		do	
-		{
-			var name = displayObject.name || '*';
+        if (full)
+        {
+            var testObject = this.game.stage._stage.last._iNext;
+            var displayObject = this.game.stage._stage;
+        }
+        else
+        {
+            var testObject = this._container.last._iNext;
+            var displayObject = this._container;
+        }
+        
+        do
+        {
+            var name = displayObject.name || '*';
 
-			if (this.cursor == displayObject)
-			{
-				var name = '> ' + name;
-			}
+            if (this.cursor == displayObject)
+            {
+                var name = '> ' + name;
+            }
 
-			var nameNext = '-';
-			var namePrev = '-';
-			var nameFirst = '-';
-			var nameLast = '-';
+            var nameNext = '-';
+            var namePrev = '-';
+            var nameFirst = '-';
+            var nameLast = '-';
 
-			if (displayObject._iNext)
-			{
-				nameNext = displayObject._iNext.name;
-			}
+            if (displayObject._iNext)
+            {
+                nameNext = displayObject._iNext.name;
+            }
 
-			if (displayObject._iPrev)
-			{
-				namePrev = displayObject._iPrev.name;
-			}
+            if (displayObject._iPrev)
+            {
+                namePrev = displayObject._iPrev.name;
+            }
 
-			if (displayObject.first)
-			{
-				nameFirst = displayObject.first.name;
-			}
+            if (displayObject.first)
+            {
+                nameFirst = displayObject.first.name;
+            }
 
-			if (displayObject.last)
-			{
-				nameLast = displayObject.last.name;
-			}
+            if (displayObject.last)
+            {
+                nameLast = displayObject.last.name;
+            }
 
-			if (typeof nameNext === 'undefined')
-			{
-				nameNext = '-';
-			}
+            if (typeof nameNext === 'undefined')
+            {
+                nameNext = '-';
+            }
 
-			if (typeof namePrev === 'undefined')
-			{
-				namePrev = '-';
-			}
+            if (typeof namePrev === 'undefined')
+            {
+                namePrev = '-';
+            }
 
-			if (typeof nameFirst === 'undefined')
-			{
-				nameFirst = '-';
-			}
+            if (typeof nameFirst === 'undefined')
+            {
+                nameFirst = '-';
+            }
 
-			if (typeof nameLast === 'undefined')
-			{
-				nameLast = '-';
-			}
+            if (typeof nameLast === 'undefined')
+            {
+                nameLast = '-';
+            }
 
-			var output = Phaser.Utils.pad(name, spacing) + "|" + Phaser.Utils.pad(nameNext, spacing) + "|" + Phaser.Utils.pad(namePrev, spacing) + "|" + Phaser.Utils.pad(nameFirst, spacing) + "|" + Phaser.Utils.pad(nameLast, spacing);
-			console.log(output);
+            var output = Phaser.Utils.pad(name, spacing) + "|" + Phaser.Utils.pad(nameNext, spacing) + "|" + Phaser.Utils.pad(namePrev, spacing) + "|" + Phaser.Utils.pad(nameFirst, spacing) + "|" + Phaser.Utils.pad(nameLast, spacing);
+            console.log(output);
 
-			displayObject = displayObject._iNext;
+            displayObject = displayObject._iNext;
 
-		}
-		while(displayObject != testObject)
+        }
+        while(displayObject != testObject)
 
-	}
+    }
 
 };
 
@@ -12891,7 +13230,7 @@ Phaser.Group.prototype = {
 Object.defineProperty(Phaser.Group.prototype, "total", {
 
     get: function () {
-    	return this.iterate('exists', true, Phaser.Group.RETURN_TOTAL);
+        return this.iterate('exists', true, Phaser.Group.RETURN_TOTAL);
         // return this._container.children.length;
     }
 
@@ -12905,7 +13244,7 @@ Object.defineProperty(Phaser.Group.prototype, "total", {
 Object.defineProperty(Phaser.Group.prototype, "length", {
 
     get: function () {
-    	return this.iterate('exists', true, Phaser.Group.RETURN_TOTAL);
+        return this.iterate('exists', true, Phaser.Group.RETURN_TOTAL);
         // return this._container.children.length;
     }
 
@@ -13038,7 +13377,7 @@ Phaser.World = function (game) {
 
     /**
     * @property {Phaser.Point} scale - Replaces the PIXI.Point with a slightly more flexible one.
-    */ 
+    */
     this.scale = new Phaser.Point(1, 1);
 
     /**
@@ -13046,20 +13385,20 @@ Phaser.World = function (game) {
     * By default we set the Bounds to be from 0,0 to Game.width,Game.height. I.e. it will match the size given to the game constructor with 0,0 representing the top-left of the display.
     * However 0,0 is actually the center of the world, and if you rotate or scale the world all of that will happen from 0,0.
     * So if you want to make a game in which the world itself will rotate you should adjust the bounds so that 0,0 is the center point, i.e. set them to -1000,-1000,2000,2000 for a 2000x2000 sized world centered around 0,0.
-	* @property {Phaser.Rectangle} bounds - Bound of this world that objects can not escape from.
-	*/
-	this.bounds = new Phaser.Rectangle(0, 0, game.width, game.height);
+    * @property {Phaser.Rectangle} bounds - Bound of this world that objects can not escape from.
+    */
+    this.bounds = new Phaser.Rectangle(0, 0, game.width, game.height);
 
     /**
-	* @property {Phaser.Camera} camera - Camera instance.
-	*/
-	this.camera = null;
+    * @property {Phaser.Camera} camera - Camera instance.
+    */
+    this.camera = null;
 
     /**
-	* @property {number} currentRenderOrderID - Reset each frame, keeps a count of the total number of objects updated.
-	*/
-	this.currentRenderOrderID = 0;
-	
+    * @property {number} currentRenderOrderID - Reset each frame, keeps a count of the total number of objects updated.
+    */
+    this.currentRenderOrderID = 0;
+    
 };
 
 Phaser.World.prototype = Object.create(Phaser.Group.prototype);
@@ -13088,28 +13427,39 @@ Phaser.World.prototype.boot = function () {
 */
 Phaser.World.prototype.update = function () {
 
-	this.currentRenderOrderID = 0;
+    this.currentRenderOrderID = 0;
+    
+    if (this.game.stage._stage.first._iNext)
+    {
+        var currentNode = this.game.stage._stage.first._iNext;
+        var skipChildren;
+        
+        do
+        {
+            skipChildren = false;
 
-	if (this.game.stage._stage.first._iNext)
-	{
-		var currentNode = this.game.stage._stage.first._iNext;
-		
-		do
-		{
-			if (currentNode['preUpdate'])
-			{
-				currentNode.preUpdate();
-			}
+            if (currentNode['preUpdate'])
+            {
+                skipChildren = (currentNode.preUpdate() === false);
+            }
 
-			if (currentNode['update'])
-			{
-				currentNode.update();
-			}
-			
-			currentNode = currentNode._iNext;
-		}
-		while (currentNode != this.game.stage._stage.last._iNext)
-	}
+            if (currentNode['update'])
+            {
+                skipChildren = (currentNode.update() === false) || skipChildren;
+            }
+            
+            if (skipChildren)
+            {
+                currentNode = currentNode.last._iNext;
+            }
+            else
+            {
+                currentNode = currentNode._iNext;
+            }
+            
+        }
+        while (currentNode != this.game.stage._stage.last._iNext)
+    }
 
 }
 
@@ -13125,7 +13475,7 @@ Phaser.World.prototype.postUpdate = function () {
     {
         var currentNode = this.game.stage._stage.first._iNext;
         
-        do  
+        do
         {
             if (currentNode['postUpdate'])
             {
@@ -13318,380 +13668,380 @@ Object.defineProperty(Phaser.World.prototype, "visible", {
 */
 Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias) {
 
-	width = width || 800;
-	height = height || 600;
-	renderer = renderer || Phaser.AUTO;
-	parent = parent || '';
-	state = state || null;
+    width = width || 800;
+    height = height || 600;
+    renderer = renderer || Phaser.AUTO;
+    parent = parent || '';
+    state = state || null;
 
-	if (typeof transparent == 'undefined') { transparent = false; }
-	if (typeof antialias == 'undefined') { antialias = true; }
+    if (typeof transparent == 'undefined') { transparent = false; }
+    if (typeof antialias == 'undefined') { antialias = true; }
 
-	/**
-	* @property {number} id - Phaser Game ID (for when Pixi supports multiple instances).
-	*/
-	this.id = Phaser.GAMES.push(this) - 1;
+    /**
+    * @property {number} id - Phaser Game ID (for when Pixi supports multiple instances).
+    */
+    this.id = Phaser.GAMES.push(this) - 1;
 
-	/**
-	* @property {HTMLElement} parent - The Games DOM parent.
-	*/
-	this.parent = parent;
+    /**
+    * @property {HTMLElement} parent - The Games DOM parent.
+    */
+    this.parent = parent;
 
-	//	Do some more intelligent size parsing here, so they can set "100%" for example, maybe pass the scale mode in here too?
+    //  Do some more intelligent size parsing here, so they can set "100%" for example, maybe pass the scale mode in here too?
 
-	/**
-	* @property {number} width - The Game width (in pixels).
-	*/
-	this.width = width;
+    /**
+    * @property {number} width - The Game width (in pixels).
+    */
+    this.width = width;
 
-	/**
-	* @property {number} height - The Game height (in pixels).
-	*/
-	this.height = height;
+    /**
+    * @property {number} height - The Game height (in pixels).
+    */
+    this.height = height;
 
-	/**
-	* @property {boolean} transparent - Use a transparent canvas background or not.
-	*/
-	this.transparent = transparent;
+    /**
+    * @property {boolean} transparent - Use a transparent canvas background or not.
+    */
+    this.transparent = transparent;
 
-	/**
-	* @property {boolean} antialias - Anti-alias graphics (in WebGL this helps with edges, in Canvas2D it retains pixel-art quality).
-	*/
-	this.antialias = antialias;
+    /**
+    * @property {boolean} antialias - Anti-alias graphics (in WebGL this helps with edges, in Canvas2D it retains pixel-art quality).
+    */
+    this.antialias = antialias;
 
-	/**
-	* @property {number} renderer - The Pixi Renderer
-	* @default
-	*/
-	this.renderer = null;
+    /**
+    * @property {number} renderer - The Pixi Renderer
+    * @default
+    */
+    this.renderer = null;
 
-	/**
-	* @property {number} state - The StateManager.
-	*/
-	this.state = new Phaser.StateManager(this, state);
+    /**
+    * @property {number} state - The StateManager.
+    */
+    this.state = new Phaser.StateManager(this, state);
 
-	/**
-	* @property {boolean} _paused - Is game paused?
-	* @private
-	* @default
-	*/
-	this._paused = false;
+    /**
+    * @property {boolean} _paused - Is game paused?
+    * @private
+    * @default
+    */
+    this._paused = false;
 
-	/**
-	* @property {number} renderType - The Renderer this Phaser.Game will use. Either Phaser.RENDERER_AUTO, Phaser.RENDERER_CANVAS or Phaser.RENDERER_WEBGL.
-	*/
-	this.renderType = renderer;
+    /**
+    * @property {number} renderType - The Renderer this Phaser.Game will use. Either Phaser.RENDERER_AUTO, Phaser.RENDERER_CANVAS or Phaser.RENDERER_WEBGL.
+    */
+    this.renderType = renderer;
 
-	/**
-	* @property {boolean} _loadComplete - Whether load complete loading or not.
-	* @private
-	* @default
-	*/
-	this._loadComplete = false;
+    /**
+    * @property {boolean} _loadComplete - Whether load complete loading or not.
+    * @private
+    * @default
+    */
+    this._loadComplete = false;
 
-	/**
-	* @property {boolean} isBooted - Whether the game engine is booted, aka available.
-	* @default
-	*/
-	this.isBooted = false;
+    /**
+    * @property {boolean} isBooted - Whether the game engine is booted, aka available.
+    * @default
+    */
+    this.isBooted = false;
 
-	/**
-	* @property {boolean} id -Is game running or paused?
-	* @default
-	*/
-	this.isRunning = false;
+    /**
+    * @property {boolean} id -Is game running or paused?
+    * @default
+    */
+    this.isRunning = false;
 
-	/**
-	* @property {Phaser.RequestAnimationFrame} raf - Automatically handles the core game loop via requestAnimationFrame or setTimeout
-	* @default
-	*/
-	this.raf = null;
+    /**
+    * @property {Phaser.RequestAnimationFrame} raf - Automatically handles the core game loop via requestAnimationFrame or setTimeout
+    * @default
+    */
+    this.raf = null;
 
-	/**
-	* @property {Phaser.GameObjectFactory} add - Reference to the GameObject Factory.
-	* @default
-	*/
+    /**
+    * @property {Phaser.GameObjectFactory} add - Reference to the GameObject Factory.
+    * @default
+    */
     this.add = null;
 
     /**
-	* @property {Phaser.Cache} cache - Reference to the assets cache.
-	* @default
-	*/
+    * @property {Phaser.Cache} cache - Reference to the assets cache.
+    * @default
+    */
     this.cache = null;
 
     /**
-	* @property {Phaser.Input} input - Reference to the input manager
-	* @default
-	*/
+    * @property {Phaser.Input} input - Reference to the input manager
+    * @default
+    */
     this.input = null;
 
     /**
-	* @property {Phaser.Loader} load - Reference to the assets loader.
-	* @default
-	*/
+    * @property {Phaser.Loader} load - Reference to the assets loader.
+    * @default
+    */
     this.load = null;
 
     /**
-	* @property {Phaser.GameMath} math - Reference to the math helper.
-	* @default
-	*/
+    * @property {Phaser.Math} math - Reference to the math helper.
+    * @default
+    */
     this.math = null;
 
     /**
-	* @property {Phaser.Net} net - Reference to the network class.
-	* @default
-	*/
+    * @property {Phaser.Net} net - Reference to the network class.
+    * @default
+    */
     this.net = null;
 
     /**
-	* @property {Phaser.SoundManager} sound - Reference to the sound manager.
-	* @default
-	*/
+    * @property {Phaser.SoundManager} sound - Reference to the sound manager.
+    * @default
+    */
     this.sound = null;
 
     /**
-	* @property {Phaser.Stage} stage - Reference to the stage.
-	* @default
-	*/
+    * @property {Phaser.Stage} stage - Reference to the stage.
+    * @default
+    */
     this.stage = null;
 
     /**
-	* @property {Phaser.TimeManager} time - Reference to game clock.
-	* @default
-	*/
+    * @property {Phaser.TimeManager} time - Reference to game clock.
+    * @default
+    */
     this.time = null;
 
     /**
-	* @property {Phaser.TweenManager} tweens - Reference to the tween manager.
-	* @default
-	*/
+    * @property {Phaser.TweenManager} tweens - Reference to the tween manager.
+    * @default
+    */
     this.tweens = null;
 
     /**
-	* @property {Phaser.World} world - Reference to the world.
-	* @default
-	*/
+    * @property {Phaser.World} world - Reference to the world.
+    * @default
+    */
     this.world = null;
 
     /**
-	* @property {Phaser.Physics.PhysicsManager} physics - Reference to the physics manager.
-	* @default
-	*/
+    * @property {Phaser.Physics.PhysicsManager} physics - Reference to the physics manager.
+    * @default
+    */
     this.physics = null;
 
     /**
-	* @property {Phaser.RandomDataGenerator} rnd - Instance of repeatable random data generator helper.
-	* @default
-	*/
+    * @property {Phaser.RandomDataGenerator} rnd - Instance of repeatable random data generator helper.
+    * @default
+    */
     this.rnd = null;
 
     /**
-	* @property {Phaser.Device} device - Contains device information and capabilities.
-	* @default
-	*/
+    * @property {Phaser.Device} device - Contains device information and capabilities.
+    * @default
+    */
     this.device = null;
 
     /**
-	* @property {Phaser.Physics.PhysicsManager} camera - A handy reference to world.camera.
-	* @default
-	*/
-	this.camera = null;
+    * @property {Phaser.Physics.PhysicsManager} camera - A handy reference to world.camera.
+    * @default
+    */
+    this.camera = null;
 
-	   /**
-	* @property {HTMLCanvasElement} canvas - A handy reference to renderer.view.
-	* @default
-	*/
-	this.canvas = null;
-
-	/**
-	* @property {Context} context - A handy reference to renderer.context (only set for CANVAS games)
-	* @default
-	*/
-	this.context = null;
+       /**
+    * @property {HTMLCanvasElement} canvas - A handy reference to renderer.view.
+    * @default
+    */
+    this.canvas = null;
 
     /**
-	* @property {Phaser.Utils.Debug} debug - A set of useful debug utilitie.
-	* @default
-	*/
-	this.debug = null;
+    * @property {Context} context - A handy reference to renderer.context (only set for CANVAS games)
+    * @default
+    */
+    this.context = null;
 
-	/**
-	* @property {Phaser.Particles} particles - The Particle Manager.
-	* @default
-	*/
-	this.particles = null;
+    /**
+    * @property {Phaser.Utils.Debug} debug - A set of useful debug utilitie.
+    * @default
+    */
+    this.debug = null;
 
-	var _this = this;
+    /**
+    * @property {Phaser.Particles} particles - The Particle Manager.
+    * @default
+    */
+    this.particles = null;
+
+    var _this = this;
 
     this._onBoot = function () {
         return _this.boot();
     }
 
-	if (document.readyState === 'complete' || document.readyState === 'interactive')
-	{
-		window.setTimeout(this._onBoot, 0);
-	}
-	else
-	{
-		document.addEventListener('DOMContentLoaded', this._onBoot, false);
-		window.addEventListener('load', this._onBoot, false);
-	}
+    if (document.readyState === 'complete' || document.readyState === 'interactive')
+    {
+        window.setTimeout(this._onBoot, 0);
+    }
+    else
+    {
+        document.addEventListener('DOMContentLoaded', this._onBoot, false);
+        window.addEventListener('load', this._onBoot, false);
+    }
 
-	return this;
+    return this;
 
 };
 
 Phaser.Game.prototype = {
 
-	/**
-	* Initialize engine sub modules and start the game.
-	*
-	* @method Phaser.Game#boot
-	* @protected
-	*/
-	boot: function () {
+    /**
+    * Initialize engine sub modules and start the game.
+    *
+    * @method Phaser.Game#boot
+    * @protected
+    */
+    boot: function () {
 
-		if (this.isBooted)
-		{
-			return;
-		}
+        if (this.isBooted)
+        {
+            return;
+        }
 
-		if (!document.body)
-		{
-			window.setTimeout(this._onBoot, 20);
-		}
-		else
-		{
-			document.removeEventListener('DOMContentLoaded', this._onBoot);
-			window.removeEventListener('load', this._onBoot);
+        if (!document.body)
+        {
+            window.setTimeout(this._onBoot, 20);
+        }
+        else
+        {
+            document.removeEventListener('DOMContentLoaded', this._onBoot);
+            window.removeEventListener('load', this._onBoot);
 
-			this.onPause = new Phaser.Signal;
-			this.onResume = new Phaser.Signal;
+            this.onPause = new Phaser.Signal();
+            this.onResume = new Phaser.Signal();
 
-			this.isBooted = true;
+            this.isBooted = true;
 
-			this.device = new Phaser.Device();
-			this.math = Phaser.Math;
-			this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
+            this.device = new Phaser.Device();
+            this.math = Phaser.Math;
+            this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
 
-			this.stage = new Phaser.Stage(this, this.width, this.height);
+            this.stage = new Phaser.Stage(this, this.width, this.height);
 
-			this.setUpRenderer();
+            this.setUpRenderer();
 
-			this.world = new Phaser.World(this);
-			this.add = new Phaser.GameObjectFactory(this);
-			this.cache = new Phaser.Cache(this);
-			this.load = new Phaser.Loader(this);
-			this.time = new Phaser.Time(this);
-			this.tweens = new Phaser.TweenManager(this);
-			this.input = new Phaser.Input(this);
-			this.sound = new Phaser.SoundManager(this);
-			this.physics = new Phaser.Physics.Arcade(this);
-			this.particles = new Phaser.Particles(this);
-			this.plugins = new Phaser.PluginManager(this, this);
-			this.net = new Phaser.Net(this);
-			this.debug = new Phaser.Utils.Debug(this);
+            this.world = new Phaser.World(this);
+            this.add = new Phaser.GameObjectFactory(this);
+            this.cache = new Phaser.Cache(this);
+            this.load = new Phaser.Loader(this);
+            this.time = new Phaser.Time(this);
+            this.tweens = new Phaser.TweenManager(this);
+            this.input = new Phaser.Input(this);
+            this.sound = new Phaser.SoundManager(this);
+            this.physics = new Phaser.Physics.Arcade(this);
+            this.particles = new Phaser.Particles(this);
+            this.plugins = new Phaser.PluginManager(this, this);
+            this.net = new Phaser.Net(this);
+            this.debug = new Phaser.Utils.Debug(this);
 
-			this.stage.boot();
-			this.world.boot();
-			this.input.boot();
-			this.sound.boot();
-			this.state.boot();
+            this.stage.boot();
+            this.world.boot();
+            this.input.boot();
+            this.sound.boot();
+            this.state.boot();
 
-			this.load.onLoadComplete.add(this.loadComplete, this);
+            this.load.onLoadComplete.add(this.loadComplete, this);
 
-			this.showDebugHeader();
+            this.showDebugHeader();
 
-	        this.isRunning = true;
+            this.isRunning = true;
             this._loadComplete = false;
 
-			this.raf = new Phaser.RequestAnimationFrame(this);
-			this.raf.start();
+            this.raf = new Phaser.RequestAnimationFrame(this);
+            this.raf.start();
 
-		}
+        }
 
-	},
+    },
 
-	/**
+    /**
     * Displays a Phaser version debug header in the console.
     *
     * @method Phaser.Game#showDebugHeader
     * @protected
     */
-	showDebugHeader: function () {
+    showDebugHeader: function () {
 
-		var v = Phaser.DEV_VERSION;
-		var r = 'Canvas';
-		var a = 'HTML Audio';
+        var v = Phaser.DEV_VERSION;
+        var r = 'Canvas';
+        var a = 'HTML Audio';
 
-		if (this.renderType == Phaser.WEBGL)
-		{
-			r = 'WebGL';
-		}
+        if (this.renderType == Phaser.WEBGL)
+        {
+            r = 'WebGL';
+        }
 
-		if (this.device.webAudio)
-		{
-			a = 'WebAudio';
-		}
+        if (this.device.webAudio)
+        {
+            a = 'WebAudio';
+        }
 
-		if (this.device.chrome)
-		{
-			var args = [ 
-				'%c %c %c  Phaser v' + v + ' - Renderer: ' + r + ' - Audio: ' + a + '  %c %c ',
-				'background: #00bff3',
-				'background: #0072bc',
-				'color: #ffffff; background: #003471',
-				'background: #0072bc',
-				'background: #00bff3'
-			];
+        if (this.device.chrome)
+        {
+            var args = [
+                '%c %c %c  Phaser v' + v + ' - Renderer: ' + r + ' - Audio: ' + a + '  %c %c ',
+                'background: #00bff3',
+                'background: #0072bc',
+                'color: #ffffff; background: #003471',
+                'background: #0072bc',
+                'background: #00bff3'
+            ];
 
-			console.log.apply(console, args);
-		}
-		else
-		{
-			console.log('Phaser v' + v + ' - Renderer: ' + r + ' - Audio: ' + a);
-		}
+            console.log.apply(console, args);
+        }
+        else
+        {
+            console.log('Phaser v' + v + ' - Renderer: ' + r + ' - Audio: ' + a);
+        }
 
-	},
+    },
 
-	/**
-	* Checks if the device is capable of using the requested renderer and sets it up or an alternative if not.
-	*
-	* @method Phaser.Game#setUpRenderer
-	* @protected
-	*/
-	setUpRenderer: function () {
+    /**
+    * Checks if the device is capable of using the requested renderer and sets it up or an alternative if not.
+    *
+    * @method Phaser.Game#setUpRenderer
+    * @protected
+    */
+    setUpRenderer: function () {
 
-		if (this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && this.device.webGL == false))
-		{
-			if (this.device.canvas)
-			{
-				this.renderType = Phaser.CANVAS;
-				this.renderer = new PIXI.CanvasRenderer(this.width, this.height, this.stage.canvas, this.transparent);
-				Phaser.Canvas.setSmoothingEnabled(this.renderer.context, this.antialias);
-				this.canvas = this.renderer.view;
-				this.context = this.renderer.context;
-			}
-			else
-			{
-				throw new Error('Phaser.Game - cannot create Canvas or WebGL context, aborting.');
-			}
-		}
-		else
-		{
-			//	They requested WebGL, and their browser supports it
-			this.renderType = Phaser.WEBGL;
-			this.renderer = new PIXI.WebGLRenderer(this.width, this.height, this.stage.canvas, this.transparent, this.antialias);
-			this.canvas = this.renderer.view;
-			this.context = null;
-		}
+        if (this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && this.device.webGL === false))
+        {
+            if (this.device.canvas)
+            {
+                this.renderType = Phaser.CANVAS;
+                this.renderer = new PIXI.CanvasRenderer(this.width, this.height, this.stage.canvas, this.transparent);
+                Phaser.Canvas.setSmoothingEnabled(this.renderer.context, this.antialias);
+                this.canvas = this.renderer.view;
+                this.context = this.renderer.context;
+            }
+            else
+            {
+                throw new Error('Phaser.Game - cannot create Canvas or WebGL context, aborting.');
+            }
+        }
+        else
+        {
+            //  They requested WebGL, and their browser supports it
+            this.renderType = Phaser.WEBGL;
+            this.renderer = new PIXI.WebGLRenderer(this.width, this.height, this.stage.canvas, this.transparent, this.antialias);
+            this.canvas = this.renderer.view;
+            this.context = null;
+        }
 
         Phaser.Canvas.addToDOM(this.renderer.view, this.parent, true);
         Phaser.Canvas.setTouchAction(this.renderer.view);
 
-	},
+    },
 
-	/**
+    /**
     * Called when the load has finished, after preload was run.
     *
     * @method Phaser.Game#loadComplete
@@ -13705,61 +14055,61 @@ Phaser.Game.prototype = {
 
     },
 
-	/**
+    /**
     * The core game loop.
     *
     * @method Phaser.Game#update
     * @protected
-	* @param {number} time - The current time as provided by RequestAnimationFrame.
+    * @param {number} time - The current time as provided by RequestAnimationFrame.
     */
-	update: function (time) {
+    update: function (time) {
 
-		this.time.update(time);
+        this.time.update(time);
 
-		if (this._paused)
-		{
-			this.renderer.render(this.stage._stage);
-			this.plugins.render();
-			this.state.render();
-		}
-		else
-		{
-	        this.plugins.preUpdate();
-	        this.physics.preUpdate();
+        if (this._paused)
+        {
+            this.renderer.render(this.stage._stage);
+            this.plugins.render();
+            this.state.render();
+        }
+        else
+        {
+            this.plugins.preUpdate();
+            this.physics.preUpdate();
 
-	        this.stage.update();
-	        this.input.update();
-	        this.tweens.update();
-	        this.sound.update();
-			this.world.update();
-			this.particles.update();
-			this.state.update();
-	        this.plugins.update();
+            this.stage.update();
+            this.input.update();
+            this.tweens.update();
+            this.sound.update();
+            this.world.update();
+            this.particles.update();
+            this.state.update();
+            this.plugins.update();
 
-			this.world.postUpdate();
+            this.world.postUpdate();
             this.plugins.postUpdate();
 
-			this.renderer.render(this.stage._stage);
-			this.plugins.render();
-			this.state.render();
+            this.renderer.render(this.stage._stage);
+            this.plugins.render();
+            this.state.render();
 
-			this.plugins.postRender();
-		}
+            this.plugins.postRender();
+        }
 
-	},
+    },
 
-	/**
+    /**
     * Nuke the entire game from orbit
     *
     * @method Phaser.Game#destroy
     */
     destroy: function () {
 
-		this.raf.stop();
+        this.raf.stop();
 
-    	this.input.destroy();
+        this.input.destroy();
 
-    	this.state.destroy();
+        this.state.destroy();
 
         this.state = null;
         this.cache = null;
@@ -13789,22 +14139,22 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
 
     set: function (value) {
 
-    	if (value === true)
-    	{
-    		if (this._paused == false)
-    		{
-	    		this._paused = true;
-	    		this.onPause.dispatch(this);
-    		}
-    	}
-    	else
-    	{
-    		if (this._paused)
-    		{
-	    		this._paused = false;
-	    		this.onResume.dispatch(this);
-    		}
-    	}
+        if (value === true)
+        {
+            if (this._paused === false)
+            {
+                this._paused = true;
+                this.onPause.dispatch(this);
+            }
+        }
+        else
+        {
+            if (this._paused)
+            {
+                this._paused = false;
+                this.onResume.dispatch(this);
+            }
+        }
 
     }
 
@@ -13821,32 +14171,32 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
 */
 
 /**
-* Constructor for Phaser Input.
+* Phaser.Input is the Input Manager for all types of Input across Phaser, including mouse, keyboard, touch and MSPointer.
+* The Input manager is updated automatically by the core game loop.
+*
 * @class Phaser.Input
-* @classdesc A game specific Input manager that looks after the mouse, keyboard and touch objects.
-* This is updated by the core game loop.
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
 */
 Phaser.Input = function (game) {
 
-	/**
-	* @property {Phaser.Game} game - A reference to the currently running game. 
-	*/
-	this.game = game;
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game. 
+    */
+    this.game = game;
 
-	/**
-    * @property {Description} hitCanvas - Description. 
+    /**
+    * @property {HTMLCanvasElement} hitCanvas - The canvas to which single pixels are drawn in order to perform pixel-perfect hit detection.
     * @default
-	*/
+    */
     this.hitCanvas = null;
     
-	/**
-     * @property {Description} hitContext - Description. 
-     * @default
- 	*/
+    /**
+    * @property {CanvasRenderingContext2D} hitContext - The context of the pixel perfect hit canvas.
+    * @default
+    */
     this.hitContext = null;
-	
+    
 };
 
 /**
@@ -13869,11 +14219,6 @@ Phaser.Input.MOUSE_TOUCH_COMBINE = 2;
 
 Phaser.Input.prototype = {
 
-    /** 
-    * @property {Phaser.Game} game
-    */	
-    game: null,
-
     /**
     * How often should the input pointers be checked for updates?
     * A value of 0 means every single frame (60fps), a value of 1 means every other frame (30fps) and so on.
@@ -13883,31 +14228,28 @@ Phaser.Input.prototype = {
     pollRate: 0,
     
     /**
-     * @property {number} _pollCounter - Description.
-     * @private
-     * @default
-     */
+    * @property {number} _pollCounter - Internal var holding the current poll counter.
+    * @private
+    * @default
+    */
     _pollCounter: 0,
 
     /**
-    * A vector object representing the previous position of the Pointer.
-    * @property {Vec2} vector
+    * @property {Phaser.Point} _oldPosition - A point object representing the previous position of the Pointer.
     * @private
     * @default 
     */
     _oldPosition: null,
 
     /**
-    * X coordinate of the most recent Pointer event
-    * @property {number} _x
+    * @property {number} _x - x coordinate of the most recent Pointer event
     * @private
     * @default
     */
     _x: 0,
 
     /**
-    * Y coordinate of the most recent Pointer event
-    * @property {number} _y
+    * @property {number} _y - Y coordinate of the most recent Pointer event
     * @private
     * @default
     */
@@ -13928,17 +14270,14 @@ Phaser.Input.prototype = {
     multiInputOverride: Phaser.Input.MOUSE_TOUCH_COMBINE,
 
     /**
-    * A vector object representing the current position of the Pointer.
-    * @property {Phaser.Point} position
+    * @property {Phaser.Point} position - A point object representing the current position of the Pointer.
     * @default 
     */
     position: null,
 
     /**
-    * A vector object representing the speed of the Pointer. Only really useful in single Pointer games,
-    * otherwise see the Pointer objects directly.
+    * A point object representing the speed of the Pointer. Only really useful in single Pointer games, otherwise see the Pointer objects directly.
     * @property {Phaser.Point} speed
-    * @default 
     */
     speed: null,
 
@@ -13946,7 +14285,6 @@ Phaser.Input.prototype = {
     * A Circle object centered on the x/y screen coordinates of the Input.
     * Default size of 44px (Apples recommended "finger tip" size) but can be changed to anything.
     * @property {Phaser.Circle} circle
-    * @default
     */
     circle: null,
 
@@ -13954,7 +14292,6 @@ Phaser.Input.prototype = {
     * The scale by which all input coordinates are multiplied, calculated by the StageScaleMode.
     * In an un-scaled game the values will be x: 1 and y: 1.
     * @property {Phaser.Point} scale
-    * @default
     */
     scale: null,
 
@@ -14083,7 +14420,7 @@ Phaser.Input.prototype = {
     /**
     * A Pointer object
     * @property {Phaser.Pointer} pointer9
-    */ 
+    */
     pointer9: null,
 
     /**
@@ -14169,40 +14506,40 @@ Phaser.Input.prototype = {
     */
     interactiveItems: new Phaser.LinkedList(),
 
-	/**
+    /**
     * Starts the Input Manager running.
     * @method Phaser.Input#boot
     * @protected
     */
     boot: function () {
 
-	    this.mousePointer = new Phaser.Pointer(this.game, 0);
-	    this.pointer1 = new Phaser.Pointer(this.game, 1);
-	    this.pointer2 = new Phaser.Pointer(this.game, 2);
+        this.mousePointer = new Phaser.Pointer(this.game, 0);
+        this.pointer1 = new Phaser.Pointer(this.game, 1);
+        this.pointer2 = new Phaser.Pointer(this.game, 2);
 
-	    this.mouse = new Phaser.Mouse(this.game);
-	    this.keyboard = new Phaser.Keyboard(this.game);
-	    this.touch = new Phaser.Touch(this.game);
-	    this.mspointer = new Phaser.MSPointer(this.game);
+        this.mouse = new Phaser.Mouse(this.game);
+        this.keyboard = new Phaser.Keyboard(this.game);
+        this.touch = new Phaser.Touch(this.game);
+        this.mspointer = new Phaser.MSPointer(this.game);
 
-	    this.onDown = new Phaser.Signal();
-	    this.onUp = new Phaser.Signal();
-	    this.onTap = new Phaser.Signal();
-	    this.onHold = new Phaser.Signal();
+        this.onDown = new Phaser.Signal();
+        this.onUp = new Phaser.Signal();
+        this.onTap = new Phaser.Signal();
+        this.onHold = new Phaser.Signal();
 
-	    this.scale = new Phaser.Point(1, 1);
-	    this.speed = new Phaser.Point();
-	    this.position = new Phaser.Point();
-	    this._oldPosition = new Phaser.Point();
+        this.scale = new Phaser.Point(1, 1);
+        this.speed = new Phaser.Point();
+        this.position = new Phaser.Point();
+        this._oldPosition = new Phaser.Point();
 
-	    this.circle = new Phaser.Circle(0, 0, 44);
+        this.circle = new Phaser.Circle(0, 0, 44);
 
-	    this.activePointer = this.mousePointer;
-	    this.currentPointers = 0;
+        this.activePointer = this.mousePointer;
+        this.currentPointers = 0;
 
-	    this.hitCanvas = document.createElement('canvas');
-	    this.hitCanvas.width = 1;
-	    this.hitCanvas.height = 1;
+        this.hitCanvas = document.createElement('canvas');
+        this.hitCanvas.width = 1;
+        this.hitCanvas.height = 1;
         this.hitContext = this.hitCanvas.getContext('2d');
 
         this.mouse.start();
@@ -14226,7 +14563,7 @@ Phaser.Input.prototype = {
 
     },
 
-	/**
+    /**
     * Add a new Pointer object to the Input Manager. By default Input creates 3 pointer objects: mousePointer, pointer1 and pointer2.
     * If you need more then use this to create a new one, up to a maximum of 10.
     * @method Phaser.Input#addPointer
@@ -14244,7 +14581,7 @@ Phaser.Input.prototype = {
             }
         }
 
-        if (next == 0)
+        if (next === 0)
         {
             console.warn("You can only have 10 Pointer objects");
             return null;
@@ -14257,7 +14594,7 @@ Phaser.Input.prototype = {
 
     },
 
-	/**
+    /**
     * Updates the Input Manager. Called by the core Game loop.
     * @method Phaser.Input#update
     * @protected
@@ -14291,14 +14628,14 @@ Phaser.Input.prototype = {
         this._pollCounter = 0;
     },
 
-	/**
+    /**
     * Reset all of the Pointers and Input states
     * @method Phaser.Input#reset
     * @param {boolean} hard - A soft reset (hard = false) won't reset any Signals that might be bound. A hard reset will.
     */
     reset: function (hard) {
 
-        if (this.game.isBooted == false)
+        if (this.game.isBooted === false)
         {
             return;
         }
@@ -14319,7 +14656,7 @@ Phaser.Input.prototype = {
         this.currentPointers = 0;
         this.game.stage.canvas.style.cursor = "default";
 
-        if (hard == true)
+        if (hard === true)
         {
             this.onDown.dispose();
             this.onUp.dispose();
@@ -14350,7 +14687,7 @@ Phaser.Input.prototype = {
 
     },
 
-	/**
+    /**
     * Find the first free Pointer object and start it, passing in the event data. This is called automatically by Phaser.Touch and Phaser.MSPointer.
     * @method Phaser.Input#startPointer
     * @param {Any} event - The event data from the Touch event.
@@ -14363,11 +14700,11 @@ Phaser.Input.prototype = {
             return null;
         }
 
-        if (this.pointer1.active == false)
+        if (this.pointer1.active === false)
         {
             return this.pointer1.start(event);
         }
-        else if (this.pointer2.active == false)
+        else if (this.pointer2.active === false)
         {
             return this.pointer2.start(event);
         }
@@ -14375,7 +14712,7 @@ Phaser.Input.prototype = {
         {
             for (var i = 3; i <= 10; i++)
             {
-                if (this['pointer' + i] && this['pointer' + i].active == false)
+                if (this['pointer' + i] && this['pointer' + i].active === false)
                 {
                     return this['pointer' + i].start(event);
                 }
@@ -14386,7 +14723,7 @@ Phaser.Input.prototype = {
 
     },
 
-	/**
+    /**
     * Updates the matching Pointer object, passing in the event data. This is called automatically and should not normally need to be invoked.
     * @method Phaser.Input#updatePointer
     * @param {Any} event - The event data from the Touch event.
@@ -14417,7 +14754,7 @@ Phaser.Input.prototype = {
 
     },
 
-	/**
+    /**
     * Stops the matching Pointer object, passing in the event data.
     * @method Phaser.Input#stopPointer
     * @param {Any} event - The event data from the Touch event.
@@ -14448,7 +14785,7 @@ Phaser.Input.prototype = {
 
     },
 
-	/**
+    /**
     * Get the next Pointer object whos active property matches the given state
     * @method Phaser.Input#getPointer
     * @param {boolean} state - The state the Pointer should be in (false for inactive, true for active).
@@ -14481,7 +14818,7 @@ Phaser.Input.prototype = {
 
     },
 
-	/**
+    /**
     * Get the Pointer object whos identified property matches the given identifier value.
     * @method Phaser.Input#getPointerFromIdentifier
     * @param {number} identifier - The Pointer.identifier value to search for.
@@ -14609,7 +14946,7 @@ Object.defineProperty(Phaser.Input.prototype, "totalActivePointers", {
 Object.defineProperty(Phaser.Input.prototype, "worldX", {
 
     get: function () {
-		return this.game.camera.view.x + this.x;
+        return this.game.camera.view.x + this.x;
     }
 
 });
@@ -14622,7 +14959,7 @@ Object.defineProperty(Phaser.Input.prototype, "worldX", {
 Object.defineProperty(Phaser.Input.prototype, "worldY", {
 
     get: function () {
-		return this.game.camera.view.y + this.y;
+        return this.game.camera.view.y + this.y;
     }
 
 });
@@ -14642,87 +14979,87 @@ Object.defineProperty(Phaser.Input.prototype, "worldY", {
 */
 Phaser.Key = function (game, keycode) {
 
-	/**
-	* @property {Phaser.Game} game - A reference to the currently running game. 
-	*/
-	this.game = game;
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game. 
+    */
+    this.game = game;
 
-	/**
-	* @property {boolean} isDown - The "down" state of the key.
-	* @default
-	*/
-	this.isDown = false;
+    /**
+    * @property {boolean} isDown - The "down" state of the key.
+    * @default
+    */
+    this.isDown = false;
 
-	/**
-	* @property {boolean} isUp - The "up" state of the key.
-	* @default
-	*/
-	this.isUp = false;
+    /**
+    * @property {boolean} isUp - The "up" state of the key.
+    * @default
+    */
+    this.isUp = false;
 
-	/**
-	* @property {boolean} altKey - The down state of the ALT key, if pressed at the same time as this key.
-	* @default
-	*/
-	this.altKey = false;
+    /**
+    * @property {boolean} altKey - The down state of the ALT key, if pressed at the same time as this key.
+    * @default
+    */
+    this.altKey = false;
 
-	/**
-	* @property {boolean} ctrlKey - The down state of the CTRL key, if pressed at the same time as this key.
-	* @default
-	*/
-	this.ctrlKey = false;
+    /**
+    * @property {boolean} ctrlKey - The down state of the CTRL key, if pressed at the same time as this key.
+    * @default
+    */
+    this.ctrlKey = false;
 
-	/**
-	* @property {boolean} shiftKey - The down state of the SHIFT key, if pressed at the same time as this key.
-	* @default
-	*/
-	this.shiftKey = false;
+    /**
+    * @property {boolean} shiftKey - The down state of the SHIFT key, if pressed at the same time as this key.
+    * @default
+    */
+    this.shiftKey = false;
 
-	/**
-	* @property {number} timeDown - The timestamp when the key was last pressed down.
-	* @default
-	*/
-	this.timeDown = 0;
+    /**
+    * @property {number} timeDown - The timestamp when the key was last pressed down.
+    * @default
+    */
+    this.timeDown = 0;
 
-	/**
-	* If the key is down this value holds the duration of that key press and is constantly updated.
-	* If the key is up it holds the duration of the previous down session.
-	* @property {number} duration - The number of milliseconds this key has been held down for.
-	* @default
-	*/
-	this.duration = 0;
+    /**
+    * If the key is down this value holds the duration of that key press and is constantly updated.
+    * If the key is up it holds the duration of the previous down session.
+    * @property {number} duration - The number of milliseconds this key has been held down for.
+    * @default
+    */
+    this.duration = 0;
 
-	/**
-	* @property {number} timeUp - The timestamp when the key was last released.
-	* @default
-	*/
-	this.timeUp = 0;
+    /**
+    * @property {number} timeUp - The timestamp when the key was last released.
+    * @default
+    */
+    this.timeUp = 0;
 
-	/**
-	* @property {number} repeats - If a key is held down this holds down the number of times the key has 'repeated'.
-	* @default
-	*/
-	this.repeats = 0;
+    /**
+    * @property {number} repeats - If a key is held down this holds down the number of times the key has 'repeated'.
+    * @default
+    */
+    this.repeats = 0;
 
-	/**
-	* @property {number} keyCode - The keycode of this key.
-	*/
-	this.keyCode = keycode;
+    /**
+    * @property {number} keyCode - The keycode of this key.
+    */
+    this.keyCode = keycode;
 
-	/**
-	* @property {Phaser.Signal} onDown - This Signal is dispatched every time this Key is pressed down. It is only dispatched once (until the key is released again).
-	*/
+    /**
+    * @property {Phaser.Signal} onDown - This Signal is dispatched every time this Key is pressed down. It is only dispatched once (until the key is released again).
+    */
     this.onDown = new Phaser.Signal();
 
-	/**
-	* @property {Phaser.Signal} onUp - This Signal is dispatched every time this Key is pressed down. It is only dispatched once (until the key is released again).
-	*/
+    /**
+    * @property {Phaser.Signal} onUp - This Signal is dispatched every time this Key is pressed down. It is only dispatched once (until the key is released again).
+    */
     this.onUp = new Phaser.Signal();
-	
+    
 };
 
 Phaser.Key.prototype = {
 
-	/**
+    /**
     * Called automatically by Phaser.Keyboard.
     * @method Phaser.Key#processKeyDown
     * @param {KeyboardEvent} event.
@@ -14753,7 +15090,7 @@ Phaser.Key.prototype = {
 
     },
 
-	/**
+    /**
     * Called automatically by Phaser.Keyboard.
     * @method Phaser.Key#processKeyUp
     * @param {KeyboardEvent} event.
@@ -14769,8 +15106,8 @@ Phaser.Key.prototype = {
 
     },
 
-	/**
-	* Returns the "just pressed" state of the Key. Just pressed is considered true if the key was pressed down within the duration given (default 250ms)
+    /**
+    * Returns the "just pressed" state of the Key. Just pressed is considered true if the key was pressed down within the duration given (default 250ms)
     * @method Phaser.Key#justPressed
     * @param {number} [duration=250] - The duration below which the key is considered as being just pressed.
     * @return {boolean} True if the key is just pressed otherwise false.
@@ -14783,8 +15120,8 @@ Phaser.Key.prototype = {
 
     },
 
-	/**
-	* Returns the "just released" state of the Key. Just released is considered as being true if the key was released within the duration given (default 250ms)
+    /**
+    * Returns the "just released" state of the Key. Just released is considered as being true if the key was released within the duration given (default 250ms)
     * @method Phaser.Key#justPressed
     * @param {number} [duration=250] - The duration below which the key is considered as being just released.
     * @return {boolean} True if the key is just released otherwise false.
@@ -14793,7 +15130,7 @@ Phaser.Key.prototype = {
 
         if (typeof duration === "undefined") { duration = 250; }
 
-        return (this.isDown == false && (this.game.time.now - this.timeUp < duration));
+        return (this.isDown === false && (this.game.time.now - this.timeUp < duration));
 
     }
 
@@ -14806,36 +15143,35 @@ Phaser.Key.prototype = {
 */
 
 /**
-* Phaser - Keyboard constructor.
+* The Keyboard class handles looking after keyboard input for your game. It will recognise and respond to key presses and dispatch the required events.
 *
 * @class Phaser.Keyboard
-* @classdesc A Keyboard object Description.
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
 Phaser.Keyboard = function (game) {
 
-	/**
-	* @property {Phaser.Game} game - Local reference to game.
-	*/
-	this.game = game;
-	
-	/**
-	* @property {Description} _keys - Description.
-	* @private
-	*/
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
+    this.game = game;
+    
+    /**
+    * @property {object} _keys - The object the key values are stored in.
+    * @private
+    */
     this._keys = {};
     
     /**
-    * @property {Description} _hotkeys - Description.
+    * @property {object} _hotkeys - The object the hot keys are stored in.
     * @private
     */
     this._hotkeys = {};
 
-	/**
-	* @property {Description} _capture - Description.
-	* @private
-	*/
+    /**
+    * @property {object} _capture - The object the key capture values are stored in.
+    * @private
+    */
     this._capture = {};
 
     /**
@@ -14873,7 +15209,7 @@ Phaser.Keyboard = function (game) {
     * @property {function} onUpCallback - This callback is invoked every time a key is released.
     */
     this.onUpCallback = null;
-	
+    
 };
 
 Phaser.Keyboard.prototype = {
@@ -14935,10 +15271,10 @@ Phaser.Keyboard.prototype = {
     */
     createCursorKeys: function () {
 
-        return { 
-            up: this.addKey(Phaser.Keyboard.UP), 
-            down: this.addKey(Phaser.Keyboard.DOWN), 
-            left: this.addKey(Phaser.Keyboard.LEFT), 
+        return {
+            up: this.addKey(Phaser.Keyboard.UP),
+            down: this.addKey(Phaser.Keyboard.DOWN),
+            left: this.addKey(Phaser.Keyboard.LEFT),
             right: this.addKey(Phaser.Keyboard.RIGHT)
         }
 
@@ -14962,8 +15298,8 @@ Phaser.Keyboard.prototype = {
             return _this.processKeyUp(event);
         };
 
-        document.body.addEventListener('keydown', this._onKeyDown, false);
-        document.body.addEventListener('keyup', this._onKeyUp, false);
+        window.addEventListener('keydown', this._onKeyDown, false);
+        window.addEventListener('keyup', this._onKeyUp, false);
 
     },
 
@@ -14974,12 +15310,12 @@ Phaser.Keyboard.prototype = {
     */
     stop: function () {
 
-        document.body.removeEventListener('keydown', this._onKeyDown);
-        document.body.removeEventListener('keyup', this._onKeyUp);
+        window.removeEventListener('keydown', this._onKeyDown);
+        window.removeEventListener('keyup', this._onKeyUp);
 
     },
 
-	/**
+    /**
     * By default when a key is pressed Phaser will not stop the event from propagating up to the browser.
     * There are some keys this can be annoying for, like the arrow keys or space bar, which make the browser window scroll.
     * You can use addKeyCapture to consume the keyboard event for specific keys so it doesn't bubble up to the the browser.
@@ -15002,9 +15338,9 @@ Phaser.Keyboard.prototype = {
         }
     },
 
-	/**
-	* Removes an existing key capture.
-	* @method Phaser.Keyboard#removeKeyCapture
+    /**
+    * Removes an existing key capture.
+    * @method Phaser.Keyboard#removeKeyCapture
     * @param {number} keycode
     */
     removeKeyCapture: function (keycode) {
@@ -15013,9 +15349,9 @@ Phaser.Keyboard.prototype = {
 
     },
 
-	/**
-	* Clear all set key captures.
-	* @method Phaser.Keyboard#clearCaptures
+    /**
+    * Clear all set key captures.
+    * @method Phaser.Keyboard#clearCaptures
     */
     clearCaptures: function () {
 
@@ -15023,12 +15359,12 @@ Phaser.Keyboard.prototype = {
 
     },
 
-	/**
-	* Process the keydown event.
-	* @method Phaser.Keyboard#processKeyDown
+    /**
+    * Process the keydown event.
+    * @method Phaser.Keyboard#processKeyDown
     * @param {KeyboardEvent} event
     * @protected
-    */    
+    */
     processKeyDown: function (event) {
 
         if (this.game.input.disabled || this.disabled)
@@ -15079,9 +15415,9 @@ Phaser.Keyboard.prototype = {
 
     },
 
-	/**
-	* Process the keyup event.
-	* @method Phaser.Keyboard#processKeyUp
+    /**
+    * Process the keyup event.
+    * @method Phaser.Keyboard#processKeyUp
     * @param {KeyboardEvent} event
     * @protected
     */
@@ -15125,9 +15461,9 @@ Phaser.Keyboard.prototype = {
 
     },
 
-	/**
-	* Reset the "isDown" state of all keys.
-	* @method Phaser.Keyboard#reset
+    /**
+    * Reset the "isDown" state of all keys.
+    * @method Phaser.Keyboard#reset
     */
     reset: function () {
 
@@ -15191,7 +15527,7 @@ Phaser.Keyboard.prototype = {
             return this._keys[keycode].isDown;
         }
 
-		return false;
+        return false;
 
     }
 
@@ -15303,93 +15639,90 @@ Phaser.Keyboard.NUM_LOCK = 144;
 */
 
 /**
-* Phaser - Mouse constructor.
+* Phaser.Mouse is responsible for handling all aspects of mouse interaction with the browser. It captures and processes mouse events.
 *
 * @class Phaser.Mouse
-* @classdesc The Mouse class
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
 Phaser.Mouse = function (game) {
 
-	/**
-	* @property {Phaser.Game} game - Local reference to game.
-	*/
-	this.game = game;
-	
-	/**
-	* @property {Object} callbackContext - Description.
-	*/
-	this.callbackContext = this.game;
-
-	/**
-	* @property {function} mouseDownCallback - Description.
-	* @default
-	*/
-	this.mouseDownCallback = null;
-	
-	/**
-	* @property {function} mouseMoveCallback - Description.
-	* @default
-	*/
-	this.mouseMoveCallback = null;
-	
-	/**
-	* @property {function} mouseUpCallback - Description.
-	* @default
-	*/
-	this.mouseUpCallback = null;
-
-	/**
-	* @property {number} button- The type of click, either: Phaser.Mouse.NO_BUTTON, Phaser.Mouse.LEFT_BUTTON, Phaser.Mouse.MIDDLE_BUTTON or Phaser.Mouse.RIGHT_BUTTON.
-	* @default
-	*/
-	this.button = -1;
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game.
+    */
+    this.game = game;
+    
+    /**
+    * @property {Object} callbackContext - The context under which callbacks are called.
+    */
+    this.callbackContext = this.game;
 
     /**
-    * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-    * @property {boolean} disabled
+    * @property {function} mouseDownCallback - A callback that can be fired when the mouse is pressed down.
+    */
+    this.mouseDownCallback = null;
+    
+    /**
+    * @property {function} mouseMoveCallback - A callback that can be fired when the mouse is moved while pressed down.
+    */
+    this.mouseMoveCallback = null;
+    
+    /**
+    * @property {function} mouseUpCallback - A callback that can be fired when the mouse is released from a pressed down state.
+    */
+    this.mouseUpCallback = null;
+
+    /**
+    * @property {boolean} capture - If true the DOM mouse events will have event.preventDefault applied to them, if false they will propogate fully.
+    */
+    this.capture = true;
+
+    /**
+    * @property {number} button- The type of click, either: Phaser.Mouse.NO_BUTTON, Phaser.Mouse.LEFT_BUTTON, Phaser.Mouse.MIDDLE_BUTTON or Phaser.Mouse.RIGHT_BUTTON.
+    * @default
+    */
+    this.button = -1;
+
+    /**
+    * @property {boolean} disabled - You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
     * @default
     */
     this.disabled = false;
 
     /**
-    * If the mouse has been Pointer Locked successfully this will be set to true.
-    * @property {boolean} locked
+    * @property {boolean} locked - If the mouse has been Pointer Locked successfully this will be set to true.
     * @default
     */
     this.locked = false;
 
     /**
-    * This event is dispatched when the browser enters or leaves pointer lock state.
-    * @property {Phaser.Signal} pointerLock
+    * @property {Phaser.Signal} pointerLock - This event is dispatched when the browser enters or leaves pointer lock state.
     * @default
     */
-    this.pointerLock = new Phaser.Signal;
+    this.pointerLock = new Phaser.Signal();
 
     /**
-    * The browser mouse event.
-    * @property {MouseEvent} event
+    * @property {MouseEvent} event - The browser mouse event.
     */
-    this.event;
+    this.event = null;
 
     /**
-    * @property {function} _onMouseDown
+    * @property {function} _onMouseDown - Internal event handler reference.
     * @private
     */
-    this._onMouseDown;
+    this._onMouseDown = null;
 
     /**
-    * @property {function} _onMouseMove
+    * @property {function} _onMouseMove - Internal event handler reference.
     * @private
     */
-    this._onMouseMove;
+    this._onMouseMove = null;
 
     /**
-    * @property {function} _onMouseUp
+    * @property {function} _onMouseUp - Internal event handler reference.
     * @private
     */
-    this._onMouseUp;
+    this._onMouseUp = null;
 
 };
 
@@ -15398,6 +15731,7 @@ Phaser.Mouse = function (game) {
 * @type {number}
 */
 Phaser.Mouse.NO_BUTTON = -1;
+
 /**
 * @constant
 * @type {number}
@@ -15418,7 +15752,7 @@ Phaser.Mouse.RIGHT_BUTTON = 2;
 
 Phaser.Mouse.prototype = {
 
-	/**
+    /**
     * Starts the event listeners running.
     * @method Phaser.Mouse#start
     */
@@ -15426,7 +15760,7 @@ Phaser.Mouse.prototype = {
 
         var _this = this;
 
-        if (this.game.device.android && this.game.device.chrome == false)
+        if (this.game.device.android && this.game.device.chrome === false)
         {
             //  Android stock browser fires mouse events even if you preventDefault on the touchStart, so ...
             return;
@@ -15454,16 +15788,19 @@ Phaser.Mouse.prototype = {
 
     },
 
-	/**
-	* The internal method that handles the mouse down event from the browser.
-	* @method Phaser.Mouse#onMouseDown
-    * @param {MouseEvent} event
+    /**
+    * The internal method that handles the mouse down event from the browser.
+    * @method Phaser.Mouse#onMouseDown
+    * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
     */
     onMouseDown: function (event) {
 
         this.event = event;
 
-        event.preventDefault();
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
 
         this.button = event.which;
 
@@ -15483,16 +15820,19 @@ Phaser.Mouse.prototype = {
 
     },
 
-	/**
+    /**
     * The internal method that handles the mouse move event from the browser.
-	* @method Phaser.Mouse#onMouseMove
-    * @param {MouseEvent} event
+    * @method Phaser.Mouse#onMouseMove
+    * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
     */
     onMouseMove: function (event) {
 
         this.event = event;
 
-        event.preventDefault();
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
 
         if (this.mouseMoveCallback)
         {
@@ -15510,18 +15850,21 @@ Phaser.Mouse.prototype = {
 
     },
 
-	/**
+    /**
     * The internal method that handles the mouse up event from the browser.
-	* @method Phaser.Mouse#onMouseUp
-    * @param {MouseEvent} event
+    * @method Phaser.Mouse#onMouseUp
+    * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
     */
     onMouseUp: function (event) {
 
         this.event = event;
 
-        event.preventDefault();
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
 
-    	this.button = Phaser.Mouse.NO_BUTTON;
+        this.button = Phaser.Mouse.NO_BUTTON;
 
         if (this.mouseUpCallback)
         {
@@ -15543,7 +15886,7 @@ Phaser.Mouse.prototype = {
     * If the browser supports it you can request that the pointer be locked to the browser window.
     * This is classically known as 'FPS controls', where the pointer can't leave the browser until the user presses an exit key.
     * If the browser successfully enters a locked state the event Phaser.Mouse.pointerLock will be dispatched and the first parameter will be 'true'.
-	* @method Phaser.Mouse#requestPointerLock
+    * @method Phaser.Mouse#requestPointerLock
     */
     requestPointerLock: function () {
 
@@ -15568,10 +15911,10 @@ Phaser.Mouse.prototype = {
 
     },
 
-	/**
-	* Internal pointerLockChange handler.
-	* @method Phaser.Mouse#pointerLockChange
-    * @param {MouseEvent} event
+    /**
+    * Internal pointerLockChange handler.
+    * @method Phaser.Mouse#pointerLockChange
+    * @param {pointerlockchange} event - The native event from the browser. This gets stored in Mouse.event.
     */
     pointerLockChange: function (event) {
 
@@ -15581,20 +15924,20 @@ Phaser.Mouse.prototype = {
         {
             //  Pointer was successfully locked
             this.locked = true;
-            this.pointerLock.dispatch(true);
+            this.pointerLock.dispatch(true, event);
         }
         else
         {
             //  Pointer was unlocked
             this.locked = false;
-            this.pointerLock.dispatch(false);
+            this.pointerLock.dispatch(false, event);
         }
 
     },
 
-	/**
-	* Internal release pointer lock handler.
-	* @method Phaser.Mouse#releasePointerLock
+    /**
+    * Internal release pointer lock handler.
+    * @method Phaser.Mouse#releasePointerLock
     */
     releasePointerLock: function () {
 
@@ -15608,7 +15951,7 @@ Phaser.Mouse.prototype = {
 
     },
 
-	/**
+    /**
     * Stop the event listeners.
     * @method Phaser.Mouse#stop
     */
@@ -15644,33 +15987,15 @@ Phaser.Mouse.prototype = {
 */
 Phaser.MSPointer = function (game) {
 
-	/**
-	* @property {Phaser.Game} game - Local reference to game.
-	*/
-	this.game = game;
-	
-	/**
-	* @property {Phaser.Game} callbackContext - Description.
-	*/
-	this.callbackContext = this.game;
-
-	/**
-	* @property {Description} mouseDownCallback - Description.
-	* @default
-	*/
-	this.mouseDownCallback = null;
-	
-	/**
-	* @property {Description} mouseMoveCallback - Description.
-	* @default
-	*/
-	this.mouseMoveCallback = null;
-	
-	/**
-	* @property {Description} mouseUpCallback - Description.
-	* @default
-	*/
-	this.mouseUpCallback = null;
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game.
+    */
+    this.game = game;
+    
+    /**
+    * @property {Object} callbackContext - The context under which callbacks are called (defaults to game).
+    */
+    this.callbackContext = this.game;
 
     /**
     * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
@@ -15679,26 +16004,20 @@ Phaser.MSPointer = function (game) {
     this.disabled = false;
 
     /**
-    * Description.
-    * @property {Description} _onMSPointerDown
+    * @property {function} _onMSPointerDown - Internal function to handle MSPointer events.
     * @private
-    * @default
     */
     this._onMSPointerDown = null;
     
     /**
-    * Description.
-    * @property {Description} _onMSPointerMove
+    * @property {function} _onMSPointerMove - Internal function to handle MSPointer events.
     * @private
-    * @default
     */
     this._onMSPointerMove = null;
     
     /**
-    * Description.
-    * @property {Description} _onMSPointerUp
+    * @property {function} _onMSPointerUp - Internal function to handle MSPointer events.
     * @private
-    * @default
     */
     this._onMSPointerUp = null;
 
@@ -15706,7 +16025,7 @@ Phaser.MSPointer = function (game) {
 
 Phaser.MSPointer.prototype = {
 
-	/**
+    /**
     * Starts the event listeners running.
     * @method Phaser.MSPointer#start
     */
@@ -15714,7 +16033,7 @@ Phaser.MSPointer.prototype = {
 
         var _this = this;
 
-        if (this.game.device.mspointer == true)
+        if (this.game.device.mspointer === true)
         {
             this._onMSPointerDown = function (event) {
                 return _this.onPointerDown(event);
@@ -15732,6 +16051,11 @@ Phaser.MSPointer.prototype = {
             this.game.renderer.view.addEventListener('MSPointerMove', this._onMSPointerMove, false);
             this.game.renderer.view.addEventListener('MSPointerUp', this._onMSPointerUp, false);
 
+            //  IE11+ uses non-prefix events
+            this.game.renderer.view.addEventListener('pointerDown', this._onMSPointerDown, false);
+            this.game.renderer.view.addEventListener('pointerMove', this._onMSPointerMove, false);
+            this.game.renderer.view.addEventListener('pointerUp', this._onMSPointerUp, false);
+
             this.game.renderer.view.style['-ms-content-zooming'] = 'none';
             this.game.renderer.view.style['-ms-touch-action'] = 'none';
 
@@ -15740,10 +16064,10 @@ Phaser.MSPointer.prototype = {
     },
 
     /**
-    * Description.
+    * The function that handles the PointerDown event.
     * @method Phaser.MSPointer#onPointerDown
-    * @param {Any} event
-    **/
+    * @param {PointerEvent} event
+    */
     onPointerDown: function (event) {
 
         if (this.game.input.disabled || this.disabled)
@@ -15759,10 +16083,10 @@ Phaser.MSPointer.prototype = {
     },
 
     /**
-    * Description.
+    * The function that handles the PointerMove event.
     * @method Phaser.MSPointer#onPointerMove
-    * @param {Any} event
-    **/
+    * @param {PointerEvent } event
+    */
     onPointerMove: function (event) {
 
         if (this.game.input.disabled || this.disabled)
@@ -15778,10 +16102,10 @@ Phaser.MSPointer.prototype = {
     },
 
     /**
-    * Description.
+    * The function that handles the PointerUp event.
     * @method Phaser.MSPointer#onPointerUp
-    * @param {Any} event
-    **/
+    * @param {PointerEvent} event
+    */
     onPointerUp: function (event) {
 
         if (this.game.input.disabled || this.disabled)
@@ -15796,7 +16120,7 @@ Phaser.MSPointer.prototype = {
 
     },
 
-	/**
+    /**
     * Stop the event listeners.
     * @method Phaser.MSPointer#stop
     */
@@ -15805,6 +16129,10 @@ Phaser.MSPointer.prototype = {
         this.game.stage.canvas.removeEventListener('MSPointerDown', this._onMSPointerDown);
         this.game.stage.canvas.removeEventListener('MSPointerMove', this._onMSPointerMove);
         this.game.stage.canvas.removeEventListener('MSPointerUp', this._onMSPointerUp);
+
+        this.game.stage.canvas.removeEventListener('pointerDown', this._onMSPointerDown);
+        this.game.stage.canvas.removeEventListener('pointerMove', this._onMSPointerMove);
+        this.game.stage.canvas.removeEventListener('pointerUp', this._onMSPointerUp);
 
     }
 
@@ -15822,192 +16150,167 @@ Phaser.MSPointer.prototype = {
 * @classdesc A Pointer object is used by the Mouse, Touch and MSPoint managers and represents a single finger on the touch screen.
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {Description} id - Description.
+* @param {number} id - The ID of the Pointer object within the game. Each game can have up to 10 active pointers.
 */
 Phaser.Pointer = function (game, id) {
 
     /**
-    * @property {Phaser.Game} game - Local reference to game.
+    * @property {Phaser.Game} game - A reference to the currently running game.
     */
     this.game = game;
 
     /**
-    * @property {Description} id - Description.
+    * @property {number} id - The ID of the Pointer object within the game. Each game can have up to 10 active pointers.
     */
     this.id = id;
 
     /**
-    * Local private variable to store the status of dispatching a hold event.
-    * @property {boolean} _holdSent
+    * @property {boolean} _holdSent - Local private variable to store the status of dispatching a hold event.
     * @private
     * @default
     */
     this._holdSent = false;
 
     /**
-    * Local private variable storing the short-term history of pointer movements.
-    * @property {array} _history
+    * @property {array} _history - Local private variable storing the short-term history of pointer movements.
     * @private
     */
     this._history = [];
 
     /**
-    * Local private variable storing the time at which the next history drop should occur
-    * @property {number} _lastDrop
+    * @property {number} _lastDrop - Local private variable storing the time at which the next history drop should occur.
     * @private
     * @default
     */
     this._nextDrop = 0;
 
     /**
-     * Monitor events outside of a state reset loop.
-     * @property {boolean} _stateReset
-     * @private
-     * @default
-     */
+    * @property {boolean} _stateReset - Monitor events outside of a state reset loop.
+    * @private
+    * @default
+    */
     this._stateReset = false;
 
     /**
-    * Description.
-    * @property {boolean} withinGame
+    * @property {boolean} withinGame - true if the Pointer is within the game area, otherwise false.
     */
     this.withinGame = false;
 
     /**
-    * The horizontal coordinate of point relative to the viewport in pixels, excluding any scroll offset.
-    * @property {number} clientX
+    * @property {number} clientX - The horizontal coordinate of point relative to the viewport in pixels, excluding any scroll offset.
     * @default
     */
     this.clientX = -1;
 
     /**
-    * The vertical coordinate of point relative to the viewport in pixels, excluding any scroll offset.
-    * @property {number} clientY
+    * @property {number} clientY - The vertical coordinate of point relative to the viewport in pixels, excluding any scroll offset.
     * @default
     */
     this.clientY = -1;
 
     /**
-    * The horizontal coordinate of point relative to the viewport in pixels, including any scroll offset.
-    * @property {number} pageX
+    * @property {number} pageX - The horizontal coordinate of point relative to the viewport in pixels, including any scroll offset.
     * @default
     */
     this.pageX = -1;
 
     /**
-    * The vertical coordinate of point relative to the viewport in pixels, including any scroll offset.
-    * @property {number} pageY
+    * @property {number} pageY - The vertical coordinate of point relative to the viewport in pixels, including any scroll offset.
     * @default
     */
     this.pageY = -1;
 
     /**
-    * The horizontal coordinate of point relative to the screen in pixels.
-    * @property {number} screenX
+    * @property {number} screenX - The horizontal coordinate of point relative to the screen in pixels.
     * @default
     */
     this.screenX = -1;
 
     /**
-    * The vertical coordinate of point relative to the screen in pixels.
-    * @property {number} screenY
+    * @property {number} screenY - The vertical coordinate of point relative to the screen in pixels.
     * @default
     */
     this.screenY = -1;
 
     /**
-    * The horizontal coordinate of point relative to the game element. This value is automatically scaled based on game size.
-    * @property {number} x
+    * @property {number} x - The horizontal coordinate of point relative to the game element. This value is automatically scaled based on game size.
     * @default
     */
     this.x = -1;
 
     /**
-    * The vertical coordinate of point relative to the game element. This value is automatically scaled based on game size.
-    * @property {number} y
+    * @property {number} y - The vertical coordinate of point relative to the game element. This value is automatically scaled based on game size.
     * @default
     */
     this.y = -1;
 
     /**
-    * If the Pointer is a mouse this is true, otherwise false.
-    * @property {boolean} isMouse
-    * @type {boolean}
+    * @property {boolean} isMouse - If the Pointer is a mouse this is true, otherwise false.
+    * @default
     */
     this.isMouse = false;
 
     /**
-    * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true.
-    * @property {boolean} isDown
+    * @property {boolean} isDown - If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true.
     * @default
     */
     this.isDown = false;
 
     /**
-    * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true.
-    * @property {boolean} isUp
+    * @property {boolean} isUp - If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true.
     * @default
     */
     this.isUp = true;
 
     /**
-    * A timestamp representing when the Pointer first touched the touchscreen.
-    * @property {number} timeDown
+    * @property {number} timeDown - A timestamp representing when the Pointer first touched the touchscreen.
     * @default
     */
     this.timeDown = 0;
 
     /**
-    * A timestamp representing when the Pointer left the touchscreen.
-    * @property {number} timeUp
+    * @property {number} timeUp - A timestamp representing when the Pointer left the touchscreen.
     * @default
     */
     this.timeUp = 0;
 
     /**
-    * A timestamp representing when the Pointer was last tapped or clicked.
-    * @property {number} previousTapTime
+    * @property {number} previousTapTime - A timestamp representing when the Pointer was last tapped or clicked.
     * @default
     */
     this.previousTapTime = 0;
 
     /**
-    * The total number of times this Pointer has been touched to the touchscreen.
-    * @property {number} totalTouches
+    * @property {number} totalTouches - The total number of times this Pointer has been touched to the touchscreen.
     * @default
     */
     this.totalTouches = 0;
 
     /**
-    * The number of miliseconds since the last click.
-    * @property {number} msSinceLastClick
+    * @property {number} msSinceLastClick - The number of miliseconds since the last click.
     * @default
     */
     this.msSinceLastClick = Number.MAX_VALUE;
 
     /**
-    * The Game Object this Pointer is currently over / touching / dragging.
-    * @property {Any} targetObject
+    * @property {any} targetObject - The Game Object this Pointer is currently over / touching / dragging.
     * @default
     */
     this.targetObject = null;
 
     /**
-    * An active pointer is one that is currently pressed down on the display. A Mouse is always active.
-    * @property {boolean} active
+    * @property {boolean} active - An active pointer is one that is currently pressed down on the display. A Mouse is always active.
     * @default
     */
     this.active = false;
 
     /**
-    * A Phaser.Point object containing the current x/y values of the pointer on the display.
-    * @property {Phaser.Point} position
+    * @property {Phaser.Point} position - A Phaser.Point object containing the current x/y values of the pointer on the display.
     */
     this.position = new Phaser.Point();
     
     /**
-    * A Phaser.Point object containing the x/y values of the pointer when it was last in a down state on the display.
-    * @property {Phaser.Point} positionDown
+    * @property {Phaser.Point} positionDown - A Phaser.Point object containing the x/y values of the pointer when it was last in a down state on the display.
     */
     this.positionDown = new Phaser.Point();
 
@@ -16018,7 +16321,7 @@ Phaser.Pointer = function (game, id) {
     */
     this.circle = new Phaser.Circle(0, 0, 44);
 
-    if (id == 0)
+    if (id === 0)
     {
         this.isMouse = true;
     }
@@ -16027,7 +16330,7 @@ Phaser.Pointer = function (game, id) {
 
 Phaser.Pointer.prototype = {
 
-	/**
+    /**
     * Called when the Pointer is pressed onto the touchscreen.
     * @method Phaser.Pointer#start
     * @param {Any} event
@@ -16043,7 +16346,7 @@ Phaser.Pointer.prototype = {
         }
 
         //  Fix to stop rogue browser plugins from blocking the visibility state event
-        if (this.game.paused == true && this.game.stage.scale.incorrectOrientation == false)
+        if (this.game.paused === true && this.game.stage.scale.incorrectOrientation === false)
         {
             this.game.paused = false;
             return this;
@@ -16066,7 +16369,7 @@ Phaser.Pointer.prototype = {
         // x and y are the old values here?
         this.positionDown.setTo(this.x, this.y);
 
-        if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
+        if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers === 0))
         {
             this.game.input.x = this.x;
             this.game.input.y = this.y;
@@ -16078,7 +16381,7 @@ Phaser.Pointer.prototype = {
         this._stateReset = false;
         this.totalTouches++;
 
-        if (this.isMouse == false)
+        if (this.isMouse === false)
         {
             this.game.input.currentPointers++;
         }
@@ -16092,17 +16395,17 @@ Phaser.Pointer.prototype = {
 
     },
 
-	/**
-    * Description.
+    /**
+    * Called internall by the Input Manager.
     * @method Phaser.Pointer#update
     */
     update: function () {
 
         if (this.active)
         {
-            if (this._holdSent == false && this.duration >= this.game.input.holdRate)
+            if (this._holdSent === false && this.duration >= this.game.input.holdRate)
             {
-                if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
+                if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers === 0))
                 {
                     this.game.input.onHold.dispatch(this);
                 }
@@ -16129,10 +16432,10 @@ Phaser.Pointer.prototype = {
 
     },
 
-	/**
-    * Called when the Pointer is moved
+    /**
+    * Called when the Pointer is moved.
     * @method Phaser.Pointer#move
-    * @param {Any} event
+    * @param {MouseEvent|PointerEvent|TouchEvent} event - The event passed up from the input handler.
     */
     move: function (event) {
 
@@ -16162,7 +16465,7 @@ Phaser.Pointer.prototype = {
         this.circle.x = this.x;
         this.circle.y = this.y;
 
-        if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
+        if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers === 0))
         {
             this.game.input.activePointer = this;
             this.game.input.x = this.x;
@@ -16179,9 +16482,9 @@ Phaser.Pointer.prototype = {
         }
 
         //  Easy out if we're dragging something and it still exists
-        if (this.targetObject !== null && this.targetObject.isDragged == true)
+        if (this.targetObject !== null && this.targetObject.isDragged === true)
         {
-            if (this.targetObject.update(this) == false)
+            if (this.targetObject.update(this) === false)
             {
                 this.targetObject = null;
             }
@@ -16199,7 +16502,7 @@ Phaser.Pointer.prototype = {
         {
             var currentNode = this.game.input.interactiveItems.next;
 
-            do  
+            do
             {
                 //  If the object is using pixelPerfect checks, or has a higher InputManager.PriorityID OR if the priority ID is the same as the current highest AND it has a higher renderOrderID, then set it to the top
                 if (currentNode.pixelPerfect || currentNode.priorityID > this._highestInputPriorityID || (currentNode.priorityID == this._highestInputPriorityID && currentNode.sprite.renderOrderID > this._highestRenderOrderID))
@@ -16244,7 +16547,7 @@ Phaser.Pointer.prototype = {
                 {
                     //  Same target as before, so update it
                     // console.log("Same target as before, so update it");
-                    if (this._highestRenderObject.update(this) == false)
+                    if (this._highestRenderObject.update(this) === false)
                     {
                         this.targetObject = null;
                     }
@@ -16266,10 +16569,10 @@ Phaser.Pointer.prototype = {
 
     },
 
-	/**
+    /**
     * Called when the Pointer leaves the target area.
     * @method Phaser.Pointer#leave
-    * @param {Any} event
+    * @param {MouseEvent|PointerEvent|TouchEvent} event - The event passed up from the input handler.
     */
     leave: function (event) {
 
@@ -16278,10 +16581,10 @@ Phaser.Pointer.prototype = {
 
     },
 
-	/**
+    /**
     * Called when the Pointer leaves the touchscreen.
     * @method Phaser.Pointer#stop
-    * @param {Any} event
+    * @param {MouseEvent|PointerEvent|TouchEvent} event - The event passed up from the input handler.
     */
     stop: function (event) {
 
@@ -16293,7 +16596,7 @@ Phaser.Pointer.prototype = {
 
         this.timeUp = this.game.time.now;
 
-        if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers == 0))
+        if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers === 0))
         {
             this.game.input.onUp.dispatch(this, event);
 
@@ -16326,7 +16629,7 @@ Phaser.Pointer.prototype = {
         this.isDown = false;
         this.isUp = true;
 
-        if (this.isMouse == false)
+        if (this.isMouse === false)
         {
             this.game.input.currentPointers--;
         }
@@ -16335,7 +16638,7 @@ Phaser.Pointer.prototype = {
         {
             var currentNode = this.game.input.interactiveItems.next;
             
-            do  
+            do
             {
                 if (currentNode)
                 {
@@ -16357,11 +16660,13 @@ Phaser.Pointer.prototype = {
 
     },
 
-	/**
+    /**
     * The Pointer is considered justPressed if the time it was pressed onto the touchscreen or clicked is less than justPressedRate.
+    * Note that calling justPressed doesn't reset the pressed status of the Pointer, it will return `true` for as long as the duration is valid.
+    * If you wish to check if the Pointer was pressed down just once then see the Sprite.events.onInputDown event.
     * @method Phaser.Pointer#justPressed
-    * @param {number} [duration]
-    * @return {boolean}
+    * @param {number} [duration] - The time to check against. If none given it will use InputManager.justPressedRate.
+    * @return {boolean} true if the Pointer was pressed down within the duration given.
     */
     justPressed: function (duration) {
 
@@ -16371,11 +16676,13 @@ Phaser.Pointer.prototype = {
 
     },
 
-	/**
+    /**
     * The Pointer is considered justReleased if the time it left the touchscreen is less than justReleasedRate.
+    * Note that calling justReleased doesn't reset the pressed status of the Pointer, it will return `true` for as long as the duration is valid.
+    * If you wish to check if the Pointer was released just once then see the Sprite.events.onInputUp event.
     * @method Phaser.Pointer#justReleased
-    * @param {number} [duration]
-    * @return {boolean}
+    * @param {number} [duration] - The time to check against. If none given it will use InputManager.justReleasedRate.
+    * @return {boolean} true if the Pointer was released within the duration given.
     */
     justReleased: function (duration) {
 
@@ -16385,13 +16692,13 @@ Phaser.Pointer.prototype = {
 
     },
 
-	/**
+    /**
     * Resets the Pointer properties. Called by InputManager.reset when you perform a State change.
     * @method Phaser.Pointer#reset
     */
     reset: function () {
 
-        if (this.isMouse == false)
+        if (this.isMouse === false)
         {
             this.active = false;
         }
@@ -16411,15 +16718,6 @@ Phaser.Pointer.prototype = {
 
         this.targetObject = null;
 
-    },
-
-	/**
-    * Returns a string representation of this object.
-    * @method Phaser.Pointer#toString
-    * @return {string} A string representation of the instance.
-    **/
-    toString: function () {
-        return "[{Pointer (id=" + this.id + " identifer=" + this.identifier + " active=" + this.active + " duration=" + this.duration + " withinGame=" + this.withinGame + " x=" + this.x + " y=" + this.y + " clientX=" + this.clientX + " clientY=" + this.clientY + " screenX=" + this.screenX + " screenY=" + this.screenY + " pageX=" + this.pageX + " pageY=" + this.pageY + ")}]";
     }
 
 };
@@ -16455,7 +16753,7 @@ Object.defineProperty(Phaser.Pointer.prototype, "worldX", {
 
     get: function () {
 
-		return this.game.world.camera.x + this.x;
+        return this.game.world.camera.x + this.x;
 
     }
 
@@ -16471,7 +16769,7 @@ Object.defineProperty(Phaser.Pointer.prototype, "worldY", {
 
     get: function () {
 
-		return this.game.world.camera.y + this.y;
+        return this.game.world.camera.y + this.y;
 
     }
 
@@ -16494,70 +16792,102 @@ Object.defineProperty(Phaser.Pointer.prototype, "worldY", {
 Phaser.Touch = function (game) {
 
     /**
-    * @property {Phaser.Game} game - Local reference to game.
+    * @property {Phaser.Game} game - A reference to the currently running game.
     */
     this.game = game;
     
     /**
-    * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-    * @method Phaser.Touch#disabled
+    * @property {boolean} disabled - You can disable all Touch events by setting disabled = true. While set all new touch events will be ignored.
     * @return {boolean}
     */
     this.disabled = false;
 
     /**
-    * @property {Phaser.Game} callbackContext - Description.
+    * @property {Object} callbackContext - The context under which callbacks are called.
     */
     this.callbackContext = this.game;
 
     /**
-    * @property {Phaser.Game} touchStartCallback - Description.
-    * @default
+    * @property {function} touchStartCallback - A callback that can be fired on a touchStart event.
     */
     this.touchStartCallback = null;
     
     /**
-    * @property {Phaser.Game} touchMoveCallback - Description.
-    * @default
+    * @property {function} touchMoveCallback - A callback that can be fired on a touchMove event.
     */
     this.touchMoveCallback = null;
     
     /**
-    * @property {Phaser.Game} touchEndCallback - Description.
-    * @default
+    * @property {function} touchEndCallback - A callback that can be fired on a touchEnd event.
     */
     this.touchEndCallback = null;
     
     /**
-    * @property {Phaser.Game} touchEnterCallback - Description.
-    * @default
+    * @property {function} touchEnterCallback - A callback that can be fired on a touchEnter event.
     */
     this.touchEnterCallback = null;
     
     /**
-    * @property {Phaser.Game} touchLeaveCallback - Description.
-    * @default
+    * @property {function} touchLeaveCallback - A callback that can be fired on a touchLeave event.
     */
     this.touchLeaveCallback = null;
     
     /**
-    * @property {Description} touchCancelCallback - Description.
-    * @default
+    * @property {function} touchCancelCallback - A callback that can be fired on a touchCancel event.
     */
     this.touchCancelCallback = null;
     
     /**
-    * @property {boolean} preventDefault - Description.
+    * @property {boolean} preventDefault - If true the TouchEvent will have prevent.default called on it.
     * @default
     */
     this.preventDefault = true;
 
+    /**
+    * @property {TouchEvent} event - The browser touch event.
+    */
+    this.event = null;
+
+    /**
+    * @property {function} _onTouchStart - Internal event handler reference.
+    * @private
+    */
     this._onTouchStart = null;
+
+    /**
+    * @property {function} _onTouchMove - Internal event handler reference.
+    * @private
+    */
     this._onTouchMove = null;
+
+    /**
+    * @property {function} _onTouchEnd - Internal event handler reference.
+    * @private
+    */
     this._onTouchEnd = null;
+
+    /**
+    * @property {function} _onTouchEnter - Internal event handler reference.
+    * @private
+    */
     this._onTouchEnter = null;
+
+    /**
+    * @property {function} _onTouchLeave - Internal event handler reference.
+    * @private
+    */
     this._onTouchLeave = null;
+
+    /**
+    * @property {function} _onTouchCancel - Internal event handler reference.
+    * @private
+    */
     this._onTouchCancel = null;
+
+    /**
+    * @property {function} _onTouchMove - Internal event handler reference.
+    * @private
+    */
     this._onTouchMove = null;
 
 };
@@ -16623,11 +16953,13 @@ Phaser.Touch.prototype = {
     },
 
     /**
-    * Description.
+    * The internal method that handles the touchstart event from the browser.
     * @method Phaser.Touch#onTouchStart
-    * @param {Any} event
+    * @param {TouchEvent} event - The native event from the browser. This gets stored in Touch.event.
     */
     onTouchStart: function (event) {
+
+        this.event = event;
 
         if (this.touchStartCallback)
         {
@@ -16658,9 +16990,11 @@ Phaser.Touch.prototype = {
     * Touch cancel - touches that were disrupted (perhaps by moving into a plugin or browser chrome).
     * Occurs for example on iOS when you put down 4 fingers and the app selector UI appears.
     * @method Phaser.Touch#onTouchCancel
-    * @param {Any} event
+    * @param {TouchEvent} event - The native event from the browser. This gets stored in Touch.event.
     */
     onTouchCancel: function (event) {
+
+        this.event = event;
 
         if (this.touchCancelCallback)
         {
@@ -16690,9 +17024,11 @@ Phaser.Touch.prototype = {
     * For touch enter and leave its a list of the touch points that have entered or left the target.
     * Doesn't appear to be supported by most browsers on a canvas element yet.
     * @method Phaser.Touch#onTouchEnter
-    * @param {Any} event
+    * @param {TouchEvent} event - The native event from the browser. This gets stored in Touch.event.
     */
     onTouchEnter: function (event) {
+
+        this.event = event;
 
         if (this.touchEnterCallback)
         {
@@ -16709,10 +17045,12 @@ Phaser.Touch.prototype = {
             event.preventDefault();
         }
 
+        /*
         for (var i = 0; i < event.changedTouches.length; i++)
         {
             //console.log('touch enter');
         }
+       */
 
     },
 
@@ -16720,9 +17058,11 @@ Phaser.Touch.prototype = {
     * For touch enter and leave its a list of the touch points that have entered or left the target.
     * Doesn't appear to be supported by most browsers on a canvas element yet.
     * @method Phaser.Touch#onTouchLeave
-    * @param {Any} event
-    */    
+    * @param {TouchEvent} event - The native event from the browser. This gets stored in Touch.event.
+    */
     onTouchLeave: function (event) {
+
+        this.event = event;
 
         if (this.touchLeaveCallback)
         {
@@ -16734,19 +17074,23 @@ Phaser.Touch.prototype = {
             event.preventDefault();
         }
 
+        /*
         for (var i = 0; i < event.changedTouches.length; i++)
         {
             //console.log('touch leave');
         }
+       */
 
     },
 
     /**
-    * Description.
+    * The handler for the touchmove events.
     * @method Phaser.Touch#onTouchMove
-    * @param {Any} event
+    * @param {TouchEvent} event - The native event from the browser. This gets stored in Touch.event.
     */
     onTouchMove: function (event) {
+
+        this.event = event;
 
         if (this.touchMoveCallback)
         {
@@ -16766,11 +17110,13 @@ Phaser.Touch.prototype = {
     },
 
     /**
-    * Description.
+    * The handler for the touchend events.
     * @method Phaser.Touch#onTouchEnd
-    * @param {Any} event
+    * @param {TouchEvent} event - The native event from the browser. This gets stored in Touch.event.
     */
     onTouchEnd: function (event) {
+
+        this.event = event;
 
         if (this.touchEndCallback)
         {
@@ -16818,131 +17164,129 @@ Phaser.Touch.prototype = {
 */
 
 /**
-* Constructor for Phaser InputHandler.
+* The Input Handler is bound to a specific Sprite and is responsible for managing all Input events on that Sprite.
 * @class Phaser.InputHandler
-* @classdesc Description.
 * @constructor
-* @param {Phaser.Sprite} game - Description.
+* @param {Phaser.Sprite} sprite - The Sprite object to which this Input Handler belongs.
 */
 Phaser.InputHandler = function (sprite) {
 
-	/**
-	* @property {Phaser.Sprite} sprite - Description. 
-	*/
-	this.sprite = sprite;
+    /**
+    * @property {Phaser.Sprite} sprite - The Sprite object to which this Input Handler belongs.
+    */
+    this.sprite = sprite;
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game. 
     */
     this.game = sprite.game;
 
-	/**
-	* @property {boolean} enabled - Description. 
-	* @default
-	*/
+    /**
+    * @property {boolean} enabled - If enabled the Input Handler will process input requests and monitor pointer activity.
+    * @default
+    */
     this.enabled = false;
 
-    //	Linked list references
-	/**
-	* @property {Description} parent - Description. 
-	* @default
-	*/
-    this.parent = null;
+    /**
+    * @property {Description} parent - Description. 
+    * @default
+    */
+    // this.parent = null;
     
-	/**
-	* @property {Description} next - Description. 
-	* @default
-	*/
-    this.next = null;
+    /**
+    * @property {Description} next - Linked List
+    * @default
+    */
+    // this.next = null;
     
-	/**
-	* @property {Description} prev - Description. 
-	* @default
-	*/
-    this.prev = null;
+    /**
+    * @property {Description} prev - Description. 
+    * @default
+    */
+    // this.prev = null;
     
-	/**
-	* @property {Description} last - Description. 
-	* @default
-	*/
-	this.last = this;
-	
-	/**
-	* @property {Description} first - Description. 
-	* @default
-	*/
-	this.first = this;
+    /**
+    * @property {Description} last - Description. 
+    * @default
+    */
+    // this.last = this;
+    
+    /**
+    * @property {Description} first - Description. 
+    * @default
+    */
+    // this.first = this;
 
-	/**
-	* @property {number} priorityID - The PriorityID controls which Sprite receives an Input event first if they should overlap.
-	* @default
-	*/
+    /**
+    * @property {number} priorityID - The PriorityID controls which Sprite receives an Input event first if they should overlap.
+    * @default
+    */
     this.priorityID = 0;
     
-	/**
-	* @property {boolean} useHandCursor - Description. 
-	* @default
-	*/
+    /**
+    * @property {boolean} useHandCursor - On a desktop browser you can set the 'hand' cursor to appear when moving over the Sprite.
+    * @default
+    */
     this.useHandCursor = false;
-	
-	/**
-	* @property {boolean} isDragged - Description. 
-	* @default
-	*/
+    
+    /**
+    * @property {boolean} isDragged - true if the Sprite is being currently dragged.
+    * @default
+    */
     this.isDragged = false;
     
-	/**
-	* @property {boolean} allowHorizontalDrag - Description. 
-	* @default
-	*/
+    /**
+    * @property {boolean} allowHorizontalDrag - Controls if the Sprite is allowed to be dragged horizontally.
+    * @default
+    */
     this.allowHorizontalDrag = true;
     
-	/**
-	* @property {boolean} allowVerticalDrag - Description. 
-	* @default
-	*/
+    /**
+    * @property {boolean} allowVerticalDrag - Controls if the Sprite is allowed to be dragged vertically.
+    * @default
+    */
     this.allowVerticalDrag = true;
     
-	/**
-	* @property {boolean} bringToTop - Description. 
-	* @default
-	*/
+    /**
+    * @property {boolean} bringToTop - If true when this Sprite is clicked or dragged it will automatically be bought to the top of the Group it is within.
+    * @default
+    */
     this.bringToTop = false;
 
-	/**
-	* @property {Description} snapOffset - Description. 
-	* @default
-	*/
+    /**
+    * @property {Phaser.Point} snapOffset - A Point object that contains by how far the Sprite snap is offset.
+    * @default
+    */
     this.snapOffset = null;
     
-	/**
-	* @property {boolean} snapOnDrag - Description. 
-	* @default
-	*/
+    /**
+    * @property {boolean} snapOnDrag - When the Sprite is dragged this controls if the center of the Sprite will snap to the pointer on drag or not.
+    * @default
+    */
     this.snapOnDrag = false;
     
-	/**
-	* @property {boolean} snapOnRelease - Description. 
-	* @default
-	*/
+    /**
+    * @property {boolean} snapOnRelease - When the Sprite is dragged this controls if the Sprite will be snapped on release.
+    * @default
+    */
     this.snapOnRelease = false;
     
-	/**
-	* @property {number} snapX - Description. 
-	* @default
-	*/
+    /**
+    * @property {number} snapX - When a Sprite has snapping enabled this holds the width of the snap grid.
+    * @default
+    */
     this.snapX = 0;
     
-	/**
-	* @property {number} snapY - Description. 
-	* @default
-	*/
+    /**
+    * @property {number} snapY - When a Sprite has snapping enabled this holds the height of the snap grid.
+    * @default
+    */
     this.snapY = 0;
 
-	/**
-	* @property {number} pixelPerfect - Should we use pixel perfect hit detection? Warning: expensive. Only enable if you really need it!
-	* @default
-	*/
+    /**
+    * @property {number} pixelPerfect - Should we use pixel perfect hit detection? Warning: expensive. Only enable if you really need it!
+    * @default
+    */
     this.pixelPerfect = false;
 
     /**
@@ -16958,13 +17302,13 @@ Phaser.InputHandler = function (sprite) {
     this.draggable = false;
 
     /**
-    * @property {Description} boundsRect - A region of the game world within which the sprite is restricted during drag.
+    * @property {Phaser.Rectangle} boundsRect - A region of the game world within which the sprite is restricted during drag.
     * @default 
     */
     this.boundsRect = null;
 
     /**
-    * @property {Description} boundsSprite - A Sprite the bounds of which this sprite is restricted during drag.
+    * @property {Phaser.Sprite} boundsSprite - A Sprite the bounds of which this sprite is restricted during drag.
     * @default
     */
     this.boundsSprite = null;
@@ -16981,7 +17325,7 @@ Phaser.InputHandler = function (sprite) {
     * @property {Phaser.Point} _tempPoint - Description.
     * @private
     */
-    this._tempPoint = new Phaser.Point;
+    this._tempPoint = new Phaser.Point();
 
     this._pointerData = [];
 
@@ -17005,23 +17349,23 @@ Phaser.InputHandler = function (sprite) {
 
 Phaser.InputHandler.prototype = {
 
-	/**
-	* Description.
-	* @method Phaser.InputHandler#start
-	* @param {number} priority - Description.
-	* @param {boolean} useHandCursor - Description.
-	* @return {Phaser.Sprite} Description.
-	*/
-	start: function (priority, useHandCursor) {
+    /**
+    * Starts the Input Handler running. This is called automatically when you enable input on a Sprite, or can be called directly if you need to set a specific priority.
+    * @method Phaser.InputHandler#start
+    * @param {number} priority - Higher priority sprites take click priority over low-priority sprites when they are stacked on-top of each other.
+    * @param {boolean} useHandCursor - If true the Sprite will show the hand cursor on mouse-over (doesn't apply to mobile browsers)
+    * @return {Phaser.Sprite} The Sprite object to which the Input Handler is bound.
+    */
+    start: function (priority, useHandCursor) {
 
-		priority = priority || 0;
-		if (typeof useHandCursor == 'undefined') { useHandCursor = false; }
+        priority = priority || 0;
+        if (typeof useHandCursor == 'undefined') { useHandCursor = false; }
 
         //  Turning on
-        if (this.enabled == false)
+        if (this.enabled === false)
         {
             //  Register, etc
-			this.game.input.interactiveItems.add(this);
+            this.game.input.interactiveItems.add(this);
             this.useHandCursor = useHandCursor;
             this.priorityID = priority;
 
@@ -17044,29 +17388,29 @@ Phaser.InputHandler.prototype = {
                 };
             }
 
-            this.snapOffset = new Phaser.Point;
+            this.snapOffset = new Phaser.Point();
             this.enabled = true;
 
             //  Create the signals the Input component will emit
             if (this.sprite.events && this.sprite.events.onInputOver == null)
             {
-                this.sprite.events.onInputOver = new Phaser.Signal;
-                this.sprite.events.onInputOut = new Phaser.Signal;
-                this.sprite.events.onInputDown = new Phaser.Signal;
-                this.sprite.events.onInputUp = new Phaser.Signal;
-                this.sprite.events.onDragStart = new Phaser.Signal;
-                this.sprite.events.onDragStop = new Phaser.Signal;
+                this.sprite.events.onInputOver = new Phaser.Signal();
+                this.sprite.events.onInputOut = new Phaser.Signal();
+                this.sprite.events.onInputDown = new Phaser.Signal();
+                this.sprite.events.onInputUp = new Phaser.Signal();
+                this.sprite.events.onDragStart = new Phaser.Signal();
+                this.sprite.events.onDragStop = new Phaser.Signal();
             }
         }
 
         return this.sprite;
 
-	},
+    },
 
-	/**
-	* Description.
-	* @method Phaser.InputHandler#reset
-	*/
+    /**
+    * Resets the Input Handler and disables it.
+    * @method Phaser.InputHandler#reset
+    */
     reset: function () {
 
         this.enabled = false;
@@ -17091,14 +17435,14 @@ Phaser.InputHandler.prototype = {
         }
     },
 
-	/**
-	* Description.
-	* @method Phaser.InputHandler#stop
-	*/
-	stop: function () {
+    /**
+    * Stops the Input Handler from running.
+    * @method Phaser.InputHandler#stop
+    */
+    stop: function () {
 
         //  Turning off
-        if (this.enabled == false)
+        if (this.enabled === false)
         {
             return;
         }
@@ -17106,15 +17450,15 @@ Phaser.InputHandler.prototype = {
         {
             //  De-register, etc
             this.enabled = false;
-			this.game.input.interactiveItems.remove(this);
+            this.game.input.interactiveItems.remove(this);
         }
 
-	},
+    },
 
-	/**
-	* Clean up memory.
-	* @method Phaser.InputHandler#destroy
-	*/
+    /**
+    * Clean up memory.
+    * @method Phaser.InputHandler#destroy
+    */
     destroy: function () {
 
         if (this.enabled)
@@ -17123,99 +17467,99 @@ Phaser.InputHandler.prototype = {
 
             this.game.input.interactiveItems.remove(this);
 
-        	this.stop();
+            this.stop();
 
-        	this.sprite = null;
+            this.sprite = null;
         }
     },
 
-	/**
+    /**
     * The x coordinate of the Input pointer, relative to the top-left of the parent Sprite.
     * This value is only set when the pointer is over this Sprite.
     * @method Phaser.InputHandler#pointerX
-    * @param {Pointer} pointer
+    * @param {Phaser.Pointer} pointer
     * @return {number} The x coordinate of the Input pointer.
-    */    
+    */
     pointerX: function (pointer) {
 
-    	pointer = pointer || 0;
+        pointer = pointer || 0;
 
         return this._pointerData[pointer].x;
 
     },
 
-	/**
+    /**
     * The y coordinate of the Input pointer, relative to the top-left of the parent Sprite
     * This value is only set when the pointer is over this Sprite.
     * @method Phaser.InputHandler#pointerY
-    * @param {Pointer} pointer
+    * @param {Phaser.Pointer} pointer
     * @return {number} The y coordinate of the Input pointer.
     */
     pointerY: function (pointer) {
 
-    	pointer = pointer || 0;
+        pointer = pointer || 0;
 
         return this._pointerData[pointer].y;
 
     },
 
-	/**
+    /**
     * If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true.
     * @method Phaser.InputHandler#pointerDown
-    * @param {Pointer} pointer
+    * @param {Phaser.Pointer} pointer
     * @return {boolean}
     */
     pointerDown: function (pointer) {
 
-    	pointer = pointer || 0;
+        pointer = pointer || 0;
 
         return this._pointerData[pointer].isDown;
 
     },
 
-	/**
+    /**
     * If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true
     * @method Phaser.InputHandler#pointerUp
-    * @param {Pointer} pointer
+    * @param {Phaser.Pointer} pointer
     * @return {boolean}
     */
     pointerUp: function (pointer) {
 
-    	pointer = pointer || 0;
+        pointer = pointer || 0;
 
         return this._pointerData[pointer].isUp;
 
     },
 
-	/**
+    /**
     * A timestamp representing when the Pointer first touched the touchscreen.
     * @method Phaser.InputHandler#pointerTimeDown
-    * @param {Pointer} pointer
+    * @param {Phaser.Pointer} pointer
     * @return {number}
     */
     pointerTimeDown: function (pointer) {
 
-    	pointer = pointer || 0;
+        pointer = pointer || 0;
 
         return this._pointerData[pointer].timeDown;
 
     },
 
-	/**
+    /**
     * A timestamp representing when the Pointer left the touchscreen.
     * @method Phaser.InputHandler#pointerTimeUp
-    * @param {Pointer} pointer
+    * @param {Phaser.Pointer} pointer
     * @return {number}
     */
     pointerTimeUp: function (pointer) {
 
-    	pointer = pointer || 0;
+        pointer = pointer || 0;
 
         return this._pointerData[pointer].timeUp;
 
     },
 
-	/**
+    /**
     * Is the Pointer over this Sprite?
     * @method Phaser.InputHandler#pointerOver
     * @param {number} [index] - The ID number of a Pointer to check. If you don't provide a number it will check all Pointers.
@@ -17245,13 +17589,13 @@ Phaser.InputHandler.prototype = {
 
     },
 
-	/**
+    /**
     * Is the Pointer outside of this Sprite?
     * @method Phaser.InputHandler#pointerOut
     * @param {number} [index] - The ID number of a Pointer to check. If you don't provide a number it will check all Pointers.
     * @return {boolean} True if the given pointer (if a index was given, or any pointer if not) is out of this object.
     */
-    pointerOut: function (pointer) {
+    pointerOut: function (index) {
 
         if (this.enabled)
         {
@@ -17275,52 +17619,52 @@ Phaser.InputHandler.prototype = {
 
     },
 
-	/**
+    /**
     * A timestamp representing when the Pointer first touched the touchscreen.
     * @method Phaser.InputHandler#pointerTimeOver
-    * @param {Pointer} pointer
+    * @param {Phaser.Pointer} pointer
     * @return {number}
     */
     pointerTimeOver: function (pointer) {
 
-    	pointer = pointer || 0;
+        pointer = pointer || 0;
 
         return this._pointerData[pointer].timeOver;
 
     },
 
-	/**
+    /**
     * A timestamp representing when the Pointer left the touchscreen.
     * @method Phaser.InputHandler#pointerTimeOut
-    * @param {Pointer} pointer
+    * @param {Phaser.Pointer} pointer
     * @return {number}
     */
     pointerTimeOut: function (pointer) {
 
-    	pointer = pointer || 0;
+        pointer = pointer || 0;
 
         return this._pointerData[pointer].timeOut;
 
     },
 
-	/**
+    /**
     * Is this sprite being dragged by the mouse or not?
     * @method Phaser.InputHandler#pointerTimeOut
-    * @param {Pointer} pointer
+    * @param {Phaser.Pointer} pointer
     * @return {number}
     */
     pointerDragged: function (pointer) {
 
-    	pointer = pointer || 0;
+        pointer = pointer || 0;
 
         return this._pointerData[pointer].isDragged;
 
     },
 
-	/**
+    /**
     * Checks if the given pointer is over this Sprite.
     * @method Phaser.InputHandler#checkPointerOver
-    * @param {Pointer} pointer
+    * @param {Phaser.Pointer} pointer
     * @return {boolean}
     */
     checkPointerOver: function (pointer) {
@@ -17346,7 +17690,7 @@ Phaser.InputHandler.prototype = {
 
     },
 
-	/**
+    /**
     * Runs a pixel perfect check against the given x/y coordinates of the Sprite this InputHandler is bound to.
     * It compares the alpha value of the pixel and if >= InputHandler.pixelPerfectAlpha it returns true.
     * @method Phaser.InputHandler#checkPixel
@@ -17378,14 +17722,14 @@ Phaser.InputHandler.prototype = {
 
     },
 
-	/**
+    /**
     * Update.
     * @method Phaser.InputHandler#update
-    * @param {Pointer} pointer
+    * @param {Phaser.Pointer} pointer
     */
     update: function (pointer) {
 
-        if (this.enabled == false || this.sprite.visible == false || (this.sprite.group && this.sprite.group.visible == false))
+        if (this.enabled === false || this.sprite.visible === false || (this.sprite.group && this.sprite.group.visible === false))
         {
             this._pointerOutHandler(pointer);
             return false;
@@ -17395,7 +17739,7 @@ Phaser.InputHandler.prototype = {
         {
             return this.updateDrag(pointer);
         }
-        else if (this._pointerData[pointer.id].isOver == true)
+        else if (this._pointerData[pointer.id].isOver === true)
         {
             if (this.checkPointerOver(pointer))
             {
@@ -17411,15 +17755,15 @@ Phaser.InputHandler.prototype = {
         }
     },
 
-	/**
-     * Description.
-     * @method Phaser.InputHandler#_pointerOverHandler
-     * @private
-     * @param {Pointer} pointer
-     */
+    /**
+    * Internal method handling the pointer over event.
+    * @method Phaser.InputHandler#_pointerOverHandler
+    * @private
+    * @param {Phaser.Pointer} pointer
+    */
     _pointerOverHandler: function (pointer) {
 
-        if (this._pointerData[pointer.id].isOver == false)
+        if (this._pointerData[pointer.id].isOver === false)
         {
             this._pointerData[pointer.id].isOver = true;
             this._pointerData[pointer.id].isOut = false;
@@ -17427,7 +17771,7 @@ Phaser.InputHandler.prototype = {
             this._pointerData[pointer.id].x = pointer.x - this.sprite.x;
             this._pointerData[pointer.id].y = pointer.y - this.sprite.y;
 
-            if (this.useHandCursor && this._pointerData[pointer.id].isDragged == false)
+            if (this.useHandCursor && this._pointerData[pointer.id].isDragged === false)
             {
                 this.game.stage.canvas.style.cursor = "pointer";
             }
@@ -17436,19 +17780,19 @@ Phaser.InputHandler.prototype = {
         }
     },
 
-	/**
-     * Description.
-     * @method Phaser.InputHandler#_pointerOutHandler
-     * @private
-     * @param {Pointer} pointer
-     */
+    /**
+    * Internal method handling the pointer out event.
+    * @method Phaser.InputHandler#_pointerOutHandler
+    * @private
+    * @param {Phaser.Pointer} pointer
+    */
     _pointerOutHandler: function (pointer) {
 
         this._pointerData[pointer.id].isOver = false;
         this._pointerData[pointer.id].isOut = true;
         this._pointerData[pointer.id].timeOut = this.game.time.now;
 
-        if (this.useHandCursor && this._pointerData[pointer.id].isDragged == false)
+        if (this.useHandCursor && this._pointerData[pointer.id].isDragged === false)
         {
             this.game.stage.canvas.style.cursor = "default";
         }
@@ -17460,15 +17804,15 @@ Phaser.InputHandler.prototype = {
 
     },
 
-	/**
-     * Description.
-     * @method Phaser.InputHandler#_touchedHandler
-     * @private
-     * @param {Pointer} pointer
-     */
+    /**
+    * Internal method handling the touched event.
+    * @method Phaser.InputHandler#_touchedHandler
+    * @private
+    * @param {Phaser.Pointer} pointer
+    */
     _touchedHandler: function (pointer) {
 
-        if (this._pointerData[pointer.id].isDown == false && this._pointerData[pointer.id].isOver == true)
+        if (this._pointerData[pointer.id].isDown === false && this._pointerData[pointer.id].isOver === true)
         {
             this._pointerData[pointer.id].isDown = true;
             this._pointerData[pointer.id].isUp = false;
@@ -17476,7 +17820,7 @@ Phaser.InputHandler.prototype = {
             this.sprite.events.onInputDown.dispatch(this.sprite, pointer);
 
             //  Start drag
-            if (this.draggable && this.isDragged == false)
+            if (this.draggable && this.isDragged === false)
             {
                 this.startDrag(pointer);
             }
@@ -17484,7 +17828,7 @@ Phaser.InputHandler.prototype = {
             if (this.bringToTop)
             {
                 this.sprite.bringToTop();
-			}
+            }
         }
 
         //  Consume the event?
@@ -17492,12 +17836,12 @@ Phaser.InputHandler.prototype = {
 
     },
 
-	/**
-     * Description.
-     * @method Phaser.InputHandler#_releasedHandler
-     * @private
-     * @param {Pointer} pointer
-     */
+    /**
+    * Internal method handling the pointer released event.
+    * @method Phaser.InputHandler#_releasedHandler
+    * @private
+    * @param {Phaser.Pointer} pointer
+    */
     _releasedHandler: function (pointer) {
 
         //  If was previously touched by this Pointer, check if still is AND still over this item
@@ -17532,10 +17876,10 @@ Phaser.InputHandler.prototype = {
 
     },
 
-	/**
+    /**
     * Updates the Pointer drag on this Sprite.
     * @method Phaser.InputHandler#updateDrag
-    * @param {Pointer} pointer
+    * @param {Phaser.Pointer} pointer
     * @return {boolean}
     */
     updateDrag: function (pointer) {
@@ -17576,79 +17920,79 @@ Phaser.InputHandler.prototype = {
 
     },
 
-	/**
+    /**
     * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
     * @method Phaser.InputHandler#justOver
-    * @param {Pointer} pointer
+    * @param {Phaser.Pointer} pointer
     * @param {number} delay - The time below which the pointer is considered as just over.
     * @return {boolean}
     */
     justOver: function (pointer, delay) {
 
-    	pointer = pointer || 0;
-    	delay = delay || 500;
+        pointer = pointer || 0;
+        delay = delay || 500;
 
         return (this._pointerData[pointer].isOver && this.overDuration(pointer) < delay);
 
     },
 
-	/**
+    /**
     * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
     * @method Phaser.InputHandler#justOut
-    * @param {Pointer} pointer
+    * @param {Phaser.Pointer} pointer
     * @param {number} delay - The time below which the pointer is considered as just out.
     * @return {boolean}
     */
     justOut: function (pointer, delay) {
 
-    	pointer = pointer || 0;
-    	delay = delay || 500;
+        pointer = pointer || 0;
+        delay = delay || 500;
 
         return (this._pointerData[pointer].isOut && (this.game.time.now - this._pointerData[pointer].timeOut < delay));
 
     },
 
-	/**
+    /**
     * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
     * @method Phaser.InputHandler#justPressed
-    * @param {Pointer} pointer
+    * @param {Phaser.Pointer} pointer
     * @param {number} delay - The time below which the pointer is considered as just over.
     * @return {boolean}
     */
     justPressed: function (pointer, delay) {
 
-    	pointer = pointer || 0;
-    	delay = delay || 500;
+        pointer = pointer || 0;
+        delay = delay || 500;
 
         return (this._pointerData[pointer].isDown && this.downDuration(pointer) < delay);
 
     },
 
-	/**
+    /**
     * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
     * @method Phaser.InputHandler#justReleased
-    * @param {Pointer} pointer
+    * @param {Phaser.Pointer} pointer
     * @param {number} delay - The time below which the pointer is considered as just out.
     * @return {boolean}
     */
     justReleased: function (pointer, delay) {
 
-    	pointer = pointer || 0;
-    	delay = delay || 500;
+        pointer = pointer || 0;
+        delay = delay || 500;
 
         return (this._pointerData[pointer].isUp && (this.game.time.now - this._pointerData[pointer].timeUp < delay));
 
     },
 
-	/**
+    /**
     * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
     * @method Phaser.InputHandler#overDuration
-    * @param {Pointer} pointer
+    * @param {Phaser.Pointer} pointer
     * @return {number} The number of milliseconds the pointer has been over the Sprite, or -1 if not over.
     */
     overDuration: function (pointer) {
 
-    	pointer = pointer || 0;
+        pointer = pointer || 0;
 
         if (this._pointerData[pointer].isOver)
         {
@@ -17659,15 +18003,15 @@ Phaser.InputHandler.prototype = {
 
     },
 
-	/**
+    /**
     * If the pointer is currently over this Sprite this returns how long it has been there for in milliseconds.
     * @method Phaser.InputHandler#downDuration
-    * @param {Pointer} pointer
+    * @param {Phaser.Pointer} pointer
     * @return {number} The number of milliseconds the pointer has been pressed down on the Sprite, or -1 if not over.
     */
     downDuration: function (pointer) {
 
-    	pointer = pointer || 0;
+        pointer = pointer || 0;
 
         if (this._pointerData[pointer].isDown)
         {
@@ -17678,25 +18022,24 @@ Phaser.InputHandler.prototype = {
 
     },
 
-	/**
+    /**
     * Make this Sprite draggable by the mouse. You can also optionally set mouseStartDragCallback and mouseStopDragCallback
     * @method Phaser.InputHandler#enableDrag
-    * @param	lockCenter			If false the Sprite will drag from where you click it minus the dragOffset. If true it will center itself to the tip of the mouse pointer.
-    * @param	bringToTop			If true the Sprite will be bought to the top of the rendering list in its current Group.
-    * @param	pixelPerfect		If true it will use a pixel perfect test to see if you clicked the Sprite. False uses the bounding box.
-    * @param	alphaThreshold		If using pixel perfect collision this specifies the alpha level from 0 to 255 above which a collision is processed (default 255)
-    * @param	boundsRect			If you want to restrict the drag of this sprite to a specific FlxRect, pass the FlxRect here, otherwise it's free to drag anywhere
-    * @param	boundsSprite		If you want to restrict the drag of this sprite to within the bounding box of another sprite, pass it here
+    * @param {boolean} [lockCenter=false] - If false the Sprite will drag from where you click it minus the dragOffset. If true it will center itself to the tip of the mouse pointer.
+    * @param {boolean} [bringToTop=false] - If true the Sprite will be bought to the top of the rendering list in its current Group.
+    * @param {boolean} [pixelPerfect=false] - If true it will use a pixel perfect test to see if you clicked the Sprite. False uses the bounding box.
+    * @param {boolean} [alphaThreshold=255] - If using pixel perfect collision this specifies the alpha level from 0 to 255 above which a collision is processed.
+    * @param {Phaser.Rectangle} [boundsRect=null] - If you want to restrict the drag of this sprite to a specific Rectangle, pass the Phaser.Rectangle here, otherwise it's free to drag anywhere.
+    * @param {Phaser.Sprite} [boundsSprite=null] - If you want to restrict the drag of this sprite to within the bounding box of another sprite, pass it here.
     */
     enableDrag: function (lockCenter, bringToTop, pixelPerfect, alphaThreshold, boundsRect, boundsSprite) {
 
         if (typeof lockCenter == 'undefined') { lockCenter = false; }
         if (typeof bringToTop == 'undefined') { bringToTop = false; }
         if (typeof pixelPerfect == 'undefined') { pixelPerfect = false; }
-
-        alphaThreshold = alphaThreshold || 255;
-        boundsRect = boundsRect || null;
-        boundsSprite = boundsSprite || null;
+        if (typeof alphaThreshold == 'undefined') { alphaThreshold = 255; }
+        if (typeof boundsRect == 'undefined') { boundsRect = null; }
+        if (typeof boundsSprite == 'undefined') { boundsSprite = null; }
 
         this._dragPoint = new Phaser.Point();
         this.draggable = true;
@@ -17719,7 +18062,7 @@ Phaser.InputHandler.prototype = {
 
     },
 
-	/**
+    /**
     * Stops this sprite from being able to be dragged. If it is currently the target of an active drag it will be stopped immediately. Also disables any set callbacks.
     * @method Phaser.InputHandler#disableDrag
     */
@@ -17739,9 +18082,10 @@ Phaser.InputHandler.prototype = {
 
     },
 
-	/**
+    /**
     * Called by Pointer when drag starts on this Sprite. Should not usually be called directly.
     * @method Phaser.InputHandler#startDrag
+    * @param {Phaser.Pointer} pointer
     */
     startDrag: function (pointer) {
 
@@ -17770,9 +18114,10 @@ Phaser.InputHandler.prototype = {
 
     },
 
-	/**
+    /**
     * Called by Pointer when drag is stopped on this Sprite. Should not usually be called directly.
     * @method Phaser.InputHandler#stopDrag
+    * @param {Phaser.Pointer} pointer
     */
     stopDrag: function (pointer) {
 
@@ -17789,37 +18134,37 @@ Phaser.InputHandler.prototype = {
         this.sprite.events.onDragStop.dispatch(this.sprite, pointer);
         this.sprite.events.onInputUp.dispatch(this.sprite, pointer);
 
-        if (this.checkPointerOver(pointer) == false)
+        if (this.checkPointerOver(pointer) === false)
         {
             this._pointerOutHandler(pointer);
         }
 
     },
 
-	/**
+    /**
     * Restricts this sprite to drag movement only on the given axis. Note: If both are set to false the sprite will never move!
     * @method Phaser.InputHandler#setDragLock
-    * @param	allowHorizontal		To enable the sprite to be dragged horizontally set to true, otherwise false
-    * @param	allowVertical		To enable the sprite to be dragged vertically set to true, otherwise false
+    * @param {boolean} [allowHorizontal=true] - To enable the sprite to be dragged horizontally set to true, otherwise false.
+    * @param {boolean} [allowVertical=true] - To enable the sprite to be dragged vertically set to true, otherwise false.
     */
     setDragLock: function (allowHorizontal, allowVertical) {
 
         if (typeof allowHorizontal == 'undefined') { allowHorizontal = true; }
-    	if (typeof allowVertical == 'undefined') { allowVertical = true; }
+        if (typeof allowVertical == 'undefined') { allowVertical = true; }
 
         this.allowHorizontalDrag = allowHorizontal;
         this.allowVerticalDrag = allowVertical;
 
     },
 
-	/**
+    /**
     * Make this Sprite snap to the given grid either during drag or when it's released.
     * For example 16x16 as the snapX and snapY would make the sprite snap to every 16 pixels.
     * @method Phaser.InputHandler#enableSnap
-    * @param	snapX		The width of the grid cell in pixels
-    * @param	snapY		The height of the grid cell in pixels
-    * @param	onDrag		If true the sprite will snap to the grid while being dragged
-    * @param	onRelease	If true the sprite will snap to the grid when released
+    * @param {number} snapX - The width of the grid cell to snap to.
+    * @param {number} snapY - The height of the grid cell to snap to.
+    * @param {boolean} [onDrag=true] - If true the sprite will snap to the grid while being dragged.
+    * @param {boolean} [onRelease=false] - If true the sprite will snap to the grid when released.
     */
     enableSnap: function (snapX, snapY, onDrag, onRelease) {
 
@@ -17833,7 +18178,7 @@ Phaser.InputHandler.prototype = {
 
     },
 
-	/**
+    /**
     * Stops the sprite from snapping to a grid during drag or release.
     * @method Phaser.InputHandler#disableSnap
     */
@@ -17844,7 +18189,7 @@ Phaser.InputHandler.prototype = {
 
     },
 
-	/**
+    /**
     * Bounds Rect check for the sprite drag
     * @method Phaser.InputHandler#checkBoundsRect
     */
@@ -17870,7 +18215,7 @@ Phaser.InputHandler.prototype = {
 
     },
 
-	/**
+    /**
     * Parent Sprite Bounds check for the sprite drag.
     * @method Phaser.InputHandler#checkBoundsSprite
     */
@@ -17903,7 +18248,6 @@ Phaser.InputHandler.prototype = {
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-
 /**
 * The Events component is a collection of events fired by the parent game object and its components.
 * 
@@ -17913,13 +18257,13 @@ Phaser.InputHandler.prototype = {
 * @param {Phaser.Sprite} sprite - A reference to Description.
 */
 Phaser.Events = function (sprite) {
-	
-	this.parent = sprite;
-	this.onAddedToGroup = new Phaser.Signal;
-	this.onRemovedFromGroup = new Phaser.Signal;
-	this.onKilled = new Phaser.Signal;
-	this.onRevived = new Phaser.Signal;
-	this.onOutOfBounds = new Phaser.Signal;
+    
+    this.parent = sprite;
+    this.onAddedToGroup = new Phaser.Signal();
+    this.onRemovedFromGroup = new Phaser.Signal();
+    this.onKilled = new Phaser.Signal();
+    this.onRevived = new Phaser.Signal();
+    this.onOutOfBounds = new Phaser.Signal();
 
     this.onInputOver = null;
     this.onInputOut = null;
@@ -17928,41 +18272,41 @@ Phaser.Events = function (sprite) {
     this.onDragStart = null;
     this.onDragStop = null;
 
-	this.onAnimationStart = null;
-	this.onAnimationComplete = null;
-	this.onAnimationLoop = null;
+    this.onAnimationStart = null;
+    this.onAnimationComplete = null;
+    this.onAnimationLoop = null;
 
 };
 
 Phaser.Events.prototype = {
 
-	destroy: function () {
+    destroy: function () {
 
-		this.parent = null;
-		this.onAddedToGroup.dispose();
-		this.onRemovedFromGroup.dispose();
-		this.onKilled.dispose();
-		this.onRevived.dispose();
-		this.onOutOfBounds.dispose();
+        this.parent = null;
+        this.onAddedToGroup.dispose();
+        this.onRemovedFromGroup.dispose();
+        this.onKilled.dispose();
+        this.onRevived.dispose();
+        this.onOutOfBounds.dispose();
 
-		if (this.onInputOver)
-		{
-		    this.onInputOver.dispose();
-		    this.onInputOut.dispose();
-		    this.onInputDown.dispose();
-		    this.onInputUp.dispose();
-		    this.onDragStart.dispose();
-		    this.onDragStop.dispose();
-		}
+        if (this.onInputOver)
+        {
+            this.onInputOver.dispose();
+            this.onInputOut.dispose();
+            this.onInputDown.dispose();
+            this.onInputUp.dispose();
+            this.onDragStart.dispose();
+            this.onDragStop.dispose();
+        }
 
-		if (this.onAnimationStart)
-		{
-			this.onAnimationStart.dispose();
-			this.onAnimationComplete.dispose();
-			this.onAnimationLoop.dispose();
-		}
+        if (this.onAnimationStart)
+        {
+            this.onAnimationStart.dispose();
+            this.onAnimationComplete.dispose();
+            this.onAnimationLoop.dispose();
+        }
 
-	}
+    }
 
 };
 /**
@@ -17981,14 +18325,14 @@ Phaser.Events.prototype = {
 Phaser.GameObjectFactory = function (game) {
 
     /**
-	* @property {Phaser.Game} game - A reference to the currently running Game.
-	*/
-	this.game = game;
-	
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
+    this.game = game;
+    
     /**
-	* @property {Phaser.World} world - A reference to the game world.
-	*/
-	this.world = this.game.world;
+    * @property {Phaser.World} world - A reference to the game world.
+    */
+    this.world = this.game.world;
 
 };
 
@@ -18006,7 +18350,7 @@ Phaser.GameObjectFactory.prototype = {
 
     },
 
-	/**
+    /**
     * Create a new Sprite with specific position and sprite sheet key.
     *
     * @method Phaser.GameObjectFactory#sprite
@@ -18067,14 +18411,14 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-     * Creates a new instance of the Sound class.
-     *
+    * Creates a new instance of the Sound class.
+    *
     * @method Phaser.GameObjectFactory#audio
-     * @param {string} key - The Game.cache key of the sound that this object will use.
-     * @param {number} volume - The volume at which the sound will be played.
-     * @param {boolean} loop - Whether or not the sound will loop.
-     * @return {Phaser.Sound} The newly created text object.
-     */
+    * @param {string} key - The Game.cache key of the sound that this object will use.
+    * @param {number} volume - The volume at which the sound will be played.
+    * @param {boolean} loop - Whether or not the sound will loop.
+    * @return {Phaser.Sound} The newly created text object.
+    */
     audio: function (key, volume, loop) {
 
         return this.game.sound.add(key, volume, loop);
@@ -18082,17 +18426,17 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-     * Creates a new <code>TileSprite</code>.
-     *
+    * Creates a new <code>TileSprite</code>.
+    *
     * @method Phaser.GameObjectFactory#tileSprite
-     * @param {number} x - X position of the new tileSprite.
-     * @param {number} y - Y position of the new tileSprite.
-     * @param {number} width - the width of the tilesprite.
-     * @param {number} height - the height of the tilesprite.
-     * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
-     * @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
-     * @return {Phaser.TileSprite} The newly created tileSprite object.
-     */
+    * @param {number} x - X position of the new tileSprite.
+    * @param {number} y - Y position of the new tileSprite.
+    * @param {number} width - the width of the tilesprite.
+    * @param {number} height - the height of the tilesprite.
+    * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+    * @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+    * @return {Phaser.TileSprite} The newly created tileSprite object.
+    */
     tileSprite: function (x, y, width, height, key, frame) {
 
         return this.world.add(new Phaser.TileSprite(this.game, x, y, width, height, key, frame));
@@ -18100,15 +18444,15 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-     * Creates a new <code>Text</code>.
-     *
+    * Creates a new <code>Text</code>.
+    *
     * @method Phaser.GameObjectFactory#text
-     * @param {number} x - X position of the new text object.
-     * @param {number} y - Y position of the new text object.
-     * @param {string} text - The actual text that will be written.
-     * @param {object} style - The style object containing style attributes like font, font size , etc.
-     * @return {Phaser.Text} The newly created text object.
-     */
+    * @param {number} x - X position of the new text object.
+    * @param {number} y - Y position of the new text object.
+    * @param {string} text - The actual text that will be written.
+    * @param {object} style - The style object containing style attributes like font, font size , etc.
+    * @return {Phaser.Text} The newly created text object.
+    */
     text: function (x, y, text, style) {
 
         return this.world.add(new Phaser.Text(this.game, x, y, text, style));
@@ -18136,13 +18480,13 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-     * Creates a new <code>Graphics</code> object.
-     *
+    * Creates a new <code>Graphics</code> object.
+    *
     * @method Phaser.GameObjectFactory#graphics
-     * @param {number} x - X position of the new graphics object.
-     * @param {number} y - Y position of the new graphics object.
-     * @return {Phaser.Graphics} The newly created graphics object.
-     */
+    * @param {number} x - X position of the new graphics object.
+    * @param {number} y - Y position of the new graphics object.
+    * @return {Phaser.Graphics} The newly created graphics object.
+    */
     graphics: function (x, y) {
 
         return this.world.add(new Phaser.Graphics(this.game, x, y));
@@ -18255,6 +18599,26 @@ Phaser.GameObjectFactory.prototype = {
 
         return new Phaser.BitmapData(this.game, width, height);
 
+    },
+
+    /**
+    * A WebGL shader/filter that can be applied to Sprites.
+    *
+    * @method Phaser.GameObjectFactory#filter
+    * @param {string} filter - The name of the filter you wish to create, for example "HueRotate" or "SineWave"
+    * @param {...} - Whatever parameters are needed to be passed to the filter init function.
+    * @return {Phaser.Filter} The newly created Phaser.Filter object.
+    */
+    filter: function (filter) {
+
+        var args = Array.prototype.splice.call(arguments, 1);
+
+        var f = new Phaser.Filter[filter](this.game);
+
+        f.init.apply(f, args);
+
+        return f;
+
     }
 
 };
@@ -18275,933 +18639,944 @@ Phaser.GameObjectFactory.prototype = {
 */
 Phaser.BitmapData = function (game, width, height) {
 
-	if (typeof width === 'undefined') { width = 256; }
-	if (typeof height === 'undefined') { height = 256; }
+    if (typeof width === 'undefined') { width = 256; }
+    if (typeof height === 'undefined') { height = 256; }
 
-	/**
-	* @property {Phaser.Game} game - A reference to the currently running game. 
-	*/
-	this.game = game;
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game. 
+    */
+    this.game = game;
 
-	/**
+    /**
     * @property {string} name - The name of the BitmapData.
-	*/
+    */
     this.name = '';
 
-	/**
-	* @property {number} width - The width of the BitmapData in pixels.
+    /**
+    * @property {number} width - The width of the BitmapData in pixels.
     */
-	this.width = width;
-	
-	/**
-	* @property {number} height - The height of the BitmapData in pixels.
+    this.width = width;
+    
+    /**
+    * @property {number} height - The height of the BitmapData in pixels.
     */
-	this.height = height;
+    this.height = height;
 
-	/**
-	* @property {HTMLCanvasElement} canvas - The canvas to which this BitmapData draws.
-	* @default
-	*/
+    /**
+    * @property {HTMLCanvasElement} canvas - The canvas to which this BitmapData draws.
+    * @default
+    */
     this.canvas = Phaser.Canvas.create(width, height);
     
-	/**
-	* @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
-	* @default
-	*/
+    /**
+    * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
+    * @default
+    */
     this.context = this.canvas.getContext('2d');
 
-	/**
-	* @property {array} imageData - The canvas image data.
-	*/
-	this.imageData = this.context.getImageData(0, 0, width, height);
+    /**
+    * @property {array} imageData - The canvas image data.
+    */
+    this.imageData = this.context.getImageData(0, 0, width, height);
 
-	/**
-	* @property {UInt8Clamped} pixels - A reference to the context imageData buffer.
-	*/
-	this.pixels = this.imageData.data.buffer;
+    /**
+    * @property {UInt8Clamped} pixels - A reference to the context imageData buffer.
+    */
+    if (this.imageData.data.buffer)
+    {
+        this.pixels = this.imageData.data.buffer;
+    }
+    else
+    {
+        this.pixels = this.imageData.data;
+    }
 
-	/**
-	* @property {PIXI.BaseTexture} baseTexture - The PIXI.BaseTexture.
-	* @default
-	*/
+    /**
+    * @property {PIXI.BaseTexture} baseTexture - The PIXI.BaseTexture.
+    * @default
+    */
     this.baseTexture = new PIXI.BaseTexture(this.canvas);
     
-	/**
-	* @property {PIXI.Texture} texture - The PIXI.Texture.
-	* @default
-	*/
+    /**
+    * @property {PIXI.Texture} texture - The PIXI.Texture.
+    * @default
+    */
     this.texture = new PIXI.Texture(this.baseTexture);
     
-	/**
-	* @property {Phaser.Frame} textureFrame - The Frame this BitmapData uses for rendering.
-	* @default
-	*/
+    /**
+    * @property {Phaser.Frame} textureFrame - The Frame this BitmapData uses for rendering.
+    * @default
+    */
     this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'bitmapData', game.rnd.uuid());
 
     /**
-	* @property {number} type - The const type of this object.
+    * @property {number} type - The const type of this object.
     * @default
-	*/
+    */
     this.type = Phaser.BITMAPDATA;
 
-	this._dirty = false;
+    this._dirty = false;
 
 }
 
 Phaser.BitmapData.prototype = {
 
-	/**
-	* Updates the given Sprite so that it uses this BitmapData as its texture.
-	* @method Phaser.BitmapData.add
-	* @param {Phaser.Sprite} sprite - The sprite to apply this texture to.
-	*/
-	add: function (sprite) {
+    /**
+    * Updates the given Sprite so that it uses this BitmapData as its texture.
+    * @method Phaser.BitmapData.add
+    * @param {Phaser.Sprite} sprite - The sprite to apply this texture to.
+    */
+    add: function (sprite) {
 
-		sprite.loadTexture(this);
-
-	},
-
-	/**
-	* Given an array of Sprites it will update each of them so that their Textures reference this BitmapData.
-	* @method Phaser.BitmapData.addTo
-	* @param {Phaser.Sprite[]} sprites - An array of Sprites to apply this texture to.
-	*/
-	addTo: function (sprites) {
-
-		for (var i = 0; i < objects.length; i++)
-		{
-		    if (objects[i].texture)
-		    {
-		    }
-		}
-
-	},
-
-	/**
-	* Clears the BitmapData.
-	* @method Phaser.BitmapData.clear
-	*/
-	clear: function () {
-
-	    this.context.clearRect(0, 0, this.width, this.height);
-	
-		this._dirty = true;
-
-	},
-
-	refreshBuffer: function () {
-
-		this.imageData = this.context.getImageData(0, 0, this.width, this.height);
-		this.pixels = new Int32Array(this.imageData.data.buffer);
-
-		// this.data8 = new Uint8ClampedArray(this.imageData.buffer);
-		// this.data32 = new Uint32Array(this.imageData.buffer);
-
-	},
-
-	/**
-	* Sets the color of the given pixel to the specified red, green, blue and alpha values.
-	* @method Phaser.BitmapData.setPixel32
-	* @param {number} x - The X coordinate of the pixel to be set.
-	* @param {number} y - The Y coordinate of the pixel to be set.
-	* @param {number} red - The red color value, between 0 and 0xFF (255).
-	* @param {number} green - The green color value, between 0 and 0xFF (255).
-	* @param {number} blue - The blue color value, between 0 and 0xFF (255).
-	* @param {number} alpha - The alpha color value, between 0 and 0xFF (255).
-	*/
-    setPixel32: function (x, y, red, green, blue, alpha) {
-
-    	if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
-    	{
-			this.pixels[y * this.width + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
-
-    		/*
-    		if (this.isLittleEndian)
-    		{
-				this.data32[y * this.width + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
-    		}
-    		else
-    		{
-				this.data32[y * this.width + x] = (red << 24) | (green << 16) | (blue << 8) | alpha;
-    		}
-    		*/
-
-    		// this.imageData.data.set(this.data8);
-
-    		this.context.putImageData(this.imageData, 0, 0);
-
-			this._dirty = true;
-    	}
-
-    },
-
-	/**
-	* Sets the color of the given pixel to the specified red, green and blue values.
-	* @method Phaser.BitmapData.setPixel
-	* @param {number} x - The X coordinate of the pixel to be set.
-	* @param {number} y - The Y coordinate of the pixel to be set.
-	* @param {number} red - The red color value (between 0 and 255)
-	* @param {number} green - The green color value (between 0 and 255)
-	* @param {number} blue - The blue color value (between 0 and 255)
-	*/
-    setPixel: function (x, y, red, green, blue) {
-
-    	this.setPixel32(x, y, red, green, blue, 255);
-
-    },
-
-	/**
-	* Get a color of a specific pixel.
-	* @param {number} x - The X coordinate of the pixel to get.
-	* @param {number} y - The Y coordinate of the pixel to get.
-	* @return {number} A native color value integer (format: 0xRRGGBB)
-	*/
-    getPixel: function (x, y) {
-
-    	if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
-    	{
-			return this.data32[y * this.width + x];
-    	}
-
-    },
-
-	/**
-	* Get a color of a specific pixel (including alpha value).
-	* @param {number} x - The X coordinate of the pixel to get.
-	* @param {number} y - The Y coordinate of the pixel to get.
-	* @return {number} A native color value integer (format: 0xAARRGGBB)
-	*/
-    getPixel32: function (x, y) {
-
-    	if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
-    	{
-			return this.data32[y * this.width + x];
-    	}
+        sprite.loadTexture(this);
 
     },
 
     /**
-     * Get pixels in array in a specific Rectangle.
-     * @param rect {Rectangle} The specific Rectangle.
-     * @return {array} CanvasPixelArray.
-     */
-    getPixels: function (rect) {
+    * Given an array of Sprites it will update each of them so that their Textures reference this BitmapData.
+    * @method Phaser.BitmapData.addTo
+    * @param {Phaser.Sprite[]} sprites - An array of Sprites to apply this texture to.
+    */
+    addTo: function (sprites) {
 
-        // return this.context.getImageData(rect.x, rect.y, rect.width, rect.height);
+        for (var i = 0; i < sprites.length; i++)
+        {
+            if (sprites[i].texture)
+            {
+                sprites[i].loadTexture(this);
+            }
+        }
 
     },
 
-	/**
-	* Adds an arc to the path which is centered at (x, y) position with radius r starting at startAngle and ending at endAngle 
-	* going in the given direction by anticlockwise (defaulting to clockwise).
-	* @method Phaser.BitmapData.arc
-	* @param {number} x - The x axis of the coordinate for the arc's center
-	* @param {number} y - The y axis of the coordinate for the arc's center
-	* @param {number} radius - The arc's radius
-	* @param {number} startAngle - The starting point, measured from the x axis, from which it will be drawn, expressed in radians.
-	* @param {number} endAngle - The end arc's angle to which it will be drawn, expressed in radians.
-	* @param {boolean} [anticlockwise=true] - true draws the arc anticlockwise, otherwise in a clockwise direction.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	arc: function (x, y, radius, startAngle, endAngle, anticlockwise) {
-
-		if (typeof anticlockwise === 'undefined') { anticlockwise = false; }
-
-		this._dirty = true;
-		this.context.arc(x, y, radius, startAngle, endAngle, anticlockwise);
-		return this;
-
-	},
-
-	/**
-	* Adds an arc with the given control points and radius, connected to the previous point by a straight line.
-	* @method Phaser.BitmapData.arcTo
-	* @param {number} x1
-	* @param {number} y1
-	* @param {number} x2
-	* @param {number} y2
-	* @param {number} radius
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	arcTo: function (x1, y1, x2, y2, radius) {
-
-		this._dirty = true;
-		this.context.arcTo(x1, y1, x2, y2, radius);
-		return this;
-
-	},
-
-	/**
-	* Begins a fill with the specified color. This ends the current sub-path.
-	* @method Phaser.BitmapData.beginFill
-	* @param {string} color - A CSS compatible color value (ex. "red", "#FF0000", or "rgba(255,0,0,0.5)"). Setting to null will result in no fill.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	beginFill: function (color) {
-
-		this.fillStyle(color);
-
-		return this;
-
-	},
-
-	/**
-	* Begins a linear gradient fill defined by the line (x0, y0) to (x1, y1). This ends the current sub-path. For
-	* example, the following code defines a black to white vertical gradient ranging from 20px to 120px, and draws a square to display it:
-	*
-	*      ```myGraphics.beginLinearGradientFill(["#000","#FFF"], [0, 1], 0, 20, 0, 120).rect(20, 20, 120, 120);```
-	*
-	* @method Phaser.BitmapData.beginLinearGradientFill
-	* @param {Array} colors - An array of CSS compatible color values. For example, ["#F00","#00F"] would define a gradient drawing from red to blue.
-	* @param {Array} ratios - An array of gradient positions which correspond to the colors. For example, [0.1, 0.9] would draw the first color to 10% then interpolating to the second color at 90%.
-	* @param {number} x0 - The position of the first point defining the line that defines the gradient direction and size.
-	* @param {number} y0 - The position of the first point defining the line that defines the gradient direction and size.
-	* @param {number} x1 - The position of the second point defining the line that defines the gradient direction and size.
-	* @param {number} y1 - The position of the second point defining the line that defines the gradient direction and size.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	beginLinearGradientFill: function (colors, ratios, x0, y0, x1, y1) {
-
-		var gradient = this.createLinearGradient(x0, y0, x1, y1);
-
-		for (var i = 0, len = colors.length; i < len; i++)
-		{
-			gradient.addColorStop(ratios[i], colors[i]);
-		}
-
-		this.fillStyle(gradient);
-
-		return this;
-
-	},
-
-	/**
-	* Begins a linear gradient stroke defined by the line (x0, y0) to (x1, y1). This ends the current sub-path. For
-	* example, the following code defines a black to white vertical gradient ranging from 20px to 120px, and draws a
-	* square to display it:
-	*
-	*      ```myGraphics.setStrokeStyle(10).beginLinearGradientStroke(["#000","#FFF"], [0, 1], 0, 20, 0, 120).drawRect(20, 20, 120, 120);```
-	*
-	* @method Phaser.BitmapData.beginLinearGradientStroke
-	* @param {Array} colors - An array of CSS compatible color values. For example, ["#F00","#00F"] would define a gradient drawing from red to blue.
-	* @param {Array} ratios - An array of gradient positions which correspond to the colors. For example, [0.1, 0.9] would draw the first color to 10% then interpolating to the second color at 90%.
-	* @param {number} x0 - The position of the first point defining the line that defines the gradient direction and size.
-	* @param {number} y0 - The position of the first point defining the line that defines the gradient direction and size.
-	* @param {number} x1 - The position of the second point defining the line that defines the gradient direction and size.
-	* @param {number} y1 - The position of the second point defining the line that defines the gradient direction and size.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	beginLinearGradientStroke: function (colors, ratios, x0, y0, x1, y1) {
-
-		var gradient = this.createLinearGradient(x0, y0, x1, y1);
-
-		for (var i = 0, len = colors.length; i < len; i++)
-		{
-			gradient.addColorStop(ratios[i], colors[i]);
-		}
-
-		this.strokeStyle(gradient);
-
-		return this;
-
-	},
-
-	/**
-	* Begins a radial gradient stroke. This ends the current sub-path. For example, the following code defines a red to
-	* blue radial gradient centered at (100, 100), with a radius of 50, and draws a rectangle to display it:
-	*
-	*      myGraphics.setStrokeStyle(10)
-	*          .beginRadialGradientStroke(["#F00","#00F"], [0, 1], 100, 100, 0, 100, 100, 50)
-	*          .drawRect(50, 90, 150, 110);
-	*
-	* @method Phaser.BitmapData.beginRadialGradientStroke
-	* @param {Array} colors - An array of CSS compatible color values. For example, ["#F00","#00F"] would define a gradient drawing from red to blue.
-	* @param {Array} ratios - An array of gradient positions which correspond to the colors. For example, [0.1, 0.9] would draw the first color to 10% then interpolating to the second color at 90%.
-	* @param {number} x0 - Center position of the inner circle that defines the gradient.
-	* @param {number} y0 - Center position of the inner circle that defines the gradient.
-	* @param {number} r0 - Radius of the inner circle that defines the gradient.
-	* @param {number} x1 - Center position of the outer circle that defines the gradient.
-	* @param {number} y1 - Center position of the outer circle that defines the gradient.
-	* @param {number} r1 - Radius of the outer circle that defines the gradient.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	beginRadialGradientStroke: function (colors, ratios, x0, y0, r0, x1, y1, r1) {
-
-		var gradient = this.createRadialGradient(x0, y0, r0, x1, y1, r1);
-
-		for (var i = 0, len = colors.length; i < len; i++)
-		{
-			gradient.addColorStop(ratios[i], colors[i]);
-		}
-
-		this.strokeStyle(gradient);
-
-		return this;
-
-	},
-
-	/**
-	* Starts a new path by resetting the list of sub-paths. Call this method when you want to create a new path.
-	* @method Phaser.BitmapData.beginPath
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	beginPath: function () {
-
-		this.context.beginPath();
-		return this;
-
-	},
-
-	/**
-	* Begins a stroke with the specified color. This ends the current sub-path.
-	* @method Phaser.BitmapData.beginStroke
-	* @param {String} color A CSS compatible color value (ex. "#FF0000", "red", or "rgba(255,0,0,0.5)"). Setting to null will result in no stroke.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	beginStroke: function (color) {
-
-		this.strokeStyle(color);
-		return this;
-
-	},
-
-	/**
-	* Adds a bezier curve from the current context point to (x, y) using the control points (cp1x, cp1y) and (cp2x, cp2y).
-	* @method Phaser.BitmapData.bezierCurveTo
-	* @param {number} cp1x - The x axis of control point 1.
-	* @param {number} cp1y - The y axis of control point 1.
-	* @param {number} cp2x - The x axis of control point 2.
-	* @param {number} cp2y - The y axis of control point 2.
-	* @param {number} x - The x axis of the ending point.
-	* @param {number} y - The y axis of the ending point.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	bezierCurveTo: function (cp1x, cp1y, cp2x, cp2y, x, y) {
-
-		this._dirty = true;
-		this.context.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
-		return this;
-
-	},
-
-	/**
-	* Draws a circle with the specified radius at (x, y).
-	* @method Phaser.BitmapData.circle
-	* @param {number} x - x coordinate center point of circle.
-	* @param {number} y - y coordinate center point of circle.
-	* @param {number} radius - Radius of circle in radians.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	circle: function (x, y, radius) {
-
-		this.arc(x, y, radius, 0, Math.PI*2);
-		return this;
-
-	},
-
-	/**
-	* Sets all pixels in the rectangle defined by starting point (x, y) and size (width, height) to transparent black.
-	* @method Phaser.BitmapData.clearRect
-	* @param {number} x - The x axis of the coordinate for the rectangle starting point.
-	* @param {number} y - The y axis of the coordinate for the rectangle starting point.
-	* @param {number} width - The rectangles width.
-	* @param {number} height - The rectangles height.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	clearRect: function (x, y, width, height) {
-
-		this._dirty = true;
-		this.context.clearRect(x, y, width, height);
-		return this;
-
-	},
-
-	/**
-	* Creates a clipping path from the current sub-paths. Everything drawn after clip() is called appears inside the clipping path only.
-	* @method Phaser.BitmapData.clip
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	clip: function (x, y, width, height) {
-
-		this._dirty = true;
-		this.context.clip();
-		return this;
-
-	},
-
-	/**
-	* Tries to draw a straight line from the current point to the start. If the shape has already been closed or has only one point, this function does nothing.
-	* @method Phaser.BitmapData.closePath
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	closePath: function () {
-
-		this._dirty = true;
-		this.context.closePath();
-		return this;
-
-	},
-
-	/**
-	* Creates a linear gradient with defined by an imaginary line which implies the direction of the gradient.
-	* Once the gradient is created colors can be inserted using the addColorStop method.
-	* @method Phaser.BitmapData.createLinearGradient
-	* @param {number} x - The x axis of the coordinate for the gradients starting point.
-	* @param {number} y - The y axis of the coordinate for the gradients starting point.
-	* @param {number} width - The width of the gradient.
-	* @param {number} height - The height of the gradient.
-	* @return {CanvasGradient} The Linear Gradient.
-	*/
-	createLinearGradient: function (x, y, width, height) {
-
-		return this.context.createLinearGradient(x, y, width, height);
-
-	},
-
-	//	createPattern
-
-	/**
-	* Creates a radial gradient.
-	* @method Phaser.BitmapData.createRadialGradient
-	* @param {number} x0
-	* @param {number} y0
-	* @param {number} r0
-	* @param {number} x1
-	* @param {number} y1
-	* @param {number} r1
-	* @return {CanvasGradient} The Radial Gradient.
-	*/
-	createRadialGradient: function (x, y, width, height) {
-
-		return this.context.createRadialGradient(x0, y0, r0, x1, y1, r1);
-
-	},
-
-	//	drawImage
-	//	drawSystemFocusRing (?)
-
-	/**
-	* Draws an ellipse (oval) with a specified width (w) and height (h).
-	* @method Phaser.BitmapData.ellipse
-	* @param {number} x - x coordinate center point of ellipse.
-	* @param {number} y - y coordinate center point of ellipse.
-	* @param {number} w - height (horizontal diameter) of ellipse. The horizontal radius will be half of this number.
-	* @param {number} h - width (vertical diameter) of ellipse. The vertical radius will be half of this number.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	ellipse: function (x, y, w, h) {
-
-		var k = 0.5522848;
-		var ox = (w / 2) * k;
-		var oy = (h / 2) * k;
-		var xe = x + w;
-		var ye = y + h;
-		var xm = x + w / 2;
-		var ym = y + h / 2;
-			
-		this.moveTo(x, ym);
-		this.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
-		this.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
-		this.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
-		this.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
-
-		return this;
-
-	},
-
-	/**
-	* Fills the subpaths with the current fill style.
-	* @method Phaser.BitmapData.fill
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	fill: function () {
-
-		this._dirty = true;
-		this.context.fill();
-		return this;
-
-	},
-
-	/**
-	* Draws a filled rectangle at (x, y) position whose size is determined by width and height.
-	* @method Phaser.BitmapData.fillRect
-	* @param {number} x - The x axis of the coordinate for the rectangle starting point.
-	* @param {number} y - The y axis of the coordinate for the rectangle starting point.
-	* @param {number} width - The rectangles width.
-	* @param {number} height - The rectangles height.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	fillRect: function (x, y, width, height) {
-
-		this._dirty = true;
-		this.context.fillRect(x, y, width, height);
-		return this;
-
-	},
-
-	/**
-	* Sets the fill style.
-	* @method Phaser.BitmapData.fillStyle
-	* @param {string} color - The fill color value in CSS format: #RRGGBB or rgba(r,g,b,a)
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	fillStyle: function (color) {
-
-		this.context.fillStyle = color;
-		return this;
-
-	},
-
-	//	fillText
-
-	/**
-	* Sets the font.
-	* @method Phaser.BitmapData.font
-	* @param {DOMString} font - The font to be used for any text rendering. Default value 10px sans-serif.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	font: function (font) {
-
-		this.context.font = font;
-		return this;
-
-	},
-
-	/**
-	* Alpha value that is applied to shapes and images before they are composited onto the canvas. Default 1.0 (opaque).
-	* @method Phaser.BitmapData.globalAlpha
-	* @param {number} alpha - Alpha value that is applied to shapes and images before they are composited onto the canvas. Default 1.0 (opaque).
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	globalAlpha: function (alpha) {
-
-		this.context.globalAlpha = alpha;
-		return this;
-
-	},
-
-	/**
-	* With globalAlpha applied this sets how shapes and images are drawn onto the existing bitmap. Possible values: source-atop, source-in, source-out,
-	* source-over (default), destination-atop, destination-in, destination-out, destination-over, lighter, darker, copy and xor.
-	* @method Phaser.BitmapData.globalCompositeOperation
-	* @param {DOMString} operation - The composite operation to apply.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	globalCompositeOperation: function (operation) {
-
-		this.context.globalCompositeOperation = operation;
-		return this;
-
-	},
-
-	/**
-	* Type of endings on the end of lines. Possible values: butt (default), round, square.
-	* @method Phaser.BitmapData.lineCap
-	* @param {DOMString} style - Possible values: butt (default), round, square
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	lineCap: function (style) {
-
-		this.context.lineCap = style;
-		return this;
-
-	},
-
-	/**
-	* Specifies where to start a dasharray on a line.
-	* @method Phaser.BitmapData.lineDashOffset
-	* @param {number} offset - Specifies where to start a dasharray on a line.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	lineDashOffset: function (offset) {
-
-		this.context.lineDashOffset = offset;
-		return this;
-
-	},
-
-	/**
-	* Defines the type of corners where two lines meet. Possible values: round, bevel, miter (default)
-	* @method Phaser.BitmapData.lineJoin
-	* @param {DOMString} join - Possible values: round, bevel, miter (default)
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	lineJoin: function (join) {
-
-		this.context.lineJoin = join;
-		return this;
-
-	},
-
-	/**
-	* Width of lines. Default 1.0
-	* @method Phaser.BitmapData.lineWidth
-	* @param {number} width - Width of lines. Default 1.0
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	lineWidth: function (width) {
-
-		this.context.lineWidth = width;
-		return this;
-
-	},
-
-	/**
-	* Default 10.
-	* @method Phaser.BitmapData.miterLimit
-	* @param {number} limit - Default 10.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	miterLimit: function (limit) {
-
-		this.context.miterLimit = limit;
-		return this;
-
-	},
-
-	//	getImageData
-	//	getLineDash
-	//	isPointInPath
-	//	isPointInStroke
-
-	/**
-	* Connects the last point in the subpath to the x, y coordinates with a straight line.
-	* @method Phaser.BitmapData.lineTo
-	* @param {number} x - The x axis of the coordinate for the end of the line.
-	* @param {number} y - The y axis of the coordinate for the end of the line.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	lineTo: function (x, y) {
-
-		this._dirty = true;
-		this.context.lineTo(x, y);
-		return this;
-
-	},
-
-	//	measureText
-
-	/**
-	* Moves the starting point of a new subpath to the (x, y) coordinates.
-	* @method Phaser.BitmapData.moveTo
-	* @param {number} x - The x axis of the point.
-	* @param {number} y - The y axis of the point.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	moveTo: function (x, y) {
-
-		this.context.moveTo(x, y);
-		return this;
-
-	},
-
-	//	putImageData
-
-	/**
-	* Draws a quadratic curve from the current drawing point to (x, y) using the control point (cpx, cpy).
-	* @method Phaser.BitmapData.quadraticCurveTo
-	* @param {Number} cpx - The x axis of the control point.
-	* @param {Number} cpy - The y axis of the control point.
-	* @param {Number} x - The x axis of the ending point.
-	* @param {Number} y - The y axis of the ending point.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	quadraticCurveTo: function(cpx, cpy, x, y) {
-
-		this._dirty = true;
-		this.context.quadraticCurveTo(cpx, cpy, x, y);
-		return this;
-
-	},
-
-	/**
-	* Draws a rectangle at (x, y) position whose size is determined by width and height.
-	* @method Phaser.BitmapData.rect
-	* @param {number} x - The x axis of the coordinate for the rectangle starting point.
-	* @param {number} y - The y axis of the coordinate for the rectangle starting point.
-	* @param {number} width - The rectangles width.
-	* @param {number} height - The rectangles height.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	rect: function (x, y, width, height) {
-
-		this._dirty = true;
-		this.context.rect(x, y, width, height);
-		return this;
-
-	},
-	
-	/**
-	* Restores the drawing style state to the last element on the 'state stack' saved by save().
-	* @method Phaser.BitmapData.restore
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	restore: function () {
-
-		this._dirty = true;
-		this.context.restore();
-		return this;
-
-	},
-
-	/**
-	* Rotates the drawing context values by r radians.
-	* @method Phaser.BitmapData.rotate
-	* @param {number} angle - The angle of rotation given in radians.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	rotate: function (angle) {
-
-		this._dirty = true;
-		this.context.rotate(angle);
-		return this;
-
-	},
-
-	/**
-	* Sets the stroke style for the current sub-path. Like all drawing methods, this can be chained, so you can define
-	* the stroke style and color in a single line of code like so:
-	*
-	*      ```myGraphics.setStrokeStyle(8,"round").beginStroke("#F00");```
-	*
-	* @method Phaser.BitmapData.setStrokeStyle
-	* @param {number} thickness - The width of the stroke.
-	* @param {string|number} [caps=0] - Indicates the type of caps to use at the end of lines. One of butt, round, or square. Defaults to "butt". Also accepts the values 0 (butt), 1 (round), and 2 (square) for use with he tiny API.
-	* @param {string|number} [joints=0] Specifies the type of joints that should be used where two lines meet. One of bevel, round, or miter. Defaults to "miter". Also accepts the values 0 (miter), 1 (round), and 2 (bevel) for use with the tiny API.
-	* @param {number} [miterLimit=10] - If joints is set to "miter", then you can specify a miter limit ratio which controls at what point a mitered joint will be clipped.
-	* @param {boolean} [ignoreScale=false] - If true, the stroke will be drawn at the specified thickness regardless of active transformations.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	setStrokeStyle: function (thickness, caps, joints, miterLimit, ignoreScale) {
-
-		if (typeof thickness === 'undefined') { thickness = 1; }
-		if (typeof caps === 'undefined') { caps = 'butt'; }
-		if (typeof joints === 'undefined') { joints = 'miter'; }
-		if (typeof miterLimit === 'undefined') { miterLimit = 10; }
-
-		this.lineWidth(thickness);
-		this.lineCap(caps);
-		this.lineJoin(joints);
-		this.miterLimit(miterLimit);
-
-		return this;
-
-	},
-
-	/**
-	* Saves the current drawing style state using a stack so you can revert any change you make to it using restore().
-	* @method Phaser.BitmapData.save
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	save: function () {
-
-		this._dirty = true;
-		this.context.save();
-		return this;
-
-	},
-
-	/**
-	* Scales the current drawing context.
-	* @method Phaser.BitmapData.scale
-	* @param {number} x
-	* @param {number} y
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	scale: function (x, y) {
-
-		this._dirty = true;
-		this.context.scale(x, y);
-		return this;
-
-	},
-
-	/**
-	* 
-	* @method Phaser.BitmapData.scrollPathIntoView
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	scrollPathIntoView: function () {
-
-		this._dirty = true;
-		this.context.scrollPathIntoView();
-		return this;
-
-	},
-
-	//	setLineDash
-	//	setTransform
-
-	/**
-	* Strokes the subpaths with the current stroke style.
-	* @method Phaser.BitmapData.stroke
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	stroke: function () {
-
-		this._dirty = true;
-		this.context.stroke();
-		return this;
-
-	},
-
-	/**
-	* Paints a rectangle which has a starting point at (x, y) and has a w width and an h height onto the canvas, using the current stroke style.
-	* @method Phaser.BitmapData.strokeRect
-	* @param {number} x - The x axis for the starting point of the rectangle.
-	* @param {number} y - The y axis for the starting point of the rectangle.
-	* @param {number} width - The rectangles width.
-	* @param {number} height - The rectangles height.
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	strokeRect: function () {
-
-		this._dirty = true;
-		this.context.strokeRect(x, y, width, height);
-		return this;
-
-	},
-
-	/**
-	* Color or style to use for the lines around shapes. Default #000 (black).
-	* @method Phaser.BitmapData.strokeStyle
-	* @param {string} style - Color or style to use for the lines around shapes. Default #000 (black).
-	* @return {Phaser.BitmapData} The BitmapData instance this method was called on.
-	*/
-	strokeStyle: function (style) {
-
-		this.context.strokeStyle = style;
-		return this;
-
-	},
-
-	//	strokeText
-	//	transform
-	//	translate
-
-	/**
-	* If the game is running in WebGL this will push the texture up to the GPU if it's dirty.
-	* This is called automatically if the BitmapData is being used by a Sprite, otherwise you need to remember to call it in your render function.
-	* @method Phaser.BitmapData.render
-	*/
-	render: function () {
-
-		if (this._dirty)
-		{
-		    //  Only needed if running in WebGL, otherwise this array will never get cleared down
-		    if (this.game.renderType == Phaser.WEBGL)
-		    {
-		        PIXI.texturesToUpdate.push(this.baseTexture);
-		    }
-
-			this._dirty = false;
-		}
-
-	}
+    /**
+    * Clears the BitmapData.
+    * @method Phaser.BitmapData.clear
+    */
+    clear: function () {
+
+        this.context.clearRect(0, 0, this.width, this.height);
+    
+        this._dirty = true;
+
+    },
+
+    refreshBuffer: function () {
+
+        this.imageData = this.context.getImageData(0, 0, this.width, this.height);
+        this.pixels = new Int32Array(this.imageData.data.buffer);
+
+        // this.data8 = new Uint8ClampedArray(this.imageData.buffer);
+        // this.data32 = new Uint32Array(this.imageData.buffer);
+
+    },
+
+    /**
+    * Sets the color of the given pixel to the specified red, green, blue and alpha values.
+    * @method Phaser.BitmapData.setPixel32
+    * @param {number} x - The X coordinate of the pixel to be set.
+    * @param {number} y - The Y coordinate of the pixel to be set.
+    * @param {number} red - The red color value, between 0 and 0xFF (255).
+    * @param {number} green - The green color value, between 0 and 0xFF (255).
+    * @param {number} blue - The blue color value, between 0 and 0xFF (255).
+    * @param {number} alpha - The alpha color value, between 0 and 0xFF (255).
+    */
+    setPixel32: function (x, y, red, green, blue, alpha) {
+
+        if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
+        {
+            this.pixels[y * this.width + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
+
+            /*
+            if (this.isLittleEndian)
+            {
+                this.data32[y * this.width + x] = (alpha << 24) | (blue << 16) | (green << 8) | red;
+            }
+            else
+            {
+                this.data32[y * this.width + x] = (red << 24) | (green << 16) | (blue << 8) | alpha;
+            }
+           */
+
+            // this.imageData.data.set(this.data8);
+
+            this.context.putImageData(this.imageData, 0, 0);
+
+            this._dirty = true;
+        }
+
+    },
+
+    /**
+    * Sets the color of the given pixel to the specified red, green and blue values.
+    * @method Phaser.BitmapData.setPixel
+    * @param {number} x - The X coordinate of the pixel to be set.
+    * @param {number} y - The Y coordinate of the pixel to be set.
+    * @param {number} red - The red color value (between 0 and 255)
+    * @param {number} green - The green color value (between 0 and 255)
+    * @param {number} blue - The blue color value (between 0 and 255)
+    */
+    setPixel: function (x, y, red, green, blue) {
+
+        this.setPixel32(x, y, red, green, blue, 255);
+
+    },
+
+    /**
+    * Get a color of a specific pixel.
+    * @param {number} x - The X coordinate of the pixel to get.
+    * @param {number} y - The Y coordinate of the pixel to get.
+    * @return {number} A native color value integer (format: 0xRRGGBB)
+    */
+    getPixel: function (x, y) {
+
+        if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
+        {
+            return this.data32[y * this.width + x];
+        }
+
+    },
+
+    /**
+    * Get a color of a specific pixel (including alpha value).
+    * @param {number} x - The X coordinate of the pixel to get.
+    * @param {number} y - The Y coordinate of the pixel to get.
+    * @return {number} A native color value integer (format: 0xAARRGGBB)
+    */
+    getPixel32: function (x, y) {
+
+        if (x >= 0 && x <= this.width && y >= 0 && y <= this.height)
+        {
+            return this.data32[y * this.width + x];
+        }
+
+    },
+
+    /**
+    * Get pixels in array in a specific Rectangle.
+    * @param rect {Rectangle} The specific Rectangle.
+    * @return {array} CanvasPixelArray.
+    */
+    getPixels: function (rect) {
+
+        return this.context.getImageData(rect.x, rect.y, rect.width, rect.height);
+
+    },
+
+    /**
+    * Adds an arc to the path which is centered at (x, y) position with radius r starting at startAngle and ending at endAngle 
+    * going in the given direction by anticlockwise (defaulting to clockwise).
+    * @method Phaser.BitmapData.arc
+    * @param {number} x - The x axis of the coordinate for the arc's center
+    * @param {number} y - The y axis of the coordinate for the arc's center
+    * @param {number} radius - The arc's radius
+    * @param {number} startAngle - The starting point, measured from the x axis, from which it will be drawn, expressed in radians.
+    * @param {number} endAngle - The end arc's angle to which it will be drawn, expressed in radians.
+    * @param {boolean} [anticlockwise=true] - true draws the arc anticlockwise, otherwise in a clockwise direction.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    arc: function (x, y, radius, startAngle, endAngle, anticlockwise) {
+
+        if (typeof anticlockwise === 'undefined') { anticlockwise = false; }
+
+        this._dirty = true;
+        this.context.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+        return this;
+
+    },
+
+    /**
+    * Adds an arc with the given control points and radius, connected to the previous point by a straight line.
+    * @method Phaser.BitmapData.arcTo
+    * @param {number} x1
+    * @param {number} y1
+    * @param {number} x2
+    * @param {number} y2
+    * @param {number} radius
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    arcTo: function (x1, y1, x2, y2, radius) {
+
+        this._dirty = true;
+        this.context.arcTo(x1, y1, x2, y2, radius);
+        return this;
+
+    },
+
+    /**
+    * Begins a fill with the specified color. This ends the current sub-path.
+    * @method Phaser.BitmapData.beginFill
+    * @param {string} color - A CSS compatible color value (ex. "red", "#FF0000", or "rgba(255,0,0,0.5)"). Setting to null will result in no fill.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    beginFill: function (color) {
+
+        this.fillStyle(color);
+
+        return this;
+
+    },
+
+    /**
+    * Begins a linear gradient fill defined by the line (x0, y0) to (x1, y1). This ends the current sub-path. For
+    * example, the following code defines a black to white vertical gradient ranging from 20px to 120px, and draws a square to display it:
+    *
+    *      ```myGraphics.beginLinearGradientFill(["#000","#FFF"], [0, 1], 0, 20, 0, 120).rect(20, 20, 120, 120);```
+    *
+    * @method Phaser.BitmapData.beginLinearGradientFill
+    * @param {Array} colors - An array of CSS compatible color values. For example, ["#F00","#00F"] would define a gradient drawing from red to blue.
+    * @param {Array} ratios - An array of gradient positions which correspond to the colors. For example, [0.1, 0.9] would draw the first color to 10% then interpolating to the second color at 90%.
+    * @param {number} x0 - The position of the first point defining the line that defines the gradient direction and size.
+    * @param {number} y0 - The position of the first point defining the line that defines the gradient direction and size.
+    * @param {number} x1 - The position of the second point defining the line that defines the gradient direction and size.
+    * @param {number} y1 - The position of the second point defining the line that defines the gradient direction and size.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    beginLinearGradientFill: function (colors, ratios, x0, y0, x1, y1) {
+
+        var gradient = this.createLinearGradient(x0, y0, x1, y1);
+
+        for (var i = 0, len = colors.length; i < len; i++)
+        {
+            gradient.addColorStop(ratios[i], colors[i]);
+        }
+
+        this.fillStyle(gradient);
+
+        return this;
+
+    },
+
+    /**
+    * Begins a linear gradient stroke defined by the line (x0, y0) to (x1, y1). This ends the current sub-path. For
+    * example, the following code defines a black to white vertical gradient ranging from 20px to 120px, and draws a
+    * square to display it:
+    *
+    *      ```myGraphics.setStrokeStyle(10).beginLinearGradientStroke(["#000","#FFF"], [0, 1], 0, 20, 0, 120).drawRect(20, 20, 120, 120);```
+    *
+    * @method Phaser.BitmapData.beginLinearGradientStroke
+    * @param {Array} colors - An array of CSS compatible color values. For example, ["#F00","#00F"] would define a gradient drawing from red to blue.
+    * @param {Array} ratios - An array of gradient positions which correspond to the colors. For example, [0.1, 0.9] would draw the first color to 10% then interpolating to the second color at 90%.
+    * @param {number} x0 - The position of the first point defining the line that defines the gradient direction and size.
+    * @param {number} y0 - The position of the first point defining the line that defines the gradient direction and size.
+    * @param {number} x1 - The position of the second point defining the line that defines the gradient direction and size.
+    * @param {number} y1 - The position of the second point defining the line that defines the gradient direction and size.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    beginLinearGradientStroke: function (colors, ratios, x0, y0, x1, y1) {
+
+        var gradient = this.createLinearGradient(x0, y0, x1, y1);
+
+        for (var i = 0, len = colors.length; i < len; i++)
+        {
+            gradient.addColorStop(ratios[i], colors[i]);
+        }
+
+        this.strokeStyle(gradient);
+
+        return this;
+
+    },
+
+    /**
+    * Begins a radial gradient stroke. This ends the current sub-path. For example, the following code defines a red to
+    * blue radial gradient centered at (100, 100), with a radius of 50, and draws a rectangle to display it:
+    *
+    *      myGraphics.setStrokeStyle(10)
+    *          .beginRadialGradientStroke(["#F00","#00F"], [0, 1], 100, 100, 0, 100, 100, 50)
+    *          .drawRect(50, 90, 150, 110);
+    *
+    * @method Phaser.BitmapData.beginRadialGradientStroke
+    * @param {Array} colors - An array of CSS compatible color values. For example, ["#F00","#00F"] would define a gradient drawing from red to blue.
+    * @param {Array} ratios - An array of gradient positions which correspond to the colors. For example, [0.1, 0.9] would draw the first color to 10% then interpolating to the second color at 90%.
+    * @param {number} x0 - Center position of the inner circle that defines the gradient.
+    * @param {number} y0 - Center position of the inner circle that defines the gradient.
+    * @param {number} r0 - Radius of the inner circle that defines the gradient.
+    * @param {number} x1 - Center position of the outer circle that defines the gradient.
+    * @param {number} y1 - Center position of the outer circle that defines the gradient.
+    * @param {number} r1 - Radius of the outer circle that defines the gradient.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    beginRadialGradientStroke: function (colors, ratios, x0, y0, r0, x1, y1, r1) {
+
+        var gradient = this.createRadialGradient(x0, y0, r0, x1, y1, r1);
+
+        for (var i = 0, len = colors.length; i < len; i++)
+        {
+            gradient.addColorStop(ratios[i], colors[i]);
+        }
+
+        this.strokeStyle(gradient);
+
+        return this;
+
+    },
+
+    /**
+    * Starts a new path by resetting the list of sub-paths. Call this method when you want to create a new path.
+    * @method Phaser.BitmapData.beginPath
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    beginPath: function () {
+
+        this.context.beginPath();
+        return this;
+
+    },
+
+    /**
+    * Begins a stroke with the specified color. This ends the current sub-path.
+    * @method Phaser.BitmapData.beginStroke
+    * @param {String} color A CSS compatible color value (ex. "#FF0000", "red", or "rgba(255,0,0,0.5)"). Setting to null will result in no stroke.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    beginStroke: function (color) {
+
+        this.strokeStyle(color);
+        return this;
+
+    },
+
+    /**
+    * Adds a bezier curve from the current context point to (x, y) using the control points (cp1x, cp1y) and (cp2x, cp2y).
+    * @method Phaser.BitmapData.bezierCurveTo
+    * @param {number} cp1x - The x axis of control point 1.
+    * @param {number} cp1y - The y axis of control point 1.
+    * @param {number} cp2x - The x axis of control point 2.
+    * @param {number} cp2y - The y axis of control point 2.
+    * @param {number} x - The x axis of the ending point.
+    * @param {number} y - The y axis of the ending point.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    bezierCurveTo: function (cp1x, cp1y, cp2x, cp2y, x, y) {
+
+        this._dirty = true;
+        this.context.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+        return this;
+
+    },
+
+    /**
+    * Draws a circle with the specified radius at (x, y).
+    * @method Phaser.BitmapData.circle
+    * @param {number} x - x coordinate center point of circle.
+    * @param {number} y - y coordinate center point of circle.
+    * @param {number} radius - Radius of circle in radians.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    circle: function (x, y, radius) {
+
+        this.arc(x, y, radius, 0, Math.PI*2);
+        return this;
+
+    },
+
+    /**
+    * Sets all pixels in the rectangle defined by starting point (x, y) and size (width, height) to transparent black.
+    * @method Phaser.BitmapData.clearRect
+    * @param {number} x - The x axis of the coordinate for the rectangle starting point.
+    * @param {number} y - The y axis of the coordinate for the rectangle starting point.
+    * @param {number} width - The rectangles width.
+    * @param {number} height - The rectangles height.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    clearRect: function (x, y, width, height) {
+
+        this._dirty = true;
+        this.context.clearRect(x, y, width, height);
+        return this;
+
+    },
+
+    /**
+    * Creates a clipping path from the current sub-paths. Everything drawn after clip() is called appears inside the clipping path only.
+    * @method Phaser.BitmapData.clip
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    clip: function () {
+
+        this._dirty = true;
+        this.context.clip();
+        return this;
+
+    },
+
+    /**
+    * Tries to draw a straight line from the current point to the start. If the shape has already been closed or has only one point, this function does nothing.
+    * @method Phaser.BitmapData.closePath
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    closePath: function () {
+
+        this._dirty = true;
+        this.context.closePath();
+        return this;
+
+    },
+
+    /**
+    * Creates a linear gradient with defined by an imaginary line which implies the direction of the gradient.
+    * Once the gradient is created colors can be inserted using the addColorStop method.
+    * @method Phaser.BitmapData.createLinearGradient
+    * @param {number} x - The x axis of the coordinate for the gradients starting point.
+    * @param {number} y - The y axis of the coordinate for the gradients starting point.
+    * @param {number} width - The width of the gradient.
+    * @param {number} height - The height of the gradient.
+    * @return {CanvasGradient} The Linear Gradient.
+    */
+    createLinearGradient: function (x, y, width, height) {
+
+        return this.context.createLinearGradient(x, y, width, height);
+
+    },
+
+    //  createPattern
+
+    /**
+    * Creates a radial gradient.
+    * @method Phaser.BitmapData.createRadialGradient
+    * @param {number} x0
+    * @param {number} y0
+    * @param {number} r0
+    * @param {number} x1
+    * @param {number} y1
+    * @param {number} r1
+    * @return {CanvasGradient} The Radial Gradient.
+    */
+    createRadialGradient: function (x0, y0, r0, x1, y1, r1) {
+
+        return this.context.createRadialGradient(x0, y0, r0, x1, y1, r1);
+
+    },
+
+    //  drawImage
+    //  drawSystemFocusRing (?)
+
+    /**
+    * Draws an ellipse (oval) with a specified width (w) and height (h).
+    * @method Phaser.BitmapData.ellipse
+    * @param {number} x - x coordinate center point of ellipse.
+    * @param {number} y - y coordinate center point of ellipse.
+    * @param {number} w - height (horizontal diameter) of ellipse. The horizontal radius will be half of this number.
+    * @param {number} h - width (vertical diameter) of ellipse. The vertical radius will be half of this number.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    ellipse: function (x, y, w, h) {
+
+        var k = 0.5522848;
+        var ox = (w / 2) * k;
+        var oy = (h / 2) * k;
+        var xe = x + w;
+        var ye = y + h;
+        var xm = x + w / 2;
+        var ym = y + h / 2;
+            
+        this.moveTo(x, ym);
+        this.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+        this.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+        this.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+        this.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+
+        return this;
+
+    },
+
+    /**
+    * Fills the subpaths with the current fill style.
+    * @method Phaser.BitmapData.fill
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    fill: function () {
+
+        this._dirty = true;
+        this.context.fill();
+        return this;
+
+    },
+
+    /**
+    * Draws a filled rectangle at (x, y) position whose size is determined by width and height.
+    * @method Phaser.BitmapData.fillRect
+    * @param {number} x - The x axis of the coordinate for the rectangle starting point.
+    * @param {number} y - The y axis of the coordinate for the rectangle starting point.
+    * @param {number} width - The rectangles width.
+    * @param {number} height - The rectangles height.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    fillRect: function (x, y, width, height) {
+
+        this._dirty = true;
+        this.context.fillRect(x, y, width, height);
+        return this;
+
+    },
+
+    /**
+    * Sets the fill style.
+    * @method Phaser.BitmapData.fillStyle
+    * @param {string} color - The fill color value in CSS format: #RRGGBB or rgba(r,g,b,a)
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    fillStyle: function (color) {
+
+        this.context.fillStyle = color;
+        return this;
+
+    },
+
+    //  fillText
+
+    /**
+    * Sets the font.
+    * @method Phaser.BitmapData.font
+    * @param {DOMString} font - The font to be used for any text rendering. Default value 10px sans-serif.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    font: function (font) {
+
+        this.context.font = font;
+        return this;
+
+    },
+
+    /**
+    * Alpha value that is applied to shapes and images before they are composited onto the canvas. Default 1.0 (opaque).
+    * @method Phaser.BitmapData.globalAlpha
+    * @param {number} alpha - Alpha value that is applied to shapes and images before they are composited onto the canvas. Default 1.0 (opaque).
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    globalAlpha: function (alpha) {
+
+        this.context.globalAlpha = alpha;
+        return this;
+
+    },
+
+    /**
+    * With globalAlpha applied this sets how shapes and images are drawn onto the existing bitmap. Possible values: source-atop, source-in, source-out,
+    * source-over (default), destination-atop, destination-in, destination-out, destination-over, lighter, darker, copy and xor.
+    * @method Phaser.BitmapData.globalCompositeOperation
+    * @param {DOMString} operation - The composite operation to apply.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    globalCompositeOperation: function (operation) {
+
+        this.context.globalCompositeOperation = operation;
+        return this;
+
+    },
+
+    /**
+    * Type of endings on the end of lines. Possible values: butt (default), round, square.
+    * @method Phaser.BitmapData.lineCap
+    * @param {DOMString} style - Possible values: butt (default), round, square
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    lineCap: function (style) {
+
+        this.context.lineCap = style;
+        return this;
+
+    },
+
+    /**
+    * Specifies where to start a dasharray on a line.
+    * @method Phaser.BitmapData.lineDashOffset
+    * @param {number} offset - Specifies where to start a dasharray on a line.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    lineDashOffset: function (offset) {
+
+        this.context.lineDashOffset = offset;
+        return this;
+
+    },
+
+    /**
+    * Defines the type of corners where two lines meet. Possible values: round, bevel, miter (default)
+    * @method Phaser.BitmapData.lineJoin
+    * @param {DOMString} join - Possible values: round, bevel, miter (default)
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    lineJoin: function (join) {
+
+        this.context.lineJoin = join;
+        return this;
+
+    },
+
+    /**
+    * Width of lines. Default 1.0
+    * @method Phaser.BitmapData.lineWidth
+    * @param {number} width - Width of lines. Default 1.0
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    lineWidth: function (width) {
+
+        this.context.lineWidth = width;
+        return this;
+
+    },
+
+    /**
+    * Default 10.
+    * @method Phaser.BitmapData.miterLimit
+    * @param {number} limit - Default 10.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    miterLimit: function (limit) {
+
+        this.context.miterLimit = limit;
+        return this;
+
+    },
+
+    //  getImageData
+    //  getLineDash
+    //  isPointInPath
+    //  isPointInStroke
+
+    /**
+    * Connects the last point in the subpath to the x, y coordinates with a straight line.
+    * @method Phaser.BitmapData.lineTo
+    * @param {number} x - The x axis of the coordinate for the end of the line.
+    * @param {number} y - The y axis of the coordinate for the end of the line.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    lineTo: function (x, y) {
+
+        this._dirty = true;
+        this.context.lineTo(x, y);
+        return this;
+
+    },
+
+    //  measureText
+
+    /**
+    * Moves the starting point of a new subpath to the (x, y) coordinates.
+    * @method Phaser.BitmapData.moveTo
+    * @param {number} x - The x axis of the point.
+    * @param {number} y - The y axis of the point.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    moveTo: function (x, y) {
+
+        this.context.moveTo(x, y);
+        return this;
+
+    },
+
+    //  putImageData
+
+    /**
+    * Draws a quadratic curve from the current drawing point to (x, y) using the control point (cpx, cpy).
+    * @method Phaser.BitmapData.quadraticCurveTo
+    * @param {Number} cpx - The x axis of the control point.
+    * @param {Number} cpy - The y axis of the control point.
+    * @param {Number} x - The x axis of the ending point.
+    * @param {Number} y - The y axis of the ending point.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    quadraticCurveTo: function(cpx, cpy, x, y) {
+
+        this._dirty = true;
+        this.context.quadraticCurveTo(cpx, cpy, x, y);
+        return this;
+
+    },
+
+    /**
+    * Draws a rectangle at (x, y) position whose size is determined by width and height.
+    * @method Phaser.BitmapData.rect
+    * @param {number} x - The x axis of the coordinate for the rectangle starting point.
+    * @param {number} y - The y axis of the coordinate for the rectangle starting point.
+    * @param {number} width - The rectangles width.
+    * @param {number} height - The rectangles height.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    rect: function (x, y, width, height) {
+
+        this._dirty = true;
+        this.context.rect(x, y, width, height);
+        return this;
+
+    },
+    
+    /**
+    * Restores the drawing style state to the last element on the 'state stack' saved by save().
+    * @method Phaser.BitmapData.restore
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    restore: function () {
+
+        this._dirty = true;
+        this.context.restore();
+        return this;
+
+    },
+
+    /**
+    * Rotates the drawing context values by r radians.
+    * @method Phaser.BitmapData.rotate
+    * @param {number} angle - The angle of rotation given in radians.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    rotate: function (angle) {
+
+        this._dirty = true;
+        this.context.rotate(angle);
+        return this;
+
+    },
+
+    /**
+    * Sets the stroke style for the current sub-path. Like all drawing methods, this can be chained, so you can define
+    * the stroke style and color in a single line of code like so:
+    *
+    *      ```myGraphics.setStrokeStyle(8,"round").beginStroke("#F00");```
+    *
+    * @method Phaser.BitmapData.setStrokeStyle
+    * @param {number} thickness - The width of the stroke.
+    * @param {string|number} [caps=0] - Indicates the type of caps to use at the end of lines. One of butt, round, or square. Defaults to "butt". Also accepts the values 0 (butt), 1 (round), and 2 (square) for use with he tiny API.
+    * @param {string|number} [joints=0] Specifies the type of joints that should be used where two lines meet. One of bevel, round, or miter. Defaults to "miter". Also accepts the values 0 (miter), 1 (round), and 2 (bevel) for use with the tiny API.
+    * @param {number} [miterLimit=10] - If joints is set to "miter", then you can specify a miter limit ratio which controls at what point a mitered joint will be clipped.
+    * @param {boolean} [ignoreScale=false] - If true, the stroke will be drawn at the specified thickness regardless of active transformations.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    setStrokeStyle: function (thickness, caps, joints, miterLimit, ignoreScale) {
+
+        if (typeof thickness === 'undefined') { thickness = 1; }
+        if (typeof caps === 'undefined') { caps = 'butt'; }
+        if (typeof joints === 'undefined') { joints = 'miter'; }
+        if (typeof miterLimit === 'undefined') { miterLimit = 10; }
+
+        //  TODO
+        ignoreScale = false;
+
+        this.lineWidth(thickness);
+        this.lineCap(caps);
+        this.lineJoin(joints);
+        this.miterLimit(miterLimit);
+
+        return this;
+
+    },
+
+    /**
+    * Saves the current drawing style state using a stack so you can revert any change you make to it using restore().
+    * @method Phaser.BitmapData.save
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    save: function () {
+
+        this._dirty = true;
+        this.context.save();
+        return this;
+
+    },
+
+    /**
+    * Scales the current drawing context.
+    * @method Phaser.BitmapData.scale
+    * @param {number} x
+    * @param {number} y
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    scale: function (x, y) {
+
+        this._dirty = true;
+        this.context.scale(x, y);
+        return this;
+
+    },
+
+    /**
+    * 
+    * @method Phaser.BitmapData.scrollPathIntoView
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    scrollPathIntoView: function () {
+
+        this._dirty = true;
+        this.context.scrollPathIntoView();
+        return this;
+
+    },
+
+    //  setLineDash
+    //  setTransform
+
+    /**
+    * Strokes the subpaths with the current stroke style.
+    * @method Phaser.BitmapData.stroke
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    stroke: function () {
+
+        this._dirty = true;
+        this.context.stroke();
+        return this;
+
+    },
+
+    /**
+    * Paints a rectangle which has a starting point at (x, y) and has a w width and an h height onto the canvas, using the current stroke style.
+    * @method Phaser.BitmapData.strokeRect
+    * @param {number} x - The x axis for the starting point of the rectangle.
+    * @param {number} y - The y axis for the starting point of the rectangle.
+    * @param {number} width - The rectangles width.
+    * @param {number} height - The rectangles height.
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    strokeRect: function (x, y, width, height) {
+
+        this._dirty = true;
+        this.context.strokeRect(x, y, width, height);
+        return this;
+
+    },
+
+    /**
+    * Color or style to use for the lines around shapes. Default #000 (black).
+    * @method Phaser.BitmapData.strokeStyle
+    * @param {string} style - Color or style to use for the lines around shapes. Default #000 (black).
+    * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
+    */
+    strokeStyle: function (style) {
+
+        this.context.strokeStyle = style;
+        return this;
+
+    },
+
+    //  strokeText
+    //  transform
+    //  translate
+
+    /**
+    * If the game is running in WebGL this will push the texture up to the GPU if it's dirty.
+    * This is called automatically if the BitmapData is being used by a Sprite, otherwise you need to remember to call it in your render function.
+    * @method Phaser.BitmapData.render
+    */
+    render: function () {
+
+        if (this._dirty)
+        {
+            //  Only needed if running in WebGL, otherwise this array will never get cleared down
+            if (this.game.renderType == Phaser.WEBGL)
+            {
+                PIXI.texturesToUpdate.push(this.baseTexture);
+            }
+
+            this._dirty = false;
+        }
+
+    }
 
 }
 
-//	EaselJS Tiny API emulation
+//  EaselJS Tiny API emulation
 
 /**
 * Shortcut to moveTo.
@@ -19226,13 +19601,13 @@ Phaser.BitmapData.prototype.at = Phaser.BitmapData.prototype.arcTo;
 * @method Phaser.BitmapData.prototype.bt
 */
 Phaser.BitmapData.prototype.bt = Phaser.BitmapData.prototype.bezierCurveTo;
-	
+    
 /**
 * Shortcut to quadraticCurveTo.
 * @method Phaser.BitmapData.prototype.qt
 */
 Phaser.BitmapData.prototype.qt = Phaser.BitmapData.prototype.quadraticCurveTo;
-	
+    
 /**
 * Shortcut to arc.
 * @method Phaser.BitmapData.prototype.a
@@ -19244,7 +19619,7 @@ Phaser.BitmapData.prototype.a = Phaser.BitmapData.prototype.arc;
 * @method Phaser.BitmapData.prototype.r
 */
 Phaser.BitmapData.prototype.r = Phaser.BitmapData.prototype.rect;
-	
+    
 /**
 * Shortcut to closePath.
 * @method Phaser.BitmapData.prototype.cp
@@ -19256,7 +19631,7 @@ Phaser.BitmapData.prototype.cp = Phaser.BitmapData.prototype.closePath;
 * @method Phaser.BitmapData.prototype.c
 */
 Phaser.BitmapData.prototype.c = Phaser.BitmapData.prototype.clear;
-	
+    
 /**
 * Shortcut to beginFill.
 * @method Phaser.BitmapData.prototype.f
@@ -19268,19 +19643,19 @@ Phaser.BitmapData.prototype.f = Phaser.BitmapData.prototype.beginFill;
 * @method Phaser.BitmapData.prototype.lf
 */
 Phaser.BitmapData.prototype.lf = Phaser.BitmapData.prototype.beginLinearGradientFill;
-	
+    
 /**
 * Shortcut to beginRadialGradientFill.
 * @method Phaser.BitmapData.prototype.rf
 */
 Phaser.BitmapData.prototype.rf = Phaser.BitmapData.prototype.beginRadialGradientFill;
-	
+    
 /**
 * Shortcut to beginBitmapFill.
 * @method Phaser.BitmapData.prototype.bf
 */
 //Phaser.BitmapData.prototype.bf = Phaser.BitmapData.prototype.beginBitmapFill;
-	
+    
 /**
 * Shortcut to endFill.
 * @method Phaser.BitmapData.prototype.ef
@@ -19292,13 +19667,13 @@ Phaser.BitmapData.prototype.ef = Phaser.BitmapData.prototype.endFill;
 * @method Phaser.BitmapData.prototype.ss
 */
 Phaser.BitmapData.prototype.ss = Phaser.BitmapData.prototype.setStrokeStyle;
-	
+    
 /**
 * Shortcut to beginStroke.
 * @method Phaser.BitmapData.prototype.s
 */
 Phaser.BitmapData.prototype.s = Phaser.BitmapData.prototype.beginStroke;
-	
+    
 /**
 * Shortcut to beginLinearGradientStroke.
 * @method Phaser.BitmapData.prototype.ls
@@ -19310,31 +19685,31 @@ Phaser.BitmapData.prototype.ls = Phaser.BitmapData.prototype.beginLinearGradient
 * @method Phaser.BitmapData.prototype.rs
 */
 Phaser.BitmapData.prototype.rs = Phaser.BitmapData.prototype.beginRadialGradientStroke;
-	
+    
 /**
 * Shortcut to beginBitmapStroke.
 * @method Phaser.BitmapData.prototype.bs
 */
 // Phaser.BitmapData.prototype.bs = Phaser.BitmapData.prototype.beginBitmapStroke;
-	
+    
 /**
 * Shortcut to endStroke.
 * @method Phaser.BitmapData.prototype.es
 */
 // Phaser.BitmapData.prototype.es = Phaser.BitmapData.prototype.endStroke;
-	
+    
 /**
 * Shortcut to rect.
 * @method Phaser.BitmapData.prototype.dr
 */
 Phaser.BitmapData.prototype.dr = Phaser.BitmapData.prototype.rect;
-	
+    
 /**
 * Shortcut to drawRoundRect.
 * @method Phaser.BitmapData.prototype.rr
 */
 // Phaser.BitmapData.prototype.rr = Phaser.BitmapData.prototype.drawRoundRect;
-	
+    
 /**
 * Shortcut to drawRoundRectComplex.
 * @method Phaser.BitmapData.prototype.rc
@@ -19346,13 +19721,13 @@ Phaser.BitmapData.prototype.dr = Phaser.BitmapData.prototype.rect;
 * @method Phaser.BitmapData.prototype.dc
 */
 Phaser.BitmapData.prototype.dc = Phaser.BitmapData.prototype.circle;
-	
+    
 /**
 * Shortcut to drawEllipse.
 * @method Phaser.BitmapData.prototype.de
 */
 Phaser.BitmapData.prototype.de = Phaser.BitmapData.prototype.ellipse;
-	
+    
 /**
 * Shortcut to drawPolyStar.
 * @method Phaser.BitmapData.prototype.dp
@@ -19387,55 +19762,55 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     frame = frame || null;
     
     /**
-	* @property {Phaser.Game} game - A reference to the currently running Game.
-	*/
-	this.game = game;
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
+    this.game = game;
  
-	/**
-	* @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
-	* @default
-	*/
+    /**
+    * @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
+    * @default
+    */
     this.exists = true;
 
-	/**
+    /**
     * @property {boolean} alive - This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering.
-   	* @default
-   	*/
+    * @default
+    */
     this.alive = true;
 
-	/**
+    /**
     * @property {Phaser.Group} group - The parent Group of this Sprite. This is usually set after Sprite instantiation by the parent.
-   	*/
+    */
     this.group = null;
 
     /**
-     * @property {string} name - The user defined name given to this Sprite.
-     * @default
-     */
+    * @property {string} name - The user defined name given to this Sprite.
+    * @default
+    */
     this.name = '';
 
     /**
-	* @property {number} type - The const type of this object.
-    * @default
-	*/
+    * @property {number} type - The const type of this object.
+    * @readonly
+    */
     this.type = Phaser.SPRITE;
 
     /**
-	* @property {number} renderOrderID - Used by the Renderer and Input Manager to control picking order.
-	* @default
-	*/
+    * @property {number} renderOrderID - Used by the Renderer and Input Manager to control picking order.
+    * @default
+    */
     this.renderOrderID = -1;
 
     /**
     * If you would like the Sprite to have a lifespan once 'born' you can set this to a positive value. Handy for particles, bullets, etc.
-	* The lifespan is decremented by game.time.elapsed each update, once it reaches zero the kill() function is called.
-	* @property {number} lifespan - The lifespan of the Sprite (in ms) before it will be killed.
-	* @default
-	*/    
+    * The lifespan is decremented by game.time.elapsed each update, once it reaches zero the kill() function is called.
+    * @property {number} lifespan - The lifespan of the Sprite (in ms) before it will be killed.
+    * @default
+    */
     this.lifespan = 0;
 
     /**
-    * @property {Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
+    * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
     */
     this.events = new Phaser.Events(this);
 
@@ -19445,7 +19820,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.animations = new Phaser.AnimationManager(this);
 
     /**
-    * @property {InputHandler} input - The Input Handler Component.
+    * @property {Phaser.InputHandler} input - The Input Handler Component.
     */
     this.input = new Phaser.InputHandler(this);
 
@@ -19479,9 +19854,14 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     }
     else
     {
-        if (key == null || this.game.cache.checkImageKey(key) == false)
+        if (key === null || typeof key === 'undefined')
         {
             key = '__default';
+            this.key = key;
+        }
+        else if (typeof key === 'string' && this.game.cache.checkImageKey(key) === false)
+        {
+            key = '__missing';
             this.key = key;
         }
 
@@ -19521,22 +19901,22 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * Setting than anchor to 0.5,0.5 means the textures origin is centered
     * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right
     *
-    * @property {Phaser.Point} anchor - The anchor around with Sprite rotation and scaling takes place.
+    * @property {Phaser.Point} anchor - The anchor around which rotation and scaling takes place.
     */
     this.anchor = new Phaser.Point();
 
     /**
-    * @property {number} x - The x coordinate (in world space) of this Sprite.
+    * @property {number} x - The x coordinate in world space of this Sprite.
     */
     this.x = x;
     
     /**
-    * @property {number} y - The y coordinate (in world space) of this Sprite.
+    * @property {number} y - The y coordinate in world space of this Sprite.
     */
     this.y = y;
 
-	this.position.x = x;
-	this.position.y = y;
+    this.position.x = x;
+    this.position.y = y;
 
     /**
     * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
@@ -19554,60 +19934,82 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     /**
     * @property {Phaser.Point} scale - The scale of the Sprite when rendered. By default it's set to 1 (no scale). You can modify it via scale.x or scale.y or scale.setTo(x, y). A value of 1 means no change to the scale, 0.5 means "half the size", 2 means "twice the size", etc.
-    */ 
+    */
     this.scale = new Phaser.Point(1, 1);
 
     /**
-    * @property {Phaser.Point} _cache - A mini cache for storing all of the calculated values.
+    * @property {object} _cache - A mini cache for storing all of the calculated values.
     * @private
     */
-    this._cache = { 
+    this._cache = {
 
         dirty: false,
 
         //  Transform cache
-        a00: -1, a01: -1, a02: -1, a10: -1, a11: -1, a12: -1, id: -1, 
+        a00: -1,
+        a01: -1,
+        a02: -1,
+        a10: -1,
+        a11: -1,
+        a12: -1,
+        id: -1,
 
         //  Input specific transform cache
-        i01: -1, i10: -1, idi: -1,
+        i01: -1,
+        i10: -1,
+        idi: -1,
 
         //  Bounds check
-        left: null, right: null, top: null, bottom: null, 
+        left: null,
+        right: null,
+        top: null,
+        bottom: null,
 
         //  delta cache
-        prevX: x, prevY: y,
+        prevX: x,
+        prevY: y,
 
         //  The previous calculated position
-        x: -1, y: -1,
+        x: -1,
+        y: -1,
 
         //  The actual scale values based on the worldTransform
-        scaleX: 1, scaleY: 1,
+        scaleX: 1,
+        scaleY: 1,
 
         //  The width/height of the image, based on the un-modified frame size multiplied by the final calculated scale size
-        width: this.currentFrame.sourceSizeW, height: this.currentFrame.sourceSizeH,
+        width: this.currentFrame.sourceSizeW,
+        height: this.currentFrame.sourceSizeH,
 
         //  The actual width/height of the image if from a trimmed atlas, multiplied by the final calculated scale size
-        halfWidth: Math.floor(this.currentFrame.sourceSizeW / 2), halfHeight: Math.floor(this.currentFrame.sourceSizeH / 2),
+        halfWidth: Math.floor(this.currentFrame.sourceSizeW / 2),
+        halfHeight: Math.floor(this.currentFrame.sourceSizeH / 2),
 
         //  The width/height of the image, based on the un-modified frame size multiplied by the final calculated scale size
-        calcWidth: -1, calcHeight: -1,
+        calcWidth: -1,
+        calcHeight: -1,
 
         //  The current frame details
         // frameID: this.currentFrame.uuid, frameWidth: this.currentFrame.width, frameHeight: this.currentFrame.height,
-        frameID: -1, frameWidth: this.currentFrame.width, frameHeight: this.currentFrame.height,
+        frameID: -1,
+        frameWidth: this.currentFrame.width,
+        frameHeight: this.currentFrame.height,
 
         //  If this sprite visible to the camera (regardless of being set to visible or not)
         cameraVisible: true,
 
         //  Crop cache
-        cropX: 0, cropY: 0, cropWidth: this.currentFrame.sourceSizeW, cropHeight: this.currentFrame.sourceSizeH
+        cropX: 0,
+        cropY: 0,
+        cropWidth: this.currentFrame.sourceSizeW,
+        cropHeight: this.currentFrame.sourceSizeH
 
     };
   
     /**
     * @property {Phaser.Point} offset - Corner point defaults. Should not typically be modified.
-    */    
-    this.offset = new Phaser.Point;
+    */
+    this.offset = new Phaser.Point();
     
     /**
     * @property {Phaser.Point} center - A Point containing the center coordinate of the Sprite. Takes rotation and scale into account.
@@ -19649,7 +20051,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 
     /**
     * @property {number} health - Health value. Used in combination with damage() to allow for quick killing of Sprites.
-    */    
+    */
     this.health = 1;
 
     /**
@@ -19686,7 +20088,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     /**
     * @property {Phaser.Point} cameraOffset - If this Sprite is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.
     */
-    this.cameraOffset = new Phaser.Point;
+    this.cameraOffset = new Phaser.Point();
 
     /**
     * You can crop the Sprites texture by modifying the crop properties. For example crop.width = 50 would set the Sprite to only render 50px wide.
@@ -19722,7 +20124,9 @@ Phaser.Sprite.prototype.preUpdate = function() {
     if (!this.exists || (this.group && !this.group.exists))
     {
         this.renderOrderID = -1;
-        return;
+        
+        // Skip children if not exists
+        return false;
     }
 
     if (this.lifespan > 0)
@@ -19732,7 +20136,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
         if (this.lifespan <= 0)
         {
             this.kill();
-            return;
+            return false;
         }
     }
 
@@ -19759,6 +20163,8 @@ Phaser.Sprite.prototype.preUpdate = function() {
     {
         this.body.preUpdate();
     }
+
+    return true;
 
 };
 
@@ -19889,7 +20295,7 @@ Phaser.Sprite.prototype.updateBounds = function() {
 
     this.updateFrame = true;
 
-    if (this.inWorld == false)
+    if (this.inWorld === false)
     {
         //  Sprite WAS out of the screen, is it still?
         this.inWorld = Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds, this.inWorldThreshold);
@@ -19905,7 +20311,7 @@ Phaser.Sprite.prototype.updateBounds = function() {
         //   Sprite WAS in the screen, has it now left?
         this.inWorld = Phaser.Rectangle.intersects(this.bounds, this.game.world.bounds, this.inWorldThreshold);
 
-        if (this.inWorld == false)
+        if (this.inWorld === false)
         {
             this.events.onOutOfBounds.dispatch(this);
             this._outOfBoundsFired = true;
@@ -20431,7 +20837,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
 
         if (value)
         {
-            if (this.input.enabled == false)
+            if (this.input.enabled === false)
             {
                 this.input.start();
             }
@@ -20455,8 +20861,9 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
 */
 
 /**
-* Create a new <code>TileSprite</code>.
+* A TileSprite is a Sprite whos texture is set to repeat and can be scrolled. As it scrolls the texture repeats (wraps) on the edges.
 * @class Phaser.Tilemap
+* @extends Phaser.Sprite
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
 * @param {number} x - X position of the new tileSprite.
@@ -20475,36 +20882,36 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
     key = key || null;
     frame = frame || null;
 
-	Phaser.Sprite.call(this, game, x, y, key, frame);
+    Phaser.Sprite.call(this, game, x, y, key, frame);
 
-	/**
-	* @property {Description} texture - Description. 
+    /**
+    * @property {PIXI.Texture} texture - The texture that the sprite renders with.
     */
     this.texture = PIXI.TextureCache[key];
 
-	PIXI.TilingSprite.call(this, this.texture, width, height);
+    PIXI.TilingSprite.call(this, this.texture, width, height);
 
-	/**
-	* @property {Description} type - Description. 
+    /**
+    * @property {number} type - The const type of this object.
+    * @readonly
     */
-	this.type = Phaser.TILESPRITE;
+    this.type = Phaser.TILESPRITE;
 
-	/**
-	* @property {Point} tileScale - The scaling of the image that is being tiled.
-	*/	
-	this.tileScale = new Phaser.Point(1, 1);
+    /**
+    * @property {Phaser.Point} tileScale - The scaling of the image that is being tiled.
+    */
+    this.tileScale = new Phaser.Point(1, 1);
 
-	/**
-	* @property {Point} tilePosition - The offset position of the image that is being tiled.
-	*/	
-	this.tilePosition = new Phaser.Point(0, 0);
+    /**
+    * @property {Phaser.Point} tilePosition - The offset position of the image that is being tiled.
+    */
+    this.tilePosition = new Phaser.Point(0, 0);
 
 };
 
 Phaser.TileSprite.prototype = Phaser.Utils.extend(true, PIXI.TilingSprite.prototype, Phaser.Sprite.prototype);
 Phaser.TileSprite.prototype.constructor = Phaser.TileSprite;
 
-//  Add our own custom methods
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
@@ -20529,81 +20936,99 @@ Phaser.Text = function (game, x, y, text, style) {
     text = text || '';
     style = style || '';
 
-    //  If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all
-	/**
-	* @property {boolean} exists - Description.
-	* @default
-	*/
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
+    this.game = game;
+ 
+    /**
+    * @property {boolean} exists - If exists = false then the Text isn't updated by the core game loop.
+    * @default
+    */
     this.exists = true;
 
-    //  This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering
-	/**
-	* @property {boolean} alive - Description.
-	* @default
-	*/
+    /**
+    * @property {boolean} alive - This is a handy little var your game can use to determine if an object is alive or not, it doesn't effect rendering.
+    * @default
+    */
     this.alive = true;
 
-	/**
-	* @property {Description} group - Description.
-	* @default
-	*/
+    /**
+    * @property {Phaser.Group} group - The parent Group of this Text object.
+    */
     this.group = null;
 
-	/**
-	* @property {string} name - Description.
-	* @default
-	*/
+    /**
+    * @property {string} name - The user defined name given to this object.
+    * @default
+    */
     this.name = '';
 
     /**
-    * @property {Phaser.Game} game - A reference to the currently running game. 
+    * @property {number} type - The const type of this object.
+    * @default
     */
-    this.game = game;
+    this.type = Phaser.TEXT;
 
+    /**
+    * @property {string} _text - Internal value.
+    * @private
+    */
     this._text = text;
+
+    /**
+    * @property {string} _style - Internal value.
+    * @private
+    */
     this._style = style;
 
     PIXI.Text.call(this, text, style);
 
     /**
-     * @property {Description} type - Description. 
-     */
-    this.type = Phaser.TEXT;
-
-    /**
-     * @property {Description} position - Description. 
-     */
+    * @property {Phaser.Point} position - The position of this Text object in world space.
+    */
     this.position.x = this.x = x;
     this.position.y = this.y = y;
 
-    //  Replaces the PIXI.Point with a slightly more flexible one
     /**
-     * @property {Phaser.Point} anchor - Description. 
-     */
+    * The anchor sets the origin point of the texture.
+    * The default is 0,0 this means the textures origin is the top left 
+    * Setting than anchor to 0.5,0.5 means the textures origin is centered
+    * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right
+    *
+    * @property {Phaser.Point} anchor - The anchor around which rotation and scaling takes place.
+    */
     this.anchor = new Phaser.Point();
     
     /**
-     * @property {Phaser.Point} scale - Description. 
-     */
+    * @property {Phaser.Point} scale - The scale of the object when rendered. By default it's set to 1 (no scale). You can modify it via scale.x or scale.y or scale.setTo(x, y). A value of 1 means no change to the scale, 0.5 means "half the size", 2 means "twice the size", etc.
+    */
     this.scale = new Phaser.Point(1, 1);
 
-    //  A mini cache for storing all of the calculated values
     /**
-    * @property {Description} _cache - Description. 
+    * @property {object} _cache - A mini cache for storing all of the calculated values.
     * @private
     */
-    this._cache = { 
+    this._cache = {
 
         dirty: false,
 
         //  Transform cache
-        a00: 1, a01: 0, a02: x, a10: 0, a11: 1, a12: y, id: 1, 
+        a00: 1,
+        a01: 0,
+        a02: x,
+        a10: 0,
+        a11: 1,
+        a12: y,
+        id: 1,
 
         //  The previous calculated position
-        x: -1, y: -1,
+        x: -1,
+        y: -1,
 
         //  The actual scale values based on the worldTransform
-        scaleX: 1, scaleY: 1
+        scaleX: 1,
+        scaleY: 1
 
     };
 
@@ -20611,7 +21036,7 @@ Phaser.Text = function (game, x, y, text, style) {
     this._cache.y = this.y;
 
     /**
-    * @property {boolean} renderable - Description. 
+    * @property {boolean} renderable - A renderable object will be rendered to the context each frame.
     */
     this.renderable = true;
 
@@ -20672,11 +21097,11 @@ Phaser.Text.prototype.destroy = function() {
 }
 
 /**
-* Get
-* @returns {Description}
-*//**
-* Set
-* @param {Description} value - Description
+* Indicates the rotation of the Text, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+* Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
+* If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
+* @name Phaser.Text#angle
+* @property {number} angle - Gets or sets the angle of rotation in degrees.
 */
 Object.defineProperty(Phaser.Text.prototype, 'angle', {
 
@@ -20690,6 +21115,45 @@ Object.defineProperty(Phaser.Text.prototype, 'angle', {
 
 });
 
+/**
+* The x coordinate of this object in world space.
+* @name Phaser.Text#x
+* @property {number} x - The x coordinate of this object in world space.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'x', {
+
+    get: function() {
+        return this.position.x;
+    },
+
+    set: function(value) {
+        this.position.x = value;
+    }
+
+});
+
+/**
+* The y coordinate of this object in world space.
+* @name Phaser.Text#y
+* @property {number} y - The y coordinate of this object in world space.
+*/
+Object.defineProperty(Phaser.Text.prototype, 'y', {
+
+    get: function() {
+        return this.position.y;
+    },
+
+    set: function(value) {
+        this.position.y = value;
+    }
+
+});
+
+/**
+* The string to be rendered by this Text object.
+* @name Phaser.Text#content
+* @property {string} content - The string to be rendered by this Text object.
+*/
 Object.defineProperty(Phaser.Text.prototype, 'content', {
 
     get: function() {
@@ -20709,6 +21173,11 @@ Object.defineProperty(Phaser.Text.prototype, 'content', {
 
 });
 
+/**
+* The font the text will be rendered in.
+* @name Phaser.Text#font
+* @property {string} font - The font the text will be rendered in.
+*/
 Object.defineProperty(Phaser.Text.prototype, 'font', {
 
     get: function() {
@@ -20751,100 +21220,108 @@ Phaser.BitmapText = function (game, x, y, text, style) {
 
     x = x || 0;
     y = y || 0;
-
     text = text || '';
     style = style || '';
-
-	/** 
-	* @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
-	* @default
-	*/
-    this.exists = true;
-
-	/**
-    * @property {boolean} alive - This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering.
-	* @default
-	*/
-    this.alive = true;
-
-	/**
-    * @property {Description} group - Description.
- 	* @default
- 	*/
-    this.group = null;
-
-	/**
-    * @property {string} name - Description.
-  	* @default
-  	*/
-    this.name = '';
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
     this.game = game;
 
-    PIXI.BitmapText.call(this, text, style);
+    /** 
+    * @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
+    * @default
+    */
+    this.exists = true;
 
     /**
-    * @property {Description} type - Description.
+    * @property {boolean} alive - This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering.
+    * @default
+    */
+    this.alive = true;
+
+    /**
+    * @property {Phaser.Group} group - The parent Group of this BitmapText.
+    */
+    this.group = null;
+
+    /**
+    * @property {string} name - The user defined name given to this BitmapText.
+    * @default
+    */
+    this.name = '';
+
+    /**
+    * @property {number} type - The const type of this object.
+    * @readonly
     */
     this.type = Phaser.BITMAPTEXT;
 
-	/**
-	* @property {number} position.x - Description.
-	*/
+    PIXI.BitmapText.call(this, text, style);
+
+    /**
+    * @property {number} position.x - The x position of this object.
+    */
     this.position.x = x;
     
-	/**
-	* @property {number} position.y - Description.
-	*/
+    /**
+    * @property {number} position.y - The y position of this object.
+    */
     this.position.y = y;
 
-    //  Replaces the PIXI.Point with a slightly more flexible one
-	/**
-	* @property {Phaser.Point} anchor - Description.
-	*/
+    /**
+    * The anchor sets the origin point of the texture.
+    * The default is 0,0 this means the textures origin is the top left 
+    * Setting than anchor to 0.5,0.5 means the textures origin is centered
+    * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right
+    *
+    * @property {Phaser.Point} anchor - The anchor around which rotation and scaling takes place.
+    */
     this.anchor = new Phaser.Point();
     
-	/**
-	* @property {Phaser.Point} scale - Description.
-	*/
+    /**
+    * @property {Phaser.Point} scale - The scale of the object when rendered. By default it's set to 1 (no scale). You can modify it via scale.x or scale.y or scale.setTo(x, y). A value of 1 means no change to the scale, 0.5 means "half the size", 2 means "twice the size", etc.
+    */
     this.scale = new Phaser.Point(1, 1);
 
-    //  A mini cache for storing all of the calculated values
-	/**
-	* @property {function} _cache - Description.
-	* @private
-	*/
-    this._cache = { 
+    /**
+    * @property {object} _cache - A mini cache for storing all of the calculated values.
+    * @private
+    */
+    this._cache = {
 
         dirty: false,
 
         //  Transform cache
-        a00: 1, a01: 0, a02: x, a10: 0, a11: 1, a12: y, id: 1, 
+        a00: 1,
+        a01: 0,
+        a02: x,
+        a10: 0,
+        a11: 1,
+        a12: y,
+        id: 1,
 
         //  The previous calculated position
-        x: -1, y: -1,
+        x: -1,
+        y: -1,
 
         //  The actual scale values based on the worldTransform
-        scaleX: 1, scaleY: 1
+        scaleX: 1,
+        scaleY: 1
 
     };
 
     this._cache.x = this.x;
     this._cache.y = this.y;
 
-	/**
-	* @property {boolean} renderable - Description.
-	* @private
-	*/
+    /**
+    * @property {boolean} renderable - A renderable object will be rendered to the context each frame.
+    */
     this.renderable = true;
 
 };
 
 Phaser.BitmapText.prototype = Object.create(PIXI.BitmapText.prototype);
-// Phaser.BitmapText.prototype = Phaser.Utils.extend(true, PIXI.BitmapText.prototype);
 Phaser.BitmapText.prototype.constructor = Phaser.BitmapText;
 
 /**
@@ -20902,11 +21379,11 @@ Phaser.BitmapText.prototype.destroy = function() {
 }
 
 /**
-* Get
-* @returns {Description}
-*//**
-* Set
-* @param {Description} value - Description
+* Indicates the rotation of the BitmapText, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+* Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
+* If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
+* @name Phaser.BitmapText#angle
+* @property {number} angle - Gets or sets the angle of rotation in degrees.
 */
 Object.defineProperty(Phaser.BitmapText.prototype, 'angle', {
 
@@ -20921,11 +21398,9 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'angle', {
 });
 
 /**
-* Get
-* @returns {Description}
-*//**
-* Set
-* @param {Description} value - Description
+* The x coordinate of this object in world space.
+* @name Phaser.BitmapText#x
+* @property {number} x - The x coordinate of this object in world space.
 */
 Object.defineProperty(Phaser.BitmapText.prototype, 'x', {
 
@@ -20940,11 +21415,9 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'x', {
 });
 
 /**
-* Get
-* @returns {Description}
-*//**
-* Set
-* @param {Description} value - Description
+* The y coordinate of this object in world space.
+* @name Phaser.BitmapText#y
+* @property {number} y - The y coordinate of this object in world space.
 */
 Object.defineProperty(Phaser.BitmapText.prototype, 'y', {
 
@@ -20993,67 +21466,67 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     callback = callback || null;
     callbackContext = callbackContext || this;
 
-	Phaser.Sprite.call(this, game, x, y, key, outFrame);
+    Phaser.Sprite.call(this, game, x, y, key, outFrame);
 
-	/** 
-	* @property {number} type - The Phaser Object Type.
-	*/
+    /** 
+    * @property {number} type - The Phaser Object Type.
+    */
     this.type = Phaser.BUTTON;
 
-	/** 
-	* @property {string} _onOverFrameName - Internal variable.
-	* @private
-	* @default
-	*/
+    /** 
+    * @property {string} _onOverFrameName - Internal variable.
+    * @private
+    * @default
+    */
     this._onOverFrameName = null;
     
-	/** 
-	* @property {string} _onOutFrameName - Internal variable.
-	* @private
-	* @default
-	*/
+    /** 
+    * @property {string} _onOutFrameName - Internal variable.
+    * @private
+    * @default
+    */
     this._onOutFrameName = null;
     
-	/** 
-	* @property {string} _onDownFrameName - Internal variable.
-	* @private
-	* @default
-	*/
+    /** 
+    * @property {string} _onDownFrameName - Internal variable.
+    * @private
+    * @default
+    */
     this._onDownFrameName = null;
     
-	/** 
-	* @property {string} _onUpFrameName - Internal variable.
-	* @private
-	* @default
-	*/
+    /** 
+    * @property {string} _onUpFrameName - Internal variable.
+    * @private
+    * @default
+    */
     this._onUpFrameName = null;
     
-	/** 
-	* @property {number} _onOverFrameID - Internal variable.
-	* @private
-	* @default
-	*/
+    /** 
+    * @property {number} _onOverFrameID - Internal variable.
+    * @private
+    * @default
+    */
     this._onOverFrameID = null;
     
-	/** 
-	* @property {number} _onOutFrameID - Internal variable.
-	* @private
-	* @default
-	*/
+    /** 
+    * @property {number} _onOutFrameID - Internal variable.
+    * @private
+    * @default
+    */
     this._onOutFrameID = null;
     
-	/** 
-	* @property {number} _onDownFrameID - Internal variable.
-	* @private
-	* @default
-	*/
+    /** 
+    * @property {number} _onDownFrameID - Internal variable.
+    * @private
+    * @default
+    */
     this._onDownFrameID = null;
     
-	/** 
-	* @property {number} _onUpFrameID - Internal variable.
-	* @private
-	* @default
-	*/
+    /** 
+    * @property {number} _onUpFrameID - Internal variable.
+    * @private
+    * @default
+    */
     this._onUpFrameID = null;
 
     /** 
@@ -21104,25 +21577,25 @@ Phaser.Button = function (game, x, y, key, callback, callbackContext, overFrame,
     */
     this.onUpSoundMarker = '';
 
-	/** 
-	* @property {Phaser.Signal} onInputOver - The Signal (or event) dispatched when this Button is in an Over state.
-	*/
-    this.onInputOver = new Phaser.Signal;
+    /** 
+    * @property {Phaser.Signal} onInputOver - The Signal (or event) dispatched when this Button is in an Over state.
+    */
+    this.onInputOver = new Phaser.Signal();
     
-	/** 
-	* @property {Phaser.Signal} onInputOut - The Signal (or event) dispatched when this Button is in an Out state.
-	*/
-    this.onInputOut = new Phaser.Signal;
+    /** 
+    * @property {Phaser.Signal} onInputOut - The Signal (or event) dispatched when this Button is in an Out state.
+    */
+    this.onInputOut = new Phaser.Signal();
     
-	/** 
-	* @property {Phaser.Signal} onInputDown - The Signal (or event) dispatched when this Button is in an Down state.
-	*/
-    this.onInputDown = new Phaser.Signal;
+    /** 
+    * @property {Phaser.Signal} onInputDown - The Signal (or event) dispatched when this Button is in an Down state.
+    */
+    this.onInputDown = new Phaser.Signal();
     
-	/** 
-	* @property {Phaser.Signal} onInputUp - The Signal (or event) dispatched when this Button is in an Up state.
-	*/
-    this.onInputUp = new Phaser.Signal;
+    /** 
+    * @property {Phaser.Signal} onInputUp - The Signal (or event) dispatched when this Button is in an Up state.
+    */
+    this.onInputUp = new Phaser.Signal();
 
     /** 
     * @property {boolean} freezeFrames - When true the Button will cease to change texture frame on all events (over, out, up, down).
@@ -21197,7 +21670,7 @@ Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
             this._onOutFrameName = outFrame;
             this._onUpFrameName = outFrame;
 
-            if (this.input.pointerOver() == false)
+            if (this.input.pointerOver() === false)
             {
                 this.frameName = outFrame;
             }
@@ -21207,7 +21680,7 @@ Phaser.Button.prototype.setFrames = function (overFrame, outFrame, downFrame) {
             this._onOutFrameID = outFrame;
             this._onUpFrameID = outFrame;
 
-            if (this.input.pointerOver() == false)
+            if (this.input.pointerOver() === false)
             {
                 this.frame = outFrame;
             }
@@ -21367,7 +21840,7 @@ Phaser.Button.prototype.setDownSound = function (sound, marker) {
 */
 Phaser.Button.prototype.onInputOverHandler = function (pointer) {
 
-    if (this.freezeFrames == false)
+    if (this.freezeFrames === false)
     {
         if (this._onOverFrameName != null)
         {
@@ -21399,7 +21872,7 @@ Phaser.Button.prototype.onInputOverHandler = function (pointer) {
 */
 Phaser.Button.prototype.onInputOutHandler = function (pointer) {
 
-    if (this.freezeFrames == false)
+    if (this.freezeFrames === false)
     {
         if (this._onOutFrameName != null)
         {
@@ -21431,7 +21904,7 @@ Phaser.Button.prototype.onInputOutHandler = function (pointer) {
 */
 Phaser.Button.prototype.onInputDownHandler = function (pointer) {
 
-    if (this.freezeFrames == false)
+    if (this.freezeFrames === false)
     {
         if (this._onDownFrameName != null)
         {
@@ -21463,7 +21936,7 @@ Phaser.Button.prototype.onInputDownHandler = function (pointer) {
 */
 Phaser.Button.prototype.onInputUpHandler = function (pointer) {
 
-    if (this.freezeFrames == false)
+    if (this.freezeFrames === false)
     {
         if (this._onUpFrameName != null)
         {
@@ -21480,7 +21953,7 @@ Phaser.Button.prototype.onInputUpHandler = function (pointer) {
         this.onUpSound.play(this.onUpSoundMarker);
     }
 
-    if (this.forceOut && this.freezeFrames == false)
+    if (this.forceOut && this.freezeFrames === false)
     {
         if (this._onOutFrameName != null)
         {
@@ -21506,7 +21979,7 @@ Phaser.Button.prototype.onInputUpHandler = function (pointer) {
 */
 
 /**
-* Creates a new <code>Graphics</code> object.
+* Creates a new `Graphics` object.
 * 
 * @class Phaser.Graphics
 * @constructor
@@ -21522,22 +21995,20 @@ Phaser.Graphics = function (game, x, y) {
     PIXI.Graphics.call(this);
 
     /**
-	* @property {Description} type - Description.
+    * @property {number} type - The Phaser Object Type.
 	*/
     this.type = Phaser.GRAPHICS;
 
     this.position.x = x;
-    this.position.y = y;    
+    this.position.y = y;
 
 };
 
 Phaser.Graphics.prototype = Object.create(PIXI.Graphics.prototype);
 Phaser.Graphics.prototype.constructor = Phaser.Graphics;
 
-//  Add our own custom methods
-
 /**
-* Description.
+* Destroy this Graphics instance.
 * 
 * @method Phaser.Sprite.prototype.destroy
 */
@@ -21559,14 +22030,14 @@ Phaser.Graphics.prototype.destroy = function() {
 */
 Phaser.Graphics.prototype.drawPolygon = function (poly) {
 
-    graphics.moveTo(poly.points[0].x, poly.points[0].y);
+    this.moveTo(poly.points[0].x, poly.points[0].y);
 
     for (var i = 1; i < poly.points.length; i += 1)
     {
-        graphics.lineTo(poly.points[i].x, poly.points[i].y);
+        this.lineTo(poly.points[i].x, poly.points[i].y);
     }
 
-    graphics.lineTo(poly.points[0].x, poly.points[0].y);
+    this.lineTo(poly.points[0].x, poly.points[0].y);
     
 }
 
@@ -21623,54 +22094,54 @@ Object.defineProperty(Phaser.Graphics.prototype, 'y', {
 */
 Phaser.RenderTexture = function (game, key, width, height) {
 
-	/**
-	* @property {Phaser.Game} game - A reference to the currently running game. 
-	*/
-	this.game = game;
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game. 
+    */
+    this.game = game;
 
-	/**
+    /**
     * @property {string} name - the name of the object. 
-	*/
+    */
     this.name = key;
 
-	PIXI.EventTarget.call(this);
+    PIXI.EventTarget.call(this);
 
-	/**
-	* @property {number} width - the width. 
+    /**
+    * @property {number} width - the width. 
     */
-	this.width = width || 100;
-	
-	/**
-	* @property {number} height - the height. 
+    this.width = width || 100;
+    
+    /**
+    * @property {number} height - the height. 
     */
-	this.height = height || 100;
+    this.height = height || 100;
 
-	/**
+    /**
     * @property {PIXI.mat3} indetityMatrix - Matrix object. 
- 	*/
-	this.indetityMatrix = PIXI.mat3.create();
-
-	/**
-	* @property {PIXI.Rectangle} frame - The frame for this texture. 
     */
-	this.frame = new PIXI.Rectangle(0, 0, this.width, this.height);	
+    this.indetityMatrix = PIXI.mat3.create();
 
-	/**
-	* @property {number} type - Base Phaser object type. 
+    /**
+    * @property {PIXI.Rectangle} frame - The frame for this texture. 
     */
-	this.type = Phaser.RENDERTEXTURE;
+    this.frame = new PIXI.Rectangle(0, 0, this.width, this.height);
 
-	this._tempPoint = { x: 0, y: 0 };
+    /**
+    * @property {number} type - Base Phaser object type. 
+    */
+    this.type = Phaser.RENDERTEXTURE;
 
-	if (PIXI.gl)
-	{
-		this.initWebGL();
-	}
-	else
-	{
-		this.initCanvas();
-	}
-	
+    this._tempPoint = { x: 0, y: 0 };
+
+    if (PIXI.gl)
+    {
+        this.initWebGL();
+    }
+    else
+    {
+        this.initCanvas();
+    }
+    
 };
 
 Phaser.RenderTexture.prototype = Object.create(PIXI.Texture.prototype);
@@ -21687,22 +22158,22 @@ Phaser.RenderTexture.prototype.constructor = PIXI.RenderTexture;
 */
 Phaser.RenderTexture.prototype.render = function(displayObject, position, clear) {
 
-	if (typeof position === 'undefined') { position = false; }
-	if (typeof clear === 'undefined') { clear = false; }
+    if (typeof position === 'undefined') { position = false; }
+    if (typeof clear === 'undefined') { clear = false; }
 
-	if (displayObject instanceof Phaser.Group)
-	{
-		displayObject = displayObject._container;
-	}
+    if (displayObject instanceof Phaser.Group)
+    {
+        displayObject = displayObject._container;
+    }
 
-	if (PIXI.gl)
-	{
-		this.renderWebGL(displayObject, position, clear);
-	}
-	else
-	{
-		this.renderCanvas(displayObject, position, clear);
-	}
+    if (PIXI.gl)
+    {
+        this.renderWebGL(displayObject, position, clear);
+    }
+    else
+    {
+        this.renderCanvas(displayObject, position, clear);
+    }
 
 }
 
@@ -21718,10 +22189,10 @@ Phaser.RenderTexture.prototype.render = function(displayObject, position, clear)
 */
 Phaser.RenderTexture.prototype.renderXY = function(displayObject, x, y, clear) {
 
-	this._tempPoint.x = x;
-	this._tempPoint.y = y;
+    this._tempPoint.x = x;
+    this._tempPoint.y = y;
 
-	this.render(displayObject, this._tempPoint, clear);
+    this.render(displayObject, this._tempPoint, clear);
 
 }
 
@@ -21733,64 +22204,64 @@ Phaser.RenderTexture.prototype.renderXY = function(displayObject, x, y, clear) {
  */
 Phaser.RenderTexture.prototype.initWebGL = function()
 {
-	var gl = PIXI.gl;
-	this.glFramebuffer = gl.createFramebuffer();
+    var gl = PIXI.gl;
+    this.glFramebuffer = gl.createFramebuffer();
 
-   	gl.bindFramebuffer(gl.FRAMEBUFFER, this.glFramebuffer );
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.glFramebuffer );
 
     this.glFramebuffer.width = this.width;
-    this.glFramebuffer.height = this.height;	
+    this.glFramebuffer.height = this.height;
 
-	this.baseTexture = new PIXI.BaseTexture();
+    this.baseTexture = new PIXI.BaseTexture();
 
-	this.baseTexture.width = this.width;
-	this.baseTexture.height = this.height;
+    this.baseTexture.width = this.width;
+    this.baseTexture.height = this.height;
 
     this.baseTexture._glTexture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, this.baseTexture._glTexture);
 
-	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  this.width,  this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  this.width,  this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-	this.baseTexture.isRender = true;
+    this.baseTexture.isRender = true;
 
-	gl.bindFramebuffer(gl.FRAMEBUFFER, this.glFramebuffer );
-	gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.baseTexture._glTexture, 0);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.glFramebuffer );
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.baseTexture._glTexture, 0);
 
-	// create a projection matrix..
-	this.projection = new PIXI.Point(this.width/2 , -this.height/2);
+    // create a projection matrix..
+    this.projection = new PIXI.Point(this.width/2 , -this.height/2);
 
-	// set the correct render function..
-	// this.render = this.renderWebGL;
+    // set the correct render function..
+    // this.render = this.renderWebGL;
 }
 
 
 Phaser.RenderTexture.prototype.resize = function(width, height)
 {
 
-	this.width = width;
-	this.height = height;
-	
-	if(PIXI.gl)
-	{
-		this.projection.x = this.width/2
-		this.projection.y = -this.height/2;
-	
-		var gl = PIXI.gl;
-		gl.bindTexture(gl.TEXTURE_2D, this.baseTexture._glTexture);
-		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  this.width,  this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-	}
-	else
-	{
-		
-		this.frame.width = this.width
-		this.frame.height = this.height;
-		this.renderer.resize(this.width, this.height);
-	}
+    this.width = width;
+    this.height = height;
+    
+    if(PIXI.gl)
+    {
+        this.projection.x = this.width/2
+        this.projection.y = -this.height/2;
+    
+        var gl = PIXI.gl;
+        gl.bindTexture(gl.TEXTURE_2D, this.baseTexture._glTexture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  this.width,  this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    }
+    else
+    {
+        
+        this.frame.width = this.width
+        this.frame.height = this.height;
+        this.renderer.resize(this.width, this.height);
+    }
 }
 
 /**
@@ -21801,12 +22272,12 @@ Phaser.RenderTexture.prototype.resize = function(width, height)
  */
 Phaser.RenderTexture.prototype.initCanvas = function()
 {
-	this.renderer = new PIXI.CanvasRenderer(this.width, this.height, null, 0);
+    this.renderer = new PIXI.CanvasRenderer(this.width, this.height, null, 0);
 
-	this.baseTexture = new PIXI.BaseTexture(this.renderer.view);
-	this.frame = new PIXI.Rectangle(0, 0, this.width, this.height);
+    this.baseTexture = new PIXI.BaseTexture(this.renderer.view);
+    this.frame = new PIXI.Rectangle(0, 0, this.width, this.height);
 
-	// this.render = this.renderCanvas;
+    // this.render = this.renderCanvas;
 }
 
 /**
@@ -21819,68 +22290,71 @@ Phaser.RenderTexture.prototype.initCanvas = function()
  */
 Phaser.RenderTexture.prototype.renderWebGL = function(displayObject, position, clear)
 {
-	var gl = PIXI.gl;
+    var gl = PIXI.gl;
 
-	// enable the alpha color mask..
-	gl.colorMask(true, true, true, true); 
+    // enable the alpha color mask..
+    gl.colorMask(true, true, true, true);
 
-	gl.viewport(0, 0, this.width, this.height);	
+    gl.viewport(0, 0, this.width, this.height);
 
-	gl.bindFramebuffer(gl.FRAMEBUFFER, this.glFramebuffer );
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.glFramebuffer );
 
-	if(clear)
-	{
-		gl.clearColor(0,0,0, 0);     
-		gl.clear(gl.COLOR_BUFFER_BIT);
-	}
+    if (clear)
+    {
+        gl.clearColor(0,0,0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+    }
 
-	// THIS WILL MESS WITH HIT TESTING!
-	var children = displayObject.children;
+    // THIS WILL MESS WITH HIT TESTING!
+    var children = displayObject.children;
 
-	//TODO -? create a new one??? dont think so!
-	var originalWorldTransform = displayObject.worldTransform;
-	displayObject.worldTransform = PIXI.mat3.create();//sthis.indetityMatrix;
-	// modify to flip...
-	displayObject.worldTransform[4] = -1;
-	displayObject.worldTransform[5] = this.projection.y * -2;
+    //TODO -? create a new one??? dont think so!
+    var originalWorldTransform = displayObject.worldTransform;
+    displayObject.worldTransform = PIXI.mat3.create();//sthis.indetityMatrix;
+    // modify to flip...
+    displayObject.worldTransform[4] = -1;
+    displayObject.worldTransform[5] = this.projection.y * -2;
 
-	if(position)
-	{
-		displayObject.worldTransform[2] = position.x;
-		displayObject.worldTransform[5] -= position.y;
-	}
-	
-	PIXI.visibleCount++;
-	displayObject.vcount = PIXI.visibleCount;
-	
-	for(var i=0,j=children.length; i<j; i++)
-	{
-		children[i].updateTransform();	
-	}
+    if (position)
+    {
+        displayObject.worldTransform[2] = position.x;
+        displayObject.worldTransform[5] -= position.y;
+    }
+    
+    PIXI.visibleCount++;
+    displayObject.vcount = PIXI.visibleCount;
+    
+    for (var i = 0, j = children.length; i < j; i++)
+    {
+        children[i].updateTransform();
+    }
 
-	var renderGroup = displayObject.__renderGroup;
+    var renderGroup = displayObject.__renderGroup;
 
-	if(renderGroup)
-	{
-		if(displayObject == renderGroup.root)
-		{
-			renderGroup.render(this.projection, this.glFramebuffer);
-		}
-		else
-		{
-			renderGroup.renderSpecific(displayObject, this.projection, this.glFramebuffer);
-		}
-	}
-	else
-	{
-		if(!this.renderGroup)this.renderGroup = new PIXI.WebGLRenderGroup(gl);
-		this.renderGroup.setRenderable(displayObject);
-		this.renderGroup.render(this.projection, this.glFramebuffer);
-	}
-	
-	displayObject.worldTransform = originalWorldTransform;
+    if (renderGroup)
+    {
+        if (displayObject == renderGroup.root)
+        {
+            renderGroup.render(this.projection, this.glFramebuffer);
+        }
+        else
+        {
+            renderGroup.renderSpecific(displayObject, this.projection, this.glFramebuffer);
+        }
+    }
+    else
+    {
+        if (!this.renderGroup)
+        {
+            this.renderGroup = new PIXI.WebGLRenderGroup(gl);
+        }
+
+        this.renderGroup.setRenderable(displayObject);
+        this.renderGroup.render(this.projection, this.glFramebuffer);
+    }
+    
+    displayObject.worldTransform = originalWorldTransform;
 }
-
 
 /**
  * This function will draw the display object to the texture.
@@ -21892,28 +22366,29 @@ Phaser.RenderTexture.prototype.renderWebGL = function(displayObject, position, c
  */
 Phaser.RenderTexture.prototype.renderCanvas = function(displayObject, position, clear)
 {
-	var children = displayObject.children;
+    var children = displayObject.children;
 
-	displayObject.worldTransform = PIXI.mat3.create();
-	
-	if(position)
-	{
-		displayObject.worldTransform[2] = position.x;
-		displayObject.worldTransform[5] = position.y;
-	}
-	
+    displayObject.worldTransform = PIXI.mat3.create();
+    
+    if (position)
+    {
+        displayObject.worldTransform[2] = position.x;
+        displayObject.worldTransform[5] = position.y;
+    }
 
-	for(var i=0,j=children.length; i<j; i++)
-	{
-		children[i].updateTransform();	
-	}
+    for (var i = 0, j = children.length; i < j; i++)
+    {
+        children[i].updateTransform();
+    }
 
-	if(clear)this.renderer.context.clearRect(0,0, this.width, this.height);
-	
+    if (clear)
+    {
+        this.renderer.context.clearRect(0, 0, this.width, this.height);
+    }
+    
     this.renderer.renderDisplayObject(displayObject);
     
-    this.renderer.context.setTransform(1,0,0,1,0,0); 
-    
+    this.renderer.context.setTransform(1, 0, 0, 1, 0, 0);
 
   //  PIXI.texturesToUpdate.push(this.baseTexture);
 }
@@ -21960,10 +22435,10 @@ Phaser.Canvas = {
     * @param {HTMLElement} element - The targeted element that we want to retrieve the offset.
     * @param {Phaser.Point} [point] - The point we want to take the x/y values of the offset.
     * @return {Phaser.Point} - A point objet with the offsetX and Y as its properties.
-    */    
+    */
     getOffset: function (element, point) {
 
-        point = point || new Phaser.Point;
+        point = point || new Phaser.Point();
 
         var box = element.getBoundingClientRect();
         var clientTop = element.clientTop || document.body.clientTop || 0;
@@ -21984,7 +22459,7 @@ Phaser.Canvas = {
     * @method Phaser.Canvas.getAspectRatio
     * @param {HTMLCanvasElement} canvas - The canvas to get the aspect ratio from.
     * @return {number} The ratio between canvas' width and height.
-    */        
+    */
     getAspectRatio: function (canvas) {
         return canvas.width / canvas.height;
     },
@@ -22188,14 +22663,13 @@ Phaser.Canvas = {
 */
 
 /**
-* An Animation instance contains a single animation and the controls to play it.
-* It is created by the AnimationManager, consists of Animation.Frame objects and belongs to a single Game Object such as a Sprite.
+* The StageScaleMode object is responsible for helping you manage the scaling, resizing and alignment of your game within the browser.
 *
 * @class Phaser.StageScaleMode 
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {number} width - Description.
-* @param {number} height - Description.
+* @param {number} width - The native width of the game.
+* @param {number} height - The native height of the game.
 */
 Phaser.StageScaleMode = function (game, width, height) {
 
@@ -22257,7 +22731,7 @@ Phaser.StageScaleMode = function (game, width, height) {
     * @property {boolean} forcePortrait - If the game should be forced to use Portrait mode, this is set to true by Game.Stage
     * @default
     */
-     this.forcePortrait = false;
+    this.forcePortrait = false;
 
     /**
     * @property {boolean} incorrectOrientation - If the game should be forced to use a specific orientation and the device currently isn't in that orientation this is set to true.
@@ -22300,7 +22774,6 @@ Phaser.StageScaleMode = function (game, width, height) {
     * @default
     */
     this.maxIterations = 5;
-    
 
     /**
     * @property {PIXI.Sprite} orientationSprite - The Sprite that is optionally displayed if the browser enters an unsupported orientation.
@@ -22317,6 +22790,21 @@ Phaser.StageScaleMode = function (game, width, height) {
     * @property {Phaser.Signal} enterPortrait - The event that is dispatched when the browser enters horizontal orientation.
     */
     this.enterPortrait = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} enterIncorrectOrientation - The event that is dispatched when the browser enters an incorrect orientation, as defined by forceOrientation.
+    */
+    this.enterIncorrectOrientation = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} leaveIncorrectOrientation - The event that is dispatched when the browser leaves an incorrect orientation, as defined by forceOrientation.
+    */
+    this.leaveIncorrectOrientation = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} hasResized - The event that is dispatched when the game scale changes.
+    */
+    this.hasResized = new Phaser.Signal();
 
     if (window['orientation'])
     {
@@ -22336,14 +22824,32 @@ Phaser.StageScaleMode = function (game, width, height) {
 
     /**
     * @property {Phaser.Point} scaleFactor - The scale factor based on the game dimensions vs. the scaled dimensions.
+    * @readonly
     */
     this.scaleFactor = new Phaser.Point(1, 1);
+
+    /**
+    * @property {Phaser.Point} scaleFactorInversed - The inversed scale factor. The displayed dimensions divided by the game dimensions.
+    * @readonly
+    */
+    this.scaleFactorInversed = new Phaser.Point(1, 1);
+
+    /**
+    * @property {Phaser.Point} margin - If the game canvas is seto to align by adjusting the margin, the margin calculation values are stored in this Point.
+    * @readonly
+    */
+    this.margin = new Phaser.Point(0, 0);
 
     /**
     * @property {number} aspectRatio - Aspect ratio.
     * @default
     */
     this.aspectRatio = 0;
+
+    /**
+    * @property {any} event- The native browser events from full screen API changes.
+    */
+    this.event = null;
 
     var _this = this;
 
@@ -22366,7 +22872,7 @@ Phaser.StageScaleMode = function (game, width, height) {
     document.addEventListener('fullscreenchange', function (event) {
         return _this.fullScreenChange(event);
     }, false);
-	
+    
 };
 
 /**
@@ -22458,6 +22964,8 @@ Phaser.StageScaleMode.prototype = {
     */
     fullScreenChange: function (event) {
 
+        this.event = event;
+
         if (this.isFullScreen)
         {
             this.game.stage.canvas.style['width'] = '100%';
@@ -22505,7 +23013,7 @@ Phaser.StageScaleMode.prototype = {
 
         if (typeof orientationImage !== 'undefined')
         {
-            if (orientationImage == null || this.game.cache.checkImageKey(orientationImage) == false)
+            if (orientationImage == null || this.game.cache.checkImageKey(orientationImage) === false)
             {
                 orientationImage = '__default';
             }
@@ -22548,6 +23056,7 @@ Phaser.StageScaleMode.prototype = {
                 //  Back to normal
                 this.game.paused = false;
                 this.incorrectOrientation = false;
+                this.leaveIncorrectOrientation.dispatch();
 
                 if (this.orientationSprite)
                 {
@@ -22565,8 +23074,9 @@ Phaser.StageScaleMode.prototype = {
                 //  Show orientation screen
                 this.game.paused = true;
                 this.incorrectOrientation = true;
+                this.enterIncorrectOrientation.dispatch();
 
-                if (this.orientationSprite && this.orientationSprite.visible == false)
+                if (this.orientationSprite && this.orientationSprite.visible === false)
                 {
                     this.orientationSprite.visible = true;
                     this.game.world.visible = false;
@@ -22583,6 +23093,8 @@ Phaser.StageScaleMode.prototype = {
     * @param {Event} event - The orientationchange event data.
     */
     checkOrientation: function (event) {
+
+        this.event = event;
 
         this.orientation = window['orientation'];
 
@@ -22608,6 +23120,8 @@ Phaser.StageScaleMode.prototype = {
     * @param {Event} event - The resize event data.
     */
     checkResize: function (event) {
+
+        this.event = event;
 
         if (window.outerWidth > window.outerHeight)
         {
@@ -22642,15 +23156,10 @@ Phaser.StageScaleMode.prototype = {
     */
     refresh: function () {
 
-        var _this = this;
-        
         //  We can't do anything about the status bars in iPads, web apps or desktops
-        if (this.game.device.iPad == false && this.game.device.webApp == false && this.game.device.desktop == false)
+        if (this.game.device.iPad === false && this.game.device.webApp === false && this.game.device.desktop === false)
         {
-            // document.documentElement['style'].minHeight = '2000px';
-            // this._startHeight = window.innerHeight;
-
-            if (this.game.device.android && this.game.device.chrome == false)
+            if (this.game.device.android && this.game.device.chrome === false)
             {
                 window.scrollTo(0, 1);
             }
@@ -22663,9 +23172,13 @@ Phaser.StageScaleMode.prototype = {
         if (this._check == null && this.maxIterations > 0)
         {
             this._iterations = this.maxIterations;
+
+            var _this = this;
+
             this._check = window.setInterval(function () {
                 return _this.setScreenSize();
             }, 10);
+
             this.setScreenSize();
         }
 
@@ -22682,9 +23195,9 @@ Phaser.StageScaleMode.prototype = {
             force = false;
         }
         
-        if (this.game.device.iPad == false && this.game.device.webApp == false && this.game.device.desktop == false) 
+        if (this.game.device.iPad === false && this.game.device.webApp === false && this.game.device.desktop === false)
         {
-            if (this.game.device.android && this.game.device.chrome == false)
+            if (this.game.device.android && this.game.device.chrome === false)
             {
                 window.scrollTo(0, 1);
             }
@@ -22701,7 +23214,7 @@ Phaser.StageScaleMode.prototype = {
             // Set minimum height of content to new window height
             document.documentElement['style'].minHeight = window.innerHeight + 'px';
         
-            if (this.incorrectOrientation == true)
+            if (this.incorrectOrientation === true)
             {
                 this.setMaximum();
             }
@@ -22727,7 +23240,7 @@ Phaser.StageScaleMode.prototype = {
     */
     setSize: function () {
 
-        if (this.incorrectOrientation == false)
+        if (this.incorrectOrientation === false)
         {
             if (this.maxWidth && this.width > this.maxWidth)
             {
@@ -22757,24 +23270,28 @@ Phaser.StageScaleMode.prototype = {
 
         if (this.pageAlignHorizontally)
         {
-            if (this.width < window.innerWidth && this.incorrectOrientation == false)
+            if (this.width < window.innerWidth && this.incorrectOrientation === false)
             {
-                this.game.canvas.style.marginLeft = Math.round((window.innerWidth - this.width) / 2) + 'px';
+                this.margin.x = Math.round((window.innerWidth - this.width) / 2);
+                this.game.canvas.style.marginLeft = this.margin.x + 'px';
             }
             else
             {
+                this.margin.x = 0;
                 this.game.canvas.style.marginLeft = '0px';
             }
         }
 
         if (this.pageAlignVertically)
         {
-            if (this.height < window.innerHeight && this.incorrectOrientation == false)
+            if (this.height < window.innerHeight && this.incorrectOrientation === false)
             {
-                this.game.canvas.style.marginTop = Math.round((window.innerHeight - this.height) / 2) + 'px';
+                this.margin.y = Math.round((window.innerHeight - this.height) / 2);
+                this.game.canvas.style.marginTop = this.margin.y + 'px';
             }
             else
             {
+                this.margin.y = 0;
                 this.game.canvas.style.marginTop = '0px';
             }
         }
@@ -22785,6 +23302,11 @@ Phaser.StageScaleMode.prototype = {
         
         this.scaleFactor.x = this.game.width / this.width;
         this.scaleFactor.y = this.game.height / this.height;
+
+        this.scaleFactorInversed.x = this.width / this.game.width;
+        this.scaleFactorInversed.y = this.height / this.game.height;
+
+        this.hasResized.dispatch(this.width, this.height);
 
         this.checkOrientationState();
 
@@ -22870,7 +23392,7 @@ Object.defineProperty(Phaser.StageScaleMode.prototype, "isFullScreen", {
 Object.defineProperty(Phaser.StageScaleMode.prototype, "isPortrait", {
 
     get: function () {
-        return this.orientation == 0 || this.orientation == 180;
+        return this.orientation === 0 || this.orientation == 180;
     }
 
 });
@@ -23016,67 +23538,78 @@ Phaser.Device = function () {
     */
     this.pointerLock = false;
 
+    /**
+    * @property {boolean} typedArray - Does the browser support TypedArrays?
+    * @default
+    */
+    this.typedArray = false;
+
     //  Browser
 
     /**
-    * @property {boolean} arora - Is running in arora?
+    * @property {boolean} arora - Set to true if running in Arora.
     * @default
     */
     this.arora = false;
 
     /**
-    * @property {boolean} chrome - Is running in chrome?
+    * @property {boolean} chrome - Set to true if running in Chrome.
     * @default
     */
     this.chrome = false;
 
     /**
-    * @property {boolean} epiphany - Is running in epiphany?
+    * @property {boolean} epiphany - Set to true if running in Epiphany.
     * @default
     */
     this.epiphany = false;
 
     /**
-    * @property {boolean} firefox - Is running in firefox?
+    * @property {boolean} firefox - Set to true if running in Firefox.
     * @default
     */
     this.firefox = false;
 
     /**
-    * @property {boolean} ie - Is running in ie?
+    * @property {boolean} ie - Set to true if running in Internet Explorer.
     * @default
     */
     this.ie = false;
 
     /**
-    * @property {number} ieVersion - Version of ie?
+    * @property {number} ieVersion - If running in Internet Explorer this will contain the major version number.
     * @default
     */
     this.ieVersion = 0;
 
     /**
-    * @property {boolean} mobileSafari - Is running in mobileSafari?
+    * @property {boolean} mobileSafari - Set to true if running in Mobile Safari.
     * @default
     */
     this.mobileSafari = false;
 
     /**
-    * @property {boolean} midori - Is running in midori?
+    * @property {boolean} midori - Set to true if running in Midori.
     * @default
     */
     this.midori = false;
 
     /**
-    * @property {boolean} opera - Is running in opera?
+    * @property {boolean} opera - Set to true if running in Opera.
     * @default
     */
     this.opera = false;
 
     /**
-    * @property {boolean} safari - Is running in safari?
+    * @property {boolean} safari - Set to true if running in Safari.
     * @default
     */
     this.safari = false;
+
+    /**
+    * @property {boolean} webApp - Set to true if running as a WebApp, i.e. within a WebView
+    * @default
+    */
     this.webApp = false;
 
     //  Audio
@@ -23116,6 +23649,7 @@ Phaser.Device = function () {
     * @default
     */
     this.wav = false;
+
     /**
     * Can this device play m4a files?
     * @property {boolean} m4a - True if this device can play m4a files.
@@ -23265,7 +23799,7 @@ Phaser.Device.prototype = {
             this.mobileSafari = true;
         } else if (/MSIE (\d+\.\d+);/.test(ua)) {
             this.ie = true;
-            this.ieVersion = parseInt(RegExp.$1);
+            this.ieVersion = parseInt(RegExp.$1, 10);
         } else if (/Midori/.test(ua)) {
             this.midori = true;
         } else if (/Opera/.test(ua)) {
@@ -23343,6 +23877,12 @@ Phaser.Device.prototype = {
         if (typeof Int8Array !== 'undefined')
         {
             this.littleEndian = new Int8Array(new Int16Array([1]).buffer)[0] > 0;
+            this.typedArray = true;
+        }
+        else
+        {
+            this.littleEndian = false;
+            this.typedArray = false;
         }
 
     },
@@ -23457,149 +23997,151 @@ Phaser.Device.prototype = {
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
 Phaser.RequestAnimationFrame = function(game) {
-	
-	/**
-	* @property {Phaser.Game} game - The currently running game.
-	*/
-	this.game = game;
+    
+    /**
+    * @property {Phaser.Game} game - The currently running game.
+    */
+    this.game = game;
 
-	/**
-	* @property {boolean} isRunning - true if RequestAnimationFrame is running, otherwise false.
-	* @default
-	*/
-	this.isRunning = false;
+    /**
+    * @property {boolean} isRunning - true if RequestAnimationFrame is running, otherwise false.
+    * @default
+    */
+    this.isRunning = false;
 
-	var vendors = [
-		'ms', 
-		'moz', 
-		'webkit', 
-		'o'
-	];
+    var vendors = [
+        'ms',
+        'moz',
+        'webkit',
+        'o'
+    ];
 
-	for (var x = 0; x < vendors.length && !window.requestAnimationFrame; x++)
-	{
-		window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-		window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'];
-	}
+    for (var x = 0; x < vendors.length && !window.requestAnimationFrame; x++)
+    {
+        window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'];
+    }
 
-	/**
-	* @property {boolean} _isSetTimeOut  - true if the browser is using setTimeout instead of raf.
-	* @private
-	*/
-	this._isSetTimeOut = false;
+    /**
+    * @property {boolean} _isSetTimeOut  - true if the browser is using setTimeout instead of raf.
+    * @private
+    */
+    this._isSetTimeOut = false;
 
-	/**
-	* @property {function} _onLoop - The function called by the update.
-	* @private
-	*/
-	this._onLoop = null;
+    /**
+    * @property {function} _onLoop - The function called by the update.
+    * @private
+    */
+    this._onLoop = null;
 
-	/**
-	* @property {number} _timeOutID - The callback ID used when calling cancel.
-	* @private
-	*/
-	this._timeOutID = null;
+    /**
+    * @property {number} _timeOutID - The callback ID used when calling cancel.
+    * @private
+    */
+    this._timeOutID = null;
 
 };
 
 Phaser.RequestAnimationFrame.prototype = {
 
-	/**
-	* Starts the requestAnimatioFrame running or setTimeout if unavailable in browser
-	* @method Phaser.RequestAnimationFrame#start
-	*/
-	start: function () {
+    /**
+    * Starts the requestAnimatioFrame running or setTimeout if unavailable in browser
+    * @method Phaser.RequestAnimationFrame#start
+    */
+    start: function () {
 
-		this.isRunning = true;
+        this.isRunning = true;
 
-		var _this = this;
+        var _this = this;
 
-		if (!window.requestAnimationFrame)
-		{
-			this._isSetTimeOut = true;
+        if (!window.requestAnimationFrame)
+        {
+            this._isSetTimeOut = true;
 
             this._onLoop = function () {
                 return _this.updateSetTimeout();
             };
 
-			this._timeOutID = window.setTimeout(this._onLoop, 0);
-		}
-		else
-		{
-			this._isSetTimeOut = false;
+            this._timeOutID = window.setTimeout(this._onLoop, 0);
+        }
+        else
+        {
+            this._isSetTimeOut = false;
 
             this._onLoop = function (time) {
                 return _this.updateRAF(time);
             };
 
-			this._timeOutID = window.requestAnimationFrame(this._onLoop);
-		}
+            this._timeOutID = window.requestAnimationFrame(this._onLoop);
+        }
 
-	},
+    },
 
-	/**
-	* The update method for the requestAnimationFrame
-	* @method Phaser.RequestAnimationFrame#updateRAF	
-	* @param {number} time - A timestamp, either from RAF or setTimeOut
-	*/
-	updateRAF: function (time) {
+    /**
+    * The update method for the requestAnimationFrame
+    * @method Phaser.RequestAnimationFrame#updateRAF    
+    * @param {number} time - A timestamp, either from RAF or setTimeOut
+    */
+    updateRAF: function (time) {
 
-		this.game.update(time);
+        this.game.update(time);
 
-		this._timeOutID = window.requestAnimationFrame(this._onLoop);
+        this._timeOutID = window.requestAnimationFrame(this._onLoop);
 
-	},
+    },
 
-	/**
-	* The update method for the setTimeout.
-	* @method Phaser.RequestAnimationFrame#updateSetTimeout
-	*/
-	updateSetTimeout: function () {
+    /**
+    * The update method for the setTimeout.
+    * @method Phaser.RequestAnimationFrame#updateSetTimeout
+    */
+    updateSetTimeout: function () {
 
-		this.game.update(Date.now());
+        this.game.update(Date.now());
 
-		this._timeOutID = window.setTimeout(this._onLoop, this.game.time.timeToCall);
+        this._timeOutID = window.setTimeout(this._onLoop, this.game.time.timeToCall);
 
-	},
+    },
 
-	/**
-	* Stops the requestAnimationFrame from running.
-	* @method Phaser.RequestAnimationFrame#stop
-	*/
-	stop: function () {
+    /**
+    * Stops the requestAnimationFrame from running.
+    * @method Phaser.RequestAnimationFrame#stop
+    */
+    stop: function () {
 
-		if (this._isSetTimeOut)
-		{
-			clearTimeout(this._timeOutID);
-		}
-		else
-		{
-			window.cancelAnimationFrame(this._timeOutID);
-		}
+        if (this._isSetTimeOut)
+        {
+            clearTimeout(this._timeOutID);
+        }
+        else
+        {
+            window.cancelAnimationFrame(this._timeOutID);
+        }
 
-		this.isRunning = false;
+        this.isRunning = false;
 
-	},
+    },
 
-	/**
-	* Is the browser using setTimeout?
-	* @method Phaser.RequestAnimationFrame#isSetTimeOut
-	* @return {boolean}
-	*/
-	isSetTimeOut: function () {
-		return this._isSetTimeOut;
-	},
+    /**
+    * Is the browser using setTimeout?
+    * @method Phaser.RequestAnimationFrame#isSetTimeOut
+    * @return {boolean}
+    */
+    isSetTimeOut: function () {
+        return this._isSetTimeOut;
+    },
 
-	/**
-	* Is the browser using requestAnimationFrame?
-	* @method Phaser.RequestAnimationFrame#isRAF
-	* @return {boolean}
-	*/
-	isRAF: function () {
-		return (this._isSetTimeOut === false);
-	}
+    /**
+    * Is the browser using requestAnimationFrame?
+    * @method Phaser.RequestAnimationFrame#isRAF
+    * @return {boolean}
+    */
+    isRAF: function () {
+        return (this._isSetTimeOut === false);
+    }
 
 };
+/* jshint noempty: false */
+
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
@@ -23618,232 +24160,231 @@ Phaser.RequestAnimationFrame.prototype = {
 * @param {array} seeds
 */
 Phaser.RandomDataGenerator = function (seeds) {
-	
-	if (typeof seeds === "undefined") { seeds = []; }
+    
+    if (typeof seeds === "undefined") { seeds = []; }
 
-	this.sow(seeds);
+    /**
+    * @property {number} c - Internal var.
+    * @private
+    */
+    this.c = 1;
+
+    /**
+    * @property {number} s0 - Internal var.
+    * @private
+    */
+    this.s0 = 0;
+
+    /**
+    * @property {number} s1 - Internal var.
+    * @private
+    */
+    this.s1 = 0;
+
+    /**
+    * @property {number} s2 - Internal var.
+    * @private
+    */
+    this.s2 = 0;
+
+    this.sow(seeds);
 
 };
 
 Phaser.RandomDataGenerator.prototype = {
 
-	/**
-	* @property {number} c
-	* @private
-	*/
-	c: 1,
+    /**
+    * Private random helper.
+    * @method Phaser.RandomDataGenerator#rnd
+    * @private
+    * @return {number}
+    */
+    rnd: function () {
 
-	/**
-	* @property {number} s0
-	* @private
-	*/
-	s0: 0,
+        var t = 2091639 * this.s0 + this.c * 2.3283064365386963e-10; // 2^-32
 
-	/**
-	* @property {number} s1
-	* @private
-	*/
-	s1: 0,
+        this.c = t | 0;
+        this.s0 = this.s1;
+        this.s1 = this.s2;
+        this.s2 = t - this.c;
 
-	/**
-	* @property {number} s2
-	* @private
-	*/
-	s2: 0,
+        return this.s2;
+    },
 
-	/**
-	* Private random helper.
-	* @method Phaser.RandomDataGenerator#rnd
-	* @private
-	* @return {number} Description.
-	*/
-	rnd: function () {
+    /**
+    * Reset the seed of the random data generator.
+    * 
+    * @method Phaser.RandomDataGenerator#sow
+    * @param {array} seeds
+    */
+    sow: function (seeds) {
 
-		var t = 2091639 * this.s0 + this.c * 2.3283064365386963e-10; // 2^-32
+        if (typeof seeds === "undefined") { seeds = []; }
 
-		this.c = t | 0;
-		this.s0 = this.s1;
-		this.s1 = this.s2;
-		this.s2 = t - this.c;
+        this.s0 = this.hash(' ');
+        this.s1 = this.hash(this.s0);
+        this.s2 = this.hash(this.s1);
+        this.c = 1;
 
-		return this.s2;
-	},
+        var seed;
 
-	/**
-	* Reset the seed of the random data generator.
-	* 
-	* @method Phaser.RandomDataGenerator#sow
-	* @param {array} seeds
-	*/
-	sow: function (seeds) {
+        for (var i = 0; seed = seeds[i++]; )
+        {
+            this.s0 -= this.hash(seed);
+            this.s0 += ~~(this.s0 < 0);
+            this.s1 -= this.hash(seed);
+            this.s1 += ~~(this.s1 < 0);
+            this.s2 -= this.hash(seed);
+            this.s2 += ~~(this.s2 < 0);
+        }
+        
+    },
 
-		if (typeof seeds === "undefined") { seeds = []; }
+    /**
+    * Internal method that creates a seed hash.
+    * @method Phaser.RandomDataGenerator#hash
+    * @param {Any} data
+    * @private
+    * @return {number} hashed value.
+    */
+    hash: function (data) {
 
-		this.s0 = this.hash(' ');
-		this.s1 = this.hash(this.s0);
-		this.s2 = this.hash(this.s1);
-		this.c = 1;
+        var h, i, n;
+        n = 0xefc8249d;
+        data = data.toString();
 
-		var seed;
+        for (i = 0; i < data.length; i++) {
+            n += data.charCodeAt(i);
+            h = 0.02519603282416938 * n;
+            n = h >>> 0;
+            h -= n;
+            h *= n;
+            n = h >>> 0;
+            h -= n;
+            n += h * 0x100000000;// 2^32
+        }
 
-		for (var i = 0; seed = seeds[i++]; )
-		{
-			this.s0 -= this.hash(seed);
-			this.s0 += ~~(this.s0 < 0);
-			this.s1 -= this.hash(seed);
-			this.s1 += ~~(this.s1 < 0);
-			this.s2 -= this.hash(seed);
-			this.s2 += ~~(this.s2 < 0);
-		}
-		
-	},
+        return (n >>> 0) * 2.3283064365386963e-10;// 2^-32
 
-	/**
-	* Description.
-	* @method Phaser.RandomDataGenerator#hash
-	* @param {Any} data
-	* @private
-	* @return {number} Description.
-	*/
-	hash: function (data) {
+    },
 
-		var h, i, n;
-		n = 0xefc8249d;
-		data = data.toString();
+    /**
+    * Returns a random integer between 0 and 2^32.
+    * @method Phaser.RandomDataGenerator#integer
+    * @return {number} A random integer between 0 and 2^32.
+    */
+    integer: function() {
+        return this.rnd.apply(this) * 0x100000000;// 2^32
+    },
 
-		for (i = 0; i < data.length; i++) {
-			n += data.charCodeAt(i);
-			h = 0.02519603282416938 * n;
-			n = h >>> 0;
-			h -= n;
-			h *= n;
-			n = h >>> 0;
-			h -= n;
-			n += h * 0x100000000;// 2^32
-		}
+    /**
+    * Returns a random real number between 0 and 1.
+    * @method Phaser.RandomDataGenerator#frac
+    * @return {number} A random real number between 0 and 1.
+    */
+    frac: function() {
+        return this.rnd.apply(this) + (this.rnd.apply(this) * 0x200000 | 0) * 1.1102230246251565e-16;// 2^-53
+    },
 
-		return (n >>> 0) * 2.3283064365386963e-10;// 2^-32
+    /**
+    * Returns a random real number between 0 and 2^32.
+    * @method Phaser.RandomDataGenerator#real
+    * @return {number} A random real number between 0 and 2^32.
+    */
+    real: function() {
+        return this.integer() + this.frac();
+    },
 
-	},
+    /**
+    * Returns a random integer between min and max.
+    * @method Phaser.RandomDataGenerator#integerInRange
+    * @param {number} min - The minimum value in the range.
+    * @param {number} max - The maximum value in the range.
+    * @return {number} A random number between min and max.
+    */
+    integerInRange: function (min, max) {
+        return Math.floor(this.realInRange(min, max));
+    },
 
-	/**
-	* Returns a random integer between 0 and 2^32.
-	* @method Phaser.RandomDataGenerator#integer
-	* @return {number}
-	*/
-	integer: function() {
-		return this.rnd.apply(this) * 0x100000000;// 2^32
-	},
+    /**
+    * Returns a random real number between min and max.
+    * @method Phaser.RandomDataGenerator#realInRange
+    * @param {number} min - The minimum value in the range.
+    * @param {number} max - The maximum value in the range.
+    * @return {number} A random number between min and max.
+    */
+    realInRange: function (min, max) {
 
-	/**
-	* Returns a random real number between 0 and 1.
-	* @method Phaser.RandomDataGenerator#frac
-	* @return {number}
-	*/	
-	frac: function() {
-		return this.rnd.apply(this) + (this.rnd.apply(this) * 0x200000 | 0) * 1.1102230246251565e-16;// 2^-53
-	},
+        return this.frac() * (max - min) + min;
 
-	/**
-	* Returns a random real number between 0 and 2^32.
-	* @method Phaser.RandomDataGenerator#real
-	* @return {number}
-	*/
-	real: function() {
-		return this.integer() + this.frac();
-	},
+    },
 
-	/**
-	* Returns a random integer between min and max.
-	* @method Phaser.RandomDataGenerator#integerInRange
-	* @param {number} min
-	* @param {number} max
-	* @return {number}
-	*/
-	integerInRange: function (min, max) {
-		return Math.floor(this.realInRange(min, max));
-	},
+    /**
+    * Returns a random real number between -1 and 1.
+    * @method Phaser.RandomDataGenerator#normal
+    * @return {number} A random real number between -1 and 1.
+    */
+    normal: function () {
+        return 1 - 2 * this.frac();
+    },
 
-	/**
-	* Returns a random real number between min and max.
-	* @method Phaser.RandomDataGenerator#realInRange
-	* @param {number} min
-	* @param {number} max
-	* @return {number}
-	*/
-	realInRange: function (min, max) {
+    /**
+    * Returns a valid RFC4122 version4 ID hex string from https://gist.github.com/1308368
+    * @method Phaser.RandomDataGenerator#uuid
+    * @return {string} A valid RFC4122 version4 ID hex string
+    */
+    uuid: function () {
 
-		return this.frac() * (max - min) + min;
+        var a = '';
+        var b = '';
 
-	},
+        for (b = a = ''; a++ < 36; b +=~a % 5 | a * 3&4 ? (a^15 ? 8^this.frac() * (a^20 ? 16 : 4) : 4).toString(16) : '-')
+        {
+        }
 
-	/**
-	* Returns a random real number between -1 and 1.
-	* @method Phaser.RandomDataGenerator#normal
-	* @return {number}
-	*/
-	normal: function () {
-		return 1 - 2 * this.frac();
-	},
+        return b;
 
-	/**
-	* Returns a valid RFC4122 version4 ID hex string from https://gist.github.com/1308368
-	* @method Phaser.RandomDataGenerator#uuid
-	* @return {string}
-	*/
-	uuid: function () {
+    },
 
-		var a, b;
+    /**
+    * Returns a random member of `array`.
+    * @method Phaser.RandomDataGenerator#pick
+    * @param {Array} ary - An Array to pick a random member of.
+    * @return {any} A random member of the array.
+    */
+    pick: function (ary) {
+        return ary[this.integerInRange(0, ary.length)];
+    },
 
-		for (
-			b=a='';
-			a++<36;
-			b+=~a%5|a*3&4?(a^15?8^this.frac()*(a^20?16:4):4).toString(16):'-'
-		);
+    /**
+    * Returns a random member of `array`, favoring the earlier entries.
+    * @method Phaser.RandomDataGenerator#weightedPick
+    * @param {Array} ary - An Array to pick a random member of.
+    * @return {any} A random member of the array.
+    */
+    weightedPick: function (ary) {
+        return ary[~~(Math.pow(this.frac(), 2) * ary.length)];
+    },
 
-		return b;
+    /**
+    * Returns a random timestamp between min and max, or between the beginning of 2000 and the end of 2020 if min and max aren't specified.
+    * @method Phaser.RandomDataGenerator#timestamp
+    * @param {number} min - The minimum value in the range.
+    * @param {number} max - The maximum value in the range.
+    * @return {number} A random timestamp between min and max.
+    */
+    timestamp: function (min, max) {
+        return this.realInRange(min || 946684800000, max || 1577862000000);
+    },
 
-	},
-
-	/**
-	* Returns a random member of `array`.
-	* @method Phaser.RandomDataGenerator#pick
-	* @param {Any} ary
-	* @return {number}
-	*/
-	pick: function (ary) {
-		return ary[this.integerInRange(0, ary.length)];
-	},
-
-	/**
-	* Returns a random member of `array`, favoring the earlier entries.
-	* @method Phaser.RandomDataGenerator#weightedPick
-	* @param {Any} ary
-	* @return {number}
-	*/
-	weightedPick: function (ary) {
-		return ary[~~(Math.pow(this.frac(), 2) * ary.length)];
-	},
-
-	/**
-	* Returns a random timestamp between min and max, or between the beginning of 2000 and the end of 2020 if min and max aren't specified.
-	* @method Phaser.RandomDataGenerator#timestamp
-	* @param {number} min
-	* @param {number} max
-	* @return {number}
-	*/
-	timestamp: function (a, b) {
-		return this.realInRange(a || 946684800000, b || 1577862000000);
-	},
-
-	/**
-	* Returns a random angle between -180 and 180.
-	* @method Phaser.RandomDataGenerator#angle
-	* @return {number}
-	*/
-	angle: function() {
-		return this.integerInRange(-180, 180);
-	}
+    /**
+    * Returns a random angle between -180 and 180.
+    * @method Phaser.RandomDataGenerator#angle
+    * @return {number} A random number between -180 and 180.
+    */
+    angle: function() {
+        return this.integerInRange(-180, 180);
+    }
 
 };
 
@@ -23860,78 +24401,78 @@ Phaser.RandomDataGenerator.prototype = {
 */
 Phaser.Math = {
 
-	/**
-	* = 2 &pi;
-	* @method Phaser.Math#PI2
-	*/
-	PI2: Math.PI * 2,
+    /**
+    * = 2 &pi;
+    * @method Phaser.Math#PI2
+    */
+    PI2: Math.PI * 2,
 
-	/**
-	* Two number are fuzzyEqual if their difference is less than &epsilon;. 
-	* @method Phaser.Math#fuzzyEqual
-	* @param {number} a
-	* @param {number} b
-	* @param {number} epsilon 
-	* @return {boolean} True if |a-b|<&epsilon;
-	*/
+    /**
+    * Two number are fuzzyEqual if their difference is less than &epsilon;. 
+    * @method Phaser.Math#fuzzyEqual
+    * @param {number} a
+    * @param {number} b
+    * @param {number} epsilon 
+    * @return {boolean} True if |a-b|<&epsilon;
+    */
     fuzzyEqual: function (a, b, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
         return Math.abs(a - b) < epsilon;
     },
 
-	/**
-	* a is fuzzyLessThan b if it is less than b + &epsilon;. 
-	* @method Phaser.Math#fuzzyEqual
-	* @param {number} a
-	* @param {number} b
-	* @param {number} epsilon 
-	* @return {boolean} True if a<b+&epsilon;
-	*/
+    /**
+    * a is fuzzyLessThan b if it is less than b + &epsilon;. 
+    * @method Phaser.Math#fuzzyEqual
+    * @param {number} a
+    * @param {number} b
+    * @param {number} epsilon 
+    * @return {boolean} True if a<b+&epsilon;
+    */
     fuzzyLessThan: function (a, b, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
         return a < b + epsilon;
     },
 
-	/**
-	* a is fuzzyGreaterThan b if it is more than b - &epsilon;.  
-	* @method Phaser.Math#fuzzyGreaterThan
-	* @param {number} a
-	* @param {number} b
-	* @param {number} epsilon 
-	* @return {boolean} True if a>b+&epsilon;
-	*/
+    /**
+    * a is fuzzyGreaterThan b if it is more than b - &epsilon;.  
+    * @method Phaser.Math#fuzzyGreaterThan
+    * @param {number} a
+    * @param {number} b
+    * @param {number} epsilon 
+    * @return {boolean} True if a>b+&epsilon;
+    */
     fuzzyGreaterThan: function (a, b, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
         return a > b - epsilon;
     },
 
-	/** 
-	* @method Phaser.Math#fuzzyCeil
-	* @param {number} val
-	* @param {number} epsilon 
-	* @return {boolean} ceiling(val-&epsilon;)
-	*/
+    /** 
+    * @method Phaser.Math#fuzzyCeil
+    * @param {number} val
+    * @param {number} epsilon 
+    * @return {boolean} ceiling(val-&epsilon;)
+    */
     fuzzyCeil: function (val, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
         return Math.ceil(val - epsilon);
     },
 
-	/** 
-	* @method Phaser.Math#fuzzyFloor
-	* @param {number} val
-	* @param {number} epsilon 
-	* @return {boolean} floor(val-&epsilon;)
-	*/
+    /** 
+    * @method Phaser.Math#fuzzyFloor
+    * @param {number} val
+    * @param {number} epsilon 
+    * @return {boolean} floor(val-&epsilon;)
+    */
     fuzzyFloor: function (val, epsilon) {
         if (typeof epsilon === "undefined") { epsilon = 0.0001; }
         return Math.floor(val + epsilon);
     },
 
-	/** 
+    /** 
     * Averages all values passed to the function and returns the result. You can pass as many parameters as you like.
-	* @method Phaser.Math#average
+    * @method Phaser.Math#average
     * @return {number} The average of all given values.
-	*/
+    */
     average: function () {
 
         var args = [];
@@ -23950,40 +24491,40 @@ Phaser.Math = {
 
     },
 
-	/** 
-	* @method Phaser.Math#truncate
+    /** 
+    * @method Phaser.Math#truncate
     * @param {number} n
     * @return {number}
-	*/
+    */
     truncate: function (n) {
         return (n > 0) ? Math.floor(n) : Math.ceil(n);
     },
 
-	/** 
-	* @method Phaser.Math#shear
-	* @param {number} n
-	* @return {number} n mod 1
-	*/
+    /** 
+    * @method Phaser.Math#shear
+    * @param {number} n
+    * @return {number} n mod 1
+    */
     shear: function (n) {
         return n % 1;
     },
 
-	/**
-	* Snap a value to nearest grid slice, using rounding.
-	*
-	* Example: if you have an interval gap of 5 and a position of 12... you will snap to 10 whereas 14 will snap to 15.
-	*
-	* @method Phaser.Math#snapTo
-	* @param {number} input - The value to snap.
-	* @param {number} gap - The interval gap of the grid.
-	* @param {number} [start] - Optional starting offset for gap.
+    /**
+    * Snap a value to nearest grid slice, using rounding.
+    *
+    * Example: if you have an interval gap of 5 and a position of 12... you will snap to 10 whereas 14 will snap to 15.
+    *
+    * @method Phaser.Math#snapTo
+    * @param {number} input - The value to snap.
+    * @param {number} gap - The interval gap of the grid.
+    * @param {number} [start] - Optional starting offset for gap.
     * @return {number}
-	*/
+    */
     snapTo: function (input, gap, start) {
 
         if (typeof start === "undefined") { start = 0; }
 
-        if (gap == 0) {
+        if (gap === 0) {
             return input;
         }
 
@@ -23994,7 +24535,7 @@ Phaser.Math = {
 
     },
 
-	/**
+    /**
     * Snap a value to nearest grid slice, using floor.
     *
     * Example: if you have an interval gap of 5 and a position of 12... you will snap to 10. As will 14 snap to 10... but 16 will snap to 15
@@ -24009,7 +24550,7 @@ Phaser.Math = {
 
         if (typeof start === "undefined") { start = 0; }
 
-        if (gap == 0) {
+        if (gap === 0) {
             return input;
         }
 
@@ -24020,22 +24561,22 @@ Phaser.Math = {
 
     },
 
-	/**
-	* Snap a value to nearest grid slice, using ceil.
-	*
-	* Example: if you have an interval gap of 5 and a position of 12... you will snap to 15. As will 14 will snap to 15... but 16 will snap to 20.
-	*
+    /**
+    * Snap a value to nearest grid slice, using ceil.
+    *
+    * Example: if you have an interval gap of 5 and a position of 12... you will snap to 15. As will 14 will snap to 15... but 16 will snap to 20.
+    *
     * @method Phaser.Math#snapToCeil
     * @param {number} input - The value to snap.
     * @param {number} gap - The interval gap of the grid.
     * @param {number} [start] - Optional starting offset for gap.
     * @return {number}
-	*/
+    */
     snapToCeil: function (input, gap, start) {
 
         if (typeof start === "undefined") { start = 0; }
 
-        if (gap == 0) {
+        if (gap === 0) {
             return input;
         }
 
@@ -24047,14 +24588,14 @@ Phaser.Math = {
     },
 
 
-	/**
-	* Snaps a value to the nearest value in an array.
-	* @method Phaser.Math#snapToInArray
-	* @param {number} input
-	* @param {array} arr 
-	* @param {boolean} sort - True if the array needs to be sorted.
+    /**
+    * Snaps a value to the nearest value in an array.
+    * @method Phaser.Math#snapToInArray
+    * @param {number} input
+    * @param {array} arr 
+    * @param {boolean} sort - True if the array needs to be sorted.
     * @return {number}
-	*/
+    */
     snapToInArray: function (input, arr, sort) {
 
         if (typeof sort === "undefined") { sort = true; }
@@ -24080,42 +24621,42 @@ Phaser.Math = {
 
     },
 
-	/**
-	* Round to some place comparative to a 'base', default is 10 for decimal place.
-	*
-	* 'place' is represented by the power applied to 'base' to get that place
-	* e.g.
-	* 2000/7 ~= 285.714285714285714285714 ~= (bin)100011101.1011011011011011
-	*
-	* roundTo(2000/7,3) == 0
-	* roundTo(2000/7,2) == 300
-	* roundTo(2000/7,1) == 290
-	* roundTo(2000/7,0) == 286
-	* roundTo(2000/7,-1) == 285.7
-	* roundTo(2000/7,-2) == 285.71
-	* roundTo(2000/7,-3) == 285.714
-	* roundTo(2000/7,-4) == 285.7143
-	* roundTo(2000/7,-5) == 285.71429
-	*
-	* roundTo(2000/7,3,2)  == 288       -- 100100000
-	* roundTo(2000/7,2,2)  == 284       -- 100011100
-	* roundTo(2000/7,1,2)  == 286       -- 100011110
-	* roundTo(2000/7,0,2)  == 286       -- 100011110
-	* roundTo(2000/7,-1,2) == 285.5     -- 100011101.1
-	* roundTo(2000/7,-2,2) == 285.75    -- 100011101.11
-	* roundTo(2000/7,-3,2) == 285.75    -- 100011101.11
-	* roundTo(2000/7,-4,2) == 285.6875  -- 100011101.1011
-	* roundTo(2000/7,-5,2) == 285.71875 -- 100011101.10111
-	*
-	* Note what occurs when we round to the 3rd space (8ths place), 100100000, this is to be assumed
-	* because we are rounding 100011.1011011011011011 which rounds up.
-	* 
-	* @method Phaser.Math#roundTo
-	* @param {number} value - The value to round.
-	* @param {number} place - The place to round to.
-	* @param {number} base - The base to round in... default is 10 for decimal.
+    /**
+    * Round to some place comparative to a 'base', default is 10 for decimal place.
+    *
+    * 'place' is represented by the power applied to 'base' to get that place
+    * e.g.
+    * 2000/7 ~= 285.714285714285714285714 ~= (bin)100011101.1011011011011011
+    *
+    * roundTo(2000/7,3) === 0
+    * roundTo(2000/7,2) == 300
+    * roundTo(2000/7,1) == 290
+    * roundTo(2000/7,0) == 286
+    * roundTo(2000/7,-1) == 285.7
+    * roundTo(2000/7,-2) == 285.71
+    * roundTo(2000/7,-3) == 285.714
+    * roundTo(2000/7,-4) == 285.7143
+    * roundTo(2000/7,-5) == 285.71429
+    *
+    * roundTo(2000/7,3,2)  == 288       -- 100100000
+    * roundTo(2000/7,2,2)  == 284       -- 100011100
+    * roundTo(2000/7,1,2)  == 286       -- 100011110
+    * roundTo(2000/7,0,2)  == 286       -- 100011110
+    * roundTo(2000/7,-1,2) == 285.5     -- 100011101.1
+    * roundTo(2000/7,-2,2) == 285.75    -- 100011101.11
+    * roundTo(2000/7,-3,2) == 285.75    -- 100011101.11
+    * roundTo(2000/7,-4,2) == 285.6875  -- 100011101.1011
+    * roundTo(2000/7,-5,2) == 285.71875 -- 100011101.10111
+    *
+    * Note what occurs when we round to the 3rd space (8ths place), 100100000, this is to be assumed
+    * because we are rounding 100011.1011011011011011 which rounds up.
+    * 
+    * @method Phaser.Math#roundTo
+    * @param {number} value - The value to round.
+    * @param {number} place - The place to round to.
+    * @param {number} base - The base to round in... default is 10 for decimal.
     * @return {number}
-	*/
+    */
     roundTo: function (value, place, base) {
 
         if (typeof place === "undefined") { place = 0; }
@@ -24128,12 +24669,12 @@ Phaser.Math = {
     },
 
     /**
-	* @method Phaser.Math#floorTo
-	* @param {number} value - The value to round.
-	* @param {number} place - The place to round to.
-	* @param {number} base - The base to round in... default is 10 for decimal.
+    * @method Phaser.Math#floorTo
+    * @param {number} value - The value to round.
+    * @param {number} place - The place to round to.
+    * @param {number} base - The base to round in... default is 10 for decimal.
     * @return {number}
-	*/
+    */
     floorTo: function (value, place, base) {
 
         if (typeof place === "undefined") { place = 0; }
@@ -24146,12 +24687,12 @@ Phaser.Math = {
     },
 
     /**
-	* @method Phaser.Math#ceilTo
-	* @param {number} value - The value to round.
-	* @param {number} place - The place to round to.
-	* @param {number} base - The base to round in... default is 10 for decimal.
+    * @method Phaser.Math#ceilTo
+    * @param {number} value - The value to round.
+    * @param {number} place - The place to round to.
+    * @param {number} base - The base to round in... default is 10 for decimal.
     * @return {number}
-	*/
+    */
     ceilTo: function (value, place, base) {
 
         if (typeof place === "undefined") { place = 0; }
@@ -24163,56 +24704,56 @@ Phaser.Math = {
 
     },
 
-	/**
-	* A one dimensional linear interpolation of a value.
-	* @method Phaser.Math#interpolateFloat
-	* @param {number} a
-	* @param {number} b
-	* @param {number} weight 
+    /**
+    * A one dimensional linear interpolation of a value.
+    * @method Phaser.Math#interpolateFloat
+    * @param {number} a
+    * @param {number} b
+    * @param {number} weight 
     * @return {number}
-	*/
+    */
     interpolateFloat: function (a, b, weight) {
         return (b - a) * weight + a;
     },
 
-	/**
-	* Find the angle of a segment from (x1, y1) -> (x2, y2 ).
-	* @method Phaser.Math#angleBetween
-	* @param {number} x1
-	* @param {number} y1
-	* @param {number} x2
-	* @param {number} y2
+    /**
+    * Find the angle of a segment from (x1, y1) -> (x2, y2 ).
+    * @method Phaser.Math#angleBetween
+    * @param {number} x1
+    * @param {number} y1
+    * @param {number} x2
+    * @param {number} y2
     * @return {number}
-	*/
+    */
     angleBetween: function (x1, y1, x2, y2) {
         return Math.atan2(y2 - y1, x2 - x1);
     },
 
-	/**
-	* Set an angle  within the bounds of -&pi; to&pi;.
-	* @method Phaser.Math#normalizeAngle
-	* @param {number} angle
-	* @param {boolean} radians - True if angle size is expressed in radians.
+    /**
+    * Set an angle  within the bounds of -&pi; to&pi;.
+    * @method Phaser.Math#normalizeAngle
+    * @param {number} angle
+    * @param {boolean} radians - True if angle size is expressed in radians.
     * @return {number}
-	*/
+    */
     normalizeAngle: function (angle, radians) {
 
         if (typeof radians === "undefined") { radians = true; }
 
-        var rd = (radians) ? GameMath.PI : 180;
-        return this.wrap(angle, rd, -rd);
+        var rd = (radians) ? Math.PI : 180;
+        return this.wrap(angle, -rd, rd);
         
     },
 
-	/**
-	* Closest angle between two angles from a1 to a2
-	* absolute value the return for exact angle
-	* @method Phaser.Math#nearestAngleBetween
-	* @param {number} a1
-	* @param {number} a2
-	* @param {boolean} radians - True if angle sizes are expressed in radians.
+    /**
+    * Closest angle between two angles from a1 to a2
+    * absolute value the return for exact angle
+    * @method Phaser.Math#nearestAngleBetween
+    * @param {number} a1
+    * @param {number} a2
+    * @param {boolean} radians - True if angle sizes are expressed in radians.
     * @return {number}
-	*/
+    */
     nearestAngleBetween: function (a1, a2, radians) {
 
         if (typeof radians === "undefined") { radians = true; }
@@ -24235,16 +24776,16 @@ Phaser.Math = {
 
     },
 
-	/**
-	* Interpolate across the shortest arc between two angles.
-	* @method Phaser.Math#interpolateAngles
-	* @param {number} a1 - Description.
-	* @param {number} a2 - Description.
-	* @param {number} weight - Description.
-	* @param {boolean} radians - True if angle sizes are expressed in radians.
-	* @param {Description} ease - Description.
+    /**
+    * Interpolate across the shortest arc between two angles.
+    * @method Phaser.Math#interpolateAngles
+    * @param {number} a1 - Description.
+    * @param {number} a2 - Description.
+    * @param {number} weight - Description.
+    * @param {boolean} radians - True if angle sizes are expressed in radians.
+    * @param {Description} ease - Description.
     * @return {number}
-	*/
+    */
     interpolateAngles: function (a1, a2, weight, radians, ease) {
 
         if (typeof radians === "undefined") { radians = true; }
@@ -24257,16 +24798,16 @@ Phaser.Math = {
 
     },
 
-	/**
-	* Generate a random bool result based on the chance value.
-	* <p>
-	* Returns true or false based on the chance value (default 50%). For example if you wanted a player to have a 30% chance
-	* of getting a bonus, call chanceRoll(30) - true means the chance passed, false means it failed.
-	* </p>
-	* @method Phaser.Math#chanceRoll
-	* @param {number} chance - The chance of receiving the value. A number between 0 and 100 (effectively 0% to 100%).
-	* @return {boolean} True if the roll passed, or false otherwise.
-	*/
+    /**
+    * Generate a random bool result based on the chance value.
+    * <p>
+    * Returns true or false based on the chance value (default 50%). For example if you wanted a player to have a 30% chance
+    * of getting a bonus, call chanceRoll(30) - true means the chance passed, false means it failed.
+    * </p>
+    * @method Phaser.Math#chanceRoll
+    * @param {number} chance - The chance of receiving the value. A number between 0 and 100 (effectively 0% to 100%).
+    * @return {boolean} True if the roll passed, or false otherwise.
+    */
     chanceRoll: function (chance) {
 
         if (typeof chance === "undefined") { chance = 50; }
@@ -24314,15 +24855,15 @@ Phaser.Math = {
 
     },
 
-	/**
-	* Adds the given amount to the value, but never lets the value go over the specified maximum.
-	*
-	* @method Phaser.Math#maxAdd
-	* @param {number} value - The value to add the amount to.
-	* @param {number} amount - The amount to add to the value.
-	* @param {number} max- The maximum the value is allowed to be.
+    /**
+    * Adds the given amount to the value, but never lets the value go over the specified maximum.
+    *
+    * @method Phaser.Math#maxAdd
+    * @param {number} value - The value to add the amount to.
+    * @param {number} amount - The amount to add to the value.
+    * @param {number} max- The maximum the value is allowed to be.
     * @return {number}
-	*/
+    */
     maxAdd: function (value, amount, max) {
 
         value += amount;
@@ -24336,15 +24877,15 @@ Phaser.Math = {
 
     },
 
-	/**
-	* Subtracts the given amount from the value, but never lets the value go below the specified minimum.
-	*
-	* @method Phaser.Math#minSub
-	* @param {number} value - The base value.
-	* @param {number} amount - The amount to subtract from the base value.
-	* @param {number} min - The minimum the value is allowed to be.
-	* @return {number} The new value.
-	*/
+    /**
+    * Subtracts the given amount from the value, but never lets the value go below the specified minimum.
+    *
+    * @method Phaser.Math#minSub
+    * @param {number} value - The base value.
+    * @param {number} amount - The amount to subtract from the base value.
+    * @param {number} min - The minimum the value is allowed to be.
+    * @return {number} The new value.
+    */
     minSub: function (value, amount, min) {
 
         value -= amount;
@@ -24392,11 +24933,11 @@ Phaser.Math = {
     * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
     * <p>Values must be positive integers, and are passed through Math.abs</p>
     *
-	* @method Phaser.Math#wrapValue
-	* @param {number} value - The value to add the amount to.
-	* @param {number} amount - The amount to add to the value.
-	* @param {number} max - The maximum the value is allowed to be.
-	* @return {number} The wrapped value.
+    * @method Phaser.Math#wrapValue
+    * @param {number} value - The value to add the amount to.
+    * @param {number} amount - The amount to add to the value.
+    * @param {number} max - The maximum the value is allowed to be.
+    * @return {number} The wrapped value.
     */
     wrapValue: function (value, amount, max) {
 
@@ -24410,36 +24951,36 @@ Phaser.Math = {
 
     },
 
-	/**
-	* Randomly returns either a 1 or -1.
-	*
-	* @method Phaser.Math#randomSign
-	* @return {number}	1 or -1
-	*/
+    /**
+    * Randomly returns either a 1 or -1.
+    *
+    * @method Phaser.Math#randomSign
+    * @return {number}  1 or -1
+    */
     randomSign: function () {
         return (Math.random() > 0.5) ? 1 : -1;
     },
 
-	/**
-	* Returns true if the number given is odd.
-	*
-	* @method Phaser.Math#isOdd
-	* @param {number} n - The number to check.
-	* @return {boolean} True if the given number is odd. False if the given number is even.
-	*/
+    /**
+    * Returns true if the number given is odd.
+    *
+    * @method Phaser.Math#isOdd
+    * @param {number} n - The number to check.
+    * @return {boolean} True if the given number is odd. False if the given number is even.
+    */
     isOdd: function (n) {
 
         return (n & 1);
 
     },
 
-	/**
-	* Returns true if the number given is even.
-	*
-	* @method Phaser.Math#isEven
-	* @param {number} n - The number to check.
-	* @return {boolean} True if the given number is even. False if the given number is odd.
-	*/
+    /**
+    * Returns true if the number given is even.
+    *
+    * @method Phaser.Math#isEven
+    * @param {number} n - The number to check.
+    * @return {boolean} True if the given number is even. False if the given number is odd.
+    */
     isEven: function (n) {
 
         if (n & 1)
@@ -24495,46 +25036,30 @@ Phaser.Math = {
 
     },
 
-	/**
-	* Keeps an angle value between -180 and +180<br>
-	* Should be called whenever the angle is updated on the Sprite to stop it from going insane.
-	*
-	* @method Phaser.Math#wrapAngle
-	* @param {number} angle - The angle value to check
-	* @return {number} The new angle value, returns the same as the input angle if it was within bounds.
-	*/
+    /**
+    * Keeps an angle value between -180 and +180<br>
+    * Should be called whenever the angle is updated on the Sprite to stop it from going insane.
+    *
+    * @method Phaser.Math#wrapAngle
+    * @param {number} angle - The angle value to check
+    * @return {number} The new angle value, returns the same as the input angle if it was within bounds.
+    */
     wrapAngle: function (angle) {
 
-        var result = angle;
-
-        //  Nothing needs to change
-        if (angle >= -180 && angle <= 180)
-        {
-            return angle;
-        }
-
-        //  Else normalise it to -180, 180
-        result = (angle + 180) % 360;
-
-        if (result < 0)
-        {
-            result += 360;
-        }
-
-        return result - 180;
+        return this.wrap(angle, -180, 180);
 
     },
 
-	/**
-	* Keeps an angle value between the given min and max values.
-	*
-	* @method Phaser.Math#angleLimit
-	* @param {number} angle - The angle value to check. Must be between -180 and +180.
-	* @param {number} min - The minimum angle that is allowed (must be -180 or greater).
-	* @param {number} max - The maximum angle that is allowed (must be 180 or less).
-	*
-	* @return {number} The new angle value, returns the same as the input angle if it was within bounds
-	*/
+    /**
+    * Keeps an angle value between the given min and max values.
+    *
+    * @method Phaser.Math#angleLimit
+    * @param {number} angle - The angle value to check. Must be between -180 and +180.
+    * @param {number} min - The minimum angle that is allowed (must be -180 or greater).
+    * @param {number} max - The maximum angle that is allowed (must be 180 or less).
+    *
+    * @return {number} The new angle value, returns the same as the input angle if it was within bounds
+    */
     angleLimit: function (angle, min, max) {
 
         var result = angle;
@@ -24552,13 +25077,13 @@ Phaser.Math = {
 
     },
 
-	/**
-	* Description.
-	* @method Phaser.Math#linearInterpolation
-	* @param {number} v
-	* @param {number} k
-	* @return {number} 
-	*/
+    /**
+    * Description.
+    * @method Phaser.Math#linearInterpolation
+    * @param {number} v
+    * @param {number} k
+    * @return {number} 
+    */
     linearInterpolation: function (v, k) {
 
         var m = v.length - 1;
@@ -24579,13 +25104,13 @@ Phaser.Math = {
 
     },
 
-	/**
-	* Description.
-	* @method Phaser.Math#bezierInterpolation
-	* @param {number} v
-	* @param {number} k
-	* @return {number}
-	*/
+    /**
+    * Description.
+    * @method Phaser.Math#bezierInterpolation
+    * @param {number} v
+    * @param {number} k
+    * @return {number}
+    */
     bezierInterpolation: function (v, k) {
 
         var b = 0;
@@ -24600,13 +25125,13 @@ Phaser.Math = {
 
     },
 
-	/**
-	* Description.
-	* @method Phaser.Math#catmullRomInterpolation
-	* @param {number} v
-	* @param {number} k
-	* @return {number}
-	*/
+    /**
+    * Description.
+    * @method Phaser.Math#catmullRomInterpolation
+    * @param {number} v
+    * @param {number} k
+    * @return {number}
+    */
     catmullRomInterpolation: function (v, k) {
 
         var m = v.length - 1;
@@ -24640,38 +25165,38 @@ Phaser.Math = {
 
     },
 
-	/**
-	* Description.
-	* @method Phaser.Math#Linear
-	* @param {number} p0
-	* @param {number} p1
-	* @param {number} t
-	* @return {number}
-	*/
+    /**
+    * Description.
+    * @method Phaser.Math#Linear
+    * @param {number} p0
+    * @param {number} p1
+    * @param {number} t
+    * @return {number}
+    */
     linear: function (p0, p1, t) {
         return (p1 - p0) * t + p0;
     },
 
-	/**
-	* @method Phaser.Math#bernstein
-	* @param {number} n
-	* @param {number} i
-	* @return {number}
-	*/
+    /**
+    * @method Phaser.Math#bernstein
+    * @param {number} n
+    * @param {number} i
+    * @return {number}
+    */
     bernstein: function (n, i) {
         return this.factorial(n) / this.factorial(i) / this.factorial(n - i);
     },
 
-	/**
-	* Description.
-	* @method Phaser.Math#catmullRom
-	* @param {number} p0
-	* @param {number} p1
-	* @param {number} p2
-	* @param {number} p3
-	* @param {number} t
-	* @return {number} 
-	*/
+    /**
+    * Description.
+    * @method Phaser.Math#catmullRom
+    * @param {number} p0
+    * @param {number} p1
+    * @param {number} p2
+    * @param {number} p3
+    * @param {number} t
+    * @return {number} 
+    */
     catmullRom: function (p0, p1, p2, p3, t) {
 
         var v0 = (p2 - p0) * 0.5, v1 = (p3 - p1) * 0.5, t2 = t * t, t3 = t * t2;
@@ -24690,16 +25215,16 @@ Phaser.Math = {
         return Math.abs(a - b);
     },
 
-	/**
-	* Fetch a random entry from the given array.
-	* Will return null if random selection is missing, or array has no entries.
-	*
-	* @method Phaser.Math#getRandom
-	* @param {array} objects - An array of objects.
-	* @param {number} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
-	* @param {number} length - Optional restriction on the number of values you want to randomly select from.
-	* @return {object} The random object that was selected.
-	*/
+    /**
+    * Fetch a random entry from the given array.
+    * Will return null if random selection is missing, or array has no entries.
+    *
+    * @method Phaser.Math#getRandom
+    * @param {array} objects - An array of objects.
+    * @param {number} startIndex - Optional offset off the front of the array. Default value is 0, or the beginning of the array.
+    * @param {number} length - Optional restriction on the number of values you want to randomly select from.
+    * @return {object} The random object that was selected.
+    */
     getRandom: function (objects, startIndex, length) {
 
         if (typeof startIndex === "undefined") { startIndex = 0; }
@@ -24709,7 +25234,7 @@ Phaser.Math = {
 
             var l = length;
 
-            if ((l == 0) || (l > objects.length - startIndex))
+            if ((l === 0) || (l > objects.length - startIndex))
             {
                 l = objects.length - startIndex;
             }
@@ -24724,13 +25249,13 @@ Phaser.Math = {
 
     },
 
-	/**
-	* Round down to the next whole number. E.g. floor(1.7) == 1, and floor(-2.7) == -2.
-	*
-	* @method Phaser.Math#floor
-	* @param {number} Value	Any number.
-	* @return {number} The rounded value of that number.
-	*/
+    /**
+    * Round down to the next whole number. E.g. floor(1.7) == 1, and floor(-2.7) == -2.
+    *
+    * @method Phaser.Math#floor
+    * @param {number} Value Any number.
+    * @return {number} The rounded value of that number.
+    */
     floor: function (value) {
 
         var n = value | 0;
@@ -24739,19 +25264,19 @@ Phaser.Math = {
 
     },
 
-	/**
-	* Round up to the next whole number.  E.g. ceil(1.3) == 2, and ceil(-2.3) == -3.
-	*
+    /**
+    * Round up to the next whole number.  E.g. ceil(1.3) == 2, and ceil(-2.3) == -3.
+    *
     * @method Phaser.Math#ceil
-	* @param {number} value - Any number.
-	* @return {number} The rounded value of that number.
-	*/
+    * @param {number} value - Any number.
+    * @return {number} The rounded value of that number.
+    */
     ceil: function (value) {
         var n = value | 0;
         return (value > 0) ? ((n != value) ? (n + 1) : (n)) : (n);
     },
 
-	/**
+    /**
     * Generate a sine and cosine table simultaneously and extremely quickly. Based on research by Franky of scene.at
     * <p>
     * The parameters allow you to specify the length, amplitude and frequency of the wave. Once you have called this function
@@ -24791,9 +25316,9 @@ Phaser.Math = {
 
     },
 
-	/**
-	* Removes the top element from the stack and re-inserts it onto the bottom, then returns it.
-	* The original stack is modified in the process. This effectively moves the position of the data from the start to the end of the table.
+    /**
+    * Removes the top element from the stack and re-inserts it onto the bottom, then returns it.
+    * The original stack is modified in the process. This effectively moves the position of the data from the start to the end of the table.
     * 
     * @method Phaser.Math#shift
     * @param {array} stack - The array to shift.
@@ -24801,14 +25326,14 @@ Phaser.Math = {
     */
     shift: function (stack) {
 
-    	var s = stack.shift();
-    	stack.push(s);
+        var s = stack.shift();
+        stack.push(s);
 
-    	return s;
+        return s;
 
     },
 
-	/**
+    /**
     * Shuffles the data in the given array into a new order
     * @method Phaser.Math#shuffleArray
     * @param {array} array - The array to shuffle
@@ -24828,7 +25353,7 @@ Phaser.Math = {
 
     },
 
-	/**
+    /**
     * Returns the distance between the two given set of coordinates.
     * 
     * @method Phaser.Math#distance
@@ -24837,7 +25362,7 @@ Phaser.Math = {
     * @param {number} x2
     * @param {number} y2
     * @return {number} The distance between this Point object and the destination Point object.
-    **/
+    */
     distance: function (x1, y1, x2, y2) {
 
         var dx = x1 - x2;
@@ -24856,42 +25381,42 @@ Phaser.Math = {
     * @param {number} x2
     * @param {number} y2
     * @return {number} The distance between this Point object and the destination Point object.
-    **/
+    */
     distanceRounded: function (x1, y1, x2, y2) {
 
-    	return Math.round(Phaser.Math.distance(x1, y1, x2, y2));
+        return Math.round(Phaser.Math.distance(x1, y1, x2, y2));
 
     },
 
-	/**
-	* Force a value within the boundaries of two values.
-	* Clamp value to range <a, b>
-	* 
-	* @method Phaser.Math#clamp
-	* @param {number} x
-	* @param {number} a
-	* @param {number} b
+    /**
+    * Force a value within the boundaries of two values.
+    * Clamp value to range <a, b>
+    * 
+    * @method Phaser.Math#clamp
+    * @param {number} x
+    * @param {number} a
+    * @param {number} b
     * @return {number}
-	*/
-	clamp: function ( x, a, b ) {
+    */
+    clamp: function ( x, a, b ) {
 
-		return ( x < a ) ? a : ( ( x > b ) ? b : x );
+        return ( x < a ) ? a : ( ( x > b ) ? b : x );
 
-	},
+    },
  
-	/**
-	* Clamp value to range <a, inf).
-	* 
-	* @method Phaser.Math#clampBottom
-	* @param {number} x
-	* @param {number} a
+    /**
+    * Clamp value to range <a, inf).
+    * 
+    * @method Phaser.Math#clampBottom
+    * @param {number} x
+    * @param {number} a
     * @return {number}
-	*/
-	clampBottom: function ( x, a ) {
+    */
+    clampBottom: function ( x, a ) {
 
-		return x < a ? a : x;
+        return x < a ? a : x;
 
-	},
+    },
 
     /**
     * Checks if two values are within the given tolerance of each other.
@@ -24908,113 +25433,127 @@ Phaser.Math = {
 
     },
  
-	/**
-	* Linear mapping from range <a1, a2> to range <b1, b2>
-	* 
-	* @method Phaser.Math#mapLinear
-	* @param {number} x
-	* @param {number} a1
-	* @param {number} a1
-	* @param {number} a2
-	* @param {number} b1
-	* @param {number} b2
-	* @return {number}
-	*/
-	mapLinear: function ( x, a1, a2, b1, b2 ) {
+    /**
+    * Linear mapping from range <a1, a2> to range <b1, b2>
+    * 
+    * @method Phaser.Math#mapLinear
+    * @param {number} x
+    * @param {number} a1
+    * @param {number} a1
+    * @param {number} a2
+    * @param {number} b1
+    * @param {number} b2
+    * @return {number}
+    */
+    mapLinear: function ( x, a1, a2, b1, b2 ) {
 
-		return b1 + ( x - a1 ) * ( b2 - b1 ) / ( a2 - a1 );
+        return b1 + ( x - a1 ) * ( b2 - b1 ) / ( a2 - a1 );
 
-	},
+    },
 
-	/**
-	* Smoothstep function as detailed at http://en.wikipedia.org/wiki/Smoothstep
-	* 
-	* @method Phaser.Math#smoothstep
-	* @param {number} x
-	* @param {number} min
-	* @param {number} max
-	* @return {number}
-	*/
-	smoothstep: function ( x, min, max ) {
+    /**
+    * Smoothstep function as detailed at http://en.wikipedia.org/wiki/Smoothstep
+    * 
+    * @method Phaser.Math#smoothstep
+    * @param {number} x
+    * @param {number} min
+    * @param {number} max
+    * @return {number}
+    */
+    smoothstep: function ( x, min, max ) {
 
-		if ( x <= min ) return 0;
-		if ( x >= max ) return 1;
+        if (x <= min)
+        {
+            return 0;
+        }
 
-		x = ( x - min )/( max - min );
+        if (x >= max)
+        {
+            return 1;
+        }
 
-		return x*x*(3 - 2*x);
+        x = (x - min) / (max - min);
 
-	},
+        return x * x * (3 - 2 * x);
 
-	/**
+    },
+
+    /**
     * Smootherstep function as detailed at http://en.wikipedia.org/wiki/Smoothstep
-	* 
-	* @method Phaser.Math#smootherstep
-	* @param {number} x
-	* @param {number} min
-	* @param {number} max
-	* @return {number}
-	*/
-	smootherstep: function ( x, min, max ) {
+    * 
+    * @method Phaser.Math#smootherstep
+    * @param {number} x
+    * @param {number} min
+    * @param {number} max
+    * @return {number}
+    */
+    smootherstep: function ( x, min, max ) {
 
-		if ( x <= min ) return 0;
-		if ( x >= max ) return 1;
+        if (x <= min)
+        {
+            return 0;
+        }
 
-		x = ( x - min )/( max - min );
+        if (x >= max)
+        {
+            return 1;
+        }
 
-		return x*x*x*(x*(x*6 - 15) + 10);
+        x = (x - min) / (max - min);
 
-	},
+        return x * x * x * (x * (x * 6 - 15) + 10);
 
-	/**
-	* A value representing the sign of the value.
-	* -1 for negative, +1 for positive, 0 if value is 0
-	* 
-	* @method Phaser.Math#sign
-	* @param {number} x
-	* @return {number}
-	*/
-	sign: function ( x ) {
+    },
 
-		return ( x < 0 ) ? -1 : ( ( x > 0 ) ? 1 : 0 );
+    /**
+    * A value representing the sign of the value.
+    * -1 for negative, +1 for positive, 0 if value is 0
+    * 
+    * @method Phaser.Math#sign
+    * @param {number} x
+    * @return {number}
+    */
+    sign: function ( x ) {
 
-	},
+        return ( x < 0 ) ? -1 : ( ( x > 0 ) ? 1 : 0 );
 
-	/**
-	* Convert degrees to radians.
-	* 
-	* @method Phaser.Math#degToRad
-	* @return {function}
-	*/
-	degToRad: function() {
+    },
 
-		var degreeToRadiansFactor = Math.PI / 180;
+    /**
+    * Convert degrees to radians.
+    * 
+    * @method Phaser.Math#degToRad
+    * @return {function}
+    */
+    degToRad: function() {
 
-		return function ( degrees ) {
+        var degreeToRadiansFactor = Math.PI / 180;
 
-			return degrees * degreeToRadiansFactor;
+        return function ( degrees ) {
 
-		};
+            return degrees * degreeToRadiansFactor;
 
-	}(),
+        };
 
-	/**
-	* Convert degrees to radians.
-	* 
-	* @method Phaser.Math#radToDeg
-	* @return {function}
-	*/
-	radToDeg: function() {
+    }(),
 
-		var radianToDegreesFactor = 180 / Math.PI;
+    /**
+    * Convert degrees to radians.
+    * 
+    * @method Phaser.Math#radToDeg
+    * @return {function}
+    */
+    radToDeg: function() {
 
-		return function ( radians ) {
+        var radianToDegreesFactor = 180 / Math.PI;
 
-			return radians * radianToDegreesFactor;
+        return function ( radians ) {
 
-		};
+            return radians * radianToDegreesFactor;
 
-	}()
+        };
+
+    }()
 
 };
 
@@ -25078,208 +25617,209 @@ Phaser.Math = {
  * @param {number} level - Description.
  */
 Phaser.QuadTree = function (physicsManager, x, y, width, height, maxObjects, maxLevels, level) {
-		
-	this.physicsManager = physicsManager;
-	this.ID = physicsManager.quadTreeID;
-	physicsManager.quadTreeID++;
+        
+    this.physicsManager = physicsManager;
+    this.ID = physicsManager.quadTreeID;
+    physicsManager.quadTreeID++;
 
-	this.maxObjects = maxObjects || 10;
-	this.maxLevels = maxLevels || 4;
-	this.level = level || 0;
+    this.maxObjects = maxObjects || 10;
+    this.maxLevels = maxLevels || 4;
+    this.level = level || 0;
 
-	this.bounds = { 
-		x: Math.round(x), 
-		y: Math.round(y), 
-		width: width, 
-		height: height, 
-		subWidth: Math.floor(width / 2),
-		subHeight: Math.floor(height / 2),
-		right: Math.round(x) + Math.floor(width / 2),
-		bottom: Math.round(y) + Math.floor(height / 2)
-	};
-	
-	this.objects = [];
-	this.nodes = [];
+    this.bounds = {
+        x: Math.round(x),
+        y: Math.round(y),
+        width: width,
+        height: height,
+        subWidth: Math.floor(width / 2),
+        subHeight: Math.floor(height / 2),
+        right: Math.round(x) + Math.floor(width / 2),
+        bottom: Math.round(y) + Math.floor(height / 2)
+    };
+    
+    this.objects = [];
+    this.nodes = [];
 
 };
 
 Phaser.QuadTree.prototype = {
 
-	/*
-	* Split the node into 4 subnodes
-	* 
-	* @method Phaser.QuadTree#split
-	*/
-	split: function() {
+    /*
+    * Split the node into 4 subnodes
+    * 
+    * @method Phaser.QuadTree#split
+    */
+    split: function() {
 
-		this.level++;
-		
-	 	//	top right node
-		this.nodes[0] = new Phaser.QuadTree(this.physicsManager, this.bounds.right, this.bounds.y, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
-		
-		//	top left node
-		this.nodes[1] = new Phaser.QuadTree(this.physicsManager, this.bounds.x, this.bounds.y, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
-		
-		//	bottom left node
-		this.nodes[2] = new Phaser.QuadTree(this.physicsManager, this.bounds.x, this.bounds.bottom, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
-		
-		//	bottom right node
-		this.nodes[3] = new Phaser.QuadTree(this.physicsManager, this.bounds.right, this.bounds.bottom, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+        this.level++;
+        
+        //  top right node
+        this.nodes[0] = new Phaser.QuadTree(this.physicsManager, this.bounds.right, this.bounds.y, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+        
+        //  top left node
+        this.nodes[1] = new Phaser.QuadTree(this.physicsManager, this.bounds.x, this.bounds.y, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+        
+        //  bottom left node
+        this.nodes[2] = new Phaser.QuadTree(this.physicsManager, this.bounds.x, this.bounds.bottom, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+        
+        //  bottom right node
+        this.nodes[3] = new Phaser.QuadTree(this.physicsManager, this.bounds.right, this.bounds.bottom, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
 
-	},
+    },
 
-	/*
-	 * Insert the object into the node. If the node
-	 * exceeds the capacity, it will split and add all
-	 * objects to their corresponding subnodes.
-	 * 
-	 * @method Phaser.QuadTree#insert
-	 * @param {object} body - Description.
-	 */
-	insert: function (body) {
-		
-		var i = 0;
-		var index;
-	 	
-	 	//	if we have subnodes ...
-		if (this.nodes[0] != null)
-		{
-			index = this.getIndex(body);
-	 
-		  	if (index !== -1)
-		  	{
-				this.nodes[index].insert(body);
-			 	return;
-			}
-		}
-	 
-	 	this.objects.push(body);
-		
-		if (this.objects.length > this.maxObjects && this.level < this.maxLevels)
-		{
-			//	Split if we don't already have subnodes
-			if (this.nodes[0] == null)
-			{
-				this.split();
-			}
-			
-			//	Add objects to subnodes
-			while (i < this.objects.length)
-			{
-				index = this.getIndex(this.objects[i]);
-				
-				if (index !== -1)
-				{
-					//	this is expensive - see what we can do about it
-					this.nodes[index].insert(this.objects.splice(i, 1)[0]);
-				}
-				else
-				{
-					i++;
-			 	}
-		 	}
-		}
-	 },
-	 
-	/*
-	 * Determine which node the object belongs to.
-	 * 
-	 * @method Phaser.QuadTree#getIndex
-	 * @param {object} rect	- Description.
-	 * @return {number} index -	Index of the subnode (0-3), or -1 if rect cannot completely fit within a subnode and is part of the parent node.
-	 */
-	getIndex: function (rect) {
-		
-		//	default is that rect doesn't fit, i.e. it straddles the internal quadrants
-		var index = -1;
+    /*
+    * Insert the object into the node. If the node
+    * exceeds the capacity, it will split and add all
+    * objects to their corresponding subnodes.
+    * 
+    * @method Phaser.QuadTree#insert
+    * @param {object} body - Description.
+    */
+    insert: function (body) {
+        
+        var i = 0;
+        var index;
+        
+        //  if we have subnodes ...
+        if (this.nodes[0] != null)
+        {
+            index = this.getIndex(body);
+     
+            if (index !== -1)
+            {
+                this.nodes[index].insert(body);
+                return;
+            }
+        }
+     
+        this.objects.push(body);
+        
+        if (this.objects.length > this.maxObjects && this.level < this.maxLevels)
+        {
+            //  Split if we don't already have subnodes
+            if (this.nodes[0] == null)
+            {
+                this.split();
+            }
+            
+            //  Add objects to subnodes
+            while (i < this.objects.length)
+            {
+                index = this.getIndex(this.objects[i]);
+                
+                if (index !== -1)
+                {
+                    //  this is expensive - see what we can do about it
+                    this.nodes[index].insert(this.objects.splice(i, 1)[0]);
+                }
+                else
+                {
+                    i++;
+                }
+            }
+        }
 
-		if (rect.x < this.bounds.right && rect.right < this.bounds.right)
-		{
-			if ((rect.y < this.bounds.bottom && rect.bottom < this.bounds.bottom))
-			{
-				//	rect fits within the top-left quadrant of this quadtree
-				index = 1;
-			}
-			else if ((rect.y > this.bounds.bottom))
-			{
-				//	rect fits within the bottom-left quadrant of this quadtree
-				index = 2;
-			}
-		}
-		else if (rect.x > this.bounds.right)
-		{
-			//	rect can completely fit within the right quadrants
-			if ((rect.y < this.bounds.bottom && rect.bottom < this.bounds.bottom))
-			{
-				//	rect fits within the top-right quadrant of this quadtree
-				index = 0;
-			}
-			else if ((rect.y > this.bounds.bottom))
-			{
-				//	rect fits within the bottom-right quadrant of this quadtree
-				index = 3;
-			}
-		}
-	 
-		return index;
+    },
+     
+    /*
+    * Determine which node the object belongs to.
+    * 
+    * @method Phaser.QuadTree#getIndex
+    * @param {object} rect - Description.
+    * @return {number} index - Index of the subnode (0-3), or -1 if rect cannot completely fit within a subnode and is part of the parent node.
+    */
+    getIndex: function (rect) {
+        
+        //  default is that rect doesn't fit, i.e. it straddles the internal quadrants
+        var index = -1;
 
-	},
+        if (rect.x < this.bounds.right && rect.right < this.bounds.right)
+        {
+            if ((rect.y < this.bounds.bottom && rect.bottom < this.bounds.bottom))
+            {
+                //  rect fits within the top-left quadrant of this quadtree
+                index = 1;
+            }
+            else if ((rect.y > this.bounds.bottom))
+            {
+                //  rect fits within the bottom-left quadrant of this quadtree
+                index = 2;
+            }
+        }
+        else if (rect.x > this.bounds.right)
+        {
+            //  rect can completely fit within the right quadrants
+            if ((rect.y < this.bounds.bottom && rect.bottom < this.bounds.bottom))
+            {
+                //  rect fits within the top-right quadrant of this quadtree
+                index = 0;
+            }
+            else if ((rect.y > this.bounds.bottom))
+            {
+                //  rect fits within the bottom-right quadrant of this quadtree
+                index = 3;
+            }
+        }
+     
+        return index;
 
-	 /*
-	 * Return all objects that could collide with the given object.
-	 * 
-	 * @method Phaser.QuadTree#retrieve
-	 * @param {object} rect	- Description.
-	 * @Return {array} - Array with all detected objects.
-	 */
-	retrieve: function (sprite) {
-	 	
-		var returnObjects = this.objects;
+    },
 
-		sprite.body.quadTreeIndex = this.getIndex(sprite.body);
+     /*
+    * Return all objects that could collide with the given object.
+    * 
+    * @method Phaser.QuadTree#retrieve
+    * @param {object} rect - Description.
+    * @Return {array} - Array with all detected objects.
+    */
+    retrieve: function (sprite) {
+        
+        var returnObjects = this.objects;
 
-		//	Temp store for the node IDs this sprite is in, we can use this for fast elimination later
-		sprite.body.quadTreeIDs.push(this.ID);
+        sprite.body.quadTreeIndex = this.getIndex(sprite.body);
 
-		if (this.nodes[0])
-		{
-			//	if rect fits into a subnode ..
-			if (sprite.body.quadTreeIndex !== -1)
-			{
-				returnObjects = returnObjects.concat(this.nodes[sprite.body.quadTreeIndex].retrieve(sprite));
-			}
-			else
-			{
-				//	if rect does not fit into a subnode, check it against all subnodes (unrolled for speed)
-				returnObjects = returnObjects.concat(this.nodes[0].retrieve(sprite));
-				returnObjects = returnObjects.concat(this.nodes[1].retrieve(sprite));
-				returnObjects = returnObjects.concat(this.nodes[2].retrieve(sprite));
-				returnObjects = returnObjects.concat(this.nodes[3].retrieve(sprite));
-			}
-		}
-	 
-		return returnObjects;
+        //  Temp store for the node IDs this sprite is in, we can use this for fast elimination later
+        sprite.body.quadTreeIDs.push(this.ID);
 
-	},
+        if (this.nodes[0])
+        {
+            //  if rect fits into a subnode ..
+            if (sprite.body.quadTreeIndex !== -1)
+            {
+                returnObjects = returnObjects.concat(this.nodes[sprite.body.quadTreeIndex].retrieve(sprite));
+            }
+            else
+            {
+                //  if rect does not fit into a subnode, check it against all subnodes (unrolled for speed)
+                returnObjects = returnObjects.concat(this.nodes[0].retrieve(sprite));
+                returnObjects = returnObjects.concat(this.nodes[1].retrieve(sprite));
+                returnObjects = returnObjects.concat(this.nodes[2].retrieve(sprite));
+                returnObjects = returnObjects.concat(this.nodes[3].retrieve(sprite));
+            }
+        }
+     
+        return returnObjects;
 
-	/*
-	 * Clear the quadtree.
-	 * @method Phaser.QuadTree#clear
-	 */
-	clear: function () {
-		
-		this.objects = [];
-	 
-		for (var i = 0, len = this.nodes.length; i < len; i++)
-		{
-			// if (typeof this.nodes[i] !== 'undefined')
-			if (this.nodes[i])
-			{
-				this.nodes[i].clear();
-				delete this.nodes[i];
-		  	}
-		}
-	}
+    },
+
+    /*
+    * Clear the quadtree.
+    * @method Phaser.QuadTree#clear
+    */
+    clear: function () {
+        
+        this.objects = [];
+     
+        for (var i = 0, len = this.nodes.length; i < len; i++)
+        {
+            // if (typeof this.nodes[i] !== 'undefined')
+            if (this.nodes[i])
+            {
+                this.nodes[i].clear();
+                delete this.nodes[i];
+            }
+        }
+    }
 
 };
 
@@ -25298,7 +25838,7 @@ Phaser.QuadTree.prototype = {
 * @param {number} [y] The y coordinate of the center of the circle.
 * @param {number} [diameter] The diameter of the circle.
 * @return {Phaser.Circle} This circle object
-**/
+*/
 Phaser.Circle = function (x, y, diameter) {
 
     x = x || 0;
@@ -25307,26 +25847,26 @@ Phaser.Circle = function (x, y, diameter) {
 
     /**
     * @property {number} x - The x coordinate of the center of the circle.
-    **/
+    */
     this.x = x;
 
     /**
     * @property {number} y - The y coordinate of the center of the circle.
-    **/
+    */
     this.y = y;
 
     /**
     * @property {number} _diameter - The diameter of the circle.
     * @private
-    **/
+    */
     this._diameter = diameter;
 
     if (diameter > 0)
     {
-    	/**
-    	* @property {number} _radius - The radius of the circle.
-    	* @private
-        **/
+        /**
+       * @property {number} _radius - The radius of the circle.
+       * @private
+       */
         this._radius = diameter * 0.5;
     }
     else
@@ -25342,7 +25882,7 @@ Phaser.Circle.prototype = {
     * The circumference of the circle.
     * @method Phaser.Circle#circumference
     * @return {number}
-    **/
+    */
     circumference: function () {
         return 2 * (Math.PI * this._radius);
     },
@@ -25354,7 +25894,7 @@ Phaser.Circle.prototype = {
     * @param {number} y - The y coordinate of the center of the circle.
     * @param {number} diameter - The diameter of the circle in pixels.
     * @return {Circle} This circle object.
-    **/
+    */
     setTo: function (x, y, diameter) {
         this.x = x;
         this.y = y;
@@ -25368,7 +25908,7 @@ Phaser.Circle.prototype = {
     * @method Phaser.Circle#copyFrom
     * @param {any} source - The object to copy from.
     * @return {Circle} This Circle object.
-    **/
+    */
     copyFrom: function (source) {
         return this.setTo(source.x, source.y, source.diameter);
     },
@@ -25378,11 +25918,11 @@ Phaser.Circle.prototype = {
     * @method Phaser.Circle#copyTo
     * @param {any} dest - The object to copy to.
     * @return {Object} This dest object.
-    **/
+    */
     copyTo: function(dest) {
-        dest[x] = this.x;
-        dest[y] = this.y;
-        dest[diameter] = this._diameter;
+        dest.x = this.x;
+        dest.y = this.y;
+        dest.diameter = this._diameter;
         return dest;
     },
 
@@ -25419,7 +25959,7 @@ Phaser.Circle.prototype = {
 
         if (typeof out === "undefined") { out = new Phaser.Circle(); }
 
-        return out.setTo(a.x, a.y, a.diameter);
+        return out.setTo(this.x, this.y, this.diameter);
 
     },
 
@@ -25452,7 +25992,7 @@ Phaser.Circle.prototype = {
     * @param {number} dx - Moves the x value of the Circle object by this amount.
     * @param {number} dy - Moves the y value of the Circle object by this amount.
     * @return {Circle} This Circle object.
-    **/
+    */
     offset: function (dx, dy) {
         this.x += dx;
         this.y += dy;
@@ -25464,7 +26004,7 @@ Phaser.Circle.prototype = {
     * @method Phaser.Circle#offsetPoint
     * @param {Point} point A Point object to use to offset this Circle object (or any valid object with exposed x and y properties).
     * @return {Circle} This Circle object.
-    **/
+    */
     offsetPoint: function (point) {
         return this.offset(point.x, point.y);
     },
@@ -25473,7 +26013,7 @@ Phaser.Circle.prototype = {
     * Returns a string representation of this object.
     * @method Phaser.Circle#toString
     * @return {string} a string representation of the instance.
-    **/
+    */
     toString: function () {
         return "[{Phaser.Circle (x=" + this.x + " y=" + this.y + " diameter=" + this.diameter + " radius=" + this.radius + ")}]";
     }
@@ -25636,11 +26176,16 @@ Object.defineProperty(Phaser.Circle.prototype, "area", {
 Object.defineProperty(Phaser.Circle.prototype, "empty", {
 
     get: function () {
-        return (this._diameter == 0);
+        return (this._diameter === 0);
     },
 
     set: function (value) {
-        this.setTo(0, 0, 0);
+
+        if (value === true)
+        {
+            this.setTo(0, 0, 0);
+        }
+
     }
 
 });
@@ -25767,20 +26312,20 @@ Phaser.Circle.intersectsRectangle = function (c, r) {
 * @constructor
 * @param {number} x The horizontal position of this Point (default 0)
 * @param {number} y The vertical position of this Point (default 0)
-**/
+*/
 Phaser.Point = function (x, y) {
 
     x = x || 0;
     y = y || 0;
 
     /**
-     * @property {number} x - The x coordinate of the point.
-     **/
+    * @property {number} x - The x coordinate of the point.
+    */
     this.x = x;
     
     /**
-     * @property {number} y - The y coordinate of the point.
-     **/
+    * @property {number} y - The y coordinate of the point.
+    */
     this.y = y;
 
 };
@@ -25792,7 +26337,7 @@ Phaser.Point.prototype = {
     * @method Phaser.Point#copyFrom
     * @param {any} source - The object to copy from.
     * @return {Point} This Point object.
-    **/
+    */
     copyFrom: function (source) {
         return this.setTo(source.x, source.y);
     },
@@ -25801,7 +26346,7 @@ Phaser.Point.prototype = {
     * Inverts the x and y values of this Point
     * @method Phaser.Point#invert
     * @return {Point} This Point object.
-    **/
+    */
     invert: function () {
         return this.setTo(this.y, this.x);
     },
@@ -25812,7 +26357,7 @@ Phaser.Point.prototype = {
     * @param {number} x - The horizontal position of this point.
     * @param {number} y - The vertical position of this point.
     * @return {Point} This Point object. Useful for chaining method calls.
-    **/        
+    */
     setTo: function (x, y) {
 
         this.x = x;
@@ -25827,7 +26372,7 @@ Phaser.Point.prototype = {
     * @param {number} x - The value to add to Point.x.
     * @param {number} y - The value to add to Point.y.
     * @return {Phaser.Point} This Point object. Useful for chaining method calls.
-    **/        
+    */
     add: function (x, y) {
 
         this.x += x;
@@ -25842,7 +26387,7 @@ Phaser.Point.prototype = {
     * @param {number} x - The value to subtract from Point.x.
     * @param {number} y - The value to subtract from Point.y.
     * @return {Phaser.Point} This Point object. Useful for chaining method calls.
-    **/        
+    */
     subtract: function (x, y) {
 
         this.x -= x;
@@ -25857,7 +26402,7 @@ Phaser.Point.prototype = {
     * @param {number} x - The value to multiply Point.x by.
     * @param {number} y - The value to multiply Point.x by.
     * @return {Phaser.Point} This Point object. Useful for chaining method calls.
-    **/        
+    */
     multiply: function (x, y) {
 
         this.x *= x;
@@ -25872,7 +26417,7 @@ Phaser.Point.prototype = {
     * @param {number} x - The value to divide Point.x by.
     * @param {number} y - The value to divide Point.x by.
     * @return {Phaser.Point} This Point object. Useful for chaining method calls.
-    **/        
+    */
     divide: function (x, y) {
 
         this.x /= x;
@@ -25932,20 +26477,10 @@ Phaser.Point.prototype = {
     */
     clone: function (output) {
 
-        if (typeof output === "undefined") { output = new Phaser.Point; }
+        if (typeof output === "undefined") { output = new Phaser.Point(); }
 
         return output.setTo(this.x, this.y);
 
-    },
-
-    /**
-    * Copies the x and y properties from any given object to this Point.
-    * @method Phaser.Point#copyFrom
-    * @param {any} source - The object to copy from.
-    * @return {Point} This Point object.
-    **/
-    copyFrom: function (source) {
-        return this.setTo(source.x, source.y);
     },
 
     /**
@@ -25953,11 +26488,11 @@ Phaser.Point.prototype = {
     * @method Phaser.Point#copyTo
     * @param {any} dest - The object to copy to.
     * @return {Object} The dest object.
-    **/
+    */
     copyTo: function(dest) {
 
-        dest[x] = this.x;
-        dest[y] = this.y;
+        dest.x = this.x;
+        dest.y = this.y;
 
         return dest;
 
@@ -25999,29 +26534,29 @@ Phaser.Point.prototype = {
     },
 
     /**
-     * Calculates the length of the vector
-     * @method Phaser.Point#getMagnitude
-     * @return {number} the length of the vector
-     */
+    * Calculates the length of the vector
+    * @method Phaser.Point#getMagnitude
+    * @return {number} the length of the vector
+    */
     getMagnitude: function() {
         return Math.sqrt((this.x * this.x) + (this.y * this.y));
     },
 
     /**
-     * Alters the length of the vector without changing the direction
-     * @method Phaser.Point#getMagnitude
-     * @param {number} magnitude the desired magnitude of the resulting vector
-     * @return {Phaser.Point} the modified original vector
-     */
+    * Alters the length of the vector without changing the direction
+    * @method Phaser.Point#getMagnitude
+    * @param {number} magnitude the desired magnitude of the resulting vector
+    * @return {Phaser.Point} the modified original vector
+    */
     setMagnitude: function(magnitude) {
         return this.normalize().multiply(magnitude, magnitude);
     },
 
     /**
-     * Alters the vector so that its length is 1, but it retains the same direction
-     * @method Phaser.Point#normalize
-     * @return {Phaser.Point} the modified original vector
-     */
+    * Alters the vector so that its length is 1, but it retains the same direction
+    * @method Phaser.Point#normalize
+    * @return {Phaser.Point} the modified original vector
+    */
     normalize: function() {
 
         if(!this.isZero()) {
@@ -26035,10 +26570,10 @@ Phaser.Point.prototype = {
     },
 
     /**
-     * Determine if this point is at 0,0
-     * @method Phaser.Point#isZero
-     * @return {boolean} True if this Point is 0,0, otherwise false
-     */
+    * Determine if this point is at 0,0
+    * @method Phaser.Point#isZero
+    * @return {boolean} True if this Point is 0,0, otherwise false
+    */
     isZero: function() {
         return (this.x === 0 && this.y === 0);
     },
@@ -26047,7 +26582,7 @@ Phaser.Point.prototype = {
     * Returns a string representation of this object.
     * @method Phaser.Point#toString
     * @return {string} A string representation of the instance.
-    **/
+    */
     toString: function () {
         return '[{Point (x=' + this.x + ' y=' + this.y + ')}]';
     }
@@ -26162,7 +26697,7 @@ Phaser.Point.distance = function (a, b, round) {
         return Phaser.Math.distance(a.x, a.y, b.x, b.y);
     }
 
-},
+};
 
 /**
 * Rotates a Point around the x/y coordinates given to the desired angle.
@@ -26208,10 +26743,10 @@ Phaser.Point.rotate = function (a, x, y, angle, asDegrees, distance) {
 * @constructor
 * @param {number} x - The x coordinate of the top-left corner of the Rectangle.
 * @param {number} y - The y coordinate of the top-left corner of the Rectangle.
-* @param {number} width - The width of the Rectangle in pixels.
-* @param {number} height - The height of the Rectangle in pixels.
+* @param {number} width - The width of the Rectangle.
+* @param {number} height - The height of the Rectangle.
 * @return {Rectangle} This Rectangle object.
-**/
+*/
 Phaser.Rectangle = function (x, y, width, height) {
 
     x = x || 0;
@@ -26220,22 +26755,22 @@ Phaser.Rectangle = function (x, y, width, height) {
     height = height || 0;
 
     /**
-    * @property {number} x - Description.
+    * @property {number} x - The x coordinate of the top-left corner of the Rectangle.
     */
     this.x = x;
     
     /**
-    * @property {number} y - Description.
+    * @property {number} y - The y coordinate of the top-left corner of the Rectangle.
     */
     this.y = y;
     
     /**
-    * @property {number} width - Description.
+    * @property {number} width - The width of the Rectangle.
     */
     this.width = width;
     
     /**
-    * @property {number} height - Description.
+    * @property {number} height - The height of the Rectangle.
     */
     this.height = height;
 
@@ -26249,7 +26784,7 @@ Phaser.Rectangle.prototype = {
     * @param {number} dx - Moves the x value of the Rectangle object by this amount.
     * @param {number} dy - Moves the y value of the Rectangle object by this amount.
     * @return {Rectangle} This Rectangle object.
-    **/
+    */
     offset: function (dx, dy) {
 
         this.x += dx;
@@ -26264,7 +26799,7 @@ Phaser.Rectangle.prototype = {
     * @method Phaser.Rectangle#offsetPoint
     * @param {Point} point - A Point object to use to offset this Rectangle object.
     * @return {Rectangle} This Rectangle object.
-    **/
+    */
     offsetPoint: function (point) {
         return this.offset(point.x, point.y);
     },
@@ -26277,7 +26812,7 @@ Phaser.Rectangle.prototype = {
     * @param {number} width - The width of the Rectangle in pixels.
     * @param {number} height - The height of the Rectangle in pixels.
     * @return {Rectangle} This Rectangle object
-    **/
+    */
     setTo: function (x, y, width, height) {
 
         this.x = x;
@@ -26292,7 +26827,7 @@ Phaser.Rectangle.prototype = {
     /**
     * Runs Math.floor() on both the x and y values of this Rectangle.
     * @method Phaser.Rectangle#floor
-    **/
+    */
     floor: function () {
 
         this.x = Math.floor(this.x);
@@ -26303,7 +26838,7 @@ Phaser.Rectangle.prototype = {
     /**
     * Runs Math.floor() on the x, y, width and height values of this Rectangle.
     * @method Phaser.Rectangle#floorAll
-    **/
+    */
     floorAll: function () {
 
         this.x = Math.floor(this.x);
@@ -26318,7 +26853,7 @@ Phaser.Rectangle.prototype = {
     * @method Phaser.Rectangle#copyFrom
     * @param {any} source - The object to copy from.
     * @return {Rectangle} This Rectangle object.
-    **/
+    */
     copyFrom: function (source) {
         return this.setTo(source.x, source.y, source.width, source.height);
     },
@@ -26328,7 +26863,7 @@ Phaser.Rectangle.prototype = {
     * @method Phaser.Rectangle#copyTo
     * @param {any} source - The object to copy to.
     * @return {object} This object.
-    **/
+    */
     copyTo: function (dest) {
 
         dest.x = this.x;
@@ -26412,7 +26947,7 @@ Phaser.Rectangle.prototype = {
     * @return {Phaser.Rectangle} A Rectangle object that equals the area of intersection. If the Rectangles do not intersect, this method returns an empty Rectangle object; that is, a Rectangle with its x, y, width, and height properties set to 0.
     */
     intersection: function (b, out) {
-        return Phaser.Rectangle.intersection(this, b, output);
+        return Phaser.Rectangle.intersection(this, b, out);
     },
 
     /**
@@ -26456,7 +26991,7 @@ Phaser.Rectangle.prototype = {
     * Returns a string representation of this object.
     * @method Phaser.Rectangle#toString
     * @return {string} A string representation of the instance.
-    **/
+    */
     toString: function () {
         return "[{Rectangle (x=" + this.x + " y=" + this.y + " width=" + this.width + " height=" + this.height + " empty=" + this.empty + ")}]";
     }
@@ -26687,7 +27222,12 @@ Object.defineProperty(Phaser.Rectangle.prototype, "empty", {
     },
 
     set: function (value) {
-        this.setTo(0, 0, 0, 0);
+
+        if (value === true)
+        {
+            this.setTo(0, 0, 0, 0);
+        }
+        
     }
 
 });
@@ -26812,7 +27352,7 @@ Phaser.Rectangle.equals = function (a, b) {
 */
 Phaser.Rectangle.intersection = function (a, b, out) {
 
-    out  = out || new Phaser.Rectangle;
+    out  = out || new Phaser.Rectangle();
 
     if (Phaser.Rectangle.intersects(a, b))
     {
@@ -26901,8 +27441,8 @@ Phaser.Polygon = function (points) {
     PIXI.Polygon.call(this, points);
 
     /**
-	* @property {number} type - The base object type.
-	*/
+    * @property {number} type - The base object type.
+    */
     this.type = Phaser.POLYGON;
 
 };
@@ -26916,165 +27456,161 @@ Phaser.Polygon.prototype.constructor = Phaser.Polygon;
 */
 
 /**
-* Description of Phaser.Net
+* Phaser.Net handles browser URL related tasks such as checking host names, domain names and query string manipulation.
 *
 * @class Phaser.Net
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
 Phaser.Net = function (game) {
-	
-	this.game = game;
+    
+    this.game = game;
 
 };
 
 Phaser.Net.prototype = {
 
-	/**
-	* Returns the hostname given by the browser.
-	* 
-	* @method Phaser.Net#getHostName
-	* @return {string}
-	*/        
-	getHostName: function () {
+    /**
+    * Returns the hostname given by the browser.
+    * 
+    * @method Phaser.Net#getHostName
+    * @return {string}
+    */
+    getHostName: function () {
 
-		if (window.location && window.location.hostname) {
-			return window.location.hostname;
-		}
+        if (window.location && window.location.hostname) {
+            return window.location.hostname;
+        }
 
-		return null;
+        return null;
 
-	},
+    },
 
-	/**
-	* Compares the given domain name against the hostname of the browser containing the game.
-	* If the domain name is found it returns true.
-	* You can specify a part of a domain, for example 'google' would match 'google.com', 'google.co.uk', etc.
-	* Do not include 'http://' at the start.
-	* 
-	* @method Phaser.Net#checkDomainName
-	* @param {string} domain
-	* @return {boolean}
-	*/        
-	checkDomainName: function (domain) {
-		return window.location.hostname.indexOf(domain) !== -1;
-	},
+    /**
+    * Compares the given domain name against the hostname of the browser containing the game.
+    * If the domain name is found it returns true.
+    * You can specify a part of a domain, for example 'google' would match 'google.com', 'google.co.uk', etc.
+    * Do not include 'http://' at the start.
+    * 
+    * @method Phaser.Net#checkDomainName
+    * @param {string} domain
+    * @return {boolean} true if the given domain fragment can be found in the window.location.hostname
+    */
+    checkDomainName: function (domain) {
+        return window.location.hostname.indexOf(domain) !== -1;
+    },
 
-	/**
-	* Updates a value on the Query String and returns it in full.
-	* If the value doesn't already exist it is set.
-	* If the value exists it is replaced with the new value given. If you don't provide a new value it is removed from the query string.
-	* Optionally you can redirect to the new url, or just return it as a string.
-	* 
-	* @method Phaser.Net#updateQueryString
-	* @param {string} key - The querystring key to update.
-	* @param {string} value - The new value to be set. If it already exists it will be replaced.
-	* @param {boolean} redirect - If true the browser will issue a redirect to the url with the new querystring.
-	* @param {string} url - The URL to modify. If none is given it uses window.location.href.
-	* @return {string} If redirect is false then the modified url and query string is returned.
-	*/
-	updateQueryString: function (key, value, redirect, url) {
+    /**
+    * Updates a value on the Query String and returns it in full.
+    * If the value doesn't already exist it is set.
+    * If the value exists it is replaced with the new value given. If you don't provide a new value it is removed from the query string.
+    * Optionally you can redirect to the new url, or just return it as a string.
+    * 
+    * @method Phaser.Net#updateQueryString
+    * @param {string} key - The querystring key to update.
+    * @param {string} value - The new value to be set. If it already exists it will be replaced.
+    * @param {boolean} redirect - If true the browser will issue a redirect to the url with the new querystring.
+    * @param {string} url - The URL to modify. If none is given it uses window.location.href.
+    * @return {string} If redirect is false then the modified url and query string is returned.
+    */
+    updateQueryString: function (key, value, redirect, url) {
 
-		if (typeof redirect === "undefined") { redirect = false; }
-		if (typeof url === "undefined") { url = ''; }
+        if (typeof redirect === "undefined") { redirect = false; }
+        if (typeof url === "undefined" || url === '') { url = window.location.href; }
 
-		if (url == '') {
-			url = window.location.href;
-		}
+        var output = '';
+        var re = new RegExp("([?|&])" + key + "=.*?(&|#|$)(.*)", "gi");
+        
+        if (re.test(url))
+        {
+            if (typeof value !== 'undefined' && value !== null)
+            {
+                output = url.replace(re, '$1' + key + "=" + value + '$2$3');
+            }
+            else
+            {
+                output = url.replace(re, '$1$3').replace(/(&|\?)$/, '');
+            }
+        }
+        else
+        {
+            if (typeof value !== 'undefined' && value !== null)
+            {
+                var separator = url.indexOf('?') !== -1 ? '&' : '?';
+                var hash = url.split('#');
+                url = hash[0] + separator + key + '=' + value;
 
-		var output = '';
-		var re = new RegExp("([?|&])" + key + "=.*?(&|#|$)(.*)", "gi");
-		
-		if (re.test(url))
-		{
-			if (typeof value !== 'undefined' && value !== null)
-			{
-				output = url.replace(re, '$1' + key + "=" + value + '$2$3');
-			}
-			else
-			{
-				output = url.replace(re, '$1$3').replace(/(&|\?)$/, '');
-			}
-		}
-		else
-		{
-			if (typeof value !== 'undefined' && value !== null)
-			{
-				var separator = url.indexOf('?') !== -1 ? '&' : '?';
-				var hash = url.split('#');
-				url = hash[0] + separator + key + '=' + value;
+                if (hash[1]) {
+                    url += '#' + hash[1];
+                }
 
-				if (hash[1]) {
-					url += '#' + hash[1];
-				}
+                output = url;
 
-				output = url;
+            }
+            else
+            {
+                output = url;
+            }
+        }
 
-			}
-			else
-			{
-				output = url;
-			}
-		}
+        if (redirect)
+        {
+            window.location.href = output;
+        }
+        else
+        {
+            return output;
+        }
 
-		if (redirect)
-		{
-			window.location.href = output;
-		}
-		else
-		{
-			return output;
-		}
+    },
 
-	},
+    /**
+    * Returns the Query String as an object.
+    * If you specify a parameter it will return just the value of that parameter, should it exist.
+    * 
+    * @method Phaser.Net#getQueryString
+    * @param {string} [parameter=''] - If specified this will return just the value for that key.
+    * @return {string|object} An object containing the key value pairs found in the query string or just the value if a parameter was given.
+    */
+    getQueryString: function (parameter) {
 
-	/**
-	* Returns the Query String as an object.
-	* If you specify a parameter it will return just the value of that parameter, should it exist.
-	* 
-	* @method Phaser.Net#getQueryString
-	* @param {string} [parameter=''] - If specified this will return just the value for that key.
-	* @return {string|object} An object containing the key value pairs found in the query string or just the value if a parameter was given.
-	*/
-	getQueryString: function (parameter) {
+        if (typeof parameter === "undefined") { parameter = ''; }
 
-		if (typeof parameter === "undefined") { parameter = ''; }
+        var output = {};
+        var keyValues = location.search.substring(1).split('&');
 
-		var output = {};
-		var keyValues = location.search.substring(1).split('&');
+        for (var i in keyValues) {
 
-		for (var i in keyValues) {
+            var key = keyValues[i].split('=');
 
-			var key = keyValues[i].split('=');
+            if (key.length > 1)
+            {
+                if (parameter && parameter == this.decodeURI(key[0]))
+                {
+                    return this.decodeURI(key[1]);
+                }
+                else
+                {
+                    output[this.decodeURI(key[0])] = this.decodeURI(key[1]);
+                }
+            }
+        }
 
-			if (key.length > 1)
-			{
-				if (parameter && parameter == this.decodeURI(key[0]))
-				{
-					return this.decodeURI(key[1]);
-				}
-				else
-				{
-					output[this.decodeURI(key[0])] = this.decodeURI(key[1]);
-				}
-			}
-		}
+        return output;
 
-		return output;
+    },
 
-	},
-
-	/**
-	* Returns the Query String as an object.
-	* If you specify a parameter it will return just the value of that parameter, should it exist.
-	* 
-	* @method Phaser.Net#decodeURI
-	* @param {string} value - The URI component to be decoded.
-	* @return {string} The decoded value.
-	*/
-	decodeURI: function (value) {
-		return decodeURIComponent(value.replace(/\+/g, " "));
-	}
+    /**
+    * Returns the Query String as an object.
+    * If you specify a parameter it will return just the value of that parameter, should it exist.
+    * 
+    * @method Phaser.Net#decodeURI
+    * @param {string} value - The URI component to be decoded.
+    * @return {string} The decoded value.
+    */
+    decodeURI: function (value) {
+        return decodeURIComponent(value.replace(/\+/g, " "));
+    }
 
 };
 
@@ -27102,180 +27638,183 @@ Phaser.Net.prototype = {
 */
 Phaser.TweenManager = function (game) {
 
-	/**
-	* @property {Phaser.Game} game - Local reference to game.
-	*/
-	this.game = game;
-	
-	/**
-	* @property {array} _tweens - Description.
-	* @private
-	*/
-	this._tweens = [];
-	
-	/**
-	* @property {array} _add - Description.
-	* @private
-	*/
-	this._add = [];
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
+    this.game = game;
+    
+    /**
+    * @property {array} _tweens - Description.
+    * @private
+    */
+    this._tweens = [];
+    
+    /**
+    * @property {array} _add - Description.
+    * @private
+    */
+    this._add = [];
 
-	this.game.onPause.add(this.pauseAll, this);
-	this.game.onResume.add(this.resumeAll, this);
+    this.game.onPause.add(this.pauseAll, this);
+    this.game.onResume.add(this.resumeAll, this);
 
 };
 
 Phaser.TweenManager.prototype = {
 
-	/**
-	* Version number of this library.
-	* @property {string} REVISION
-	* @default 
-	*/	
-	REVISION: '11dev',
+    /**
+    * Version number of this library.
+    * @property {string} REVISION
+    * @default 
+    */
+    REVISION: '11dev',
 
-	/**
-	* Get all the tween objects in an array.
-	* @method Phaser.TweenManager#getAll
-	* @returns {Phaser.Tween[]} Array with all tween objects.
-	*/
-	getAll: function () {
+    /**
+    * Get all the tween objects in an array.
+    * @method Phaser.TweenManager#getAll
+    * @returns {Phaser.Tween[]} Array with all tween objects.
+    */
+    getAll: function () {
 
-		return this._tweens;
+        return this._tweens;
 
-	},
+    },
 
-	/**
-	* Remove all tween objects.
-	* @method Phaser.TweenManager#removeAll
-	*/
-	removeAll: function () {
+    /**
+    * Remove all tween objects.
+    * @method Phaser.TweenManager#removeAll
+    */
+    removeAll: function () {
 
-		this._tweens = [];
+        this._tweens = [];
 
-	},
+    },
 
-	/**
-	* Add a new tween into the TweenManager.
-	*
-	* @method Phaser.TweenManager#add
-	* @param {Phaser.Tween} tween - The tween object you want to add.
-	* @returns {Phaser.Tween} The tween object you added to the manager.
-	*/
-	add: function ( tween ) {
+    /**
+    * Add a new tween into the TweenManager.
+    *
+    * @method Phaser.TweenManager#add
+    * @param {Phaser.Tween} tween - The tween object you want to add.
+    * @returns {Phaser.Tween} The tween object you added to the manager.
+    */
+    add: function ( tween ) {
 
-		this._add.push( tween );
+        this._add.push( tween );
 
-	},
+    },
 
-	/**
-	* Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite. 
-	*
-	* @method Phaser.TweenManager#create
-	* @param {Object} object - Object the tween will be run on.
-	* @returns {Phaser.Tween} The newly created tween object.
-	*/
+    /**
+    * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite. 
+    *
+    * @method Phaser.TweenManager#create
+    * @param {Object} object - Object the tween will be run on.
+    * @returns {Phaser.Tween} The newly created tween object.
+    */
     create: function (object) {
 
         return new Phaser.Tween(object, this.game);
 
     },
 
-	/**
-	* Remove a tween from this manager.
-	*
-	* @method Phaser.TweenManager#remove
-	* @param {Phaser.Tween} tween - The tween object you want to remove.
-	*/
-	remove: function ( tween ) {
+    /**
+    * Remove a tween from this manager.
+    *
+    * @method Phaser.TweenManager#remove
+    * @param {Phaser.Tween} tween - The tween object you want to remove.
+    */
+    remove: function ( tween ) {
 
-		var i = this._tweens.indexOf( tween );
+        var i = this._tweens.indexOf( tween );
 
-		if ( i !== -1 ) {
+        if ( i !== -1 ) {
 
-			this._tweens[i].pendingDelete = true;
+            this._tweens[i].pendingDelete = true;
 
-		}
-
-	},
-
-	/**
-	* Update all the tween objects you added to this manager.
-	*
-	* @method Phaser.TweenManager#update
-	* @returns {boolean} Return false if there's no tween to update, otherwise return true.
-	*/
-	update: function () {
-
-		if ( this._tweens.length === 0 && this._add.length === 0 ) return false;
-
-		var i = 0;
-		var numTweens = this._tweens.length;
-
-		while ( i < numTweens ) {
-
-			if ( this._tweens[ i ].update( this.game.time.now ) ) {
-
-				i++;
-
-			} else {
-
-				this._tweens.splice( i, 1 );
-
-				numTweens--;
-
-			}
-
-		}
-
-		//	If there are any new tweens to be added, do so now - otherwise they can be spliced out of the array before ever running
-		if (this._add.length > 0)
-		{
-			this._tweens = this._tweens.concat(this._add);
-			this._add.length = 0;
-		}
-
-		return true;
-
-	},
-
-	/**
-	* Checks to see if a particular Sprite is currently being tweened.
-	*
-	* @method Phaser.TweenManager#isTweening
-	* @param {object} object - The object to check for tweens against.
-	* @returns {boolean} Returns true if the object is currently being tweened, false if not.
-	*/
-	isTweening: function(object) {	
-
-		return this._tweens.some(function(tween) {
-			return tween._object === object;
-		});
-
-	},
-
-	/**
-	* Pauses all currently running tweens.
-	*
-	* @method Phaser.TweenManager#update
-	*/
-	pauseAll: function () {
-
-    	for (var i = this._tweens.length - 1; i >= 0; i--) {
-    		this._tweens[i].pause();
-    	};
+        }
 
     },
 
-	/**
-	* Pauses all currently paused tweens.
-	*
-	* @method Phaser.TweenManager#resumeAll
-	*/
-   	resumeAll: function () {
+    /**
+    * Update all the tween objects you added to this manager.
+    *
+    * @method Phaser.TweenManager#update
+    * @returns {boolean} Return false if there's no tween to update, otherwise return true.
+    */
+    update: function () {
 
-    	for (var i = this._tweens.length - 1; i >= 0; i--) {
-    		this._tweens[i].resume();
-    	};
+        if ( this._tweens.length === 0 && this._add.length === 0 )
+        {
+            return false;
+        }
+
+        var i = 0;
+        var numTweens = this._tweens.length;
+
+        while ( i < numTweens ) {
+
+            if ( this._tweens[ i ].update( this.game.time.now ) ) {
+
+                i++;
+
+            } else {
+
+                this._tweens.splice( i, 1 );
+
+                numTweens--;
+
+            }
+
+        }
+
+        //  If there are any new tweens to be added, do so now - otherwise they can be spliced out of the array before ever running
+        if (this._add.length > 0)
+        {
+            this._tweens = this._tweens.concat(this._add);
+            this._add.length = 0;
+        }
+
+        return true;
+
+    },
+
+    /**
+    * Checks to see if a particular Sprite is currently being tweened.
+    *
+    * @method Phaser.TweenManager#isTweening
+    * @param {object} object - The object to check for tweens against.
+    * @returns {boolean} Returns true if the object is currently being tweened, false if not.
+    */
+    isTweening: function(object) {
+
+        return this._tweens.some(function(tween) {
+            return tween._object === object;
+        });
+
+    },
+
+    /**
+    * Pauses all currently running tweens.
+    *
+    * @method Phaser.TweenManager#update
+    */
+    pauseAll: function () {
+
+        for (var i = this._tweens.length - 1; i >= 0; i--) {
+            this._tweens[i].pause();
+        }
+
+    },
+
+    /**
+    * Pauses all currently paused tweens.
+    *
+    * @method Phaser.TweenManager#resumeAll
+    */
+    resumeAll: function () {
+
+        for (var i = this._tweens.length - 1; i >= 0; i--) {
+            this._tweens[i].resume();
+        }
 
     }
 
@@ -27302,7 +27841,7 @@ Phaser.Tween = function (object, game) {
     * @property {object} _object
     * @private
     */
-	this._object = object;
+    this._object = object;
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
@@ -27436,7 +27975,7 @@ Phaser.Tween = function (object, game) {
 
     // Set all starting values present on the target object
     for ( var field in object ) {
-    	this._valuesStart[ field ] = parseFloat(object[field], 10);
+        this._valuesStart[ field ] = parseFloat(object[field], 10);
     }
     
     /**
@@ -27459,45 +27998,45 @@ Phaser.Tween = function (object, game) {
 
 Phaser.Tween.prototype = {
 
-	/**
-	* Configure the Tween
-	*
-	* @method Phaser.Tween#to
-	* @param {object} properties - Properties you want to tween.
-	* @param {number} duration - Duration of this tween.
-	* @param {function} ease - Easing function.
-	* @param {boolean} autoStart - Whether this tween will start automatically or not.
-	* @param {number} delay - Delay before this tween will start, defaults to 0 (no delay).
-	* @param {boolean} repeat - Should the tween automatically restart once complete? (ignores any chained tweens).
-	* @param {Phaser.Tween} yoyo - Description.
-	* @return {Phaser.Tween} Itself.
-	*/
-	to: function ( properties, duration, ease, autoStart, delay, repeat, yoyo ) {
+    /**
+    * Configure the Tween
+    *
+    * @method Phaser.Tween#to
+    * @param {object} properties - Properties you want to tween.
+    * @param {number} duration - Duration of this tween.
+    * @param {function} ease - Easing function.
+    * @param {boolean} autoStart - Whether this tween will start automatically or not.
+    * @param {number} delay - Delay before this tween will start, defaults to 0 (no delay).
+    * @param {boolean} repeat - Should the tween automatically restart once complete? (ignores any chained tweens).
+    * @param {Phaser.Tween} yoyo - Description.
+    * @return {Phaser.Tween} Itself.
+    */
+    to: function ( properties, duration, ease, autoStart, delay, repeat, yoyo ) {
 
-		duration = duration || 1000;
-		ease = ease || null;
-		autoStart = autoStart || false;
-		delay = delay || 0;
-		repeat = repeat || 0;
-		yoyo = yoyo || false;
+        duration = duration || 1000;
+        ease = ease || null;
+        autoStart = autoStart || false;
+        delay = delay || 0;
+        repeat = repeat || 0;
+        yoyo = yoyo || false;
 
-		var self;
-		if (this._parent)
-		{
-			self = this._manager.create(this._object);
-			this._lastChild.chain(self);
-			this._lastChild = self;
-		}
-		else
-		{
-			self = this;
-			this._parent = this;
-			this._lastChild = this;
-		}
+        var self;
+        if (this._parent)
+        {
+            self = this._manager.create(this._object);
+            this._lastChild.chain(self);
+            this._lastChild = self;
+        }
+        else
+        {
+            self = this;
+            this._parent = this;
+            this._lastChild = this;
+        }
 
-		self._repeat = repeat;
+        self._repeat = repeat;
         self._duration = duration;
-		self._valuesEnd = properties;
+        self._valuesEnd = properties;
 
         if (ease !== null)
         {
@@ -27517,256 +28056,255 @@ Phaser.Tween.prototype = {
             return this;
         }
 
-	},
+    },
 
-	/**
-	* Starts the tween running. Can also be called by the autoStart parameter of Tween.to.
-	*
-	* @method Phaser.Tween#start
-	* @param {number} time - Description.
-	* @return {Phaser.Tween} Itself.
-	*/
-	start: function ( time ) {
+    /**
+    * Starts the tween running. Can also be called by the autoStart parameter of Tween.to.
+    *
+    * @method Phaser.Tween#start
+    * @return {Phaser.Tween} Itself.
+    */
+    start: function () {
 
         if (this.game === null || this._object === null) {
             return;
         }
 
-		this._manager.add(this);
+        this._manager.add(this);
 
-		this.onStart.dispatch(this._object);
+        this.onStart.dispatch(this._object);
 
         this.isRunning = true;
 
-		this._onStartCallbackFired = false;
+        this._onStartCallbackFired = false;
 
         this._startTime = this.game.time.now + this._delayTime;
 
-		for ( var property in this._valuesEnd ) {
+        for ( var property in this._valuesEnd ) {
 
-			// check if an Array was provided as property value
-			if ( this._valuesEnd[ property ] instanceof Array ) {
+            // check if an Array was provided as property value
+            if ( this._valuesEnd[ property ] instanceof Array ) {
 
-				if ( this._valuesEnd[ property ].length === 0 ) {
+                if ( this._valuesEnd[ property ].length === 0 ) {
 
-					continue;
+                    continue;
 
-				}
+                }
 
-				// create a local copy of the Array with the start value at the front
-				this._valuesEnd[ property ] = [ this._object[ property ] ].concat( this._valuesEnd[ property ] );
+                // create a local copy of the Array with the start value at the front
+                this._valuesEnd[ property ] = [ this._object[ property ] ].concat( this._valuesEnd[ property ] );
 
-			}
+            }
 
-			this._valuesStart[ property ] = this._object[ property ];
+            this._valuesStart[ property ] = this._object[ property ];
 
-			if ( ( this._valuesStart[ property ] instanceof Array ) === false ) {
-				this._valuesStart[ property ] *= 1.0; // Ensures we're using numbers, not strings
-			}
+            if ( ( this._valuesStart[ property ] instanceof Array ) === false ) {
+                this._valuesStart[ property ] *= 1.0; // Ensures we're using numbers, not strings
+            }
 
-			this._valuesStartRepeat[ property ] = this._valuesStart[ property ] || 0;
+            this._valuesStartRepeat[ property ] = this._valuesStart[ property ] || 0;
 
-		}
+        }
 
-		return this;
+        return this;
 
-	},
+    },
 
-	/**
-	* Stops the tween if running and removes it from the TweenManager. If there are any onComplete callbacks or events they are not dispatched.
-	*
-	* @method Phaser.Tween#stop
-	* @return {Phaser.Tween} Itself.
-	*/
-	stop: function () {
+    /**
+    * Stops the tween if running and removes it from the TweenManager. If there are any onComplete callbacks or events they are not dispatched.
+    *
+    * @method Phaser.Tween#stop
+    * @return {Phaser.Tween} Itself.
+    */
+    stop: function () {
 
         this.isRunning = false;
 
-		this._manager.remove(this);
+        this._manager.remove(this);
 
-		return this;
+        return this;
 
-	},
+    },
 
-	/**
-	* Sets a delay time before this tween will start.
-	*
-	* @method Phaser.Tween#delay
-	* @param {number} amount - The amount of the delay in ms.
-	* @return {Phaser.Tween} Itself.
-	*/
-	delay: function ( amount ) {
+    /**
+    * Sets a delay time before this tween will start.
+    *
+    * @method Phaser.Tween#delay
+    * @param {number} amount - The amount of the delay in ms.
+    * @return {Phaser.Tween} Itself.
+    */
+    delay: function ( amount ) {
 
-		this._delayTime = amount;
-		return this;
+        this._delayTime = amount;
+        return this;
 
-	},
+    },
 
-	/**
-	* Sets the number of times this tween will repeat.
-	*
-	* @method Phaser.Tween#repeat
-	* @param {number} times - How many times to repeat.
-	* @return {Phaser.Tween} Itself.
-	*/
-	repeat: function ( times ) {
+    /**
+    * Sets the number of times this tween will repeat.
+    *
+    * @method Phaser.Tween#repeat
+    * @param {number} times - How many times to repeat.
+    * @return {Phaser.Tween} Itself.
+    */
+    repeat: function ( times ) {
 
-		this._repeat = times;
-		return this;
+        this._repeat = times;
+        return this;
 
-	},
+    },
 
-	/**
-	* A tween that has yoyo set to true will run through from start to finish, then reverse from finish to start.
-	* Used in combination with repeat you can create endless loops.
-	*
-	* @method Phaser.Tween#yoyo
-	* @param {boolean} yoyo - Set to true to yoyo this tween.
-	* @return {Phaser.Tween} Itself.
-	*/
-	yoyo: function( yoyo ) {
+    /**
+    * A tween that has yoyo set to true will run through from start to finish, then reverse from finish to start.
+    * Used in combination with repeat you can create endless loops.
+    *
+    * @method Phaser.Tween#yoyo
+    * @param {boolean} yoyo - Set to true to yoyo this tween.
+    * @return {Phaser.Tween} Itself.
+    */
+    yoyo: function( yoyo ) {
 
-		this._yoyo = yoyo;
-		return this;
+        this._yoyo = yoyo;
+        return this;
 
-	},
+    },
 
-	/**
-	* Set easing function this tween will use, i.e. Phaser.Easing.Linear.None. 
-	*
-	* @method Phaser.Tween#easing
-	* @param {function} easing - The easing function this tween will use, i.e. Phaser.Easing.Linear.None.
-	* @return {Phaser.Tween} Itself.
-	*/
-	easing: function ( easing ) {
+    /**
+    * Set easing function this tween will use, i.e. Phaser.Easing.Linear.None. 
+    *
+    * @method Phaser.Tween#easing
+    * @param {function} easing - The easing function this tween will use, i.e. Phaser.Easing.Linear.None.
+    * @return {Phaser.Tween} Itself.
+    */
+    easing: function ( easing ) {
 
-		this._easingFunction = easing;
-		return this;
+        this._easingFunction = easing;
+        return this;
 
-	},
+    },
 
-	/**
-	* Set interpolation function the tween will use, by default it uses Phaser.Math.linearInterpolation.
-	*
-	* @method Phaser.Tween#interpolation
-	* @param {function} interpolation - The interpolation function to use (Phaser.Math.linearInterpolation by default)
-	* @return {Phaser.Tween} Itself.
-	*/
-	interpolation: function ( interpolation ) {
+    /**
+    * Set interpolation function the tween will use, by default it uses Phaser.Math.linearInterpolation.
+    *
+    * @method Phaser.Tween#interpolation
+    * @param {function} interpolation - The interpolation function to use (Phaser.Math.linearInterpolation by default)
+    * @return {Phaser.Tween} Itself.
+    */
+    interpolation: function ( interpolation ) {
 
-		this._interpolationFunction = interpolation;
-		return this;
+        this._interpolationFunction = interpolation;
+        return this;
 
-	},
+    },
 
-	/**
-	* You can chain tweens together by passing a reference to the chain function. This enables one tween to call another on completion.
-	* You can pass as many tweens as you like to this function, they will each be chained in sequence.
-	*
-	* @method Phaser.Tween#chain
-	* @return {Phaser.Tween} Itself.
-	*/
-	chain: function () {
+    /**
+    * You can chain tweens together by passing a reference to the chain function. This enables one tween to call another on completion.
+    * You can pass as many tweens as you like to this function, they will each be chained in sequence.
+    *
+    * @method Phaser.Tween#chain
+    * @return {Phaser.Tween} Itself.
+    */
+    chain: function () {
 
-		this._chainedTweens = arguments;
-		return this;
+        this._chainedTweens = arguments;
+        return this;
 
-	},
+    },
 
-	/**
-	* Loop a chain of tweens
-	* 
-	* Usage:
-	* game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
-	* .to({ y: 300 }, 1000, Phaser.Easing.Linear.None)
-	* .to({ x: 0 }, 1000, Phaser.Easing.Linear.None)
-	* .to({ y: 0 }, 1000, Phaser.Easing.Linear.None)
-	* .loop();
-	* @method Phaser.Tween#loop
-	* @return {Phaser.Tween} Itself.
-	*/
-	loop: function() {
+    /**
+    * Loop a chain of tweens
+    * 
+    * Usage:
+    * game.add.tween(p).to({ x: 700 }, 1000, Phaser.Easing.Linear.None, true)
+    * .to({ y: 300 }, 1000, Phaser.Easing.Linear.None)
+    * .to({ x: 0 }, 1000, Phaser.Easing.Linear.None)
+    * .to({ y: 0 }, 1000, Phaser.Easing.Linear.None)
+    * .loop();
+    * @method Phaser.Tween#loop
+    * @return {Phaser.Tween} Itself.
+    */
+    loop: function() {
 
-		this._lastChild.chain(this);
-		return this;
+        this._lastChild.chain(this);
+        return this;
 
-	},
+    },
 
-	/**
-	* Sets a callback to be fired when the tween starts. Note: callback will be called in the context of the global scope.
-	*
-	* @method Phaser.Tween#onStartCallback
-	* @param {function} callback - The callback to invoke on start.
-	* @return {Phaser.Tween} Itself.
-	*/
-	onStartCallback: function ( callback ) {
+    /**
+    * Sets a callback to be fired when the tween starts. Note: callback will be called in the context of the global scope.
+    *
+    * @method Phaser.Tween#onStartCallback
+    * @param {function} callback - The callback to invoke on start.
+    * @return {Phaser.Tween} Itself.
+    */
+    onStartCallback: function ( callback ) {
 
-		this._onStartCallback = callback;
-		return this;
+        this._onStartCallback = callback;
+        return this;
 
-	},
+    },
 
-	/**
-	* Sets a callback to be fired each time this tween updates. Note: callback will be called in the context of the global scope.
-	*
-	* @method Phaser.Tween#onUpdateCallback
-	* @param {function} callback - The callback to invoke each time this tween is updated.
-	* @return {Phaser.Tween} Itself.
-	*/
-	onUpdateCallback: function ( callback ) {
+    /**
+    * Sets a callback to be fired each time this tween updates. Note: callback will be called in the context of the global scope.
+    *
+    * @method Phaser.Tween#onUpdateCallback
+    * @param {function} callback - The callback to invoke each time this tween is updated.
+    * @return {Phaser.Tween} Itself.
+    */
+    onUpdateCallback: function ( callback ) {
 
-		this._onUpdateCallback = callback;
-		return this;
+        this._onUpdateCallback = callback;
+        return this;
 
-	},
+    },
 
-	/**
-	* Sets a callback to be fired when the tween completes. Note: callback will be called in the context of the global scope.
-	*
-	* @method Phaser.Tween#onCompleteCallback
-	* @param {function} callback - The callback to invoke on completion.
-	* @return {Phaser.Tween} Itself.
-	*/
-	onCompleteCallback: function ( callback ) {
+    /**
+    * Sets a callback to be fired when the tween completes. Note: callback will be called in the context of the global scope.
+    *
+    * @method Phaser.Tween#onCompleteCallback
+    * @param {function} callback - The callback to invoke on completion.
+    * @return {Phaser.Tween} Itself.
+    */
+    onCompleteCallback: function ( callback ) {
 
-		this._onCompleteCallback = callback;
-		return this;
+        this._onCompleteCallback = callback;
+        return this;
 
-	},
+    },
 
-	/**
-	* Pauses the tween. 
-	*
-	* @method Phaser.Tween#pause
-	*/
+    /**
+    * Pauses the tween. 
+    *
+    * @method Phaser.Tween#pause
+    */
     pause: function () {
         this._paused = true;
         this._pausedTime = this.game.time.now;
     },
 
-	/**
-	* Resumes a paused tween.
-	*
-	* @method Phaser.Tween#resume
-	*/
+    /**
+    * Resumes a paused tween.
+    *
+    * @method Phaser.Tween#resume
+    */
     resume: function () {
         this._paused = false;
         this._startTime += (this.game.time.now - this._pausedTime);
     },
 
-	/**
-	* Core tween update function called by the TweenManager. Does not need to be invoked directly.
-	*
-	* @method Phaser.Tween#update
-	* @param {number} time - A timestamp passed in by the TweenManager.
-	* @return {boolean} false if the tween has completed and should be deleted from the manager, otherwise true (still active).
-	*/
-	update: function ( time ) {
+    /**
+    * Core tween update function called by the TweenManager. Does not need to be invoked directly.
+    *
+    * @method Phaser.Tween#update
+    * @param {number} time - A timestamp passed in by the TweenManager.
+    * @return {boolean} false if the tween has completed and should be deleted from the manager, otherwise true (still active).
+    */
+    update: function ( time ) {
 
-		if (this.pendingDelete)
-		{
-			return false;
-		}
+        if (this.pendingDelete)
+        {
+            return false;
+        }
 
         if (this._paused || time < this._startTime) {
 
@@ -27774,122 +28312,125 @@ Phaser.Tween.prototype = {
 
         }
 
-		var property;
+        var property;
 
-		if ( time < this._startTime ) {
+        if ( time < this._startTime ) {
 
-			return true;
+            return true;
 
-		}
+        }
 
-		if ( this._onStartCallbackFired === false ) {
+        if ( this._onStartCallbackFired === false ) {
 
-			if ( this._onStartCallback !== null ) {
+            if ( this._onStartCallback !== null ) {
 
-				this._onStartCallback.call( this._object );
+                this._onStartCallback.call( this._object );
 
-			}
+            }
 
-			this._onStartCallbackFired = true;
+            this._onStartCallbackFired = true;
 
-		}
+        }
 
-		var elapsed = ( time - this._startTime ) / this._duration;
-		elapsed = elapsed > 1 ? 1 : elapsed;
+        var elapsed = ( time - this._startTime ) / this._duration;
+        elapsed = elapsed > 1 ? 1 : elapsed;
 
-		var value = this._easingFunction( elapsed );
+        var value = this._easingFunction( elapsed );
 
-		for ( property in this._valuesEnd ) {
+        for ( property in this._valuesEnd ) {
 
-			var start = this._valuesStart[ property ] || 0;
-			var end = this._valuesEnd[ property ];
+            var start = this._valuesStart[ property ] || 0;
+            var end = this._valuesEnd[ property ];
 
-			if ( end instanceof Array ) {
+            if ( end instanceof Array ) {
 
-				this._object[ property ] = this._interpolationFunction( end, value );
+                this._object[ property ] = this._interpolationFunction( end, value );
 
-			} else {
+            } else {
 
                 // Parses relative end values with start as base (e.g.: +10, -3)
-				if ( typeof(end) === "string" ) {
-					end = start + parseFloat(end, 10);
-				}
+                if ( typeof(end) === "string" ) {
+                    end = start + parseFloat(end, 10);
+                }
 
-				// protect against non numeric properties.
+                // protect against non numeric properties.
                 if ( typeof(end) === "number" ) {
-					this._object[ property ] = start + ( end - start ) * value;
-				}
+                    this._object[ property ] = start + ( end - start ) * value;
+                }
 
-			}
+            }
 
-		}
+        }
 
-		if ( this._onUpdateCallback !== null ) {
+        if ( this._onUpdateCallback !== null ) {
 
-			this._onUpdateCallback.call( this._object, value );
+            this._onUpdateCallback.call( this._object, value );
 
-		}
+        }
 
-		if ( elapsed == 1 ) {
+        if ( elapsed == 1 ) {
 
-			if ( this._repeat > 0 ) {
+            if ( this._repeat > 0 ) {
 
-				if ( isFinite( this._repeat ) ) {
-					this._repeat--;
-				}
+                if ( isFinite( this._repeat ) ) {
+                    this._repeat--;
+                }
 
-				// reassign starting values, restart by making startTime = now
-				for ( property in this._valuesStartRepeat ) {
+                // reassign starting values, restart by making startTime = now
+                for ( property in this._valuesStartRepeat ) {
 
-					if ( typeof( this._valuesEnd[ property ] ) === "string" ) {
-						this._valuesStartRepeat[ property ] = this._valuesStartRepeat[ property ] + parseFloat(this._valuesEnd[ property ], 10);
-					}
+                    if ( typeof( this._valuesEnd[ property ] ) === "string" ) {
+                        this._valuesStartRepeat[ property ] = this._valuesStartRepeat[ property ] + parseFloat(this._valuesEnd[ property ], 10);
+                    }
 
-					if (this._yoyo) {
-						var tmp = this._valuesStartRepeat[ property ];
-						this._valuesStartRepeat[ property ] = this._valuesEnd[ property ];
-						this._valuesEnd[ property ] = tmp;
-						this._reversed = !this._reversed;
-					}
-					this._valuesStart[ property ] = this._valuesStartRepeat[ property ];
+                    if (this._yoyo) {
+                        var tmp = this._valuesStartRepeat[ property ];
+                        this._valuesStartRepeat[ property ] = this._valuesEnd[ property ];
+                        this._valuesEnd[ property ] = tmp;
+                        this._reversed = !this._reversed;
+                    }
+                    this._valuesStart[ property ] = this._valuesStartRepeat[ property ];
 
-				}
+                }
 
-				this._startTime = time + this._delayTime;
+                this._startTime = time + this._delayTime;
 
-				this.onComplete.dispatch(this._object);
+                this.onComplete.dispatch(this._object);
 
-				if ( this._onCompleteCallback !== null ) {
-					this._onCompleteCallback.call( this._object );
-				}
+                if ( this._onCompleteCallback !== null ) {
+                    this._onCompleteCallback.call( this._object );
+                }
 
-				return true;
+                return true;
 
-			} else {
+            } else {
 
-				this.onComplete.dispatch(this._object);
+                this.isRunning = false;
+                this.onComplete.dispatch(this._object);
 
-				if ( this._onCompleteCallback !== null ) {
-					this._onCompleteCallback.call( this._object );
-				}
+                if ( this._onCompleteCallback !== null ) {
+                    this._onCompleteCallback.call( this._object );
+                }
 
-				for ( var i = 0, numChainedTweens = this._chainedTweens.length; i < numChainedTweens; i ++ ) {
+                for ( var i = 0, numChainedTweens = this._chainedTweens.length; i < numChainedTweens; i ++ ) {
 
-					this._chainedTweens[ i ].start( time );
+                    this._chainedTweens[ i ].start( time );
 
-				}
+                }
 
-				return false;
+                return false;
 
-			}
+            }
 
-		}
+        }
 
-		return true;
+        return true;
 
-	}
-	
+    }
+    
 };
+
+/* jshint curly: false */
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
@@ -27909,547 +28450,547 @@ Phaser.Easing = {
     *
     * @class Phaser.Easing.Linear
     */
-	Linear: {
+    Linear: {
 
-		/**
-		* Ease-in.
-		*
-		* @method Phaser.Easing.Linear#In 
-		* @param {number} k - The value to be tweened.
-		* @returns {number} k^2.
-		*/
-		None: function ( k ) {
+        /**
+        * Ease-in.
+        *
+        * @method Phaser.Easing.Linear#In 
+        * @param {number} k - The value to be tweened.
+        * @returns {number} k^2.
+        */
+        None: function ( k ) {
 
-			return k;
+            return k;
 
-		}
+        }
 
-	},
+    },
 
     /**
     * Quadratic easing.
     *
     * @class Phaser.Easing.Quadratic
     */
-	Quadratic: {
+    Quadratic: {
 
-		/**
-		* Ease-in.
-		*
-		* @method Phaser.Easing.Quadratic#In 
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} k^2.
-		*/
-		In: function ( k ) {
+        /**
+        * Ease-in.
+        *
+        * @method Phaser.Easing.Quadratic#In 
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} k^2.
+        */
+        In: function ( k ) {
 
-			return k * k;
+            return k * k;
 
-		},
+        },
 
-		/**
-		* Ease-out.
-		*
-		* @method Phaser.Easing.Quadratic#Out 
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} k* (2-k).
-		*/
-		Out: function ( k ) {
+        /**
+        * Ease-out.
+        *
+        * @method Phaser.Easing.Quadratic#Out 
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} k* (2-k).
+        */
+        Out: function ( k ) {
 
-			return k * ( 2 - k );
+            return k * ( 2 - k );
 
-		},
+        },
 
-		/**
-		* Ease-in/out.
-		*
-		* @method Phaser.Easing.Quadratic#InOut
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-		*/
-		InOut: function ( k ) {
+        /**
+        * Ease-in/out.
+        *
+        * @method Phaser.Easing.Quadratic#InOut
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+        */
+        InOut: function ( k ) {
 
-			if ( ( k *= 2 ) < 1 ) return 0.5 * k * k;
-			return - 0.5 * ( --k * ( k - 2 ) - 1 );
+            if ( ( k *= 2 ) < 1 ) return 0.5 * k * k;
+            return - 0.5 * ( --k * ( k - 2 ) - 1 );
 
-		}
+        }
 
-	},
+    },
 
     /**
     * Cubic easing.
     *
     * @class Phaser.Easing.Cubic
     */
-	Cubic: {
+    Cubic: {
 
-		/**
-		* Cubic ease-in.
-		*
-		* @method Phaser.Easing.Cubic#In 
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-		*/
-		In: function ( k ) {
+        /**
+        * Cubic ease-in.
+        *
+        * @method Phaser.Easing.Cubic#In 
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+        */
+        In: function ( k ) {
 
-			return k * k * k;
+            return k * k * k;
 
-		},
+        },
 
-		/**
-		* Cubic ease-out.
-		*
-		* @method Phaser.Easing.Cubic#Out
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-		*/
-		Out: function ( k ) {
+        /**
+        * Cubic ease-out.
+        *
+        * @method Phaser.Easing.Cubic#Out
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+        */
+        Out: function ( k ) {
 
-			return --k * k * k + 1;
+            return --k * k * k + 1;
 
-		},
+        },
 
-		/**
-		* Cubic ease-in/out.
-		*
-		* @method Phaser.Easing.Cubic#InOut
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-		*/
-		InOut: function ( k ) {
+        /**
+        * Cubic ease-in/out.
+        *
+        * @method Phaser.Easing.Cubic#InOut
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+        */
+        InOut: function ( k ) {
 
-			if ( ( k *= 2 ) < 1 ) return 0.5 * k * k * k;
-			return 0.5 * ( ( k -= 2 ) * k * k + 2 );
+            if ( ( k *= 2 ) < 1 ) return 0.5 * k * k * k;
+            return 0.5 * ( ( k -= 2 ) * k * k + 2 );
 
-		}
+        }
 
-	},
+    },
 
     /**
     * Quartic easing.
     *
     * @class Phaser.Easing.Quartic
     */
-	Quartic: {
+    Quartic: {
 
-		/**
-		* Quartic ease-in.
-		*
-		* @method Phaser.Easing.Quartic#In 
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-		*/
-		In: function ( k ) {
+        /**
+        * Quartic ease-in.
+        *
+        * @method Phaser.Easing.Quartic#In 
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+        */
+        In: function ( k ) {
 
-			return k * k * k * k;
+            return k * k * k * k;
 
-		},
+        },
 
-		/**
-		* Quartic ease-out.
-		*
-		* @method Phaser.Easing.Quartic#Out
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-		*/
-		Out: function ( k ) {
+        /**
+        * Quartic ease-out.
+        *
+        * @method Phaser.Easing.Quartic#Out
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+        */
+        Out: function ( k ) {
 
-			return 1 - ( --k * k * k * k );
+            return 1 - ( --k * k * k * k );
 
-		},
+        },
 
-		/**
-		* Quartic ease-in/out.
-		*
-		* @method Phaser.Easing.Quartic#InOut
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-		*/
-		InOut: function ( k ) {
+        /**
+        * Quartic ease-in/out.
+        *
+        * @method Phaser.Easing.Quartic#InOut
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+        */
+        InOut: function ( k ) {
 
-			if ( ( k *= 2 ) < 1) return 0.5 * k * k * k * k;
-			return - 0.5 * ( ( k -= 2 ) * k * k * k - 2 );
+            if ( ( k *= 2 ) < 1) return 0.5 * k * k * k * k;
+            return - 0.5 * ( ( k -= 2 ) * k * k * k - 2 );
 
-		}
+        }
 
-	},
+    },
 
     /**
     * Quintic easing.
     *
     * @class Phaser.Easing.Quintic
     */
-	Quintic: {
+    Quintic: {
 
-		/**
-		* Quintic ease-in.
-		*
-		* @method Phaser.Easing.Quintic#In 
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-		*/
-		In: function ( k ) {
+        /**
+        * Quintic ease-in.
+        *
+        * @method Phaser.Easing.Quintic#In 
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+        */
+        In: function ( k ) {
 
-			return k * k * k * k * k;
+            return k * k * k * k * k;
 
-		},
+        },
 
-		/**
-		* Quintic ease-out.
-		*
-		* @method Phaser.Easing.Quintic#Out
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-		*/
-		Out: function ( k ) {
+        /**
+        * Quintic ease-out.
+        *
+        * @method Phaser.Easing.Quintic#Out
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+        */
+        Out: function ( k ) {
 
-			return --k * k * k * k * k + 1;
+            return --k * k * k * k * k + 1;
 
-		},
+        },
 
-		/**
-		* Quintic ease-in/out.
-		*
-		* @method Phaser.Easing.Quintic#InOut
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-		*/
-		InOut: function ( k ) {
+        /**
+        * Quintic ease-in/out.
+        *
+        * @method Phaser.Easing.Quintic#InOut
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+        */
+        InOut: function ( k ) {
 
-			if ( ( k *= 2 ) < 1 ) return 0.5 * k * k * k * k * k;
-			return 0.5 * ( ( k -= 2 ) * k * k * k * k + 2 );
+            if ( ( k *= 2 ) < 1 ) return 0.5 * k * k * k * k * k;
+            return 0.5 * ( ( k -= 2 ) * k * k * k * k + 2 );
 
-		}
+        }
 
-	},
+    },
 
     /**
     * Sinusoidal easing.
     *
     * @class Phaser.Easing.Sinusoidal
     */
-	Sinusoidal: {
+    Sinusoidal: {
 
-		/**
-		* Sinusoidal ease-in.
-		*
-		* @method Phaser.Easing.Sinusoidal#In 
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-		*/
-		In: function ( k ) {
+        /**
+        * Sinusoidal ease-in.
+        *
+        * @method Phaser.Easing.Sinusoidal#In 
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+        */
+        In: function ( k ) {
 
-			return 1 - Math.cos( k * Math.PI / 2 );
+            return 1 - Math.cos( k * Math.PI / 2 );
 
-		},
+        },
 
-		/**
-		* Sinusoidal ease-out.
-		*
-		* @method Phaser.Easing.Sinusoidal#Out
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-		*/
-		Out: function ( k ) {
+        /**
+        * Sinusoidal ease-out.
+        *
+        * @method Phaser.Easing.Sinusoidal#Out
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+        */
+        Out: function ( k ) {
 
-			return Math.sin( k * Math.PI / 2 );
+            return Math.sin( k * Math.PI / 2 );
 
-		},
+        },
 
-		/**
-		* Sinusoidal ease-in/out.
-		*
-		* @method Phaser.Easing.Sinusoidal#InOut
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-		*/
-		InOut: function ( k ) {
+        /**
+        * Sinusoidal ease-in/out.
+        *
+        * @method Phaser.Easing.Sinusoidal#InOut
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+        */
+        InOut: function ( k ) {
 
-			return 0.5 * ( 1 - Math.cos( Math.PI * k ) );
+            return 0.5 * ( 1 - Math.cos( Math.PI * k ) );
 
-		}
+        }
 
-	},
+    },
 
     /**
     * Exponential easing.
     *
     * @class Phaser.Easing.Exponential
     */
-	Exponential: {
+    Exponential: {
 
-		/**
-		* Exponential ease-in.
-		*
-		* @method Phaser.Easing.Exponential#In 
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-		*/
-		In: function ( k ) {
+        /**
+        * Exponential ease-in.
+        *
+        * @method Phaser.Easing.Exponential#In 
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+        */
+        In: function ( k ) {
 
-			return k === 0 ? 0 : Math.pow( 1024, k - 1 );
+            return k === 0 ? 0 : Math.pow( 1024, k - 1 );
 
-		},
+        },
 
-		/**
-		* Exponential ease-out.
-		*
-		* @method Phaser.Easing.Exponential#Out
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-		*/
-		Out: function ( k ) {
+        /**
+        * Exponential ease-out.
+        *
+        * @method Phaser.Easing.Exponential#Out
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+        */
+        Out: function ( k ) {
 
-			return k === 1 ? 1 : 1 - Math.pow( 2, - 10 * k );
+            return k === 1 ? 1 : 1 - Math.pow( 2, - 10 * k );
 
-		},
+        },
 
-		/**
-		* Exponential ease-in/out.
-		*
-		* @method Phaser.Easing.Exponential#InOut
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-		*/
-		InOut: function ( k ) {
+        /**
+        * Exponential ease-in/out.
+        *
+        * @method Phaser.Easing.Exponential#InOut
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+        */
+        InOut: function ( k ) {
 
-			if ( k === 0 ) return 0;
-			if ( k === 1 ) return 1;
-			if ( ( k *= 2 ) < 1 ) return 0.5 * Math.pow( 1024, k - 1 );
-			return 0.5 * ( - Math.pow( 2, - 10 * ( k - 1 ) ) + 2 );
+            if ( k === 0 ) return 0;
+            if ( k === 1 ) return 1;
+            if ( ( k *= 2 ) < 1 ) return 0.5 * Math.pow( 1024, k - 1 );
+            return 0.5 * ( - Math.pow( 2, - 10 * ( k - 1 ) ) + 2 );
 
-		}
+        }
 
-	},
+    },
 
     /**
     * Circular easing.
     *
     * @class Phaser.Easing.Circular
     */
-	Circular: {
+    Circular: {
 
-		/**
-		* Circular ease-in.
-		*
-		* @method Phaser.Easing.Circular#In 
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-		*/
-		In: function ( k ) {
-
-			return 1 - Math.sqrt( 1 - k * k );
-
-		},
-
-		/**
-		* Circular ease-out.
-		*
-		* @method Phaser.Easing.Circular#Out
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-		*/
-		Out: function ( k ) {
-
-			return Math.sqrt( 1 - ( --k * k ) );
-
-		},
-
-		/**
-		* Circular ease-in/out.
+        /**
+        * Circular ease-in.
         *
-		* @method Phaser.Easing.Circular#InOut
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
+        * @method Phaser.Easing.Circular#In 
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
         */
-		InOut: function ( k ) {
+        In: function ( k ) {
 
-			if ( ( k *= 2 ) < 1) return - 0.5 * ( Math.sqrt( 1 - k * k) - 1);
-			return 0.5 * ( Math.sqrt( 1 - ( k -= 2) * k) + 1);
+            return 1 - Math.sqrt( 1 - k * k );
 
-		}
+        },
 
-	},
+        /**
+        * Circular ease-out.
+        *
+        * @method Phaser.Easing.Circular#Out
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+        */
+        Out: function ( k ) {
+
+            return Math.sqrt( 1 - ( --k * k ) );
+
+        },
+
+        /**
+        * Circular ease-in/out.
+       *
+        * @method Phaser.Easing.Circular#InOut
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+       */
+        InOut: function ( k ) {
+
+            if ( ( k *= 2 ) < 1) return - 0.5 * ( Math.sqrt( 1 - k * k) - 1);
+            return 0.5 * ( Math.sqrt( 1 - ( k -= 2) * k) + 1);
+
+        }
+
+    },
 
     /**
     * Elastic easing.
     *
     * @class Phaser.Easing.Elastic
     */
-	Elastic: {
+    Elastic: {
 
-		/**
-		* Elastic ease-in.
-        *
-		* @method Phaser.Easing.Elastic#In 
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-        */
-		In: function ( k ) {
+        /**
+        * Elastic ease-in.
+       *
+        * @method Phaser.Easing.Elastic#In 
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+       */
+        In: function ( k ) {
 
-			var s, a = 0.1, p = 0.4;
-			if ( k === 0 ) return 0;
-			if ( k === 1 ) return 1;
-			if ( !a || a < 1 ) { a = 1; s = p / 4; }
-			else s = p * Math.asin( 1 / a ) / ( 2 * Math.PI );
-			return - ( a * Math.pow( 2, 10 * ( k -= 1 ) ) * Math.sin( ( k - s ) * ( 2 * Math.PI ) / p ) );
+            var s, a = 0.1, p = 0.4;
+            if ( k === 0 ) return 0;
+            if ( k === 1 ) return 1;
+            if ( !a || a < 1 ) { a = 1; s = p / 4; }
+            else s = p * Math.asin( 1 / a ) / ( 2 * Math.PI );
+            return - ( a * Math.pow( 2, 10 * ( k -= 1 ) ) * Math.sin( ( k - s ) * ( 2 * Math.PI ) / p ) );
 
-		},
+        },
 
-		/**
-		* Elastic ease-out.
-        *
-		* @method Phaser.Easing.Elastic#Out
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-        */
-		Out: function ( k ) {
+        /**
+        * Elastic ease-out.
+       *
+        * @method Phaser.Easing.Elastic#Out
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+       */
+        Out: function ( k ) {
 
-			var s, a = 0.1, p = 0.4;
-			if ( k === 0 ) return 0;
-			if ( k === 1 ) return 1;
-			if ( !a || a < 1 ) { a = 1; s = p / 4; }
-			else s = p * Math.asin( 1 / a ) / ( 2 * Math.PI );
-			return ( a * Math.pow( 2, - 10 * k) * Math.sin( ( k - s ) * ( 2 * Math.PI ) / p ) + 1 );
+            var s, a = 0.1, p = 0.4;
+            if ( k === 0 ) return 0;
+            if ( k === 1 ) return 1;
+            if ( !a || a < 1 ) { a = 1; s = p / 4; }
+            else s = p * Math.asin( 1 / a ) / ( 2 * Math.PI );
+            return ( a * Math.pow( 2, - 10 * k) * Math.sin( ( k - s ) * ( 2 * Math.PI ) / p ) + 1 );
 
-		},
+        },
 
-		/**
-		* Elastic ease-in/out.
-        *
-		* @method Phaser.Easing.Elastic#InOut
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-        */
-		InOut: function ( k ) {
+        /**
+        * Elastic ease-in/out.
+       *
+        * @method Phaser.Easing.Elastic#InOut
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+       */
+        InOut: function ( k ) {
 
-			var s, a = 0.1, p = 0.4;
-			if ( k === 0 ) return 0;
-			if ( k === 1 ) return 1;
-			if ( !a || a < 1 ) { a = 1; s = p / 4; }
-			else s = p * Math.asin( 1 / a ) / ( 2 * Math.PI );
-			if ( ( k *= 2 ) < 1 ) return - 0.5 * ( a * Math.pow( 2, 10 * ( k -= 1 ) ) * Math.sin( ( k - s ) * ( 2 * Math.PI ) / p ) );
-			return a * Math.pow( 2, -10 * ( k -= 1 ) ) * Math.sin( ( k - s ) * ( 2 * Math.PI ) / p ) * 0.5 + 1;
+            var s, a = 0.1, p = 0.4;
+            if ( k === 0 ) return 0;
+            if ( k === 1 ) return 1;
+            if ( !a || a < 1 ) { a = 1; s = p / 4; }
+            else s = p * Math.asin( 1 / a ) / ( 2 * Math.PI );
+            if ( ( k *= 2 ) < 1 ) return - 0.5 * ( a * Math.pow( 2, 10 * ( k -= 1 ) ) * Math.sin( ( k - s ) * ( 2 * Math.PI ) / p ) );
+            return a * Math.pow( 2, -10 * ( k -= 1 ) ) * Math.sin( ( k - s ) * ( 2 * Math.PI ) / p ) * 0.5 + 1;
 
-		}
+        }
 
-	},
+    },
 
     /**
     * Back easing.
     *
     * @class Phaser.Easing.Back
     */
-	Back: {
+    Back: {
 
-		/**
-		* Back ease-in.
-        *
-		* @method Phaser.Easing.Back#In 
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-        */
-		In: function ( k ) {
+        /**
+        * Back ease-in.
+       *
+        * @method Phaser.Easing.Back#In 
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+       */
+        In: function ( k ) {
 
-			var s = 1.70158;
-			return k * k * ( ( s + 1 ) * k - s );
+            var s = 1.70158;
+            return k * k * ( ( s + 1 ) * k - s );
 
-		},
+        },
 
-		/**
-		* Back ease-out.
-        *
-		* @method Phaser.Easing.Back#Out
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-        */
-		Out: function ( k ) {
+        /**
+        * Back ease-out.
+       *
+        * @method Phaser.Easing.Back#Out
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+       */
+        Out: function ( k ) {
 
-			var s = 1.70158;
-			return --k * k * ( ( s + 1 ) * k + s ) + 1;
+            var s = 1.70158;
+            return --k * k * ( ( s + 1 ) * k + s ) + 1;
 
-		},
+        },
 
-		/**
-		* Back ease-in/out.
-        *
-		* @method Phaser.Easing.Back#InOut
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-        */
-		InOut: function ( k ) {
+        /**
+        * Back ease-in/out.
+       *
+        * @method Phaser.Easing.Back#InOut
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+       */
+        InOut: function ( k ) {
 
-			var s = 1.70158 * 1.525;
-			if ( ( k *= 2 ) < 1 ) return 0.5 * ( k * k * ( ( s + 1 ) * k - s ) );
-			return 0.5 * ( ( k -= 2 ) * k * ( ( s + 1 ) * k + s ) + 2 );
+            var s = 1.70158 * 1.525;
+            if ( ( k *= 2 ) < 1 ) return 0.5 * ( k * k * ( ( s + 1 ) * k - s ) );
+            return 0.5 * ( ( k -= 2 ) * k * ( ( s + 1 ) * k + s ) + 2 );
 
-		}
+        }
 
-	},
+    },
 
     /**
     * Bounce easing.
     *
     * @class Phaser.Easing.Bounce
     */
-	Bounce: {
+    Bounce: {
 
-		/**
-		* Bounce ease-in.
-        *
-		* @method Phaser.Easing.Bounce#In 
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-        */
-		In: function ( k ) {
+        /**
+        * Bounce ease-in.
+       *
+        * @method Phaser.Easing.Bounce#In 
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+       */
+        In: function ( k ) {
 
-			return 1 - Phaser.Easing.Bounce.Out( 1 - k );
+            return 1 - Phaser.Easing.Bounce.Out( 1 - k );
 
-		},
+        },
 
-		/**
-		* Bounce ease-out.
-        *
-		* @method Phaser.Easing.Bounce#Out
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-        */
-		Out: function ( k ) {
+        /**
+        * Bounce ease-out.
+       *
+        * @method Phaser.Easing.Bounce#Out
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+       */
+        Out: function ( k ) {
 
-			if ( k < ( 1 / 2.75 ) ) {
+            if ( k < ( 1 / 2.75 ) ) {
 
-				return 7.5625 * k * k;
+                return 7.5625 * k * k;
 
-			} else if ( k < ( 2 / 2.75 ) ) {
+            } else if ( k < ( 2 / 2.75 ) ) {
 
-				return 7.5625 * ( k -= ( 1.5 / 2.75 ) ) * k + 0.75;
+                return 7.5625 * ( k -= ( 1.5 / 2.75 ) ) * k + 0.75;
 
-			} else if ( k < ( 2.5 / 2.75 ) ) {
+            } else if ( k < ( 2.5 / 2.75 ) ) {
 
-				return 7.5625 * ( k -= ( 2.25 / 2.75 ) ) * k + 0.9375;
+                return 7.5625 * ( k -= ( 2.25 / 2.75 ) ) * k + 0.9375;
 
-			} else {
+            } else {
 
-				return 7.5625 * ( k -= ( 2.625 / 2.75 ) ) * k + 0.984375;
+                return 7.5625 * ( k -= ( 2.625 / 2.75 ) ) * k + 0.984375;
 
-			}
+            }
 
-		},
+        },
 
-		/**
-		* Bounce ease-in/out.
-        *
-		* @method Phaser.Easing.Bounce#InOut
-		* @param {number} k - The value to be tweened. 
-		* @returns {number} The tweened value.
-        */
-		InOut: function ( k ) {
+        /**
+        * Bounce ease-in/out.
+       *
+        * @method Phaser.Easing.Bounce#InOut
+        * @param {number} k - The value to be tweened. 
+        * @returns {number} The tweened value.
+       */
+        InOut: function ( k ) {
 
-			if ( k < 0.5 ) return Phaser.Easing.Bounce.In( k * 2 ) * 0.5;
-			return Phaser.Easing.Bounce.Out( k * 2 - 1 ) * 0.5 + 0.5;
+            if ( k < 0.5 ) return Phaser.Easing.Bounce.In( k * 2 ) * 0.5;
+            return Phaser.Easing.Bounce.Out( k * 2 - 1 ) * 0.5 + 0.5;
 
-		}
+        }
 
-	}
+    }
 
 };
 
@@ -28475,124 +29016,91 @@ Phaser.Time = function (game) {
 	this.game = game;
 
 	/**
-	* The time at which the Game instance started.
-	* @property {number} _started
+	* @property {number} _started - The time at which the Game instance started.
 	* @private
-	* @default
 	*/
 	this._started = 0;
 
 	/**
-	* The time (in ms) that the last second counter ticked over.
-	* @property {number} _timeLastSecond
+	* @property {number} _timeLastSecond - The time (in ms) that the last second counter ticked over.
 	* @private
-	* @default
 	*/
 	this._timeLastSecond = 0;
 
 	/**
-	* The time the game started being paused.
-	* @property {number} _pauseStarted
+	* @property {number} _pauseStarted - The time the game started being paused.
 	* @private
-	* @default
 	*/
 	this._pauseStarted = 0;
 
 	/**
-	* The elapsed time calculated for the physics motion updates.
-	* @property {number} physicsElapsed
-	* @default
+	* @property {number} physicsElapsed - The elapsed time calculated for the physics motion updates.
 	*/
 	this.physicsElapsed = 0;
 
 	/**
-	* Game time counter.
-	* @property {number} time
-	* @default
+	* @property {number} time - Game time counter.
 	*/
 	this.time = 0;
 
 	/**
-	* Records how long the game has been paused for. Is reset each time the game pauses.
-	* @property {number} pausedTime
-	* @default
+	* @property {number} pausedTime - Records how long the game has been paused for. Is reset each time the game pauses.
 	*/
 	this.pausedTime = 0;
 
 	/**
-	* The time right now.
-	* @property {number} now
-    * @default
+	* @property {number} now - The time right now.
 	*/
 	this.now = 0;
 
 	/**
-	* Elapsed time since the last frame.
-	* @property {number} elapsed
-	* @default
+	* @property {number} elapsed - Elapsed time since the last frame.
 	*/
 	this.elapsed = 0;
 
 	/**
-	* Frames per second.
-	* @property {number} fps
-	* @default
+	* @property {number} fps - Frames per second.
 	*/
 	this.fps = 0;
 
 	/**
-	* The lowest rate the fps has dropped to.
-	* @property {number} fpsMin
-	* @default
+	* @property {number} fpsMin - The lowest rate the fps has dropped to.
 	*/
 	this.fpsMin = 1000;
 
 	/**
-	* The highest rate the fps has reached (usually no higher than 60fps).
-	* @property {number} fpsMax
-	* @default
+	* @property {number} fpsMax - The highest rate the fps has reached (usually no higher than 60fps).
 	*/
 	this.fpsMax = 0;
 
 	/**
-	* The minimum amount of time the game has taken between two frames.
-	* @property {number} msMin
+	* @property {number} msMin - The minimum amount of time the game has taken between two frames.
 	* @default
 	*/
 	this.msMin = 1000;
 
 	/**
-	* The maximum amount of time the game has taken between two frames.
-	* @property {number} msMax
-	* @default
+	* @property {number} msMax - The maximum amount of time the game has taken between two frames.
 	*/
 	this.msMax = 0;
 
 	/**
-	* The number of frames record in the last second.
-	* @property {number} frames
-	* @default
+	* @property {number} frames - The number of frames record in the last second.
 	*/
 	this.frames = 0;
 
 	/**
-	* Records how long the game was paused for in miliseconds.
-	* @property {number} pauseDuration
-	* @default
+	* @property {number} pauseDuration - Records how long the game was paused for in miliseconds.
 	*/
 	this.pauseDuration = 0;
 
 	/**
-	* The value that setTimeout needs to work out when to next update
-	* @property {number} timeToCall
-	* @default
+	* @property {number} timeToCall - The value that setTimeout needs to work out when to next update
 	*/
 	this.timeToCall = 0;
 
 	/**
-	* Internal value used by timeToCall as part of the setTimeout loop
-	* @property {number} lastTime
-	* @default
+	* @property {number} lastTime - Internal value used by timeToCall as part of the setTimeout loop
 	*/
 	this.lastTime = 0;
 
@@ -28601,24 +29109,14 @@ Phaser.Time = function (game) {
 	this.game.onResume.add(this.gameResumed, this);
 
 	/**
-	* Description.
-	* @property {boolean} _justResumed
-    * @default
+	* @property {boolean} _justResumed - Internal value used to recover from the game pause state.
+    * @private
 	*/
 	this._justResumed = false;
 
 };
 
 Phaser.Time.prototype = {
-
-	/**
-	* The number of seconds that have elapsed since the game was started.
-	* @method Phaser.Time#totalElapsedSeconds
-	* @return {number}
-	*/
-	totalElapsedSeconds: function() {
-		return (this.now - this._started) * 0.001;
-	},
 
 	/**
 	* Updates the game clock and calculate the fps. This is called automatically by Phaser.Game.
@@ -28697,6 +29195,15 @@ Phaser.Time.prototype = {
 	},
 
 	/**
+	* The number of seconds that have elapsed since the game was started.
+	* @method Phaser.Time#totalElapsedSeconds
+	* @return {number}
+	*/
+	totalElapsedSeconds: function() {
+		return (this.now - this._started) * 0.001;
+	},
+
+	/**
 	* How long has passed since the given time.
 	* @method Phaser.Time#elapsedSince
 	* @param {number} since - The time you want to measure against.
@@ -28732,6 +29239,123 @@ Phaser.Time.prototype = {
 */
 
 /**
+* Timer constructor.
+*
+* @class Phaser.Timer
+* @classdesc A Timer
+* @constructor
+* @param {Phaser.Game} game A reference to the currently running game.
+*/
+Phaser.Timer = function (game) {
+
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
+    this.game = game;
+
+    /**
+    * The time at which this Timer instance started.
+    * @property {number} _started
+    * @private
+    * @default
+    */
+    this._started = 0;
+
+    /**
+    * The time (in ms) that the last second counter ticked over.
+    * @property {number} _timeLastSecond
+    * @private
+    * @default
+    */
+    this._timeLastSecond = 0;
+
+    this.running = false;
+
+    this.events = [];
+
+    this.onEvent = new Phaser.Signal();
+
+    //  Need to add custom FPS rate, for now we'll just use seconds
+
+}
+
+Phaser.Timer.prototype = {
+
+    //  delay could be from now, when the timer is created, or relative to an already running timer
+
+    // add: function (delay, callback, callbackContext) {
+    add: function (delay) {
+
+        this.events.push({
+            delay: delay,
+            dispatched: false,
+            args: Array.prototype.splice.call(arguments, 1)
+        });
+
+        // this.events.push({
+        //  delay: delay,
+        //  dispatched: false,
+        //  callback: callback,
+        //  callbackContext: callbackContext,
+        //  args: Array.prototype.splice.call(arguments, 3)
+        // });
+
+    },
+
+    start: function() {
+
+        this._started = this.game.time.now;
+        this.running = true;
+
+        //  sort the events based on delay here, also don't run unless events is populated
+        //  add ability to auto-stop once all events are done
+        //  add support for maximum duration
+        //  add support for delay before starting
+        //  add signals?
+
+    },
+
+    stop: function() {
+
+        this.running = false;
+        this.events.length = 0;
+
+    },
+
+    update: function() {
+
+        //  TODO: Game Paused support
+
+        if (this.running)
+        {
+            var seconds = this.seconds();
+
+            for (var i = 0, len = this.events.length; i < len; i++)
+            {
+                if (this.events[i].dispatched === false && seconds >= this.events[i].delay)
+                {
+                    this.events[i].dispatched = true;
+                    // this.events[i].callback.apply(this.events[i].callbackContext, this.events[i].args);
+                    this.onEvent.dispatch.apply(this, this.events[i].args);
+                    //  ought to slice it now
+                }
+            }
+        }
+
+    },
+
+    seconds: function() {
+        return (this.game.time.now - this._started) * 0.001;
+    }
+
+}
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
 * The Animation Manager is used to add, play and update Phaser Animations.
 * Any Game Object such as Phaser.Sprite that supports animation contains a single AnimationManager instance.
 *
@@ -28744,49 +29368,49 @@ Phaser.AnimationManager = function (sprite) {
     /**
     * @property {Phaser.Sprite} sprite - A reference to the parent Sprite that owns this AnimationManager.
     */
-	this.sprite = sprite;
+    this.sprite = sprite;
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
-	this.game = sprite.game;
+    this.game = sprite.game;
 
-	/**
-	* @property {Phaser.Frame} currentFrame - The currently displayed Frame of animation, if any.
-	* @default
-	*/
-	this.currentFrame = null;
-	
-	/**
-	* @property {boolean} updateIfVisible - Should the animation data continue to update even if the Sprite.visible is set to false.
-	* @default
-	*/
-	this.updateIfVisible = true;
+    /**
+    * @property {Phaser.Frame} currentFrame - The currently displayed Frame of animation, if any.
+    * @default
+    */
+    this.currentFrame = null;
+    
+    /**
+    * @property {boolean} updateIfVisible - Should the animation data continue to update even if the Sprite.visible is set to false.
+    * @default
+    */
+    this.updateIfVisible = true;
 
-	/**
-	* @property {boolean} isLoaded - Set to true once animation data has been loaded.
-	* @default
-	*/
-	this.isLoaded = false;
+    /**
+    * @property {boolean} isLoaded - Set to true once animation data has been loaded.
+    * @default
+    */
+    this.isLoaded = false;
 
-	/**
-	* @property {Phaser.FrameData} _frameData - A temp. var for holding the currently playing Animations FrameData.
-	* @private
-	* @default
-	*/
-	this._frameData = null;
+    /**
+    * @property {Phaser.FrameData} _frameData - A temp. var for holding the currently playing Animations FrameData.
+    * @private
+    * @default
+    */
+    this._frameData = null;
 
-	/**
-	* @property {object} _anims - An internal object that stores all of the Animation instances.
-	* @private
-	*/   
-	this._anims = {};
+    /**
+    * @property {object} _anims - An internal object that stores all of the Animation instances.
+    * @private
+    */
+    this._anims = {};
 
-	/**
-	* @property {object} _outputFrames - An internal object to help avoid gc.
-	* @private
-	*/
-	this._outputFrames = [];
+    /**
+    * @property {object} _outputFrames - An internal object to help avoid gc.
+    * @private
+    */
+    this._outputFrames = [];
 
 };
 
@@ -28800,226 +29424,226 @@ Phaser.AnimationManager.prototype = {
     * @private
     * @param {Phaser.FrameData} frameData - The FrameData set to load.
     */
-	loadFrameData: function (frameData) {
+    loadFrameData: function (frameData) {
 
-		this._frameData = frameData;
-		this.frame = 0;
-		this.isLoaded = true;
+        this._frameData = frameData;
+        this.frame = 0;
+        this.isLoaded = true;
 
-	},
+    },
 
-	/**
-	* Adds a new animation under the given key. Optionally set the frames, frame rate and loop.
-	* Animations added in this way are played back with the play function.
-	*
+    /**
+    * Adds a new animation under the given key. Optionally set the frames, frame rate and loop.
+    * Animations added in this way are played back with the play function.
+    *
     * @method Phaser.AnimationManager#add
-	* @param {string} name - The unique (within this Sprite) name for the animation, i.e. "run", "fire", "walk".
-	* @param {Array} [frames=null] - An array of numbers/strings that correspond to the frames to add to this animation and in which order. e.g. [1, 2, 3] or ['run0', 'run1', run2]). If null then all frames will be used.
-	* @param {number} [frameRate=60] - The speed at which the animation should play. The speed is given in frames per second.
-	* @param {boolean} [loop=false] - Whether or not the animation is looped or just plays once.
-	* @param {boolean} [useNumericIndex=true] - Are the given frames using numeric indexes (default) or strings?
-	* @return {Phaser.Animation} The Animation object that was created.
-	*/
-	add: function (name, frames, frameRate, loop, useNumericIndex) {
+    * @param {string} name - The unique (within this Sprite) name for the animation, i.e. "run", "fire", "walk".
+    * @param {Array} [frames=null] - An array of numbers/strings that correspond to the frames to add to this animation and in which order. e.g. [1, 2, 3] or ['run0', 'run1', run2]). If null then all frames will be used.
+    * @param {number} [frameRate=60] - The speed at which the animation should play. The speed is given in frames per second.
+    * @param {boolean} [loop=false] - Whether or not the animation is looped or just plays once.
+    * @param {boolean} [useNumericIndex=true] - Are the given frames using numeric indexes (default) or strings?
+    * @return {Phaser.Animation} The Animation object that was created.
+    */
+    add: function (name, frames, frameRate, loop, useNumericIndex) {
 
-		if (this._frameData == null)
-		{
-			console.warn('No FrameData available for Phaser.Animation ' + name);
-			return;
-		}
+        if (this._frameData == null)
+        {
+            console.warn('No FrameData available for Phaser.Animation ' + name);
+            return;
+        }
 
-		frameRate = frameRate || 60;
+        frameRate = frameRate || 60;
 
-		if (typeof loop === 'undefined') { loop = false; }
+        if (typeof loop === 'undefined') { loop = false; }
 
-		//	If they didn't set the useNumericIndex then let's at least try and guess it
-		if (typeof useNumericIndex === 'undefined')
-		{
-			if (frames && typeof frames[0] === 'number')
-			{
-				useNumericIndex = true;
-			}
-			else
-			{
-				useNumericIndex = false;
-			}
-		}
+        //  If they didn't set the useNumericIndex then let's at least try and guess it
+        if (typeof useNumericIndex === 'undefined')
+        {
+            if (frames && typeof frames[0] === 'number')
+            {
+                useNumericIndex = true;
+            }
+            else
+            {
+                useNumericIndex = false;
+            }
+        }
 
-		//  Create the signals the AnimationManager will emit
-		if (this.sprite.events.onAnimationStart == null)
-		{
-			this.sprite.events.onAnimationStart = new Phaser.Signal();
-			this.sprite.events.onAnimationComplete = new Phaser.Signal();
-			this.sprite.events.onAnimationLoop = new Phaser.Signal();
-		}
+        //  Create the signals the AnimationManager will emit
+        if (this.sprite.events.onAnimationStart == null)
+        {
+            this.sprite.events.onAnimationStart = new Phaser.Signal();
+            this.sprite.events.onAnimationComplete = new Phaser.Signal();
+            this.sprite.events.onAnimationLoop = new Phaser.Signal();
+        }
 
-    	this._outputFrames.length = 0;
+        this._outputFrames.length = 0;
 
-		this._frameData.getFrameIndexes(frames, useNumericIndex, this._outputFrames);
+        this._frameData.getFrameIndexes(frames, useNumericIndex, this._outputFrames);
 
-		this._anims[name] = new Phaser.Animation(this.game, this.sprite, name, this._frameData, this._outputFrames, frameRate, loop);
-		this.currentAnim = this._anims[name];
-		this.currentFrame = this.currentAnim.currentFrame;
-		this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+        this._anims[name] = new Phaser.Animation(this.game, this.sprite, name, this._frameData, this._outputFrames, frameRate, loop);
+        this.currentAnim = this._anims[name];
+        this.currentFrame = this.currentAnim.currentFrame;
+        this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
 
-		return this._anims[name];
+        return this._anims[name];
 
-	},
+    },
 
-	/**
-	* Check whether the frames in the given array are valid and exist.
-	*
+    /**
+    * Check whether the frames in the given array are valid and exist.
+    *
     * @method Phaser.AnimationManager#validateFrames
-	* @param {Array} frames - An array of frames to be validated.
-	* @param {boolean} [useNumericIndex=true] - Validate the frames based on their numeric index (true) or string index (false)
-	* @return {boolean} True if all given Frames are valid, otherwise false.
-	*/
-	validateFrames: function (frames, useNumericIndex) {
+    * @param {Array} frames - An array of frames to be validated.
+    * @param {boolean} [useNumericIndex=true] - Validate the frames based on their numeric index (true) or string index (false)
+    * @return {boolean} True if all given Frames are valid, otherwise false.
+    */
+    validateFrames: function (frames, useNumericIndex) {
 
-		if (typeof useNumericIndex == 'undefined') { useNumericIndex = true; }
+        if (typeof useNumericIndex == 'undefined') { useNumericIndex = true; }
 
-		for (var i = 0; i < frames.length; i++)
-		{
-			if (useNumericIndex == true)
-			{
-				if (frames[i] > this._frameData.total)
-				{
-					return false;
-				}
-			}
-			else
-			{
-				if (this._frameData.checkFrameName(frames[i]) == false)
-				{
-					return false;
-				}
-			}
-		}
+        for (var i = 0; i < frames.length; i++)
+        {
+            if (useNumericIndex === true)
+            {
+                if (frames[i] > this._frameData.total)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (this._frameData.checkFrameName(frames[i]) === false)
+                {
+                    return false;
+                }
+            }
+        }
 
-		return true;
+        return true;
 
-	},
+    },
 
-	/**
-	* Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()
-	* If the requested animation is already playing this request will be ignored. If you need to reset an already running animation do so directly on the Animation object itself.
-	* 
-	* @method Phaser.AnimationManager#play
-	* @param {string} name - The name of the animation to be played, e.g. "fire", "walk", "jump".
+    /**
+    * Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()
+    * If the requested animation is already playing this request will be ignored. If you need to reset an already running animation do so directly on the Animation object itself.
+    * 
+    * @method Phaser.AnimationManager#play
+    * @param {string} name - The name of the animation to be played, e.g. "fire", "walk", "jump".
     * @param {number} [frameRate=null] - The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
     * @param {boolean} [loop=false] - Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
     * @param {boolean} [killOnComplete=false] - If set to true when the animation completes (only happens if loop=false) the parent Sprite will be killed.
     * @return {Phaser.Animation} A reference to playing Animation instance.
-	*/
-	play: function (name, frameRate, loop, killOnComplete) {
+    */
+    play: function (name, frameRate, loop, killOnComplete) {
 
-		if (this._anims[name])
-		{
-			if (this.currentAnim == this._anims[name])
-			{
-				if (this.currentAnim.isPlaying == false)
-				{
-			        this.currentAnim.paused = false;
-					return this.currentAnim.play(frameRate, loop, killOnComplete);
-				}
-			}
-			else
-			{
-				this.currentAnim = this._anims[name];
-			    this.currentAnim.paused = false;
-				return this.currentAnim.play(frameRate, loop, killOnComplete);
-			}
-		}
+        if (this._anims[name])
+        {
+            if (this.currentAnim == this._anims[name])
+            {
+                if (this.currentAnim.isPlaying === false)
+                {
+                    this.currentAnim.paused = false;
+                    return this.currentAnim.play(frameRate, loop, killOnComplete);
+                }
+            }
+            else
+            {
+                this.currentAnim = this._anims[name];
+                this.currentAnim.paused = false;
+                return this.currentAnim.play(frameRate, loop, killOnComplete);
+            }
+        }
 
-	},
+    },
 
-	/**
-	* Stop playback of an animation. If a name is given that specific animation is stopped, otherwise the current animation is stopped.
-	* The currentAnim property of the AnimationManager is automatically set to the animation given.
-	*
-	* @method Phaser.AnimationManager#stop
-	* @param {string} [name=null] - The name of the animation to be stopped, e.g. "fire". If none is given the currently running animation is stopped.
-	* @param {boolean} [resetFrame=false] - When the animation is stopped should the currentFrame be set to the first frame of the animation (true) or paused on the last frame displayed (false)
-	*/
-	stop: function (name, resetFrame) {
+    /**
+    * Stop playback of an animation. If a name is given that specific animation is stopped, otherwise the current animation is stopped.
+    * The currentAnim property of the AnimationManager is automatically set to the animation given.
+    *
+    * @method Phaser.AnimationManager#stop
+    * @param {string} [name=null] - The name of the animation to be stopped, e.g. "fire". If none is given the currently running animation is stopped.
+    * @param {boolean} [resetFrame=false] - When the animation is stopped should the currentFrame be set to the first frame of the animation (true) or paused on the last frame displayed (false)
+    */
+    stop: function (name, resetFrame) {
 
-		if (typeof resetFrame == 'undefined') { resetFrame = false; }
+        if (typeof resetFrame == 'undefined') { resetFrame = false; }
 
-		if (typeof name == 'string')
-		{
-			if (this._anims[name])
-			{
-				this.currentAnim = this._anims[name];
-				this.currentAnim.stop(resetFrame);
-			}
-		}
-		else
-		{
-			if (this.currentAnim)
-			{
-				this.currentAnim.stop(resetFrame);
-			}
-		}
+        if (typeof name == 'string')
+        {
+            if (this._anims[name])
+            {
+                this.currentAnim = this._anims[name];
+                this.currentAnim.stop(resetFrame);
+            }
+        }
+        else
+        {
+            if (this.currentAnim)
+            {
+                this.currentAnim.stop(resetFrame);
+            }
+        }
 
-	},
+    },
 
-	/**
-	* The main update function is called by the Sprites update loop. It's responsible for updating animation frames and firing related events.
-	* 
-	* @method Phaser.AnimationManager#update
-	* @protected
+    /**
+    * The main update function is called by the Sprites update loop. It's responsible for updating animation frames and firing related events.
+    * 
+    * @method Phaser.AnimationManager#update
+    * @protected
     * @return {boolean} True if a new animation frame has been set, otherwise false.
-	*/
-	update: function () {
+    */
+    update: function () {
 
-		if (this.updateIfVisible && this.sprite.visible == false)
-		{
-			return false;
-		}
+        if (this.updateIfVisible && this.sprite.visible === false)
+        {
+            return false;
+        }
 
-		if (this.currentAnim && this.currentAnim.update() == true)
-		{
-			this.currentFrame = this.currentAnim.currentFrame;
-			this.sprite.currentFrame = this.currentFrame;
-			return true;
-		}
+        if (this.currentAnim && this.currentAnim.update() === true)
+        {
+            this.currentFrame = this.currentAnim.currentFrame;
+            this.sprite.currentFrame = this.currentFrame;
+            return true;
+        }
 
-		return false;
+        return false;
 
-	},
+    },
 
-	/**
-	* Returns an animation that was previously added by name.
-	*
-	* @method Phaser.AnimationManager#getAnimation
-	* @param {string} name - The name of the animation to be returned, e.g. "fire".
+    /**
+    * Returns an animation that was previously added by name.
+    *
+    * @method Phaser.AnimationManager#getAnimation
+    * @param {string} name - The name of the animation to be returned, e.g. "fire".
     * @return {Phaser.Animation|boolean} The Animation instance, if found, otherwise false.
-	*/
-	getAnimation: function (name) {
+    */
+    getAnimation: function (name) {
 
-		if (typeof name == 'string')
-		{
-			if (this._anims[name])
-			{
-				return this._anims[name];
-			}
-		}
+        if (typeof name == 'string')
+        {
+            if (this._anims[name])
+            {
+                return this._anims[name];
+            }
+        }
 
-		return false;
+        return false;
 
-	},
+    },
 
     /**
     * Refreshes the current frame data back to the parent Sprite and also resets the texture data.
     *
     * @method Phaser.AnimationManager#refreshFrame
     */
-	refreshFrame: function () {
+    refreshFrame: function () {
 
         this.sprite.currentFrame = this.currentFrame;
-		this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+        this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
 
-	},
+    },
 
     /**
     * Destroys all references this AnimationManager contains. Sets the _anims to a new object and nulls the current animation.
@@ -29043,7 +29667,7 @@ Phaser.AnimationManager.prototype = {
 * @property {Phaser.FrameData} frameData - The current animations FrameData.
 * @readonly
 */
-Object.defineProperty(Phaser.AnimationManager.prototype, "frameData", {
+Object.defineProperty(Phaser.AnimationManager.prototype, 'frameData', {
 
     get: function () {
         return this._frameData;
@@ -29056,7 +29680,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameData", {
 * @property {number} frameTotal - The total number of frames in the currently loaded FrameData, or -1 if no FrameData is loaded.
 * @readonly
 */
-Object.defineProperty(Phaser.AnimationManager.prototype, "frameTotal", {
+Object.defineProperty(Phaser.AnimationManager.prototype, 'frameTotal', {
  
     get: function () {
 
@@ -29076,7 +29700,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameTotal", {
 * @name Phaser.AnimationManager#paused
 * @property {boolean} paused - Gets and sets the paused state of the current animation.
 */
-Object.defineProperty(Phaser.AnimationManager.prototype, "paused", {
+Object.defineProperty(Phaser.AnimationManager.prototype, 'paused', {
 
     get: function () {
 
@@ -29096,15 +29720,15 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "paused", {
 * @name Phaser.AnimationManager#frame
 * @property {number} frame - Gets or sets the current frame index and updates the Texture Cache for display.
 */
-Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
+Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
 
     get: function () {
 
-    	if (this.currentFrame)
-    	{
-	        return this._frameIndex;
-	    }
-	    
+        if (this.currentFrame)
+        {
+            return this._frameIndex;
+        }
+        
     },
 
     set: function (value) {
@@ -29114,7 +29738,7 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
             this.currentFrame = this._frameData.getFrame(value);
             this._frameIndex = value;
             this.sprite.currentFrame = this.currentFrame;
-			this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+            this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
         }
 
     }
@@ -29125,14 +29749,14 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frame", {
 * @name Phaser.AnimationManager#frameName
 * @property {string} frameName - Gets or sets the current frame name and updates the Texture Cache for display.
 */
-Object.defineProperty(Phaser.AnimationManager.prototype, "frameName", {
+Object.defineProperty(Phaser.AnimationManager.prototype, 'frameName', {
 
     get: function () {
 
-    	if (this.currentFrame)
-    	{
-	        return this.currentFrame.name;
-    	}
+        if (this.currentFrame)
+        {
+            return this.currentFrame.name;
+        }
 
     },
 
@@ -29143,11 +29767,11 @@ Object.defineProperty(Phaser.AnimationManager.prototype, "frameName", {
             this.currentFrame = this._frameData.getFrameByName(value);
             this._frameIndex = this.currentFrame.index;
             this.sprite.currentFrame = this.currentFrame;
-			this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+            this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
         }
         else
         {
-            console.warn("Cannot set frameName: " + value);
+            console.warn('Cannot set frameName: ' + value);
         }
     }
 
@@ -29178,13 +29802,13 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
-	this.game = game;
+    this.game = game;
 
     /**
     * @property {Phaser.Sprite} _parent - A reference to the parent Sprite that owns this Animation.
     * @private
     */
-	this._parent = parent;
+    this._parent = parent;
 
     /**
     * @property {Phaser.FrameData} _frameData - The FrameData the Animation uses.
@@ -29201,18 +29825,18 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     * @property {object} _frames
     * @private
     */
-	this._frames = [];
+    this._frames = [];
     this._frames = this._frames.concat(frames);
 
     /**
     * @property {number} delay - The delay in ms between each frame of the Animation.
     */
-	this.delay = 1000 / delay;
+    this.delay = 1000 / delay;
 
     /**
     * @property {boolean} looped - The loop state of the Animation.
     */
-	this.looped = looped;
+    this.looped = looped;
 
     /**
     * @property {boolean} looped - The loop state of the Animation.
@@ -29223,13 +29847,13 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     * @property {boolean} isFinished - The finished state of the Animation. Set to true once playback completes, false during playback.
     * @default
     */
-	this.isFinished = false;
+    this.isFinished = false;
 
     /**
     * @property {boolean} isPlaying - The playing state of the Animation. Set to false once playback completes, true during playback.
     * @default
     */
-	this.isPlaying = false;
+    this.isPlaying = false;
 
     /**
     * @property {boolean} isPaused - The paused state of the Animation.
@@ -29249,7 +29873,7 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     * @private
     * @default
     */
-	this._frameIndex = 0;
+    this._frameIndex = 0;
 
     /**
     * @property {number} _frameDiff
@@ -29268,8 +29892,8 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     /**
     * @property {Phaser.Frame} currentFrame - The currently displayed frame of the Animation.
     */
-	this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-	
+    this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+    
 };
 
 Phaser.Animation.prototype = {
@@ -29314,7 +29938,7 @@ Phaser.Animation.prototype = {
         this._frameIndex = 0;
 
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
-		this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+        this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
 
         if (this._parent.events)
         {
@@ -29381,7 +30005,7 @@ Phaser.Animation.prototype = {
             return false;
         }
 
-        if (this.isPlaying == true && this.game.time.now >= this._timeNextFrame)
+        if (this.isPlaying === true && this.game.time.now >= this._timeNextFrame)
         {
             this._frameSkip = 1;
 
@@ -29486,7 +30110,7 @@ Phaser.Animation.prototype = {
 * @name Phaser.Animation#paused
 * @property {boolean} paused - Gets and sets the paused state of this Animation.
 */
-Object.defineProperty(Phaser.Animation.prototype, "paused", {
+Object.defineProperty(Phaser.Animation.prototype, 'paused', {
 
     get: function () {
 
@@ -29521,7 +30145,7 @@ Object.defineProperty(Phaser.Animation.prototype, "paused", {
 * @property {number} frameTotal - The total number of frames in the currently loaded FrameData, or -1 if no FrameData is loaded.
 * @readonly
 */
-Object.defineProperty(Phaser.Animation.prototype, "frameTotal", {
+Object.defineProperty(Phaser.Animation.prototype, 'frameTotal', {
 
     get: function () {
         return this._frames.length;
@@ -29533,7 +30157,7 @@ Object.defineProperty(Phaser.Animation.prototype, "frameTotal", {
 * @name Phaser.Animation#frame
 * @property {number} frame - Gets or sets the current frame index and updates the Texture Cache for display.
 */
-Object.defineProperty(Phaser.Animation.prototype, "frame", {
+Object.defineProperty(Phaser.Animation.prototype, 'frame', {
 
     get: function () {
 
@@ -29555,7 +30179,7 @@ Object.defineProperty(Phaser.Animation.prototype, "frame", {
         if (this.currentFrame !== null)
         {
             this._frameIndex = value;
-			this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+            this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
         }
 
     }
@@ -29645,124 +30269,124 @@ Phaser.Animation.generateFrameNames = function (prefix, start, stop, suffix, zer
 */
 Phaser.Frame = function (index, x, y, width, height, name, uuid) {
 
-	/**
-	* @property {number} index - The index of this Frame within the FrameData set it is being added to.
-	*/
-	this.index = index;
-	
-	/**
-	* @property {number} x - X position within the image to cut from.
-	*/
-	this.x = x;
+    /**
+    * @property {number} index - The index of this Frame within the FrameData set it is being added to.
+    */
+    this.index = index;
+    
+    /**
+    * @property {number} x - X position within the image to cut from.
+    */
+    this.x = x;
 
-	/**
-	* @property {number} y - Y position within the image to cut from.
-	*/
-	this.y = y;
+    /**
+    * @property {number} y - Y position within the image to cut from.
+    */
+    this.y = y;
 
-	/**
-	* @property {number} width - Width of the frame.
-	*/
-	this.width = width;
+    /**
+    * @property {number} width - Width of the frame.
+    */
+    this.width = width;
 
-	/**
-	* @property {number} height - Height of the frame.
-	*/
-	this.height = height;
+    /**
+    * @property {number} height - Height of the frame.
+    */
+    this.height = height;
 
-	/**
-	* @property {string} name - Useful for Texture Atlas files (is set to the filename value).
-	*/
-	this.name = name;
+    /**
+    * @property {string} name - Useful for Texture Atlas files (is set to the filename value).
+    */
+    this.name = name;
 
-	/**
-	* @property {string} uuid - A link to the PIXI.TextureCache entry.
-	*/
-	this.uuid = uuid;
+    /**
+    * @property {string} uuid - A link to the PIXI.TextureCache entry.
+    */
+    this.uuid = uuid;
 
-	/**
-	* @property {number} centerX - Center X position within the image to cut from.
-	*/
+    /**
+    * @property {number} centerX - Center X position within the image to cut from.
+    */
     this.centerX = Math.floor(width / 2);
 
-	/**
-	* @property {number} centerY - Center Y position within the image to cut from.
-	*/
+    /**
+    * @property {number} centerY - Center Y position within the image to cut from.
+    */
     this.centerY = Math.floor(height / 2);
 
-	/**
-	* @property {number} distance - The distance from the top left to the bottom-right of this Frame.
-	*/
-	this.distance = Phaser.Math.distance(0, 0, width, height);
+    /**
+    * @property {number} distance - The distance from the top left to the bottom-right of this Frame.
+    */
+    this.distance = Phaser.Math.distance(0, 0, width, height);
 
-	/**
-	* @property {boolean} rotated - Rotated? (not yet implemented)
-	* @default
-	*/
-	this.rotated = false;
+    /**
+    * @property {boolean} rotated - Rotated? (not yet implemented)
+    * @default
+    */
+    this.rotated = false;
 
-	/**
-	* @property {string} rotationDirection - Either 'cw' or 'ccw', rotation is always 90 degrees.
-	* @default 'cw'
-	*/
-	this.rotationDirection = 'cw';
+    /**
+    * @property {string} rotationDirection - Either 'cw' or 'ccw', rotation is always 90 degrees.
+    * @default 'cw'
+    */
+    this.rotationDirection = 'cw';
 
-	/**
-	* @property {boolean} trimmed - Was it trimmed when packed?
-	* @default
-	*/
-	this.trimmed = false;
+    /**
+    * @property {boolean} trimmed - Was it trimmed when packed?
+    * @default
+    */
+    this.trimmed = false;
 
-	/**
-	* @property {number} sourceSizeW - Width of the original sprite.
-	*/
+    /**
+    * @property {number} sourceSizeW - Width of the original sprite.
+    */
     this.sourceSizeW = width;
 
-	/**
-	* @property {number} sourceSizeH - Height of the original sprite.
-	*/
+    /**
+    * @property {number} sourceSizeH - Height of the original sprite.
+    */
     this.sourceSizeH = height;
 
-	/**
-	* @property {number} spriteSourceSizeX - X position of the trimmed sprite inside original sprite.
-	* @default
-	*/
-	this.spriteSourceSizeX = 0;
+    /**
+    * @property {number} spriteSourceSizeX - X position of the trimmed sprite inside original sprite.
+    * @default
+    */
+    this.spriteSourceSizeX = 0;
 
-	/**
-	* @property {number} spriteSourceSizeY - Y position of the trimmed sprite inside original sprite.
-	* @default
-	*/
-	this.spriteSourceSizeY = 0;
+    /**
+    * @property {number} spriteSourceSizeY - Y position of the trimmed sprite inside original sprite.
+    * @default
+    */
+    this.spriteSourceSizeY = 0;
 
-	/**
-	* @property {number} spriteSourceSizeW - Width of the trimmed sprite.
-	* @default
-	*/
-	this.spriteSourceSizeW = 0;
+    /**
+    * @property {number} spriteSourceSizeW - Width of the trimmed sprite.
+    * @default
+    */
+    this.spriteSourceSizeW = 0;
 
-	/**
-	* @property {number} spriteSourceSizeH - Height of the trimmed sprite.
-	* @default
-	*/
-	this.spriteSourceSizeH = 0;
+    /**
+    * @property {number} spriteSourceSizeH - Height of the trimmed sprite.
+    * @default
+    */
+    this.spriteSourceSizeH = 0;
 
 };
 
 Phaser.Frame.prototype = {
 
-	/**
-	* If the frame was trimmed when added to the Texture Atlas this records the trim and source data.
-	*
-	* @method Phaser.Frame#setTrim
-	* @param {boolean} trimmed - If this frame was trimmed or not.
-	* @param {number} actualWidth - The width of the frame before being trimmed.
-	* @param {number} actualHeight - The height of the frame before being trimmed.
-	* @param {number} destX - The destination X position of the trimmed frame for display.
-	* @param {number} destY - The destination Y position of the trimmed frame for display.
-	* @param {number} destWidth - The destination width of the trimmed frame for display.
-	* @param {number} destHeight - The destination height of the trimmed frame for display.
-	*/
+    /**
+    * If the frame was trimmed when added to the Texture Atlas this records the trim and source data.
+    *
+    * @method Phaser.Frame#setTrim
+    * @param {boolean} trimmed - If this frame was trimmed or not.
+    * @param {number} actualWidth - The width of the frame before being trimmed.
+    * @param {number} actualHeight - The height of the frame before being trimmed.
+    * @param {number} destX - The destination X position of the trimmed frame for display.
+    * @param {number} destY - The destination Y position of the trimmed frame for display.
+    * @param {number} destWidth - The destination width of the trimmed frame for display.
+    * @param {number} destHeight - The destination height of the trimmed frame for display.
+    */
     setTrim: function (trimmed, actualWidth, actualHeight, destX, destY, destWidth, destHeight) {
 
         this.trimmed = trimmed;
@@ -29773,8 +30397,8 @@ Phaser.Frame.prototype = {
             this.height = actualHeight;
             this.sourceSizeW = actualWidth;
             this.sourceSizeH = actualHeight;
-		    this.centerX = Math.floor(actualWidth / 2);
-		    this.centerY = Math.floor(actualHeight / 2);
+            this.centerX = Math.floor(actualWidth / 2);
+            this.centerY = Math.floor(actualHeight / 2);
             this.spriteSourceSizeX = destX;
             this.spriteSourceSizeY = destY;
             this.spriteSourceSizeW = destWidth;
@@ -29799,17 +30423,17 @@ Phaser.Frame.prototype = {
 */
 Phaser.FrameData = function () {
 
-	/**
-	* @property {Array} _frames - Local array of frames.
-	* @private
-	*/
+    /**
+    * @property {Array} _frames - Local array of frames.
+    * @private
+    */
     this._frames = [];
 
 
-	/**
-	* @property {Array} _frameNames - Local array of frame names for name to index conversions.
-	* @private
-	*/
+    /**
+    * @property {Array} _frameNames - Local array of frame names for name to index conversions.
+    * @private
+    */
     this._frameNames = [];
 
 };
@@ -29838,13 +30462,13 @@ Phaser.FrameData.prototype = {
 
     },
 
-	/**
-	* Get a Frame by its numerical index.
+    /**
+    * Get a Frame by its numerical index.
     *
     * @method Phaser.FrameData#getFrame
-	* @param {number} index - The index of the frame you want to get.
-	* @return {Phaser.Frame} The frame, if found.
-	*/
+    * @param {number} index - The index of the frame you want to get.
+    * @return {Phaser.Frame} The frame, if found.
+    */
     getFrame: function (index) {
 
         if (this._frames.length > index)
@@ -29892,15 +30516,15 @@ Phaser.FrameData.prototype = {
         
     },
 
-	/**
-	* Returns a range of frames based on the given start and end frame indexes and returns them in an Array.
+    /**
+    * Returns a range of frames based on the given start and end frame indexes and returns them in an Array.
     *
     * @method Phaser.FrameData#getFrameRange
     * @param {number} start - The starting frame index.
-	* @param {number} end - The ending frame index.
-	* @param {Array} [output] - If given the results will be appended to the end of this array otherwise a new array will be created.
-	* @return {Array} An array of Frames between the start and end index values, or an empty array if none were found.
-	*/
+    * @param {number} end - The ending frame index.
+    * @param {Array} [output] - If given the results will be appended to the end of this array otherwise a new array will be created.
+    * @return {Array} An array of Frames between the start and end index values, or an empty array if none were found.
+    */
     getFrameRange: function (start, end, output) {
         
         if (typeof output === "undefined") { output = []; }
@@ -29914,8 +30538,8 @@ Phaser.FrameData.prototype = {
 
     },
 
-	/**
-	* Returns all of the Frames in this FrameData set where the frame index is found in the input array.
+    /**
+    * Returns all of the Frames in this FrameData set where the frame index is found in the input array.
     * The frames are returned in the output array, or if none is provided in a new Array object.
     *
     * @method Phaser.FrameData#getFrames
@@ -29923,13 +30547,13 @@ Phaser.FrameData.prototype = {
     * @param {boolean} [useNumericIndex=true] - Are the given frames using numeric indexes (default) or strings? (false)
     * @param {Array} [output] - If given the results will be appended to the end of this array otherwise a new array will be created.
     * @return {Array} An array of all Frames in this FrameData set matching the given names or IDs.
-	*/
+    */
     getFrames: function (frames, useNumericIndex, output) {
 
         if (typeof useNumericIndex === "undefined") { useNumericIndex = true; }
         if (typeof output === "undefined") { output = []; }
 
-        if (typeof frames === "undefined" || frames.length == 0)
+        if (typeof frames === "undefined" || frames.length === 0)
         {
             //  No input array, so we loop through all frames
             for (var i = 0; i < this._frames.length; i++)
@@ -29976,7 +30600,7 @@ Phaser.FrameData.prototype = {
         if (typeof useNumericIndex === "undefined") { useNumericIndex = true; }
         if (typeof output === "undefined") { output = []; }
 
-        if (typeof frames === "undefined" || frames.length == 0)
+        if (typeof frames === "undefined" || frames.length === 0)
         {
             //  No frames array, so we loop through all frames
             for (var i = 0, len = this._frames.length; i < len; i++)
@@ -30080,7 +30704,7 @@ Phaser.AnimationParser = {
         }
 
         //  Zero or smaller than frame sizes?
-        if (width == 0 || height == 0 || width < frameWidth || height < frameHeight || total === 0)
+        if (width === 0 || height === 0 || width < frameWidth || height < frameHeight || total === 0)
         {
             console.warn("Phaser.AnimationParser.spriteSheet: width/height zero or width/height < given frameWidth/frameHeight");
             return null;
@@ -30149,13 +30773,13 @@ Phaser.AnimationParser = {
 
             newFrame = data.addFrame(new Phaser.Frame(
                 i,
-            	frames[i].frame.x, 
-            	frames[i].frame.y, 
-            	frames[i].frame.w, 
-            	frames[i].frame.h, 
-            	frames[i].filename,
+                frames[i].frame.x,
+                frames[i].frame.y,
+                frames[i].frame.w,
+                frames[i].frame.h,
+                frames[i].filename,
                 uuid
-			));
+            ));
 
             PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[cacheKey], {
                 x: frames[i].frame.x,
@@ -30167,12 +30791,12 @@ Phaser.AnimationParser = {
             if (frames[i].trimmed)
             {
                 newFrame.setTrim(
-                    frames[i].trimmed, 
-                    frames[i].sourceSize.w, 
-                    frames[i].sourceSize.h, 
-                    frames[i].spriteSourceSize.x, 
-                    frames[i].spriteSourceSize.y, 
-                    frames[i].spriteSourceSize.w, 
+                    frames[i].trimmed,
+                    frames[i].sourceSize.w,
+                    frames[i].sourceSize.h,
+                    frames[i].spriteSourceSize.x,
+                    frames[i].spriteSourceSize.y,
+                    frames[i].spriteSourceSize.w,
                     frames[i].spriteSourceSize.h
                 );
 
@@ -30221,10 +30845,10 @@ Phaser.AnimationParser = {
 
             newFrame = data.addFrame(new Phaser.Frame(
                 i,
-                frames[key].frame.x, 
-                frames[key].frame.y, 
-                frames[key].frame.w, 
-                frames[key].frame.h, 
+                frames[key].frame.x,
+                frames[key].frame.y,
+                frames[key].frame.w,
+                frames[key].frame.h,
                 key,
                 uuid
             ));
@@ -30239,12 +30863,12 @@ Phaser.AnimationParser = {
             if (frames[key].trimmed)
             {
                 newFrame.setTrim(
-                    frames[key].trimmed, 
-                    frames[key].sourceSize.w, 
-                    frames[key].sourceSize.h, 
-                    frames[key].spriteSourceSize.x, 
-                    frames[key].spriteSourceSize.y, 
-                    frames[key].spriteSourceSize.w, 
+                    frames[key].trimmed,
+                    frames[key].sourceSize.w,
+                    frames[key].sourceSize.h,
+                    frames[key].spriteSourceSize.x,
+                    frames[key].spriteSourceSize.y,
+                    frames[key].spriteSourceSize.w,
                     frames[key].spriteSourceSize.h
                 );
 
@@ -30286,6 +30910,7 @@ Phaser.AnimationParser = {
         var newFrame;
 
         var uuid;
+        var name;
         var frame;
         var x;
         var y;
@@ -30303,20 +30928,20 @@ Phaser.AnimationParser = {
             frame = frames[i].attributes;
 
             name = frame.name.nodeValue;
-            x = parseInt(frame.x.nodeValue);
-            y = parseInt(frame.y.nodeValue);
-            width = parseInt(frame.width.nodeValue);
-            height = parseInt(frame.height.nodeValue);
+            x = parseInt(frame.x.nodeValue, 10);
+            y = parseInt(frame.y.nodeValue, 10);
+            width = parseInt(frame.width.nodeValue, 10);
+            height = parseInt(frame.height.nodeValue, 10);
 
             frameX = null;
             frameY = null;
 
             if (frame.frameX)
             {
-                frameX = Math.abs(parseInt(frame.frameX.nodeValue));
-                frameY = Math.abs(parseInt(frame.frameY.nodeValue));
-                frameWidth = parseInt(frame.frameWidth.nodeValue);
-                frameHeight = parseInt(frame.frameHeight.nodeValue);
+                frameX = Math.abs(parseInt(frame.frameX.nodeValue, 10));
+                frameY = Math.abs(parseInt(frame.frameY.nodeValue, 10));
+                frameWidth = parseInt(frame.frameWidth.nodeValue, 10);
+                frameHeight = parseInt(frame.frameHeight.nodeValue, 10);
             }
 
             newFrame = data.addFrame(new Phaser.Frame(i, x, y, width, height, name, uuid));
@@ -30366,44 +30991,44 @@ Phaser.AnimationParser = {
 Phaser.Cache = function (game) {
 
     /**
-	* @property {Phaser.Game} game - Local reference to game.
-	*/
-	this.game = game;
+    * @property {Phaser.Game} game - Local reference to game.
+    */
+    this.game = game;
 
-	/**
-	* @property {object} game - Canvas key-value container.
-	* @private
-	*/
+    /**
+    * @property {object} game - Canvas key-value container.
+    * @private
+    */
     this._canvases = {};
 
     /**
-	* @property {object} _images - Image key-value container.
-	* @private
-	*/
+    * @property {object} _images - Image key-value container.
+    * @private
+    */
     this._images = {};
 
     /**
-	* @property {object} _textures - RenderTexture key-value container.
-	* @private
-	*/
+    * @property {object} _textures - RenderTexture key-value container.
+    * @private
+    */
     this._textures = {};
 
     /**
-	* @property {object} _sounds - Sound key-value container.
-	* @private
-	*/
+    * @property {object} _sounds - Sound key-value container.
+    * @private
+    */
     this._sounds = {};
 
     /**
-	* @property {object} _text - Text key-value container.
-	* @private
-	*/
+    * @property {object} _text - Text key-value container.
+    * @private
+    */
     this._text = {};
 
     /**
-	* @property {object} _tilemaps - Tilemap key-value container.
-	* @private
-	*/
+    * @property {object} _tilemaps - Tilemap key-value container.
+    * @private
+    */
     this._tilemaps = {};
 
     /**
@@ -30419,11 +31044,12 @@ Phaser.Cache = function (game) {
     this._bitmapDatas = {};
 
     this.addDefaultImage();
+    this.addMissingImage();
 
     /**
-	* @property {Phaser.Signal} onSoundUnlock - Description.
-	*/
-    this.onSoundUnlock = new Phaser.Signal;
+    * @property {Phaser.Signal} onSoundUnlock - This event is dispatched when the sound system is unlocked via a touch event on cellular devices.
+    */
+    this.onSoundUnlock = new Phaser.Signal();
 
 };
 
@@ -30589,14 +31215,14 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Adds a default image to be used when a key is wrong / missing. Is mapped to the key __default.
+    * Adds a default image to be used in special cases such as WebGL Filters. Is mapped to the key __default.
     *
     * @method Phaser.Cache#addDefaultImage
     */
     addDefaultImage: function () {
 
         var img = new Image();
-        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJ9JREFUeNq01ssOwyAMRFG46v//Mt1ESmgh+DFmE2GPOBARKb2NVjo+17PXLD8a1+pl5+A+wSgFygymWYHBb0FtsKhJDdZlncG2IzJ4ayoMDv20wTmSMzClEgbWYNTAkQ0Z+OJ+A/eWnAaR9+oxCF4Os0H8htsMUp+pwcgBBiMNnAwF8GqIgL2hAzaGFFgZauDPKABmowZ4GL369/0rwACp2yA/ttmvsQAAAABJRU5ErkJggg==";
+        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQMAAABJtOi3AAAAA1BMVEX///+nxBvIAAAAAXRSTlMAQObYZgAAABVJREFUeF7NwIEAAAAAgKD9qdeocAMAoAABm3DkcAAAAABJRU5ErkJggg==";
 
         this._images['__default'] = { url: null, data: img, spriteSheet: false };
         this._images['__default'].frame = new Phaser.Frame(0, 0, 0, 32, 32, '', '');
@@ -30607,13 +31233,31 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    * Adds an image to be used when a key is wrong / missing. Is mapped to the key __missing.
+    *
+    * @method Phaser.Cache#addMissingImage
+    */
+    addMissingImage: function () {
+
+        var img = new Image();
+        img.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJ9JREFUeNq01ssOwyAMRFG46v//Mt1ESmgh+DFmE2GPOBARKb2NVjo+17PXLD8a1+pl5+A+wSgFygymWYHBb0FtsKhJDdZlncG2IzJ4ayoMDv20wTmSMzClEgbWYNTAkQ0Z+OJ+A/eWnAaR9+oxCF4Os0H8htsMUp+pwcgBBiMNnAwF8GqIgL2hAzaGFFgZauDPKABmowZ4GL369/0rwACp2yA/ttmvsQAAAABJRU5ErkJggg==";
+
+        this._images['__missing'] = { url: null, data: img, spriteSheet: false };
+        this._images['__missing'].frame = new Phaser.Frame(0, 0, 0, 32, 32, '', '');
+
+        PIXI.BaseTextureCache['__missing'] = new PIXI.BaseTexture(img);
+        PIXI.TextureCache['__missing'] = new PIXI.Texture(PIXI.BaseTextureCache['__missing']);
+
+    },
+
+    /**
     * Add a new text data.
     *
     * @method Phaser.Cache#addText
     * @param {string} key - Asset key for the text data. 
     * @param {string} url - URL of this text data file.
     * @param {object} data - Extra text data.
-    */    
+    */
     addText: function (key, url, data) {
 
         this._text[key] = {
@@ -30657,7 +31301,6 @@ Phaser.Cache.prototype = {
         webAudio = webAudio || true;
         audioTag = audioTag || false;
 
-        var locked = this.game.sound.touchLocked;
         var decoded = false;
 
         if (audioTag)
@@ -30719,13 +31362,13 @@ Phaser.Cache.prototype = {
 
     },
 
-	/**
-	* Add a new decoded sound.
+    /**
+    * Add a new decoded sound.
     *
     * @method Phaser.Cache#decodedSound
-	* @param {string} key - Asset key for the sound.
-	* @param {object} data - Extra sound data.
-	*/
+    * @param {string} key - Asset key for the sound.
+    * @param {object} data - Extra sound data.
+    */
     decodedSound: function (key, data) {
 
         this._sounds[key].data = data;
@@ -30734,13 +31377,13 @@ Phaser.Cache.prototype = {
 
     },
 
-	/**
-	* Get a canvas object from the cache by its key.
+    /**
+    * Get a canvas object from the cache by its key.
     *
     * @method Phaser.Cache#getCanvas
-	* @param {string} key - Asset key of the canvas you want.
-	* @return {object} The canvas you want.
-	*/
+    * @param {string} key - Asset key of the canvas you want.
+    * @return {object} The canvas you want.
+    */
     getCanvas: function (key) {
 
         if (this._canvases[key])
@@ -30776,7 +31419,7 @@ Phaser.Cache.prototype = {
     * @method Phaser.Cache#checkImageKey
     * @param {string} key - Asset key of the image you want.
     * @return {boolean} True if the key exists, otherwise false.
-    */    
+    */
     checkImageKey: function (key) {
 
         if (this._images[key])
@@ -30788,13 +31431,13 @@ Phaser.Cache.prototype = {
 
     },
 
-	/**
-	* Get image data by key.
+    /**
+    * Get image data by key.
     *
     * @method Phaser.Cache#getImage
-	* @param {string} key - Asset key of the image you want.
-	* @return {object} The image data you want.
-	*/    
+    * @param {string} key - Asset key of the image you want.
+    * @return {object} The image data you want.
+    */
     getImage: function (key) {
 
         if (this._images[key])
@@ -30812,7 +31455,7 @@ Phaser.Cache.prototype = {
     * @method Phaser.Cache#getTileSetImage
     * @param {string} key - Asset key of the image you want.
     * @return {object} The image data you want.
-    */    
+    */
     getTilesetImage: function (key) {
 
         if (this._tilesets[key])
@@ -30830,7 +31473,7 @@ Phaser.Cache.prototype = {
     * @method Phaser.Cache#getTileset
     * @param {string} key - Asset key of the image you want.
     * @return {Phaser.Tileset} The tileset data. The tileset image is in the data property, the tile data in tileData.
-    */    
+    */
     getTileset: function (key) {
 
         if (this._tilesets[key])
@@ -30859,13 +31502,13 @@ Phaser.Cache.prototype = {
         return null;
     },
 
-	/**
-	* Get frame data by key.
+    /**
+    * Get frame data by key.
     *
     * @method Phaser.Cache#getFrameData
-	* @param {string} key - Asset key of the frame data you want.
-	* @return {Phaser.FrameData} The frame data you want.
-	*/
+    * @param {string} key - Asset key of the frame data you want.
+    * @return {Phaser.FrameData} The frame data you want.
+    */
     getFrameData: function (key) {
 
         if (this._images[key] && this._images[key].frameData)
@@ -30919,7 +31562,7 @@ Phaser.Cache.prototype = {
     */
     getFrame: function (key) {
 
-        if (this._images[key] && this._images[key].spriteSheet == false)
+        if (this._images[key] && this._images[key].spriteSheet === false)
         {
             return this._images[key].frame;
         }
@@ -30962,13 +31605,13 @@ Phaser.Cache.prototype = {
 
     },
 
-	/**
-	* Get sound by key.
+    /**
+    * Get sound by key.
     *
     * @method Phaser.Cache#getSound
-	* @param {string} key - Asset key of the sound you want.
-	* @return {Phaser.Sound} The sound you want.
-	*/
+    * @param {string} key - Asset key of the sound you want.
+    * @return {Phaser.Sound} The sound you want.
+    */
     getSound: function (key) {
 
         if (this._sounds[key])
@@ -30980,13 +31623,13 @@ Phaser.Cache.prototype = {
 
     },
 
-	/**
-	* Get sound data by key.
+    /**
+    * Get sound data by key.
     *
     * @method Phaser.Cache#getSoundData
-	* @param {string} key - Asset key of the sound you want.
-	* @return {object} The sound data you want.
-	*/
+    * @param {string} key - Asset key of the sound you want.
+    * @return {object} The sound data you want.
+    */
     getSoundData: function (key) {
 
         if (this._sounds[key])
@@ -30998,13 +31641,13 @@ Phaser.Cache.prototype = {
 
     },
 
-	/**
-	* Check if the given sound has finished decoding.
+    /**
+    * Check if the given sound has finished decoding.
     *
     * @method Phaser.Cache#isSoundDecoded
-	* @param {string} key - Asset key of the sound you want.
-	* @return {boolean} The decoded state of the Sound object.
-	*/
+    * @param {string} key - Asset key of the sound you want.
+    * @return {boolean} The decoded state of the Sound object.
+    */
     isSoundDecoded: function (key) {
 
         if (this._sounds[key])
@@ -31014,26 +31657,26 @@ Phaser.Cache.prototype = {
 
     },
 
-	/**
-	* Check if the given sound is ready for playback. A sound is considered ready when it has finished decoding and the device is no longer touch locked.
+    /**
+    * Check if the given sound is ready for playback. A sound is considered ready when it has finished decoding and the device is no longer touch locked.
     *
     * @method Phaser.Cache#isSoundReady
-	* @param {string} key - Asset key of the sound you want.
-	* @return {boolean} True if the sound is decoded and the device is not touch locked.
-	*/
+    * @param {string} key - Asset key of the sound you want.
+    * @return {boolean} True if the sound is decoded and the device is not touch locked.
+    */
     isSoundReady: function (key) {
 
-        return (this._sounds[key] && this._sounds[key].decoded && this.game.sound.touchLocked == false);
+        return (this._sounds[key] && this._sounds[key].decoded && this.game.sound.touchLocked === false);
 
     },
 
-	/**
-	* Check whether an image asset is sprite sheet or not.
+    /**
+    * Check whether an image asset is sprite sheet or not.
     *
     * @method Phaser.Cache#isSpriteSheet
-	* @param {string} key - Asset key of the sprite sheet you want.
-	* @return {boolean} True if the image is a sprite sheet.
-	*/
+    * @param {string} key - Asset key of the sprite sheet you want.
+    * @return {boolean} True if the image is a sprite sheet.
+    */
     isSpriteSheet: function (key) {
 
         if (this._images[key])
@@ -31045,13 +31688,13 @@ Phaser.Cache.prototype = {
 
     },
 
-	/**
-	* Get text data by key.
+    /**
+    * Get text data by key.
     *
     * @method Phaser.Cache#getText
-	* @param {string} key - Asset key of the text data you want.
-	* @return {object} The text data you want.
-	*/
+    * @param {string} key - Asset key of the text data you want.
+    * @return {object} The text data you want.
+    */
     getText: function (key) {
 
         if (this._text[key])
@@ -31087,42 +31730,42 @@ Phaser.Cache.prototype = {
 
     },
 
-	/**
-	* Returns an array containing all of the keys of Images in the Cache.
+    /**
+    * Returns an array containing all of the keys of Images in the Cache.
     *
     * @method Phaser.Cache#getImageKeys
-	* @return {Array} The string based keys in the Cache.
-	*/
+    * @return {Array} The string based keys in the Cache.
+    */
     getImageKeys: function () {
-    	return this.getKeys(this._images);
+        return this.getKeys(this._images);
     },
 
-	/**
-	* Returns an array containing all of the keys of Sounds in the Cache.
+    /**
+    * Returns an array containing all of the keys of Sounds in the Cache.
     *
     * @method Phaser.Cache#getSoundKeys
-	* @return {Array} The string based keys in the Cache.
-	*/
+    * @return {Array} The string based keys in the Cache.
+    */
     getSoundKeys: function () {
-    	return this.getKeys(this._sounds);
+        return this.getKeys(this._sounds);
     },
 
-	/**
-	* Returns an array containing all of the keys of Text Files in the Cache.
+    /**
+    * Returns an array containing all of the keys of Text Files in the Cache.
     *
     * @method Phaser.Cache#getTextKeys
-	* @return {Array} The string based keys in the Cache.
-	*/
+    * @return {Array} The string based keys in the Cache.
+    */
     getTextKeys: function () {
-    	return this.getKeys(this._text);
+        return this.getKeys(this._text);
     },
 
-	/**
-	* Removes a canvas from the cache.
+    /**
+    * Removes a canvas from the cache.
     *
-	* @method Phaser.Cache#removeCanvas
+    * @method Phaser.Cache#removeCanvas
     * @param {string} key - Key of the asset you want to remove.
-	*/
+    */
     removeCanvas: function (key) {
         delete this._canvases[key];
     },
@@ -31157,11 +31800,11 @@ Phaser.Cache.prototype = {
         delete this._text[key];
     },
 
-	/**
-	* Clears the cache. Removes every local cache object reference.
+    /**
+    * Clears the cache. Removes every local cache object reference.
     *
-	* @method Phaser.Cache#destroy
-	*/
+    * @method Phaser.Cache#destroy
+    */
     destroy: function () {
 
         for (var item in this._canvases)
@@ -31205,101 +31848,101 @@ Phaser.Cache.prototype = {
 */
 Phaser.Loader = function (game) {
 
-	/**
+    /**
     * @property {Phaser.Game} game - Local reference to game.
-	*/
-	this.game = game;
-
-	/**
-	* @property {array} _keys - Array stores assets keys. So you can get that asset by its unique key.
-	* @private
     */
-	this._keys = [];
+    this.game = game;
 
-	/**
-	* @property {Description} _fileList - Contains all the assets file infos.
-	* @private
+    /**
+    * @property {array} _keys - Array stores assets keys. So you can get that asset by its unique key.
+    * @private
     */
-	this._fileList = {};
+    this._keys = [];
 
-	/**
-	* @property {number} _progressChunk - Indicates assets loading progress. (from 0 to 100)
-	* @private
-	* @default
-	*/
-	this._progressChunk = 0;
+    /**
+    * @property {Description} _fileList - Contains all the assets file infos.
+    * @private
+    */
+    this._fileList = {};
 
-	/**
-	* @property {XMLHttpRequest} - An XMLHttpRequest object used for loading text and audio data.
-	* @private
-	*/
-	this._xhr = new XMLHttpRequest();
+    /**
+    * @property {number} _progressChunk - Indicates assets loading progress. (from 0 to 100)
+    * @private
+    * @default
+    */
+    this._progressChunk = 0;
 
-	/** 
-	* @property {number} - Length of assets queue.
-	* @default
-	*/
-	this.queueSize = 0;
+    /**
+    * @property {XMLHttpRequest} - An XMLHttpRequest object used for loading text and audio data.
+    * @private
+    */
+    this._xhr = new XMLHttpRequest();
 
-	/**
-	* @property {boolean} isLoading - True if the Loader is in the process of loading the queue.
-	* @default
-	*/
-	this.isLoading = false;
+    /** 
+    * @property {number} - Length of assets queue.
+    * @default
+    */
+    this.queueSize = 0;
 
-	/**
-	* @property {boolean} hasLoaded - True if all assets in the queue have finished loading.
-	* @default
-	*/
-	this.hasLoaded = false;
+    /**
+    * @property {boolean} isLoading - True if the Loader is in the process of loading the queue.
+    * @default
+    */
+    this.isLoading = false;
 
-	/**
-	* @property {number} progress - The Load progress percentage value (from 0 to 100)
-	* @default
-	*/
-	this.progress = 0;
+    /**
+    * @property {boolean} hasLoaded - True if all assets in the queue have finished loading.
+    * @default
+    */
+    this.hasLoaded = false;
 
-	/**
-	* You can optionally link a sprite to the preloader.
-	* If you do so the Sprite's width or height will be cropped based on the percentage loaded.
-	* @property {Description} preloadSprite
-	* @default
-	*/
-	this.preloadSprite = null;
+    /**
+    * @property {number} progress - The Load progress percentage value (from 0 to 100)
+    * @default
+    */
+    this.progress = 0;
 
-	/**
-	* @property {string} crossOrigin - The crossOrigin value applied to loaded images
-	*/
-	this.crossOrigin = '';
+    /**
+    * You can optionally link a sprite to the preloader.
+    * If you do so the Sprite's width or height will be cropped based on the percentage loaded.
+    * @property {Description} preloadSprite
+    * @default
+    */
+    this.preloadSprite = null;
 
-	/**
-	* If you want to append a URL before the path of any asset you can set this here.
-	* Useful if you need to allow an asset url to be configured outside of the game code.
-	* MUST have / on the end of it!
-	* @property {string} baseURL
-	* @default
-	*/
-	this.baseURL = '';
+    /**
+    * @property {string} crossOrigin - The crossOrigin value applied to loaded images
+    */
+    this.crossOrigin = '';
 
-	/**
-	* @property {Phaser.Signal} onFileComplete - Event signal.
-	*/
-	this.onFileComplete = new Phaser.Signal;
-	
-	/**
-	* @property {Phaser.Signal} onFileError - Event signal.
-	*/
-	this.onFileError = new Phaser.Signal;
-	
-	/**
-	* @property {Phaser.Signal} onLoadStart - Event signal.
-	*/
-	this.onLoadStart = new Phaser.Signal;
-	
-	/**
-	* @property {Phaser.Signal} onLoadComplete - Event signal.
-	*/
-	this.onLoadComplete = new Phaser.Signal;
+    /**
+    * If you want to append a URL before the path of any asset you can set this here.
+    * Useful if you need to allow an asset url to be configured outside of the game code.
+    * MUST have / on the end of it!
+    * @property {string} baseURL
+    * @default
+    */
+    this.baseURL = '';
+
+    /**
+    * @property {Phaser.Signal} onFileComplete - Event signal.
+    */
+    this.onFileComplete = new Phaser.Signal();
+    
+    /**
+    * @property {Phaser.Signal} onFileError - Event signal.
+    */
+    this.onFileError = new Phaser.Signal();
+    
+    /**
+    * @property {Phaser.Signal} onLoadStart - Event signal.
+    */
+    this.onLoadStart = new Phaser.Signal();
+    
+    /**
+    * @property {Phaser.Signal} onLoadComplete - Event signal.
+    */
+    this.onLoadComplete = new Phaser.Signal();
 
 };
 
@@ -31323,978 +31966,989 @@ Phaser.Loader.TEXTURE_ATLAS_XML_STARLING = 2;
 
 Phaser.Loader.prototype = {
 
-	/**
-	* You can set a Sprite to be a "preload" sprite by passing it to this method.
-	* A "preload" sprite will have its width or height crop adjusted based on the percentage of the loader in real-time.
-	* This allows you to easily make loading bars for games.
-	*
-	* @method Phaser.Loader#setPreloadSprite
+    /**
+    * You can set a Sprite to be a "preload" sprite by passing it to this method.
+    * A "preload" sprite will have its width or height crop adjusted based on the percentage of the loader in real-time.
+    * This allows you to easily make loading bars for games.
+    *
+    * @method Phaser.Loader#setPreloadSprite
     * @param {Phaser.Sprite} sprite - The sprite that will be cropped during the load.
     * @param {number} [direction=0] - A value of zero means the sprite width will be cropped, a value of 1 means its height will be cropped.
     */
-	setPreloadSprite: function (sprite, direction) {
-
-		direction = direction || 0;
-
-		this.preloadSprite = { sprite: sprite, direction: direction, width: sprite.width, height: sprite.height, crop: null };
-
-		if (direction == 0)
-		{
-			//	Horizontal crop
-			this.preloadSprite.crop = new Phaser.Rectangle(0, 0, 1, sprite.height);
-		}
-		else
-		{
-			//	Vertical crop
-			this.preloadSprite.crop = new Phaser.Rectangle(0, 0, sprite.width, 1);
-		}
-
-		sprite.crop = this.preloadSprite.crop;
-		sprite.cropEnabled = true;
-
-	},
-
-	/**
-	* Check whether asset exists with a specific key.
-	*
-	* @method Phaser.Loader#checkKeyExists
-	* @param {string} key - Key of the asset you want to check.
-	* @return {boolean} Return true if exists, otherwise return false.
-	*/
-	checkKeyExists: function (key) {
-
-		if (this._fileList[key])
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-		
-	},
-
-	/**
-	* Reset loader, this will remove all loaded assets.
-	*
-	* @method Phaser.Loader#reset
-	*/
-	reset: function () {
-
-		this.preloadSprite = null;
-		this.queueSize = 0;
-		this.isLoading = false;
-
-	},
-
-	/**
-	* Internal function that adds a new entry to the file list. Do not call directly.
-	*
-	* @method Phaser.Loader#addToFileList
-	* @param {Description} type - Description.
-	* @param {string} key - Description.
-	* @param {string} url - URL of Description.
-	* @param {Description} properties - Description.
-	* @protected
-	*/
-	addToFileList: function (type, key, url, properties) {
-
-		var entry = {
-			type: type,
-			key: key,
-			url: url,
-			data: null,
-			error: false,
-			loaded: false
-		};
-
-		if (typeof properties !== "undefined")
-		{
-			for (var prop in properties)
-			{
-				entry[prop] = properties[prop];
-			}
-		}
-
-		this._fileList[key] = entry;
-
-		this._keys.push(key);
-
-		this.queueSize++;
-
-	},
-
-	/**
-	* Add an image to the Loader.
-	*
-	* @method Phaser.Loader#image
-	* @param {string} key - Unique asset key of this image file.
-	* @param {string} url - URL of image file.
-	* @param {boolean} overwrite - If an entry with a matching key already exists this will over-write it
-	*/
-	image: function (key, url, overwrite) {
-
-		if (typeof overwrite === "undefined") { overwrite = false; }
-
-		if (overwrite || this.checkKeyExists(key) == false)
-		{
-			this.addToFileList('image', key, url);
-		}
-
-		return this;
-
-	},
-
-	/**
-	* Add a text file to the Loader.
-	*
-	* @method Phaser.Loader#text
-	* @param {string} key - Unique asset key of the text file.
-	* @param {string} url - URL of the text file.
-	* @param {boolean} overwrite - True if Description.
-	*/
-	text: function (key, url, overwrite) {
-
-		if (typeof overwrite === "undefined") { overwrite = false; }
-
-		if (overwrite || this.checkKeyExists(key) == false)
-		{
-			this.addToFileList('text', key, url);
-		}
-
-		return this;
-
-	},
-
-	/**
-	* Add a new sprite sheet to the loader.
-	*
-	* @method Phaser.Loader#spritesheet
-	* @param {string} key - Unique asset key of the sheet file.
-	* @param {string} url - URL of the sheet file.
-	* @param {number} frameWidth - Width of each single frame.
-	* @param {number} frameHeight - Height of each single frame.
-	* @param {number} [frameMax=-1] - How many frames in this sprite sheet. If not specified it will divide the whole image into frames.
-	*/
-	spritesheet: function (key, url, frameWidth, frameHeight, frameMax) {
-
-		if (typeof frameMax === "undefined") { frameMax = -1; }
-
-		if (this.checkKeyExists(key) === false)
-		{
-			this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax });
-		}
-
-		return this;
-
-	},
-
-	/**
-	* Add a new tile set to the loader. These are used in the rendering of tile maps.
-	*
-	* @method Phaser.Loader#tileset
-	* @param {string} key - Unique asset key of the tileset file.
-	* @param {string} url - URL of the tileset.
-	* @param {number} tileWidth - Width of each single tile in pixels.
-	* @param {number} tileHeight - Height of each single tile in pixels.
-	* @param {number} [tileMax=-1] - How many tiles in this tileset. If not specified it will divide the whole image into tiles.
-	* @param {number} [tileMargin=0] - If the tiles have been drawn with a margin, specify the amount here.
-	* @param {number} [tileSpacing=0] - If the tiles have been drawn with spacing between them, specify the amount here.
-	*/
-	tileset: function (key, url, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing) {
-
-		if (typeof tileMax === "undefined") { tileMax = -1; }
-		if (typeof tileMargin === "undefined") { tileMargin = 0; }
-		if (typeof tileSpacing === "undefined") { tileSpacing = 0; }
-
-		if (this.checkKeyExists(key) === false)
-		{
-			this.addToFileList('tileset', key, url, { tileWidth: tileWidth, tileHeight: tileHeight, tileMax: tileMax, tileMargin: tileMargin, tileSpacing: tileSpacing });
-		}
-
-		return this;
-
-	},
-
-	/**
-	* Add a new audio file to the loader.
-	*
-	* @method Phaser.Loader#audio
-	* @param {string} key - Unique asset key of the audio file.
-	* @param {Array} urls - An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ].
-	* @param {boolean} autoDecode - When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
-	*/
-	audio: function (key, urls, autoDecode) {
-
-		if (typeof autoDecode === "undefined") { autoDecode = true; }
-
-		if (this.checkKeyExists(key) === false)
-		{
-			this.addToFileList('audio', key, urls, { buffer: null, autoDecode: autoDecode });
-		}
-
-		return this;
-
-	},
-
-	/**
-	* Add a new tilemap loading request.
-	*
-	* @method Phaser.Loader#tilemap
-	* @param {string} key - Unique asset key of the tilemap data.
-	* @param {string} tilesetURL - The url of the tile set image file.
-	* @param {string} [mapDataURL] - The url of the map data file (csv/json)
-	* @param {object} [mapData] - An optional JSON data object (can be given in place of a URL).
-	* @param {string} [format] - The format of the map data.
-	*/
-	tilemap: function (key, mapDataURL, mapData, format) {
-
-		if (typeof mapDataURL === "undefined") { mapDataURL = null; }
-		if (typeof mapData === "undefined") { mapData = null; }
-		if (typeof format === "undefined") { format = Phaser.Tilemap.CSV; }
-
-		if (mapDataURL == null && mapData == null)
-		{
-			console.warn('Phaser.Loader.tilemap - Both mapDataURL and mapData are null. One must be set.');
-
-			return this;
-		}
-
-		if (this.checkKeyExists(key) === false)
-		{
-			//  A URL to a json/csv file has been given
-			if (mapDataURL)
-			{
-				this.addToFileList('tilemap', key, mapDataURL, { format: format });
-			}
-			else
-			{
-				switch (format)
-				{
-					//  A csv string or object has been given
-					case Phaser.Tilemap.CSV:
-						break;
-
-					//  An xml string or object has been given
-					case Phaser.Tilemap.TILED_JSON:
-
-						if (typeof mapData === 'string')
-						{
-							mapData = JSON.parse(mapData);
-						}
-						break;
-				}
-
-				this.game.cache.addTilemap(key, null, mapData, format);
-
-			}
-		}
-
-		return this;
-
-	},
-
-	/**
-	* Add a new bitmap font loading request.
-	*
-	* @method Phaser.Loader#bitmapFont
-	* @param {string} key - Unique asset key of the bitmap font.
-	* @param {string} textureURL - The url of the font image file.
-	* @param {string} [xmlURL] - The url of the font data file (xml/fnt)
-	* @param {object} [xmlData] - An optional XML data object.
-	*/
-	bitmapFont: function (key, textureURL, xmlURL, xmlData) {
-
-		if (typeof xmlURL === "undefined") { xmlURL = null; }
-		if (typeof xmlData === "undefined") { xmlData = null; }
-
-		if (this.checkKeyExists(key) === false)
-		{
-			//  A URL to a json/xml file has been given
-			if (xmlURL)
-			{
-				this.addToFileList('bitmapfont', key, textureURL, { xmlURL: xmlURL });
-			}
-			else
-			{
-				//  An xml string or object has been given
-				if (typeof xmlData === 'string')
-				{
-					var xml;
-
-					try  {
-						if (window['DOMParser'])
-						{
-							var domparser = new DOMParser();
-							xml = domparser.parseFromString(xmlData, "text/xml");
-						}
-						else
-						{
-							xml = new ActiveXObject("Microsoft.XMLDOM");
-							xml.async = 'false';
-							xml.loadXML(xmlData);
-						}
-					}
-					catch (e)
-					{
-						xml = undefined;
-					}
-
-					if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
-					{
-						throw new Error("Phaser.Loader. Invalid Bitmap Font XML given");
-					}
-					else
-					{
-						this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml });
-					}
-				}
-			}
-		}
-
-		return this;
-
-	},
-
-	/**
-	* Add a new texture atlas to the loader. This atlas uses the JSON Array data format.
-	*
-	* @method Phaser.Loader#atlasJSONArray
-	* @param {string} key - Unique asset key of the bitmap font.
-	* @param {Description} atlasURL - The url of the Description.
-	* @param {Description} atlasData - Description.
-	*/
-	atlasJSONArray: function (key, textureURL, atlasURL, atlasData) {
-
-		return this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
-
-	},
-
-	/**
-	* Add a new texture atlas to the loader. This atlas uses the JSON Hash data format.
-	*
-	* @method Phaser.Loader#atlasJSONHash
-	* @param {string} key - Unique asset key of the bitmap font.
-	* @param {Description} atlasURL - The url of the Description.
-	* @param {Description} atlasData - Description.
-	*/
-	atlasJSONHash: function (key, textureURL, atlasURL, atlasData) {
-
-		return this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
-
-	},
-
-	/**
-	* Add a new texture atlas to the loader. This atlas uses the Starling XML data format.
-	*
-	* @method Phaser.Loader#atlasXML
-	* @param {string} key - Unique asset key of the bitmap font.
-	* @param {Description} atlasURL - The url of the Description.
-	* @param {Description} atlasData - Description.
-	*/
-	atlasXML: function (key, textureURL, atlasURL, atlasData) {
-
-		return this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_XML_STARLING);
-
-	},
-
-	/**
-	* Add a new texture atlas to the loader.
-	*
-	* @method Phaser.Loader#atlas
-	* @param {string} key - Unique asset key of the texture atlas file.
-	* @param {string} textureURL - The url of the texture atlas image file.
-	* @param {string} [atlasURL] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
-	* @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
-	* @param {number} [format] - A value describing the format of the data, the default is Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY.
-	*/
-	atlas: function (key, textureURL, atlasURL, atlasData, format) {
-
-		if (typeof atlasURL === "undefined") { atlasURL = null; }
-		if (typeof atlasData === "undefined") { atlasData = null; }
-		if (typeof format === "undefined") { format = Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY; }
-
-		if (this.checkKeyExists(key) === false)
-		{
-			//  A URL to a json/xml file has been given
-			if (atlasURL)
-			{
-				this.addToFileList('textureatlas', key, textureURL, { atlasURL: atlasURL, format: format });
-			}
-			else
-			{
-				switch (format)
-				{
-					//  A json string or object has been given
-					case Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY: 
-
-						if (typeof atlasData === 'string')
-						{
-							atlasData = JSON.parse(atlasData);
-						}
-						break;
-
-					//  An xml string or object has been given
-					case Phaser.Loader.TEXTURE_ATLAS_XML_STARLING:
-
-						if (typeof atlasData === 'string')
-						{
-							var xml;
-
-							try  {
-								if (window['DOMParser'])
-								{
-									var domparser = new DOMParser();
-									xml = domparser.parseFromString(atlasData, "text/xml");
-								}
-								else
-								{
-									xml = new ActiveXObject("Microsoft.XMLDOM");
-									xml.async = 'false';
-									xml.loadXML(atlasData);
-								}
-							}
-							catch (e)
-							{
-								xml = undefined;
-							}
-
-							if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
-							{
-								throw new Error("Phaser.Loader. Invalid Texture Atlas XML given");
-							}
-							else
-							{
-								atlasData = xml;
-							}
-						}
-						break;
-				}
-
-				this.addToFileList('textureatlas', key, textureURL, { atlasURL: null, atlasData: atlasData, format: format });
-
-			}
-
-		}
-
-		return this;
-
-	},
-
-	/**
-	* Remove loading request of a file.
-	*
-	* @method Phaser.Loader#removeFile
-	* @param key {string} Key of the file you want to remove.
-	*/
-	removeFile: function (key) {
-
-		delete this._fileList[key];
-
-	},
-
-	/**
-	* Remove all file loading requests.
-	*
-	* @method Phaser.Loader#removeAll
-	*/
-	removeAll: function () {
-
-		this._fileList = {};
-
-	},
-
-	/**
-	* Start loading the assets. Normally you don't need to call this yourself as the StateManager will do so.
-	*
-	* @method Phaser.Loader#start
-	*/
-	start: function () {
-
-		if (this.isLoading)
-		{
-			return;
-		}
-
-		this.progress = 0;
-		this.hasLoaded = false;
-		this.isLoading = true;
-
-		this.onLoadStart.dispatch(this.queueSize);
-
-		if (this._keys.length > 0)
-		{
-			this._progressChunk = 100 / this._keys.length;
-			this.loadFile();
-		}
-		else
-		{
-			this.progress = 100;
-			this.hasLoaded = true;
-			this.onLoadComplete.dispatch();
-		}
-
-	},
-
-	/**
-	* Load files. Private method ONLY used by loader.
-	*
-	* @method Phaser.Loader#loadFile
-	* @private
-	*/
-	loadFile: function () {
-
-		var file = this._fileList[this._keys.shift()];
-		var _this = this;
-
-		//  Image or Data?
-		switch (file.type)
-		{
-			case 'image':
-			case 'spritesheet':
-			case 'textureatlas':
-			case 'bitmapfont':
-			case 'tileset':
-				file.data = new Image();
-				file.data.name = file.key;
-				file.data.onload = function () {
-					return _this.fileComplete(file.key);
-				};
-				file.data.onerror = function () {
-					return _this.fileError(file.key);
-				};
-				file.data.crossOrigin = this.crossOrigin;
-				file.data.src = this.baseURL + file.url;
-				break;
-
-			case 'audio':
-				file.url = this.getAudioURL(file.url);
-
-				if (file.url !== null)
-				{
-					//  WebAudio or Audio Tag?
-					if (this.game.sound.usingWebAudio)
-					{
-						this._xhr.open("GET", this.baseURL + file.url, true);
-						this._xhr.responseType = "arraybuffer";
-						this._xhr.onload = function () {
-							return _this.fileComplete(file.key);
-						};
-						this._xhr.onerror = function () {
-							return _this.fileError(file.key);
-						};
-						this._xhr.send();
-					}
-					else if (this.game.sound.usingAudioTag)
-					{
-						if (this.game.sound.touchLocked)
-						{
-							//  If audio is locked we can't do this yet, so need to queue this load request. Bum.
-							file.data = new Audio();
-							file.data.name = file.key;
-							file.data.preload = 'auto';
-							file.data.src = this.baseURL + file.url;
-							this.fileComplete(file.key);
-						}
-						else
-						{
-							file.data = new Audio();
-							file.data.name = file.key;
-							file.data.onerror = function () {
-								return _this.fileError(file.key);
-							};
-							file.data.preload = 'auto';
-							file.data.src = this.baseURL + file.url;
-							file.data.addEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete(file.key), false);
-							file.data.load();
-						}
-					}
-				}
-				else
-				{
-					this.fileError(file.key);
-				}
-
-				break;
-
-			case 'tilemap':
-				this._xhr.open("GET", this.baseURL + file.url, true);
-				this._xhr.responseType = "text";
-
-				if (file.format == Phaser.Tilemap.TILED_JSON)
-				{
-					this._xhr.onload = function () {
-						return _this.jsonLoadComplete(file.key);
-					};
-				}
-				else if (file.format == Phaser.Tilemap.CSV)
-				{
-					this._xhr.onload = function () {
-						return _this.csvLoadComplete(file.key);
-					};
-				}
-
-				this._xhr.onerror = function () {
-					return _this.dataLoadError(file.key);
-				};
-				this._xhr.send();
-				break;
-
-			case 'text':
-				this._xhr.open("GET", this.baseURL + file.url, true);
-				this._xhr.responseType = "text";
-				this._xhr.onload = function () {
-					return _this.fileComplete(file.key);
-				};
-				this._xhr.onerror = function () {
-					return _this.fileError(file.key);
-				};
-				this._xhr.send();
-				break;
-		}
-
-	},
-
-	/**
-	* Private method ONLY used by loader.
-	* @method Phaser.Loader#getAudioURL
-	* @param {Description} urls - Description.
-	* @private
-	*/
-	getAudioURL: function (urls) {
-
-		var extension;
-
-		for (var i = 0; i < urls.length; i++)
-		{
-			extension = urls[i].toLowerCase();
-			extension = extension.substr((Math.max(0, extension.lastIndexOf(".")) || Infinity) + 1);
-
-			if (this.game.device.canPlayAudio(extension))
-			{
-				return urls[i];
-			}
-
-		}
-
-		return null;
-
-	},
-
-	/**
-	* Error occured when load a file.
-	*
-	* @method Phaser.Loader#fileError
-	* @param {string} key - Key of the error loading file.
-	*/
-	fileError: function (key) {
-
-		this._fileList[key].loaded = true;
-		this._fileList[key].error = true;
-
-		this.onFileError.dispatch(key);
-
-		console.warn("Phaser.Loader error loading file: " + key + ' from URL ' + this._fileList[key].url);
-
-		this.nextFile(key, false);
-
-	},
-
-	/**
-	* Called when a file is successfully loaded.
-	*
-	* @method Phaser.Loader#fileComplete
-	* @param {string} key - Key of the successfully loaded file.
-	*/
-	fileComplete: function (key) {
-
-		if (!this._fileList[key])
-		{
-			console.warn('Phaser.Loader fileComplete invalid key ' + key);
-			return;
-		}
-		
-		this._fileList[key].loaded = true;
-
-		var file = this._fileList[key];
-		var loadNext = true;
-		var _this = this;
-
-		switch (file.type)
-		{
-			case 'image':
-
-				this.game.cache.addImage(file.key, file.url, file.data);
-				break;
-
-			case 'spritesheet':
-
-				this.game.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax);
-				break;
-
-			case 'tileset':
-
-				this.game.cache.addTileset(file.key, file.url, file.data, file.tileWidth, file.tileHeight, file.tileMax, file.tileMargin, file.tileSpacing);
-				break;
-
-			case 'textureatlas':
-
-				if (file.atlasURL == null)
-				{
-					this.game.cache.addTextureAtlas(file.key, file.url, file.data, file.atlasData, file.format);
-				}
-				else
-				{
-					//  Load the JSON or XML before carrying on with the next file
-					loadNext = false;
-					this._xhr.open("GET", this.baseURL + file.atlasURL, true);
-					this._xhr.responseType = "text";
-
-					if (file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY || file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
-					{
-						this._xhr.onload = function () {
-							return _this.jsonLoadComplete(file.key);
-						};
-					}
-					else if (file.format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
-					{
-						this._xhr.onload = function () {
-							return _this.xmlLoadComplete(file.key);
-						};
-					}
-
-					this._xhr.onerror = function () {
-						return _this.dataLoadError(file.key);
-					};
-					this._xhr.send();
-				}
-				break;
-
-			case 'bitmapfont':
-
-				if (file.xmlURL == null)
-				{
-					this.game.cache.addBitmapFont(file.key, file.url, file.data, file.xmlData);
-				}
-				else
-				{
-					//  Load the XML before carrying on with the next file
-					loadNext = false;
-					this._xhr.open("GET", this.baseURL + file.xmlURL, true);
-					this._xhr.responseType = "text";
-
-					this._xhr.onload = function () {
-						return _this.xmlLoadComplete(file.key);
-					};
-
-					this._xhr.onerror = function () {
-						return _this.dataLoadError(file.key);
-					};
-					this._xhr.send();
-				}
-				break;
-
-			case 'audio':
-
-				if (this.game.sound.usingWebAudio)
-				{
-					file.data = this._xhr.response;
-
-					this.game.cache.addSound(file.key, file.url, file.data, true, false);
-
-					if (file.autoDecode)
-					{
-						this.game.cache.updateSound(key, 'isDecoding', true);
-
-						var that = this;
-						var key = file.key;
-
-						this.game.sound.context.decodeAudioData(file.data, function (buffer) {
-							if (buffer)
-							{
-								that.game.cache.decodedSound(key, buffer);
-							}
-						});
-					}
-				}
-				else
-				{
-					file.data.removeEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete);
-					this.game.cache.addSound(file.key, file.url, file.data, false, true);
-				}
-				break;
-
-			case 'text':
-				file.data = this._xhr.responseText;
-				this.game.cache.addText(file.key, file.url, file.data);
-				break;
-		}
-
-		if (loadNext)
-		{
-			this.nextFile(key, true);
-		}
-
-	},
-
-	/**
-	* Successfully loaded a JSON file.
-	*
-	* @method Phaser.Loader#jsonLoadComplete
-	* @param {string} key - Key of the loaded JSON file.
-	*/
-	jsonLoadComplete: function (key) {
-
-		var data = JSON.parse(this._xhr.responseText);
-		var file = this._fileList[key];
-
-		if (file.type == 'tilemap')
-		{
-			this.game.cache.addTilemap(file.key, file.url, data, file.format);
-		}
-		else
-		{
-			this.game.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
-		}
-
-		this.nextFile(key, true);
-
-	},
-
-	/**
-	* Successfully loaded a CSV file.
-	*
-	* @method Phaser.Loader#csvLoadComplete
-	* @param {string} key - Key of the loaded CSV file.
-	*/
-	csvLoadComplete: function (key) {
-
-		var data = this._xhr.responseText;
-		var file = this._fileList[key];
-
-		this.game.cache.addTilemap(file.key, file.url, data, file.format);
-
-		this.nextFile(key, true);
-
-	},
-
-	/**
-	* Error occured when load a JSON.
-	*
-	* @method Phaser.Loader#dataLoadError
-	* @param {string} key - Key of the error loading JSON file.
-	*/
-	dataLoadError: function (key) {
-
-		var file = this._fileList[key];
-
-		file.error = true;
-
-		console.warn("Phaser.Loader dataLoadError: " + key);
-
-		this.nextFile(key, true);
-
-	},
-
-	/**
-	* Successfully loaded an XML file.
-	*
-	* @method Phaser.Loader#xmlLoadComplete
-	* @param {string} key - Key of the loaded XML file.
-	*/
-	xmlLoadComplete: function (key) {
-
-		var data = this._xhr.responseText;
-		var xml;
-
-		try
-		{
-			if (window['DOMParser'])
-			{
-				var domparser = new DOMParser();
-				xml = domparser.parseFromString(data, "text/xml");
-			}
-			else
-			{
-				xml = new ActiveXObject("Microsoft.XMLDOM");
-				xml.async = 'false';
-				xml.loadXML(data);
-			}
-		}
-		catch (e)
-		{
-			xml = undefined;
-		}
-
-		if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
-		{
-			throw new Error("Phaser.Loader. Invalid XML given");
-		}
-
-		var file = this._fileList[key];
-
-		if (file.type == 'bitmapfont')
-		{
-			this.game.cache.addBitmapFont(file.key, file.url, file.data, xml);
-		}
-		else if (file.type == 'textureatlas')
-		{
-			this.game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
-		}
-
-		this.nextFile(key, true);
-
-	},
-
-	/**
-	* Handle loading next file.
-	*
-	* @param previousKey {string} Key of previous loaded asset.
-	* @param success {boolean} Whether the previous asset loaded successfully or not.
-	* @private
-	*/
-	nextFile: function (previousKey, success) {
-
-		this.progress = Math.round(this.progress + this._progressChunk);
-
-		if (this.progress > 100)
-		{
-			this.progress = 100;
-		}
-
-		if (this.preloadSprite !== null)
-		{
-			if (this.preloadSprite.direction == 0)
-			{
-				this.preloadSprite.crop.width = Math.floor((this.preloadSprite.width / 100) * this.progress);
-			}
-			else
-			{
-				this.preloadSprite.crop.height = Math.floor((this.preloadSprite.height / 100) * this.progress);
-			}
-
-			this.preloadSprite.sprite.crop = this.preloadSprite.crop;
-		}
-
-		this.onFileComplete.dispatch(this.progress, previousKey, success, this.queueSize - this._keys.length, this.queueSize);
-
-		if (this._keys.length > 0)
-		{
-			this.loadFile();
-		}
-		else
-		{
-			this.hasLoaded = true;
-			this.isLoading = false;
-			
-			this.removeAll();
-
-			this.onLoadComplete.dispatch();
-		}
-
-	}
+    setPreloadSprite: function (sprite, direction) {
+
+        direction = direction || 0;
+
+        this.preloadSprite = { sprite: sprite, direction: direction, width: sprite.width, height: sprite.height, crop: null };
+
+        if (direction === 0)
+        {
+            //  Horizontal crop
+            this.preloadSprite.crop = new Phaser.Rectangle(0, 0, 1, sprite.height);
+        }
+        else
+        {
+            //  Vertical crop
+            this.preloadSprite.crop = new Phaser.Rectangle(0, 0, sprite.width, 1);
+        }
+
+        sprite.crop = this.preloadSprite.crop;
+        sprite.cropEnabled = true;
+
+    },
+
+    /**
+    * Check whether asset exists with a specific key.
+    *
+    * @method Phaser.Loader#checkKeyExists
+    * @param {string} key - Key of the asset you want to check.
+    * @return {boolean} Return true if exists, otherwise return false.
+    */
+    checkKeyExists: function (key) {
+
+        if (this._fileList[key])
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        
+    },
+
+    /**
+    * Reset loader, this will remove all loaded assets.
+    *
+    * @method Phaser.Loader#reset
+    */
+    reset: function () {
+
+        this.preloadSprite = null;
+        this.queueSize = 0;
+        this.isLoading = false;
+
+    },
+
+    /**
+    * Internal function that adds a new entry to the file list. Do not call directly.
+    *
+    * @method Phaser.Loader#addToFileList
+    * @param {Description} type - Description.
+    * @param {string} key - Description.
+    * @param {string} url - URL of Description.
+    * @param {Description} properties - Description.
+    * @protected
+    */
+    addToFileList: function (type, key, url, properties) {
+
+        var entry = {
+            type: type,
+            key: key,
+            url: url,
+            data: null,
+            error: false,
+            loaded: false
+        };
+
+        if (typeof properties !== "undefined")
+        {
+            for (var prop in properties)
+            {
+                entry[prop] = properties[prop];
+            }
+        }
+
+        this._fileList[key] = entry;
+
+        this._keys.push(key);
+
+        this.queueSize++;
+
+    },
+
+    /**
+    * Add an image to the Loader.
+    *
+    * @method Phaser.Loader#image
+    * @param {string} key - Unique asset key of this image file.
+    * @param {string} url - URL of image file.
+    * @param {boolean} overwrite - If an entry with a matching key already exists this will over-write it
+    */
+    image: function (key, url, overwrite) {
+
+        if (typeof overwrite === "undefined") { overwrite = false; }
+
+        if (overwrite || this.checkKeyExists(key) === false)
+        {
+            this.addToFileList('image', key, url);
+        }
+
+        return this;
+
+    },
+
+    /**
+    * Add a text file to the Loader.
+    *
+    * @method Phaser.Loader#text
+    * @param {string} key - Unique asset key of the text file.
+    * @param {string} url - URL of the text file.
+    * @param {boolean} overwrite - True if Description.
+    */
+    text: function (key, url, overwrite) {
+
+        if (typeof overwrite === "undefined") { overwrite = false; }
+
+        if (overwrite || this.checkKeyExists(key) === false)
+        {
+            this.addToFileList('text', key, url);
+        }
+
+        return this;
+
+    },
+
+    /**
+    * Add a new sprite sheet to the loader.
+    *
+    * @method Phaser.Loader#spritesheet
+    * @param {string} key - Unique asset key of the sheet file.
+    * @param {string} url - URL of the sheet file.
+    * @param {number} frameWidth - Width of each single frame.
+    * @param {number} frameHeight - Height of each single frame.
+    * @param {number} [frameMax=-1] - How many frames in this sprite sheet. If not specified it will divide the whole image into frames.
+    */
+    spritesheet: function (key, url, frameWidth, frameHeight, frameMax) {
+
+        if (typeof frameMax === "undefined") { frameMax = -1; }
+
+        if (this.checkKeyExists(key) === false)
+        {
+            this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax });
+        }
+
+        return this;
+
+    },
+
+    /**
+    * Add a new tile set to the loader. These are used in the rendering of tile maps.
+    *
+    * @method Phaser.Loader#tileset
+    * @param {string} key - Unique asset key of the tileset file.
+    * @param {string} url - URL of the tileset.
+    * @param {number} tileWidth - Width of each single tile in pixels.
+    * @param {number} tileHeight - Height of each single tile in pixels.
+    * @param {number} [tileMax=-1] - How many tiles in this tileset. If not specified it will divide the whole image into tiles.
+    * @param {number} [tileMargin=0] - If the tiles have been drawn with a margin, specify the amount here.
+    * @param {number} [tileSpacing=0] - If the tiles have been drawn with spacing between them, specify the amount here.
+    */
+    tileset: function (key, url, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing) {
+
+        if (typeof tileMax === "undefined") { tileMax = -1; }
+        if (typeof tileMargin === "undefined") { tileMargin = 0; }
+        if (typeof tileSpacing === "undefined") { tileSpacing = 0; }
+
+        if (this.checkKeyExists(key) === false)
+        {
+            this.addToFileList('tileset', key, url, { tileWidth: tileWidth, tileHeight: tileHeight, tileMax: tileMax, tileMargin: tileMargin, tileSpacing: tileSpacing });
+        }
+
+        return this;
+
+    },
+
+    /**
+    * Add a new audio file to the loader.
+    *
+    * @method Phaser.Loader#audio
+    * @param {string} key - Unique asset key of the audio file.
+    * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ] or a single string containing just one URL.
+    * @param {boolean} autoDecode - When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
+    */
+    audio: function (key, urls, autoDecode) {
+
+        if (typeof autoDecode === "undefined") { autoDecode = true; }
+
+        if (this.checkKeyExists(key) === false)
+        {
+            this.addToFileList('audio', key, urls, { buffer: null, autoDecode: autoDecode });
+        }
+
+        return this;
+
+    },
+
+    /**
+    * Add a new tilemap loading request.
+    *
+    * @method Phaser.Loader#tilemap
+    * @param {string} key - Unique asset key of the tilemap data.
+    * @param {string} tilesetURL - The url of the tile set image file.
+    * @param {string} [mapDataURL] - The url of the map data file (csv/json)
+    * @param {object} [mapData] - An optional JSON data object (can be given in place of a URL).
+    * @param {string} [format] - The format of the map data.
+    */
+    tilemap: function (key, mapDataURL, mapData, format) {
+
+        if (typeof mapDataURL === "undefined") { mapDataURL = null; }
+        if (typeof mapData === "undefined") { mapData = null; }
+        if (typeof format === "undefined") { format = Phaser.Tilemap.CSV; }
+
+        if (mapDataURL == null && mapData == null)
+        {
+            console.warn('Phaser.Loader.tilemap - Both mapDataURL and mapData are null. One must be set.');
+
+            return this;
+        }
+
+        if (this.checkKeyExists(key) === false)
+        {
+            //  A URL to a json/csv file has been given
+            if (mapDataURL)
+            {
+                this.addToFileList('tilemap', key, mapDataURL, { format: format });
+            }
+            else
+            {
+                switch (format)
+                {
+                    //  A csv string or object has been given
+                    case Phaser.Tilemap.CSV:
+                        break;
+
+                    //  An xml string or object has been given
+                    case Phaser.Tilemap.TILED_JSON:
+
+                        if (typeof mapData === 'string')
+                        {
+                            mapData = JSON.parse(mapData);
+                        }
+                        break;
+                }
+
+                this.game.cache.addTilemap(key, null, mapData, format);
+
+            }
+        }
+
+        return this;
+
+    },
+
+    /**
+    * Add a new bitmap font loading request.
+    *
+    * @method Phaser.Loader#bitmapFont
+    * @param {string} key - Unique asset key of the bitmap font.
+    * @param {string} textureURL - The url of the font image file.
+    * @param {string} [xmlURL] - The url of the font data file (xml/fnt)
+    * @param {object} [xmlData] - An optional XML data object.
+    */
+    bitmapFont: function (key, textureURL, xmlURL, xmlData) {
+
+        if (typeof xmlURL === "undefined") { xmlURL = null; }
+        if (typeof xmlData === "undefined") { xmlData = null; }
+
+        if (this.checkKeyExists(key) === false)
+        {
+            //  A URL to a json/xml file has been given
+            if (xmlURL)
+            {
+                this.addToFileList('bitmapfont', key, textureURL, { xmlURL: xmlURL });
+            }
+            else
+            {
+                //  An xml string or object has been given
+                if (typeof xmlData === 'string')
+                {
+                    var xml;
+
+                    try  {
+                        if (window['DOMParser'])
+                        {
+                            var domparser = new DOMParser();
+                            xml = domparser.parseFromString(xmlData, "text/xml");
+                        }
+                        else
+                        {
+                            xml = new ActiveXObject("Microsoft.XMLDOM");
+                            xml.async = 'false';
+                            xml.loadXML(xmlData);
+                        }
+                    }
+                    catch (e)
+                    {
+                        xml = undefined;
+                    }
+
+                    if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
+                    {
+                        throw new Error("Phaser.Loader. Invalid Bitmap Font XML given");
+                    }
+                    else
+                    {
+                        this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml });
+                    }
+                }
+            }
+        }
+
+        return this;
+
+    },
+
+    /**
+    * Add a new texture atlas to the loader. This atlas uses the JSON Array data format.
+    *
+    * @method Phaser.Loader#atlasJSONArray
+    * @param {string} key - Unique asset key of the bitmap font.
+    * @param {Description} atlasURL - The url of the Description.
+    * @param {Description} atlasData - Description.
+    */
+    atlasJSONArray: function (key, textureURL, atlasURL, atlasData) {
+
+        return this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
+
+    },
+
+    /**
+    * Add a new texture atlas to the loader. This atlas uses the JSON Hash data format.
+    *
+    * @method Phaser.Loader#atlasJSONHash
+    * @param {string} key - Unique asset key of the bitmap font.
+    * @param {Description} atlasURL - The url of the Description.
+    * @param {Description} atlasData - Description.
+    */
+    atlasJSONHash: function (key, textureURL, atlasURL, atlasData) {
+
+        return this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+
+    },
+
+    /**
+    * Add a new texture atlas to the loader. This atlas uses the Starling XML data format.
+    *
+    * @method Phaser.Loader#atlasXML
+    * @param {string} key - Unique asset key of the bitmap font.
+    * @param {Description} atlasURL - The url of the Description.
+    * @param {Description} atlasData - Description.
+    */
+    atlasXML: function (key, textureURL, atlasURL, atlasData) {
+
+        return this.atlas(key, textureURL, atlasURL, atlasData, Phaser.Loader.TEXTURE_ATLAS_XML_STARLING);
+
+    },
+
+    /**
+    * Add a new texture atlas to the loader.
+    *
+    * @method Phaser.Loader#atlas
+    * @param {string} key - Unique asset key of the texture atlas file.
+    * @param {string} textureURL - The url of the texture atlas image file.
+    * @param {string} [atlasURL] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
+    * @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
+    * @param {number} [format] - A value describing the format of the data, the default is Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY.
+    */
+    atlas: function (key, textureURL, atlasURL, atlasData, format) {
+
+        if (typeof atlasURL === "undefined") { atlasURL = null; }
+        if (typeof atlasData === "undefined") { atlasData = null; }
+        if (typeof format === "undefined") { format = Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY; }
+
+        if (this.checkKeyExists(key) === false)
+        {
+            //  A URL to a json/xml file has been given
+            if (atlasURL)
+            {
+                this.addToFileList('textureatlas', key, textureURL, { atlasURL: atlasURL, format: format });
+            }
+            else
+            {
+                switch (format)
+                {
+                    //  A json string or object has been given
+                    case Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY:
+
+                        if (typeof atlasData === 'string')
+                        {
+                            atlasData = JSON.parse(atlasData);
+                        }
+                        break;
+
+                    //  An xml string or object has been given
+                    case Phaser.Loader.TEXTURE_ATLAS_XML_STARLING:
+
+                        if (typeof atlasData === 'string')
+                        {
+                            var xml;
+
+                            try  {
+                                if (window['DOMParser'])
+                                {
+                                    var domparser = new DOMParser();
+                                    xml = domparser.parseFromString(atlasData, "text/xml");
+                                }
+                                else
+                                {
+                                    xml = new ActiveXObject("Microsoft.XMLDOM");
+                                    xml.async = 'false';
+                                    xml.loadXML(atlasData);
+                                }
+                            }
+                            catch (e)
+                            {
+                                xml = undefined;
+                            }
+
+                            if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
+                            {
+                                throw new Error("Phaser.Loader. Invalid Texture Atlas XML given");
+                            }
+                            else
+                            {
+                                atlasData = xml;
+                            }
+                        }
+                        break;
+                }
+
+                this.addToFileList('textureatlas', key, textureURL, { atlasURL: null, atlasData: atlasData, format: format });
+
+            }
+
+        }
+
+        return this;
+
+    },
+
+    /**
+    * Remove loading request of a file.
+    *
+    * @method Phaser.Loader#removeFile
+    * @param key {string} Key of the file you want to remove.
+    */
+    removeFile: function (key) {
+
+        delete this._fileList[key];
+
+    },
+
+    /**
+    * Remove all file loading requests.
+    *
+    * @method Phaser.Loader#removeAll
+    */
+    removeAll: function () {
+
+        this._fileList = {};
+
+    },
+
+    /**
+    * Start loading the assets. Normally you don't need to call this yourself as the StateManager will do so.
+    *
+    * @method Phaser.Loader#start
+    */
+    start: function () {
+
+        if (this.isLoading)
+        {
+            return;
+        }
+
+        this.progress = 0;
+        this.hasLoaded = false;
+        this.isLoading = true;
+
+        this.onLoadStart.dispatch(this.queueSize);
+
+        if (this._keys.length > 0)
+        {
+            this._progressChunk = 100 / this._keys.length;
+            this.loadFile();
+        }
+        else
+        {
+            this.progress = 100;
+            this.hasLoaded = true;
+            this.onLoadComplete.dispatch();
+        }
+
+    },
+
+    /**
+    * Load files. Private method ONLY used by loader.
+    *
+    * @method Phaser.Loader#loadFile
+    * @private
+    */
+    loadFile: function () {
+
+        var file = this._fileList[this._keys.shift()];
+        var _this = this;
+
+        //  Image or Data?
+        switch (file.type)
+        {
+            case 'image':
+            case 'spritesheet':
+            case 'textureatlas':
+            case 'bitmapfont':
+            case 'tileset':
+                file.data = new Image();
+                file.data.name = file.key;
+                file.data.onload = function () {
+                    return _this.fileComplete(file.key);
+                };
+                file.data.onerror = function () {
+                    return _this.fileError(file.key);
+                };
+                file.data.crossOrigin = this.crossOrigin;
+                file.data.src = this.baseURL + file.url;
+                break;
+
+            case 'audio':
+                file.url = this.getAudioURL(file.url);
+
+                if (file.url !== null)
+                {
+                    //  WebAudio or Audio Tag?
+                    if (this.game.sound.usingWebAudio)
+                    {
+                        this._xhr.open("GET", this.baseURL + file.url, true);
+                        this._xhr.responseType = "arraybuffer";
+                        this._xhr.onload = function () {
+                            return _this.fileComplete(file.key);
+                        };
+                        this._xhr.onerror = function () {
+                            return _this.fileError(file.key);
+                        };
+                        this._xhr.send();
+                    }
+                    else if (this.game.sound.usingAudioTag)
+                    {
+                        if (this.game.sound.touchLocked)
+                        {
+                            //  If audio is locked we can't do this yet, so need to queue this load request. Bum.
+                            file.data = new Audio();
+                            file.data.name = file.key;
+                            file.data.preload = 'auto';
+                            file.data.src = this.baseURL + file.url;
+                            this.fileComplete(file.key);
+                        }
+                        else
+                        {
+                            file.data = new Audio();
+                            file.data.name = file.key;
+                            file.data.onerror = function () {
+                                return _this.fileError(file.key);
+                            };
+                            file.data.preload = 'auto';
+                            file.data.src = this.baseURL + file.url;
+                            file.data.addEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete(file.key), false);
+                            file.data.load();
+                        }
+                    }
+                }
+                else
+                {
+                    this.fileError(file.key);
+                }
+
+                break;
+
+            case 'tilemap':
+                this._xhr.open("GET", this.baseURL + file.url, true);
+                this._xhr.responseType = "text";
+
+                if (file.format == Phaser.Tilemap.TILED_JSON)
+                {
+                    this._xhr.onload = function () {
+                        return _this.jsonLoadComplete(file.key);
+                    };
+                }
+                else if (file.format == Phaser.Tilemap.CSV)
+                {
+                    this._xhr.onload = function () {
+                        return _this.csvLoadComplete(file.key);
+                    };
+                }
+                else
+                {
+                    throw new Error("Phaser.Loader. Invalid Tilemap format: " + file.format);
+                }
+
+                this._xhr.onerror = function () {
+                    return _this.dataLoadError(file.key);
+                };
+                this._xhr.send();
+                break;
+
+            case 'text':
+                this._xhr.open("GET", this.baseURL + file.url, true);
+                this._xhr.responseType = "text";
+                this._xhr.onload = function () {
+                    return _this.fileComplete(file.key);
+                };
+                this._xhr.onerror = function () {
+                    return _this.fileError(file.key);
+                };
+                this._xhr.send();
+                break;
+        }
+
+    },
+
+    /**
+    * Private method ONLY used by loader.
+    * @method Phaser.Loader#getAudioURL
+    * @param {array|string} urls - Either an array of audio file URLs or a string containing a single URL path.
+    * @private
+    */
+    getAudioURL: function (urls) {
+
+        var extension;
+
+        if (typeof urls === 'string') { urls = [urls]; }
+
+        for (var i = 0; i < urls.length; i++)
+        {
+            extension = urls[i].toLowerCase();
+            extension = extension.substr((Math.max(0, extension.lastIndexOf(".")) || Infinity) + 1);
+
+            if (this.game.device.canPlayAudio(extension))
+            {
+                return urls[i];
+            }
+
+        }
+
+        return null;
+
+    },
+
+    /**
+    * Error occured when load a file.
+    *
+    * @method Phaser.Loader#fileError
+    * @param {string} key - Key of the error loading file.
+    */
+    fileError: function (key) {
+
+        this._fileList[key].loaded = true;
+        this._fileList[key].error = true;
+
+        this.onFileError.dispatch(key);
+
+        console.warn("Phaser.Loader error loading file: " + key + ' from URL ' + this._fileList[key].url);
+
+        this.nextFile(key, false);
+
+    },
+
+    /**
+    * Called when a file is successfully loaded.
+    *
+    * @method Phaser.Loader#fileComplete
+    * @param {string} key - Key of the successfully loaded file.
+    */
+    fileComplete: function (key) {
+
+        if (!this._fileList[key])
+        {
+            console.warn('Phaser.Loader fileComplete invalid key ' + key);
+            return;
+        }
+        
+        this._fileList[key].loaded = true;
+
+        var file = this._fileList[key];
+        var loadNext = true;
+        var _this = this;
+
+        switch (file.type)
+        {
+            case 'image':
+
+                this.game.cache.addImage(file.key, file.url, file.data);
+                break;
+
+            case 'spritesheet':
+
+                this.game.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax);
+                break;
+
+            case 'tileset':
+
+                this.game.cache.addTileset(file.key, file.url, file.data, file.tileWidth, file.tileHeight, file.tileMax, file.tileMargin, file.tileSpacing);
+                break;
+
+            case 'textureatlas':
+
+                if (file.atlasURL == null)
+                {
+                    this.game.cache.addTextureAtlas(file.key, file.url, file.data, file.atlasData, file.format);
+                }
+                else
+                {
+                    //  Load the JSON or XML before carrying on with the next file
+                    loadNext = false;
+                    this._xhr.open("GET", this.baseURL + file.atlasURL, true);
+                    this._xhr.responseType = "text";
+
+                    if (file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY || file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
+                    {
+                        this._xhr.onload = function () {
+                            return _this.jsonLoadComplete(file.key);
+                        };
+                    }
+                    else if (file.format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
+                    {
+                        this._xhr.onload = function () {
+                            return _this.xmlLoadComplete(file.key);
+                        };
+                    }
+                    else
+                    {
+                        throw new Error("Phaser.Loader. Invalid Texture Atlas format: " + file.format);
+                    }
+
+                    this._xhr.onerror = function () {
+                        return _this.dataLoadError(file.key);
+                    };
+                    this._xhr.send();
+                }
+                break;
+
+            case 'bitmapfont':
+
+                if (file.xmlURL == null)
+                {
+                    this.game.cache.addBitmapFont(file.key, file.url, file.data, file.xmlData);
+                }
+                else
+                {
+                    //  Load the XML before carrying on with the next file
+                    loadNext = false;
+                    this._xhr.open("GET", this.baseURL + file.xmlURL, true);
+                    this._xhr.responseType = "text";
+
+                    this._xhr.onload = function () {
+                        return _this.xmlLoadComplete(file.key);
+                    };
+
+                    this._xhr.onerror = function () {
+                        return _this.dataLoadError(file.key);
+                    };
+                    this._xhr.send();
+                }
+                break;
+
+            case 'audio':
+
+                if (this.game.sound.usingWebAudio)
+                {
+                    file.data = this._xhr.response;
+
+                    this.game.cache.addSound(file.key, file.url, file.data, true, false);
+
+                    if (file.autoDecode)
+                    {
+                        this.game.cache.updateSound(key, 'isDecoding', true);
+
+                        var that = this;
+                        var key = file.key;
+
+                        this.game.sound.context.decodeAudioData(file.data, function (buffer) {
+                            if (buffer)
+                            {
+                                that.game.cache.decodedSound(key, buffer);
+                            }
+                        });
+                    }
+                }
+                else
+                {
+                    file.data.removeEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete);
+                    this.game.cache.addSound(file.key, file.url, file.data, false, true);
+                }
+                break;
+
+            case 'text':
+                file.data = this._xhr.responseText;
+                this.game.cache.addText(file.key, file.url, file.data);
+                break;
+        }
+
+        if (loadNext)
+        {
+            this.nextFile(key, true);
+        }
+
+    },
+
+    /**
+    * Successfully loaded a JSON file.
+    *
+    * @method Phaser.Loader#jsonLoadComplete
+    * @param {string} key - Key of the loaded JSON file.
+    */
+    jsonLoadComplete: function (key) {
+
+        var data = JSON.parse(this._xhr.responseText);
+        var file = this._fileList[key];
+
+        if (file.type == 'tilemap')
+        {
+            this.game.cache.addTilemap(file.key, file.url, data, file.format);
+        }
+        else
+        {
+            this.game.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
+        }
+
+        this.nextFile(key, true);
+
+    },
+
+    /**
+    * Successfully loaded a CSV file.
+    *
+    * @method Phaser.Loader#csvLoadComplete
+    * @param {string} key - Key of the loaded CSV file.
+    */
+    csvLoadComplete: function (key) {
+
+        var data = this._xhr.responseText;
+        var file = this._fileList[key];
+
+        this.game.cache.addTilemap(file.key, file.url, data, file.format);
+
+        this.nextFile(key, true);
+
+    },
+
+    /**
+    * Error occured when load a JSON.
+    *
+    * @method Phaser.Loader#dataLoadError
+    * @param {string} key - Key of the error loading JSON file.
+    */
+    dataLoadError: function (key) {
+
+        var file = this._fileList[key];
+
+        file.error = true;
+
+        console.warn("Phaser.Loader dataLoadError: " + key);
+
+        this.nextFile(key, true);
+
+    },
+
+    /**
+    * Successfully loaded an XML file.
+    *
+    * @method Phaser.Loader#xmlLoadComplete
+    * @param {string} key - Key of the loaded XML file.
+    */
+    xmlLoadComplete: function (key) {
+
+        var data = this._xhr.responseText;
+        var xml;
+
+        try
+        {
+            if (window['DOMParser'])
+            {
+                var domparser = new DOMParser();
+                xml = domparser.parseFromString(data, "text/xml");
+            }
+            else
+            {
+                xml = new ActiveXObject("Microsoft.XMLDOM");
+                xml.async = 'false';
+                xml.loadXML(data);
+            }
+        }
+        catch (e)
+        {
+            xml = undefined;
+        }
+
+        if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
+        {
+            throw new Error("Phaser.Loader. Invalid XML given");
+        }
+
+        var file = this._fileList[key];
+
+        if (file.type == 'bitmapfont')
+        {
+            this.game.cache.addBitmapFont(file.key, file.url, file.data, xml);
+        }
+        else if (file.type == 'textureatlas')
+        {
+            this.game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
+        }
+
+        this.nextFile(key, true);
+
+    },
+
+    /**
+    * Handle loading next file.
+    *
+    * @param previousKey {string} Key of previous loaded asset.
+    * @param success {boolean} Whether the previous asset loaded successfully or not.
+    * @private
+    */
+    nextFile: function (previousKey, success) {
+
+        this.progress = Math.round(this.progress + this._progressChunk);
+
+        if (this.progress > 100)
+        {
+            this.progress = 100;
+        }
+
+        if (this.preloadSprite !== null)
+        {
+            if (this.preloadSprite.direction === 0)
+            {
+                this.preloadSprite.crop.width = Math.floor((this.preloadSprite.width / 100) * this.progress);
+            }
+            else
+            {
+                this.preloadSprite.crop.height = Math.floor((this.preloadSprite.height / 100) * this.progress);
+            }
+
+            this.preloadSprite.sprite.crop = this.preloadSprite.crop;
+        }
+
+        this.onFileComplete.dispatch(this.progress, previousKey, success, this.queueSize - this._keys.length, this.queueSize);
+
+        if (this._keys.length > 0)
+        {
+            this.loadFile();
+        }
+        else
+        {
+            this.hasLoaded = true;
+            this.isLoading = false;
+            
+            this.removeAll();
+
+            this.onLoadComplete.dispatch();
+        }
+
+    }
 
 };
+
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2013 Photon Storm Ltd.
@@ -32307,14 +32961,14 @@ Phaser.Loader.prototype = {
 * @class Phaser.LoaderParser
 */
 Phaser.LoaderParser = {
-	
+    
     /**
     * Parse frame data from an XML file.
     * @method Phaser.LoaderParser.bitmapFont
     * @param {object} xml - XML data you want to parse.
     * @return {FrameData} Generated FrameData object.
     */
-	bitmapFont: function (game, xml, cacheKey) {
+    bitmapFont: function (game, xml, cacheKey) {
 
         //  Malformed?
         if (!xml.getElementsByTagName('font'))
@@ -32347,8 +33001,8 @@ Phaser.LoaderParser = {
                 height: parseInt(letters[i].attributes.getNamedItem("height").nodeValue, 10)
             };
 
-            //	Note: This means you can only have 1 BitmapFont loaded at once!
-            //	Need to replace this with our own handler soon.
+            //  Note: This means you can only have 1 BitmapFont loaded at once!
+            //  Need to replace this with our own handler soon.
             PIXI.TextureCache[charCode] = new PIXI.Texture(texture, textureRect);
 
             data.chars[charCode] = {
@@ -32366,9 +33020,9 @@ Phaser.LoaderParser = {
 
         for (i = 0; i < kernings.length; i++)
         {
-           var first = parseInt(kernings[i].attributes.getNamedItem("first").nodeValue, 10);
-           var second = parseInt(kernings[i].attributes.getNamedItem("second").nodeValue, 10);
-           var amount = parseInt(kernings[i].attributes.getNamedItem("amount").nodeValue, 10);
+            var first = parseInt(kernings[i].attributes.getNamedItem("first").nodeValue, 10);
+            var second = parseInt(kernings[i].attributes.getNamedItem("second").nodeValue, 10);
+            var amount = parseInt(kernings[i].attributes.getNamedItem("amount").nodeValue, 10);
 
             data.chars[second].kerning[first] = amount;
         }
@@ -32396,9 +33050,9 @@ Phaser.LoaderParser = {
 * @param {boolean} [loop=false] - Whether or not the sound will loop.
 */
 Phaser.Sound = function (game, key, volume, loop) {
-	
-	volume = volume || 1;
-	if (typeof loop == 'undefined') { loop = false; }
+    
+    if (typeof volume == 'undefined') { volume = 1; }
+    if (typeof loop == 'undefined') { loop = false; }
 
     /**
     * A reference to the currently running Game.
@@ -32407,157 +33061,128 @@ Phaser.Sound = function (game, key, volume, loop) {
     this.game = game;
 
     /**
-    * Name of the sound.
-    * @property {string} name
-    * @default
+    * @property {string} name - Name of the sound.
     */
     this.name = key;
 
     /**
-    * Asset key for the sound.
-    * @property {string} key
+    * @property {string} key - Asset key for the sound.
     */
     this.key = key;
 
     /**
-    * Whether or not the sound will loop.
-    * @property {boolean} loop
+    * @property {boolean} loop - Whether or not the sound will loop.
     */
     this.loop = loop;
 
     /**
-    * The global audio volume. A value between 0 (silence) and 1 (full volume).
-    * @property {number} _volume
+    * @property {number} _volume - The global audio volume. A value between 0 (silence) and 1 (full volume).
     * @private
     */
     this._volume = volume;
 
     /**
-    * The sound markers, empty by default.
-    * @property {object} markers
+    * @property {object} markers - The sound markers.
     */
     this.markers = {};
-
     
     /**
-    * Reference to AudioContext instance.
-    * @property {AudioContext} context
-    * @default
+    * @property {AudioContext} context - Reference to the AudioContext instance.
     */
     this.context = null;
 
     /**
-    * Decoded data buffer / Audio tag.
-    * @property {Description} _buffer
+    * @property {Description} _buffer - Decoded data buffer / Audio tag.
     * @private
     */
     this._buffer = null;
 
     /**
-    * Boolean indicating whether the game is on "mute". 
-    * @property {boolean} _muted
+    * @property {boolean} _muted - Boolean indicating whether the sound is muted or not.
     * @private
     * @default
     */
     this._muted = false;
 
     /**
-    * Boolean indicating whether the sound should start automatically.
-    * @property {boolean} autoplay
-    * @private
+    * @property {boolean} autoplay - Boolean indicating whether the sound should start automatically.
     */
     this.autoplay = false;
 
     /**
-    * The total duration of the sound, in milliseconds
-    * @property {number} totalDuration
-    * @default
+    * @property {number} totalDuration - The total duration of the sound, in milliseconds
     */
     this.totalDuration = 0;
    
     /**
-    * Description.
-    * @property {number} startTime
+    * @property {number} startTime - The time the Sound starts at (typically 0 unless starting from a marker)
     * @default
     */
     this.startTime = 0;
     
     /**
-    * Description.
-    * @property {number} currentTime
-    * @default
+    * @property {number} currentTime - The current time the sound is at.
     */
     this.currentTime = 0;
     
     /**
-    * Description.
-    * @property {number} duration
-    * @default
+    * @property {number} duration - The duration of the sound.
     */
     this.duration = 0;
     
     /**
-    * Description.
-    * @property {number} stopTime
+    * @property {number} stopTime - The time the sound stopped.
     */
     this.stopTime = 0;
     
     /**
-    * Description.
-    * @property {boolean} paused
+    * @property {boolean} paused - true if the sound is paused, otherwise false.
     * @default
     */
     this.paused = false;
     
     /**
-    * Description.
-    * @property {number} pausedPosition
+    * @property {number} pausedPosition - The position the sound had reached when it was paused.
     */
     this.pausedPosition = 0;
 
     /**
-    * Description.
-    * @property {number} pausedTime
+    * @property {number} pausedTime - The game time at which the sound was paused.
     */
     this.pausedTime = 0;
 
     /**
-    * Description.
-    * @property {boolean} isPlaying
+    * @property {boolean} isPlaying - true if the sound is currently playing, otherwise false.
     * @default
     */
     this.isPlaying = false;
     
     /**
-    * Description.
-    * @property {string} currentMarker
+    * @property {string} currentMarker - The string ID of the currently playing marker, if any.
     * @default
     */
     this.currentMarker = '';
     
     /**
-    * Description.
-    * @property {boolean} pendingPlayback
-    * @default
+    * @property {boolean} pendingPlayback - true if the sound file is pending playback
+    * @readonly
     */
     this.pendingPlayback = false;
     
     /**
-    * Description.
-    * @property {boolean} override
+    * @property {boolean} override - if true when you play this sound it will always start from the beginning.
     * @default
     */
     this.override = false;
     
     /**
-    * Description.
-    * @property {boolean} usingWebAudio
+    * @property {boolean} usingWebAudio - true if this sound is being played with Web Audio.
+    * @readonly
     */
     this.usingWebAudio = this.game.sound.usingWebAudio;
     
     /**
-    * Description.
-    * @property {Description} usingAudioTag
+    * @property {boolean} usingAudioTag - true if the sound is being played via the Audio tag.
     */
     this.usingAudioTag = this.game.sound.usingAudioTag;
 
@@ -32597,63 +33222,55 @@ Phaser.Sound = function (game, key, volume, loop) {
     }
 
     /**
-    * Description.
-    * @property {Phaser.Signal} onDecoded
+    * @property {Phaser.Signal} onDecoded - The onDecoded event is dispatched when the sound has finished decoding (typically for mp3 files)
     */
-    this.onDecoded = new Phaser.Signal;
+    this.onDecoded = new Phaser.Signal();
     
     /**
-    * Description.
-    * @property {Phaser.Signal} onPlay
+    * @property {Phaser.Signal} onPlay - The onPlay event is dispatched each time this sound is played.
     */
-    this.onPlay = new Phaser.Signal;
+    this.onPlay = new Phaser.Signal();
     
     /**
-    * Description.
-    * @property {Phaser.Signal} onPause
+    * @property {Phaser.Signal} onPause - The onPause event is dispatched when this sound is paused.
     */
-    this.onPause = new Phaser.Signal;
+    this.onPause = new Phaser.Signal();
     
     /**
-    * Description.
-    * @property {Phaser.Signal} onResume
+    * @property {Phaser.Signal} onResume - The onResume event is dispatched when this sound is resumed from a paused state.
     */
-    this.onResume = new Phaser.Signal;
+    this.onResume = new Phaser.Signal();
     
     /**
-    * Description.
-    * @property {Phaser.Signal} onLoop
+    * @property {Phaser.Signal} onLoop - The onLoop event is dispatched when this sound loops during playback.
     */
-    this.onLoop = new Phaser.Signal;
+    this.onLoop = new Phaser.Signal();
     
     /**
-    * Description.
-    * @property {Phaser.Signal} onStop
+    * @property {Phaser.Signal} onStop - The onStop event is dispatched when this sound stops playback.
     */
-    this.onStop = new Phaser.Signal;
+    this.onStop = new Phaser.Signal();
     
     /**
-    * Description.
-    * @property {Phaser.Signal} onMute
+    * @property {Phaser.Signal} onMute - The onMouse event is dispatched when this sound is muted.
     */
-    this.onMute = new Phaser.Signal;
+    this.onMute = new Phaser.Signal();
     
     /**
-    * Description.
-    * @property {Phaser.Signal} onMarkerComplete
+    * @property {Phaser.Signal} onMarkerComplete - The onMarkerComplete event is dispatched when a marker within this sound completes playback.
     */
-    this.onMarkerComplete = new Phaser.Signal;
+    this.onMarkerComplete = new Phaser.Signal();
 
 };
 
 Phaser.Sound.prototype = {
 
-	/**
+    /**
     * Called automatically when this sound is unlocked.
-	* @method Phaser.Sound#soundHasUnlocked
-	* @param {string} key - Description.
+    * @method Phaser.Sound#soundHasUnlocked
+    * @param {string} key - The Phaser.Cache key of the sound file to check for decoding.
     * @protected
-	*/
+    */
     soundHasUnlocked: function (key) {
 
         if (key == this.key)
@@ -32661,22 +33278,22 @@ Phaser.Sound.prototype = {
             this._sound = this.game.cache.getSoundData(this.key);
             this.totalDuration = this._sound.duration;
             // console.log('sound has unlocked' + this._sound);
-	    }
+        }
 
-	},
+    },
 
-	/**
-	 * Description.
-	 * @method Phaser.Sound#addMarker
-	 * @param {string} name - Description.
-	 * @param {Description} start - Description.
-	 * @param {Description} stop - Description.
-	 * @param {Description} volume - Description.
-	 * @param {Description} loop - Description.
+    /**
+     * Description.
+     * @method Phaser.Sound#addMarker
+     * @param {string} name - Description.
+     * @param {Description} start - Description.
+     * @param {Description} stop - Description.
+     * @param {Description} volume - Description.
+     * @param {Description} loop - Description.
     addMarker: function (name, start, stop, volume, loop) {
 
-    	volume = volume || 1;
-    	if (typeof loop == 'undefined') { loop = false; }
+        volume = volume || 1;
+        if (typeof loop == 'undefined') { loop = false; }
 
         this.markers[name] = {
             name: name,
@@ -32718,22 +33335,22 @@ Phaser.Sound.prototype = {
 
     },
 
-	/**
-	* Removes a marker from the sound.
-	* @method Phaser.Sound#removeMarker
-	* @param {string} name - The key of the marker to remove.
-	*/
+    /**
+    * Removes a marker from the sound.
+    * @method Phaser.Sound#removeMarker
+    * @param {string} name - The key of the marker to remove.
+    */
     removeMarker: function (name) {
 
         delete this.markers[name];
 
     },
 
-	/**
-	* Called automatically by Phaser.SoundManager.
-	* @method Phaser.Sound#update
+    /**
+    * Called automatically by Phaser.SoundManager.
+    * @method Phaser.Sound#update
     * @protected
-	*/
+    */
     update: function () {
 
         if (this.pendingPlayback && this.game.cache.isSoundReady(this.key))
@@ -32757,7 +33374,7 @@ Phaser.Sound.prototype = {
                         //  won't work with markers, needs to reset the position
                         this.onLoop.dispatch(this);
 
-                        if (this.currentMarker == '')
+                        if (this.currentMarker === '')
                         {
                             //console.log('loop2');
                             this.currentTime = 0;
@@ -32791,27 +33408,28 @@ Phaser.Sound.prototype = {
         }
     },
 
-	/**
+    /**
     * Play this sound, or a marked section of it.
     * @method Phaser.Sound#play
     * @param {string} [marker=''] - If you want to play a marker then give the key here, otherwise leave blank to play the full sound.
     * @param {number} [position=0] - The starting position to play the sound from - this is ignored if you provide a marker.
-    * @param {number} [volume=1] - Volume of the sound you want to play.
+    * @param {number} [volume=1] - Volume of the sound you want to play. If none is given it will use the volume given to the Sound when it was created (which defaults to 1 if none was specified).
     * @param {boolean} [loop=false] - Loop when it finished playing?
     * @param {boolean} [forceRestart=true] - If the sound is already playing you can set forceRestart to restart it from the beginning.
-    * @return {Sound} The playing sound object.
+    * @return {Phaser.Sound} This sound instance.
     */
     play: function (marker, position, volume, loop, forceRestart) {
 
-    	marker = marker || '';
-    	position = position || 0;
-    	volume = volume || 1;
-    	if (typeof loop == 'undefined') { loop = false; }
-    	if (typeof forceRestart == 'undefined') { forceRestart = true; }
+        marker = marker || '';
+        position = position || 0;
+
+        if (typeof volume === 'undefined') { volume = this._volume; }
+        if (typeof loop === 'undefined') { loop = false; }
+        if (typeof forceRestart === 'undefined') { forceRestart = true; }
 
         // console.log(this.name + ' play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop, 'force', forceRestart);
 
-        if (this.isPlaying == true && forceRestart == false && this.override == false)
+        if (this.isPlaying === true && forceRestart === false && this.override === false)
         {
             //  Use Restart instead
             return;
@@ -32896,14 +33514,14 @@ Phaser.Sound.prototype = {
                 this._sound.connect(this.gainNode);
                 this.totalDuration = this._sound.buffer.duration;
 
-                if (this.duration == 0)
+                if (this.duration === 0)
                 {
                     // console.log('duration reset');
                     this.duration = this.totalDuration;
                     this.durationMS = this.totalDuration * 1000;
                 }
 
-                if (this.loop && marker == '')
+                if (this.loop && marker === '')
                 {
                     this._sound.loop = true;
                 }
@@ -32914,9 +33532,9 @@ Phaser.Sound.prototype = {
                     this._sound.noteGrainOn(0, this.position, this.duration);
                     // this._sound.noteGrainOn(0, this.position, this.duration / 1000);
                     //this._sound.noteOn(0); // the zero is vitally important, crashes iOS6 without it
-				}
-				else
-				{
+                }
+                else
+                {
                     // this._sound.start(0, this.position, this.duration / 1000);
                     this._sound.start(0, this.position, this.duration);
                 }
@@ -32926,12 +33544,12 @@ Phaser.Sound.prototype = {
                 this.currentTime = 0;
                 this.stopTime = this.startTime + this.durationMS;
                 this.onPlay.dispatch(this);
-			}
-			else
-			{
+            }
+            else
+            {
                 this.pendingPlayback = true;
 
-                if (this.game.cache.getSound(this.key) && this.game.cache.getSound(this.key).isDecoding == false)
+                if (this.game.cache.getSound(this.key) && this.game.cache.getSound(this.key).isDecoding === false)
                 {
                     this.game.sound.decode(this.key, this);
                 }
@@ -32955,7 +33573,7 @@ Phaser.Sound.prototype = {
                     //  This doesn't become available until you call play(), wonderful ...
                     this.totalDuration = this._sound.duration;
 
-                    if (this.duration == 0)
+                    if (this.duration === 0)
                     {
                         this.duration = this.totalDuration;
                         this.durationMS = this.totalDuration * 1000;
@@ -32998,10 +33616,10 @@ Phaser.Sound.prototype = {
     */
     restart: function (marker, position, volume, loop) {
 
-    	marker = marker || '';
-    	position = position || 0;
-    	volume = volume || 1;
-    	if (typeof loop == 'undefined') { loop = false; }
+        marker = marker || '';
+        position = position || 0;
+        volume = volume || 1;
+        if (typeof loop == 'undefined') { loop = false; }
 
         this.play(marker, position, volume, loop, true);
 
@@ -33045,9 +33663,9 @@ Phaser.Sound.prototype = {
                 {
                     this._sound.noteGrainOn(0, p, this.duration);
                     //this._sound.noteOn(0); // the zero is vitally important, crashes iOS6 without it
-				}
-				else
-				{
+                }
+                else
+                {
                     this._sound.start(0, p, this.duration);
                 }
             }
@@ -33064,7 +33682,7 @@ Phaser.Sound.prototype = {
 
     },
 
-	/**
+    /**
     * Stop playing this sound.
     * @method Phaser.Sound#stop
     */
@@ -33131,14 +33749,14 @@ Object.defineProperty(Phaser.Sound.prototype, "isDecoded", {
 * @property {boolean} mute - Gets or sets the muted state of this sound.
 */
 Object.defineProperty(Phaser.Sound.prototype, "mute", {
-	
+    
     get: function () {
         return this._muted;
     },
  
     set: function (value) {
 
-    	value = value || null;
+        value = value || null;
 
         if (value)
         {
@@ -33214,6 +33832,8 @@ Object.defineProperty(Phaser.Sound.prototype, "volume", {
 
 /**
 * Sound Manager constructor.
+* The Sound Manager is responsible for playing back audio via either the Legacy HTML Audio tag or via Web Audio if the browser supports it.
+* Note: On Firefox 25+ on Linux if you have media.gstreamer disabled in about:config then it cannot play back mp3 or m4a files.
 *
 * @class Phaser.SoundManager
 * @classdesc Phaser Sound Manager.
@@ -33222,28 +33842,28 @@ Object.defineProperty(Phaser.Sound.prototype, "volume", {
 */
 Phaser.SoundManager = function (game) {
 
-	/**
-	* @property {Phaser.Game} game - Local reference to game.
-	*/
-	this.game = game;
-	
-	/**
-	* @property {Phaser.Signal} onSoundDecode - Description.
-	*/
-	this.onSoundDecode = new Phaser.Signal;
-	
-	/**
-	* @property {boolean} _muted - Description.
-	* @private
-	* @default
-	*/
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
+    this.game = game;
+    
+    /**
+    * @property {Phaser.Signal} onSoundDecode - The event dispatched when a sound decodes (typically only for mp3 files)
+    */
+    this.onSoundDecode = new Phaser.Signal();
+    
+    /**
+    * @property {boolean} _muted - Internal mute tracking var.
+    * @private
+    * @default
+    */
     this._muted = false;
    
-	/**
-	* @property {Description} _unlockSource - Description.
-	* @private
-	* @default
-	*/
+    /**
+    * @property {Description} _unlockSource - Internal unlock tracking var.
+    * @private
+    * @default
+    */
     this._unlockSource = null;
 
     /**
@@ -33261,41 +33881,41 @@ Phaser.SoundManager = function (game) {
     this._sounds = [];
 
     /**
-    * @property {Description} context - Description. 
+    * @property {AudioContext} context - The AudioContext being used for playback.
     * @default
     */
     this.context = null;
     
-	/**
-	* @property {boolean} usingWebAudio - Description.
-	* @default
-	*/
+    /**
+    * @property {boolean} usingWebAudio - true if this sound is being played with Web Audio.
+    * @readonly
+    */
     this.usingWebAudio = true;
     
-	/**
-	* @property {boolean} usingAudioTag - Description.
-	* @default
-	*/
+    /**
+    * @property {boolean} usingAudioTag - true if the sound is being played via the Audio tag.
+    * @readonly
+    */
     this.usingAudioTag = false;
     
-	/**
-	* @property {boolean} noAudio - Description.
-	* @default
-	*/
+    /**
+    * @property {boolean} noAudio - Has audio been disabled via the PhaserGlobal object? Useful if you need to use a 3rd party audio library instead.
+    * @default
+    */
     this.noAudio = false;
 
-	/**
-	* @property {boolean} touchLocked - Description.
-	* @default
-	*/
+    /**
+    * @property {boolean} touchLocked - true if the audio system is currently locked awaiting a touch event.
+    * @default
+    */
     this.touchLocked = false;
 
-	/**
-	* @property {number} channels - Description.
-	* @default
-	*/
+    /**
+    * @property {number} channels - The number of audio channels to use in playback.
+    * @default
+    */
     this.channels = 32;
-	
+    
 };
 
 Phaser.SoundManager.prototype = {
@@ -33307,7 +33927,7 @@ Phaser.SoundManager.prototype = {
     */
     boot: function () {
 
-        if (this.game.device.iOS && this.game.device.webAudio == false)
+        if (this.game.device.iOS && this.game.device.webAudio === false)
         {
             this.channels = 1;
         }
@@ -33329,7 +33949,7 @@ Phaser.SoundManager.prototype = {
         if (window['PhaserGlobal'])
         {
             //  Check to see if all audio playback is disabled (i.e. handled by a 3rd party class)
-            if (window['PhaserGlobal'].disableAudio == true)
+            if (window['PhaserGlobal'].disableAudio === true)
             {
                 this.usingWebAudio = false;
                 this.noAudio = true;
@@ -33337,7 +33957,7 @@ Phaser.SoundManager.prototype = {
             }
 
             //  Check if the Web Audio API is disabled (for testing Audio Tag playback during development)
-            if (window['PhaserGlobal'].disableWebAudio == true)
+            if (window['PhaserGlobal'].disableWebAudio === true)
             {
                 this.usingWebAudio = false;
                 this.usingAudioTag = true;
@@ -33389,13 +34009,13 @@ Phaser.SoundManager.prototype = {
     */
     unlock: function () {
 
-        if (this.touchLocked == false)
+        if (this.touchLocked === false)
         {
             return;
         }
 
         //  Global override (mostly for Audio Tag testing)
-        if (this.game.device.webAudio == false || (window['PhaserGlobal'] && window['PhaserGlobal'].disableWebAudio == true))
+        if (this.game.device.webAudio === false || (window['PhaserGlobal'] && window['PhaserGlobal'].disableWebAudio === true))
         {
             //  Create an Audio tag?
             this.touchLocked = false;
@@ -33463,9 +34083,9 @@ Phaser.SoundManager.prototype = {
             }
         }
    
-	},
+    },
 
-	/**
+    /**
     * Decode a sound by its assets key.
     * @method Phaser.SoundManager#decode
     * @param {string} key - Assets key of the sound to be decoded.
@@ -33530,15 +34150,37 @@ Phaser.SoundManager.prototype = {
     * @param {string} key - Asset key for the sound.
     * @param {number} [volume=1] - Default value for the volume.
     * @param {boolean} [loop=false] - Whether or not the sound will loop.
+    * @return {Phaser.Sound} The new sound instance.
     */
     add: function (key, volume, loop) {
 
-    	volume = volume || 1;
-    	if (typeof loop == 'undefined') { loop = false; }
+        if (typeof volume === 'undefined') { volume = 1; }
+        if (typeof loop === 'undefined') { loop = false; }
 
         var sound = new Phaser.Sound(this.game, key, volume, loop);
 
         this._sounds.push(sound);
+
+        return sound;
+
+    },
+
+    /**
+    * Adds a new Sound into the SoundManager and starts it playing.
+    * @method Phaser.SoundManager#play
+    * @param {string} key - Asset key for the sound.
+    * @param {number} [volume=1] - Default value for the volume.
+    * @param {boolean} [loop=false] - Whether or not the sound will loop.
+    * @param {boolean} [destroyOnComplete=false] - If true the Sound will destroy itself once it has finished playing, or is stopped.
+    * @return {Phaser.Sound} The new sound instance.
+    */
+    play: function (key, volume, loop, destroyOnComplete) {
+
+        if (typeof destroyOnComplete == 'undefined') { destroyOnComplete = false; }
+
+        var sound = this.add(key, volume, loop);
+
+        sound.play();
 
         return sound;
 
@@ -33588,7 +34230,7 @@ Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
         }
         else
         {
-            if (this._muted == false)
+            if (this._muted === false)
             {
                 return;
             }
@@ -33673,47 +34315,47 @@ Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
 Phaser.Utils.Debug = function (game) {
 
     /**
-	* @property {Phaser.Game} game - A reference to the currently running Game.
-	*/
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
     this.game = game;
   
-	/**
-	* @property {Context} context - The canvas context on which to render the debug information.
-	*/
+    /**
+    * @property {Context} context - The canvas context on which to render the debug information.
+    */
     this.context = game.context;
 
-	/**
-	* @property {string} font - The font that the debug information is rendered in.
-	* @default '14px Courier'
-	*/
+    /**
+    * @property {string} font - The font that the debug information is rendered in.
+    * @default '14px Courier'
+    */
     this.font = '14px Courier';
    
-	/**
-	* @property {number} lineHeight - The line height between the debug text.
-	*/
+    /**
+    * @property {number} lineHeight - The line height between the debug text.
+    */
     this.lineHeight = 16;
     
-	/**
-	* @property {boolean} renderShadow - Should the text be rendered with a slight shadow? Makes it easier to read on different types of background.
-	*/
+    /**
+    * @property {boolean} renderShadow - Should the text be rendered with a slight shadow? Makes it easier to read on different types of background.
+    */
     this.renderShadow = true;
     
-	/**
-	* @property {Context} currentX - The current X position the debug information will be rendered at.
-	* @default
-	*/
+    /**
+    * @property {Context} currentX - The current X position the debug information will be rendered at.
+    * @default
+    */
     this.currentX = 0;
     
-	/**
-	* @property {number} currentY - The current Y position the debug information will be rendered at.
-	* @default
-	*/
+    /**
+    * @property {number} currentY - The current Y position the debug information will be rendered at.
+    * @default
+    */
     this.currentY = 0;
     
-	/**
-	* @property {number} currentAlpha - The current alpha the debug information will be rendered at.
-	* @default
-	*/
+    /**
+    * @property {number} currentAlpha - The current alpha the debug information will be rendered at.
+    * @default
+    */
     this.currentAlpha = 1;
 
 };
@@ -33842,13 +34484,13 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-     * Renders the corners and point information of the given Sprite.
-     * @method Phaser.Utils.Debug#renderSpriteCorners
-     * @param {Phaser.Sprite} sprite - The sprite to be rendered.
-     * @param {boolean} [showText=false] - If true the x/y coordinates of each point will be rendered.
-     * @param {boolean} [showBounds=false] - If true the bounds will be rendered over the top of the sprite.
-     * @param {string} [color='rgb(255,0,255)'] - The color the text is rendered in.
-     */
+    * Renders the corners and point information of the given Sprite.
+    * @method Phaser.Utils.Debug#renderSpriteCorners
+    * @param {Phaser.Sprite} sprite - The sprite to be rendered.
+    * @param {boolean} [showText=false] - If true the x/y coordinates of each point will be rendered.
+    * @param {boolean} [showBounds=false] - If true the bounds will be rendered over the top of the sprite.
+    * @param {string} [color='rgb(255,0,255)'] - The color the text is rendered in.
+    */
     renderSpriteCorners: function (sprite, showText, showBounds, color) {
 
         if (this.context == null)
@@ -33984,7 +34626,7 @@ Phaser.Utils.Debug.prototype = {
         upColor = upColor || 'rgba(255,0,0,0.5)';
         color = color || 'rgb(255,255,255)';
 
-        if (hideIfUp == true && pointer.isUp == true)
+        if (hideIfUp === true && pointer.isUp === true)
         {
             return;
         }
@@ -34030,7 +34672,7 @@ Phaser.Utils.Debug.prototype = {
     * @param {number} x - X position of the debug info to be rendered.
     * @param {number} y - Y position of the debug info to be rendered.
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
-    */    
+    */
     renderSpriteInputInfo: function (sprite, x, y, color) {
 
         color = color || 'rgb(255,255,255)';
@@ -34046,13 +34688,13 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-     * Render Sprite collision.
-     * @method Phaser.Utils.Debug#renderSpriteCollision
-     * @param {Phaser.Sprite} sprite - The sprite to be rendered.
-     * @param {number} x - X position of the debug info to be rendered.
-     * @param {number} y - Y position of the debug info to be rendered.
+    * Render Sprite collision.
+    * @method Phaser.Utils.Debug#renderSpriteCollision
+    * @param {Phaser.Sprite} sprite - The sprite to be rendered.
+    * @param {number} x - X position of the debug info to be rendered.
+    * @param {number} y - Y position of the debug info to be rendered.
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
-     */ 
+    */
     renderSpriteCollision: function (sprite, x, y, color) {
 
         color = color || 'rgb(255,255,255)';
@@ -34437,7 +35079,7 @@ Phaser.Utils.Debug.prototype = {
     * @param {number} y - Y position of the debug info to be rendered.
     * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
     * @param {string} font - The font of text to draw.
-    */    
+    */
     renderText: function (text, x, y, color, font) {
 
         if (this.context == null)
@@ -34477,7 +35119,7 @@ Phaser.Utils.Debug.prototype = {
         var testObject = entity.last.next;
         entity = entity.first;
         
-        do  
+        do
         {
             var name = entity.sprite.name || '*';
             var nameNext = '-';
@@ -34619,13 +35261,13 @@ Phaser.Color = {
         var argb = Phaser.Color.getRGB(color);
         var hsl = Phaser.Color.RGBtoHSV(color);
         
-        //	Hex format
+        //  Hex format
         var result = Phaser.Color.RGBtoHexstring(color) + "\n";
         
-        //	RGB format
+        //  RGB format
         result = result.concat("Alpha: " + argb.alpha + " Red: " + argb.red + " Green: " + argb.green + " Blue: " + argb.blue) + "\n";
         
-        //	HSL info
+        //  HSL info
         result = result.concat("Hue: " + hsl.hue + " Saturation: " + hsl.saturation + " Lightnes: " + hsl.lightness);
 
         return result;
@@ -34772,7 +35414,7 @@ Phaser.Color = {
         if (typeof max === "undefined") { max = 255; }
         if (typeof alpha === "undefined") { alpha = 255; }
 
-        //	Sanity checks
+        //  Sanity checks
         if (max > 255) {
             return Phaser.Color.getColor(255, 255, 255);
         }
@@ -34887,7 +35529,7 @@ Phaser.Color = {
     getBlue: function (color) {
         return color & 0xFF;
     }
-	
+    
 };
 
 /**
@@ -34919,7 +35561,7 @@ Phaser.Physics.Arcade = function (game) {
     /**
     * @property {Phaser.Point} gravity - The World gravity setting. Defaults to x: 0, y: 0, or no gravity.
     */
-    this.gravity = new Phaser.Point;
+    this.gravity = new Phaser.Point();
 
     /**
     * @property {Phaser.Rectangle} bounds - The bounds inside of which the physics world exists. Defaults to match the world bounds.
@@ -34957,13 +35599,13 @@ Phaser.Physics.Arcade = function (game) {
     * @property {Phaser.Rectangle} _bounds1 - Internal cache var.
     * @private
     */
-    this._bounds1 = new Phaser.Rectangle;
+    this._bounds1 = new Phaser.Rectangle();
 
     /**
     * @property {Phaser.Rectangle} _bounds2 - Internal cache var.
     * @private
     */
-    this._bounds2 = new Phaser.Rectangle;
+    this._bounds2 = new Phaser.Rectangle();
 
     /**
     * @property {number} _overlap - Internal cache var.
@@ -35296,7 +35938,7 @@ Phaser.Physics.Arcade.prototype = {
 
         this._mapData = tilemapLayer.getTiles(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height, true);
 
-        if (this._mapData.length == 0)
+        if (this._mapData.length === 0)
         {
             return;
         }
@@ -35340,12 +35982,12 @@ Phaser.Physics.Arcade.prototype = {
     */
     collideGroupVsTilemapLayer: function (group, tilemapLayer, collideCallback, processCallback, callbackContext) {
 
-        if (group.length == 0)
+        if (group.length === 0)
         {
             return;
         }
 
-        if (group.length == 0)
+        if (group.length === 0)
         {
             return;
         }
@@ -35354,7 +35996,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             var currentNode = group._container.first._iNext;
                 
-            do  
+            do
             {
                 if (currentNode.exists)
                 {
@@ -35413,7 +36055,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext) {
 
-        if (group.length == 0)
+        if (group.length === 0)
         {
             return;
         }
@@ -35455,7 +36097,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext) {
 
-        if (group1.length == 0 || group2.length == 0)
+        if (group1.length === 0 || group2.length === 0)
         {
             return;
         }
@@ -35464,7 +36106,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             var currentNode = group1._container.first._iNext;
                 
-            do  
+            do
             {
                 if (currentNode.exists)
                 {
@@ -35512,7 +36154,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             this._maxOverlap = body1.deltaAbsX() + body2.deltaAbsX() + this.OVERLAP_BIAS;
 
-            if (body1.deltaX() == 0 && body2.deltaX() == 0)
+            if (body1.deltaX() === 0 && body2.deltaX() === 0)
             {
                 //  They overlap but neither of them are moving
                 body1.embedded = true;
@@ -35523,7 +36165,7 @@ Phaser.Physics.Arcade.prototype = {
                 //  Body1 is moving right and/or Body2 is moving left
                 this._overlap = body1.x + body1.width - body2.x;
 
-                if ((this._overlap > this._maxOverlap) || body1.allowCollision.right == false || body2.allowCollision.left == false)
+                if ((this._overlap > this._maxOverlap) || body1.allowCollision.right === false || body2.allowCollision.left === false)
                 {
                     this._overlap = 0;
                 }
@@ -35538,7 +36180,7 @@ Phaser.Physics.Arcade.prototype = {
                 //  Body1 is moving left and/or Body2 is moving right
                 this._overlap = body1.x - body2.width - body2.x;
 
-                if ((-this._overlap > this._maxOverlap) || body1.allowCollision.left == false || body2.allowCollision.right == false)
+                if ((-this._overlap > this._maxOverlap) || body1.allowCollision.left === false || body2.allowCollision.right === false)
                 {
                     this._overlap = 0;
                 }
@@ -35550,7 +36192,7 @@ Phaser.Physics.Arcade.prototype = {
             }
 
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
-            if (this._overlap != 0)
+            if (this._overlap !== 0)
             {
                 body1.overlapX = this._overlap;
                 body2.overlapX = this._overlap;
@@ -35620,7 +36262,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             this._maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + this.OVERLAP_BIAS;
 
-            if (body1.deltaY() == 0 && body2.deltaY() == 0)
+            if (body1.deltaY() === 0 && body2.deltaY() === 0)
             {
                 //  They overlap but neither of them are moving
                 body1.embedded = true;
@@ -35631,7 +36273,7 @@ Phaser.Physics.Arcade.prototype = {
                 //  Body1 is moving down and/or Body2 is moving up
                 this._overlap = body1.y + body1.height - body2.y;
 
-                if ((this._overlap > this._maxOverlap) || body1.allowCollision.down == false || body2.allowCollision.up == false)
+                if ((this._overlap > this._maxOverlap) || body1.allowCollision.down === false || body2.allowCollision.up === false)
                 {
                     this._overlap = 0;
                 }
@@ -35646,7 +36288,7 @@ Phaser.Physics.Arcade.prototype = {
                 //  Body1 is moving up and/or Body2 is moving down
                 this._overlap = body1.y - body2.height - body2.y;
 
-                if ((-this._overlap > this._maxOverlap) || body1.allowCollision.up == false || body2.allowCollision.down == false)
+                if ((-this._overlap > this._maxOverlap) || body1.allowCollision.up === false || body2.allowCollision.down === false)
                 {
                     this._overlap = 0;
                 }
@@ -35658,7 +36300,7 @@ Phaser.Physics.Arcade.prototype = {
             }
 
             //  Then adjust their positions and velocities accordingly (if there was any overlap)
-            if (this._overlap != 0)
+            if (this._overlap !== 0)
             {
                 body1.overlapY = this._overlap;
                 body2.overlapY = this._overlap;
@@ -35744,7 +36386,7 @@ Phaser.Physics.Arcade.prototype = {
     separateTileX: function (body, tile, separate) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
-        if (body.immovable || body.deltaX() == 0 || Phaser.Rectangle.intersects(body.hullX, tile) == false)
+        if (body.immovable || body.deltaX() === 0 || Phaser.Rectangle.intersects(body.hullX, tile) === false)
         {
             return false;
         }
@@ -35759,8 +36401,8 @@ Phaser.Physics.Arcade.prototype = {
             //  Moving left
             this._overlap = tile.right - body.hullX.x;
 
-            // if ((this._overlap > this._maxOverlap) || body.allowCollision.left == false || tile.tile.collideRight == false)
-            if (body.allowCollision.left == false || tile.tile.collideRight == false)
+            // if ((this._overlap > this._maxOverlap) || body.allowCollision.left === false || tile.tile.collideRight === false)
+            if (body.allowCollision.left === false || tile.tile.collideRight === false)
             {
                 this._overlap = 0;
             }
@@ -35774,8 +36416,8 @@ Phaser.Physics.Arcade.prototype = {
             //  Moving right
             this._overlap = body.hullX.right - tile.x;
 
-            // if ((this._overlap > this._maxOverlap) || body.allowCollision.right == false || tile.tile.collideLeft == false)
-            if (body.allowCollision.right == false || tile.tile.collideLeft == false)
+            // if ((this._overlap > this._maxOverlap) || body.allowCollision.right === false || tile.tile.collideLeft === false)
+            if (body.allowCollision.right === false || tile.tile.collideLeft === false)
             {
                 this._overlap = 0;
             }
@@ -35786,7 +36428,7 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         //  Then adjust their positions and velocities accordingly (if there was any overlap)
-        if (this._overlap != 0)
+        if (this._overlap !== 0)
         {
             if (separate)
             {
@@ -35799,7 +36441,7 @@ Phaser.Physics.Arcade.prototype = {
                     body.x = body.x - this._overlap;
                 }
 
-                if (body.bounce.x == 0)
+                if (body.bounce.x === 0)
                 {
                     body.velocity.x = 0;
                 }
@@ -35830,7 +36472,7 @@ Phaser.Physics.Arcade.prototype = {
     separateTileY: function (body, tile, separate) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
-        if (body.immovable || body.deltaY() == 0 || Phaser.Rectangle.intersects(body.hullY, tile) == false)
+        if (body.immovable || body.deltaY() === 0 || Phaser.Rectangle.intersects(body.hullY, tile) === false)
         {
             return false;
         }
@@ -35845,8 +36487,8 @@ Phaser.Physics.Arcade.prototype = {
             //  Moving up
             this._overlap = tile.bottom - body.hullY.y;
 
-            // if ((this._overlap > this._maxOverlap) || body.allowCollision.up == false || tile.tile.collideDown == false)
-            if (body.allowCollision.up == false || tile.tile.collideDown == false)
+            // if ((this._overlap > this._maxOverlap) || body.allowCollision.up === false || tile.tile.collideDown === false)
+            if (body.allowCollision.up === false || tile.tile.collideDown === false)
             {
                 this._overlap = 0;
             }
@@ -35860,8 +36502,8 @@ Phaser.Physics.Arcade.prototype = {
             //  Moving down
             this._overlap = body.hullY.bottom - tile.y;
 
-            // if ((this._overlap > this._maxOverlap) || body.allowCollision.down == false || tile.tile.collideUp == false)
-            if (body.allowCollision.down == false || tile.tile.collideUp == false)
+            // if ((this._overlap > this._maxOverlap) || body.allowCollision.down === false || tile.tile.collideUp === false)
+            if (body.allowCollision.down === false || tile.tile.collideUp === false)
             {
                 this._overlap = 0;
             }
@@ -35872,7 +36514,7 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         //  Then adjust their positions and velocities accordingly (if there was any overlap)
-        if (this._overlap != 0)
+        if (this._overlap !== 0)
         {
             if (separate)
             {
@@ -35885,7 +36527,7 @@ Phaser.Physics.Arcade.prototype = {
                     body.y = body.y - this._overlap;
                 }
 
-                if (body.bounce.y == 0)
+                if (body.bounce.y === 0)
                 {
                     body.velocity.y = 0;
                 }
@@ -36025,7 +36667,7 @@ Phaser.Physics.Arcade.prototype = {
     velocityFromAngle: function (angle, speed, point) {
 
         if (typeof speed === 'undefined') { speed = 60; }
-        point = point || new Phaser.Point;
+        point = point || new Phaser.Point();
 
         return point.setTo((Math.cos(this.game.math.degToRad(angle)) * speed), (Math.sin(this.game.math.degToRad(angle)) * speed));
 
@@ -36044,7 +36686,7 @@ Phaser.Physics.Arcade.prototype = {
     velocityFromRotation: function (rotation, speed, point) {
 
         if (typeof speed === 'undefined') { speed = 60; }
-        point = point || new Phaser.Point;
+        point = point || new Phaser.Point();
 
         return point.setTo((Math.cos(rotation) * speed), (Math.sin(rotation) * speed));
 
@@ -36063,7 +36705,7 @@ Phaser.Physics.Arcade.prototype = {
     accelerationFromRotation: function (rotation, speed, point) {
 
         if (typeof speed === 'undefined') { speed = 60; }
-        point = point || new Phaser.Point;
+        point = point || new Phaser.Point();
 
         return point.setTo((Math.cos(rotation) * speed), (Math.sin(rotation) * speed));
 
@@ -36292,91 +36934,91 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     /**
     * @property {Phaser.Sprite} sprite - Reference to the parent Sprite.
     */
-	this.sprite = sprite;
+    this.sprite = sprite;
 
     /**
     * @property {Phaser.Game} game - Local reference to game.
     */
-	this.game = sprite.game;
+    this.game = sprite.game;
 
     /**
     * @property {Phaser.Point} offset - The offset of the Physics Body from the Sprite x/y position.
     */
-	this.offset = new Phaser.Point;
+    this.offset = new Phaser.Point();
 
     /**
     * @property {number} x - The x position of the physics body.
     * @readonly
     */
-	this.x = sprite.x;
+    this.x = sprite.x;
 
     /**
     * @property {number} y - The y position of the physics body.
     * @readonly
     */
-	this.y = sprite.y;
+    this.y = sprite.y;
 
     /**
     * @property {number} preX - The previous x position of the physics body.
     * @readonly
     */
-	this.preX = sprite.x;
+    this.preX = sprite.x;
 
     /**
     * @property {number} preY - The previous y position of the physics body.
     * @readonly
     */
-	this.preY = sprite.y;
+    this.preY = sprite.y;
 
     /**
     * @property {number} preRotation - The previous rotation of the physics body.
     * @readonly
     */
-	this.preRotation = sprite.angle;
+    this.preRotation = sprite.angle;
 
     /**
     * @property {number} screenX - The x position of the physics body translated to screen space.
     * @readonly
     */
-	this.screenX = sprite.x;
+    this.screenX = sprite.x;
 
     /**
     * @property {number} screenY - The y position of the physics body translated to screen space.
     * @readonly
     */
-	this.screenY = sprite.y;
+    this.screenY = sprite.y;
 
     /**
     * @property {number} sourceWidth - The un-scaled original size.
     * @readonly
     */
-	this.sourceWidth = sprite.currentFrame.sourceSizeW;
+    this.sourceWidth = sprite.currentFrame.sourceSizeW;
 
     /**
     * @property {number} sourceHeight - The un-scaled original size.
     * @readonly
     */
-	this.sourceHeight = sprite.currentFrame.sourceSizeH;
+    this.sourceHeight = sprite.currentFrame.sourceSizeH;
 
     /**
     * @property {number} width - The calculated width of the physics body.
     */
-	this.width = sprite.currentFrame.sourceSizeW;
+    this.width = sprite.currentFrame.sourceSizeW;
 
     /**
     * @property .numInternal ID cache
     */
-	this.height = sprite.currentFrame.sourceSizeH;
+    this.height = sprite.currentFrame.sourceSizeH;
 
     /**
     * @property {number} halfWidth - The calculated width / 2 of the physics body.
     */
-	this.halfWidth = Math.floor(sprite.currentFrame.sourceSizeW / 2);
+    this.halfWidth = Math.floor(sprite.currentFrame.sourceSizeW / 2);
 
     /**
     * @property {number} halfHeight - The calculated height / 2 of the physics body.
     */
-	this.halfHeight = Math.floor(sprite.currentFrame.sourceSizeH / 2);
+    this.halfHeight = Math.floor(sprite.currentFrame.sourceSizeH / 2);
 
     /**
     * @property {Phaser.Point} center - The center coordinate of the Physics Body.
@@ -36387,38 +37029,38 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @property {number} _sx - Internal cache var.
     * @private
     */
-	this._sx = sprite.scale.x;
+    this._sx = sprite.scale.x;
 
     /**
     * @property {number} _sy - Internal cache var.
     * @private
     */
-	this._sy = sprite.scale.y;
+    this._sy = sprite.scale.y;
 
     /**
     * @property {Phaser.Point} velocity - The velocity in pixels per second sq. of the Body.
     */
-    this.velocity = new Phaser.Point;
+    this.velocity = new Phaser.Point();
 
     /**
     * @property {Phaser.Point} acceleration - The velocity in pixels per second sq. of the Body.
     */
-    this.acceleration = new Phaser.Point;
+    this.acceleration = new Phaser.Point();
 
     /**
     * @property {Phaser.Point} drag - The drag applied to the motion of the Body.
     */
-    this.drag = new Phaser.Point;
+    this.drag = new Phaser.Point();
 
     /**
     * @property {Phaser.Point} gravity - A private Gravity setting for the Body.
     */
-    this.gravity = new Phaser.Point;
+    this.gravity = new Phaser.Point();
 
     /**
     * @property {Phaser.Point} bounce - The elasticitiy of the Body when colliding. bounce.x/y = 1 means full rebound, bounce.x/y = 0.5 means 50% rebound velocity.
     */
-    this.bounce = new Phaser.Point;
+    this.bounce = new Phaser.Point();
 
     /**
     * @property {Phaser.Point} maxVelocity - The maximum velocity in pixels per second sq. that the Body can reach.
@@ -36474,7 +37116,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this.quadTreeIndex = -1;
 
-    //	Allow collision
+    //  Allow collision
 
     /**
     * Set the allowCollision properties to control which directions collision is processed for this Body.
@@ -36592,20 +37234,20 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade#updateBounds
     * @protected
     */
-	updateBounds: function (centerX, centerY, scaleX, scaleY) {
+    updateBounds: function (centerX, centerY, scaleX, scaleY) {
 
-		if (scaleX != this._sx || scaleY != this._sy)
-		{
-			this.width = this.sourceWidth * scaleX;
-			this.height = this.sourceHeight * scaleY;
-			this.halfWidth = Math.floor(this.width / 2);
-			this.halfHeight = Math.floor(this.height / 2);
-			this._sx = scaleX;
-			this._sy = scaleY;
+        if (scaleX != this._sx || scaleY != this._sy)
+        {
+            this.width = this.sourceWidth * scaleX;
+            this.height = this.sourceHeight * scaleY;
+            this.halfWidth = Math.floor(this.width / 2);
+            this.halfHeight = Math.floor(this.height / 2);
+            this._sx = scaleX;
+            this._sy = scaleY;
             this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
-		}
+        }
 
-	},
+    },
 
     /**
     * Internal method.
@@ -36613,55 +37255,55 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade#preUpdate
     * @protected
     */
-	preUpdate: function () {
+    preUpdate: function () {
 
-		//	Store and reset collision flags
-	    this.wasTouching.none = this.touching.none;
-	    this.wasTouching.up = this.touching.up;
-	    this.wasTouching.down = this.touching.down;
-	    this.wasTouching.left = this.touching.left;
-	    this.wasTouching.right = this.touching.right;
+        //  Store and reset collision flags
+        this.wasTouching.none = this.touching.none;
+        this.wasTouching.up = this.touching.up;
+        this.wasTouching.down = this.touching.down;
+        this.wasTouching.left = this.touching.left;
+        this.wasTouching.right = this.touching.right;
 
-	    this.touching.none = true;
-	    this.touching.up = false;
-	    this.touching.down = false;
-	    this.touching.left = false;
-	    this.touching.right = false;
+        this.touching.none = true;
+        this.touching.up = false;
+        this.touching.down = false;
+        this.touching.left = false;
+        this.touching.right = false;
 
-	    this.embedded = false;
+        this.embedded = false;
 
-		this.screenX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-		this.screenY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+        this.screenX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+        this.screenY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 
         this.preX = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
         this.preY = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
 
-		this.preRotation = this.sprite.angle;
+        this.preRotation = this.sprite.angle;
 
-		this.x = this.preX;
-		this.y = this.preY;
-		this.rotation = this.preRotation;
+        this.x = this.preX;
+        this.y = this.preY;
+        this.rotation = this.preRotation;
 
-		if (this.moves)
-		{
-			this.game.physics.updateMotion(this);
+        if (this.moves)
+        {
+            this.game.physics.updateMotion(this);
 
-			if (this.collideWorldBounds)
-			{
-				this.checkWorldBounds();
-			}
+            if (this.collideWorldBounds)
+            {
+                this.checkWorldBounds();
+            }
 
-			this.updateHulls();
+            this.updateHulls();
         }
 
-		if (this.skipQuadTree == false && this.allowCollision.none == false && this.sprite.visible && this.sprite.alive)
-		{
-		    this.quadTreeIDs = [];
-		    this.quadTreeIndex = -1;
-			this.game.physics.quadTree.insert(this);
-		}
+        if (this.skipQuadTree === false && this.allowCollision.none === false && this.sprite.visible && this.sprite.alive)
+        {
+            this.quadTreeIDs = [];
+            this.quadTreeIndex = -1;
+            this.game.physics.quadTree.insert(this);
+        }
 
-	},
+    },
 
     /**
     * Internal method.
@@ -36669,25 +37311,25 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade#postUpdate
     * @protected
     */
-	postUpdate: function () {
+    postUpdate: function () {
 
-		if (this.deltaX() < 0)
-		{
-			this.facing = Phaser.LEFT;
-		}
-		else if (this.deltaX() > 0)
-		{
-			this.facing = Phaser.RIGHT;
-		}
+        if (this.deltaX() < 0)
+        {
+            this.facing = Phaser.LEFT;
+        }
+        else if (this.deltaX() > 0)
+        {
+            this.facing = Phaser.RIGHT;
+        }
 
-		if (this.deltaY() < 0)
-		{
-			this.facing = Phaser.UP;
-		}
-		else if (this.deltaY() > 0)
-		{
-			this.facing = Phaser.DOWN;
-		}
+        if (this.deltaY() < 0)
+        {
+            this.facing = Phaser.UP;
+        }
+        else if (this.deltaY() > 0)
+        {
+            this.facing = Phaser.DOWN;
+        }
 
         if (this.deltaX() !== 0 || this.deltaY() !== 0)
         {
@@ -36696,12 +37338,12 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
         }
 
-		if (this.allowRotation)
-		{
-			this.sprite.angle += this.deltaZ();
-		}
+        if (this.allowRotation)
+        {
+            this.sprite.angle += this.deltaZ();
+        }
 
-	},
+    },
 
     /**
     * Internal method.
@@ -36709,12 +37351,12 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade#updateHulls
     * @protected
     */
-	updateHulls: function () {
+    updateHulls: function () {
 
-		this.hullX.setTo(this.x, this.preY, this.width, this.height);
-		this.hullY.setTo(this.preX, this.y, this.width, this.height);
+        this.hullX.setTo(this.x, this.preY, this.width, this.height);
+        this.hullY.setTo(this.preX, this.y, this.width, this.height);
 
-	},
+    },
 
     /**
     * Internal method.
@@ -36722,31 +37364,31 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade#checkWorldBounds
     * @protected
     */
-	checkWorldBounds: function () {
+    checkWorldBounds: function () {
 
-		if (this.x < this.game.world.bounds.x)
-		{
-			this.x = this.game.world.bounds.x;
-			this.velocity.x *= -this.bounce.x;
-		}
-		else if (this.right > this.game.world.bounds.right)
-		{
-			this.x = this.game.world.bounds.right - this.width;
-			this.velocity.x *= -this.bounce.x;
-		}
+        if (this.x < this.game.world.bounds.x)
+        {
+            this.x = this.game.world.bounds.x;
+            this.velocity.x *= -this.bounce.x;
+        }
+        else if (this.right > this.game.world.bounds.right)
+        {
+            this.x = this.game.world.bounds.right - this.width;
+            this.velocity.x *= -this.bounce.x;
+        }
 
-		if (this.y < this.game.world.bounds.y)
-		{
-			this.y = this.game.world.bounds.y;
-			this.velocity.y *= -this.bounce.y;
-		}
-		else if (this.bottom > this.game.world.bounds.bottom)
-		{
-			this.y = this.game.world.bounds.bottom - this.height;
-			this.velocity.y *= -this.bounce.y;
-		}
+        if (this.y < this.game.world.bounds.y)
+        {
+            this.y = this.game.world.bounds.y;
+            this.velocity.y *= -this.bounce.y;
+        }
+        else if (this.bottom > this.game.world.bounds.bottom)
+        {
+            this.y = this.game.world.bounds.bottom - this.height;
+            this.velocity.y *= -this.bounce.y;
+        }
 
-	},
+    },
 
     /**
     * You can modify the size of the physics Body to be any dimension you need.
@@ -36759,46 +37401,46 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @param {number} offsetX - The X offset of the Body from the Sprite position.
     * @param {number} offsetY - The Y offset of the Body from the Sprite position.
     */
-	setSize: function (width, height, offsetX, offsetY) {
+    setSize: function (width, height, offsetX, offsetY) {
 
-		offsetX = offsetX || this.offset.x;
-		offsetY = offsetY || this.offset.y;
+        offsetX = offsetX || this.offset.x;
+        offsetY = offsetY || this.offset.y;
 
-		this.sourceWidth = width;
-		this.sourceHeight = height;
-		this.width = this.sourceWidth * this._sx;
-		this.height = this.sourceHeight * this._sy;
-		this.halfWidth = Math.floor(this.width / 2);
-		this.halfHeight = Math.floor(this.height / 2);
-		this.offset.setTo(offsetX, offsetY);
+        this.sourceWidth = width;
+        this.sourceHeight = height;
+        this.width = this.sourceWidth * this._sx;
+        this.height = this.sourceHeight * this._sy;
+        this.halfWidth = Math.floor(this.width / 2);
+        this.halfHeight = Math.floor(this.height / 2);
+        this.offset.setTo(offsetX, offsetY);
 
         this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
 
-	},
+    },
 
     /**
     * Resets all Body values (velocity, acceleration, rotation, etc)
     *
     * @method Phaser.Physics.Arcade#reset
     */
-	reset: function () {
+    reset: function () {
 
-		this.velocity.setTo(0, 0);
-		this.acceleration.setTo(0, 0);
+        this.velocity.setTo(0, 0);
+        this.acceleration.setTo(0, 0);
 
-	    this.angularVelocity = 0;
-	    this.angularAcceleration = 0;
+        this.angularVelocity = 0;
+        this.angularAcceleration = 0;
         this.preX = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
         this.preY = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
-		this.preRotation = this.sprite.angle;
+        this.preRotation = this.sprite.angle;
 
-		this.x = this.preX;
-		this.y = this.preY;
-		this.rotation = this.preRotation;
+        this.x = this.preX;
+        this.y = this.preY;
+        this.rotation = this.preRotation;
         
         this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
 
-	},
+    },
 
     /**
     * Returns the absolute delta x value.
@@ -36856,7 +37498,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
     * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
     * @method bottom
     * @return {number}
-    **/
+    */
     get: function () {
         return this.y + this.height;
     },
@@ -36865,7 +37507,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
     * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
     * @method bottom
     * @param {number} value
-    **/    
+    */
     set: function (value) {
 
         if (value <= this.y)
@@ -36892,7 +37534,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
     * However it does affect the width property.
     * @method right
     * @return {number}
-    **/    
+    */
     get: function () {
         return this.x + this.width;
     },
@@ -36902,7 +37544,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
     * However it does affect the width property.
     * @method right
     * @param {number} value
-    **/
+    */
     set: function (value) {
 
         if (value <= this.x)
@@ -36934,62 +37576,67 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
 */
 Phaser.Particles = function (game) {
 
-	/**
-    * @property {Description} emitters - Description.
-	*/
-	this.emitters = {};
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
+    this.game = game;
 
-	/**
-	* @property {number} ID - Description.
-	* @default
-	*/
-	this.ID = 0;
+    /**
+    * @property {object} emitters - Internal emitters store.
+    */
+    this.emitters = {};
+
+    /**
+    * @property {number} ID - 
+    * @default
+    */
+    this.ID = 0;
 
 };
 
 Phaser.Particles.prototype = {
 
-	/**
-	* Adds a new Particle Emitter to the Particle Manager.
-	* @method Phaser.Particles#add
-	* @param {Phaser.Emitter} emitter - Description.
-	* @return {Phaser.Emitter} The emitter that was added.
-	*/
-	add: function (emitter) {
+    /**
+    * Adds a new Particle Emitter to the Particle Manager.
+    * @method Phaser.Particles#add
+    * @param {Phaser.Emitter} emitter - The emitter to be added to the particle manager.
+    * @return {Phaser.Emitter} The emitter that was added.
+    */
+    add: function (emitter) {
 
-		this.emitters[emitter.name] = emitter;
+        this.emitters[emitter.name] = emitter;
 
-		return emitter;
+        return emitter;
 
-	},
+    },
 
-	/**
-	* Removes an existing Particle Emitter from the Particle Manager.
-	* @method Phaser.Particles#remove
-	* @param {Phaser.Emitter} emitter - The emitter to remove.
-	*/
-	remove: function (emitter) {
+    /**
+    * Removes an existing Particle Emitter from the Particle Manager.
+    * @method Phaser.Particles#remove
+    * @param {Phaser.Emitter} emitter - The emitter to remove.
+    */
+    remove: function (emitter) {
 
-		delete this.emitters[emitter.name];
+        delete this.emitters[emitter.name];
 
-	},
+    },
 
-	/**
-	* Called by the core game loop. Updates all Emitters who have their exists value set to true.
-	* @method Phaser.Particles#update
-	* @protected
-	*/
-	update: function () {
+    /**
+    * Called by the core game loop. Updates all Emitters who have their exists value set to true.
+    * @method Phaser.Particles#update
+    * @protected
+    */
+    update: function () {
 
-		for (var key in this.emitters)
-		{
-			if (this.emitters[key].exists)
-			{
-				this.emitters[key].update();
-			}
-		}
+        for (var key in this.emitters)
+        {
+            if (this.emitters[key].exists)
+            {
+                this.emitters[key].update();
+            }
+        }
 
-	}
+    }
 
 };
 Phaser.Particles.Arcade = {}
@@ -37021,36 +37668,36 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     * @property {number} maxParticles - The total number of particles in this emitter..
     * @default
     */
-	this.maxParticles = maxParticles || 50;
+    this.maxParticles = maxParticles || 50;
 
-	Phaser.Group.call(this, game);
+    Phaser.Group.call(this, game);
 
     /**
-	* @property {string} name - Description.
-	*/
+    * @property {string} name - Description.
+    */
     this.name = 'emitter' + this.game.particles.ID++;
 
     /**
-	* @property {Description} type - Description.
-	*/
+    * @property {Description} type - Description.
+    */
     this.type = Phaser.EMITTER;
 
     /**
-     * @property {number} x - The X position of the top left corner of the emitter in world space.
-     * @default
-     */
+    * @property {number} x - The X position of the top left corner of the emitter in world space.
+    * @default
+    */
     this.x = 0;
 
     /**
-     * @property {number} y - The Y position of the top left corner of emitter in world space.
-     * @default
-     */
+    * @property {number} y - The Y position of the top left corner of emitter in world space.
+    * @default
+    */
     this.y = 0;
 
     /**
-     * @property {number} width - The width of the emitter.  Particles can be randomly generated from anywhere within this box.
-     * @default
-     */
+    * @property {number} width - The width of the emitter.  Particles can be randomly generated from anywhere within this box.
+    * @default
+    */
     this.width = 1;
 
     /**
@@ -37082,138 +37729,138 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.minParticleScale = 1;
 
     /**
-     * The maximum possible scale of a particle.
-     * The default value is 1.
-     * @property {number} maxParticleScale
-     * @default
-     */
+    * The maximum possible scale of a particle.
+    * The default value is 1.
+    * @property {number} maxParticleScale
+    * @default
+    */
     this.maxParticleScale = 1;
 
     /**
-     * The minimum possible angular velocity of a particle.  The default value is -360.
-     * @property {number} minRotation
-     * @default
-     */
+    * The minimum possible angular velocity of a particle.  The default value is -360.
+    * @property {number} minRotation
+    * @default
+    */
     this.minRotation = -360;
 
     /**
-     * The maximum possible angular velocity of a particle.  The default value is 360.
-     * @property {number} maxRotation
-     * @default
-     */
+    * The maximum possible angular velocity of a particle.  The default value is 360.
+    * @property {number} maxRotation
+    * @default
+    */
     this.maxRotation = 360;
 
     /**
-     * Sets the <code>gravity.y</code> of each particle to this value on launch.
-     * @property {number} gravity
-     * @default
-     */
+    * Sets the <code>gravity.y</code> of each particle to this value on launch.
+    * @property {number} gravity
+    * @default
+    */
     this.gravity = 2;
 
     /**
-     * Set your own particle class type here.
-     * @property {Description} particleClass
-     * @default
-     */
+    * Set your own particle class type here.
+    * @property {Description} particleClass
+    * @default
+    */
     this.particleClass = null;
 
     /**
-     * The X and Y drag component of particles launched from the emitter.
-     * @property {Phaser.Point} particleDrag
-     */
+    * The X and Y drag component of particles launched from the emitter.
+    * @property {Phaser.Point} particleDrag
+    */
     this.particleDrag = new Phaser.Point();
 
     /**
-     * The angular drag component of particles launched from the emitter if they are rotating.
-     * @property {number} angularDrag
-     * @default
-     */
+    * The angular drag component of particles launched from the emitter if they are rotating.
+    * @property {number} angularDrag
+    * @default
+    */
     this.angularDrag = 0;
 
     /**
-     * How often a particle is emitted in ms (if emitter is started with Explode == false).
-     * @property {boolean} frequency
-     * @default
-     */
+    * How often a particle is emitted in ms (if emitter is started with Explode === false).
+    * @property {boolean} frequency
+    * @default
+    */
     this.frequency = 100;
 
     /**
-     * How long each particle lives once it is emitted in ms. Default is 2 seconds.
-     * Set lifespan to 'zero' for particles to live forever.
-     * @property {number} lifespan
-     * @default
-     */
+    * How long each particle lives once it is emitted in ms. Default is 2 seconds.
+    * Set lifespan to 'zero' for particles to live forever.
+    * @property {number} lifespan
+    * @default
+    */
     this.lifespan = 2000;
 
     /**
-     * How much each particle should bounce on each axis.  1 = full bounce, 0 = no bounce.
-     * @property {Phaser.Point} bounce
-     */
+    * How much each particle should bounce on each axis.  1 = full bounce, 0 = no bounce.
+    * @property {Phaser.Point} bounce
+    */
     this.bounce = new Phaser.Point();
 
     /**
-     * Internal helper for deciding how many particles to launch.
-     * @property {number} _quantity
-     * @private
-     * @default
-     */
+    * Internal helper for deciding how many particles to launch.
+    * @property {number} _quantity
+    * @private
+    * @default
+    */
     this._quantity = 0;
 
-   /**
-     * Internal helper for deciding when to launch particles or kill them.
-     * @property {number} _timer
-     * @private
-     * @default
-     */
+    /**
+    * Internal helper for deciding when to launch particles or kill them.
+    * @property {number} _timer
+    * @private
+    * @default
+    */
     this._timer = 0;
 
     /**
-     * Internal counter for figuring out how many particles to launch.
-     * @property {number} _counter
-     * @private
-     * @default
-     */
+    * Internal counter for figuring out how many particles to launch.
+    * @property {number} _counter
+    * @private
+    * @default
+    */
     this._counter = 0;
 
     /**
-     * Internal helper for the style of particle emission (all at once, or one at a time).
-     * @property {boolean} _explode
-     * @private
-     * @default
-     */
+    * Internal helper for the style of particle emission (all at once, or one at a time).
+    * @property {boolean} _explode
+    * @private
+    * @default
+    */
     this._explode = true;
 
     /**
-     * Determines whether the emitter is currently emitting particles.
-     * It is totally safe to directly toggle this.
-     * @property {boolean} on
-     * @default
-     */
+    * Determines whether the emitter is currently emitting particles.
+    * It is totally safe to directly toggle this.
+    * @property {boolean} on
+    * @default
+    */
     this.on = false;
 
     /**
-     * Determines whether the emitter is being updated by the core game loop.
-     * @property {boolean} exists
-     * @default
-     */
+    * Determines whether the emitter is being updated by the core game loop.
+    * @property {boolean} exists
+    * @default
+    */
     this.exists = true;
 
     /**
-     * The point the particles are emitted from.
-     * Emitter.x and Emitter.y control the containers location, which updates all current particles
-     * Emitter.emitX and Emitter.emitY control the emission location relative to the x/y position.
-     * @property {boolean} emitX
-     */
+    * The point the particles are emitted from.
+    * Emitter.x and Emitter.y control the containers location, which updates all current particles
+    * Emitter.emitX and Emitter.emitY control the emission location relative to the x/y position.
+    * @property {boolean} emitX
+    */
     this.emitX = x;
     
     /**
-     * The point the particles are emitted from.
-     * Emitter.x and Emitter.y control the containers location, which updates all current particles
-     * Emitter.emitX and Emitter.emitY control the emission location relative to the x/y position.
-     * @property {boolean} emitY
-     */
+    * The point the particles are emitted from.
+    * Emitter.x and Emitter.y control the containers location, which updates all current particles
+    * Emitter.emitX and Emitter.emitY control the emission location relative to the x/y position.
+    * @property {boolean} emitY
+    */
     this.emitY = y;
-	
+    
 };
 
 Phaser.Particles.Arcade.Emitter.prototype = Object.create(Phaser.Group.prototype);
@@ -37229,12 +37876,12 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
     {
         if (this._explode)
         {
-			this._counter = 0;
+            this._counter = 0;
 
             do
             {
-            	this.emitParticle();
-            	this._counter++;
+                this.emitParticle();
+                this._counter++;
             }
             while (this._counter < this._quantity);
 
@@ -37242,22 +37889,22 @@ Phaser.Particles.Arcade.Emitter.prototype.update = function () {
         }
         else
         {
-        	if (this.game.time.now >= this._timer)
-        	{
+            if (this.game.time.now >= this._timer)
+            {
                 this.emitParticle();
-				
-				this._counter++;
+                
+                this._counter++;
 
                 if (this._quantity > 0)
                 {
-	                if (this._counter >= this._quantity)
-	                {
-	                	this.on = false;
-	                }
+                    if (this._counter >= this._quantity)
+                    {
+                        this.on = false;
+                    }
                 }
 
                 this._timer = this.game.time.now + this.frequency;
-        	}
+            }
         }
     }
 
@@ -37281,7 +37928,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
         frames = 0;
     }
 
-	quantity = quantity || this.maxParticles;
+    quantity = quantity || this.maxParticles;
     collide = collide || 0;
 
     if (typeof collideWorldBounds == 'undefined')
@@ -37310,10 +37957,10 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
 
             particle = new Phaser.Sprite(this.game, 0, 0, rndKey, rndFrame);
         }
-        else
-        {
+        // else
+        // {
             // particle = new this.particleClass(this.game);
-        }
+        // }
 
         if (collide > 0)
         {
@@ -37375,18 +38022,18 @@ Phaser.Particles.Arcade.Emitter.prototype.revive = function () {
  */
 Phaser.Particles.Arcade.Emitter.prototype.start = function (explode, lifespan, frequency, quantity) {
 
-	if (typeof explode !== 'boolean')
-	{
-		explode = true;
-	}
+    if (typeof explode !== 'boolean')
+    {
+        explode = true;
+    }
 
-	lifespan = lifespan || 0;
+    lifespan = lifespan || 0;
 
-	//	How many ms between emissions?
-	frequency = frequency || 250;
+    //  How many ms between emissions?
+    frequency = frequency || 250;
 
-	//	Total number of particles to emit
-	quantity = quantity || 0;
+    //  Total number of particles to emit
+    quantity = quantity || 0;
 
     this.revive();
 
@@ -37421,16 +38068,16 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
 
     if (particle == null)
     {
-    	return;
+        return;
     }
 
     if (this.width > 1 || this.height > 1)
     {
-    	particle.reset(this.game.rnd.integerInRange(this.left, this.right), this.game.rnd.integerInRange(this.top, this.bottom));
+        particle.reset(this.game.rnd.integerInRange(this.left, this.right), this.game.rnd.integerInRange(this.top, this.bottom));
     }
     else
     {
-    	particle.reset(this.emitX, this.emitY);
+        particle.reset(this.emitX, this.emitY);
     }
 
     particle.lifespan = this.lifespan;
@@ -37499,8 +38146,8 @@ Phaser.Particles.Arcade.Emitter.prototype.setSize = function (width, height) {
 */
 Phaser.Particles.Arcade.Emitter.prototype.setXSpeed = function (min, max) {
 
-	min = min || 0;
-	max = max || 0;
+    min = min || 0;
+    max = max || 0;
 
     this.minParticleSpeed.x = min;
     this.maxParticleSpeed.x = max;
@@ -37515,8 +38162,8 @@ Phaser.Particles.Arcade.Emitter.prototype.setXSpeed = function (min, max) {
 */
 Phaser.Particles.Arcade.Emitter.prototype.setYSpeed = function (min, max) {
 
-	min = min || 0;
-	max = max || 0;
+    min = min || 0;
+    max = max || 0;
 
     this.minParticleSpeed.y = min;
     this.maxParticleSpeed.y = max;
@@ -37531,8 +38178,8 @@ Phaser.Particles.Arcade.Emitter.prototype.setYSpeed = function (min, max) {
 */
 Phaser.Particles.Arcade.Emitter.prototype.setRotation = function (min, max) {
 
-	min = min || 0;
-	max = max || 0;
+    min = min || 0;
+    max = max || 0;
 
     this.minRotation = min;
     this.maxRotation = max;
@@ -37675,7 +38322,6 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "bottom", {
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 * @module       Phaser.Tile
 */
-
 
 /**
 * Create a new <code>Tile</code>.
@@ -37862,7 +38508,7 @@ Object.defineProperty(Phaser.Tile.prototype, "bottom", {
     * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
     * @method bottom
     * @return {number}
-    **/
+    */
     get: function () {
         return this.y + this.height;
     }
@@ -37876,7 +38522,7 @@ Object.defineProperty(Phaser.Tile.prototype, "right", {
     * However it does affect the width property.
     * @method right
     * @return {number}
-    **/    
+    */
     get: function () {
         return this.x + this.width;
     }
@@ -37885,26 +38531,26 @@ Object.defineProperty(Phaser.Tile.prototype, "right", {
 
 Phaser.Tilemap = function (game, key) {
 
-	/**
-	* @property {Phaser.Game} game - Description.
-	*/ 
+    /**
+    * @property {Phaser.Game} game - Description.
+    */
     this.game = game;
 
     /**
     * @property {array} layers - Description.
     */
-	this.layers;
+    this.layers = null;
 
     if (typeof key === 'string')
     {
-    	this.key = key;
+        this.key = key;
 
-		this.layers = game.cache.getTilemapData(key).layers;
+        this.layers = game.cache.getTilemapData(key).layers;
         this.calculateIndexes();
     }
     else
     {
-	    this.layers = [];
+        this.layers = [];
     }
 
     this.currentLayer = 0;
@@ -37940,15 +38586,15 @@ Phaser.Tilemap.prototype = {
 
         this.currentLayer = this.layers.push({
 
-			name: name, 
-			width: width, 
-			height: height, 
-			alpha: 1, 
-			visible: true, 
-			tileMargin: 0, 
-			tileSpacing: 0,
-			format: Phaser.Tilemap.CSV,
-			data: data,
+            name: name,
+            width: width,
+            height: height,
+            alpha: 1,
+            visible: true,
+            tileMargin: 0,
+            tileSpacing: 0,
+            format: Phaser.Tilemap.CSV,
+            data: data,
             indexes: []
 
         });
@@ -37981,10 +38627,10 @@ Phaser.Tilemap.prototype = {
 
     setLayer: function (layer) {
 
-    	if (this.layers[layer])
-    	{
-    		this.currentLayer = layer;
-    	}
+        if (this.layers[layer])
+        {
+            this.currentLayer = layer;
+        }
 
     },
 
@@ -37999,10 +38645,10 @@ Phaser.Tilemap.prototype = {
 
         if (typeof layer === "undefined") { layer = this.currentLayer; }
 
-    	if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
-    	{
-    		this.layers[layer].data[y][x] = index;
-    	}
+        if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
+        {
+            this.layers[layer].data[y][x] = index;
+        }
 
         this.dirty = true;
 
@@ -38158,7 +38804,7 @@ Phaser.Tilemap.prototype = {
 
     },
 
-    swapHandler: function (value, index, array) {
+    swapHandler: function (value, index) {
 
         if (value.index === this._tempA)
         {
@@ -38347,14 +38993,14 @@ Phaser.Tilemap.prototype = {
 
                 if (this.layers[this.currentLayer].data[y][x] > 1)
                 {
-                	if (this.debugMap[this.layers[this.currentLayer].data[y][x]])
-                	{
-	                    args.push("background: " + this.debugMap[this.layers[this.currentLayer].data[y][x]]);
-                	}
-                	else
-                	{
-	                    args.push("background: #ffffff");
-                	}
+                    if (this.debugMap[this.layers[this.currentLayer].data[y][x]])
+                    {
+                        args.push("background: " + this.debugMap[this.layers[this.currentLayer].data[y][x]]);
+                    }
+                    else
+                    {
+                        args.push("background: #ffffff");
+                    }
                 }
                 else
                 {
@@ -38382,33 +39028,33 @@ Phaser.Tilemap.prototype = {
 //  Maybe should extend Sprite?
 Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, tilemap, layer) {
 
-	/**
-	* @property {Phaser.Game} game - Description.
-	*/ 
+    /**
+    * @property {Phaser.Game} game - Description.
+    */
     this.game = game;
     
-	/**
-	* @property {Description} canvas - Description.
-	* @default
-	*/
+    /**
+    * @property {Description} canvas - Description.
+    * @default
+    */
     this.canvas = Phaser.Canvas.create(renderWidth, renderHeight);
     
-	/**
-	* @property {Description} context - Description.
-	* @default
-	*/
+    /**
+    * @property {Description} context - Description.
+    * @default
+    */
     this.context = this.canvas.getContext('2d');
     
-	/**
-	* @property {Description} baseTexture - Description.
-	* @default
-	*/
+    /**
+    * @property {Description} baseTexture - Description.
+    * @default
+    */
     this.baseTexture = new PIXI.BaseTexture(this.canvas);
     
-	/**
-	* @property {Description} texture - Description.
-	* @default
-	*/
+    /**
+    * @property {Description} texture - Description.
+    * @default
+    */
     this.texture = new PIXI.Texture(this.baseTexture);
     
     this.textureFrame = new Phaser.Frame(0, 0, 0, renderWidth, renderHeight, 'tilemaplayer', game.rnd.uuid());
@@ -38526,18 +39172,18 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
 
     /**
     * @property {number} scrollFactorX - speed at which this layer scrolls
-	* horizontally, relative to the camera (e.g. scrollFactorX of 0.5 scrolls
-	* half as quickly as the 'normal' camera-locked layers do)
-	* @default 1
+    * horizontally, relative to the camera (e.g. scrollFactorX of 0.5 scrolls
+    * half as quickly as the 'normal' camera-locked layers do)
+    * @default 1
     */
-	this.scrollFactorX = 1;
+    this.scrollFactorX = 1;
     /**
     * @property {number} scrollFactorY - speed at which this layer scrolls
-	* vertically, relative to the camera (e.g. scrollFactorY of 0.5 scrolls
-	* half as quickly as the 'normal' camera-locked layers do)
-	* @default 1
+    * vertically, relative to the camera (e.g. scrollFactorY of 0.5 scrolls
+    * half as quickly as the 'normal' camera-locked layers do)
+    * @default 1
     */
-	this.scrollFactorY = 1;
+    this.scrollFactorY = 1;
 
     this.tilemap = null;
     this.layer = null;
@@ -38632,14 +39278,14 @@ Phaser.TilemapLayer.prototype.updateMapData = function (tilemap, layer) {
  */
 Phaser.TilemapLayer.prototype._fixX = function(x) {
 
-	if (this.scrollFactorX === 1)
+    if (this.scrollFactorX === 1)
     {
         return x;
     }
 
-	var left_edge = x - (this._x / this.scrollFactorX);
+    var leftEdge = x - (this._x / this.scrollFactorX);
 
-	return this._x + left_edge;
+    return this._x + leftEdge;
 
 }
 
@@ -38651,14 +39297,14 @@ Phaser.TilemapLayer.prototype._fixX = function(x) {
  */
 Phaser.TilemapLayer.prototype._unfixX = function(x) {
 
-	if (this.scrollFactorX === 1)
+    if (this.scrollFactorX === 1)
     {
         return x;
     }
 
-	var left_edge = x - this._x;
+    var leftEdge = x - this._x;
 
-	return (this._x / this.scrollFactorX) + left_edge;
+    return (this._x / this.scrollFactorX) + leftEdge;
 
 }
 
@@ -38670,14 +39316,14 @@ Phaser.TilemapLayer.prototype._unfixX = function(x) {
  */
 Phaser.TilemapLayer.prototype._fixY = function(y) {
 
-	if (this.scrollFactorY === 1)
+    if (this.scrollFactorY === 1)
     {
         return y;
     }
 
-	var top_edge = y - (this._y / this.scrollFactorY);
+    var topEdge = y - (this._y / this.scrollFactorY);
 
-	return this._y + top_edge;
+    return this._y + topEdge;
 
 }
 
@@ -38689,14 +39335,14 @@ Phaser.TilemapLayer.prototype._fixY = function(y) {
  */
 Phaser.TilemapLayer.prototype._unfixY = function(y) {
 
-	if (this.scrollFactorY === 1)
+    if (this.scrollFactorY === 1)
     {
         return y;
     }
 
-	var top_edge = y - this._y;
+    var topEdge = y - this._y;
 
-	return (this._y / this.scrollFactorY) + top_edge;
+    return (this._y / this.scrollFactorY) + topEdge;
 
 }
 
@@ -38710,7 +39356,7 @@ Phaser.TilemapLayer.prototype.getTileX = function (x) {
 
     var tileWidth = this.tileWidth * this.scale.x;
 
-	return this.game.math.snapToFloor(this._fixX(x), tileWidth) / tileWidth;
+    return this.game.math.snapToFloor(this._fixX(x), tileWidth) / tileWidth;
 
 }
 
@@ -38724,7 +39370,7 @@ Phaser.TilemapLayer.prototype.getTileY = function (y) {
 
     var tileHeight = this.tileHeight * this.scale.y;
 
-	return this.game.math.snapToFloor(this._fixY(y), tileHeight) / tileHeight;
+    return this.game.math.snapToFloor(this._fixY(y), tileHeight) / tileHeight;
 
 }
 
@@ -38765,9 +39411,9 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
         y = 0;
     }
 
-	// adjust the x,y coordinates for scrollFactor
-	x = this._fixX( x );
-	y = this._fixY( y );
+    // adjust the x,y coordinates for scrollFactor
+    x = this._fixX( x );
+    y = this._fixY( y );
 
     if (width > this.widthInPixels)
     {
@@ -38814,11 +39460,11 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
                 sx = _tile.width * this.scale.x;
                 sy = _tile.height * this.scale.y;
 
-                if (collides == false || (collides && _tile.collideNone == false))
+                if (collides === false || (collides && _tile.collideNone === false))
                 {
-					// convert tile coordinates back to camera space for return
-					var _wx = this._unfixX( wx*sx ) / tileWidth;
-					var _wy = this._unfixY( wy*sy ) / tileHeight;
+                    // convert tile coordinates back to camera space for return
+                    var _wx = this._unfixX( wx*sx ) / tileWidth;
+                    var _wy = this._unfixY( wy*sy ) / tileHeight;
                     this._results.push({ x: _wx * sx, right: (_wx * sx) + sx, y: _wy * sy, bottom: (_wy * sy) + sy, width: sx, height: sy, tx: _wx, ty: _wy, tile: _tile });
                 }
             }
@@ -39016,185 +39662,185 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
 
 Phaser.TilemapParser = {
 
-	tileset: function (game, key, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing) {
+    tileset: function (game, key, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing) {
 
-	    //  How big is our image?
-	    var img = game.cache.getTilesetImage(key);
+        //  How big is our image?
+        var img = game.cache.getTilesetImage(key);
 
-	    if (img == null)
-	    {
-	        return null;
-	    }
+        if (img == null)
+        {
+            return null;
+        }
 
-	    var width = img.width;
-	    var height = img.height;
+        var width = img.width;
+        var height = img.height;
 
-	    //	If no tile width/height is given, try and figure it out (won't work if the tileset has margin/spacing)
-	    if (tileWidth <= 0)
-	    {
-	        tileWidth = Math.floor(-width / Math.min(-1, tileWidth));
-	    }
+        //  If no tile width/height is given, try and figure it out (won't work if the tileset has margin/spacing)
+        if (tileWidth <= 0)
+        {
+            tileWidth = Math.floor(-width / Math.min(-1, tileWidth));
+        }
 
-	    if (tileHeight <= 0)
-	    {
-	        tileHeight = Math.floor(-height / Math.min(-1, tileHeight));
-	    }
+        if (tileHeight <= 0)
+        {
+            tileHeight = Math.floor(-height / Math.min(-1, tileHeight));
+        }
 
-	    var row = Math.round(width / tileWidth);
-	    var column = Math.round(height / tileHeight);
-	    var total = row * column;
-	    
-	    if (tileMax !== -1)
-	    {
-	        total = tileMax;
-	    }
+        var row = Math.round(width / tileWidth);
+        var column = Math.round(height / tileHeight);
+        var total = row * column;
+        
+        if (tileMax !== -1)
+        {
+            total = tileMax;
+        }
 
-	    //  Zero or smaller than tile sizes?
-	    if (width == 0 || height == 0 || width < tileWidth || height < tileHeight || total === 0)
-	    {
-	        console.warn("Phaser.TilemapParser.tileSet: width/height zero or width/height < given tileWidth/tileHeight");
-	        return null;
-	    }
+        //  Zero or smaller than tile sizes?
+        if (width === 0 || height === 0 || width < tileWidth || height < tileHeight || total === 0)
+        {
+            console.warn("Phaser.TilemapParser.tileSet: width/height zero or width/height < given tileWidth/tileHeight");
+            return null;
+        }
 
-	    //  Let's create some tiles
-	    var x = tileMargin;
-	    var y = tileMargin;
+        //  Let's create some tiles
+        var x = tileMargin;
+        var y = tileMargin;
 
-	    var tileset = new Phaser.Tileset(img, key, tileWidth, tileHeight, tileMargin, tileSpacing);
+        var tileset = new Phaser.Tileset(img, key, tileWidth, tileHeight, tileMargin, tileSpacing);
 
-	    for (var i = 0; i < total; i++)
-	    {
-	        tileset.addTile(new Phaser.Tile(tileset, i, x, y, tileWidth, tileHeight));
+        for (var i = 0; i < total; i++)
+        {
+            tileset.addTile(new Phaser.Tile(tileset, i, x, y, tileWidth, tileHeight));
 
-	        x += tileWidth + tileSpacing;
+            x += tileWidth + tileSpacing;
 
-	        if (x === width)
-	        {
-	            x = tileMargin;
-	            y += tileHeight + tileSpacing;
-	        }
-	    }
-
-	    return tileset;
-
-	},
-
-	parse: function (game, data, format) {
-
-		if (format === Phaser.Tilemap.CSV)
-		{
-			return this.parseCSV(data);
-		}
-		else if (format === Phaser.Tilemap.TILED_JSON)
-		{
-			return this.parseTiledJSON(data);
-		}
-
-	},
-
-	/**
-	* Parse csv map data and generate tiles.
-	* 
-	* @method Phaser.Tilemap.prototype.parseCSV
-	* @param {string} data - CSV map data.
-	*/
-	parseCSV: function (data) {
-
-	    //  Trim any rogue whitespace from the data
-	    data = data.trim();
-
-	    var output = [];
-	    var rows = data.split("\n");
-	    var height = rows.length;
-	    var width = 0;
-
-	    for (var i = 0; i < rows.length; i++)
-	    {
-	    	output[i] = [];
-
-	        var column = rows[i].split(",");
-
-	        for (var c = 0; c < column.length; c++)
-	        {
-	            output[i][c] = parseInt(column[c]);
-	        }
-
-            if (width == 0)
+            if (x === width)
             {
-            	width = column.length;
+                x = tileMargin;
+                y += tileHeight + tileSpacing;
             }
-	    }
+        }
 
-	    return [{ name: 'csv', width: width, height: height, alpha: 1, visible: true, indexes: [], tileMargin: 0, tileSpacing: 0, data: output }];
+        return tileset;
 
-	},
+    },
 
-	/**
-	* Parse JSON map data and generate tiles.
-	* 
-	* @method Phaser.Tilemap.prototype.parseTiledJSON
-	* @param {string} data - JSON map data.
-	* @param {string} key - Asset key for tileset image.
-	*/
-	parseTiledJSON: function (json) {
+    parse: function (game, data, format) {
 
-		var layers = [];
+        if (format === Phaser.Tilemap.CSV)
+        {
+            return this.parseCSV(data);
+        }
+        else if (format === Phaser.Tilemap.TILED_JSON)
+        {
+            return this.parseTiledJSON(data);
+        }
 
-	    for (var i = 0; i < json.layers.length; i++)
-	    {
-	        //  Check it's a data layer
-	        if (!json.layers[i].data)
-	        {
-	            continue;
-	        }
+    },
 
-			//	json.tilewidth
-			//	json.tileheight
+    /**
+    * Parse csv map data and generate tiles.
+    * 
+    * @method Phaser.Tilemap.prototype.parseCSV
+    * @param {string} data - CSV map data.
+    */
+    parseCSV: function (data) {
 
-	        var layer = {
+        //  Trim any rogue whitespace from the data
+        data = data.trim();
 
-		        name: json.layers[i].name,
-		        width: json.layers[i].width,
-		        height: json.layers[i].height,
-		        alpha: json.layers[i].opacity,
-		        visible: json.layers[i].visible,
-		        indexes: [],
+        var output = [];
+        var rows = data.split("\n");
+        var height = rows.length;
+        var width = 0;
 
-		        tileMargin: json.tilesets[0].margin,
-		        tileSpacing: json.tilesets[0].spacing,
+        for (var i = 0; i < rows.length; i++)
+        {
+            output[i] = [];
 
-	        };
+            var column = rows[i].split(",");
 
-	        var output = [];
-	        var c = 0;
-	        var row;
+            for (var c = 0; c < column.length; c++)
+            {
+                output[i][c] = parseInt(column[c], 10);
+            }
 
-	        for (var t = 0; t < json.layers[i].data.length; t++)
-	        {
-	            if (c == 0)
-	            {
-	                row = [];
-	            }
+            if (width === 0)
+            {
+                width = column.length;
+            }
+        }
 
-	            row.push(json.layers[i].data[t]);
-	            c++;
+        return [{ name: 'csv', width: width, height: height, alpha: 1, visible: true, indexes: [], tileMargin: 0, tileSpacing: 0, data: output }];
 
-	            if (c == json.layers[i].width)
-	            {
-	            	output.push(row);
-	                c = 0;
-	            }
-	        }
+    },
 
-	        layer.data = output;
-	        
-	        layers.push(layer);
+    /**
+    * Parse JSON map data and generate tiles.
+    * 
+    * @method Phaser.Tilemap.prototype.parseTiledJSON
+    * @param {string} data - JSON map data.
+    * @param {string} key - Asset key for tileset image.
+    */
+    parseTiledJSON: function (json) {
 
-	    }
+        var layers = [];
 
-	    return layers;
+        for (var i = 0; i < json.layers.length; i++)
+        {
+            //  Check it's a data layer
+            if (!json.layers[i].data)
+            {
+                continue;
+            }
 
-	}
+            //  json.tilewidth
+            //  json.tileheight
+
+            var layer = {
+
+                name: json.layers[i].name,
+                width: json.layers[i].width,
+                height: json.layers[i].height,
+                alpha: json.layers[i].opacity,
+                visible: json.layers[i].visible,
+                indexes: [],
+
+                tileMargin: json.tilesets[0].margin,
+                tileSpacing: json.tilesets[0].spacing
+
+            };
+
+            var output = [];
+            var c = 0;
+            var row;
+
+            for (var t = 0; t < json.layers[i].data.length; t++)
+            {
+                if (c === 0)
+                {
+                    row = [];
+                }
+
+                row.push(json.layers[i].data[t]);
+                c++;
+
+                if (c == json.layers[i].width)
+                {
+                    output.push(row);
+                    c = 0;
+                }
+            }
+
+            layer.data = output;
+            
+            layers.push(layer);
+
+        }
+
+        return layers;
+
+    }
 
 }
 
@@ -39261,7 +39907,7 @@ Phaser.Tileset.prototype = {
 
     checkTileIndex: function (index) {
 
-    	return (this.tiles[index]);
+        return (this.tiles[index]);
 
     },
 
@@ -39284,7 +39930,7 @@ Phaser.Tileset.prototype = {
             this.tiles[index].setCollision(left, right, up, down);
         }
 
-    },
+    }
 
 }
 
@@ -39319,240 +39965,239 @@ Object.defineProperty(Phaser.Tileset.prototype, "total", {
  */
 PIXI.CanvasRenderer.prototype.render = function(stage)
 {
-	PIXI.texturesToUpdate.length = 0;
-	PIXI.texturesToDestroy.length = 0;
-	
-	PIXI.visibleCount++;
-	stage.updateTransform();
-	
-	// update the background color
-	// if(this.view.style.backgroundColor!=stage.backgroundColorString && !this.transparent)this.view.style.backgroundColor = stage.backgroundColorString;
+    PIXI.texturesToUpdate.length = 0;
+    PIXI.texturesToDestroy.length = 0;
+    
+    PIXI.visibleCount++;
+    stage.updateTransform();
 
-	this.context.setTransform(1, 0, 0, 1, 0, 0); 
-	this.context.clearRect(0, 0, this.width, this.height)
+    this.context.setTransform(1, 0, 0, 1, 0, 0);
+    this.context.clearRect(0, 0, this.width, this.height)
     this.renderDisplayObject(stage);
    
-	//	Remove frame updates
-	if (PIXI.Texture.frameUpdates.length > 0)
-	{
-		PIXI.Texture.frameUpdates.length = 0;
-	}
-	
+    //  Remove frame updates
+    if (PIXI.Texture.frameUpdates.length > 0)
+    {
+        PIXI.Texture.frameUpdates.length = 0;
+    }
+    
 }
 
 PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
 {
-	// Once the display object hits this we can break the loop	
-	var testObject = displayObject.last._iNext;
-	displayObject = displayObject.first;
-	
-	do	
-	{
-		//transform = displayObject.worldTransform;
-		
-		if (!displayObject.visible)
-		{
-			displayObject = displayObject.last._iNext;
-			continue;
-		}
-		
-		if (!displayObject.renderable || displayObject.alpha == 0)
-		{
-			displayObject = displayObject._iNext;
-			continue;
-		}
-		
-		if (displayObject instanceof PIXI.Sprite)
-		{
-			// var frame = displayObject.texture.frame;
-			
-			if (displayObject.texture.frame)
-			{
-				this.context.globalAlpha = displayObject.worldAlpha;
-				
-				if (displayObject.texture.trimmed)
-				{
-					this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2] + displayObject.texture.trim.x, displayObject.worldTransform[5] + displayObject.texture.trim.y);
-				}
-				else
-				{
-					this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2], displayObject.worldTransform[5]);
-				}
-					
-				this.context.drawImage(
-					displayObject.texture.baseTexture.source, 
-					displayObject.texture.frame.x,
-					displayObject.texture.frame.y,
-					displayObject.texture.frame.width,
-					displayObject.texture.frame.height,
-					(displayObject.anchor.x) * -displayObject.texture.frame.width, 
-					(displayObject.anchor.y) * -displayObject.texture.frame.height,
-					displayObject.texture.frame.width,
-					displayObject.texture.frame.height);
-			}					   
-	   	}
-	   	else if (displayObject instanceof PIXI.Strip)
-		{
-			this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2], displayObject.worldTransform[5])
-			this.renderStrip(displayObject);
-		}
-		else if (displayObject instanceof PIXI.TilingSprite)
-		{
-			this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2], displayObject.worldTransform[5])
-			this.renderTilingSprite(displayObject);
-		}
-		else if (displayObject instanceof PIXI.CustomRenderable)
-		{
-			displayObject.renderCanvas(this);
-		}
-		else if (displayObject instanceof PIXI.Graphics)
-		{
-			this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2], displayObject.worldTransform[5])
-			PIXI.CanvasGraphics.renderGraphics(displayObject, this.context);
-		}
-		else if (displayObject instanceof PIXI.FilterBlock)
-		{
-			if (displayObject.open)
-			{
-				this.context.save();
-				
-				var cacheAlpha = displayObject.mask.alpha;
-				var maskTransform = displayObject.mask.worldTransform;
-				
-				this.context.setTransform(maskTransform[0], maskTransform[3], maskTransform[1], maskTransform[4], maskTransform[2], maskTransform[5])
-				
-				displayObject.mask.worldAlpha = 0.5;
-				
-				this.context.worldAlpha = 0;
-				
-				PIXI.CanvasGraphics.renderGraphicsMask(displayObject.mask, this.context);
-				this.context.clip();
-				
-				displayObject.mask.worldAlpha = cacheAlpha;
-			}
-			else
-			{
-				this.context.restore();
-			}
-		}
-		//	count++
-		displayObject = displayObject._iNext;
-	}
-	while(displayObject != testObject)
-	
+    // Once the display object hits this we can break the loop  
+    var testObject = displayObject.last._iNext;
+    displayObject = displayObject.first;
+    
+    do
+    {
+        //transform = displayObject.worldTransform;
+        
+        if (!displayObject.visible)
+        {
+            displayObject = displayObject.last._iNext;
+            continue;
+        }
+        
+        if (!displayObject.renderable || displayObject.alpha === 0)
+        {
+            displayObject = displayObject._iNext;
+            continue;
+        }
+        
+        if (displayObject instanceof PIXI.Sprite)
+        {
+            // var frame = displayObject.texture.frame;
+            
+            if (displayObject.texture.frame)
+            {
+                this.context.globalAlpha = displayObject.worldAlpha;
+                
+                if (displayObject.texture.trimmed)
+                {
+                    this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2] + displayObject.texture.trim.x, displayObject.worldTransform[5] + displayObject.texture.trim.y);
+                }
+                else
+                {
+                    this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2], displayObject.worldTransform[5]);
+                }
+                    
+                this.context.drawImage(
+                    displayObject.texture.baseTexture.source,
+                    displayObject.texture.frame.x,
+                    displayObject.texture.frame.y,
+                    displayObject.texture.frame.width,
+                    displayObject.texture.frame.height,
+                    (displayObject.anchor.x) * -displayObject.texture.frame.width,
+                    (displayObject.anchor.y) * -displayObject.texture.frame.height,
+                    displayObject.texture.frame.width,
+                    displayObject.texture.frame.height);
+            }
+        }
+        else if (displayObject instanceof PIXI.Strip)
+        {
+            this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2], displayObject.worldTransform[5])
+            this.renderStrip(displayObject);
+        }
+        else if (displayObject instanceof PIXI.TilingSprite)
+        {
+            this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2], displayObject.worldTransform[5])
+            this.renderTilingSprite(displayObject);
+        }
+        else if (displayObject instanceof PIXI.CustomRenderable)
+        {
+            displayObject.renderCanvas(this);
+        }
+        else if (displayObject instanceof PIXI.Graphics)
+        {
+            this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2], displayObject.worldTransform[5])
+            PIXI.CanvasGraphics.renderGraphics(displayObject, this.context);
+        }
+        else if (displayObject instanceof PIXI.FilterBlock)
+        {
+            if (displayObject.open)
+            {
+                this.context.save();
+                
+                var cacheAlpha = displayObject.mask.alpha;
+                var maskTransform = displayObject.mask.worldTransform;
+                
+                this.context.setTransform(maskTransform[0], maskTransform[3], maskTransform[1], maskTransform[4], maskTransform[2], maskTransform[5])
+                
+                displayObject.mask.worldAlpha = 0.5;
+                
+                this.context.worldAlpha = 0;
+                
+                PIXI.CanvasGraphics.renderGraphicsMask(displayObject.mask, this.context);
+                this.context.clip();
+                
+                displayObject.mask.worldAlpha = cacheAlpha;
+            }
+            else
+            {
+                this.context.restore();
+            }
+        }
+        //  count++
+        displayObject = displayObject._iNext;
+    }
+    while(displayObject != testObject)
+    
 }
 
 PIXI.WebGLBatch.prototype.update = function()
 {
-	var gl = this.gl;
-	var worldTransform, width, height, aX, aY, w0, w1, h0, h1, index, index2, index3
+    // var gl = this.gl;
+    // var worldTransform, width, height, aX, aY, w0, w1, h0, h1, index, index2, index3
 
-	var a, b, c, d, tx, ty;
+    var worldTransform, width, height, aX, aY, w0, w1, h0, h1, index;
 
-	var indexRun = 0;
+    var a, b, c, d, tx, ty;
 
-	var displayObject = this.head;
+    var indexRun = 0;
 
-	while(displayObject)
-	{
-		if(displayObject.vcount === PIXI.visibleCount)
-		{
-			width = displayObject.texture.frame.width;
-			height = displayObject.texture.frame.height;
+    var displayObject = this.head;
 
-			// TODO trim??
-			aX = displayObject.anchor.x;// - displayObject.texture.trim.x
-			aY = displayObject.anchor.y; //- displayObject.texture.trim.y
-			w0 = width * (1-aX);
-			w1 = width * -aX;
+    while(displayObject)
+    {
+        if(displayObject.vcount === PIXI.visibleCount)
+        {
+            width = displayObject.texture.frame.width;
+            height = displayObject.texture.frame.height;
 
-			h0 = height * (1-aY);
-			h1 = height * -aY;
+            // TODO trim??
+            aX = displayObject.anchor.x;// - displayObject.texture.trim.x
+            aY = displayObject.anchor.y; //- displayObject.texture.trim.y
+            w0 = width * (1-aX);
+            w1 = width * -aX;
 
-			index = indexRun * 8;
+            h0 = height * (1-aY);
+            h1 = height * -aY;
 
-			worldTransform = displayObject.worldTransform;
+            index = indexRun * 8;
 
-			a = worldTransform[0];
-			b = worldTransform[3];
-			c = worldTransform[1];
-			d = worldTransform[4];
-			tx = worldTransform[2];
-			ty = worldTransform[5];
+            worldTransform = displayObject.worldTransform;
 
-			if (displayObject.texture.trimmed)
-			{
-				tx += displayObject.texture.trim.x;
-				ty += displayObject.texture.trim.y;
-			}
+            a = worldTransform[0];
+            b = worldTransform[3];
+            c = worldTransform[1];
+            d = worldTransform[4];
+            tx = worldTransform[2];
+            ty = worldTransform[5];
 
-			this.verticies[index + 0 ] = a * w1 + c * h1 + tx; 
-			this.verticies[index + 1 ] = d * h1 + b * w1 + ty;
+            if (displayObject.texture.trimmed)
+            {
+                tx += displayObject.texture.trim.x;
+                ty += displayObject.texture.trim.y;
+            }
 
-			this.verticies[index + 2 ] = a * w0 + c * h1 + tx; 
-			this.verticies[index + 3 ] = d * h1 + b * w0 + ty; 
+            this.verticies[index + 0 ] = a * w1 + c * h1 + tx;
+            this.verticies[index + 1 ] = d * h1 + b * w1 + ty;
 
-			this.verticies[index + 4 ] = a * w0 + c * h0 + tx; 
-			this.verticies[index + 5 ] = d * h0 + b * w0 + ty; 
+            this.verticies[index + 2 ] = a * w0 + c * h1 + tx;
+            this.verticies[index + 3 ] = d * h1 + b * w0 + ty;
 
-			this.verticies[index + 6] =  a * w1 + c * h0 + tx; 
-			this.verticies[index + 7] =  d * h0 + b * w1 + ty; 
+            this.verticies[index + 4 ] = a * w0 + c * h0 + tx;
+            this.verticies[index + 5 ] = d * h0 + b * w0 + ty;
 
-			if(displayObject.updateFrame || displayObject.texture.updateFrame)
-			{
-				this.dirtyUVS = true;
+            this.verticies[index + 6] =  a * w1 + c * h0 + tx;
+            this.verticies[index + 7] =  d * h0 + b * w1 + ty;
 
-				var texture = displayObject.texture;
+            if(displayObject.updateFrame || displayObject.texture.updateFrame)
+            {
+                this.dirtyUVS = true;
 
-				var frame = texture.frame;
-				var tw = texture.baseTexture.width;
-				var th = texture.baseTexture.height;
+                var texture = displayObject.texture;
 
-				this.uvs[index + 0] = frame.x / tw;
-				this.uvs[index +1] = frame.y / th;
+                var frame = texture.frame;
+                var tw = texture.baseTexture.width;
+                var th = texture.baseTexture.height;
 
-				this.uvs[index +2] = (frame.x + frame.width) / tw;
-				this.uvs[index +3] = frame.y / th;
+                this.uvs[index + 0] = frame.x / tw;
+                this.uvs[index +1] = frame.y / th;
 
-				this.uvs[index +4] = (frame.x + frame.width) / tw;
-				this.uvs[index +5] = (frame.y + frame.height) / th; 
+                this.uvs[index +2] = (frame.x + frame.width) / tw;
+                this.uvs[index +3] = frame.y / th;
 
-				this.uvs[index +6] = frame.x / tw;
-				this.uvs[index +7] = (frame.y + frame.height) / th;
+                this.uvs[index +4] = (frame.x + frame.width) / tw;
+                this.uvs[index +5] = (frame.y + frame.height) / th;
 
-				displayObject.updateFrame = false;
-			}
+                this.uvs[index +6] = frame.x / tw;
+                this.uvs[index +7] = (frame.y + frame.height) / th;
 
-			// TODO this probably could do with some optimisation....
-			if(displayObject.cacheAlpha != displayObject.worldAlpha)
-			{
-				displayObject.cacheAlpha = displayObject.worldAlpha;
+                displayObject.updateFrame = false;
+            }
 
-				var colorIndex = indexRun * 4;
-				this.colors[colorIndex] = this.colors[colorIndex + 1] = this.colors[colorIndex + 2] = this.colors[colorIndex + 3] = displayObject.worldAlpha;
-				this.dirtyColors = true;
-			}
-		}
-		else
-		{
-			index = indexRun * 8;
+            // TODO this probably could do with some optimisation....
+            if(displayObject.cacheAlpha != displayObject.worldAlpha)
+            {
+                displayObject.cacheAlpha = displayObject.worldAlpha;
 
-			this.verticies[index + 0 ] = 0;
-			this.verticies[index + 1 ] = 0;
+                var colorIndex = indexRun * 4;
+                this.colors[colorIndex] = this.colors[colorIndex + 1] = this.colors[colorIndex + 2] = this.colors[colorIndex + 3] = displayObject.worldAlpha;
+                this.dirtyColors = true;
+            }
+        }
+        else
+        {
+            index = indexRun * 8;
 
-			this.verticies[index + 2 ] = 0;
-			this.verticies[index + 3 ] = 0;
+            this.verticies[index + 0 ] = 0;
+            this.verticies[index + 1 ] = 0;
 
-			this.verticies[index + 4 ] = 0;
-			this.verticies[index + 5 ] = 0;
+            this.verticies[index + 2 ] = 0;
+            this.verticies[index + 3 ] = 0;
 
-			this.verticies[index + 6] = 0;
-			this.verticies[index + 7] = 0;
-		}
+            this.verticies[index + 4 ] = 0;
+            this.verticies[index + 5 ] = 0;
 
-		indexRun++;
-		displayObject = displayObject.__next;
-   }
+            this.verticies[index + 6] = 0;
+            this.verticies[index + 7] = 0;
+        }
+
+        indexRun++;
+        displayObject = displayObject.__next;
+    }
 }
   return Phaser;
 });

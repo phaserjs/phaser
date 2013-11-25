@@ -36,6 +36,9 @@ $(document).ready(function(){
 		var height = $(window).height() - 270;
 		$("#panel").css('height', height + 'px');
 
+		//	iFrame focus
+		$('a').click(function(e) { $('#viewer').focus(); });
+
 	})
 
 	.fail(function() {

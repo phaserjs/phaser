@@ -202,10 +202,10 @@ Object.defineProperty(Phaser.Text.prototype, 'angle', {
 
 /**
 * The x coordinate of this object in world space.
-* @name Phaser.BitmapText#x
+* @name Phaser.Text#x
 * @property {number} x - The x coordinate of this object in world space.
 */
-Object.defineProperty(Phaser.BitmapText.prototype, 'x', {
+Object.defineProperty(Phaser.Text.prototype, 'x', {
 
     get: function() {
         return this.position.x;
@@ -219,10 +219,10 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'x', {
 
 /**
 * The y coordinate of this object in world space.
-* @name Phaser.BitmapText#y
+* @name Phaser.Text#y
 * @property {number} y - The y coordinate of this object in world space.
 */
-Object.defineProperty(Phaser.BitmapText.prototype, 'y', {
+Object.defineProperty(Phaser.Text.prototype, 'y', {
 
     get: function() {
         return this.position.y;
