@@ -18,7 +18,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v1.1.3 - Built at: Mon Nov 25 2013 13:10:47
+* v1.1.3 - Built at: Mon Nov 25 2013 14:14:28
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -60,9 +60,11 @@ var Phaser = Phaser || {
 	VERSION: '1.1.3',
 	DEV_VERSION: '1.1.3',
 	GAMES: [],
+
 	AUTO: 0,
 	CANVAS: 1,
 	WEBGL: 2,
+	HEADLESS: 3,
 
 	SPRITE: 0,
 	BUTTON: 1,
@@ -13660,7 +13662,7 @@ Object.defineProperty(Phaser.World.prototype, "visible", {
 * @constructor
 * @param {number} [width=800] - The width of your game in game pixels.
 * @param {number} [height=600] - The height of your game in game pixels.
-* @param {number} [renderer=Phaser.AUTO] - Which renderer to use (canvas or webgl)
+* @param {number} [renderer=Phaser.AUTO] - Which renderer to use: Phaser.AUTO will auto-detect, Phaser.WEBGL, Phaser.CANVAS or Phaser.HEADLESS (no rendering at all).
 * @param {HTMLElement} [parent=''] - The Games DOM parent.
 * @param {any} [state=null] - Description.
 * @param {boolean} [transparent=false] - Use a transparent canvas background or not.
@@ -13978,6 +13980,10 @@ Phaser.Game.prototype = {
         {
             r = 'WebGL';
         }
+        else if (this.renderType == Phaser.HEADLESS)
+        {
+            r = 'Headless';
+        }
 
         if (this.device.webAudio)
         {
@@ -14012,11 +14018,15 @@ Phaser.Game.prototype = {
     */
     setUpRenderer: function () {
 
-        if (this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && this.device.webGL === false))
+        if (this.renderType === Phaser.HEADLESS || this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && this.device.webGL === false))
         {
             if (this.device.canvas)
             {
-                this.renderType = Phaser.CANVAS;
+                if (this.renderType === Phaser.AUTO)
+                {
+                    this.renderType = Phaser.CANVAS;
+                }
+
                 this.renderer = new PIXI.CanvasRenderer(this.width, this.height, this.stage.canvas, this.transparent);
                 Phaser.Canvas.setSmoothingEnabled(this.renderer.context, this.antialias);
                 this.canvas = this.renderer.view;
@@ -14089,11 +14099,15 @@ Phaser.Game.prototype = {
             this.world.postUpdate();
             this.plugins.postUpdate();
 
-            this.renderer.render(this.stage._stage);
-            this.plugins.render();
-            this.state.render();
+            if (this.renderType !== Phaser.HEADLESS)
+            {
+                this.renderer.render(this.stage._stage);
+                this.plugins.render();
+                this.state.render();
 
-            this.plugins.postRender();
+                this.plugins.postRender();
+            }
+
         }
 
     },
