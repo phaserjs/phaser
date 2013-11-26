@@ -15,10 +15,11 @@
 * @param {number} [volume=1] - Default value for the volume, between 0 and 1.
 * @param {boolean} [loop=false] - Whether or not the sound will loop.
 */
-Phaser.Sound = function (game, key, volume, loop) {
+Phaser.Sound = function (game, key, volume, loop, connect) {
     
     if (typeof volume == 'undefined') { volume = 1; }
     if (typeof loop == 'undefined') { loop = false; }
+    if (typeof connect === 'undefined') { connect = game.sound.connectToMaster; }
 
     /**
     * A reference to the currently running Game.
@@ -152,6 +153,11 @@ Phaser.Sound = function (game, key, volume, loop) {
     */
     this.usingAudioTag = this.game.sound.usingAudioTag;
 
+    /**
+    * @property {object} externalNode - If defined this Sound won't connect to the SoundManager master gain node, but will instead connect to externalNode.input.
+    */
+    this.externalNode = null;
+
     if (this.usingWebAudio)
     {
         this.context = this.game.sound.context;
@@ -167,7 +173,11 @@ Phaser.Sound = function (game, key, volume, loop) {
         }
 
         this.gainNode.gain.value = volume * this.game.sound.volume;
-        this.gainNode.connect(this.masterGainNode);
+
+        if (connect)
+        {
+            this.gainNode.connect(this.masterGainNode);
+        }
     }
     else
     {
@@ -477,7 +487,16 @@ Phaser.Sound.prototype = {
 
                 this._sound = this.context.createBufferSource();
                 this._sound.buffer = this._buffer;
-                this._sound.connect(this.gainNode);
+       
+                if (this.externalNode)
+                {
+                    this._sound.connect(this.externalNode.input);
+                }
+                else
+                {
+                    this._sound.connect(this.gainNode);
+                }
+
                 this.totalDuration = this._sound.buffer.duration;
 
                 if (this.duration === 0)

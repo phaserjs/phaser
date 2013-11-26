@@ -1190,15 +1190,25 @@ Phaser.Group.prototype = {
     *
     * @method Phaser.Group#remove
     * @param {Any} child - The child to remove.
+    * @return {boolean} true if the child was removed from this Group, otherwise false.
     */
     remove: function (child) {
+
+        if (child.group !== this)
+        {
+            return false;
+        }
 
         if (child.events)
         {
             child.events.onRemovedFromGroup.dispatch(child, this);
         }
 
-        this._container.removeChild(child);
+        //  Check it's actually in the container
+        if (child.parent === this._container)
+        {
+            this._container.removeChild(child);
+        }
 
         if (this.cursor == child)
         {
@@ -1213,6 +1223,8 @@ Phaser.Group.prototype = {
         }
 
         child.group = null;
+
+        return true;
 
     },
 

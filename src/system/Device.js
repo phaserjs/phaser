@@ -354,11 +354,11 @@ Phaser.Device.prototype = {
 
         this.worker = !!window['Worker'];
         
-        if ('ontouchstart' in document.documentElement || window.navigator.msPointerEnabled) {
+        if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1)) {
             this.touch = true;
         }
 
-        if (window.navigator.msPointerEnabled) {
+        if (window.navigator.msPointerEnabled || window.navigator.pointerEnabled) {
             this.mspointer = true;
         }
         

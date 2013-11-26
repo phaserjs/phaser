@@ -79,6 +79,12 @@ Phaser.SoundManager = function (game) {
     this.noAudio = false;
 
     /**
+    * @property {boolean} connectToMaster - Used in conjunction with Sound.externalNode this allows you to stop a Sound node being connected to the SoundManager master gain node.
+    * @default
+    */
+    this.connectToMaster = true;
+
+    /**
     * @property {boolean} touchLocked - true if the audio system is currently locked awaiting a touch event.
     * @default
     */
@@ -173,7 +179,6 @@ Phaser.SoundManager.prototype = {
             this.masterGain.gain.value = 1;
             this.masterGain.connect(this.context.destination);
         }
-
 
     },
 
@@ -324,14 +329,16 @@ Phaser.SoundManager.prototype = {
     * @param {string} key - Asset key for the sound.
     * @param {number} [volume=1] - Default value for the volume.
     * @param {boolean} [loop=false] - Whether or not the sound will loop.
+    * @param {boolean} [connect=true] - Controls if the created Sound object will connect to the master gainNode of the SoundManager when running under WebAudio.
     * @return {Phaser.Sound} The new sound instance.
     */
-    add: function (key, volume, loop) {
+    add: function (key, volume, loop, connect) {
 
         if (typeof volume === 'undefined') { volume = 1; }
         if (typeof loop === 'undefined') { loop = false; }
+        if (typeof connect === 'undefined') { connect = this.connectToMaster; }
 
-        var sound = new Phaser.Sound(this.game, key, volume, loop);
+        var sound = new Phaser.Sound(this.game, key, volume, loop, connect);
 
         this._sounds.push(sound);
 

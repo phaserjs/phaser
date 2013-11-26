@@ -28,23 +28,7 @@
     <script src="$path/src/pixi/extras/Rope.js"></script>
     <script src="$path/src/pixi/extras/TilingSprite.js"></script>
 
-    <script src="$path/src/pixi/filters/AbstractFilter.js"></script>
-    <script src="$path/src/pixi/filters/BlurFilter.js"></script>
-    <script src="$path/src/pixi/filters/BlurXFilter.js"></script>
-    <script src="$path/src/pixi/filters/BlurYFilter.js"></script>
-    <script src="$path/src/pixi/filters/ColorMatrixFilter.js"></script>
-    <script src="$path/src/pixi/filters/CrossHatchFilter.js"></script>
-    <script src="$path/src/pixi/filters/DisplacementFilter.js"></script>
-    <script src="$path/src/pixi/filters/DotScreenFilter.js"></script>
     <script src="$path/src/pixi/filters/FilterBlock.js"></script>
-    <script src="$path/src/pixi/filters/GrayFilter.js"></script>
-    <script src="$path/src/pixi/filters/InvertFilter.js"></script>
-    <script src="$path/src/pixi/filters/PixelateFilter.js"></script>
-    <script src="$path/src/pixi/filters/RGBSplitFilter.js"></script>
-    <script src="$path/src/pixi/filters/SepiaFilter.js"></script>
-    <script src="$path/src/pixi/filters/SmartBlurFilter.js"></script>
-    <script src="$path/src/pixi/filters/TwistFilter.js"></script>
-
     <script src="$path/src/pixi/primitives/Graphics.js"></script>
 
     <script src="$path/src/pixi/renderers/canvas/CanvasGraphics.js"></script>

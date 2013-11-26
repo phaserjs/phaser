@@ -510,24 +510,24 @@ Phaser.InputHandler.prototype = {
     */
     checkPointerOver: function (pointer) {
 
-        if (this.enabled && this.sprite.visible)
+        if (this.enabled === false || this.sprite.visible === false || (this.sprite.group && this.sprite.group.visible === false))
         {
-            this.sprite.getLocalUnmodifiedPosition(this._tempPoint, pointer.x, pointer.y);
-
-            if (this._tempPoint.x >= 0 && this._tempPoint.x <= this.sprite.currentFrame.width && this._tempPoint.y >= 0 && this._tempPoint.y <= this.sprite.currentFrame.height)
-            {
-                if (this.pixelPerfect)
-                {
-                    return this.checkPixel(this._tempPoint.x, this._tempPoint.y);
-                }
-                else
-                {
-                    return true;
-                }
-            }
+            return false;
         }
 
-        return false;
+        this.sprite.getLocalUnmodifiedPosition(this._tempPoint, pointer.x, pointer.y);
+
+        if (this._tempPoint.x >= 0 && this._tempPoint.x <= this.sprite.currentFrame.width && this._tempPoint.y >= 0 && this._tempPoint.y <= this.sprite.currentFrame.height)
+        {
+            if (this.pixelPerfect)
+            {
+                return this.checkPixel(this._tempPoint.x, this._tempPoint.y);
+            }
+            else
+            {
+                return true;
+            }
+        }
 
     },
 

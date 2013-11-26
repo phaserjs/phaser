@@ -307,7 +307,7 @@ Phaser.Utils.Debug.prototype = {
 
     /**
     * Renders the Pointer.circle object onto the stage in green if down or red if up along with debug text.
-    * @method Phaser.Utils.Debug#renderDebug
+    * @method Phaser.Utils.Debug#renderPointer
     * @param {Phaser.Pointer} pointer - Description.
     * @param {boolean} [hideIfUp=false] - Doesn't render the circle if the pointer is up.
     * @param {string} [downColor='rgba(0,255,0,0.5)'] - The color the circle is rendered in if down.

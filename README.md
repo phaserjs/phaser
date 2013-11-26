@@ -46,12 +46,12 @@ Version 1.1.3 - in build
 * New: Added a new in-built texture. Sprites now use __default if no texture was provided (a 32x32 transparent PNG) or __missing if one was given but not found (a 32x32 black box with a green cross through it)
 * New: Added Phaser.Filter. A new way to use the new WebGL shaders/filters that the new version of Pixi supports.
 * New: The object returned by Math.sinCosGenerator now contains a length property.
-* New: Phaser.BitmapData object. Can be used as a texture for a Sprite or Tiling Sprite. See the new examples and docs for details.
+* New: Phaser.BitmapData object. A Canvas you can freely draw to with lots of functions. Can be used as a texture for Sprites. See the new examples and docs for details.
 * New: RenderTexture.render now takes a Phaser.Group. Also added renderXY for when you don't want to make a new Point object.
-* New: Implementing PluginManager.remove, added PluginManager.removeAll (thanks crazysam)
-* New: Added scrollFactorX/scrollFactorY to TilemapLayers (thanks jcd-as)
+* New: PluginManager.remove, added PluginManager.removeAll (thanks crazysam)
+* New: scrollFactorX/scrollFactorY have been added to TilemapLayers (thanks jcd-as)
 * New: Phaser.Game parent can now be an HTMLElement or a string (thanks beeglebug)
-* New: Updated to use the latest version of Pixi.js - which means you can now use all the sexy new WebGL filters they added :)
+* New: Now using the latest version of Pixi.js. Which means you can use all the sexy new WebGL filters :)
 * New: Sprite.animations.getAnimation will return an animation instance which was added by name.
 * New: Added Mouse.button which is set to the button that was pressed: Phaser.Mouse.LEFT_BUTTON, MIDDLE_BUTTON or RIGHT_BUTTON (thanks wKLV)
 * New: Added Mouse.pointerLock signal which you can listen to whenever the browser enters or leaves pointer lock mode.
@@ -64,6 +64,8 @@ Version 1.1.3 - in build
 * New: Device.littleEndian boolean added. Only safe to use if the browser supports TypedArrays (which IE9 doesn't, but nearly all others do)
 * New: You can now call game.sound.play() and simply pass it a key. The sound will play if the audio system is unlocked and optionally destroy itself on complete.
 * New: Mouse.capture is a boolean. If set to true then DOM mouse events will have event.preventDefault() applied, if false they will propogate fully.
+* New: Added Sound.externalNode which allows you to connect a Sound to an external node input rather than the SoundManager gain node.
+* New: Added SoundManager.connectToMaster boolean. Used in conjunction with Sound.externalNode you can easily configure audio nodes to connect together for special effects.
 
 * Fixed: Lots of fixes to the TypeScript definitions file (many thanks gltovar)
 * Fixed: Tilemap commands use specified layer when one given (thanks Izzimach)
@@ -77,6 +79,8 @@ Version 1.1.3 - in build
 * Fixed: Fixes to Math and Loader (thanks theJare)
 * Fixed: Tween - isRunning not reset when non-looped tween completes (thanks crazysam + kevinthompson)
 * Fixed: Math.normalizeAngle and Math.wrapAngle (thanks theJare)
+* Fixed: Device.isTouch modified to test maxTouchPointers instead of MSPointer.
+* Fixed: InputHandler.checkPointerOver now checks the visible status of the Sprite Group before processing.
 
 * Updated: ArcadePhysics.updateMotion applies the dt to the velocity calculations as well as position now (thanks jcs)
 * Updated: RequestAnimationFrame now retains the callbackID which is passed to cancelRequestAnimationFrame.

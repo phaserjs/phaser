@@ -104,13 +104,14 @@ Phaser.GameObjectFactory.prototype = {
     *
     * @method Phaser.GameObjectFactory#audio
     * @param {string} key - The Game.cache key of the sound that this object will use.
-    * @param {number} volume - The volume at which the sound will be played.
-    * @param {boolean} loop - Whether or not the sound will loop.
+    * @param {number} [volume=1] - The volume at which the sound will be played.
+    * @param {boolean} [loop=false] - Whether or not the sound will loop.
+    * @param {boolean} [connect=true] - Controls if the created Sound object will connect to the master gainNode of the SoundManager when running under WebAudio.
     * @return {Phaser.Sound} The newly created text object.
     */
-    audio: function (key, volume, loop) {
+    audio: function (key, volume, loop, connect) {
 
-        return this.game.sound.add(key, volume, loop);
+        return this.game.sound.add(key, volume, loop, connect);
         
     },
 
