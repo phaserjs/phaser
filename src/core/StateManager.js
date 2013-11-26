@@ -250,7 +250,7 @@ Phaser.StateManager.prototype = {
             this.onPreloadCallback.call(this.callbackContext, this.game);
 
             //  Is the loader empty?
-            if (this.game.load.queueSize === 0)
+            if (this.game.load.totalQueuedFiles() === 0)
             {
                 this.game.loadComplete();
             }

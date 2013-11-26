@@ -389,6 +389,18 @@
   ],
   "loader": [
     {
+      "file": "load+audio.js",
+      "title": "load audio"
+    },
+    {
+      "file": "load+image.js",
+      "title": "load image"
+    },
+    {
+      "file": "load+spritesheet.js",
+      "title": "load spritesheet"
+    },
+    {
       "file": "pick+images+from+cache.js",
       "title": "pick images from cache"
     }

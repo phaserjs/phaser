@@ -46,12 +46,6 @@ Phaser.Loader = function (game) {
     */
     this._xhr = new XMLHttpRequest();
 
-    /** 
-    * @property {number} - Length of assets queue.
-    * @default
-    */
-    this.queueSize = 0;
-
     /**
     * @property {boolean} isLoading - True if the Loader is in the process of loading the queue.
     * @default
@@ -249,6 +243,8 @@ Phaser.Loader.prototype = {
             error: false,
             loaded: false
         };
+
+        console.log('addToFileList', entry);
 
         if (typeof properties !== "undefined")
         {
@@ -685,6 +681,8 @@ Phaser.Loader.prototype = {
     */
     start: function () {
 
+        console.log('Loader start', this._fileList);
+
         if (this.isLoading)
         {
             return;
@@ -733,10 +731,10 @@ Phaser.Loader.prototype = {
                 file.data = new Image();
                 file.data.name = file.key;
                 file.data.onload = function () {
-                    return _this.fileComplete(this._fileIndex);
+                    return _this.fileComplete(_this._fileIndex);
                 };
                 file.data.onerror = function () {
-                    return _this.fileError(this._fileIndex);
+                    return _this.fileError(_this._fileIndex);
                 };
                 file.data.crossOrigin = this.crossOrigin;
                 file.data.src = this.baseURL + file.url;
@@ -753,10 +751,10 @@ Phaser.Loader.prototype = {
                         this._xhr.open("GET", this.baseURL + file.url, true);
                         this._xhr.responseType = "arraybuffer";
                         this._xhr.onload = function () {
-                            return _this.fileComplete(this._fileIndex);
+                            return _this.fileComplete(_this._fileIndex);
                         };
                         this._xhr.onerror = function () {
-                            return _this.fileError(this._fileIndex);
+                            return _this.fileError(_this._fileIndex);
                         };
                         this._xhr.send();
                     }
@@ -776,7 +774,7 @@ Phaser.Loader.prototype = {
                             file.data = new Audio();
                             file.data.name = file.key;
                             file.data.onerror = function () {
-                                return _this.fileError(this._fileIndex);
+                                return _this.fileError(_this._fileIndex);
                             };
                             file.data.preload = 'auto';
                             file.data.src = this.baseURL + file.url;
@@ -799,13 +797,13 @@ Phaser.Loader.prototype = {
                 if (file.format == Phaser.Tilemap.TILED_JSON)
                 {
                     this._xhr.onload = function () {
-                        return _this.jsonLoadComplete(this._fileIndex);
+                        return _this.jsonLoadComplete(_this._fileIndex);
                     };
                 }
                 else if (file.format == Phaser.Tilemap.CSV)
                 {
                     this._xhr.onload = function () {
-                        return _this.csvLoadComplete(this._fileIndex);
+                        return _this.csvLoadComplete(_this._fileIndex);
                     };
                 }
                 else
@@ -814,7 +812,7 @@ Phaser.Loader.prototype = {
                 }
 
                 this._xhr.onerror = function () {
-                    return _this.dataLoadError(this._fileIndex);
+                    return _this.dataLoadError(_this._fileIndex);
                 };
                 this._xhr.send();
                 break;
@@ -823,10 +821,10 @@ Phaser.Loader.prototype = {
                 this._xhr.open("GET", this.baseURL + file.url, true);
                 this._xhr.responseType = "text";
                 this._xhr.onload = function () {
-                    return _this.fileComplete(this._fileIndex);
+                    return _this.fileComplete(_this._fileIndex);
                 };
                 this._xhr.onerror = function () {
-                    return _this.fileError(this._fileIndex);
+                    return _this.fileError(_this._fileIndex);
                 };
                 this._xhr.send();
                 break;
@@ -888,6 +886,8 @@ Phaser.Loader.prototype = {
     * @param {number} index - The index of the file in the file queue that loaded.
     */
     fileComplete: function (index) {
+
+console.log('fileComplete', index);
 
         if (!this._fileList[index])
         {
@@ -1189,7 +1189,7 @@ Phaser.Loader.prototype = {
 
         var total = 0;
 
-        for (var i = 0; i < this._fileList; i++)
+        for (var i = 0; i < this._fileList.length; i++)
         {
             if (this._fileList[i].loaded)
             {
@@ -1210,7 +1210,7 @@ Phaser.Loader.prototype = {
 
         var total = 0;
 
-        for (var i = 0; i < this._fileList; i++)
+        for (var i = 0; i < this._fileList.length; i++)
         {
             if (this._fileList[i].loaded === false)
             {
