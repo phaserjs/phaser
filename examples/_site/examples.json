@@ -177,6 +177,12 @@
       "title": "render texture trail"
     }
   ],
+  "filters": [
+    {
+      "file": "fire.js",
+      "title": "fire"
+    }
+  ],
   "games": [
     {
       "file": "breakout.js",

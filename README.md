@@ -81,6 +81,7 @@ Version 1.1.3 - in build
 * Fixed: Math.normalizeAngle and Math.wrapAngle (thanks theJare)
 * Fixed: Device.isTouch modified to test maxTouchPointers instead of MSPointer.
 * Fixed: InputHandler.checkPointerOver now checks the visible status of the Sprite Group before processing.
+* Fixed: The Sprite hulls (used for tile collision) were not being updated in sprite->sprite separations (thanks jcs)
 
 * Updated: ArcadePhysics.updateMotion applies the dt to the velocity calculations as well as position now (thanks jcs)
 * Updated: RequestAnimationFrame now retains the callbackID which is passed to cancelRequestAnimationFrame.
@@ -94,6 +95,7 @@ Version 1.1.3 - in build
 * Updated: Skip preupdate/update for PIXI hierarchies in which an ancestor doesn't exist (thanks cocoademon)
 * Updated: Loader.audio can now accept either an array of URL strings or a single URL string (thanks crazysam + kevinthompson)
 * Updated: MSPointer updated to support IE11 by dropping the prefix from the event listeners.
+* Updated: Device.cocoonJS added to detect if the game is running under Cocoon or a native browser.
 
 You can view the complete Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
 

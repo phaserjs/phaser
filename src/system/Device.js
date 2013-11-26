@@ -35,6 +35,12 @@ Phaser.Device = function () {
     this.iOS = false;
 
     /**
+    * @property {boolean} cocoonJS - Is the game running under CocoonJS?
+    * @default
+    */
+    this.cocoonJS = false;
+
+    /**
     * @property {boolean} android - Is running on android?
     * @default
     */
@@ -399,6 +405,10 @@ Phaser.Device.prototype = {
         // WebApp mode in iOS
         if (navigator['standalone']) {
             this.webApp = true;
+        }
+
+        if (navigator['isCocoonJS']) {
+            this.cocoonJS = true;
         }
 
     },

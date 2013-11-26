@@ -22,16 +22,16 @@ Phaser.Loader = function (game) {
     this.game = game;
 
     /**
-    * @property {array} _keys - Array stores assets keys. So you can get that asset by its unique key.
+    * @property {array} _fileList - Contains all the assets file infos.
     * @private
     */
-    this._keys = [];
+    this._fileList = [];
 
     /**
-    * @property {Description} _fileList - Contains all the assets file infos.
+    * @property {number} _fileIndex - The index of the current file being loaded.
     * @private
     */
-    this._fileList = {};
+    this._fileIndex = 0;
 
     /**
     * @property {number} _progressChunk - Indicates assets loading progress. (from 0 to 100)
@@ -169,32 +169,63 @@ Phaser.Loader.prototype = {
     * Check whether asset exists with a specific key.
     *
     * @method Phaser.Loader#checkKeyExists
+    * @param {string} type - The type asset you want to check.
     * @param {string} key - Key of the asset you want to check.
     * @return {boolean} Return true if exists, otherwise return false.
     */
-    checkKeyExists: function (key) {
+    checkKeyExists: function (type, key) {
 
-        if (this._fileList[key])
+        if (this._fileList.length > 0)
         {
-            return true;
+            for (var i = 0; i < this._fileList.length; i++)
+            {
+                if (this._fileList[i].type === type && this._fileList[i].key === key)
+                {
+                    return true;
+                }
+            }
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
         
     },
 
     /**
-    * Reset loader, this will remove all loaded assets.
+    * Gets the asset that is queued for load.
+    *
+    * @method Phaser.Loader#getAsset
+    * @param {string} type - The type asset you want to check.
+    * @param {string} key - Key of the asset you want to check.
+    * @return {any} Returns an object if found that has 2 properties: index and file. Otherwise false.
+    */
+    getAsset: function (type, key) {
+
+        if (this._fileList.length > 0)
+        {
+            for (var i = 0; i < this._fileList.length; i++)
+            {
+                if (this._fileList[i].type === type && this._fileList[i].key === key)
+                {
+                    return { index: i, file: this._fileList[i] };
+                }
+            }
+        }
+
+        return false;
+        
+    },
+
+    /**
+    * Reset loader, this will remove the load queue.
     *
     * @method Phaser.Loader#reset
     */
     reset: function () {
 
         this.preloadSprite = null;
-        this.queueSize = 0;
         this.isLoading = false;
+        this._fileList.length = 0;
+        this._fileIndex = 0;
 
     },
 
@@ -202,10 +233,10 @@ Phaser.Loader.prototype = {
     * Internal function that adds a new entry to the file list. Do not call directly.
     *
     * @method Phaser.Loader#addToFileList
-    * @param {Description} type - Description.
-    * @param {string} key - Description.
-    * @param {string} url - URL of Description.
-    * @param {Description} properties - Description.
+    * @param {string} type - The type of resource to add to the list (image, audio, xml, etc).
+    * @param {string} key - The unique Cache ID key of this resource.
+    * @param {string} url - The URL the asset will be loaded from.
+    * @param {object} properties - Any additional properties needed to load the file.
     * @protected
     */
     addToFileList: function (type, key, url, properties) {
@@ -227,11 +258,46 @@ Phaser.Loader.prototype = {
             }
         }
 
-        this._fileList[key] = entry;
+        if (this.checkKeyExists(type, key) === false)
+        {
+            this._fileList.push(entry);
+        }
 
-        this._keys.push(key);
+    },
 
-        this.queueSize++;
+    /**
+    * Internal function that replaces an existing entry in the file list with a new one. Do not call directly.
+    *
+    * @method Phaser.Loader#replaceInFileList
+    * @param {string} type - The type of resource to add to the list (image, audio, xml, etc).
+    * @param {string} key - The unique Cache ID key of this resource.
+    * @param {string} url - The URL the asset will be loaded from.
+    * @param {object} properties - Any additional properties needed to load the file.
+    * @protected
+    */
+    replaceInFileList: function (type, key, url, properties) {
+
+        var entry = {
+            type: type,
+            key: key,
+            url: url,
+            data: null,
+            error: false,
+            loaded: false
+        };
+
+        if (typeof properties !== "undefined")
+        {
+            for (var prop in properties)
+            {
+                entry[prop] = properties[prop];
+            }
+        }
+
+        if (this.checkKeyExists(type, key) === false)
+        {
+            this._fileList.push(entry);
+        }
 
     },
 
@@ -241,13 +307,17 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#image
     * @param {string} key - Unique asset key of this image file.
     * @param {string} url - URL of image file.
-    * @param {boolean} overwrite - If an entry with a matching key already exists this will over-write it
+    * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
     */
     image: function (key, url, overwrite) {
 
         if (typeof overwrite === "undefined") { overwrite = false; }
 
-        if (overwrite || this.checkKeyExists(key) === false)
+        if (overwrite)
+        {
+            this.replaceInFileList('image', key, url);
+        }
+        else
         {
             this.addToFileList('image', key, url);
         }
@@ -262,13 +332,17 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#text
     * @param {string} key - Unique asset key of the text file.
     * @param {string} url - URL of the text file.
-    * @param {boolean} overwrite - True if Description.
+    * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
     */
     text: function (key, url, overwrite) {
 
         if (typeof overwrite === "undefined") { overwrite = false; }
 
-        if (overwrite || this.checkKeyExists(key) === false)
+        if (overwrite)
+        {
+            this.replaceInFileList('text', key, url);
+        }
+        else
         {
             this.addToFileList('text', key, url);
         }
@@ -291,10 +365,7 @@ Phaser.Loader.prototype = {
 
         if (typeof frameMax === "undefined") { frameMax = -1; }
 
-        if (this.checkKeyExists(key) === false)
-        {
-            this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax });
-        }
+        this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax });
 
         return this;
 
@@ -318,10 +389,7 @@ Phaser.Loader.prototype = {
         if (typeof tileMargin === "undefined") { tileMargin = 0; }
         if (typeof tileSpacing === "undefined") { tileSpacing = 0; }
 
-        if (this.checkKeyExists(key) === false)
-        {
-            this.addToFileList('tileset', key, url, { tileWidth: tileWidth, tileHeight: tileHeight, tileMax: tileMax, tileMargin: tileMargin, tileSpacing: tileSpacing });
-        }
+        this.addToFileList('tileset', key, url, { tileWidth: tileWidth, tileHeight: tileHeight, tileMax: tileMax, tileMargin: tileMargin, tileSpacing: tileSpacing });
 
         return this;
 
@@ -339,10 +407,7 @@ Phaser.Loader.prototype = {
 
         if (typeof autoDecode === "undefined") { autoDecode = true; }
 
-        if (this.checkKeyExists(key) === false)
-        {
-            this.addToFileList('audio', key, urls, { buffer: null, autoDecode: autoDecode });
-        }
+        this.addToFileList('audio', key, urls, { buffer: null, autoDecode: autoDecode });
 
         return this;
 
@@ -371,34 +436,30 @@ Phaser.Loader.prototype = {
             return this;
         }
 
-        if (this.checkKeyExists(key) === false)
+        //  A URL to a json/csv file has been given
+        if (mapDataURL)
         {
-            //  A URL to a json/csv file has been given
-            if (mapDataURL)
+            this.addToFileList('tilemap', key, mapDataURL, { format: format });
+        }
+        else
+        {
+            switch (format)
             {
-                this.addToFileList('tilemap', key, mapDataURL, { format: format });
+                //  A csv string or object has been given
+                case Phaser.Tilemap.CSV:
+                    break;
+
+                //  An xml string or object has been given
+                case Phaser.Tilemap.TILED_JSON:
+
+                    if (typeof mapData === 'string')
+                    {
+                        mapData = JSON.parse(mapData);
+                    }
+                    break;
             }
-            else
-            {
-                switch (format)
-                {
-                    //  A csv string or object has been given
-                    case Phaser.Tilemap.CSV:
-                        break;
 
-                    //  An xml string or object has been given
-                    case Phaser.Tilemap.TILED_JSON:
-
-                        if (typeof mapData === 'string')
-                        {
-                            mapData = JSON.parse(mapData);
-                        }
-                        break;
-                }
-
-                this.game.cache.addTilemap(key, null, mapData, format);
-
-            }
+            this.game.cache.addTilemap(key, null, mapData, format);
         }
 
         return this;
@@ -419,46 +480,43 @@ Phaser.Loader.prototype = {
         if (typeof xmlURL === "undefined") { xmlURL = null; }
         if (typeof xmlData === "undefined") { xmlData = null; }
 
-        if (this.checkKeyExists(key) === false)
+        //  A URL to a json/xml file has been given
+        if (xmlURL)
         {
-            //  A URL to a json/xml file has been given
-            if (xmlURL)
+            this.addToFileList('bitmapfont', key, textureURL, { xmlURL: xmlURL });
+        }
+        else
+        {
+            //  An xml string or object has been given
+            if (typeof xmlData === 'string')
             {
-                this.addToFileList('bitmapfont', key, textureURL, { xmlURL: xmlURL });
-            }
-            else
-            {
-                //  An xml string or object has been given
-                if (typeof xmlData === 'string')
-                {
-                    var xml;
+                var xml;
 
-                    try  {
-                        if (window['DOMParser'])
-                        {
-                            var domparser = new DOMParser();
-                            xml = domparser.parseFromString(xmlData, "text/xml");
-                        }
-                        else
-                        {
-                            xml = new ActiveXObject("Microsoft.XMLDOM");
-                            xml.async = 'false';
-                            xml.loadXML(xmlData);
-                        }
-                    }
-                    catch (e)
+                try  {
+                    if (window['DOMParser'])
                     {
-                        xml = undefined;
-                    }
-
-                    if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
-                    {
-                        throw new Error("Phaser.Loader. Invalid Bitmap Font XML given");
+                        var domparser = new DOMParser();
+                        xml = domparser.parseFromString(xmlData, "text/xml");
                     }
                     else
                     {
-                        this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml });
+                        xml = new ActiveXObject("Microsoft.XMLDOM");
+                        xml.async = 'false';
+                        xml.loadXML(xmlData);
                     }
+                }
+                catch (e)
+                {
+                    xml = undefined;
+                }
+
+                if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
+                {
+                    throw new Error("Phaser.Loader. Invalid Bitmap Font XML given");
+                }
+                else
+                {
+                    this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml });
                 }
             }
         }
@@ -471,9 +529,10 @@ Phaser.Loader.prototype = {
     * Add a new texture atlas to the loader. This atlas uses the JSON Array data format.
     *
     * @method Phaser.Loader#atlasJSONArray
-    * @param {string} key - Unique asset key of the bitmap font.
-    * @param {Description} atlasURL - The url of the Description.
-    * @param {Description} atlasData - Description.
+    * @param {string} key - Unique asset key of the texture atlas file.
+    * @param {string} textureURL - The url of the texture atlas image file.
+    * @param {string} [atlasURL] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
+    * @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
     */
     atlasJSONArray: function (key, textureURL, atlasURL, atlasData) {
 
@@ -485,9 +544,10 @@ Phaser.Loader.prototype = {
     * Add a new texture atlas to the loader. This atlas uses the JSON Hash data format.
     *
     * @method Phaser.Loader#atlasJSONHash
-    * @param {string} key - Unique asset key of the bitmap font.
-    * @param {Description} atlasURL - The url of the Description.
-    * @param {Description} atlasData - Description.
+    * @param {string} key - Unique asset key of the texture atlas file.
+    * @param {string} textureURL - The url of the texture atlas image file.
+    * @param {string} [atlasURL] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
+    * @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
     */
     atlasJSONHash: function (key, textureURL, atlasURL, atlasData) {
 
@@ -499,9 +559,10 @@ Phaser.Loader.prototype = {
     * Add a new texture atlas to the loader. This atlas uses the Starling XML data format.
     *
     * @method Phaser.Loader#atlasXML
-    * @param {string} key - Unique asset key of the bitmap font.
-    * @param {Description} atlasURL - The url of the Description.
-    * @param {Description} atlasData - Description.
+    * @param {string} key - Unique asset key of the texture atlas file.
+    * @param {string} textureURL - The url of the texture atlas image file.
+    * @param {string} [atlasURL] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
+    * @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
     */
     atlasXML: function (key, textureURL, atlasURL, atlasData) {
 
@@ -525,66 +586,62 @@ Phaser.Loader.prototype = {
         if (typeof atlasData === "undefined") { atlasData = null; }
         if (typeof format === "undefined") { format = Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY; }
 
-        if (this.checkKeyExists(key) === false)
+        //  A URL to a json/xml file has been given
+        if (atlasURL)
         {
-            //  A URL to a json/xml file has been given
-            if (atlasURL)
+            this.addToFileList('textureatlas', key, textureURL, { atlasURL: atlasURL, format: format });
+        }
+        else
+        {
+            switch (format)
             {
-                this.addToFileList('textureatlas', key, textureURL, { atlasURL: atlasURL, format: format });
-            }
-            else
-            {
-                switch (format)
-                {
-                    //  A json string or object has been given
-                    case Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY:
+                //  A json string or object has been given
+                case Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY:
 
-                        if (typeof atlasData === 'string')
-                        {
-                            atlasData = JSON.parse(atlasData);
-                        }
-                        break;
+                    if (typeof atlasData === 'string')
+                    {
+                        atlasData = JSON.parse(atlasData);
+                    }
+                    break;
 
-                    //  An xml string or object has been given
-                    case Phaser.Loader.TEXTURE_ATLAS_XML_STARLING:
+                //  An xml string or object has been given
+                case Phaser.Loader.TEXTURE_ATLAS_XML_STARLING:
 
-                        if (typeof atlasData === 'string')
-                        {
-                            var xml;
+                    if (typeof atlasData === 'string')
+                    {
+                        var xml;
 
-                            try  {
-                                if (window['DOMParser'])
-                                {
-                                    var domparser = new DOMParser();
-                                    xml = domparser.parseFromString(atlasData, "text/xml");
-                                }
-                                else
-                                {
-                                    xml = new ActiveXObject("Microsoft.XMLDOM");
-                                    xml.async = 'false';
-                                    xml.loadXML(atlasData);
-                                }
-                            }
-                            catch (e)
+                        try  {
+                            if (window['DOMParser'])
                             {
-                                xml = undefined;
-                            }
-
-                            if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
-                            {
-                                throw new Error("Phaser.Loader. Invalid Texture Atlas XML given");
+                                var domparser = new DOMParser();
+                                xml = domparser.parseFromString(atlasData, "text/xml");
                             }
                             else
                             {
-                                atlasData = xml;
+                                xml = new ActiveXObject("Microsoft.XMLDOM");
+                                xml.async = 'false';
+                                xml.loadXML(atlasData);
                             }
                         }
-                        break;
-                }
+                        catch (e)
+                        {
+                            xml = undefined;
+                        }
 
-                this.addToFileList('textureatlas', key, textureURL, { atlasURL: null, atlasData: atlasData, format: format });
-
+                        if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
+                        {
+                            throw new Error("Phaser.Loader. Invalid Texture Atlas XML given");
+                        }
+                        else
+                        {
+                            atlasData = xml;
+                        }
+                    }
+                    break;
             }
+
+            this.addToFileList('textureatlas', key, textureURL, { atlasURL: null, atlasData: atlasData, format: format });
 
         }
 
@@ -596,11 +653,17 @@ Phaser.Loader.prototype = {
     * Remove loading request of a file.
     *
     * @method Phaser.Loader#removeFile
-    * @param key {string} Key of the file you want to remove.
+    * @param {string} type - The type of resource to add to the list (image, audio, xml, etc).
+    * @param {string} key - Key of the file you want to remove.
     */
-    removeFile: function (key) {
+    removeFile: function (type, key) {
 
-        delete this._fileList[key];
+        var file = this.getAsset(type, key);
+
+        if (file !== false)
+        {
+            this._fileList.splice(file.index, 1);
+        }
 
     },
 
@@ -611,7 +674,7 @@ Phaser.Loader.prototype = {
     */
     removeAll: function () {
 
-        this._fileList = {};
+        this._fileList.length = 0;
 
     },
 
@@ -631,11 +694,12 @@ Phaser.Loader.prototype = {
         this.hasLoaded = false;
         this.isLoading = true;
 
-        this.onLoadStart.dispatch(this.queueSize);
+        this.onLoadStart.dispatch(this._fileList.length);
 
-        if (this._keys.length > 0)
+        if (this._fileList.length > 0)
         {
-            this._progressChunk = 100 / this._keys.length;
+            this._fileIndex = 0;
+            this._progressChunk = 100 / this._fileList.length;
             this.loadFile();
         }
         else
@@ -655,7 +719,7 @@ Phaser.Loader.prototype = {
     */
     loadFile: function () {
 
-        var file = this._fileList[this._keys.shift()];
+        var file = this._fileList[this._fileIndex];
         var _this = this;
 
         //  Image or Data?
@@ -669,10 +733,10 @@ Phaser.Loader.prototype = {
                 file.data = new Image();
                 file.data.name = file.key;
                 file.data.onload = function () {
-                    return _this.fileComplete(file.key);
+                    return _this.fileComplete(this._fileIndex);
                 };
                 file.data.onerror = function () {
-                    return _this.fileError(file.key);
+                    return _this.fileError(this._fileIndex);
                 };
                 file.data.crossOrigin = this.crossOrigin;
                 file.data.src = this.baseURL + file.url;
@@ -689,10 +753,10 @@ Phaser.Loader.prototype = {
                         this._xhr.open("GET", this.baseURL + file.url, true);
                         this._xhr.responseType = "arraybuffer";
                         this._xhr.onload = function () {
-                            return _this.fileComplete(file.key);
+                            return _this.fileComplete(this._fileIndex);
                         };
                         this._xhr.onerror = function () {
-                            return _this.fileError(file.key);
+                            return _this.fileError(this._fileIndex);
                         };
                         this._xhr.send();
                     }
@@ -705,25 +769,25 @@ Phaser.Loader.prototype = {
                             file.data.name = file.key;
                             file.data.preload = 'auto';
                             file.data.src = this.baseURL + file.url;
-                            this.fileComplete(file.key);
+                            this.fileComplete(this._fileIndex);
                         }
                         else
                         {
                             file.data = new Audio();
                             file.data.name = file.key;
                             file.data.onerror = function () {
-                                return _this.fileError(file.key);
+                                return _this.fileError(this._fileIndex);
                             };
                             file.data.preload = 'auto';
                             file.data.src = this.baseURL + file.url;
-                            file.data.addEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete(file.key), false);
+                            file.data.addEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete(this._fileIndex), false);
                             file.data.load();
                         }
                     }
                 }
                 else
                 {
-                    this.fileError(file.key);
+                    this.fileError(this._fileIndex);
                 }
 
                 break;
@@ -735,13 +799,13 @@ Phaser.Loader.prototype = {
                 if (file.format == Phaser.Tilemap.TILED_JSON)
                 {
                     this._xhr.onload = function () {
-                        return _this.jsonLoadComplete(file.key);
+                        return _this.jsonLoadComplete(this._fileIndex);
                     };
                 }
                 else if (file.format == Phaser.Tilemap.CSV)
                 {
                     this._xhr.onload = function () {
-                        return _this.csvLoadComplete(file.key);
+                        return _this.csvLoadComplete(this._fileIndex);
                     };
                 }
                 else
@@ -750,7 +814,7 @@ Phaser.Loader.prototype = {
                 }
 
                 this._xhr.onerror = function () {
-                    return _this.dataLoadError(file.key);
+                    return _this.dataLoadError(this._fileIndex);
                 };
                 this._xhr.send();
                 break;
@@ -759,10 +823,10 @@ Phaser.Loader.prototype = {
                 this._xhr.open("GET", this.baseURL + file.url, true);
                 this._xhr.responseType = "text";
                 this._xhr.onload = function () {
-                    return _this.fileComplete(file.key);
+                    return _this.fileComplete(this._fileIndex);
                 };
                 this._xhr.onerror = function () {
-                    return _this.fileError(file.key);
+                    return _this.fileError(this._fileIndex);
                 };
                 this._xhr.send();
                 break;
@@ -799,21 +863,21 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Error occured when load a file.
+    * Error occured when loading a file.
     *
     * @method Phaser.Loader#fileError
-    * @param {string} key - Key of the error loading file.
+    * @param {number} index - The index of the file in the file queue that errored.
     */
-    fileError: function (key) {
+    fileError: function (index) {
 
-        this._fileList[key].loaded = true;
-        this._fileList[key].error = true;
+        this._fileList[index].loaded = true;
+        this._fileList[index].error = true;
 
-        this.onFileError.dispatch(key);
+        this.onFileError.dispatch(this._fileList[index].key, this._fileList[index]);
 
-        console.warn("Phaser.Loader error loading file: " + key + ' from URL ' + this._fileList[key].url);
+        console.warn("Phaser.Loader error loading file: " + this._fileList[index].key + ' from URL ' + this._fileList[index].url);
 
-        this.nextFile(key, false);
+        this.nextFile(index, false);
 
     },
 
@@ -821,19 +885,19 @@ Phaser.Loader.prototype = {
     * Called when a file is successfully loaded.
     *
     * @method Phaser.Loader#fileComplete
-    * @param {string} key - Key of the successfully loaded file.
+    * @param {number} index - The index of the file in the file queue that loaded.
     */
-    fileComplete: function (key) {
+    fileComplete: function (index) {
 
-        if (!this._fileList[key])
+        if (!this._fileList[index])
         {
-            console.warn('Phaser.Loader fileComplete invalid key ' + key);
+            console.warn('Phaser.Loader fileComplete invalid index ' + index);
             return;
         }
         
-        this._fileList[key].loaded = true;
+        this._fileList[index].loaded = true;
 
-        var file = this._fileList[key];
+        var file = this._fileList[index];
         var loadNext = true;
         var _this = this;
 
@@ -870,13 +934,13 @@ Phaser.Loader.prototype = {
                     if (file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY || file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
                     {
                         this._xhr.onload = function () {
-                            return _this.jsonLoadComplete(file.key);
+                            return _this.jsonLoadComplete(index);
                         };
                     }
                     else if (file.format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
                     {
                         this._xhr.onload = function () {
-                            return _this.xmlLoadComplete(file.key);
+                            return _this.xmlLoadComplete(index);
                         };
                     }
                     else
@@ -885,7 +949,7 @@ Phaser.Loader.prototype = {
                     }
 
                     this._xhr.onerror = function () {
-                        return _this.dataLoadError(file.key);
+                        return _this.dataLoadError(index);
                     };
                     this._xhr.send();
                 }
@@ -905,11 +969,11 @@ Phaser.Loader.prototype = {
                     this._xhr.responseType = "text";
 
                     this._xhr.onload = function () {
-                        return _this.xmlLoadComplete(file.key);
+                        return _this.xmlLoadComplete(index);
                     };
 
                     this._xhr.onerror = function () {
-                        return _this.dataLoadError(file.key);
+                        return _this.dataLoadError(index);
                     };
                     this._xhr.send();
                 }
@@ -933,7 +997,7 @@ Phaser.Loader.prototype = {
                         this.game.sound.context.decodeAudioData(file.data, function (buffer) {
                             if (buffer)
                             {
-                                that.game.cache.decodedSound(key, buffer);
+                                that.game.cache.decodedSound(index, buffer);
                             }
                         });
                     }
@@ -953,7 +1017,7 @@ Phaser.Loader.prototype = {
 
         if (loadNext)
         {
-            this.nextFile(key, true);
+            this.nextFile(index, true);
         }
 
     },
@@ -962,12 +1026,12 @@ Phaser.Loader.prototype = {
     * Successfully loaded a JSON file.
     *
     * @method Phaser.Loader#jsonLoadComplete
-    * @param {string} key - Key of the loaded JSON file.
+    * @param {number} index - The index of the file in the file queue that loaded.
     */
-    jsonLoadComplete: function (key) {
+    jsonLoadComplete: function (index) {
 
         var data = JSON.parse(this._xhr.responseText);
-        var file = this._fileList[key];
+        var file = this._fileList[index];
 
         if (file.type == 'tilemap')
         {
@@ -978,7 +1042,7 @@ Phaser.Loader.prototype = {
             this.game.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
         }
 
-        this.nextFile(key, true);
+        this.nextFile(index, true);
 
     },
 
@@ -986,16 +1050,16 @@ Phaser.Loader.prototype = {
     * Successfully loaded a CSV file.
     *
     * @method Phaser.Loader#csvLoadComplete
-    * @param {string} key - Key of the loaded CSV file.
+    * @param {number} index - The index of the file in the file queue that loaded.
     */
-    csvLoadComplete: function (key) {
+    csvLoadComplete: function (index) {
 
         var data = this._xhr.responseText;
-        var file = this._fileList[key];
+        var file = this._fileList[index];
 
         this.game.cache.addTilemap(file.key, file.url, data, file.format);
 
-        this.nextFile(key, true);
+        this.nextFile(index, true);
 
     },
 
@@ -1003,17 +1067,17 @@ Phaser.Loader.prototype = {
     * Error occured when load a JSON.
     *
     * @method Phaser.Loader#dataLoadError
-    * @param {string} key - Key of the error loading JSON file.
+    * @param {number} index - The index of the file in the file queue that errored.
     */
-    dataLoadError: function (key) {
+    dataLoadError: function (index) {
 
-        var file = this._fileList[key];
+        var file = this._fileList[index];
 
         file.error = true;
 
-        console.warn("Phaser.Loader dataLoadError: " + key);
+        console.warn("Phaser.Loader dataLoadError: " + file.key);
 
-        this.nextFile(key, true);
+        this.nextFile(index, true);
 
     },
 
@@ -1021,9 +1085,9 @@ Phaser.Loader.prototype = {
     * Successfully loaded an XML file.
     *
     * @method Phaser.Loader#xmlLoadComplete
-    * @param {string} key - Key of the loaded XML file.
+    * @param {number} index - The index of the file in the file queue that loaded.
     */
-    xmlLoadComplete: function (key) {
+    xmlLoadComplete: function (index) {
 
         var data = this._xhr.responseText;
         var xml;
@@ -1052,7 +1116,7 @@ Phaser.Loader.prototype = {
             throw new Error("Phaser.Loader. Invalid XML given");
         }
 
-        var file = this._fileList[key];
+        var file = this._fileList[index];
 
         if (file.type == 'bitmapfont')
         {
@@ -1063,18 +1127,18 @@ Phaser.Loader.prototype = {
             this.game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
         }
 
-        this.nextFile(key, true);
+        this.nextFile(index, true);
 
     },
 
     /**
     * Handle loading next file.
     *
-    * @param previousKey {string} Key of previous loaded asset.
-    * @param success {boolean} Whether the previous asset loaded successfully or not.
+    * @param {number} previousIndex - Index of the previously loaded asset.
+    * @param {boolean} success - Whether the previous asset loaded successfully or not.
     * @private
     */
-    nextFile: function (previousKey, success) {
+    nextFile: function (previousIndex, success) {
 
         this.progress = Math.round(this.progress + this._progressChunk);
 
@@ -1097,10 +1161,11 @@ Phaser.Loader.prototype = {
             this.preloadSprite.sprite.crop = this.preloadSprite.crop;
         }
 
-        this.onFileComplete.dispatch(this.progress, previousKey, success, this.queueSize - this._keys.length, this.queueSize);
+        this.onFileComplete.dispatch(this.progress, this._fileList[previousIndex].key, success, this.totalLoadedFiles(), this._fileList.length);
 
-        if (this._keys.length > 0)
+        if (this.totalQueuedFiles() > 0)
         {
+            this._fileIndex++;
             this.loadFile();
         }
         else
@@ -1112,6 +1177,48 @@ Phaser.Loader.prototype = {
 
             this.onLoadComplete.dispatch();
         }
+
+    },
+
+    /**
+    * Returns the number of files that have already been loaded, even if they errored.
+    *
+    * @return {number} The number of files that have already been loaded (even if they errored)
+    */
+    totalLoadedFiles: function () {
+
+        var total = 0;
+
+        for (var i = 0; i < this._fileList; i++)
+        {
+            if (this._fileList[i].loaded)
+            {
+                total++;
+            }
+        }
+
+        return total;
+
+    },
+
+    /**
+    * Returns the number of files still waiting to be processed in the load queue. This value decreases as each file is in the queue is loaded.
+    *
+    * @return {number} The number of files that still remain in the load queue.
+    */
+    totalQueuedFiles: function () {
+
+        var total = 0;
+
+        for (var i = 0; i < this._fileList; i++)
+        {
+            if (this._fileList[i].loaded === false)
+            {
+                total++;
+            }
+        }
+
+        return total;
 
     }
 

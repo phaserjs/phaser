@@ -31,8 +31,6 @@ PIXI.PixiShader = function()
     * @property {number} textureCount - A local texture counter for multi-texture shaders.
     */
     this.textureCount = 0;
-
-    // this.dirty = true;
     
 };
 
@@ -90,13 +88,11 @@ PIXI.PixiShader.prototype.initUniforms = function()
 
         if (type == 'sampler2D')
         {
-            if (uniform.value && uniform.value.baseTexture.hasLoaded)
+            uniform._init = false;
+
+            if (uniform.value !== null)
             {
                 this.initSampler2D(uniform);
-            }
-            else
-            {
-                uniform._init = false;
             }
         }
         else if (type == 'mat2' || type == 'mat3' || type == 'mat4')
@@ -151,48 +147,70 @@ PIXI.PixiShader.prototype.initUniforms = function()
 */
 PIXI.PixiShader.prototype.initSampler2D = function(uniform)
 {
-    if (uniform.value && uniform.value.baseTexture.hasLoaded)
+    if (!uniform.value || !uniform.value.baseTexture || !uniform.value.baseTexture.hasLoaded)
     {
+        return;
+    }
+
+    PIXI.gl.activeTexture(PIXI.gl['TEXTURE' + this.textureCount]);
+    PIXI.gl.bindTexture(PIXI.gl.TEXTURE_2D, uniform.value.baseTexture._glTexture);
+
+    //  Extended texture data
+    if (uniform.textureData)
+    {
+        var data = uniform.textureData;
+
         // GLTexture = mag linear, min linear_mipmap_linear, wrap repeat + gl.generateMipmap(gl.TEXTURE_2D);
         // GLTextureLinear = mag/min linear, wrap clamp
         // GLTextureNearestRepeat = mag/min NEAREST, wrap repeat
         // GLTextureNearest = mag/min nearest, wrap clamp
-        // AudioTexture = whatever + luminance
+        // AudioTexture = whatever + luminance + width 512, height 2, border 0
+        // KeyTexture = whatever + luminance + width 256, height 2, border 0
 
         //  magFilter can be: gl.LINEAR, gl.LINEAR_MIPMAP_LINEAR or gl.NEAREST
         //  wrapS/T can be: gl.CLAMP_TO_EDGE or gl.REPEAT
 
-        var magFilter = (uniform.magFilter) ? uniform.magFilter : PIXI.gl.LINEAR;
-        var minFilter = (uniform.minFilter) ? uniform.minFilter : PIXI.gl.LINEAR;
-        var wrapS = (uniform.wrapS) ? uniform.wrapS : PIXI.gl.CLAMP_TO_EDGE;
-        var wrapT = (uniform.wrapT) ? uniform.wrapT : PIXI.gl.CLAMP_TO_EDGE;
-        var format = (uniform.luminance) ? PIXI.gl.LUMINANCE : PIXI.gl.RGBA;
+        var magFilter = (data.magFilter) ? data.magFilter : PIXI.gl.LINEAR;
+        var minFilter = (data.minFilter) ? data.minFilter : PIXI.gl.LINEAR;
+        var wrapS = (data.wrapS) ? data.wrapS : PIXI.gl.CLAMP_TO_EDGE;
+        var wrapT = (data.wrapT) ? data.wrapT : PIXI.gl.CLAMP_TO_EDGE;
+        var format = (data.luminance) ? PIXI.gl.LUMINANCE : PIXI.gl.RGBA;
 
-        if (uniform.repeat)
+        if (data.repeat)
         {
             wrapS = PIXI.gl.REPEAT;
             wrapT = PIXI.gl.REPEAT;
         }
 
-        PIXI.gl.activeTexture(PIXI.gl['TEXTURE' + this.textureCount]);
-        PIXI.gl.bindTexture(PIXI.gl.TEXTURE_2D, uniform.value.baseTexture._glTexture);
         PIXI.gl.pixelStorei(PIXI.gl.UNPACK_FLIP_Y_WEBGL, false);
 
-        PIXI.gl.texImage2D(PIXI.gl.TEXTURE_2D, 0, format, PIXI.gl.RGBA, PIXI.gl.UNSIGNED_BYTE, uniform.value.baseTexture.source);
-        // PIXI.gl.texImage2D(PIXI.gl.TEXTURE_2D, 0, PIXI.gl.LUMINANCE, 512, 2, 0, PIXI.gl.LUMINANCE, PIXI.gl.UNSIGNED_BYTE, null);
-        // PIXI.gl.texImage2D(PIXI.gl.TEXTURE_2D, 0, PIXI.gl.LUMINANCE, 256, 2, 0, PIXI.gl.LUMINANCE, PIXI.gl.UNSIGNED_BYTE, null);
+        if (data.width)
+        {
+            var width = (data.width) ? data.width : 512;
+            var height = (data.height) ? data.height : 2;
+            var border = (data.border) ? data.border : 0;
+
+            // void texImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, ArrayBufferView? pixels);
+            PIXI.gl.texImage2D(PIXI.gl.TEXTURE_2D, 0, format, width, height, border, format, PIXI.gl.UNSIGNED_BYTE, null);
+        }
+        else
+        {
+            //  void texImage2D(GLenum target, GLint level, GLenum internalformat, GLenum format, GLenum type, ImageData? pixels);
+            PIXI.gl.texImage2D(PIXI.gl.TEXTURE_2D, 0, format, PIXI.gl.RGBA, PIXI.gl.UNSIGNED_BYTE, uniform.value.baseTexture.source);
+        }
 
         PIXI.gl.texParameteri(PIXI.gl.TEXTURE_2D, PIXI.gl.TEXTURE_MAG_FILTER, magFilter);
         PIXI.gl.texParameteri(PIXI.gl.TEXTURE_2D, PIXI.gl.TEXTURE_MIN_FILTER, minFilter);
         PIXI.gl.texParameteri(PIXI.gl.TEXTURE_2D, PIXI.gl.TEXTURE_WRAP_S, wrapS);
         PIXI.gl.texParameteri(PIXI.gl.TEXTURE_2D, PIXI.gl.TEXTURE_WRAP_T, wrapT);
-
-        PIXI.gl.uniform1i(uniform.uniformLocation, this.textureCount);
-
-        uniform._init = true;
-
-        this.textureCount++;
     }
+
+    PIXI.gl.uniform1i(uniform.uniformLocation, this.textureCount);
+
+    uniform._init = true;
+
+    this.textureCount++;
+
 };
 
 /**
@@ -202,6 +220,7 @@ PIXI.PixiShader.prototype.initSampler2D = function(uniform)
 */
 PIXI.PixiShader.prototype.syncUniforms = function()
 {
+    this.textureCount = 1;
     var uniform;
 
     //  This would probably be faster in an array and it would guarantee key order
@@ -232,9 +251,19 @@ PIXI.PixiShader.prototype.syncUniforms = function()
         {
             uniform.glFunc.call(PIXI.gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z, uniform.value.w);
         }
-        else if (uniform.type == 'sampler2D' && uniform._init == false && uniform.value && uniform.value.baseTexture.hasLoaded === false)
+        else if (uniform.type == 'sampler2D')
         {
-            this.initSampler2D(uniform);
+            if (uniform._init)
+            {
+                PIXI.gl.activeTexture(PIXI.gl['TEXTURE' + this.textureCount]);
+                PIXI.gl.bindTexture(PIXI.gl.TEXTURE_2D, uniform.value.baseTexture._glTexture);
+                PIXI.gl.uniform1i(uniform.uniformLocation, this.textureCount);
+                this.textureCount++;
+            }
+            else
+            {
+                this.initSampler2D(uniform);
+            }
         }
     }
     
