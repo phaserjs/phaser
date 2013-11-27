@@ -1,12 +1,27 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* A Tile Map object. A Tile map consists of a set of tile data and tile sets. It is rendered to the display using a TilemapLayer.
+* A map may have multiple layers. You can perform operations on the map data such as copying, pasting, filling and shuffling the tiles around.
+*
+* @class Phaser.Tilemap
+* @constructor
+* @param {Phaser.Game} game - Game reference to the currently running game.
+* @param {string} [key] - The key of the tilemap data as stored in the Cache.
+*/
 Phaser.Tilemap = function (game, key) {
 
     /**
-    * @property {Phaser.Game} game - Description.
+    * @property {Phaser.Game} game - A reference to the currently running Game.
     */
     this.game = game;
 
     /**
-    * @property {array} layers - Description.
+    * @property {array} layers - An array of Tilemap layers.
     */
     this.layers = null;
 
@@ -22,23 +37,64 @@ Phaser.Tilemap = function (game, key) {
         this.layers = [];
     }
 
+    /**
+    * @property {number} currentLayer - The current layer.
+    */
     this.currentLayer = 0;
+
+    /**
+    * @property {array} debugMap - Map data used for debug values only.
+    */
 
     this.debugMap = [];
 
+    /**
+    * @property {boolean} dirty - Internal rendering related flag.
+    */
     this.dirty = false;
 
+    /**
+    * @property {array} _results - Internal var.
+    * @private
+    */
     this._results = [];
+
+    /**
+    * @property {number} _tempA - Internal var.
+    * @private
+    */
     this._tempA = 0;
+
+    /**
+    * @property {number} _tempB - Internal var.
+    * @private
+    */
     this._tempB = 0;
 
 };
 
+/**
+* @constant
+* @type {number}
+*/
 Phaser.Tilemap.CSV = 0;
+
+/**
+* @constant
+* @type {number}
+*/
 Phaser.Tilemap.TILED_JSON = 1;
 
 Phaser.Tilemap.prototype = {
 
+    /**
+    * Creates an empty map of the given dimensions.
+    *
+    * @method Phaser.Tilemap#create
+    * @param {string} name - The name of the map (mostly used for debugging)
+    * @param {number} width - The width of the map in tiles.
+    * @param {number} height - The height of the map in tiles.
+    */
     create: function (name, width, height) {
 
         var data = [];
@@ -53,7 +109,7 @@ Phaser.Tilemap.prototype = {
             }
         }
 
-        this.currentLayer = this.layers.push({
+        this.layers.push({
 
             name: name,
             width: width,
@@ -68,10 +124,17 @@ Phaser.Tilemap.prototype = {
 
         });
 
+        this.currentLayer = this.layers.length - 1;
+
         this.dirty = true;
 
     },
 
+    /**
+    * Internal function that calculates the tile indexes for the map data.
+    *
+    * @method Phaser.Tilemap#calculateIndexes
+    */
     calculateIndexes: function () {
 
         for (var layer = 0; layer < this.layers.length; layer++)
@@ -94,6 +157,12 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Sets the current layer to the given index.
+    *
+    * @method Phaser.Tilemap#setLayer
+    * @param {number} layer - Sets the current layer to the given index.
+    */
     setLayer: function (layer) {
 
         if (this.layers[layer])
@@ -104,11 +173,12 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Set a specific tile with its x and y in tiles.
-    * @method putTile
-    * @param {number} x - X position of this tile.
-    * @param {number} y - Y position of this tile.
-    * @param {number} index - The index of this tile type in the core map data.
+    * Puts a tile of the given index value at the coordinate specified.
+    * @method Phaser.Tilemap#putTile
+    * @param {number} index - The index of this tile to set.
+    * @param {number} x - X position to place the tile (given in tile units, not pixels)
+    * @param {number} y - Y position to place the tile (given in tile units, not pixels)
+    * @param {number} [layer] - The Tilemap Layer to operate on.
     */
     putTile: function (index, x, y, layer) {
 
@@ -123,6 +193,14 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Gets a tile from the Tilemap Layer. The coordinates are given in tile values.
+    * @method Phaser.Tilemap#getTile
+    * @param {number} x - X position to get the tile from (given in tile units, not pixels)
+    * @param {number} y - Y position to get the tile from (given in tile units, not pixels)
+    * @param {number} [layer] - The Tilemap Layer to operate on.
+    * @return {number} The index of the tile at the given coordinates.
+    */
     getTile: function (x, y, layer) {
 
         if (typeof layer === "undefined") { layer = this.currentLayer; }
@@ -134,6 +212,14 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Gets a tile from the Tilemap layer. The coordinates are given in pixel values.
+    * @method Phaser.Tilemap#getTileWorldXY
+    * @param {number} x - X position to get the tile from (given in pixels)
+    * @param {number} y - Y position to get the tile from (given in pixels)
+    * @param {number} [layer] - The Tilemap Layer to operate on.
+    * @return {number} The index of the tile at the given coordinates.
+    */
     getTileWorldXY: function (x, y, tileWidth, tileHeight, layer) {
 
         if (typeof layer === "undefined") { layer = this.currentLayer; }
@@ -149,13 +235,18 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Set a specific tile with its x and y in tiles.
-    * @method putTileWorldXY
-    * @param {number} x - X position of this tile in world coordinates.
-    * @param {number} y - Y position of this tile in world coordinates.
-    * @param {number} index - The index of this tile type in the core map data.
+    * Puts a tile into the Tilemap layer. The coordinates are given in pixel values.
+    * @method Phaser.Tilemap#putTileWorldXY
+    * @param {number} index - The index of the tile to put into the layer.
+    * @param {number} x - X position to insert the tile (given in pixels)
+    * @param {number} y - Y position to insert the tile (given in pixels)
+    * @param {number} tileWidth - The width of the tile in pixels.
+    * @param {number} tileHeight - The height of the tile in pixels.
+    * @param {number} [layer] - The Tilemap Layer to operate on.
     */
     putTileWorldXY: function (index, x, y, tileWidth, tileHeight, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
 
         x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
         y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
@@ -169,7 +260,16 @@ Phaser.Tilemap.prototype = {
 
     },
 
-    //  Values are in TILEs, not pixels.
+    /**
+    * Copies all of the tiles in the given rectangular block into the tilemap data buffer.
+    * @method Phaser.Tilemap#copy
+    * @param {number} x - X position of the top left of the area to copy (given in tiles, not pixels)
+    * @param {number} y - Y position of the top left of the area to copy (given in tiles, not pixels)
+    * @param {number} width - The width of the area to copy (given in tiles, not pixels)
+    * @param {number} height - The height of the area to copy (given in tiles, not pixels)
+    * @param {number} [layer] - The Tilemap Layer to operate on.
+    * @return {array} An array of the tiles that were copied.
+    */
     copy: function (x, y, width, height, layer) {
 
         if (typeof layer === "undefined") { layer = this.currentLayer; }
@@ -221,6 +321,14 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Pastes a previously copied block of tile data into the given x/y coordinates. Data should have been prepared with Tilemap.copy.
+    * @method Phaser.Tilemap#paste
+    * @param {number} x - X position of the top left of the area to paste to (given in tiles, not pixels)
+    * @param {number} y - Y position of the top left of the area to paste to (given in tiles, not pixels)
+    * @param {array} tileblock - The block of tiles to paste.
+    * @param {number} layer - The Tilemap Layer to operate on.
+    */
     paste: function (x, y, tileblock, layer) {
 
         if (typeof x === "undefined") { x = 0; }
@@ -247,13 +355,13 @@ Phaser.Tilemap.prototype = {
 
     /**
     * Swap tiles with 2 kinds of indexes.
-    * @method swapTile
+    * @method Phaser.Tilemap#swapTile
     * @param {number} tileA - First tile index.
     * @param {number} tileB - Second tile index.
-    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
-    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
-    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
-    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    * @param {number} x - X position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} y - Y position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} width - The width in tiles of the area to operate on.
+    * @param {number} height - The height in tiles of the area to operate on.
     */
     swap: function (tileA, tileB, x, y, width, height, layer) {
 
@@ -273,6 +381,12 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Internal function that handles the swapping of tiles.
+    * @method Phaser.Tilemap#swapHandler
+    * @param {number} value
+    * @param {number} index
+    */
     swapHandler: function (value, index) {
 
         if (value.index === this._tempA)
@@ -287,14 +401,15 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Swap tiles with 2 kinds of indexes.
-    * @method swapTile
-    * @param {number} tileA - First tile index.
-    * @param {number} tileB - Second tile index.
-    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
-    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
-    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
-    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    * For each tile in the given area (defined by x/y and width/height) run the given callback.
+    * @method Phaser.Tilemap#forEach
+    * @param {number} callback - The callback. Each tile in the given area will be passed to this callback as the first and only parameter.
+    * @param {number} context - The context under which the callback should be run.
+    * @param {number} x - X position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} y - Y position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} width - The width in tiles of the area to operate on.
+    * @param {number} height - The height in tiles of the area to operate on.
+    * @param {number} [layer] - The Tilemap Layer to operate on.
     */
     forEach: function (callback, context, x, y, width, height, layer) {
 
@@ -312,14 +427,15 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Replaces one type of tile with another.
-    * @method replace
+    * Replaces one type of tile with another in the given area (defined by x/y and width/height).
+    * @method Phaser.Tilemap#replace
     * @param {number} tileA - First tile index.
     * @param {number} tileB - Second tile index.
-    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
-    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
-    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
-    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    * @param {number} x - X position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} y - Y position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} width - The width in tiles of the area to operate on.
+    * @param {number} height - The height in tiles of the area to operate on.
+    * @param {number} [layer] - The Tilemap Layer to operate on.
     */
     replace: function (tileA, tileB, x, y, width, height, layer) {
 
@@ -343,14 +459,15 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Randomises a set of tiles in a given area. It will only randomise the tiles in that area, so if they're all the same nothing will appear to have changed!
-    * @method random
+    * Randomises a set of tiles in a given area.
+    * @method Phaser.Tilemap#random
     * @param {number} tileA - First tile index.
     * @param {number} tileB - Second tile index.
-    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
-    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
-    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
-    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    * @param {number} x - X position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} y - Y position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} width - The width in tiles of the area to operate on.
+    * @param {number} height - The height in tiles of the area to operate on.
+    * @param {number} [layer] - The Tilemap Layer to operate on.
     */
     random: function (x, y, width, height, layer) {
 
@@ -385,14 +502,15 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Randomises a set of tiles in a given area. It will only randomise the tiles in that area, so if they're all the same nothing will appear to have changed!
-    * @method random
+    * Shuffles a set of tiles in a given area. It will only randomise the tiles in that area, so if they're all the same nothing will appear to have changed!
+    * @method Phaser.Tilemap#shuffle
     * @param {number} tileA - First tile index.
     * @param {number} tileB - Second tile index.
-    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
-    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
-    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
-    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    * @param {number} x - X position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} y - Y position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} width - The width in tiles of the area to operate on.
+    * @param {number} height - The height in tiles of the area to operate on.
+    * @param {number} [layer] - The Tilemap Layer to operate on.
     */
     shuffle: function (x, y, width, height, layer) {
 
@@ -416,13 +534,14 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Fill a tile block with a specific tile index.
-    * @method fill
+    * Fill a block with a specific tile index.
+    * @method Phaser.Tilemap#fill
     * @param {number} index - Index of tiles you want to fill with.
-    * @param {number} [x] - X position (in tiles) of block's left-top corner.
-    * @param {number} [y] - Y position (in tiles) of block's left-top corner.
-    * @param {number} [width] - width of block.
-    * @param {number} [height] - height of block.
+    * @param {number} x - X position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} y - Y position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} width - The width in tiles of the area to operate on.
+    * @param {number} height - The height in tiles of the area to operate on.
+    * @param {number} [layer] - The Tilemap Layer to operate on.
     */
     fill: function (index, x, y, width, height, layer) {
 
@@ -442,6 +561,10 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Removes all layers from this tile map.
+    * @method Phaser.Tilemap#removeAllLayers
+    */
     removeAllLayers: function () {
 
         this.layers.length = 0;
@@ -449,6 +572,10 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Dumps the tilemap data out to the console.
+    * @method Phaser.Tilemap#dump
+    */
     dump: function () {
 
         var txt = '';
@@ -485,6 +612,10 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Removes all layers from this tile map and nulls the game reference.
+    * @method Phaser.Tilemap#destroy
+    */
     destroy: function () {
 
         this.removeAllLayers();

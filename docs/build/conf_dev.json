@@ -18,6 +18,7 @@
             "../../src/physics/arcade/", 
             "../../src/sound/", 
             "../../src/system/", 
+            "../../src/tilemap/", 
             "../../src/time/", 
             "../../src/tween/", 
             "../../src/utils/" 

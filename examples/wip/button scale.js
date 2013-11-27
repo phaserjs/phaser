@@ -32,6 +32,8 @@ var button6;
 
 function create() {
 
+    console.log('create!');
+
     background = game.add.sprite(0, 0, 'sky0');
     background.name = 'background';
 
@@ -77,7 +79,7 @@ function create() {
     
     // Phaser.Canvas.setSmoothingEnabled(false);
 
-    game.input.onDown.add(gofull, this);
+    //game.input.onDown.add(gofull, this);
 
 }
 

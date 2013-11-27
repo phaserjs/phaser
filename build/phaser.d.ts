@@ -1565,6 +1565,10 @@ declare module Phaser {
                   computeVelocity(axis: number, body: Phaser.Physics.Arcade.Body, velocity: number, acceleration: number, drag: number, max: number): void;
                   preUpdate(): void;
                   postUpdate(): void;
+                  overlap(object1: any, object2: any, overlapCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
+                  overlapSpriteVsSprite(sprite1: Phaser.Sprite, sprite2: Phaser.Sprite,  overlapCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
+                  overlapSpriteVsGroup(sprite1: Phaser.Sprite, group: Phaser.Group,  overlapCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
+                  overlapGroupVsGroup(group: Phaser.Group, group2: Phaser.Group,  overlapCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
                   collide(object1: any, object2: any, collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
                   collideSpriteVsSprite(sprite1: Phaser.Sprite, sprite2: Phaser.Sprite,  collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
                   collideSpriteVsTilemap(sprite1: Phaser.Sprite, tilemap: Phaser.Tilemap,  collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;

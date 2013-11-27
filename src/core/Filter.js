@@ -67,10 +67,21 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
 
 Phaser.Filter.prototype = {
 
+    /**
+    * Should be over-ridden.
+    * @method Phaser.Filter#init
+    * @param {...}
+    */
     init: function () {
         //  This should be over-ridden. Will receive a variable number of arguments.
     },
 
+    /**
+    * Set the resolution uniforms on the filter.
+    * @method Phaser.Filter#setResolution
+    * @param {number} width - The width of the display.
+    * @param {number} height - The height of the display.
+    */
     setResolution: function (width, height) {
 
         this.uniforms.resolution.value.x = width;
@@ -78,6 +89,11 @@ Phaser.Filter.prototype = {
 
     },
 
+    /**
+    * Updates the filter.
+    * @method Phaser.Filter#update
+    * @param {Phaser.Pointer} [pointer] - A Pointer object to use for the filter. The coordinates are mapped to the mouse uniform.
+    */
     update: function (pointer) {
 
         if (typeof pointer !== 'undefined')
@@ -102,6 +118,10 @@ Phaser.Filter.prototype = {
 
 };
 
+/**
+* @name Phaser.Filter#width
+* @property {number} width - The width (resolution uniform)
+*/
 Object.defineProperty(Phaser.Filter.prototype, 'width', {
 
     get: function() {
@@ -114,6 +134,10 @@ Object.defineProperty(Phaser.Filter.prototype, 'width', {
 
 });
 
+/**
+* @name Phaser.Filter#height
+* @property {number} height - The height (resolution uniform)
+*/
 Object.defineProperty(Phaser.Filter.prototype, 'height', {
 
     get: function() {

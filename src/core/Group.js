@@ -197,7 +197,6 @@ Phaser.Group.prototype = {
     * Returns the child found at the given index within this Group.
     *
     * @method Phaser.Group#getAt
-    * @memberof Phaser.Group
     * @param {number} index - The index to return the child from.
     * @return {*} The child that was found at the given index.
     */

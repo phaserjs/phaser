@@ -100,7 +100,7 @@ Phaser.PluginManager.prototype = {
         //  The plugin must have at least one of the above functions to be added to the PluginManager.
         if (result)
         {
-            if (plugin.hasPreUpdate || plugin.hasUpdate)
+            if (plugin.hasPreUpdate || plugin.hasUpdate || plugin.hasPostUpdate)
             {
                 plugin.active = true;
             }

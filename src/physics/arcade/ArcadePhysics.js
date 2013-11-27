@@ -282,22 +282,179 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-    * Checks if two Sprite objects overlap.
+    * Checks for overlaps between two game objects. The objects can be Sprites, Groups or Emitters.
+    * You can perform Sprite vs. Sprite, Sprite vs. Group and Group vs. Group overlap checks.
+    * Unlike collide the objects are NOT automatically separated or have any physics applied, they merely test for overlap results.
     *
     * @method Phaser.Physics.Arcade#overlap
-    * @param {Phaser.Sprite} object1 - The first object to check. Can be an instance of Phaser.Sprite or anything that extends it.
-    * @param {Phaser.Sprite} object2 - The second object to check. Can be an instance of Phaser.Sprite or anything that extends it.
-    * @returns {boolean} true if the two objects overlap.
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group or Phaser.Particles.Emitter.
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter} object2 - The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group or Phaser.Particles.Emitter.
+    * @param {function} [overlapCallback=null] - An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then overlapCallback will only be called if processCallback returns true.
+    * @param {object} [callbackContext] - The context in which to run the callbacks.
+    * @returns {boolean} True if an overlap occured otherwise false.
     */
-    overlap: function (object1, object2) {
+    overlap: function (object1, object2, overlapCallback, processCallback, callbackContext) {
+
+        overlapCallback = overlapCallback || null;
+        processCallback = processCallback || null;
+        callbackContext = callbackContext || overlapCallback;
+
+        this._result = false;
+        this._total = 0;
 
         //  Only test valid objects
         if (object1 && object2 && object1.exists && object2.exists)
         {
-            return (Phaser.Rectangle.intersects(object1.body, object2.body));
+            //  SPRITES
+            if (object1.type == Phaser.SPRITE)
+            {
+                if (object2.type == Phaser.SPRITE)
+                {
+                    this.overlapSpriteVsSprite(object1, object2, overlapCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.overlapSpriteVsGroup(object1, object2, overlapCallback, processCallback, callbackContext);
+                }
+            }
+            //  GROUPS
+            else if (object1.type == Phaser.GROUP)
+            {
+                if (object2.type == Phaser.SPRITE)
+                {
+                    this.overlapSpriteVsGroup(object2, object1, overlapCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.overlapGroupVsGroup(object1, object2, overlapCallback, processCallback, callbackContext);
+                }
+            }
+            //  EMITTER
+            else if (object1.type == Phaser.EMITTER)
+            {
+                if (object2.type == Phaser.SPRITE)
+                {
+                    this.overlapSpriteVsGroup(object2, object1, overlapCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.overlapGroupVsGroup(object1, object2, overlapCallback, processCallback, callbackContext);
+                }
+            }
         }
 
-        return false;
+        return (this._total > 0);
+
+    },
+
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.overlap instead.
+    *
+    * @method Phaser.Physics.Arcade#overlapSpriteVsSprite
+    * @private
+    */
+    overlapSpriteVsSprite: function (sprite1, sprite2, overlapCallback, processCallback, callbackContext) {
+
+        this._result = Phaser.Rectangle.intersects(sprite1.body, sprite2.body);
+
+        if (this._result)
+        {
+            //  They collided, is there a custom process callback?
+            if (processCallback)
+            {
+                if (processCallback.call(callbackContext, sprite1, sprite2))
+                {
+                    this._total++;
+
+                    if (overlapCallback)
+                    {
+                        overlapCallback.call(callbackContext, sprite1, sprite2);
+                    }
+                }
+            }
+            else
+            {
+                this._total++;
+
+                if (overlapCallback)
+                {
+                    overlapCallback.call(callbackContext, sprite1, sprite2);
+                }
+            }
+        }
+
+    },
+
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.overlap instead.
+    *
+    * @method Phaser.Physics.Arcade#overlapSpriteVsGroup
+    * @private
+    */
+    overlapSpriteVsGroup: function (sprite, group, overlapCallback, processCallback, callbackContext) {
+
+        if (group.length === 0)
+        {
+            return;
+        }
+
+        //  What is the sprite colliding with in the quadtree?
+        this._potentials = this.quadTree.retrieve(sprite);
+
+        for (var i = 0, len = this._potentials.length; i < len; i++)
+        {
+            //  We have our potential suspects, are they in this group?
+            if (this._potentials[i].sprite.group == group)
+            {
+                this._result = Phaser.Rectangle.intersects(sprite.body, this._potentials[i]);
+
+                if (this._result && processCallback)
+                {
+                    this._result = processCallback.call(callbackContext, sprite, this._potentials[i].sprite);
+                }
+
+                if (this._result)
+                {
+                    this._total++;
+
+                    if (overlapCallback)
+                    {
+                        overlapCallback.call(callbackContext, sprite, this._potentials[i].sprite);
+                    }
+                }
+            }
+        }
+
+    },
+
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.overlap instead.
+    *
+    * @method Phaser.Physics.Arcade#overlapGroupVsGroup
+    * @private
+    */
+    overlapGroupVsGroup: function (group1, group2, overlapCallback, processCallback, callbackContext) {
+
+        if (group1.length === 0 || group2.length === 0)
+        {
+            return;
+        }
+
+        if (group1._container.first._iNext)
+        {
+            var currentNode = group1._container.first._iNext;
+                
+            do
+            {
+                if (currentNode.exists)
+                {
+                    this.overlapSpriteVsGroup(currentNode, group2, overlapCallback, processCallback, callbackContext);
+                }
+                currentNode = currentNode._iNext;
+            }
+            while (currentNode != group1._container.last._iNext);
+        }
 
     },
 
@@ -309,10 +466,10 @@ Phaser.Physics.Arcade.prototype = {
     * @method Phaser.Physics.Arcade#collide
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object2 - The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap
-    * @param {function} [collideCallback=null] - An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
+    * @param {function} [collideCallback=null] - An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you specified them.
     * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collideCallback will only be called if processCallback returns true.
     * @param {object} [callbackContext] - The context in which to run the callbacks.
-    * @returns {number} The number of collisions that were processed.
+    * @returns {boolean} True if a collision occured otherwise false.
     */
     collide: function (object1, object2, collideCallback, processCallback, callbackContext) {
 

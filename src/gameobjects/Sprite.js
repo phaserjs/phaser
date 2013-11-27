@@ -1099,6 +1099,8 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
 
     set: function (value) {
 
+        console.log('inputEnabled', value, this.input);
+
         if (value)
         {
             if (this.input.enabled === false)

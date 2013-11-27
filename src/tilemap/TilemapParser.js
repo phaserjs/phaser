@@ -1,5 +1,28 @@
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* Phaser.TilemapParser parses data objects from Phaser.Loader that need more preparation before they can be inserted into a Tilemap.
+*
+* @class Phaser.TilemapParser
+*/
 Phaser.TilemapParser = {
 
+    /**
+    * Creates a Tileset object.
+    * @method Phaser.TilemapParser.tileset
+    * @param {Phaser.Game} game - Game reference to the currently running game.
+    * @param {string} key
+    * @param {number} tileWidth
+    * @param {number} tileHeight
+    * @param {number} tileMax
+    * @param {number} tileMargin
+    * @param {number} tileSpacing
+    * @return {Phaser.Tileset} Generated Tileset object.
+    */
     tileset: function (game, key, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing) {
 
         //  How big is our image?
@@ -63,6 +86,14 @@ Phaser.TilemapParser = {
 
     },
 
+    /**
+    * Parse tileset data from the cache and creates a Tileset object.
+    * @method Phaser.TilemapParser.parse
+    * @param {Phaser.Game} game - Game reference to the currently running game.
+    * @param {object} data
+    * @param {string} format
+    * @return {Phaser.Tileset} Generated Tileset object.
+    */
     parse: function (game, data, format) {
 
         if (format === Phaser.Tilemap.CSV)
@@ -77,10 +108,10 @@ Phaser.TilemapParser = {
     },
 
     /**
-    * Parse csv map data and generate tiles.
-    * 
-    * @method Phaser.Tilemap.prototype.parseCSV
-    * @param {string} data - CSV map data.
+    * Parses a CSV file into valid map data.
+    * @method Phaser.TilemapParser.parseCSV
+    * @param {string} data - The CSV file data.
+    * @return {object} Generated map data.
     */
     parseCSV: function (data) {
 
@@ -114,11 +145,10 @@ Phaser.TilemapParser = {
     },
 
     /**
-    * Parse JSON map data and generate tiles.
-    * 
-    * @method Phaser.Tilemap.prototype.parseTiledJSON
-    * @param {string} data - JSON map data.
-    * @param {string} key - Asset key for tileset image.
+    * Parses a Tiled JSON file into valid map data.
+    * @method Phaser.TilemapParser.parseJSON
+    * @param {object} json- The Tiled JSON data.
+    * @return {object} Generated map data.
     */
     parseTiledJSON: function (json) {
 

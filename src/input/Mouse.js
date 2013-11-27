@@ -41,7 +41,7 @@ Phaser.Mouse = function (game) {
     /**
     * @property {boolean} capture - If true the DOM mouse events will have event.preventDefault applied to them, if false they will propogate fully.
     */
-    this.capture = true;
+    this.capture = false;
 
     /**
     * @property {number} button- The type of click, either: Phaser.Mouse.NO_BUTTON, Phaser.Mouse.LEFT_BUTTON, Phaser.Mouse.MIDDLE_BUTTON or Phaser.Mouse.RIGHT_BUTTON.
@@ -143,10 +143,6 @@ Phaser.Mouse.prototype = {
         this._onMouseUp = function (event) {
             return _this.onMouseUp(event);
         };
-
-        // this.game.renderer.view.addEventListener('mousedown', this._onMouseDown, true);
-        // this.game.renderer.view.addEventListener('mousemove', this._onMouseMove, true);
-        // this.game.renderer.view.addEventListener('mouseup', this._onMouseUp, true);
 
         document.addEventListener('mousedown', this._onMouseDown, true);
         document.addEventListener('mousemove', this._onMouseMove, true);
@@ -322,10 +318,6 @@ Phaser.Mouse.prototype = {
     * @method Phaser.Mouse#stop
     */
     stop: function () {
-
-        // this.game.stage.canvas.removeEventListener('mousedown', this._onMouseDown, true);
-        // this.game.stage.canvas.removeEventListener('mousemove', this._onMouseMove, true);
-        // this.game.stage.canvas.removeEventListener('mouseup', this._onMouseUp, true);
 
         document.removeEventListener('mousedown', this._onMouseDown, true);
         document.removeEventListener('mousemove', this._onMouseMove, true);

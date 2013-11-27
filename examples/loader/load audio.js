@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, render: render });
 
 function preload() {
 
@@ -14,6 +14,9 @@ function preload() {
 
     game.load.audio('boden', ['assets/audio/bodenstaendig_2000_in_rock_4bit.mp3', 'assets/audio/bodenstaendig_2000_in_rock_4bit.ogg']);
 
+    //  If you know you only need to load 1 type of audio file, you can pass a string instead of an array, like this:
+    // game.load.audio('boden', 'assets/audio/bodenstaendig_2000_in_rock_4bit.mp3');
+
 }
 
 var music;
@@ -22,8 +25,6 @@ function create() {
 
     game.stage.backgroundColor = '#182d3b';
 
-    // game.input.touch.preventDefault = false;
-
     music = game.sound.play('boden');
 
 }
@@ -31,5 +32,10 @@ function create() {
 function render() {
 
     game.debug.renderSoundInfo(music, 32, 32);
+
+    if (music.isDecoding)
+    {
+        game.debug.renderText("Decoding MP3 ...", 32, 200);
+    }
 
 }

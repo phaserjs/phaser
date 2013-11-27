@@ -1,69 +1,115 @@
-//  Maybe should extend Sprite?
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* A Tilemap Layer is a set of map data combined with a Tileset in order to render that data to the game.
+*
+* @class Phaser.TilemapLayer
+* @constructor
+* @param {Phaser.Game} game - Game reference to the currently running game.
+* @param {number} x - The x coordinate of this layer.
+* @param {number} y - The y coordinate of this layer.
+* @param {number} renderWidth - Width of the layer.
+* @param {number} renderHeight - Height of the layer.
+* @param {Phaser.Tileset|string} tileset - The tile set used for rendering.
+* @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
+* @param {number} layer - The layer index within the map.
+*/
 Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, tilemap, layer) {
 
     /**
-    * @property {Phaser.Game} game - Description.
+    * @property {Phaser.Game} game - A reference to the currently running Game.
     */
     this.game = game;
     
     /**
-    * @property {Description} canvas - Description.
-    * @default
+    * @property {HTMLCanvasElement} canvas - The canvas to which this BitmapData draws.
     */
     this.canvas = Phaser.Canvas.create(renderWidth, renderHeight);
     
     /**
-    * @property {Description} context - Description.
-    * @default
+    * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
     */
     this.context = this.canvas.getContext('2d');
     
     /**
-    * @property {Description} baseTexture - Description.
-    * @default
+    * @property {PIXI.BaseTexture} baseTexture - Required Pixi var.
     */
     this.baseTexture = new PIXI.BaseTexture(this.canvas);
     
     /**
-    * @property {Description} texture - Description.
-    * @default
+    * @property {PIXI.Texture} texture - Required Pixi var.
     */
     this.texture = new PIXI.Texture(this.baseTexture);
     
+    /**
+    * @property {Phaser.Frame} textureFrame - Dimensions of the renderable area.
+    */
     this.textureFrame = new Phaser.Frame(0, 0, 0, renderWidth, renderHeight, 'tilemaplayer', game.rnd.uuid());
 
     Phaser.Sprite.call(this, this.game, x, y, this.texture, this.textureFrame);
 
+    /**
+    * @property {number} type - The const type of this object.
+    * @default
+    */
     this.type = Phaser.TILEMAPLAYER;
 
+    /**
+    * A layer that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.
+    * @property {boolean} fixedToCamera - Fixes this layer to the Camera.
+    * @default
+    */
     this.fixedToCamera = true;
 
     /**
-    * @property {Description} tileset - Description.
+    * @property {Phaser.Tileset} tileset - The tile set used for rendering.
     */
     this.tileset = null;
 
+    /**
+    * @property {number} tileWidth - The width of a single tile in pixels.
+    */
     this.tileWidth = 0;
+
+    /**
+    * @property {number} tileHeight - The height of a single tile in pixels.
+    */
     this.tileHeight = 0;
+
+    /**
+    * @property {number} tileMargin - The margin around the tiles.
+    */
     this.tileMargin = 0;
+
+    /**
+    * @property {number} tileSpacing - The spacing around the tiles.
+    */
     this.tileSpacing = 0;
 
     /**
-    * Read-only variable, do NOT recommend changing after the map is loaded!
-    * @property {number} widthInPixels
-    * @default
+    * @property {number} widthInPixels - Do NOT recommend changing after the map is loaded!
+    * @readonly
     */
     this.widthInPixels = 0;
 
     /**
-    * Read-only variable, do NOT recommend changing after the map is loaded!
-    * @property {number} heightInPixels
-    * @default
+    * @property {number} heightInPixels - Do NOT recommend changing after the map is loaded!
+    * @readonly
     */
     this.heightInPixels = 0;
 
-
+    /**
+    * @property {number} renderWidth - The width of the area being rendered.
+    */
     this.renderWidth = renderWidth;
+
+    /**
+    * @property {number} renderHeight - The height of the area being rendered.
+    */
     this.renderHeight = renderHeight;
 
     /**
@@ -108,9 +154,16 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     */
     this._ty = 0;
 
-    this._results = [];
-
+    /**
+    * @property {number} _tw - Local render loop var to help avoid gc spikes.
+    * @private 
+    */
     this._tw = 0;
+
+    /**
+    * @property {number} _th - Local render loop var to help avoid gc spikes.
+    * @private 
+    */
     this._th = 0;
     
     /**
@@ -144,12 +197,43 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     this._startY = 0;
 
     /**
+    * @property {array} _results - Local render loop var to help avoid gc spikes.
+    * @private 
+    */
+    this._results = [];
+
+    /**
+    * @property {number} _x - Private var.
+    * @private 
+    */
+    this._x = 0;
+
+    /**
+    * @property {number} _y - Private var.
+    * @private 
+    */
+    this._y = 0;
+
+    /**
+    * @property {number} _prevX - Private var.
+    * @private 
+    */
+    this._prevX = 0;
+
+    /**
+    * @property {number} _prevY - Private var.
+    * @private 
+    */
+    this._prevY = 0;
+
+    /**
     * @property {number} scrollFactorX - speed at which this layer scrolls
     * horizontally, relative to the camera (e.g. scrollFactorX of 0.5 scrolls
     * half as quickly as the 'normal' camera-locked layers do)
     * @default 1
     */
     this.scrollFactorX = 1;
+
     /**
     * @property {number} scrollFactorY - speed at which this layer scrolls
     * vertically, relative to the camera (e.g. scrollFactorY of 0.5 scrolls
@@ -158,15 +242,24 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     */
     this.scrollFactorY = 1;
 
+    /**
+    * @property {Phaser.Tilemap} tilemap - The Tilemap to which this layer is bound.
+    */
     this.tilemap = null;
+
+    /**
+    * @property {number} layer - Tilemap layer index.
+    */
     this.layer = null;
+
+    /**
+    * @property {number} index
+    */
     this.index = 0;
 
-    this._x = 0;
-    this._y = 0;
-    this._prevX = 0;
-    this._prevY = 0;
-
+    /**
+    * @property {boolean} dirty - Flag controlling when to re-render the layer.
+    */
     this.dirty = true;
 
     if (tileset instanceof Phaser.Tileset || typeof tileset === 'string')
@@ -185,7 +278,12 @@ Phaser.TilemapLayer.prototype = Object.create(Phaser.Sprite.prototype);
 Phaser.TilemapLayer.prototype = Phaser.Utils.extend(true, Phaser.TilemapLayer.prototype, Phaser.Sprite.prototype, PIXI.Sprite.prototype);
 Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 
-
+/**
+* Automatically called by World.preUpdate. Handles cache updates.
+*
+* @method Phaser.TilemapLayer#update
+* @memberof Phaser.TilemapLayer
+*/
 Phaser.TilemapLayer.prototype.update = function () {
 
     this.scrollX = this.game.camera.x * this.scrollFactorX;
@@ -195,12 +293,25 @@ Phaser.TilemapLayer.prototype.update = function () {
 
 }
 
+/**
+* Sets the world size to match the size of this layer.
+*
+* @method Phaser.TilemapLayer#resizeWorld
+* @memberof Phaser.TilemapLayer
+*/
 Phaser.TilemapLayer.prototype.resizeWorld = function () {
 
     this.game.world.setBounds(0, 0, this.widthInPixels, this.heightInPixels);
 
 }
 
+/**
+* Updates the Tileset data.
+*
+* @method Phaser.TilemapLayer#updateTileset
+* @memberof Phaser.TilemapLayer
+* @param {Phaser.Tileset|string} tileset - The tileset to use for this layer.
+*/
 Phaser.TilemapLayer.prototype.updateTileset = function (tileset) {
 
     if (tileset instanceof Phaser.Tileset)
@@ -225,6 +336,14 @@ Phaser.TilemapLayer.prototype.updateTileset = function (tileset) {
 
 }
 
+/**
+* Updates the Tilemap data.
+*
+* @method Phaser.TilemapLayer#updateMapData
+* @memberof Phaser.TilemapLayer
+* @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
+* @param {number} layer - The layer index within the map.
+*/
 Phaser.TilemapLayer.prototype.updateMapData = function (tilemap, layer) {
 
     if (typeof layer === 'undefined')
@@ -244,11 +363,14 @@ Phaser.TilemapLayer.prototype.updateMapData = function (tilemap, layer) {
 }
 
 /**
- * Take an x coordinate that doesn't account for scrollFactorY and 'fix' it 
- * into a scrolled local space. Used primarily internally
- * @param {number} x - x coordinate in camera space
- * @return {number} x coordinate in scrollFactor-adjusted dimensions
- */
+* Take an x coordinate that doesn't account for scrollFactorY and 'fix' it 
+* into a scrolled local space. Used primarily internally
+* @method Phaser.TilemapLayer#_fixX
+* @memberof Phaser.TilemapLayer
+* @private
+* @param {number} x - x coordinate in camera space
+* @return {number} x coordinate in scrollFactor-adjusted dimensions
+*/
 Phaser.TilemapLayer.prototype._fixX = function(x) {
 
     if (this.scrollFactorX === 1)
@@ -263,11 +385,14 @@ Phaser.TilemapLayer.prototype._fixX = function(x) {
 }
 
 /**
- * Take an x coordinate that _does_ account for scrollFactorY and 'unfix' it 
- * back to camera space. Used primarily internally
- * @param {number} x - x coordinate in scrollFactor-adjusted dimensions
- * @return {number} x coordinate in camera space
- */
+* Take an x coordinate that _does_ account for scrollFactorY and 'unfix' it 
+* back to camera space. Used primarily internally
+* @method Phaser.TilemapLayer#_unfixX
+* @memberof Phaser.TilemapLayer
+* @private
+* @param {number} x - x coordinate in scrollFactor-adjusted dimensions
+* @return {number} x coordinate in camera space
+*/
 Phaser.TilemapLayer.prototype._unfixX = function(x) {
 
     if (this.scrollFactorX === 1)
@@ -282,11 +407,14 @@ Phaser.TilemapLayer.prototype._unfixX = function(x) {
 }
 
 /**
- * Take a y coordinate that doesn't account for scrollFactorY and 'fix' it 
- * into a scrolled local space. Used primarily internally
- * @param {number} y - y coordinate in camera space
- * @return {number} y coordinate in scrollFactor-adjusted dimensions
- */
+* Take a y coordinate that doesn't account for scrollFactorY and 'fix' it 
+* into a scrolled local space. Used primarily internally
+* @method Phaser.TilemapLayer#_fixY
+* @memberof Phaser.TilemapLayer
+* @private
+* @param {number} y - y coordinate in camera space
+* @return {number} y coordinate in scrollFactor-adjusted dimensions
+*/
 Phaser.TilemapLayer.prototype._fixY = function(y) {
 
     if (this.scrollFactorY === 1)
@@ -301,11 +429,14 @@ Phaser.TilemapLayer.prototype._fixY = function(y) {
 }
 
 /**
- * Take a y coordinate that _does_ account for scrollFactorY and 'unfix' it 
- * back to camera space. Used primarily internally
- * @param {number} y - y coordinate in scrollFactor-adjusted dimensions
- * @return {number} y coordinate in camera space
- */
+* Take a y coordinate that _does_ account for scrollFactorY and 'unfix' it 
+* back to camera space. Used primarily internally
+* @method Phaser.TilemapLayer#_unfixY
+* @memberof Phaser.TilemapLayer
+* @private
+* @param {number} y - y coordinate in scrollFactor-adjusted dimensions
+* @return {number} y coordinate in camera space
+*/
 Phaser.TilemapLayer.prototype._unfixY = function(y) {
 
     if (this.scrollFactorY === 1)
@@ -321,9 +452,10 @@ Phaser.TilemapLayer.prototype._unfixY = function(y) {
 
 /**
 * Convert a pixel value to a tile coordinate.
+* @method Phaser.TilemapLayer#getTileX
+* @memberof Phaser.TilemapLayer
 * @param {number} x - X position of the point in target tile.
-* @param {number} [layer] - layer of this tile located.
-* @return {number} The tile with specific properties.
+* @return {Phaser.Tile} The tile with specific properties.
 */
 Phaser.TilemapLayer.prototype.getTileX = function (x) {
 
@@ -335,9 +467,10 @@ Phaser.TilemapLayer.prototype.getTileX = function (x) {
 
 /**
 * Convert a pixel value to a tile coordinate.
-* @param {number} x - X position of the point in target tile.
-* @param {number} [layer] - layer of this tile located.
-* @return {number} The tile with specific properties.
+* @method Phaser.TilemapLayer#getTileY
+* @memberof Phaser.TilemapLayer
+* @param {number} y - Y position of the point in target tile.
+* @return {Phaser.Tile} The tile with specific properties.
 */
 Phaser.TilemapLayer.prototype.getTileY = function (y) {
 
@@ -347,6 +480,14 @@ Phaser.TilemapLayer.prototype.getTileY = function (y) {
 
 }
 
+/**
+* Convert a pixel value to a tile coordinate.
+* @method Phaser.TilemapLayer#getTileXY
+* @memberof Phaser.TilemapLayer
+* @param {number} x - X position of the point in target tile.
+* @param {number} y - Y position of the point in target tile.
+* @return {Phaser.Tile} The tile with specific properties.
+*/
 Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
 
     point.x = this.getTileX(x);
@@ -357,9 +498,14 @@ Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
 }
 
 /**
-* 
-* @method getTileOverlaps
-* @param {GameObject} object - Tiles you want to get that overlaps this.
+* Get the tiles within the given area.
+* @method Phaser.TilemapLayer#getTiles
+* @memberof Phaser.TilemapLayer
+* @param {number} x - X position of the top left of the area to copy (given in tiles, not pixels)
+* @param {number} y - Y position of the top left of the area to copy (given in tiles, not pixels)
+* @param {number} width - The width of the area to copy (given in tiles, not pixels)
+* @param {number} height - The height of the area to copy (given in tiles, not pixels)
+* @param {boolean} collides - If true only return tiles that collide on one or more faces.
 * @return {array} Array with tiles informations (each contains x, y, and the tile).
 */
 Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides) {
@@ -448,6 +594,11 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
 
 }
 
+/**
+* Internal function to update maximum values.
+* @method Phaser.TilemapLayer#updateMax
+* @memberof Phaser.TilemapLayer
+*/
 Phaser.TilemapLayer.prototype.updateMax = function () {
 
     this._maxX = this.game.math.ceil(this.canvas.width / this.tileWidth) + 1;
@@ -473,6 +624,11 @@ Phaser.TilemapLayer.prototype.updateMax = function () {
 
 }
 
+/**
+* Renders the tiles to the layer canvas and pushes to the display.
+* @method Phaser.TilemapLayer#render
+* @memberof Phaser.TilemapLayer
+*/
 Phaser.TilemapLayer.prototype.render = function () {
 
     if (this.tilemap && this.tilemap.dirty)
@@ -545,22 +701,50 @@ Phaser.TilemapLayer.prototype.render = function () {
 
 }
 
+/**
+* Returns the absolute delta x value.
+* @method Phaser.TilemapLayer#deltaAbsX
+* @memberof Phaser.TilemapLayer
+* @return {number} Absolute delta X value
+*/
 Phaser.TilemapLayer.prototype.deltaAbsX = function () {
     return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
 }
 
+/**
+* Returns the absolute delta y value.
+* @method Phaser.TilemapLayer#deltaAbsY
+* @memberof Phaser.TilemapLayer
+* @return {number} Absolute delta Y value
+*/
 Phaser.TilemapLayer.prototype.deltaAbsY = function () {
     return (this.deltaY() > 0 ? this.deltaY() : -this.deltaY());
 }
 
+/**
+* Returns the delta x value.
+* @method Phaser.TilemapLayer#deltaX
+* @memberof Phaser.TilemapLayer
+* @return {number} Delta X value
+*/
 Phaser.TilemapLayer.prototype.deltaX = function () {
     return this._dx - this._prevX;
 }
 
+/**
+* Returns the delta y value.
+* @method Phaser.TilemapLayer#deltaY
+* @memberof Phaser.TilemapLayer
+* @return {number} Delta Y value
+*/
 Phaser.TilemapLayer.prototype.deltaY = function () {
     return this._dy - this._prevY;
 }
 
+/**
+* @name Phaser.TilemapLayer#scrollX
+* @property {number} scrollX - Scrolls the map horizontally or returns the current x position.
+*/
 Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollX", {
     
     get: function () {
@@ -597,6 +781,10 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollX", {
 
 });
 
+/**
+* @name Phaser.TilemapLayer#scrollY
+* @property {number} scrollY - Scrolls the map vertically or returns the current y position.
+*/
 Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
     
     get: function () {

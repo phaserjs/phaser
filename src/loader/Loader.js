@@ -244,8 +244,6 @@ Phaser.Loader.prototype = {
             loaded: false
         };
 
-        console.log('addToFileList', entry);
-
         if (typeof properties !== "undefined")
         {
             for (var prop in properties)
@@ -681,8 +679,6 @@ Phaser.Loader.prototype = {
     */
     start: function () {
 
-        console.log('Loader start', this._fileList);
-
         if (this.isLoading)
         {
             return;
@@ -887,8 +883,6 @@ Phaser.Loader.prototype = {
     */
     fileComplete: function (index) {
 
-console.log('fileComplete', index);
-
         if (!this._fileList[index])
         {
             console.warn('Phaser.Loader fileComplete invalid index ' + index);
@@ -997,7 +991,7 @@ console.log('fileComplete', index);
                         this.game.sound.context.decodeAudioData(file.data, function (buffer) {
                             if (buffer)
                             {
-                                that.game.cache.decodedSound(index, buffer);
+                                that.game.cache.decodedSound(key, buffer);
                             }
                         });
                     }

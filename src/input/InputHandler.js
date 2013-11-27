@@ -199,6 +199,8 @@ Phaser.InputHandler.prototype = {
     */
     start: function (priority, useHandCursor) {
 
+        console.log('InputHandler start');
+
         priority = priority || 0;
         if (typeof useHandCursor == 'undefined') { useHandCursor = false; }
 

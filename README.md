@@ -44,10 +44,12 @@ Version 1.1.3 - in build
 * New: Added a .jshintrc so contributions can be run through JSHint to help retain formatting across the library (thanks kevinthompson)
 * New: The entire Phaser library has been updated to match the new JSHint configuration.
 * New: Added a new in-built texture. Sprites now use __default if no texture was provided (a 32x32 transparent PNG) or __missing if one was given but not found (a 32x32 black box with a green cross through it)
-* New: Added Phaser.Filter. A new way to use the new WebGL shaders/filters that the new version of Pixi supports.
-* New: The object returned by Math.sinCosGenerator now contains a length property.
+* New: Phaser.Filter. A new way to use the new WebGL shaders/filters that the new version of Pixi supports.
 * New: Phaser.BitmapData object. A Canvas you can freely draw to with lots of functions. Can be used as a texture for Sprites. See the new examples and docs for details.
 * New: RenderTexture.render now takes a Phaser.Group. Also added renderXY for when you don't want to make a new Point object.
+* New: Physics.overlap now supports Sprites, Groups or Emitters and can perform group vs. group (etc) overlap checks with a custom callback and process handler.
+* New: Added Sound.externalNode which allows you to connect a Sound to an external node input rather than the SoundManager gain node.
+* New: Added SoundManager.connectToMaster boolean. Used in conjunction with Sound.externalNode you can easily configure audio nodes to connect together for special effects.
 * New: PluginManager.remove, added PluginManager.removeAll (thanks crazysam)
 * New: scrollFactorX/scrollFactorY have been added to TilemapLayers (thanks jcd-as)
 * New: Phaser.Game parent can now be an HTMLElement or a string (thanks beeglebug)
@@ -64,8 +66,22 @@ Version 1.1.3 - in build
 * New: Device.littleEndian boolean added. Only safe to use if the browser supports TypedArrays (which IE9 doesn't, but nearly all others do)
 * New: You can now call game.sound.play() and simply pass it a key. The sound will play if the audio system is unlocked and optionally destroy itself on complete.
 * New: Mouse.capture is a boolean. If set to true then DOM mouse events will have event.preventDefault() applied, if false they will propogate fully.
-* New: Added Sound.externalNode which allows you to connect a Sound to an external node input rather than the SoundManager gain node.
-* New: Added SoundManager.connectToMaster boolean. Used in conjunction with Sound.externalNode you can easily configure audio nodes to connect together for special effects.
+* New: The object returned by Math.sinCosGenerator now contains a length property.
+
+* Updated: Lots of documentation fixes and updates across nearly all files. Tilemap now documented for example and lots of instances of 'Description' filled out.
+* Updated: ArcadePhysics.updateMotion applies the dt to the velocity calculations as well as position now (thanks jcs)
+* Updated: RequestAnimationFrame now retains the callbackID which is passed to cancelRequestAnimationFrame.
+* Updated: Button now goes back to over state when setFrames used in action (thanks beeglebug)
+* Updated: plugins now have a postUpdate callback (thanks cocoademon)
+* Updated: Tided up the Graphics object (thanks BorisKozo)
+* Updated: If running in Canvas mode and you have a render function it will save the context and reset the transform before running your render function.
+* Updated: Sprite will now check the exists property of the Group it is in, if the Group.exists = false the Sprite won't update.
+* Updated: If you specify 'null' as a Group parent it will now revert to using the World as the parent (before only 'undefined' worked)
+* Updated: Skip preupdate/update for PIXI hierarchies in which an ancestor doesn't exist (thanks cocoademon)
+* Updated: Loader.audio can now accept either an array of URL strings or a single URL string (thanks crazysam + kevinthompson)
+* Updated: MSPointer updated to support IE11 by dropping the prefix from the event listeners.
+* Updated: Device.cocoonJS added to detect if the game is running under Cocoon or a native browser.
+* Updated: Loader now uses a new queue system internally, meaning you can have assets with the same key spread across different types.
 
 * Fixed: Lots of fixes to the TypeScript definitions file (many thanks gltovar)
 * Fixed: Tilemap commands use specified layer when one given (thanks Izzimach)
@@ -82,20 +98,7 @@ Version 1.1.3 - in build
 * Fixed: Device.isTouch modified to test maxTouchPointers instead of MSPointer.
 * Fixed: InputHandler.checkPointerOver now checks the visible status of the Sprite Group before processing.
 * Fixed: The Sprite hulls (used for tile collision) were not being updated in sprite->sprite separations (thanks jcs)
-
-* Updated: ArcadePhysics.updateMotion applies the dt to the velocity calculations as well as position now (thanks jcs)
-* Updated: RequestAnimationFrame now retains the callbackID which is passed to cancelRequestAnimationFrame.
-* Updated: Button now goes back to over state when setFrames used in action (thanks beeglebug)
-* Updated: plugins now have a postUpdate callback (thanks cocoademon)
-* Updated: Tided up the Graphics object (thanks BorisKozo)
-* Updated: If running in Canvas mode and you have a render function it will save the context and reset the transform before running your render function.
-* Updated: Sprite will now check the exists property of the Group it is in, if the Group.exists = false the Sprite won't update.
-* Updated: Lots of documentation fixes and updates across nearly all files.
-* Updated: If you specify 'null' as a Group parent it will now revert to using the World as the parent (before only 'undefined' worked)
-* Updated: Skip preupdate/update for PIXI hierarchies in which an ancestor doesn't exist (thanks cocoademon)
-* Updated: Loader.audio can now accept either an array of URL strings or a single URL string (thanks crazysam + kevinthompson)
-* Updated: MSPointer updated to support IE11 by dropping the prefix from the event listeners.
-* Updated: Device.cocoonJS added to detect if the game is running under Cocoon or a native browser.
+* Fixed: Plugins that had a postUpdate but no Update weren't being marked as active (thanks crazysam)
 
 You can view the complete Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
 
@@ -211,12 +214,6 @@ The 1.1 release was a massive under-taking, but we're really happy with how Phas
 * Create more touch input examples (http://www.html5gamedevs.com/topic/1556-mobile-touch-event/)
 * Look at HiDPI Canvas settings.
 
-Some specific features / issues we will address soon:
-
-* Loader conflict if 2 keys are the same even if they are in different packages (i.e. you can't use "title" for both and image and sound file).
-* Sound.addMarker hh:mm:ss:ms.
-* Add support for a rotation offset.
-
 Learn By Example
 ----------------
 
@@ -243,9 +240,9 @@ If you find a bug (highly likely!) then please report it on github or our forum.
 
 If you have a feature request, or have written a small game or demo that shows Phaser in use, then please get in touch. We'd love to hear from you.
 
-Before submitting a pull request, please run your code through [JSHint](http://www.jshint.com/) to check for stylistic or formatting errors. To use JSHint, first install it by running `npm install jshint`, then test your code by running `jshint src`. This isn't a requirement, we are happy to receive pull requests that haven't been JSHinted, so don't let it put you off contributing - but do know that we'll reformat your source before going live with it.
-
 You can do this on the Phaser board that is part of the [HTML5 Game Devs forum](http://www.html5gamedevs.com/forum/14-phaser/) or email: rich@photonstorm.com
+
+Before submitting a pull request, please run your code through [JSHint](http://www.jshint.com/) to check for stylistic or formatting errors. To use JSHint, first install it by running `npm install jshint`, then test your code by running `jshint src`. This isn't a requirement, we are happy to receive pull requests that haven't been JSHinted, so don't let it put you off contributing - but do know that we'll reformat your source before going live with it.
 
 Bugs?
 -----

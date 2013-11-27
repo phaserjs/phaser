@@ -393,12 +393,28 @@
       "title": "load audio"
     },
     {
+      "file": "load+bitmap+font.js",
+      "title": "load bitmap font"
+    },
+    {
       "file": "load+image.js",
       "title": "load image"
     },
     {
       "file": "load+spritesheet.js",
       "title": "load spritesheet"
+    },
+    {
+      "file": "load+starling+atlas.js",
+      "title": "load starling atlas"
+    },
+    {
+      "file": "load+text+file.js",
+      "title": "load text file"
+    },
+    {
+      "file": "load+texture+atlas.js",
+      "title": "load texture atlas"
     },
     {
       "file": "pick+images+from+cache.js",
@@ -591,6 +607,10 @@
     {
       "file": "animated+tiling+sprite.js",
       "title": "animated tiling sprite"
+    },
+    {
+      "file": "tiling+sprite+input.js",
+      "title": "tiling sprite input"
     },
     {
       "file": "tiling+sprite.js",

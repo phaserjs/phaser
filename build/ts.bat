@@ -1,1 +1,0 @@
-jsdocts -d:phaser.d.ts phaser.js
