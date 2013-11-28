@@ -55,6 +55,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.BitmapData.html">BitmapData</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -136,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Filter.html">Filter</a>
 						</li>
 						
 						<li>
@@ -303,11 +311,35 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tilemap.html">Tilemap</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapLayer.html">TilemapLayer</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapParser.html">TilemapParser</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tileset.html">Tileset</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.TileSprite.html">TileSprite</a>
 						</li>
 						
 						<li>
 							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Timer.html">Timer</a>
 						</li>
 						
 						<li>
@@ -357,6 +389,14 @@
 						</li>
 						
 						<li>
+							<a href="global.html#render">render</a>
+						</li>
+						
+						<li>
+							<a href="global.html#renderXY">renderXY</a>
+						</li>
+						
+						<li>
 							<a href="global.html#right">right</a>
 						</li>
 						
@@ -391,15 +431,15 @@
 * Phaser.SignalBinding
 *
 * Object that represents a binding between a Signal and a listener function.
-* &lt;br />- &lt;strong>This is an internal constructor and shouldn't be called by regular users.&lt;/strong>
-* &lt;br />- inspired by Joa Ebert AS3 SignalBinding and Robert Penner's Slot classes.
+* This is an internal constructor and shouldn't be called by regular users.
+* Inspired by Joa Ebert AS3 SignalBinding and Robert Penner's Slot classes.
 *
 * @class Phaser.SignalBinding
 * @name SignalBinding
 * @author Miller Medeiros http://millermedeiros.github.com/js-signals/
 * @constructor
 * @inner
-* @param {Signal} signal - Reference to Signal object that listener is currently bound to.
+* @param {Phaser.Signal} signal - Reference to Signal object that listener is currently bound to.
 * @param {function} listener - Handler function bound to the signal.
 * @param {boolean} isOnce - If binding should be executed just once.
 * @param {object} [listenerContext] - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
@@ -408,33 +448,33 @@
 Phaser.SignalBinding = function (signal, listener, isOnce, listenerContext, priority) {
 
     /**
-	* @property {Phaser.Game} _listener - Handler function bound to the signal.
-	* @private
-	*/
+    * @property {Phaser.Game} _listener - Handler function bound to the signal.
+    * @private
+    */
     this._listener = listener;
 
     /**
-	* @property {boolean} _isOnce - If binding should be executed just once.
-	* @private
-	*/
+    * @property {boolean} _isOnce - If binding should be executed just once.
+    * @private
+    */
     this._isOnce = isOnce;
 
     /**
-	* @property {object|undefined|null} context - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
-	* @memberof SignalBinding.prototype
-	*/
+    * @property {object|undefined|null} context - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
+    * @memberof SignalBinding.prototype
+    */
     this.context = listenerContext;
 
     /**
-	* @property {Signal} _signal - Reference to Signal object that listener is currently bound to.
-	* @private
-	*/
+    * @property {Phaser.Signal} _signal - Reference to Signal object that listener is currently bound to.
+    * @private
+    */
     this._signal = signal;
 
     /**
-	* @property {number} _priority - Listener priority.
-	* @private
-	*/
+    * @property {number} _priority - Listener priority.
+    * @private
+    */
     this._priority = priority || 0;
 
 };
@@ -445,7 +485,7 @@ Phaser.SignalBinding.prototype = {
     * If binding is active and should be executed.
     * @property {boolean} active
     * @default
-    */ 
+    */
     active: true,
 
     /**
@@ -457,10 +497,10 @@ Phaser.SignalBinding.prototype = {
 
     /**
     * Call listener passing arbitrary parameters.
-    * &lt;p>If binding was added using `Signal.addOnce()` it will be automatically removed from signal dispatch queue, this method is used internally for the signal dispatch.&lt;/p>
+    * If binding was added using `Signal.addOnce()` it will be automatically removed from signal dispatch queue, this method is used internally for the signal dispatch.
     * @method Phaser.SignalBinding#execute
     * @param {array} [paramsArr] - Array of parameters that should be passed to the listener.
-    * @return {Description} Value returned by the listener.
+    * @return {any} Value returned by the listener.
     */
     execute: function (paramsArr) {
 
@@ -483,7 +523,7 @@ Phaser.SignalBinding.prototype = {
 
     /**
     * Detach binding from signal.
-    * &lt;p>alias to: @see mySignal.remove(myBinding.getListener());
+    * alias to: @see mySignal.remove(myBinding.getListener());
     * @method Phaser.SignalBinding#detach
     * @return {function|null} Handler function bound to the signal or `null` if binding was previously detached.
     */
@@ -564,7 +604,7 @@ Phaser.SignalBinding.prototype = {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 07 2013 06:07:33 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Nov 28 2013 15:56:25 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

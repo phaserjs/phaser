@@ -55,6 +55,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.BitmapData.html">BitmapData</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -136,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Filter.html">Filter</a>
 						</li>
 						
 						<li>
@@ -303,11 +311,35 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tilemap.html">Tilemap</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapLayer.html">TilemapLayer</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapParser.html">TilemapParser</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tileset.html">Tileset</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.TileSprite.html">TileSprite</a>
 						</li>
 						
 						<li>
 							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Timer.html">Timer</a>
 						</li>
 						
 						<li>
@@ -357,6 +389,14 @@
 						</li>
 						
 						<li>
+							<a href="global.html#render">render</a>
+						</li>
+						
+						<li>
+							<a href="global.html#renderXY">renderXY</a>
+						</li>
+						
+						<li>
 							<a href="global.html#right">right</a>
 						</li>
 						
@@ -387,7 +427,9 @@
     BitmapText
     </h2>
     
-        <div class="class-description"><p>Phaser.BitmapText</p></div>
+        <div class="class-description"><p>BitmapText objects work by taking a texture file and an XML file that describes the font layout.</p>
+<p>On Windows you can use the free app BMFont: <a href="http://www.angelcode.com/products/bmfont/">http://www.angelcode.com/products/bmfont/</a></p>
+<p>On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphdesigner">http://www.71squared.com/en/glyphdesigner</a></p></div>
     
 </header>
 
@@ -406,9 +448,7 @@
     
     
     <div class="description">
-        <p>Creates a new <code>BitmapText</code> object. BitmapText work by taking a texture file and an XML file that describes the font layout.
-On Windows you can use the free app BMFont: <a href="http://www.angelcode.com/products/bmfont/">http://www.angelcode.com/products/bmfont/</a>
-On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphdesigner">http://www.71squared.com/en/glyphdesigner</a></p>
+        <p>Creates a new BitmapText object.</p>
     </div>
     
 
@@ -582,7 +622,7 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-20">line 20</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-25">line 25</a>
     </li></ul></dd>
     
 
@@ -713,7 +753,7 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-38">line 38</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-47">line 47</a>
     </li></ul></dd>
     
 
@@ -736,6 +776,13 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
     
 </dt>
 <dd>
+    
+    <div class="description">
+        <p>The anchor sets the origin point of the texture.
+The default is 0,0 this means the textures origin is the top left 
+Setting than anchor to 0.5,0.5 means the textures origin is centered
+Setting the anchor to 1,1 would mean the textures origin points will be the bottom right</p>
+    </div>
     
     
     
@@ -786,7 +833,7 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The anchor around which rotation and scaling takes place.</p></td>
         </tr>
 
 	
@@ -815,7 +862,115 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-78">line 78</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-86">line 86</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="angle"><span class="type-signature"></span>angle<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Indicates the rotation of the BitmapText, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
+If you wish to work in radians instead of degrees use the property Sprite.rotation instead.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>angle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Gets or sets the angle of rotation in degrees.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-187">line 187</a>
     </li></ul></dd>
     
 
@@ -920,7 +1075,7 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-32">line 32</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-41">line 41</a>
     </li></ul></dd>
     
 
@@ -1022,7 +1177,7 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-55">line 55</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-35">line 35</a>
     </li></ul></dd>
     
 
@@ -1085,7 +1240,7 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
 
 
             
@@ -1095,7 +1250,7 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The parent Group of this BitmapText.</p></td>
         </tr>
 
 	
@@ -1120,14 +1275,11 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-44">line 44</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-52">line 52</a>
     </li></ul></dd>
     
 
@@ -1200,7 +1352,7 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The user defined name given to this BitmapText.</p></td>
         </tr>
 
 	
@@ -1229,7 +1381,109 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-50">line 50</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-58">line 58</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="renderable"><span class="type-signature"></span>renderable<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>renderable</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A renderable object will be rendered to the context each frame.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-126">line 126</a>
     </li></ul></dd>
     
 
@@ -1302,7 +1556,7 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The scale of the object when rendered. By default it's set to 1 (no scale). You can modify it via scale.x or scale.y or scale.setTo(x, y). A value of 1 means no change to the scale, 0.5 means &quot;half the size&quot;, 2 means &quot;twice the size&quot;, etc.</p></td>
         </tr>
 
 	
@@ -1331,7 +1585,7 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-83">line 83</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-91">line 91</a>
     </li></ul></dd>
     
 
@@ -1349,7 +1603,7 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
         
             
 <dt>
-    <h4 class="name" id="type"><span class="type-signature"></span>type<span class="type-signature"></span></h4>
+    <h4 class="name" id="type"><span class="type-signature">&lt;readonly> </span>type<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1394,7 +1648,7 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">number</span>
 
 
             
@@ -1404,7 +1658,7 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The const type of this object.</p></td>
         </tr>
 
 	
@@ -1433,7 +1687,219 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-62">line 62</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-64">line 64</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="x"><span class="type-signature"></span>x<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The x coordinate of this object in world space.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The x coordinate of this object in world space.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-206">line 206</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="y"><span class="type-signature"></span>y<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The y coordinate of this object in world space.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The y coordinate of this object in world space.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-223">line 223</a>
     </li></ul></dd>
     
 
@@ -1498,7 +1964,7 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-120">line 120</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-133">line 133</a>
     </li></ul></dd>
     
 
@@ -1549,7 +2015,7 @@ On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphd
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 07 2013 06:07:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Nov 28 2013 15:56:27 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

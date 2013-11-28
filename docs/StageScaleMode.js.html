@@ -55,6 +55,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.BitmapData.html">BitmapData</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -136,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Filter.html">Filter</a>
 						</li>
 						
 						<li>
@@ -303,11 +311,35 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tilemap.html">Tilemap</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapLayer.html">TilemapLayer</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapParser.html">TilemapParser</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tileset.html">Tileset</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.TileSprite.html">TileSprite</a>
 						</li>
 						
 						<li>
 							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Timer.html">Timer</a>
 						</li>
 						
 						<li>
@@ -357,6 +389,14 @@
 						</li>
 						
 						<li>
+							<a href="global.html#render">render</a>
+						</li>
+						
+						<li>
+							<a href="global.html#renderXY">renderXY</a>
+						</li>
+						
+						<li>
 							<a href="global.html#right">right</a>
 						</li>
 						
@@ -388,14 +428,13 @@
 */
 
 /**
-* An Animation instance contains a single animation and the controls to play it.
-* It is created by the AnimationManager, consists of Animation.Frame objects and belongs to a single Game Object such as a Sprite.
+* The StageScaleMode object is responsible for helping you manage the scaling, resizing and alignment of your game within the browser.
 *
 * @class Phaser.StageScaleMode 
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {number} width - Description.
-* @param {number} height - Description.
+* @param {number} width - The native width of the game.
+* @param {number} height - The native height of the game.
 */
 Phaser.StageScaleMode = function (game, width, height) {
 
@@ -457,7 +496,7 @@ Phaser.StageScaleMode = function (game, width, height) {
     * @property {boolean} forcePortrait - If the game should be forced to use Portrait mode, this is set to true by Game.Stage
     * @default
     */
-     this.forcePortrait = false;
+    this.forcePortrait = false;
 
     /**
     * @property {boolean} incorrectOrientation - If the game should be forced to use a specific orientation and the device currently isn't in that orientation this is set to true.
@@ -500,7 +539,6 @@ Phaser.StageScaleMode = function (game, width, height) {
     * @default
     */
     this.maxIterations = 5;
-    
 
     /**
     * @property {PIXI.Sprite} orientationSprite - The Sprite that is optionally displayed if the browser enters an unsupported orientation.
@@ -517,6 +555,21 @@ Phaser.StageScaleMode = function (game, width, height) {
     * @property {Phaser.Signal} enterPortrait - The event that is dispatched when the browser enters horizontal orientation.
     */
     this.enterPortrait = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} enterIncorrectOrientation - The event that is dispatched when the browser enters an incorrect orientation, as defined by forceOrientation.
+    */
+    this.enterIncorrectOrientation = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} leaveIncorrectOrientation - The event that is dispatched when the browser leaves an incorrect orientation, as defined by forceOrientation.
+    */
+    this.leaveIncorrectOrientation = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} hasResized - The event that is dispatched when the game scale changes.
+    */
+    this.hasResized = new Phaser.Signal();
 
     if (window['orientation'])
     {
@@ -536,14 +589,32 @@ Phaser.StageScaleMode = function (game, width, height) {
 
     /**
     * @property {Phaser.Point} scaleFactor - The scale factor based on the game dimensions vs. the scaled dimensions.
+    * @readonly
     */
     this.scaleFactor = new Phaser.Point(1, 1);
+
+    /**
+    * @property {Phaser.Point} scaleFactorInversed - The inversed scale factor. The displayed dimensions divided by the game dimensions.
+    * @readonly
+    */
+    this.scaleFactorInversed = new Phaser.Point(1, 1);
+
+    /**
+    * @property {Phaser.Point} margin - If the game canvas is seto to align by adjusting the margin, the margin calculation values are stored in this Point.
+    * @readonly
+    */
+    this.margin = new Phaser.Point(0, 0);
 
     /**
     * @property {number} aspectRatio - Aspect ratio.
     * @default
     */
     this.aspectRatio = 0;
+
+    /**
+    * @property {any} event- The native browser events from full screen API changes.
+    */
+    this.event = null;
 
     var _this = this;
 
@@ -566,7 +637,7 @@ Phaser.StageScaleMode = function (game, width, height) {
     document.addEventListener('fullscreenchange', function (event) {
         return _this.fullScreenChange(event);
     }, false);
-	
+    
 };
 
 /**
@@ -658,6 +729,8 @@ Phaser.StageScaleMode.prototype = {
     */
     fullScreenChange: function (event) {
 
+        this.event = event;
+
         if (this.isFullScreen)
         {
             this.game.stage.canvas.style['width'] = '100%';
@@ -693,21 +766,19 @@ Phaser.StageScaleMode.prototype = {
     * The optional orientationImage is displayed when the game is in the incorrect orientation.
     * @method Phaser.StageScaleMode#forceOrientation
     * @param {boolean} forceLandscape - true if the game should run in landscape mode only.
-    * @param {boolean} forcePortrait - true if the game should run in portrait mode only.
-    * @param {string} [forcePortrait=''] - The string of an image in the Phaser.Cache to display when this game is in the incorrect orientation.
+    * @param {boolean} [forcePortrait=false] - true if the game should run in portrait mode only.
+    * @param {string} [orientationImage=''] - The string of an image in the Phaser.Cache to display when this game is in the incorrect orientation.
     */
     forceOrientation: function (forceLandscape, forcePortrait, orientationImage) {
 
-        this.forceLandscape = forceLandscape;
+        if (typeof forcePortrait === 'undefined') { forcePortrait = false; }
 
-        if (typeof forcePortrait === 'undefined')
-        {
-            this.forcePortrait = false;
-        }
+        this.forceLandscape = forceLandscape;
+        this.forcePortrait = forcePortrait;
 
         if (typeof orientationImage !== 'undefined')
         {
-            if (orientationImage == null || this.game.cache.checkImageKey(orientationImage) == false)
+            if (orientationImage == null || this.game.cache.checkImageKey(orientationImage) === false)
             {
                 orientationImage = '__default';
             }
@@ -750,6 +821,7 @@ Phaser.StageScaleMode.prototype = {
                 //  Back to normal
                 this.game.paused = false;
                 this.incorrectOrientation = false;
+                this.leaveIncorrectOrientation.dispatch();
 
                 if (this.orientationSprite)
                 {
@@ -767,8 +839,9 @@ Phaser.StageScaleMode.prototype = {
                 //  Show orientation screen
                 this.game.paused = true;
                 this.incorrectOrientation = true;
+                this.enterIncorrectOrientation.dispatch();
 
-                if (this.orientationSprite && this.orientationSprite.visible == false)
+                if (this.orientationSprite && this.orientationSprite.visible === false)
                 {
                     this.orientationSprite.visible = true;
                     this.game.world.visible = false;
@@ -785,6 +858,8 @@ Phaser.StageScaleMode.prototype = {
     * @param {Event} event - The orientationchange event data.
     */
     checkOrientation: function (event) {
+
+        this.event = event;
 
         this.orientation = window['orientation'];
 
@@ -810,6 +885,8 @@ Phaser.StageScaleMode.prototype = {
     * @param {Event} event - The resize event data.
     */
     checkResize: function (event) {
+
+        this.event = event;
 
         if (window.outerWidth > window.outerHeight)
         {
@@ -844,15 +921,10 @@ Phaser.StageScaleMode.prototype = {
     */
     refresh: function () {
 
-        var _this = this;
-        
         //  We can't do anything about the status bars in iPads, web apps or desktops
-        if (this.game.device.iPad == false && this.game.device.webApp == false && this.game.device.desktop == false)
+        if (this.game.device.iPad === false && this.game.device.webApp === false && this.game.device.desktop === false)
         {
-            // document.documentElement['style'].minHeight = '2000px';
-            // this._startHeight = window.innerHeight;
-
-            if (this.game.device.android && this.game.device.chrome == false)
+            if (this.game.device.android && this.game.device.chrome === false)
             {
                 window.scrollTo(0, 1);
             }
@@ -865,9 +937,13 @@ Phaser.StageScaleMode.prototype = {
         if (this._check == null && this.maxIterations > 0)
         {
             this._iterations = this.maxIterations;
+
+            var _this = this;
+
             this._check = window.setInterval(function () {
                 return _this.setScreenSize();
             }, 10);
+
             this.setScreenSize();
         }
 
@@ -884,9 +960,9 @@ Phaser.StageScaleMode.prototype = {
             force = false;
         }
         
-        if (this.game.device.iPad == false && this.game.device.webApp == false && this.game.device.desktop == false) 
+        if (this.game.device.iPad === false && this.game.device.webApp === false && this.game.device.desktop === false)
         {
-            if (this.game.device.android && this.game.device.chrome == false)
+            if (this.game.device.android && this.game.device.chrome === false)
             {
                 window.scrollTo(0, 1);
             }
@@ -903,7 +979,7 @@ Phaser.StageScaleMode.prototype = {
             // Set minimum height of content to new window height
             document.documentElement['style'].minHeight = window.innerHeight + 'px';
         
-            if (this.incorrectOrientation == true)
+            if (this.incorrectOrientation === true)
             {
                 this.setMaximum();
             }
@@ -929,7 +1005,7 @@ Phaser.StageScaleMode.prototype = {
     */
     setSize: function () {
 
-        if (this.incorrectOrientation == false)
+        if (this.incorrectOrientation === false)
         {
             if (this.maxWidth && this.width > this.maxWidth)
             {
@@ -959,24 +1035,28 @@ Phaser.StageScaleMode.prototype = {
 
         if (this.pageAlignHorizontally)
         {
-            if (this.width &lt; window.innerWidth && this.incorrectOrientation == false)
+            if (this.width &lt; window.innerWidth && this.incorrectOrientation === false)
             {
-                this.game.canvas.style.marginLeft = Math.round((window.innerWidth - this.width) / 2) + 'px';
+                this.margin.x = Math.round((window.innerWidth - this.width) / 2);
+                this.game.canvas.style.marginLeft = this.margin.x + 'px';
             }
             else
             {
+                this.margin.x = 0;
                 this.game.canvas.style.marginLeft = '0px';
             }
         }
 
         if (this.pageAlignVertically)
         {
-            if (this.height &lt; window.innerHeight && this.incorrectOrientation == false)
+            if (this.height &lt; window.innerHeight && this.incorrectOrientation === false)
             {
-                this.game.canvas.style.marginTop = Math.round((window.innerHeight - this.height) / 2) + 'px';
+                this.margin.y = Math.round((window.innerHeight - this.height) / 2);
+                this.game.canvas.style.marginTop = this.margin.y + 'px';
             }
             else
             {
+                this.margin.y = 0;
                 this.game.canvas.style.marginTop = '0px';
             }
         }
@@ -987,6 +1067,11 @@ Phaser.StageScaleMode.prototype = {
         
         this.scaleFactor.x = this.game.width / this.width;
         this.scaleFactor.y = this.game.height / this.height;
+
+        this.scaleFactorInversed.x = this.width / this.game.width;
+        this.scaleFactorInversed.y = this.height / this.game.height;
+
+        this.hasResized.dispatch(this.width, this.height);
 
         this.checkOrientationState();
 
@@ -1072,7 +1157,7 @@ Object.defineProperty(Phaser.StageScaleMode.prototype, "isFullScreen", {
 Object.defineProperty(Phaser.StageScaleMode.prototype, "isPortrait", {
 
     get: function () {
-        return this.orientation == 0 || this.orientation == 180;
+        return this.orientation === 0 || this.orientation == 180;
     }
 
 });
@@ -1110,7 +1195,7 @@ Object.defineProperty(Phaser.StageScaleMode.prototype, "isLandscape", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 07 2013 06:07:33 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Nov 28 2013 15:56:25 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

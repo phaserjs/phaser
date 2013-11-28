@@ -70,7 +70,6 @@ Phaser.Filter.prototype = {
     /**
     * Should be over-ridden.
     * @method Phaser.Filter#init
-    * @param {...}
     */
     init: function () {
         //  This should be over-ridden. Will receive a variable number of arguments.

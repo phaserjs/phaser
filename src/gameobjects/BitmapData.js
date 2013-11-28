@@ -5,9 +5,16 @@
 */
 
 /**
-* Creates a new `BitmapData` object.
+* Creates a new BitmapData object.
 *
 * @class Phaser.BitmapData
+*
+* @classdesc Note: This object is still experimental and likely to change.
+*
+* A BitmapData object can be thought of as a blank canvas onto which you can perform graphics operations as you would on a normal canvas, 
+* such as drawing lines, circles, arcs, fills and copying and setting blocks of pixel data. A single BitmapData can be used as the texture 
+* for multiple Sprites. So if you need to dynamically create a Sprite texture then they are a good choice. It supports the EaselJS Tiny API.
+*
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} [width=256] - The width of the BitmapData in pixels.
@@ -99,7 +106,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Updates the given Sprite so that it uses this BitmapData as its texture.
-    * @method Phaser.BitmapData.add
+    * @method Phaser.BitmapData#add
     * @param {Phaser.Sprite} sprite - The sprite to apply this texture to.
     */
     add: function (sprite) {
@@ -110,7 +117,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Given an array of Sprites it will update each of them so that their Textures reference this BitmapData.
-    * @method Phaser.BitmapData.addTo
+    * @method Phaser.BitmapData#addTo
     * @param {Phaser.Sprite[]} sprites - An array of Sprites to apply this texture to.
     */
     addTo: function (sprites) {
@@ -127,7 +134,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Clears the BitmapData.
-    * @method Phaser.BitmapData.clear
+    * @method Phaser.BitmapData#clear
     */
     clear: function () {
 
@@ -149,7 +156,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Sets the color of the given pixel to the specified red, green, blue and alpha values.
-    * @method Phaser.BitmapData.setPixel32
+    * @method Phaser.BitmapData#setPixel32
     * @param {number} x - The X coordinate of the pixel to be set.
     * @param {number} y - The Y coordinate of the pixel to be set.
     * @param {number} red - The red color value, between 0 and 0xFF (255).
@@ -185,7 +192,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Sets the color of the given pixel to the specified red, green and blue values.
-    * @method Phaser.BitmapData.setPixel
+    * @method Phaser.BitmapData#setPixel
     * @param {number} x - The X coordinate of the pixel to be set.
     * @param {number} y - The Y coordinate of the pixel to be set.
     * @param {number} red - The red color value (between 0 and 255)
@@ -242,7 +249,7 @@ Phaser.BitmapData.prototype = {
     /**
     * Adds an arc to the path which is centered at (x, y) position with radius r starting at startAngle and ending at endAngle 
     * going in the given direction by anticlockwise (defaulting to clockwise).
-    * @method Phaser.BitmapData.arc
+    * @method Phaser.BitmapData#arc
     * @param {number} x - The x axis of the coordinate for the arc's center
     * @param {number} y - The y axis of the coordinate for the arc's center
     * @param {number} radius - The arc's radius
@@ -263,7 +270,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Adds an arc with the given control points and radius, connected to the previous point by a straight line.
-    * @method Phaser.BitmapData.arcTo
+    * @method Phaser.BitmapData#arcTo
     * @param {number} x1
     * @param {number} y1
     * @param {number} x2
@@ -281,7 +288,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Begins a fill with the specified color. This ends the current sub-path.
-    * @method Phaser.BitmapData.beginFill
+    * @method Phaser.BitmapData#beginFill
     * @param {string} color - A CSS compatible color value (ex. "red", "#FF0000", or "rgba(255,0,0,0.5)"). Setting to null will result in no fill.
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
@@ -299,7 +306,7 @@ Phaser.BitmapData.prototype = {
     *
     *      ```myGraphics.beginLinearGradientFill(["#000","#FFF"], [0, 1], 0, 20, 0, 120).rect(20, 20, 120, 120);```
     *
-    * @method Phaser.BitmapData.beginLinearGradientFill
+    * @method Phaser.BitmapData#beginLinearGradientFill
     * @param {Array} colors - An array of CSS compatible color values. For example, ["#F00","#00F"] would define a gradient drawing from red to blue.
     * @param {Array} ratios - An array of gradient positions which correspond to the colors. For example, [0.1, 0.9] would draw the first color to 10% then interpolating to the second color at 90%.
     * @param {number} x0 - The position of the first point defining the line that defines the gradient direction and size.
@@ -330,7 +337,7 @@ Phaser.BitmapData.prototype = {
     *
     *      ```myGraphics.setStrokeStyle(10).beginLinearGradientStroke(["#000","#FFF"], [0, 1], 0, 20, 0, 120).drawRect(20, 20, 120, 120);```
     *
-    * @method Phaser.BitmapData.beginLinearGradientStroke
+    * @method Phaser.BitmapData#beginLinearGradientStroke
     * @param {Array} colors - An array of CSS compatible color values. For example, ["#F00","#00F"] would define a gradient drawing from red to blue.
     * @param {Array} ratios - An array of gradient positions which correspond to the colors. For example, [0.1, 0.9] would draw the first color to 10% then interpolating to the second color at 90%.
     * @param {number} x0 - The position of the first point defining the line that defines the gradient direction and size.
@@ -362,7 +369,7 @@ Phaser.BitmapData.prototype = {
     *          .beginRadialGradientStroke(["#F00","#00F"], [0, 1], 100, 100, 0, 100, 100, 50)
     *          .drawRect(50, 90, 150, 110);
     *
-    * @method Phaser.BitmapData.beginRadialGradientStroke
+    * @method Phaser.BitmapData#beginRadialGradientStroke
     * @param {Array} colors - An array of CSS compatible color values. For example, ["#F00","#00F"] would define a gradient drawing from red to blue.
     * @param {Array} ratios - An array of gradient positions which correspond to the colors. For example, [0.1, 0.9] would draw the first color to 10% then interpolating to the second color at 90%.
     * @param {number} x0 - Center position of the inner circle that defines the gradient.
@@ -390,7 +397,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Starts a new path by resetting the list of sub-paths. Call this method when you want to create a new path.
-    * @method Phaser.BitmapData.beginPath
+    * @method Phaser.BitmapData#beginPath
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
     beginPath: function () {
@@ -402,7 +409,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Begins a stroke with the specified color. This ends the current sub-path.
-    * @method Phaser.BitmapData.beginStroke
+    * @method Phaser.BitmapData#beginStroke
     * @param {String} color A CSS compatible color value (ex. "#FF0000", "red", or "rgba(255,0,0,0.5)"). Setting to null will result in no stroke.
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
@@ -415,7 +422,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Adds a bezier curve from the current context point to (x, y) using the control points (cp1x, cp1y) and (cp2x, cp2y).
-    * @method Phaser.BitmapData.bezierCurveTo
+    * @method Phaser.BitmapData#bezierCurveTo
     * @param {number} cp1x - The x axis of control point 1.
     * @param {number} cp1y - The y axis of control point 1.
     * @param {number} cp2x - The x axis of control point 2.
@@ -434,7 +441,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Draws a circle with the specified radius at (x, y).
-    * @method Phaser.BitmapData.circle
+    * @method Phaser.BitmapData#circle
     * @param {number} x - x coordinate center point of circle.
     * @param {number} y - y coordinate center point of circle.
     * @param {number} radius - Radius of circle in radians.
@@ -449,7 +456,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Sets all pixels in the rectangle defined by starting point (x, y) and size (width, height) to transparent black.
-    * @method Phaser.BitmapData.clearRect
+    * @method Phaser.BitmapData#clearRect
     * @param {number} x - The x axis of the coordinate for the rectangle starting point.
     * @param {number} y - The y axis of the coordinate for the rectangle starting point.
     * @param {number} width - The rectangles width.
@@ -466,7 +473,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Creates a clipping path from the current sub-paths. Everything drawn after clip() is called appears inside the clipping path only.
-    * @method Phaser.BitmapData.clip
+    * @method Phaser.BitmapData#clip
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
     clip: function () {
@@ -479,7 +486,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Tries to draw a straight line from the current point to the start. If the shape has already been closed or has only one point, this function does nothing.
-    * @method Phaser.BitmapData.closePath
+    * @method Phaser.BitmapData#closePath
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
     closePath: function () {
@@ -493,7 +500,7 @@ Phaser.BitmapData.prototype = {
     /**
     * Creates a linear gradient with defined by an imaginary line which implies the direction of the gradient.
     * Once the gradient is created colors can be inserted using the addColorStop method.
-    * @method Phaser.BitmapData.createLinearGradient
+    * @method Phaser.BitmapData#createLinearGradient
     * @param {number} x - The x axis of the coordinate for the gradients starting point.
     * @param {number} y - The y axis of the coordinate for the gradients starting point.
     * @param {number} width - The width of the gradient.
@@ -510,7 +517,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Creates a radial gradient.
-    * @method Phaser.BitmapData.createRadialGradient
+    * @method Phaser.BitmapData#createRadialGradient
     * @param {number} x0
     * @param {number} y0
     * @param {number} r0
@@ -530,7 +537,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Draws an ellipse (oval) with a specified width (w) and height (h).
-    * @method Phaser.BitmapData.ellipse
+    * @method Phaser.BitmapData#ellipse
     * @param {number} x - x coordinate center point of ellipse.
     * @param {number} y - y coordinate center point of ellipse.
     * @param {number} w - height (horizontal diameter) of ellipse. The horizontal radius will be half of this number.
@@ -559,7 +566,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Fills the subpaths with the current fill style.
-    * @method Phaser.BitmapData.fill
+    * @method Phaser.BitmapData#fill
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
     fill: function () {
@@ -572,7 +579,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Draws a filled rectangle at (x, y) position whose size is determined by width and height.
-    * @method Phaser.BitmapData.fillRect
+    * @method Phaser.BitmapData#fillRect
     * @param {number} x - The x axis of the coordinate for the rectangle starting point.
     * @param {number} y - The y axis of the coordinate for the rectangle starting point.
     * @param {number} width - The rectangles width.
@@ -589,7 +596,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Sets the fill style.
-    * @method Phaser.BitmapData.fillStyle
+    * @method Phaser.BitmapData#fillStyle
     * @param {string} color - The fill color value in CSS format: #RRGGBB or rgba(r,g,b,a)
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
@@ -604,7 +611,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Sets the font.
-    * @method Phaser.BitmapData.font
+    * @method Phaser.BitmapData#font
     * @param {DOMString} font - The font to be used for any text rendering. Default value 10px sans-serif.
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
@@ -617,7 +624,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Alpha value that is applied to shapes and images before they are composited onto the canvas. Default 1.0 (opaque).
-    * @method Phaser.BitmapData.globalAlpha
+    * @method Phaser.BitmapData#globalAlpha
     * @param {number} alpha - Alpha value that is applied to shapes and images before they are composited onto the canvas. Default 1.0 (opaque).
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
@@ -631,7 +638,7 @@ Phaser.BitmapData.prototype = {
     /**
     * With globalAlpha applied this sets how shapes and images are drawn onto the existing bitmap. Possible values: source-atop, source-in, source-out,
     * source-over (default), destination-atop, destination-in, destination-out, destination-over, lighter, darker, copy and xor.
-    * @method Phaser.BitmapData.globalCompositeOperation
+    * @method Phaser.BitmapData#globalCompositeOperation
     * @param {DOMString} operation - The composite operation to apply.
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
@@ -644,7 +651,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Type of endings on the end of lines. Possible values: butt (default), round, square.
-    * @method Phaser.BitmapData.lineCap
+    * @method Phaser.BitmapData#lineCap
     * @param {DOMString} style - Possible values: butt (default), round, square
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
@@ -657,7 +664,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Specifies where to start a dasharray on a line.
-    * @method Phaser.BitmapData.lineDashOffset
+    * @method Phaser.BitmapData#lineDashOffset
     * @param {number} offset - Specifies where to start a dasharray on a line.
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
@@ -670,7 +677,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Defines the type of corners where two lines meet. Possible values: round, bevel, miter (default)
-    * @method Phaser.BitmapData.lineJoin
+    * @method Phaser.BitmapData#lineJoin
     * @param {DOMString} join - Possible values: round, bevel, miter (default)
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
@@ -683,7 +690,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Width of lines. Default 1.0
-    * @method Phaser.BitmapData.lineWidth
+    * @method Phaser.BitmapData#lineWidth
     * @param {number} width - Width of lines. Default 1.0
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
@@ -696,7 +703,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Default 10.
-    * @method Phaser.BitmapData.miterLimit
+    * @method Phaser.BitmapData#miterLimit
     * @param {number} limit - Default 10.
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
@@ -714,7 +721,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Connects the last point in the subpath to the x, y coordinates with a straight line.
-    * @method Phaser.BitmapData.lineTo
+    * @method Phaser.BitmapData#lineTo
     * @param {number} x - The x axis of the coordinate for the end of the line.
     * @param {number} y - The y axis of the coordinate for the end of the line.
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
@@ -731,7 +738,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Moves the starting point of a new subpath to the (x, y) coordinates.
-    * @method Phaser.BitmapData.moveTo
+    * @method Phaser.BitmapData#moveTo
     * @param {number} x - The x axis of the point.
     * @param {number} y - The y axis of the point.
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
@@ -747,7 +754,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Draws a quadratic curve from the current drawing point to (x, y) using the control point (cpx, cpy).
-    * @method Phaser.BitmapData.quadraticCurveTo
+    * @method Phaser.BitmapData#quadraticCurveTo
     * @param {Number} cpx - The x axis of the control point.
     * @param {Number} cpy - The y axis of the control point.
     * @param {Number} x - The x axis of the ending point.
@@ -764,7 +771,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Draws a rectangle at (x, y) position whose size is determined by width and height.
-    * @method Phaser.BitmapData.rect
+    * @method Phaser.BitmapData#rect
     * @param {number} x - The x axis of the coordinate for the rectangle starting point.
     * @param {number} y - The y axis of the coordinate for the rectangle starting point.
     * @param {number} width - The rectangles width.
@@ -781,7 +788,7 @@ Phaser.BitmapData.prototype = {
     
     /**
     * Restores the drawing style state to the last element on the 'state stack' saved by save().
-    * @method Phaser.BitmapData.restore
+    * @method Phaser.BitmapData#restore
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
     restore: function () {
@@ -794,7 +801,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Rotates the drawing context values by r radians.
-    * @method Phaser.BitmapData.rotate
+    * @method Phaser.BitmapData#rotate
     * @param {number} angle - The angle of rotation given in radians.
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
@@ -812,7 +819,7 @@ Phaser.BitmapData.prototype = {
     *
     *      ```myGraphics.setStrokeStyle(8,"round").beginStroke("#F00");```
     *
-    * @method Phaser.BitmapData.setStrokeStyle
+    * @method Phaser.BitmapData#setStrokeStyle
     * @param {number} thickness - The width of the stroke.
     * @param {string|number} [caps=0] - Indicates the type of caps to use at the end of lines. One of butt, round, or square. Defaults to "butt". Also accepts the values 0 (butt), 1 (round), and 2 (square) for use with he tiny API.
     * @param {string|number} [joints=0] Specifies the type of joints that should be used where two lines meet. One of bevel, round, or miter. Defaults to "miter". Also accepts the values 0 (miter), 1 (round), and 2 (bevel) for use with the tiny API.
@@ -841,7 +848,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Saves the current drawing style state using a stack so you can revert any change you make to it using restore().
-    * @method Phaser.BitmapData.save
+    * @method Phaser.BitmapData#save
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
     save: function () {
@@ -854,7 +861,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Scales the current drawing context.
-    * @method Phaser.BitmapData.scale
+    * @method Phaser.BitmapData#scale
     * @param {number} x
     * @param {number} y
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
@@ -869,7 +876,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * 
-    * @method Phaser.BitmapData.scrollPathIntoView
+    * @method Phaser.BitmapData#scrollPathIntoView
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
     scrollPathIntoView: function () {
@@ -885,7 +892,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Strokes the subpaths with the current stroke style.
-    * @method Phaser.BitmapData.stroke
+    * @method Phaser.BitmapData#stroke
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
     stroke: function () {
@@ -898,7 +905,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Paints a rectangle which has a starting point at (x, y) and has a w width and an h height onto the canvas, using the current stroke style.
-    * @method Phaser.BitmapData.strokeRect
+    * @method Phaser.BitmapData#strokeRect
     * @param {number} x - The x axis for the starting point of the rectangle.
     * @param {number} y - The y axis for the starting point of the rectangle.
     * @param {number} width - The rectangles width.
@@ -915,7 +922,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Color or style to use for the lines around shapes. Default #000 (black).
-    * @method Phaser.BitmapData.strokeStyle
+    * @method Phaser.BitmapData#strokeStyle
     * @param {string} style - Color or style to use for the lines around shapes. Default #000 (black).
     * @return {Phaser.BitmapData} The BitmapData instance this method was called on.
     */
@@ -933,7 +940,7 @@ Phaser.BitmapData.prototype = {
     /**
     * If the game is running in WebGL this will push the texture up to the GPU if it's dirty.
     * This is called automatically if the BitmapData is being used by a Sprite, otherwise you need to remember to call it in your render function.
-    * @method Phaser.BitmapData.render
+    * @method Phaser.BitmapData#render
     */
     render: function () {
 

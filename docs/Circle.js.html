@@ -55,6 +55,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.BitmapData.html">BitmapData</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -136,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Filter.html">Filter</a>
 						</li>
 						
 						<li>
@@ -303,11 +311,35 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tilemap.html">Tilemap</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapLayer.html">TilemapLayer</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapParser.html">TilemapParser</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tileset.html">Tileset</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.TileSprite.html">TileSprite</a>
 						</li>
 						
 						<li>
 							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Timer.html">Timer</a>
 						</li>
 						
 						<li>
@@ -357,6 +389,14 @@
 						</li>
 						
 						<li>
+							<a href="global.html#render">render</a>
+						</li>
+						
+						<li>
+							<a href="global.html#renderXY">renderXY</a>
+						</li>
+						
+						<li>
 							<a href="global.html#right">right</a>
 						</li>
 						
@@ -396,7 +436,7 @@
 * @param {number} [y] The y coordinate of the center of the circle.
 * @param {number} [diameter] The diameter of the circle.
 * @return {Phaser.Circle} This circle object
-**/
+*/
 Phaser.Circle = function (x, y, diameter) {
 
     x = x || 0;
@@ -405,26 +445,26 @@ Phaser.Circle = function (x, y, diameter) {
 
     /**
     * @property {number} x - The x coordinate of the center of the circle.
-    **/
+    */
     this.x = x;
 
     /**
     * @property {number} y - The y coordinate of the center of the circle.
-    **/
+    */
     this.y = y;
 
     /**
     * @property {number} _diameter - The diameter of the circle.
     * @private
-    **/
+    */
     this._diameter = diameter;
 
     if (diameter > 0)
     {
-    	/**
-    	* @property {number} _radius - The radius of the circle.
-    	* @private
-        **/
+        /**
+       * @property {number} _radius - The radius of the circle.
+       * @private
+       */
         this._radius = diameter * 0.5;
     }
     else
@@ -440,7 +480,7 @@ Phaser.Circle.prototype = {
     * The circumference of the circle.
     * @method Phaser.Circle#circumference
     * @return {number}
-    **/
+    */
     circumference: function () {
         return 2 * (Math.PI * this._radius);
     },
@@ -452,7 +492,7 @@ Phaser.Circle.prototype = {
     * @param {number} y - The y coordinate of the center of the circle.
     * @param {number} diameter - The diameter of the circle in pixels.
     * @return {Circle} This circle object.
-    **/
+    */
     setTo: function (x, y, diameter) {
         this.x = x;
         this.y = y;
@@ -466,7 +506,7 @@ Phaser.Circle.prototype = {
     * @method Phaser.Circle#copyFrom
     * @param {any} source - The object to copy from.
     * @return {Circle} This Circle object.
-    **/
+    */
     copyFrom: function (source) {
         return this.setTo(source.x, source.y, source.diameter);
     },
@@ -476,11 +516,11 @@ Phaser.Circle.prototype = {
     * @method Phaser.Circle#copyTo
     * @param {any} dest - The object to copy to.
     * @return {Object} This dest object.
-    **/
+    */
     copyTo: function(dest) {
-        dest[x] = this.x;
-        dest[y] = this.y;
-        dest[diameter] = this._diameter;
+        dest.x = this.x;
+        dest.y = this.y;
+        dest.diameter = this._diameter;
         return dest;
     },
 
@@ -517,7 +557,7 @@ Phaser.Circle.prototype = {
 
         if (typeof out === "undefined") { out = new Phaser.Circle(); }
 
-        return out.setTo(a.x, a.y, a.diameter);
+        return out.setTo(this.x, this.y, this.diameter);
 
     },
 
@@ -550,7 +590,7 @@ Phaser.Circle.prototype = {
     * @param {number} dx - Moves the x value of the Circle object by this amount.
     * @param {number} dy - Moves the y value of the Circle object by this amount.
     * @return {Circle} This Circle object.
-    **/
+    */
     offset: function (dx, dy) {
         this.x += dx;
         this.y += dy;
@@ -562,7 +602,7 @@ Phaser.Circle.prototype = {
     * @method Phaser.Circle#offsetPoint
     * @param {Point} point A Point object to use to offset this Circle object (or any valid object with exposed x and y properties).
     * @return {Circle} This Circle object.
-    **/
+    */
     offsetPoint: function (point) {
         return this.offset(point.x, point.y);
     },
@@ -571,7 +611,7 @@ Phaser.Circle.prototype = {
     * Returns a string representation of this object.
     * @method Phaser.Circle#toString
     * @return {string} a string representation of the instance.
-    **/
+    */
     toString: function () {
         return "[{Phaser.Circle (x=" + this.x + " y=" + this.y + " diameter=" + this.diameter + " radius=" + this.radius + ")}]";
     }
@@ -734,11 +774,16 @@ Object.defineProperty(Phaser.Circle.prototype, "area", {
 Object.defineProperty(Phaser.Circle.prototype, "empty", {
 
     get: function () {
-        return (this._diameter == 0);
+        return (this._diameter === 0);
     },
 
     set: function (value) {
-        this.setTo(0, 0, 0);
+
+        if (value === true)
+        {
+            this.setTo(0, 0, 0);
+        }
+
     }
 
 });
@@ -872,7 +917,7 @@ Phaser.Circle.intersectsRectangle = function (c, r) {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 07 2013 06:07:33 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Nov 28 2013 15:56:25 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

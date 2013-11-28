@@ -55,6 +55,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.BitmapData.html">BitmapData</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -136,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Filter.html">Filter</a>
 						</li>
 						
 						<li>
@@ -303,11 +311,35 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tilemap.html">Tilemap</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapLayer.html">TilemapLayer</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapParser.html">TilemapParser</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tileset.html">Tileset</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.TileSprite.html">TileSprite</a>
 						</li>
 						
 						<li>
 							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Timer.html">Timer</a>
 						</li>
 						
 						<li>
@@ -354,6 +386,14 @@
 						
 						<li>
 							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
+						</li>
+						
+						<li>
+							<a href="global.html#render">render</a>
+						</li>
+						
+						<li>
+							<a href="global.html#renderXY">renderXY</a>
 						</li>
 						
 						<li>
@@ -469,7 +509,7 @@
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">number</span>
 
 
             
@@ -479,7 +519,7 @@
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The ID of the Pointer object within the game. Each game can have up to 10 active pointers.</p></td>
         </tr>
 
 	
@@ -561,10 +601,6 @@
 </dt>
 <dd>
     
-    <div class="description">
-        <p>Description.</p>
-    </div>
-    
     
     
 
@@ -598,7 +634,7 @@
 
         <tr>
             
-                <td class="name"><code>isDown</code></td>
+                <td class="name"><code>active</code></td>
             
 
             <td class="type">
@@ -614,7 +650,7 @@
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>An active pointer is one that is currently pressed down on the display. A Mouse is always active.</p></td>
         </tr>
 
 	
@@ -646,7 +682,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-211">line 211</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-166">line 166</a>
     </li></ul></dd>
     
 
@@ -671,117 +707,8 @@
 <dd>
     
     <div class="description">
-        <p>A Circle object centered on the x/y screen coordinates of the Pointer.
-Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>circle</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Circle</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-79">line 79</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="circle"><span class="type-signature"></span>circle<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Description</p>
+        <p>A Phaser.Circle that is centered on the x/y coordinates of this pointer, useful for hit detection.
+The Circle size is 44px (Apples recommended &quot;finger tip&quot; size).</p>
     </div>
     
     
@@ -862,7 +789,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-229">line 229</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-183">line 183</a>
     </li></ul></dd>
     
 
@@ -885,10 +812,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The horizontal coordinate of point relative to the viewport in pixels, excluding any scroll offset.</p>
-    </div>
     
     
     
@@ -939,7 +862,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The horizontal coordinate of point relative to the viewport in pixels, excluding any scroll offset.</p></td>
         </tr>
 
 	
@@ -968,7 +891,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-92">line 92</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-64">line 64</a>
     </li></ul></dd>
     
 
@@ -991,10 +914,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The vertical coordinate of point relative to the viewport in pixels, excluding any scroll offset.</p>
-    </div>
     
     
     
@@ -1045,7 +964,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The vertical coordinate of point relative to the viewport in pixels, excluding any scroll offset.</p></td>
         </tr>
 
 	
@@ -1074,7 +993,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-99">line 99</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-70">line 70</a>
     </li></ul></dd>
     
 
@@ -1180,7 +1099,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-637">line 637</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-586">line 586</a>
     </li></ul></dd>
     
 
@@ -1253,7 +1172,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"><p>Local reference to game.</p></td>
+            <td class="description last"><p>A reference to the currently running game.</p></td>
         </tr>
 
 	
@@ -1345,7 +1264,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">number</span>
 
 
             
@@ -1355,7 +1274,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The ID of the Pointer object within the game. Each game can have up to 10 active pointers.</p></td>
         </tr>
 
 	
@@ -1408,10 +1327,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 </dt>
 <dd>
     
-    <div class="description">
-        <p>If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true.</p>
-    </div>
-    
     
     
 
@@ -1461,7 +1376,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>If the Pointer is touching the touchscreen, or the mouse button is held down, isDown is set to true.</p></td>
         </tr>
 
 	
@@ -1493,7 +1408,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-155">line 155</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-118">line 118</a>
     </li></ul></dd>
     
 
@@ -1511,27 +1426,13 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
         
             
 <dt>
-    <h4 class="name" id="isMouse"><span class="type-signature"></span>isMouse<span class="type-signature"> :boolean</span></h4>
+    <h4 class="name" id="isMouse"><span class="type-signature"></span>isMouse<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
-    <div class="description">
-        <p>If the Pointer is a mouse this is true, otherwise false.</p>
-    </div>
     
-    
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">boolean</span>
-
-
-            </li>
-        </ul>
     
 
     
@@ -1580,7 +1481,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>If the Pointer is a mouse this is true, otherwise false.</p></td>
         </tr>
 
 	
@@ -1605,11 +1506,14 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 
     
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-148">line 148</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-112">line 112</a>
     </li></ul></dd>
     
 
@@ -1632,10 +1536,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true.</p>
-    </div>
     
     
     
@@ -1686,7 +1586,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>If the Pointer is not touching the touchscreen, or the mouse button is up, isUp is set to true.</p></td>
         </tr>
 
 	
@@ -1718,7 +1618,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-162">line 162</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-124">line 124</a>
     </li></ul></dd>
     
 
@@ -1741,10 +1641,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The number of miliseconds since the last click.</p>
-    </div>
     
     
     
@@ -1795,7 +1691,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The number of miliseconds since the last click.</p></td>
         </tr>
 
 	
@@ -1824,7 +1720,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-197">line 197</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-154">line 154</a>
     </li></ul></dd>
     
 
@@ -1847,10 +1743,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The horizontal coordinate of point relative to the viewport in pixels, including any scroll offset.</p>
-    </div>
     
     
     
@@ -1901,7 +1793,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The horizontal coordinate of point relative to the viewport in pixels, including any scroll offset.</p></td>
         </tr>
 
 	
@@ -1930,7 +1822,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-106">line 106</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-76">line 76</a>
     </li></ul></dd>
     
 
@@ -1953,10 +1845,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The vertical coordinate of point relative to the viewport in pixels, including any scroll offset.</p>
-    </div>
     
     
     
@@ -2007,7 +1895,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The vertical coordinate of point relative to the viewport in pixels, including any scroll offset.</p></td>
         </tr>
 
 	
@@ -2036,7 +1924,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-113">line 113</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-82">line 82</a>
     </li></ul></dd>
     
 
@@ -2059,119 +1947,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>A Vector object containing the current position of the Pointer on the screen.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>position</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Vec2</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-71">line 71</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="position"><span class="type-signature"></span>position<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Description</p>
-    </div>
     
     
     
@@ -2222,7 +1997,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>A Phaser.Point object containing the current x/y values of the pointer on the display.</p></td>
         </tr>
 
 	
@@ -2251,7 +2026,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-217">line 217</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-171">line 171</a>
     </li></ul></dd>
     
 
@@ -2274,119 +2049,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>A Vector object containing the initial position when the Pointer was engaged with the screen.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>positionDown</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Vec2</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-64">line 64</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="positionDown"><span class="type-signature"></span>positionDown<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Description</p>
-    </div>
     
     
     
@@ -2437,7 +2099,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>A Phaser.Point object containing the x/y values of the pointer when it was last in a down state on the display.</p></td>
         </tr>
 
 	
@@ -2466,7 +2128,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-223">line 223</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-176">line 176</a>
     </li></ul></dd>
     
 
@@ -2489,10 +2151,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>A timestamp representing when the Pointer was last tapped or clicked.</p>
-    </div>
     
     
     
@@ -2543,7 +2201,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>A timestamp representing when the Pointer was last tapped or clicked.</p></td>
         </tr>
 
 	
@@ -2575,7 +2233,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-183">line 183</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-142">line 142</a>
     </li></ul></dd>
     
 
@@ -2598,10 +2256,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The horizontal coordinate of point relative to the screen in pixels.</p>
-    </div>
     
     
     
@@ -2652,7 +2306,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The horizontal coordinate of point relative to the screen in pixels.</p></td>
         </tr>
 
 	
@@ -2681,7 +2335,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-120">line 120</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-88">line 88</a>
     </li></ul></dd>
     
 
@@ -2704,10 +2358,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The vertical coordinate of point relative to the screen in pixels.</p>
-    </div>
     
     
     
@@ -2758,7 +2408,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The vertical coordinate of point relative to the screen in pixels.</p></td>
         </tr>
 
 	
@@ -2787,7 +2437,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-127">line 127</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-94">line 94</a>
     </li></ul></dd>
     
 
@@ -2810,10 +2460,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The Game Object this Pointer is currently over / touching / dragging.</p>
-    </div>
     
     
     
@@ -2854,7 +2500,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
             <td class="type">
             
                 
-<span class="param-type">Any</span>
+<span class="param-type">any</span>
 
 
             
@@ -2864,7 +2510,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The Game Object this Pointer is currently over / touching / dragging.</p></td>
         </tr>
 
 	
@@ -2896,7 +2542,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-204">line 204</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-160">line 160</a>
     </li></ul></dd>
     
 
@@ -2919,10 +2565,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>A timestamp representing when the Pointer first touched the touchscreen.</p>
-    </div>
     
     
     
@@ -2973,7 +2615,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>A timestamp representing when the Pointer first touched the touchscreen.</p></td>
         </tr>
 
 	
@@ -3005,7 +2647,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-169">line 169</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-130">line 130</a>
     </li></ul></dd>
     
 
@@ -3028,10 +2670,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>A timestamp representing when the Pointer left the touchscreen.</p>
-    </div>
     
     
     
@@ -3082,7 +2720,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>A timestamp representing when the Pointer left the touchscreen.</p></td>
         </tr>
 
 	
@@ -3114,7 +2752,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-176">line 176</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-136">line 136</a>
     </li></ul></dd>
     
 
@@ -3137,10 +2775,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The total number of times this Pointer has been touched to the touchscreen.</p>
-    </div>
     
     
     
@@ -3191,7 +2825,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The total number of times this Pointer has been touched to the touchscreen.</p></td>
         </tr>
 
 	
@@ -3223,7 +2857,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-190">line 190</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-148">line 148</a>
     </li></ul></dd>
     
 
@@ -3246,10 +2880,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>Description.</p>
-    </div>
     
     
     
@@ -3300,7 +2930,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>true if the Pointer is within the game area, otherwise false.</p></td>
         </tr>
 
 	
@@ -3329,7 +2959,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-85">line 85</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-58">line 58</a>
     </li></ul></dd>
     
 
@@ -3435,7 +3065,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-658">line 658</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-607">line 607</a>
     </li></ul></dd>
     
 
@@ -3541,7 +3171,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-674">line 674</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-623">line 623</a>
     </li></ul></dd>
     
 
@@ -3564,10 +3194,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The horizontal coordinate of point relative to the game element. This value is automatically scaled based on game size.</p>
-    </div>
     
     
     
@@ -3618,7 +3244,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The horizontal coordinate of point relative to the game element. This value is automatically scaled based on game size.</p></td>
         </tr>
 
 	
@@ -3647,7 +3273,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-134">line 134</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-100">line 100</a>
     </li></ul></dd>
     
 
@@ -3670,10 +3296,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The vertical coordinate of point relative to the game element. This value is automatically scaled based on game size.</p>
-    </div>
     
     
     
@@ -3724,7 +3346,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The vertical coordinate of point relative to the game element. This value is automatically scaled based on game size.</p></td>
         </tr>
 
 	
@@ -3753,7 +3375,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-141">line 141</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-106">line 106</a>
     </li></ul></dd>
     
 
@@ -3785,7 +3407,9 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     
     <div class="description">
-        <p>The Pointer is considered justPressed if the time it was pressed onto the touchscreen or clicked is less than justPressedRate.</p>
+        <p>The Pointer is considered justPressed if the time it was pressed onto the touchscreen or clicked is less than justPressedRate.
+Note that calling justPressed doesn't reset the pressed status of the Pointer, it will return <code>true</code> for as long as the duration is valid.
+If you wish to check if the Pointer was pressed down just once then see the Sprite.events.onInputDown event.</p>
     </div>
     
 
@@ -3847,7 +3471,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The time to check against. If none given it will use InputManager.justPressedRate.</p></td>
         </tr>
 
 	
@@ -3879,7 +3503,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-570">line 570</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-524">line 524</a>
     </li></ul></dd>
     
 
@@ -3903,6 +3527,10 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     <h5>Returns:</h5>
     
             
+<div class="param-desc">
+    <p>true if the Pointer was pressed down within the duration given.</p>
+</div>
+
 
 
 <dl>
@@ -3934,7 +3562,9 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     
     <div class="description">
-        <p>The Pointer is considered justReleased if the time it left the touchscreen is less than justReleasedRate.</p>
+        <p>The Pointer is considered justReleased if the time it left the touchscreen is less than justReleasedRate.
+Note that calling justReleased doesn't reset the pressed status of the Pointer, it will return <code>true</code> for as long as the duration is valid.
+If you wish to check if the Pointer was released just once then see the Sprite.events.onInputUp event.</p>
     </div>
     
 
@@ -3996,7 +3626,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The time to check against. If none given it will use InputManager.justReleasedRate.</p></td>
         </tr>
 
 	
@@ -4028,7 +3658,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-584">line 584</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-540">line 540</a>
     </li></ul></dd>
     
 
@@ -4052,6 +3682,10 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     <h5>Returns:</h5>
     
             
+<div class="param-desc">
+    <p>true if the Pointer was released within the duration given.</p>
+</div>
+
 
 
 <dl>
@@ -4123,7 +3757,13 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
             <td class="type">
             
                 
-<span class="param-type">Any</span>
+<span class="param-type">MouseEvent</span>
+|
+
+<span class="param-type">PointerEvent</span>
+|
+
+<span class="param-type">TouchEvent</span>
 
 
             
@@ -4133,7 +3773,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The event passed up from the input handler.</p></td>
         </tr>
 
 	
@@ -4165,7 +3805,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-479">line 479</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-433">line 433</a>
     </li></ul></dd>
     
 
@@ -4201,7 +3841,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     
     <div class="description">
-        <p>Called when the Pointer is moved</p>
+        <p>Called when the Pointer is moved.</p>
     </div>
     
 
@@ -4241,7 +3881,13 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
             <td class="type">
             
                 
-<span class="param-type">Any</span>
+<span class="param-type">MouseEvent</span>
+|
+
+<span class="param-type">PointerEvent</span>
+|
+
+<span class="param-type">TouchEvent</span>
 
 
             
@@ -4251,7 +3897,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The event passed up from the input handler.</p></td>
         </tr>
 
 	
@@ -4283,7 +3929,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-342">line 342</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-296">line 296</a>
     </li></ul></dd>
     
 
@@ -4352,7 +3998,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-598">line 598</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-556">line 556</a>
     </li></ul></dd>
     
 
@@ -4470,7 +4116,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-240">line 240</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-194">line 194</a>
     </li></ul></dd>
     
 
@@ -4546,7 +4192,13 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
             <td class="type">
             
                 
-<span class="param-type">Any</span>
+<span class="param-type">MouseEvent</span>
+|
+
+<span class="param-type">PointerEvent</span>
+|
+
+<span class="param-type">TouchEvent</span>
 
 
             
@@ -4556,7 +4208,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The event passed up from the input handler.</p></td>
         </tr>
 
 	
@@ -4588,7 +4240,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-491">line 491</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-445">line 445</a>
     </li></ul></dd>
     
 
@@ -4609,98 +4261,6 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     
     
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="toString"><span class="type-signature"></span>toString<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Returns a string representation of this object.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-626">line 626</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>A string representation of the instance.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">string</span>
-
-
-	</dd>
-</dl>
-
-
-        
     
     
 </dd>
@@ -4716,7 +4276,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Called internall by the Input Manager.</p>
     </div>
     
 
@@ -4749,7 +4309,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-305">line 305</a>
+        <a href="Pointer.js.html">input/Pointer.js</a>, <a href="Pointer.js.html#sunlight-1-line-259">line 259</a>
     </li></ul></dd>
     
 
@@ -4800,7 +4360,7 @@ Default size of 44px (Apple's recommended &quot;finger tip&quot; size).</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 07 2013 06:07:39 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Nov 28 2013 15:56:32 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

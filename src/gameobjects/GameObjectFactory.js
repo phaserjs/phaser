@@ -295,19 +295,19 @@ Phaser.GameObjectFactory.prototype = {
     * A WebGL shader/filter that can be applied to Sprites.
     *
     * @method Phaser.GameObjectFactory#filter
-    * @param {string} filter - The name of the filter you wish to create, for example "HueRotate" or "SineWave"
-    * @param {...} - Whatever parameters are needed to be passed to the filter init function.
+    * @param {string} filter - The name of the filter you wish to create, for example HueRotate or SineWave.
+    * @param {any} - Whatever parameters are needed to be passed to the filter init function.
     * @return {Phaser.Filter} The newly created Phaser.Filter object.
     */
     filter: function (filter) {
 
         var args = Array.prototype.splice.call(arguments, 1);
 
-        var f = new Phaser.Filter[filter](this.game);
+        var filter = new Phaser.Filter[filter](this.game);
 
-        f.init.apply(f, args);
+        filter.init.apply(filter, args);
 
-        return f;
+        return filter;
 
     }
 

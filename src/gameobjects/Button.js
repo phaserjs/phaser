@@ -5,14 +5,17 @@
 */
 
 /**
-* Create a new `Button` object. A Button is a special type of Sprite that is set-up to handle Pointer events automatically. The four states a Button responds to are:
-* 'Over' - when the Pointer moves over the Button. This is also commonly known as 'hover'.
-* 'Out' - when the Pointer that was previously over the Button moves out of it.
-* 'Down' - when the Pointer is pressed down on the Button. I.e. touched on a touch enabled device or clicked with the mouse.
-* 'Up' - when the Pointer that was pressed down on the Button is released again.
+* @class Phaser.Button
+*
+* @classdesc Create a new `Button` object. A Button is a special type of Sprite that is set-up to handle Pointer events automatically. The four states a Button responds to are:
+*
+* * 'Over' - when the Pointer moves over the Button. This is also commonly known as 'hover'.
+* * 'Out' - when the Pointer that was previously over the Button moves out of it.
+* * 'Down' - when the Pointer is pressed down on the Button. I.e. touched on a touch enabled device or clicked with the mouse.
+* * 'Up' - when the Pointer that was pressed down on the Button is released again.
+*
 * You can set a unique texture frame and Sound for any of these states.
 *
-* @class Phaser.Button
 * @constructor
 *
 * @param {Phaser.Game} game Current game instance.

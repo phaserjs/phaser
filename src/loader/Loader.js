@@ -934,9 +934,10 @@ Phaser.Loader.prototype = {
             return;
         }
         
-        this._fileList[index].loaded = true;
 
         var file = this._fileList[index];
+        file.loaded = true;
+
         var loadNext = true;
         var _this = this;
 

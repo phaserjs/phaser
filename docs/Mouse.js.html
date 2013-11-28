@@ -55,6 +55,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.BitmapData.html">BitmapData</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -136,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Filter.html">Filter</a>
 						</li>
 						
 						<li>
@@ -303,11 +311,35 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tilemap.html">Tilemap</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapLayer.html">TilemapLayer</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapParser.html">TilemapParser</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tileset.html">Tileset</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.TileSprite.html">TileSprite</a>
 						</li>
 						
 						<li>
 							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Timer.html">Timer</a>
 						</li>
 						
 						<li>
@@ -357,6 +389,14 @@
 						</li>
 						
 						<li>
+							<a href="global.html#render">render</a>
+						</li>
+						
+						<li>
+							<a href="global.html#renderXY">renderXY</a>
+						</li>
+						
+						<li>
 							<a href="global.html#right">right</a>
 						</li>
 						
@@ -388,69 +428,90 @@
 */
 
 /**
-* Phaser - Mouse constructor.
+* Phaser.Mouse is responsible for handling all aspects of mouse interaction with the browser. It captures and processes mouse events.
 *
 * @class Phaser.Mouse
-* @classdesc The Mouse class
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
 Phaser.Mouse = function (game) {
 
-	/**
-	* @property {Phaser.Game} game - Local reference to game.
-	*/
-	this.game = game;
-	
-	/**
-	* @property {Object} callbackContext - Description.
-	*/
-	this.callbackContext = this.game;
-
-	/**
-	* @property {function} mouseDownCallback - Description.
-	* @default
-	*/
-	this.mouseDownCallback = null;
-	
-	/**
-	* @property {function} mouseMoveCallback - Description.
-	* @default
-	*/
-	this.mouseMoveCallback = null;
-	
-	/**
-	* @property {function} mouseUpCallback - Description.
-	* @default
-	*/
-	this.mouseUpCallback = null;
-
-	/**
-	* @property {number} button- The type of click, either: Phaser.Mouse.NO_BUTTON, Phaser.Mouse.LEFT_BUTTON, Phaser.Mouse.MIDDLE_BUTTON or Phaser.Mouse.RIGHT_BUTTON.
-	* @default
-	*/
-	this.button = -1;
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game.
+    */
+    this.game = game;
+    
+    /**
+    * @property {Object} callbackContext - The context under which callbacks are called.
+    */
+    this.callbackContext = this.game;
 
     /**
-    * You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
-    * @property {boolean} disabled
+    * @property {function} mouseDownCallback - A callback that can be fired when the mouse is pressed down.
+    */
+    this.mouseDownCallback = null;
+    
+    /**
+    * @property {function} mouseMoveCallback - A callback that can be fired when the mouse is moved while pressed down.
+    */
+    this.mouseMoveCallback = null;
+    
+    /**
+    * @property {function} mouseUpCallback - A callback that can be fired when the mouse is released from a pressed down state.
+    */
+    this.mouseUpCallback = null;
+
+    /**
+    * @property {boolean} capture - If true the DOM mouse events will have event.preventDefault applied to them, if false they will propogate fully.
+    */
+    this.capture = false;
+
+    /**
+    * @property {number} button- The type of click, either: Phaser.Mouse.NO_BUTTON, Phaser.Mouse.LEFT_BUTTON, Phaser.Mouse.MIDDLE_BUTTON or Phaser.Mouse.RIGHT_BUTTON.
+    * @default
+    */
+    this.button = -1;
+
+    /**
+    * @property {boolean} disabled - You can disable all Input by setting disabled = true. While set all new input related events will be ignored.
     * @default
     */
     this.disabled = false;
 
     /**
-    * If the mouse has been Pointer Locked successfully this will be set to true.
-    * @property {boolean} locked
+    * @property {boolean} locked - If the mouse has been Pointer Locked successfully this will be set to true.
     * @default
     */
     this.locked = false;
 
     /**
-    * This event is dispatched when the browser enters or leaves pointer lock state.
-    * @property {Phaser.Signal} pointerLock
+    * @property {Phaser.Signal} pointerLock - This event is dispatched when the browser enters or leaves pointer lock state.
     * @default
     */
-    this.pointerLock = new Phaser.Signal;
+    this.pointerLock = new Phaser.Signal();
+
+    /**
+    * @property {MouseEvent} event - The browser mouse event.
+    */
+    this.event = null;
+
+    /**
+    * @property {function} _onMouseDown - Internal event handler reference.
+    * @private
+    */
+    this._onMouseDown = null;
+
+    /**
+    * @property {function} _onMouseMove - Internal event handler reference.
+    * @private
+    */
+    this._onMouseMove = null;
+
+    /**
+    * @property {function} _onMouseUp - Internal event handler reference.
+    * @private
+    */
+    this._onMouseUp = null;
 
 };
 
@@ -459,6 +520,7 @@ Phaser.Mouse = function (game) {
 * @type {number}
 */
 Phaser.Mouse.NO_BUTTON = -1;
+
 /**
 * @constant
 * @type {number}
@@ -479,7 +541,7 @@ Phaser.Mouse.RIGHT_BUTTON = 2;
 
 Phaser.Mouse.prototype = {
 
-	/**
+    /**
     * Starts the event listeners running.
     * @method Phaser.Mouse#start
     */
@@ -487,7 +549,7 @@ Phaser.Mouse.prototype = {
 
         var _this = this;
 
-        if (this.game.device.android && this.game.device.chrome == false)
+        if (this.game.device.android && this.game.device.chrome === false)
         {
             //  Android stock browser fires mouse events even if you preventDefault on the touchStart, so ...
             return;
@@ -505,33 +567,27 @@ Phaser.Mouse.prototype = {
             return _this.onMouseUp(event);
         };
 
-        this.game.renderer.view.addEventListener('mousedown', this._onMouseDown, true);
-        this.game.renderer.view.addEventListener('mousemove', this._onMouseMove, true);
-        this.game.renderer.view.addEventListener('mouseup', this._onMouseUp, true);
+        document.addEventListener('mousedown', this._onMouseDown, true);
+        document.addEventListener('mousemove', this._onMouseMove, true);
+        document.addEventListener('mouseup', this._onMouseUp, true);
 
     },
 
-	/**
-	* The internal method that handles the mouse down event from the browser.
-	* @method Phaser.Mouse#onMouseDown
-    * @param {MouseEvent} event
+    /**
+    * The internal method that handles the mouse down event from the browser.
+    * @method Phaser.Mouse#onMouseDown
+    * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
     */
     onMouseDown: function (event) {
 
-        event.preventDefault();
+        this.event = event;
 
-        if (event.which === 1)
+        if (this.capture)
         {
-            this.button = Phaser.Mouse.LEFT_BUTTON;
-        } 
-        else if (event.which === 2)
-        {
-            this.button = Phaser.Mouse.MIDDLE_BUTTON;
-        } 
-        else if (event.which === 3)
-        {
-            this.button = Phaser.Mouse.RIGHT_BUTTON;
+            event.preventDefault();
         }
+
+        this.button = event.which;
 
         if (this.mouseDownCallback)
         {
@@ -549,14 +605,19 @@ Phaser.Mouse.prototype = {
 
     },
 
-	/**
+    /**
     * The internal method that handles the mouse move event from the browser.
-	* @method Phaser.Mouse#onMouseMove
-    * @param {MouseEvent} event
+    * @method Phaser.Mouse#onMouseMove
+    * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
     */
     onMouseMove: function (event) {
 
-        event.preventDefault();
+        this.event = event;
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
 
         if (this.mouseMoveCallback)
         {
@@ -574,16 +635,21 @@ Phaser.Mouse.prototype = {
 
     },
 
-	/**
+    /**
     * The internal method that handles the mouse up event from the browser.
-	* @method Phaser.Mouse#onMouseUp
-    * @param {MouseEvent} event
+    * @method Phaser.Mouse#onMouseUp
+    * @param {MouseEvent} event - The native event from the browser. This gets stored in Mouse.event.
     */
     onMouseUp: function (event) {
 
-        event.preventDefault();
+        this.event = event;
 
-    	this.button = Phaser.Mouse.NO_BUTTON;
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+
+        this.button = Phaser.Mouse.NO_BUTTON;
 
         if (this.mouseUpCallback)
         {
@@ -605,7 +671,7 @@ Phaser.Mouse.prototype = {
     * If the browser supports it you can request that the pointer be locked to the browser window.
     * This is classically known as 'FPS controls', where the pointer can't leave the browser until the user presses an exit key.
     * If the browser successfully enters a locked state the event Phaser.Mouse.pointerLock will be dispatched and the first parameter will be 'true'.
-	* @method Phaser.Mouse#requestPointerLock
+    * @method Phaser.Mouse#requestPointerLock
     */
     requestPointerLock: function () {
 
@@ -630,10 +696,10 @@ Phaser.Mouse.prototype = {
 
     },
 
-	/**
-	* Internal pointerLockChange handler.
-	* @method Phaser.Mouse#pointerLockChange
-    * @param {MouseEvent} event
+    /**
+    * Internal pointerLockChange handler.
+    * @method Phaser.Mouse#pointerLockChange
+    * @param {pointerlockchange} event - The native event from the browser. This gets stored in Mouse.event.
     */
     pointerLockChange: function (event) {
 
@@ -643,20 +709,20 @@ Phaser.Mouse.prototype = {
         {
             //  Pointer was successfully locked
             this.locked = true;
-            this.pointerLock.dispatch(true);
+            this.pointerLock.dispatch(true, event);
         }
         else
         {
             //  Pointer was unlocked
             this.locked = false;
-            this.pointerLock.dispatch(false);
+            this.pointerLock.dispatch(false, event);
         }
 
     },
 
-	/**
-	* Internal release pointer lock handler.
-	* @method Phaser.Mouse#releasePointerLock
+    /**
+    * Internal release pointer lock handler.
+    * @method Phaser.Mouse#releasePointerLock
     */
     releasePointerLock: function () {
 
@@ -670,15 +736,15 @@ Phaser.Mouse.prototype = {
 
     },
 
-	/**
+    /**
     * Stop the event listeners.
     * @method Phaser.Mouse#stop
     */
     stop: function () {
 
-        this.game.stage.canvas.removeEventListener('mousedown', this._onMouseDown, true);
-        this.game.stage.canvas.removeEventListener('mousemove', this._onMouseMove, true);
-        this.game.stage.canvas.removeEventListener('mouseup', this._onMouseUp, true);
+        document.removeEventListener('mousedown', this._onMouseDown, true);
+        document.removeEventListener('mousemove', this._onMouseMove, true);
+        document.removeEventListener('mouseup', this._onMouseUp, true);
 
     }
 
@@ -704,7 +770,7 @@ Phaser.Mouse.prototype = {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 07 2013 06:07:33 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Nov 28 2013 15:56:25 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

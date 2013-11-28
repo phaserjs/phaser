@@ -55,6 +55,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.BitmapData.html">BitmapData</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -136,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Filter.html">Filter</a>
 						</li>
 						
 						<li>
@@ -303,11 +311,35 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tilemap.html">Tilemap</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapLayer.html">TilemapLayer</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapParser.html">TilemapParser</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tileset.html">Tileset</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.TileSprite.html">TileSprite</a>
 						</li>
 						
 						<li>
 							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Timer.html">Timer</a>
 						</li>
 						
 						<li>
@@ -354,6 +386,14 @@
 						
 						<li>
 							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
+						</li>
+						
+						<li>
+							<a href="global.html#render">render</a>
+						</li>
+						
+						<li>
+							<a href="global.html#renderXY">renderXY</a>
 						</li>
 						
 						<li>
@@ -690,7 +730,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>This event is dispatched when the sound system is unlocked via a touch event on cellular devices.</p></td>
         </tr>
 
 	
@@ -719,7 +759,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-70">line 70</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-77">line 77</a>
     </li></ul></dd>
     
 
@@ -741,6 +781,170 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
         <h3 class="subsection-title">Methods</h3>
 
         <dl>
+            
+<dt>
+    <h4 class="name" id="addBitmapData"><span class="type-signature"></span>addBitmapData<span class="signature">(key, bitmapData)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Add a BitmapData object in to the cache.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Asset key for this BitmapData.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>bitmapData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The BitmapData object to be addded to the cache.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-96">line 96</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The BitmapData object to be addded to the cache.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
             
 <dt>
     <h4 class="name" id="addBitmapFont"><span class="type-signature"></span>addBitmapFont<span class="signature">(key, url, data, xmlData)</span><span class="type-signature"></span></h4>
@@ -902,7 +1106,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-199">line 199</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-221">line 221</a>
     </li></ul></dd>
     
 
@@ -1066,7 +1270,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-76">line 76</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-83">line 83</a>
     </li></ul></dd>
     
 
@@ -1102,7 +1306,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     
     <div class="description">
-        <p>Adds a default image to be used when a key is wrong / missing. Is mapped to the key __default.</p>
+        <p>Adds a default image to be used in special cases such as WebGL Filters. Is mapped to the key __default.</p>
     </div>
     
 
@@ -1135,7 +1339,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-220">line 220</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-242">line 242</a>
     </li></ul></dd>
     
 
@@ -1299,7 +1503,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-255">line 255</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-295">line 295</a>
     </li></ul></dd>
     
 
@@ -1327,7 +1531,76 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
         
             
 <dt>
-    <h4 class="name" id="addRenderTexture"><span class="type-signature"></span>addRenderTexture<span class="signature">(key, textue)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="addMissingImage"><span class="type-signature"></span>addMissingImage<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Adds an image to be used when a key is wrong / missing. Is mapped to the key __missing.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-260">line 260</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="addRenderTexture"><span class="type-signature"></span>addRenderTexture<span class="signature">(key, texture)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1392,7 +1665,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
 
         <tr>
             
-                <td class="name"><code>textue</code></td>
+                <td class="name"><code>texture</code></td>
             
 
             <td class="type">
@@ -1440,7 +1713,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-89">line 89</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-111">line 111</a>
     </li></ul></dd>
     
 
@@ -1650,7 +1923,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-274">line 274</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-314">line 314</a>
     </li></ul></dd>
     
 
@@ -1883,7 +2156,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-104">line 104</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-126">line 126</a>
     </li></ul></dd>
     
 
@@ -2047,7 +2320,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-238">line 238</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-278">line 278</a>
     </li></ul></dd>
     
 
@@ -2257,7 +2530,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-167">line 167</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-189">line 189</a>
     </li></ul></dd>
     
 
@@ -2444,7 +2717,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-150">line 150</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-172">line 172</a>
     </li></ul></dd>
     
 
@@ -2831,7 +3104,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-126">line 126</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-148">line 148</a>
     </li></ul></dd>
     
 
@@ -2949,7 +3222,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-383">line 383</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-441">line 441</a>
     </li></ul></dd>
     
 
@@ -3113,7 +3386,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-351">line 351</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-390">line 390</a>
     </li></ul></dd>
     
 
@@ -3182,7 +3455,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-769">line 769</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-828">line 828</a>
     </li></ul></dd>
     
 
@@ -3210,6 +3483,147 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
         
             
 <dt>
+    <h4 class="name" id="getBitmapData"><span class="type-signature"></span>getBitmapData<span class="signature">(key)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Get a BitmapData object from the cache by its key.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Asset key of the BitmapData object you want.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-423">line 423</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The requested BitmapData object if found, or null if not.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="getCanvas"><span class="type-signature"></span>getCanvas<span class="signature">(key)</span><span class="type-signature"> &rarr; {object}</span></h4>
     
     
@@ -3218,7 +3632,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     
     <div class="description">
-        <p>Get acanvas object from the cache by its key.</p>
+        <p>Get a canvas object from the cache by its key.</p>
     </div>
     
 
@@ -3300,7 +3714,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-366">line 366</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-405">line 405</a>
     </li></ul></dd>
     
 
@@ -3441,7 +3855,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-522">line 522</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-581">line 581</a>
     </li></ul></dd>
     
 
@@ -3582,7 +3996,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-488">line 488</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-547">line 547</a>
     </li></ul></dd>
     
 
@@ -3723,7 +4137,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-505">line 505</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-564">line 564</a>
     </li></ul></dd>
     
 
@@ -3864,7 +4278,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-471">line 471</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-530">line 530</a>
     </li></ul></dd>
     
 
@@ -4005,7 +4419,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-401">line 401</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-459">line 459</a>
     </li></ul></dd>
     
 
@@ -4097,7 +4511,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-699">line 699</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-758">line 758</a>
     </li></ul></dd>
     
 
@@ -4239,7 +4653,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-675">line 675</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-734">line 734</a>
     </li></ul></dd>
     
 
@@ -4380,7 +4794,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-574">line 574</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-633">line 633</a>
     </li></ul></dd>
     
 
@@ -4521,7 +4935,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-592">line 592</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-651">line 651</a>
     </li></ul></dd>
     
 
@@ -4613,7 +5027,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-709">line 709</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-768">line 768</a>
     </li></ul></dd>
     
 
@@ -4754,7 +5168,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-657">line 657</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-716">line 716</a>
     </li></ul></dd>
     
 
@@ -4846,7 +5260,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-719">line 719</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-778">line 778</a>
     </li></ul></dd>
     
 
@@ -4987,7 +5401,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-556">line 556</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-615">line 615</a>
     </li></ul></dd>
     
 
@@ -5128,7 +5542,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-539">line 539</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-598">line 598</a>
     </li></ul></dd>
     
 
@@ -5269,7 +5683,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-454">line 454</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-513">line 513</a>
     </li></ul></dd>
     
 
@@ -5320,7 +5734,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
         
             
 <dt>
-    <h4 class="name" id="getTileset"><span class="type-signature"></span>getTileset<span class="signature">(key)</span><span class="type-signature"> &rarr; {Phaser.Tileset}</span></h4>
+    <h4 class="name" id="getTileset"><span class="type-signature"></span>getTileset<span class="signature">(key)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tileset.html">Phaser.Tileset</a>}</span></h4>
     
     
 </dt>
@@ -5410,7 +5824,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-436">line 436</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-495">line 495</a>
     </li></ul></dd>
     
 
@@ -5446,7 +5860,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
 	</dt>
 	<dd>
 		
-<span class="param-type">Phaser.Tileset</span>
+<span class="param-type"><a href="Phaser.Tileset.html">Phaser.Tileset</a></span>
 
 
 	</dd>
@@ -5551,7 +5965,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-418">line 418</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-477">line 477</a>
     </li></ul></dd>
     
 
@@ -5692,7 +6106,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-610">line 610</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-669">line 669</a>
     </li></ul></dd>
     
 
@@ -5833,7 +6247,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-626">line 626</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-685">line 685</a>
     </li></ul></dd>
     
 
@@ -5974,7 +6388,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-639">line 639</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-698">line 698</a>
     </li></ul></dd>
     
 
@@ -6115,7 +6529,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-301">line 301</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-340">line 340</a>
     </li></ul></dd>
     
 
@@ -6233,7 +6647,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-322">line 322</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-361">line 361</a>
     </li></ul></dd>
     
 
@@ -6351,7 +6765,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-729">line 729</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-788">line 788</a>
     </li></ul></dd>
     
 
@@ -6469,7 +6883,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-739">line 739</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-798">line 798</a>
     </li></ul></dd>
     
 
@@ -6587,7 +7001,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-749">line 749</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-808">line 808</a>
     </li></ul></dd>
     
 
@@ -6705,7 +7119,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-759">line 759</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-818">line 818</a>
     </li></ul></dd>
     
 
@@ -6823,7 +7237,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-337">line 337</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-376">line 376</a>
     </li></ul></dd>
     
 
@@ -6874,7 +7288,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 07 2013 06:07:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Nov 28 2013 15:56:27 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

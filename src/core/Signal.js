@@ -13,13 +13,13 @@
 Phaser.Signal = function () {
 
     /**
-    * @property {Array.<Phaser.SignalBinding>} _bindings - Description.
+    * @property {Array.<Phaser.SignalBinding>} _bindings - Internal variable.
     * @private
     */
     this._bindings = [];
     
     /**
-    * @property {Description} _prevParams - Description.
+    * @property {any} _prevParams - Internal variable.
     * @private
     */
     this._prevParams = null;
@@ -28,7 +28,7 @@ Phaser.Signal = function () {
     var self = this;
 
     /**
-    * @property {Description} dispatch - Description.
+    * @property {function} dispatch - The dispatch function is what sends the Signal out.
     */
     this.dispatch = function(){
         Phaser.Signal.prototype.dispatch.apply(self, arguments);
@@ -63,7 +63,7 @@ Phaser.Signal.prototype = {
     /**
     * @method Phaser.Signal#validateListener
     * @param {function} listener - Signal handler function.
-    * @param {Description} fnName - Description.
+    * @param {string} fnName - Function name.
     * @private
     */
     validateListener: function (listener, fnName) {
@@ -222,7 +222,7 @@ Phaser.Signal.prototype = {
 
     /**
     * Stop propagation of the event, blocking the dispatch to next listeners on the queue.
-    * <p><strong>IMPORTANT:</strong> should be called only during signal dispatch, calling it before/after dispatch won't affect signal broadcast.</p>
+    * IMPORTANT: should be called only during signal dispatch, calling it before/after dispatch won't affect signal broadcast.
     * @see Signal.prototype.disable
     *
     * @method Phaser.Signal#halt
@@ -235,7 +235,7 @@ Phaser.Signal.prototype = {
     * Dispatch/Broadcast Signal to all listeners added to the queue.
     *
     * @method Phaser.Signal#dispatch
-    * @param {...} [params] - Parameters that should be passed to each handler.
+    * @param {any} [params] - Parameters that should be passed to each handler.
     */
     dispatch: function () {
 
@@ -280,7 +280,7 @@ Phaser.Signal.prototype = {
 
     /**
     * Remove all bindings from signal and destroy any reference to external objects (destroy Signal object).
-    * <p><strong>IMPORTANT:</strong> calling any method on the signal instance after calling dispose will throw errors.</p>
+    * IMPORTANT: calling any method on the signal instance after calling dispose will throw errors.
     *
     * @method Phaser.Signal#dispose
     */

@@ -54,4 +54,18 @@ $(document).ready(function(){
 
 	});
 
+	$.getJSON("http://phaser.io/version.json")
+
+	.done(function(data) {
+
+		console.log(data);
+
+		if (data.version !== '1.1.3')
+		{
+			$("#upgrade").append(data.version);
+			$("#upgrade").css('display', 'inline-block');
+		}
+
+	});
+
 });

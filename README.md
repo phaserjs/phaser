@@ -5,7 +5,7 @@ Phaser 1.1
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 1.1.3 - Released: -in development-
+Version: 1.1.3 - Released: November 28th 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -39,7 +39,7 @@ Phaser is everything we ever wanted from an HTML5 game framework. It powers all 
 Change Log
 ----------
 
-Version 1.1.3 - in build
+Version 1.1.3 - November 28th 2013
 
 * New: Added a .jshintrc so contributions can be run through JSHint to help retain formatting across the library (thanks kevinthompson)
 * New: The entire Phaser library has been updated to match the new JSHint configuration.
@@ -250,7 +250,7 @@ Before submitting a pull request, please run your code through [JSHint](http://w
 Bugs?
 -----
 
-Please add them to the [Issue Tracker][1] with as much info as possible.
+Please add them to the [Issue Tracker][1] with as much info as possible, especially source code demonstrating the issue.
 
 ![Phaser Tilemap](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_tilemap_collision.png)
 

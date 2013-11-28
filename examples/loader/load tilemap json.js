@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create });
 
 function preload() {
 
@@ -37,18 +37,6 @@ function create() {
     
     tileset = game.add.tileset('tiles');
 
-    layer = game.add.tilemapLayer(0, 100, 800, 600, tileset, map, 0);
-
-    layer.fixedToCamera = false;
-
-    // layer.position.y = 200;
-
-    layer.resizeWorld();
-
-}
-
-function update() {
-
-    layer.scrollX--;
+    layer = game.add.tilemapLayer(0, 0, 800, 600, tileset, map, 0);
 
 }

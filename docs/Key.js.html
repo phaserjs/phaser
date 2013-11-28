@@ -55,6 +55,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.BitmapData.html">BitmapData</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -136,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Filter.html">Filter</a>
 						</li>
 						
 						<li>
@@ -303,11 +311,35 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tilemap.html">Tilemap</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapLayer.html">TilemapLayer</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapParser.html">TilemapParser</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tileset.html">Tileset</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.TileSprite.html">TileSprite</a>
 						</li>
 						
 						<li>
 							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Timer.html">Timer</a>
 						</li>
 						
 						<li>
@@ -357,6 +389,14 @@
 						</li>
 						
 						<li>
+							<a href="global.html#render">render</a>
+						</li>
+						
+						<li>
+							<a href="global.html#renderXY">renderXY</a>
+						</li>
+						
+						<li>
 							<a href="global.html#right">right</a>
 						</li>
 						
@@ -396,87 +436,87 @@
 */
 Phaser.Key = function (game, keycode) {
 
-	/**
-	* @property {Phaser.Game} game - A reference to the currently running game. 
-	*/
-	this.game = game;
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game. 
+    */
+    this.game = game;
 
-	/**
-	* @property {boolean} isDown - The "down" state of the key.
-	* @default
-	*/
-	this.isDown = false;
+    /**
+    * @property {boolean} isDown - The "down" state of the key.
+    * @default
+    */
+    this.isDown = false;
 
-	/**
-	* @property {boolean} isUp - The "up" state of the key.
-	* @default
-	*/
-	this.isUp = false;
+    /**
+    * @property {boolean} isUp - The "up" state of the key.
+    * @default
+    */
+    this.isUp = false;
 
-	/**
-	* @property {boolean} altKey - The down state of the ALT key, if pressed at the same time as this key.
-	* @default
-	*/
-	this.altKey = false;
+    /**
+    * @property {boolean} altKey - The down state of the ALT key, if pressed at the same time as this key.
+    * @default
+    */
+    this.altKey = false;
 
-	/**
-	* @property {boolean} ctrlKey - The down state of the CTRL key, if pressed at the same time as this key.
-	* @default
-	*/
-	this.ctrlKey = false;
+    /**
+    * @property {boolean} ctrlKey - The down state of the CTRL key, if pressed at the same time as this key.
+    * @default
+    */
+    this.ctrlKey = false;
 
-	/**
-	* @property {boolean} shiftKey - The down state of the SHIFT key, if pressed at the same time as this key.
-	* @default
-	*/
-	this.shiftKey = false;
+    /**
+    * @property {boolean} shiftKey - The down state of the SHIFT key, if pressed at the same time as this key.
+    * @default
+    */
+    this.shiftKey = false;
 
-	/**
-	* @property {number} timeDown - The timestamp when the key was last pressed down.
-	* @default
-	*/
-	this.timeDown = 0;
+    /**
+    * @property {number} timeDown - The timestamp when the key was last pressed down.
+    * @default
+    */
+    this.timeDown = 0;
 
-	/**
-	* If the key is down this value holds the duration of that key press and is constantly updated.
-	* If the key is up it holds the duration of the previous down session.
-	* @property {number} duration - The number of milliseconds this key has been held down for.
-	* @default
-	*/
-	this.duration = 0;
+    /**
+    * If the key is down this value holds the duration of that key press and is constantly updated.
+    * If the key is up it holds the duration of the previous down session.
+    * @property {number} duration - The number of milliseconds this key has been held down for.
+    * @default
+    */
+    this.duration = 0;
 
-	/**
-	* @property {number} timeUp - The timestamp when the key was last released.
-	* @default
-	*/
-	this.timeUp = 0;
+    /**
+    * @property {number} timeUp - The timestamp when the key was last released.
+    * @default
+    */
+    this.timeUp = 0;
 
-	/**
-	* @property {number} repeats - If a key is held down this holds down the number of times the key has 'repeated'.
-	* @default
-	*/
-	this.repeats = 0;
+    /**
+    * @property {number} repeats - If a key is held down this holds down the number of times the key has 'repeated'.
+    * @default
+    */
+    this.repeats = 0;
 
-	/**
-	* @property {number} keyCode - The keycode of this key.
-	*/
-	this.keyCode = keycode;
+    /**
+    * @property {number} keyCode - The keycode of this key.
+    */
+    this.keyCode = keycode;
 
-	/**
-	* @property {Phaser.Signal} onDown - This Signal is dispatched every time this Key is pressed down. It is only dispatched once (until the key is released again).
-	*/
+    /**
+    * @property {Phaser.Signal} onDown - This Signal is dispatched every time this Key is pressed down. It is only dispatched once (until the key is released again).
+    */
     this.onDown = new Phaser.Signal();
 
-	/**
-	* @property {Phaser.Signal} onUp - This Signal is dispatched every time this Key is pressed down. It is only dispatched once (until the key is released again).
-	*/
+    /**
+    * @property {Phaser.Signal} onUp - This Signal is dispatched every time this Key is pressed down. It is only dispatched once (until the key is released again).
+    */
     this.onUp = new Phaser.Signal();
-	
+    
 };
 
 Phaser.Key.prototype = {
 
-	/**
+    /**
     * Called automatically by Phaser.Keyboard.
     * @method Phaser.Key#processKeyDown
     * @param {KeyboardEvent} event.
@@ -507,7 +547,7 @@ Phaser.Key.prototype = {
 
     },
 
-	/**
+    /**
     * Called automatically by Phaser.Keyboard.
     * @method Phaser.Key#processKeyUp
     * @param {KeyboardEvent} event.
@@ -523,8 +563,8 @@ Phaser.Key.prototype = {
 
     },
 
-	/**
-	* Returns the "just pressed" state of the Key. Just pressed is considered true if the key was pressed down within the duration given (default 250ms)
+    /**
+    * Returns the "just pressed" state of the Key. Just pressed is considered true if the key was pressed down within the duration given (default 250ms)
     * @method Phaser.Key#justPressed
     * @param {number} [duration=250] - The duration below which the key is considered as being just pressed.
     * @return {boolean} True if the key is just pressed otherwise false.
@@ -537,8 +577,8 @@ Phaser.Key.prototype = {
 
     },
 
-	/**
-	* Returns the "just released" state of the Key. Just released is considered as being true if the key was released within the duration given (default 250ms)
+    /**
+    * Returns the "just released" state of the Key. Just released is considered as being true if the key was released within the duration given (default 250ms)
     * @method Phaser.Key#justPressed
     * @param {number} [duration=250] - The duration below which the key is considered as being just released.
     * @return {boolean} True if the key is just released otherwise false.
@@ -547,7 +587,7 @@ Phaser.Key.prototype = {
 
         if (typeof duration === "undefined") { duration = 250; }
 
-        return (this.isDown == false && (this.game.time.now - this.timeUp &lt; duration));
+        return (this.isDown === false && (this.game.time.now - this.timeUp &lt; duration));
 
     }
 
@@ -573,7 +613,7 @@ Phaser.Key.prototype = {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 07 2013 06:07:33 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Nov 28 2013 15:56:25 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

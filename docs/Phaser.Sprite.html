@@ -55,6 +55,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.BitmapData.html">BitmapData</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -136,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Filter.html">Filter</a>
 						</li>
 						
 						<li>
@@ -303,11 +311,35 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tilemap.html">Tilemap</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapLayer.html">TilemapLayer</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapParser.html">TilemapParser</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tileset.html">Tileset</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.TileSprite.html">TileSprite</a>
 						</li>
 						
 						<li>
 							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Timer.html">Timer</a>
 						</li>
 						
 						<li>
@@ -357,6 +389,14 @@
 						</li>
 						
 						<li>
+							<a href="global.html#render">render</a>
+						</li>
+						
+						<li>
+							<a href="global.html#renderXY">renderXY</a>
+						</li>
+						
+						<li>
 							<a href="global.html#right">right</a>
 						</li>
 						
@@ -387,7 +427,10 @@
     Sprite
     </h2>
     
-        <div class="class-description"><p>Phaser.Sprite</p></div>
+        <div class="class-description"><p>Create a new <code>Sprite</code> object. Sprites are the lifeblood of your game, used for nearly everything visual.</p>
+<p>At its most basic a Sprite consists of a set of coordinates and a texture that is rendered to the canvas.
+They also contain additional properties allowing for physics motion (via Sprite.body), input handling (via Sprite.input),
+events (via Sprite.events), animation (via Sprite.animations), camera culling and more. Please see the Examples for use cases.</p></div>
     
 </header>
 
@@ -404,13 +447,6 @@
 </dt>
 <dd>
     
-    
-    <div class="description">
-        <p>Create a new <code>Sprite</code> object. Sprites are the lifeblood of your game, used for nearly everything visual.
-At its most basic a Sprite consists of a set of coordinates and a texture that is rendered to the canvas.
-They also contain additional properties allowing for physics motion (via Sprite.body), input handling (via Sprite.input),
-events (via Sprite.events), animation (via Sprite.animations), camera culling and more. Please see the Examples for use cases.</p>
-    </div>
     
 
     
@@ -524,6 +560,9 @@ events (via Sprite.events), animation (via Sprite.animations), camera culling an
 <span class="param-type"><a href="Phaser.RenderTexture.html">Phaser.RenderTexture</a></span>
 |
 
+<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
+|
+
 <span class="param-type">PIXI.Texture</span>
 
 
@@ -592,7 +631,7 @@ events (via Sprite.events), animation (via Sprite.animations), camera culling an
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-21">line 21</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-23">line 23</a>
     </li></ul></dd>
     
 
@@ -723,7 +762,7 @@ events (via Sprite.events), animation (via Sprite.animations), camera culling an
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-43">line 43</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-45">line 45</a>
     </li></ul></dd>
     
 
@@ -803,7 +842,7 @@ Setting the anchor to 1,1 would mean the textures origin points will be the bott
 
             
 
-            <td class="description last"><p>The anchor around with Sprite rotation and scaling takes place.</p></td>
+            <td class="description last"><p>The anchor around which rotation and scaling takes place.</p></td>
         </tr>
 
 	
@@ -832,7 +871,7 @@ Setting the anchor to 1,1 would mean the textures origin points will be the bott
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-159">line 159</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-172">line 172</a>
     </li></ul></dd>
     
 
@@ -940,7 +979,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-928">line 928</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-977">line 977</a>
     </li></ul></dd>
     
 
@@ -1042,7 +1081,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-84">line 84</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-86">line 86</a>
     </li></ul></dd>
     
 
@@ -1152,7 +1191,7 @@ A culled sprite has its renderable property set to 'false'.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-186">line 186</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-199">line 199</a>
     </li></ul></dd>
     
 
@@ -1254,7 +1293,7 @@ A culled sprite has its renderable property set to 'false'.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-281">line 281</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-316">line 316</a>
     </li></ul></dd>
     
 
@@ -1356,7 +1395,7 @@ A culled sprite has its renderable property set to 'false'.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-268">line 268</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-303">line 303</a>
     </li></ul></dd>
     
 
@@ -1458,7 +1497,7 @@ A culled sprite has its renderable property set to 'false'.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-263">line 263</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-298">line 298</a>
     </li></ul></dd>
     
 
@@ -1566,7 +1605,7 @@ It's used for Camera culling and physics body alignment.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-276">line 276</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-311">line 311</a>
     </li></ul></dd>
     
 
@@ -1668,7 +1707,7 @@ It's used for Camera culling and physics body alignment.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-322">line 322</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-357">line 357</a>
     </li></ul></dd>
     
 
@@ -1770,7 +1809,7 @@ It's used for Camera culling and physics body alignment.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-248">line 248</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-283">line 283</a>
     </li></ul></dd>
     
 
@@ -1877,7 +1916,7 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-330">line 330</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-365">line 365</a>
     </li></ul></dd>
     
 
@@ -1982,7 +2021,7 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-336">line 336</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-371">line 371</a>
     </li></ul></dd>
     
 
@@ -2084,7 +2123,7 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-99">line 99</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-101">line 101</a>
     </li></ul></dd>
     
 
@@ -2147,7 +2186,7 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
             <td class="type">
             
                 
-<span class="param-type">Events</span>
+<span class="param-type"><a href="Phaser.Events.html">Phaser.Events</a></span>
 
 
             
@@ -2186,7 +2225,7 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-79">line 79</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-81">line 81</a>
     </li></ul></dd>
     
 
@@ -2291,7 +2330,7 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-37">line 37</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-39">line 39</a>
     </li></ul></dd>
     
 
@@ -2400,7 +2439,7 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-317">line 317</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-352">line 352</a>
     </li></ul></dd>
     
 
@@ -2502,7 +2541,7 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-947">line 947</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-996">line 996</a>
     </li></ul></dd>
     
 
@@ -2604,7 +2643,7 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-963">line 963</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1012">line 1012</a>
     </li></ul></dd>
     
 
@@ -2706,7 +2745,7 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-31">line 31</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-33">line 33</a>
     </li></ul></dd>
     
 
@@ -2808,7 +2847,7 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-48">line 48</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-50">line 50</a>
     </li></ul></dd>
     
 
@@ -2910,7 +2949,7 @@ The crop is only applied if you have set Sprite.cropEnabled to true.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-286">line 286</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-321">line 321</a>
     </li></ul></dd>
     
 
@@ -3017,7 +3056,7 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1015">line 1015</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1064">line 1064</a>
     </li></ul></dd>
     
 
@@ -3119,7 +3158,7 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-979">line 979</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1028">line 1028</a>
     </li></ul></dd>
     
 
@@ -3182,7 +3221,7 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
             <td class="type">
             
                 
-<span class="param-type">InputHandler</span>
+<span class="param-type"><a href="Phaser.InputHandler.html">Phaser.InputHandler</a></span>
 
 
             
@@ -3221,7 +3260,7 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-89">line 89</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-91">line 91</a>
     </li></ul></dd>
     
 
@@ -3328,7 +3367,7 @@ activated for this Sprite instance and it will then start to process click/touch
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1038">line 1038</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1087">line 1087</a>
     </li></ul></dd>
     
 
@@ -3430,7 +3469,7 @@ activated for this Sprite instance and it will then start to process click/touch
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-291">line 291</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-326">line 326</a>
     </li></ul></dd>
     
 
@@ -3535,7 +3574,7 @@ activated for this Sprite instance and it will then start to process click/touch
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-297">line 297</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-332">line 332</a>
     </li></ul></dd>
     
 
@@ -3604,6 +3643,9 @@ activated for this Sprite instance and it will then start to process click/touch
 <span class="param-type"><a href="Phaser.RenderTexture.html">Phaser.RenderTexture</a></span>
 |
 
+<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
+|
+
 <span class="param-type">PIXI.Texture</span>
 
 
@@ -3614,7 +3656,7 @@ activated for this Sprite instance and it will then start to process click/touch
 
             
 
-            <td class="description last"><p>This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.</p></td>
+            <td class="description last"><p>This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.</p></td>
         </tr>
 
 	
@@ -3643,7 +3685,7 @@ activated for this Sprite instance and it will then start to process click/touch
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-94">line 94</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-96">line 96</a>
     </li></ul></dd>
     
 
@@ -3753,7 +3795,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-74">line 74</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-76">line 76</a>
     </li></ul></dd>
     
 
@@ -3855,7 +3897,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-54">line 54</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-56">line 56</a>
     </li></ul></dd>
     
 
@@ -3957,7 +3999,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-243">line 243</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-278">line 278</a>
     </li></ul></dd>
     
 
@@ -4062,7 +4104,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-303">line 303</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-338">line 338</a>
     </li></ul></dd>
     
 
@@ -4164,7 +4206,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-66">line 66</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-68">line 68</a>
     </li></ul></dd>
     
 
@@ -4266,7 +4308,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-191">line 191</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-204">line 204</a>
     </li></ul></dd>
     
 
@@ -4372,7 +4414,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-149">line 149</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-162">line 162</a>
     </li></ul></dd>
     
 
@@ -4474,7 +4516,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-253">line 253</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-288">line 288</a>
     </li></ul></dd>
     
 
@@ -4576,7 +4618,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-258">line 258</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-293">line 293</a>
     </li></ul></dd>
     
 
@@ -4594,7 +4636,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
         
             
 <dt>
-    <h4 class="name" id="type"><span class="type-signature"></span>type<span class="type-signature"></span></h4>
+    <h4 class="name" id="type"><span class="type-signature">&lt;readonly> </span>type<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -4678,7 +4720,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-60">line 60</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-62">line 62</a>
     </li></ul></dd>
     
 
@@ -4785,7 +4827,7 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-992">line 992</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-1041">line 1041</a>
     </li></ul></dd>
     
 
@@ -4887,7 +4929,7 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-177">line 177</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-190">line 190</a>
     </li></ul></dd>
     
 
@@ -4960,7 +5002,7 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
 
             
 
-            <td class="description last"><p>The x coordinate (in world space) of this Sprite.</p></td>
+            <td class="description last"><p>The x coordinate in world space of this Sprite.</p></td>
         </tr>
 
 	
@@ -4989,7 +5031,7 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-164">line 164</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-177">line 177</a>
     </li></ul></dd>
     
 
@@ -5062,7 +5104,7 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
 
             
 
-            <td class="description last"><p>The y coordinate (in world space) of this Sprite.</p></td>
+            <td class="description last"><p>The y coordinate in world space of this Sprite.</p></td>
         </tr>
 
 	
@@ -5091,7 +5133,7 @@ If you wish to crop the Sprite instead see the Sprite.crop value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-169">line 169</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-182">line 182</a>
     </li></ul></dd>
     
 
@@ -5157,7 +5199,7 @@ bought to the top of that Group, not the entire display list.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-884">line 884</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-933">line 933</a>
     </li></ul></dd>
     
 
@@ -5310,7 +5352,7 @@ Doesn't change the anchor point of the sprite.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-714">line 714</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-763">line 763</a>
     </li></ul></dd>
     
 
@@ -5440,7 +5482,7 @@ If health is then taken below zero Sprite.kill is called.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-822">line 822</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-871">line 871</a>
     </li></ul></dd>
     
 
@@ -5487,7 +5529,7 @@ If health is then taken below zero Sprite.kill is called.</p>
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Destroy this Graphics instance.</p>
     </div>
     
 
@@ -5520,7 +5562,7 @@ If health is then taken below zero Sprite.kill is called.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Graphics.js.html">gameobjects/Graphics.js</a>, <a href="Graphics.js.html#sunlight-1-line-35">line 35</a>
+        <a href="Graphics.js.html">gameobjects/Graphics.js</a>, <a href="Graphics.js.html#sunlight-1-line-36">line 36</a>
     </li></ul></dd>
     
 
@@ -5590,7 +5632,7 @@ and nulls its reference to game, freeing it up for garbage collection.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-785">line 785</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-834">line 834</a>
     </li></ul></dd>
     
 
@@ -5801,7 +5843,7 @@ Mostly only used internally.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-569">line 569</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-608">line 608</a>
     </li></ul></dd>
     
 
@@ -5989,7 +6031,7 @@ Mostly only used internally by the Input Manager, but also useful for custom hit
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-591">line 591</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-630">line 630</a>
     </li></ul></dd>
     
 
@@ -6084,7 +6126,7 @@ If you don't need this Sprite any more you should call Sprite.destroy instead.</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-760">line 760</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-809">line 809</a>
     </li></ul></dd>
     
 
@@ -6178,6 +6220,9 @@ This causes a WebGL texture update, so use sparingly or in low-intensity portion
 <span class="param-type"><a href="Phaser.RenderTexture.html">Phaser.RenderTexture</a></span>
 |
 
+<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
+|
+
 <span class="param-type">PIXI.Texture</span>
 
 
@@ -6188,7 +6233,7 @@ This causes a WebGL texture update, so use sparingly or in low-intensity portion
 
             
 
-            <td class="description last"><p>This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.</p></td>
+            <td class="description last"><p>This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.</p></td>
         </tr>
 
 	
@@ -6246,7 +6291,7 @@ This causes a WebGL texture update, so use sparingly or in low-intensity portion
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-660">line 660</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-704">line 704</a>
     </li></ul></dd>
     
 
@@ -6498,7 +6543,7 @@ If the requested animation is already playing this request will be ignored. If y
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-907">line 907</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-956">line 956</a>
     </li></ul></dd>
     
 
@@ -6590,7 +6635,7 @@ If the requested animation is already playing this request will be ignored. If y
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-625">line 625</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-664">line 664</a>
     </li></ul></dd>
     
 
@@ -6659,7 +6704,7 @@ If the requested animation is already playing this request will be ignored. If y
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-347">line 347</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-382">line 382</a>
     </li></ul></dd>
     
 
@@ -6869,7 +6914,7 @@ If the Sprite has a physics body that too is reset.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-847">line 847</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-896">line 896</a>
     </li></ul></dd>
     
 
@@ -6949,7 +6994,7 @@ If the Sprite has a physics body that too is reset.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-611">line 611</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-650">line 650</a>
     </li></ul></dd>
     
 
@@ -7089,7 +7134,7 @@ It will dispatch the onRevived event, you can listen to Sprite.events.onRevived 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-732">line 732</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-781">line 781</a>
     </li></ul></dd>
     
 
@@ -7169,7 +7214,7 @@ It will dispatch the onRevived event, you can listen to Sprite.events.onRevived 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-444">line 444</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-483">line 483</a>
     </li></ul></dd>
     
 
@@ -7238,7 +7283,7 @@ It will dispatch the onRevived event, you can listen to Sprite.events.onRevived 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-500">line 500</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-539">line 539</a>
     </li></ul></dd>
     
 
@@ -7307,7 +7352,7 @@ It will dispatch the onRevived event, you can listen to Sprite.events.onRevived 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-398">line 398</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-437">line 437</a>
     </li></ul></dd>
     
 
@@ -7376,7 +7421,7 @@ It will dispatch the onRevived event, you can listen to Sprite.events.onRevived 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-471">line 471</a>
+        <a href="Sprite.js.html">gameobjects/Sprite.js</a>, <a href="Sprite.js.html#sunlight-1-line-510">line 510</a>
     </li></ul></dd>
     
 
@@ -7427,7 +7472,7 @@ It will dispatch the onRevived event, you can listen to Sprite.events.onRevived 
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 07 2013 06:07:40 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Nov 28 2013 15:56:33 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

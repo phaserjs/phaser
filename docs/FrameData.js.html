@@ -55,6 +55,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.BitmapData.html">BitmapData</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -136,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Filter.html">Filter</a>
 						</li>
 						
 						<li>
@@ -303,11 +311,35 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tilemap.html">Tilemap</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapLayer.html">TilemapLayer</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapParser.html">TilemapParser</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tileset.html">Tileset</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.TileSprite.html">TileSprite</a>
 						</li>
 						
 						<li>
 							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Timer.html">Timer</a>
 						</li>
 						
 						<li>
@@ -357,6 +389,14 @@
 						</li>
 						
 						<li>
+							<a href="global.html#render">render</a>
+						</li>
+						
+						<li>
+							<a href="global.html#renderXY">renderXY</a>
+						</li>
+						
+						<li>
 							<a href="global.html#right">right</a>
 						</li>
 						
@@ -395,17 +435,17 @@
 */
 Phaser.FrameData = function () {
 
-	/**
-	* @property {Array} _frames - Local array of frames.
-	* @private
-	*/
+    /**
+    * @property {Array} _frames - Local array of frames.
+    * @private
+    */
     this._frames = [];
 
 
-	/**
-	* @property {Array} _frameNames - Local array of frame names for name to index conversions.
-	* @private
-	*/
+    /**
+    * @property {Array} _frameNames - Local array of frame names for name to index conversions.
+    * @private
+    */
     this._frameNames = [];
 
 };
@@ -434,13 +474,13 @@ Phaser.FrameData.prototype = {
 
     },
 
-	/**
-	* Get a Frame by its numerical index.
+    /**
+    * Get a Frame by its numerical index.
     *
     * @method Phaser.FrameData#getFrame
-	* @param {number} index - The index of the frame you want to get.
-	* @return {Phaser.Frame} The frame, if found.
-	*/
+    * @param {number} index - The index of the frame you want to get.
+    * @return {Phaser.Frame} The frame, if found.
+    */
     getFrame: function (index) {
 
         if (this._frames.length > index)
@@ -488,15 +528,15 @@ Phaser.FrameData.prototype = {
         
     },
 
-	/**
-	* Returns a range of frames based on the given start and end frame indexes and returns them in an Array.
+    /**
+    * Returns a range of frames based on the given start and end frame indexes and returns them in an Array.
     *
     * @method Phaser.FrameData#getFrameRange
     * @param {number} start - The starting frame index.
-	* @param {number} end - The ending frame index.
-	* @param {Array} [output] - If given the results will be appended to the end of this array otherwise a new array will be created.
-	* @return {Array} An array of Frames between the start and end index values, or an empty array if none were found.
-	*/
+    * @param {number} end - The ending frame index.
+    * @param {Array} [output] - If given the results will be appended to the end of this array otherwise a new array will be created.
+    * @return {Array} An array of Frames between the start and end index values, or an empty array if none were found.
+    */
     getFrameRange: function (start, end, output) {
         
         if (typeof output === "undefined") { output = []; }
@@ -510,8 +550,8 @@ Phaser.FrameData.prototype = {
 
     },
 
-	/**
-	* Returns all of the Frames in this FrameData set where the frame index is found in the input array.
+    /**
+    * Returns all of the Frames in this FrameData set where the frame index is found in the input array.
     * The frames are returned in the output array, or if none is provided in a new Array object.
     *
     * @method Phaser.FrameData#getFrames
@@ -519,13 +559,13 @@ Phaser.FrameData.prototype = {
     * @param {boolean} [useNumericIndex=true] - Are the given frames using numeric indexes (default) or strings? (false)
     * @param {Array} [output] - If given the results will be appended to the end of this array otherwise a new array will be created.
     * @return {Array} An array of all Frames in this FrameData set matching the given names or IDs.
-	*/
+    */
     getFrames: function (frames, useNumericIndex, output) {
 
         if (typeof useNumericIndex === "undefined") { useNumericIndex = true; }
         if (typeof output === "undefined") { output = []; }
 
-        if (typeof frames === "undefined" || frames.length == 0)
+        if (typeof frames === "undefined" || frames.length === 0)
         {
             //  No input array, so we loop through all frames
             for (var i = 0; i &lt; this._frames.length; i++)
@@ -572,7 +612,7 @@ Phaser.FrameData.prototype = {
         if (typeof useNumericIndex === "undefined") { useNumericIndex = true; }
         if (typeof output === "undefined") { output = []; }
 
-        if (typeof frames === "undefined" || frames.length == 0)
+        if (typeof frames === "undefined" || frames.length === 0)
         {
             //  No frames array, so we loop through all frames
             for (var i = 0, len = this._frames.length; i &lt; len; i++)
@@ -639,7 +679,7 @@ Object.defineProperty(Phaser.FrameData.prototype, "total", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 07 2013 06:07:33 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Nov 28 2013 15:56:25 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -95,7 +95,9 @@ $(document).ready(function(){
 
 	.done(function(data) {
 
-		if (data.version !== '1.1')
+		console.log(data);
+
+		if (data.version !== '1.1.3')
 		{
 			$("#upgrade").append(data.version);
 			$("#upgrade").css('display', 'inline-block');

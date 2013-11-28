@@ -55,6 +55,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.BitmapData.html">BitmapData</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -136,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Filter.html">Filter</a>
 						</li>
 						
 						<li>
@@ -303,11 +311,35 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tilemap.html">Tilemap</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapLayer.html">TilemapLayer</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapParser.html">TilemapParser</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tileset.html">Tileset</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.TileSprite.html">TileSprite</a>
 						</li>
 						
 						<li>
 							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Timer.html">Timer</a>
 						</li>
 						
 						<li>
@@ -357,6 +389,14 @@
 						</li>
 						
 						<li>
+							<a href="global.html#render">render</a>
+						</li>
+						
+						<li>
+							<a href="global.html#renderXY">renderXY</a>
+						</li>
+						
+						<li>
 							<a href="global.html#right">right</a>
 						</li>
 						
@@ -387,8 +427,7 @@
     Input
     </h2>
     
-        <div class="class-description"><p>A game specific Input manager that looks after the mouse, keyboard and touch objects.
-This is updated by the core game loop.</p></div>
+        <div class="class-description"><p>Phaser.Input</p></div>
     
 </header>
 
@@ -407,7 +446,8 @@ This is updated by the core game loop.</p></div>
     
     
     <div class="description">
-        <p>Constructor for Phaser Input.</p>
+        <p>Phaser.Input is the Input Manager for all types of Input across Phaser, including mouse, keyboard, touch and MSPointer.
+The Input manager is updated automatically by the core game loop.</p>
     </div>
     
 
@@ -805,7 +845,7 @@ When you've limited max pointers to 1 this will accurately be either the first f
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-285">line 285</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-272">line 272</a>
     </li></ul></dd>
     
 
@@ -908,14 +948,11 @@ Default size of 44px (Apples recommended &quot;finger tip&quot; size) but can be
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-135">line 135</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-123">line 123</a>
     </li></ul></dd>
     
 
@@ -1024,7 +1061,7 @@ Default size of 44px (Apples recommended &quot;finger tip&quot; size) but can be
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-158">line 158</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-145">line 145</a>
     </li></ul></dd>
     
 
@@ -1134,7 +1171,7 @@ If you need to disable just one type of input, for example mouse, use Input.mous
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-106">line 106</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-98">line 98</a>
     </li></ul></dd>
     
 
@@ -1243,7 +1280,7 @@ If you need to disable just one type of input, for example mouse, use Input.mous
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-172">line 172</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-159">line 159</a>
     </li></ul></dd>
     
 
@@ -1363,108 +1400,6 @@ If you need to disable just one type of input, for example mouse, use Input.mous
         
             
 <dt>
-    <h4 class="name" id="game"><span class="type-signature"></span>game<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>game</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Game.html">Phaser.Game</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-59">line 59</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
     <h4 class="name" id="hitCanvas"><span class="type-signature"></span>hitCanvas<span class="type-signature"></span></h4>
     
     
@@ -1510,7 +1445,7 @@ If you need to disable just one type of input, for example mouse, use Input.mous
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">HTMLCanvasElement</span>
 
 
             
@@ -1520,7 +1455,7 @@ If you need to disable just one type of input, for example mouse, use Input.mous
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The canvas to which single pixels are drawn in order to perform pixel-perfect hit detection.</p></td>
         </tr>
 
 	
@@ -1615,7 +1550,7 @@ If you need to disable just one type of input, for example mouse, use Input.mous
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">CanvasRenderingContext2D</span>
 
 
             
@@ -1625,7 +1560,7 @@ If you need to disable just one type of input, for example mouse, use Input.mous
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The context of the pixel perfect hit canvas.</p></td>
         </tr>
 
 	
@@ -1766,7 +1701,7 @@ If you need to disable just one type of input, for example mouse, use Input.mous
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-179">line 179</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-166">line 166</a>
     </li></ul></dd>
     
 
@@ -1872,7 +1807,7 @@ If you need to disable just one type of input, for example mouse, use Input.mous
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-354">line 354</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-341">line 341</a>
     </li></ul></dd>
     
 
@@ -1981,7 +1916,7 @@ If you need to disable just one type of input, for example mouse, use Input.mous
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-186">line 186</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-173">line 173</a>
     </li></ul></dd>
     
 
@@ -2090,7 +2025,7 @@ If you need to disable just one type of input, for example mouse, use Input.mous
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-193">line 193</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-180">line 180</a>
     </li></ul></dd>
     
 
@@ -2199,7 +2134,7 @@ If you need to disable just one type of input, for example mouse, use Input.mous
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-306">line 306</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-293">line 293</a>
     </li></ul></dd>
     
 
@@ -2309,7 +2244,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-151">line 151</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-138">line 138</a>
     </li></ul></dd>
     
 
@@ -2418,7 +2353,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-299">line 299</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-286">line 286</a>
     </li></ul></dd>
     
 
@@ -2527,7 +2462,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-292">line 292</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-279">line 279</a>
     </li></ul></dd>
     
 
@@ -2636,7 +2571,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-320">line 320</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-307">line 307</a>
     </li></ul></dd>
     
 
@@ -2742,7 +2677,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-112">line 112</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-104">line 104</a>
     </li></ul></dd>
     
 
@@ -2851,7 +2786,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-327">line 327</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-314">line 314</a>
     </li></ul></dd>
     
 
@@ -2960,7 +2895,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-348">line 348</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-335">line 335</a>
     </li></ul></dd>
     
 
@@ -3069,7 +3004,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-341">line 341</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-328">line 328</a>
     </li></ul></dd>
     
 
@@ -3178,7 +3113,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-334">line 334</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-321">line 321</a>
     </li></ul></dd>
     
 
@@ -3284,7 +3219,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-223">line 223</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-210">line 210</a>
     </li></ul></dd>
     
 
@@ -3390,7 +3325,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-229">line 229</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-216">line 216</a>
     </li></ul></dd>
     
 
@@ -3496,7 +3431,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-235">line 235</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-222">line 222</a>
     </li></ul></dd>
     
 
@@ -3602,7 +3537,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-241">line 241</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-228">line 228</a>
     </li></ul></dd>
     
 
@@ -3708,7 +3643,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-247">line 247</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-234">line 234</a>
     </li></ul></dd>
     
 
@@ -3814,7 +3749,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-253">line 253</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-240">line 240</a>
     </li></ul></dd>
     
 
@@ -3920,7 +3855,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-259">line 259</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-246">line 246</a>
     </li></ul></dd>
     
 
@@ -4026,7 +3961,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-265">line 265</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-252">line 252</a>
     </li></ul></dd>
     
 
@@ -4132,7 +4067,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-271">line 271</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-258">line 258</a>
     </li></ul></dd>
     
 
@@ -4238,7 +4173,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-277">line 277</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-264">line 264</a>
     </li></ul></dd>
     
 
@@ -4340,7 +4275,7 @@ For lots of games it's useful to set this to 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-735">line 735</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-722">line 722</a>
     </li></ul></dd>
     
 
@@ -4450,7 +4385,7 @@ A value of 0 means every single frame (60fps), a value of 1 means every other fr
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-67">line 67</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-62">line 62</a>
     </li></ul></dd>
     
 
@@ -4473,10 +4408,6 @@ A value of 0 means every single frame (60fps), a value of 1 means every other fr
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>A vector object representing the current position of the Pointer.</p>
-    </div>
     
     
     
@@ -4527,7 +4458,7 @@ A value of 0 means every single frame (60fps), a value of 1 means every other fr
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>A point object representing the current position of the Pointer.</p></td>
         </tr>
 
 	
@@ -4559,7 +4490,7 @@ A value of 0 means every single frame (60fps), a value of 1 means every other fr
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-119">line 119</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-110">line 110</a>
     </li></ul></dd>
     
 
@@ -4669,7 +4600,7 @@ If the Pointer is tracking one event every 100ms, then a trackLimit of 100 would
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-217">line 217</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-204">line 204</a>
     </li></ul></dd>
     
 
@@ -4780,7 +4711,7 @@ The history is updated at the rate specified in Input.pollRate</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-202">line 202</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-189">line 189</a>
     </li></ul></dd>
     
 
@@ -4889,7 +4820,7 @@ The history is updated at the rate specified in Input.pollRate</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-209">line 209</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-196">line 196</a>
     </li></ul></dd>
     
 
@@ -4992,14 +4923,11 @@ In an un-scaled game the values will be x: 1 and y: 1.</p>
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-143">line 143</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-130">line 130</a>
     </li></ul></dd>
     
 
@@ -5024,8 +4952,7 @@ In an un-scaled game the values will be x: 1 and y: 1.</p>
 <dd>
     
     <div class="description">
-        <p>A vector object representing the speed of the Pointer. Only really useful in single Pointer games,
-otherwise see the Pointer objects directly.</p>
+        <p>A point object representing the speed of the Pointer. Only really useful in single Pointer games, otherwise see the Pointer objects directly.</p>
     </div>
     
     
@@ -5102,14 +5029,11 @@ otherwise see the Pointer objects directly.</p>
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-127">line 127</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-116">line 116</a>
     </li></ul></dd>
     
 
@@ -5218,7 +5142,7 @@ otherwise see the Pointer objects directly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-165">line 165</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-152">line 152</a>
     </li></ul></dd>
     
 
@@ -5324,7 +5248,7 @@ otherwise see the Pointer objects directly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-762">line 762</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-749">line 749</a>
     </li></ul></dd>
     
 
@@ -5430,7 +5354,7 @@ otherwise see the Pointer objects directly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-748">line 748</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-735">line 735</a>
     </li></ul></dd>
     
 
@@ -5539,7 +5463,7 @@ otherwise see the Pointer objects directly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-313">line 313</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-300">line 300</a>
     </li></ul></dd>
     
 
@@ -5645,7 +5569,7 @@ otherwise see the Pointer objects directly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-788">line 788</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-775">line 775</a>
     </li></ul></dd>
     
 
@@ -5751,7 +5675,7 @@ otherwise see the Pointer objects directly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-801">line 801</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-788">line 788</a>
     </li></ul></dd>
     
 
@@ -5857,7 +5781,7 @@ otherwise see the Pointer objects directly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-701">line 701</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-688">line 688</a>
     </li></ul></dd>
     
 
@@ -5963,7 +5887,7 @@ otherwise see the Pointer objects directly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-718">line 718</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-705">line 705</a>
     </li></ul></dd>
     
 
@@ -6029,7 +5953,7 @@ If you need more then use this to create a new one, up to a maximum of 10.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-413">line 413</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-400">line 400</a>
     </li></ul></dd>
     
 
@@ -6121,7 +6045,7 @@ If you need more then use this to create a new one, up to a maximum of 10.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-356">line 356</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-343">line 343</a>
     </li></ul></dd>
     
 
@@ -6190,7 +6114,7 @@ If you need more then use this to create a new one, up to a maximum of 10.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-400">line 400</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-387">line 387</a>
     </li></ul></dd>
     
 
@@ -6308,7 +6232,7 @@ If you need more then use this to create a new one, up to a maximum of 10.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-635">line 635</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-622">line 622</a>
     </li></ul></dd>
     
 
@@ -6449,7 +6373,7 @@ If you need more then use this to create a new one, up to a maximum of 10.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-668">line 668</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-655">line 655</a>
     </li></ul></dd>
     
 
@@ -6590,7 +6514,7 @@ If you need more then use this to create a new one, up to a maximum of 10.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-478">line 478</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-465">line 465</a>
     </li></ul></dd>
     
 
@@ -6731,7 +6655,7 @@ If you need more then use this to create a new one, up to a maximum of 10.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-524">line 524</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-511">line 511</a>
     </li></ul></dd>
     
 
@@ -6849,7 +6773,7 @@ If you need more then use this to create a new one, up to a maximum of 10.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-537">line 537</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-524">line 524</a>
     </li></ul></dd>
     
 
@@ -6990,7 +6914,7 @@ If you need more then use this to create a new one, up to a maximum of 10.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-604">line 604</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-591">line 591</a>
     </li></ul></dd>
     
 
@@ -7082,7 +7006,7 @@ If you need more then use this to create a new one, up to a maximum of 10.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-444">line 444</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-431">line 431</a>
     </li></ul></dd>
     
 
@@ -7200,7 +7124,7 @@ If you need more then use this to create a new one, up to a maximum of 10.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-573">line 573</a>
+        <a href="Input.js.html">input/Input.js</a>, <a href="Input.js.html#sunlight-1-line-560">line 560</a>
     </li></ul></dd>
     
 
@@ -7274,7 +7198,7 @@ If you need more then use this to create a new one, up to a maximum of 10.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 07 2013 06:07:37 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Nov 28 2013 15:56:30 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

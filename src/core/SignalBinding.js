@@ -8,15 +8,15 @@
 * Phaser.SignalBinding
 *
 * Object that represents a binding between a Signal and a listener function.
-* <br />- <strong>This is an internal constructor and shouldn't be called by regular users.</strong>
-* <br />- inspired by Joa Ebert AS3 SignalBinding and Robert Penner's Slot classes.
+* This is an internal constructor and shouldn't be called by regular users.
+* Inspired by Joa Ebert AS3 SignalBinding and Robert Penner's Slot classes.
 *
 * @class Phaser.SignalBinding
 * @name SignalBinding
 * @author Miller Medeiros http://millermedeiros.github.com/js-signals/
 * @constructor
 * @inner
-* @param {Signal} signal - Reference to Signal object that listener is currently bound to.
+* @param {Phaser.Signal} signal - Reference to Signal object that listener is currently bound to.
 * @param {function} listener - Handler function bound to the signal.
 * @param {boolean} isOnce - If binding should be executed just once.
 * @param {object} [listenerContext] - Context on which listener will be executed (object that should represent the `this` variable inside listener function).
@@ -43,7 +43,7 @@ Phaser.SignalBinding = function (signal, listener, isOnce, listenerContext, prio
     this.context = listenerContext;
 
     /**
-    * @property {Signal} _signal - Reference to Signal object that listener is currently bound to.
+    * @property {Phaser.Signal} _signal - Reference to Signal object that listener is currently bound to.
     * @private
     */
     this._signal = signal;
@@ -74,10 +74,10 @@ Phaser.SignalBinding.prototype = {
 
     /**
     * Call listener passing arbitrary parameters.
-    * <p>If binding was added using `Signal.addOnce()` it will be automatically removed from signal dispatch queue, this method is used internally for the signal dispatch.</p>
+    * If binding was added using `Signal.addOnce()` it will be automatically removed from signal dispatch queue, this method is used internally for the signal dispatch.
     * @method Phaser.SignalBinding#execute
     * @param {array} [paramsArr] - Array of parameters that should be passed to the listener.
-    * @return {Description} Value returned by the listener.
+    * @return {any} Value returned by the listener.
     */
     execute: function (paramsArr) {
 
@@ -100,7 +100,7 @@ Phaser.SignalBinding.prototype = {
 
     /**
     * Detach binding from signal.
-    * <p>alias to: @see mySignal.remove(myBinding.getListener());
+    * alias to: @see mySignal.remove(myBinding.getListener());
     * @method Phaser.SignalBinding#detach
     * @return {function|null} Handler function bound to the signal or `null` if binding was previously detached.
     */

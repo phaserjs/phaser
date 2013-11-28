@@ -18,7 +18,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v1.1.3 - Built at: Mon Nov 25 2013 14:14:28
+* v1.1.3 - Built at: Thu Nov 28 2013 14:52:32
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -2602,934 +2602,12 @@ PIXI.AbstractFilter = function(fragmentSrc, uniforms)
  */
 
 
-/**
- * 
- * The BlurFilter applies a Gaussian blur to an object. 
- * The strength of the blur can be set for x- and y-axis separately (always relative to the stage).
- *
- * @class BlurFilter
- * @contructor
- */
-PIXI.BlurFilter = function()
-{
-    
-	this.blurXFilter = new PIXI.BlurXFilter();
-	this.blurYFilter = new PIXI.BlurYFilter();
-
-	this.passes =[this.blurXFilter, this.blurYFilter];
-	
-}
-
-/**
- * Sets the strength of both the blurX and blurY properties simultaneously
- *
- * @property blur
- * @type Number the strength of the blur
- * @default 2
- */
-Object.defineProperty(PIXI.BlurFilter.prototype, 'blur', {
-    get: function() {
-        return this.blurXFilter.blur;
-    },
-    set: function(value) {
-  		this.blurXFilter.blur = this.blurYFilter.blur = value;
-    }
-});
-
-/**
- * Sets the strength of the blurX property simultaneously
- *
- * @property blurX
- * @type Number the strength of the blurX
- * @default 2
- */
-Object.defineProperty(PIXI.BlurFilter.prototype, 'blurX', {
-    get: function() {
-        return this.blurXFilter.blur;
-    },
-    set: function(value) {
-    	this.blurXFilter.blur = value;
-    }
-});
-
-/**
- * Sets the strength of the blurX property simultaneously
- *
- * @property blurY
- * @type Number the strength of the blurY
- * @default 2
- */
-Object.defineProperty(PIXI.BlurFilter.prototype, 'blurY', {
-    get: function() {
-        return this.blurYFilter.blur;
-    },
-    set: function(value) {
-    	this.blurYFilter.blur = value;
-    }
-});
-
-/**
- * @author Mat Groves http://matgroves.com/ @Doormat23
- */
-
-
-
-PIXI.BlurXFilter = function()
-{
-	PIXI.AbstractFilter.call( this );
-	
-	this.passes = [this];
-	
-	// set the uniforms
-	this.uniforms = {
-		blur: {type: '1f', value: 1/512},
-	};
-	
-	this.fragmentSrc = [
-	  "precision mediump float;",
-	  "varying vec2 vTextureCoord;",
-	  "varying float vColor;",
-	  "uniform float blur;",
-	  "uniform sampler2D uSampler;",
-	    "void main(void) {",
-	  	"vec4 sum = vec4(0.0);",
-
-	  	"sum += texture2D(uSampler, vec2(vTextureCoord.x - 4.0*blur, vTextureCoord.y)) * 0.05;",
-	    "sum += texture2D(uSampler, vec2(vTextureCoord.x - 3.0*blur, vTextureCoord.y)) * 0.09;",
-	    "sum += texture2D(uSampler, vec2(vTextureCoord.x - 2.0*blur, vTextureCoord.y)) * 0.12;",
-	    "sum += texture2D(uSampler, vec2(vTextureCoord.x - blur, vTextureCoord.y)) * 0.15;",
-	    "sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y)) * 0.16;",
-	    "sum += texture2D(uSampler, vec2(vTextureCoord.x + blur, vTextureCoord.y)) * 0.15;",
-	    "sum += texture2D(uSampler, vec2(vTextureCoord.x + 2.0*blur, vTextureCoord.y)) * 0.12;",
-	    "sum += texture2D(uSampler, vec2(vTextureCoord.x + 3.0*blur, vTextureCoord.y)) * 0.09;",
-	    "sum += texture2D(uSampler, vec2(vTextureCoord.x + 4.0*blur, vTextureCoord.y)) * 0.05;",
-	 
-		"gl_FragColor = sum;",
-
-	  "}"
-	];
-}
-
-PIXI.BlurXFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.BlurXFilter.prototype.constructor = PIXI.BlurXFilter;
-
-
-Object.defineProperty(PIXI.BlurXFilter.prototype, 'blur', {
-    get: function() {
-        return this.uniforms.blur.value / (1/7000);
-    },
-    set: function(value) {
-    
-    	this.dirty = true;
-    	this.uniforms.blur.value = (1/7000) * value;
-    }
-});
-
-/**
- * @author Mat Groves http://matgroves.com/ @Doormat23
- */
-
-
-
-PIXI.BlurYFilter = function()
-{
-	PIXI.AbstractFilter.call( this );
-	
-	this.passes = [this];
-	
-	// set the uniforms
-	this.uniforms = {
-		blur: {type: '1f', value: 1/512},
-	};
-	
-	this.fragmentSrc = [
-	  "precision mediump float;",
-	  "varying vec2 vTextureCoord;",
-	  "varying float vColor;",
-	  "uniform float blur;",
-	  "uniform sampler2D uSampler;",
-	    "void main(void) {",
-	  	"vec4 sum = vec4(0.0);",
-
-	  	"sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y - 4.0*blur)) * 0.05;",
-	    "sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y - 3.0*blur)) * 0.09;",
-	    "sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y - 2.0*blur)) * 0.12;",
-	    "sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y - blur)) * 0.15;",
-	    "sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y)) * 0.16;",
-	    "sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + blur)) * 0.15;",
-	    "sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + 2.0*blur)) * 0.12;",
-	    "sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + 3.0*blur)) * 0.09;",
-	    "sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + 4.0*blur)) * 0.05;",
-	 
-		"gl_FragColor = sum;",
-
-	  "}"
-	];
-}
-
-PIXI.BlurYFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.BlurYFilter.prototype.constructor = PIXI.BlurYFilter;
-
-Object.defineProperty(PIXI.BlurYFilter.prototype, 'blur', {
-    get: function() {
-        return this.uniforms.blur.value / (1/7000);
-    },
-    set: function(value) {
-    	//this.padding = value;
-    	this.uniforms.blur.value = (1/7000) * value;
-    }
-});
-
-/**
- * @author Mat Groves http://matgroves.com/ @Doormat23
- */
-
-/**
- * 
- * The ColorMatrixFilter class lets you apply a 4x4 matrix transformation on the RGBA 
- * color and alpha values of every pixel on your displayObject to produce a result 
- * with a new set of RGBA color and alpha values. Its pretty powerful!
- * @class ColorMatrixFilter
- * @contructor
- */
-PIXI.ColorMatrixFilter = function()
-{
-	PIXI.AbstractFilter.call( this );
-	
-	this.passes = [this];
-	
-	// set the uniforms
-	this.uniforms = {
-		matrix: {type: 'mat4', value: [1,0,0,0,
-									   0,1,0,0,
-									   0,0,1,0,
-									   0,0,0,1]},
-	};
-	
-	this.fragmentSrc = [
-	  "precision mediump float;",
-	  "varying vec2 vTextureCoord;",
-	  "varying float vColor;",
-	  "uniform float invert;",
-	  "uniform mat4 matrix;",
-	  "uniform sampler2D uSampler;",
-	  "void main(void) {",
-	    "gl_FragColor = texture2D(uSampler, vTextureCoord) * matrix;",
-	    "gl_FragColor = gl_FragColor * vColor;",
-	  "}"
-	];
-	
-}
-
-PIXI.ColorMatrixFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.ColorMatrixFilter.prototype.constructor = PIXI.ColorMatrixFilter;
-
-/**
- * Sets the matrix of the color matrix filter
- *
- * @property matrix
- * @type Array and array of 26 numbers
- * @default [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
- */
-Object.defineProperty(PIXI.ColorMatrixFilter.prototype, 'matrix', {
-    get: function() {
-        return this.uniforms.matrix.value;
-    },
-    set: function(value) {
-    	this.uniforms.matrix.value = value;
-    }
-});
-/**
- * @author Mat Groves http://matgroves.com/ @Doormat23
- */
-
-
-
-PIXI.CrossHatchFilter = function()
-{
-	PIXI.AbstractFilter.call( this );
-	
-	this.passes = [this];
-	
-	// set the uniforms
-	this.uniforms = {
-		blur: {type: '1f', value: 1/512},
-	};
-	
-	this.fragmentSrc = [
-	  "precision mediump float;",
-	  "varying vec2 vTextureCoord;",
-	  "varying float vColor;",
-	  "uniform float blur;",
-	  "uniform sampler2D uSampler;",
-	    "void main(void) {",
-	  	
-	    
-		"    float lum = length(texture2D(uSampler, vTextureCoord.xy).rgb);",
-		"     ",
-		"    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);",
-		"     ",
-		"    if (lum < 1.00) {",
-		"        if (mod(gl_FragCoord.x + gl_FragCoord.y, 10.0) === 0.0) {",
-		"            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);",
-		"        }",
-		"    }",
-		"     ",
-		"    if (lum < 0.75) {",
-		"        if (mod(gl_FragCoord.x - gl_FragCoord.y, 10.0) === 0.0) {",
-		"            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);",
-		"        }",
-		"    }",
-		"     ",
-		"    if (lum < 0.50) {",
-		"        if (mod(gl_FragCoord.x + gl_FragCoord.y - 5.0, 10.0) === 0.0) {",
-		"            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);",
-		"        }",
-		"    }",
-		"     ",
-		"    if (lum < 0.3) {",
-		"        if (mod(gl_FragCoord.x - gl_FragCoord.y - 5.0, 10.0) === 0.0) {",
-		"            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);",
-		"        }",
-		"    }",
-		"}"
-	];
-}
-
-PIXI.CrossHatchFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.CrossHatchFilter.prototype.constructor = PIXI.BlurYFilter;
-
-Object.defineProperty(PIXI.CrossHatchFilter.prototype, 'blur', {
-    get: function() {
-        return this.uniforms.blur.value / (1/7000);
-    },
-    set: function(value) {
-    	//this.padding = value;
-    	this.uniforms.blur.value = (1/7000) * value;
-    }
-});
-
-/**
- * @author Mat Groves http://matgroves.com/ @Doormat23
- */
-
-
-/**
- * 
- * The DisplacementFilter class uses the pixel values from the specified texture (called the displacement map) to perform a displacement of an object. 
- * You can use this filter to apply all manor of crazy warping effects
- * Currently the r property of the texture is used offset the x and the g propery of the texture is used to offset the y.
- * @class DisplacementFilter
- * @contructor
- * @param texture {Texture} The texture used for the displacemtent map * must be power of 2 texture at the moment
- */
-PIXI.DisplacementFilter = function(texture)
-{
-	PIXI.AbstractFilter.call( this );
-	
-	this.passes = [this];
-	texture.baseTexture._powerOf2 = true;
-
-	// set the uniforms
-	//console.log()
-	this.uniforms = {
-		displacementMap: {type: 'sampler2D', value:texture},
-		scale:			 {type: '2f', value:{x:30, y:30}},
-		offset:			 {type: '2f', value:{x:0, y:0}},
-		mapDimensions:   {type: '2f', value:{x:1, y:5112}},
-		dimensions:   {type: '4fv', value:[0,0,0,0]}
-	};
-	
-
-	if(texture.baseTexture.hasLoaded)
-	{
-		this.uniforms.mapDimensions.value.x = texture.width;
-		this.uniforms.mapDimensions.value.y = texture.height;
-	}
-	else
-	{
-		this.boundLoadedFunction = this.onTextureLoaded.bind(this);
-
-		texture.baseTexture.on("loaded", this.boundLoadedFunction);
-	}
-
-	this.fragmentSrc = [
-	  "precision mediump float;",
-	  "varying vec2 vTextureCoord;",
-	  "varying float vColor;",
-	  "uniform sampler2D displacementMap;",
-	  "uniform sampler2D uSampler;",
-	  "uniform vec2 scale;",
-	  "uniform vec2 offset;",
-	  "uniform vec4 dimensions;",
-	  "uniform vec2 mapDimensions;",// = vec2(256.0, 256.0);",
-	 // "const vec2 textureDimensions = vec2(750.0, 750.0);",
-	  
-	  "void main(void) {",
-	  	"vec2 mapCords = vTextureCoord.xy;",
-//	  	"mapCords -= ;",
-	 	"mapCords += (dimensions.zw + offset)/ dimensions.xy ;",
-	 	"mapCords.y *= -1.0;",
-	 	"mapCords.y += 1.0;",
-	  	"vec2 matSample = texture2D(displacementMap, mapCords).xy;",
-		"matSample -= 0.5;",	  
-	 	"matSample *= scale;",
-	 	"matSample /= mapDimensions;",
-	    "gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.x + matSample.x, vTextureCoord.y + matSample.y));",
-		"gl_FragColor.rgb = mix( gl_FragColor.rgb, gl_FragColor.rgb, 1.0);",
-		"vec2 cord = vTextureCoord;",
-		
-		//"gl_FragColor =  texture2D(displacementMap, cord);",
-	    "gl_FragColor = gl_FragColor * vColor;",
-	    
-	  "}"
-	];
-	
-}
-
-PIXI.DisplacementFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.DisplacementFilter.prototype.constructor = PIXI.DisplacementFilter;
-
-PIXI.DisplacementFilter.prototype.onTextureLoaded = function()
-{
-	
-	this.uniforms.mapDimensions.value.x = this.uniforms.displacementMap.value.width;
-	this.uniforms.mapDimensions.value.y = this.uniforms.displacementMap.value.height;
-
-	this.uniforms.displacementMap.value.baseTexture.off("loaded", this.boundLoadedFunction)
-
-}
-
-/**
- * The texture used for the displacemtent map * must be power of 2 texture at the moment
- *
- * @property map
- * @type Texture
- */
-Object.defineProperty(PIXI.DisplacementFilter.prototype, 'map', {
-    get: function() {
-        return this.uniforms.displacementMap.value;
-    },
-    set: function(value) {
-    	this.uniforms.displacementMap.value = value;
-    }
-});
-
-/**
- * The multiplier used to scale the displacement result from the map calculation.
- *
- * @property scale
- * @type Point
- */
-Object.defineProperty(PIXI.DisplacementFilter.prototype, 'scale', {
-    get: function() {
-        return this.uniforms.scale.value;
-    },
-    set: function(value) {
-    	this.uniforms.scale.value = value;
-    }
-});
-
-/**
- * The offset used to move the displacement map.
- *
- * @property offset
- * @type Point
- */
-Object.defineProperty(PIXI.DisplacementFilter.prototype, 'offset', {
-    get: function() {
-        return this.uniforms.offset.value;
-    },
-    set: function(value) {
-    	this.uniforms.offset.value = value;
-    }
-});
-/**
- * @author Mat Groves http://matgroves.com/ @Doormat23
- * original filter: https://github.com/evanw/glfx.js/blob/master/src/filters/fun/dotscreen.js
- */
-
-/**
- * 
- * This filter applies a pixlate effect making display objects appear "blocky"
- * @class PixelateFilter
- * @contructor
- */
-PIXI.DotScreenFilter = function()
-{
-	PIXI.AbstractFilter.call( this );
-
-	this.passes = [this];
-	
-	// set the uniforms
-	this.uniforms = {
-		scale: {type: '1f', value:1},
-		angle: {type: '1f', value:5},
-		dimensions:   {type: '4fv', value:[0,0,0,0]}
-	};
-
-	this.fragmentSrc = [
-	  "precision mediump float;",
-	  "varying vec2 vTextureCoord;",
-	  "varying float vColor;",
-	  "uniform vec4 dimensions;",
-	  "uniform sampler2D uSampler;",
-
-	    "uniform float angle;",
-	    "uniform float scale;",
-
-	    "float pattern() {",
-	    	"float s = sin(angle), c = cos(angle);",
-	    	"vec2 tex = vTextureCoord * dimensions.xy;",
-	    	"vec2 point = vec2(",
-	    		"c * tex.x - s * tex.y,",
-	    		"s * tex.x + c * tex.y",
-	    	") * scale;",
-	    	"return (sin(point.x) * sin(point.y)) * 4.0;",
-	    "}",
-
-	    "void main() {",
-            "vec4 color = texture2D(uSampler, vTextureCoord);",
-            "float average = (color.r + color.g + color.b) / 3.0;",
-            "gl_FragColor = vec4(vec3(average * 10.0 - 5.0 + pattern()), color.a);",
-        "}",
-	];
-}
-
-PIXI.DotScreenFilter.prototype = Object.create( PIXI.DotScreenFilter.prototype );
-PIXI.DotScreenFilter.prototype.constructor = PIXI.DotScreenFilter;
-
-/**
- * 
- * This describes the the scale
- * @property scale
- * @type Number
- */
-Object.defineProperty(PIXI.DotScreenFilter.prototype, 'scale', {
-    get: function() {
-        return this.uniforms.scale.value;
-    },
-    set: function(value) {
-    	this.dirty = true;
-    	this.uniforms.scale.value = value;
-    }
-});
-
-/**
- * 
- * This radius describes angle
- * @property angle
- * @type Number
- */
-Object.defineProperty(PIXI.DotScreenFilter.prototype, 'angle', {
-    get: function() {
-        return this.uniforms.angle.value;
-    },
-    set: function(value) {
-    	this.dirty = true;
-    	this.uniforms.angle.value = value;
-    }
-});
-/**
- * @author Mat Groves http://matgroves.com/ @Doormat23
- */
-
-
 
 PIXI.FilterBlock = function()
 {
 	this.visible = true;
 	this.renderable = true;
 }
-/**
- * @author Mat Groves http://matgroves.com/ @Doormat23
- */
-
-/**
- * 
- * This inverts your displayObjects colors.
- * @class InvertFilter
- * @contructor
- */
-PIXI.InvertFilter = function()
-{
-	PIXI.AbstractFilter.call( this );
-	
-	this.passes = [this];
-	
-	// set the uniforms
-	this.uniforms = {
-		invert: {type: '1f', value: 1},
-	};
-	
-	this.fragmentSrc = [
-	  "precision mediump float;",
-	  "varying vec2 vTextureCoord;",
-	  "varying float vColor;",
-	  "uniform float invert;",
-	  "uniform sampler2D uSampler;",
-	  "void main(void) {",
-	    "gl_FragColor = texture2D(uSampler, vTextureCoord);",
-		"gl_FragColor.rgb = mix( (vec3(1)-gl_FragColor.rgb) * gl_FragColor.a, gl_FragColor.rgb, 1.0 - invert);",
-		//"gl_FragColor.rgb = gl_FragColor.rgb  * gl_FragColor.a;",
-	    "gl_FragColor = gl_FragColor * vColor;",
-	  "}"
-	];
-	
-}
-
-PIXI.InvertFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.InvertFilter.prototype.constructor = PIXI.InvertFilter;
-
-/**
-The strength of the invert. 1 will fully invert the colors, 0 will make the object its normal color
-@property invert
-*/
-Object.defineProperty(PIXI.InvertFilter.prototype, 'invert', {
-    get: function() {
-        return this.uniforms.invert.value;
-    },
-    set: function(value) {
-    	this.uniforms.invert.value = value;
-    }
-});
-/**
- * @author Mat Groves http://matgroves.com/ @Doormat23
- */
-
-/**
- * 
- * This filter applies a pixlate effect making display objects appear "blocky"
- * @class PixelateFilter
- * @contructor
- */
-PIXI.PixelateFilter = function()
-{
-	PIXI.AbstractFilter.call( this );
-
-	this.passes = [this];
-	
-	// set the uniforms
-	this.uniforms = {
-		invert: {type: '1f', value: 0},
-		dimensions: {type: '4fv', value:new Float32Array([10000, 100, 10, 10])},
-		pixelSize: {type: '2f', value:{x:10, y:10}},
-	};
-
-	this.fragmentSrc = [
-	  "precision mediump float;",
-	  "varying vec2 vTextureCoord;",
-	  "varying float vColor;",
-	  "uniform vec2 testDim;",
-	  "uniform vec4 dimensions;",
-	  "uniform vec2 pixelSize;",
-	  "uniform sampler2D uSampler;",
-	  "void main(void) {",
-	 	"vec2 coord = vTextureCoord;",
-
-	 	"vec2 size = dimensions.xy/pixelSize;",
-
-	 	"vec2 color = floor( ( vTextureCoord * size ) ) / size + pixelSize/dimensions.xy * 0.5;",
-	    "gl_FragColor = texture2D(uSampler, color);",
-	  "}"
-	];
-	
-
-}
-
-PIXI.PixelateFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.PixelateFilter.prototype.constructor = PIXI.PixelateFilter;
-
-/**
- * 
- * This a point that describes the size of the blocs. x is the width of the block and y is the the height
- * @property size
- * @type Point
- */
-Object.defineProperty(PIXI.PixelateFilter.prototype, 'size', {
-    get: function() {
-        return this.uniforms.pixelSize.value;
-    },
-    set: function(value) {
-    	this.dirty = true;
-    	this.uniforms.pixelSize.value = value;
-    }
-});
-/**
- * @author Mat Groves http://matgroves.com/ @Doormat23
- */
-
-
-
-PIXI.RGBSplitFilter = function()
-{
-	PIXI.AbstractFilter.call( this );
-	
-	this.passes = [this];
-	
-	// set the uniforms
-	this.uniforms = {
-		red: {type: '2f', value: {x:20, y:20}},
-		green: {type: '2f', value: {x:-20, y:20}},
-		blue: {type: '2f', value: {x:20, y:-20}},
-		dimensions:   {type: '4fv', value:[0,0,0,0]}
-	};
-	
-	this.fragmentSrc = [
-	  "precision mediump float;",
-	  "varying vec2 vTextureCoord;",
-	  "varying float vColor;",
-	  "uniform vec2 red;",
-	  "uniform vec2 green;",
-	  "uniform vec2 blue;",
-	  "uniform vec4 dimensions;",
-	  "uniform sampler2D uSampler;",
-	    "void main(void) {",
-	  	  "gl_FragColor.r = texture2D(uSampler, vTextureCoord + red/dimensions.xy).r;",
-	  	  "gl_FragColor.g = texture2D(uSampler, vTextureCoord + green/dimensions.xy).g;",
-	  	  "gl_FragColor.b = texture2D(uSampler, vTextureCoord + blue/dimensions.xy).b;",
-	  	  "gl_FragColor.a = texture2D(uSampler, vTextureCoord).a;",
-	  "}"
-	];
-}
-
-PIXI.RGBSplitFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.RGBSplitFilter.prototype.constructor = PIXI.RGBSplitFilter;
-
-Object.defineProperty(PIXI.RGBSplitFilter.prototype, 'angle', {
-    get: function() {
-        return this.uniforms.blur.value / (1/7000);
-    },
-    set: function(value) {
-    	//this.padding = value;
-    	this.uniforms.blur.value = (1/7000) * value;
-    }
-});
-
-/**
-/**
- * @author Mat Groves http://matgroves.com/ @Doormat23
- */
-
-
-/**
- * 
- * This applies a sepia effect to your displayObjects.
- * @class SepiaFilter
- * @contructor
- */
-PIXI.SepiaFilter = function()
-{
-	PIXI.AbstractFilter.call( this );
-	
-	this.passes = [this];
-	
-	// set the uniforms
-	this.uniforms = {
-		sepia: {type: '1f', value: 1},
-	};
-	
-	this.fragmentSrc = [
-	  "precision mediump float;",
-	  "varying vec2 vTextureCoord;",
-	  "varying float vColor;",
-	  "uniform float sepia;",
-	  "uniform sampler2D uSampler;",
-	 	   
-	  "const mat3 sepiaMatrix = mat3(0.3588, 0.7044, 0.1368, 0.2990, 0.5870, 0.1140, 0.2392, 0.4696, 0.0912);",
-	  "void main(void) {",
-	    "gl_FragColor = texture2D(uSampler, vTextureCoord);",
-		"gl_FragColor.rgb = mix( gl_FragColor.rgb, gl_FragColor.rgb * sepiaMatrix, sepia);",
-	    "gl_FragColor = gl_FragColor * vColor;",
-	  "}"
-	];
-	
-}
-
-PIXI.SepiaFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.SepiaFilter.prototype.constructor = PIXI.SepiaFilter;
-
-/**
-The strength of the sepia. 1 will apply the full sepia effect, 0 will make the object its normal color
-@property sepia
-*/
-Object.defineProperty(PIXI.SepiaFilter.prototype, 'sepia', {
-    get: function() {
-        return this.uniforms.sepia.value;
-    },
-    set: function(value) {
-    	this.uniforms.sepia.value = value;
-    }
-});
-
-/**
- * @author Mat Groves http://matgroves.com/ @Doormat23
- */
-
-
-
-PIXI.SmartBlurFilter = function()
-{
-	PIXI.AbstractFilter.call( this );
-	
-	this.passes = [this];
-	
-	// set the uniforms
-	this.uniforms = {
-		blur: {type: '1f', value: 1/512},
-	};
-	
-	this.fragmentSrc = [
-	  "precision mediump float;",
- 	  "varying vec2 vTextureCoord;",
-  	  "uniform sampler2D uSampler;",
-    //  "uniform vec2 delta;",
-      "const vec2 delta = vec2(1.0/10.0, 0.0);",
-     // "uniform float darkness;",
-	  
-	  "float random(vec3 scale, float seed) {",
-	        "return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);",
-	   "}",
-	   
-	   
-	  "void main(void) {",
-	 
-	  "vec4 color = vec4(0.0);",
-	  "float total = 0.0;",
-	  
-	  "float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);",
-	            
-	  "for (float t = -30.0; t <= 30.0; t++) {",
-	           "float percent = (t + offset - 0.5) / 30.0;",
-	                "float weight = 1.0 - abs(percent);",
-	                "vec4 sample = texture2D(uSampler, vTextureCoord + delta * percent);",
-	                "sample.rgb *= sample.a;",
-	                "color += sample * weight;",
-	                "total += weight;",
-	            "}",
-	            
-	            "gl_FragColor = color / total;",
-	            "gl_FragColor.rgb /= gl_FragColor.a + 0.00001;",
-	          //  "gl_FragColor.rgb *= darkness;",
-	  "}"
-	];
-}
-
-PIXI.SmartBlurFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.SmartBlurFilter.prototype.constructor = PIXI.SmartBlurFilter;
-
-Object.defineProperty(PIXI.SmartBlurFilter.prototype, 'blur', {
-    get: function() {
-        return this.uniforms.blur.value;
-    },
-    set: function(value) {
-    	this.uniforms.blur.value = value;
-    }
-});
-
-/**
- * @author Mat Groves http://matgroves.com/ @Doormat23
- */
-
-/**
- * 
- * This filter applies a pixlate effect making display objects appear "blocky"
- * @class PixelateFilter
- * @contructor
- */
-PIXI.TwistFilter = function()
-{
-	PIXI.AbstractFilter.call( this );
-
-	this.passes = [this];
-	
-	// set the uniforms
-	this.uniforms = {
-		radius: {type: '1f', value:0.5},
-		angle: {type: '1f', value:5},
-		offset: {type: '2f', value:{x:0.5, y:0.5}},
-	};
-
-	this.fragmentSrc = [
-	  "precision mediump float;",
-	  "varying vec2 vTextureCoord;",
-	  "varying float vColor;",
-	  "uniform vec4 dimensions;",
-	  "uniform sampler2D uSampler;",
-	  
-	  "uniform float radius;",
-      "uniform float angle;",
-      "uniform vec2 offset;",
-
-	  "void main(void) {",
-	 	"vec2 coord = vTextureCoord - offset;",
-		"float distance = length(coord);",
-	 	
-	 	"if (distance < radius){",
-
-		 	"float ratio = (radius - distance) / radius;",
-		 	"float angleMod = ratio * ratio * angle;",
-		 	"float s = sin(angleMod);",
-		 	"float c = cos(angleMod);",
-		 	"coord = vec2(coord.x * c - coord.y * s, coord.x * s + coord.y * c);",
-
-	 	"}",
-
-	    "gl_FragColor = texture2D(uSampler, coord+offset);",
-	  "}"
-	];
-}
-
-PIXI.TwistFilter.prototype = Object.create( PIXI.AbstractFilter.prototype );
-PIXI.TwistFilter.prototype.constructor = PIXI.TwistFilter;
-
-/**
- * 
- * This point describes the the offset of the twist
- * @property size
- * @type Point
- */
-Object.defineProperty(PIXI.TwistFilter.prototype, 'offset', {
-    get: function() {
-        return this.uniforms.offset.value;
-    },
-    set: function(value) {
-    	this.dirty = true;
-    	this.uniforms.offset.value = value;
-    }
-});
-
-/**
- * 
- * This radius describes size of the twist
- * @property size
- * @type Number
- */
-Object.defineProperty(PIXI.TwistFilter.prototype, 'radius', {
-    get: function() {
-        return this.uniforms.radius.value;
-    },
-    set: function(value) {
-    	this.dirty = true;
-    	this.uniforms.radius.value = value;
-    }
-});
-
-/**
- * 
- * This radius describes angle of the twist
- * @property angle
- * @type Number
- */
-Object.defineProperty(PIXI.TwistFilter.prototype, 'angle', {
-    get: function() {
-        return this.uniforms.angle.value;
-    },
-    set: function(value) {
-    	this.dirty = true;
-    	this.uniforms.angle.value = value;
-    }
-});
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -4492,7 +3570,7 @@ PIXI.PixiShader = function()
     */
     this.textureCount = 0;
     
-}
+};
 
 /**
 * @method PIXI.PixiShader#init
@@ -4509,7 +3587,7 @@ PIXI.PixiShader.prototype.init = function()
     this.uSampler = gl.getUniformLocation(program, "uSampler");
     this.projectionVector = gl.getUniformLocation(program, "projectionVector");
     this.offsetVector = gl.getUniformLocation(program, "offsetVector");
-    // this.dimensions = gl.getUniformLocation(program, "dimensions");
+    this.dimensions = gl.getUniformLocation(program, "dimensions");
     
     // get and store the attributes
     this.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
@@ -4522,189 +3600,78 @@ PIXI.PixiShader.prototype.init = function()
         // get the uniform locations..
         this.uniforms[key].uniformLocation = gl.getUniformLocation(program, key);
     }
+
+    this.initUniforms();
   
     this.program = program;
-}
+};
 
 /**
-* Updates the shader uniform values.
+* Initialises the shader uniform values.
 * Uniforms are specified in the GLSL_ES Specification: http://www.khronos.org/registry/webgl/specs/latest/1.0/
 * http://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf
 *
-* @method PIXI.PixiShader#syncUniforms
+* @method PIXI.PixiShader#initUniforms
 */
-PIXI.PixiShader.prototype.syncUniforms = function()
+PIXI.PixiShader.prototype.initUniforms = function()
 {
     this.textureCount = 1;
 
-    var gl = PIXI.gl;
+    var uniform;
     
     for (var key in this.uniforms) 
     {
-        var type = this.uniforms[key].type;
-        var transpose = false;
+        var uniform = this.uniforms[key];
+        var type = uniform.type;
 
-        if (this.uniforms[key].transpose)
+        if (type == 'sampler2D')
         {
-            transpose = this.uniforms[key].transpose;
-        }
+            uniform._init = false;
 
-        if (type == "1f")
-        {
-            // void uniform1f(WebGLUniformLocation? location, GLfloat x);
-            gl.uniform1f(this.uniforms[key].uniformLocation, this.uniforms[key].value);
-        }
-        else if (type == "1fv")
-        {
-            // void uniform1fv(WebGLUniformLocation? location, Float32Array v);
-            // void uniform1fv(WebGLUniformLocation? location, sequence<GLfloat> v);
-            gl.uniform1fv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
-        }
-        else if (type == "1i")
-        {
-            // void uniform1i(WebGLUniformLocation? location, GLint x);
-            gl.uniform1i(this.uniforms[key].uniformLocation, this.uniforms[key].value);
-        }
-        else if (type == "1iv")
-        {
-            // void uniform1iv(WebGLUniformLocation? location, Int32Array v);
-            // void uniform1iv(WebGLUniformLocation? location, sequence<long> v);
-            gl.uniform1i(this.uniforms[key].uniformLocation, this.uniforms[key].value);
-        }
-        else if (type == "2f")
-        {
-            // void uniform2f(WebGLUniformLocation? location, GLfloat x, GLfloat y);
-            gl.uniform2f(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y);
-        }
-        else if (type == "2fv")
-        {
-            // void uniform2fv(WebGLUniformLocation? location, Float32Array v);
-            // void uniform2fv(WebGLUniformLocation? location, sequence<GLfloat> v);
-            gl.uniform2fv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
-        }
-        else if (type == "2i")
-        {
-            // void uniform2i(WebGLUniformLocation? location, GLint x, GLint y);
-            gl.uniform2i(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y);
-        }
-        else if (type == "2iv")
-        {
-            // void uniform2iv(WebGLUniformLocation? location, Int32Array v);
-            // void uniform2iv(WebGLUniformLocation? location, sequence<long> v);
-            gl.uniform2iv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
-        }
-        else if (type == "3f")
-        {
-            // void uniform3f(WebGLUniformLocation? location, GLfloat x, GLfloat y, GLfloat z);
-            gl.uniform3f(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y, this.uniforms[key].value.z);
-        }
-        else if (type == "3fv")
-        {
-            // void uniform3fv(WebGLUniformLocation? location, Float32Array v);
-            // void uniform3fv(WebGLUniformLocation? location, sequence<GLfloat> v);
-            gl.uniform3fv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
-        }
-        else if (type == "3i")
-        {
-            // void uniform3i(WebGLUniformLocation? location, GLint x, GLint y, GLint z);
-            gl.uniform3i(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y, this.uniforms[key].value.z);
-        }
-        else if (type == "3iv")
-        {
-            // void uniform3iv(WebGLUniformLocation? location, Int32Array v);
-            // void uniform3iv(WebGLUniformLocation? location, sequence<long> v);
-            gl.uniform3iv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
-        }
-        else if (type == "4f")
-        {
-            // void uniform4f(WebGLUniformLocation? location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
-            gl.uniform4f(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y, this.uniforms[key].value.z, this.uniforms[key].value.w);
-        }
-        else if (type == "4fv")
-        {
-            // void uniform4fv(WebGLUniformLocation? location, Float32Array v);
-            // void uniform4fv(WebGLUniformLocation? location, sequence<GLfloat> v);
-            gl.uniform4fv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
-        }
-        else if (type == "4i")
-        {
-            // void uniform4i(WebGLUniformLocation? location, GLint x, GLint y, GLint z, GLint w);
-            gl.uniform4i(this.uniforms[key].uniformLocation, this.uniforms[key].value.x, this.uniforms[key].value.y, this.uniforms[key].value.z, this.uniforms[key].value.w);
-        }
-        else if (type == "4iv")
-        {
-            // void uniform4iv(WebGLUniformLocation? location, Int32Array v);
-            // void uniform4iv(WebGLUniformLocation? location, sequence<long> v);
-            gl.uniform4iv(this.uniforms[key].uniformLocation, this.uniforms[key].value);
-        }
-        else if (type == "mat2")
-        {
-            // void uniformMatrix2fv(WebGLUniformLocation? location, GLboolean transpose, Float32Array value);
-            // void uniformMatrix2fv(WebGLUniformLocation? location, GLboolean transpose, sequence<GLfloat> value);
-            gl.uniformMatrix2fv(this.uniforms[key].uniformLocation, transpose, this.uniforms[key].value);
-        }
-        else if (type == "mat3")
-        {
-            // void uniformMatrix3fv(WebGLUniformLocation? location, GLboolean transpose, Float32Array value);
-            // void uniformMatrix3fv(WebGLUniformLocation? location, GLboolean transpose, sequence<GLfloat> value);
-            gl.uniformMatrix3fv(this.uniforms[key].uniformLocation, transpose, this.uniforms[key].value);
-        }
-        else if (type == "mat4")
-        {
-            // void uniformMatrix4fv(WebGLUniformLocation? location, GLboolean transpose, Float32Array value);
-            // void uniformMatrix4fv(WebGLUniformLocation? location, GLboolean transpose, sequence<GLfloat> value);
-            gl.uniformMatrix4fv(this.uniforms[key].uniformLocation, transpose, this.uniforms[key].value);
-        }
-        else if (type == "sampler2D")
-        {
-            if (this.uniforms[key].value && this.uniforms[key].value.baseTexture.hasLoaded)
+            if (uniform.value !== null)
             {
-                var texture = this.uniforms[key].value.baseTexture._glTexture;
-                var image = this.uniforms[key].value.baseTexture.source;
-                var format = gl.RGBA;
+                this.initSampler2D(uniform);
+            }
+        }
+        else if (type == 'mat2' || type == 'mat3' || type == 'mat4')
+        {
+            //  These require special handling
+            uniform.glMatrix = true;
+            uniform.glValueLength = 1;
 
-                if (this.uniforms[key].format && this.uniforms[key].format == 'luminance')
-                {
-                    format = gl.LUMINANCE;
-                }
+            if (type == 'mat2')
+            {
+                uniform.glFunc = PIXI.gl.uniformMatrix2fv;
+            }
+            else if (type == 'mat3')
+            {
+                uniform.glFunc = PIXI.gl.uniformMatrix3fv;
+            }
+            else if (type == 'mat4')
+            {
+                uniform.glFunc = PIXI.gl.uniformMatrix4fv;
+            }
+        }
+        else
+        {
+            //  GL function reference
+            uniform.glFunc = PIXI.gl['uniform' + type];
 
-                gl.activeTexture(gl['TEXTURE' + this.textureCount]);
-
-                if (this.uniforms[key].wrap)
-                {
-                    if (this.uniforms[key].wrap == 'no-repeat' || this.uniforms[key].wrap === false)
-                    {
-                        this.createGLTextureLinear(gl, image, texture);
-                    }
-                    else if (this.uniforms[key].wrap == 'repeat' || this.uniforms[key].wrap === true)
-                    {
-                        this.createGLTexture(gl, image, format, texture);
-                    }
-                    else if (this.uniforms[key].wrap == 'nearest-repeat')
-                    {
-                        this.createGLTextureNearestRepeat(gl, image, texture);
-                    }
-                    else if (this.uniforms[key].wrap == 'nearest')
-                    {
-                        this.createGLTextureNearest(gl, image, texture);
-                    }
-                    else if (this.uniforms[key].wrap == 'audio')
-                    {
-                        this.createAudioTexture(gl, texture);
-                    }
-                    else if (this.uniforms[key].wrap == 'keyboard')
-                    {
-                        this.createKeyboardTexture(gl, texture);
-                    }
-                }
-                else
-                {
-                    this.createGLTextureLinear(gl, image, texture);
-                }
-
-                gl.uniform1i(this.uniforms[key].uniformLocation, this.textureCount);
-
-                this.textureCount++;
+            if (type == '2f' || type == '2i')
+            {
+                uniform.glValueLength = 2;
+            }
+            else if (type == '3f' || type == '3i')
+            {
+                uniform.glValueLength = 3;
+            }
+            else if (type == '4f' || type == '4i')
+            {
+                uniform.glValueLength = 4;
+            }
+            else
+            {
+                uniform.glValueLength = 1;
             }
         }
     }
@@ -4712,99 +3679,133 @@ PIXI.PixiShader.prototype.syncUniforms = function()
 };
 
 /**
-* Binds the given texture and image data. The texture is set to REPEAT.
-* Code based on Effects.js from ShaderToy.com
-* @method PIXI.PixiShader#createGLTexture
+* Initialises a Sampler2D uniform (which may only be available later on after initUniforms once the texture is has loaded)
+*
+* @method PIXI.PixiShader#initSampler2D
 */
-PIXI.PixiShader.prototype.createGLTexture = function(gl, image, format, texture)
+PIXI.PixiShader.prototype.initSampler2D = function(uniform)
 {
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-    gl.texImage2D(gl.TEXTURE_2D, 0, format, gl.RGBA, gl.UNSIGNED_BYTE, image);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-    gl.generateMipmap(gl.TEXTURE_2D);
-}
+    if (!uniform.value || !uniform.value.baseTexture || !uniform.value.baseTexture.hasLoaded)
+    {
+        return;
+    }
+
+    PIXI.gl.activeTexture(PIXI.gl['TEXTURE' + this.textureCount]);
+    PIXI.gl.bindTexture(PIXI.gl.TEXTURE_2D, uniform.value.baseTexture._glTexture);
+
+    //  Extended texture data
+    if (uniform.textureData)
+    {
+        var data = uniform.textureData;
+
+        // GLTexture = mag linear, min linear_mipmap_linear, wrap repeat + gl.generateMipmap(gl.TEXTURE_2D);
+        // GLTextureLinear = mag/min linear, wrap clamp
+        // GLTextureNearestRepeat = mag/min NEAREST, wrap repeat
+        // GLTextureNearest = mag/min nearest, wrap clamp
+        // AudioTexture = whatever + luminance + width 512, height 2, border 0
+        // KeyTexture = whatever + luminance + width 256, height 2, border 0
+
+        //  magFilter can be: gl.LINEAR, gl.LINEAR_MIPMAP_LINEAR or gl.NEAREST
+        //  wrapS/T can be: gl.CLAMP_TO_EDGE or gl.REPEAT
+
+        var magFilter = (data.magFilter) ? data.magFilter : PIXI.gl.LINEAR;
+        var minFilter = (data.minFilter) ? data.minFilter : PIXI.gl.LINEAR;
+        var wrapS = (data.wrapS) ? data.wrapS : PIXI.gl.CLAMP_TO_EDGE;
+        var wrapT = (data.wrapT) ? data.wrapT : PIXI.gl.CLAMP_TO_EDGE;
+        var format = (data.luminance) ? PIXI.gl.LUMINANCE : PIXI.gl.RGBA;
+
+        if (data.repeat)
+        {
+            wrapS = PIXI.gl.REPEAT;
+            wrapT = PIXI.gl.REPEAT;
+        }
+
+        PIXI.gl.pixelStorei(PIXI.gl.UNPACK_FLIP_Y_WEBGL, false);
+
+        if (data.width)
+        {
+            var width = (data.width) ? data.width : 512;
+            var height = (data.height) ? data.height : 2;
+            var border = (data.border) ? data.border : 0;
+
+            // void texImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, ArrayBufferView? pixels);
+            PIXI.gl.texImage2D(PIXI.gl.TEXTURE_2D, 0, format, width, height, border, format, PIXI.gl.UNSIGNED_BYTE, null);
+        }
+        else
+        {
+            //  void texImage2D(GLenum target, GLint level, GLenum internalformat, GLenum format, GLenum type, ImageData? pixels);
+            PIXI.gl.texImage2D(PIXI.gl.TEXTURE_2D, 0, format, PIXI.gl.RGBA, PIXI.gl.UNSIGNED_BYTE, uniform.value.baseTexture.source);
+        }
+
+        PIXI.gl.texParameteri(PIXI.gl.TEXTURE_2D, PIXI.gl.TEXTURE_MAG_FILTER, magFilter);
+        PIXI.gl.texParameteri(PIXI.gl.TEXTURE_2D, PIXI.gl.TEXTURE_MIN_FILTER, minFilter);
+        PIXI.gl.texParameteri(PIXI.gl.TEXTURE_2D, PIXI.gl.TEXTURE_WRAP_S, wrapS);
+        PIXI.gl.texParameteri(PIXI.gl.TEXTURE_2D, PIXI.gl.TEXTURE_WRAP_T, wrapT);
+    }
+
+    PIXI.gl.uniform1i(uniform.uniformLocation, this.textureCount);
+
+    uniform._init = true;
+
+    this.textureCount++;
+
+};
 
 /**
-* Binds the given texture and image data. The texture is set to CLAMP_TO_EDGE.
-* Code based on Effects.js from ShaderToy.com
-* @method PIXI.PixiShader#createGLTextureLinear
+* Updates the shader uniform values.
+*
+* @method PIXI.PixiShader#syncUniforms
 */
-PIXI.PixiShader.prototype.createGLTextureLinear = function(gl, image, texture)
+PIXI.PixiShader.prototype.syncUniforms = function()
 {
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-}
+    this.textureCount = 1;
+    var uniform;
 
-/**
-* Binds the given texture and image data. The texture is set to REPEAT with NEAREST.
-* Code based on Effects.js from ShaderToy.com
-* @method PIXI.PixiShader#createGLTextureNearestRepeat
-*/
-PIXI.PixiShader.prototype.createGLTextureNearestRepeat = function(gl, image, texture)
-{
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-}
+    //  This would probably be faster in an array and it would guarantee key order
+    for (var key in this.uniforms) 
+    {
+        uniform = this.uniforms[key];
 
-/**
-* Binds the given texture and image data. The texture is set to CLAMP_TO_EDGE with NEAREST.
-* Code based on Effects.js from ShaderToy.com
-* @method PIXI.PixiShader#createGLTextureNearest
-*/
-PIXI.PixiShader.prototype.createGLTextureNearest = function(gl, image, texture)
-{
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-}
-
-/**
-* Binds the given texture data. The texture is set to CLAMP_TO_EDGE with LUMINANCE. Designed for use with real-time audio data.
-* Code based on Effects.js from ShaderToy.com
-* @method PIXI.PixiShader#createAudioTexture
-*/
-PIXI.PixiShader.prototype.createAudioTexture = function(gl, texture)
-{
-    gl.bindTexture(gl.TEXTURE_2D, texture );
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR );
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE) ;
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, 512, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, null);
-}
-
-/**
-* Binds the given texture data. The texture is set to CLAMP_TO_EDGE with LUMINANCE. Designed for use with keyboard input data.
-* Code based on Effects.js from ShaderToy.com
-* @method PIXI.PixiShader#createKeyboardTexture
-*/
-PIXI.PixiShader.prototype.createKeyboardTexture = function(gl, texture)
-{
-    gl.bindTexture(gl.TEXTURE_2D, texture );
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST );
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST );
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE );
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE) ;
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, 256, 2, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, null);
-}
+        if (uniform.glValueLength == 1)
+        {
+            if (uniform.glMatrix === true)
+            {
+                uniform.glFunc.call(PIXI.gl, uniform.uniformLocation, uniform.transpose, uniform.value);
+            }
+            else
+            {
+                uniform.glFunc.call(PIXI.gl, uniform.uniformLocation, uniform.value);
+            }
+        }
+        else if (uniform.glValueLength == 2)
+        {
+            uniform.glFunc.call(PIXI.gl, uniform.uniformLocation, uniform.value.x, uniform.value.y);
+        }
+        else if (uniform.glValueLength == 3)
+        {
+            uniform.glFunc.call(PIXI.gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z);
+        }
+        else if (uniform.glValueLength == 4)
+        {
+            uniform.glFunc.call(PIXI.gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z, uniform.value.w);
+        }
+        else if (uniform.type == 'sampler2D')
+        {
+            if (uniform._init)
+            {
+                PIXI.gl.activeTexture(PIXI.gl['TEXTURE' + this.textureCount]);
+                PIXI.gl.bindTexture(PIXI.gl.TEXTURE_2D, uniform.value.baseTexture._glTexture);
+                PIXI.gl.uniform1i(uniform.uniformLocation, this.textureCount);
+                this.textureCount++;
+            }
+            else
+            {
+                this.initSampler2D(uniform);
+            }
+        }
+    }
+    
+};
 
 PIXI.PixiShader.defaultVertexSrc = [
     
@@ -10044,6 +9045,9 @@ Phaser.StateManager.prototype = {
     */
     boot: function () {
 
+        this.game.onPause.add(this.pause, this);
+        this.game.onResume.add(this.resume, this);
+
         if (this._pendingState !== null)
         {
             if (typeof this._pendingState === 'string')
@@ -10184,7 +9188,7 @@ Phaser.StateManager.prototype = {
             this.onPreloadCallback.call(this.callbackContext, this.game);
 
             //  Is the loader empty?
-            if (this.game.load.queueSize === 0)
+            if (this.game.load.totalQueuedFiles() === 0)
             {
                 this.game.loadComplete();
             }
@@ -10322,6 +9326,32 @@ Phaser.StateManager.prototype = {
         else
         {
             this._created = true;
+        }
+
+    },
+
+    /**
+    * @method Phaser.StateManager#pause
+    * @protected
+    */
+    pause: function () {
+
+        if (this._created && this.onPausedCallback)
+        {
+            this.onPausedCallback.call(this.callbackContext, this.game, true);
+        }
+
+    },
+
+    /**
+    * @method Phaser.StateManager#resume
+    * @protected
+    */
+    resume: function () {
+
+        if (this._created && this.onre)
+        {
+            this.onPausedCallback.call(this.callbackContext, this.game, false);
         }
 
     },
@@ -11107,10 +10137,21 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
 
 Phaser.Filter.prototype = {
 
+    /**
+    * Should be over-ridden.
+    * @method Phaser.Filter#init
+    * @param {...}
+    */
     init: function () {
         //  This should be over-ridden. Will receive a variable number of arguments.
     },
 
+    /**
+    * Set the resolution uniforms on the filter.
+    * @method Phaser.Filter#setResolution
+    * @param {number} width - The width of the display.
+    * @param {number} height - The height of the display.
+    */
     setResolution: function (width, height) {
 
         this.uniforms.resolution.value.x = width;
@@ -11118,6 +10159,11 @@ Phaser.Filter.prototype = {
 
     },
 
+    /**
+    * Updates the filter.
+    * @method Phaser.Filter#update
+    * @param {Phaser.Pointer} [pointer] - A Pointer object to use for the filter. The coordinates are mapped to the mouse uniform.
+    */
     update: function (pointer) {
 
         if (typeof pointer !== 'undefined')
@@ -11142,6 +10188,10 @@ Phaser.Filter.prototype = {
 
 };
 
+/**
+* @name Phaser.Filter#width
+* @property {number} width - The width (resolution uniform)
+*/
 Object.defineProperty(Phaser.Filter.prototype, 'width', {
 
     get: function() {
@@ -11154,6 +10204,10 @@ Object.defineProperty(Phaser.Filter.prototype, 'width', {
 
 });
 
+/**
+* @name Phaser.Filter#height
+* @property {number} height - The height (resolution uniform)
+*/
 Object.defineProperty(Phaser.Filter.prototype, 'height', {
 
     get: function() {
@@ -11390,7 +10444,7 @@ Phaser.PluginManager.prototype = {
         //  The plugin must have at least one of the above functions to be added to the PluginManager.
         if (result)
         {
-            if (plugin.hasPreUpdate || plugin.hasUpdate)
+            if (plugin.hasPreUpdate || plugin.hasUpdate || plugin.hasPostUpdate)
             {
                 plugin.active = true;
             }
@@ -11977,7 +11031,6 @@ Phaser.Group.prototype = {
     * Returns the child found at the given index within this Group.
     *
     * @method Phaser.Group#getAt
-    * @memberof Phaser.Group
     * @param {number} index - The index to return the child from.
     * @return {*} The child that was found at the given index.
     */
@@ -12970,15 +12023,25 @@ Phaser.Group.prototype = {
     *
     * @method Phaser.Group#remove
     * @param {Any} child - The child to remove.
+    * @return {boolean} true if the child was removed from this Group, otherwise false.
     */
     remove: function (child) {
+
+        if (child.group !== this)
+        {
+            return false;
+        }
 
         if (child.events)
         {
             child.events.onRemovedFromGroup.dispatch(child, this);
         }
 
-        this._container.removeChild(child);
+        //  Check it's actually in the container
+        if (child.parent === this._container)
+        {
+            this._container.removeChild(child);
+        }
 
         if (this.cursor == child)
         {
@@ -12993,6 +12056,8 @@ Phaser.Group.prototype = {
         }
 
         child.group = null;
+
+        return true;
 
     },
 
@@ -13471,8 +12536,6 @@ Phaser.World.prototype.update = function () {
 */
 Phaser.World.prototype.postUpdate = function () {
 
-    this.camera.update();
-
     if (this.game.stage._stage.first._iNext)
     {
         var currentNode = this.game.stage._stage.first._iNext;
@@ -13489,6 +12552,7 @@ Phaser.World.prototype.postUpdate = function () {
         while (currentNode != this.game.stage._stage.last._iNext)
     }
 
+    this.camera.update();
 }
 
 /**
@@ -15689,7 +14753,7 @@ Phaser.Mouse = function (game) {
     /**
     * @property {boolean} capture - If true the DOM mouse events will have event.preventDefault applied to them, if false they will propogate fully.
     */
-    this.capture = true;
+    this.capture = false;
 
     /**
     * @property {number} button- The type of click, either: Phaser.Mouse.NO_BUTTON, Phaser.Mouse.LEFT_BUTTON, Phaser.Mouse.MIDDLE_BUTTON or Phaser.Mouse.RIGHT_BUTTON.
@@ -15791,10 +14855,6 @@ Phaser.Mouse.prototype = {
         this._onMouseUp = function (event) {
             return _this.onMouseUp(event);
         };
-
-        // this.game.renderer.view.addEventListener('mousedown', this._onMouseDown, true);
-        // this.game.renderer.view.addEventListener('mousemove', this._onMouseMove, true);
-        // this.game.renderer.view.addEventListener('mouseup', this._onMouseUp, true);
 
         document.addEventListener('mousedown', this._onMouseDown, true);
         document.addEventListener('mousemove', this._onMouseMove, true);
@@ -15970,10 +15030,6 @@ Phaser.Mouse.prototype = {
     * @method Phaser.Mouse#stop
     */
     stop: function () {
-
-        // this.game.stage.canvas.removeEventListener('mousedown', this._onMouseDown, true);
-        // this.game.stage.canvas.removeEventListener('mousemove', this._onMouseMove, true);
-        // this.game.stage.canvas.removeEventListener('mouseup', this._onMouseUp, true);
 
         document.removeEventListener('mousedown', this._onMouseDown, true);
         document.removeEventListener('mousemove', this._onMouseMove, true);
@@ -17372,6 +16428,8 @@ Phaser.InputHandler.prototype = {
     */
     start: function (priority, useHandCursor) {
 
+        console.log('InputHandler start');
+
         priority = priority || 0;
         if (typeof useHandCursor == 'undefined') { useHandCursor = false; }
 
@@ -17683,24 +16741,24 @@ Phaser.InputHandler.prototype = {
     */
     checkPointerOver: function (pointer) {
 
-        if (this.enabled && this.sprite.visible)
+        if (this.enabled === false || this.sprite.visible === false || (this.sprite.group && this.sprite.group.visible === false))
         {
-            this.sprite.getLocalUnmodifiedPosition(this._tempPoint, pointer.x, pointer.y);
-
-            if (this._tempPoint.x >= 0 && this._tempPoint.x <= this.sprite.currentFrame.width && this._tempPoint.y >= 0 && this._tempPoint.y <= this.sprite.currentFrame.height)
-            {
-                if (this.pixelPerfect)
-                {
-                    return this.checkPixel(this._tempPoint.x, this._tempPoint.y);
-                }
-                else
-                {
-                    return true;
-                }
-            }
+            return false;
         }
 
-        return false;
+        this.sprite.getLocalUnmodifiedPosition(this._tempPoint, pointer.x, pointer.y);
+
+        if (this._tempPoint.x >= 0 && this._tempPoint.x <= this.sprite.currentFrame.width && this._tempPoint.y >= 0 && this._tempPoint.y <= this.sprite.currentFrame.height)
+        {
+            if (this.pixelPerfect)
+            {
+                return this.checkPixel(this._tempPoint.x, this._tempPoint.y);
+            }
+            else
+            {
+                return true;
+            }
+        }
 
     },
 
@@ -18429,13 +17487,14 @@ Phaser.GameObjectFactory.prototype = {
     *
     * @method Phaser.GameObjectFactory#audio
     * @param {string} key - The Game.cache key of the sound that this object will use.
-    * @param {number} volume - The volume at which the sound will be played.
-    * @param {boolean} loop - Whether or not the sound will loop.
+    * @param {number} [volume=1] - The volume at which the sound will be played.
+    * @param {boolean} [loop=false] - Whether or not the sound will loop.
+    * @param {boolean} [connect=true] - Controls if the created Sound object will connect to the master gainNode of the SoundManager when running under WebAudio.
     * @return {Phaser.Sound} The newly created text object.
     */
-    audio: function (key, volume, loop) {
+    audio: function (key, volume, loop, connect) {
 
-        return this.game.sound.add(key, volume, loop);
+        return this.game.sound.add(key, volume, loop, connect);
         
     },
 
@@ -18627,11 +17686,11 @@ Phaser.GameObjectFactory.prototype = {
 
         var args = Array.prototype.splice.call(arguments, 1);
 
-        var f = new Phaser.Filter[filter](this.game);
+        var filter = new Phaser.Filter[filter](this.game);
 
-        f.init.apply(f, args);
+        filter.init.apply(filter, args);
 
-        return f;
+        return filter;
 
     }
 
@@ -20848,6 +19907,8 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
     },
 
     set: function (value) {
+
+        console.log('inputEnabled', value, this.input);
 
         if (value)
         {
@@ -23461,6 +22522,12 @@ Phaser.Device = function () {
     this.iOS = false;
 
     /**
+    * @property {boolean} cocoonJS - Is the game running under CocoonJS?
+    * @default
+    */
+    this.cocoonJS = false;
+
+    /**
     * @property {boolean} android - Is running on android?
     * @default
     */
@@ -23780,11 +22847,11 @@ Phaser.Device.prototype = {
 
         this.worker = !!window['Worker'];
         
-        if ('ontouchstart' in document.documentElement || window.navigator.msPointerEnabled) {
+        if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1)) {
             this.touch = true;
         }
 
-        if (window.navigator.msPointerEnabled) {
+        if (window.navigator.msPointerEnabled || window.navigator.pointerEnabled) {
             this.mspointer = true;
         }
         
@@ -23825,6 +22892,10 @@ Phaser.Device.prototype = {
         // WebApp mode in iOS
         if (navigator['standalone']) {
             this.webApp = true;
+        }
+
+        if (navigator['isCocoonJS']) {
+            this.cocoonJS = true;
         }
 
     },
@@ -31868,16 +30939,16 @@ Phaser.Loader = function (game) {
     this.game = game;
 
     /**
-    * @property {array} _keys - Array stores assets keys. So you can get that asset by its unique key.
+    * @property {array} _fileList - Contains all the assets file infos.
     * @private
     */
-    this._keys = [];
+    this._fileList = [];
 
     /**
-    * @property {Description} _fileList - Contains all the assets file infos.
+    * @property {number} _fileIndex - The index of the current file being loaded.
     * @private
     */
-    this._fileList = {};
+    this._fileIndex = 0;
 
     /**
     * @property {number} _progressChunk - Indicates assets loading progress. (from 0 to 100)
@@ -31891,12 +30962,6 @@ Phaser.Loader = function (game) {
     * @private
     */
     this._xhr = new XMLHttpRequest();
-
-    /** 
-    * @property {number} - Length of assets queue.
-    * @default
-    */
-    this.queueSize = 0;
 
     /**
     * @property {boolean} isLoading - True if the Loader is in the process of loading the queue.
@@ -32015,32 +31080,63 @@ Phaser.Loader.prototype = {
     * Check whether asset exists with a specific key.
     *
     * @method Phaser.Loader#checkKeyExists
+    * @param {string} type - The type asset you want to check.
     * @param {string} key - Key of the asset you want to check.
     * @return {boolean} Return true if exists, otherwise return false.
     */
-    checkKeyExists: function (key) {
+    checkKeyExists: function (type, key) {
 
-        if (this._fileList[key])
+        if (this._fileList.length > 0)
         {
-            return true;
+            for (var i = 0; i < this._fileList.length; i++)
+            {
+                if (this._fileList[i].type === type && this._fileList[i].key === key)
+                {
+                    return true;
+                }
+            }
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
         
     },
 
     /**
-    * Reset loader, this will remove all loaded assets.
+    * Gets the asset that is queued for load.
+    *
+    * @method Phaser.Loader#getAsset
+    * @param {string} type - The type asset you want to check.
+    * @param {string} key - Key of the asset you want to check.
+    * @return {any} Returns an object if found that has 2 properties: index and file. Otherwise false.
+    */
+    getAsset: function (type, key) {
+
+        if (this._fileList.length > 0)
+        {
+            for (var i = 0; i < this._fileList.length; i++)
+            {
+                if (this._fileList[i].type === type && this._fileList[i].key === key)
+                {
+                    return { index: i, file: this._fileList[i] };
+                }
+            }
+        }
+
+        return false;
+        
+    },
+
+    /**
+    * Reset loader, this will remove the load queue.
     *
     * @method Phaser.Loader#reset
     */
     reset: function () {
 
         this.preloadSprite = null;
-        this.queueSize = 0;
         this.isLoading = false;
+        this._fileList.length = 0;
+        this._fileIndex = 0;
 
     },
 
@@ -32048,10 +31144,10 @@ Phaser.Loader.prototype = {
     * Internal function that adds a new entry to the file list. Do not call directly.
     *
     * @method Phaser.Loader#addToFileList
-    * @param {Description} type - Description.
-    * @param {string} key - Description.
-    * @param {string} url - URL of Description.
-    * @param {Description} properties - Description.
+    * @param {string} type - The type of resource to add to the list (image, audio, xml, etc).
+    * @param {string} key - The unique Cache ID key of this resource.
+    * @param {string} url - The URL the asset will be loaded from.
+    * @param {object} properties - Any additional properties needed to load the file.
     * @protected
     */
     addToFileList: function (type, key, url, properties) {
@@ -32073,11 +31169,46 @@ Phaser.Loader.prototype = {
             }
         }
 
-        this._fileList[key] = entry;
+        if (this.checkKeyExists(type, key) === false)
+        {
+            this._fileList.push(entry);
+        }
 
-        this._keys.push(key);
+    },
 
-        this.queueSize++;
+    /**
+    * Internal function that replaces an existing entry in the file list with a new one. Do not call directly.
+    *
+    * @method Phaser.Loader#replaceInFileList
+    * @param {string} type - The type of resource to add to the list (image, audio, xml, etc).
+    * @param {string} key - The unique Cache ID key of this resource.
+    * @param {string} url - The URL the asset will be loaded from.
+    * @param {object} properties - Any additional properties needed to load the file.
+    * @protected
+    */
+    replaceInFileList: function (type, key, url, properties) {
+
+        var entry = {
+            type: type,
+            key: key,
+            url: url,
+            data: null,
+            error: false,
+            loaded: false
+        };
+
+        if (typeof properties !== "undefined")
+        {
+            for (var prop in properties)
+            {
+                entry[prop] = properties[prop];
+            }
+        }
+
+        if (this.checkKeyExists(type, key) === false)
+        {
+            this._fileList.push(entry);
+        }
 
     },
 
@@ -32087,13 +31218,18 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#image
     * @param {string} key - Unique asset key of this image file.
     * @param {string} url - URL of image file.
-    * @param {boolean} overwrite - If an entry with a matching key already exists this will over-write it
+    * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
+    * @return {Phaser.Loader} This Loader instance.
     */
     image: function (key, url, overwrite) {
 
         if (typeof overwrite === "undefined") { overwrite = false; }
 
-        if (overwrite || this.checkKeyExists(key) === false)
+        if (overwrite)
+        {
+            this.replaceInFileList('image', key, url);
+        }
+        else
         {
             this.addToFileList('image', key, url);
         }
@@ -32108,16 +31244,37 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#text
     * @param {string} key - Unique asset key of the text file.
     * @param {string} url - URL of the text file.
-    * @param {boolean} overwrite - True if Description.
+    * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
+    * @return {Phaser.Loader} This Loader instance.
     */
     text: function (key, url, overwrite) {
 
         if (typeof overwrite === "undefined") { overwrite = false; }
 
-        if (overwrite || this.checkKeyExists(key) === false)
+        if (overwrite)
+        {
+            this.replaceInFileList('text', key, url);
+        }
+        else
         {
             this.addToFileList('text', key, url);
         }
+
+        return this;
+
+    },
+
+    /**
+    * Add a JavaScript file to the Loader. Once loaded the JavaScript file will be automatically turned into a script tag (and executed), so be careful what you load!
+    *
+    * @method Phaser.Loader#script
+    * @param {string} key - Unique asset key of the script file.
+    * @param {string} url - URL of the JavaScript file.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    script: function (key, url) {
+
+        this.addToFileList('script', key, url);
 
         return this;
 
@@ -32132,15 +31289,13 @@ Phaser.Loader.prototype = {
     * @param {number} frameWidth - Width of each single frame.
     * @param {number} frameHeight - Height of each single frame.
     * @param {number} [frameMax=-1] - How many frames in this sprite sheet. If not specified it will divide the whole image into frames.
+    * @return {Phaser.Loader} This Loader instance.
     */
     spritesheet: function (key, url, frameWidth, frameHeight, frameMax) {
 
         if (typeof frameMax === "undefined") { frameMax = -1; }
 
-        if (this.checkKeyExists(key) === false)
-        {
-            this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax });
-        }
+        this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax });
 
         return this;
 
@@ -32157,6 +31312,7 @@ Phaser.Loader.prototype = {
     * @param {number} [tileMax=-1] - How many tiles in this tileset. If not specified it will divide the whole image into tiles.
     * @param {number} [tileMargin=0] - If the tiles have been drawn with a margin, specify the amount here.
     * @param {number} [tileSpacing=0] - If the tiles have been drawn with spacing between them, specify the amount here.
+    * @return {Phaser.Loader} This Loader instance.
     */
     tileset: function (key, url, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing) {
 
@@ -32164,10 +31320,7 @@ Phaser.Loader.prototype = {
         if (typeof tileMargin === "undefined") { tileMargin = 0; }
         if (typeof tileSpacing === "undefined") { tileSpacing = 0; }
 
-        if (this.checkKeyExists(key) === false)
-        {
-            this.addToFileList('tileset', key, url, { tileWidth: tileWidth, tileHeight: tileHeight, tileMax: tileMax, tileMargin: tileMargin, tileSpacing: tileSpacing });
-        }
+        this.addToFileList('tileset', key, url, { tileWidth: tileWidth, tileHeight: tileHeight, tileMax: tileMax, tileMargin: tileMargin, tileSpacing: tileSpacing });
 
         return this;
 
@@ -32180,15 +31333,13 @@ Phaser.Loader.prototype = {
     * @param {string} key - Unique asset key of the audio file.
     * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ] or a single string containing just one URL.
     * @param {boolean} autoDecode - When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
+    * @return {Phaser.Loader} This Loader instance.
     */
     audio: function (key, urls, autoDecode) {
 
         if (typeof autoDecode === "undefined") { autoDecode = true; }
 
-        if (this.checkKeyExists(key) === false)
-        {
-            this.addToFileList('audio', key, urls, { buffer: null, autoDecode: autoDecode });
-        }
+        this.addToFileList('audio', key, urls, { buffer: null, autoDecode: autoDecode });
 
         return this;
 
@@ -32199,10 +31350,10 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#tilemap
     * @param {string} key - Unique asset key of the tilemap data.
-    * @param {string} tilesetURL - The url of the tile set image file.
     * @param {string} [mapDataURL] - The url of the map data file (csv/json)
-    * @param {object} [mapData] - An optional JSON data object (can be given in place of a URL).
-    * @param {string} [format] - The format of the map data.
+    * @param {object} [mapData] - An optional JSON data object. If given then the mapDataURL is ignored and this JSON object is used for map data instead.
+    * @param {string} [format=Phaser.Tilemap.CSV] - The format of the map data. Either Phaser.Tilemap.CSV or Phaser.Tilemap.TILED_JSON.
+    * @return {Phaser.Loader} This Loader instance.
     */
     tilemap: function (key, mapDataURL, mapData, format) {
 
@@ -32217,34 +31368,30 @@ Phaser.Loader.prototype = {
             return this;
         }
 
-        if (this.checkKeyExists(key) === false)
+        //  A map data object has been given
+        if (mapData)
         {
-            //  A URL to a json/csv file has been given
-            if (mapDataURL)
+            switch (format)
             {
-                this.addToFileList('tilemap', key, mapDataURL, { format: format });
+                //  A csv string or object has been given
+                case Phaser.Tilemap.CSV:
+                    break;
+
+                //  An xml string or object has been given
+                case Phaser.Tilemap.TILED_JSON:
+
+                    if (typeof mapData === 'string')
+                    {
+                        mapData = JSON.parse(mapData);
+                    }
+                    break;
             }
-            else
-            {
-                switch (format)
-                {
-                    //  A csv string or object has been given
-                    case Phaser.Tilemap.CSV:
-                        break;
 
-                    //  An xml string or object has been given
-                    case Phaser.Tilemap.TILED_JSON:
-
-                        if (typeof mapData === 'string')
-                        {
-                            mapData = JSON.parse(mapData);
-                        }
-                        break;
-                }
-
-                this.game.cache.addTilemap(key, null, mapData, format);
-
-            }
+            this.game.cache.addTilemap(key, null, mapData, format);
+        }
+        else
+        {
+            this.addToFileList('tilemap', key, mapDataURL, { format: format });
         }
 
         return this;
@@ -32259,52 +31406,50 @@ Phaser.Loader.prototype = {
     * @param {string} textureURL - The url of the font image file.
     * @param {string} [xmlURL] - The url of the font data file (xml/fnt)
     * @param {object} [xmlData] - An optional XML data object.
+    * @return {Phaser.Loader} This Loader instance.
     */
     bitmapFont: function (key, textureURL, xmlURL, xmlData) {
 
         if (typeof xmlURL === "undefined") { xmlURL = null; }
         if (typeof xmlData === "undefined") { xmlData = null; }
 
-        if (this.checkKeyExists(key) === false)
+        //  A URL to a json/xml file has been given
+        if (xmlURL)
         {
-            //  A URL to a json/xml file has been given
-            if (xmlURL)
+            this.addToFileList('bitmapfont', key, textureURL, { xmlURL: xmlURL });
+        }
+        else
+        {
+            //  An xml string or object has been given
+            if (typeof xmlData === 'string')
             {
-                this.addToFileList('bitmapfont', key, textureURL, { xmlURL: xmlURL });
-            }
-            else
-            {
-                //  An xml string or object has been given
-                if (typeof xmlData === 'string')
-                {
-                    var xml;
+                var xml;
 
-                    try  {
-                        if (window['DOMParser'])
-                        {
-                            var domparser = new DOMParser();
-                            xml = domparser.parseFromString(xmlData, "text/xml");
-                        }
-                        else
-                        {
-                            xml = new ActiveXObject("Microsoft.XMLDOM");
-                            xml.async = 'false';
-                            xml.loadXML(xmlData);
-                        }
-                    }
-                    catch (e)
+                try  {
+                    if (window['DOMParser'])
                     {
-                        xml = undefined;
-                    }
-
-                    if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
-                    {
-                        throw new Error("Phaser.Loader. Invalid Bitmap Font XML given");
+                        var domparser = new DOMParser();
+                        xml = domparser.parseFromString(xmlData, "text/xml");
                     }
                     else
                     {
-                        this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml });
+                        xml = new ActiveXObject("Microsoft.XMLDOM");
+                        xml.async = 'false';
+                        xml.loadXML(xmlData);
                     }
+                }
+                catch (e)
+                {
+                    xml = undefined;
+                }
+
+                if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
+                {
+                    throw new Error("Phaser.Loader. Invalid Bitmap Font XML given");
+                }
+                else
+                {
+                    this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml });
                 }
             }
         }
@@ -32317,9 +31462,11 @@ Phaser.Loader.prototype = {
     * Add a new texture atlas to the loader. This atlas uses the JSON Array data format.
     *
     * @method Phaser.Loader#atlasJSONArray
-    * @param {string} key - Unique asset key of the bitmap font.
-    * @param {Description} atlasURL - The url of the Description.
-    * @param {Description} atlasData - Description.
+    * @param {string} key - Unique asset key of the texture atlas file.
+    * @param {string} textureURL - The url of the texture atlas image file.
+    * @param {string} [atlasURL] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
+    * @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
+    * @return {Phaser.Loader} This Loader instance.
     */
     atlasJSONArray: function (key, textureURL, atlasURL, atlasData) {
 
@@ -32331,9 +31478,11 @@ Phaser.Loader.prototype = {
     * Add a new texture atlas to the loader. This atlas uses the JSON Hash data format.
     *
     * @method Phaser.Loader#atlasJSONHash
-    * @param {string} key - Unique asset key of the bitmap font.
-    * @param {Description} atlasURL - The url of the Description.
-    * @param {Description} atlasData - Description.
+    * @param {string} key - Unique asset key of the texture atlas file.
+    * @param {string} textureURL - The url of the texture atlas image file.
+    * @param {string} [atlasURL] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
+    * @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
+    * @return {Phaser.Loader} This Loader instance.
     */
     atlasJSONHash: function (key, textureURL, atlasURL, atlasData) {
 
@@ -32345,9 +31494,11 @@ Phaser.Loader.prototype = {
     * Add a new texture atlas to the loader. This atlas uses the Starling XML data format.
     *
     * @method Phaser.Loader#atlasXML
-    * @param {string} key - Unique asset key of the bitmap font.
-    * @param {Description} atlasURL - The url of the Description.
-    * @param {Description} atlasData - Description.
+    * @param {string} key - Unique asset key of the texture atlas file.
+    * @param {string} textureURL - The url of the texture atlas image file.
+    * @param {string} [atlasURL] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
+    * @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
+    * @return {Phaser.Loader} This Loader instance.
     */
     atlasXML: function (key, textureURL, atlasURL, atlasData) {
 
@@ -32364,6 +31515,7 @@ Phaser.Loader.prototype = {
     * @param {string} [atlasURL] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
     * @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
     * @param {number} [format] - A value describing the format of the data, the default is Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY.
+    * @return {Phaser.Loader} This Loader instance.
     */
     atlas: function (key, textureURL, atlasURL, atlasData, format) {
 
@@ -32371,66 +31523,62 @@ Phaser.Loader.prototype = {
         if (typeof atlasData === "undefined") { atlasData = null; }
         if (typeof format === "undefined") { format = Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY; }
 
-        if (this.checkKeyExists(key) === false)
+        //  A URL to a json/xml file has been given
+        if (atlasURL)
         {
-            //  A URL to a json/xml file has been given
-            if (atlasURL)
+            this.addToFileList('textureatlas', key, textureURL, { atlasURL: atlasURL, format: format });
+        }
+        else
+        {
+            switch (format)
             {
-                this.addToFileList('textureatlas', key, textureURL, { atlasURL: atlasURL, format: format });
-            }
-            else
-            {
-                switch (format)
-                {
-                    //  A json string or object has been given
-                    case Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY:
+                //  A json string or object has been given
+                case Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY:
 
-                        if (typeof atlasData === 'string')
-                        {
-                            atlasData = JSON.parse(atlasData);
-                        }
-                        break;
+                    if (typeof atlasData === 'string')
+                    {
+                        atlasData = JSON.parse(atlasData);
+                    }
+                    break;
 
-                    //  An xml string or object has been given
-                    case Phaser.Loader.TEXTURE_ATLAS_XML_STARLING:
+                //  An xml string or object has been given
+                case Phaser.Loader.TEXTURE_ATLAS_XML_STARLING:
 
-                        if (typeof atlasData === 'string')
-                        {
-                            var xml;
+                    if (typeof atlasData === 'string')
+                    {
+                        var xml;
 
-                            try  {
-                                if (window['DOMParser'])
-                                {
-                                    var domparser = new DOMParser();
-                                    xml = domparser.parseFromString(atlasData, "text/xml");
-                                }
-                                else
-                                {
-                                    xml = new ActiveXObject("Microsoft.XMLDOM");
-                                    xml.async = 'false';
-                                    xml.loadXML(atlasData);
-                                }
-                            }
-                            catch (e)
+                        try  {
+                            if (window['DOMParser'])
                             {
-                                xml = undefined;
-                            }
-
-                            if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
-                            {
-                                throw new Error("Phaser.Loader. Invalid Texture Atlas XML given");
+                                var domparser = new DOMParser();
+                                xml = domparser.parseFromString(atlasData, "text/xml");
                             }
                             else
                             {
-                                atlasData = xml;
+                                xml = new ActiveXObject("Microsoft.XMLDOM");
+                                xml.async = 'false';
+                                xml.loadXML(atlasData);
                             }
                         }
-                        break;
-                }
+                        catch (e)
+                        {
+                            xml = undefined;
+                        }
 
-                this.addToFileList('textureatlas', key, textureURL, { atlasURL: null, atlasData: atlasData, format: format });
-
+                        if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length)
+                        {
+                            throw new Error("Phaser.Loader. Invalid Texture Atlas XML given");
+                        }
+                        else
+                        {
+                            atlasData = xml;
+                        }
+                    }
+                    break;
             }
+
+            this.addToFileList('textureatlas', key, textureURL, { atlasURL: null, atlasData: atlasData, format: format });
 
         }
 
@@ -32442,11 +31590,17 @@ Phaser.Loader.prototype = {
     * Remove loading request of a file.
     *
     * @method Phaser.Loader#removeFile
-    * @param key {string} Key of the file you want to remove.
+    * @param {string} type - The type of resource to add to the list (image, audio, xml, etc).
+    * @param {string} key - Key of the file you want to remove.
     */
-    removeFile: function (key) {
+    removeFile: function (type, key) {
 
-        delete this._fileList[key];
+        var file = this.getAsset(type, key);
+
+        if (file !== false)
+        {
+            this._fileList.splice(file.index, 1);
+        }
 
     },
 
@@ -32457,7 +31611,7 @@ Phaser.Loader.prototype = {
     */
     removeAll: function () {
 
-        this._fileList = {};
+        this._fileList.length = 0;
 
     },
 
@@ -32477,11 +31631,12 @@ Phaser.Loader.prototype = {
         this.hasLoaded = false;
         this.isLoading = true;
 
-        this.onLoadStart.dispatch(this.queueSize);
+        this.onLoadStart.dispatch(this._fileList.length);
 
-        if (this._keys.length > 0)
+        if (this._fileList.length > 0)
         {
-            this._progressChunk = 100 / this._keys.length;
+            this._fileIndex = 0;
+            this._progressChunk = 100 / this._fileList.length;
             this.loadFile();
         }
         else
@@ -32501,7 +31656,13 @@ Phaser.Loader.prototype = {
     */
     loadFile: function () {
 
-        var file = this._fileList[this._keys.shift()];
+        if (!this._fileList[this._fileIndex])
+        {
+            console.warn('Phaser.Loader loadFile invalid index ' + this._fileIndex);
+            return;
+        }
+
+        var file = this._fileList[this._fileIndex];
         var _this = this;
 
         //  Image or Data?
@@ -32515,10 +31676,10 @@ Phaser.Loader.prototype = {
                 file.data = new Image();
                 file.data.name = file.key;
                 file.data.onload = function () {
-                    return _this.fileComplete(file.key);
+                    return _this.fileComplete(_this._fileIndex);
                 };
                 file.data.onerror = function () {
-                    return _this.fileError(file.key);
+                    return _this.fileError(_this._fileIndex);
                 };
                 file.data.crossOrigin = this.crossOrigin;
                 file.data.src = this.baseURL + file.url;
@@ -32535,10 +31696,10 @@ Phaser.Loader.prototype = {
                         this._xhr.open("GET", this.baseURL + file.url, true);
                         this._xhr.responseType = "arraybuffer";
                         this._xhr.onload = function () {
-                            return _this.fileComplete(file.key);
+                            return _this.fileComplete(_this._fileIndex);
                         };
                         this._xhr.onerror = function () {
-                            return _this.fileError(file.key);
+                            return _this.fileError(_this._fileIndex);
                         };
                         this._xhr.send();
                     }
@@ -32551,25 +31712,25 @@ Phaser.Loader.prototype = {
                             file.data.name = file.key;
                             file.data.preload = 'auto';
                             file.data.src = this.baseURL + file.url;
-                            this.fileComplete(file.key);
+                            this.fileComplete(this._fileIndex);
                         }
                         else
                         {
                             file.data = new Audio();
                             file.data.name = file.key;
                             file.data.onerror = function () {
-                                return _this.fileError(file.key);
+                                return _this.fileError(_this._fileIndex);
                             };
                             file.data.preload = 'auto';
                             file.data.src = this.baseURL + file.url;
-                            file.data.addEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete(file.key), false);
+                            file.data.addEventListener('canplaythrough', Phaser.GAMES[this.game.id].load.fileComplete(this._fileIndex), false);
                             file.data.load();
                         }
                     }
                 }
                 else
                 {
-                    this.fileError(file.key);
+                    this.fileError(this._fileIndex);
                 }
 
                 break;
@@ -32578,16 +31739,16 @@ Phaser.Loader.prototype = {
                 this._xhr.open("GET", this.baseURL + file.url, true);
                 this._xhr.responseType = "text";
 
-                if (file.format == Phaser.Tilemap.TILED_JSON)
+                if (file.format === Phaser.Tilemap.TILED_JSON)
                 {
                     this._xhr.onload = function () {
-                        return _this.jsonLoadComplete(file.key);
+                        return _this.jsonLoadComplete(_this._fileIndex);
                     };
                 }
-                else if (file.format == Phaser.Tilemap.CSV)
+                else if (file.format === Phaser.Tilemap.CSV)
                 {
                     this._xhr.onload = function () {
-                        return _this.csvLoadComplete(file.key);
+                        return _this.csvLoadComplete(_this._fileIndex);
                     };
                 }
                 else
@@ -32596,7 +31757,7 @@ Phaser.Loader.prototype = {
                 }
 
                 this._xhr.onerror = function () {
-                    return _this.dataLoadError(file.key);
+                    return _this.dataLoadError(_this._fileIndex);
                 };
                 this._xhr.send();
                 break;
@@ -32605,10 +31766,23 @@ Phaser.Loader.prototype = {
                 this._xhr.open("GET", this.baseURL + file.url, true);
                 this._xhr.responseType = "text";
                 this._xhr.onload = function () {
-                    return _this.fileComplete(file.key);
+                    return _this.fileComplete(_this._fileIndex);
                 };
                 this._xhr.onerror = function () {
-                    return _this.fileError(file.key);
+                    return _this.fileError(_this._fileIndex);
+                };
+                this._xhr.send();
+                break;
+
+            case 'script':
+
+                this._xhr.open("GET", this.baseURL + file.url, true);
+                this._xhr.responseType = "text";
+                this._xhr.onload = function () {
+                    return _this.fileComplete(_this._fileIndex);
+                };
+                this._xhr.onerror = function () {
+                    return _this.fileError(_this._fileIndex);
                 };
                 this._xhr.send();
                 break;
@@ -32645,21 +31819,21 @@ Phaser.Loader.prototype = {
     },
 
     /**
-    * Error occured when load a file.
+    * Error occured when loading a file.
     *
     * @method Phaser.Loader#fileError
-    * @param {string} key - Key of the error loading file.
+    * @param {number} index - The index of the file in the file queue that errored.
     */
-    fileError: function (key) {
+    fileError: function (index) {
 
-        this._fileList[key].loaded = true;
-        this._fileList[key].error = true;
+        this._fileList[index].loaded = true;
+        this._fileList[index].error = true;
 
-        this.onFileError.dispatch(key);
+        this.onFileError.dispatch(this._fileList[index].key, this._fileList[index]);
 
-        console.warn("Phaser.Loader error loading file: " + key + ' from URL ' + this._fileList[key].url);
+        console.warn("Phaser.Loader error loading file: " + this._fileList[index].key + ' from URL ' + this._fileList[index].url);
 
-        this.nextFile(key, false);
+        this.nextFile(index, false);
 
     },
 
@@ -32667,19 +31841,20 @@ Phaser.Loader.prototype = {
     * Called when a file is successfully loaded.
     *
     * @method Phaser.Loader#fileComplete
-    * @param {string} key - Key of the successfully loaded file.
+    * @param {number} index - The index of the file in the file queue that loaded.
     */
-    fileComplete: function (key) {
+    fileComplete: function (index) {
 
-        if (!this._fileList[key])
+        if (!this._fileList[index])
         {
-            console.warn('Phaser.Loader fileComplete invalid key ' + key);
+            console.warn('Phaser.Loader fileComplete invalid index ' + index);
             return;
         }
         
-        this._fileList[key].loaded = true;
 
-        var file = this._fileList[key];
+        var file = this._fileList[index];
+        file.loaded = true;
+
         var loadNext = true;
         var _this = this;
 
@@ -32716,13 +31891,13 @@ Phaser.Loader.prototype = {
                     if (file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY || file.format == Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
                     {
                         this._xhr.onload = function () {
-                            return _this.jsonLoadComplete(file.key);
+                            return _this.jsonLoadComplete(index);
                         };
                     }
                     else if (file.format == Phaser.Loader.TEXTURE_ATLAS_XML_STARLING)
                     {
                         this._xhr.onload = function () {
-                            return _this.xmlLoadComplete(file.key);
+                            return _this.xmlLoadComplete(index);
                         };
                     }
                     else
@@ -32731,7 +31906,7 @@ Phaser.Loader.prototype = {
                     }
 
                     this._xhr.onerror = function () {
-                        return _this.dataLoadError(file.key);
+                        return _this.dataLoadError(index);
                     };
                     this._xhr.send();
                 }
@@ -32751,11 +31926,11 @@ Phaser.Loader.prototype = {
                     this._xhr.responseType = "text";
 
                     this._xhr.onload = function () {
-                        return _this.xmlLoadComplete(file.key);
+                        return _this.xmlLoadComplete(index);
                     };
 
                     this._xhr.onerror = function () {
-                        return _this.dataLoadError(file.key);
+                        return _this.dataLoadError(index);
                     };
                     this._xhr.send();
                 }
@@ -32795,11 +31970,20 @@ Phaser.Loader.prototype = {
                 file.data = this._xhr.responseText;
                 this.game.cache.addText(file.key, file.url, file.data);
                 break;
+
+            case 'script':
+                file.data = document.createElement('script');
+                file.data.language = 'javascript';
+                file.data.type = 'text/javascript';
+                file.data.defer = true;
+                file.data.text = this._xhr.responseText;
+                document.head.appendChild(file.data);
+                break;
         }
 
         if (loadNext)
         {
-            this.nextFile(key, true);
+            this.nextFile(index, true);
         }
 
     },
@@ -32808,14 +31992,22 @@ Phaser.Loader.prototype = {
     * Successfully loaded a JSON file.
     *
     * @method Phaser.Loader#jsonLoadComplete
-    * @param {string} key - Key of the loaded JSON file.
+    * @param {number} index - The index of the file in the file queue that loaded.
     */
-    jsonLoadComplete: function (key) {
+    jsonLoadComplete: function (index) {
 
+        if (!this._fileList[index])
+        {
+            console.warn('Phaser.Loader jsonLoadComplete invalid index ' + index);
+            return;
+        }
+
+        var file = this._fileList[index];
         var data = JSON.parse(this._xhr.responseText);
-        var file = this._fileList[key];
 
-        if (file.type == 'tilemap')
+        file.loaded = true;
+
+        if (file.type === 'tilemap')
         {
             this.game.cache.addTilemap(file.key, file.url, data, file.format);
         }
@@ -32824,7 +32016,7 @@ Phaser.Loader.prototype = {
             this.game.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
         }
 
-        this.nextFile(key, true);
+        this.nextFile(index, true);
 
     },
 
@@ -32832,16 +32024,24 @@ Phaser.Loader.prototype = {
     * Successfully loaded a CSV file.
     *
     * @method Phaser.Loader#csvLoadComplete
-    * @param {string} key - Key of the loaded CSV file.
+    * @param {number} index - The index of the file in the file queue that loaded.
     */
-    csvLoadComplete: function (key) {
+    csvLoadComplete: function (index) {
 
+        if (!this._fileList[index])
+        {
+            console.warn('Phaser.Loader csvLoadComplete invalid index ' + index);
+            return;
+        }
+
+        var file = this._fileList[index];
         var data = this._xhr.responseText;
-        var file = this._fileList[key];
+
+        file.loaded = true;
 
         this.game.cache.addTilemap(file.key, file.url, data, file.format);
 
-        this.nextFile(key, true);
+        this.nextFile(index, true);
 
     },
 
@@ -32849,17 +32049,18 @@ Phaser.Loader.prototype = {
     * Error occured when load a JSON.
     *
     * @method Phaser.Loader#dataLoadError
-    * @param {string} key - Key of the error loading JSON file.
+    * @param {number} index - The index of the file in the file queue that errored.
     */
-    dataLoadError: function (key) {
+    dataLoadError: function (index) {
 
-        var file = this._fileList[key];
+        var file = this._fileList[index];
 
+        file.loaded = true;
         file.error = true;
 
-        console.warn("Phaser.Loader dataLoadError: " + key);
+        console.warn("Phaser.Loader dataLoadError: " + file.key);
 
-        this.nextFile(key, true);
+        this.nextFile(index, true);
 
     },
 
@@ -32867,9 +32068,9 @@ Phaser.Loader.prototype = {
     * Successfully loaded an XML file.
     *
     * @method Phaser.Loader#xmlLoadComplete
-    * @param {string} key - Key of the loaded XML file.
+    * @param {number} index - The index of the file in the file queue that loaded.
     */
-    xmlLoadComplete: function (key) {
+    xmlLoadComplete: function (index) {
 
         var data = this._xhr.responseText;
         var xml;
@@ -32898,7 +32099,8 @@ Phaser.Loader.prototype = {
             throw new Error("Phaser.Loader. Invalid XML given");
         }
 
-        var file = this._fileList[key];
+        var file = this._fileList[index];
+        file.loaded = true;
 
         if (file.type == 'bitmapfont')
         {
@@ -32909,18 +32111,18 @@ Phaser.Loader.prototype = {
             this.game.cache.addTextureAtlas(file.key, file.url, file.data, xml, file.format);
         }
 
-        this.nextFile(key, true);
+        this.nextFile(index, true);
 
     },
 
     /**
     * Handle loading next file.
     *
-    * @param previousKey {string} Key of previous loaded asset.
-    * @param success {boolean} Whether the previous asset loaded successfully or not.
+    * @param {number} previousIndex - Index of the previously loaded asset.
+    * @param {boolean} success - Whether the previous asset loaded successfully or not.
     * @private
     */
-    nextFile: function (previousKey, success) {
+    nextFile: function (previousIndex, success) {
 
         this.progress = Math.round(this.progress + this._progressChunk);
 
@@ -32943,10 +32145,11 @@ Phaser.Loader.prototype = {
             this.preloadSprite.sprite.crop = this.preloadSprite.crop;
         }
 
-        this.onFileComplete.dispatch(this.progress, previousKey, success, this.queueSize - this._keys.length, this.queueSize);
+        this.onFileComplete.dispatch(this.progress, this._fileList[previousIndex].key, success, this.totalLoadedFiles(), this._fileList.length);
 
-        if (this._keys.length > 0)
+        if (this.totalQueuedFiles() > 0)
         {
+            this._fileIndex++;
             this.loadFile();
         }
         else
@@ -32958,6 +32161,48 @@ Phaser.Loader.prototype = {
 
             this.onLoadComplete.dispatch();
         }
+
+    },
+
+    /**
+    * Returns the number of files that have already been loaded, even if they errored.
+    *
+    * @return {number} The number of files that have already been loaded (even if they errored)
+    */
+    totalLoadedFiles: function () {
+
+        var total = 0;
+
+        for (var i = 0; i < this._fileList.length; i++)
+        {
+            if (this._fileList[i].loaded)
+            {
+                total++;
+            }
+        }
+
+        return total;
+
+    },
+
+    /**
+    * Returns the number of files still waiting to be processed in the load queue. This value decreases as each file is in the queue is loaded.
+    *
+    * @return {number} The number of files that still remain in the load queue.
+    */
+    totalQueuedFiles: function () {
+
+        var total = 0;
+
+        for (var i = 0; i < this._fileList.length; i++)
+        {
+            if (this._fileList[i].loaded === false)
+            {
+                total++;
+            }
+        }
+
+        return total;
 
     }
 
@@ -33063,10 +32308,11 @@ Phaser.LoaderParser = {
 * @param {number} [volume=1] - Default value for the volume, between 0 and 1.
 * @param {boolean} [loop=false] - Whether or not the sound will loop.
 */
-Phaser.Sound = function (game, key, volume, loop) {
+Phaser.Sound = function (game, key, volume, loop, connect) {
     
     if (typeof volume == 'undefined') { volume = 1; }
     if (typeof loop == 'undefined') { loop = false; }
+    if (typeof connect === 'undefined') { connect = game.sound.connectToMaster; }
 
     /**
     * A reference to the currently running Game.
@@ -33200,6 +32446,11 @@ Phaser.Sound = function (game, key, volume, loop) {
     */
     this.usingAudioTag = this.game.sound.usingAudioTag;
 
+    /**
+    * @property {object} externalNode - If defined this Sound won't connect to the SoundManager master gain node, but will instead connect to externalNode.input.
+    */
+    this.externalNode = null;
+
     if (this.usingWebAudio)
     {
         this.context = this.game.sound.context;
@@ -33215,7 +32466,11 @@ Phaser.Sound = function (game, key, volume, loop) {
         }
 
         this.gainNode.gain.value = volume * this.game.sound.volume;
-        this.gainNode.connect(this.masterGainNode);
+
+        if (connect)
+        {
+            this.gainNode.connect(this.masterGainNode);
+        }
     }
     else
     {
@@ -33525,7 +32780,16 @@ Phaser.Sound.prototype = {
 
                 this._sound = this.context.createBufferSource();
                 this._sound.buffer = this._buffer;
-                this._sound.connect(this.gainNode);
+       
+                if (this.externalNode)
+                {
+                    this._sound.connect(this.externalNode.input);
+                }
+                else
+                {
+                    this._sound.connect(this.gainNode);
+                }
+
                 this.totalDuration = this._sound.buffer.duration;
 
                 if (this.duration === 0)
@@ -33919,6 +33183,12 @@ Phaser.SoundManager = function (game) {
     this.noAudio = false;
 
     /**
+    * @property {boolean} connectToMaster - Used in conjunction with Sound.externalNode this allows you to stop a Sound node being connected to the SoundManager master gain node.
+    * @default
+    */
+    this.connectToMaster = true;
+
+    /**
     * @property {boolean} touchLocked - true if the audio system is currently locked awaiting a touch event.
     * @default
     */
@@ -34013,7 +33283,6 @@ Phaser.SoundManager.prototype = {
             this.masterGain.gain.value = 1;
             this.masterGain.connect(this.context.destination);
         }
-
 
     },
 
@@ -34164,14 +33433,16 @@ Phaser.SoundManager.prototype = {
     * @param {string} key - Asset key for the sound.
     * @param {number} [volume=1] - Default value for the volume.
     * @param {boolean} [loop=false] - Whether or not the sound will loop.
+    * @param {boolean} [connect=true] - Controls if the created Sound object will connect to the master gainNode of the SoundManager when running under WebAudio.
     * @return {Phaser.Sound} The new sound instance.
     */
-    add: function (key, volume, loop) {
+    add: function (key, volume, loop, connect) {
 
         if (typeof volume === 'undefined') { volume = 1; }
         if (typeof loop === 'undefined') { loop = false; }
+        if (typeof connect === 'undefined') { connect = this.connectToMaster; }
 
-        var sound = new Phaser.Sound(this.game, key, volume, loop);
+        var sound = new Phaser.Sound(this.game, key, volume, loop, connect);
 
         this._sounds.push(sound);
 
@@ -34621,7 +33892,7 @@ Phaser.Utils.Debug.prototype = {
 
     /**
     * Renders the Pointer.circle object onto the stage in green if down or red if up along with debug text.
-    * @method Phaser.Utils.Debug#renderDebug
+    * @method Phaser.Utils.Debug#renderPointer
     * @param {Phaser.Pointer} pointer - Description.
     * @param {boolean} [hideIfUp=false] - Doesn't render the circle if the pointer is up.
     * @param {string} [downColor='rgba(0,255,0,0.5)'] - The color the circle is rendered in if down.
@@ -35830,22 +35101,179 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-    * Checks if two Sprite objects overlap.
+    * Checks for overlaps between two game objects. The objects can be Sprites, Groups or Emitters.
+    * You can perform Sprite vs. Sprite, Sprite vs. Group and Group vs. Group overlap checks.
+    * Unlike collide the objects are NOT automatically separated or have any physics applied, they merely test for overlap results.
     *
     * @method Phaser.Physics.Arcade#overlap
-    * @param {Phaser.Sprite} object1 - The first object to check. Can be an instance of Phaser.Sprite or anything that extends it.
-    * @param {Phaser.Sprite} object2 - The second object to check. Can be an instance of Phaser.Sprite or anything that extends it.
-    * @returns {boolean} true if the two objects overlap.
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group or Phaser.Particles.Emitter.
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter} object2 - The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group or Phaser.Particles.Emitter.
+    * @param {function} [overlapCallback=null] - An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then overlapCallback will only be called if processCallback returns true.
+    * @param {object} [callbackContext] - The context in which to run the callbacks.
+    * @returns {boolean} True if an overlap occured otherwise false.
     */
-    overlap: function (object1, object2) {
+    overlap: function (object1, object2, overlapCallback, processCallback, callbackContext) {
+
+        overlapCallback = overlapCallback || null;
+        processCallback = processCallback || null;
+        callbackContext = callbackContext || overlapCallback;
+
+        this._result = false;
+        this._total = 0;
 
         //  Only test valid objects
         if (object1 && object2 && object1.exists && object2.exists)
         {
-            return (Phaser.Rectangle.intersects(object1.body, object2.body));
+            //  SPRITES
+            if (object1.type == Phaser.SPRITE)
+            {
+                if (object2.type == Phaser.SPRITE)
+                {
+                    this.overlapSpriteVsSprite(object1, object2, overlapCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.overlapSpriteVsGroup(object1, object2, overlapCallback, processCallback, callbackContext);
+                }
+            }
+            //  GROUPS
+            else if (object1.type == Phaser.GROUP)
+            {
+                if (object2.type == Phaser.SPRITE)
+                {
+                    this.overlapSpriteVsGroup(object2, object1, overlapCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.overlapGroupVsGroup(object1, object2, overlapCallback, processCallback, callbackContext);
+                }
+            }
+            //  EMITTER
+            else if (object1.type == Phaser.EMITTER)
+            {
+                if (object2.type == Phaser.SPRITE)
+                {
+                    this.overlapSpriteVsGroup(object2, object1, overlapCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.overlapGroupVsGroup(object1, object2, overlapCallback, processCallback, callbackContext);
+                }
+            }
         }
 
-        return false;
+        return (this._total > 0);
+
+    },
+
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.overlap instead.
+    *
+    * @method Phaser.Physics.Arcade#overlapSpriteVsSprite
+    * @private
+    */
+    overlapSpriteVsSprite: function (sprite1, sprite2, overlapCallback, processCallback, callbackContext) {
+
+        this._result = Phaser.Rectangle.intersects(sprite1.body, sprite2.body);
+
+        if (this._result)
+        {
+            //  They collided, is there a custom process callback?
+            if (processCallback)
+            {
+                if (processCallback.call(callbackContext, sprite1, sprite2))
+                {
+                    this._total++;
+
+                    if (overlapCallback)
+                    {
+                        overlapCallback.call(callbackContext, sprite1, sprite2);
+                    }
+                }
+            }
+            else
+            {
+                this._total++;
+
+                if (overlapCallback)
+                {
+                    overlapCallback.call(callbackContext, sprite1, sprite2);
+                }
+            }
+        }
+
+    },
+
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.overlap instead.
+    *
+    * @method Phaser.Physics.Arcade#overlapSpriteVsGroup
+    * @private
+    */
+    overlapSpriteVsGroup: function (sprite, group, overlapCallback, processCallback, callbackContext) {
+
+        if (group.length === 0)
+        {
+            return;
+        }
+
+        //  What is the sprite colliding with in the quadtree?
+        this._potentials = this.quadTree.retrieve(sprite);
+
+        for (var i = 0, len = this._potentials.length; i < len; i++)
+        {
+            //  We have our potential suspects, are they in this group?
+            if (this._potentials[i].sprite.group == group)
+            {
+                this._result = Phaser.Rectangle.intersects(sprite.body, this._potentials[i]);
+
+                if (this._result && processCallback)
+                {
+                    this._result = processCallback.call(callbackContext, sprite, this._potentials[i].sprite);
+                }
+
+                if (this._result)
+                {
+                    this._total++;
+
+                    if (overlapCallback)
+                    {
+                        overlapCallback.call(callbackContext, sprite, this._potentials[i].sprite);
+                    }
+                }
+            }
+        }
+
+    },
+
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.overlap instead.
+    *
+    * @method Phaser.Physics.Arcade#overlapGroupVsGroup
+    * @private
+    */
+    overlapGroupVsGroup: function (group1, group2, overlapCallback, processCallback, callbackContext) {
+
+        if (group1.length === 0 || group2.length === 0)
+        {
+            return;
+        }
+
+        if (group1._container.first._iNext)
+        {
+            var currentNode = group1._container.first._iNext;
+                
+            do
+            {
+                if (currentNode.exists)
+                {
+                    this.overlapSpriteVsGroup(currentNode, group2, overlapCallback, processCallback, callbackContext);
+                }
+                currentNode = currentNode._iNext;
+            }
+            while (currentNode != group1._container.last._iNext);
+        }
 
     },
 
@@ -35857,10 +35285,10 @@ Phaser.Physics.Arcade.prototype = {
     * @method Phaser.Physics.Arcade#collide
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object2 - The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap
-    * @param {function} [collideCallback=null] - An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you passed them to Collision.overlap.
+    * @param {function} [collideCallback=null] - An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you specified them.
     * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collideCallback will only be called if processCallback returns true.
     * @param {object} [callbackContext] - The context in which to run the callbacks.
-    * @returns {number} The number of collisions that were processed.
+    * @returns {boolean} True if a collision occured otherwise false.
     */
     collide: function (object1, object2, collideCallback, processCallback, callbackContext) {
 
@@ -36245,6 +35673,8 @@ Phaser.Physics.Arcade.prototype = {
                     body2.x += this._overlap;
                     body2.velocity.x = this._velocity1 - this._velocity2 * body2.bounce.x;
                 }
+				body1.updateHulls();
+				body2.updateHulls();
 
                 return true;
             }
@@ -36365,6 +35795,8 @@ Phaser.Physics.Arcade.prototype = {
                         body2.x += body1.x - body1.lastX;
                     }
                 }
+				body1.updateHulls();
+				body2.updateHulls();
 
                 return true;
             }
@@ -38338,21 +37770,22 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "bottom", {
 */
 
 /**
-* Create a new <code>Tile</code>.
+* Create a new `Tile` object. Tiles live inside of Tilesets and are rendered via TilemapLayers.
 *
 * @class Phaser.Tile
 * @classdesc A Tile is a single representation of a tile within a Tilemap.
 * @constructor
-* @param {Phaser.Game} game - A reference to the currently running game.
-* @param {Tilemap} tilemap - The tilemap this tile belongs to.
-* @param {number}  index - The index of this tile type in the core map data.
-* @param {number}  width - Width of the tile.
-* @param {number}  height - Height of the tile.
+* @param {Phaser.Tileset} tileset - The tileset this tile belongs to.
+* @param {number} index - The index of this tile type in the core map data.
+* @param {number} x - The x coordinate of this tile.
+* @param {number} y - The y coordinate of this tile.
+* @param {number} width - Width of the tile.
+* @param {number} height - Height of the tile.
 */
 Phaser.Tile = function (tileset, index, x, y, width, height) {
 
     /**
-    * @property {string} tileset - The tileset this tile belongs to.
+    * @property {Phaser.Tileset} tileset - The tileset this tile belongs to.
     */
     this.tileset = tileset;
     
@@ -38450,7 +37883,7 @@ Phaser.Tile.prototype = {
     /**
     * Set callback to be called when this tilemap collides.
     * 
-    * @method Phaser.Tilemap.prototype.setCollisionCallback
+    * @method Phaser.Tile#setCollisionCallback
     * @param {Function} callback - Callback function.
     * @param {object} context - Callback will be called with this context.
     */
@@ -38463,7 +37896,7 @@ Phaser.Tile.prototype = {
 
     /**
     * Clean up memory.
-    * @method destroy
+    * @method Phaser.Tile#destroy
     */
     destroy: function () {
 
@@ -38472,15 +37905,12 @@ Phaser.Tile.prototype = {
     },
 
     /**
-    * Set collision configs.
-    * @method setCollision
-    * @param {boolean}   left - Indicating collide with any object on the left.
-    * @param {boolean}   right - Indicating collide with any object on the right.
-    * @param {boolean}   up - Indicating collide with any object on the top.
-    * @param {boolean}   down - Indicating collide with any object on the bottom.
-    * @param {boolean}   reset - Description. 
-    * @param {boolean}   separateX - Separate at x-axis.
-    * @param {boolean}   separateY - Separate at y-axis.
+    * Set collision settings on this tile.
+    * @method Phaser.Tile#setCollision
+    * @param {boolean} left - Indicating collide with any object on the left.
+    * @param {boolean} right - Indicating collide with any object on the right.
+    * @param {boolean} up - Indicating collide with any object on the top.
+    * @param {boolean} down - Indicating collide with any object on the bottom.
     */
     setCollision: function (left, right, up, down) {
 
@@ -38502,7 +37932,7 @@ Phaser.Tile.prototype = {
 
     /**
     * Reset collision status flags.
-    * @method resetCollision
+    * @method Phaser.Tile#resetCollision
     */
     resetCollision: function () {
 
@@ -38516,42 +37946,56 @@ Phaser.Tile.prototype = {
 
 };
 
+/**
+* @name Phaser.Tile#bottom
+* @property {number} bottom - The sum of the y and height properties.
+* @readonly
+*/
 Object.defineProperty(Phaser.Tile.prototype, "bottom", {
     
-    /**
-    * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
-    * @method bottom
-    * @return {number}
-    */
     get: function () {
         return this.y + this.height;
     }
 
 });
 
+/**
+* @name Phaser.Tile#right
+* @property {number} right - The sum of the x and width properties.
+* @readonly
+*/
 Object.defineProperty(Phaser.Tile.prototype, "right", {
     
-    /**
-    * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
-    * However it does affect the width property.
-    * @method right
-    * @return {number}
-    */
     get: function () {
         return this.x + this.width;
     }
 
 });
 
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* A Tile Map object. A Tile map consists of a set of tile data and tile sets. It is rendered to the display using a TilemapLayer.
+* A map may have multiple layers. You can perform operations on the map data such as copying, pasting, filling and shuffling the tiles around.
+*
+* @class Phaser.Tilemap
+* @constructor
+* @param {Phaser.Game} game - Game reference to the currently running game.
+* @param {string} [key] - The key of the tilemap data as stored in the Cache.
+*/
 Phaser.Tilemap = function (game, key) {
 
     /**
-    * @property {Phaser.Game} game - Description.
+    * @property {Phaser.Game} game - A reference to the currently running Game.
     */
     this.game = game;
 
     /**
-    * @property {array} layers - Description.
+    * @property {array} layers - An array of Tilemap layers.
     */
     this.layers = null;
 
@@ -38567,23 +38011,64 @@ Phaser.Tilemap = function (game, key) {
         this.layers = [];
     }
 
+    /**
+    * @property {number} currentLayer - The current layer.
+    */
     this.currentLayer = 0;
+
+    /**
+    * @property {array} debugMap - Map data used for debug values only.
+    */
 
     this.debugMap = [];
 
+    /**
+    * @property {boolean} dirty - Internal rendering related flag.
+    */
     this.dirty = false;
 
+    /**
+    * @property {array} _results - Internal var.
+    * @private
+    */
     this._results = [];
+
+    /**
+    * @property {number} _tempA - Internal var.
+    * @private
+    */
     this._tempA = 0;
+
+    /**
+    * @property {number} _tempB - Internal var.
+    * @private
+    */
     this._tempB = 0;
 
 };
 
+/**
+* @constant
+* @type {number}
+*/
 Phaser.Tilemap.CSV = 0;
+
+/**
+* @constant
+* @type {number}
+*/
 Phaser.Tilemap.TILED_JSON = 1;
 
 Phaser.Tilemap.prototype = {
 
+    /**
+    * Creates an empty map of the given dimensions.
+    *
+    * @method Phaser.Tilemap#create
+    * @param {string} name - The name of the map (mostly used for debugging)
+    * @param {number} width - The width of the map in tiles.
+    * @param {number} height - The height of the map in tiles.
+    */
     create: function (name, width, height) {
 
         var data = [];
@@ -38598,7 +38083,7 @@ Phaser.Tilemap.prototype = {
             }
         }
 
-        this.currentLayer = this.layers.push({
+        this.layers.push({
 
             name: name,
             width: width,
@@ -38613,10 +38098,17 @@ Phaser.Tilemap.prototype = {
 
         });
 
+        this.currentLayer = this.layers.length - 1;
+
         this.dirty = true;
 
     },
 
+    /**
+    * Internal function that calculates the tile indexes for the map data.
+    *
+    * @method Phaser.Tilemap#calculateIndexes
+    */
     calculateIndexes: function () {
 
         for (var layer = 0; layer < this.layers.length; layer++)
@@ -38639,6 +38131,12 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Sets the current layer to the given index.
+    *
+    * @method Phaser.Tilemap#setLayer
+    * @param {number} layer - Sets the current layer to the given index.
+    */
     setLayer: function (layer) {
 
         if (this.layers[layer])
@@ -38649,11 +38147,12 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Set a specific tile with its x and y in tiles.
-    * @method putTile
-    * @param {number} x - X position of this tile.
-    * @param {number} y - Y position of this tile.
-    * @param {number} index - The index of this tile type in the core map data.
+    * Puts a tile of the given index value at the coordinate specified.
+    * @method Phaser.Tilemap#putTile
+    * @param {number} index - The index of this tile to set.
+    * @param {number} x - X position to place the tile (given in tile units, not pixels)
+    * @param {number} y - Y position to place the tile (given in tile units, not pixels)
+    * @param {number} [layer] - The Tilemap Layer to operate on.
     */
     putTile: function (index, x, y, layer) {
 
@@ -38668,6 +38167,14 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Gets a tile from the Tilemap Layer. The coordinates are given in tile values.
+    * @method Phaser.Tilemap#getTile
+    * @param {number} x - X position to get the tile from (given in tile units, not pixels)
+    * @param {number} y - Y position to get the tile from (given in tile units, not pixels)
+    * @param {number} [layer] - The Tilemap Layer to operate on.
+    * @return {number} The index of the tile at the given coordinates.
+    */
     getTile: function (x, y, layer) {
 
         if (typeof layer === "undefined") { layer = this.currentLayer; }
@@ -38679,6 +38186,14 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Gets a tile from the Tilemap layer. The coordinates are given in pixel values.
+    * @method Phaser.Tilemap#getTileWorldXY
+    * @param {number} x - X position to get the tile from (given in pixels)
+    * @param {number} y - Y position to get the tile from (given in pixels)
+    * @param {number} [layer] - The Tilemap Layer to operate on.
+    * @return {number} The index of the tile at the given coordinates.
+    */
     getTileWorldXY: function (x, y, tileWidth, tileHeight, layer) {
 
         if (typeof layer === "undefined") { layer = this.currentLayer; }
@@ -38694,13 +38209,18 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Set a specific tile with its x and y in tiles.
-    * @method putTileWorldXY
-    * @param {number} x - X position of this tile in world coordinates.
-    * @param {number} y - Y position of this tile in world coordinates.
-    * @param {number} index - The index of this tile type in the core map data.
+    * Puts a tile into the Tilemap layer. The coordinates are given in pixel values.
+    * @method Phaser.Tilemap#putTileWorldXY
+    * @param {number} index - The index of the tile to put into the layer.
+    * @param {number} x - X position to insert the tile (given in pixels)
+    * @param {number} y - Y position to insert the tile (given in pixels)
+    * @param {number} tileWidth - The width of the tile in pixels.
+    * @param {number} tileHeight - The height of the tile in pixels.
+    * @param {number} [layer] - The Tilemap Layer to operate on.
     */
     putTileWorldXY: function (index, x, y, tileWidth, tileHeight, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
 
         x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
         y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
@@ -38714,7 +38234,16 @@ Phaser.Tilemap.prototype = {
 
     },
 
-    //  Values are in TILEs, not pixels.
+    /**
+    * Copies all of the tiles in the given rectangular block into the tilemap data buffer.
+    * @method Phaser.Tilemap#copy
+    * @param {number} x - X position of the top left of the area to copy (given in tiles, not pixels)
+    * @param {number} y - Y position of the top left of the area to copy (given in tiles, not pixels)
+    * @param {number} width - The width of the area to copy (given in tiles, not pixels)
+    * @param {number} height - The height of the area to copy (given in tiles, not pixels)
+    * @param {number} [layer] - The Tilemap Layer to operate on.
+    * @return {array} An array of the tiles that were copied.
+    */
     copy: function (x, y, width, height, layer) {
 
         if (typeof layer === "undefined") { layer = this.currentLayer; }
@@ -38766,6 +38295,14 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Pastes a previously copied block of tile data into the given x/y coordinates. Data should have been prepared with Tilemap.copy.
+    * @method Phaser.Tilemap#paste
+    * @param {number} x - X position of the top left of the area to paste to (given in tiles, not pixels)
+    * @param {number} y - Y position of the top left of the area to paste to (given in tiles, not pixels)
+    * @param {array} tileblock - The block of tiles to paste.
+    * @param {number} layer - The Tilemap Layer to operate on.
+    */
     paste: function (x, y, tileblock, layer) {
 
         if (typeof x === "undefined") { x = 0; }
@@ -38792,13 +38329,13 @@ Phaser.Tilemap.prototype = {
 
     /**
     * Swap tiles with 2 kinds of indexes.
-    * @method swapTile
+    * @method Phaser.Tilemap#swapTile
     * @param {number} tileA - First tile index.
     * @param {number} tileB - Second tile index.
-    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
-    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
-    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
-    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    * @param {number} x - X position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} y - Y position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} width - The width in tiles of the area to operate on.
+    * @param {number} height - The height in tiles of the area to operate on.
     */
     swap: function (tileA, tileB, x, y, width, height, layer) {
 
@@ -38818,6 +38355,12 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Internal function that handles the swapping of tiles.
+    * @method Phaser.Tilemap#swapHandler
+    * @param {number} value
+    * @param {number} index
+    */
     swapHandler: function (value, index) {
 
         if (value.index === this._tempA)
@@ -38832,14 +38375,15 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Swap tiles with 2 kinds of indexes.
-    * @method swapTile
-    * @param {number} tileA - First tile index.
-    * @param {number} tileB - Second tile index.
-    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
-    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
-    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
-    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    * For each tile in the given area (defined by x/y and width/height) run the given callback.
+    * @method Phaser.Tilemap#forEach
+    * @param {number} callback - The callback. Each tile in the given area will be passed to this callback as the first and only parameter.
+    * @param {number} context - The context under which the callback should be run.
+    * @param {number} x - X position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} y - Y position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} width - The width in tiles of the area to operate on.
+    * @param {number} height - The height in tiles of the area to operate on.
+    * @param {number} [layer] - The Tilemap Layer to operate on.
     */
     forEach: function (callback, context, x, y, width, height, layer) {
 
@@ -38857,14 +38401,15 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Replaces one type of tile with another.
-    * @method replace
+    * Replaces one type of tile with another in the given area (defined by x/y and width/height).
+    * @method Phaser.Tilemap#replace
     * @param {number} tileA - First tile index.
     * @param {number} tileB - Second tile index.
-    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
-    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
-    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
-    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    * @param {number} x - X position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} y - Y position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} width - The width in tiles of the area to operate on.
+    * @param {number} height - The height in tiles of the area to operate on.
+    * @param {number} [layer] - The Tilemap Layer to operate on.
     */
     replace: function (tileA, tileB, x, y, width, height, layer) {
 
@@ -38888,14 +38433,15 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Randomises a set of tiles in a given area. It will only randomise the tiles in that area, so if they're all the same nothing will appear to have changed!
-    * @method random
+    * Randomises a set of tiles in a given area.
+    * @method Phaser.Tilemap#random
     * @param {number} tileA - First tile index.
     * @param {number} tileB - Second tile index.
-    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
-    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
-    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
-    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    * @param {number} x - X position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} y - Y position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} width - The width in tiles of the area to operate on.
+    * @param {number} height - The height in tiles of the area to operate on.
+    * @param {number} [layer] - The Tilemap Layer to operate on.
     */
     random: function (x, y, width, height, layer) {
 
@@ -38930,14 +38476,15 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Randomises a set of tiles in a given area. It will only randomise the tiles in that area, so if they're all the same nothing will appear to have changed!
-    * @method random
+    * Shuffles a set of tiles in a given area. It will only randomise the tiles in that area, so if they're all the same nothing will appear to have changed!
+    * @method Phaser.Tilemap#shuffle
     * @param {number} tileA - First tile index.
     * @param {number} tileB - Second tile index.
-    * @param {number} [x] - specify a Rectangle of tiles to operate. The x position in tiles of Rectangle's left-top corner.
-    * @param {number} [y] - specify a Rectangle of tiles to operate. The y position in tiles of Rectangle's left-top corner.
-    * @param {number} [width] - specify a Rectangle of tiles to operate. The width in tiles.
-    * @param {number} [height] - specify a Rectangle of tiles to operate. The height in tiles.
+    * @param {number} x - X position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} y - Y position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} width - The width in tiles of the area to operate on.
+    * @param {number} height - The height in tiles of the area to operate on.
+    * @param {number} [layer] - The Tilemap Layer to operate on.
     */
     shuffle: function (x, y, width, height, layer) {
 
@@ -38961,13 +38508,14 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Fill a tile block with a specific tile index.
-    * @method fill
+    * Fill a block with a specific tile index.
+    * @method Phaser.Tilemap#fill
     * @param {number} index - Index of tiles you want to fill with.
-    * @param {number} [x] - X position (in tiles) of block's left-top corner.
-    * @param {number} [y] - Y position (in tiles) of block's left-top corner.
-    * @param {number} [width] - width of block.
-    * @param {number} [height] - height of block.
+    * @param {number} x - X position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} y - Y position of the top left of the area to operate one, given in tiles, not pixels.
+    * @param {number} width - The width in tiles of the area to operate on.
+    * @param {number} height - The height in tiles of the area to operate on.
+    * @param {number} [layer] - The Tilemap Layer to operate on.
     */
     fill: function (index, x, y, width, height, layer) {
 
@@ -38987,6 +38535,10 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Removes all layers from this tile map.
+    * @method Phaser.Tilemap#removeAllLayers
+    */
     removeAllLayers: function () {
 
         this.layers.length = 0;
@@ -38994,6 +38546,10 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Dumps the tilemap data out to the console.
+    * @method Phaser.Tilemap#dump
+    */
     dump: function () {
 
         var txt = '';
@@ -39030,6 +38586,10 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Removes all layers from this tile map and nulls the game reference.
+    * @method Phaser.Tilemap#destroy
+    */
     destroy: function () {
 
         this.removeAllLayers();
@@ -39039,72 +38599,118 @@ Phaser.Tilemap.prototype = {
 
 };
 
-//  Maybe should extend Sprite?
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* A Tilemap Layer is a set of map data combined with a Tileset in order to render that data to the game.
+*
+* @class Phaser.TilemapLayer
+* @constructor
+* @param {Phaser.Game} game - Game reference to the currently running game.
+* @param {number} x - The x coordinate of this layer.
+* @param {number} y - The y coordinate of this layer.
+* @param {number} renderWidth - Width of the layer.
+* @param {number} renderHeight - Height of the layer.
+* @param {Phaser.Tileset|string} tileset - The tile set used for rendering.
+* @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
+* @param {number} layer - The layer index within the map.
+*/
 Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, tilemap, layer) {
 
     /**
-    * @property {Phaser.Game} game - Description.
+    * @property {Phaser.Game} game - A reference to the currently running Game.
     */
     this.game = game;
     
     /**
-    * @property {Description} canvas - Description.
-    * @default
+    * @property {HTMLCanvasElement} canvas - The canvas to which this BitmapData draws.
     */
     this.canvas = Phaser.Canvas.create(renderWidth, renderHeight);
     
     /**
-    * @property {Description} context - Description.
-    * @default
+    * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
     */
     this.context = this.canvas.getContext('2d');
     
     /**
-    * @property {Description} baseTexture - Description.
-    * @default
+    * @property {PIXI.BaseTexture} baseTexture - Required Pixi var.
     */
     this.baseTexture = new PIXI.BaseTexture(this.canvas);
     
     /**
-    * @property {Description} texture - Description.
-    * @default
+    * @property {PIXI.Texture} texture - Required Pixi var.
     */
     this.texture = new PIXI.Texture(this.baseTexture);
     
+    /**
+    * @property {Phaser.Frame} textureFrame - Dimensions of the renderable area.
+    */
     this.textureFrame = new Phaser.Frame(0, 0, 0, renderWidth, renderHeight, 'tilemaplayer', game.rnd.uuid());
 
     Phaser.Sprite.call(this, this.game, x, y, this.texture, this.textureFrame);
 
+    /**
+    * @property {number} type - The const type of this object.
+    * @default
+    */
     this.type = Phaser.TILEMAPLAYER;
 
+    /**
+    * A layer that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.
+    * @property {boolean} fixedToCamera - Fixes this layer to the Camera.
+    * @default
+    */
     this.fixedToCamera = true;
 
     /**
-    * @property {Description} tileset - Description.
+    * @property {Phaser.Tileset} tileset - The tile set used for rendering.
     */
     this.tileset = null;
 
+    /**
+    * @property {number} tileWidth - The width of a single tile in pixels.
+    */
     this.tileWidth = 0;
+
+    /**
+    * @property {number} tileHeight - The height of a single tile in pixels.
+    */
     this.tileHeight = 0;
+
+    /**
+    * @property {number} tileMargin - The margin around the tiles.
+    */
     this.tileMargin = 0;
+
+    /**
+    * @property {number} tileSpacing - The spacing around the tiles.
+    */
     this.tileSpacing = 0;
 
     /**
-    * Read-only variable, do NOT recommend changing after the map is loaded!
-    * @property {number} widthInPixels
-    * @default
+    * @property {number} widthInPixels - Do NOT recommend changing after the map is loaded!
+    * @readonly
     */
     this.widthInPixels = 0;
 
     /**
-    * Read-only variable, do NOT recommend changing after the map is loaded!
-    * @property {number} heightInPixels
-    * @default
+    * @property {number} heightInPixels - Do NOT recommend changing after the map is loaded!
+    * @readonly
     */
     this.heightInPixels = 0;
 
-
+    /**
+    * @property {number} renderWidth - The width of the area being rendered.
+    */
     this.renderWidth = renderWidth;
+
+    /**
+    * @property {number} renderHeight - The height of the area being rendered.
+    */
     this.renderHeight = renderHeight;
 
     /**
@@ -39149,9 +38755,16 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     */
     this._ty = 0;
 
-    this._results = [];
-
+    /**
+    * @property {number} _tw - Local render loop var to help avoid gc spikes.
+    * @private 
+    */
     this._tw = 0;
+
+    /**
+    * @property {number} _th - Local render loop var to help avoid gc spikes.
+    * @private 
+    */
     this._th = 0;
     
     /**
@@ -39185,12 +38798,43 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     this._startY = 0;
 
     /**
+    * @property {array} _results - Local render loop var to help avoid gc spikes.
+    * @private 
+    */
+    this._results = [];
+
+    /**
+    * @property {number} _x - Private var.
+    * @private 
+    */
+    this._x = 0;
+
+    /**
+    * @property {number} _y - Private var.
+    * @private 
+    */
+    this._y = 0;
+
+    /**
+    * @property {number} _prevX - Private var.
+    * @private 
+    */
+    this._prevX = 0;
+
+    /**
+    * @property {number} _prevY - Private var.
+    * @private 
+    */
+    this._prevY = 0;
+
+    /**
     * @property {number} scrollFactorX - speed at which this layer scrolls
     * horizontally, relative to the camera (e.g. scrollFactorX of 0.5 scrolls
     * half as quickly as the 'normal' camera-locked layers do)
     * @default 1
     */
     this.scrollFactorX = 1;
+
     /**
     * @property {number} scrollFactorY - speed at which this layer scrolls
     * vertically, relative to the camera (e.g. scrollFactorY of 0.5 scrolls
@@ -39199,15 +38843,24 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     */
     this.scrollFactorY = 1;
 
+    /**
+    * @property {Phaser.Tilemap} tilemap - The Tilemap to which this layer is bound.
+    */
     this.tilemap = null;
+
+    /**
+    * @property {number} layer - Tilemap layer index.
+    */
     this.layer = null;
+
+    /**
+    * @property {number} index
+    */
     this.index = 0;
 
-    this._x = 0;
-    this._y = 0;
-    this._prevX = 0;
-    this._prevY = 0;
-
+    /**
+    * @property {boolean} dirty - Flag controlling when to re-render the layer.
+    */
     this.dirty = true;
 
     if (tileset instanceof Phaser.Tileset || typeof tileset === 'string')
@@ -39226,7 +38879,12 @@ Phaser.TilemapLayer.prototype = Object.create(Phaser.Sprite.prototype);
 Phaser.TilemapLayer.prototype = Phaser.Utils.extend(true, Phaser.TilemapLayer.prototype, Phaser.Sprite.prototype, PIXI.Sprite.prototype);
 Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 
-
+/**
+* Automatically called by World.preUpdate. Handles cache updates.
+*
+* @method Phaser.TilemapLayer#update
+* @memberof Phaser.TilemapLayer
+*/
 Phaser.TilemapLayer.prototype.update = function () {
 
     this.scrollX = this.game.camera.x * this.scrollFactorX;
@@ -39236,12 +38894,25 @@ Phaser.TilemapLayer.prototype.update = function () {
 
 }
 
+/**
+* Sets the world size to match the size of this layer.
+*
+* @method Phaser.TilemapLayer#resizeWorld
+* @memberof Phaser.TilemapLayer
+*/
 Phaser.TilemapLayer.prototype.resizeWorld = function () {
 
     this.game.world.setBounds(0, 0, this.widthInPixels, this.heightInPixels);
 
 }
 
+/**
+* Updates the Tileset data.
+*
+* @method Phaser.TilemapLayer#updateTileset
+* @memberof Phaser.TilemapLayer
+* @param {Phaser.Tileset|string} tileset - The tileset to use for this layer.
+*/
 Phaser.TilemapLayer.prototype.updateTileset = function (tileset) {
 
     if (tileset instanceof Phaser.Tileset)
@@ -39266,6 +38937,14 @@ Phaser.TilemapLayer.prototype.updateTileset = function (tileset) {
 
 }
 
+/**
+* Updates the Tilemap data.
+*
+* @method Phaser.TilemapLayer#updateMapData
+* @memberof Phaser.TilemapLayer
+* @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
+* @param {number} layer - The layer index within the map.
+*/
 Phaser.TilemapLayer.prototype.updateMapData = function (tilemap, layer) {
 
     if (typeof layer === 'undefined')
@@ -39285,11 +38964,14 @@ Phaser.TilemapLayer.prototype.updateMapData = function (tilemap, layer) {
 }
 
 /**
- * Take an x coordinate that doesn't account for scrollFactorY and 'fix' it 
- * into a scrolled local space. Used primarily internally
- * @param {number} x - x coordinate in camera space
- * @return {number} x coordinate in scrollFactor-adjusted dimensions
- */
+* Take an x coordinate that doesn't account for scrollFactorY and 'fix' it 
+* into a scrolled local space. Used primarily internally
+* @method Phaser.TilemapLayer#_fixX
+* @memberof Phaser.TilemapLayer
+* @private
+* @param {number} x - x coordinate in camera space
+* @return {number} x coordinate in scrollFactor-adjusted dimensions
+*/
 Phaser.TilemapLayer.prototype._fixX = function(x) {
 
     if (this.scrollFactorX === 1)
@@ -39304,11 +38986,14 @@ Phaser.TilemapLayer.prototype._fixX = function(x) {
 }
 
 /**
- * Take an x coordinate that _does_ account for scrollFactorY and 'unfix' it 
- * back to camera space. Used primarily internally
- * @param {number} x - x coordinate in scrollFactor-adjusted dimensions
- * @return {number} x coordinate in camera space
- */
+* Take an x coordinate that _does_ account for scrollFactorY and 'unfix' it 
+* back to camera space. Used primarily internally
+* @method Phaser.TilemapLayer#_unfixX
+* @memberof Phaser.TilemapLayer
+* @private
+* @param {number} x - x coordinate in scrollFactor-adjusted dimensions
+* @return {number} x coordinate in camera space
+*/
 Phaser.TilemapLayer.prototype._unfixX = function(x) {
 
     if (this.scrollFactorX === 1)
@@ -39323,11 +39008,14 @@ Phaser.TilemapLayer.prototype._unfixX = function(x) {
 }
 
 /**
- * Take a y coordinate that doesn't account for scrollFactorY and 'fix' it 
- * into a scrolled local space. Used primarily internally
- * @param {number} y - y coordinate in camera space
- * @return {number} y coordinate in scrollFactor-adjusted dimensions
- */
+* Take a y coordinate that doesn't account for scrollFactorY and 'fix' it 
+* into a scrolled local space. Used primarily internally
+* @method Phaser.TilemapLayer#_fixY
+* @memberof Phaser.TilemapLayer
+* @private
+* @param {number} y - y coordinate in camera space
+* @return {number} y coordinate in scrollFactor-adjusted dimensions
+*/
 Phaser.TilemapLayer.prototype._fixY = function(y) {
 
     if (this.scrollFactorY === 1)
@@ -39342,11 +39030,14 @@ Phaser.TilemapLayer.prototype._fixY = function(y) {
 }
 
 /**
- * Take a y coordinate that _does_ account for scrollFactorY and 'unfix' it 
- * back to camera space. Used primarily internally
- * @param {number} y - y coordinate in scrollFactor-adjusted dimensions
- * @return {number} y coordinate in camera space
- */
+* Take a y coordinate that _does_ account for scrollFactorY and 'unfix' it 
+* back to camera space. Used primarily internally
+* @method Phaser.TilemapLayer#_unfixY
+* @memberof Phaser.TilemapLayer
+* @private
+* @param {number} y - y coordinate in scrollFactor-adjusted dimensions
+* @return {number} y coordinate in camera space
+*/
 Phaser.TilemapLayer.prototype._unfixY = function(y) {
 
     if (this.scrollFactorY === 1)
@@ -39362,9 +39053,10 @@ Phaser.TilemapLayer.prototype._unfixY = function(y) {
 
 /**
 * Convert a pixel value to a tile coordinate.
+* @method Phaser.TilemapLayer#getTileX
+* @memberof Phaser.TilemapLayer
 * @param {number} x - X position of the point in target tile.
-* @param {number} [layer] - layer of this tile located.
-* @return {number} The tile with specific properties.
+* @return {Phaser.Tile} The tile with specific properties.
 */
 Phaser.TilemapLayer.prototype.getTileX = function (x) {
 
@@ -39376,9 +39068,10 @@ Phaser.TilemapLayer.prototype.getTileX = function (x) {
 
 /**
 * Convert a pixel value to a tile coordinate.
-* @param {number} x - X position of the point in target tile.
-* @param {number} [layer] - layer of this tile located.
-* @return {number} The tile with specific properties.
+* @method Phaser.TilemapLayer#getTileY
+* @memberof Phaser.TilemapLayer
+* @param {number} y - Y position of the point in target tile.
+* @return {Phaser.Tile} The tile with specific properties.
 */
 Phaser.TilemapLayer.prototype.getTileY = function (y) {
 
@@ -39388,6 +39081,14 @@ Phaser.TilemapLayer.prototype.getTileY = function (y) {
 
 }
 
+/**
+* Convert a pixel value to a tile coordinate.
+* @method Phaser.TilemapLayer#getTileXY
+* @memberof Phaser.TilemapLayer
+* @param {number} x - X position of the point in target tile.
+* @param {number} y - Y position of the point in target tile.
+* @return {Phaser.Tile} The tile with specific properties.
+*/
 Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
 
     point.x = this.getTileX(x);
@@ -39398,9 +39099,14 @@ Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
 }
 
 /**
-* 
-* @method getTileOverlaps
-* @param {GameObject} object - Tiles you want to get that overlaps this.
+* Get the tiles within the given area.
+* @method Phaser.TilemapLayer#getTiles
+* @memberof Phaser.TilemapLayer
+* @param {number} x - X position of the top left of the area to copy (given in tiles, not pixels)
+* @param {number} y - Y position of the top left of the area to copy (given in tiles, not pixels)
+* @param {number} width - The width of the area to copy (given in tiles, not pixels)
+* @param {number} height - The height of the area to copy (given in tiles, not pixels)
+* @param {boolean} collides - If true only return tiles that collide on one or more faces.
 * @return {array} Array with tiles informations (each contains x, y, and the tile).
 */
 Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides) {
@@ -39489,6 +39195,11 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
 
 }
 
+/**
+* Internal function to update maximum values.
+* @method Phaser.TilemapLayer#updateMax
+* @memberof Phaser.TilemapLayer
+*/
 Phaser.TilemapLayer.prototype.updateMax = function () {
 
     this._maxX = this.game.math.ceil(this.canvas.width / this.tileWidth) + 1;
@@ -39514,6 +39225,11 @@ Phaser.TilemapLayer.prototype.updateMax = function () {
 
 }
 
+/**
+* Renders the tiles to the layer canvas and pushes to the display.
+* @method Phaser.TilemapLayer#render
+* @memberof Phaser.TilemapLayer
+*/
 Phaser.TilemapLayer.prototype.render = function () {
 
     if (this.tilemap && this.tilemap.dirty)
@@ -39586,22 +39302,50 @@ Phaser.TilemapLayer.prototype.render = function () {
 
 }
 
+/**
+* Returns the absolute delta x value.
+* @method Phaser.TilemapLayer#deltaAbsX
+* @memberof Phaser.TilemapLayer
+* @return {number} Absolute delta X value
+*/
 Phaser.TilemapLayer.prototype.deltaAbsX = function () {
     return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
 }
 
+/**
+* Returns the absolute delta y value.
+* @method Phaser.TilemapLayer#deltaAbsY
+* @memberof Phaser.TilemapLayer
+* @return {number} Absolute delta Y value
+*/
 Phaser.TilemapLayer.prototype.deltaAbsY = function () {
     return (this.deltaY() > 0 ? this.deltaY() : -this.deltaY());
 }
 
+/**
+* Returns the delta x value.
+* @method Phaser.TilemapLayer#deltaX
+* @memberof Phaser.TilemapLayer
+* @return {number} Delta X value
+*/
 Phaser.TilemapLayer.prototype.deltaX = function () {
     return this._dx - this._prevX;
 }
 
+/**
+* Returns the delta y value.
+* @method Phaser.TilemapLayer#deltaY
+* @memberof Phaser.TilemapLayer
+* @return {number} Delta Y value
+*/
 Phaser.TilemapLayer.prototype.deltaY = function () {
     return this._dy - this._prevY;
 }
 
+/**
+* @name Phaser.TilemapLayer#scrollX
+* @property {number} scrollX - Scrolls the map horizontally or returns the current x position.
+*/
 Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollX", {
     
     get: function () {
@@ -39638,6 +39382,10 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollX", {
 
 });
 
+/**
+* @name Phaser.TilemapLayer#scrollY
+* @property {number} scrollY - Scrolls the map vertically or returns the current y position.
+*/
 Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
     
     get: function () {
@@ -39674,8 +39422,31 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
 
 });
 
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* Phaser.TilemapParser parses data objects from Phaser.Loader that need more preparation before they can be inserted into a Tilemap.
+*
+* @class Phaser.TilemapParser
+*/
 Phaser.TilemapParser = {
 
+    /**
+    * Creates a Tileset object.
+    * @method Phaser.TilemapParser.tileset
+    * @param {Phaser.Game} game - Game reference to the currently running game.
+    * @param {string} key
+    * @param {number} tileWidth
+    * @param {number} tileHeight
+    * @param {number} tileMax
+    * @param {number} tileMargin
+    * @param {number} tileSpacing
+    * @return {Phaser.Tileset} Generated Tileset object.
+    */
     tileset: function (game, key, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing) {
 
         //  How big is our image?
@@ -39739,6 +39510,14 @@ Phaser.TilemapParser = {
 
     },
 
+    /**
+    * Parse tileset data from the cache and creates a Tileset object.
+    * @method Phaser.TilemapParser.parse
+    * @param {Phaser.Game} game - Game reference to the currently running game.
+    * @param {object} data
+    * @param {string} format
+    * @return {Phaser.Tileset} Generated Tileset object.
+    */
     parse: function (game, data, format) {
 
         if (format === Phaser.Tilemap.CSV)
@@ -39753,10 +39532,10 @@ Phaser.TilemapParser = {
     },
 
     /**
-    * Parse csv map data and generate tiles.
-    * 
-    * @method Phaser.Tilemap.prototype.parseCSV
-    * @param {string} data - CSV map data.
+    * Parses a CSV file into valid map data.
+    * @method Phaser.TilemapParser.parseCSV
+    * @param {string} data - The CSV file data.
+    * @return {object} Generated map data.
     */
     parseCSV: function (data) {
 
@@ -39790,11 +39569,10 @@ Phaser.TilemapParser = {
     },
 
     /**
-    * Parse JSON map data and generate tiles.
-    * 
-    * @method Phaser.Tilemap.prototype.parseTiledJSON
-    * @param {string} data - JSON map data.
-    * @param {string} key - Asset key for tileset image.
+    * Parses a Tiled JSON file into valid map data.
+    * @method Phaser.TilemapParser.parseJSON
+    * @param {object} json- The Tiled JSON data.
+    * @return {object} Generated map data.
     */
     parseTiledJSON: function (json) {
 
@@ -39858,7 +39636,24 @@ Phaser.TilemapParser = {
 
 }
 
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2013 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
 
+/**
+* A Tile set is a combination of an image containing the tiles and collision data per tile.
+*
+* @class Phaser.Tileset
+* @constructor
+* @param {Image} image - The Image object from the Cache.
+* @param {string} key - The key of the tileset in the cache.
+* @param {number} tileWidth - The width of the tile in pixels.
+* @param {number} tileHeight - The height of the tile in pixels.
+* @param {number} [tileMargin] - The margin around the tiles in the sheet.
+* @param {number} [tileSpacing] - The spacing between the tiles in the sheet.
+*/
 Phaser.Tileset = function (image, key, tileWidth, tileHeight, tileMargin, tileSpacing) {
 
     if (typeof tileMargin === "undefined") { tileMargin = 0; }
@@ -39869,19 +39664,46 @@ Phaser.Tileset = function (image, key, tileWidth, tileHeight, tileMargin, tileSp
     */
     this.key = key;
 
+    /**
+    * @property {object} image - The image used for rendering.
+    */
     this.image = image;
 
+    /**
+    * @property {number} tileWidth - The width of a tile in pixels.
+    */
     this.tileWidth = tileWidth;
+
+    /**
+    * @property {number} tileHeight - The height of a tile in pixels.
+    */
     this.tileHeight = tileHeight;
+
+    /**
+    * @property {number} tileMargin - The margin around the tiles in the sheet.
+    */
     this.margin = tileMargin;
+
+    /**
+    * @property {number} tileSpacing - The margin around the tiles in the sheet.
+    */
     this.spacing = tileSpacing;
 
+    /**
+    * @property {array} tiles - An array of the tile collision data.
+    */
     this.tiles = [];
 
 }
 
 Phaser.Tileset.prototype = {
 
+    /**
+    * Adds a Tile into this set.
+    *
+    * @method Phaser.Tileset#addTile
+    * @param {Phaser.Tile} tile - The tile to add to this set.
+    */
     addTile: function (tile) {
 
         this.tiles.push(tile);
@@ -39890,6 +39712,13 @@ Phaser.Tileset.prototype = {
 
     },
 
+    /**
+    * Gets a Tile from this set.
+    *
+    * @method Phaser.Tileset#getTile
+    * @param {number} index - The index of the tile within the set.
+    * @return {Phaser.Tile} The tile.
+    */
     getTile: function (index) {
 
         if (this.tiles[index])
@@ -39901,6 +39730,13 @@ Phaser.Tileset.prototype = {
 
     },
 
+    /**
+    * Sets tile spacing and margins.
+    *
+    * @method Phaser.Tileset#setSpacing
+    * @param {number} [tileMargin] - The margin around the tiles in the sheet.
+    * @param {number} [tileSpacing] - The spacing between the tiles in the sheet.
+    */
     setSpacing: function (margin, spacing) {
 
         this.tileMargin = margin;
@@ -39908,6 +39744,13 @@ Phaser.Tileset.prototype = {
 
     },
 
+    /**
+    * Checks if the tile at the given index can collide.
+    *
+    * @method Phaser.Tileset#canCollide
+    * @param {number} index - The index of the tile within the set.
+    * @return {boolean} True or false depending on the tile collision or null if no tile was found at the given index.
+    */
     canCollide: function (index) {
 
         if (this.tiles[index])
@@ -39919,12 +39762,30 @@ Phaser.Tileset.prototype = {
 
     },
 
+    /**
+    * Checks if the tile at the given index exists.
+    *
+    * @method Phaser.Tileset#checkTileIndex
+    * @param {number} index - The index of the tile within the set.
+    * @return {boolean} True if a tile exists at the given index otherwise false.
+    */
     checkTileIndex: function (index) {
 
         return (this.tiles[index]);
 
     },
 
+    /**
+    * Sets collision values on a range of tiles in the set.
+    *
+    * @method Phaser.Tileset#setCollisionRange
+    * @param {number} start - The index to start setting the collision data on.
+    * @param {number} stop - The index to stop setting the collision data on.
+    * @param {boolean} left - Should the tile collide on the left?
+    * @param {boolean} right - Should the tile collide on the right?
+    * @param {boolean} up - Should the tile collide on the top?
+    * @param {boolean} down - Should the tile collide on the bottom?
+    */
     setCollisionRange: function (start, stop, left, right, up, down) {
 
         if (this.tiles[start] && this.tiles[stop] && start < stop)
@@ -39937,6 +39798,16 @@ Phaser.Tileset.prototype = {
 
     },
 
+    /**
+    * Sets collision values on a tile in the set.
+    *
+    * @method Phaser.Tileset#setCollision
+    * @param {number} index - The index of the tile within the set.
+    * @param {boolean} left - Should the tile collide on the left?
+    * @param {boolean} right - Should the tile collide on the right?
+    * @param {boolean} up - Should the tile collide on the top?
+    * @param {boolean} down - Should the tile collide on the bottom?
+    */
     setCollision: function (index, left, right, up, down) {
 
         if (this.tiles[index])

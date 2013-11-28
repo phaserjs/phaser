@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Class: Bullet</title>
+	<title>Phaser Class: TilemapLayer</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -55,11 +55,11 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.BitmapText.html">BitmapText</a>
+							<a href="Phaser.BitmapData.html">BitmapData</a>
 						</li>
 						
 						<li>
-							<a href="Phaser.Bullet.html">Bullet</a>
+							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
 						<li>
@@ -140,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Events.html">Events</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Filter.html">Filter</a>
 						</li>
 						
 						<li>
@@ -247,6 +251,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Polygon.html">Polygon</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.QuadTree.html">QuadTree</a>
 						</li>
 						
@@ -303,11 +311,35 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Tile.html">Tile</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tilemap.html">Tilemap</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapLayer.html">TilemapLayer</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.TilemapParser.html">TilemapParser</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Tileset.html">Tileset</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.TileSprite.html">TileSprite</a>
 						</li>
 						
 						<li>
 							<a href="Phaser.Time.html">Time</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Timer.html">Timer</a>
 						</li>
 						
 						<li>
@@ -357,6 +389,14 @@
 						</li>
 						
 						<li>
+							<a href="global.html#render">render</a>
+						</li>
+						
+						<li>
+							<a href="global.html#renderXY">renderXY</a>
+						</li>
+						
+						<li>
 							<a href="global.html#right">right</a>
 						</li>
 						
@@ -377,17 +417,17 @@
 					
 
 
-	<h1 class="page-title">Class: Bullet</h1>
+	<h1 class="page-title">Class: TilemapLayer</h1>
 <section>
 
 <header>
     <h2>
         <span class="ancestors"><a href="Phaser.html">Phaser</a>.</span>
     
-    Bullet
+    TilemapLayer
     </h2>
     
-        <div class="class-description"><p>Phaser.Bullet</p></div>
+        <div class="class-description"><p>Phaser.TilemapLayer</p></div>
     
 </header>
 
@@ -398,7 +438,7 @@
     
         
 <dt>
-    <h4 class="name" id="Bullet"><span class="type-signature"></span>new Bullet<span class="signature">(game, x, y, key, frame)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="TilemapLayer"><span class="type-signature"></span>new TilemapLayer<span class="signature">(game, x, y, renderWidth, renderHeight, tileset, tilemap, layer)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -406,11 +446,7 @@
     
     
     <div class="description">
-        <p>Warning: Bullet is an experimental object that we don't advise using for now.</p>
-<p>A Bullet is like a stripped-down Sprite, useful for when you just need to get something moving around the screen quickly with little of the extra
-features that a Sprite supports.
-Bullet is MISSING the following:</p>
-<p>animation, all input events, crop support, health/damage, loadTexture</p>
+        <p>A Tilemap Layer is a set of map data combined with a Tileset in order to render that data to the game.</p>
     </div>
     
 
@@ -460,7 +496,7 @@ Bullet is MISSING the following:</p>
 
             
 
-            <td class="description last"><p>Current game instance.</p></td>
+            <td class="description last"><p>Game reference to the currently running game.</p></td>
         </tr>
 
 	
@@ -483,7 +519,7 @@ Bullet is MISSING the following:</p>
 
             
 
-            <td class="description last"><p>X position of the new bullet.</p></td>
+            <td class="description last"><p>The x coordinate of this layer.</p></td>
         </tr>
 
 	
@@ -506,51 +542,19 @@ Bullet is MISSING the following:</p>
 
             
 
-            <td class="description last"><p>Y position of the new bullet.</p></td>
+            <td class="description last"><p>The y coordinate of this layer.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>key</code></td>
+                <td class="name"><code>renderWidth</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
-|
-
-<span class="param-type"><a href="Phaser.RenderTexture.html">Phaser.RenderTexture</a></span>
-|
-
-<span class="param-type">PIXI.Texture</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>frame</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
 <span class="param-type">number</span>
 
 
@@ -561,7 +565,102 @@ Bullet is MISSING the following:</p>
 
             
 
-            <td class="description last"><p>If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.</p></td>
+            <td class="description last"><p>Width of the layer.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>renderHeight</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Height of the layer.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>tileset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Tileset.html">Phaser.Tileset</a></span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The tile set used for rendering.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>tilemap</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Tilemap.html">Phaser.Tilemap</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The tilemap to which this layer belongs.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>layer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The layer index within the map.</p></td>
         </tr>
 
 	
@@ -593,7 +692,7 @@ Bullet is MISSING the following:</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-24">line 24</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-21">line 21</a>
     </li></ul></dd>
     
 
@@ -637,7 +736,7 @@ Bullet is MISSING the following:</p>
         <dl>
             
 <dt>
-    <h4 class="name" id="alive"><span class="type-signature"></span>alive<span class="type-signature"></span></h4>
+    <h4 class="name" id="baseTexture"><span class="type-signature"></span>baseTexture<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -676,7 +775,313 @@ Bullet is MISSING the following:</p>
 
         <tr>
             
-                <td class="name"><code>alive</code></td>
+                <td class="name"><code>baseTexture</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">PIXI.BaseTexture</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Required Pixi var.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-41">line 41</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="canvas"><span class="type-signature"></span>canvas<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>canvas</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLCanvasElement</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The canvas to which this BitmapData draws.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-31">line 31</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="context"><span class="type-signature"></span>context<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">CanvasRenderingContext2D</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The 2d context of the canvas.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-36">line 36</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="dirty"><span class="type-signature"></span>dirty<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>dirty</code></td>
             
 
             <td class="type">
@@ -692,119 +1097,7 @@ Bullet is MISSING the following:</p>
 
             
 
-            <td class="description last"><p>This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>true</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-46">line 46</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="anchor"><span class="type-signature"></span>anchor<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The anchor sets the origin point of the texture.
-The default is 0,0 this means the textures origin is the top left 
-Setting than anchor to 0.5,0.5 means the textures origin is centered
-Setting the anchor to 1,1 would mean the textures origin points will be the bottom right</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>anchor</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
+            <td class="description last"><p>Flag controlling when to re-render the layer.</p></td>
         </tr>
 
 	
@@ -833,944 +1126,7 @@ Setting the anchor to 1,1 would mean the textures origin points will be the bott
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-142">line 142</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="angle"><span class="type-signature"></span>angle<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Indicates the rotation of the Bullet, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
-Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
-If you wish to work in radians instead of degrees use the property Bullet.rotation instead.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>angle</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Gets or sets the Bullets angle of rotation in degrees.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-594">line 594</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="autoCull"><span class="type-signature"></span>autoCull<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Should this Sprite be automatically culled if out of range of the camera?
-A culled sprite has its visible property set to 'false'.
-Note that this check doesn't look at this Sprites children, which may still be in camera range.
-So you should set autoCull to false if the Sprite will have children likely to still be in camera range.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>autoCull</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-169">line 169</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="body"><span class="type-signature"></span>body<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>body</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Physics.Arcade.Body.html">Phaser.Physics.Arcade.Body</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Set-up the physics body.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-250">line 250</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="bottomLeft"><span class="type-signature"></span>bottomLeft<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>bottomLeft</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Description.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-240">line 240</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="bottomRight"><span class="type-signature"></span>bottomRight<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>bottomRight</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Description.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-235">line 235</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="bounds"><span class="type-signature"></span>bounds<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>bounds</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Description.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-245">line 245</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="center"><span class="type-signature"></span>center<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>center</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Description.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-220">line 220</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="events"><span class="type-signature"></span>events<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>events</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Events</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The Signals you can subscribe to that are dispatched when certain things happen on this Sprite or its components</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-82">line 82</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="exists"><span class="type-signature"></span>exists<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>exists</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>true</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-40">line 40</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-263">line 263</a>
     </li></ul></dd>
     
 
@@ -1795,7 +1151,7 @@ So you should set autoCull to false if the Sprite will have children likely to s
 <dd>
     
     <div class="description">
-        <p>A Sprite that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.</p>
+        <p>A layer that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.</p>
     </div>
     
     
@@ -1847,7 +1203,7 @@ So you should set autoCull to false if the Sprite will have children likely to s
 
             
 
-            <td class="description last"><p>Fixes this Sprite to the Camera.</p></td>
+            <td class="description last"><p>Fixes this layer to the Camera.</p></td>
         </tr>
 
 	
@@ -1873,13 +1229,13 @@ So you should set autoCull to false if the Sprite will have children likely to s
 
     
     <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    <dd class="tag-default"><ul class="dummy"><li>true</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-281">line 281</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-66">line 66</a>
     </li></ul></dd>
     
 
@@ -1981,7 +1337,7 @@ So you should set autoCull to false if the Sprite will have children likely to s
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-34">line 34</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-26">line 26</a>
     </li></ul></dd>
     
 
@@ -1999,7 +1355,7 @@ So you should set autoCull to false if the Sprite will have children likely to s
         
             
 <dt>
-    <h4 class="name" id="group"><span class="type-signature"></span>group<span class="type-signature"></span></h4>
+    <h4 class="name" id="heightInPixels"><span class="type-signature">&lt;readonly> </span>heightInPixels<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2038,214 +1394,7 @@ So you should set autoCull to false if the Sprite will have children likely to s
 
         <tr>
             
-                <td class="name"><code>group</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Description</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Description.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-52">line 52</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="inWorld"><span class="type-signature"></span>inWorld<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>inWorld</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Description</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>World bounds check.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-255">line 255</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="inWorldThreshold"><span class="type-signature"></span>inWorldThreshold<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>inWorldThreshold</code></td>
+                <td class="name"><code>heightInPixels</code></td>
             
 
             <td class="type">
@@ -2261,7 +1410,7 @@ So you should set autoCull to false if the Sprite will have children likely to s
 
             
 
-            <td class="description last"><p>World bounds check.</p></td>
+            <td class="description last"><p>Do NOT recommend changing after the map is loaded!</p></td>
         </tr>
 
 	
@@ -2286,14 +1435,11 @@ So you should set autoCull to false if the Sprite will have children likely to s
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-261">line 261</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-103">line 103</a>
     </li></ul></dd>
     
 
@@ -2311,7 +1457,7 @@ So you should set autoCull to false if the Sprite will have children likely to s
         
             
 <dt>
-    <h4 class="name" id="key"><span class="type-signature"></span>key<span class="type-signature"></span></h4>
+    <h4 class="name" id="index"><span class="type-signature"></span>index<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2350,114 +1496,7 @@ So you should set autoCull to false if the Sprite will have children likely to s
 
         <tr>
             
-                <td class="name"><code>key</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Description</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Description.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-87">line 87</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="lifespan"><span class="type-signature"></span>lifespan<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>If you would like the Sprite to have a lifespan once 'born' you can set this to a positive value. Handy for particles, bullets, etc.
-The lifespan is decremented by game.time.elapsed each update, once it reaches zero the kill() function is called.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>lifespan</code></td>
+                <td class="name"><code>index</code></td>
             
 
             <td class="type">
@@ -2498,14 +1537,11 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-77">line 77</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-258">line 258</a>
     </li></ul></dd>
     
 
@@ -2523,7 +1559,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
         
             
 <dt>
-    <h4 class="name" id="name"><span class="type-signature"></span>name<span class="type-signature"></span></h4>
+    <h4 class="name" id="layer"><span class="type-signature"></span>layer<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2562,316 +1598,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
 
         <tr>
             
-                <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The user defined name given to this Sprite.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-58">line 58</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="offset"><span class="type-signature"></span>offset<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>offset</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Corner point defaults.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-215">line 215</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="outOfBoundsKill"><span class="type-signature"></span>outOfBoundsKill<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>outOfBoundsKill</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Kills this sprite as soon as it goes outside of the World bounds.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-267">line 267</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="renderOrderID"><span class="type-signature"></span>renderOrderID<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>renderOrderID</code></td>
+                <td class="name"><code>layer</code></td>
             
 
             <td class="type">
@@ -2887,7 +1614,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>Tilemap layer index.</p></td>
         </tr>
 
 	
@@ -2916,7 +1643,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-69">line 69</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-253">line 253</a>
     </li></ul></dd>
     
 
@@ -2934,7 +1661,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
         
             
 <dt>
-    <h4 class="name" id="scale"><span class="type-signature"></span>scale<span class="type-signature"></span></h4>
+    <h4 class="name" id="renderHeight"><span class="type-signature"></span>renderHeight<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2973,13 +1700,13 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
 
         <tr>
             
-                <td class="name"><code>scale</code></td>
+                <td class="name"><code>renderHeight</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
+<span class="param-type">number</span>
 
 
             
@@ -2989,7 +1716,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
 
             
 
-            <td class="description last"><p>Replaces the PIXI.Point with a slightly more flexible one.</p></td>
+            <td class="description last"><p>The height of the area being rendered.</p></td>
         </tr>
 
 	
@@ -3018,7 +1745,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-174">line 174</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-113">line 113</a>
     </li></ul></dd>
     
 
@@ -3036,7 +1763,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
         
             
 <dt>
-    <h4 class="name" id="topLeft"><span class="type-signature"></span>topLeft<span class="type-signature"></span></h4>
+    <h4 class="name" id="renderWidth"><span class="type-signature"></span>renderWidth<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -3075,13 +1802,13 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
 
         <tr>
             
-                <td class="name"><code>topLeft</code></td>
+                <td class="name"><code>renderWidth</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
+<span class="param-type">number</span>
 
 
             
@@ -3091,7 +1818,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The width of the area being rendered.</p></td>
         </tr>
 
 	
@@ -3120,7 +1847,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-225">line 225</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-108">line 108</a>
     </li></ul></dd>
     
 
@@ -3138,7 +1865,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
         
             
 <dt>
-    <h4 class="name" id="topRight"><span class="type-signature"></span>topRight<span class="type-signature"></span></h4>
+    <h4 class="name" id="scrollFactorX"><span class="type-signature"></span>scrollFactorX<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -3177,13 +1904,13 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
 
         <tr>
             
-                <td class="name"><code>topRight</code></td>
+                <td class="name"><code>scrollFactorX</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
+<span class="param-type">number</span>
 
 
             
@@ -3193,7 +1920,221 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>speed at which this layer scrolls
+horizontally, relative to the camera (e.g. scrollFactorX of 0.5 scrolls
+half as quickly as the 'normal' camera-locked layers do)</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>1</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-235">line 235</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="scrollFactorY"><span class="type-signature"></span>scrollFactorY<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>scrollFactorY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>speed at which this layer scrolls
+vertically, relative to the camera (e.g. scrollFactorY of 0.5 scrolls
+half as quickly as the 'normal' camera-locked layers do)</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>1</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-243">line 243</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="scrollX"><span class="type-signature"></span>scrollX<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>scrollX</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Scrolls the map horizontally or returns the current x position.</p></td>
         </tr>
 
 	
@@ -3222,7 +2163,925 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-230">line 230</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-744">line 744</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="scrollY"><span class="type-signature"></span>scrollY<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>scrollY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Scrolls the map vertically or returns the current y position.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-784">line 784</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="texture"><span class="type-signature"></span>texture<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>texture</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">PIXI.Texture</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Required Pixi var.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-46">line 46</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="textureFrame"><span class="type-signature"></span>textureFrame<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>textureFrame</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Frame.html">Phaser.Frame</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Dimensions of the renderable area.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-51">line 51</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="tileHeight"><span class="type-signature"></span>tileHeight<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>tileHeight</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The height of a single tile in pixels.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-81">line 81</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="tilemap"><span class="type-signature"></span>tilemap<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>tilemap</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Tilemap.html">Phaser.Tilemap</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Tilemap to which this layer is bound.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-248">line 248</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="tileMargin"><span class="type-signature"></span>tileMargin<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>tileMargin</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The margin around the tiles.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-86">line 86</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="tileset"><span class="type-signature"></span>tileset<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>tileset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Tileset.html">Phaser.Tileset</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The tile set used for rendering.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-71">line 71</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="tileSpacing"><span class="type-signature"></span>tileSpacing<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>tileSpacing</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The spacing around the tiles.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-91">line 91</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="tileWidth"><span class="type-signature"></span>tileWidth<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>tileWidth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The width of a single tile in pixels.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-76">line 76</a>
     </li></ul></dd>
     
 
@@ -3285,7 +3144,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">number</span>
 
 
             
@@ -3295,7 +3154,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The const type of this object.</p></td>
         </tr>
 
 	
@@ -3324,7 +3183,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-63">line 63</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-59">line 59</a>
     </li></ul></dd>
     
 
@@ -3342,7 +3201,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
         
             
 <dt>
-    <h4 class="name" id="x"><span class="type-signature"></span>x<span class="type-signature"></span></h4>
+    <h4 class="name" id="widthInPixels"><span class="type-signature">&lt;readonly> </span>widthInPixels<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -3381,7 +3240,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
 
         <tr>
             
-                <td class="name"><code>x</code></td>
+                <td class="name"><code>widthInPixels</code></td>
             
 
             <td class="type">
@@ -3397,7 +3256,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>Do NOT recommend changing after the map is loaded!</p></td>
         </tr>
 
 	
@@ -3426,109 +3285,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-147">line 147</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="y"><span class="type-signature"></span>y<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Description.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-152">line 152</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-97">line 97</a>
     </li></ul></dd>
     
 
@@ -3552,7 +3309,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
         <dl>
             
 <dt>
-    <h4 class="name" id="bringToTop"><span class="type-signature"></span>bringToTop<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="deltaAbsX"><span class="type-signature"></span>deltaAbsX<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -3560,7 +3317,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Returns the absolute delta x value.</p>
     </div>
     
 
@@ -3593,7 +3350,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-576">line 576</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-704">line 704</a>
     </li></ul></dd>
     
 
@@ -3614,6 +3371,29 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Absolute delta X value</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
     
     
 </dd>
@@ -3621,7 +3401,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
         
             
 <dt>
-    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="deltaAbsY"><span class="type-signature"></span>deltaAbsY<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -3629,7 +3409,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Returns the absolute delta y value.</p>
     </div>
     
 
@@ -3662,7 +3442,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-454">line 454</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-714">line 714</a>
     </li></ul></dd>
     
 
@@ -3683,6 +3463,29 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Absolute delta Y value</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
     
     
 </dd>
@@ -3690,7 +3493,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
         
             
 <dt>
-    <h4 class="name" id="getLocalPosition"><span class="type-signature"></span>getLocalPosition<span class="signature">(p, x, y)</span><span class="type-signature"> &rarr; {Description}</span></h4>
+    <h4 class="name" id="deltaX"><span class="type-signature"></span>deltaX<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
 </dt>
@@ -3698,7 +3501,191 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Returns the delta x value.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-724">line 724</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Delta X value</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="deltaY"><span class="type-signature"></span>deltaY<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Returns the delta y value.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-734">line 734</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Delta Y value</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getTiles"><span class="type-signature"></span>getTiles<span class="signature">(x, y, width, height, collides)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Get the tiles within the given area.</p>
     </div>
     
 
@@ -3732,29 +3719,6 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
 
         <tr>
             
-                <td class="name"><code>p</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Description</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Description.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
                 <td class="name"><code>x</code></td>
             
 
@@ -3771,7 +3735,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>X position of the top left of the area to copy (given in tiles, not pixels)</p></td>
         </tr>
 
 	
@@ -3794,7 +3758,76 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>Y position of the top left of the area to copy (given in tiles, not pixels)</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The width of the area to copy (given in tiles, not pixels)</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The height of the area to copy (given in tiles, not pixels)</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>collides</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If true only return tiles that collide on one or more faces.</p></td>
         </tr>
 
 	
@@ -3826,7 +3859,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-558">line 558</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-500">line 500</a>
     </li></ul></dd>
     
 
@@ -3851,7 +3884,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
             
 <div class="param-desc">
-    <p>Description.</p>
+    <p>Array with tiles informations (each contains x, y, and the tile).</p>
 </div>
 
 
@@ -3862,7 +3895,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
 	</dt>
 	<dd>
 		
-<span class="param-type">Description</span>
+<span class="param-type">array</span>
 
 
 	</dd>
@@ -3877,7 +3910,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
         
             
 <dt>
-    <h4 class="name" id="kill"><span class="type-signature"></span>kill<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="getTileX"><span class="type-signature"></span>getTileX<span class="signature">(x)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tile.html">Phaser.Tile</a>}</span></h4>
     
     
 </dt>
@@ -3885,7 +3918,453 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Convert a pixel value to a tile coordinate.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>X position of the point in target tile.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-453">line 453</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The tile with specific properties.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Tile.html">Phaser.Tile</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getTileXY"><span class="type-signature"></span>getTileXY<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tile.html">Phaser.Tile</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Convert a pixel value to a tile coordinate.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>X position of the point in target tile.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Y position of the point in target tile.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-483">line 483</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The tile with specific properties.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Tile.html">Phaser.Tile</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getTileY"><span class="type-signature"></span>getTileY<span class="signature">(y)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tile.html">Phaser.Tile</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Convert a pixel value to a tile coordinate.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Y position of the point in target tile.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-468">line 468</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The tile with specific properties.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Tile.html">Phaser.Tile</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="render"><span class="type-signature"></span>render<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Renders the tiles to the layer canvas and pushes to the display.</p>
     </div>
     
 
@@ -3918,7 +4397,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-440">line 440</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-627">line 627</a>
     </li></ul></dd>
     
 
@@ -3946,7 +4425,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
         
             
 <dt>
-    <h4 class="name" id="revive"><span class="type-signature"></span>revive<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="resizeWorld"><span class="type-signature"></span>resizeWorld<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -3954,7 +4433,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Sets the world size to match the size of this layer.</p>
     </div>
     
 
@@ -3987,7 +4466,407 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Bullet.js.html">gameobjects/Bullet.js</a>, <a href="Bullet.js.html#sunlight-1-line-422">line 422</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-296">line 296</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="update"><span class="type-signature"></span>update<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Automatically called by World.preUpdate. Handles cache updates.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-281">line 281</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="updateMapData"><span class="type-signature"></span>updateMapData<span class="signature">(tilemap, layer)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Updates the Tilemap data.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>tilemap</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Tilemap.html">Phaser.Tilemap</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The tilemap to which this layer belongs.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>layer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The layer index within the map.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-339">line 339</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="updateMax"><span class="type-signature"></span>updateMax<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Internal function to update maximum values.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-597">line 597</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="updateTileset"><span class="type-signature"></span>updateTileset<span class="signature">(tileset)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Updates the Tileset data.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>tileset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Tileset.html">Phaser.Tileset</a></span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The tileset to use for this layer.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-308">line 308</a>
     </li></ul></dd>
     
 
@@ -4038,7 +4917,7 @@ The lifespan is decremented by game.time.elapsed each update, once it reaches ze
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Fri Oct 25 2013 17:05:25 GMT+0100 (BST) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Thu Nov 28 2013 15:56:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
