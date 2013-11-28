@@ -58,8 +58,6 @@ $(document).ready(function(){
 
 	.done(function(data) {
 
-		console.log(data);
-
 		if (data.version !== '1.1.3')
 		{
 			$("#upgrade").append(data.version);

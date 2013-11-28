@@ -7,7 +7,7 @@ var filter;
 function preload() {
 
     game.load.image('phaser', 'assets/sprites/phaser2.png');
-    game.load.script('light', '../filters/LightBeam.js');
+    game.load.script('filter', '../filters/LightBeam.js');
 
 }
 

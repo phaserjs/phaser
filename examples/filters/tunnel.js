@@ -8,7 +8,7 @@ function preload() {
 
     game.load.image('phaser', 'assets/sprites/phaser.png');
     game.load.image('texture', 'assets/textures/ooze.png');
-    game.load.script('tunnel', '../filters/Tunnel.js');
+    game.load.script('filter', '../filters/Tunnel.js');
 
 }
 

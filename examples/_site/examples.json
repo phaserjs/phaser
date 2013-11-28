@@ -179,8 +179,16 @@
   ],
   "filters": [
     {
+      "file": "checker+wave.js",
+      "title": "checker wave"
+    },
+    {
       "file": "fire.js",
       "title": "fire"
+    },
+    {
+      "file": "hue+rotate.js",
+      "title": "hue rotate"
     },
     {
       "file": "lightbeams.js",

@@ -28,7 +28,9 @@
     <script src="$path/src/pixi/extras/Rope.js"></script>
     <script src="$path/src/pixi/extras/TilingSprite.js"></script>
 
+    <script src="$path/src/pixi/filters/AbstractFilter.js"></script>
     <script src="$path/src/pixi/filters/FilterBlock.js"></script>
+
     <script src="$path/src/pixi/primitives/Graphics.js"></script>
 
     <script src="$path/src/pixi/renderers/canvas/CanvasGraphics.js"></script>

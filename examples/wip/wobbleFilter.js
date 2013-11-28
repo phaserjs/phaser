@@ -14,11 +14,11 @@ PIXI.WobbleFilter = function(width, height, texture0, texture1)
 	];
 
 	this.uniforms = {
-		iResolution: { type: 'f3', value: { x: width, y: height, z: 0 }},
-		iGlobalTime: { type: 'f', value: 1 },
-		iDate: { type: 'f4', value: dates },
-		iChannel0: { type: 'sampler2D', value: texture0, wrap: 'repeat' },
-		iChannel1: { type: 'sampler2D', value: texture1, wrap: 'repeat' }
+		iResolution: { type: '3f', value: { x: width, y: height, z: 0 }},
+		iGlobalTime: { type: '1f', value: 1 },
+		iDate: { type: '4fv', value: dates },
+		iChannel0: { type: 'sampler2D', value: texture0, textureData: { repeat: true } },
+		iChannel1: { type: 'sampler2D', value: texture1, textureData: { repeat: true } }
 	};
 
 	//	Shader by deps (https://www.shadertoy.com/view/MssGDM)

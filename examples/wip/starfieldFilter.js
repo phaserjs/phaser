@@ -14,10 +14,10 @@ PIXI.StarFieldFilter = function(width, height, texture)
 	];
 
 	this.uniforms = {
-		iResolution: { type: 'f3', value: { x: width, y: height, z: 0 }},
-		iGlobalTime: { type: 'f', value: 1 },
-		iDate: { type: 'f4', value: dates },
-		iChannel0: { type: 'sampler2D', value: texture, wrap: 'repeat' }
+		iResolution: { type: '3f', value: { x: width, y: height, z: 0 }},
+		iGlobalTime: { type: '1f', value: 1 },
+		iDate: { type: '4fv', value: dates },
+		iChannel0: { type: 'sampler2D', value: texture, textureData: { repeat: true } }
 	};
 
 	//	Shader by Rebb / TRSI (https://www.shadertoy.com/view/XdX3Wn)

@@ -7,7 +7,7 @@ var filter;
 function preload() {
 
     game.load.image('phaser', 'assets/sprites/phaser2.png');
-    game.load.script('plasma', '../filters/Plasma.js');
+    game.load.script('filter', '../filters/Plasma.js');
 
 }
 

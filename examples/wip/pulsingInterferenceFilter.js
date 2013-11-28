@@ -14,10 +14,10 @@ PIXI.PulsingInterferenceFilter = function(width, height, texture)
 	];
 
 	this.uniforms = {
-		iResolution: { type: 'f3', value: { x: width, y: height, z: 0 }},
-		iMouse: { type: 'f3', value: { x: 0, y: 0, z: 0 }},
-		iGlobalTime: { type: 'f', value: 1 },
-		iDate: { type: 'f4', value: dates },
+		iResolution: { type: '3f', value: { x: width, y: height, z: 0 }},
+		iMouse: { type: '3f', value: { x: 0, y: 0, z: 0 }},
+		iGlobalTime: { type: '1f', value: 1 },
+		iDate: { type: '4fv', value: dates },
 		iChannel0: { type: 'sampler2D', value: texture, wrap: 'repeat' }
 	};
 
