@@ -63,7 +63,7 @@ Object.defineProperty(Phaser.Filter.Tunnel.prototype, 'origin', {
     },
 
     set: function(value) {
-    	this.uniforms.origin.value = value.toFixed(2);
+    	this.uniforms.origin.value = value;
     }
 
 });

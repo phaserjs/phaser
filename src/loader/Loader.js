@@ -346,6 +346,21 @@ Phaser.Loader.prototype = {
     },
 
     /**
+    * Add a JavaScript file to the Loader. Once loaded the JavaScript file will be automatically turned into a script tag (and executed), so be careful what you load!
+    *
+    * @method Phaser.Loader#script
+    * @param {string} key - Unique asset key of the script file.
+    * @param {string} url - URL of the JavaScript file.
+    */
+    script: function (key, url) {
+
+        this.addToFileList('script', key, url);
+
+        return this;
+
+    },
+
+    /**
     * Add a new sprite sheet to the loader.
     *
     * @method Phaser.Loader#spritesheet
@@ -824,6 +839,19 @@ Phaser.Loader.prototype = {
                 };
                 this._xhr.send();
                 break;
+
+            case 'script':
+
+                this._xhr.open("GET", this.baseURL + file.url, true);
+                this._xhr.responseType = "text";
+                this._xhr.onload = function () {
+                    return _this.fileComplete(_this._fileIndex);
+                };
+                this._xhr.onerror = function () {
+                    return _this.fileError(_this._fileIndex);
+                };
+                this._xhr.send();
+                break;
         }
 
     },
@@ -1006,6 +1034,15 @@ Phaser.Loader.prototype = {
             case 'text':
                 file.data = this._xhr.responseText;
                 this.game.cache.addText(file.key, file.url, file.data);
+                break;
+
+            case 'script':
+                file.data = document.createElement('script');
+                file.data.language = 'javascript';
+                file.data.type = 'text/javascript';
+                file.data.defer = true;
+                file.data.text = this._xhr.responseText;
+                document.head.appendChild(file.data);
                 break;
         }
 

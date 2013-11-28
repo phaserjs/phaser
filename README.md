@@ -46,6 +46,7 @@ Version 1.1.3 - in build
 * New: Added a new in-built texture. Sprites now use __default if no texture was provided (a 32x32 transparent PNG) or __missing if one was given but not found (a 32x32 black box with a green cross through it)
 * New: Phaser.Filter. A new way to use the new WebGL shaders/filters that the new version of Pixi supports.
 * New: Phaser.BitmapData object. A Canvas you can freely draw to with lots of functions. Can be used as a texture for Sprites. See the new examples and docs for details.
+* New: Loader can now load JavaScript files. Just use game.load.script('key', 'url') - the file will be turned into a script tag in the document head on successful load.
 * New: RenderTexture.render now takes a Phaser.Group. Also added renderXY for when you don't want to make a new Point object.
 * New: Physics.overlap now supports Sprites, Groups or Emitters and can perform group vs. group (etc) overlap checks with a custom callback and process handler.
 * New: Added Sound.externalNode which allows you to connect a Sound to an external node input rather than the SoundManager gain node.
@@ -99,6 +100,8 @@ Version 1.1.3 - in build
 * Fixed: InputHandler.checkPointerOver now checks the visible status of the Sprite Group before processing.
 * Fixed: The Sprite hulls (used for tile collision) were not being updated in sprite->sprite separations (thanks jcs)
 * Fixed: Plugins that had a postUpdate but no Update weren't being marked as active (thanks crazysam)
+* Fixed: StateManager.onPausedCallback function is not called when the game is paused (thanks haden)
+* Fixed: Fix for 'jitter' in scrolling where tilemaps & sprites are one frame off (thanks jcs)
 
 You can view the complete Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
 

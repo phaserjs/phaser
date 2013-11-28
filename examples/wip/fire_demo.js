@@ -7,6 +7,7 @@ var filter;
 function preload() {
 
     game.load.image('phaser', 'assets/sprites/phaser2.png');
+    game.load.script('fire', '../filters/Fire.js');
 
 }
 

@@ -7,7 +7,7 @@ var filter;
 function preload() {
 
     game.load.image('phaser', 'assets/sprites/phaser2.png');
-    game.load.script('fire', '../filters/Fire.js');
+    game.load.script('light', '../filters/LightBeam.js');
 
 }
 
@@ -20,8 +20,15 @@ function create() {
 	background.width = 800;
 	background.height = 600;
 
-	filter = game.add.filter('Fire', 800, 600);
+	filter = game.add.filter('LightBeam', 800, 600);
+
+	//	You have the following values to play with (defaults shown):
 	filter.alpha = 0.0;
+	// filter.red = 1.0;
+	// filter.green = 1.0;
+	// filter.blue = 2.0;
+	// filter.thickness = 70.0;
+	// filter.speed = 1.0;
 
 	background.filters = [filter];
 

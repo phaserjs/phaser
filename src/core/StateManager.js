@@ -110,6 +110,9 @@ Phaser.StateManager.prototype = {
     */
     boot: function () {
 
+        this.game.onPause.add(this.pause, this);
+        this.game.onResume.add(this.resume, this);
+
         if (this._pendingState !== null)
         {
             if (typeof this._pendingState === 'string')
@@ -388,6 +391,32 @@ Phaser.StateManager.prototype = {
         else
         {
             this._created = true;
+        }
+
+    },
+
+    /**
+    * @method Phaser.StateManager#pause
+    * @protected
+    */
+    pause: function () {
+
+        if (this._created && this.onPausedCallback)
+        {
+            this.onPausedCallback.call(this.callbackContext, this.game, true);
+        }
+
+    },
+
+    /**
+    * @method Phaser.StateManager#resume
+    * @protected
+    */
+    resume: function () {
+
+        if (this._created && this.onre)
+        {
+            this.onPausedCallback.call(this.callbackContext, this.game, false);
         }
 
     },

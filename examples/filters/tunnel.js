@@ -7,7 +7,6 @@ var filter;
 function preload() {
 
     game.load.image('phaser', 'assets/sprites/phaser.png');
-    game.load.image('texture2', 'wip/tex00.jpg');
     game.load.image('texture', 'assets/textures/ooze.png');
     game.load.script('tunnel', '../filters/Tunnel.js');
 
