@@ -302,6 +302,7 @@ Phaser.Loader.prototype = {
     * @param {string} key - Unique asset key of this image file.
     * @param {string} url - URL of image file.
     * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
+    * @return {Phaser.Loader} This Loader instance.
     */
     image: function (key, url, overwrite) {
 
@@ -327,6 +328,7 @@ Phaser.Loader.prototype = {
     * @param {string} key - Unique asset key of the text file.
     * @param {string} url - URL of the text file.
     * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
+    * @return {Phaser.Loader} This Loader instance.
     */
     text: function (key, url, overwrite) {
 
@@ -351,6 +353,7 @@ Phaser.Loader.prototype = {
     * @method Phaser.Loader#script
     * @param {string} key - Unique asset key of the script file.
     * @param {string} url - URL of the JavaScript file.
+    * @return {Phaser.Loader} This Loader instance.
     */
     script: function (key, url) {
 
@@ -369,6 +372,7 @@ Phaser.Loader.prototype = {
     * @param {number} frameWidth - Width of each single frame.
     * @param {number} frameHeight - Height of each single frame.
     * @param {number} [frameMax=-1] - How many frames in this sprite sheet. If not specified it will divide the whole image into frames.
+    * @return {Phaser.Loader} This Loader instance.
     */
     spritesheet: function (key, url, frameWidth, frameHeight, frameMax) {
 
@@ -391,6 +395,7 @@ Phaser.Loader.prototype = {
     * @param {number} [tileMax=-1] - How many tiles in this tileset. If not specified it will divide the whole image into tiles.
     * @param {number} [tileMargin=0] - If the tiles have been drawn with a margin, specify the amount here.
     * @param {number} [tileSpacing=0] - If the tiles have been drawn with spacing between them, specify the amount here.
+    * @return {Phaser.Loader} This Loader instance.
     */
     tileset: function (key, url, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing) {
 
@@ -411,6 +416,7 @@ Phaser.Loader.prototype = {
     * @param {string} key - Unique asset key of the audio file.
     * @param {Array|string} urls - An array containing the URLs of the audio files, i.e.: [ 'jump.mp3', 'jump.ogg', 'jump.m4a' ] or a single string containing just one URL.
     * @param {boolean} autoDecode - When using Web Audio the audio files can either be decoded at load time or run-time. They can't be played until they are decoded, but this let's you control when that happens. Decoding is a non-blocking async process.
+    * @return {Phaser.Loader} This Loader instance.
     */
     audio: function (key, urls, autoDecode) {
 
@@ -427,10 +433,10 @@ Phaser.Loader.prototype = {
     *
     * @method Phaser.Loader#tilemap
     * @param {string} key - Unique asset key of the tilemap data.
-    * @param {string} tilesetURL - The url of the tile set image file.
     * @param {string} [mapDataURL] - The url of the map data file (csv/json)
-    * @param {object} [mapData] - An optional JSON data object (can be given in place of a URL).
-    * @param {string} [format] - The format of the map data.
+    * @param {object} [mapData] - An optional JSON data object. If given then the mapDataURL is ignored and this JSON object is used for map data instead.
+    * @param {string} [format=Phaser.Tilemap.CSV] - The format of the map data. Either Phaser.Tilemap.CSV or Phaser.Tilemap.TILED_JSON.
+    * @return {Phaser.Loader} This Loader instance.
     */
     tilemap: function (key, mapDataURL, mapData, format) {
 
@@ -445,12 +451,8 @@ Phaser.Loader.prototype = {
             return this;
         }
 
-        //  A URL to a json/csv file has been given
-        if (mapDataURL)
-        {
-            this.addToFileList('tilemap', key, mapDataURL, { format: format });
-        }
-        else
+        //  A map data object has been given
+        if (mapData)
         {
             switch (format)
             {
@@ -470,6 +472,10 @@ Phaser.Loader.prototype = {
 
             this.game.cache.addTilemap(key, null, mapData, format);
         }
+        else
+        {
+            this.addToFileList('tilemap', key, mapDataURL, { format: format });
+        }
 
         return this;
 
@@ -483,6 +489,7 @@ Phaser.Loader.prototype = {
     * @param {string} textureURL - The url of the font image file.
     * @param {string} [xmlURL] - The url of the font data file (xml/fnt)
     * @param {object} [xmlData] - An optional XML data object.
+    * @return {Phaser.Loader} This Loader instance.
     */
     bitmapFont: function (key, textureURL, xmlURL, xmlData) {
 
@@ -542,6 +549,7 @@ Phaser.Loader.prototype = {
     * @param {string} textureURL - The url of the texture atlas image file.
     * @param {string} [atlasURL] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
     * @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
+    * @return {Phaser.Loader} This Loader instance.
     */
     atlasJSONArray: function (key, textureURL, atlasURL, atlasData) {
 
@@ -557,6 +565,7 @@ Phaser.Loader.prototype = {
     * @param {string} textureURL - The url of the texture atlas image file.
     * @param {string} [atlasURL] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
     * @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
+    * @return {Phaser.Loader} This Loader instance.
     */
     atlasJSONHash: function (key, textureURL, atlasURL, atlasData) {
 
@@ -572,6 +581,7 @@ Phaser.Loader.prototype = {
     * @param {string} textureURL - The url of the texture atlas image file.
     * @param {string} [atlasURL] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
     * @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
+    * @return {Phaser.Loader} This Loader instance.
     */
     atlasXML: function (key, textureURL, atlasURL, atlasData) {
 
@@ -588,6 +598,7 @@ Phaser.Loader.prototype = {
     * @param {string} [atlasURL] - The url of the texture atlas data file (json/xml). You don't need this if you are passing an atlasData object instead.
     * @param {object} [atlasData] - A JSON or XML data object. You don't need this if the data is being loaded from a URL.
     * @param {number} [format] - A value describing the format of the data, the default is Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY.
+    * @return {Phaser.Loader} This Loader instance.
     */
     atlas: function (key, textureURL, atlasURL, atlasData, format) {
 
@@ -728,6 +739,12 @@ Phaser.Loader.prototype = {
     */
     loadFile: function () {
 
+        if (!this._fileList[this._fileIndex])
+        {
+            console.warn('Phaser.Loader loadFile invalid index ' + this._fileIndex);
+            return;
+        }
+
         var file = this._fileList[this._fileIndex];
         var _this = this;
 
@@ -805,13 +822,13 @@ Phaser.Loader.prototype = {
                 this._xhr.open("GET", this.baseURL + file.url, true);
                 this._xhr.responseType = "text";
 
-                if (file.format == Phaser.Tilemap.TILED_JSON)
+                if (file.format === Phaser.Tilemap.TILED_JSON)
                 {
                     this._xhr.onload = function () {
                         return _this.jsonLoadComplete(_this._fileIndex);
                     };
                 }
-                else if (file.format == Phaser.Tilemap.CSV)
+                else if (file.format === Phaser.Tilemap.CSV)
                 {
                     this._xhr.onload = function () {
                         return _this.csvLoadComplete(_this._fileIndex);
@@ -1061,10 +1078,18 @@ Phaser.Loader.prototype = {
     */
     jsonLoadComplete: function (index) {
 
-        var data = JSON.parse(this._xhr.responseText);
-        var file = this._fileList[index];
+        if (!this._fileList[index])
+        {
+            console.warn('Phaser.Loader jsonLoadComplete invalid index ' + index);
+            return;
+        }
 
-        if (file.type == 'tilemap')
+        var file = this._fileList[index];
+        var data = JSON.parse(this._xhr.responseText);
+
+        file.loaded = true;
+
+        if (file.type === 'tilemap')
         {
             this.game.cache.addTilemap(file.key, file.url, data, file.format);
         }
@@ -1085,8 +1110,16 @@ Phaser.Loader.prototype = {
     */
     csvLoadComplete: function (index) {
 
-        var data = this._xhr.responseText;
+        if (!this._fileList[index])
+        {
+            console.warn('Phaser.Loader csvLoadComplete invalid index ' + index);
+            return;
+        }
+
         var file = this._fileList[index];
+        var data = this._xhr.responseText;
+
+        file.loaded = true;
 
         this.game.cache.addTilemap(file.key, file.url, data, file.format);
 
@@ -1104,6 +1137,7 @@ Phaser.Loader.prototype = {
 
         var file = this._fileList[index];
 
+        file.loaded = true;
         file.error = true;
 
         console.warn("Phaser.Loader dataLoadError: " + file.key);
@@ -1148,6 +1182,7 @@ Phaser.Loader.prototype = {
         }
 
         var file = this._fileList[index];
+        file.loaded = true;
 
         if (file.type == 'bitmapfont')
         {

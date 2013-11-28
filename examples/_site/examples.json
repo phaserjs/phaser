@@ -181,6 +181,18 @@
     {
       "file": "fire.js",
       "title": "fire"
+    },
+    {
+      "file": "lightbeams.js",
+      "title": "lightbeams"
+    },
+    {
+      "file": "plasma.js",
+      "title": "plasma"
+    },
+    {
+      "file": "tunnel.js",
+      "title": "tunnel"
     }
   ],
   "games": [
@@ -417,6 +429,10 @@
       "title": "load texture atlas"
     },
     {
+      "file": "load+tilemap+json.js",
+      "title": "load tilemap json"
+    },
+    {
       "file": "pick+images+from+cache.js",
       "title": "pick images from cache"
     }
@@ -607,10 +623,6 @@
     {
       "file": "animated+tiling+sprite.js",
       "title": "animated tiling sprite"
-    },
-    {
-      "file": "tiling+sprite+input.js",
-      "title": "tiling sprite input"
     },
     {
       "file": "tiling+sprite.js",
