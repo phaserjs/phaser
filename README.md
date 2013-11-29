@@ -5,21 +5,18 @@ Phaser 1.1
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 1.1.3 - Released: November 29th 2013
+Version: 1.1.3 "Arafel" - Released: November 29th 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
 View the [Official Website](http://phaser.io)<br />
 Follow on [Twitter](https://twitter.com/photonstorm)<br />
-Read the [Development Blog](http://www.photonstorm.com)<br />
 Join the [Forum](http://www.html5gamedevs.com/forum/14-phaser/)<br />
-Try out 150+ [Phaser Examples](http://gametest.mobi/phaser/examples/)
+Try out 160+ [Phaser Examples](http://gametest.mobi/phaser/examples/)
 
 [Un-official Getting Started with Phaser](http://www.antonoffplus.com/coding-an-html5-game-for-30-minutes-or-an-introduction-to-the-phaser-framework)
 
 [Subscribe to our new Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E). We'll email you when new versions are released as well as send you our regular Phaser game making magazine.
-
-"Being negative is not how we make progress" - Larry Page, Google
 
 Welcome to Phaser
 -----------------
@@ -36,10 +33,15 @@ Phaser is everything we ever wanted from an HTML5 game framework. It powers all 
 
 ![MiniCybernoid](http://www.photonstorm.com/wp-content/uploads/2013/10/phaser-cybernoid-640x480.png)
 
+Getting Started Guide
+---------------------
+
+We have a new [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE. If you're new to HTML5 game development (or are coming from another language like AS3) then we recommend starting there.
+
 Change Log
 ----------
 
-Version 1.1.3 - November 29th 2013
+Version 1.1.3 - "Arafel" - November 29th 2013
 
 * New: Added a .jshintrc so contributions can be run through JSHint to help retain formatting across the library (thanks kevinthompson)
 * New: The entire Phaser library has been updated to match the new JSHint configuration.
@@ -200,9 +202,18 @@ Road Map
 
 The 1.1 release was a massive under-taking, but we're really happy with how Phaser is progressing. It's becoming more solid and versatile with each iteration. Here is what's on our road map for future versions:
 
+Version 1.1.4 ("Kandor")
+
 * Enhance the State Management, so you can perform non-destructive State swaps and persistence.
+* More advanced tile map features. Better support for advanced Tiled features. Proper support for DAME tilemaps.
+
+Versions 1.2 ("Saldaea")
+
 * Integration with an advanced physics system. We've been experimenting with p2.js but have yet to conclude our research.
 * A more advanced Particle system, one that can render to a single canvas (rather than spawn hundreds of Sprites), more advanced effects, etc.
+
+Version 1.2+
+
 * Massively enhance the audio side of Phaser. Although it does what it does well, it could do with taking more advantage of Web Audio - echo effects, positional sound, etc.
 * Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.
 * Integration with third party services like Google Play Game Services and Amazon JS SDK.
@@ -212,7 +223,6 @@ The 1.1 release was a massive under-taking, but we're really happy with how Phas
 * Test out packaging with Node-webkit.
 * Flash CC HTML5 export integration.
 * Game parameters stored in Google Docs.
-* More advanced tile map features. Better support for advanced Tiled features and also I want to add full support for DAME tilemaps.
 * Add a d-pad example (http://www.html5gamedevs.com/topic/1574-gameinputondown-question/)
 * Create more touch input examples (http://www.html5gamedevs.com/topic/1556-mobile-touch-event/)
 * Look at HiDPI Canvas settings.
@@ -251,6 +261,8 @@ Bugs?
 Please add them to the [Issue Tracker][1] with as much info as possible, especially source code demonstrating the issue.
 
 ![Phaser Tilemap](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_tilemap_collision.png)
+
+"Being negative is not how we make progress" - Larry Page, Google
 
 License
 -------

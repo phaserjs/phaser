@@ -226,12 +226,25 @@ function enemyFires () {
     //  Grab the first bullet we can from the pool
     enemyBullet = enemyBullets.getFirstExists(false);
 
-    if (enemyBullet)
+    var livingEnemies=[];
+
+    aliens.forEachAlive(function(alien){
+
+        // put every living enemy in an array
+        livingEnemies.push(alien);
+    });
+
+
+    if (enemyBullet && livingEnemies.length > 0)
     {
-        var shooter=aliens.getRandom();
-        //  And fire it
+        
+        var random=game.rnd.integerInRange(0,livingEnemies.length);
+
+        // randomly select one of them
+        var shooter=livingEnemies[random];
+        // And fire the bullet from this enemy
         enemyBullet.reset(shooter.body.x, shooter.body.y);
-        // enemyBullet.body.velocity.y = 400;
+
         game.physics.moveToObject(enemyBullet,player,120);
         firingTimer = game.time.now + 2000;
     }
