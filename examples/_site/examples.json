@@ -195,6 +195,10 @@
       "title": "lightbeams"
     },
     {
+      "file": "marble.js",
+      "title": "marble"
+    },
+    {
       "file": "plasma.js",
       "title": "plasma"
     },

@@ -54,7 +54,7 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
 
         resolution: { type: '3f', value: { x: 256, y: 256, z: 0 }},
         time: { type: '1f', value: 0 },
-        mouse: { type: '4f', value: { x: 0, y: 0, z: 0, w: 0 }}
+        mouse: { type: '4fv', value: { x: 0, y: 0, z: 0, w: 0 }}
 
     };
     
