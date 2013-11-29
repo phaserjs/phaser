@@ -1,7 +1,7 @@
 ![Phaser Logo](http://www.photonstorm.com/wp-content/uploads/2013/09/phaser_10_release.jpg)
 
-Phaser 1.1
-==========
+Phaser 1.1.3
+============
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
@@ -14,98 +14,107 @@ Follow on [Twitter](https://twitter.com/photonstorm)<br />
 Join the [Forum](http://www.html5gamedevs.com/forum/14-phaser/)<br />
 Try out 160+ [Phaser Examples](http://gametest.mobi/phaser/examples/)
 
-[Un-official Getting Started with Phaser](http://www.antonoffplus.com/coding-an-html5-game-for-30-minutes-or-an-introduction-to-the-phaser-framework)
-
 [Subscribe to our new Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E). We'll email you when new versions are released as well as send you our regular Phaser game making magazine.
+
 
 Welcome to Phaser
 -----------------
 
-It's staggering to think just how much has been achieved in the short time Phaser has been alive. We've implemented literally hundreds of bug fixes and updates, thanks to the effort the community puts in to reporting issues they find. Exciting new features have been merged into the core and we revisited old ones and pimped them out. We also completely overhauled the Examples Suite, removed the requirement for PHP, rebuilt it and filled it with over 150 examples to dig in and learn from. And more importantly we've got our first pass at the API docs ready too.
+Over 1000 github stars! Wow! The latest release of Phaser represents another hard months work by the development team and the community at large. We've had some great contributions and have not let-up the pace of innovating and pushing Phaser forward. As we march towards the end of 2013 we do so knowing that with every passing month more and more developers are using Phaser, and more games are being made. All while it is getting stronger with each release.
 
-There is still more to be done of course. The API docs, while a good start, are lacking in places and still need to be backed up with a proper comprehensive manual. And we desperately need to write some 'best practises' and 'getting started' tutorials too. But we hope you appreciate the amount of effort that has been put in by the team so far.
+Our plan is to end 2013 with one final point release (1.1.4 - "Kandor") and then we'll start planning out the features we wish to see in version 1.2 in the New Year.
 
-There are many exciting new features and tweaks in this build that we felt it warranted a proper point release, hence the shift to version 1.1. Because of several core changes games that were in development in a 1.0.x version of Phaser may need refactoring for 1.1, but we feel those changes have helped the framework grow and mature as a whole.
-
-As before we offer a heart-felt "Thank you!" to everyone who has encouraged us along the way. To those of you who worked with Phaser during its various incarnations, and who released full games with it despite there being zero API documentation available: you are our heroes. It's your kind words and enthusiasm that has kept us going.
+As always we offer a heart-felt "Thank you!" to everyone who has encouraged us along the way. To those of you who worked with Phaser during its various incarnations, and who released full games with it despite there being zero API documentation available back then: you are our heroes. It's your kind words and enthusiasm that has kept us going.
 
 Phaser is everything we ever wanted from an HTML5 game framework. It powers all of our client work in build today and remains our single most important product, and we've only just scratched the surface of what we have planned for it.
 
 ![MiniCybernoid](http://www.photonstorm.com/wp-content/uploads/2013/10/phaser-cybernoid-640x480.png)
 
-Getting Started Guide
----------------------
+
+Getting Started Guides
+----------------------
 
 We have a new [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE. If you're new to HTML5 game development (or are coming from another language like AS3) then we recommend starting there.
+
+There is also this great [Un-official Getting Started Guide](http://www.antonoffplus.com/coding-an-html5-game-for-30-minutes-or-an-introduction-to-the-phaser-framework) which is well worth running through as well.
+
 
 Change Log
 ----------
 
 Version 1.1.3 - "Arafel" - November 29th 2013
 
-* New: Added a .jshintrc so contributions can be run through JSHint to help retain formatting across the library (thanks kevinthompson)
-* New: The entire Phaser library has been updated to match the new JSHint configuration.
-* New: Added a new in-built texture. Sprites now use __default if no texture was provided (a 32x32 transparent PNG) or __missing if one was given but not found (a 32x32 black box with a green cross through it)
-* New: Phaser.Filter. A new way to use the new WebGL shaders/filters that the new version of Pixi supports.
-* New: Phaser.BitmapData object. A Canvas you can freely draw to with lots of functions. Can be used as a texture for Sprites. See the new examples and docs for details.
-* New: Loader can now load JavaScript files. Just use game.load.script('key', 'url') - the file will be turned into a script tag in the document head on successful load.
-* New: RenderTexture.render now takes a Phaser.Group. Also added renderXY for when you don't want to make a new Point object.
-* New: Physics.overlap now supports Sprites, Groups or Emitters and can perform group vs. group (etc) overlap checks with a custom callback and process handler.
-* New: Added Sound.externalNode which allows you to connect a Sound to an external node input rather than the SoundManager gain node.
-* New: Added SoundManager.connectToMaster boolean. Used in conjunction with Sound.externalNode you can easily configure audio nodes to connect together for special effects.
-* New: PluginManager.remove, added PluginManager.removeAll (thanks crazysam)
-* New: scrollFactorX/scrollFactorY have been added to TilemapLayers (thanks jcd-as)
-* New: Phaser.Game parent can now be an HTMLElement or a string (thanks beeglebug)
-* New: Now using the latest version of Pixi.js. Which means you can use all the sexy new WebGL filters :)
-* New: Sprite.animations.getAnimation will return an animation instance which was added by name.
-* New: Added Mouse.button which is set to the button that was pressed: Phaser.Mouse.LEFT_BUTTON, MIDDLE_BUTTON or RIGHT_BUTTON (thanks wKLV)
-* New: Added Mouse.pointerLock signal which you can listen to whenever the browser enters or leaves pointer lock mode.
-* New: StageScaleMode.forceOrientation allows you to lock your game to one orientation and display a Sprite (i.e. a "please rotate" screen) when incorrect.
-* New: World.visible boolean added, toggles rendering of the world on/off entirely.
-* New: Polygon class & drawPolygon method added to Graphics (thanks rjimenezda)
-* New: Added Group.iterate, a powerful way to count or return children that match a certain criteria. Refactored Group to use iterate, lots of repeated code cut.
-* New: Added Group.sort. You can now sort the Group based on any given numeric property (x, y, health), finally you can do depth-sorting :) Example created to show.
-* New: Enhanced renderTexture so it can accept a Phaser.Group object and improved documentation and examples.
-* New: Device.littleEndian boolean added. Only safe to use if the browser supports TypedArrays (which IE9 doesn't, but nearly all others do)
-* New: You can now call game.sound.play() and simply pass it a key. The sound will play if the audio system is unlocked and optionally destroy itself on complete.
-* New: Mouse.capture is a boolean. If set to true then DOM mouse events will have event.preventDefault() applied, if false they will propogate fully.
-* New: The object returned by Math.sinCosGenerator now contains a length property.
+New features:
 
-* Updated: Lots of documentation fixes and updates across nearly all files. Tilemap now documented for example and lots of instances of 'Description' filled out.
-* Updated: ArcadePhysics.updateMotion applies the dt to the velocity calculations as well as position now (thanks jcs)
-* Updated: RequestAnimationFrame now retains the callbackID which is passed to cancelRequestAnimationFrame.
-* Updated: Button now goes back to over state when setFrames used in action (thanks beeglebug)
-* Updated: plugins now have a postUpdate callback (thanks cocoademon)
-* Updated: Tided up the Graphics object (thanks BorisKozo)
-* Updated: If running in Canvas mode and you have a render function it will save the context and reset the transform before running your render function.
-* Updated: Sprite will now check the exists property of the Group it is in, if the Group.exists = false the Sprite won't update.
-* Updated: If you specify 'null' as a Group parent it will now revert to using the World as the parent (before only 'undefined' worked)
-* Updated: Skip preupdate/update for PIXI hierarchies in which an ancestor doesn't exist (thanks cocoademon)
-* Updated: Loader.audio can now accept either an array of URL strings or a single URL string (thanks crazysam + kevinthompson)
-* Updated: MSPointer updated to support IE11 by dropping the prefix from the event listeners.
-* Updated: Device.cocoonJS added to detect if the game is running under Cocoon or a native browser.
-* Updated: Loader now uses a new queue system internally, meaning you can have assets with the same key spread across different types.
+* Phaser.Filter. A new way to use the new WebGL shaders/filters that the new version of Pixi supports.
+* Phaser.BitmapData object. A Canvas you can freely draw to with lots of functions. Can be used as a texture for Sprites. See the new examples and docs for details.
+* The entire Phaser library has been updated to match the new JSHint configuration.
+* Added a .jshintrc so contributions can be run through JSHint to help retain formatting across the library (thanks kevinthompson)
+* Added a new in-built texture. Sprites now use __default if no texture was provided (a 32x32 transparent PNG) or __missing if one was given but not found (a 32x32 black box with a green cross through it)
+* Loader can now load JavaScript files. Just use game.load.script('key', 'url') - the file will be turned into a script tag in the document head on successful load.
+* RenderTexture.render now takes a Phaser.Group. Also added renderXY for when you don't want to make a new Point object.
+* Physics.overlap now supports Sprites, Groups or Emitters and can perform group vs. group (etc) overlap checks with a custom callback and process handler.
+* Added Sound.externalNode which allows you to connect a Sound to an external node input rather than the SoundManager gain node.
+* Added SoundManager.connectToMaster boolean. Used in conjunction with Sound.externalNode you can easily configure audio nodes to connect together for special effects.
+* PluginManager.remove, added PluginManager.removeAll (thanks crazysam)
+* scrollFactorX/scrollFactorY have been added to TilemapLayers (thanks jcd-as)
+* Phaser.Game parent can now be an HTMLElement or a string (thanks beeglebug)
+* Now using the latest version of Pixi.js. Which means you can use all the sexy new WebGL filters :)
+* Sprite.animations.getAnimation will return an animation instance which was added by name.
+* Added Mouse.button which is set to the button that was pressed: Phaser.Mouse.LEFT_BUTTON, MIDDLE_BUTTON or RIGHT_BUTTON (thanks wKLV)
+* Added Mouse.pointerLock signal which you can listen to whenever the browser enters or leaves pointer lock mode.
+* StageScaleMode.forceOrientation allows you to lock your game to one orientation and display a Sprite (i.e. a "please rotate" screen) when incorrect.
+* World.visible boolean added, toggles rendering of the world on/off entirely.
+* Polygon class & drawPolygon method added to Graphics (thanks rjimenezda)
+* Added Group.iterate, a powerful way to count or return children that match a certain criteria. Refactored Group to use iterate, lots of repeated code cut.
+* Added Group.sort. You can now sort the Group based on any given numeric property (x, y, health), finally you can do depth-sorting :) Example created to show.
+* Enhanced renderTexture so it can accept a Phaser.Group object and improved documentation and examples.
+* Device.littleEndian boolean added. Only safe to use if the browser supports TypedArrays (which IE9 doesn't, but nearly all others do)
+* You can now call game.sound.play() and simply pass it a key. The sound will play if the audio system is unlocked and optionally destroy itself on complete.
+* Mouse.capture is a boolean. If set to true then DOM mouse events will have event.preventDefault() applied, if false they will propogate fully.
+* The object returned by Math.sinCosGenerator now contains a length property.
 
-* Fixed: Lots of fixes to the TypeScript definitions file (many thanks gltovar)
-* Fixed: Tilemap commands use specified layer when one given (thanks Izzimach)
-* Fixed: Mouse.stop now uses the true useCapture, which means the event listeners stop listening correctly (thanks beeglebug)
-* Fixed: Input Keyboard example fix (thanks Atrodilla)
-* Fixed: BitmapText.destroy now checks if it has a canvas before calling parentNode on it.
-* Fixed: Group.swap had a hellish to find bug that only manifested when B-A upward swaps occured. Hours of debugging later = bug crushed.
-* Fixed: Point.rotate asDegrees fixed (thanks BorisKozo)
-* Fixed: ArcadePhysics.separateTile wasn't returning the value, so the custom process callback wasn't getting called (thanks flameiguana)
-* Fixed: StageScaleMode.forceOrientation now correctly stores the forcePortrait value (thanks haden)
-* Fixed: Fixes to Math and Loader (thanks theJare)
-* Fixed: Tween - isRunning not reset when non-looped tween completes (thanks crazysam + kevinthompson)
-* Fixed: Math.normalizeAngle and Math.wrapAngle (thanks theJare)
-* Fixed: Device.isTouch modified to test maxTouchPointers instead of MSPointer.
-* Fixed: InputHandler.checkPointerOver now checks the visible status of the Sprite Group before processing.
-* Fixed: The Sprite hulls (used for tile collision) were not being updated in sprite->sprite separations (thanks jcs)
-* Fixed: Plugins that had a postUpdate but no Update weren't being marked as active (thanks crazysam)
-* Fixed: StateManager.onPausedCallback function is not called when the game is paused (thanks haden)
-* Fixed: Fix for 'jitter' in scrolling where tilemaps & sprites are one frame off (thanks jcs)
+Updates:
 
-You can view the complete Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
+* Lots of documentation fixes and updates across nearly all files. Tilemap now documented for example and lots of instances of 'Description' filled out.
+* ArcadePhysics.updateMotion applies the dt to the velocity calculations as well as position now (thanks jcs)
+* RequestAnimationFrame now retains the callbackID which is passed to cancelRequestAnimationFrame.
+* Button now goes back to over state when setFrames used in action (thanks beeglebug)
+* plugins now have a postUpdate callback (thanks cocoademon)
+* Tided up the Graphics object (thanks BorisKozo)
+* If running in Canvas mode and you have a render function it will save the context and reset the transform before running your render function.
+* Sprite will now check the exists property of the Group it is in, if the Group.exists = false the Sprite won't update.
+* If you specify 'null' as a Group parent it will now revert to using the World as the parent (before only 'undefined' worked)
+* Skip preupdate/update for PIXI hierarchies in which an ancestor doesn't exist (thanks cocoademon)
+* Loader.audio can now accept either an array of URL strings or a single URL string (thanks crazysam + kevinthompson)
+* MSPointer updated to support IE11 by dropping the prefix from the event listeners.
+* Device.cocoonJS added to detect if the game is running under Cocoon or a native browser.
+* Loader now uses a new queue system internally, meaning you can have assets with the same key spread across different types.
+
+Bug Fixes:
+
+* Lots of fixes to the TypeScript definitions file (many thanks gltovar)
+* Tilemap commands use specified layer when one given (thanks Izzimach)
+* Mouse.stop now uses the true useCapture, which means the event listeners stop listening correctly (thanks beeglebug)
+* Input Keyboard example fix (thanks Atrodilla)
+* BitmapText.destroy now checks if it has a canvas before calling parentNode on it.
+* Group.swap had a hellish to find bug that only manifested when B-A upward swaps occured. Hours of debugging later = bug crushed.
+* Point.rotate asDegrees fixed (thanks BorisKozo)
+* ArcadePhysics.separateTile wasn't returning the value, so the custom process callback wasn't getting called (thanks flameiguana)
+* StageScaleMode.forceOrientation now correctly stores the forcePortrait value (thanks haden)
+* Fixes to Math and Loader (thanks theJare)
+* Tween - isRunning not reset when non-looped tween completes (thanks crazysam + kevinthompson)
+* Math.normalizeAngle and Math.wrapAngle (thanks theJare)
+* Device.isTouch modified to test maxTouchPointers instead of MSPointer.
+* InputHandler.checkPointerOver now checks the visible status of the Sprite Group before processing.
+* The Sprite hulls (used for tile collision) were not being updated in sprite->sprite separations (thanks jcs)
+* Plugins that had a postUpdate but no Update weren't being marked as active (thanks crazysam)
+* StateManager.onPausedCallback function is not called when the game is paused (thanks haden)
+* Fix for 'jitter' in scrolling where tilemaps & sprites are one frame off (thanks jcs)
+
+
+You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
+
 
 How to Build
 ------------
@@ -118,6 +127,7 @@ Run `grunt` in the phaser folder for a list of command-line options.
 
 ![Tanks](http://www.photonstorm.com/wp-content/uploads/2013/10/phaser_tanks-640x480.png)
 
+
 Requirements
 ------------
 
@@ -125,18 +135,19 @@ Games created with Phaser require a modern web browser that supports the canvas 
 
 For developing with Phaser you can use either a plain-vanilla JavaScript approach or [TypeScript](https://typescript.codeplex.com/) using the provided TypeScript definitions file. We made no assumptions about how you like to code your games, and were careful not to impose any form of class/inheritance/structure upon you.
 
-Phaser is 281 KB minified and 66 KB gzipped.
+Phaser is 321 KB minified and 72 KB gzipped.
+
 
 Features
 --------
 
 **WebGL &amp; Canvas**
 
-Phaser uses both a Canvas and WebGL renderer internally and can automatically swap between them based on browser support. This allows for lightning fast rendering across Desktop and Mobile. Phaser uses and contributes towards the excellent Pixi.js library for rendering.
+Phaser uses both a Canvas and WebGL renderer internally and can automatically swap between them based on browser support. This allows for lightning fast rendering across Desktop and Mobile. When running under WebGL Phaser now supports shaders, allowing for some incredible in-game effects. Phaser uses and contributes towards the excellent Pixi.js library for rendering.
 
 **Preloader**
 
-We've made the loading of assets as simple as one line of code. Images, Sounds, Sprite Sheets, Tilemaps, JSON data, XML - all parsed and handled automatically, ready for use in game and stored in a global Cache for Sprites to share.
+We've made the loading of assets as simple as one line of code. Images, Sounds, Sprite Sheets, Tilemaps, JSON data, XML and JavaScrtip files - all parsed and handled automatically, ready for use in game and stored in a global Cache for Sprites to share.
 
 **Physics**
 
@@ -197,6 +208,7 @@ Although Phaser 1.0 is a brand new release it is born from years of experience b
 
 ![FruitParty](http://www.photonstorm.com/wp-content/uploads/2013/10/phaser_fruit_particles-640x480.png)
 
+
 Road Map
 --------
 
@@ -227,6 +239,7 @@ Version 1.2+
 * Create more touch input examples (http://www.html5gamedevs.com/topic/1556-mobile-touch-event/)
 * Look at HiDPI Canvas settings.
 
+
 Learn By Example
 ----------------
 
@@ -244,6 +257,7 @@ There is a new 'Side View' example viewer as well. This loads all the examples i
 
 You can also browse all [Phaser Examples](http://gametest.mobi/phaser/) online.
 
+
 Contributing
 ------------
 
@@ -255,6 +269,7 @@ You can do this on the Phaser board that is part of the [HTML5 Game Devs forum](
 
 Before submitting a pull request, please run your code through [JSHint](http://www.jshint.com/) to check for stylistic or formatting errors. To use JSHint, first install it by running `npm install jshint`, then test your code by running `jshint src`. This isn't a requirement, we are happy to receive pull requests that haven't been JSHinted, so don't let it put you off contributing - but do know that we'll reformat your source before going live with it.
 
+
 Bugs?
 -----
 
@@ -264,10 +279,11 @@ Please add them to the [Issue Tracker][1] with as much info as possible, especia
 
 "Being negative is not how we make progress" - Larry Page, Google
 
+
 License
 -------
 
-Phaser is released under the (http://opensource.org/licenses/MIT) MIT License.
+Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 
 [1]: https://github.com/photonstorm/phaser/issues
 [phaser]: https://github.com/photonstorm/phaser
