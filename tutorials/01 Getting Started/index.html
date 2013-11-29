@@ -15,66 +15,32 @@
 
         <h1>Getting started with Phaser</h1>
 
-        <h2>Part 1 - Setting up your development environment</h2>
+        <ul>
+            <li><a href="index.html">Part 1: Introduction</a></li>
+            <li><a href="part2.html">Part 2: Installing a web server</a></li>
+            <li><a href="part3.html">Part 3: Run in the Cloud</a></li>
+            <li><a href="part4.html">Part 4: Choosing an Editor</a></li>
+            <li><a href="part5.html">Part 5: Downloading Phaser</a></li>
+            <li><a href="part6.html">Part 6: Hello World!</a></li>
+            <li><a href="part7.html">Part 7: The Phaser Examples</a></li>
+            <li><a href="part8.html">Part 8: Next Steps</a></li>
+        </ul>
+
+        <h2>Part 1 - Introduction</h2>
 
         <p>In this tutorial we're going to cover setting-up a development enviornment with which you can build your Phaser games. This will include running a local web server, picking an IDE, getting the latest version of Phaser and checking it all works together properly.</p>
 
-        <p>"But why do I need a local web server anyway? Can't I just drag the html files onto my browser?"</p>
+        <p><strong>"Why do I need a local web server? Can't I just drag the html files onto my browser?"</strong></p>
 
-        <p>Not these days, no. I appreciate that it's a bit confusing, even contradictory at times, but it all boils down to browser security in the end. If you're making a static html web site, with a few images in it, then you can happily drag this into your browser and see the end results. You can also "Save As" entire web pages locally and re-open them, with all the contents mostly intact. So why can't you drag an HTML5 game into a browser and have it work?</p>
+        <p>Not these days, no. I appreciate that it's a bit confusing, even contradictory at times, but it all boils down to browser security. If you're making a static html web page, perhaps with a few images in it, then you can happily drag this file into your browser and see the end results. You can also "Save As" entire web pages locally and re-open them, with all the contents mostly intact. If both of these things work why can't you drag an HTML5 game into a browser and run it?</p>
 
-        <p>It's to do with the protocol used to access the files. When you request anything over the web you're using http - and the server level security is enough to ensure you can only access files you're meant to. But when you drag a file in it's loaded via the local file system (technically file://) and that is a massively restricted one, for obvious reasons. Under file:// there's no concept of domains, no server level security - just a raw file system. Ask yourself this: do you really want JavaScript to have the ability to load files from your local file system? The immediate answer should of course be "no way!". If JavaScript had free reign while operating under file:// there would be nothing stopping it loading up any system file it fancied and sending it off over the net to anywhere it liked.</p>
+        <p>It's to do with the protocol used to access the files. When you request anything over the web you're using http, and the server level security is enough to ensure you can only access files you're meant to. But when you drag a file in it's loaded via the local file system (technically file://) and that is massively restricted, for obvious reasons. Under file:// there's no concept of domains, no server level security, just a raw file system. Ask yourself this: do you really want JavaScript to have the ability to load files from your local file system? Your immediate answer should of course be "not in a million years!". If JavaScript had free reign while operating under file:// there would be nothing stopping it loading pretty much <em>any</em> file it fancied and sending it off who knows where.</p>
 
-        <p>Because this is so dangerous browsers lock themselves down tighter than Alcatraz when running under file://. Every single page becomes treated as a unique local domain. That is why "Save Web page" work, to a degree. They still are under the same cross-site restrictions as if they were on a live server. (to a degree, they still can't save anything or send data out or load data like a game), but also why "Save Web page" cannot make a cross site request, i.e. it can't load or send local data elsewhere. There's a quite detailed post here about it: http://blog.chromium.org/2008/12/security-in-depth-local-web-pages.html        
+        <p>Because this is so dangerous browsers lock themselves down tighter than Alcatraz when running under file://. Every single page becomes treated as a unique local domain. That is why "Save Web page" works, to a degree. It opens under the same cross-site restrictions as if they were on a live server. There's a detailed post about it on the Chromium blog: http://blog.chromium.org/2008/12/security-in-depth-local-web-pages.html.</p>
 
+        <p>Your game is going to need to load in resources. Images, audio files, JSON data, maybe other JavaScript files. In order to do this it needs to run unhindered by the browser security shackles. It needs http:// access to the game files. And for that we need a web server.</p>
 
-
-            Due to the way that web browser sandbox security works you will need a local web server running. This is so that your games can load in external assets like images and music. By default web browsers are unable to load local files, as if you think about it for a moment you should be grateful for that fact! Although there are ways to modify your browsers start-up settings to bypass the sandbox security we really don't recommend it, and as you're building games for <em>the web</em> it's only sensible that you run a local environment that as closely emulates the web on which your game will be running anyway.</p>
-
-
-        <h2>Download the latest version of Phaser</h2>
-
-
-        <p>In this tutorial we're going to build a game that will introduce some of the core features of Phaser to you. Before we begin there are a few things you'll need to have set-up if you haven't already:</p>
-
-        <h2>Download the latest version of Phaser</h2>
-
-        <p>The latest version of Phaser is available to download from github. At the time of writing that is version 1.1.2. If you aren't familiar with using git then github offer a handy "Download as zip" option which will download the whole repository in a single zip file. You can then unzip this locally and get to all the files. If you are happy using git then pull down the latest version of the repositiory before starting.</p>
-
-        <h2>Set-up your development environment</h2>
-
-        <h3>Method 1: Run a local web server</h3>
-
-http://cesanta.com/downloads.html
-
-        <p>On Windows there are lots of "single install" bundles available. These are easy-to-install files that package together popular web technologies like Apache, PHP and MySQL and install them all for you at once, often with a handy system-tray icon to manage them too. We would recommend either <a href="http://www.wampserver.com/en/">WAMP Server</a> or <a href="http://www.apachefriends.org/en/xampp.html">XAMPP</a>. Instead of an 'all in one' bundle you could also download just the web server on its own. Microsoft provide IIS and Apache can be downloaded for Windows as well.</p>
-
-        <p><strong>Note:</strong> Skype likes to steal port 80 by default. This is the traditional port for a web server to run over and it might interfer with WAMP or similar being able to start. To disable this within Skype go to "Tools - Options - Connection" and uncheck the "Use port 80 and 443 as alternatives for incoming connections" checkbox.</p>
-
-        <p>On OS X you could download <a href="http://www.mamp.info/en/index.html">MAMP</a> which comes in two versions (one free, one paid for). Or there are guides for setting up a local web server manually, such as <a href="https://discussions.apple.com/docs/DOC-3083">this guide written for Mountain Lion</a>.
-
-        <h3>Method 2: grunt connect</h3>
-
-        <p><a href="http://gruntjs.com/">Grunt</a> is an extremely powerful tool to have installed, regardless if you use it as a web server or not. At its essence it's a JavaScript based task runner and allows you to automate tedious time consuming tasks. But it can also be configured with Connect for serving local files and <a href="https://github.com/gruntjs/grunt-contrib-connect">here's a guide on doing just that</a>.
-
-        <h3>Method 3: Simple HTTP Server with Python</h3>
-
-        <p>If you need a quick web server running and you don't want to mess around with setting up apache or something similar, then Python can help. Python comes with a simple built in HTTP server. With the help of this little HTTP server you can turn any directory in your system into your web server directory. The only thing you need to have installed is Python. <a href="http://www.linuxjournal.com/content/tech-tip-really-simple-http-server-python">Read the full guide here</a>.
-
-        <h3>Method 4: http-server for node.js</h3>
-
-        <p>http-server is a simple, zero-configuration command-line http server for <a href="http://nodejs.org/">node.js</a>. It is powerful enough for production usage, but it's simple and hackable enough to be used for testing, local development, and learning. Or as the web site says "Serving up static files like they were turtles strapped to rockets". Get the npm and instructions from the <a href="https://npmjs.org/package/http-server">http-server web site</a>.</p>
-
-        <h3>Method 5: php 5 built-in web server</h3>
-
-        <p>As of PHP 5.4.0, the CLI SAPI provides a built-in web server. It's only really suitable for development purposes and servers all files sequentially, but it's easily powerful enough for testing HTML5 games. It's invoked from a single command-line call and you can find details on how to do this in <a href="http://php.net/manual/en/features.commandline.webserver.php">the PHP Manual</a></p>.
-
-
-
-
-        <h3>Method 2: Run in the cloud</h3>
-
-
+        <p><a href="part2.html">Part 2: Installing a web server</a></p>
 
     </body>
 </html>
