@@ -67,7 +67,7 @@ Phaser.Loader = function (game) {
     /**
     * You can optionally link a sprite to the preloader.
     * If you do so the Sprite's width or height will be cropped based on the percentage loaded.
-    * @property {Description} preloadSprite
+    * @property {Phaser.Sprite} preloadSprite
     * @default
     */
     this.preloadSprite = null;
@@ -1058,7 +1058,7 @@ Phaser.Loader.prototype = {
                 file.data = document.createElement('script');
                 file.data.language = 'javascript';
                 file.data.type = 'text/javascript';
-                file.data.defer = true;
+                file.data.defer = false;
                 file.data.text = this._xhr.responseText;
                 document.head.appendChild(file.data);
                 break;

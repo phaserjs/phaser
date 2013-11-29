@@ -5,7 +5,7 @@ Phaser 1.1
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 1.1.3 - Released: November 28th 2013
+Version: 1.1.3 - Released: November 29th 2013
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -39,7 +39,7 @@ Phaser is everything we ever wanted from an HTML5 game framework. It powers all 
 Change Log
 ----------
 
-Version 1.1.3 - November 28th 2013
+Version 1.1.3 - November 29th 2013
 
 * New: Added a .jshintrc so contributions can be run through JSHint to help retain formatting across the library (thanks kevinthompson)
 * New: The entire Phaser library has been updated to match the new JSHint configuration.
@@ -228,7 +228,7 @@ Using a locally installed web server browse to the examples folder:
 
     examples/index.html
 
-Alternatively in order to start the included web server, after you've cloned the repo, run npm install to install all dependencies, then run grunt connect to start a local server. After running this command, you should be able to access your local webserver at `http://127.0.0.1:8000`. Then browse to the examples folder: `http://127.0.0.1:8000/examples/index.html`
+Alternatively in order to start the included web server, after you've cloned the repo, run `npm install` to install all dependencies, then `grunt connect `to start a local server. After running this command you should be able to access your local webserver at `http://127.0.0.1:8000`. Then browse to the examples folder: `http://127.0.0.1:8000/examples/index.html`
 
 There is a new 'Side View' example viewer as well. This loads all the examples into a left-hand frame for faster navigation.
 
@@ -236,8 +236,6 @@ You can also browse all [Phaser Examples](http://gametest.mobi/phaser/) online.
 
 Contributing
 ------------
-
-Phaser is in early stages and although we've still got a lot to add to it, we wanted to get it out there and share it with the world.
 
 If you find a bug (highly likely!) then please report it on github or our forum.
 

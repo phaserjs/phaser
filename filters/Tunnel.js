@@ -13,7 +13,7 @@ Phaser.Filter.Tunnel = function (game) {
     this.fragmentSrc = [
 
         "precision mediump float;",
-        "uniform vec3      resolution;",
+        "uniform vec2      resolution;",
         "uniform float     time;",
         "uniform sampler2D iChannel0;",
         "uniform float     alpha;",

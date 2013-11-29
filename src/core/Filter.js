@@ -52,9 +52,9 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
     */
     this.uniforms = {
 
-        resolution: { type: '3f', value: { x: 256, y: 256, z: 0 }},
         time: { type: '1f', value: 0 },
-        mouse: { type: '4fv', value: { x: 0, y: 0, z: 0, w: 0 }}
+        resolution: { type: '2f', value: { x: 256, y: 256 }},
+        mouse: { type: '2f', value: { x: 0.0, y: 0.0 }}
 
     };
     
@@ -97,8 +97,15 @@ Phaser.Filter.prototype = {
 
         if (typeof pointer !== 'undefined')
         {
-            this.uniforms.mouse.x = pointer.x;
-            this.uniforms.mouse.y = pointer.y;
+            if (pointer.x > 0)
+            {
+                this.uniforms.mouse.x = pointer.x.toFixed(2);
+            }
+
+            if (pointer.y > 0)
+            {
+                this.uniforms.mouse.y = pointer.y.toFixed(2);
+            }
         }
 
         this.uniforms.time.value = this.game.time.totalElapsedSeconds();

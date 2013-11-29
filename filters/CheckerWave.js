@@ -14,7 +14,7 @@ Phaser.Filter.CheckerWave = function (game) {
     this.fragmentSrc = [
 
         "precision mediump float;",
-        "uniform vec3      resolution;",
+        "uniform vec2      resolution;",
         "uniform float     time;",
         "uniform float     alpha;",
         "uniform vec3      vrp;",
@@ -122,7 +122,7 @@ Phaser.Filter.CheckerWave.prototype.setColor2 = function (red, green, blue) {
 
 }
 
-Object.defineProperty(Phaser.Filter.HueRotate.prototype, 'alpha', {
+Object.defineProperty(Phaser.Filter.CheckerWave.prototype, 'alpha', {
 
     get: function() {
         return this.uniforms.alpha.value;
@@ -134,7 +134,7 @@ Object.defineProperty(Phaser.Filter.HueRotate.prototype, 'alpha', {
 
 });
 
-Object.defineProperty(Phaser.Filter.HueRotate.prototype, 'cameraX', {
+Object.defineProperty(Phaser.Filter.CheckerWave.prototype, 'cameraX', {
 
     get: function() {
         return this.uniforms.vrp.value.x;
@@ -146,7 +146,7 @@ Object.defineProperty(Phaser.Filter.HueRotate.prototype, 'cameraX', {
 
 });
 
-Object.defineProperty(Phaser.Filter.HueRotate.prototype, 'cameraY', {
+Object.defineProperty(Phaser.Filter.CheckerWave.prototype, 'cameraY', {
 
     get: function() {
         return this.uniforms.vrp.value.y;
@@ -158,7 +158,7 @@ Object.defineProperty(Phaser.Filter.HueRotate.prototype, 'cameraY', {
 
 });
 
-Object.defineProperty(Phaser.Filter.HueRotate.prototype, 'cameraZ', {
+Object.defineProperty(Phaser.Filter.CheckerWave.prototype, 'cameraZ', {
 
     get: function() {
         return this.uniforms.vrp.value.z;

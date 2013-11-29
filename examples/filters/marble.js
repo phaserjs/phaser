@@ -21,7 +21,12 @@ function create() {
 	background.height = 600;
 
 	filter = game.add.filter('Marble', 800, 600);
-	//filter.alpha = 0.0;
+	filter.alpha = 0.2;
+
+	//	The following properties are available (shown at default values)
+
+	//	filter.speed = 10.0;
+	//	filter.intensity = 0.30;
 
 	background.filters = [filter];
 

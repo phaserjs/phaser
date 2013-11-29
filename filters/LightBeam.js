@@ -16,7 +16,7 @@ Phaser.Filter.LightBeam = function (game) {
     this.fragmentSrc = [
 
         "precision mediump float;",
-        "uniform vec3      resolution;",
+        "uniform vec2      resolution;",
         "uniform float     time;",
         "uniform float     alpha;",
         "uniform float     thickness;",
