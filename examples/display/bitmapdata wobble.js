@@ -17,7 +17,7 @@ var waveDataCounter;
 function create() {
 
 	//	Create our BitmapData object at a size of 32x64
-	bmd = game.add.bitmapData('ball', 32, 64);
+	bmd = game.add.bitmapData(32, 64);
 
     //  And apply it to 100 randomly positioned sprites
     for (var i = 0; i < 100; i++)
