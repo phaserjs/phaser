@@ -279,13 +279,15 @@ Phaser.TilemapLayer.prototype = Phaser.Utils.extend(true, Phaser.TilemapLayer.pr
 Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 
 /**
-* Automatically called by World.preUpdate. Handles cache updates.
+* Automatically called by World.postUpdate. Handles cache updates.
 *
-* @method Phaser.TilemapLayer#update
+* @method Phaser.TilemapLayer#postUpdate
 * @memberof Phaser.TilemapLayer
 */
-Phaser.TilemapLayer.prototype.update = function () {
+Phaser.TilemapLayer.prototype.postUpdate = function () {
 
+	Phaser.Sprite.prototype.postUpdate.call( this );
+	
     this.scrollX = this.game.camera.x * this.scrollFactorX;
     this.scrollY = this.game.camera.y * this.scrollFactorY;
 
