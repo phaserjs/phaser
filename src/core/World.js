@@ -113,6 +113,8 @@ Phaser.World.prototype.update = function () {
 */
 Phaser.World.prototype.postUpdate = function () {
 
+    this.camera.update();
+
     if (this.game.stage._stage.first._iNext)
     {
         var currentNode = this.game.stage._stage.first._iNext;
@@ -128,8 +130,6 @@ Phaser.World.prototype.postUpdate = function () {
         }
         while (currentNode != this.game.stage._stage.last._iNext)
     }
-
-    this.camera.update();
 }
 
 /**
