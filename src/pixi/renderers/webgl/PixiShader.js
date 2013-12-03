@@ -226,6 +226,7 @@ PIXI.PixiShader.prototype.syncUniforms = function()
     //  This would probably be faster in an array and it would guarantee key order
     for (var key in this.uniforms) 
     {
+
         uniform = this.uniforms[key];
 
         if (uniform.glValueLength == 1)

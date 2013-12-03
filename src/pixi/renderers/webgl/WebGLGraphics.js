@@ -280,7 +280,7 @@ PIXI.WebGLGraphics.buildLine = function(graphicsData, webGLData)
 	
 	var wrap = true;
 	var points = graphicsData.points;
-	if(points.length === 0)return;
+	if(points.length == 0)return;
 	
 	// if the line width is an odd number add 0.5 to align to a whole pixel
 	if(graphicsData.lineWidth%2)

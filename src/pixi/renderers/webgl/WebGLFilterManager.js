@@ -45,8 +45,15 @@ PIXI.WebGLFilterManager.prototype.pushFilter = function(filterBlock)
 	
 	
 	var texture = this.texturePool.pop();
-	if(!texture)texture = new PIXI.FilterTexture(this.width, this.height);
-	
+	if(!texture)
+	{
+		texture = new PIXI.FilterTexture(this.width, this.height);
+	}
+	else
+	{
+		texture.resize(this.width, this.height);
+	}
+
 	gl.bindTexture(gl.TEXTURE_2D,  texture.texture);
 	
 	this.getBounds(filterBlock.target);
@@ -508,6 +515,8 @@ PIXI.FilterTexture = function(width, height)
 
 PIXI.FilterTexture.prototype.resize = function(width, height)
 {
+	if(this.width == width && this.height == height)return;
+
 	this.width = width;
 	this.height = height;
 

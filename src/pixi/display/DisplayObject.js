@@ -122,6 +122,8 @@ PIXI.DisplayObject = function()
 	 */
 	this._interactive = false;
 
+	this.defaultCursor = "pointer";
+	
 	/**
 	 * [read-only] Current transform of the object based on world (parent) factors
 	 *
@@ -368,6 +370,12 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'filters', {
  */
 PIXI.DisplayObject.prototype.addFilter = function(data)
 {
+	//if(this.filter)return;
+	//this.filter = true;
+//	data[0].target = this;
+	
+console.log('addFilter');
+console.log(data);
 
 	// insert a filter block..
 	// TODO Onject pool thease bad boys..
@@ -386,6 +394,8 @@ PIXI.DisplayObject.prototype.addFilter = function(data)
 	start.open = true;
 	
 	start.target = this;
+
+console.log('start', start);
 	
 	/*
 	 * insert start
@@ -455,6 +465,7 @@ PIXI.DisplayObject.prototype.addFilter = function(data)
 	// if webGL...
 	if(this.__renderGroup)
 	{
+		console.log('__renderGroup');
 		this.__renderGroup.addFilterBlocks(start, end);
 	}
 	
@@ -470,13 +481,20 @@ PIXI.DisplayObject.prototype.removeFilter = function(data)
 {
 	//if(!this.filter)return;
 	//this.filter = false;
-	console.log("YUOIO")
+	// console.log("YUOIO")
 	// modify the list..
+
+console.log('DisplayObject removeFilter');
+console.log(data);
+
 	var startBlock = data.start;
 	
+console.log('start', startBlock);
 	
 	var nextObject = startBlock._iNext;
 	var previousObject = startBlock._iPrev;
+
+
 		
 	if(nextObject)nextObject._iPrev = previousObject;
 	if(previousObject)previousObject._iNext = nextObject;		

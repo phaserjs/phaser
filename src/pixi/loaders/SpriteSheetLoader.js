@@ -52,19 +52,19 @@ PIXI.SpriteSheetLoader = function (url, crossorigin) {
 	this.baseUrl = url.replace(/[^\/]*$/, "");
 
     /**
-    * The texture being loaded
-    *
-    * @property texture
-    * @type Texture
-    */
+     * The texture being loaded
+     *
+     * @property texture
+     * @type Texture
+     */
     this.texture = null;
 
     /**
-    * The frames of the sprite sheet
-    *
-    * @property frames
-    * @type Object
-    */
+     * The frames of the sprite sheet
+     *
+     * @property frames
+     * @type Object
+     */
 	this.frames = {};
 };
 

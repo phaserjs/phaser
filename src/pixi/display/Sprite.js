@@ -26,9 +26,9 @@ PIXI.Sprite = function(texture)
 	 * Setting than anchor to 0.5,0.5 means the textures origin is centered
 	 * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right
 	 *
-    * @property anchor
-    * @type Point
-    */
+     * @property anchor
+     * @type Point
+     */
 	this.anchor = new PIXI.Point();
 
 	/**

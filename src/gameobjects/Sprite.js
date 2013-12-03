@@ -860,6 +860,13 @@ Phaser.Sprite.prototype.destroy = function() {
         this.animations.destroy();
     }
 
+    if (this._filters)
+    {
+        console.log('removeFilter', this._filters);
+        this.removeFilter(this._filters);
+        console.log(this._filters);
+    }
+
     this.alive = false;
     this.exists = false;
     this.visible = false;

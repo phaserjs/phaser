@@ -32,7 +32,7 @@
 
     function dirToArray($dir) { 
 
-        $ignore = array('.', '..', '_site', 'assets', 'states', 'book', 'filters');
+        $ignore = array('.', '..', '_site', 'assets', 'states', 'book');
         $result = array(); 
         $root = scandir($dir); 
         $dirs = array_diff($root, $ignore);
@@ -64,7 +64,7 @@
             $value2 = substr($value, 0, -3);
             $file = urlencode($value);
 
-            $output .= "<a href=\"wip/index.php?f=$file\">$value2</a><br />";
+            $output .= "<a href=\"wip/filters/index.php?f=$file\">$value2</a><br />";
         }
 
         return $output;
@@ -76,9 +76,9 @@
     <head>
         <meta charset="UTF-8" />
         <title>phaser</title>
-        <base href="../"></base>
+        <base href="../../"></base>
         <?php
-            require('../../build/config.php');
+            require('../../../build/config.php');
 
             if (isset($_GET['f']))
             {
@@ -99,7 +99,7 @@
 
         <div id="phaser-example"></div>
 
-        <h2>work in progress examples</h2>
+        <h2>work in progress filters</h2>
 
         <?php
             echo printJSLinks('wip', $files);

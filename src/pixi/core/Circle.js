@@ -14,24 +14,24 @@
 PIXI.Circle = function(x, y, radius)
 {
     /**
-    * @property x
-    * @type Number
-    * @default 0
-    */
+     * @property x
+     * @type Number
+     * @default 0
+     */
     this.x = x || 0;
 
     /**
-    * @property y
-    * @type Number
-    * @default 0
-    */
+     * @property y
+     * @type Number
+     * @default 0
+     */
     this.y = y || 0;
 
     /**
-    * @property radius
-    * @type Number
-    * @default 0
-    */
+     * @property radius
+     * @type Number
+     * @default 0
+     */
     this.radius = radius || 0;
 }
 

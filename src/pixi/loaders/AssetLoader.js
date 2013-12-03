@@ -24,26 +24,26 @@ PIXI.AssetLoader = function(assetURLs, crossorigin)
 
 	/**
 	 * The array of asset URLs that are going to be loaded
-    *
+     *
 	 * @property assetURLs
 	 * @type Array<String>
 	 */
 	this.assetURLs = assetURLs;
 
     /**
-    * Whether the requests should be treated as cross origin
-    *
-    * @property crossorigin
-    * @type Boolean
-    */
+     * Whether the requests should be treated as cross origin
+     *
+     * @property crossorigin
+     * @type Boolean
+     */
 	this.crossorigin = crossorigin;
 
     /**
-    * Maps file extension to loader types
-    *
-    * @property loadersByType
-    * @type Object
-    */
+     * Maps file extension to loader types
+     *
+     * @property loadersByType
+     * @type Object
+     */
     this.loadersByType = {
         "jpg":  PIXI.ImageLoader,
         "jpeg": PIXI.ImageLoader,
@@ -113,7 +113,7 @@ PIXI.AssetLoader.prototype.onAssetLoaded = function()
 	this.dispatchEvent({type: "onProgress", content: this});
 	if(this.onProgress) this.onProgress();
 
-	if(this.loadCount === 0)
+	if(this.loadCount == 0)
 	{
 		this.dispatchEvent({type: "onComplete", content: this});
 		if(this.onComplete) this.onComplete();
