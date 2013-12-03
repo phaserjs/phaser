@@ -2,12 +2,6 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-    // Enable scaling 
-    game.stage.scaleMode = Phaser.StageScaleMode.SHOW_ALL;
-    game.stage.scale.maxWidth = 1024;
-    game.stage.scale.maxHeight = 672;
-    game.stage.scale.refresh();
-
     game.load.image('atari1', 'assets/sprites/atari130xe.png');
     game.load.image('atari2', 'assets/sprites/atari800xl.png');
     game.load.image('atari4', 'assets/sprites/atari800.png');

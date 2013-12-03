@@ -54,7 +54,9 @@ Updates:
 
 Bug Fixes:
 
-* TBC
+* Cache.getImageKeys returned __missing in the array, now excluded.
+* Fixed Group.scale so you can now scale a Group directly.
+* Removed World.scale as it was preventing Group.scale from working - you can still scale the world, but you'll need to factor in Input changes yourself.
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md

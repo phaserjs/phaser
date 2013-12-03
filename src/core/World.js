@@ -12,17 +12,13 @@
 * the world at world-based coordinates. By default a world is created the same size as your Stage.
 *
 * @class Phaser.World
+* @extends Phaser.Group
 * @constructor
 * @param {Phaser.Game} game - Reference to the current game instance.
 */
 Phaser.World = function (game) {
 
     Phaser.Group.call(this, game, null, '__world', false);
-
-    /**
-    * @property {Phaser.Point} scale - Replaces the PIXI.Point with a slightly more flexible one.
-    */
-    this.scale = new Phaser.Point(1, 1);
 
     /**
     * The World has no fixed size, but it does have a bounds outside of which objects are no longer considered as being "in world" and you should use this to clean-up the display list and purge dead objects.

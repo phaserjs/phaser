@@ -77,10 +77,13 @@ Phaser.Group = function (game, parent, name, useStage) {
     */
     this.exists = true;
 
+    //  Replaces the PIXI.Point with a slightly more flexible one.
+    this._container.scale = new Phaser.Point(1, 1);
+
     /**
-    * @property {Phaser.Point} scale - Replaces the PIXI.Point with a slightly more flexible one.
+    * @property {Phaser.Point} scale - The scane of the Group container.
     */
-    this.scale = new Phaser.Point(1, 1);
+    this.scale = this._container.scale;
 
     /**
     * The cursor is a simple way to iterate through the objects in a Group using the Group.next and Group.previous functions.

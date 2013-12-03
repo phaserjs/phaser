@@ -29,36 +29,6 @@ Phaser.InputHandler = function (sprite) {
     this.enabled = false;
 
     /**
-    * @property {Description} parent - Description. 
-    * @default
-    */
-    // this.parent = null;
-    
-    /**
-    * @property {Description} next - Linked List
-    * @default
-    */
-    // this.next = null;
-    
-    /**
-    * @property {Description} prev - Description. 
-    * @default
-    */
-    // this.prev = null;
-    
-    /**
-    * @property {Description} last - Description. 
-    * @default
-    */
-    // this.last = this;
-    
-    /**
-    * @property {Description} first - Description. 
-    * @default
-    */
-    // this.first = this;
-
-    /**
     * @property {number} priorityID - The PriorityID controls which Sprite receives an Input event first if they should overlap.
     * @default
     */
@@ -198,8 +168,6 @@ Phaser.InputHandler.prototype = {
     * @return {Phaser.Sprite} The Sprite object to which the Input Handler is bound.
     */
     start: function (priority, useHandCursor) {
-
-        console.log('InputHandler start');
 
         priority = priority || 0;
         if (typeof useHandCursor == 'undefined') { useHandCursor = false; }

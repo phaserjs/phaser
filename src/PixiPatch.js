@@ -79,8 +79,8 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
                     displayObject.texture.frame.y,
                     displayObject.texture.frame.width,
                     displayObject.texture.frame.height,
-                    (displayObject.anchor.x) * -displayObject.texture.frame.width,
-                    (displayObject.anchor.y) * -displayObject.texture.frame.height,
+                    Math.floor((displayObject.anchor.x) * -displayObject.texture.frame.width),
+                    Math.floor((displayObject.anchor.y) * -displayObject.texture.frame.height),
                     displayObject.texture.frame.width,
                     displayObject.texture.frame.height);
             }

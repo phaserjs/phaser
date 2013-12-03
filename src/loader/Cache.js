@@ -745,7 +745,7 @@ Phaser.Cache.prototype = {
 
         for (var item in array)
         {
-            if (item !== '__default')
+            if (item !== '__default' && item !== '__missing')
             {
                 output.push(item);
             }

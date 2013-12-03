@@ -128,8 +128,8 @@ Phaser.Net.prototype = {
         var output = {};
         var keyValues = location.search.substring(1).split('&');
 
-        for (var i in keyValues) {
-
+        for (var i in keyValues)
+        {
             var key = keyValues[i].split('=');
 
             if (key.length > 1)
