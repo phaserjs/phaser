@@ -49,11 +49,6 @@ Phaser.Tilemap = function (game, key) {
     this.debugMap = [];
 
     /**
-    * @property {boolean} dirty - Internal rendering related flag.
-    */
-    this.dirty = false;
-
-    /**
     * @property {array} _results - Internal var.
     * @private
     */
@@ -120,13 +115,11 @@ Phaser.Tilemap.prototype = {
             tileSpacing: 0,
             format: Phaser.Tilemap.CSV,
             data: data,
-            indexes: []
-
+            indexes: [],
+			dirty: true
         });
 
         this.currentLayer = this.layers.length - 1;
-
-        this.dirty = true;
 
     },
 
@@ -187,9 +180,8 @@ Phaser.Tilemap.prototype = {
         if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
         {
             this.layers[layer].data[y][x] = index;
+			this.layers[layer].dirty = true;
         }
-
-        this.dirty = true;
 
     },
 
@@ -254,9 +246,8 @@ Phaser.Tilemap.prototype = {
         if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
         {
             this.layers[layer].data[y][x] = index;
+			this.layers[layer].dirty = true;
         }
-
-        this.dirty = true;
 
     },
 
@@ -349,8 +340,7 @@ Phaser.Tilemap.prototype = {
             this.layers[layer].data[ diffY + tileblock[i].y ][ diffX + tileblock[i].x ] = tileblock[i].index;
         }
 
-        this.dirty = true;
-
+		this.layers[layer].dirty = true;
     },
 
     /**
