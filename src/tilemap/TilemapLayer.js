@@ -359,7 +359,7 @@ Phaser.TilemapLayer.prototype.updateMapData = function (tilemap, layer) {
         this.layer = this.tilemap.layers[layer];
         this.index = layer;
         this.updateMax();
-        this.tilemap.dirty = true;
+		this.tilemap.layers[layer].dirty = true;
     }
 
 }
@@ -633,7 +633,7 @@ Phaser.TilemapLayer.prototype.updateMax = function () {
 */
 Phaser.TilemapLayer.prototype.render = function () {
 
-    if (this.tilemap && this.tilemap.dirty)
+	if (this.tilemap && this.tilemap.layers[this.index].dirty )
     {
         this.dirty = true;
     }
@@ -694,10 +694,10 @@ Phaser.TilemapLayer.prototype.render = function () {
 
     this.dirty = false;
 
-    if (this.tilemap.dirty)
-    {
-        this.tilemap.dirty = false;
-    }
+	if( this.tilemap.layers[this.index].dirty )
+	{
+		this.tilemap.layers[this.index].dirty = false;
+	}
 
     return true;
 
