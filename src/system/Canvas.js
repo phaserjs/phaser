@@ -13,21 +13,29 @@
 Phaser.Canvas = {
 
     /**
-    * Creates the &lt;canvas&gt; tag
+    * Creates a `canvas` DOM element. The element is not automatically added to the document.
     *
     * @method Phaser.Canvas.create
-    * @param {number} width - The desired width.
-    * @param {number} height - The desired height.
-    * @return {HTMLCanvasElement} The newly created &lt;canvas&gt; tag.
+    * @param {number} [width=256] - The width of the canvas element.
+    * @param {number} [height=256] - The height of the canvas element..
+    * @param {string} [id=''] - If given this will be set as the ID of the canvas element, otherwise no ID will be set.
+    * @return {HTMLCanvasElement} The newly created canvas element.
     */
-    create: function (width, height) {
+    create: function (width, height, id) {
 
         width = width || 256;
         height = height || 256;
 
         var canvas = document.createElement('canvas');
+
+        if (typeof id === 'string')
+        {
+            canvas.id = id;
+        }
+
         canvas.width = width;
         canvas.height = height;
+
         canvas.style.display = 'block';
 
         return canvas;
@@ -137,7 +145,7 @@ Phaser.Canvas = {
     *
     * @method Phaser.Canvas.addToDOM
     * @param {HTMLCanvasElement} canvas - The canvas to set the touch action on.
-    * @param {string|HTMLElement} parent - The DOM element to add the canvas to. Defaults to ''.
+    * @param {string|HTMLElement} parent - The DOM element to add the canvas to.
     * @param {boolean} overflowHidden - If set to true it will add the overflow='hidden' style to the parent DOM element.
     * @return {HTMLCanvasElement} Returns the source canvas.
     */
@@ -149,14 +157,14 @@ Phaser.Canvas = {
 
         if (parent)
         {
-            // hopefully an element ID
             if (typeof parent === 'string')
             {
+                // hopefully an element ID
                 target = document.getElementById(parent);
             }
-            // quick test for a HTMLelement
             else if (typeof parent === 'object' && parent.nodeType === 1)
             {
+                // quick test for a HTMLelement
                 target = parent;
             }
 
@@ -166,8 +174,8 @@ Phaser.Canvas = {
             }
         }
 
-        // fallback, covers an invalid ID and a none HTMLelement object
-        if(!target)
+        // Fallback, covers an invalid ID and a non HTMLelement object
+        if (!target)
         {
             target = document.body;
         }

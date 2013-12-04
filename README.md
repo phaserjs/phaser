@@ -50,14 +50,16 @@ New features:
 
 Updates:
 
-* TBC
+* When a Sprite is destroyed any active filters are removed as well.
+* Updated Pixi.js so that removing filters now works correctly without breaking the display list.
+* Phaser.Canvas.create updated to it can be given an ID as the 3rd parameter.
 
 Bug Fixes:
 
 * Cache.getImageKeys returned __missing in the array, now excluded.
 * Fixed Group.scale so you can now scale a Group directly.
 * Removed World.scale as it was preventing Group.scale from working - you can still scale the world, but you'll need to factor in Input changes yourself.
-
+* Moved 'dirty' flag for Tilemap to a per-layer flag. Fixes #242
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
 

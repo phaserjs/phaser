@@ -15,6 +15,9 @@ function preload() {
 function create() {
 
 
+    logo = game.add.sprite(game.world.centerX, game.world.centerY, 'phaser');
+    logo.anchor.setTo(0.5, 0.5);
+
     background = game.add.sprite(0, 0);
     background.width = 800;
     background.height = 600;
@@ -24,8 +27,6 @@ function create() {
 
     background.filters = [filter];
 
-    logo = game.add.sprite(game.world.centerX, game.world.centerY, 'phaser');
-    logo.anchor.setTo(0.5, 0.5);
 
     game.input.onDown.add(removeBackground, this);
 
@@ -41,7 +42,10 @@ function removeBackground() {
 
     console.log('removeBackground');
 
-    // background.destroy();
-    background.removeFilter(filter);
+
+    // background.filters = null;
+    background.destroy();
+
+    // console.log(background.filters);
 
 }

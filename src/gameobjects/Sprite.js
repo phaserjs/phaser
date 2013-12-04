@@ -840,6 +840,11 @@ Phaser.Sprite.prototype.kill = function() {
 */
 Phaser.Sprite.prototype.destroy = function() {
 
+    if (this.filters)
+    {
+        this.filters = null;
+    }
+
     if (this.group)
     {
         this.group.remove(this);
@@ -858,13 +863,6 @@ Phaser.Sprite.prototype.destroy = function() {
     if (this.animations)
     {
         this.animations.destroy();
-    }
-
-    if (this._filters)
-    {
-        console.log('removeFilter', this._filters);
-        this.removeFilter(this._filters);
-        console.log(this._filters);
     }
 
     this.alive = false;
