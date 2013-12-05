@@ -374,9 +374,6 @@ PIXI.DisplayObject.prototype.addFilter = function(data)
 	//this.filter = true;
 //	data[0].target = this;
 	
-console.log('addFilter');
-console.log(data);
-
 	// insert a filter block..
 	// TODO Onject pool thease bad boys..
 	var start = new PIXI.FilterBlock();
@@ -395,8 +392,6 @@ console.log(data);
 	
 	start.target = this;
 
-console.log('start', start);
-	
 	/*
 	 * insert start
 	 */
@@ -484,13 +479,7 @@ PIXI.DisplayObject.prototype.removeFilter = function(data)
 	// console.log("YUOIO")
 	// modify the list..
 
-console.log('DisplayObject removeFilter');
-console.log(data);
-
 	var startBlock = data.start;
-	
-console.log('start', startBlock);
-	
 	var nextObject = startBlock._iNext;
 	var previousObject = startBlock._iPrev;
 

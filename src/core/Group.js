@@ -1047,7 +1047,7 @@ Phaser.Group.prototype = {
     */
     iterate: function (key, value, returnType, callback, callbackContext, args) {
 
-        if (returnType == Phaser.Group.RETURN_TOTAL && this._container.children.length === 0)
+        if (returnType === Phaser.Group.RETURN_TOTAL && this._container.children.length === 0)
         {
             return -1;
         }
@@ -1075,7 +1075,7 @@ Phaser.Group.prototype = {
                         callback.apply(callbackContext, args);
                     }
 
-                    if (returnType == Phaser.Group.RETURN_CHILD)
+                    if (returnType === Phaser.Group.RETURN_CHILD)
                     {
                         return currentNode;
                     }
@@ -1086,11 +1086,11 @@ Phaser.Group.prototype = {
             while (currentNode != this._container.last._iNext);
         }
 
-        if (returnType == Phaser.Group.RETURN_TOTAL)
+        if (returnType === Phaser.Group.RETURN_TOTAL)
         {
             return total;
         }
-        else if (returnType == Phaser.Group.RETURN_CHILD)
+        else if (returnType === Phaser.Group.RETURN_CHILD)
         {
             return null;
         }
@@ -1460,28 +1460,26 @@ Phaser.Group.prototype = {
 
 /**
 * @name Phaser.Group#total
-* @property {number} total - The total number of children in this Group, regardless of their alive state.
+* @property {number} total - The total number of children in this Group who have a state of exists = true.
 * @readonly
 */
 Object.defineProperty(Phaser.Group.prototype, "total", {
 
     get: function () {
         return this.iterate('exists', true, Phaser.Group.RETURN_TOTAL);
-        // return this._container.children.length;
     }
 
 });
 
 /**
 * @name Phaser.Group#length
-* @property {number} length - The number of children in this Group.
+* @property {number} length - The total number of children in this Group, regardless of their exists/alive status.
 * @readonly
 */
 Object.defineProperty(Phaser.Group.prototype, "length", {
 
     get: function () {
-        return this.iterate('exists', true, Phaser.Group.RETURN_TOTAL);
-        // return this._container.children.length;
+        return this._container.children.length;
     }
 
 });
