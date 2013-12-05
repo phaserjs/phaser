@@ -268,7 +268,7 @@ Phaser.StageScaleMode.prototype = {
         }
         else if (element['mozRequestFullScreen'])
         {
-            element['mozRequestFullScreen']();
+            element.parentNode['mozRequestFullScreen']();
         }
         else if (element['webkitRequestFullScreen'])
         {

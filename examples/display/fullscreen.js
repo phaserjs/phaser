@@ -18,7 +18,7 @@ function create() {
     // Keep original size
 //    game.stage.fullScreenScaleMode = Phaser.StageScaleMode.NO_SCALE;
     // Maintain aspect ratio
-    game.stage.fullScreenScaleMode = Phaser.StageScaleMode.NO_SCALE;
+    game.stage.fullScreenScaleMode = Phaser.StageScaleMode.SHOW_ALL;
 
     game.input.onDown.add(gofull, this);
 
