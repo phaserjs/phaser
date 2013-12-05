@@ -310,16 +310,25 @@ Phaser.StageScaleMode.prototype = {
 
         if (this.isFullScreen)
         {
-            this.game.stage.canvas.style['width'] = '100%';
-            this.game.stage.canvas.style['height'] = '100%';
+            if (this.game.stage.fullScreenScaleMode === Phaser.StageScaleMode.EXACT_FIT)
+            {
+                this.game.stage.canvas.style['width'] = '100%';
+                this.game.stage.canvas.style['height'] = '100%';
 
-            this.setMaximum();
+                this.setMaximum();
 
-            this.game.input.scale.setTo(this.game.width / this.width, this.game.height / this.height);
+                this.game.input.scale.setTo(this.game.width / this.width, this.game.height / this.height);
 
-            this.aspectRatio = this.width / this.height;
-            this.scaleFactor.x = this.game.width / this.width;
-            this.scaleFactor.y = this.game.height / this.height;
+                this.aspectRatio = this.width / this.height;
+                this.scaleFactor.x = this.game.width / this.width;
+                this.scaleFactor.y = this.game.height / this.height;
+            }
+            else if (this.game.stage.fullScreenScaleMode === Phaser.StageScaleMode.SHOW_ALL)
+            {
+                this.game.stage.scale.setShowAll();
+                this.game.stage.scale.refresh();
+            }
+
         }
         else
         {
@@ -560,13 +569,27 @@ Phaser.StageScaleMode.prototype = {
             {
                 this.setMaximum();
             }
-            else if (this.game.stage.scaleMode == Phaser.StageScaleMode.EXACT_FIT)
+            else if (!this.isFullScreen)
             {
-                this.setExactFit();
+                if (this.game.stage.scaleMode == Phaser.StageScaleMode.EXACT_FIT)
+                {
+                    this.setExactFit();
+                }
+                else if (this.game.stage.scaleMode == Phaser.StageScaleMode.SHOW_ALL)
+                {
+                    this.setShowAll();
+                }
             }
-            else if (this.game.stage.scaleMode == Phaser.StageScaleMode.SHOW_ALL)
+            else
             {
-                this.setShowAll();
+                if (this.game.stage.fullScreenScaleMode == Phaser.StageScaleMode.EXACT_FIT)
+                {
+                    this.setExactFit();
+                }
+                else if (this.game.stage.fullScreenScaleMode == Phaser.StageScaleMode.SHOW_ALL)
+                {
+                    this.setShowAll();
+                }
             }
 
             this.setSize();

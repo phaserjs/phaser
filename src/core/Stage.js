@@ -52,6 +52,11 @@ Phaser.Stage = function (game, width, height) {
     */
     this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
 
+    /*
+    * @property {number} fullScreenScaleMode - Scale mode to be used in fullScreen
+     */
+    this.fullScreenScaleMode = Phaser.StageScaleMode.NO_SCALE;
+
     /**
     * @property {Phaser.StageScaleMode} scale - The scale of the current running game.
     */
