@@ -286,6 +286,8 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this.overlapY = 0;
 
+    this.hull = new Phaser.Rectangle();
+
     /**
     * @property {Phaser.Rectangle} hullX - The dynamically calculated hull used during collision.
     */
@@ -368,6 +370,9 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.y = this.preY;
         this.rotation = this.preRotation;
 
+        this.overlapX = 0;
+        this.overlapY = 0;
+
         if (this.moves)
         {
             this.game.physics.updateMotion(this);
@@ -377,7 +382,11 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.checkWorldBounds();
             }
 
-            this.updateHulls();
+            this.hull.setTo(this.preX, this.preY, this.width, this.height);
+
+            // this.hullX.setTo(this.x, this.preY, this.width, this.height);
+            // this.hullY.setTo(this.preX, this.y, this.width, this.height);
+            this.updateHulls(true);
         }
 
         if (this.skipQuadTree === false && this.allowCollision.none === false && this.sprite.visible && this.sprite.alive)
@@ -415,8 +424,37 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.facing = Phaser.DOWN;
         }
 
+        /*
+        if (this.overlapX !== 0)
+        {
+            this.sprite.x += this.overlapX;
+        }
+        else
+        {
+            if (this.deltaX() !== 0)
+            {
+                this.sprite.x += this.deltaX();
+            }
+        }
+
+        if (this.overlapY !== 0)
+        {
+            this.sprite.y += this.overlapY;
+        }
+        else
+        {
+            if (this.deltaY() !== 0)
+            {
+                this.sprite.y += this.deltaY();
+            }
+        }
+        */
+
         if (this.deltaX() !== 0 || this.deltaY() !== 0)
         {
+            // console.log('dx', this.deltaX());
+            // console.log('dy', this.deltaY());
+
             this.sprite.x += this.deltaX();
             this.sprite.y += this.deltaY();
             this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
@@ -435,10 +473,21 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade#updateHulls
     * @protected
     */
-    updateHulls: function () {
+    updateHulls: function (separation) {
 
-        this.hullX.setTo(this.x, this.preY, this.width, this.height);
-        this.hullY.setTo(this.preX, this.y, this.width, this.height);
+        // this.hull.setTo(this.x, this.y, this.width, this.height);
+
+        // if (separation)
+        // {
+            // this.hullX.setTo(this.x, this.preY, this.width, this.height);
+            // this.hullY.setTo(this.preX, this.y, this.width, this.height);
+        // }
+        // else
+        // {
+            //  if this has separated then the preX/Y values are no longer valid
+            // this.hullX.setTo(this.x, this.y, this.width, this.height);
+            // this.hullY.setTo(this.x, this.y, this.width, this.height);
+        // }
 
     },
 

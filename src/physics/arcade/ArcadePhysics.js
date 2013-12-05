@@ -610,11 +610,6 @@ Phaser.Physics.Arcade.prototype = {
             return;
         }
 
-        if (group.length === 0)
-        {
-            return;
-        }
-
         if (group._container.first._iNext)
         {
             var currentNode = group._container.first._iNext;
@@ -995,11 +990,115 @@ Phaser.Physics.Arcade.prototype = {
     * @param {Phaser.Tile} tile - The tile to collide against.
     * @returns {boolean} Returns true if the bodies were separated, otherwise false.
     */
-    separateTile: function (body, tile) {
+    XseparateTile: function (body, tile) {
 
         this._result = (this.separateTileX(body, tile, true) || this.separateTileY(body, tile, true));
 
         return this._result;
+
+    },
+
+    separateTile: function (body, tile) {
+
+        //  Can't separate two immovable objects (tiles are always immovable)
+        if (body.immovable || Phaser.Rectangle.intersects(body, tile) === false)
+        {
+            return false;
+        }
+
+        var overlapX = 0;
+        var overlapY = 0;
+
+        console.log('x', tile.x, 'y', tile.y, 'r', tile.right, 'b', tile.bottom);
+        console.log('x', body.x, 'y', body.y, 'r', body.right, 'b', body.bottom);
+        console.log(Phaser.Rectangle.intersects(body, tile));
+
+        if (body.deltaX() < 0 && body.allowCollision.left && tile.tile.faceRight)
+        {
+            //  LEFT
+            if (tile.right - body.x < Math.ceil(body.deltaAbsX()))
+            {
+                overlapX = tile.right - body.x;
+
+                body.touching.left = true;
+                body.touching.none = false;
+            }
+        }
+        else if (body.deltaX() > 0 && body.allowCollision.right && tile.tile.faceLeft)
+        {
+            //  RIGHT
+            if (body.right - tile.x < Math.ceil(body.deltaAbsX()))
+            {
+                overlapX = tile.x - body.right;
+
+                body.touching.right = true;
+                body.touching.none = false;
+            }
+        }
+
+        if (body.deltaY() < 0 && body.allowCollision.up && tile.tile.faceBottom)
+        {
+            //  UP
+            if (tile.bottom - body.y < Math.ceil(body.deltaAbsY()))
+            {
+                overlapY = tile.bottom - body.y;
+
+                body.touching.up = true;
+                body.touching.none = false;
+            }
+        }
+        else if (body.deltaY() > 0 && body.allowCollision.down && tile.tile.faceTop)
+        {
+            //  DOWN
+            if (body.bottom - tile.y < Math.ceil(body.deltaAbsY()))
+            {
+                overlapY = tile.y - body.bottom;
+
+                body.touching.down = true;
+                body.touching.none = false;
+            }
+        }
+
+        //  Separate in a single sweep
+
+        if (overlapX === 0 && overlapY === 0)
+        {
+            return false;
+        }
+
+        if (overlapX !== 0)
+        {
+            // body.overlapX = overlapX;
+            body.x += overlapX;
+            body.preX = body.x;
+
+            if (body.bounce.x === 0)
+            {
+                body.velocity.x = 0;
+            }
+            else
+            {
+                body.velocity.x = -body.velocity.x * body.bounce.x;
+            }
+        }
+
+        if (overlapY !== 0)
+        {
+            // body.overlapY = overlapY;
+            body.y += overlapY;
+            body.preY = body.y;
+
+            if (body.bounce.y === 0)
+            {
+                body.velocity.y = 0;
+            }
+            else
+            {
+                body.velocity.y = -body.velocity.y * body.bounce.y;
+            }
+        }
+
+        return true;
 
     },
 
@@ -1059,6 +1158,8 @@ Phaser.Physics.Arcade.prototype = {
         {
             if (separate)
             {
+                // console.log('dx1', body.x);
+
                 if (body.deltaX() < 0)
                 {
                     body.x = body.x + this._overlap;
@@ -1067,6 +1168,8 @@ Phaser.Physics.Arcade.prototype = {
                 {
                     body.x = body.x - this._overlap;
                 }
+
+                // console.log('dx2', body.x, this._overlap);
 
                 if (body.bounce.x === 0)
                 {
@@ -1077,7 +1180,7 @@ Phaser.Physics.Arcade.prototype = {
                     body.velocity.x = -body.velocity.x * body.bounce.x;
                 }
 
-                body.updateHulls();
+                body.updateHulls(false);
             }
 
             return true;
@@ -1163,7 +1266,7 @@ Phaser.Physics.Arcade.prototype = {
                     body.velocity.y = -body.velocity.y * body.bounce.y;
                 }
 
-                body.updateHulls();
+                body.updateHulls(false);
             }
             
             return true;

@@ -17,18 +17,29 @@
 * @param {number} width - Width of the tile.
 * @param {number} height - Height of the tile.
 */
-Phaser.Tile = function (tileset, index, x, y, width, height) {
+// Phaser.Tile = function (tileset, index, x, y, width, height) {
+Phaser.Tile = function (index, x, y, width, height) {
 
     /**
     * @property {Phaser.Tileset} tileset - The tileset this tile belongs to.
     */
-    this.tileset = tileset;
+    // this.tileset = tileset;
     
     /**
     * @property {number} index - The index of this tile within the tileset.
     */
     this.index = index;
     
+    /**
+    * @property {number} x - The x map coordinate of this tile.
+    */
+    this.x = x;
+    
+    /**
+    * @property {number} y - The y map coordinate of this tile.
+    */
+    this.y = y;
+
     /**
     * @property {number} width - The width of the tile in pixels.
     */
@@ -40,14 +51,9 @@ Phaser.Tile = function (tileset, index, x, y, width, height) {
     this.height = height;
 
     /**
-    * @property {number} x - The top-left corner of the tile within the tileset.
+    * @property {number} alpha - The alpha value at which this tile is drawn to the canvas.
     */
-    this.x = x;
-    
-    /**
-    * @property {number} y - The top-left corner of the tile within the tileset.
-    */
-    this.y = y;
+    this.alpha = 1;
 
     //  Any extra meta data info we need here
 
@@ -55,7 +61,18 @@ Phaser.Tile = function (tileset, index, x, y, width, height) {
     * @property {number} mass - The virtual mass of the tile.
     * @default
     */
-    this.mass = 1.0;
+    // this.mass = 1.0;
+
+
+    //  Keep track of our interesting faces
+    this.faceTop = false;
+    this.faceBottom = false;
+    this.faceLeft = false;
+    this.faceRight = false;
+
+    this.collides = false;
+
+
 
     /**
     * @property {boolean} collideNone - Indicating this Tile doesn't collide at all.
@@ -91,13 +108,13 @@ Phaser.Tile = function (tileset, index, x, y, width, height) {
     * @property {boolean} separateX - Enable separation at x-axis. 
     * @default
     */
-    this.separateX = true;
+    // this.separateX = true;
 
     /**
     * @property {boolean} separateY - Enable separation at y-axis. 
     * @default
     */
-    this.separateY = true;
+    // this.separateY = true;
 
     /**
     * @property {boolean} collisionCallback - Tilemap collision callback.

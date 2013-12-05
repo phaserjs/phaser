@@ -124,12 +124,147 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
+    * Sets collision values on a tile in the set.
+    *
+    * @method Phaser.Tileset#setCollision
+    * @param {number} index - The index of the tile within the set.
+    * @param {boolean} left - Should the tile collide on the left?
+    * @param {boolean} right - Should the tile collide on the right?
+    * @param {boolean} up - Should the tile collide on the top?
+    * @param {boolean} down - Should the tile collide on the bottom?
+    */
+    
+    //  Sets all tiles matching the given index to collide on the given faces
+    //  Recalculates the collision map
+    setCollisionByIndex: function (index, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        for (var y = 0; y < this.layers[layer].height ; y++)
+        {
+            for (var x = 0; x < this.layers[layer].width; x++)
+            {
+                var tile = this.layers[layer].data[y][x];
+
+                if (tile && tile.index === index)
+                {
+                    tile.collides = true;
+                    tile.faceTop = true;
+                    tile.faceBottom = true;
+                    tile.faceLeft = true;
+                    tile.faceRight = true;
+                }
+            }
+        }
+
+        //  Now re-calculate interesting faces
+        this.calculateFaces(layer);
+
+    },
+
+    calculateFaces: function (layer) {
+
+        var above = null;
+        var below = null;
+        var left = null;
+        var right = null;
+
+console.log(this.layers[layer].width, 'x', this.layers[layer].height);
+
+        for (var y = 0; y < this.layers[layer].height ; y++)
+        {
+            for (var x = 0; x < this.layers[layer].width; x++)
+            {
+                var tile = this.layers[layer].data[y][x];
+
+                if (tile)
+                {
+                    above = this.getTileAbove(layer, x, y);
+                    below = this.getTileBelow(layer, x, y);
+                    left = this.getTileLeft(layer, x, y);
+                    right = this.getTileRight(layer, x, y);
+
+                    if (above && above.collides)
+                    {
+                        //  There is a tile above this one that also collides, so the top of this tile is no longer interesting
+                        tile.faceTop = false;
+                    }
+
+                    if (below && below.collides)
+                    {
+                        //  There is a tile below this one that also collides, so the bottom of this tile is no longer interesting
+                        tile.faceBottom = false;
+                    }
+
+                    if (left && left.collides)
+                    {
+                        //  There is a tile left this one that also collides, so the left of this tile is no longer interesting
+                        tile.faceLeft = false;
+                    }
+
+                    if (right && right.collides)
+                    {
+                        //  There is a tile right this one that also collides, so the right of this tile is no longer interesting
+                        tile.faceRight = false;
+                    }
+                }
+            }
+        }
+
+    },
+
+    getTileAbove: function (layer, x, y) {
+
+        if (y > 0)
+        {
+            return this.layers[layer].data[y - 1][x];
+        }
+
+        return null;
+
+    },
+
+    getTileBelow: function (layer, x, y) {
+
+        if (y < this.layers[layer].height - 1)
+        {
+            return this.layers[layer].data[y + 1][x];
+        }
+
+        return null;
+
+    },
+
+    getTileLeft: function (layer, x, y) {
+
+        if (x > 0)
+        {
+            return this.layers[layer].data[y][x - 1];
+        }
+
+        return null;
+
+    },
+
+    getTileRight: function (layer, x, y) {
+
+        if (x < this.layers[layer].width - 1)
+        {
+            return this.layers[layer].data[y][x + 1];
+        }
+
+        return null;
+
+    },
+
+    /**
     * Internal function that calculates the tile indexes for the map data.
     *
     * @method Phaser.Tilemap#calculateIndexes
     */
     calculateIndexes: function () {
 
+        /*
         for (var layer = 0; layer < this.layers.length; layer++)
         {
             this.layers[layer].indexes = [];
@@ -147,6 +282,7 @@ Phaser.Tilemap.prototype = {
                 }
             }
         }
+        */
 
     },
 

@@ -627,7 +627,7 @@ Phaser.Utils.Debug.prototype = {
     */
     renderSpriteBody: function (sprite, color) {
 
-        if (this.context == null)
+        if (this.context == null || sprite.body.touching.none === true)
         {
             return;
         }
@@ -636,8 +636,37 @@ Phaser.Utils.Debug.prototype = {
 
         this.start(0, 0, color);
 
-        this.context.fillStyle = color;
-        this.context.fillRect(sprite.body.screenX, sprite.body.screenY, sprite.body.width, sprite.body.height);
+        // this.context.fillStyle = color;
+        // this.context.fillRect(sprite.body.screenX, sprite.body.screenY, sprite.body.width, sprite.body.height);
+
+        this.context.beginPath();
+        this.context.strokeStyle = '#000000';
+
+        if (sprite.body.touching.up)
+        {
+            this.context.moveTo(sprite.body.x, sprite.body.y);
+            this.context.lineTo(sprite.body.x + sprite.body.width, sprite.body.y);
+        }
+
+        if (sprite.body.touching.down)
+        {
+            this.context.moveTo(sprite.body.x, sprite.body.y + sprite.body.height);
+            this.context.lineTo(sprite.body.x + sprite.body.width, sprite.body.y + sprite.body.height);
+        }
+
+        if (sprite.body.touching.left)
+        {
+            this.context.moveTo(sprite.body.x, sprite.body.y);
+            this.context.lineTo(sprite.body.x, sprite.body.y + sprite.body.height);
+        }
+
+        if (sprite.body.touching.right)
+        {
+            this.context.moveTo(sprite.body.x + sprite.body.width, sprite.body.y);
+            this.context.lineTo(sprite.body.x + sprite.body.width, sprite.body.y + sprite.body.height);
+        }
+
+        this.context.stroke();
 
         this.stop();
 
@@ -670,9 +699,18 @@ Phaser.Utils.Debug.prototype = {
         }
         else
         {
-            this.context.strokeStyle = color;
-            this.context.strokeRect(sprite.bounds.x, sprite.bounds.y, sprite.bounds.width, sprite.bounds.height);
-            this.context.stroke();
+            // this.context.strokeStyle = color;
+            // this.context.strokeRect(sprite.bounds.x, sprite.bounds.y, sprite.bounds.width, sprite.bounds.height);
+            // this.context.strokeRect(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height);
+            // this.context.strokeRect(sprite.body.hull.x, sprite.body.hull.y, sprite.body.hull.width, sprite.body.hull.height);
+            // this.context.stroke();
+
+            // this.context.strokeStyle = '#ff0000';
+            // this.context.strokeRect(sprite.body.hullX.x, sprite.body.hullX.y, sprite.body.hullX.width, sprite.body.hullX.height);
+            // this.context.stroke();
+            // this.context.strokeStyle = '#00ff00';
+            // this.context.strokeRect(sprite.body.hullY.x, sprite.body.hullY.y, sprite.body.hullY.width, sprite.body.hullY.height);
+            // this.context.stroke();
         }
 
         this.stop();

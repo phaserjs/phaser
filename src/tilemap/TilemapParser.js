@@ -140,6 +140,8 @@ Phaser.TilemapParser = {
             }
         }
 
+        //  Build collision map
+
         return [{ name: 'csv', width: width, height: height, alpha: 1, visible: true, indexes: [], tileMargin: 0, tileSpacing: 0, data: output }];
 
     },
@@ -147,10 +149,18 @@ Phaser.TilemapParser = {
     /**
     * Parses a Tiled JSON file into valid map data.
     * @method Phaser.TilemapParser.parseJSON
-    * @param {object} json- The Tiled JSON data.
+    * @param {object} json - The Tiled JSON data.
     * @return {object} Generated map data.
     */
     parseTiledJSON: function (json) {
+
+        //  Let's work out which tilesets are in here
+        var tilesets = [];
+
+        for (var i = 0; i < json.tilesets.length; i++)
+        {
+            tilesets.push(json.tilesets[i].firstgid);
+        }
 
         var layers = [];
 
@@ -168,29 +178,69 @@ Phaser.TilemapParser = {
             var layer = {
 
                 name: json.layers[i].name,
+                x: json.layers[i].x,
+                y: json.layers[i].y,
                 width: json.layers[i].width,
                 height: json.layers[i].height,
                 alpha: json.layers[i].opacity,
                 visible: json.layers[i].visible,
+                properties: {},
+                tileWidth: json.tilewidth,
+                tileHeight: json.tileheight,
+
                 indexes: [],
 
-                tileMargin: json.tilesets[0].margin,
-                tileSpacing: json.tilesets[0].spacing
+                //  tileset specific
+                // tileMargin: json.tilesets[0].margin,
+                // tileSpacing: json.tilesets[0].spacing
 
             };
 
+            if (json.layers[i].properties)
+            {
+                layer.properties = json.layers[i].properties;
+            }
+
+            var x = 0;
+            var row = [];
             var output = [];
-            var c = 0;
-            var row;
+
+            //  Loop through the data field in the JSON.
+
+            //  This is an array containing the tile indexes, one after the other. 0 = no tile, everything else = the tile index (starting at 1)
+            //  If the map contains multiple tilesets then the indexes are relative to that which the set starts from
+            //  Need to set which tileset in the cache = which tileset in the JSON, if you do this manually it means you can use the same map data but a new tileset.
 
             for (var t = 0; t < json.layers[i].data.length; t++)
             {
+                //  index, x, y, width, height
+                if (json.layers[i].data[t] > 0)
+                {
+                    row.push(new Phaser.Tile(json.layers[i].data[t], x, output.length, json.tilewidth, json.tileheight));
+                }
+                else
+                {
+                    row.push(null);
+                }
+
+                x++;
+
+                if (x === json.layers[i].width)
+                {
+                    output.push(row);
+                    x = 0;
+                    row = [];
+                }
+
+
+                /*
                 if (c === 0)
                 {
                     row = [];
                 }
 
                 row.push(json.layers[i].data[t]);
+
                 c++;
 
                 if (c == json.layers[i].width)
@@ -198,9 +248,13 @@ Phaser.TilemapParser = {
                     output.push(row);
                     c = 0;
                 }
+                */
             }
 
             layer.data = output;
+
+            //  Build collision map
+            // console.log(output);
             
             layers.push(layer);
 
