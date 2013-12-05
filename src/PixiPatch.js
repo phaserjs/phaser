@@ -63,14 +63,18 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
             if (displayObject.texture.frame)
             {
                 this.context.globalAlpha = displayObject.worldAlpha;
+
+                this.context.setTransform(
+                        displayObject.worldTransform[0],
+                        displayObject.worldTransform[3],
+                        displayObject.worldTransform[1],
+                        displayObject.worldTransform[4],
+                        displayObject.worldTransform[2],
+                        displayObject.worldTransform[5]);
                 
                 if (displayObject.texture.trimmed)
                 {
-                    this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2] + displayObject.texture.trim.x, displayObject.worldTransform[5] + displayObject.texture.trim.y);
-                }
-                else
-                {
-                    this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2], displayObject.worldTransform[5]);
+                    this.context.transform(1, 0, 0, 1, displayObject.texture.trim.x, displayObject.texture.trim.y);
                 }
                     
                 this.context.drawImage(
