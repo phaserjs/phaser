@@ -13,6 +13,13 @@ function create() {
 
     game.stage.backgroundColor = '#e3ed49';
 
+    // Stretch to fill
+//    game.stage.fullScreenScaleMode = Phaser.StageScaleMode.EXACT_FIT;
+    // Keep original size
+//    game.stage.fullScreenScaleMode = Phaser.StageScaleMode.NO_SCALE;
+    // Maintain aspect ratio
+    game.stage.fullScreenScaleMode = Phaser.StageScaleMode.SHOW_ALL;
+
     game.input.onDown.add(gofull, this);
 
 }
