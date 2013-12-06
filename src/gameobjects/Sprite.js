@@ -162,16 +162,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.textureRegion = new Phaser.Rectangle(this.texture.frame.x, this.texture.frame.y, this.texture.frame.width, this.texture.frame.height);
 
     /**
-    * The anchor sets the origin point of the texture.
-    * The default is 0,0 this means the textures origin is the top left 
-    * Setting than anchor to 0.5,0.5 means the textures origin is centered
-    * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right
-    *
-    * @property {Phaser.Point} anchor - The anchor around which rotation and scaling takes place.
-    */
-    this.anchor = new Phaser.Point();
-
-    /**
     * @property {number} x - The x coordinate in world space of this Sprite.
     */
     this.x = x;
@@ -378,6 +368,16 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 //  Needed to keep the PIXI.Sprite constructor in the prototype chain (as the core pixi renderer uses an instanceof check sadly)
 Phaser.Sprite.prototype = Object.create(PIXI.Sprite.prototype);
 Phaser.Sprite.prototype.constructor = Phaser.Sprite;
+
+/**
+* The anchor sets the origin point of the texture.
+* The default is 0,0 this means the textures origin is the top left
+* Setting than anchor to 0.5,0.5 means the textures origin is centered
+* Setting the anchor to 1,1 would mean the textures origin points will be the bottom right
+*
+* @property {Phaser.Point} anchor - The anchor around which rotation and scaling takes place.
+*/
+Phaser.Sprite.prototype.anchor = new Phaser.Point();
 
 /**
 * Automatically called by World.preUpdate. Handles cache updates, lifespan checks, animation updates and physics updates.
