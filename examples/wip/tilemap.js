@@ -6,7 +6,9 @@ function preload() {
     game.load.tilemap('map', 'assets/maps/newtest.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.tileset('tiles', 'assets/maps/ground_1x1.png', 32, 32);
     // game.load.image('phaser', 'assets/sprites/phaser-ship.png');
-    game.load.image('phaser', 'assets/sprites/mushroom2.png');
+    // game.load.image('phaser', 'assets/sprites/mushroom2.png');
+    // game.load.image('phaser', 'assets/sprites/wabbit.png');
+    game.load.image('phaser', 'assets/sprites/arrow.png');
 
 }
 
@@ -36,9 +38,9 @@ function create() {
     //  this screws something up - not quite sure what, but needs investigating!
     // layer.resizeWorld();
 
-    sprite = game.add.sprite(120, 450, 'phaser');
-    // sprite.anchor.setTo(0.5, 0.5);
-    // sprite.angle = 5;
+    sprite = game.add.sprite(200, 420, 'phaser');
+    sprite.anchor.setTo(0.5, 0.5);
+    sprite.angle = 35;
 
     // game.camera.follow(sprite);
 
@@ -84,23 +86,25 @@ function update() {
     sprite.body.velocity.x = 0;
     sprite.body.velocity.y = 0;
 
+    sprite.angle = sprite.angle + 1;
+
     if (cursors.up.isDown)
     {
-        sprite.body.velocity.y = -150;
+        sprite.body.velocity.y = -900;
     }
     else if (cursors.down.isDown)
     {
-        sprite.body.velocity.y = 150;
+        sprite.body.velocity.y = 900;
     }
 
     if (cursors.left.isDown)
     {
-        sprite.body.velocity.x = -150;
+        sprite.body.velocity.x = -900;
         // sprite.scale.x = -1;
     }
     else if (cursors.right.isDown)
     {
-        sprite.body.velocity.x = 150;
+        sprite.body.velocity.x = 900;
         // sprite.scale.x = 1;
     }
 
@@ -109,8 +113,8 @@ function update() {
 
 function render() {
 
-    game.debug.renderSpriteBody(sprite);
-    // game.debug.renderSpriteBounds(sprite);
+    // game.debug.renderSpriteBody(sprite);
+    game.debug.renderSpriteBounds(sprite);
 
     game.debug.renderText(sprite.x, 32, 32);
     game.debug.renderText(sprite.y, 32, 48);

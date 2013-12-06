@@ -680,6 +680,8 @@ Phaser.Sprite.prototype.postUpdate = function() {
         if (this.body)
         {
             this.body.postUpdate();
+            this.x = Math.round(this.x);
+            this.y = Math.round(this.y);
         }
 
         if (this.fixedToCamera)
