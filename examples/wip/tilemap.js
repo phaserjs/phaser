@@ -33,7 +33,8 @@ function create() {
     layer = game.add.tilemapLayer(0, 0, 400, 600, null, map, 0);
 
     // layer2 = game.add.tilemapLayer(0, 0, 400, 600, null, map, 0);
-    layer.cameraOffset.x = 400;
+    // layer.cameraOffset.x = 400;
+    layer.alpha = 0.5;
 
     // tileset = game.add.tileset('tilesNes');
     // layer = game.add.tilemapLayer(0, 0, map.layers[0].width*tilesetNes.tileWidth, 600, tileset, map, 0);
