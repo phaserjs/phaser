@@ -8,7 +8,8 @@ function preload() {
     // game.load.image('phaser', 'assets/sprites/phaser-ship.png');
     // game.load.image('phaser', 'assets/sprites/mushroom2.png');
     // game.load.image('phaser', 'assets/sprites/wabbit.png');
-    game.load.image('phaser', 'assets/sprites/arrow.png');
+    // game.load.image('phaser', 'assets/sprites/arrow.png');
+    game.load.image('phaser', 'assets/sprites/darkwing_crazy.png');
 
 }
 

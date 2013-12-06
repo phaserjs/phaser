@@ -1018,6 +1018,8 @@ Phaser.Physics.Arcade.prototype = {
         var tile;
         var localOverlapX = 0;
         var localOverlapY = 0;
+        var maxOverlapX = Math.round(tiles[0].width / 2);
+        var maxOverlapY = Math.round(tiles[0].height / 2);
 
         for (var i = 0; i < tiles.length; i++)
         {
@@ -1029,6 +1031,11 @@ Phaser.Physics.Arcade.prototype = {
                 {
                     //  LEFT
                     localOverlapX = body.x - tile.right;
+
+                    if (localOverlapX < -maxOverlapX)
+                    {
+                        localOverlapX = 0;
+                    }
 
                     if (localOverlapX >= body.deltaX())
                     {
@@ -1043,6 +1050,11 @@ Phaser.Physics.Arcade.prototype = {
                 {
                     //  RIGHT
                     localOverlapX = body.right - tile.x;
+
+                    if (localOverlapX > maxOverlapX)
+                    {
+                        localOverlapX = 0;
+                    }
 
                     //  Distance check
                     if (localOverlapX <= body.deltaX())
@@ -1059,6 +1071,12 @@ Phaser.Physics.Arcade.prototype = {
                     //  UP
                     localOverlapY = body.y - tile.bottom;
 
+                    //  negatives
+                    if (localOverlapY < -maxOverlapY)
+                    {
+                        localOverlapY = 0;
+                    }
+
                     //  Distance check
                     if (localOverlapY >= body.deltaY())
                     {
@@ -1072,6 +1090,11 @@ Phaser.Physics.Arcade.prototype = {
                 {
                     //  DOWN
                     localOverlapY = body.bottom - tile.y;
+
+                    if (localOverlapY > maxOverlapY)
+                    {
+                        localOverlapY = 0;
+                    }
 
                     if (localOverlapY <= body.deltaY())
                     {
@@ -1164,6 +1187,11 @@ Phaser.Physics.Arcade.prototype = {
             //  LEFT
             body.overlapX = body.x - tile.right;
 
+            if (body.overlapX < -maxOverlapX)
+            {
+                body.overlapX = 0;
+            }
+
             if (body.overlapX >= body.deltaX())
             {
                 console.log('left overlapX', body.overlapX, body.deltaX(), this.game.time.physicsElapsed);
@@ -1177,6 +1205,11 @@ Phaser.Physics.Arcade.prototype = {
         {
             //  RIGHT
             body.overlapX = body.right - tile.x;
+
+            if (body.overlapX > maxOverlapX)
+            {
+                body.overlapX = 0;
+            }
 
             //  Distance check
             if (body.overlapX <= body.deltaX())
@@ -1193,6 +1226,11 @@ Phaser.Physics.Arcade.prototype = {
             //  UP
             body.overlapY = body.y - tile.bottom;
 
+            if (body.overlapY < -maxOverlapY)
+            {
+                body.overlapY = 0;
+            }
+
             //  Distance check
             if (body.overlapY >= body.deltaY())
             {
@@ -1206,6 +1244,11 @@ Phaser.Physics.Arcade.prototype = {
         {
             //  DOWN
             body.overlapY = body.bottom - tile.y;
+
+            if (body.overlapY > maxOverlapY)
+            {
+                body.overlapY = 0;
+            }
 
             if (body.overlapY <= body.deltaY())
             {
