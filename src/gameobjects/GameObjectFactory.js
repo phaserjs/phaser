@@ -90,7 +90,7 @@ Phaser.GameObjectFactory.prototype = {
     *
     * @method Phaser.GameObjectFactory#group
     * @param {*} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
-    * @param {string} [name=group] - A name for this Group. Not used internally but useful for debugging.
+    * @param {string} [name='group'] - A name for this Group. Not used internally but useful for debugging.
     * @return {Phaser.Group} The newly created group.
     */
     group: function (parent, name) {

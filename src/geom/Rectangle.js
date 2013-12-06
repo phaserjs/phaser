@@ -644,7 +644,14 @@ Phaser.Rectangle.intersection = function (a, b, out) {
 */
 Phaser.Rectangle.intersects = function (a, b) {
 
-    return (a.x < b.right && b.x < a.right && a.y < b.bottom && b.y < a.bottom);
+    if (a.width <= 0 || a.height <= 0 || b.width <= 0 || b.height <= 0)
+    {
+        return false;
+    }
+
+    return !(a.right < b.x || a.bottom < b.y || a.x > b.right || a.y > b.bottom);
+
+    // return (a.x < b.right && b.x < a.right && a.y < b.bottom && b.y < a.bottom);
 
     // return (a.x <= b.right && b.x <= a.right && a.y <= b.bottom && b.y <= a.bottom);
 

@@ -36,8 +36,8 @@ function create() {
     //  this screws something up - not quite sure what, but needs investigating!
     // layer.resizeWorld();
 
-    sprite = game.add.sprite(120, 510, 'phaser');
-    sprite.anchor.setTo(0.5, 0.5);
+    sprite = game.add.sprite(120, 450, 'phaser');
+    // sprite.anchor.setTo(0.5, 0.5);
     // sprite.angle = 5;
 
     // game.camera.follow(sprite);
@@ -96,12 +96,12 @@ function update() {
     if (cursors.left.isDown)
     {
         sprite.body.velocity.x = -150;
-        sprite.scale.x = -1;
+        // sprite.scale.x = -1;
     }
     else if (cursors.right.isDown)
     {
         sprite.body.velocity.x = 150;
-        sprite.scale.x = 1;
+        // sprite.scale.x = 1;
     }
 
 
@@ -113,6 +113,6 @@ function render() {
     // game.debug.renderSpriteBounds(sprite);
 
     game.debug.renderText(sprite.x, 32, 32);
-    game.debug.renderText(sprite.y, 32, 64);
+    game.debug.renderText(sprite.y, 32, 48);
 
 }

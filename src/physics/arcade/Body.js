@@ -207,6 +207,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * For example allowCollision.up = false means it won't collide when the collision happened while moving up.
     * @property {object} allowCollision - An object containing allowed collision.
     */
+    //  This would be faster as an array
     this.allowCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
 
     /**
@@ -214,12 +215,14 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * touching.up = true means the collision happened to the top of this Body for example.
     * @property {object} touching - An object containing touching results.
     */
+    //  This would be faster as an array
     this.touching = { none: true, up: false, down: false, left: false, right: false };
 
     /**
     * This object is populated with previous touching values from the bodies previous collision.
     * @property {object} wasTouching - An object containing previous touching results.
     */
+    //  This would be faster as an array
     this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
 
     /**
@@ -310,6 +313,8 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this.collideWorldBounds = false;
 
+    this.blocked = { up: false, down: false, left: false, right: false };
+
 };
 
 Phaser.Physics.Arcade.Body.prototype = {
@@ -370,8 +375,13 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.y = this.preY;
         this.rotation = this.preRotation;
 
-        this.overlapX = 0;
-        this.overlapY = 0;
+        // this.overlapX = 0;
+        // this.overlapY = 0;
+
+        this.blocked.up = false;
+        this.blocked.down = false;
+        this.blocked.left = false;
+        this.blocked.right = false;
 
         if (this.moves)
         {
@@ -406,59 +416,55 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     postUpdate: function () {
 
-        if (this.deltaX() < 0)
+        // if (this.overlapX !== 0)
+        // {
+        //     this.x -= this.overlapX;
+        // }
+
+        // if (this.overlapY !== 0)
+        // {
+        //     this.y -= this.overlapY;
+        // }
+
+        if (this.deltaX() < 0 && this.blocked.left === false)
         {
             this.facing = Phaser.LEFT;
+            this.sprite.x += this.deltaX();
         }
-        else if (this.deltaX() > 0)
+        else if (this.deltaX() > 0 && this.blocked.right === false)
         {
             this.facing = Phaser.RIGHT;
+            this.sprite.x += this.deltaX();
         }
 
-        if (this.deltaY() < 0)
+        if (this.deltaY() < 0 && this.blocked.up === false)
         {
             this.facing = Phaser.UP;
+            this.sprite.y += this.deltaY();
         }
-        else if (this.deltaY() > 0)
+        else if (this.deltaY() > 0 && this.blocked.down === false)
         {
             this.facing = Phaser.DOWN;
-        }
-
-        /*
-        if (this.overlapX !== 0)
-        {
-            this.sprite.x += this.overlapX;
-        }
-        else
-        {
-            if (this.deltaX() !== 0)
-            {
-                this.sprite.x += this.deltaX();
-            }
-        }
-
-        if (this.overlapY !== 0)
-        {
-            this.sprite.y += this.overlapY;
-        }
-        else
-        {
-            if (this.deltaY() !== 0)
-            {
-                this.sprite.y += this.deltaY();
-            }
-        }
-        */
-
-        if (this.deltaX() !== 0 || this.deltaY() !== 0)
-        {
-            // console.log('dx', this.deltaX());
-            // console.log('dy', this.deltaY());
-
-            this.sprite.x += this.deltaX();
             this.sprite.y += this.deltaY();
-            this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
         }
+
+        // if (this.deltaY() !== 0 && this.blocked.up === false && this.blocked.down === false)
+        // {
+        //     this.sprite.y += this.deltaY();
+        // }
+
+        // if (this.deltaX() !== 0 || this.deltaY() !== 0)
+        // {
+        //     this.sprite.x += this.deltaX();
+        //     this.sprite.y += this.deltaY();
+
+        //     this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
+        // }
+
+        // if (this.deltaX() !== 0 || this.deltaY() !== 0)
+        // {
+            this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
+        // }
 
         if (this.allowRotation)
         {
@@ -599,7 +605,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     * Returns the delta x value. The difference between Body.x now and in the previous step.
     *
     * @method Phaser.Physics.Arcade.Body#deltaX
-    * @return {number} The delta value.
+    * @return {number} The delta value. Positive if the motion was to the right, negative if to the left.
     */
     deltaX: function () {
         return this.x - this.preX;
@@ -609,7 +615,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     * Returns the delta y value. The difference between Body.y now and in the previous step.
     *
     * @method Phaser.Physics.Arcade.Body#deltaY
-    * @return {number} The delta value.
+    * @return {number} The delta value. Positive if the motion was downwards, negative if upwards.
     */
     deltaY: function () {
         return this.y - this.preY;
@@ -633,7 +639,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
     * @return {number}
     */
     get: function () {
-        return this.y + this.height;
+        return Math.floor(this.y + this.height);
     },
 
     /**
@@ -669,7 +675,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
     * @return {number}
     */
     get: function () {
-        return this.x + this.width;
+        return Math.floor(this.x + this.width);
     },
 
     /**

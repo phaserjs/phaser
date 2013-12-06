@@ -10,31 +10,31 @@
 * @classdesc A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {*} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
+* @param {*} parent - The parent Group or DisplayObjectContainer that will hold this group, if any. If not set, or set to null, it will use game.world.
 * @param {string} [name=group] - A name for this Group. Not used internally but useful for debugging.
 * @param {boolean} [useStage=false] - Should the DisplayObjectContainer this Group creates be added to the World (default, false) or direct to the Stage (true).
 */
 Phaser.Group = function (game, parent, name, useStage) {
 
-    if (typeof parent === 'undefined' || typeof parent === null)
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
+    this.game = game;
+
+    if (typeof parent === 'undefined' || parent === null)
     {
         parent = game.world;
     }
+
+    /**
+    * @property {string} name - A name for this Group. Not used internally but useful for debugging.
+    */
+    this.name = name || 'group';
 
     if (typeof useStage === 'undefined')
     {
         useStage = false;
     }
-
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    */
-    this.game = game;
-    
-    /**
-    * @property {string} name - A name for this Group. Not used internally but useful for debugging.
-    */
-    this.name = name || 'group';
 
     if (useStage)
     {
