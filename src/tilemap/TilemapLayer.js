@@ -288,7 +288,7 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
 
 	Phaser.Sprite.prototype.postUpdate.call(this);
 	
-    //  Stops you being able to scroll the camera if it's not following a sprite
+    //  Stops you being able to auto-scroll the camera if it's not following a sprite
     this.scrollX = this.game.camera.x * this.scrollFactorX;
     this.scrollY = this.game.camera.y * this.scrollFactorY;
 
@@ -513,7 +513,7 @@ Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
 * @param {boolean} [collides=false] - If true only return tiles that collide on one or more faces.
 * @return {array} Array with tiles informations (each contains x, y, and the tile).
 */
-Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides) {
+Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides, debug) {
 
     if (this.tilemap === null)
     {
@@ -522,6 +522,7 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
 
     //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
     if (typeof collides === 'undefined') { collides = false; }
+    if (typeof debug === 'undefined') { debug = false; }
 
     //  Cap the values
 
@@ -549,7 +550,12 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
         height = this.heightInPixels;
     }
 
-    this.context.fillStyle = 'rgba(255,0,255,0.5)';
+    if (debug)
+    {
+        console.log('x', x, 'y', y, 'w', width, 'h', height);
+    }
+
+    // this.context.fillStyle = 'rgba(255,0,255,0.5)';
     // this.context.fillRect(x, y, width, height);
 
     var tileWidth = this.tileWidth * this.scale.x;
@@ -561,7 +567,12 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     this._tw = (this.game.math.snapToCeil(width, tileWidth) + tileWidth) / tileWidth;
     this._th = (this.game.math.snapToCeil(height, tileHeight) + tileHeight) / tileHeight;
 
-    this.context.fillRect(this._tx * tileWidth, this._ty * tileHeight, this._tw * tileWidth, this._th * tileHeight);
+    if (debug)
+    {
+        console.log('tx', this._tx, 'ty', this._ty, 'tw', this._tw, 'th', this._th);
+    }
+
+    // this.context.fillRect(this._tx * tileWidth, this._ty * tileHeight, this._tw * tileWidth, this._th * tileHeight);
 
     //  This should apply the layer x/y here
     this._results.length = 0;
@@ -571,19 +582,34 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     var sx = 0;
     var sy = 0;
 
-    this.context.fillStyle = 'rgba(255,0,0,0.5)';
-    this.context.strokeStyle = 'rgba(0,0,0,1)';
+    this.context.fillStyle = 'rgba(255,0,0,1)';
+    // this.context.strokeStyle = 'rgba(0,0,0,1)';
 
     for (var wy = this._ty; wy < this._ty + this._th; wy++)
     {
+        if (debug)
+        {
+            console.log('wy', wy);
+        }
+
         for (var wx = this._tx; wx < this._tx + this._tw; wx++)
         {
+            if (debug)
+            {
+                console.log('wx', wx);
+            }
+
             if (this.layer.data[wy] && this.layer.data[wy][wx])
             {
                 //  Could combine
                 // _index = this.layer.data[wy][wx] - 1;
                 // _tile = this.tileset.getTile(_index);
                 _tile = this.layer.data[wy][wx];
+        
+                if (debug)
+                {
+                    console.log('tile', _tile);
+                }
 
                 if (_tile)
                 {
@@ -595,8 +621,13 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
 
                     if (collides === false || (collides && _tile.collides))
                     {
-                        this.context.fillRect(_tile.x * this.tileWidth, _tile.y * this.tileHeight, this.tileWidth, this.tileHeight);
-                        this.context.strokeRect(_tile.x * this.tileWidth, _tile.y * this.tileHeight, this.tileWidth, this.tileHeight);
+                        if (debug)
+                        {
+                            this.context.fillRect(_tile.x * this.tileWidth, _tile.y * this.tileHeight, this.tileWidth, this.tileHeight);
+                        }
+
+
+                        // this.context.strokeRect(_tile.x * this.tileWidth, _tile.y * this.tileHeight, this.tileWidth, this.tileHeight);
 
                         // convert tile coordinates back to camera space for return
                         var _wx = this._unfixX(wx * sx) / this.tileWidth;
@@ -653,6 +684,8 @@ Phaser.TilemapLayer.prototype.updateMax = function () {
 
     this.dirty = true;
 
+    console.log('updateMax', this._maxX, this._maxY, 'px', this.widthInPixels, this.heightInPixels, 'rwh', this.width, this.height);
+
 }
 
 /**
@@ -686,9 +719,9 @@ Phaser.TilemapLayer.prototype.render = function () {
     this._tx = this._dx;
     this._ty = this._dy;
 
-    // this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    // this.context.fillStyle = '#000000';
-    // this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context.fillStyle = '#000000';
+    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.context.strokeStyle = '#00ff00';
 
@@ -834,15 +867,14 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollX", {
 
     set: function (value) {
 
-        if (value !== this._x && value >= 0 && this.layer)
+        if (value !== this._x && value >= 0 && this.layer && this.widthInPixels > this.renderWidth)
         {
             this._x = value;
-
+    
             if (this._x > (this.widthInPixels - this.renderWidth))
             {
                 this._x = this.widthInPixels - this.renderWidth;
             }
-
 
             this._startX = this.game.math.floor(this._x / this.tileWidth);
 
@@ -875,7 +907,7 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
 
     set: function (value) {
 
-        if (value !== this._y && value >= 0 && this.layer)
+        if (value !== this._y && value >= 0 && this.layer && this.heightInPixels > this.renderHeight)
         {
             this._y = value;
 

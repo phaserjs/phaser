@@ -990,20 +990,12 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
-    * The core separation function to separate a physics body and a tile.
-    * @method Phaser.Physics.Arcade#separateTile
+    * The core separation function to separate a physics body and an array of tiles.
+    * @method Phaser.Physics.Arcade#separateTiles
     * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
     * @param {Phaser.Tile} tile - The tile to collide against.
     * @returns {boolean} Returns true if the bodies were separated, otherwise false.
     */
-    XseparateTile: function (body, tile) {
-
-        this._result = (this.separateTileX(body, tile, true) || this.separateTileY(body, tile, true));
-
-        return this._result;
-
-    },
-
     separateTiles: function (body, tiles) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
@@ -1018,8 +1010,6 @@ Phaser.Physics.Arcade.prototype = {
         var tile;
         var localOverlapX = 0;
         var localOverlapY = 0;
-        var maxOverlapX = Math.round(tiles[0].width / 2);
-        var maxOverlapY = Math.round(tiles[0].height / 2);
 
         for (var i = 0; i < tiles.length; i++)
         {
@@ -1032,14 +1022,9 @@ Phaser.Physics.Arcade.prototype = {
                     //  LEFT
                     localOverlapX = body.x - tile.right;
 
-                    if (localOverlapX < -maxOverlapX)
-                    {
-                        localOverlapX = 0;
-                    }
-
                     if (localOverlapX >= body.deltaX())
                     {
-                        console.log('m left overlapX', localOverlapX, body.deltaX(), this.game.time.physicsElapsed);
+                        console.log('m left overlapX', localOverlapX, body.deltaX());
                         //  use touching instead of blocked?
                         body.blocked.left = true;
                         body.touching.left = true;
@@ -1051,15 +1036,10 @@ Phaser.Physics.Arcade.prototype = {
                     //  RIGHT
                     localOverlapX = body.right - tile.x;
 
-                    if (localOverlapX > maxOverlapX)
-                    {
-                        localOverlapX = 0;
-                    }
-
                     //  Distance check
                     if (localOverlapX <= body.deltaX())
                     {
-                        console.log('m right overlapX', localOverlapX, body.deltaX(), this.game.time.physicsElapsed);
+                        console.log('m right overlapX', localOverlapX, body.deltaX());
                         body.blocked.right = true;
                         body.touching.right = true;
                         body.touching.none = false;
@@ -1071,16 +1051,10 @@ Phaser.Physics.Arcade.prototype = {
                     //  UP
                     localOverlapY = body.y - tile.bottom;
 
-                    //  negatives
-                    if (localOverlapY < -maxOverlapY)
-                    {
-                        localOverlapY = 0;
-                    }
-
                     //  Distance check
                     if (localOverlapY >= body.deltaY())
                     {
-                        console.log('m up overlapY', localOverlapY, body.deltaY(), this.game.time.physicsElapsed);
+                        console.log('m up overlapY', localOverlapY, body.deltaY());
                         body.blocked.up = true;
                         body.touching.up = true;
                         body.touching.none = false;
@@ -1091,14 +1065,9 @@ Phaser.Physics.Arcade.prototype = {
                     //  DOWN
                     localOverlapY = body.bottom - tile.y;
 
-                    if (localOverlapY > maxOverlapY)
-                    {
-                        localOverlapY = 0;
-                    }
-
                     if (localOverlapY <= body.deltaY())
                     {
-                        console.log('m down overlapY', localOverlapY, body.deltaY(), this.game.time.physicsElapsed);
+                        console.log('m down overlapY', localOverlapY, body.deltaY());
                         body.blocked.down = true;
                         body.touching.down = true;
                         body.touching.none = false;
@@ -1122,7 +1091,8 @@ Phaser.Physics.Arcade.prototype = {
             return false;
         }
 
-        if (body.overlapX !== 0)
+        // if (body.overlapX !== 0)
+        if (body.touching.left || body.touching.right)
         {
             body.x -= body.overlapX;
             body.preX -= body.overlapX;
@@ -1137,7 +1107,8 @@ Phaser.Physics.Arcade.prototype = {
             }
         }
 
-        if (body.overlapY !== 0)
+        // if (body.overlapY !== 0)
+        if (body.touching.up || body.touching.down)
         {
             body.y -= body.overlapY;
             body.preY -= body.overlapY;
@@ -1154,9 +1125,15 @@ Phaser.Physics.Arcade.prototype = {
 
         return true;
 
-
     },
 
+    /**
+    * The core separation function to separate a physics body and a tile.
+    * @method Phaser.Physics.Arcade#separateTile
+    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
+    * @param {Phaser.Tile} tile - The tile to collide against.
+    * @returns {boolean} Returns true if the bodies were separated, otherwise false.
+    */
     separateTile: function (body, tile) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
@@ -1167,9 +1144,6 @@ Phaser.Physics.Arcade.prototype = {
             // console.log('bx', body.x, 'by', body.y, 'bw', body.width, 'bh', body.height, 'br', body.right, 'bb', body.bottom);
             return false;
         }
-
-        var maxOverlapX = Math.round(tile.width / 2);
-        var maxOverlapY = Math.round(tile.height / 2);
 
         //  use body var instead
         body.overlapX = 0;
@@ -1187,14 +1161,9 @@ Phaser.Physics.Arcade.prototype = {
             //  LEFT
             body.overlapX = body.x - tile.right;
 
-            if (body.overlapX < -maxOverlapX)
-            {
-                body.overlapX = 0;
-            }
-
             if (body.overlapX >= body.deltaX())
             {
-                console.log('left overlapX', body.overlapX, body.deltaX(), this.game.time.physicsElapsed);
+                console.log('left overlapX', body.overlapX, body.deltaX());
                 //  use touching instead of blocked?
                 body.blocked.left = true;
                 body.touching.left = true;
@@ -1206,15 +1175,10 @@ Phaser.Physics.Arcade.prototype = {
             //  RIGHT
             body.overlapX = body.right - tile.x;
 
-            if (body.overlapX > maxOverlapX)
-            {
-                body.overlapX = 0;
-            }
-
             //  Distance check
             if (body.overlapX <= body.deltaX())
             {
-                console.log('right overlapX', body.overlapX, body.deltaX(), this.game.time.physicsElapsed);
+                console.log('right overlapX', body.overlapX, body.deltaX());
                 body.blocked.right = true;
                 body.touching.right = true;
                 body.touching.none = false;
@@ -1226,15 +1190,10 @@ Phaser.Physics.Arcade.prototype = {
             //  UP
             body.overlapY = body.y - tile.bottom;
 
-            if (body.overlapY < -maxOverlapY)
-            {
-                body.overlapY = 0;
-            }
-
             //  Distance check
             if (body.overlapY >= body.deltaY())
             {
-                console.log('up overlapY', body.overlapY, body.deltaY(), this.game.time.physicsElapsed);
+                console.log('up overlapY', body.overlapY, body.deltaY());
                 body.blocked.up = true;
                 body.touching.up = true;
                 body.touching.none = false;
@@ -1245,14 +1204,9 @@ Phaser.Physics.Arcade.prototype = {
             //  DOWN
             body.overlapY = body.bottom - tile.y;
 
-            if (body.overlapY > maxOverlapY)
-            {
-                body.overlapY = 0;
-            }
-
             if (body.overlapY <= body.deltaY())
             {
-                console.log('down overlapY', body.overlapY, body.deltaY(), this.game.time.physicsElapsed);
+                console.log('down overlapY', body.overlapY, body.deltaY());
                 body.blocked.down = true;
                 body.touching.down = true;
                 body.touching.none = false;
@@ -1266,7 +1220,8 @@ Phaser.Physics.Arcade.prototype = {
             return false;
         }
 
-        if (body.overlapX !== 0)
+        // if (body.overlapX !== 0)
+        if (body.touching.left || body.touching.right)
         {
             body.x -= body.overlapX;
             body.preX -= body.overlapX;
@@ -1281,7 +1236,8 @@ Phaser.Physics.Arcade.prototype = {
             }
         }
 
-        if (body.overlapY !== 0)
+        // if (body.overlapY !== 0)
+        if (body.touching.up || body.touching.down)
         {
             body.y -= body.overlapY;
             body.preY -= body.overlapY;
@@ -1297,182 +1253,6 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         return true;
-
-    },
-
-    /**
-    * The core separation function to separate a physics body and a tile on the x axis.
-    * @method Phaser.Physics.Arcade#separateTileX
-    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
-    * @param {Phaser.Tile} tile - The tile to collide against.
-    * @returns {boolean} Returns true if the bodies were separated, otherwise false.
-    */
-    separateTileX: function (body, tile, separate) {
-
-        //  Can't separate two immovable objects (tiles are always immovable)
-        if (body.immovable || body.deltaX() === 0 || Phaser.Rectangle.intersects(body.hullX, tile) === false)
-        {
-            return false;
-        }
-
-        this._overlap = 0;
-
-        //  The hulls overlap, let's process it
-        // this._maxOverlap = body.deltaAbsX() + this.OVERLAP_BIAS;
-
-        if (body.deltaX() < 0)
-        {
-            //  Moving left
-            this._overlap = tile.right - body.hullX.x;
-
-            // if ((this._overlap > this._maxOverlap) || body.allowCollision.left === false || tile.tile.collideRight === false)
-            if (body.allowCollision.left === false || tile.tile.collideRight === false)
-            {
-                this._overlap = 0;
-            }
-            else
-            {
-                body.touching.left = true;
-            }
-        }
-        else
-        {
-            //  Moving right
-            this._overlap = body.hullX.right - tile.x;
-
-            // if ((this._overlap > this._maxOverlap) || body.allowCollision.right === false || tile.tile.collideLeft === false)
-            if (body.allowCollision.right === false || tile.tile.collideLeft === false)
-            {
-                this._overlap = 0;
-            }
-            else
-            {
-                body.touching.right = true;
-            }
-        }
-
-        //  Then adjust their positions and velocities accordingly (if there was any overlap)
-        if (this._overlap !== 0)
-        {
-            if (separate)
-            {
-                // console.log('dx1', body.x);
-
-                if (body.deltaX() < 0)
-                {
-                    body.x = body.x + this._overlap;
-                }
-                else
-                {
-                    body.x = body.x - this._overlap;
-                }
-
-                // console.log('dx2', body.x, this._overlap);
-
-                if (body.bounce.x === 0)
-                {
-                    body.velocity.x = 0;
-                }
-                else
-                {
-                    body.velocity.x = -body.velocity.x * body.bounce.x;
-                }
-
-                body.updateHulls(false);
-            }
-
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-
-    },
-
-    /**
-    * The core separation function to separate a physics body and a tile on the x axis.
-    * @method Phaser.Physics.Arcade#separateTileY
-    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
-    * @param {Phaser.Tile} tile - The tile to collide against.
-    * @returns {boolean} Returns true if the bodies were separated, otherwise false.
-    */
-    separateTileY: function (body, tile, separate) {
-
-        //  Can't separate two immovable objects (tiles are always immovable)
-        if (body.immovable || body.deltaY() === 0 || Phaser.Rectangle.intersects(body.hullY, tile) === false)
-        {
-            return false;
-        }
-
-        this._overlap = 0;
-
-        //  The hulls overlap, let's process it
-        // this._maxOverlap = body.deltaAbsY() + this.OVERLAP_BIAS;
-
-        if (body.deltaY() < 0)
-        {
-            //  Moving up
-            this._overlap = tile.bottom - body.hullY.y;
-
-            // if ((this._overlap > this._maxOverlap) || body.allowCollision.up === false || tile.tile.collideDown === false)
-            if (body.allowCollision.up === false || tile.tile.collideDown === false)
-            {
-                this._overlap = 0;
-            }
-            else
-            {
-                body.touching.up = true;
-            }
-        }
-        else
-        {
-            //  Moving down
-            this._overlap = body.hullY.bottom - tile.y;
-
-            // if ((this._overlap > this._maxOverlap) || body.allowCollision.down === false || tile.tile.collideUp === false)
-            if (body.allowCollision.down === false || tile.tile.collideUp === false)
-            {
-                this._overlap = 0;
-            }
-            else
-            {
-                body.touching.down = true;
-            }
-        }
-
-        //  Then adjust their positions and velocities accordingly (if there was any overlap)
-        if (this._overlap !== 0)
-        {
-            if (separate)
-            {
-                if (body.deltaY() < 0)
-                {
-                    body.y = body.y + this._overlap;
-                }
-                else
-                {
-                    body.y = body.y - this._overlap;
-                }
-
-                if (body.bounce.y === 0)
-                {
-                    body.velocity.y = 0;
-                }
-                else
-                {
-                    body.velocity.y = -body.velocity.y * body.bounce.y;
-                }
-
-                body.updateHulls(false);
-            }
-            
-            return true;
-        }
-        else
-        {
-            return false;
-        }
 
     },
 
@@ -1622,7 +1402,7 @@ Phaser.Physics.Arcade.prototype = {
 
     /**
     * Given the rotation (in radians) and speed calculate the acceleration and return it as a Point object, or set it to the given point object.
-    * One way to use this is: velocityFromRotation(rotation, 200, sprite.velocity) which will set the values directly to the sprites velocity and not create a new Point object.
+    * One way to use this is: accelerationFromRotation(rotation, 200, sprite.acceleration) which will set the values directly to the sprites acceleration and not create a new Point object.
     * 
     * @method Phaser.Physics.Arcade#accelerationFromRotation
     * @param {number} rotation - The angle in radians.

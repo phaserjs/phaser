@@ -5,17 +5,18 @@ function preload() {
 
     game.load.tilemap('map', 'assets/maps/newtest.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.tileset('tiles', 'assets/maps/ground_1x1.png', 32, 32);
-    // game.load.image('phaser', 'assets/sprites/phaser-ship.png');
+    game.load.image('phaser', 'assets/sprites/phaser-ship.png');
     // game.load.image('phaser', 'assets/sprites/mushroom2.png');
     // game.load.image('phaser', 'assets/sprites/wabbit.png');
     // game.load.image('phaser', 'assets/sprites/arrow.png');
-    game.load.image('phaser', 'assets/sprites/darkwing_crazy.png');
+    // game.load.image('phaser', 'assets/sprites/darkwing_crazy.png');
 
 }
 
 var cursors;
 var map;
 var layer;
+var layer2;
 var sprite;
 
 function create() {
@@ -28,48 +29,63 @@ function create() {
 
     // Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, tilemap, layer) {
     
-    layer = game.add.tilemapLayer(0, 0, 800, 600, null, map, 0);
+    // layer = game.add.tilemapLayer(0, 0, 800, 600, null, map, 0);
+    layer = game.add.tilemapLayer(0, 0, 400, 600, null, map, 0);
+
+    // layer2 = game.add.tilemapLayer(0, 0, 400, 600, null, map, 0);
+    layer.cameraOffset.x = 400;
 
     // tileset = game.add.tileset('tilesNes');
     // layer = game.add.tilemapLayer(0, 0, map.layers[0].width*tilesetNes.tileWidth, 600, tileset, map, 0);
-
     //  disable this and you can place anywhere, but will almost certainly screw collision
-    // layer.fixedToCamera=false;
 
-    //  this screws something up - not quite sure what, but needs investigating!
-    // layer.resizeWorld();
+    layer.resizeWorld();
 
-    sprite = game.add.sprite(200, 420, 'phaser');
+    sprite = game.add.sprite(260, 100, 'phaser');
     sprite.anchor.setTo(0.5, 0.5);
-    sprite.angle = 35;
 
-    // game.camera.follow(sprite);
+    //  We'll set a lower max angular velocity here to keep it from going totally nuts
+    sprite.body.maxAngular = 500;
+
+    //  Apply a drag otherwise the sprite will just spin and never slow down
+    sprite.body.angularDrag = 50;
+
+    // sprite.body.drag.x = 50;
+    // sprite.body.drag.y = 20;
+
+    // sprite.body.velocity.x = 50;
+
+    sprite.body.bounce.x = 0.8;
+    sprite.body.bounce.y = 0.8;
+
+    // sprite.angle = 35;
+
+    game.camera.follow(sprite);
+
+    game.input.onDown.add(getIt, this);
 
     cursors = game.input.keyboard.createCursorKeys();
 
-    game.input.onDown.add(dump, this);
-
-
 }
 
-function dump() {
+function getIt() {
 
-    console.log(sprite.bounds);
-    console.log(sprite.body.hull);
-    console.log('wy', sprite.world.y);
+    console.log('cam', game.camera.bounds);
+    console.log('w', game.world.bounds);
+    // console.log(layer.getTiles(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height, true, true));
 
 }
 
 function update() {
 
-    /*
+/*
     if (cursors.left.isDown)
     {
-        layer.scrollX -= 4;
+        game.camera.x -= 1;
     }
     else if (cursors.right.isDown)
     {
-        layer.scrollX += 4;
+        game.camera.x += 1;
     }
 
     if (cursors.up.isDown)
@@ -80,10 +96,42 @@ function update() {
     {
         layer.scrollY += 4;
     }
-    */
-
+*/
     game.physics.collide(sprite, layer);
 
+    sprite.body.velocity.x = 0;
+    sprite.body.velocity.y = 0;
+    sprite.body.angularVelocity = 0;
+
+    // sprite.body.acceleration.x = 0;
+    // sprite.body.angularAcceleration = 0;
+
+    if (cursors.left.isDown)
+    {
+        // sprite.body.acceleration.x = -200;
+        sprite.body.angularVelocity = -300;
+        // sprite.body.angularAcceleration -= 200;
+    }
+    else if (cursors.right.isDown)
+    {
+        // sprite.body.acceleration.x = 200;
+        sprite.body.angularVelocity = 300;
+        // sprite.body.angularAcceleration += 200;
+    }
+
+    if (cursors.up.isDown)
+    {
+        game.physics.velocityFromAngle(sprite.angle, 300, sprite.body.velocity);
+    }
+    else
+    {
+        // game.physics.velocityFromAngle(sprite.angle, sprite.body.velocity, sprite.body.velocity);
+    }
+
+
+
+
+    /*
     sprite.body.velocity.x = 0;
     sprite.body.velocity.y = 0;
 
@@ -108,6 +156,7 @@ function update() {
         sprite.body.velocity.x = 900;
         // sprite.scale.x = 1;
     }
+    */
 
 
 }
@@ -117,7 +166,10 @@ function render() {
     // game.debug.renderSpriteBody(sprite);
     game.debug.renderSpriteBounds(sprite);
 
-    game.debug.renderText(sprite.x, 32, 32);
-    game.debug.renderText(sprite.y, 32, 48);
+    // game.debug.renderText(sprite.x, 32, 32);
+    // game.debug.renderText(sprite.y, 32, 48);
+
+    game.debug.renderText(layer.scrollX, 32, 32);
+    game.debug.renderText(layer.scrollY, 32, 48);
 
 }

@@ -636,8 +636,11 @@ Phaser.Utils.Debug.prototype = {
 
         this.start(0, 0, color);
 
-        // this.context.fillStyle = color;
-        // this.context.fillRect(sprite.body.screenX, sprite.body.screenY, sprite.body.width, sprite.body.height);
+        this.context.fillStyle = color;
+        this.context.fillRect(sprite.body.screenX, sprite.body.screenY, sprite.body.width, sprite.body.height);
+
+        this.stop();
+        this.start(0, 0, color);
 
         this.context.beginPath();
         this.context.strokeStyle = '#000000';
@@ -699,11 +702,11 @@ Phaser.Utils.Debug.prototype = {
         }
         else
         {
-            // this.context.strokeStyle = color;
-            // this.context.strokeRect(sprite.bounds.x, sprite.bounds.y, sprite.bounds.width, sprite.bounds.height);
-            // this.context.strokeRect(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height);
+            this.context.strokeStyle = color;
+            this.context.strokeRect(sprite.bounds.x, sprite.bounds.y, sprite.bounds.width, sprite.bounds.height);
+            this.context.strokeRect(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height);
             // this.context.strokeRect(sprite.body.hull.x, sprite.body.hull.y, sprite.body.hull.width, sprite.body.hull.height);
-            // this.context.stroke();
+            this.context.stroke();
 
             // this.context.strokeStyle = '#ff0000';
             // this.context.strokeRect(sprite.body.hullX.x, sprite.body.hullX.y, sprite.body.hullX.width, sprite.body.hullX.height);

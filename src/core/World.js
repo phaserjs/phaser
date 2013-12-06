@@ -130,7 +130,7 @@ Phaser.World.prototype.postUpdate = function () {
 
 /**
 * Updates the size of this world. Note that this doesn't modify the world x/y coordinates, just the width and height.
-* If you need to adjust the bounds of the world
+*
 * @method Phaser.World#setBounds
 * @param {number} x - Top left most corner of the world.
 * @param {number} y - Top left most corner of the world.
@@ -139,10 +139,22 @@ Phaser.World.prototype.postUpdate = function () {
 */
 Phaser.World.prototype.setBounds = function (x, y, width, height) {
 
+        if (width < this.game.width)
+        {
+            width = this.game.width;
+        }
+
+        if (height < this.game.height)
+        {
+            height = this.game.height;
+        }
+
     this.bounds.setTo(x, y, width, height);
 
     if (this.camera.bounds)
     {
+        //  The Camera can never be smaller than the game size
+
         this.camera.bounds.setTo(x, y, width, height);
     }
 

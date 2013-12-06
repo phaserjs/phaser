@@ -207,28 +207,28 @@ Phaser.Camera.prototype = {
 
         if (this.deadzone)
         {
-            this._edge = this.target.x - this.deadzone.x;
+            this._edge = this.target.bounds.x - this.deadzone.x;
 
             if (this.view.x > this._edge)
             {
                 this.view.x = this._edge;
             }
 
-            this._edge = this.target.x + this.target.width - this.deadzone.x - this.deadzone.width;
+            this._edge = this.target.bounds.right - this.deadzone.x - this.deadzone.width;
 
             if (this.view.x < this._edge)
             {
                 this.view.x = this._edge;
             }
 
-            this._edge = this.target.y - this.deadzone.y;
+            this._edge = this.target.bounds.y - this.deadzone.y;
 
             if (this.view.y > this._edge)
             {
                 this.view.y = this._edge;
             }
 
-            this._edge = this.target.y + this.target.height - this.deadzone.y - this.deadzone.height;
+            this._edge = this.target.bounds.bottom - this.deadzone.y - this.deadzone.height;
 
             if (this.view.y < this._edge)
             {
