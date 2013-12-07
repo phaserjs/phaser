@@ -5,10 +5,10 @@ function preload() {
 
     game.load.tilemap('map', 'assets/maps/newtest.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.tileset('tiles', 'assets/maps/ground_1x1.png', 32, 32);
-    game.load.image('phaser', 'assets/sprites/phaser-ship.png');
+    // game.load.image('phaser', 'assets/sprites/phaser-ship.png');
     // game.load.image('phaser', 'assets/sprites/mushroom2.png');
     // game.load.image('phaser', 'assets/sprites/wabbit.png');
-    // game.load.image('phaser', 'assets/sprites/arrow.png');
+    game.load.image('phaser', 'assets/sprites/arrow.png');
     // game.load.image('phaser', 'assets/sprites/darkwing_crazy.png');
 
 }
@@ -30,11 +30,11 @@ function create() {
     // Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, tilemap, layer) {
     
     // layer = game.add.tilemapLayer(0, 0, 800, 600, null, map, 0);
-    layer = game.add.tilemapLayer(0, 0, 400, 600, null, map, 0);
+    layer = game.add.tilemapLayer(0, 0, 800, 600, null, map, 0);
 
     // layer2 = game.add.tilemapLayer(0, 0, 400, 600, null, map, 0);
     // layer.cameraOffset.x = 400;
-    layer.alpha = 0.5;
+    // layer.alpha = 0.5;
 
     // tileset = game.add.tileset('tilesNes');
     // layer = game.add.tilemapLayer(0, 0, map.layers[0].width*tilesetNes.tileWidth, 600, tileset, map, 0);
@@ -44,6 +44,16 @@ function create() {
 
     sprite = game.add.sprite(260, 100, 'phaser');
     sprite.anchor.setTo(0.5, 0.5);
+
+    //  This adjusts the collision body size.
+    //  100x50 is the new width/height.
+    //  50, 25 is the X and Y offset of the newly sized box.
+    //  In this case the box is 50px in and 25px down.
+    sprite.body.setSize(16, 16, 8, 8);
+
+
+
+
 
     //  We'll set a lower max angular velocity here to keep it from going totally nuts
     sprite.body.maxAngular = 500;

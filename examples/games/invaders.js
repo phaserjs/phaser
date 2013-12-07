@@ -28,6 +28,7 @@ var lives;
 var enemyBullet;
 var firingTimer = 0;
 var stateText;
+var livingEnemies=[];
 
 function create() {
 
@@ -226,7 +227,7 @@ function enemyFires () {
     //  Grab the first bullet we can from the pool
     enemyBullet = enemyBullets.getFirstExists(false);
 
-    var livingEnemies=[];
+    livingEnemies.length=0;
 
     aliens.forEachAlive(function(alien){
 
