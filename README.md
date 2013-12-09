@@ -66,6 +66,7 @@ Bug Fixes:
 * Group.length now returns the number of children in the Group regardless of their exists/alive state, or 0 if the Group is has no children.
 * Switch Camera.setBoundsToWorld to match world.bounds instead of world (thanks cocoademon)
 * Fixed an issue where passing null as the Group parent wouldn't set it to game.world as it should have (thanks tito100)
+* Fixed Pixi bug (#425) incorrect width property for multi-line Bitmap (thanks jcd-as)
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md

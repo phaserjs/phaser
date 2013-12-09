@@ -368,7 +368,7 @@ Phaser.TilemapLayer.prototype.updateMapData = function (tilemap, layer) {
 }
 
 /**
-* Take an x coordinate that doesn't account for scrollFactorY and 'fix' it 
+* Take an x coordinate that doesn't account for scrollFactorX and 'fix' it 
 * into a scrolled local space. Used primarily internally
 * @method Phaser.TilemapLayer#_fixX
 * @memberof Phaser.TilemapLayer
@@ -378,19 +378,22 @@ Phaser.TilemapLayer.prototype.updateMapData = function (tilemap, layer) {
 */
 Phaser.TilemapLayer.prototype._fixX = function(x) {
 
+    if (x < 0)
+    {
+        x = 0;
+    }
+
     if (this.scrollFactorX === 1)
     {
         return x;
     }
 
-    var leftEdge = x - (this._x / this.scrollFactorX);
-
-    return this._x + leftEdge;
+    return this._x + (x - (this._x / this.scrollFactorX));
 
 }
 
 /**
-* Take an x coordinate that _does_ account for scrollFactorY and 'unfix' it 
+* Take an x coordinate that _does_ account for scrollFactorX and 'unfix' it 
 * back to camera space. Used primarily internally
 * @method Phaser.TilemapLayer#_unfixX
 * @memberof Phaser.TilemapLayer
@@ -405,9 +408,7 @@ Phaser.TilemapLayer.prototype._unfixX = function(x) {
         return x;
     }
 
-    var leftEdge = x - this._x;
-
-    return (this._x / this.scrollFactorX) + leftEdge;
+    return (this._x / this.scrollFactorX) + (x - this._x);
 
 }
 
@@ -422,14 +423,17 @@ Phaser.TilemapLayer.prototype._unfixX = function(x) {
 */
 Phaser.TilemapLayer.prototype._fixY = function(y) {
 
+    if (y < 0)
+    {
+        y = 0;
+    }
+
     if (this.scrollFactorY === 1)
     {
         return y;
     }
 
-    var topEdge = y - (this._y / this.scrollFactorY);
-
-    return this._y + topEdge;
+    return this._y + (y - (this._y / this.scrollFactorY));
 
 }
 
@@ -449,9 +453,7 @@ Phaser.TilemapLayer.prototype._unfixY = function(y) {
         return y;
     }
 
-    var topEdge = y - this._y;
-
-    return (this._y / this.scrollFactorY) + topEdge;
+    return (this._y / this.scrollFactorY) + (y - this._y);
 
 }
 
@@ -523,18 +525,6 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
     if (typeof collides === 'undefined') { collides = false; }
     if (typeof debug === 'undefined') { debug = false; }
-
-    //  Cap the values
-
-    if (x < 0)
-    {
-        x = 0;
-    }
-
-    if (y < 0)
-    {
-        y = 0;
-    }
 
     // adjust the x,y coordinates for scrollFactor
     x = this._fixX(x);
@@ -702,7 +692,7 @@ Phaser.TilemapLayer.prototype.render = function () {
 
     if (!this.dirty || !this.tileset || !this.tilemap || !this.visible)
     {
-        // return;
+        return;
     }
 
     this._prevX = this._dx;
@@ -720,8 +710,8 @@ Phaser.TilemapLayer.prototype.render = function () {
     this._ty = this._dy;
 
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.fillStyle = '#000000';
-    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    // this.context.fillStyle = '#000000';
+    // this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.context.strokeStyle = '#00ff00';
 
@@ -732,6 +722,23 @@ Phaser.TilemapLayer.prototype.render = function () {
         for (var x = this._startX, lenX = this._startX + this._maxX; x < lenX; x++)
         {
             var tile = this._column[x];
+
+            // var tile = this.tileset.tiles[this._column[x] - 1];
+
+            if (tile)
+            {
+                // this.context.drawImage(
+                //     this.tileset.image,
+                //     tile.x,
+                //     tile.y,
+                //     this.tileWidth,
+                //     this.tileHeight,
+                //     Math.floor(this._tx),
+                //     Math.floor(this._ty),
+                //     this.tileWidth,
+                //     this.tileHeight
+                // );
+            }
 
             if (tile && (tile.faceTop || tile.faceBottom || tile.faceLeft || tile.faceRight))
             {
@@ -768,26 +775,6 @@ Phaser.TilemapLayer.prototype.render = function () {
                 // this.context.fillRect(this._tx, this._ty, this.tileWidth, this.tileHeight);
                 // this.context.strokeRect(this._tx, this._ty, this.tileWidth, this.tileHeight);
             }
-
-            //  only -1 on TILED maps, not CSV
-            /*
-            var tile = this.tileset.tiles[this._column[x]-1];
-
-            if (tile)
-            {
-                this.context.drawImage(
-                    this.tileset.image,
-                    tile.x,
-                    tile.y,
-                    this.tileWidth,
-                    this.tileHeight,
-                    Math.floor(this._tx),
-                    Math.floor(this._ty),
-                    this.tileWidth,
-                    this.tileHeight
-                );
-            }
-            */
 
             this._tx += this.tileWidth;
 
