@@ -440,14 +440,15 @@ Phaser.Game.prototype = {
         {
             this.plugins.preUpdate();
             this.physics.preUpdate();
+            this.world.preUpdate();
 
             this.stage.update();
             this.input.update();
             this.tweens.update();
             this.sound.update();
-            this.world.update();
-            this.particles.update();
             this.state.update();
+            this.world.update();
+            this.particles.update();            
             this.plugins.update();
 
             this.world.postUpdate();
