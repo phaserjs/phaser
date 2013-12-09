@@ -65,6 +65,33 @@ Phaser.World.prototype.boot = function () {
 * 
 * @method Phaser.World#update
 */
+Phaser.World.prototype.preUpdate = function () {
+    
+    if (this.game.stage._stage.first._iNext)
+    {
+        var currentNode = this.game.stage._stage.first._iNext;
+        
+        do
+        {
+            // If preUpdate exists, and it returns false, skip PIXI child objects
+            if (currentNode['preUpdate'] && !currentNode.preUpdate())
+            {
+                currentNode = currentNode.last._iNext;
+            } else {
+                currentNode = currentNode._iNext;
+            }
+            
+        }
+        while (currentNode != this.game.stage._stage.last._iNext)
+    }
+
+}
+
+/**
+* This is called automatically every frame, and is where main logic happens.
+* 
+* @method Phaser.World#update
+*/
 Phaser.World.prototype.update = function () {
 
     this.currentRenderOrderID = 0;
@@ -72,28 +99,14 @@ Phaser.World.prototype.update = function () {
     if (this.game.stage._stage.first._iNext)
     {
         var currentNode = this.game.stage._stage.first._iNext;
-        var skipChildren;
         
         do
         {
-            skipChildren = false;
-
-            if (currentNode['preUpdate'])
-            {
-                skipChildren = (currentNode.preUpdate() === false);
-            }
-
-            if (currentNode['update'])
-            {
-                skipChildren = (currentNode.update() === false) || skipChildren;
-            }
-            
-            if (skipChildren)
+            // If update exists, and it returns false, skip PIXI child objects
+            if (currentNode['update'] && !currentNode.update())
             {
                 currentNode = currentNode.last._iNext;
-            }
-            else
-            {
+            } else {
                 currentNode = currentNode._iNext;
             }
             
