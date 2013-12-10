@@ -32,7 +32,7 @@ function create() {
     //  Un fondo simple para nuestro juego
     game.add.sprite(0, 0, 'sky');
 
-    //  El grupo 'platforms' contiene el suelo y las dos repisas sobre las que podemos saltar
+    //  El grupo 'platforms' contiene el suelo y las dos plataformas sobre las que podemos saltar
     platforms = game.add.group();
 
     // Aquí creamos el suelo
@@ -44,7 +44,7 @@ function create() {
     //  Esto hace que el suelo no se caiga cuando saltas en él. Lo hace inmóvil
     ground.body.immovable = true;
 
-    //  Creamos las dos repisas
+    //  Creamos las dos plataformas
     var ledge = platforms.create(400, 400, 'ground');
     ledge.body.immovable = true;
 
