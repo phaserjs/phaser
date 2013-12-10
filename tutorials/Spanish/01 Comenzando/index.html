@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Phaser Tutorial 01 - Getting Started</title>
+        <script src="build/phaser.js" type="text/javascript"></script>
+        <style>
+            body {
+                font-family: Arial;
+                font-size: 14px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <h1>Getting started with Phaser</h1>
+
+        <ul>
+            <li><a href="index.html">Part 1: Introduction</a></li>
+            <li><a href="part2.html">Part 2: Installing a web server</a></li>
+            <li><a href="part3.html">Part 3: Run in the Cloud</a></li>
+            <li><a href="part4.html">Part 4: Choosing an Editor</a></li>
+            <li><a href="part5.html">Part 5: Downloading Phaser</a></li>
+            <li><a href="part6.html">Part 6: Hello World!</a></li>
+            <li><a href="part7.html">Part 7: The Phaser Examples</a></li>
+            <li><a href="part8.html">Part 8: Next Steps</a></li>
+        </ul>
+
+        <h2>Part 1 - Introduction</h2>
+
+        <p>In this tutorial we're going to cover setting-up a development enviornment with which you can build your Phaser games. This will include running a local web server, picking an IDE, getting the latest version of Phaser and checking it all works together properly.</p>
+
+        <p><strong>"Why do I need a local web server? Can't I just drag the html files onto my browser?"</strong></p>
+
+        <p>Not these days, no. I appreciate that it's a bit confusing, even contradictory at times, but it all boils down to browser security. If you're making a static html web page, perhaps with a few images in it, then you can happily drag this file into your browser and see the end results. You can also "Save As" entire web pages locally and re-open them, with all the contents mostly intact. If both of these things work why can't you drag an HTML5 game into a browser and run it?</p>
+
+        <p>It's to do with the protocol used to access the files. When you request anything over the web you're using http, and the server level security is enough to ensure you can only access files you're meant to. But when you drag a file in it's loaded via the local file system (technically file://) and that is massively restricted, for obvious reasons. Under file:// there's no concept of domains, no server level security, just a raw file system. Ask yourself this: do you really want JavaScript to have the ability to load files from your local file system? Your immediate answer should of course be "not in a million years!". If JavaScript had free reign while operating under file:// there would be nothing stopping it loading pretty much <em>any</em> file it fancied and sending it off who knows where.</p>
+
+        <p>Because this is so dangerous browsers lock themselves down tighter than Alcatraz when running under file://. Every single page becomes treated as a unique local domain. That is why "Save Web page" works, to a degree. It opens under the same cross-site restrictions as if they were on a live server. There's a detailed post about it on the Chromium blog: http://blog.chromium.org/2008/12/security-in-depth-local-web-pages.html.</p>
+
+        <p>Your game is going to need to load in resources. Images, audio files, JSON data, maybe other JavaScript files. In order to do this it needs to run unhindered by the browser security shackles. It needs http:// access to the game files. And for that we need a web server.</p>
+
+        <p><a href="part2.html">Part 2: Installing a web server</a></p>
+
+    </body>
+</html>
