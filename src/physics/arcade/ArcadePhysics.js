@@ -961,9 +961,9 @@ Phaser.Physics.Arcade.prototype = {
                     body1.velocity.y = this._velocity2 - this._velocity1 * body1.bounce.y;
 
                     //  This is special case code that handles things like horizontal moving platforms you can ride
-                    if (body2.active && body2.moves && (body1.deltaY() > body2.deltaY()))
+                    if (body2.moves)
                     {
-                        body1.x += body2.x - body2.lastX;
+                        body1.x += body2.x - body2.preX;
                     }
                 }
                 else if (!body2.immovable)
@@ -972,9 +972,9 @@ Phaser.Physics.Arcade.prototype = {
                     body2.velocity.y = this._velocity1 - this._velocity2 * body2.bounce.y;
 
                     //  This is special case code that handles things like horizontal moving platforms you can ride
-                    if (body1.sprite.active && body1.moves && (body1.deltaY() < body2.deltaY()))
+                    if (body1.moves)
                     {
-                        body2.x += body1.x - body1.lastX;
+                        body2.x += body1.x - body1.preX;
                     }
                 }
 				body1.updateHulls();
