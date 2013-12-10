@@ -2,7 +2,7 @@
 <html lang="en"> 
 <head> 
 	<meta charset="UTF-8" />
-	<title>Phaser - Getting started</title>
+	<title>Phaser - Creando tu primer juego, parte 4</title>
 	<script type="text/javascript" src="js/phaser.min.js"></script>
     <style type="text/css">
         body {
@@ -29,22 +29,22 @@ var platforms;
 
 function create() {
 
-    //  A simple background for our game
+    //  Un fondo simple para nuestro juego
     game.add.sprite(0, 0, 'sky');
 
-    //  The platforms group contains the ground and the 2 ledges we can jump on
+    //  El grupo 'platforms' contiene el suelo y las dos repisas sobre las que podemos saltar
     platforms = game.add.group();
 
-    // Here we create the ground.
+    // Aquí creamos el suelo
     var ground = platforms.create(0, game.world.height - 64, 'ground');
 
-    //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
+    // Lo escalamos para que se ajuste al ancho del juego (el sprite original es 400x32)
     ground.scale.setTo(2, 2);
 
-    //  This stops it from falling away when you jump on it
+    //  Esto hace que el suelo no se caiga cuando saltas en él. Lo hace inmóvil
     ground.body.immovable = true;
 
-    //  Now let's create two ledges
+    //  Creamos las dos repisas
     var ledge = platforms.create(400, 400, 'ground');
     ledge.body.immovable = true;
 
