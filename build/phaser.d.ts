@@ -93,7 +93,7 @@ declare module Phaser {
             onPausedCallback(): void;
             onShutDownCallback(): void;
             boot(): void;
-            add(key: string, state: typeof Phaser.State, autoStart?: boolean): void;
+            add(key: string, state: Phaser.State, autoStart?: boolean): void;
             remove(key: string): void;
             start(key: string, clearWorld?: boolean, clearCache?: boolean): void;
             dummy(): void;
@@ -1180,71 +1180,75 @@ declare module Phaser {
             pause(): void;
             resume(): void;
             update(time: number): boolean;
-      }
+    }
 
-      class Easing.Linear {
-            static None(k: number);
-      }
+    module Easing {
 
-      class Easing.Quadratic {
-            static In(k: number);
-            static Out(k: number);
-            static InOut(k: number);
-      }
+        class Linear {
+            static None(k: number): number;
+        }
 
-      class Easing.Cubic {
-            static In(k: number);
-            static Out(k: number);
-            static InOut(k: number);
-      }
+        class Quadratic {
+            static In(k: number): number;
+            static Out(k: number): number;
+            static InOut(k: number): number;
+        }
 
-      class Easing.Quartic {
-            static In(k: number);
-            static Out(k: number);
-            static InOut(k: number);
-      }
+        class Cubic {
+            static In(k: number): number;
+            static Out(k: number): number;
+            static InOut(k: number): number;
+        }
 
-      class Easing.Quintic {
-            static In(k: number);
-            static Out(k: number);
-            static InOut(k: number);
-      }
+        class Quartic {
+            static In(k: number): number;
+            static Out(k: number): number;
+            static InOut(k: number): number;
+        }
 
-      class Easing.Sinusoidal {
-            static In(k: number);
-            static Out(k: number);
-            static InOut(k: number);
-      }
-      
-      class Easing.Exponential {
-            static In(k: number);
-            static Out(k: number);
-            static InOut(k: number);
-      }
+        class Quintic {
+            static In(k: number): number;
+            static Out(k: number): number;
+            static InOut(k: number): number;
+        }
 
-      class Easing.Circular {
-            static In(k: number);
-            static Out(k: number);
-            static InOut(k: number);
-      }
+        class Sinusoidal {
+            static In(k: number): number;
+            static Out(k: number): number;
+            static InOut(k: number): number;
+        }
 
-      class Easing.Elastic {
-            static In(k: number);
-            static Out(k: number);
-            static InOut(k: number);
-      }
+        class Exponential {
+            static In(k: number): number;
+            static Out(k: number): number;
+            static InOut(k: number): number;
+        }
 
-      class Easing.Back {
-            static In(k: number);
-            static Out(k: number);
-            static InOut(k: number);
-      }
+        class Circular {
+            static In(k: number): number;
+            static Out(k: number): number;
+            static InOut(k: number): number;
+        }
 
-      class Easing.Bounce {
-            static In(k: number);
-            static Out(k: number);
-            static InOut(k: number);
-      }
+        class Elastic {
+            static In(k: number): number;
+            static Out(k: number): number;
+            static InOut(k: number): number;
+        }
+
+        class Back {
+            static In(k: number): number;
+            static Out(k: number): number;
+            static InOut(k: number): number;
+        }
+
+        class Bounce {
+            static In(k: number): number;
+            static Out(k: number): number;
+            static InOut(k: number): number;
+        }
+
+    }
 
       class Time {
             constructor(game: Phaser.Game);
@@ -1276,13 +1280,13 @@ declare module Phaser {
             constructor(sprite);
             sprite: Phaser.Sprite;
             game: Phaser.Game;
-            currentFrame: Phaser.Animation.Frame;
+            currentFrame: Phaser.Frame;
             updateIfVisible: boolean;
-            frameData: Phaser.Animation.FrameData;
+            frameData: Phaser.FrameData;
             frameTotal: number;
             frame: number;
             frameName: string;
-            loadFrameData(frameData: Phaser.Animation.FrameData): void;
+            loadFrameData(frameData: Phaser.FrameData): void;
             add(name: string, frames?: Array<any>, frameRate?: number, loop?: boolean, useNumericIndex?: boolean): Phaser.Animation;
             validateFrames(frames: Array<any>, useNumericIndex?: boolean): boolean;
             play(name: string, frameRate?: number, loop?: boolean): Phaser.Animation;
@@ -1292,14 +1296,14 @@ declare module Phaser {
       }
 
       class Animation {
-            constructor(game: Phaser.Game, parent: Phaser.Sprite, name: string, frameData: Phaser.Animation.FrameData, frames: any[], delay: number, looped: boolean);
+            constructor(game: Phaser.Game, parent: Phaser.Sprite, name: string, frameData: Phaser.FrameData, frames: any[], delay: number, looped: boolean);
             game: Phaser.Game;
             name: string;
             delay: number;
             looped: boolean;
             isFinished: boolean;
             isPlaying: boolean;
-            currentFrame: Phaser.Animation.Frame;
+            currentFrame: Phaser.Frame;
             frameTotal: number;
             frame: number;
             play(frameRate?: number, loop?: boolean): Phaser.Animation;
@@ -1346,10 +1350,10 @@ declare module Phaser {
       }
 
       class AnimationParser {
-            spriteSheet(game: Phaser.Game, key: string, frameWidth: number, frameHeight: number, frameMax?: number): Phaser.Animation.FrameData;
-            JSONData(game: Phaser.Game, json: Object, cacheKey: string): Phaser.Animation.FrameData;
-            JSONDataHash(game: Phaser.Game, json: Object, cacheKey: string): Phaser.Animation.FrameData;
-            XMLData(game: Phaser.Game, xml: Object, cacheKey: string): Phaser.Animation.FrameData;
+            spriteSheet(game: Phaser.Game, key: string, frameWidth: number, frameHeight: number, frameMax?: number): Phaser.FrameData;
+            JSONData(game: Phaser.Game, json: Object, cacheKey: string): Phaser.FrameData;
+            JSONDataHash(game: Phaser.Game, json: Object, cacheKey: string): Phaser.FrameData;
+            XMLData(game: Phaser.Game, xml: Object, cacheKey: string): Phaser.FrameData;
       }
 
       class Cache {
@@ -1374,11 +1378,11 @@ declare module Phaser {
             checkImageKey(key: string): boolean;
             getImage(key: string): Object;
             getTilemap(key: string): Phaser.Tilemap;
-            getFrameData(key: string): Phaser.Animation.FrameData;
-            getFrameByIndex(key: string, frame: string): Phaser.Animation.Frame;
-            getFrameByName(key: string, frame: string): Phaser.Animation.Frame;
-            getFrame(key: string): Phaser.Animation.Frame;
-            getTextureFrame(key: string): Phaser.Animation.Frame;
+            getFrameData(key: string): Phaser.FrameData;
+            getFrameByIndex(key: string, frame: string): Phaser.Frame;
+            getFrameByName(key: string, frame: string): Phaser.Frame;
+            getFrame(key: string): Phaser.Frame;
+            getTextureFrame(key: string): Phaser.Frame;
             getTexture(key: string): Phaser.RenderTexture;
             getSound(key: string): Phaser.Sound;
             getSoundData(key: string): Object;
@@ -1443,7 +1447,7 @@ declare module Phaser {
       }
 
       class LoaderParser {
-            bitmapFont(game: Phaser.Game, xml: Object, cacheKey: Phaser.Animation.FrameData): void;
+            bitmapFont(game: Phaser.Game, xml: Object, cacheKey: Phaser.FrameData): void;
       }
 
       class Sound {
