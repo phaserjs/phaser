@@ -21,7 +21,7 @@ Phaser.Tilemap = function (game, key) {
     this.game = game;
 
     /**
-    * @property {array} layers - An array of Tilemap layers.
+    * @property {array} layers - An array of Tilemap layer data.
     */
     this.layers = null;
 
@@ -30,7 +30,6 @@ Phaser.Tilemap = function (game, key) {
         this.key = key;
 
         this.layers = game.cache.getTilemapData(key).layers;
-        this.calculateIndexes();
     }
     else
     {
@@ -45,7 +44,6 @@ Phaser.Tilemap = function (game, key) {
     /**
     * @property {array} debugMap - Map data used for debug values only.
     */
-
     this.debugMap = [];
 
     /**
@@ -117,9 +115,30 @@ Phaser.Tilemap.prototype = {
             data: data,
             indexes: [],
 			dirty: true
+
         });
 
         this.currentLayer = this.layers.length - 1;
+
+    },
+
+    createTilemapLayer: function (x, y, renderWidth, renderHeight, tileset, layer) {
+
+        return this.game.world.add(new Phaser.TilemapLayer(this.game, x, y, renderWidth, renderHeight, tileset, this, layer));
+
+    },
+
+    setCollisionByIndexRange: function (start, stop, layer) {
+
+        if (start > stop)
+        {
+            return;
+        }
+
+        for (var i = start; i <= stop; i++)
+        {
+            this.setCollisionByIndex(i, layer);
+        }
 
     },
 
@@ -127,15 +146,9 @@ Phaser.Tilemap.prototype = {
     * Sets collision values on a tile in the set.
     *
     * @method Phaser.Tileset#setCollision
-    * @param {number} index - The index of the tile within the set.
-    * @param {boolean} left - Should the tile collide on the left?
-    * @param {boolean} right - Should the tile collide on the right?
-    * @param {boolean} up - Should the tile collide on the top?
-    * @param {boolean} down - Should the tile collide on the bottom?
+    * @param {number} index - The index of the tile on the layer.
+    * @param {number} layer - The layer to operate on.
     */
-    
-    //  Sets all tiles matching the given index to collide on the given faces
-    //  Recalculates the collision map
     setCollisionByIndex: function (index, layer) {
 
         if (typeof layer === "undefined") { layer = this.currentLayer; }
@@ -157,6 +170,9 @@ Phaser.Tilemap.prototype = {
             }
         }
 
+        //  Sets all tiles matching the given index to collide on the given faces
+        //  Recalculates the collision map
+
         //  Now re-calculate interesting faces
         this.calculateFaces(layer);
 
@@ -169,7 +185,7 @@ Phaser.Tilemap.prototype = {
         var left = null;
         var right = null;
 
-console.log(this.layers[layer].width, 'x', this.layers[layer].height);
+        //  console.log(this.layers[layer].width, 'x', this.layers[layer].height);
 
         for (var y = 0; y < this.layers[layer].height ; y++)
         {

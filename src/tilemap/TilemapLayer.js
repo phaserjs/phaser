@@ -16,7 +16,7 @@
 * @param {number} renderHeight - Height of the layer.
 * @param {Phaser.Tileset|string} tileset - The tile set used for rendering.
 * @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
-* @param {number} layer - The layer index within the map.
+* @param {number|string} [layer=0] - The layer within the tilemap this TilemapLayer represents.
 */
 Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, tilemap, layer) {
 
@@ -48,7 +48,7 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     /**
     * @property {Phaser.Frame} textureFrame - Dimensions of the renderable area.
     */
-    this.textureFrame = new Phaser.Frame(0, 0, 0, renderWidth, renderHeight, 'tilemaplayer', game.rnd.uuid());
+    this.textureFrame = new Phaser.Frame(0, 0, 0, renderWidth, renderHeight, 'tilemapLayer', game.rnd.uuid());
 
     Phaser.Sprite.call(this, this.game, x, y, this.texture, this.textureFrame);
 
@@ -248,12 +248,12 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     this.tilemap = null;
 
     /**
-    * @property {number} layer - Tilemap layer index.
+    * @property {object} layer - The layer object within the Tilemap that this layer represents.
     */
     this.layer = null;
 
     /**
-    * @property {number} index
+    * @property {number} index - The index of this layer within the Tilemap.
     */
     this.index = 0;
 
@@ -349,13 +349,13 @@ Phaser.TilemapLayer.prototype.updateTileset = function (tileset) {
 */
 Phaser.TilemapLayer.prototype.updateMapData = function (tilemap, layer) {
 
-    if (typeof layer === 'undefined')
-    {
-        layer = 0;
-    }
-
     if (tilemap instanceof Phaser.Tilemap)
     {
+        if (typeof layer === 'undefined')
+        {
+            layer = 0;
+        }
+
         this.tilemap = tilemap;
         this.layer = this.tilemap.layers[layer];
         this.tileWidth = this.layer.tileWidth;
@@ -690,7 +690,8 @@ Phaser.TilemapLayer.prototype.render = function () {
         this.dirty = true;
     }
 
-    if (!this.dirty || !this.tileset || !this.tilemap || !this.visible)
+    // if (!this.dirty || !this.tileset || !this.tilemap || !this.visible)
+    if (!this.dirty || !this.tilemap || !this.visible)
     {
         return;
     }
@@ -710,10 +711,8 @@ Phaser.TilemapLayer.prototype.render = function () {
     this._ty = this._dy;
 
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    // this.context.fillStyle = '#000000';
-    // this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-    this.context.strokeStyle = '#00ff00';
+    this.context.fillStyle = 'rgba(0,255,0,0.3)';
+    this.context.strokeStyle = 'rgba(0,255,0,0.9)';
 
     for (var y = this._startY, lenY = this._startY + this._maxY; y < lenY; y++)
     {
@@ -725,24 +724,26 @@ Phaser.TilemapLayer.prototype.render = function () {
 
             // var tile = this.tileset.tiles[this._column[x] - 1];
 
-            if (tile)
-            {
-                // this.context.drawImage(
-                //     this.tileset.image,
-                //     tile.x,
-                //     tile.y,
-                //     this.tileWidth,
-                //     this.tileHeight,
-                //     Math.floor(this._tx),
-                //     Math.floor(this._ty),
-                //     this.tileWidth,
-                //     this.tileHeight
-                // );
-            }
+            // if (tile && this.tileset)
+            // {
+            //     this.context.drawImage(
+            //         this.tileset.image,
+            //         tile.x,
+            //         tile.y,
+            //         this.tileWidth,
+            //         this.tileHeight,
+            //         Math.floor(this._tx),
+            //         Math.floor(this._ty),
+            //         this.tileWidth,
+            //         this.tileHeight
+            //     );
+            // }
 
             if (tile && (tile.faceTop || tile.faceBottom || tile.faceLeft || tile.faceRight))
             {
                 this._tx = Math.floor(this._tx);
+
+                this.context.fillRect(this._tx, this._ty, this.tileWidth, this.tileHeight);
 
                 this.context.beginPath();
 
@@ -770,9 +771,9 @@ Phaser.TilemapLayer.prototype.render = function () {
                     this.context.lineTo(this._tx + this.tileWidth, this._ty + this.tileHeight);
                 }
 
+                // this.context.closePath();
                 this.context.stroke();
 
-                // this.context.fillRect(this._tx, this._ty, this.tileWidth, this.tileHeight);
                 // this.context.strokeRect(this._tx, this._ty, this.tileWidth, this.tileHeight);
             }
 

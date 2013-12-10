@@ -415,8 +415,10 @@ Phaser.Cache.prototype = {
         {
             return this._canvases[key].canvas;
         }
-
-        return null;
+        else
+        {
+            console.warn('Phaser.Cache.getCanvas: Invalid key: "' + key + '"');
+        }
 
     },
 
@@ -433,8 +435,10 @@ Phaser.Cache.prototype = {
         {
             return this._bitmapDatas[key];
         }
-
-        return null;
+        else
+        {
+            console.warn('Phaser.Cache.getBitmapData: Invalid key: "' + key + '"');
+        }
 
     },
 
@@ -469,8 +473,10 @@ Phaser.Cache.prototype = {
         {
             return this._images[key].data;
         }
-
-        return null;
+        else
+        {
+            console.warn('Phaser.Cache.getImage: Invalid key: "' + key + '"');
+        }
 
     },
 
@@ -487,8 +493,10 @@ Phaser.Cache.prototype = {
         {
             return this._tilesets[key].data;
         }
-
-        return null;
+        else
+        {
+            console.warn('Phaser.Cache.getTilesetImage: Invalid key: "' + key + '"');
+        }
 
     },
 
@@ -505,8 +513,10 @@ Phaser.Cache.prototype = {
         {
             return this._tilesets[key].tileData;
         }
-
-        return null;
+        else
+        {
+            console.warn('Phaser.Cache.getTileset: Invalid key: "' + key + '"');
+        }
 
     },
 
@@ -523,8 +533,11 @@ Phaser.Cache.prototype = {
         {
             return this._tilemaps[key];
         }
+        else
+        {
+            console.warn('Phaser.Cache.getTilemapData: Invalid key: "' + key + '"');
+        }
 
-        return null;
     },
 
     /**
@@ -625,8 +638,10 @@ Phaser.Cache.prototype = {
         {
             return this._textures[key];
         }
-
-        return null;
+        else
+        {
+            console.warn('Phaser.Cache.getTexture: Invalid key: "' + key + '"');
+        }
 
     },
 
@@ -643,8 +658,10 @@ Phaser.Cache.prototype = {
         {
             return this._sounds[key];
         }
-
-        return null;
+        else
+        {
+            console.warn('Phaser.Cache.getSound: Invalid key: "' + key + '"');
+        }
 
     },
 
@@ -661,8 +678,10 @@ Phaser.Cache.prototype = {
         {
             return this._sounds[key].data;
         }
-
-        return null;
+        else
+        {
+            console.warn('Phaser.Cache.getSoundData: Invalid key: "' + key + '"');
+        }
 
     },
 
@@ -726,8 +745,10 @@ Phaser.Cache.prototype = {
         {
             return this._text[key].data;
         }
-
-        return null;
+        else
+        {
+            console.warn('Phaser.Cache.getText: Invalid key: "' + key + '"');
+        }
         
     },
 

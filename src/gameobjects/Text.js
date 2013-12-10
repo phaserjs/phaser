@@ -5,7 +5,7 @@
 */
 
 /**
-* Create a new <code>Text</code>.
+* Create a new `Text` object.
 * @class Phaser.Text
 * @constructor
 * @param {Phaser.Game} game - Current game instance.

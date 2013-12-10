@@ -14,7 +14,7 @@ var bmd;
 
 function create() {
 
-	bmd = game.add.bitmapData('ball', 32, 64);
+	bmd = game.add.bitmapData(32, 64);
 
 	console.log(bmd);
 

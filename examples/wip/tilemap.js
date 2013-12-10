@@ -3,6 +3,9 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
+    // game.load.tilemap('map', 'assets/maps/mario1.json', null, Phaser.Tilemap.TILED_JSON);
+    // game.load.tileset('marioTiles', 'assets/maps/mario1.png', 16, 16);
+
     game.load.tilemap('map', 'assets/maps/newtest.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.tileset('tiles', 'assets/maps/ground_1x1.png', 32, 32);
     // game.load.image('phaser', 'assets/sprites/phaser-ship.png');
@@ -21,24 +24,19 @@ var sprite;
 
 function create() {
 
-    game.stage.backgroundColor = '#5c94fc';
+    // game.stage.backgroundColor = '#5c94fc';
 
     map = game.add.tilemap('map');
 
+    // map.setCollisionByIndexRange(80, 97); // mario
     map.setCollisionByIndex(1);
 
     // Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, tilemap, layer) {
-    
-    // layer = game.add.tilemapLayer(0, 0, 800, 600, null, map, 0);
     layer = game.add.tilemapLayer(0, 0, 800, 600, null, map, 0);
 
     // layer2 = game.add.tilemapLayer(0, 0, 400, 600, null, map, 0);
     // layer.cameraOffset.x = 400;
     // layer.alpha = 0.5;
-
-    // tileset = game.add.tileset('tilesNes');
-    // layer = game.add.tilemapLayer(0, 0, map.layers[0].width*tilesetNes.tileWidth, 600, tileset, map, 0);
-    //  disable this and you can place anywhere, but will almost certainly screw collision
 
     layer.resizeWorld();
 
@@ -50,10 +48,6 @@ function create() {
     //  50, 25 is the X and Y offset of the newly sized box.
     //  In this case the box is 50px in and 25px down.
     sprite.body.setSize(16, 16, 8, 8);
-
-
-
-
 
     //  We'll set a lower max angular velocity here to keep it from going totally nuts
     sprite.body.maxAngular = 500;

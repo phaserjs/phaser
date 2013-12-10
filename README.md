@@ -55,6 +55,8 @@ Updates:
 * Updated Pixi.js so that removing filters now works correctly without breaking the display list.
 * Phaser.Canvas.create updated to it can be given an ID as the 3rd parameter.
 * Updated display/fullscreen example to reflect new full screen change.
+* Loads of updates to the TypeScript definitions files - games fully compile now and lots of missing classes added :)
+* Removed 'null parent' check from Group constructor. Will parent to game.world only if parent value is undefined.
 
 
 Bug Fixes:
@@ -66,7 +68,7 @@ Bug Fixes:
 * Group.length now returns the number of children in the Group regardless of their exists/alive state, or 0 if the Group is has no children.
 * Switch Camera.setBoundsToWorld to match world.bounds instead of world (thanks cocoademon)
 * Fixed an issue where passing null as the Group parent wouldn't set it to game.world as it should have (thanks tito100)
-* Fixed Pixi bug (#425) incorrect width property for multi-line Bitmap (thanks jcd-as)
+* Fixed Pixi bug (#425) incorrect width property for multi-line BitmapText (thanks jcd-as)
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
@@ -80,6 +82,16 @@ We provide a fully compiled version of Phaser in the `build` directory, in both 
 We also provide a Grunt script that will build Phaser from source along with all the examples.
 
 Run `grunt` in the phaser folder for a list of command-line options.
+
+
+Bower
+-----
+
+If you use bowser you can install phaser with:
+
+`bower install phaser`
+
+Nice and easy :)
 
 ![Tanks](http://www.photonstorm.com/wp-content/uploads/2013/10/phaser_tanks-640x480.png)
 

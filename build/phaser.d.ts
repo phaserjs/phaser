@@ -260,7 +260,7 @@ declare module Phaser {
       }
 
       class Game {
-            constructor(width: number, height: number, renderer: number, parent: string, state: Object, transparent: boolean, antialias: boolean);
+            constructor(width: number, height: number, renderer: number, parent: string, state: Object, transparent?: boolean, antialias?: boolean);
             id: number;
             width: number;
             height: number;
@@ -655,7 +655,7 @@ declare module Phaser {
             onAnimationStart: Phaser.Signal;
             onAnimationComplete: Phaser.Signal;
             onAnimationLoop: Phaser.Signal;
-      } 
+      }
 
       class GameObjectFactory {
             constructor(game: Phaser.Game);
@@ -687,7 +687,7 @@ declare module Phaser {
             type: number;
             renderOrderID: number;
             lifespan: number;
-            events: Phaser.Event[]; 
+            events: Phaser.Events;
             animations: Phaser.AnimationManager;
             input: Phaser.InputHandler;
             key: string;
@@ -707,8 +707,6 @@ declare module Phaser {
             bottomLeft: Phaser.Point;
             bounds: Phaser.Rectangle;
             body: Phaser.Physics.Arcade.Body;
-            velocity: number;
-            acceleration: number;
             inWorld: boolean;
             inWorldThreshold: number;
             angle: number;
@@ -729,6 +727,24 @@ declare module Phaser {
             getLocalUnmodifiedPosition(p: Phaser.Point, x: number, y: number): Phaser.Point;
             bringToTop(): void;
             getBounds(rect: Phaser.Rectangle): Phaser.Rectangle;
+      }
+
+      class Events {
+            parent: Phaser.Sprite;
+            onAddedToGroup: Phaser.Signal;
+            onRemovedFromGroup: Phaser.Signal;
+            onKilled: Phaser.Signal;
+            onRevived: Phaser.Signal;
+            onOutOfBounds: Phaser.Signal;
+            onInputOver: Phaser.Signal;
+            onInputOut: Phaser.Signal;
+            onInputDown: Phaser.Signal;
+            onInputUp: Phaser.Signal;
+            onDragStart: Phaser.Signal;
+            onDragStop: Phaser.Signal;
+            onAnimationStart: Phaser.Signal;
+            onAnimationComplete: Phaser.Signal;
+            onAnimationLoop: Phaser.Signal;
       }
 
       class TileSprite {
@@ -1166,60 +1182,68 @@ declare module Phaser {
             update(time: number): boolean;
       }
 
-      class Easing {
-            Linear: {
-                  None: (k: number) => number;
-            };
-            Quadratic: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-            Cubic: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-            Quartic: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-            Quintic: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-            Sinusoidal: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-            Exponential: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-            Circular: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-            Elastic: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-            Back: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-            Bounce: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
+      class Easing.Linear {
+            static None(k: number);
+      }
+
+      class Easing.Quadratic {
+            static In(k: number);
+            static Out(k: number);
+            static InOut(k: number);
+      }
+
+      class Easing.Cubic {
+            static In(k: number);
+            static Out(k: number);
+            static InOut(k: number);
+      }
+
+      class Easing.Quartic {
+            static In(k: number);
+            static Out(k: number);
+            static InOut(k: number);
+      }
+
+      class Easing.Quintic {
+            static In(k: number);
+            static Out(k: number);
+            static InOut(k: number);
+      }
+
+      class Easing.Sinusoidal {
+            static In(k: number);
+            static Out(k: number);
+            static InOut(k: number);
+      }
+      
+      class Easing.Exponential {
+            static In(k: number);
+            static Out(k: number);
+            static InOut(k: number);
+      }
+
+      class Easing.Circular {
+            static In(k: number);
+            static Out(k: number);
+            static InOut(k: number);
+      }
+
+      class Easing.Elastic {
+            static In(k: number);
+            static Out(k: number);
+            static InOut(k: number);
+      }
+
+      class Easing.Back {
+            static In(k: number);
+            static Out(k: number);
+            static InOut(k: number);
+      }
+
+      class Easing.Bounce {
+            static In(k: number);
+            static Out(k: number);
+            static InOut(k: number);
       }
 
       class Time {
@@ -1286,48 +1310,46 @@ declare module Phaser {
             onComplete(): void;
       }
 
-      module Animation {
-            class Frame {
-                  constructor(index: number, x: number, y: number, width: number, height: number, name: string, uuid: string);
-                  index: number;
-                  x: number;
-                  y: number;
-                  width: number;
-                  height: number;
-                  centerX: number;
-                  centerY: number;
-                  distance: number;
-                  name: string;
-                  uuid: string;
-                  rotated: boolean;
-                  rotationDirection: string;
-                  trimmed: boolean;
-                  sourceSizeW: number;
-                  sourceSizeH: number;
-                  spriteSourceSizeX: number;
-                  spriteSourceSizeY: number;
-                  spriteSourceSizeW: number;
-                  spriteSourcesizeH: number;
-                  setTrim(trimmed: boolean, actualWidth: number, actualHeight: number, destX: number, destY: number, destWidth: number, destHeight: number): void;
-            }
+      class Frame {
+            constructor(index: number, x: number, y: number, width: number, height: number, name: string, uuid: string);
+            index: number;
+            x: number;
+            y: number;
+            width: number;
+            height: number;
+            centerX: number;
+            centerY: number;
+            distance: number;
+            name: string;
+            uuid: string;
+            rotated: boolean;
+            rotationDirection: string;
+            trimmed: boolean;
+            sourceSizeW: number;
+            sourceSizeH: number;
+            spriteSourceSizeX: number;
+            spriteSourceSizeY: number;
+            spriteSourceSizeW: number;
+            spriteSourcesizeH: number;
+            setTrim(trimmed: boolean, actualWidth: number, actualHeight: number, destX: number, destY: number, destWidth: number, destHeight: number): void;
+      }
 
-            class FrameData {
-                  addFrame(frame: Frame): Frame;
-                  getFrame(index: number): Frame;
-                  getFrameByName(name: string): Frame;
-                  checkFrame(name: string): boolean;
-                  getFrameRange(start: number, end: number, output: Array<Frame>): Array<Frame>;
-                  getFrames(frames: Array<number>, useNumericIndex?: boolean, output?: Array<Frame>): Array<Frame>;
-                  getFrameIndexes(frames: Array<number>, useNumericIndex?: boolean, output?: Array<number>): Array<number>;
-                  total: number;
-            }
+      class FrameData {
+            addFrame(frame: Frame): Frame;
+            getFrame(index: number): Frame;
+            getFrameByName(name: string): Frame;
+            checkFrame(name: string): boolean;
+            getFrameRange(start: number, end: number, output: Array<Frame>): Array<Frame>;
+            getFrames(frames: Array<number>, useNumericIndex?: boolean, output?: Array<Frame>): Array<Frame>;
+            getFrameIndexes(frames: Array<number>, useNumericIndex?: boolean, output?: Array<number>): Array<number>;
+            total: number;
+      }
 
-            class Parser {
-                  spriteSheet(game: Phaser.Game, key: string, frameWidth: number, frameHeight: number, frameMax?: number): Phaser.Animation.FrameData;
-                  JSONData(game: Phaser.Game, json: Object, cacheKey: string): Phaser.Animation.FrameData;
-                  JSONDataHash(game: Phaser.Game, json: Object, cacheKey: string): Phaser.Animation.FrameData;
-                  XMLData(game: Phaser.Game, xml: Object, cacheKey: string): Phaser.Animation.FrameData;
-            }
+      class AnimationParser {
+            spriteSheet(game: Phaser.Game, key: string, frameWidth: number, frameHeight: number, frameMax?: number): Phaser.Animation.FrameData;
+            JSONData(game: Phaser.Game, json: Object, cacheKey: string): Phaser.Animation.FrameData;
+            JSONDataHash(game: Phaser.Game, json: Object, cacheKey: string): Phaser.Animation.FrameData;
+            XMLData(game: Phaser.Game, xml: Object, cacheKey: string): Phaser.Animation.FrameData;
       }
 
       class Cache {
@@ -1420,10 +1442,8 @@ declare module Phaser {
             nextFile(previousKey: string, success: boolean): void;
       }
 
-      module Loader {
-            class Parser {
-                  bitmapFont(game: Phaser.Game, xml: Object, cacheKey: Phaser.Animation.FrameData): void;
-            }
+      class LoaderParser {
+            bitmapFont(game: Phaser.Game, xml: Object, cacheKey: Phaser.Animation.FrameData): void;
       }
 
       class Sound {
