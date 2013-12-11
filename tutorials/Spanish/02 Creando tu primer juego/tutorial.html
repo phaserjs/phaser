@@ -1,0 +1,313 @@
+Este artículo fue escrito por <a href="https://twitter.com/alvinsight">Alvin Ourrad</a> y Richard Davey.
+
+Bienvenido a nuestro primer tutorial sobre Crear un Juego con Phaser. Aquí aprenderemos cómo crear un juego pequeño con un jugador corriendo y saltando por unas plataformas y recogiendo estrellas. Durante el proceso, explicaremos algunas de las características internas del framework.
+
+<h3>¿Qué es Phaser?</h3>
+
+<a href="http://phaser.io">Phaser</a> es un framework de juegos HTML5 cuyo propósito es ayudar a los desarrolladores a hacer juegos HTML5 potentes y portables. El único requisito del navegador es que soporte la etiqueta canvas. Además, toma muchas cosas prestadas de Flixel.
+
+<h3>Requisitos</h3>
+
+<ul>
+    <li>Necesitas tener un conocimiento muy muy básico de JavaScript.</li>
+    <li>Además asegúrate de que sigues la <a href="http://phaser.io/getting-started-js.php">Guía de Iniciación</a>, te mostrará cómo descargar el framework, configurar un entorno de desarrollo, y  un poco por encima la estructura de un proyecto de Phaser y sus funciones básicas.</li>
+</ul>
+
+Si ya has finalizado la Guía de Iniciación tendrás Phaser bajado y todo listo para programar. Descarga los recursos de este tutorial aquí y descomprímelos en un directorio de tu servidor web.
+
+Abre la página part1.html en tu editor favorito y echémosle un vistazo al código. Después de un poco de texto estándar HTML que incluye Phaser, la estructura del código tiene esta pinta:
+
+<pre class="lang:js decode:true " >
+var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+
+function preload() {
+}
+
+function create() {
+}
+
+function update() {
+}
+</pre> 
+
+En la línea 1 es donde le das vida a Phaser creando una instancia del objeto Phaser.Game y asignándola a una variable local llamada 'game'. Llamarla 'game' es una práctica común pero no obligatorio, pero es lo que encontrarás en los ejemplos de Phaser.
+
+Los dos primeros parámetros son el ancho y el alto del elemento canvas que Phaser va a crear. En este caso 800 x 600 pixels. El mundo de tu juego puede ser del tamaño que quieras, esto es simplemente la resolución a la que se va a mostrar la pantalla del juego. El tercer parámetro puede ser Phaser.CANVAS, Phaser.WEBGL, o Phaser.AUTO. Esto es el contexto de renderizado que quieres usar. El parámetro recomendable es Phaser.AUTO que automáticamente intenta usar WEBGL, pero si el navegador o el dispositivo no lo soporta se usará Canvas.
+
+El cuarto parámetro es una cadena de texto vacía, que es el id del elemento DOM en el que te gustaría insertar el elemento canvas que Phaser crea para el juego. Como lo dejamos en blanco simplemente será añadida al final del body de la página. El parámetro final es un objeto conteniendo cuatro referencias a las funciones esenciales de Phaser. Su uso está <a href="http://www.html5gamedevs.com/topic/1372-phaser-function-order-reserved-names-and-special-uses/">ampliamente explicado aquí</a>. Ten en cuenta que este objeto no es obligatorio - Phaser soporta un Sistema de Estados completo que te permite dividir tu código en objetos individuales de una manera más limpia. Pero para una guía de iniciación como esta usaremos este método pues permite un prototipado más rápido.
+
+
+<h3>Cargar Recursos</h3>
+
+Vamos a cargar los recursos que necesitamos para nuestro juego. Haces esto añadiendo llamadas game.load() dentro de una función llamada preload. Phaser automáticamente buscará esta función cuando arranca y cargará todo lo que en ella se indique.
+
+Ahora mismo la función preload está vacía. Cámbiala por:
+ 
+<pre class="lang:js decode:true " >function preload() {
+
+    game.load.image('sky', 'assets/sky.png');
+    game.load.image('ground', 'assets/platform.png');
+    game.load.image('star', 'assets/star.png');
+    game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+
+}
+</pre> 
+
+Esto cargará 4 recursos: 3 imágenes y un sprite sheet. Puede que para algunos les resulte obvio, pero me gustaría señalar el primer parámetro, la identificador del recurso. Esta cadena de texto es un enlace al recurso cargado y es lo que usarás en tu código cuando crees sprites. Eres libre de usar cualquier cadena de texto de JavaScript válida como identificador.
+
+
+<h3>Crear un Sprite</h3>
+
+Para añadir un sprite a nuestro juego escribe el siguiente código en la funcion create:
+
+<pre class="lang:js decode:true ">game.add.sprite(0, 0, 'star');</pre>
+
+Si abres la página en un navegador podrás ver la pantalla de juego en negro con una estrella en la esquina superior izquierda:
+
+<img src="http://www.photonstorm.com/wp-content/uploads/2013/12/part3.png" alt="part3" width="800" height="600" class="alignnone size-full wp-image-13605" />
+
+El orden en el cual se dibujan los sprites en pantalla coincide con el orden en el que los creas. Así que si quieres colocar un fondo detrás del sprite de la estrella deberías asegurarte de que lo añades antes de ella.
+
+<h3>Construcción del Mundo</h3> 
+
+Internamente game.add.sprite está creando un objeto <a href="http://gametest.mobi/phaser/docs/Phaser.Sprite.html">Phaser.Sprite</a> nuevo y añadiéndo el sprite al mundo del juego. Este mundo es donde todos tus objetos viven, podría compararse al Stage de ActionScript3
+
+
+<strong>Nota:</strong> El mundo del juego no tiene tamaño fijo y se extiende infinitamente en todas direcciones, siendo 0,0 su centro. Por comodidad Phaser te coloca 0,0 en la esquina superior izquierda del juego, pero puedes moverte alrededor usando la clase Camera que incorpora Phaser.
+
+
+Puedes acceder al objeto mundo mediante game.world, que viene con montón de métodos y propiedades útiles para ayudarte a distribuir tus objetos dentro del mundo. Incluye algunas propiedades simples como game.world.height, pero también algunas más avanzadas que usaremos en otro tutorial.
+
+Por ahora vamos a construir la escena añadiendo un fondo y unas plataformas. Aquí está la función create actualizada: 
+ 
+<pre class="lang:js decode:true " >var platforms;
+
+function create() {
+
+    // Un fondo simple para nuestro juego
+    game.add.sprite(0, 0, 'sky');
+
+    // El grupo 'platforms' contiene el suelo y las dos repisas sobre las que podemos saltar
+    platforms = game.add.group();
+
+    // Aquí creamos el suelo
+    var ground = platforms.create(0, game.world.height - 64, 'ground');
+
+    // Lo escalamos para que se ajuste al ancho del juego (el sprite original es 400x32)
+    ground.scale.setTo(2, 2);
+
+    //  Esto hace que el suelo no se caiga cuando saltas en él. Lo hace inmóvil
+    ground.body.immovable = true;
+
+    //  Creamos las dos plataformas
+    var ledge = platforms.create(400, 400, 'ground');
+    ledge.body.immovable = true;
+
+    ledge = platforms.create(-150, 250, 'ground');
+    ledge.body.immovable = true;
+
+}
+</pre> 
+
+Si ejecutas esto (fichero part4.html en el zip del tutorial) deberías ver una escena más propia de un juego:
+
+<img src="http://www.photonstorm.com/wp-content/uploads/2013/12/part4.png" alt="part4" width="800" height="600" class="alignnone size-full wp-image-13606" />
+
+La primera parte es lo mismo que hicimos antes con el sprite de la estrella, solo que en su lugar cambiamos el identificador a 'sky' ('cielo') y nos ha mostrado nuestro fondo de cielo, que es un PNG de 800x600 que llena la pantalla del juego.
+
+
+<h3>Grupos</h3> 
+
+Los grupos son muy potentes. Como su nombre implica te permiten agrupar objetos similares juntos y controlarlos como si fueran una unidad individual. También puedes comprobar colisiones entre Grupos, y para este juego usaremos dos grupos diferentes, uno de los cuales lo creamos en el código anterior para las plataformas:
+
+<pre class="lang:js decode:true">platforms = game.add.group();</pre>
+
+Como con los sprites, game.add crea nuestro objeto Group. Se lo asignamos a una nueva variable local llamada platforms. Ahora que está creado podemos añadir objetos en él. Primero el suelo, que se posiciona en la parte inferior del juego y usa la image 'ground' que hemos cargado antes. El suelo se escala para cubrir todo el ancho del juego. Finalmente ponemos a true su propiedad 'immovable'. Si no hubiésemos hecho esto el suelo se movería cuando el jugador choque con él (más sobre esto en la sección 'Físicas').
+
+Una vez colocado el suelo creamos dos plataformas pequeñas para saltar encima usando exáctamente la misma técnica que para el suelo.
+
+
+<h3>El Jugador</h3>
+
+Crea una nueva variable local llamada 'player' y añade el siguiente código en la función create. Puedes ver cómo queda en part5.html:
+
+ 
+<pre class="lang:js decode:true " > // El jugador y su configuración
+    player = game.add.sprite(32, game.world.height - 150, 'dude');
+
+    //  Las propiedades físicas del jugador. Le damos al chaval un pequeño rebote al caer (bounce)
+    player.body.bounce.y = 0.2;
+    player.body.gravity.y = 6; //gravedad
+    player.body.collideWorldBounds = true; //choque con los bordes del juego
+
+    // Las dos animaciones del jugador, andar izquierda y derecha ('left' y 'right', resp.)
+    player.animations.add('left', [0, 1, 2, 3], 10, true);
+    player.animations.add('right', [5, 6, 7, 8], 10, true);
+</pre> 
+
+Esto crea un nuevo sprite llamdo 'player', colocado a 32 pixels del borde izquierdo y 150px del borde inferior del juego. Le diremos que use el recurso 'dude' anteriormente cargado. Si echas un ojo a la función preload verás que 'dude' fue cargado como un sprite sheet, no una imagen. Esto es así porque contiene frames de animación. El sprite sheet completo es así:
+
+<img src="http://www.photonstorm.com/wp-content/uploads/2013/12/dude.png" alt="dude" width="288" height="48" class="alignnone size-full wp-image-13607" />
+
+Puedes ver 9 frames en total, 4 para correr a la izquierda, 1 para mirar a cámara y 4 para correr a la derecha. (Nota: Phaser puede invertir los sprites para ahorrar frames de animación, pero para este tutorial lo haremos a la vieja usanza). Definimos dos animaciones llamadas 'left' ('izquierda') y 'right' ('derecha'). La animación 'left' usa los frames 0, 1, 2 y 3 y se reproduce a 10 frames por segundo. El parámetro 'true' hace que la animación se repita. Este es nuestro ciclo de correr estándar y lo mismo para la dirección opuesta. Con las animaciones configuradas creamos un par de propiedades físicas.
+
+
+<h3>El Cuerpo y la Velocidad: Un Mundo de Físicas</h3>
+
+En Phaser todos los sprites tienen una propiedad body, que es una instancia de <a href="http://gametest.mobi/phaser/docs/Phaser.Physics.Arcade.Body.html">ArcadePhysics.Body</a>. Esto interpreta el sprite como un cuerpo físico en el motor de físicas integrado en Phaser. El objeto body tiene a su vez un montón de propiedades con el que podemos jugar. Para simular los efectos de la gravedad en un sprite, es tan simple como escribir esto:
+
+<pre class="lang:js decode:true">player.body.gravity.y = 6;</pre>
+
+Este es un valor arbitrario, pero lógicamente, cuanto más alto sea el valor, más pesado será tu objeto y más rápido caerá. Si añades esto a tu código o abres part5.html verás que el jugador cae sin parar, ignorando completamente el suelo que creamos antes:
+
+<img src="http://www.photonstorm.com/wp-content/uploads/2013/12/part5.png" alt="part5" width="800" height="600" class="alignnone size-full wp-image-13608" />
+
+La razón de esto es que no estamos testeando las colisiones entre el suelo y el jugador. Ya le dijimos a Phaser que nuestro suelo y plataformas deberían ser inmóviles ('immovable'). Si no lo hubiésemos hecho entonces el jugador colisionaría con ellos, se pararía un momento y luego todo se colapsaría. Esto es porque a menos que se lo digamos, el sprite del suelo es un objeto físico movible (también conocido como cuerpo dinámico, o 'dynamic body') y cuando el jugador choca con él, la fuerza resultante de la colisión se aplica al suelo, los dos cuerpos intercambian sus velocidades y el suelo comienza a caer también. 
+
+Así que para hacer que el jugador colisione y aproveche las propiedades físicas necesitamos introducir una comprobación de las colisiones en la función update:
+ 
+<pre class="lang:js decode:true " >function update() {
+
+    // Hacer que el jugador colisione con las plataformas
+    game.physics.collide(player, platforms);
+
+}
+</pre> 
+
+La función update se llama desde el bucle interno del juego con cada frame. La función <a href="http://gametest.mobi/phaser/docs/Phaser.Physics.Arcade.html#toc22">Physics.collide</a> es la que hace la magia. Recibe dos objetos, checkea sus colisiones y los separa en caso necesario. En este caso estamos pasándole el sprite del jugador y el grupo de las plataformas. La función es suficientemente inteligente como para comprobar la colisión en todos los miembros del grupo, así que esta llamada comprobará la colisión del jugador con el suelo y las plataformas. El resultado es una plataforma firme:
+
+<img src="http://www.photonstorm.com/wp-content/uploads/2013/12/part6.png" alt="part6" width="800" height="600" class="alignnone size-full wp-image-13609" />
+
+<h3>Controlando el jugador con el teclado</h3>
+
+Las colisiones van bien, pero realmente necesitamos que el jugador se mueva. Probablemente pensarías en ir a la documentación y buscar cómo añadir un detector de eventos ('event listener'), pero no es necesario. Phaser tiene un gestor de teclado integrado y uno de los beneficios de usarlo es esta pequeña y útil función:
+
+<pre class="lang:js decode:true " >cursors = game.input.keyboard.createCursorKeys();</pre>
+
+Esto rellena el objeto cursors con cuatro propiedades: up, down, left, right ('arriba', 'abajo', 'izda', y 'derecha', resp.), que son todas instancias de objetos <a href="http://gametest.mobi/phaser/docs/Phaser.Key.html">Phaser.Key</a>. Después de esto todo lo que tenemos que hacer es consultarlas en nuestro bucle update:
+
+
+<pre class="lang:js decode:true " >    //  Resetear la velocidad del jugador (movimiento)
+    player.body.velocity.x = 0;
+
+    if (cursors.left.isDown) //si se presiona la tecla izda..
+    {
+        //  Mover a la izquierda
+        player.body.velocity.x = -150;
+
+        player.animations.play('left');
+    }
+    else if (cursors.right.isDown) //si se presiona derecha..
+    {
+        //  Mover a la derecha
+        player.body.velocity.x = 150;
+
+        player.animations.play('right');
+    }
+    else
+    {
+        //  sino, quedarse quieto
+        player.animations.stop();
+
+        player.frame = 4;
+    }
+    
+    //  Si se presiona la tecla arriba y el jugador está tocando el suelo, que salte
+    if (cursors.up.isDown &amp;&amp; player.body.touching.down)
+    {
+        player.body.velocity.y = -350;
+    }
+</pre> 
+
+Aunque hemos añadido un montón de código, debería ser bastante legible. Lo primero que hacemos es resetear la velocidad horizontal del sprite. Luego comprobamos si el cursor izquierdo está presionado. Si es así le aplicamos una velocidad negativa horizontal (-150) e iniciamos la animación de correr 'left'. Si en cambio está presionado el cursor derecho hacemos exactamente lo opuesto. Inicializando la velocidad a 0 y haciendo todo esto, cada frame, conseguimos un estilo de movimiento del tipo 'parar-andar'.
+
+El sprite del jugador se moverá solamente cuando una tecla esté presionada y parará inmediatamente cuando no. Phaser te permite también crear movimientos más complejos, con momentum y aceleración, pero de momento ya tenemos el efecto que necesitamos para este juego. La parte final de la comprobación de teclas cambia al frame 4 si no hay ninguna tecla presionada. El frame 4 en el sprite sheet es el del jugador mirando hacia tí, quieto.
+
+<h3>Salta!</h3>
+
+La parte final del código añade la habilidad de saltar. El cursor arriba es nuestra tecla de salto y testeamos si está presionada. Sin embargo, también tenemos que testear si el jugador está tocando el suelo, sino podría saltar mientras está en el aire. Si ambas condiciones se cumplen aplicamos una velocidad vertical de 350px por segundo. El jugador caerá automáticamente al suelo por la gravedad que tiene aplicada. Con los controles listos ahora sí que tenemos un mundo que podemos explorar. Carga part7.html y juega un poco. Intenta ajustar valores (como el 350 del salto) para ver el efecto que tienen.
+
+<img src="http://www.photonstorm.com/wp-content/uploads/2013/12/part7.png" alt="part7" width="800" height="600" class="alignnone size-full wp-image-13611" />
+
+<h3>Brillo de estrellas</h3>
+
+Es hora de darle a nuestro jueguillo un propósito. Salpiquemos la escena con estrellas y dejemos que el jugador pueda recolectarlas. Para conseguirlo crearemos un nuevo grupo llamado 'stars' y lo llenaremos. En nuestra función create añadiremos el siguiente código (puedes verlo en part8.html):
+
+<pre class="lang:js decode:true">    // Añadimos un grupo para meter las estrellas
+    stars = game.add.group();
+
+    //  Creamos 12 estrellas y las esparcimos por el escenario
+    for (var i = 0; i &lt; 12; i++)
+    {
+        //  Creamos una estrella dentro del grupo 'stars'
+        var star = stars.create(i * 70, 0, 'star');
+
+        //  Le aplicamos gravedad
+        star.body.gravity.y = 6;
+
+        //  ..y un cierto valor de rebote
+        star.body.bounce.y = 0.7 + Math.random() * 0.2;
+    }
+</pre> 
+
+El proceso es similar a cuando creamos el grupo de las plataformas. Usando un bucle 'for' de JavaScript creamos 12 estrellas. Tienen una coordenada x de i * 70, que significa que estarán uniformemente separadas en la escena de 70 en 70 pixels. Como con el jugador les damos un valor de gravedad para que caigan, y un valor de rebote ('bounce') para que reboten un poco cuando chocan con las plataformas. Bounce es un valor entre 0 (sin rebote) y 1 (rebote completo). Nuestras estrellas rebotarán un valor aleatorio entre 0.7 y 0.9. Si ejecutásemos el código tal cual está ahora las estrellas caerían al borde inferior del juego. Para pararlas necesitamos que se comprueben sus colisiones contra las plataformas en nuestro bucle update:
+
+<pre class="lang:js decode:true ">game.physics.collide(stars, platforms);</pre>
+
+Además de hacer esto comprobaremos también si el jugador se superpone a una estrella o no:
+
+<pre class="lang:js decode:true ">game.physics.overlap(player, stars, collectStar, null, this);</pre>
+
+Esto le dice a Phaser que compruebe si el jugador se solapa con cualquier estrella del grupo de estrellas. Si es así se llama a la función 'collectStar' con ambos como parámetros:
+
+<pre class="lang:js decode:true">function collectStar (player, star) {
+    
+    // Elimina la estrella del juego
+    star.kill();
+
+}
+</pre>
+
+De manera fácil la estrella se mata ('kill'), lo que la elimina de la pantalla. Si ejecutas el juego ahora tenemos un jugador que puede andar, saltar, rebotar por las plataformas y recoger estrellas que caen desde arriba. No está mal para unas pocas líneas de código -espero- bastante legible :)
+
+<img src="http://www.photonstorm.com/wp-content/uploads/2013/12/part8.png" alt="part8" width="800" height="600" class="alignnone size-full wp-image-13615" />
+
+<h3>Retoques finales</h3>
+
+El último retoque que haremos será añadir un marcador. Para ello haremos uso de un objeto <a href="http://gametest.mobi/phaser/docs/Phaser.Text.html">Phaser.Text</a>. Aquí creamos dos variables nuevas, una para guardar el marcador real y otra para el propio objeto de texto:
+
+
+<pre class="lang:js decode:true">var score = 0;
+var scoreText;</pre>
+
+
+scoreText se inicializa en la función create:
+
+<pre class="lang:js decode:true">scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });</pre>
+
+16,16 son las coordenadas en las que mostrar el texto. 'score: 0' es el texto a mostrar por defecto y el objeto siguiente contiene el tamaño de fuente y el color de relleno. Si no especificamos la fuente a utilizar usaremos la que use el navegador por defecto, así que en Windows será Arial. A continuación necesitamos modificar la función collectStar para que cuando el jugador coja una estrella su puntuación se incremente y el texto se actualice para reflejarlo:
+
+<pre class="lang:js decode:true">function collectStar (player, star) {
+    
+    // Elimina la estrella del juego
+    star.kill();
+
+    //  E incrementa y actualiza la puntuación
+    score += 10;
+    scoreText.content = 'Score: ' + score;
+
+}
+</pre>
+
+De esta manera se añaden 10 puntos por cada estrella y scoreText se actualiza para mostrar el nuevo total. Si abres part9.html verás el juego final.
+
+
+<img src="http://www.photonstorm.com/wp-content/uploads/2013/12/part9.png" alt="part9" width="800" height="600" class="alignnone size-full wp-image-13618" />
+
+<h2>Conclusión</h2>
+
+Has aprendido cómo crear un sprite con propiedades físicas, para controlar su movimiento y hacer que interaccione con otros objetos, en un pequeño juego. Hay muchas más cosas que puedes hacer para mejorarlo: por ejemplo, no hay sensación de final o de riesgo. ¿Por qué no añadir algunos pinchos que debes evitar? Podrías crear un nuevo grupo 'pinchos' y comprobar su colisión contra el jugador, y en lugar de eliminar el sprite del pincho eliminarías al jugador. O para un estilo de juego no violento podrías hacer un juego de correr y desafiar al jugador a recolectar las estrellas tan rápido como pueda. Hemos incluído unos cuantos gráficos extra en el archivo zip para que te ayuden a inspirarte.
+
+Con la ayuda de lo que has aprendido en este tutorial y los <a href="http://www.gametest.mobi/phaser/examples">más de 160 ejemplos</a> que tienes disponibles, deberías tener una base sólida para un proyecto futuro. Pero como siempre si tienes preguntas, necesitas consejo o quieres compartir lo que has estado haciendo, no dudes en pedir ayuda y contactar en el <a href="http://www.html5gamedevs.com/">foro de Phaser</a>.
+    
+Estad atentos, vendrán más tutoriales :)

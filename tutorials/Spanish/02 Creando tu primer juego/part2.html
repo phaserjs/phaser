@@ -2,7 +2,7 @@
 <html lang="en"> 
 <head> 
 	<meta charset="UTF-8" />
-	<title>Phaser - Making your first game, part 3</title>
+	<title>Phaser - Creando tu primer juego, parte 2</title>
 	<script type="text/javascript" src="js/phaser.min.js"></script>
     <style type="text/css">
         body {
@@ -18,6 +18,8 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create
 
 function preload() {
 
+    // Indicamos a Phaser los recursos (imágenes png) que hay que cargar 
+
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/platform.png');
     game.load.image('star', 'assets/star.png');
@@ -26,9 +28,6 @@ function preload() {
 }
 
 function create() {
-
-	game.add.sprite(0, 0, 'star');
-
 }
 
 function update() {

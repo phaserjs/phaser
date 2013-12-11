@@ -7,6 +7,8 @@ Phaser OSX.sublime-workspace
 Phaser.sublime-project
 Phaser.sublime-workspace
 *.suo
+*.sublime-project
+*.sublime-workspace
 
 # Vendors
 node_modules/

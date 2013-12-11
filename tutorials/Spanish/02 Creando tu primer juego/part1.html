@@ -2,8 +2,8 @@
 <html lang="en"> 
 <head> 
 	<meta charset="UTF-8" />
-	<title>Phaser - Making your first game, part 3</title>
-	<script type="text/javascript" src="js/phaser.min.js"></script>
+	<title>Phaser - Creando tu primer juego, parte 1</title>
+	<script type="text/javascript" src="js/phaser.min.js"></script> <!-- incluimos la librería de Phaser -->
     <style type="text/css">
         body {
             margin: 0;
@@ -14,23 +14,18 @@
 
 <script type="text/javascript">
 
+//creamos el objeto Phaser y lo guardamos en la variable 'game'
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
+//función de precarga
 function preload() {
-
-    game.load.image('sky', 'assets/sky.png');
-    game.load.image('ground', 'assets/platform.png');
-    game.load.image('star', 'assets/star.png');
-    game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
-
 }
 
+//función de inicio de creación del juego
 function create() {
-
-	game.add.sprite(0, 0, 'star');
-
 }
 
+//función llamada durante el juego, en cada frame
 function update() {
 }
 
