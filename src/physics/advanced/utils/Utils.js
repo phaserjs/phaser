@@ -23,3 +23,11 @@ Utils.appendArray = function(a,b){
         }
     }
 };
+
+/**
+ * The array type to use for internal numeric computations.
+ * @type {Array}
+ * @static
+ * @property ARRAY_TYPE
+ */
+Utils.ARRAY_TYPE = Float32Array || Array;

@@ -1,9 +1,9 @@
-var vec2 = require('../math/vec2'),
-    Solver = require('./Solver');
+var vec2 = require('../math/vec2')
+,   Solver = require('./Solver')
+,   Utils = require('../utils/Utils')
+,   FrictionEquation = require('../constraints/FrictionEquation')
 
 module.exports = GSSolver;
-
-var ARRAY_TYPE = Float32Array || Array;
 
 /**
  * Iterative Gauss-Seidel constraint equation solver.
@@ -19,58 +19,65 @@ var ARRAY_TYPE = Float32Array || Array;
  * @param {Number} options.tolerance
  */
 function GSSolver(options){
-    Solver.call(this);
+    Solver.call(this,options);
     options = options || {};
-    this.iterations = options.iterations || 10;
-    this.tolerance = options.tolerance || 0;
-    this.debug = options.debug || false;
-    this.arrayStep = 30;
-    this.lambda = new ARRAY_TYPE(this.arrayStep);
-    this.Bs =     new ARRAY_TYPE(this.arrayStep);
-    this.invCs =  new ARRAY_TYPE(this.arrayStep);
 
     /**
-    * Whether to use .stiffness and .relaxation parameters from the Solver instead of each Equation individually.
-    * @type {Boolean}
-    * @property useGlobalEquationParameters
-    */
+     * The number of iterations to do when solving. More gives better results, but is more expensive.
+     * @property iterations
+     * @type {Number}
+     */
+    this.iterations = options.iterations || 10;
+
+    /**
+     * The error tolerance. If the total error is below this limit, the solver will stop. Set to zero for as good solution as possible.
+     * @property tolerance
+     * @type {Number}
+     */
+    this.tolerance = options.tolerance || 0;
+
+    this.debug = options.debug || false;
+    this.arrayStep = 30;
+    this.lambda = new Utils.ARRAY_TYPE(this.arrayStep);
+    this.Bs =     new Utils.ARRAY_TYPE(this.arrayStep);
+    this.invCs =  new Utils.ARRAY_TYPE(this.arrayStep);
+
+    /**
+     * Whether to use .stiffness and .relaxation parameters from the Solver instead of each Equation individually.
+     * @type {Boolean}
+     * @property useGlobalEquationParameters
+     */
     this.useGlobalEquationParameters = true;
 
     /**
-    * Global equation stiffness.
-    * @property stiffness
-    * @type {Number}
-    */
+     * Global equation stiffness. Larger number gives harder contacts, etc, but may also be more expensive to compute, or it will make your simulation explode.
+     * @property stiffness
+     * @type {Number}
+     */
     this.stiffness = 1e6;
 
     /**
-    * Global equation relaxation.
-    * @property relaxation
-    * @type {Number}
-    */
+     * Global equation relaxation. This is the number of timesteps required for a constraint to be resolved. Larger number will give softer contacts. Set to around 3 or 4 for good enough results.
+     * @property relaxation
+     * @type {Number}
+     */
     this.relaxation = 4;
 
     /**
-    * Set to true to set all right hand side terms to zero when solving. Can be handy for a few applications.
-    * @property useZeroRHS
-    * @type {Boolean}
-    */
+     * Set to true to set all right hand side terms to zero when solving. Can be handy for a few applications.
+     * @property useZeroRHS
+     * @type {Boolean}
+     */
     this.useZeroRHS = false;
+
+    /**
+     * Number of friction iterations to skip. If .skipFrictionIterations=2, then no FrictionEquations will be iterated until the third iteration.
+     * @property skipFrictionIterations
+     * @type {Number}
+     */
+    this.skipFrictionIterations = 2;
 };
 GSSolver.prototype = new Solver();
-
-/**
- * Set stiffness parameters
- *
- * @method setSpookParams
- * @param  {number} k
- * @param  {number} d
- * @deprecated
- */
-GSSolver.prototype.setSpookParams = function(k,d){
-    this.stiffness = k;
-    this.relaxation = d;
-};
 
 /**
  * Solve the system of equations
@@ -79,8 +86,12 @@ GSSolver.prototype.setSpookParams = function(k,d){
  * @param  {World}   world    World to solve
  */
 GSSolver.prototype.solve = function(dt,world){
+
+    this.sortEquations();
+
     var iter = 0,
         maxIter = this.iterations,
+        skipFrictionIter = this.skipFrictionIterations,
         tolSquared = this.tolerance*this.tolerance,
         equations = this.equations,
         Neq = equations.length,
@@ -99,9 +110,9 @@ GSSolver.prototype.solve = function(dt,world){
 
     // Things that does not change during iteration can be computed once
     if(this.lambda.length < Neq){
-        this.lambda = new ARRAY_TYPE(Neq + this.arrayStep);
-        this.Bs =     new ARRAY_TYPE(Neq + this.arrayStep);
-        this.invCs =  new ARRAY_TYPE(Neq + this.arrayStep);
+        this.lambda = new Utils.ARRAY_TYPE(Neq + this.arrayStep);
+        this.Bs =     new Utils.ARRAY_TYPE(Neq + this.arrayStep);
+        this.invCs =  new Utils.ARRAY_TYPE(Neq + this.arrayStep);
     }
     var invCs = this.invCs,
         Bs = this.Bs,
@@ -130,9 +141,7 @@ GSSolver.prototype.solve = function(dt,world){
 
         // Reset vlambda
         for(i=0; i!==Nbodies; i++){
-            var b=bodies[i], vlambda=b.vlambda;
-            set(vlambda,0,0);
-            b.wlambda = 0;
+            bodies[i].resetConstraintVelocity();
         }
 
         // Iterate over equations
@@ -142,49 +151,59 @@ GSSolver.prototype.solve = function(dt,world){
             deltalambdaTot = 0.0;
 
             for(j=0; j!==Neq; j++){
-
                 c = equations[j];
+
+                if(c instanceof FrictionEquation && iter < skipFrictionIter)
+                    continue;
 
                 var _eps = useGlobalParams ? eps : c.eps;
 
-                // Compute iteration
-                maxForce = c.maxForce;
-                minForce = c.minForce;
-
-                B = Bs[j];
-                invC = invCs[j];
-                lambdaj = lambda[j];
-                GWlambda = c.computeGWlambda(_eps);
-
-                if(useZeroRHS) B = 0;
-
-                deltalambda = invC * ( B - GWlambda - _eps * lambdaj );
-
-                // Clamp if we are not within the min/max interval
-                lambdaj_plus_deltalambda = lambdaj + deltalambda;
-                if(lambdaj_plus_deltalambda < minForce){
-                    deltalambda = minForce - lambdaj;
-                } else if(lambdaj_plus_deltalambda > maxForce){
-                    deltalambda = maxForce - lambdaj;
-                }
-                lambda[j] += deltalambda;
-
-                deltalambdaTot += Math.abs(deltalambda);
-
-                c.addToWlambda(deltalambda);
+                var deltalambda = GSSolver.iterateEquation(j,c,_eps,Bs,invCs,lambda,useZeroRHS,dt);
+                if(tolSquared !== 0) deltalambdaTot += Math.abs(deltalambda);
             }
 
             // If the total error is small enough - stop iterate
-            if(deltalambdaTot*deltalambdaTot <= tolSquared) break;
+            if(tolSquared !== 0 && deltalambdaTot*deltalambdaTot <= tolSquared) break;
         }
 
         // Add result to velocity
         for(i=0; i!==Nbodies; i++){
-            var b=bodies[i], v=b.velocity;
-            add( v, v, b.vlambda);
-            b.angularVelocity += b.wlambda;
+            bodies[i].addConstraintVelocity();
         }
     }
     errorTot = deltalambdaTot;
 };
 
+GSSolver.iterateEquation = function(j,eq,eps,Bs,invCs,lambda,useZeroRHS,dt){
+    // Compute iteration
+    var B = Bs[j],
+        invC = invCs[j],
+        lambdaj = lambda[j],
+        GWlambda = eq.computeGWlambda(eps);
+
+    if(eq instanceof FrictionEquation){
+        // Rescale the max friction force according to the normal force
+        eq.maxForce =  eq.contactEquation.multiplier * eq.frictionCoefficient * dt;
+        eq.minForce = -eq.contactEquation.multiplier * eq.frictionCoefficient * dt;
+    }
+
+    var maxForce = eq.maxForce,
+        minForce = eq.minForce;
+
+    if(useZeroRHS) B = 0;
+
+    var deltalambda = invC * ( B - GWlambda - eps * lambdaj );
+
+    // Clamp if we are not within the min/max interval
+    var lambdaj_plus_deltalambda = lambdaj + deltalambda;
+    if(lambdaj_plus_deltalambda < minForce){
+        deltalambda = minForce - lambdaj;
+    } else if(lambdaj_plus_deltalambda > maxForce){
+        deltalambda = maxForce - lambdaj;
+    }
+    lambda[j] += deltalambda;
+    eq.multiplier = lambda[j] / dt;
+    eq.addToWlambda(deltalambda);
+
+    return deltalambda;
+};

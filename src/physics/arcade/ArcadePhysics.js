@@ -200,7 +200,7 @@ Phaser.Physics.Arcade.prototype = {
     * @param {number} velocity - Any component of velocity (e.g. 20).
     * @param {number} acceleration - Rate at which the velocity is changing.
     * @param {number} drag - Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
-    * @param {number} mMax - An absolute value cap for the velocity.
+    * @param {number} [max=10000] - An absolute value cap for the velocity.
     * @return {number} The altered Velocity value.
     */
     computeVelocity: function (axis, body, velocity, acceleration, drag, max) {

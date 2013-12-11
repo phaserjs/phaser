@@ -1,4 +1,5 @@
-var Utils = require('../utils/Utils');
+var Utils = require('../utils/Utils')
+,   EventEmitter = require('../events/EventEmitter')
 
 module.exports = Solver;
 
@@ -6,20 +7,47 @@ module.exports = Solver;
  * Base class for constraint solvers.
  * @class Solver
  * @constructor
+ * @extends {EventEmitter}
  */
-function Solver(){
+function Solver(options){
+    options = options || {};
+
+    EventEmitter.call(this);
 
     /**
-    * Current equations in the solver.
-    *
-    * @property equations
-    * @type {Array}
-    */
+     * Current equations in the solver.
+     *
+     * @property equations
+     * @type {Array}
+     */
     this.equations = [];
-};
 
+    /**
+     * Function that is used to sort all equations before each solve.
+     * @property equationSortFunction
+     * @type {function|boolean}
+     */
+    this.equationSortFunction = options.equationSortFunction || false;
+};
+Solver.prototype = new EventEmitter();
+
+/**
+ * Method to be implemented in each subclass
+ * @method solve
+ * @param  {Number} dt
+ * @param  {World} world
+ */
 Solver.prototype.solve = function(dt,world){
     throw new Error("Solver.solve should be implemented by subclasses!");
+};
+
+/**
+ * Sort all equations using the .equationSortFunction. Should be called by subclasses before solving.
+ * @method sortEquations
+ */
+Solver.prototype.sortEquations = function(){
+    if(this.equationSortFunction)
+        this.equations.sort(this.equationSortFunction);
 };
 
 /**

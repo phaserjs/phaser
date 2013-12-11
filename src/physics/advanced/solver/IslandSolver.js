@@ -12,30 +12,41 @@ module.exports = IslandSolver;
  * @class IslandSolver
  * @constructor
  * @param {Solver} subsolver
+ * @param {Object} options
  * @extends Solver
  */
-function IslandSolver(subsolver){
-    Solver.call(this);
+function IslandSolver(subsolver,options){
+    Solver.call(this,options);
     var that = this;
 
     /**
-    * The solver used in the workers.
-    * @property subsolver
-    * @type {Solver}
-    */
+     * The solver used in the workers.
+     * @property subsolver
+     * @type {Solver}
+     */
     this.subsolver = subsolver;
 
     /**
-    * Number of islands
-    * @property numIslands
-    * @type {number}
-    */
+     * Number of islands. Read only.
+     * @property numIslands
+     * @type {number}
+     */
     this.numIslands = 0;
 
     // Pooling of node objects saves some GC load
     this._nodePool = [];
+
+    /**
+     * Fires before an island is solved.
+     * @event beforeSolveIsland
+     * @param {Island} island
+     */
+    this.beforeSolveIslandEvent = {
+        type : "beforeSolveIsland",
+        island : null,
+    };
 };
-IslandSolver.prototype = new Object(Solver.prototype);
+IslandSolver.prototype = new Solver();
 
 function getUnvisitedNode(nodes){
     var Nnodes = nodes.length;
@@ -153,7 +164,11 @@ IslandSolver.prototype.solve = function(dt,world){
     this.numIslands = n;
 
     // Solve islands
+    var e = this.beforeSolveIslandEvent;
     for(var i=0; i<islands.length; i++){
-        islands[i].solve(dt,this.subsolver);
+        var island = islands[i];
+        e.island = island;
+        this.emit(e);
+        island.solve(dt,this.subsolver);
     }
 };

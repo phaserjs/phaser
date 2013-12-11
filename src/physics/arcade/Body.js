@@ -392,11 +392,10 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.checkWorldBounds();
             }
 
-            this.hull.setTo(this.preX, this.preY, this.width, this.height);
-
+            // this.hull.setTo(this.preX, this.preY, this.width, this.height);
             // this.hullX.setTo(this.x, this.preY, this.width, this.height);
             // this.hullY.setTo(this.preX, this.y, this.width, this.height);
-            this.updateHulls(true);
+            // this.updateHulls(true);
         }
 
         if (this.skipQuadTree === false && this.allowCollision.none === false && this.sprite.visible && this.sprite.alive)

@@ -11,12 +11,12 @@ EventEmitter.prototype = {
     constructor: EventEmitter,
 
     /**
-    * Add an event listener
-    * @method on
-    * @param  {String} type
-    * @param  {Function} listener
-    * @return {EventEmitter} The self object, for chainability.
-    */
+     * Add an event listener
+     * @method on
+     * @param  {String} type
+     * @param  {Function} listener
+     * @return {EventEmitter} The self object, for chainability.
+     */
     on: function ( type, listener ) {
         if ( this._listeners === undefined ) this._listeners = {};
         var listeners = this._listeners;
@@ -30,12 +30,12 @@ EventEmitter.prototype = {
     },
 
     /**
-    * Check if an event listener is added
-    * @method has
-    * @param  {String} type
-    * @param  {Function} listener
-    * @return {Boolean}
-    */
+     * Check if an event listener is added
+     * @method has
+     * @param  {String} type
+     * @param  {Function} listener
+     * @return {Boolean}
+     */
     has: function ( type, listener ) {
         if ( this._listeners === undefined ) return false;
         var listeners = this._listeners;
@@ -46,12 +46,12 @@ EventEmitter.prototype = {
     },
 
     /**
-    * Remove an event listener
-    * @method off
-    * @param  {String} type
-    * @param  {Function} listener
-    * @return {EventEmitter} The self object, for chainability.
-    */
+     * Remove an event listener
+     * @method off
+     * @param  {String} type
+     * @param  {Function} listener
+     * @return {EventEmitter} The self object, for chainability.
+     */
     off: function ( type, listener ) {
         if ( this._listeners === undefined ) return;
         var listeners = this._listeners;
@@ -63,12 +63,12 @@ EventEmitter.prototype = {
     },
 
     /**
-    * Emit an event.
-    * @method emit
-    * @param  {Object} event
-    * @param  {String} event.type
-    * @return {EventEmitter} The self object, for chainability.
-    */
+     * Emit an event.
+     * @method emit
+     * @param  {Object} event
+     * @param  {String} event.type
+     * @return {EventEmitter} The self object, for chainability.
+     */
     emit: function ( event ) {
         if ( this._listeners === undefined ) return;
         var listeners = this._listeners;

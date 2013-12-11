@@ -5,7 +5,7 @@ var Equation = require("./Equation"),
 module.exports = ContactEquation;
 
 /**
- * Non-penetration constraint equation.
+ * Non-penetration constraint equation. Tries to make the ri and rj vectors the same point.
  *
  * @class ContactEquation
  * @constructor
@@ -14,13 +14,57 @@ module.exports = ContactEquation;
  * @param {Body} bj
  */
 function ContactEquation(bi,bj){
-    Equation.call(this,bi,bj,0,1e6);
+    Equation.call(this,bi,bj,0,Number.MAX_VALUE);
+
+    /**
+     * Vector from body i center of mass to the contact point.
+     * @property ri
+     * @type {Array}
+     */
     this.ri = vec2.create();
     this.penetrationVec = vec2.create();
+
+    /**
+     * Vector from body j center of mass to the contact point.
+     * @property rj
+     * @type {Array}
+     */
     this.rj = vec2.create();
+
+    /**
+     * The normal vector, pointing out of body i
+     * @property ni
+     * @type {Array}
+     */
     this.ni = vec2.create();
-    this.rixn = 0;
-    this.rjxn = 0;
+
+    /**
+     * The restitution to use. 0=no bounciness, 1=max bounciness.
+     * @property restitution
+     * @type {Number}
+     */
+    this.restitution = 0;
+
+    /**
+     * Set to true if this is the first impact between the bodies (not persistant contact).
+     * @property firstImpact
+     * @type {Boolean}
+     */
+    this.firstImpact = false;
+
+    /**
+     * The shape in body i that triggered this contact.
+     * @property shapeA
+     * @type {Shape}
+     */
+    this.shapeA = null;
+
+    /**
+     * The shape in body j that triggered this contact.
+     * @property shapeB
+     * @type {Shape}
+     */
+    this.shapeB = null;
 };
 ContactEquation.prototype = new Equation();
 ContactEquation.prototype.constructor = ContactEquation;
@@ -32,105 +76,39 @@ ContactEquation.prototype.computeB = function(a,b,h){
         xi = bi.position,
         xj = bj.position;
 
-    var vi = bi.velocity,
-        wi = bi.angularVelocity,
-        fi = bi.force,
-        taui = bi.angularForce;
-
-    var vj = bj.velocity,
-        wj = bj.angularVelocity,
-        fj = bj.force,
-        tauj = bj.angularForce;
-
     var penetrationVec = this.penetrationVec,
-        invMassi = bi.invMass,
-        invMassj = bj.invMass,
-        invIi = bi.invInertia,
-        invIj = bj.invInertia,
-        n = this.ni;
+        n = this.ni,
+        G = this.G;
 
     // Caluclate cross products
-    this.rixn = vec2.crossLength(ri,n);
-    this.rjxn = vec2.crossLength(rj,n);
+    var rixn = vec2.crossLength(ri,n),
+        rjxn = vec2.crossLength(rj,n);
+
+    // G = [-n -rixn n rjxn]
+    G[0] = -n[0];
+    G[1] = -n[1];
+    G[2] = -rixn;
+    G[3] = n[0];
+    G[4] = n[1];
+    G[5] = rjxn;
 
     // Calculate q = xj+rj -(xi+ri) i.e. the penetration vector
     vec2.add(penetrationVec,xj,rj);
     vec2.sub(penetrationVec,penetrationVec,xi);
     vec2.sub(penetrationVec,penetrationVec,ri);
 
-    var Gq = vec2.dot(n,penetrationVec);
-
     // Compute iteration
-    var GW = vec2.dot(vj,n) - vec2.dot(vi,n) + wj * this.rjxn - wi * this.rixn;
-    var GiMf = vec2.dot(fj,n)*invMassj - vec2.dot(fi,n)*invMassi + invIj*tauj*this.rjxn - invIi*taui*this.rixn;
+    var GW, Gq;
+    if(this.firstImpact && this.restitution !== 0){
+        Gq = 0;
+        GW = (1/b)*(1+this.restitution) * this.computeGW();
+    } else {
+        GW = this.computeGW();
+        Gq = vec2.dot(n,penetrationVec);
+    }
 
+    var GiMf = this.computeGiMf();
     var B = - Gq * a - GW * b - h*GiMf;
 
     return B;
 };
-
-// Compute C = GMG+eps in the SPOOK equation
-var computeC_tmp1 = vec2.create(),
-    tmpMat1 = mat2.create(),
-    tmpMat2 = mat2.create();
-ContactEquation.prototype.computeC = function(eps){
-    var bi = this.bi,
-        bj = this.bj,
-        n = this.ni,
-        rixn = this.rixn,
-        rjxn = this.rjxn,
-        tmp = computeC_tmp1,
-        imMat1 = tmpMat1,
-        imMat2 = tmpMat2;
-
-    mat2.identity(imMat1);
-    mat2.identity(imMat2);
-    imMat1[0] = imMat1[3] = bi.invMass;
-    imMat2[0] = imMat2[3] = bj.invMass;
-
-    var C = vec2.dot(n,vec2.transformMat2(tmp,n,imMat1)) + vec2.dot(n,vec2.transformMat2(tmp,n,imMat2)) + eps;
-    //var C = bi.invMass + bj.invMass + eps;
-
-    C += bi.invInertia * this.rixn * this.rixn;
-    C += bj.invInertia * this.rjxn * this.rjxn;
-
-    return C;
-};
-
-ContactEquation.prototype.computeGWlambda = function(){
-    var bi = this.bi,
-        bj = this.bj,
-        n = this.ni,
-        dot = vec2.dot;
-
-    return dot(n, bj.vlambda) + bj.wlambda * this.rjxn - dot(n, bi.vlambda) - bi.wlambda * this.rixn;
-};
-
-var addToWlambda_temp = vec2.create();
-ContactEquation.prototype.addToWlambda = function(deltalambda){
-    var bi = this.bi,
-        bj = this.bj,
-        n = this.ni,
-        temp = addToWlambda_temp,
-        imMat1 = tmpMat1,
-        imMat2 = tmpMat2;
-
-    mat2.identity(imMat1);
-    mat2.identity(imMat2);
-    imMat1[0] = imMat1[3] = bi.invMass;
-    imMat2[0] = imMat2[3] = bj.invMass;
-
-    // Add to linear velocity
-    //vec2.scale(temp,n,-bi.invMass*deltalambda);
-    vec2.scale(temp,vec2.transformMat2(temp,n,imMat1),-deltalambda);
-    vec2.add( bi.vlambda,bi.vlambda, temp );
-
-    //vec2.scale(temp,n,bj.invMass*deltalambda);
-    vec2.scale(temp,vec2.transformMat2(temp,n,imMat2),deltalambda);
-    vec2.add( bj.vlambda,bj.vlambda, temp);
-
-    // Add to angular velocity
-    bi.wlambda -= bi.invInertia * this.rixn * deltalambda;
-    bj.wlambda += bj.invInertia * this.rjxn * deltalambda;
-};
-

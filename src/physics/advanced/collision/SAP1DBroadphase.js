@@ -19,24 +19,24 @@ function SAP1DBroadphase(world){
     Broadphase.apply(this);
 
     /**
-    * List of bodies currently in the broadphase.
-    * @property axisList
-    * @type {Array}
-    */
+     * List of bodies currently in the broadphase.
+     * @property axisList
+     * @type {Array}
+     */
     this.axisList = world.bodies.slice(0);
 
     /**
-    * The world to search in.
-    * @property world
-    * @type {World}
-    */
+     * The world to search in.
+     * @property world
+     * @type {World}
+     */
     this.world = world;
 
     /**
-    * Axis to sort the bodies along. Set to 0 for x axis, and 1 for y axis. For best performance, choose an axis that the bodies are spread out more on.
-    * @property axisIndex
-    * @type {Number}
-    */
+     * Axis to sort the bodies along. Set to 0 for x axis, and 1 for y axis. For best performance, choose an axis that the bodies are spread out more on.
+     * @property axisIndex
+     * @type {Number}
+     */
     this.axisIndex = 0;
 
     // Add listeners to update the list of bodies.
@@ -92,23 +92,13 @@ SAP1DBroadphase.prototype.getCollisionPairs = function(world){
 
     // Look through the list
     for(i=0, N=bodies.length; i!==N; i++){
-        var bi = bodies[i],
-            biPos = bi.position[axisIndex],
-            ri = bi.boundingRadius;
+        var bi = bodies[i];
 
         for(j=i+1; j<N; j++){
-            var bj = bodies[j],
-                bjPos = bj.position[axisIndex],
-                rj = bj.boundingRadius,
-                boundA1 = biPos-ri,
-                boundA2 = biPos+ri,
-                boundB1 = bjPos-rj,
-                boundB2 = bjPos+rj;
+            var bj = bodies[j];
 
-            // Abort if we got gap til the next body
-            if( boundB1 > boundA2 ){
+            if(!SAP1DBroadphase.checkBounds(bi,bj,axisIndex))
                 break;
-            }
 
             // If we got overlap, add pair
             if(Broadphase.boundingRadiusCheck(bi,bj))
@@ -117,4 +107,26 @@ SAP1DBroadphase.prototype.getCollisionPairs = function(world){
     }
 
     return result;
+};
+
+/**
+ * Check if the bounds of two bodies overlap, along the given SAP axis.
+ * @static
+ * @method checkBounds
+ * @param  {Body} bi
+ * @param  {Body} bj
+ * @param  {Number} axisIndex
+ * @return {Boolean}
+ */
+SAP1DBroadphase.checkBounds = function(bi,bj,axisIndex){
+    var biPos = bi.position[axisIndex],
+        ri = bi.boundingRadius,
+        bjPos = bj.position[axisIndex],
+        rj = bj.boundingRadius,
+        boundA1 = biPos-ri,
+        boundA2 = biPos+ri,
+        boundB1 = bjPos-rj,
+        boundB2 = bjPos+rj;
+
+    return boundB1 < boundA2;
 };

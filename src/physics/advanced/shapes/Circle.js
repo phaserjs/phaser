@@ -7,15 +7,15 @@ module.exports = Circle;
  * @class Circle
  * @extends {Shape}
  * @constructor
- * @param {number} radius
+ * @param {number} radius The radius of this circle
  */
 function Circle(radius){
 
     /**
-    * The radius of the circle.
-    * @property radius
-    * @type {number}
-    */
+     * The radius of the circle.
+     * @property radius
+     * @type {number}
+     */
     this.radius = radius || 1;
 
     Shape.call(this,Shape.CIRCLE);

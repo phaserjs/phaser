@@ -57,6 +57,8 @@ Updates:
 * Updated display/fullscreen example to reflect new full screen change.
 * Loads of updates to the TypeScript definitions files - games fully compile now and lots of missing classes added :)
 * Removed 'null parent' check from Group constructor. Will parent to game.world only if parent value is undefined.
+* The tutorials have now been translated into Spanish - thanks feiss :)
+* separateY updated to re-implement the 'riding platforms' special condition (thanks cocoademon)
 
 
 Bug Fixes:

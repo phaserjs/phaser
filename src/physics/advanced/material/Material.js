@@ -11,9 +11,9 @@ var idCounter = 0;
  */
 function Material(){
     /**
-    * The material identifier
-    * @property id
-    * @type {Number}
-    */
+     * The material identifier
+     * @property id
+     * @type {Number}
+     */
     this.id = idCounter++;
 };

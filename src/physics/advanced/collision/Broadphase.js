@@ -1,6 +1,4 @@
 var vec2 = require('../math/vec2')
-,   Nearphase = require('./Nearphase')
-,   Shape = require('./../shapes/Shape')
 
 module.exports = Broadphase;
 
@@ -10,6 +8,12 @@ module.exports = Broadphase;
  * @constructor
  */
 function Broadphase(){
+
+    /**
+     * The resulting overlapping pairs. Will be filled with results during .getCollisionPairs().
+     * @property result
+     * @type {Array}
+     */
     this.result = [];
 };
 
@@ -23,10 +27,7 @@ Broadphase.prototype.getCollisionPairs = function(world){
     throw new Error("getCollisionPairs must be implemented in a subclass!");
 };
 
-// Temp things
-var dist = vec2.create(),
-    worldNormal = vec2.create(),
-    yAxis = vec2.fromValues(0,1);
+var dist = vec2.create();
 
 /**
  * Check whether the bounding radius of two bodies overlap.

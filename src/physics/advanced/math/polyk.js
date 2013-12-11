@@ -194,7 +194,7 @@
                 i++;
             }
         }
-        if(iscs.length === 0) return [p.slice(0)];
+        if(iscs.length == 0) return [p.slice(0)];
         var comp = function(u,v) {return PolyK._P.dist(a,u) - PolyK._P.dist(a,v); }
         iscs.sort(comp);
 
@@ -226,7 +226,7 @@
                 ps = PolyK._getPoints(ps, ind1, ind0);
                 i0.flag = i1.flag = false;
                 iscs.splice(0,2);
-                if(iscs.length === 0) pgs.push(ps);
+                if(iscs.length == 0) pgs.push(ps);
             }
             else { dir++; iscs.reverse(); }
             if(dir>1) break;
@@ -402,7 +402,7 @@
         var day = (a1.y-a2.y), dby = (b1.y-b2.y);
 
         var Den = dax*dby - day*dbx;
-        if (Den === 0) return null;  // parallel
+        if (Den == 0) return null;  // parallel
 
         var A = (a1.x * a2.y - a1.y * a2.x);
         var B = (b1.x * b2.y - b1.y * b2.x);
@@ -424,7 +424,7 @@
         var day = (a1.y-a2.y), dby = (b1.y-b2.y);
 
         var Den = dax*dby - day*dbx;
-        if (Den === 0) return null;  // parallel
+        if (Den == 0) return null;  // parallel
 
         var A = (a1.x * a2.y - a1.y * a2.x);
         var B = (b1.x * b2.y - b1.y * b2.x);
@@ -472,6 +472,6 @@
 
     PolyK._tp = [];
     for(var i=0; i<10; i++) PolyK._tp.push(new PolyK._P(0,0));
-       */
+        */
 
 module.exports = PolyK;

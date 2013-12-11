@@ -22,52 +22,52 @@ function Spring(bodyA,bodyB,options){
     options = options || {};
 
     /**
-    * Rest length of the spring.
-    * @property restLength
-    * @type {number}
-    */
+     * Rest length of the spring.
+     * @property restLength
+     * @type {number}
+     */
     this.restLength = typeof(options.restLength)=="number" ? options.restLength : 1;
 
     /**
-    * Stiffness of the spring.
-    * @property stiffness
-    * @type {number}
-    */
+     * Stiffness of the spring.
+     * @property stiffness
+     * @type {number}
+     */
     this.stiffness = options.stiffness || 100;
 
     /**
-    * Damping of the spring.
-    * @property damping
-    * @type {number}
-    */
+     * Damping of the spring.
+     * @property damping
+     * @type {number}
+     */
     this.damping = options.damping || 1;
 
     /**
-    * First connected body.
-    * @property bodyA
-    * @type {Body}
-    */
+     * First connected body.
+     * @property bodyA
+     * @type {Body}
+     */
     this.bodyA = bodyA;
 
     /**
-    * Second connected body.
-    * @property bodyB
-    * @type {Body}
-    */
+     * Second connected body.
+     * @property bodyB
+     * @type {Body}
+     */
     this.bodyB = bodyB;
 
     /**
-    * Anchor for bodyA in local bodyA coordinates.
-    * @property localAnchorA
-    * @type {Array}
-    */
+     * Anchor for bodyA in local bodyA coordinates.
+     * @property localAnchorA
+     * @type {Array}
+     */
     this.localAnchorA = vec2.fromValues(0,0);
 
     /**
-    * Anchor for bodyB in local bodyB coordinates.
-    * @property localAnchorB
-    * @type {Array}
-    */
+     * Anchor for bodyB in local bodyB coordinates.
+     * @property localAnchorB
+     * @type {Array}
+     */
     this.localAnchorB = vec2.fromValues(0,0);
 
     if(options.localAnchorA) vec2.copy(this.localAnchorA, options.localAnchorA);

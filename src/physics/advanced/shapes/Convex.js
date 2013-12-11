@@ -1,6 +1,7 @@
 var Shape = require('./Shape')
 ,   vec2 = require('../math/vec2')
 ,   polyk = require('../math/polyk')
+,   decomp = require('poly-decomp')
 
 module.exports = Convex;
 
@@ -14,24 +15,31 @@ module.exports = Convex;
 function Convex(vertices){
 
     /**
-    * Vertices defined in the local frame.
-    * @property vertices
-    * @type {Array}
-    */
+     * Vertices defined in the local frame.
+     * @property vertices
+     * @type {Array}
+     */
     this.vertices = vertices || [];
 
+    // Copy the verts
+    for(var i=0; i<this.vertices.length; i++){
+        var v = vec2.fromValues();
+        vec2.copy(v,this.vertices[i]);
+        this.vertices[i] = v;
+    }
+
     /**
-    * The center of mass of the Convex
-    * @property centerOfMass
-    * @type {Float32Array}
-    */
+     * The center of mass of the Convex
+     * @property centerOfMass
+     * @type {Float32Array}
+     */
     this.centerOfMass = vec2.fromValues(0,0);
 
     /**
-    * Triangulated version of this convex. The structure is Array of 3-Arrays, and each subarray contains 3 integers, referencing the vertices.
-    * @property triangles
-    * @type {Array}
-    */
+     * Triangulated version of this convex. The structure is Array of 3-Arrays, and each subarray contains 3 integers, referencing the vertices.
+     * @property triangles
+     * @type {Array}
+     */
     this.triangles = [];
 
     if(this.vertices.length){
@@ -40,10 +48,10 @@ function Convex(vertices){
     }
 
     /**
-    * The bounding radius of the convex
-    * @property boundingRadius
-    * @type {Number}
-    */
+     * The bounding radius of the convex
+     * @property boundingRadius
+     * @type {Number}
+     */
     this.boundingRadius = 0;
     this.updateBoundingRadius();
 
@@ -51,6 +59,10 @@ function Convex(vertices){
 };
 Convex.prototype = new Shape();
 
+/**
+ * Update the .triangles property
+ * @method updateTriangles
+ */
 Convex.prototype.updateTriangles = function(){
 
     this.triangles.length = 0;
@@ -85,6 +97,11 @@ var updateCenterOfMass_centroid = vec2.create(),
     updateCenterOfMass_ca = vec2.create(),
     updateCenterOfMass_cb = vec2.create(),
     updateCenterOfMass_n = vec2.create();
+
+/**
+ * Update the .centerOfMass property.
+ * @method updateCenterOfMass
+ */
 Convex.prototype.updateCenterOfMass = function(){
     var triangles = this.triangles,
         verts = this.vertices,
@@ -100,8 +117,9 @@ Convex.prototype.updateCenterOfMass = function(){
         centroid_times_mass = updateCenterOfMass_centroid_times_mass;
 
     vec2.set(cm,0,0);
+    var totalArea = 0;
 
-    for(var i=0; i<triangles.length; i++){
+    for(var i=0; i!==triangles.length; i++){
         var t = triangles[i],
             a = verts[t[0]],
             b = verts[t[1]],
@@ -109,17 +127,17 @@ Convex.prototype.updateCenterOfMass = function(){
 
         vec2.centroid(centroid,a,b,c);
 
-        vec2.sub(ca, c, a);
-        vec2.sub(cb, c, b);
-
         // Get mass for the triangle (density=1 in this case)
         // http://math.stackexchange.com/questions/80198/area-of-triangle-via-vectors
-        var m = 0.5 * vec2.crossLength(ca,cb);
+        var m = decomp.Point.area(a,b,c)
+        totalArea += m;
 
         // Add to center of mass
         vec2.scale(centroid_times_mass, centroid, m);
         vec2.add(cm, cm, centroid_times_mass);
     }
+
+    vec2.scale(cm,cm,1/totalArea);
 };
 
 /**
@@ -148,7 +166,8 @@ Convex.prototype.computeMomentOfInertia = function(mass){
 
     // Get total convex area and density
     var area = polyk.GetArea(polykVerts);
-    var density = mass / area;
+    this.updateArea();
+    var density = mass / this.area;
 
     // Temp vectors
     var a = vec2.create(),
@@ -177,15 +196,15 @@ Convex.prototype.computeMomentOfInertia = function(mass){
         vec2.sub(ca, c, a);
         vec2.sub(cb, c, b);
 
-        var area_triangle = 0.5 * vec2.crossLength(ca,cb);
+        var area_triangle = decomp.Point.area(a,b,c)
         var base = vec2.length(ca);
         var height = 2*area_triangle / base; // a=b*h/2 => h=2*a/b
 
-        // Get inertia for this triangle: http://answers.yahoo.com/question/index?qid=20080721030038AA3oE1m
-        var I_triangle = (base * (Math.pow(height,3))) / 36;
-
         // Get mass for the triangle
-        var m = base*height/2 * density;
+        var m = area_triangle * density;
+
+        // Get inertia for this triangle: http://answers.yahoo.com/question/index?qid=20080721030038AA3oE1m
+        var I_triangle = m*(base * (Math.pow(height,3))) / 36;
 
         // Add to total inertia using parallel axis theorem
         var r2 = vec2.squaredLength(centroid);
@@ -209,5 +228,28 @@ Convex.prototype.updateBoundingRadius = function(){
     }
 
     this.boundingRadius = Math.sqrt(r2);
+};
+
+/**
+ * Update the .area
+ * @method updateArea
+ */
+Convex.prototype.updateArea = function(){
+    this.updateTriangles();
+    this.area = 0;
+
+    var triangles = this.triangles,
+        verts = this.vertices;
+    for(var i=0; i!==triangles.length; i++){
+        var t = triangles[i],
+            a = verts[t[0]],
+            b = verts[t[1]],
+            c = verts[t[2]];
+
+        // Get mass for the triangle (density=1 in this case)
+        // http://math.stackexchange.com/questions/80198/area-of-triangle-via-vectors
+        var m = decomp.Point.area(a,b,c)
+        this.area += m;
+    }
 };
 
