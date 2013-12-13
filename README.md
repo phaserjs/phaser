@@ -52,6 +52,14 @@ New features:
 * Added Device.vibration to check if the Vibration API is available or not.
 * Added Device.trident and Device.tridentVersion for testing IE11 and forced IE11 to Canvas renderer until pixi updates to support it.
 
+New Examples:
+
+* Physics - Bounce by Patrick OReilly.
+* Physics - Bounce with gravity by Patrick OReilly.
+* Physics - Bounce accelerator (use the keyboard) by Patrick OReilly.
+* Physics - Bounce knock (use the keyboard) by Patrick OReilly.
+* Physics - Snake (use the keyboard to control the snake like creature) by Patrick OReilly and Richard Davey.
+
 Updates:
 
 * When a Sprite is destroyed any active filters are removed as well.
