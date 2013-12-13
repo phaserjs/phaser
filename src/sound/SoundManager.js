@@ -288,7 +288,7 @@ Phaser.SoundManager.prototype = {
                     that.game.cache.decodedSound(key, buffer);
                     if (sound)
                     {
-                        that.onSoundDecode.dispatch(sound);
+                        that.onSoundDecode.dispatch(key, sound);
                     }
                 });
             }

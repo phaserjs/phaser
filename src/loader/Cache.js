@@ -132,16 +132,18 @@ Phaser.Cache.prototype = {
     * @param {object} data - Extra sprite sheet data.
     * @param {number} frameWidth - Width of the sprite sheet.
     * @param {number} frameHeight - Height of the sprite sheet.
-    * @param {number} frameMax - How many frames stored in the sprite sheet.
+    * @param {number} [frameMax=-1] - How many frames stored in the sprite sheet. If -1 then it divides the whole sheet evenly.
+    * @param {number} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
+    * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
     */
-    addSpriteSheet: function (key, url, data, frameWidth, frameHeight, frameMax) {
+    addSpriteSheet: function (key, url, data, frameWidth, frameHeight, frameMax, margin, spacing) {
 
-        this._images[key] = { url: url, data: data, spriteSheet: true, frameWidth: frameWidth, frameHeight: frameHeight };
+        this._images[key] = { url: url, data: data, spriteSheet: true, frameWidth: frameWidth, frameHeight: frameHeight, margin: margin, spacing: spacing };
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
-        this._images[key].frameData = Phaser.AnimationParser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax);
+        this._images[key].frameData = Phaser.AnimationParser.spriteSheet(this.game, key, frameWidth, frameHeight, frameMax, margin, spacing);
 
     },
 
@@ -339,6 +341,7 @@ Phaser.Cache.prototype = {
 
     /**
     * Reload a sound.
+    *
     * @method Phaser.Cache#reloadSound
     * @param {string} key - Asset key for the sound.
     */
@@ -359,7 +362,8 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Description.
+    * Fires the onSoundUnlock event when the sound has completed reloading.
+    *
     * @method Phaser.Cache#reloadSoundComplete
     * @param {string} key - Asset key for the sound.
     */
@@ -374,7 +378,8 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Description.
+    * Updates the sound object in the cache.
+    *
     * @method Phaser.Cache#updateSound
     * @param {string} key - Asset key for the sound.
     */

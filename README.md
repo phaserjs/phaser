@@ -47,7 +47,10 @@ Version 1.1.4 - "Kandor" - In development
 New features:
 
 * Added a stage.fullScreenScaleMode property to determine scaling when fullscreen (thanks oysterCrusher)
-
+* Added touch joystick example showing how to use the clay.io virtual game controller (thanks gabehollombe)
+* Added support for margin and spacing around a frame in Loader.spritesheet.
+* Added Device.vibration to check if the Vibration API is available or not.
+* Added Device.trident and Device.tridentVersion for testing IE11 and forced IE11 to Canvas renderer until pixi updates to support it.
 
 Updates:
 
@@ -59,7 +62,8 @@ Updates:
 * Removed 'null parent' check from Group constructor. Will parent to game.world only if parent value is undefined.
 * The tutorials have now been translated into Spanish - thanks feiss :)
 * separateY updated to re-implement the 'riding platforms' special condition (thanks cocoademon)
-
+* SoundManager.onSoundDecode now dispatches the key followed by the sound object, also now dispatched by the Cache when doing an auto-decode on load.
+* Switch method of using trimmed sprites to support scaling and rotation (thanks cocoademon)
 
 Bug Fixes:
 

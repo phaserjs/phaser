@@ -372,13 +372,17 @@ Phaser.Loader.prototype = {
     * @param {number} frameWidth - Width of each single frame.
     * @param {number} frameHeight - Height of each single frame.
     * @param {number} [frameMax=-1] - How many frames in this sprite sheet. If not specified it will divide the whole image into frames.
+    * @param {number} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
+    * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
     * @return {Phaser.Loader} This Loader instance.
     */
-    spritesheet: function (key, url, frameWidth, frameHeight, frameMax) {
+    spritesheet: function (key, url, frameWidth, frameHeight, frameMax, margin, spacing) {
 
         if (typeof frameMax === "undefined") { frameMax = -1; }
+        if (typeof margin === "undefined") { margin = 0; }
+        if (typeof spacing === "undefined") { spacing = 0; }
 
-        this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax });
+        this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax, margin: margin, spacing: spacing });
 
         return this;
 
@@ -950,7 +954,7 @@ Phaser.Loader.prototype = {
 
             case 'spritesheet':
 
-                this.game.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax);
+                this.game.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing);
                 break;
 
             case 'tileset':
@@ -1038,6 +1042,7 @@ Phaser.Loader.prototype = {
                             if (buffer)
                             {
                                 that.game.cache.decodedSound(key, buffer);
+                                that.game.sound.onSoundDecode.dispatch(key, that.game.cache.getSound(key));
                             }
                         });
                     }

@@ -372,6 +372,12 @@ Phaser.Game.prototype = {
     */
     setUpRenderer: function () {
 
+        if (this.device.trident)
+        {
+            //  Until Pixi works with IE11
+            this.renderType = Phaser.CANVAS;
+        }
+
         if (this.renderType === Phaser.HEADLESS || this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && this.device.webGL === false))
         {
             if (this.device.canvas)

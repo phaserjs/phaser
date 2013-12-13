@@ -138,6 +138,12 @@ Phaser.Device = function () {
     */
     this.typedArray = false;
 
+    /**
+    * @property {boolean} vibration - Does the device support the Vibration API?
+    * @default
+    */
+    this.vibration = false;
+
     //  Browser
 
     /**
@@ -175,6 +181,18 @@ Phaser.Device = function () {
     * @default
     */
     this.ieVersion = 0;
+
+    /**
+    * @property {boolean} trident - Set to true if running a Trident version of Internet Explorer (IE11+)
+    * @default
+    */
+    this.trident = false;
+
+    /**
+    * @property {number} tridentVersion - If running in Internet Explorer 11 this will contain the major version number. See http://msdn.microsoft.com/en-us/library/ie/ms537503(v=vs.85).aspx
+    * @default
+    */
+    this.tridentVersion = 0;
 
     /**
     * @property {boolean} mobileSafari - Set to true if running in Mobile Safari.
@@ -400,6 +418,10 @@ Phaser.Device.prototype = {
             this.opera = true;
         } else if (/Safari/.test(ua)) {
             this.safari = true;
+        } else if (/Trident\/(\d+\.\d+);/.test(ua)) {
+            this.ie = true;
+            this.trident = true;
+            this.tridentVersion = parseInt(RegExp.$1, 10);
         }
 
         // WebApp mode in iOS
@@ -481,6 +503,13 @@ Phaser.Device.prototype = {
         {
             this.littleEndian = false;
             this.typedArray = false;
+        }
+
+        navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+         
+        if (navigator.vibrate)
+        {
+            this.vibration = true;
         }
 
     },

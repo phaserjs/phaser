@@ -374,6 +374,7 @@ PIXI.DisplayObject.prototype.addFilter = function(data)
 	//this.filter = true;
 //	data[0].target = this;
 	
+
 	// insert a filter block..
 	// TODO Onject pool thease bad boys..
 	var start = new PIXI.FilterBlock();
@@ -391,7 +392,7 @@ PIXI.DisplayObject.prototype.addFilter = function(data)
 	start.open = true;
 	
 	start.target = this;
-
+	
 	/*
 	 * insert start
 	 */
@@ -460,7 +461,6 @@ PIXI.DisplayObject.prototype.addFilter = function(data)
 	// if webGL...
 	if(this.__renderGroup)
 	{
-		console.log('__renderGroup');
 		this.__renderGroup.addFilterBlocks(start, end);
 	}
 	
@@ -478,12 +478,11 @@ PIXI.DisplayObject.prototype.removeFilter = function(data)
 	//this.filter = false;
 	// console.log("YUOIO")
 	// modify the list..
-
 	var startBlock = data.start;
+	
+	
 	var nextObject = startBlock._iNext;
 	var previousObject = startBlock._iPrev;
-
-
 		
 	if(nextObject)nextObject._iPrev = previousObject;
 	if(previousObject)previousObject._iNext = nextObject;		

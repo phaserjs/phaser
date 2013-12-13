@@ -15,12 +15,12 @@ Phaser.TilemapParser = {
     * Creates a Tileset object.
     * @method Phaser.TilemapParser.tileset
     * @param {Phaser.Game} game - Game reference to the currently running game.
-    * @param {string} key
-    * @param {number} tileWidth
-    * @param {number} tileHeight
-    * @param {number} tileMax
-    * @param {number} tileMargin
-    * @param {number} tileSpacing
+    * @param {string} key - The Cache key of this tileset.
+    * @param {number} tileWidth - Width of the sprite sheet.
+    * @param {number} tileHeight - Height of the sprite sheet.
+    * @param {number} tileMax - How many tiles stored in the sprite sheet.
+    * @param {number} [tileMargin=0] - If the tiles have been drawn with a margin, specify the amount here.
+    * @param {number} [tileSpacing=0] - If the tiles have been drawn with spacing between them, specify the amount here.
     * @return {Phaser.Tileset} Generated Tileset object.
     */
     tileset: function (game, key, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing) {
