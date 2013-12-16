@@ -91,6 +91,18 @@ Phaser.Text = function (game, x, y, text, style) {
     this.scale = new Phaser.Point(1, 1);
 
     /**
+    * An object that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.
+    * @property {boolean} fixedToCamera - Fixes this object to the Camera.
+    * @default
+    */
+    this.fixedToCamera = false;
+
+    /**
+    * @property {Phaser.Point} cameraOffset - If this Sprite is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.
+    */
+    this.cameraOffset = new Phaser.Point();
+
+    /**
     * @property {object} _cache - A mini cache for storing all of the calculated values.
     * @private
     */
@@ -139,6 +151,12 @@ Phaser.Text.prototype.update = function() {
     if (!this.exists)
     {
         return;
+    }
+
+    if (this.fixedToCamera)
+    {
+        this.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.y = this.game.camera.view.y + this.cameraOffset.y;
     }
 
     this._cache.dirty = false;

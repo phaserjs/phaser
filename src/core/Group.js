@@ -1044,12 +1044,13 @@ Phaser.Group.prototype = {
     * @param {number} returnType - How to return the data from this method. Either Phaser.Group.RETURN_NONE, Phaser.Group.RETURN_TOTAL or Phaser.Group.RETURN_CHILD.
     * @param {function} [callback=null] - Optional function that will be called on each matching child. Each child of the Group will be passed to it as its first parameter.
     * @param {Object} [callbackContext] - The context in which the function should be called (usually 'this').
+    * @return {any} Returns either a numeric total (if RETURN_TOTAL was specified) or the child object.
     */
     iterate: function (key, value, returnType, callback, callbackContext, args) {
 
         if (returnType === Phaser.Group.RETURN_TOTAL && this._container.children.length === 0)
         {
-            return -1;
+            return 0;
         }
 
         if (typeof callback === 'undefined')
@@ -1145,7 +1146,7 @@ Phaser.Group.prototype = {
     * Call this function to find out how many members of the group are alive.
     *
     * @method Phaser.Group#countLiving
-    * @return {number} The number of children flagged as alive. Returns -1 if Group is empty.
+    * @return {number} The number of children flagged as alive.
     */
     countLiving: function () {
 
@@ -1157,7 +1158,7 @@ Phaser.Group.prototype = {
     * Call this function to find out how many members of the group are dead.
     *
     * @method Phaser.Group#countDead
-    * @return {number} The number of children flagged as dead. Returns -1 if Group is empty.
+    * @return {number} The number of children flagged as dead.
     */
     countDead: function () {
 

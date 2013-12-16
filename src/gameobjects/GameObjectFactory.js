@@ -47,15 +47,19 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} y - Y position of the new sprite.
     * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
     * @param {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @returns {Phaser.Sprite} the newly created sprite object.
     */
-    sprite: function (x, y, key, frame) {
+    sprite: function (x, y, key, frame, group) {
 
-        return this.world.create(x, y, key, frame);
+        if (typeof group === 'undefined') { group = this.world; }
+
+        return group.create(x, y, key, frame);
 
     },
 
     /**
+    * DEPRECATED - will be removed in Phaser 1.2
     * Create a new Sprite with specific position and sprite sheet key that will automatically be added as a child of the given parent.
     *
     * @method Phaser.GameObjectFactory#child
@@ -125,11 +129,14 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} height - the height of the tilesprite.
     * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
     * @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.TileSprite} The newly created tileSprite object.
     */
-    tileSprite: function (x, y, width, height, key, frame) {
+    tileSprite: function (x, y, width, height, key, frame, group) {
 
-        return this.world.add(new Phaser.TileSprite(this.game, x, y, width, height, key, frame));
+        if (typeof group === 'undefined') { group = this.world; }
+
+        return group.add(new Phaser.TileSprite(this.game, x, y, width, height, key, frame));
 
     },
 
@@ -141,11 +148,14 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} y - Y position of the new text object.
     * @param {string} text - The actual text that will be written.
     * @param {object} style - The style object containing style attributes like font, font size , etc.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.Text} The newly created text object.
     */
-    text: function (x, y, text, style) {
+    text: function (x, y, text, style, group) {
 
-        return this.world.add(new Phaser.Text(this.game, x, y, text, style));
+        if (typeof group === 'undefined') { group = this.world; }
+
+        return group.add(new Phaser.Text(this.game, x, y, text, style));
 
     },
 
@@ -161,11 +171,14 @@ Phaser.GameObjectFactory.prototype = {
     * @param {string|number} [overFrame] This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
     * @param {string|number} [outFrame] This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
     * @param {string|number} [downFrame] This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.Button} The newly created button object.
     */
-    button: function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame) {
+    button: function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, group) {
 
-        return this.world.add(new Phaser.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
+        if (typeof group === 'undefined') { group = this.world; }
+
+        return group.add(new Phaser.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
 
     },
 
@@ -175,11 +188,14 @@ Phaser.GameObjectFactory.prototype = {
     * @method Phaser.GameObjectFactory#graphics
     * @param {number} x - X position of the new graphics object.
     * @param {number} y - Y position of the new graphics object.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.Graphics} The newly created graphics object.
     */
-    graphics: function (x, y) {
+    graphics: function (x, y, group) {
 
-        return this.world.add(new Phaser.Graphics(this.game, x, y));
+        if (typeof group === 'undefined') { group = this.world; }
+
+        return group.add(new Phaser.Graphics(this.game, x, y));
 
     },
 
@@ -208,9 +224,12 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} y - Y position of the new bitmapText object.
     * @param {string} text - The actual text that will be written.
     * @param {object} style - The style object containing style attributes like font, font size , etc.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.BitmapText} The newly created bitmapText object.
     */
-    bitmapText: function (x, y, text, style) {
+    bitmapText: function (x, y, text, style, group) {
+
+        if (typeof group === 'undefined') { group = this.world; }
 
         return this.world.add(new Phaser.BitmapText(this.game, x, y, text, style));
 
@@ -250,11 +269,14 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} y - Y position of the new tilemapLayer.
     * @param {number} width - the width of the tilemapLayer.
     * @param {number} height - the height of the tilemapLayer.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.TilemapLayer} The newly created tilemaplayer object.
     */
-    tilemapLayer: function (x, y, width, height, tileset, tilemap, layer) {
+    tilemapLayer: function (x, y, width, height, tileset, tilemap, layer, group) {
 
-        return this.world.add(new Phaser.TilemapLayer(this.game, x, y, width, height, tileset, tilemap, layer));
+        if (typeof group === 'undefined') { group = this.world; }
+
+        return group.add(new Phaser.TilemapLayer(this.game, x, y, width, height, tileset, tilemap, layer));
 
     },
 

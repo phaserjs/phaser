@@ -30,8 +30,8 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     parent = parent || '';
     state = state || null;
 
-    if (typeof transparent == 'undefined') { transparent = false; }
-    if (typeof antialias == 'undefined') { antialias = true; }
+    if (typeof transparent === 'undefined') { transparent = false; }
+    if (typeof antialias === 'undefined') { antialias = true; }
 
     /**
     * @property {number} id - Phaser Game ID (for when Pixi supports multiple instances).
@@ -42,8 +42,6 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @property {HTMLElement} parent - The Games DOM parent.
     */
     this.parent = parent;
-
-    //  Do some more intelligent size parsing here, so they can set "100%" for example, maybe pass the scale mode in here too?
 
     /**
     * @property {number} width - The Game width (in pixels).
@@ -372,11 +370,13 @@ Phaser.Game.prototype = {
     */
     setUpRenderer: function () {
 
+        /*
         if (this.device.trident)
         {
-            //  Until Pixi works with IE11
+            //  Pixi WebGL renderer on IE11 doesn't work correctly with masks, if you need them you may want to comment this block out
             this.renderType = Phaser.CANVAS;
         }
+        */
 
         if (this.renderType === Phaser.HEADLESS || this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && this.device.webGL === false))
         {

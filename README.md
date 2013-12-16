@@ -12,7 +12,7 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 View the [Official Website](http://phaser.io)<br />
 Follow on [Twitter](https://twitter.com/photonstorm)<br />
 Join the [Forum](http://www.html5gamedevs.com/forum/14-phaser/)<br />
-Try out 160+ [Phaser Examples](http://gametest.mobi/phaser/examples/)
+Try out 170+ [Phaser Examples](http://gametest.mobi/phaser/examples/)
 
 [Subscribe to our new Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E). We'll email you when new versions are released as well as send you our regular Phaser game making magazine.
 
@@ -47,10 +47,9 @@ Version 1.1.4 - "Kandor" - In development
 New features:
 
 * Added a stage.fullScreenScaleMode property to determine scaling when fullscreen (thanks oysterCrusher)
-* Added touch joystick example showing how to use the clay.io virtual game controller (thanks gabehollombe)
 * Added support for margin and spacing around a frame in Loader.spritesheet.
 * Added Device.vibration to check if the Vibration API is available or not.
-* Added Device.trident and Device.tridentVersion for testing IE11 and forced IE11 to Canvas renderer until pixi updates to support it.
+* Added Device.trident and Device.tridentVersion for testing IE11.
 
 New Examples:
 
@@ -59,6 +58,8 @@ New Examples:
 * Physics - Bounce accelerator (use the keyboard) by Patrick OReilly.
 * Physics - Bounce knock (use the keyboard) by Patrick OReilly.
 * Physics - Snake (use the keyboard to control the snake like creature) by Patrick OReilly and Richard Davey.
+* Added touch joystick example showing how to use the clay.io virtual game controller (thanks gabehollombe)
+* Games - Matching Pairs by Patrick OReilly.
 
 Updates:
 
@@ -72,6 +73,10 @@ Updates:
 * separateY updated to re-implement the 'riding platforms' special condition (thanks cocoademon)
 * SoundManager.onSoundDecode now dispatches the key followed by the sound object, also now dispatched by the Cache when doing an auto-decode on load.
 * Switch method of using trimmed sprites to support scaling and rotation (thanks cocoademon)
+* Most of the GameObjectFactory functions now have a group parameter, so you can do: game.add.sprite(x, y, frame, frameName, group) rather than defaulting to the World group.
+* Group.countLiving and countDead used to return -1 if the Group was empty, but now return 0.
+* Text can now be fixedToCamera, updated world/fixed to camera example to show this.
+
 
 Bug Fixes:
 
@@ -203,11 +208,13 @@ Version 1.1.4 ("Kandor")
 
 Versions 1.2 ("Saldaea")
 
-* Integration with an advanced physics system. We've been experimenting with p2.js but have yet to conclude our research.
+* Integration with the p2.js physics system.
+
+Beyond version 1.2
+
+* Dedicated CocoonJS packaging features (screencanvas, etc)
+* The ability to pass in a configuration option on Game boot, containing more advanced configuration features.
 * A more advanced Particle system, one that can render to a single canvas (rather than spawn hundreds of Sprites), more advanced effects, etc.
-
-Version 1.2+
-
 * Massively enhance the audio side of Phaser. Although it does what it does well, it could do with taking more advantage of Web Audio - echo effects, positional sound, etc.
 * Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.
 * Integration with third party services like Google Play Game Services and Amazon JS SDK.
@@ -225,7 +232,7 @@ Version 1.2+
 Learn By Example
 ----------------
 
-Phaser comes with an ever growing suite of Examples. Personally I feel that we learn better by looking at small refined code examples, so we created over 150 of them and create new ones to test every new feature added. Inside the `examples` folder you'll find the current set. If you write a particularly good example then please send it to us.
+Phaser comes with an ever growing suite of Examples. Personally I feel that we learn better by looking at small refined code examples, so we created over 170 of them and create new ones to test every new feature added. Inside the `examples` folder you'll find the current set. If you write a particularly good example then please send it to us.
 
 The examples need to be run through a local web server (in order to avoid file access permission errors from your browser). You can use your own web server, or start the included web server using grunt.
 
