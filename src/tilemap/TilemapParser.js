@@ -63,26 +63,11 @@ Phaser.TilemapParser = {
             return null;
         }
 
-        //  Let's create some tiles
-        var x = tileMargin;
-        var y = tileMargin;
+        //Phaser.Tileset = function (image, key, total, tileWidth, tileHeight, firstgid, tileMargin, tileSpacing) {
+        return new Phaser.Tileset(img, key, total, tileWidth, tileHeight, 1, tileMargin, tileSpacing);
 
-        var tileset = new Phaser.Tileset(img, key, tileWidth, tileHeight, tileMargin, tileSpacing);
-
-        for (var i = 0; i < total; i++)
-        {
-            tileset.addTile(new Phaser.Tile(tileset, i, x, y, tileWidth, tileHeight));
-
-            x += tileWidth + tileSpacing;
-
-            if (x === width)
-            {
-                x = tileMargin;
-                y += tileHeight + tileSpacing;
-            }
-        }
-
-        return tileset;
+        // tileset.build();
+        // return tileset;
 
     },
 

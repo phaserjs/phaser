@@ -12,8 +12,8 @@
 * @param {Phaser.Game} game - Game reference to the currently running game.
 * @param {number} x - The x coordinate of this layer.
 * @param {number} y - The y coordinate of this layer.
-* @param {number} renderWidth - Width of the layer.
-* @param {number} renderHeight - Height of the layer.
+* @param {number} renderWidth - Width of the renderable area of the layer.
+* @param {number} renderHeight - Height of the renderable area of the layer.
 * @param {Phaser.Tileset|string} tileset - The tile set used for rendering.
 * @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
 * @param {number|string} [layer=0] - The layer within the tilemap this TilemapLayer represents.
@@ -26,7 +26,7 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     this.game = game;
     
     /**
-    * @property {HTMLCanvasElement} canvas - The canvas to which this BitmapData draws.
+    * @property {HTMLCanvasElement} canvas - The canvas to which this TilemapLayer draws.
     */
     this.canvas = Phaser.Canvas.create(renderWidth, renderHeight);
     
@@ -59,11 +59,16 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     this.type = Phaser.TILEMAPLAYER;
 
     /**
-    * A layer that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.
-    * @property {boolean} fixedToCamera - Fixes this layer to the Camera.
+    * An object that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.
+    * @property {boolean} fixedToCamera - Fixes this object to the Camera.
     * @default
     */
     this.fixedToCamera = true;
+
+    /**
+    * @property {Phaser.Point} cameraOffset - If this object is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.
+    */
+    this.cameraOffset = new Phaser.Point(x, y);
 
     /**
     * @property {Phaser.Tileset} tileset - The tile set used for rendering.
@@ -89,6 +94,12 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     * @property {number} tileSpacing - The spacing around the tiles.
     */
     this.tileSpacing = 0;
+
+    /**
+    * @property {boolean} debug - If set to true the collideable tile edges path will be rendered.
+    * @default
+    */
+    this.debug = false;
 
     /**
     * @property {number} widthInPixels - Do NOT recommend changing after the map is loaded!
@@ -505,17 +516,108 @@ Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
 }
 
 /**
-* Get the tiles within the given area.
+* Get all tiles that exist within the given area, defined by the top-left corner, width and height. Values given are in pixels, not tiles.
 * @method Phaser.TilemapLayer#getTiles
 * @memberof Phaser.TilemapLayer
-* @param {number} x - X position of the top left of the area to copy (given in tiles, not pixels)
-* @param {number} y - Y position of the top left of the area to copy (given in tiles, not pixels)
-* @param {number} width - The width of the area to copy (given in tiles, not pixels)
-* @param {number} height - The height of the area to copy (given in tiles, not pixels)
+* @param {number} x - X position of the top left corner.
+* @param {number} y - Y position of the top left corner.
+* @param {number} width - Width of the area to get.
+* @param {number} height - Height of the area to get.
 * @param {boolean} [collides=false] - If true only return tiles that collide on one or more faces.
 * @return {array} Array with tiles informations (each contains x, y, and the tile).
 */
-Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides, debug) {
+Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides) {
+
+    if (this.tilemap === null)
+    {
+        return;
+    }
+
+    //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
+    if (typeof collides === 'undefined') { collides = false; }
+
+    // adjust the x,y coordinates for scrollFactor
+    x = this._fixX(x);
+    y = this._fixY(y);
+
+    if (width > this.widthInPixels)
+    {
+        width = this.widthInPixels;
+    }
+
+    if (height > this.heightInPixels)
+    {
+        height = this.heightInPixels;
+    }
+
+    var tileWidth = this.tileWidth * this.scale.x;
+    var tileHeight = this.tileHeight * this.scale.y;
+
+    //  Convert the pixel values into tile coordinates
+    this._tx = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
+    this._ty = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
+    this._tw = (this.game.math.snapToCeil(width, tileWidth) + tileWidth) / tileWidth;
+    this._th = (this.game.math.snapToCeil(height, tileHeight) + tileHeight) / tileHeight;
+
+    //  This should apply the layer x/y here
+    this._results.length = 0;
+
+    // var _index = 0;
+    var _tile = null;
+    // var sx = 0;
+    // var sy = 0;
+
+    for (var wy = this._ty; wy < this._ty + this._th; wy++)
+    {
+        for (var wx = this._tx; wx < this._tx + this._tw; wx++)
+        {
+            if (this.layer.data[wy] && this.layer.data[wy][wx])
+            {
+                _tile = this.layer.data[wy][wx];
+        
+                if (_tile)
+                {
+                    // sx = this.tileWidth * this.scale.x;
+                    // sy = this.tileHeight * this.scale.y;
+
+                    if (collides === false || (collides && _tile.collides))
+                    {
+                        // convert tile coordinates back to camera space for return
+                        var _wx = this._unfixX(wx * tileWidth) / this.tileWidth;
+                        var _wy = this._unfixY(wy * tileHeight) / this.tileHeight;
+
+                        this._results.push({ 
+                            x: _wx * tileWidth, 
+                            y: _wy * tileHeight, 
+                            right: (_wx * tileWidth) + tileWidth, 
+                            bottom: (_wy * tileHeight) + tileHeight, 
+                            tile: _tile 
+                        });
+                    }
+
+                }
+
+            }
+        }
+    }
+
+    return this._results;
+
+}
+
+/**
+* Get all tiles that exist within the given area, defined by the top-left corner, width and height. Values given are in pixels, not tiles.
+* This function also draws to the context all of the debug areas.
+* @method Phaser.TilemapLayer#debugGetTiles
+* @memberof Phaser.TilemapLayer
+* @param {number} x - X position of the top left corner.
+* @param {number} y - Y position of the top left corner.
+* @param {number} width - Width of the area to get.
+* @param {number} height - Height of the area to get.
+* @param {boolean} [collides=false] - If true only return tiles that collide on one or more faces.
+* @return {array} Array with tiles informations (each contains x, y, and the tile).
+*/
+Phaser.TilemapLayer.prototype.debugGetTiles = function (x, y, width, height, collides) {
 
     if (this.tilemap === null)
     {
@@ -616,7 +718,6 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
                             this.context.fillRect(_tile.x * this.tileWidth, _tile.y * this.tileHeight, this.tileWidth, this.tileHeight);
                         }
 
-
                         // this.context.strokeRect(_tile.x * this.tileWidth, _tile.y * this.tileHeight, this.tileWidth, this.tileHeight);
 
                         // convert tile coordinates back to camera space for return
@@ -674,7 +775,7 @@ Phaser.TilemapLayer.prototype.updateMax = function () {
 
     this.dirty = true;
 
-    console.log('updateMax', this._maxX, this._maxY, 'px', this.widthInPixels, this.heightInPixels, 'rwh', this.width, this.height);
+    // console.log('updateMax', this._maxX, this._maxY, 'px', this.widthInPixels, this.heightInPixels, 'rwh', this.width, this.height);
 
 }
 
@@ -711,8 +812,12 @@ Phaser.TilemapLayer.prototype.render = function () {
     this._ty = this._dy;
 
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.fillStyle = 'rgba(0,255,0,0.3)';
-    this.context.strokeStyle = 'rgba(0,255,0,0.9)';
+
+    if (this.debug)
+    {
+        this.context.fillStyle = 'rgba(0,255,0,0.3)';
+        this.context.strokeStyle = 'rgba(0,255,0,0.9)';
+    }
 
     for (var y = this._startY, lenY = this._startY + this._maxY; y < lenY; y++)
     {
@@ -722,59 +827,58 @@ Phaser.TilemapLayer.prototype.render = function () {
         {
             var tile = this._column[x];
 
-            // var tile = this.tileset.tiles[this._column[x] - 1];
-
-            // if (tile && this.tileset)
-            // {
-            //     this.context.drawImage(
-            //         this.tileset.image,
-            //         tile.x,
-            //         tile.y,
-            //         this.tileWidth,
-            //         this.tileHeight,
-            //         Math.floor(this._tx),
-            //         Math.floor(this._ty),
-            //         this.tileWidth,
-            //         this.tileHeight
-            //     );
-            // }
-
-            if (tile && (tile.faceTop || tile.faceBottom || tile.faceLeft || tile.faceRight))
+            if (tile && this.tileset)
             {
-                this._tx = Math.floor(this._tx);
+                this.context.drawImage(
+                    this.tileset.image,
+                    this.tileset.getTileX(tile.index),
+                    this.tileset.getTileY(tile.index),
+                    this.tileWidth,
+                    this.tileHeight,
+                    Math.floor(this._tx),
+                    Math.floor(this._ty),
+                    this.tileWidth,
+                    this.tileHeight
+                );
+            }
 
-                this.context.fillRect(this._tx, this._ty, this.tileWidth, this.tileHeight);
-
-                this.context.beginPath();
-
-                if (tile.faceTop)
+            if (this.debug)
+            {
+                if (tile && (tile.faceTop || tile.faceBottom || tile.faceLeft || tile.faceRight))
                 {
-                    this.context.moveTo(this._tx, this._ty);
-                    this.context.lineTo(this._tx + this.tileWidth, this._ty);
+                    this._tx = Math.floor(this._tx);
+
+                    // this.context.fillRect(this._tx, this._ty, this.tileWidth, this.tileHeight);
+
+                    this.context.beginPath();
+
+                    if (tile.faceTop)
+                    {
+                        this.context.moveTo(this._tx, this._ty);
+                        this.context.lineTo(this._tx + this.tileWidth, this._ty);
+                    }
+
+                    if (tile.faceBottom)
+                    {
+                        this.context.moveTo(this._tx, this._ty + this.tileHeight);
+                        this.context.lineTo(this._tx + this.tileWidth, this._ty + this.tileHeight);
+                    }
+
+                    if (tile.faceLeft)
+                    {
+                        this.context.moveTo(this._tx, this._ty);
+                        this.context.lineTo(this._tx, this._ty + this.tileHeight);
+                    }
+
+                    if (tile.faceRight)
+                    {
+                        this.context.moveTo(this._tx + this.tileWidth, this._ty);
+                        this.context.lineTo(this._tx + this.tileWidth, this._ty + this.tileHeight);
+                    }
+
+                    this.context.stroke();
+                    // this.context.strokeRect(this._tx, this._ty, this.tileWidth, this.tileHeight);
                 }
-
-                if (tile.faceBottom)
-                {
-                    this.context.moveTo(this._tx, this._ty + this.tileHeight);
-                    this.context.lineTo(this._tx + this.tileWidth, this._ty + this.tileHeight);
-                }
-
-                if (tile.faceLeft)
-                {
-                    this.context.moveTo(this._tx, this._ty);
-                    this.context.lineTo(this._tx, this._ty + this.tileHeight);
-                }
-
-                if (tile.faceRight)
-                {
-                    this.context.moveTo(this._tx + this.tileWidth, this._ty);
-                    this.context.lineTo(this._tx + this.tileWidth, this._ty + this.tileHeight);
-                }
-
-                // this.context.closePath();
-                this.context.stroke();
-
-                // this.context.strokeRect(this._tx, this._ty, this.tileWidth, this.tileHeight);
             }
 
             this._tx += this.tileWidth;

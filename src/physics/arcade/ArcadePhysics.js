@@ -855,8 +855,8 @@ Phaser.Physics.Arcade.prototype = {
                     body2.x += this._overlap;
                     body2.velocity.x = this._velocity1 - this._velocity2 * body2.bounce.x;
                 }
-				body1.updateHulls();
-				body2.updateHulls();
+				// body1.updateHulls();
+				// body2.updateHulls();
 
                 return true;
             }
@@ -977,8 +977,8 @@ Phaser.Physics.Arcade.prototype = {
                         body2.x += body1.x - body1.preX;
                     }
                 }
-				body1.updateHulls();
-				body2.updateHulls();
+				// body1.updateHulls();
+				// body2.updateHulls();
 
                 return true;
             }
@@ -1024,7 +1024,7 @@ Phaser.Physics.Arcade.prototype = {
 
                     if (localOverlapX >= body.deltaX())
                     {
-                        console.log('m left overlapX', localOverlapX, body.deltaX());
+                        // console.log('m left overlapX', localOverlapX, body.deltaX());
                         //  use touching instead of blocked?
                         body.blocked.left = true;
                         body.touching.left = true;
@@ -1039,7 +1039,7 @@ Phaser.Physics.Arcade.prototype = {
                     //  Distance check
                     if (localOverlapX <= body.deltaX())
                     {
-                        console.log('m right overlapX', localOverlapX, body.deltaX());
+                        // console.log('m right overlapX', localOverlapX, body.deltaX());
                         body.blocked.right = true;
                         body.touching.right = true;
                         body.touching.none = false;
@@ -1054,7 +1054,7 @@ Phaser.Physics.Arcade.prototype = {
                     //  Distance check
                     if (localOverlapY >= body.deltaY())
                     {
-                        console.log('m up overlapY', localOverlapY, body.deltaY());
+                        // console.log('m up overlapY', localOverlapY, body.deltaY());
                         body.blocked.up = true;
                         body.touching.up = true;
                         body.touching.none = false;
@@ -1067,7 +1067,7 @@ Phaser.Physics.Arcade.prototype = {
 
                     if (localOverlapY <= body.deltaY())
                     {
-                        console.log('m down overlapY', localOverlapY, body.deltaY());
+                        // console.log('m down overlapY', localOverlapY, body.deltaY());
                         body.blocked.down = true;
                         body.touching.down = true;
                         body.touching.none = false;
@@ -1163,7 +1163,7 @@ Phaser.Physics.Arcade.prototype = {
 
             if (body.overlapX >= body.deltaX())
             {
-                console.log('left overlapX', body.overlapX, body.deltaX());
+                // console.log('left overlapX', body.overlapX, body.deltaX());
                 //  use touching instead of blocked?
                 body.blocked.left = true;
                 body.touching.left = true;
@@ -1178,7 +1178,7 @@ Phaser.Physics.Arcade.prototype = {
             //  Distance check
             if (body.overlapX <= body.deltaX())
             {
-                console.log('right overlapX', body.overlapX, body.deltaX());
+                // console.log('right overlapX', body.overlapX, body.deltaX());
                 body.blocked.right = true;
                 body.touching.right = true;
                 body.touching.none = false;
@@ -1193,7 +1193,7 @@ Phaser.Physics.Arcade.prototype = {
             //  Distance check
             if (body.overlapY >= body.deltaY())
             {
-                console.log('up overlapY', body.overlapY, body.deltaY());
+                // console.log('up overlapY', body.overlapY, body.deltaY());
                 body.blocked.up = true;
                 body.touching.up = true;
                 body.touching.none = false;
@@ -1206,7 +1206,7 @@ Phaser.Physics.Arcade.prototype = {
 
             if (body.overlapY <= body.deltaY())
             {
-                console.log('down overlapY', body.overlapY, body.deltaY());
+                // console.log('down overlapY', body.overlapY, body.deltaY());
                 body.blocked.down = true;
                 body.touching.down = true;
                 body.touching.none = false;

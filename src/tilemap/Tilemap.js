@@ -122,13 +122,37 @@ Phaser.Tilemap.prototype = {
 
     },
 
-    createTilemapLayer: function (x, y, renderWidth, renderHeight, tileset, layer) {
+    /**
+    * Sets collision values on a range of tiles in the set.
+    *
+    * @method Phaser.Tileset#createTilemapLayer
+    * @param {number} x - X position of the new tilemapLayer.
+    * @param {number} y - Y position of the new tilemapLayer.
+    * @param {number} width - the width of the tilemapLayer.
+    * @param {number} height - the height of the tilemapLayer.
+    * @param {Phaser.Tileset|string} tileset - The tile set used for rendering.
+    * @param {number|string} [layer=0] - The layer within the tilemap this TilemapLayer represents.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
+    */
+    createTilemapLayer: function (x, y, renderWidth, renderHeight, tileset, layer, group) {
 
-        return this.game.world.add(new Phaser.TilemapLayer(this.game, x, y, renderWidth, renderHeight, tileset, this, layer));
+        if (typeof group === 'undefined') { group = this.game.world; }
+
+        return group.add(new Phaser.TilemapLayer(this.game, x, y, renderWidth, renderHeight, tileset, this, layer));
 
     },
 
+    /**
+    * Sets collision values on a range of tiles in the set.
+    *
+    * @method Phaser.Tileset#setCollisionByIndexRange
+    * @param {number} start - The first index of the tile on the layer.
+    * @param {number} stop - The last index of the tile on the layer.
+    * @param {number} layer - The layer to operate on.
+    */
     setCollisionByIndexRange: function (start, stop, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
 
         if (start > stop)
         {
@@ -137,21 +161,26 @@ Phaser.Tilemap.prototype = {
 
         for (var i = start; i <= stop; i++)
         {
-            this.setCollisionByIndex(i, layer);
+            this.setCollisionByIndex(i, layer, false);
         }
+
+        //  Now re-calculate interesting faces
+        this.calculateFaces(layer);
 
     },
 
     /**
     * Sets collision values on a tile in the set.
     *
-    * @method Phaser.Tileset#setCollision
+    * @method Phaser.Tileset#setCollisionByIndex
     * @param {number} index - The index of the tile on the layer.
     * @param {number} layer - The layer to operate on.
+    * @param {boolean} [recalculate=true] - Recalculates the tile faces after the update.
     */
-    setCollisionByIndex: function (index, layer) {
+    setCollisionByIndex: function (index, layer, recalculate) {
 
         if (typeof layer === "undefined") { layer = this.currentLayer; }
+        if (typeof recalculate === "undefined") { recalculate = true; }
 
         for (var y = 0; y < this.layers[layer].height ; y++)
         {
@@ -170,14 +199,20 @@ Phaser.Tilemap.prototype = {
             }
         }
 
-        //  Sets all tiles matching the given index to collide on the given faces
-        //  Recalculates the collision map
-
-        //  Now re-calculate interesting faces
-        this.calculateFaces(layer);
+        if (recalculate)
+        {
+            //  Now re-calculate interesting faces
+            this.calculateFaces(layer);
+        }
 
     },
 
+    /**
+    * Internal function.
+    *
+    * @method Phaser.Tileset#calculateFaces
+    * @param {number} layer - The layer to operate on.
+    */
     calculateFaces: function (layer) {
 
         var above = null;
@@ -185,9 +220,9 @@ Phaser.Tilemap.prototype = {
         var left = null;
         var right = null;
 
-        //  console.log(this.layers[layer].width, 'x', this.layers[layer].height);
+        // console.log(this.layers[layer].width, 'x', this.layers[layer].height);
 
-        for (var y = 0; y < this.layers[layer].height ; y++)
+        for (var y = 0; y < this.layers[layer].height; y++)
         {
             for (var x = 0; x < this.layers[layer].width; x++)
             {
@@ -229,6 +264,14 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Internal function.
+    *
+    * @method Phaser.Tileset#getTileAbove
+    * @param {number} layer - The layer to operate on.
+    * @param {number} x - X.
+    * @param {number} y - Y.
+    */
     getTileAbove: function (layer, x, y) {
 
         if (y > 0)
@@ -240,6 +283,14 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Internal function.
+    *
+    * @method Phaser.Tileset#getTileBelow
+    * @param {number} layer - The layer to operate on.
+    * @param {number} x - X.
+    * @param {number} y - Y.
+    */
     getTileBelow: function (layer, x, y) {
 
         if (y < this.layers[layer].height - 1)
@@ -251,6 +302,14 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Internal function.
+    *
+    * @method Phaser.Tileset#getTileLeft
+    * @param {number} layer - The layer to operate on.
+    * @param {number} x - X.
+    * @param {number} y - Y.
+    */
     getTileLeft: function (layer, x, y) {
 
         if (x > 0)
@@ -262,6 +321,14 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Internal function.
+    *
+    * @method Phaser.Tileset#getTileRight
+    * @param {number} layer - The layer to operate on.
+    * @param {number} x - X.
+    * @param {number} y - Y.
+    */
     getTileRight: function (layer, x, y) {
 
         if (x < this.layers[layer].width - 1)
@@ -270,35 +337,6 @@ Phaser.Tilemap.prototype = {
         }
 
         return null;
-
-    },
-
-    /**
-    * Internal function that calculates the tile indexes for the map data.
-    *
-    * @method Phaser.Tilemap#calculateIndexes
-    */
-    calculateIndexes: function () {
-
-        /*
-        for (var layer = 0; layer < this.layers.length; layer++)
-        {
-            this.layers[layer].indexes = [];
-
-            for (var y = 0; y < this.layers[layer].height ; y++)
-            {
-                for (var x = 0; x < this.layers[layer].width; x++)
-                {
-                    var idx = this.layers[layer].data[y][x];
-
-                    if (this.layers[layer].indexes.indexOf(idx) === -1)
-                    {
-                        this.layers[layer].indexes.push(idx);
-                    }
-                }
-            }
-        }
-        */
 
     },
 

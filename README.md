@@ -50,6 +50,8 @@ New features:
 * Added support for margin and spacing around a frame in Loader.spritesheet.
 * Added Device.vibration to check if the Vibration API is available or not.
 * Added Device.trident and Device.tridentVersion for testing IE11.
+* Added Device.silk for detecting a Kindle Fire and updated desktop OS check to exclude Kindles (thanks LuckieLordie)
+
 
 New Examples:
 

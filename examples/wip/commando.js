@@ -3,58 +3,33 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-    game.load.tilemap('map', 'assets/maps/mario1.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.tileset('tiles', 'assets/maps/mario1.png', 16, 16);
-
-    // game.load.tilemap('map', 'assets/maps/newtest.json', null, Phaser.Tilemap.TILED_JSON);
-    // game.load.tileset('tiles', 'assets/maps/ground_1x1.png', 32, 32);
-    // game.load.image('phaser', 'assets/sprites/phaser-ship.png');
-    // game.load.image('phaser', 'assets/sprites/mushroom2.png');
-    // game.load.image('phaser', 'assets/sprites/wabbit.png');
+    game.load.tilemap('map', 'assets/maps/commando.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.tileset('tiles', 'assets/maps/commando.png', 32, 32);
     game.load.image('phaser', 'assets/sprites/arrow.png');
-    // game.load.image('phaser', 'assets/sprites/darkwing_crazy.png');
 
 }
 
 var cursors;
 var map;
 var layer;
-var layer2;
 var sprite;
 
 function create() {
 
-    // game.stage.backgroundColor = '#5c94fc';
-
     map = game.add.tilemap('map');
 
-    map.setCollisionByIndexRange(80, 97); // mario
-    map.setCollisionByIndexRange(14, 18); // mario
-    
-
-
+    // map.setCollisionByIndexRange(80, 97); // mario
+    // map.setCollisionByIndexRange(14, 18); // mario
     // map.setCollisionByIndex(1);  // newtest
 
-
-
-    // Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, tilemap, layer) {
-    //  Need to get the x,y values working (adjust cameraOffset values)
     layer = game.add.tilemapLayer(0, 0, 800, 600, 'tiles', map, 0);
-    layer.debug = true;
-
-    // layer2 = game.add.tilemapLayer(0, 0, 400, 600, null, map, 0);
-    // layer.cameraOffset.x = 400;
-    // layer.alpha = 0.5;
+    // layer.debug = true;
 
     layer.resizeWorld();
 
     sprite = game.add.sprite(260, 100, 'phaser');
     sprite.anchor.setTo(0.5, 0.5);
 
-    //  This adjusts the collision body size.
-    //  100x50 is the new width/height.
-    //  50, 25 is the X and Y offset of the newly sized box.
-    //  In this case the box is 50px in and 25px down.
     sprite.body.setSize(16, 16, 8, 8);
 
     //  We'll set a lower max angular velocity here to keep it from going totally nuts
@@ -63,29 +38,9 @@ function create() {
     //  Apply a drag otherwise the sprite will just spin and never slow down
     sprite.body.angularDrag = 50;
 
-    // sprite.body.drag.x = 50;
-    // sprite.body.drag.y = 20;
-
-    // sprite.body.velocity.x = 50;
-
-    sprite.body.bounce.x = 0.8;
-    sprite.body.bounce.y = 0.8;
-
-    // sprite.angle = 35;
-
     game.camera.follow(sprite);
 
-    game.input.onDown.add(getIt, this);
-
     cursors = game.input.keyboard.createCursorKeys();
-
-}
-
-function getIt() {
-
-    // console.log('cam', game.camera.bounds);
-    // console.log('w', game.world.bounds);
-    // console.log(layer.getTiles(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height, true, true));
 
 }
 
@@ -141,9 +96,6 @@ function update() {
         // game.physics.velocityFromAngle(sprite.angle, sprite.body.velocity, sprite.body.velocity);
     }
 
-
-
-
     /*
     sprite.body.velocity.x = 0;
     sprite.body.velocity.y = 0;
@@ -177,12 +129,12 @@ function update() {
 function render() {
 
     // game.debug.renderSpriteBody(sprite);
-    game.debug.renderSpriteBounds(sprite);
+    // game.debug.renderSpriteBounds(sprite);
 
     // game.debug.renderText(sprite.x, 32, 32);
     // game.debug.renderText(sprite.y, 32, 48);
 
-    game.debug.renderText(layer.scrollX, 32, 32);
-    game.debug.renderText(layer.scrollY, 32, 48);
+    // game.debug.renderText(layer.scrollX, 32, 32);
+    // game.debug.renderText(layer.scrollY, 32, 48);
 
 }

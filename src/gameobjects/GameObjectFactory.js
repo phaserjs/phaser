@@ -262,13 +262,16 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Creates a new Tilemap Layer object.
+    * Creates a new Tilemap Layer object. By default TilemapLayers are fixed to the camera.
     *
     * @method Phaser.GameObjectFactory#tilemapLayer
     * @param {number} x - X position of the new tilemapLayer.
     * @param {number} y - Y position of the new tilemapLayer.
     * @param {number} width - the width of the tilemapLayer.
     * @param {number} height - the height of the tilemapLayer.
+    * @param {Phaser.Tileset|string} tileset - The tile set used for rendering.
+    * @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
+    * @param {number|string} [layer=0] - The layer within the tilemap this TilemapLayer represents.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.TilemapLayer} The newly created tilemaplayer object.
     */

@@ -98,7 +98,7 @@ Phaser.Text = function (game, x, y, text, style) {
     this.fixedToCamera = false;
 
     /**
-    * @property {Phaser.Point} cameraOffset - If this Sprite is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.
+    * @property {Phaser.Point} cameraOffset - If this object is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.
     */
     this.cameraOffset = new Phaser.Point();
 
