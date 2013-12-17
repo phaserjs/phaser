@@ -172,19 +172,29 @@ Phaser.Physics.Arcade.prototype = {
         //  If you're wondering why the velocity is halved and applied twice, read this: http://www.niksula.hut.fi/~hkankaan/Homepages/gravity.html
 
         //  Rotation
-        this._velocityDelta = (this.computeVelocity(0, body, body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity) * this.game.time.physicsElapsed * 0.5 * 60;
+        this._velocityDelta = (this.computeVelocity(body, body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular, 0) - body.angularVelocity) * 0.5;
         body.angularVelocity += this._velocityDelta;
         body.rotation += (body.angularVelocity * this.game.time.physicsElapsed);
         body.angularVelocity += this._velocityDelta;
 
+        if(body.allowGravity)
+        {
+            // Gravity was previously applied without taking physicsElapsed into account
+            // so it needs to be multiplied by 60 (fps) for compatibility with existing games
+            this._gravityX = (this.gravity.x + body.gravity.x) * 60;
+            this._gravityY = (this.gravity.y + body.gravity.y) * 60;
+        } else {
+            this._gravityX = this._gravityY = 0;
+        }
+
         //  Horizontal
-        this._velocityDelta = (this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x) - body.velocity.x) * this.game.time.physicsElapsed * 0.5 * 60;
+        this._velocityDelta = (this.computeVelocity(body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x, this._gravityX) - body.velocity.x) * 0.5;
         body.velocity.x += this._velocityDelta;
         body.x += (body.velocity.x * this.game.time.physicsElapsed);
         body.velocity.x += this._velocityDelta;
 
         //  Vertical
-        this._velocityDelta = (this.computeVelocity(2, body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y) - body.velocity.y) * this.game.time.physicsElapsed * 0.5 * 60;
+        this._velocityDelta = (this.computeVelocity(body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y, this._gravityY) - body.velocity.y) * 0.5;
         body.velocity.y += this._velocityDelta;
         body.y += (body.velocity.y * this.game.time.physicsElapsed);
         body.velocity.y += this._velocityDelta;
@@ -195,32 +205,21 @@ Phaser.Physics.Arcade.prototype = {
     * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
     *
     * @method Phaser.Physics.Arcade#computeVelocity
-    * @param {number} axis - 1 for horizontal, 2 for vertical.
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to be updated.
     * @param {number} velocity - Any component of velocity (e.g. 20).
     * @param {number} acceleration - Rate at which the velocity is changing.
     * @param {number} drag - Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
     * @param {number} [max=10000] - An absolute value cap for the velocity.
+    * @param {number} gravity - The acceleration due to gravity. Gravity will not induce drag.
     * @return {number} The altered Velocity value.
     */
-    computeVelocity: function (axis, body, velocity, acceleration, drag, max) {
+    computeVelocity: function (body, velocity, acceleration, drag, max, gravity) {
 
         max = max || 10000;
 
-        if (axis == 1 && body.allowGravity)
-        {
-            velocity += this.gravity.x + body.gravity.x;
-        }
-        else if (axis == 2 && body.allowGravity)
-        {
-            velocity += this.gravity.y + body.gravity.y;
-        }
-
-        if (acceleration !== 0)
-        {
-            velocity += acceleration * this.game.time.physicsElapsed;
-        }
-        else if (drag !== 0)
+        velocity += (acceleration + gravity) * this.game.time.physicsElapsed;
+        
+        if (acceleration === 0 && drag !== 0)
         {
             this._drag = drag * this.game.time.physicsElapsed;
 
