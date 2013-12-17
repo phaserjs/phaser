@@ -172,19 +172,19 @@ Phaser.Physics.Arcade.prototype = {
         //  If you're wondering why the velocity is halved and applied twice, read this: http://www.niksula.hut.fi/~hkankaan/Homepages/gravity.html
 
         //  Rotation
-        this._velocityDelta = (this.computeVelocity(0, body, body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity) * this.game.time.physicsElapsed * 0.5 * 60;
+        this._velocityDelta = (this.computeVelocity(0, body, body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity) * 0.5;
         body.angularVelocity += this._velocityDelta;
         body.rotation += (body.angularVelocity * this.game.time.physicsElapsed);
         body.angularVelocity += this._velocityDelta;
 
         //  Horizontal
-        this._velocityDelta = (this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x) - body.velocity.x) * this.game.time.physicsElapsed * 0.5 * 60;
+        this._velocityDelta = (this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x) - body.velocity.x) * 0.5;
         body.velocity.x += this._velocityDelta;
         body.x += (body.velocity.x * this.game.time.physicsElapsed);
         body.velocity.x += this._velocityDelta;
 
         //  Vertical
-        this._velocityDelta = (this.computeVelocity(2, body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y) - body.velocity.y) * this.game.time.physicsElapsed * 0.5 * 60;
+        this._velocityDelta = (this.computeVelocity(2, body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y) - body.velocity.y) * 0.5;
         body.velocity.y += this._velocityDelta;
         body.y += (body.velocity.y * this.game.time.physicsElapsed);
         body.velocity.y += this._velocityDelta;
