@@ -306,9 +306,9 @@ Phaser.Physics.Arcade.prototype = {
         if (object1 && object2 && object1.exists && object2.exists)
         {
             //  SPRITES
-            if (object1.type == Phaser.SPRITE)
+            if (object1.type == Phaser.SPRITE || object1.type == Phaser.TILESPRITE)
             {
-                if (object2.type == Phaser.SPRITE)
+                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
                 {
                     this.overlapSpriteVsSprite(object1, object2, overlapCallback, processCallback, callbackContext);
                 }
@@ -320,7 +320,7 @@ Phaser.Physics.Arcade.prototype = {
             //  GROUPS
             else if (object1.type == Phaser.GROUP)
             {
-                if (object2.type == Phaser.SPRITE)
+                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
                 {
                     this.overlapSpriteVsGroup(object2, object1, overlapCallback, processCallback, callbackContext);
                 }
@@ -332,7 +332,7 @@ Phaser.Physics.Arcade.prototype = {
             //  EMITTER
             else if (object1.type == Phaser.EMITTER)
             {
-                if (object2.type == Phaser.SPRITE)
+                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
                 {
                     this.overlapSpriteVsGroup(object2, object1, overlapCallback, processCallback, callbackContext);
                 }
@@ -482,12 +482,10 @@ Phaser.Physics.Arcade.prototype = {
         //  Only collide valid objects
         if (object1 && object2 && object1.exists && object2.exists)
         {
-            //  Can expand to support Buttons, Text, etc at a later date. For now these are the essentials.
-
             //  SPRITES
-            if (object1.type == Phaser.SPRITE)
+            if (object1.type == Phaser.SPRITE || object1.type == Phaser.TILESPRITE)
             {
-                if (object2.type == Phaser.SPRITE)
+                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
                 {
                     this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext);
                 }
@@ -503,7 +501,7 @@ Phaser.Physics.Arcade.prototype = {
             //  GROUPS
             else if (object1.type == Phaser.GROUP)
             {
-                if (object2.type == Phaser.SPRITE)
+                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
                 {
                     this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext);
                 }
@@ -519,7 +517,7 @@ Phaser.Physics.Arcade.prototype = {
             //  TILEMAP LAYERS
             else if (object1.type == Phaser.TILEMAPLAYER)
             {
-                if (object2.type == Phaser.SPRITE)
+                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
                 {
                     this.collideSpriteVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext);
                 }
@@ -531,7 +529,7 @@ Phaser.Physics.Arcade.prototype = {
             //  EMITTER
             else if (object1.type == Phaser.EMITTER)
             {
-                if (object2.type == Phaser.SPRITE)
+                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
                 {
                     this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext);
                 }

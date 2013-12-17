@@ -51,8 +51,110 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
     */
     this.tilePosition = new Phaser.Point(0, 0);
 
+    this.body.width = width;
+    this.body.height = height;
+
 };
 
 Phaser.TileSprite.prototype = Phaser.Utils.extend(true, PIXI.TilingSprite.prototype, Phaser.Sprite.prototype);
 Phaser.TileSprite.prototype.constructor = Phaser.TileSprite;
 
+/**
+* Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+* Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
+* If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
+* @name Phaser.TileSprite#angle
+* @property {number} angle - Gets or sets the Sprites angle of rotation in degrees.
+*/
+Object.defineProperty(Phaser.TileSprite.prototype, 'angle', {
+
+    get: function() {
+        return Phaser.Math.wrapAngle(Phaser.Math.radToDeg(this.rotation));
+    },
+
+    set: function(value) {
+        this.rotation = Phaser.Math.degToRad(Phaser.Math.wrapAngle(value));
+    }
+
+});
+
+/**
+* @name Phaser.TileSprite#frame
+* @property {number} frame - Gets or sets the current frame index and updates the Texture Cache for display.
+*/
+Object.defineProperty(Phaser.TileSprite.prototype, "frame", {
+    
+    get: function () {
+        return this.animations.frame;
+    },
+
+    set: function (value) {
+        this.animations.frame = value;
+    }
+
+});
+
+/**
+* @name Phaser.TileSprite#frameName
+* @property {string} frameName - Gets or sets the current frame name and updates the Texture Cache for display.
+*/
+Object.defineProperty(Phaser.TileSprite.prototype, "frameName", {
+    
+    get: function () {
+        return this.animations.frameName;
+    },
+
+    set: function (value) {
+        this.animations.frameName = value;
+    }
+
+});
+
+/**
+* @name Phaser.TileSprite#inCamera
+* @property {boolean} inCamera - Is this sprite visible to the camera or not?
+* @readonly
+*/
+Object.defineProperty(Phaser.TileSprite.prototype, "inCamera", {
+    
+    get: function () {
+        return this._cache.cameraVisible;
+    }
+
+});
+
+/**
+* By default a Sprite won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
+* activated for this Sprite instance and it will then start to process click/touch events and more.
+*
+* @name Phaser.TileSprite#inputEnabled
+* @property {boolean} inputEnabled - Set to true to allow this Sprite to receive input events, otherwise false.
+*/
+Object.defineProperty(Phaser.TileSprite.prototype, "inputEnabled", {
+    
+    get: function () {
+
+        return (this.input.enabled);
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            if (this.input.enabled === false)
+            {
+                this.input.start();
+            }
+        }
+        else
+        {
+            if (this.input.enabled)
+            {
+                this.input.stop();
+            }
+        }
+
+    }
+
+});

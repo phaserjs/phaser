@@ -217,6 +217,10 @@
       "title": "invaders"
     },
     {
+      "file": "matching+pairs.js",
+      "title": "matching pairs"
+    },
+    {
       "file": "starstruck.js",
       "title": "starstruck"
     },
@@ -515,6 +519,22 @@
       "title": "angular velocity"
     },
     {
+      "file": "bounce+accelerator.js",
+      "title": "bounce accelerator"
+    },
+    {
+      "file": "bounce+knock.js",
+      "title": "bounce knock"
+    },
+    {
+      "file": "bounce+with+gravity.js",
+      "title": "bounce with gravity"
+    },
+    {
+      "file": "bounce.js",
+      "title": "bounce"
+    },
+    {
       "file": "mass+velocity+test.js",
       "title": "mass velocity test"
     },
@@ -537,6 +557,10 @@
     {
       "file": "shoot+the+pointer.js",
       "title": "shoot the pointer"
+    },
+    {
+      "file": "snake.js",
+      "title": "snake"
     },
     {
       "file": "sprite+bounds.js",
@@ -635,6 +659,10 @@
     {
       "file": "animated+tiling+sprite.js",
       "title": "animated tiling sprite"
+    },
+    {
+      "file": "colliding+with+tiling+sprite.js",
+      "title": "colliding with tiling sprite"
     },
     {
       "file": "tiling+sprite.js",

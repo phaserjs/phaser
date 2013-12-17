@@ -35,7 +35,6 @@ function create() {
     //  The scrolling starfield background
     starfield = game.add.tileSprite(0, 0, 800, 600, 'starfield');
 
-
     //  Our bullet group
     bullets = game.add.group();
     bullets.createMultiple(30, 'bullet');

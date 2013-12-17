@@ -78,6 +78,7 @@ Updates:
 * Most of the GameObjectFactory functions now have a group parameter, so you can do: game.add.sprite(x, y, frame, frameName, group) rather than defaulting to the World group.
 * Group.countLiving and countDead used to return -1 if the Group was empty, but now return 0.
 * Text can now be fixedToCamera, updated world/fixed to camera example to show this.
+* ArcadePhysics.overlap and collide now recognise TileSprites in the collision checks.
 
 
 Bug Fixes:

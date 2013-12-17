@@ -68,6 +68,12 @@ Phaser.Stage = function (game, width, height) {
     this.aspectRatio = width / height;
 
     /**
+    * @property {boolean} disableVisibilityChange - By default if the browser tab loses focus the game will pause. You can stop that behaviour by setting this property to true.
+    * @default
+    */
+    this.disableVisibilityChange = false;
+
+    /**
     * @property {number} _nextOffsetCheck - The time to run the next offset check.
     * @private
     */

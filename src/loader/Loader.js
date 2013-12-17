@@ -396,18 +396,22 @@ Phaser.Loader.prototype = {
     * @param {string} url - URL of the tileset.
     * @param {number} tileWidth - Width of each single tile in pixels.
     * @param {number} tileHeight - Height of each single tile in pixels.
-    * @param {number} [tileMax=-1] - How many tiles in this tileset. If not specified it will divide the whole image into tiles.
     * @param {number} [tileMargin=0] - If the tiles have been drawn with a margin, specify the amount here.
     * @param {number} [tileSpacing=0] - If the tiles have been drawn with spacing between them, specify the amount here.
+    * @param {number} [rows=-1] - How many tiles are placed horizontally in each row? If -1 it will calculate rows by dividing the image width by tileWidth.
+    * @param {number} [columns=-1] - How many tiles are placed vertically in each column? If -1 it will calculate columns by dividing the image height by tileHeight.
+    * @param {number} [limit=-1] - The maximum number of tiles to extract from the image. If -1 it will extract rows * columns worth, otherwise you can set a lower limit value.
     * @return {Phaser.Loader} This Loader instance.
     */
-    tileset: function (key, url, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing) {
+    tileset: function (key, url, tileWidth, tileHeight, tileMargin, tileSpacing, rows, columns, limit) {
 
-        if (typeof tileMax === "undefined") { tileMax = -1; }
         if (typeof tileMargin === "undefined") { tileMargin = 0; }
         if (typeof tileSpacing === "undefined") { tileSpacing = 0; }
+        if (typeof rows === "undefined") { rows = -1; }
+        if (typeof columns === "undefined") { columns = -1; }
+        if (typeof limit === "undefined") { limit = -1; }
 
-        this.addToFileList('tileset', key, url, { tileWidth: tileWidth, tileHeight: tileHeight, tileMax: tileMax, tileMargin: tileMargin, tileSpacing: tileSpacing });
+        this.addToFileList('tileset', key, url, { tileWidth: tileWidth, tileHeight: tileHeight, tileMargin: tileMargin, tileSpacing: tileSpacing, rows: rows, columns: columns, limit: limit });
 
         return this;
 
