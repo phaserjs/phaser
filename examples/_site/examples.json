@@ -535,6 +535,10 @@
       "title": "bounce"
     },
     {
+      "file": "framerate+independence.js",
+      "title": "framerate independence"
+    },
+    {
       "file": "mass+velocity+test.js",
       "title": "mass velocity test"
     },
