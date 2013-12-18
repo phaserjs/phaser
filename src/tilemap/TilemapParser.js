@@ -16,46 +16,44 @@ Phaser.TilemapParser = {
     * @method Phaser.TilemapParser.tileset
     * @param {Phaser.Game} game - Game reference to the currently running game.
     * @param {string} key - The Cache key of this tileset.
-    * @param {number} tileWidth - Width of the sprite sheet.
-    * @param {number} tileHeight - Height of the sprite sheet.
-    * @param {number} tileMax - How many tiles stored in the sprite sheet.
+    * @param {number} tileWidth - Width of each single tile in pixels.
+    * @param {number} tileHeight - Height of each single tile in pixels.
     * @param {number} [tileMargin=0] - If the tiles have been drawn with a margin, specify the amount here.
     * @param {number} [tileSpacing=0] - If the tiles have been drawn with spacing between them, specify the amount here.
+    * @param {number} [rows=-1] - How many tiles are placed horizontally in each row? If -1 it will calculate rows by dividing the image width by tileWidth.
+    * @param {number} [columns=-1] - How many tiles are placed vertically in each column? If -1 it will calculate columns by dividing the image height by tileHeight.
+    * @param {number} [total=-1] - The maximum number of tiles to extract from the image. If -1 it will extract `rows * columns` worth. You can also set a value lower than the actual number of tiles.
     * @return {Phaser.Tileset} Generated Tileset object.
     */
-    tileset: function (game, key, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing) {
+    tileset: function (game, key, tileWidth, tileHeight, tileMargin, tileSpacing, rows, columns, total) {
 
         //  How big is our image?
         var img = game.cache.getTilesetImage(key);
 
-        if (img == null)
+        if (img === null)
         {
+            console.warn("Phaser.TilemapParser.tileSet: Invalid image key given");
             return null;
         }
 
         var width = img.width;
         var height = img.height;
 
-        //  If no tile width/height is given, try and figure it out (won't work if the tileset has margin/spacing)
-        if (tileWidth <= 0)
+        if (rows === -1)
         {
-            tileWidth = Math.floor(-width / Math.min(-1, tileWidth));
+            rows = Math.round(width / tileWidth);
         }
 
-        if (tileHeight <= 0)
+        if (columns === -1)
         {
-            tileHeight = Math.floor(-height / Math.min(-1, tileHeight));
+            columns = Math.round(height / tileHeight);
         }
 
-        var row = Math.round(width / tileWidth);
-        var column = Math.round(height / tileHeight);
-        var total = row * column;
+        if (total === -1)
+        {
+            total = rows * columns;
+        }
         
-        if (tileMax !== -1)
-        {
-            total = tileMax;
-        }
-
         //  Zero or smaller than tile sizes?
         if (width === 0 || height === 0 || width < tileWidth || height < tileHeight || total === 0)
         {
@@ -63,11 +61,7 @@ Phaser.TilemapParser = {
             return null;
         }
 
-        //Phaser.Tileset = function (image, key, total, tileWidth, tileHeight, firstgid, tileMargin, tileSpacing) {
-        return new Phaser.Tileset(img, key, total, tileWidth, tileHeight, 1, tileMargin, tileSpacing);
-
-        // tileset.build();
-        // return tileset;
+        return new Phaser.Tileset(img, key, tileWidth, tileHeight, tileMargin, tileSpacing, rows, columns, total);
 
     },
 

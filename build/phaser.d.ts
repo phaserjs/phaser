@@ -1424,9 +1424,10 @@ declare module Phaser {
             addToFileList(type: string, key: string, url: string, properties: Array<any>): void;
             image(key: string, url: string, overwrite?: boolean): void;
             text(key: string, url: string, overwrite?: boolean): void;
-            spritesheet(key: string, url: string, frameWidth: number, frameHeight: number, frameMax: number): void;
+            spritesheet(key: string, url: string, frameWidth: number, frameHeight: number, frameMax?: number, margin?: number, spacing?: number): void;
             audio(key: string, urls: string[], autoDecode?: boolean): void;
             tilemap(key: string, tilesetURL: string, mapDataURL?: string, mapData?: Object, format?: string): void;
+            tileset(key: string, url: string, tileWidth: number, tileHeight: number, tileMargin?: number, tileSpacing?: number, rows?: number, columns?: number, limit?: number): void;
             bitmapFont(key: string, textureURL: string, xmlURL?: string, xmlData?: Object): void;
             atlasJSONArray(key: string, textureURL: string, atlasURL: string, atlasData: Object): void;
             atlasJSONHash(key: string, textureURL: string, atlasURL: string, atlasData: Object): void;

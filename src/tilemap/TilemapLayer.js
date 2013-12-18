@@ -102,6 +102,12 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     this.debug = false;
 
     /**
+    * @property {number} debugAlpha - If debug is true then the tileset is rendered with this alpha level, to make the tile edges clearer.
+    * @default
+    */
+    this.debugAlpha = 0.5;
+
+    /**
     * @property {number} widthInPixels - Do NOT recommend changing after the map is loaded!
     * @readonly
     */
@@ -791,7 +797,6 @@ Phaser.TilemapLayer.prototype.render = function () {
         this.dirty = true;
     }
 
-    // if (!this.dirty || !this.tileset || !this.tilemap || !this.visible)
     if (!this.dirty || !this.tilemap || !this.visible)
     {
         return;
@@ -800,13 +805,8 @@ Phaser.TilemapLayer.prototype.render = function () {
     this._prevX = this._dx;
     this._prevY = this._dy;
 
-    // console.log('render', this._x);
-
     this._dx = -(this._x - (this._startX * this.tileWidth));
     this._dy = -(this._y - (this._startY * this.tileHeight));
-
-    // this._dx = Math.floor(this._dx);
-    // this._dy = Math.floor(this._dy);
 
     this._tx = this._dx;
     this._ty = this._dy;
@@ -815,8 +815,7 @@ Phaser.TilemapLayer.prototype.render = function () {
 
     if (this.debug)
     {
-        this.context.fillStyle = 'rgba(0,255,0,0.3)';
-        this.context.strokeStyle = 'rgba(0,255,0,0.9)';
+        this.context.globalAlpha = this.debugAlpha;
     }
 
     for (var y = this._startY, lenY = this._startY + this._maxY; y < lenY; y++)
@@ -842,45 +841,6 @@ Phaser.TilemapLayer.prototype.render = function () {
                 );
             }
 
-            if (this.debug)
-            {
-                if (tile && (tile.faceTop || tile.faceBottom || tile.faceLeft || tile.faceRight))
-                {
-                    this._tx = Math.floor(this._tx);
-
-                    // this.context.fillRect(this._tx, this._ty, this.tileWidth, this.tileHeight);
-
-                    this.context.beginPath();
-
-                    if (tile.faceTop)
-                    {
-                        this.context.moveTo(this._tx, this._ty);
-                        this.context.lineTo(this._tx + this.tileWidth, this._ty);
-                    }
-
-                    if (tile.faceBottom)
-                    {
-                        this.context.moveTo(this._tx, this._ty + this.tileHeight);
-                        this.context.lineTo(this._tx + this.tileWidth, this._ty + this.tileHeight);
-                    }
-
-                    if (tile.faceLeft)
-                    {
-                        this.context.moveTo(this._tx, this._ty);
-                        this.context.lineTo(this._tx, this._ty + this.tileHeight);
-                    }
-
-                    if (tile.faceRight)
-                    {
-                        this.context.moveTo(this._tx + this.tileWidth, this._ty);
-                        this.context.lineTo(this._tx + this.tileWidth, this._ty + this.tileHeight);
-                    }
-
-                    this.context.stroke();
-                    // this.context.strokeRect(this._tx, this._ty, this.tileWidth, this.tileHeight);
-                }
-            }
-
             this._tx += this.tileWidth;
 
         }
@@ -888,6 +848,12 @@ Phaser.TilemapLayer.prototype.render = function () {
         this._tx = this._dx;
         this._ty += this.tileHeight;
 
+    }
+
+    if (this.debug)
+    {
+        this.context.globalAlpha = 1;
+        this.renderDebug();
     }
 
     //  Only needed if running in WebGL, otherwise this array will never get cleared down I don't think!
@@ -904,6 +870,69 @@ Phaser.TilemapLayer.prototype.render = function () {
 	}
 
     return true;
+
+}
+
+Phaser.TilemapLayer.prototype.renderDebug = function () {
+
+    this._tx = this._dx;
+    this._ty = this._dy;
+
+    this.context.fillStyle = 'rgba(0, 255, 0, 0.3)';
+    this.context.strokeStyle = 'rgb(0, 255, 0)';
+
+    for (var y = this._startY, lenY = this._startY + this._maxY; y < lenY; y++)
+    {
+        this._column = this.layer.data[y];
+
+        for (var x = this._startX, lenX = this._startX + this._maxX; x < lenX; x++)
+        {
+            var tile = this._column[x];
+
+            if (tile && (tile.faceTop || tile.faceBottom || tile.faceLeft || tile.faceRight))
+            {
+                this._tx = Math.floor(this._tx);
+
+                // this.context.fillRect(this._tx, this._ty, this.tileWidth, this.tileHeight);
+
+                this.context.beginPath();
+
+                if (tile.faceTop)
+                {
+                    this.context.moveTo(this._tx, this._ty);
+                    this.context.lineTo(this._tx + this.tileWidth, this._ty);
+                }
+
+                if (tile.faceBottom)
+                {
+                    this.context.moveTo(this._tx, this._ty + this.tileHeight);
+                    this.context.lineTo(this._tx + this.tileWidth, this._ty + this.tileHeight);
+                }
+
+                if (tile.faceLeft)
+                {
+                    this.context.moveTo(this._tx, this._ty);
+                    this.context.lineTo(this._tx, this._ty + this.tileHeight);
+                }
+
+                if (tile.faceRight)
+                {
+                    this.context.moveTo(this._tx + this.tileWidth, this._ty);
+                    this.context.lineTo(this._tx + this.tileWidth, this._ty + this.tileHeight);
+                }
+
+                this.context.stroke();
+                // this.context.strokeRect(this._tx, this._ty, this.tileWidth, this.tileHeight);
+            }
+
+            this._tx += this.tileWidth;
+
+        }
+
+        this._tx = this._dx;
+        this._ty += this.tileHeight;
+
+    }
 
 }
 

@@ -6,23 +6,21 @@
 
 /**
 * A Tile set is a combination of an image containing the tiles and collision data per tile.
+* You should not normally instantiate this class directly.
 *
 * @class Phaser.Tileset
 * @constructor
 * @param {Image} image - The Image object from the Cache.
 * @param {string} key - The key of the tileset in the cache.
-* @param {number} total - The total number of tiles in the tilesheet.
-* @param {number} tileWidth - The width of the tile in pixels.
-* @param {number} tileHeight - The height of the tile in pixels.
-* @param {number} [firstgid=0] - The first index number (as specified by Tiled, otherwise set to zero)
-* @param {number} [tileMargin=0] - The margin around the tiles in the sheet.
-* @param {number} [tileSpacing=0] - The spacing between the tiles in the sheet.
+* @param {number} tileWidth - Width of each tile in pixels.
+* @param {number} tileHeight - Height of each tile in pixels.
+* @param {number} tileMargin - The amount of margin around the tilesheet.
+* @param {number} tileSpacing - The amount of spacing between each tile in the sheet.
+* @param {number} rows - How many tiles are placed horizontally in each row.
+* @param {number} columns - How many tiles are placed vertically in each column.
+* @param {number} total - The maximum number of tiles to extract from the image.
 */
-Phaser.Tileset = function (image, key, total, tileWidth, tileHeight, firstgid, tileMargin, tileSpacing) {
-
-    if (typeof firstgid === "undefined") { firstgid = 0; }
-    if (typeof tileMargin === "undefined") { tileMargin = 0; }
-    if (typeof tileSpacing === "undefined") { tileSpacing = 0; }
+Phaser.Tileset = function (image, key, tileWidth, tileHeight, tileMargin, tileSpacing, rows, columns, total) {
 
     /**
     * @property {string} key - The cache ID.
@@ -35,14 +33,25 @@ Phaser.Tileset = function (image, key, total, tileWidth, tileHeight, firstgid, t
     this.image = image;
 
     /**
+    * @property {number} rows - The number of rows in the tile sheet.
+    */
+    this.rows = rows;
+
+    /**
+    * @property {number} columns - The number of columns in the tile sheet.
+    */
+    this.columns = columns;
+
+    /**
     * @property {number} total - The total number of tiles in the tilesheet.
     */
     this.total = total;
 
     /**
-    * @property {number} firstgid - The total number of tiles in the tilesheet.
+    * @property {number} firstgid - The Tiled firstgid value.
+    * @default
     */
-    this.firstgid = firstgid;
+    this.firstgid = 1;
 
     /**
     * @property {number} tileWidth - The width of a tile in pixels.
@@ -76,7 +85,7 @@ Phaser.Tileset = function (image, key, total, tileWidth, tileHeight, firstgid, t
 Phaser.Tileset.prototype = {
 
     /**
-    * Builds the tile data
+    * Builds the tileset data.
     *
     * @method Phaser.Tileset#build
     */
@@ -85,6 +94,12 @@ Phaser.Tileset.prototype = {
         var x = this.tileMargin;
         var y = this.tileMargin;
 
+        var count = 0;
+        var countX = 0;
+        var countY = 0;
+
+        console.log('Building tileset', this.rows, 'x', this.columns, 'total', this.total);
+
         for (var i = this.firstgid; i < this.firstgid + this.total; i++)
         {
             //  Can add extra properties here as needed
@@ -92,14 +107,31 @@ Phaser.Tileset.prototype = {
 
             x += this.tileWidth + this.tileSpacing;
 
-            if (x === this.image.width)
+            count++;
+
+            if (count === this.total)
+            {
+                break;
+            }
+
+            countX++;
+
+            if (countX === this.rows)
             {
                 x = this.tileMargin;
                 y += this.tileHeight + this.tileSpacing;
+
+                countX = 0;
+                countY++;
+
+                if (countY === this.columns)
+                {
+                    break;
+                }
             }
         }
 
-        // console.table(this.tiles);
+        console.table(this.tiles);
 
     },
 

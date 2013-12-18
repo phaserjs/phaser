@@ -44,6 +44,11 @@ Change Log
 
 Version 1.1.4 - "Kandor" - In development
 
+Significant API changes:
+
+* Loader.tileset has a new method signature. Please use the new format: load.tileset(key, url, tileWidth, tileHeight, tileMargin, tileSpacing, rows, columns, total).
+
+
 New features:
 
 * Added a stage.fullScreenScaleMode property to determine scaling when fullscreen (thanks oysterCrusher)

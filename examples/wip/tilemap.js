@@ -3,8 +3,8 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-    game.load.tilemap('map', 'assets/maps/mario1.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.tileset('tiles', 'assets/maps/mario1.png', 16, 16);
+    game.load.tilemap('map', 'assets/maps/super_mario.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.tileset('tiles', 'assets/maps/super_mario.png', 16, 16);
 
     // game.load.tilemap('map', 'assets/maps/newtest.json', null, Phaser.Tilemap.TILED_JSON);
     // game.load.tileset('tiles', 'assets/maps/ground_1x1.png', 32, 32);
@@ -24,16 +24,13 @@ var sprite;
 
 function create() {
 
-    // game.stage.backgroundColor = '#5c94fc';
-
     map = game.add.tilemap('map');
 
-    map.setCollisionByIndexRange(80, 97); // mario
-    map.setCollisionByIndexRange(14, 18); // mario
-    
-
-
-    // map.setCollisionByIndex(1);  // newtest
+    map.setCollisionByIndex(15);
+    map.setCollisionByIndex(40);
+    map.setCollisionByIndexRange(14, 16);
+    map.setCollisionByIndexRange(20, 25);
+    map.setCollisionByIndexRange(27, 29);
 
 
 
@@ -41,6 +38,9 @@ function create() {
     //  Need to get the x,y values working (adjust cameraOffset values)
     layer = game.add.tilemapLayer(0, 0, 800, 600, 'tiles', map, 0);
     layer.debug = true;
+    layer.debugAlpha = 0.3;
+
+
 
     // layer2 = game.add.tilemapLayer(0, 0, 400, 600, null, map, 0);
     // layer.cameraOffset.x = 400;

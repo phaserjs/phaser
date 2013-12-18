@@ -400,18 +400,18 @@ Phaser.Loader.prototype = {
     * @param {number} [tileSpacing=0] - If the tiles have been drawn with spacing between them, specify the amount here.
     * @param {number} [rows=-1] - How many tiles are placed horizontally in each row? If -1 it will calculate rows by dividing the image width by tileWidth.
     * @param {number} [columns=-1] - How many tiles are placed vertically in each column? If -1 it will calculate columns by dividing the image height by tileHeight.
-    * @param {number} [limit=-1] - The maximum number of tiles to extract from the image. If -1 it will extract rows * columns worth, otherwise you can set a lower limit value.
+    * @param {number} [total=-1] - The maximum number of tiles to extract from the image. If -1 it will extract `rows * columns` worth. You can also set a value lower than the actual number of tiles.
     * @return {Phaser.Loader} This Loader instance.
     */
-    tileset: function (key, url, tileWidth, tileHeight, tileMargin, tileSpacing, rows, columns, limit) {
+    tileset: function (key, url, tileWidth, tileHeight, tileMargin, tileSpacing, rows, columns, total) {
 
         if (typeof tileMargin === "undefined") { tileMargin = 0; }
         if (typeof tileSpacing === "undefined") { tileSpacing = 0; }
         if (typeof rows === "undefined") { rows = -1; }
         if (typeof columns === "undefined") { columns = -1; }
-        if (typeof limit === "undefined") { limit = -1; }
+        if (typeof total === "undefined") { total = -1; }
 
-        this.addToFileList('tileset', key, url, { tileWidth: tileWidth, tileHeight: tileHeight, tileMargin: tileMargin, tileSpacing: tileSpacing, rows: rows, columns: columns, limit: limit });
+        this.addToFileList('tileset', key, url, { tileWidth: tileWidth, tileHeight: tileHeight, tileMargin: tileMargin, tileSpacing: tileSpacing, rows: rows, columns: columns, total: total });
 
         return this;
 
@@ -963,7 +963,7 @@ Phaser.Loader.prototype = {
 
             case 'tileset':
 
-                this.game.cache.addTileset(file.key, file.url, file.data, file.tileWidth, file.tileHeight, file.tileMax, file.tileMargin, file.tileSpacing);
+                this.game.cache.addTileset(file.key, file.url, file.data, file.tileWidth, file.tileHeight, file.tileMargin, file.tileSpacing, file.rows, file.columns, file.total);
                 break;
 
             case 'textureatlas':
