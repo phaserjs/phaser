@@ -100,7 +100,8 @@ Phaser.Tileset.prototype = {
 
         console.log('Building tileset', this.rows, 'x', this.columns, 'total', this.total);
 
-        for (var i = this.firstgid; i < this.firstgid + this.total; i++)
+        // for (var i = this.firstgid; i < this.firstgid + this.total; i++)
+        for (var i = 0; i < this.total; i++)
         {
             //  Can add extra properties here as needed
             this.tiles[i] = [x, y];

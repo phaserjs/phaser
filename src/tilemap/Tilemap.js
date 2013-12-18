@@ -12,8 +12,9 @@
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
 * @param {string} [key] - The key of the tilemap data as stored in the Cache.
+* @param {object|string} tilesets - An object mapping Cache.tileset keys with the tileset names in the JSON file. If a string is provided that will be used.
 */
-Phaser.Tilemap = function (game, key) {
+Phaser.Tilemap = function (game, key, tilesets) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
@@ -23,7 +24,7 @@ Phaser.Tilemap = function (game, key) {
     /**
     * @property {array} layers - An array of Tilemap layer data.
     */
-    this.layers = null;
+    this.layers = [];
 
     if (typeof key === 'string')
     {
@@ -31,15 +32,16 @@ Phaser.Tilemap = function (game, key) {
 
         this.layers = game.cache.getTilemapData(key).layers;
     }
-    else
-    {
-        this.layers = [];
-    }
 
     /**
     * @property {number} currentLayer - The current layer.
     */
     this.currentLayer = 0;
+
+    /**
+    * @property {array} tilesets - An array of Tilesets.
+    */
+    this.tilesets = [];
 
     /**
     * @property {array} debugMap - Map data used for debug values only.
@@ -64,6 +66,11 @@ Phaser.Tilemap = function (game, key) {
     */
     this._tempB = 0;
 
+    if (this.layers.length > 0)
+    {
+        this.addTilesets(tilesets);
+    }
+
 };
 
 /**
@@ -79,6 +86,14 @@ Phaser.Tilemap.CSV = 0;
 Phaser.Tilemap.TILED_JSON = 1;
 
 Phaser.Tilemap.prototype = {
+
+    addTilesets: function (tilesets) {
+
+        //  parse the tilesets array and set-up gid mappings
+
+
+    },
+
 
     /**
     * Creates an empty map of the given dimensions.
@@ -123,22 +138,44 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Sets collision values on a range of tiles in the set.
+    * Creates a new TilemapLayer object. By default TilemapLayers are fixed to the camera.
     *
-    * @method Phaser.Tileset#createTilemapLayer
-    * @param {number} x - X position of the new tilemapLayer.
-    * @param {number} y - Y position of the new tilemapLayer.
-    * @param {number} width - the width of the tilemapLayer.
-    * @param {number} height - the height of the tilemapLayer.
-    * @param {Phaser.Tileset|string} tileset - The tile set used for rendering.
-    * @param {number|string} [layer=0] - The layer within the tilemap this TilemapLayer represents.
+    * @method Phaser.Tileset#createLayer
+    * @param {number} x - Camera Offset X position of the layer.
+    * @param {number} y - Camera Offset Y position of the layer.
+    * @param {number} width - The rendered width of the layer, should never be wider than Game.width.
+    * @param {number} height - The rendered height of the layer, should never be wider than Game.height.
+    * @param {number|string} layer - The layer number, or if a string is given the layer name, within the map data that this TilemapLayer represents.
+    * @param {Phaser.Tileset|string} [tileset] - The Phaser.Tileset this layer will use for rendering. If none given it will render using rectangles.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
+    * @return {Phaser.TilemapLayer} The TilemapLayer object. This is an extension of Phaser.Sprite and can be moved around the display list accordingly.
     */
-    createTilemapLayer: function (x, y, renderWidth, renderHeight, tileset, layer, group) {
+    createLayer: function (x, y, width, height, layer, tileset, group) {
 
         if (typeof group === 'undefined') { group = this.game.world; }
 
-        return group.add(new Phaser.TilemapLayer(this.game, x, y, renderWidth, renderHeight, tileset, this, layer));
+        return group.add(new Phaser.TilemapLayer(this.game, x, y, width, height, this, layer, tileset));
+
+    },
+
+    /**
+    * Gets the layer index based on a layer name.
+    *
+    * @method Phaser.Tileset#getLayerIndex
+    * @param {string} name - The name of the layer to get.
+    * @return {number} The index of the layer in this tilemap, or null if not found.
+    */
+    getLayerIndex: function (name) {
+
+        for (var i = 0; i < this.layers.length; i++)
+        {
+            if (this.layers[i].name === name)
+            {
+                return i;
+            }
+        }
+
+        return null;
 
     },
 
@@ -222,9 +259,9 @@ Phaser.Tilemap.prototype = {
 
         // console.log(this.layers[layer].width, 'x', this.layers[layer].height);
 
-        for (var y = 0; y < this.layers[layer].height; y++)
+        for (var y = 0, h = this.layers[layer].height; y < h; y++)
         {
-            for (var x = 0; x < this.layers[layer].width; x++)
+            for (var x = 0, w = this.layers[layer].width; x < w; x++)
             {
                 var tile = this.layers[layer].data[y][x];
 
@@ -371,6 +408,7 @@ Phaser.Tilemap.prototype = {
         {
             this.layers[layer].data[y][x] = index;
 			this.layers[layer].dirty = true;
+            this.calculateFaces(layer);
         }
 
     },
@@ -437,6 +475,7 @@ Phaser.Tilemap.prototype = {
         {
             this.layers[layer].data[y][x] = index;
 			this.layers[layer].dirty = true;
+            this.calculateFaces(layer);
         }
 
     },
@@ -531,6 +570,8 @@ Phaser.Tilemap.prototype = {
         }
 
 		this.layers[layer].dirty = true;
+        this.calculateFaces(layer);
+
     },
 
     /**

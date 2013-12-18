@@ -5,28 +5,21 @@
 */
 
 /**
-* Create a new `Tile` object. Tiles live inside of Tilesets and are rendered via TilemapLayers.
+* Create a new `Tile` object.
 *
 * @class Phaser.Tile
-* @classdesc A Tile is a single representation of a tile within a Tilemap.
+* @classdesc A Tile is a representation of a single tile within the Tilemap.
 * @constructor
-* @param {Phaser.Tileset} tileset - The tileset this tile belongs to.
 * @param {number} index - The index of this tile type in the core map data.
 * @param {number} x - The x coordinate of this tile.
 * @param {number} y - The y coordinate of this tile.
 * @param {number} width - Width of the tile.
 * @param {number} height - Height of the tile.
 */
-// Phaser.Tile = function (tileset, index, x, y, width, height) {
 Phaser.Tile = function (index, x, y, width, height) {
 
     /**
-    * @property {Phaser.Tileset} tileset - The tileset this tile belongs to.
-    */
-    // this.tileset = tileset;
-    
-    /**
-    * @property {number} index - The index of this tile within the tileset.
+    * @property {number} index - The index of this tile within the map.
     */
     this.index = index;
     
@@ -55,24 +48,35 @@ Phaser.Tile = function (index, x, y, width, height) {
     */
     this.alpha = 1;
 
-    //  Any extra meta data info we need here
+    /**
+    * @property {object} properties - Tile specific properties.
+    */
+    this.properties = {};
 
     /**
-    * @property {number} mass - The virtual mass of the tile.
-    * @default
+    * @property {boolean} faceTop - Is the top of this tile an interesting edge?
     */
-    // this.mass = 1.0;
-
-
-    //  Keep track of our interesting faces
     this.faceTop = false;
+
+    /**
+    * @property {boolean} faceBottom - Is the bottom of this tile an interesting edge?
+    */
     this.faceBottom = false;
+
+    /**
+    * @property {boolean} faceLeft - Is the left of this tile an interesting edge?
+    */
     this.faceLeft = false;
+
+    /**
+    * @property {boolean} faceRight - Is the right of this tile an interesting edge?
+    */
     this.faceRight = false;
 
+    /**
+    * @property {boolean} collides - Does this tile collide at all?
+    */
     this.collides = false;
-
-
 
     /**
     * @property {boolean} collideNone - Indicating this Tile doesn't collide at all.
@@ -152,7 +156,9 @@ Phaser.Tile.prototype = {
     */
     destroy: function () {
 
-        this.tileset = null;
+        this.collisionCallback = null;
+        this.collisionCallbackContext = null;
+        this.properties = null;
         
     },
 

@@ -93,7 +93,7 @@ Phaser.GameObjectFactory.prototype = {
     * A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
     *
     * @method Phaser.GameObjectFactory#group
-    * @param {*} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
+    * @param {any} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
     * @param {string} [name='group'] - A name for this Group. Not used internally but useful for debugging.
     * @return {Phaser.Group} The newly created group.
     */
@@ -104,7 +104,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Creates a new instance of the Sound class.
+    * Creates a new Sound object.
     *
     * @method Phaser.GameObjectFactory#audio
     * @param {string} key - The Game.cache key of the sound that this object will use.
@@ -120,7 +120,23 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Creates a new <code>TileSprite</code>.
+    * Creates a new Sound object.
+    *
+    * @method Phaser.GameObjectFactory#sound
+    * @param {string} key - The Game.cache key of the sound that this object will use.
+    * @param {number} [volume=1] - The volume at which the sound will be played.
+    * @param {boolean} [loop=false] - Whether or not the sound will loop.
+    * @param {boolean} [connect=true] - Controls if the created Sound object will connect to the master gainNode of the SoundManager when running under WebAudio.
+    * @return {Phaser.Sound} The newly created text object.
+    */
+    sound: function (key, volume, loop, connect) {
+
+        return this.game.sound.add(key, volume, loop, connect);
+        
+    },
+
+    /**
+    * Creates a new TileSprite object.
     *
     * @method Phaser.GameObjectFactory#tileSprite
     * @param {number} x - X position of the new tileSprite.
@@ -141,7 +157,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Creates a new <code>Text</code>.
+    * Creates a new Text object.
     *
     * @method Phaser.GameObjectFactory#text
     * @param {number} x - X position of the new text object.
@@ -160,7 +176,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Creates a new <code>Button</code> object.
+    * Creates a new Button object.
     *
     * @method Phaser.GameObjectFactory#button
     * @param {number} [x] X position of the new button object.
@@ -183,7 +199,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Creates a new <code>Graphics</code> object.
+    * Creates a new Graphics object.
     *
     * @method Phaser.GameObjectFactory#graphics
     * @param {number} x - X position of the new graphics object.
@@ -217,7 +233,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * * Create a new <code>BitmapText</code>.
+    * * Create a new BitmapText object.
     *
     * @method Phaser.GameObjectFactory#bitmapText
     * @param {number} x - X position of the new bitmapText object.
@@ -239,47 +255,13 @@ Phaser.GameObjectFactory.prototype = {
     * Creates a new Tilemap object.
     *
     * @method Phaser.GameObjectFactory#tilemap
-    * @param {string} key - Asset key for the JSON file.
+    * @param {string} key - Asset key for the JSON or CSV map data in the cache.
+    * @param {object|string} tilesets - An object mapping Cache.tileset keys with the tileset names in the JSON file. If a string is provided that will be used.
     * @return {Phaser.Tilemap} The newly created tilemap object.
     */
-    tilemap: function (key) {
+    tilemap: function (key, tilesets) {
 
-        return new Phaser.Tilemap(this.game, key);
-
-    },
-
-    /**
-    * Creates a new Tileset object.
-    *
-    * @method Phaser.GameObjectFactory#tileset
-    * @param {string} key - The image key as defined in the Game.Cache to use as the tileset.
-    * @return {Phaser.Tileset} The newly created tileset object.
-    */
-    tileset: function (key) {
-
-        return this.game.cache.getTileset(key);
-
-    },
-
-    /**
-    * Creates a new Tilemap Layer object. By default TilemapLayers are fixed to the camera.
-    *
-    * @method Phaser.GameObjectFactory#tilemapLayer
-    * @param {number} x - X position of the new tilemapLayer.
-    * @param {number} y - Y position of the new tilemapLayer.
-    * @param {number} width - the width of the tilemapLayer.
-    * @param {number} height - the height of the tilemapLayer.
-    * @param {Phaser.Tileset|string} tileset - The tile set used for rendering.
-    * @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
-    * @param {number|string} [layer=0] - The layer within the tilemap this TilemapLayer represents.
-    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
-    * @return {Phaser.TilemapLayer} The newly created tilemaplayer object.
-    */
-    tilemapLayer: function (x, y, width, height, tileset, tilemap, layer, group) {
-
-        if (typeof group === 'undefined') { group = this.world; }
-
-        return group.add(new Phaser.TilemapLayer(this.game, x, y, width, height, tileset, tilemap, layer));
+        return new Phaser.Tilemap(this.game, key, tilesets);
 
     },
 
@@ -303,7 +285,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
+    * Experimental: A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
     *
     * @method Phaser.GameObjectFactory#bitmapData
     * @param {number} [width=256] - The width of the BitmapData in pixels.

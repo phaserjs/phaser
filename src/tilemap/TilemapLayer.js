@@ -14,11 +14,11 @@
 * @param {number} y - The y coordinate of this layer.
 * @param {number} renderWidth - Width of the renderable area of the layer.
 * @param {number} renderHeight - Height of the renderable area of the layer.
-* @param {Phaser.Tileset|string} tileset - The tile set used for rendering.
 * @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
-* @param {number|string} [layer=0] - The layer within the tilemap this TilemapLayer represents.
+* @param {number|string} layer - The layer within the tilemap this TilemapLayer represents.
+* @param {Phaser.Tileset|string} [tileset] - The Tileset used for rendering. If none given the tiles are drawn as rectangles.
 */
-Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, tilemap, layer) {
+Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tilemap, layer, tileset) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
@@ -96,6 +96,12 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     this.tileSpacing = 0;
 
     /**
+    * @property {string} tileColor - If no tile set is given the tiles will be rendered as rectangles in this color. Provide in hex or rgb/rgba string format.
+    * @default
+    */
+    this.tileColor = 'rgb(255, 255, 255)';
+
+    /**
     * @property {boolean} debug - If set to true the collideable tile edges path will be rendered.
     * @default
     */
@@ -106,6 +112,24 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     * @default
     */
     this.debugAlpha = 0.5;
+
+    /**
+    * @property {string} debugColor - If debug is true this is the color used to outline the edges of collidable tiles. Provide in hex or rgb/rgba string format.
+    * @default
+    */
+    this.debugColor = 'rgba(0, 255, 0, 1)';
+
+    /**
+    * @property {boolean} debugFill - If true the debug tiles are filled with debugFillColor AND stroked around.
+    * @default
+    */
+    this.debugFill = false;
+
+    /**
+    * @property {string} debugFillColor - If debugFill is true this is the color used to fill the tiles. Provide in hex or rgb/rgba string format.
+    * @default
+    */
+    this.debugFillColor = 'rgba(0, 255, 0, 0.2)';
 
     /**
     * @property {number} widthInPixels - Do NOT recommend changing after the map is loaded!
@@ -128,6 +152,42 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     * @property {number} renderHeight - The height of the area being rendered.
     */
     this.renderHeight = renderHeight;
+
+    /**
+    * @property {number} scrollFactorX - speed at which this layer scrolls
+    * horizontally, relative to the camera (e.g. scrollFactorX of 0.5 scrolls
+    * half as quickly as the 'normal' camera-locked layers do)
+    * @default 1
+    */
+    this.scrollFactorX = 1;
+
+    /**
+    * @property {number} scrollFactorY - speed at which this layer scrolls
+    * vertically, relative to the camera (e.g. scrollFactorY of 0.5 scrolls
+    * half as quickly as the 'normal' camera-locked layers do)
+    * @default 1
+    */
+    this.scrollFactorY = 1;
+
+    /**
+    * @property {Phaser.Tilemap} tilemap - The Tilemap to which this layer is bound.
+    */
+    this.tilemap = tilemap;
+
+    /**
+    * @property {object} layer - The layer object within the Tilemap that this layer represents.
+    */
+    this.layer = null;
+
+    /**
+    * @property {number} index - The index of this layer within the Tilemap.
+    */
+    this.index = 0;
+
+    /**
+    * @property {boolean} dirty - Flag controlling when to re-render the layer.
+    */
+    this.dirty = true;
 
     /**
     * @property {number} _ga - Local render loop var to help avoid gc spikes.
@@ -243,50 +303,11 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, 
     */
     this._prevY = 0;
 
-    /**
-    * @property {number} scrollFactorX - speed at which this layer scrolls
-    * horizontally, relative to the camera (e.g. scrollFactorX of 0.5 scrolls
-    * half as quickly as the 'normal' camera-locked layers do)
-    * @default 1
-    */
-    this.scrollFactorX = 1;
-
-    /**
-    * @property {number} scrollFactorY - speed at which this layer scrolls
-    * vertically, relative to the camera (e.g. scrollFactorY of 0.5 scrolls
-    * half as quickly as the 'normal' camera-locked layers do)
-    * @default 1
-    */
-    this.scrollFactorY = 1;
-
-    /**
-    * @property {Phaser.Tilemap} tilemap - The Tilemap to which this layer is bound.
-    */
-    this.tilemap = null;
-
-    /**
-    * @property {object} layer - The layer object within the Tilemap that this layer represents.
-    */
-    this.layer = null;
-
-    /**
-    * @property {number} index - The index of this layer within the Tilemap.
-    */
-    this.index = 0;
-
-    /**
-    * @property {boolean} dirty - Flag controlling when to re-render the layer.
-    */
-    this.dirty = true;
+    this.updateMapData(layer);
 
     if (tileset instanceof Phaser.Tileset || typeof tileset === 'string')
     {
         this.updateTileset(tileset);
-    }
-
-    if (tilemap instanceof Phaser.Tilemap)
-    {
-        this.updateMapData(tilemap, layer);
     }
 
 };
@@ -340,7 +361,7 @@ Phaser.TilemapLayer.prototype.updateTileset = function (tileset) {
     }
     else if (typeof tileset === 'string')
     {
-        this.tileset = this.game.cache.getTileset('tiles');
+        this.tileset = this.game.cache.getTileset(tileset);
     }
     else
     {
@@ -352,6 +373,8 @@ Phaser.TilemapLayer.prototype.updateTileset = function (tileset) {
     this.tileMargin = this.tileset.tileMargin;
     this.tileSpacing = this.tileset.tileSpacing;
 
+    //  Need to work out the firstgid
+
     this.updateMax();
 
 }
@@ -361,26 +384,21 @@ Phaser.TilemapLayer.prototype.updateTileset = function (tileset) {
 *
 * @method Phaser.TilemapLayer#updateMapData
 * @memberof Phaser.TilemapLayer
-* @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
-* @param {number} layer - The layer index within the map.
+* @param {number} layerIndex - The layer index within the map.
 */
-Phaser.TilemapLayer.prototype.updateMapData = function (tilemap, layer) {
+Phaser.TilemapLayer.prototype.updateMapData = function (layerIndex) {
 
-    if (tilemap instanceof Phaser.Tilemap)
+    if (typeof layerIndex === 'string')
     {
-        if (typeof layer === 'undefined')
-        {
-            layer = 0;
-        }
-
-        this.tilemap = tilemap;
-        this.layer = this.tilemap.layers[layer];
-        this.tileWidth = this.layer.tileWidth;
-        this.tileHeight = this.layer.tileHeight;
-        this.index = layer;
-        this.updateMax();
-		this.tilemap.layers[layer].dirty = true;
+        layerIndex = tilemap.getLayerIndex(layerIndex);
     }
+
+    this.layer = this.tilemap.layers[layerIndex];
+    this.tileWidth = this.layer.tileWidth;
+    this.tileHeight = this.layer.tileHeight;
+    this.index = layerIndex;
+    this.updateMax();
+	this.tilemap.layers[layerIndex].dirty = true;
 
 }
 
@@ -818,6 +836,11 @@ Phaser.TilemapLayer.prototype.render = function () {
         this.context.globalAlpha = this.debugAlpha;
     }
 
+    if (!this.tileset)
+    {
+        this.context.fillStyle = this.tileColor;
+    }
+
     for (var y = this._startY, lenY = this._startY + this._maxY; y < lenY; y++)
     {
         this._column = this.layer.data[y];
@@ -839,6 +862,10 @@ Phaser.TilemapLayer.prototype.render = function () {
                     this.tileWidth,
                     this.tileHeight
                 );
+            }
+            else if (tile)
+            {
+                this.context.fillRect(Math.floor(this._tx), Math.floor(this._ty), this.tileWidth, this.tileHeight);
             }
 
             this._tx += this.tileWidth;
@@ -873,13 +900,18 @@ Phaser.TilemapLayer.prototype.render = function () {
 
 }
 
+/**
+* Renders a collision debug overlay on-top of the canvas. Called automatically by render when debug = true.
+* @method Phaser.TilemapLayer#renderDebug
+* @memberof Phaser.TilemapLayer
+*/
 Phaser.TilemapLayer.prototype.renderDebug = function () {
 
     this._tx = this._dx;
     this._ty = this._dy;
 
-    this.context.fillStyle = 'rgba(0, 255, 0, 0.3)';
-    this.context.strokeStyle = 'rgb(0, 255, 0)';
+    this.context.strokeStyle = this.debugColor;
+    this.context.fillStyle = this.debugFillColor;
 
     for (var y = this._startY, lenY = this._startY + this._maxY; y < lenY; y++)
     {
@@ -893,7 +925,10 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
             {
                 this._tx = Math.floor(this._tx);
 
-                // this.context.fillRect(this._tx, this._ty, this.tileWidth, this.tileHeight);
+                if (this.debugFill)
+                {
+                    this.context.fillRect(this._tx, this._ty, this.tileWidth, this.tileHeight);
+                }
 
                 this.context.beginPath();
 
@@ -922,7 +957,6 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
                 }
 
                 this.context.stroke();
-                // this.context.strokeRect(this._tx, this._ty, this.tileWidth, this.tileHeight);
             }
 
             this._tx += this.tileWidth;

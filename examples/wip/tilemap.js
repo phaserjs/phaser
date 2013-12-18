@@ -24,7 +24,7 @@ var sprite;
 
 function create() {
 
-    map = game.add.tilemap('map');
+    map = game.add.tilemap('map', 'tiles');
 
     map.setCollisionByIndex(15);
     map.setCollisionByIndex(40);
@@ -32,13 +32,8 @@ function create() {
     map.setCollisionByIndexRange(20, 25);
     map.setCollisionByIndexRange(27, 29);
 
-
-
-    // Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tileset, tilemap, layer) {
-    //  Need to get the x,y values working (adjust cameraOffset values)
-    layer = game.add.tilemapLayer(0, 0, 800, 600, 'tiles', map, 0);
+    layer = map.createLayer(0, 0, 800, 600, 'ShoeBox Tile Grab');
     layer.debug = true;
-    layer.debugAlpha = 0.3;
 
 
 

@@ -133,26 +133,18 @@ Phaser.TilemapParser = {
     */
     parseTiledJSON: function (json) {
 
-        //  Let's work out which tilesets are in here
-        var tilesets = [];
+        //  Map data will consist of: layers, objects, images, tilesets
+        var map = {};
 
-        for (var i = 0; i < json.tilesets.length; i++)
-        {
-            tilesets.push(json.tilesets[i].firstgid);
-        }
-
+        //  Tile Layers
         var layers = [];
 
         for (var i = 0; i < json.layers.length; i++)
         {
-            //  Check it's a data layer
-            if (!json.layers[i].data)
+            if (json.layers[i].type !== 'tilelayer')
             {
                 continue;
             }
-
-            //  json.tilewidth
-            //  json.tileheight
 
             var layer = {
 
@@ -168,10 +160,6 @@ Phaser.TilemapParser = {
                 tileHeight: json.tileheight,
 
                 indexes: [],
-
-                //  tileset specific
-                // tileMargin: json.tilesets[0].margin,
-                // tileSpacing: json.tilesets[0].spacing
 
             };
 
@@ -190,7 +178,7 @@ Phaser.TilemapParser = {
             //  If the map contains multiple tilesets then the indexes are relative to that which the set starts from
             //  Need to set which tileset in the cache = which tileset in the JSON, if you do this manually it means you can use the same map data but a new tileset.
 
-            for (var t = 0; t < json.layers[i].data.length; t++)
+            for (var t = 0, len = json.layers[i].data.length; t < len; t++)
             {
                 //  index, x, y, width, height
                 if (json.layers[i].data[t] > 0)
@@ -210,36 +198,120 @@ Phaser.TilemapParser = {
                     x = 0;
                     row = [];
                 }
-
-
-                /*
-                if (c === 0)
-                {
-                    row = [];
-                }
-
-                row.push(json.layers[i].data[t]);
-
-                c++;
-
-                if (c == json.layers[i].width)
-                {
-                    output.push(row);
-                    c = 0;
-                }
-                */
             }
 
             layer.data = output;
 
-            //  Build collision map
-            // console.log(output);
-            
             layers.push(layer);
 
         }
 
-        return layers;
+        map.layers = layers;
+
+        //  Images
+        var images = [];
+
+        for (var i = 0; i < json.layers.length; i++)
+        {
+            if (json.layers[i].type !== 'imagelayer')
+            {
+                continue;
+            }
+
+            var image = {
+
+                name: json.layers[i].name,
+                image: json.layers[i].image,
+                x: json.layers[i].x,
+                y: json.layers[i].y,
+                alpha: json.layers[i].opacity,
+                visible: json.layers[i].visible,
+                properties: {}
+
+            };
+
+            if (json.layers[i].properties)
+            {
+                image.properties = json.layers[i].properties;
+            }
+
+            images.push(image);
+
+        }
+
+        map.images = images;
+
+        //  Objects
+        var objects = [];
+
+        for (var i = 0; i < json.layers.length; i++)
+        {
+            if (json.layers[i].type !== 'objectgroup')
+            {
+                continue;
+            }
+
+            for (var v = 0; v < json.layers[i].objects.length; v++)
+            {
+                //  For now we'll just support object tiles
+                if (json.layers[i].objects[v].gid)
+                {
+                    var object = {
+
+                        gid: json.layers[i].objects[v].gid,
+                        name: json.layers[i].objects[v].name,
+                        x: json.layers[i].objects[v].x,
+                        y: json.layers[i].objects[v].y,
+                        visible: json.layers[i].objects[v].visible,
+                        properties: json.layers[i].objects[v].properties
+
+                    };
+        
+                    objects.push(object);
+                }
+
+            }
+        }
+
+        map.objects = objects;
+
+        //  Tilesets
+        var tilesets = [];
+
+/*
+        {
+         "firstgid":1,
+         "image":"ground_1x1.png",
+         "imageheight":32,
+         "imagewidth":800,
+         "margin":0,
+         "name":"ground_1x1",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tileheight":32,
+         "tileproperties":
+            {
+             "1":
+                {
+                 "bounce":"1"
+                }
+            },
+         "tilewidth":32
+        }, 
+
+*/
+
+        for (var i = 0; i < json.tilesets.length; i++)
+        {
+        }
+
+        //  Lets build our super tileset index
+        map.tilesets = tilesets;
+
+        return map;
 
     }
 

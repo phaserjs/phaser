@@ -47,6 +47,7 @@ Version 1.1.4 - "Kandor" - In development
 Significant API changes:
 
 * Loader.tileset has a new method signature. Please use the new format: load.tileset(key, url, tileWidth, tileHeight, tileMargin, tileSpacing, rows, columns, total).
+* TilemapLayers are now created via the Tilemap object itself: map.createLayer(x, y, width, height, tileset, layer, group) and no longer via the GameObjectFactory.
 
 
 New features:
@@ -56,6 +57,7 @@ New features:
 * Added Device.vibration to check if the Vibration API is available or not.
 * Added Device.trident and Device.tridentVersion for testing IE11.
 * Added Device.silk for detecting a Kindle Fire and updated desktop OS check to exclude Kindles (thanks LuckieLordie)
+* TilemapLayers now have debug and debugAlpha values, this turns on the drawing of the collision edges (very handy for debugging, as the name implies!)
 
 
 New Examples:
