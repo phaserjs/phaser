@@ -58,6 +58,7 @@ New features:
 * Added Device.trident and Device.tridentVersion for testing IE11.
 * Added Device.silk for detecting a Kindle Fire and updated desktop OS check to exclude Kindles (thanks LuckieLordie)
 * TilemapLayers now have debug and debugAlpha values, this turns on the drawing of the collision edges (very handy for debugging, as the name implies!)
+* Tweens have a new event: onLoop.
 
 
 New Examples:
@@ -69,6 +70,8 @@ New Examples:
 * Physics - Snake (use the keyboard to control the snake like creature) by Patrick OReilly and Richard Davey.
 * Added touch joystick example showing how to use the clay.io virtual game controller (thanks gabehollombe)
 * Games - Matching Pairs by Patrick OReilly.
+* Tweens - Example showing how to use the tween events, onStart, onLoop and onComplete.
+
 
 Updates:
 
@@ -86,6 +89,8 @@ Updates:
 * Group.countLiving and countDead used to return -1 if the Group was empty, but now return 0.
 * Text can now be fixedToCamera, updated world/fixed to camera example to show this.
 * ArcadePhysics.overlap and collide now recognise TileSprites in the collision checks.
+* Lots of documentation fixes in the Tween class.
+* Tweens fire an onLoop event if they are set to repeat. onComplete is now only fired for the final repeat (or never if the repeat is infinite)
 
 
 Bug Fixes:
@@ -98,6 +103,7 @@ Bug Fixes:
 * Switch Camera.setBoundsToWorld to match world.bounds instead of world (thanks cocoademon)
 * Fixed an issue where passing null as the Group parent wouldn't set it to game.world as it should have (thanks tito100)
 * Fixed Pixi bug (#425) incorrect width property for multi-line BitmapText (thanks jcd-as)
+* Tween.onStart is now called when the tween starts AFTER the delay value, if given (thanks stevenbouma)
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md

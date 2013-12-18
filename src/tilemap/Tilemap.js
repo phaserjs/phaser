@@ -89,7 +89,41 @@ Phaser.Tilemap.prototype = {
 
     addTilesets: function (tilesets) {
 
+        //  { "TiledKey": "TilesetKey" }
+
         //  parse the tilesets array and set-up gid mappings
+
+// "tilesets":[
+//         {
+//          "firstgid":1,
+//          "image":"SuperMarioBros-World1-1_bank.png",
+//          "imageheight":64,
+//          "imagewidth":176,
+//          "margin":0,
+//          "name":"SuperMarioBros-World1-1_bank.png",
+//          "properties":
+//             {
+
+//             },
+//          "spacing":0,
+//          "tileheight":16,
+//          "tilewidth":16
+//         }],
+
+        //this.layers = this.game.cache.getTilemapData(key).layers;
+
+        var mapTilesets = this.game.cache.getTilemapData(this.key).tilesets;
+
+        for (var tileset in tilesets)
+        {
+            for (var i = 0; i < mapTilesets.length; i++)
+            {
+                if (mapTilesets[i].name === tilesets[tileset])
+                {
+
+                }
+            }
+        }
 
 
     },

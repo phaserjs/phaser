@@ -741,6 +741,10 @@
       "title": "pause tween"
     },
     {
+      "file": "tween+loop+event.js",
+      "title": "tween loop event"
+    },
+    {
       "file": "tween+several+properties.js",
       "title": "tween several properties"
     }

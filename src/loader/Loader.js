@@ -941,7 +941,6 @@ Phaser.Loader.prototype = {
             console.warn('Phaser.Loader fileComplete invalid index ' + index);
             return;
         }
-        
 
         var file = this._fileList[index];
         file.loaded = true;
