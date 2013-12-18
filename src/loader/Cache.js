@@ -179,14 +179,12 @@ Phaser.Cache.prototype = {
     * @method Phaser.Cache#addTilemap
     * @param {string} key - The unique key by which you will reference this object.
     * @param {string} url - URL of the tilemap image.
-    * @param {object} mapData - The tilemap data object.
+    * @param {object} mapData - The tilemap data object (either a CSV or JSON file).
     * @param {number} format - The format of the tilemap data.
     */
     addTilemap: function (key, url, mapData, format) {
 
         this._tilemaps[key] = { url: url, data: mapData, format: format };
-
-        this._tilemaps[key].layers = Phaser.TilemapParser.parse(this.game, mapData, format);
 
     },
 

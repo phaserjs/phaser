@@ -22,26 +22,36 @@ Phaser.Tilemap = function (game, key, tilesets) {
     this.game = game;
 
     /**
+    * @property {string} key - The key of this map data in the Phaser.Cache.
+    */
+    this.key = key;
+
+    var data = Phaser.TilemapParser.parse(this.game, key);
+
+    /**
     * @property {array} layers - An array of Tilemap layer data.
     */
-    this.layers = [];
+    this.layers = data.layers;
 
-    if (typeof key === 'string')
-    {
-        this.key = key;
+    /**
+    * @property {array} tilesets - An array of Tilesets.
+    */
+    this.tilesets = data.tilesets;
 
-        this.layers = game.cache.getTilemapData(key).layers;
-    }
+    /**
+    * @property {array} objects - An array of Tiled Object Layers.
+    */
+    this.objects = data.objects;
+
+    /**
+    * @property {array} images - An array of Tiled Image Layers.
+    */
+    this.images = data.images;
 
     /**
     * @property {number} currentLayer - The current layer.
     */
     this.currentLayer = 0;
-
-    /**
-    * @property {array} tilesets - An array of Tilesets.
-    */
-    this.tilesets = [];
 
     /**
     * @property {array} debugMap - Map data used for debug values only.
@@ -66,11 +76,6 @@ Phaser.Tilemap = function (game, key, tilesets) {
     */
     this._tempB = 0;
 
-    if (this.layers.length > 0)
-    {
-        this.addTilesets(tilesets);
-    }
-
 };
 
 /**
@@ -86,6 +91,8 @@ Phaser.Tilemap.CSV = 0;
 Phaser.Tilemap.TILED_JSON = 1;
 
 Phaser.Tilemap.prototype = {
+
+
 
     addTilesets: function (tilesets) {
 
@@ -127,7 +134,6 @@ Phaser.Tilemap.prototype = {
 
 
     },
-
 
     /**
     * Creates an empty map of the given dimensions.

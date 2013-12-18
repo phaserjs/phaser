@@ -10,8 +10,7 @@
 *
 * @class Phaser.Tileset
 * @constructor
-* @param {Image} image - The Image object from the Cache.
-* @param {string} key - The key of the tileset in the cache.
+* @param {string} name - The name of the tileset in the map data.
 * @param {number} tileWidth - Width of each tile in pixels.
 * @param {number} tileHeight - Height of each tile in pixels.
 * @param {number} tileMargin - The amount of margin around the tilesheet.
@@ -20,65 +19,82 @@
 * @param {number} columns - How many tiles are placed vertically in each column.
 * @param {number} total - The maximum number of tiles to extract from the image.
 */
-Phaser.Tileset = function (image, key, tileWidth, tileHeight, tileMargin, tileSpacing, rows, columns, total) {
+Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, properties) {
 
     /**
-    * @property {string} key - The cache ID.
+    * @property {string} name - The name of the Tileset.
     */
-    this.key = key;
-
-    /**
-    * @property {object} image - The image used for rendering.
-    */
-    this.image = image;
-
-    /**
-    * @property {number} rows - The number of rows in the tile sheet.
-    */
-    this.rows = rows;
-
-    /**
-    * @property {number} columns - The number of columns in the tile sheet.
-    */
-    this.columns = columns;
-
-    /**
-    * @property {number} total - The total number of tiles in the tilesheet.
-    */
-    this.total = total;
+    this.name = name;
 
     /**
     * @property {number} firstgid - The Tiled firstgid value.
     * @default
     */
-    this.firstgid = 1;
+    this.firstgid = firstgid;
 
     /**
     * @property {number} tileWidth - The width of a tile in pixels.
     */
-    this.tileWidth = tileWidth;
+    this.tileWidth = width;
 
     /**
     * @property {number} tileHeight - The height of a tile in pixels.
     */
-    this.tileHeight = tileHeight;
+    this.tileHeight = height;
 
     /**
     * @property {number} tileMargin - The margin around the tiles in the sheet.
     */
-    this.tileMargin = tileMargin;
+    this.tileMargin = margin;
 
     /**
     * @property {number} tileSpacing - The margin around the tiles in the sheet.
     */
-    this.tileSpacing = tileSpacing;
+    this.tileSpacing = spacing;
+
+    /**
+    * @property {object} properties - Tileset specific properties (typically defined in the Tiled editor).
+    */
+    this.properties = properties;
+
+    /**
+    * @property {object} tilePproperties - Tile specific properties (typically defined in the Tiled editor).
+    */
+    this.tileProperties = {};
+
+    /**
+    * @property {string} key - The cache ID.
+    */
+    // this.key = key;
+
+    /**
+    * @property {object} image - The image used for rendering.
+    */
+    this.image = null;
+
+    /**
+    * @property {number} rows - The number of rows in the tile sheet.
+    */
+    this.rows = 0;
+
+    /**
+    * @property {number} columns - The number of columns in the tile sheet.
+    */
+    this.columns = 0;
+
+    /**
+    * @property {number} total - The total number of tiles in the tilesheet.
+    */
+    this.total = 0;
 
     /**
     * @property {array} tiles - An array of the tile data.
     */
-    this.tiles = [];
+    // this.tiles = [];
 
-    this.build();
+    // this.build();
+
+
 
 }
 

@@ -91,6 +91,7 @@ Updates:
 * ArcadePhysics.overlap and collide now recognise TileSprites in the collision checks.
 * Lots of documentation fixes in the Tween class.
 * Tweens fire an onLoop event if they are set to repeat. onComplete is now only fired for the final repeat (or never if the repeat is infinite)
+* Pointer used to un-pause a paused game every time it was clicked/touched (this avoided some rogue browser plugins). Now only happens if Stage.disableVisibilityChange is true.
 
 
 Bug Fixes:

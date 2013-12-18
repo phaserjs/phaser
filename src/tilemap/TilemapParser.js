@@ -69,19 +69,27 @@ Phaser.TilemapParser = {
     * Parse tileset data from the cache and creates a Tileset object.
     * @method Phaser.TilemapParser.parse
     * @param {Phaser.Game} game - Game reference to the currently running game.
-    * @param {object} data
-    * @param {string} format
-    * @return {Phaser.Tileset} Generated Tileset object.
+    * @param {string} key - The key of the tilemap in the Cache.
+    * @return {object} The parsed map object.
     */
-    parse: function (game, data, format) {
+    parse: function (game, key) {
 
-        if (format === Phaser.Tilemap.CSV)
+        var map = game.cache.getTilemapData(key);
+
+        if (map)
         {
-            return this.parseCSV(data);
+            if (map.format === Phaser.Tilemap.CSV)
+            {
+                return this.parseCSV(map.data);
+            }
+            else if (map.format === Phaser.Tilemap.TILED_JSON)
+            {
+                return this.parseTiledJSON(map.data);
+            }
         }
-        else if (format === Phaser.Tilemap.TILED_JSON)
+        else
         {
-            return this.parseTiledJSON(data);
+            return { layers: [], objects: [], images: [], tilesets: [] };
         }
 
     },
@@ -128,8 +136,8 @@ Phaser.TilemapParser = {
     /**
     * Parses a Tiled JSON file into valid map data.
     * @method Phaser.TilemapParser.parseJSON
-    * @param {object} json - The Tiled JSON data.
-    * @return {object} Generated map data.
+    * @param {object} json - The JSON map data.
+    * @return {object} Generated and parsed map data.
     */
     parseTiledJSON: function (json) {
 
@@ -278,6 +286,41 @@ Phaser.TilemapParser = {
         //  Tilesets
         var tilesets = [];
 
+
+/*
+        // for (var i = this.firstgid; i < this.firstgid + this.total; i++)
+        for (var i = 0; i < this.total; i++)
+        {
+            //  Can add extra properties here as needed
+            this.tiles[i] = [x, y];
+
+            x += this.tileWidth + this.tileSpacing;
+
+            count++;
+
+            if (count === this.total)
+            {
+                break;
+            }
+
+            countX++;
+
+            if (countX === this.rows)
+            {
+                x = this.tileMargin;
+                y += this.tileHeight + this.tileSpacing;
+
+                countX = 0;
+                countY++;
+
+                if (countY === this.columns)
+                {
+                    break;
+                }
+            }
+        }
+
+*/
 /*
         {
          "firstgid":1,
@@ -302,10 +345,34 @@ Phaser.TilemapParser = {
          "tilewidth":32
         }, 
 
+
+    Create 1 Tileset object that contains the above, but NOT the actual tile indexes
+    Put the tile indexes into a global array (tiles?) - just need x,y + img - a drawImage look-up table
+
 */
 
         for (var i = 0; i < json.tilesets.length; i++)
         {
+            //  name, firstgid, width, height, margin, spacing, properties
+            var set = json.tilesets[i];
+            var newSet = new Phaser.Tileset(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing, set.properties);
+
+            if (set.tileproperties)
+            {
+                newSet.tileProperties = set.tileproperties;
+            }
+
+            //  rows, columns, total
+            var rows = set.imageheight / set.tileheight;
+            var columns = set.imagewidth / set.tilewidth;
+            var total = rows * columns;
+
+            newSet.rows = rows;
+            newSet.columns = columns;
+            newSet.total = total;
+
+            tilesets.push(newSet);
+
         }
 
         //  Lets build our super tileset index
