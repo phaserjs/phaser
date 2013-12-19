@@ -11,13 +11,12 @@
 * @class Phaser.Tileset
 * @constructor
 * @param {string} name - The name of the tileset in the map data.
-* @param {number} tileWidth - Width of each tile in pixels.
-* @param {number} tileHeight - Height of each tile in pixels.
-* @param {number} tileMargin - The amount of margin around the tilesheet.
-* @param {number} tileSpacing - The amount of spacing between each tile in the sheet.
-* @param {number} rows - How many tiles are placed horizontally in each row.
-* @param {number} columns - How many tiles are placed vertically in each column.
-* @param {number} total - The maximum number of tiles to extract from the image.
+* @param {number} firstgid - The Tiled firstgid value.
+* @param {number} width - Width of each tile in pixels.
+* @param {number} height - Height of each tile in pixels.
+* @param {number} margin - The amount of margin around the tilesheet.
+* @param {number} spacing - The amount of spacing between each tile in the sheet.
+* @param {object} properties - Tileset properties.
 */
 Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, properties) {
 
@@ -63,11 +62,6 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     this.tileProperties = {};
 
     /**
-    * @property {string} key - The cache ID.
-    */
-    // this.key = key;
-
-    /**
     * @property {object} image - The image used for rendering.
     */
     this.image = null;
@@ -87,70 +81,9 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     */
     this.total = 0;
 
-    /**
-    * @property {array} tiles - An array of the tile data.
-    */
-    // this.tiles = [];
-
-    // this.build();
-
-
-
 }
 
 Phaser.Tileset.prototype = {
-
-    /**
-    * Builds the tileset data.
-    *
-    * @method Phaser.Tileset#build
-    */
-    build: function () {
-
-        var x = this.tileMargin;
-        var y = this.tileMargin;
-
-        var count = 0;
-        var countX = 0;
-        var countY = 0;
-
-        console.log('Building tileset', this.rows, 'x', this.columns, 'total', this.total);
-
-        // for (var i = this.firstgid; i < this.firstgid + this.total; i++)
-        for (var i = 0; i < this.total; i++)
-        {
-            //  Can add extra properties here as needed
-            this.tiles[i] = [x, y];
-
-            x += this.tileWidth + this.tileSpacing;
-
-            count++;
-
-            if (count === this.total)
-            {
-                break;
-            }
-
-            countX++;
-
-            if (countX === this.rows)
-            {
-                x = this.tileMargin;
-                y += this.tileHeight + this.tileSpacing;
-
-                countX = 0;
-                countY++;
-
-                if (countY === this.columns)
-                {
-                    break;
-                }
-            }
-        }
-
-        console.table(this.tiles);
-
-    },
 
     /**
     * Gets a Tile from this set.
@@ -206,24 +139,6 @@ Phaser.Tileset.prototype = {
     },
 
     /**
-    * Checks if the tile at the given index can collide.
-    *
-    * @method Phaser.Tileset#canCollide
-    * @param {number} index - The index of the tile within the set.
-    * @return {boolean} True or false depending on the tile collision or null if no tile was found at the given index.
-    canCollide: function (index) {
-
-        if (this.tiles[index])
-        {
-            return this.tiles[index].collideNone;
-        }
-
-        return null;
-
-    },
-    */
-
-    /**
     * Checks if the tile at the given index exists.
     *
     * @method Phaser.Tileset#checkTileIndex
@@ -234,61 +149,6 @@ Phaser.Tileset.prototype = {
 
         return (this.tiles[index]);
 
-    },
-
-    /**
-    * Sets collision values on a range of tiles in the set.
-    *
-    * @method Phaser.Tileset#setCollisionRange
-    * @param {number} start - The index to start setting the collision data on.
-    * @param {number} stop - The index to stop setting the collision data on.
-    * @param {boolean} left - Should the tile collide on the left?
-    * @param {boolean} right - Should the tile collide on the right?
-    * @param {boolean} up - Should the tile collide on the top?
-    * @param {boolean} down - Should the tile collide on the bottom?
-    setCollisionRange: function (start, stop, left, right, up, down) {
-
-        if (this.tiles[start] && this.tiles[stop] && start < stop)
-        {
-            for (var i = start; i <= stop; i++)
-            {
-                this.tiles[i].setCollision(left, right, up, down);
-            }
-        }
-
-    },
-    */
-
-    /**
-    * Sets collision values on a tile in the set.
-    *
-    * @method Phaser.Tileset#setCollision
-    * @param {number} index - The index of the tile within the set.
-    * @param {boolean} left - Should the tile collide on the left?
-    * @param {boolean} right - Should the tile collide on the right?
-    * @param {boolean} up - Should the tile collide on the top?
-    * @param {boolean} down - Should the tile collide on the bottom?
-    setCollision: function (index, left, right, up, down) {
-
-        if (this.tiles[index])
-        {
-            this.tiles[index].setCollision(left, right, up, down);
-        }
-
     }
-    */
 
 }
-
-/**
-* @name Phaser.Tileset#total
-* @property {number} total - The total number of tiles in this Tileset.
-* @readonly
-*/
-Object.defineProperty(Phaser.Tileset.prototype, "XXXtotal", {
-
-    get: function () {
-        return this.tiles.length;
-    }
-
-});

@@ -10,25 +10,37 @@
 * @class Phaser.TilemapLayer
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
-* @param {number} x - The x coordinate of this layer.
-* @param {number} y - The y coordinate of this layer.
-* @param {number} renderWidth - Width of the renderable area of the layer.
-* @param {number} renderHeight - Height of the renderable area of the layer.
 * @param {Phaser.Tilemap} tilemap - The tilemap to which this layer belongs.
-* @param {number|string} layer - The layer within the tilemap this TilemapLayer represents.
-* @param {Phaser.Tileset|string} [tileset] - The Tileset used for rendering. If none given the tiles are drawn as rectangles.
+* @param {number} index - The layer index within the map that this TilemapLayer represents.
+* @param {number} width - Width of the renderable area of the layer.
+* @param {number} height - Height of the renderable area of the layer.
 */
-Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tilemap, layer, tileset) {
+Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
     this.game = game;
-    
+
+    /**
+    * @property {Phaser.Tilemap} map - The Tilemap to which this layer is bound.
+    */
+    this.map = tilemap;
+
+    /**
+    * @property {number} index - The index of this layer within the Tilemap.
+    */
+    this.index = index;
+
+    /**
+    * @property {object} layer - The layer object within the Tilemap that this layer represents.
+    */
+    this.layer = tilemap.layers[index];
+
     /**
     * @property {HTMLCanvasElement} canvas - The canvas to which this TilemapLayer draws.
     */
-    this.canvas = Phaser.Canvas.create(renderWidth, renderHeight);
+    this.canvas = Phaser.Canvas.create(width, height);
     
     /**
     * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
@@ -48,9 +60,14 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tilemap, 
     /**
     * @property {Phaser.Frame} textureFrame - Dimensions of the renderable area.
     */
-    this.textureFrame = new Phaser.Frame(0, 0, 0, renderWidth, renderHeight, 'tilemapLayer', game.rnd.uuid());
+    this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'tilemapLayer', game.rnd.uuid());
 
-    Phaser.Sprite.call(this, this.game, x, y, this.texture, this.textureFrame);
+    Phaser.Sprite.call(this, this.game, 0, 0, this.texture, this.textureFrame);
+
+    /**
+    * @property {string} name - The name of the layer.
+    */
+    this.name = '';
 
     /**
     * @property {number} type - The const type of this object.
@@ -68,32 +85,7 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tilemap, 
     /**
     * @property {Phaser.Point} cameraOffset - If this object is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.
     */
-    this.cameraOffset = new Phaser.Point(x, y);
-
-    /**
-    * @property {Phaser.Tileset} tileset - The tile set used for rendering.
-    */
-    this.tileset = null;
-
-    /**
-    * @property {number} tileWidth - The width of a single tile in pixels.
-    */
-    this.tileWidth = 0;
-
-    /**
-    * @property {number} tileHeight - The height of a single tile in pixels.
-    */
-    this.tileHeight = 0;
-
-    /**
-    * @property {number} tileMargin - The margin around the tiles.
-    */
-    this.tileMargin = 0;
-
-    /**
-    * @property {number} tileSpacing - The spacing around the tiles.
-    */
-    this.tileSpacing = 0;
+    this.cameraOffset = new Phaser.Point(0, 0);
 
     /**
     * @property {string} tileColor - If no tile set is given the tiles will be rendered as rectangles in this color. Provide in hex or rgb/rgba string format.
@@ -132,28 +124,6 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tilemap, 
     this.debugFillColor = 'rgba(0, 255, 0, 0.2)';
 
     /**
-    * @property {number} widthInPixels - Do NOT recommend changing after the map is loaded!
-    * @readonly
-    */
-    this.widthInPixels = 0;
-
-    /**
-    * @property {number} heightInPixels - Do NOT recommend changing after the map is loaded!
-    * @readonly
-    */
-    this.heightInPixels = 0;
-
-    /**
-    * @property {number} renderWidth - The width of the area being rendered.
-    */
-    this.renderWidth = renderWidth;
-
-    /**
-    * @property {number} renderHeight - The height of the area being rendered.
-    */
-    this.renderHeight = renderHeight;
-
-    /**
     * @property {number} scrollFactorX - speed at which this layer scrolls
     * horizontally, relative to the camera (e.g. scrollFactorX of 0.5 scrolls
     * half as quickly as the 'normal' camera-locked layers do)
@@ -170,24 +140,21 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tilemap, 
     this.scrollFactorY = 1;
 
     /**
-    * @property {Phaser.Tilemap} tilemap - The Tilemap to which this layer is bound.
-    */
-    this.tilemap = tilemap;
-
-    /**
-    * @property {object} layer - The layer object within the Tilemap that this layer represents.
-    */
-    this.layer = null;
-
-    /**
-    * @property {number} index - The index of this layer within the Tilemap.
-    */
-    this.index = 0;
-
-    /**
     * @property {boolean} dirty - Flag controlling when to re-render the layer.
     */
     this.dirty = true;
+
+    /**
+    * @property {number} _cw - Local collision var.
+    * @private 
+    */
+    this._cw = tilemap.tileWidth;
+
+    /**
+    * @property {number} _ch - Local collision var.
+    * @private 
+    */
+    this._ch = tilemap.tileHeight;
 
     /**
     * @property {number} _ga - Local render loop var to help avoid gc spikes.
@@ -303,12 +270,7 @@ Phaser.TilemapLayer = function (game, x, y, renderWidth, renderHeight, tilemap, 
     */
     this._prevY = 0;
 
-    this.updateMapData(layer);
-
-    if (tileset instanceof Phaser.Tileset || typeof tileset === 'string')
-    {
-        this.updateTileset(tileset);
-    }
+    this.updateMax();
 
 };
 
@@ -342,63 +304,7 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
 */
 Phaser.TilemapLayer.prototype.resizeWorld = function () {
 
-    this.game.world.setBounds(0, 0, this.widthInPixels, this.heightInPixels);
-
-}
-
-/**
-* Updates the Tileset data.
-*
-* @method Phaser.TilemapLayer#updateTileset
-* @memberof Phaser.TilemapLayer
-* @param {Phaser.Tileset|string} tileset - The tileset to use for this layer.
-*/
-Phaser.TilemapLayer.prototype.updateTileset = function (tileset) {
-
-    if (tileset instanceof Phaser.Tileset)
-    {
-        this.tileset = tileset;
-    }
-    else if (typeof tileset === 'string')
-    {
-        this.tileset = this.game.cache.getTileset(tileset);
-    }
-    else
-    {
-        return;
-    }
-
-    this.tileWidth = this.tileset.tileWidth;
-    this.tileHeight = this.tileset.tileHeight;
-    this.tileMargin = this.tileset.tileMargin;
-    this.tileSpacing = this.tileset.tileSpacing;
-
-    //  Need to work out the firstgid
-
-    this.updateMax();
-
-}
-
-/**
-* Updates the Tilemap data.
-*
-* @method Phaser.TilemapLayer#updateMapData
-* @memberof Phaser.TilemapLayer
-* @param {number} layerIndex - The layer index within the map.
-*/
-Phaser.TilemapLayer.prototype.updateMapData = function (layerIndex) {
-
-    if (typeof layerIndex === 'string')
-    {
-        layerIndex = tilemap.getLayerIndex(layerIndex);
-    }
-
-    this.layer = this.tilemap.layers[layerIndex];
-    this.tileWidth = this.layer.tileWidth;
-    this.tileHeight = this.layer.tileHeight;
-    this.index = layerIndex;
-    this.updateMax();
-	this.tilemap.layers[layerIndex].dirty = true;
+    this.game.world.setBounds(0, 0, this.layer.widthInPixels, this.layer.heightInPixels);
 
 }
 
@@ -501,9 +407,9 @@ Phaser.TilemapLayer.prototype._unfixY = function(y) {
 */
 Phaser.TilemapLayer.prototype.getTileX = function (x) {
 
-    var tileWidth = this.tileWidth * this.scale.x;
+    // var tileWidth = this.tileWidth * this.scale.x;
 
-    return this.game.math.snapToFloor(this._fixX(x), tileWidth) / tileWidth;
+    return this.game.math.snapToFloor(this._fixX(x), this.map.tileWidth) / this.map.tileWidth;
 
 }
 
@@ -516,9 +422,9 @@ Phaser.TilemapLayer.prototype.getTileX = function (x) {
 */
 Phaser.TilemapLayer.prototype.getTileY = function (y) {
 
-    var tileHeight = this.tileHeight * this.scale.y;
+    // var tileHeight = this.tileHeight * this.scale.y;
 
-    return this.game.math.snapToFloor(this._fixY(y), tileHeight) / tileHeight;
+    return this.game.math.snapToFloor(this._fixY(y), this.map.tileHeight) / this.map.tileHeight;
 
 }
 
@@ -528,7 +434,8 @@ Phaser.TilemapLayer.prototype.getTileY = function (y) {
 * @memberof Phaser.TilemapLayer
 * @param {number} x - X position of the point in target tile.
 * @param {number} y - Y position of the point in target tile.
-* @return {Phaser.Tile} The tile with specific properties.
+* @param {Phaser.Point|object} point - The Point object to set the x and y values on.
+* @return {Phaser.Point|object} A Point object with its x and y properties set.
 */
 Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
 
@@ -552,11 +459,6 @@ Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
 */
 Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides) {
 
-    if (this.tilemap === null)
-    {
-        return;
-    }
-
     //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
     if (typeof collides === 'undefined') { collides = false; }
 
@@ -564,32 +466,26 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     x = this._fixX(x);
     y = this._fixY(y);
 
-    if (width > this.widthInPixels)
+    if (width > this.layer.widthInPixels)
     {
-        width = this.widthInPixels;
+        width = this.layer.widthInPixels;
     }
 
-    if (height > this.heightInPixels)
+    if (height > this.layer.heightInPixels)
     {
-        height = this.heightInPixels;
+        height = this.layer.heightInPixels;
     }
-
-    var tileWidth = this.tileWidth * this.scale.x;
-    var tileHeight = this.tileHeight * this.scale.y;
 
     //  Convert the pixel values into tile coordinates
-    this._tx = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
-    this._ty = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
-    this._tw = (this.game.math.snapToCeil(width, tileWidth) + tileWidth) / tileWidth;
-    this._th = (this.game.math.snapToCeil(height, tileHeight) + tileHeight) / tileHeight;
+    this._tx = this.game.math.snapToFloor(x, this.map.tileWidth) / this.map.tileWidth;
+    this._ty = this.game.math.snapToFloor(y, this.map.tileHeight) / this.map.tileHeight;
+    this._tw = (this.game.math.snapToCeil(width, this.map.tileWidth) + this.map.tileWidth) / this.map.tileWidth;
+    this._th = (this.game.math.snapToCeil(height, this.map.tileHeight) + this.map.tileHeight) / this.map.tileHeight;
 
     //  This should apply the layer x/y here
     this._results.length = 0;
 
-    // var _index = 0;
     var _tile = null;
-    // var sx = 0;
-    // var sy = 0;
 
     for (var wy = this._ty; wy < this._ty + this._th; wy++)
     {
@@ -601,26 +497,21 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
         
                 if (_tile)
                 {
-                    // sx = this.tileWidth * this.scale.x;
-                    // sy = this.tileHeight * this.scale.y;
-
                     if (collides === false || (collides && _tile.collides))
                     {
                         // convert tile coordinates back to camera space for return
-                        var _wx = this._unfixX(wx * tileWidth) / this.tileWidth;
-                        var _wy = this._unfixY(wy * tileHeight) / this.tileHeight;
+                        var _wx = this._unfixX(wx * this.map.tileWidth) / this.map.tileWidth;
+                        var _wy = this._unfixY(wy * this.map.tileHeight) / this.map.tileHeight;
 
                         this._results.push({ 
-                            x: _wx * tileWidth, 
-                            y: _wy * tileHeight, 
-                            right: (_wx * tileWidth) + tileWidth, 
-                            bottom: (_wy * tileHeight) + tileHeight, 
+                            x: _wx * this.map.tileWidth, 
+                            y: _wy * this.map.tileHeight, 
+                            right: (_wx * this.map.tileWidth) + this.map.tileWidth, 
+                            bottom: (_wy * this.map.tileHeight) + this.map.tileHeight, 
                             tile: _tile 
                         });
                     }
-
                 }
-
             }
         }
     }
@@ -640,7 +531,6 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
 * @param {number} height - Height of the area to get.
 * @param {boolean} [collides=false] - If true only return tiles that collide on one or more faces.
 * @return {array} Array with tiles informations (each contains x, y, and the tile).
-*/
 Phaser.TilemapLayer.prototype.debugGetTiles = function (x, y, width, height, collides) {
 
     if (this.tilemap === null)
@@ -770,6 +660,7 @@ Phaser.TilemapLayer.prototype.debugGetTiles = function (x, y, width, height, col
     return this._results;
 
 }
+*/
 
 /**
 * Internal function to update maximum values.
@@ -778,8 +669,8 @@ Phaser.TilemapLayer.prototype.debugGetTiles = function (x, y, width, height, col
 */
 Phaser.TilemapLayer.prototype.updateMax = function () {
 
-    this._maxX = this.game.math.ceil(this.canvas.width / this.tileWidth) + 1;
-    this._maxY = this.game.math.ceil(this.canvas.height / this.tileHeight) + 1;
+    this._maxX = this.game.math.ceil(this.canvas.width / this.map.tileWidth) + 1;
+    this._maxY = this.game.math.ceil(this.canvas.height / this.map.tileHeight) + 1;
 
     if (this.layer)
     {
@@ -792,14 +683,11 @@ Phaser.TilemapLayer.prototype.updateMax = function () {
         {
             this._maxY = this.layer.height;
         }
-
-        this.widthInPixels = this.layer.width * this.tileWidth;
-        this.heightInPixels = this.layer.height * this.tileHeight;
     }
 
     this.dirty = true;
 
-    // console.log('updateMax', this._maxX, this._maxY, 'px', this.widthInPixels, this.heightInPixels, 'rwh', this.width, this.height);
+    console.log('updateMax', this._maxX, this._maxY, 'px', this.layer.widthInPixels, this.layer.heightInPixels, 'rwh', this.layer.width, this.layer.height);
 
 }
 
@@ -810,12 +698,12 @@ Phaser.TilemapLayer.prototype.updateMax = function () {
 */
 Phaser.TilemapLayer.prototype.render = function () {
 
-	if (this.tilemap && this.tilemap.layers[this.index].dirty)
+	if (this.layer.dirty)
     {
         this.dirty = true;
     }
 
-    if (!this.dirty || !this.tilemap || !this.visible)
+    if (!this.dirty || !this.visible)
     {
         return;
     }
@@ -823,22 +711,23 @@ Phaser.TilemapLayer.prototype.render = function () {
     this._prevX = this._dx;
     this._prevY = this._dy;
 
-    this._dx = -(this._x - (this._startX * this.tileWidth));
-    this._dy = -(this._y - (this._startY * this.tileHeight));
+    this._dx = -(this._x - (this._startX * this.map.tileWidth));
+    this._dy = -(this._y - (this._startY * this.map.tileHeight));
 
     this._tx = this._dx;
     this._ty = this._dy;
 
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context.fillStyle = this.tileColor;
+
+    var tile;
+    var set;
+    var ox = 0;
+    var oy = 0;
 
     if (this.debug)
     {
         this.context.globalAlpha = this.debugAlpha;
-    }
-
-    if (!this.tileset)
-    {
-        this.context.fillStyle = this.tileColor;
     }
 
     for (var y = this._startY, lenY = this._startY + this._maxY; y < lenY; y++)
@@ -847,33 +736,59 @@ Phaser.TilemapLayer.prototype.render = function () {
 
         for (var x = this._startX, lenX = this._startX + this._maxX; x < lenX; x++)
         {
-            var tile = this._column[x];
-
-            if (tile && this.tileset)
+            if (this._column[x])
             {
-                this.context.drawImage(
-                    this.tileset.image,
-                    this.tileset.getTileX(tile.index),
-                    this.tileset.getTileY(tile.index),
-                    this.tileWidth,
-                    this.tileHeight,
-                    Math.floor(this._tx),
-                    Math.floor(this._ty),
-                    this.tileWidth,
-                    this.tileHeight
-                );
-            }
-            else if (tile)
-            {
-                this.context.fillRect(Math.floor(this._tx), Math.floor(this._ty), this.tileWidth, this.tileHeight);
+                tile = this._column[x];
+
+                if (this.map.tiles[tile.index])
+                {
+                    set = this.map.tilesets[this.map.tiles[tile.index][2]]
+
+                    if (set.image)
+                    {
+                        if (set.tileWidth !== this.map.tileWidth || set.tileHeight !== this.map.tileHeight)
+                        {
+                            //  TODO: Smaller sized tile check
+                            this.context.drawImage(
+                                this.map.tilesets[this.map.tiles[tile.index][2]].image,
+                                this.map.tiles[tile.index][0],
+                                this.map.tiles[tile.index][1],
+                                set.tileWidth,
+                                set.tileHeight,
+                                Math.floor(this._tx),
+                                Math.floor(this._ty) - (set.tileHeight - this.map.tileHeight),
+                                set.tileWidth,
+                                set.tileHeight
+                            );
+                        }
+                        else
+                        {
+                            this.context.drawImage(
+                                this.map.tilesets[this.map.tiles[tile.index][2]].image,
+                                this.map.tiles[tile.index][0],
+                                this.map.tiles[tile.index][1],
+                                this.map.tileWidth,
+                                this.map.tileHeight,
+                                Math.floor(this._tx),
+                                Math.floor(this._ty),
+                                this.map.tileWidth,
+                                this.map.tileHeight
+                            );
+                        }
+                    }
+                    else
+                    {
+                        this.context.fillRect(Math.floor(this._tx), Math.floor(this._ty), this.map.tileWidth, this.map.tileHeight);
+                    }
+                }
             }
 
-            this._tx += this.tileWidth;
+            this._tx += this.map.tileWidth;
 
         }
 
         this._tx = this._dx;
-        this._ty += this.tileHeight;
+        this._ty += this.map.tileHeight;
 
     }
 
@@ -890,11 +805,7 @@ Phaser.TilemapLayer.prototype.render = function () {
     }
 
     this.dirty = false;
-
-	if (this.tilemap.layers[this.index].dirty)
-	{
-		this.tilemap.layers[this.index].dirty = false;
-	}
+    this.layer.dirty = false;
 
     return true;
 
@@ -913,6 +824,8 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
     this.context.strokeStyle = this.debugColor;
     this.context.fillStyle = this.debugFillColor;
 
+    var set;
+
     for (var y = this._startY, lenY = this._startY + this._maxY; y < lenY; y++)
     {
         this._column = this.layer.data[y];
@@ -923,11 +836,13 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
 
             if (tile && (tile.faceTop || tile.faceBottom || tile.faceLeft || tile.faceRight))
             {
+                set = this.map.tilesets[this.map.tiles[tile.index][2]]
+
                 this._tx = Math.floor(this._tx);
 
                 if (this.debugFill)
                 {
-                    this.context.fillRect(this._tx, this._ty, this.tileWidth, this.tileHeight);
+                    this.context.fillRect(this._tx, this._ty, set.tileWidth, set.tileHeight);
                 }
 
                 this.context.beginPath();
@@ -935,36 +850,36 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
                 if (tile.faceTop)
                 {
                     this.context.moveTo(this._tx, this._ty);
-                    this.context.lineTo(this._tx + this.tileWidth, this._ty);
+                    this.context.lineTo(this._tx + set.tileWidth, this._ty);
                 }
 
                 if (tile.faceBottom)
                 {
-                    this.context.moveTo(this._tx, this._ty + this.tileHeight);
-                    this.context.lineTo(this._tx + this.tileWidth, this._ty + this.tileHeight);
+                    this.context.moveTo(this._tx, this._ty + set.tileHeight);
+                    this.context.lineTo(this._tx + set.tileWidth, this._ty + set.tileHeight);
                 }
 
                 if (tile.faceLeft)
                 {
                     this.context.moveTo(this._tx, this._ty);
-                    this.context.lineTo(this._tx, this._ty + this.tileHeight);
+                    this.context.lineTo(this._tx, this._ty + set.tileHeight);
                 }
 
                 if (tile.faceRight)
                 {
-                    this.context.moveTo(this._tx + this.tileWidth, this._ty);
-                    this.context.lineTo(this._tx + this.tileWidth, this._ty + this.tileHeight);
+                    this.context.moveTo(this._tx + set.tileWidth, this._ty);
+                    this.context.lineTo(this._tx + set.tileWidth, this._ty + set.tileHeight);
                 }
 
                 this.context.stroke();
             }
 
-            this._tx += this.tileWidth;
+            this._tx += this.map.tileWidth;
 
         }
 
         this._tx = this._dx;
-        this._ty += this.tileHeight;
+        this._ty += this.map.tileHeight;
 
     }
 
@@ -976,9 +891,9 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
 * @memberof Phaser.TilemapLayer
 * @return {number} Absolute delta X value
 */
-Phaser.TilemapLayer.prototype.deltaAbsX = function () {
-    return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
-}
+// Phaser.TilemapLayer.prototype.deltaAbsX = function () {
+//     return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
+// }
 
 /**
 * Returns the absolute delta y value.
@@ -986,9 +901,9 @@ Phaser.TilemapLayer.prototype.deltaAbsX = function () {
 * @memberof Phaser.TilemapLayer
 * @return {number} Absolute delta Y value
 */
-Phaser.TilemapLayer.prototype.deltaAbsY = function () {
-    return (this.deltaY() > 0 ? this.deltaY() : -this.deltaY());
-}
+// Phaser.TilemapLayer.prototype.deltaAbsY = function () {
+//     return (this.deltaY() > 0 ? this.deltaY() : -this.deltaY());
+// }
 
 /**
 * Returns the delta x value.
@@ -996,9 +911,9 @@ Phaser.TilemapLayer.prototype.deltaAbsY = function () {
 * @memberof Phaser.TilemapLayer
 * @return {number} Delta X value
 */
-Phaser.TilemapLayer.prototype.deltaX = function () {
-    return this._dx - this._prevX;
-}
+// Phaser.TilemapLayer.prototype.deltaX = function () {
+//     return this._dx - this._prevX;
+// }
 
 /**
 * Returns the delta y value.
@@ -1006,9 +921,9 @@ Phaser.TilemapLayer.prototype.deltaX = function () {
 * @memberof Phaser.TilemapLayer
 * @return {number} Delta Y value
 */
-Phaser.TilemapLayer.prototype.deltaY = function () {
-    return this._dy - this._prevY;
-}
+// Phaser.TilemapLayer.prototype.deltaY = function () {
+//     return this._dy - this._prevY;
+// }
 
 /**
 * @name Phaser.TilemapLayer#scrollX
@@ -1022,16 +937,17 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollX", {
 
     set: function (value) {
 
-        if (value !== this._x && value >= 0 && this.layer && this.widthInPixels > this.renderWidth)
+        // if (value !== this._x && value >= 0 && this.layer && this.layer.widthInPixels > this.width)
+        if (value !== this._x && value >= 0 && this.layer.widthInPixels > this.width)
         {
             this._x = value;
     
-            if (this._x > (this.widthInPixels - this.renderWidth))
+            if (this._x > (this.layer.widthInPixels - this.width))
             {
-                this._x = this.widthInPixels - this.renderWidth;
+                this._x = this.layer.widthInPixels - this.width;
             }
 
-            this._startX = this.game.math.floor(this._x / this.tileWidth);
+            this._startX = this.game.math.floor(this._x / this.map.tileWidth);
 
             if (this._startX < 0)
             {
@@ -1062,16 +978,17 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
 
     set: function (value) {
 
-        if (value !== this._y && value >= 0 && this.layer && this.heightInPixels > this.renderHeight)
+        // if (value !== this._y && value >= 0 && this.layer && this.heightInPixels > this.renderHeight)
+        if (value !== this._y && value >= 0 && this.layer.heightInPixels > this.height)
         {
             this._y = value;
 
-            if (this._y > (this.heightInPixels - this.renderHeight))
+            if (this._y > (this.layer.heightInPixels - this.height))
             {
-                this._y = this.heightInPixels - this.renderHeight;
+                this._y = this.layer.heightInPixels - this.height;
             }
 
-            this._startY = this.game.math.floor(this._y / this.tileHeight);
+            this._startY = this.game.math.floor(this._y / this.map.tileHeight);
 
             if (this._startY < 0)
             {

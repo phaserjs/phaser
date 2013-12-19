@@ -141,8 +141,24 @@ Phaser.TilemapParser = {
     */
     parseTiledJSON: function (json) {
 
-        //  Map data will consist of: layers, objects, images, tilesets
+        if (json.orientation !== 'orthogonal')
+        {
+            console.warn('TilemapParser.parseTiledJSON: Only orthogonal map types are supported in this version of Phaser');
+            return null;
+        }
+
+        //  Map data will consist of: layers, objects, images, tilesets, sizes
         var map = {};
+
+        map.width = json.width;
+        map.height = json.height;
+        map.tileWidth = json.tilewidth;
+        map.tileHeight = json.tileheight;
+        map.orientation = json.orientation;
+        map.version = json.version;
+        map.properties = json.properties;
+        map.widthInPixels = map.width * map.tileWidth;
+        map.heightInPixels = map.height * map.tileHeight;
 
         //  Tile Layers
         var layers = [];
@@ -161,13 +177,12 @@ Phaser.TilemapParser = {
                 y: json.layers[i].y,
                 width: json.layers[i].width,
                 height: json.layers[i].height,
+                widthInPixels: json.layers[i].width * json.tilewidth,
+                heightInPixels: json.layers[i].height * json.tileheight,
                 alpha: json.layers[i].opacity,
                 visible: json.layers[i].visible,
                 properties: {},
-                tileWidth: json.tilewidth,
-                tileHeight: json.tileheight,
-
-                indexes: [],
+                indexes: []
 
             };
 
@@ -286,71 +301,6 @@ Phaser.TilemapParser = {
         //  Tilesets
         var tilesets = [];
 
-
-/*
-        // for (var i = this.firstgid; i < this.firstgid + this.total; i++)
-        for (var i = 0; i < this.total; i++)
-        {
-            //  Can add extra properties here as needed
-            this.tiles[i] = [x, y];
-
-            x += this.tileWidth + this.tileSpacing;
-
-            count++;
-
-            if (count === this.total)
-            {
-                break;
-            }
-
-            countX++;
-
-            if (countX === this.rows)
-            {
-                x = this.tileMargin;
-                y += this.tileHeight + this.tileSpacing;
-
-                countX = 0;
-                countY++;
-
-                if (countY === this.columns)
-                {
-                    break;
-                }
-            }
-        }
-
-*/
-/*
-        {
-         "firstgid":1,
-         "image":"ground_1x1.png",
-         "imageheight":32,
-         "imagewidth":800,
-         "margin":0,
-         "name":"ground_1x1",
-         "properties":
-            {
-
-            },
-         "spacing":0,
-         "tileheight":32,
-         "tileproperties":
-            {
-             "1":
-                {
-                 "bounce":"1"
-                }
-            },
-         "tilewidth":32
-        }, 
-
-
-    Create 1 Tileset object that contains the above, but NOT the actual tile indexes
-    Put the tile indexes into a global array (tiles?) - just need x,y + img - a drawImage look-up table
-
-*/
-
         for (var i = 0; i < json.tilesets.length; i++)
         {
             //  name, firstgid, width, height, margin, spacing, properties
@@ -362,21 +312,63 @@ Phaser.TilemapParser = {
                 newSet.tileProperties = set.tileproperties;
             }
 
-            //  rows, columns, total
-            var rows = set.imageheight / set.tileheight;
-            var columns = set.imagewidth / set.tilewidth;
-            var total = rows * columns;
-
-            newSet.rows = rows;
-            newSet.columns = columns;
-            newSet.total = total;
+            newSet.rows = set.imageheight / set.tileheight;
+            newSet.columns = set.imagewidth / set.tilewidth;
+            newSet.total = newSet.rows * newSet.columns;
 
             tilesets.push(newSet);
+        }
+
+        map.tilesets = tilesets;
+
+        map.tiles = [];
+
+        //  Finally lets build our super tileset index
+        for (var i = 0; i < map.tilesets.length; i++)
+        {
+            var set = map.tilesets[i];
+    
+            var x = set.tileMargin;
+            var y = set.tileMargin;
+
+            var count = 0;
+            var countX = 0;
+            var countY = 0;
+
+            for (var t = set.firstgid; t < set.firstgid + set.total; t++)
+            {
+                //  Can add extra properties here as needed
+                map.tiles[t] = [x, y, i];
+
+                x += set.tileWidth + set.tileSpacing;
+
+                count++;
+
+                if (count === set.total)
+                {
+                    break;
+                }
+
+                countX++;
+
+                if (countX === set.columns)
+                {
+                    x = set.tileMargin;
+                    y += set.tileHeight + set.tileSpacing;
+
+                    countX = 0;
+                    countY++;
+
+                    if (countY === set.rows)
+                    {
+                        break;
+                    }
+                }
+            }
 
         }
 
-        //  Lets build our super tileset index
-        map.tilesets = tilesets;
+        console.log(map);
 
         return map;
 

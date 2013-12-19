@@ -3,10 +3,18 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-    game.load.tilemap('map', 'assets/maps/super_mario.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.tileset('tiles', 'assets/maps/super_mario.png', 16, 16);
+    // game.load.tilemap('map', 'assets/maps/super_mario.json', null, Phaser.Tilemap.TILED_JSON);
+    // game.load.tileset('tiles', 'assets/maps/super_mario.png', 16, 16);
 
-    // game.load.tilemap('map', 'assets/maps/newtest.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.tilemap('map', 'assets/maps/newtest.json', null, Phaser.Tilemap.TILED_JSON);
+
+    // game.load.image('ground', 'assets/maps/ground_1x1.png');
+
+    game.load.image('ground_1x1', 'assets/maps/ground_1x1.png');
+    game.load.image('walls_1x2', 'assets/maps/walls_1x2.png');
+    game.load.image('tiles2', 'assets/maps/tiles2.png');
+
+
     // game.load.tileset('tiles', 'assets/maps/ground_1x1.png', 32, 32);
     // game.load.image('phaser', 'assets/sprites/phaser-ship.png');
     // game.load.image('phaser', 'assets/sprites/mushroom2.png');
@@ -18,22 +26,38 @@ function preload() {
 
 var cursors;
 var map;
+
 var layer;
 var layer2;
+var layer3;
+
 var sprite;
 
 function create() {
 
-    map = game.add.tilemap('map', 'tiles');
+    map = game.add.tilemap('map');
 
-    map.setCollisionByIndex(15);
-    map.setCollisionByIndex(40);
-    map.setCollisionByIndexRange(14, 16);
-    map.setCollisionByIndexRange(20, 25);
-    map.setCollisionByIndexRange(27, 29);
+    map.addTilesetImage('ground_1x1');
+    map.addTilesetImage('walls_1x2');
+    map.addTilesetImage('tiles2');
 
-    layer = map.createLayer(0, 0, 800, 600, 'ShoeBox Tile Grab');
-    layer.debug = true;
+    map.setCollisionByIndexRange(1, 12);
+    map.setCollisionByIndex(100, 'Tile Layer 3');
+
+    // map.setCollisionByIndex(15);
+    // map.setCollisionByIndex(40);
+    // map.setCollisionByIndexRange(14, 16);
+    // map.setCollisionByIndexRange(20, 25);
+    // map.setCollisionByIndexRange(27, 29);
+
+    layer2 = map.createLayer('Tile Layer 2');
+    layer = map.createLayer('Tile Layer 1');
+    layer3 = map.createLayer('Tile Layer 3');
+
+    // layer.debug = true;
+    layer3.debug = true;
+
+    layer.resizeWorld();
 
 
 
@@ -41,7 +65,6 @@ function create() {
     // layer.cameraOffset.x = 400;
     // layer.alpha = 0.5;
 
-    layer.resizeWorld();
 
     sprite = game.add.sprite(260, 100, 'phaser');
     sprite.anchor.setTo(0.5, 0.5);
@@ -105,7 +128,8 @@ function update() {
         layer.scrollY += 4;
     }
 */
-    game.physics.collide(sprite, layer);
+    // game.physics.collide(sprite, layer);
+    game.physics.collide(sprite, layer3);
 
     sprite.body.velocity.x = 0;
     sprite.body.velocity.y = 0;
@@ -177,7 +201,7 @@ function render() {
     // game.debug.renderText(sprite.x, 32, 32);
     // game.debug.renderText(sprite.y, 32, 48);
 
-    game.debug.renderText(layer.scrollX, 32, 32);
-    game.debug.renderText(layer.scrollY, 32, 48);
+    // game.debug.renderText(layer.scrollX, 32, 32);
+    // game.debug.renderText(layer.scrollY, 32, 48);
 
 }
