@@ -477,10 +477,10 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     }
 
     //  Convert the pixel values into tile coordinates
-    this._tx = this.game.math.snapToFloor(x, this.map.tileWidth) / this.map.tileWidth;
-    this._ty = this.game.math.snapToFloor(y, this.map.tileHeight) / this.map.tileHeight;
-    this._tw = (this.game.math.snapToCeil(width, this.map.tileWidth) + this.map.tileWidth) / this.map.tileWidth;
-    this._th = (this.game.math.snapToCeil(height, this.map.tileHeight) + this.map.tileHeight) / this.map.tileHeight;
+    this._tx = this.game.math.snapToFloor(x, this._cw) / this._cw;
+    this._ty = this.game.math.snapToFloor(y, this._ch) / this._ch;
+    this._tw = (this.game.math.snapToCeil(width, this._cw) + this._cw) / this._cw;
+    this._th = (this.game.math.snapToCeil(height, this._ch) + this._ch) / this._ch;
 
     //  This should apply the layer x/y here
     this._results.length = 0;
@@ -500,14 +500,14 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
                     if (collides === false || (collides && _tile.collides))
                     {
                         // convert tile coordinates back to camera space for return
-                        var _wx = this._unfixX(wx * this.map.tileWidth) / this.map.tileWidth;
-                        var _wy = this._unfixY(wy * this.map.tileHeight) / this.map.tileHeight;
+                        var _wx = this._unfixX(wx * this._cw) / this._cw;
+                        var _wy = this._unfixY(wy * this._ch) / this._ch;
 
                         this._results.push({ 
-                            x: _wx * this.map.tileWidth, 
-                            y: _wy * this.map.tileHeight, 
-                            right: (_wx * this.map.tileWidth) + this.map.tileWidth, 
-                            bottom: (_wy * this.map.tileHeight) + this.map.tileHeight, 
+                            x: _wx * this._cw, 
+                            y: _wy * this._ch, 
+                            right: (_wx * this._cw) + this._cw, 
+                            bottom: (_wy * this._ch) + this._ch, 
                             tile: _tile 
                         });
                     }
@@ -687,7 +687,7 @@ Phaser.TilemapLayer.prototype.updateMax = function () {
 
     this.dirty = true;
 
-    console.log('updateMax', this._maxX, this._maxY, 'px', this.layer.widthInPixels, this.layer.heightInPixels, 'rwh', this.layer.width, this.layer.height);
+    // console.log('updateMax', this._maxX, this._maxY, 'px', this.layer.widthInPixels, this.layer.heightInPixels, 'rwh', this.layer.width, this.layer.height);
 
 }
 
@@ -824,8 +824,6 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
     this.context.strokeStyle = this.debugColor;
     this.context.fillStyle = this.debugFillColor;
 
-    var set;
-
     for (var y = this._startY, lenY = this._startY + this._maxY; y < lenY; y++)
     {
         this._column = this.layer.data[y];
@@ -836,13 +834,11 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
 
             if (tile && (tile.faceTop || tile.faceBottom || tile.faceLeft || tile.faceRight))
             {
-                set = this.map.tilesets[this.map.tiles[tile.index][2]]
-
                 this._tx = Math.floor(this._tx);
 
                 if (this.debugFill)
                 {
-                    this.context.fillRect(this._tx, this._ty, set.tileWidth, set.tileHeight);
+                    this.context.fillRect(this._tx, this._ty, this._cw, this._ch);
                 }
 
                 this.context.beginPath();
@@ -850,25 +846,25 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
                 if (tile.faceTop)
                 {
                     this.context.moveTo(this._tx, this._ty);
-                    this.context.lineTo(this._tx + set.tileWidth, this._ty);
+                    this.context.lineTo(this._tx + this._cw, this._ty);
                 }
 
                 if (tile.faceBottom)
                 {
-                    this.context.moveTo(this._tx, this._ty + set.tileHeight);
-                    this.context.lineTo(this._tx + set.tileWidth, this._ty + set.tileHeight);
+                    this.context.moveTo(this._tx, this._ty + this._ch);
+                    this.context.lineTo(this._tx + this._cw, this._ty + this._ch);
                 }
 
                 if (tile.faceLeft)
                 {
                     this.context.moveTo(this._tx, this._ty);
-                    this.context.lineTo(this._tx, this._ty + set.tileHeight);
+                    this.context.lineTo(this._tx, this._ty + this._ch);
                 }
 
                 if (tile.faceRight)
                 {
-                    this.context.moveTo(this._tx + set.tileWidth, this._ty);
-                    this.context.lineTo(this._tx + set.tileWidth, this._ty + set.tileHeight);
+                    this.context.moveTo(this._tx + this._cw, this._ty);
+                    this.context.lineTo(this._tx + this._cw, this._ty + this._ch);
                 }
 
                 this.context.stroke();
@@ -884,46 +880,6 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
     }
 
 }
-
-/**
-* Returns the absolute delta x value.
-* @method Phaser.TilemapLayer#deltaAbsX
-* @memberof Phaser.TilemapLayer
-* @return {number} Absolute delta X value
-*/
-// Phaser.TilemapLayer.prototype.deltaAbsX = function () {
-//     return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
-// }
-
-/**
-* Returns the absolute delta y value.
-* @method Phaser.TilemapLayer#deltaAbsY
-* @memberof Phaser.TilemapLayer
-* @return {number} Absolute delta Y value
-*/
-// Phaser.TilemapLayer.prototype.deltaAbsY = function () {
-//     return (this.deltaY() > 0 ? this.deltaY() : -this.deltaY());
-// }
-
-/**
-* Returns the delta x value.
-* @method Phaser.TilemapLayer#deltaX
-* @memberof Phaser.TilemapLayer
-* @return {number} Delta X value
-*/
-// Phaser.TilemapLayer.prototype.deltaX = function () {
-//     return this._dx - this._prevX;
-// }
-
-/**
-* Returns the delta y value.
-* @method Phaser.TilemapLayer#deltaY
-* @memberof Phaser.TilemapLayer
-* @return {number} Delta Y value
-*/
-// Phaser.TilemapLayer.prototype.deltaY = function () {
-//     return this._dy - this._prevY;
-// }
 
 /**
 * @name Phaser.TilemapLayer#scrollX
@@ -1002,6 +958,46 @@ Object.defineProperty(Phaser.TilemapLayer.prototype, "scrollY", {
 
             this.dirty = true;
         }
+
+    }
+
+});
+
+/**
+* @name Phaser.TilemapLayer#collisionWidth
+* @property {number} collisionWidth - The width of the collision tiles.
+*/
+Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionWidth", {
+    
+    get: function () {
+        return this._cw;
+    },
+
+    set: function (value) {
+
+        this._cw = value;
+
+        this.dirty = true;
+
+    }
+
+});
+
+/**
+* @name Phaser.TilemapLayer#collisionHeight
+* @property {number} collisionHeight - The height of the collision tiles.
+*/
+Object.defineProperty(Phaser.TilemapLayer.prototype, "collisionHeight", {
+    
+    get: function () {
+        return this._ch;
+    },
+
+    set: function (value) {
+
+        this._ch = value;
+
+        this.dirty = true;
 
     }
 

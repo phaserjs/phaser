@@ -183,6 +183,20 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    //  Region? Remove tile from map data?
+    createSpritesFromTiles: function (layer, tileIndex, key, frame, group) {
+
+        if (typeof group === 'undefined') { group = this.game.world; }
+
+    },
+
+    createGroup: function (layer, parent) {
+
+        //  Creates a Group based on an objectgroup, with one Sprite per gid entry, using the tilemap image + frame number 
+        //  Will only work if image is loaded as spritesheet
+
+    },
+
     /**
     * Creates a new TilemapLayer object. By default TilemapLayers are fixed to the camera.
     *
@@ -194,6 +208,8 @@ Phaser.Tilemap.prototype = {
     * @return {Phaser.TilemapLayer} The TilemapLayer object. This is an extension of Phaser.Sprite and can be moved around the display list accordingly.
     */
     createLayer: function (layer, width, height, group) {
+
+        //  Add Buffer support for the left of the canvas
 
         if (typeof width === 'undefined') { width = this.game.width; }
         if (typeof height === 'undefined') { height = this.game.height; }
@@ -290,15 +306,75 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    //  TODO - set collision in an area, REMOVE collision
+
     /**
-    * Sets collision values on a range of tiles in the set.
+    * Sets collision on all tiles in the given layer, except for the IDs of those in the given array.
     *
-    * @method Phaser.Tileset#setCollisionByIndexRange
-    * @param {number} start - The first index of the tile on the layer.
-    * @param {number} stop - The last index of the tile on the layer.
+    * @method Phaser.Tileset#setCollisionByExclusion
+    * @param {array} indexes - An array of the tile IDs to not be counted for collision.
     * @param {number|string|Phaser.TilemapLayer} layer - The layer to operate on. If not given will default to this.currentLayer.
     */
-    setCollisionByIndexRange: function (start, stop, layer) {
+    setCollisionByExclusion: function (indexes, layer) {
+
+        if (typeof layer === 'undefined')
+        {
+            layer = this.currentLayer;
+        }
+
+        //  Collide everything, except the IDs given in the indexes array
+        for (var i = 0, len = this.tiles.length; i < len; i++)
+        {
+            if (indexes.indexOf(i) === -1)
+            {
+                this.setCollisionByIndex(i, layer, false);
+            }
+        }
+
+        //  Now re-calculate interesting faces
+        this.calculateFaces(layer);
+
+    },
+
+    /**
+    * Sets collision the given tile index, or array of tiles indexes.
+    *
+    * @method Phaser.Tileset#setCollision
+    * @param {number|array} indexes - Either a single tile index, or an array of tile IDs to be checked for collision.
+    * @param {number|string|Phaser.TilemapLayer} layer - The layer to operate on. If not given will default to this.currentLayer.
+    */
+    setCollision: function (indexes, layer) {
+
+        if (typeof layer === 'undefined')
+        {
+            layer = this.currentLayer;
+        }
+
+        if (typeof indexes === 'number')
+        {
+            return this.setCollisionByIndex(indexes, layer);
+        }
+
+        //  Collide all of the IDs given in the indexes array
+        for (var i = 0, len = indexes.length; i < len; i++)
+        {
+            this.setCollisionByIndex(i, layer, false);
+        }
+
+        //  Now re-calculate interesting faces
+        this.calculateFaces(layer);
+
+    },
+
+    /**
+    * Sets collision on a range of tiles.
+    *
+    * @method Phaser.Tileset#setCollisionBetween
+    * @param {number} start - The first index of the tile to be set for collision.
+    * @param {number} stop - The last index of the tile to be set for collision.
+    * @param {number|string|Phaser.TilemapLayer} layer - The layer to operate on. If not given will default to this.currentLayer.
+    */
+    setCollisionBetween: function (start, stop, layer) {
 
         if (start > stop)
         {

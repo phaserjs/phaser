@@ -41,21 +41,24 @@ function create() {
     map.addTilesetImage('walls_1x2');
     map.addTilesetImage('tiles2');
 
-    map.setCollisionByIndexRange(1, 12);
-    map.setCollisionByIndex(100, 'Tile Layer 3');
+    map.setCollisionBetween(1, 12);
 
+    //  mario tiles
     // map.setCollisionByIndex(15);
     // map.setCollisionByIndex(40);
     // map.setCollisionByIndexRange(14, 16);
     // map.setCollisionByIndexRange(20, 25);
     // map.setCollisionByIndexRange(27, 29);
 
-    layer2 = map.createLayer('Tile Layer 2');
-    layer = map.createLayer('Tile Layer 1');
     layer3 = map.createLayer('Tile Layer 3');
+    layer3.scrollFactorX = 0.5;
+
+    layer2 = map.createLayer('Tile Layer 2');
+    layer2.alpha = 0.5;
+
+    layer = map.createLayer('Tile Layer 1');
 
     // layer.debug = true;
-    layer3.debug = true;
 
     layer.resizeWorld();
 
@@ -128,8 +131,7 @@ function update() {
         layer.scrollY += 4;
     }
 */
-    // game.physics.collide(sprite, layer);
-    game.physics.collide(sprite, layer3);
+    game.physics.collide(sprite, layer);
 
     sprite.body.velocity.x = 0;
     sprite.body.velocity.y = 0;
