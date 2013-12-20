@@ -672,10 +672,7 @@ declare module Phaser {
             anchor: Point;
             x: number;
             y: number;
-<<<<<<< HEAD
             alpha:number;
-=======
->>>>>>> cf0a0ebd3d6cd3ea852269ebc4058d166178cfc8
             position: Point;
             autoCull: boolean;
             scale: Point;
@@ -1147,7 +1144,6 @@ declare module Phaser {
             update(time: number): boolean;
       }
 
-<<<<<<< HEAD
     interface EaseTypeAll
     {
         In: (k: number) => number;
@@ -1177,65 +1173,7 @@ declare module Phaser {
 
 
     class Time {
-=======
-      class Easing {
-            Linear: {
-                  None: (k: number) => number;
-            };
-            Quadratic: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-            Cubic: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-            Quartic: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-            Quintic: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-            Sinusoidal: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-            Exponential: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-            Circular: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-            Elastic: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-            Back: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-            Bounce: {
-                  In: (k: number) => number;
-                  Out: (k: number) => number;
-                  InOut: (k: number) => number;
-            };
-      }
 
-      class Time {
->>>>>>> cf0a0ebd3d6cd3ea852269ebc4058d166178cfc8
             constructor(game: Game);
             game: Game;
             physicsElapsed: number;
@@ -1868,9 +1806,5 @@ declare class Phaser {
     static BITMAPDATA: number;
     static CANVAS_FILTER: number;
     static WEBGL_FILTER: number;
-<<<<<<< HEAD
 }
 
-=======
-}
->>>>>>> cf0a0ebd3d6cd3ea852269ebc4058d166178cfc8
