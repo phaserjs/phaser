@@ -364,6 +364,29 @@ Phaser.Loader.prototype = {
     },
 
     /**
+    * Add a binary file to the Loader. It will be loaded via xhr with a responseType of "arraybuffer". You can specify an optional callback to process the file after load.
+    * When the callback is called it will be passed 2 parameters: the key of the file and the file data.
+    * WARNING: If you specify a callback, the file data will be set to whatever your callback returns. So always return the data object, even if you didn't modify it.
+    *
+    * @method Phaser.Loader#binary
+    * @param {string} key - Unique asset key of the binary file.
+    * @param {string} url - URL of the binary file.
+    * @param {function} [callback] - Optional callback that will be passed the file after loading, so you can perform additional processing on it.
+    * @param {function} [callbackContext] - The context under which the callback will be applied. If not specified it will use the callback itself as the context.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    binary: function (key, url, callback, callbackContext) {
+
+        if (typeof callback === 'undefined') { callback = false; }
+        if (callback !== false && typeof callbackContext === 'undefined') { callbackContext = callback; }
+
+        this.addToFileList('binary', key, url, { callback: callback, callbackContext: callbackContext });
+
+        return this;
+
+    },
+
+    /**
     * Add a new sprite sheet to the loader.
     *
     * @method Phaser.Loader#spritesheet
@@ -854,6 +877,7 @@ Phaser.Loader.prototype = {
                 break;
 
             case 'text':
+            case 'script':
                 this._xhr.open("GET", this.baseURL + file.url, true);
                 this._xhr.responseType = "text";
                 this._xhr.onload = function () {
@@ -865,10 +889,9 @@ Phaser.Loader.prototype = {
                 this._xhr.send();
                 break;
 
-            case 'script':
-
+            case 'binary':
                 this._xhr.open("GET", this.baseURL + file.url, true);
-                this._xhr.responseType = "text";
+                this._xhr.responseType = "arraybuffer";
                 this._xhr.onload = function () {
                     return _this.fileComplete(_this._fileIndex);
                 };
@@ -1069,6 +1092,20 @@ Phaser.Loader.prototype = {
                 file.data.defer = false;
                 file.data.text = this._xhr.responseText;
                 document.head.appendChild(file.data);
+                break;
+
+            case 'binary':
+                if (file.callback)
+                {
+                    file.data = file.callback.call(file.callbackContext, file.key, this._xhr.response);
+                }
+                else
+                {
+                    file.data = this._xhr.response;
+                }
+
+                this.game.cache.addBinary(file.key, file.data);
+
                 break;
         }
 

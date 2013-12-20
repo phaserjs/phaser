@@ -59,6 +59,7 @@ New features:
 * Added Device.silk for detecting a Kindle Fire and updated desktop OS check to exclude Kindles (thanks LuckieLordie)
 * TilemapLayers now have debug and debugAlpha values, this turns on the drawing of the collision edges (very handy for debugging, as the name implies!)
 * Tweens have a new event: onLoop.
+* You can now load any binary file via the Loader: game.load.binary(key, url, callback) - the optional callback allows for post-load processing before entering the Cache.
 
 
 New Examples:
@@ -132,6 +133,18 @@ Nice and easy :)
 ![Tanks](http://www.photonstorm.com/wp-content/uploads/2013/10/phaser_tanks-640x480.png)
 
 
+CDNJS
+-----
+
+Thanks to a community member Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
+
+`http://cdnjs.cloudflare.com/ajax/libs/phaser/1.1.3/phaser.min.js`
+
+Or if you prefer you can leave the protocol off, so it works via http and https:
+
+`//cdnjs.cloudflare.com/ajax/libs/phaser/1.1.3/phaser.min.js`
+
+
 Requirements
 ------------
 
@@ -140,6 +153,24 @@ Games created with Phaser require a modern web browser that supports the canvas 
 For developing with Phaser you can use either a plain-vanilla JavaScript approach or [TypeScript](https://typescript.codeplex.com/) using the provided TypeScript definitions file. We made no assumptions about how you like to code your games, and were careful not to impose any form of class/inheritance/structure upon you.
 
 Phaser is 321 KB minified and 72 KB gzipped.
+
+
+Learn By Example
+----------------
+
+Phaser comes with an ever growing suite of Examples. Personally I feel that we learn better by looking at small refined code examples, so we created over 170 of them and create new ones to test every new feature added. Inside the `examples` folder you'll find the current set. If you write a particularly good example then please send it to us.
+
+The examples need to be run through a local web server (in order to avoid file access permission errors from your browser). You can use your own web server, or start the included web server using grunt.
+
+Using a locally installed web server browse to the examples folder:
+
+    examples/index.html
+
+Alternatively in order to start the included web server, after you've cloned the repo, run `npm install` to install all dependencies, then `grunt connect `to start a local server. After running this command you should be able to access your local webserver at `http://127.0.0.1:8000`. Then browse to the examples folder: `http://127.0.0.1:8000/examples/index.html`
+
+There is a new 'Side View' example viewer as well. This loads all the examples into a left-hand frame for faster navigation.
+
+You can also browse all [Phaser Examples](http://gametest.mobi/phaser/) online.
 
 
 Features
@@ -208,7 +239,7 @@ We use Phaser every day on our many client projects. As a result it's constantly
 
 **Battle Tested**
 
-Although Phaser 1.0 is a brand new release it is born from years of experience building some of the biggest HTML5 games out there. We're not saying it is 100% bug free, but we use it for our client work every day, so issues get resolved <em>fast</em> and we stay on-top of the changing browser landscape.
+Although Phaser 1.0 is a brand new release it is born from years of experience building some of the biggest mobile HTML5 games out there. We're not saying it is 100% bug free, but we use it for our client work every day, so issues get resolved <em>fast</em> and we stay on-top of the changing browser landscape.
 
 ![FruitParty](http://www.photonstorm.com/wp-content/uploads/2013/10/phaser_fruit_particles-640x480.png)
 
@@ -218,14 +249,10 @@ Road Map
 
 The 1.1 release was a massive under-taking, but we're really happy with how Phaser is progressing. It's becoming more solid and versatile with each iteration. Here is what's on our road map for future versions:
 
-Version 1.1.4 ("Kandor")
-
-* Enhance the State Management, so you can perform non-destructive State swaps and persistence.
-* More advanced tile map features. Better support for advanced Tiled features. Proper support for DAME tilemaps.
-
 Versions 1.2 ("Saldaea")
 
 * Integration with the p2.js physics system.
+* Enhance the State Management, so you can perform non-destructive State swaps and persistence.
 
 Beyond version 1.2
 
@@ -244,24 +271,7 @@ Beyond version 1.2
 * Add a d-pad example (http://www.html5gamedevs.com/topic/1574-gameinputondown-question/)
 * Create more touch input examples (http://www.html5gamedevs.com/topic/1556-mobile-touch-event/)
 * Look at HiDPI Canvas settings.
-
-
-Learn By Example
-----------------
-
-Phaser comes with an ever growing suite of Examples. Personally I feel that we learn better by looking at small refined code examples, so we created over 170 of them and create new ones to test every new feature added. Inside the `examples` folder you'll find the current set. If you write a particularly good example then please send it to us.
-
-The examples need to be run through a local web server (in order to avoid file access permission errors from your browser). You can use your own web server, or start the included web server using grunt.
-
-Using a locally installed web server browse to the examples folder:
-
-    examples/index.html
-
-Alternatively in order to start the included web server, after you've cloned the repo, run `npm install` to install all dependencies, then `grunt connect `to start a local server. After running this command you should be able to access your local webserver at `http://127.0.0.1:8000`. Then browse to the examples folder: `http://127.0.0.1:8000/examples/index.html`
-
-There is a new 'Side View' example viewer as well. This loads all the examples into a left-hand frame for faster navigation.
-
-You can also browse all [Phaser Examples](http://gametest.mobi/phaser/) online.
+* Support for parallel asset loading.
 
 
 Contributing
