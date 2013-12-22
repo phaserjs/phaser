@@ -255,7 +255,7 @@ declare module Phaser {
             randomY: number;
             boot(): void;
             update(): void;
-            setSize(width: number, height: number): void;
+            setBounds( x:number, y:number, width: number, height: number): void;
             destroy(): void;
       }
 
@@ -364,6 +364,32 @@ declare module Phaser {
             getPointer(state: boolean): Phaser.Pointer;
             getPointerFromIdentifier(identifier: number): Phaser.Pointer;
             addPointer(): Phaser.Pointer;
+      }
+
+      class Key {
+          constructor( game:Phaser.Game, keycode:number )
+          isDown:boolean;
+          isUp:boolean;
+          altKey:boolean;
+          ctrlKey:boolean;
+          shiftKey:boolean;
+          timeDown:number;
+          duration:number;
+          timeUp:number;
+          repeats:number;
+          keycode:number;
+          onDown:Phaser.Signal;
+          onUp:Phaser.Signal;
+          justPressed( duration:number ):boolean;
+          justReleased( duration:number ):boolean;
+      }
+
+      interface CursorKeys
+      {
+          up:Phaser.Key;
+          down:Phaser.Key;
+          left:Phaser.Key;
+          right:Phaser.Key;
       }
 
       class Keyboard {
@@ -479,6 +505,7 @@ declare module Phaser {
             justPressed(keycode: number, duration?: number): boolean;
             justReleased(keycode: number, duration?: number): boolean;
             isDown(keycode: number): boolean;
+            createCursorKeys():CursorKeys;
       }
 
       class Mouse {
