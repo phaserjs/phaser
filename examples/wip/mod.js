@@ -28,7 +28,7 @@ var module;
 function create() {
 
 	module = new Protracker();
- 	module.buffer = game.cache.getBinary('elysium');
+ 	module.buffer = game.cache.getBinary('impulse');
     module.parse();
     module.play();
 

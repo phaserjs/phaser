@@ -701,30 +701,61 @@ Phaser.InputHandler.prototype = {
             return false;
         }
 
-        if (this.allowHorizontalDrag)
+        if (this.sprite.fixedToCamera)
         {
-            this.sprite.x = pointer.x + this._dragPoint.x + this.dragOffset.x;
-        }
+            if (this.allowHorizontalDrag)
+            {
+                this.sprite.cameraOffset.x = pointer.x + this._dragPoint.x + this.dragOffset.x;
+            }
 
-        if (this.allowVerticalDrag)
-        {
-            this.sprite.y = pointer.y + this._dragPoint.y + this.dragOffset.y;
-        }
+            if (this.allowVerticalDrag)
+            {
+                this.sprite.cameraOffset.y = pointer.y + this._dragPoint.y + this.dragOffset.y;
+            }
 
-        if (this.boundsRect)
-        {
-            this.checkBoundsRect();
-        }
+            if (this.boundsRect)
+            {
+                this.checkBoundsRect();
+            }
 
-        if (this.boundsSprite)
-        {
-            this.checkBoundsSprite();
-        }
+            if (this.boundsSprite)
+            {
+                this.checkBoundsSprite();
+            }
 
-        if (this.snapOnDrag)
+            if (this.snapOnDrag)
+            {
+                this.sprite.cameraOffset.x = Math.round(this.sprite.x / this.snapX) * this.snapX;
+                this.sprite.cameraOffset.y = Math.round(this.sprite.y / this.snapY) * this.snapY;
+            }
+        }
+        else
         {
-            this.sprite.x = Math.round(this.sprite.x / this.snapX) * this.snapX;
-            this.sprite.y = Math.round(this.sprite.y / this.snapY) * this.snapY;
+            if (this.allowHorizontalDrag)
+            {
+                this.sprite.x = pointer.x + this._dragPoint.x + this.dragOffset.x;
+            }
+
+            if (this.allowVerticalDrag)
+            {
+                this.sprite.y = pointer.y + this._dragPoint.y + this.dragOffset.y;
+            }
+
+            if (this.boundsRect)
+            {
+                this.checkBoundsRect();
+            }
+
+            if (this.boundsSprite)
+            {
+                this.checkBoundsSprite();
+            }
+
+            if (this.snapOnDrag)
+            {
+                this.sprite.x = Math.round(this.sprite.x / this.snapX) * this.snapX;
+                this.sprite.y = Math.round(this.sprite.y / this.snapY) * this.snapY;
+            }
         }
 
         return true;
@@ -904,14 +935,29 @@ Phaser.InputHandler.prototype = {
         this._draggedPointerID = pointer.id;
         this._pointerData[pointer.id].isDragged = true;
 
-        if (this.dragFromCenter)
+        if (this.sprite.fixedToCamera)
         {
-            this.sprite.centerOn(pointer.x, pointer.y);
-            this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
+            if (this.dragFromCenter)
+            {
+                this.sprite.centerOn(pointer.x, pointer.y);
+                this._dragPoint.setTo(this.sprite.cameraOffset.x - pointer.x, this.sprite.cameraOffset.y - pointer.y);
+            }
+            else
+            {
+                this._dragPoint.setTo(this.sprite.cameraOffset.x - pointer.x, this.sprite.cameraOffset.y - pointer.y);
+            }
         }
         else
         {
-            this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
+            if (this.dragFromCenter)
+            {
+                this.sprite.centerOn(pointer.x, pointer.y);
+                this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
+            }
+            else
+            {
+                this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
+            }
         }
 
         this.updateDrag(pointer);
@@ -938,8 +984,16 @@ Phaser.InputHandler.prototype = {
         
         if (this.snapOnRelease)
         {
-            this.sprite.x = Math.round(this.sprite.x / this.snapX) * this.snapX;
-            this.sprite.y = Math.round(this.sprite.y / this.snapY) * this.snapY;
+            if (this.sprite.fixedToCamera)
+            {
+                this.sprite.cameraOffset.x = Math.round(this.sprite.cameraOffset.x / this.snapX) * this.snapX;
+                this.sprite.cameraOffset.y = Math.round(this.sprite.cameraOffset.y / this.snapY) * this.snapY;
+            }
+            else
+            {
+                this.sprite.x = Math.round(this.sprite.x / this.snapX) * this.snapX;
+                this.sprite.y = Math.round(this.sprite.y / this.snapY) * this.snapY;
+            }
         }
 
         this.sprite.events.onDragStop.dispatch(this.sprite, pointer);

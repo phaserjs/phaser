@@ -106,6 +106,7 @@ Bug Fixes:
 * Fixed an issue where passing null as the Group parent wouldn't set it to game.world as it should have (thanks tito100)
 * Fixed Pixi bug (#425) incorrect width property for multi-line BitmapText (thanks jcd-as)
 * Tween.onStart is now called when the tween starts AFTER the delay value, if given (thanks stevenbouma)
+* Sprites that are fixedToCamera can now be input dragged regardless of world position (thanks RafaelOliveira)
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md

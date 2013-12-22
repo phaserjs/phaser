@@ -50,13 +50,14 @@ function create() {
     // map.setCollisionByIndexRange(20, 25);
     // map.setCollisionByIndexRange(27, 29);
 
-    layer3 = map.createLayer('Tile Layer 3');
-    layer3.scrollFactorX = 0.5;
+    // layer3 = map.createLayer('Tile Layer 3');
+    // layer3.scrollFactorX = 0.5;
 
-    layer2 = map.createLayer('Tile Layer 2');
-    layer2.alpha = 0.5;
+    // layer2 = map.createLayer('Tile Layer 2');
+    // layer2.alpha = 0.5;
 
     layer = map.createLayer('Tile Layer 1');
+    layer.scrollFactorX = 0.5;
 
     // layer.debug = true;
 

@@ -354,7 +354,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     /**
     * @property {Phaser.Point} cameraOffset - If this Sprite is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.
     */
-    this.cameraOffset = new Phaser.Point();
+    this.cameraOffset = new Phaser.Point(x, y);
 
     /**
     * You can crop the Sprites texture by modifying the crop properties. For example crop.width = 50 would set the Sprite to only render 50px wide.
@@ -772,8 +772,17 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
 */
 Phaser.Sprite.prototype.centerOn = function(x, y) {
 
-    this.x = x + (this.x - this.center.x);
-    this.y = y + (this.y - this.center.y);
+    if (this.fixedToCamera)
+    {
+        this.cameraOffset.x = x + (this.cameraOffset.x - this.center.x);
+        this.cameraOffset.y = y + (this.cameraOffset.y - this.center.y);
+    }
+    else
+    {
+        this.x = x + (this.x - this.center.x);
+        this.y = y + (this.y - this.center.y);
+    }
+
     return this;
 
 };
