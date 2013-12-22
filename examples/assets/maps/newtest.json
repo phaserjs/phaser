@@ -84,13 +84,13 @@
                  "name":"",
                  "properties":
                     {
-
+                     "alpha":"0.5"
                     },
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":454,
-                 "y":307
+                 "x":443,
+                 "y":244
                 }, 
                 {
                  "gid":34,
@@ -112,7 +112,7 @@
                  "name":"",
                  "properties":
                     {
-
+                     "alpha":"0.5"
                     },
                  "type":"",
                  "visible":true,
@@ -140,7 +140,7 @@
                  "name":"",
                  "properties":
                     {
-
+                     "body.gravity.y":"5"
                     },
                  "type":"",
                  "visible":true,

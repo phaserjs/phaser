@@ -20,12 +20,14 @@ function preload() {
     // game.load.image('phaser', 'assets/sprites/mushroom2.png');
     // game.load.image('phaser', 'assets/sprites/wabbit.png');
     game.load.image('phaser', 'assets/sprites/arrow.png');
+    game.load.spritesheet('coin', 'assets/sprites/coin.png', 32, 32);
     // game.load.image('phaser', 'assets/sprites/darkwing_crazy.png');
 
 }
 
 var cursors;
 var map;
+var coins;
 
 var layer;
 var layer2;
@@ -57,13 +59,13 @@ function create() {
     // layer2.alpha = 0.5;
 
     layer = map.createLayer('Tile Layer 1');
-    layer.scrollFactorX = 0.5;
 
     // layer.debug = true;
 
     layer.resizeWorld();
 
-
+    //coins = 
+    map.createFromObjects(34, 'coin', 0)
 
     // layer2 = game.add.tilemapLayer(0, 0, 400, 600, null, map, 0);
     // layer.cameraOffset.x = 400;

@@ -335,6 +335,11 @@ Phaser.Group.prototype = {
 
     },
 
+    /**
+    * Internal test.
+    *
+    * @method Phaser.Group#childTest
+    */
     childTest: function (prefix, child) {
 
         var s = prefix + ' next: ';
@@ -363,6 +368,11 @@ Phaser.Group.prototype = {
 
     },
 
+    /**
+    * Internal test.
+    *
+    * @method Phaser.Group#swapIndex
+    */
     swapIndex: function (index1, index2) {
 
         var child1 = this.getAt(index1);
@@ -631,6 +641,32 @@ Phaser.Group.prototype = {
         }
         
         //  TODO - Deep property scane
+
+    },
+
+    /**
+    * This function allows you to quickly set a property on a single child of this Group to a new value.
+    * The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
+    *
+    * @method Phaser.Group#set
+    * @param {Phaser.Sprite} child - The child to set the property on.
+    * @param {string} key - The property, as a string, to be set. For example: 'body.velocity.x'
+    * @param {*} value - The value that will be set.
+    * @param {boolean} [checkAlive=false] - If set then the child will only be updated if alive=true.
+    * @param {boolean} [checkVisible=false] - If set then the child will only be updated if visible=true.
+    * @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+    */
+    set: function (child, key, value, checkAlive, checkVisible, operation) {
+
+        key = key.split('.');
+
+        if (typeof checkAlive === 'undefined') { checkAlive = false; }
+        if (typeof checkVisible === 'undefined') { checkVisible = false; }
+
+        if ((checkAlive === false || (checkAlive && child.alive)) && (checkVisible === false || (checkVisible && child.visible)))
+        {
+            this.setProperty(child, key, value, operation);
+        }
 
     },
 

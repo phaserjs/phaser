@@ -184,16 +184,51 @@ Phaser.Tilemap.prototype = {
     },
 
     //  Region? Remove tile from map data?
-    createSpritesFromTiles: function (layer, tileIndex, key, frame, group) {
+    createFromTiles: function (layer, tileIndex, key, frame, group) {
 
         if (typeof group === 'undefined') { group = this.game.world; }
 
     },
 
-    createGroup: function (layer, parent) {
+    /**
+    * Creates a Sprite for every object matching the given gid in the map data. You can optionally specify the group that the Sprite will be created in. If none is
+    * given it will be created in the World. All properties from the map data objectgroup are copied across to the Sprite, so you can use this as an easy way to
+    * configure Sprite properties from within the map editor. For example giving an object a property if alpha: 0.5 in the map editor will duplicate that when the
+    * Sprite is created. You could also give it a value like: body.velocity.x: 100 to set it moving automatically.
+    *
+    * @method Phaser.Tileset#createFromObjects
+    * @param {number} gid - The layer array index value, or if a string is given the layer name, within the map data that this TilemapLayer represents.
+    * @param {string} key - The Game.cache key of the image that this Sprite will use.
+    * @param {number|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
+    * @param {boolean} [exists=true] - The default exists state of the Sprite.
+    * @param {boolean} [autoCull=true] - The default autoCull state of the Sprite. Sprites that are autoCulled are culled from the camera if out of its range.
+    * @param {Phaser.Group} [group] - Optional Group to add the Sprite to. If not specified it will be added to the World group.
+    */
+    createFromObjects: function (gid, key, frame, exists, autoCull, group) {
 
-        //  Creates a Group based on an objectgroup, with one Sprite per gid entry, using the tilemap image + frame number 
-        //  Will only work if image is loaded as spritesheet
+        if (typeof exists === 'undefined') { exists = true; }
+        if (typeof autoCull === 'undefined') { autoCull = true; }
+        if (typeof group === 'undefined') { group = this.game.world; }
+
+        var sprite;
+
+        for (var i = 0; i < this.objects.length; i++)
+        {
+            if (this.objects[i].gid === gid)
+            {
+                sprite = group.create(this.objects[i].x, this.objects[i].y, key, frame, exists);
+
+                sprite.anchor.setTo(0, 1);
+                sprite.name = this.objects[i].name;
+                sprite.visible = this.objects[i].visible;
+                sprite.autoCull = autoCull;
+
+                for (property in this.objects[i].properties)
+                {
+                    group.set(sprite, property, this.objects[i].properties[property], false, false, 0);
+                }
+            }
+        }
 
     },
 

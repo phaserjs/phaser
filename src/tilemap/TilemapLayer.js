@@ -304,7 +304,7 @@ Phaser.TilemapLayer.prototype.postUpdate = function () {
 */
 Phaser.TilemapLayer.prototype.resizeWorld = function () {
 
-    this.game.world.setBounds(0, 0, this.layer.widthInPixels * 4, this.layer.heightInPixels);
+    this.game.world.setBounds(0, 0, this.layer.widthInPixels, this.layer.heightInPixels);
 
 }
 

@@ -48,6 +48,7 @@ Significant API changes:
 
 * Loader.tileset has a new method signature. Please use the new format: load.tileset(key, url, tileWidth, tileHeight, tileMargin, tileSpacing, rows, columns, total).
 * TilemapLayers are now created via the Tilemap object itself: map.createLayer(x, y, width, height, tileset, layer, group) and no longer via the GameObjectFactory.
+* Tilemap.createFromObjects can now turn a bunch of Tiled objects into Sprites in one single call, and copies across all properties as well.
 
 
 New features:
@@ -60,6 +61,7 @@ New features:
 * TilemapLayers now have debug and debugAlpha values, this turns on the drawing of the collision edges (very handy for debugging, as the name implies!)
 * Tweens have a new event: onLoop.
 * You can now load any binary file via the Loader: game.load.binary(key, url, callback) - the optional callback allows for post-load processing before entering the Cache.
+* Group.set will let you deep set a new propery on a single child of the Group.
 
 
 New Examples:

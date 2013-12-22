@@ -49,11 +49,23 @@
   <object name="sun" type="collision" x="793" y="340" width="77" height="70">
    <ellipse/>
   </object>
-  <object gid="34" x="454" y="307"/>
+  <object gid="34" x="443" y="244">
+   <properties>
+    <property name="alpha" value="0.5"/>
+   </properties>
+  </object>
   <object gid="34" x="483" y="267"/>
-  <object gid="34" x="513" y="237"/>
+  <object gid="34" x="513" y="237">
+   <properties>
+    <property name="alpha" value="0.5"/>
+   </properties>
+  </object>
   <object gid="34" x="549" y="229"/>
-  <object gid="34" x="580" y="249"/>
+  <object gid="34" x="580" y="249">
+   <properties>
+    <property name="body.gravity.y" value="5"/>
+   </properties>
+  </object>
   <object gid="34" x="610" y="278"/>
   <object gid="34" x="639" y="309"/>
   <object gid="34" x="662" y="342"/>
