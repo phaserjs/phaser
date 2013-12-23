@@ -743,6 +743,7 @@ declare module Phaser {
         crop: boolean;
         cropEnabled: boolean;
         inputEnabled: boolean;
+        fixedToCamera:boolean;
         preUpdate(): void;
         postUpdate(): void;
         centerOn(x: number, y: number): void;
@@ -777,7 +778,7 @@ declare module Phaser {
             onAnimationLoop: Phaser.Signal;
       }
 
-      class TileSprite {
+      class TileSprite extends Sprite {
             constructor(game: Phaser.Game, x: number, y: number, width: number, height: number, key?: string, frame?: number);
             texture: Phaser.RenderTexture;
             type: number;
