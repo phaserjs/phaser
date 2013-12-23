@@ -26,7 +26,7 @@ Phaser.Canvas = {
         width = width || 256;
         height = height || 256;
 
-        var canvas = document.createElement('canvas');
+        var canvas = document.getElementById(id) || document.createElement('canvas');
 
         if (typeof id === 'string')
         {
@@ -90,7 +90,7 @@ Phaser.Canvas = {
         color = color || 'rgb(0,0,0)';
 
         canvas.style.backgroundColor = color;
-        
+
         return canvas;
 
     },
