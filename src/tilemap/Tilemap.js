@@ -197,6 +197,7 @@ Phaser.Tilemap.prototype = {
     * Sprite is created. You could also give it a value like: body.velocity.x: 100 to set it moving automatically.
     *
     * @method Phaser.Tileset#createFromObjects
+    * @param {string} name - The name of the Object Group to create Sprites from.
     * @param {number} gid - The layer array index value, or if a string is given the layer name, within the map data that this TilemapLayer represents.
     * @param {string} key - The Game.cache key of the image that this Sprite will use.
     * @param {number|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
@@ -204,28 +205,34 @@ Phaser.Tilemap.prototype = {
     * @param {boolean} [autoCull=true] - The default autoCull state of the Sprite. Sprites that are autoCulled are culled from the camera if out of its range.
     * @param {Phaser.Group} [group] - Optional Group to add the Sprite to. If not specified it will be added to the World group.
     */
-    createFromObjects: function (gid, key, frame, exists, autoCull, group) {
+    createFromObjects: function (name, gid, key, frame, exists, autoCull, group) {
 
         if (typeof exists === 'undefined') { exists = true; }
         if (typeof autoCull === 'undefined') { autoCull = true; }
         if (typeof group === 'undefined') { group = this.game.world; }
 
+        if (!this.objects[name])
+        {
+            console.warn('Tilemap.createFromObjects: Invalid objectgroup name given: ' + name);
+            return;
+        }
+
         var sprite;
 
-        for (var i = 0; i < this.objects.length; i++)
+        for (var i = 0, len = this.objects[name].length; i < len; i++)
         {
-            if (this.objects[i].gid === gid)
+            if (this.objects[name][i].gid === gid)
             {
-                sprite = group.create(this.objects[i].x, this.objects[i].y, key, frame, exists);
+                sprite = group.create(this.objects[name][i].x, this.objects[name][i].y, key, frame, exists);
 
                 sprite.anchor.setTo(0, 1);
-                sprite.name = this.objects[i].name;
-                sprite.visible = this.objects[i].visible;
+                sprite.name = this.objects[name][i].name;
+                sprite.visible = this.objects[name][i].visible;
                 sprite.autoCull = autoCull;
 
-                for (property in this.objects[i].properties)
+                for (property in this.objects[name][i].properties)
                 {
-                    group.set(sprite, property, this.objects[i].properties[property], false, false, 0);
+                    group.set(sprite, property, this.objects[name][i].properties[property], false, false, 0);
                 }
             }
         }

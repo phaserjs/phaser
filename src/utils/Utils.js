@@ -245,6 +245,16 @@ function HEXtoRGB(hex) {
 }
 
 /**
+ * Converts a hex color number to an [R, G, B] array
+ *
+ * @method hex2rgb
+ * @param hex {Number}
+ */
+PIXI.hex2rgb = function hex2rgb(hex) {
+    return [(hex >> 16 & 0xFF) / 255, ( hex >> 8 & 0xFF) / 255, (hex & 0xFF)/ 255];
+};
+
+/**
 * A polyfill for Function.prototype.bind
 */
 if (typeof Function.prototype.bind != 'function') {

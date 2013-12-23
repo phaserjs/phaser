@@ -62,6 +62,7 @@ New features:
 * Tweens have a new event: onLoop.
 * You can now load any binary file via the Loader: game.load.binary(key, url, callback) - the optional callback allows for post-load processing before entering the Cache.
 * Group.set will let you deep set a new propery on a single child of the Group.
+* Stage.display property added. A direct reference to the root Pixi Stage object (very useful for RenderTexture manipulation)
 
 
 New Examples:
@@ -74,10 +75,12 @@ New Examples:
 * Added touch joystick example showing how to use the clay.io virtual game controller (thanks gabehollombe)
 * Games - Matching Pairs by Patrick OReilly.
 * Tweens - Example showing how to use the tween events, onStart, onLoop and onComplete.
+* Display - Pixi Render Texture. A Phaser conversion of the Pixi.js Render Texture example.
 
 
 Updates:
 
+* Updated to latest Pixi.js dev branch build
 * When a Sprite is destroyed any active filters are removed as well.
 * Updated Pixi.js so that removing filters now works correctly without breaking the display list.
 * Phaser.Canvas.create updated to it can be given an ID as the 3rd parameter.
@@ -109,6 +112,7 @@ Bug Fixes:
 * Fixed Pixi bug (#425) incorrect width property for multi-line BitmapText (thanks jcd-as)
 * Tween.onStart is now called when the tween starts AFTER the delay value, if given (thanks stevenbouma)
 * Sprites that are fixedToCamera can now be input dragged regardless of world position (thanks RafaelOliveira)
+* RenderTexture now displays correctly in Canvas games.
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md

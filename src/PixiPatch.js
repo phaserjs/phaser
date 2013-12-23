@@ -76,6 +76,13 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
                 {
                     this.context.transform(1, 0, 0, 1, displayObject.texture.trim.x, displayObject.texture.trim.y);
                 }
+
+                //if smoothingEnabled is supported and we need to change the smoothing property for this texture
+                if (this.smoothProperty && this.scaleMode !== displayObject.texture.baseTexture.scaleMode)
+                {
+                    this.scaleMode = displayObject.texture.baseTexture.scaleMode;
+                    this.context[this.smoothProperty] = (this.scaleMode === PIXI.BaseTexture.SCALE_MODE.LINEAR);
+                }
                     
                 this.context.drawImage(
                     displayObject.texture.baseTexture.source,

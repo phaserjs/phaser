@@ -265,7 +265,7 @@ Phaser.TilemapParser = {
         map.images = images;
 
         //  Objects
-        var objects = [];
+        var objects = {};
 
         for (var i = 0; i < json.layers.length; i++)
         {
@@ -274,7 +274,9 @@ Phaser.TilemapParser = {
                 continue;
             }
 
-            for (var v = 0; v < json.layers[i].objects.length; v++)
+            objects[json.layers[i].name] = [];
+
+            for (var v = 0, len = json.layers[i].objects.length; v < len; v++)
             {
                 //  For now we'll just support object tiles
                 if (json.layers[i].objects[v].gid)
@@ -290,7 +292,7 @@ Phaser.TilemapParser = {
 
                     };
         
-                    objects.push(object);
+                    objects[json.layers[i].name].push(object);
                 }
 
             }

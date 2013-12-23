@@ -161,6 +161,10 @@
       "title": "graphics"
     },
     {
+      "file": "pixi+render+texture.js",
+      "title": "pixi render texture"
+    },
+    {
       "file": "render+crisp.js",
       "title": "render crisp"
     },

@@ -306,7 +306,7 @@ Phaser.RenderTexture.prototype.renderCanvas = function(displayObject, position, 
     {
         this.renderer.context.clearRect(0, 0, this.width, this.height);
     }
-    
+
     this.renderer.renderDisplayObject(displayObject);
     
     this.renderer.context.setTransform(1, 0, 0, 1, 0, 0);

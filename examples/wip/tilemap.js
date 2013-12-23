@@ -65,7 +65,7 @@ function create() {
     layer.resizeWorld();
 
     //coins = 
-    map.createFromObjects(34, 'coin', 0)
+    map.createFromObjects('Object Layer 1', 34, 'coin', 0);
 
     // layer2 = game.add.tilemapLayer(0, 0, 400, 600, null, map, 0);
     // layer.cameraOffset.x = 400;
