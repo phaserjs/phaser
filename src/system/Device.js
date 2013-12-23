@@ -41,6 +41,12 @@ Phaser.Device = function () {
     this.cocoonJS = false;
 
     /**
+    * @property {boolean} ejecta - Is the game running under Ejecta?
+    * @default
+    */
+    this.ejecta = false;
+
+    /**
     * @property {boolean} android - Is running on android?
     * @default
     */
@@ -126,7 +132,7 @@ Phaser.Device = function () {
     */
     this.css3D = false;
 
-    /** 
+    /**
     * @property {boolean} pointerLock - Is Pointer Lock available?
     * @default
     */
@@ -295,7 +301,7 @@ Phaser.Device = function () {
     */
     this.iPhone4 = false;
 
-    /** 
+    /**
     * @property {boolean} iPad - Is running on iPad?
     * @default
     */
@@ -320,7 +326,7 @@ Phaser.Device = function () {
     this._checkDevice();
     this._checkFeatures();
     this._checkOS();
-    
+
 };
 
 Phaser.Device.prototype = {
@@ -395,7 +401,7 @@ Phaser.Device.prototype = {
         }
 
         this.worker = !!window['Worker'];
-        
+
         if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1))
         {
             this.touch = true;
@@ -405,7 +411,7 @@ Phaser.Device.prototype = {
         {
             this.mspointer = true;
         }
-        
+
         this.pointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
     },
@@ -478,6 +484,11 @@ Phaser.Device.prototype = {
             this.cocoonJS = true;
         }
 
+        if (typeof window.ejecta !== "undefined")
+        {
+            this.ejecta = true;
+        }
+
     },
 
     /**
@@ -494,7 +505,7 @@ Phaser.Device.prototype = {
 
         try {
             if (result = !!audioElement.canPlayType) {
-                
+
                 if (audioElement.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, '')) {
                     this.ogg = true;
                 }
@@ -551,7 +562,7 @@ Phaser.Device.prototype = {
         }
 
         navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
-         
+
         if (navigator.vibrate)
         {
             this.vibration = true;
@@ -587,7 +598,7 @@ Phaser.Device.prototype = {
                 has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
             }
         }
-        
+
         document.body.removeChild(el);
         this.css3D = (has3d !== undefined && has3d.length > 0 && has3d !== "none");
 

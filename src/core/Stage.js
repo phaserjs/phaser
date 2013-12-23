@@ -32,13 +32,13 @@ Phaser.Stage = function (game, width, height) {
     * @property {Phaser.Point} offset - Get the offset values (for input and other things).
     */
     this.offset = new Phaser.Point();
-    
+
     /**
     * @property {HTMLCanvasElement} canvas - Reference to the newly created &lt;canvas&gt; element.
     */
-    this.canvas = Phaser.Canvas.create(width, height);
+    this.canvas = Phaser.Canvas.create(width, height, (game.device.ejecta) ? 'canvas' : '');
     this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
-    
+
     /**
     * @property {PIXI.Stage} _stage - The Pixi Stage which is hooked to the renderer.
     * @private
