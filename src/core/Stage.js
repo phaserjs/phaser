@@ -24,7 +24,6 @@ Phaser.Stage = function (game, width, height) {
     /**
     * @property {string} game - Background color of the stage (defaults to black). Set via the public backgroundColor property.
     * @private
-    * @default 'rgb(0,0,0)'
     */
     this._backgroundColor = 'rgb(0,0,0)';
 
@@ -34,10 +33,9 @@ Phaser.Stage = function (game, width, height) {
     this.offset = new Phaser.Point();
     
     /**
-    * @property {HTMLCanvasElement} canvas - Reference to the newly created &lt;canvas&gt; element.
+    * @property {HTMLCanvasElement} canvas - Reference to the newly created `canvas` element.
     */
-    this.canvas = Phaser.Canvas.create(width, height);
-    this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
+    this.canvas = null;
     
     /**
     * @property {PIXI.Stage} _stage - The Pixi Stage which is hooked to the renderer.
@@ -90,9 +88,72 @@ Phaser.Stage = function (game, width, height) {
     */
     this.checkOffsetInterval = 2500;
 
+    if (game.config)
+    {
+        this.parseConfig(game.config);
+    }
+    else
+    {
+        this.canvas = Phaser.Canvas.create(width, height);
+        this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
+    }
+
 };
 
 Phaser.Stage.prototype = {
+
+    /**
+    * Parses a Game configuration object.
+    *
+    * @method Phaser.Stage#parseConfig
+    * @protected
+    */
+    parseConfig: function (config) {
+
+        if (config['canvasID'])
+        {
+            this.canvas = Phaser.Canvas.create(this.game.width, this.game.height, config['canvasID']);
+        }
+        else
+        {
+            this.canvas = Phaser.Canvas.create(this.game.width, this.game.height);
+        }
+
+        if (config['canvasStyle'])
+        {
+            this.canvas.stlye = config['canvasStyle'];
+        }
+        else
+        {
+            this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
+        }
+
+        if (config['checkOffsetInterval'])
+        {
+            this.checkOffsetInterval = config['checkOffsetInterval'];
+        }
+
+        if (config['disableVisibilityChange'])
+        {
+            this.disableVisibilityChange = config['disableVisibilityChange'];
+        }
+
+        if (config['fullScreenScaleMode'])
+        {
+            this.fullScreenScaleMode = config['fullScreenScaleMode'];
+        }
+
+        if (config['scaleMode'])
+        {
+            this.scaleMode = config['scaleMode'];
+        }
+
+        if (config['backgroundColor'])
+        {
+            this.backgroundColor = config['backgroundColor'];
+        }
+
+    },
 
     /**
     * Initialises the stage and adds the event listeners.

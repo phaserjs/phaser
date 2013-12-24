@@ -32,7 +32,7 @@ Phaser.StateManager = function (game, pendingState) {
     */
     this._pendingState = null;
 
-    if (pendingState !== null)
+    if (typeof pendingState !== 'undefined' && pendingState !== null)
     {
         this._pendingState = pendingState;
     }

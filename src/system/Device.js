@@ -41,6 +41,12 @@ Phaser.Device = function () {
     this.cocoonJS = false;
 
     /**
+     * @property {boolean} ejecta - Is the game running under Ejecta?
+     * @default
+     */
+    this.ejecta = false;
+
+    /**
     * @property {boolean} android - Is running on android?
     * @default
     */
@@ -476,6 +482,11 @@ Phaser.Device.prototype = {
         if (navigator['isCocoonJS'])
         {
             this.cocoonJS = true;
+        }
+
+        if (typeof window.ejecta !== "undefined")
+        {
+            this.ejecta = true;
         }
 
     },

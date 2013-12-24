@@ -1,5 +1,16 @@
 
-var game = new Phaser.Game(800, 600, Phaser.WEBGL, 'phaser-example', { preload: preload, create: create, update: update });
+var config = {
+
+	width: "100%",
+	height: "100%",
+	renderer: Phaser.WEBGL,
+	parent: 'phaser-example',
+	state: { preload: preload, create: create, update: update },
+	backgroundColor: '#ff0000'
+
+};
+
+var game = new Phaser.Game(config);
 
 function preload() {
 
@@ -24,20 +35,20 @@ var count = 0;
 function create() {
 
 	// create two render textures.. these dynamic textures will be used to draw the scene into itself
-	renderTexture = game.add.renderTexture('texture1', 800, 600);
-	renderTexture2 = game.add.renderTexture('textur2e', 800, 600);
+	renderTexture = game.add.renderTexture('texture1', game.width, game.height);
+	renderTexture2 = game.add.renderTexture('textur2e', game.width, game.height);
 	currentTexture = renderTexture;
 
 	// create a new sprite that uses the render texture we created above
-	outputSprite = game.add.sprite(400, 300, currentTexture);
+	outputSprite = game.add.sprite(game.width/2, game.height/2, currentTexture);
 
 	// align the sprite
 	outputSprite.anchor.x = 0.5;
 	outputSprite.anchor.y = 0.5;
 
 	stuffContainer = game.add.group();
-	stuffContainer.x = 800/2;
-	stuffContainer.y = 600/2
+	stuffContainer.x = game.width/2;
+	stuffContainer.y = game.height/2;
 
 	// now create some items and randomly position them in the stuff container
 	for (var i = 0; i < 20; i++)

@@ -53,6 +53,8 @@ Significant API changes:
 
 New features:
 
+* Phaser.Game constructor can now be passed a single object containing game settings + Stage settings, useful for advanced configurations.
+* The width/height given to Phaser.Game can now be percentages, i.e. "100%" will set the width to the maximum window innerWidth.
 * Added a stage.fullScreenScaleMode property to determine scaling when fullscreen (thanks oysterCrusher)
 * Added support for margin and spacing around a frame in Loader.spritesheet.
 * Added Device.vibration to check if the Vibration API is available or not.
@@ -63,6 +65,7 @@ New features:
 * You can now load any binary file via the Loader: game.load.binary(key, url, callback) - the optional callback allows for post-load processing before entering the Cache.
 * Group.set will let you deep set a new propery on a single child of the Group.
 * Stage.display property added. A direct reference to the root Pixi Stage object (very useful for RenderTexture manipulation)
+* Added Ejecta detection to Device (thanks endel)
 
 
 New Examples:

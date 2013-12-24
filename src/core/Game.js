@@ -24,55 +24,61 @@
 */
 Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias) {
 
-    width = width || 800;
-    height = height || 600;
-    renderer = renderer || Phaser.AUTO;
-    parent = parent || '';
-    state = state || null;
-
-    if (typeof transparent === 'undefined') { transparent = false; }
-    if (typeof antialias === 'undefined') { antialias = true; }
-
     /**
     * @property {number} id - Phaser Game ID (for when Pixi supports multiple instances).
     */
     this.id = Phaser.GAMES.push(this) - 1;
 
     /**
-    * @property {HTMLElement} parent - The Games DOM parent.
+    * @property {object} config - The Phaser.Game configuration object.
     */
-    this.parent = parent;
+    this.config = null;
+
+    /**
+    * @property {HTMLElement} parent - The Games DOM parent.
+    * @default
+    */
+    this.parent = '';
 
     /**
     * @property {number} width - The Game width (in pixels).
+    * @default
     */
-    this.width = width;
+    this.width = 800;
 
     /**
     * @property {number} height - The Game height (in pixels).
+    * @default
     */
-    this.height = height;
+    this.height = 600;
 
     /**
     * @property {boolean} transparent - Use a transparent canvas background or not.
+    * @default
     */
-    this.transparent = transparent;
+    this.transparent = false;
 
     /**
     * @property {boolean} antialias - Anti-alias graphics (in WebGL this helps with edges, in Canvas2D it retains pixel-art quality).
+    * @default
     */
-    this.antialias = antialias;
+    this.antialias = true;
 
     /**
     * @property {number} renderer - The Pixi Renderer
     * @default
     */
-    this.renderer = null;
+    this.renderer = Phaser.AUTO;
+
+    /**
+    * @property {number} renderType - The Renderer this Phaser.Game will use. Either Phaser.RENDERER_AUTO, Phaser.RENDERER_CANVAS or Phaser.RENDERER_WEBGL.
+    */
+    this.renderType = Phaser.AUTO;
 
     /**
     * @property {number} state - The StateManager.
     */
-    this.state = new Phaser.StateManager(this, state);
+    this.state = null;
 
     /**
     * @property {boolean} _paused - Is game paused?
@@ -80,11 +86,6 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @default
     */
     this._paused = false;
-
-    /**
-    * @property {number} renderType - The Renderer this Phaser.Game will use. Either Phaser.RENDERER_AUTO, Phaser.RENDERER_CANVAS or Phaser.RENDERER_WEBGL.
-    */
-    this.renderType = renderer;
 
     /**
     * @property {boolean} _loadComplete - Whether load complete loading or not.
@@ -225,6 +226,47 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     */
     this.particles = null;
 
+    //  Parse the configuration object (if any)
+    if (arguments.length === 1 && typeof arguments[0] === 'object')
+    {
+        this.parseConfig(arguments[0]);
+    }
+    else
+    {
+        if (typeof width !== 'undefined')
+        {
+            this.width = width;
+        }
+
+        if (typeof height !== 'undefined')
+        {
+            this.height = height;
+        }
+
+        if (typeof renderer !== 'undefined')
+        {
+            this.renderer = renderer;
+            this.renderType = renderer;
+        }
+
+        if (typeof parent !== 'undefined')
+        {
+            this.parent = parent;
+        }
+
+        if (typeof transparent !== 'undefined')
+        {
+            this.transparent = transparent;
+        }
+
+        if (typeof antialias !== 'undefined')
+        {
+            this.antialias = antialias;
+        }
+
+        this.state = new Phaser.StateManager(this, state);
+    }
+
     var _this = this;
 
     this._onBoot = function () {
@@ -246,6 +288,99 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 };
 
 Phaser.Game.prototype = {
+
+    /**
+    * Parses a Game configuration object.
+    *
+    * @method Phaser.Game#parseConfig
+    * @protected
+    */
+    parseConfig: function (config) {
+
+        this.config = config;
+
+        if (config['width'])
+        {
+            this.width = this.parseDimension(config['width'], 0);
+        }
+
+        if (config['height'])
+        {
+            this.height = this.parseDimension(config['height'], 1);
+        }
+
+        if (config['renderer'])
+        {
+            this.renderer = config['renderer'];
+            this.renderType = config['renderer'];
+        }
+
+        if (config['parent'])
+        {
+            this.parent = config['parent'];
+        }
+
+        if (config['transparent'])
+        {
+            this.transparent = config['transparent'];
+        }
+
+        if (config['antialias'])
+        {
+            this.antialias = config['antialias'];
+        }
+
+        var state = null;
+
+        if (config['state'])
+        {
+            state = config['state'];
+        }
+
+        this.state = new Phaser.StateManager(this, state);
+
+    },
+
+    /**
+    * Get dimension.
+    *
+    * @method Phaser.Game#parseDimension
+    * @protected
+    */
+    parseDimension: function (size, dimension) {
+
+        var f = 0;
+        var px = 0;
+
+        if (typeof size === 'string')
+        {
+            //  %?
+            if (size.substr(-1) === '%')
+            {
+                f = parseInt(size, 10) / 100;
+
+                if (dimension === 0)
+                {
+                    px = window.innerWidth * f;
+                }
+                else
+                {
+                    px = window.innerHeight * f;
+                }
+            }
+            else
+            {
+                px = parseInt(size, 10);
+            }
+        }
+        else
+        {
+            px = size;
+        }
+
+        return px;
+
+    },
 
     /**
     * Initialize engine sub modules and start the game.
