@@ -584,7 +584,7 @@ Phaser.InputHandler.prototype = {
 
             if (this.useHandCursor && this._pointerData[pointer.id].isDragged === false)
             {
-                this.game.stage.canvas.style.cursor = "pointer";
+                this.game.canvas.style.cursor = "pointer";
             }
 
             this.sprite.events.onInputOver.dispatch(this.sprite, pointer);
@@ -605,7 +605,7 @@ Phaser.InputHandler.prototype = {
 
         if (this.useHandCursor && this._pointerData[pointer.id].isDragged === false)
         {
-            this.game.stage.canvas.style.cursor = "default";
+            this.game.canvas.style.cursor = "default";
         }
 
         if (this.sprite && this.sprite.events)
@@ -674,7 +674,7 @@ Phaser.InputHandler.prototype = {
                 //  Pointer outside the sprite? Reset the cursor
                 if (this.useHandCursor)
                 {
-                    this.game.stage.canvas.style.cursor = "default";
+                    this.game.canvas.style.cursor = "default";
                 }
             }
 
