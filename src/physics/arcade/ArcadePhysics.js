@@ -748,9 +748,12 @@ Phaser.Physics.Arcade.prototype = {
     * @returns {boolean} Returns true if the bodies were separated, otherwise false.
     */
     separate: function (body1, body2) {
-
-        this._result = (this.separateX(body1, body2) || this.separateY(body1, body2));
-
+        if(body1 !== body2)
+        {
+            this._result = (this.separateX(body1, body2) || this.separateY(body1, body2));    
+        } else {
+            this._result = false;
+        }
     },
 
     /**
