@@ -181,6 +181,28 @@
       "title": "render texture trail"
     }
   ],
+  "debug":[
+    {
+     "file": "debug+sprite.js",
+     "title": "Sprite data"
+    },
+    {
+      "file": "debug+display.js",
+      "title": "Sprite display"
+    },
+    {
+      "file": "debug+input.js",
+      "title": "Input"
+    },
+    {
+        "file": "debug+camera.js",
+        "title": "Camera"
+    },
+    {
+        "file": "debug+draw.js",
+        "title": "Draw"
+    }
+  ],
   "filters": [
     {
       "file": "blur.js",
