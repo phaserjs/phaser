@@ -69,12 +69,12 @@ function update() {
 		if (i == 0 || i == 100 || i == 200)
 		{
 			//	If it's the first star of the layer then we clear the texture
-			stars[i].texture.renderXY(star, stars[i].x, stars[i].y, true);
+			stars[i].texture.renderXY(star, stars[i].x, stars[i].y, true, true);
 		}
 		else
 		{
 			//	Otherwise just draw the star sprite where we need it
-			stars[i].texture.renderXY(star, stars[i].x, stars[i].y, false);
+			stars[i].texture.renderXY(star, stars[i].x, stars[i].y, false, true);
 		}
 	}
 

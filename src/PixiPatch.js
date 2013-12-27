@@ -24,7 +24,7 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
 
     this.context.setTransform(1, 0, 0, 1, 0, 0);
     this.context.clearRect(0, 0, this.width, this.height)
-    this.renderDisplayObject(stage);
+    this.renderDisplayObject(stage, false);
    
     //  Remove frame updates
     if (PIXI.Texture.frameUpdates.length > 0)
@@ -34,7 +34,9 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
     
 }
 
-PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
+// @param {boolean} [renderHidden=false] - If true displayObjects that have their visible property set to false will still be rendered.
+
+PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject, renderHidden)
 {
     // Once the display object hits this we can break the loop  
     var testObject = displayObject.last._iNext;
@@ -44,7 +46,7 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
     {
         //transform = displayObject.worldTransform;
         
-        if (!displayObject.visible)
+        if (!displayObject.visible && !renderHidden)
         {
             displayObject = displayObject.last._iNext;
             continue;

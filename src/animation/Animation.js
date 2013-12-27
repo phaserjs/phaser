@@ -43,7 +43,7 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     this.name = name;
 
     /**
-    * @property {object} _frames
+    * @property {array} _frames
     * @private
     */
     this._frames = [];
@@ -60,7 +60,8 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     this.looped = looped;
 
     /**
-    * @property {boolean} looped - The loop state of the Animation.
+    * @property {boolean} killOnComplete - Should the parent of this Animation be killed when the animation completes?
+    * @default
     */
     this.killOnComplete = false;
 

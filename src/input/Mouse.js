@@ -68,7 +68,8 @@ Phaser.Mouse = function (game) {
     this.pointerLock = new Phaser.Signal();
 
     /**
-    * @property {MouseEvent} event - The browser mouse event.
+    * @property {MouseEvent} event - The browser mouse DOM event. Will be set to null if no mouse event has ever been received.
+    * @default
     */
     this.event = null;
 

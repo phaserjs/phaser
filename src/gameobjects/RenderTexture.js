@@ -71,16 +71,19 @@ Phaser.RenderTexture.prototype.constructor = PIXI.RenderTexture;
 /**
 * This function will draw the display object to the texture. If the display object is a Group or has children it will
 * draw all children as well.
-*
-* @method render
+* 
+* @method Phaser.RenderTexture#render
+* @memberof Phaser.RenderTexture
 * @param {DisplayObject} displayObject - The display object to render this texture on.
 * @param {Phaser.Point} [position] - Where to draw the display object.
 * @param {boolean} [clear=false] - If true the texture will be cleared before the displayObject is drawn.
+* @param {boolean} [renderHidden=false] - If true displayObjects that have their visible property set to false will still be rendered.
 */
-Phaser.RenderTexture.prototype.render = function(displayObject, position, clear) {
+Phaser.RenderTexture.prototype.render = function(displayObject, position, clear, renderHidden) {
 
     if (typeof position === 'undefined') { position = false; }
     if (typeof clear === 'undefined') { clear = false; }
+    if (typeof renderHidden === 'undefined') { renderHidden = false; }
 
     if (displayObject instanceof Phaser.Group)
     {
@@ -89,11 +92,11 @@ Phaser.RenderTexture.prototype.render = function(displayObject, position, clear)
 
     if (PIXI.gl)
     {
-        this.renderWebGL(displayObject, position, clear);
+        this.renderWebGL(displayObject, position, clear, renderHidden);
     }
     else
     {
-        this.renderCanvas(displayObject, position, clear);
+        this.renderCanvas(displayObject, position, clear, renderHidden);
     }
 
 }
@@ -102,29 +105,32 @@ Phaser.RenderTexture.prototype.render = function(displayObject, position, clear)
 * This function will draw the display object to the texture at the given x/y coordinates.
 * If the display object is a Group or has children it will draw all children as well.
 *
-* @method renderXY
+* @method Phaser.RenderTexture#renderXY
+* @memberof Phaser.RenderTexture
 * @param {DisplayObject} displayObject - The display object to render this texture on.
 * @param {number} x - The x coordinate to draw the display object at.
 * @param {number} y - The y coordinate to draw the display object at.
 * @param {boolean} [clear=false] - If true the texture will be cleared before the displayObject is drawn.
+* @param {boolean} [renderHidden=false] - If true displayObjects that have their visible property set to false will still be rendered.
 */
-Phaser.RenderTexture.prototype.renderXY = function(displayObject, x, y, clear) {
+Phaser.RenderTexture.prototype.renderXY = function(displayObject, x, y, clear, renderHidden) {
 
     this._tempPoint.x = x;
     this._tempPoint.y = y;
 
-    this.render(displayObject, this._tempPoint, clear);
+    this.render(displayObject, this._tempPoint, clear, renderHidden);
 
 }
 
 /**
- * Initializes the webgl data for this texture
- *
- * @method initWebGL
- * @private
- */
-Phaser.RenderTexture.prototype.initWebGL = function()
-{
+* Initializes the webgl data for this texture
+*
+* @method Phaser.RenderTexture#initWebGL
+* @memberof Phaser.RenderTexture
+* @private
+*/
+Phaser.RenderTexture.prototype.initWebGL = function() {
+
     var gl = PIXI.gl;
     this.glFramebuffer = gl.createFramebuffer();
 
@@ -160,7 +166,12 @@ Phaser.RenderTexture.prototype.initWebGL = function()
     // this.render = this.renderWebGL;
 }
 
-
+/**
+* Resizes the RenderTexture.
+*
+* @method Phaser.RenderTexture#resize
+* @memberof Phaser.RenderTexture
+*/
 Phaser.RenderTexture.prototype.resize = function(width, height)
 {
 
@@ -186,11 +197,12 @@ Phaser.RenderTexture.prototype.resize = function(width, height)
 }
 
 /**
- * Initializes the canvas data for this texture
- *
- * @method initCanvas
- * @private
- */
+* Initializes the canvas data for this texture
+*
+* @method Phaser.RenderTexture#initCanvas
+* @memberof Phaser.RenderTexture
+* @private
+*/
 Phaser.RenderTexture.prototype.initCanvas = function()
 {
     this.renderer = new PIXI.CanvasRenderer(this.width, this.height, null, 0);
@@ -202,14 +214,17 @@ Phaser.RenderTexture.prototype.initCanvas = function()
 }
 
 /**
- * This function will draw the display object to the texture.
- *
- * @method renderWebGL
- * @param displayObject {DisplayObject} The display object to render this texture on
- * @param clear {Boolean} If true the texture will be cleared before the displayObject is drawn
- * @private
- */
-Phaser.RenderTexture.prototype.renderWebGL = function(displayObject, position, clear)
+* This function will draw the display object to the texture.
+*
+* @method Phaser.RenderTexture#renderWebGL
+* @memberof Phaser.RenderTexture
+* @private
+* @param {DisplayObject} displayObject - The display object to render this texture on.
+* @param {Phaser.Point} [position] - Where to draw the display object.
+* @param {boolean} [clear=false] - If true the texture will be cleared before the displayObject is drawn.
+* @param {boolean} [renderHidden=false] - If true displayObjects that have their visible property set to false will still be rendered.
+*/
+Phaser.RenderTexture.prototype.renderWebGL = function(displayObject, position, clear, renderHidden)
 {
     var gl = PIXI.gl;
 
@@ -280,12 +295,15 @@ Phaser.RenderTexture.prototype.renderWebGL = function(displayObject, position, c
 /**
  * This function will draw the display object to the texture.
  *
- * @method renderCanvas
- * @param displayObject {DisplayObject} The display object to render this texture on
- * @param clear {Boolean} If true the texture will be cleared before the displayObject is drawn
- * @private
- */
-Phaser.RenderTexture.prototype.renderCanvas = function(displayObject, position, clear)
+* @method Phaser.RenderTexture#renderCanvas
+* @memberof Phaser.RenderTexture
+* @private
+* @param {DisplayObject} displayObject - The display object to render this texture on.
+* @param {Phaser.Point} [position] - Where to draw the display object.
+* @param {boolean} [clear=false] - If true the texture will be cleared before the displayObject is drawn.
+* @param {boolean} [renderHidden=false] - If true displayObjects that have their visible property set to false will still be rendered.
+*/
+Phaser.RenderTexture.prototype.renderCanvas = function(displayObject, position, clear, renderHidden)
 {
     var children = displayObject.children;
 
@@ -307,9 +325,8 @@ Phaser.RenderTexture.prototype.renderCanvas = function(displayObject, position, 
         this.renderer.context.clearRect(0, 0, this.width, this.height);
     }
 
-    this.renderer.renderDisplayObject(displayObject);
+    this.renderer.renderDisplayObject(displayObject, renderHidden);
     
     this.renderer.context.setTransform(1, 0, 0, 1, 0, 0);
 
-  //  PIXI.texturesToUpdate.push(this.baseTexture);
 }

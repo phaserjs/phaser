@@ -102,6 +102,8 @@ Updates:
 * Tweens fire an onLoop event if they are set to repeat. onComplete is now only fired for the final repeat (or never if the repeat is infinite)
 * Pointer used to un-pause a paused game every time it was clicked/touched (this avoided some rogue browser plugins). Now only happens if Stage.disableVisibilityChange is true.
 * Input doesn't set the cursor to default if it's already set to none.
+* You can now collide a group against itself, to have all children collide, and bodies won't check against themselves (thanks cocoademon)
+* RenderTexture.render / renderXY has a new parameter: renderHidden, a boolean which will allow you to render Sprites even if their visible is set to false.
 
 
 Bug Fixes:

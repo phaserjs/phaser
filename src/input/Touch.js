@@ -67,7 +67,8 @@ Phaser.Touch = function (game) {
     this.preventDefault = true;
 
     /**
-    * @property {TouchEvent} event - The browser touch event.
+    * @property {TouchEvent} event - The browser touch DOM event. Will be set to null if no touch event has ever been received.
+    * @default
     */
     this.event = null;
 
