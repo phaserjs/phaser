@@ -1,4 +1,3 @@
-
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
 
 function preload() {
@@ -154,7 +153,7 @@ function ballHitBrick (_ball, _brick) {
         //  New level starts
         score += 1000;
         scoreText.content = 'score: ' + score;
-        introText = '- Next Level -';
+        introText.content = '- Next Level -';
 
         //  Let's move the ball back to the paddle
         ballOnPaddle = true;
