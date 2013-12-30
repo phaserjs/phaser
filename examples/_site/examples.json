@@ -371,6 +371,10 @@
       "title": "gamepad hotkeys"
     },
     {
+      "file": "gamepad+invaders.js",
+      "title": "gamepad invaders"
+    },
+    {
       "file": "gamepad+multiple+pads.js",
       "title": "gamepad multiple pads"
     },
