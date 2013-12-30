@@ -99,7 +99,7 @@
         <char id="46" x="214" y="391" width="13" height="13" xoffset="3" yoffset="54" xadvance="11" page="0" chnl="0" letter="."/>
         <char id="95" x="228" y="391" width="46" height="12" xoffset="-2" yoffset="63" xadvance="35" page="0" chnl="0" letter="_"/>
         <char id="45" x="275" y="391" width="29" height="11" xoffset="9" yoffset="46" xadvance="34" page="0" chnl="0" letter="-"/>
-        <char id="32" x="305" y="391" width="0" height="0" xoffset="23" yoffset="81" xadvance="23" page="0" chnl="0" letter="space"/>
+        <char id="32" x="305" y="391" width="1" height="1" xoffset="23" yoffset="81" xadvance="23" page="0" chnl="0" letter="space"/>
     </chars>
     <kernings count="1816">
         <kerning first="102" second="102" amount="2"/>

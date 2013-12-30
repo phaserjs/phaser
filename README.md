@@ -107,6 +107,7 @@ Updates:
 * You can now collide a group against itself, to have all children collide, and bodies won't check against themselves (thanks cocoademon)
 * RenderTexture.render / renderXY has a new parameter: renderHidden, a boolean which will allow you to render Sprites even if their visible is set to false.
 * Added in prototype.constructor definitions to every class (thanks darkoverlordofdata)
+* Group.destroy has a new parameter: destroyChildren (boolean) which will optionally call the destroy method of all Group children.
 
 
 Bug Fixes:
@@ -124,6 +125,8 @@ Bug Fixes:
 * RenderTexture now displays correctly in Canvas games.
 * Canvas.addToDOM is now more robust when applying the overflowHidden style.
 * Fixed Pixi.StripShader which should stop the weird TileSprite GPU issues some were reporting (thanks GoodboyDigital)
+* Patched desyrel.xml so it doesn't contain any zero width/height characters, as they broke Firefox 25.
+
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
@@ -291,6 +294,7 @@ Beyond version 1.2
 * Create more touch input examples (http://www.html5gamedevs.com/topic/1556-mobile-touch-event/)
 * Look at HiDPI Canvas settings.
 * Support for parallel asset loading.
+* Fixed width bitmap font support, plus enhanced Bitmap font rendering.
 
 
 Contributing

@@ -1338,11 +1338,31 @@ Phaser.Group.prototype = {
     * Destroys this Group. Removes all children, then removes the container from the display list and nulls references.
     *
     * @method Phaser.Group#destroy
+    * @param {boolean} [destroyChildren=false] - Should every child of this Group have its destroy method called?
     */
-    destroy: function () {
+    destroy: function (destroyChildren) {
 
-        this.removeAll();
+        if (typeof destroyChildren === 'undefined') { destroyChildren = false; }
 
+        if (destroyChildren)
+        {
+            if (this._container.children.length > 0)
+            {
+                do
+                {
+                    if (this._container.children[0].group)
+                    {
+                        this._container.children[0].destroy();
+                    }
+                }
+                while (this._container.children.length > 0);
+            }
+        }
+        else
+        {
+            this.removeAll();
+        }
+    
         this._container.parent.removeChild(this._container);
 
         this._container = null;
@@ -1505,7 +1525,16 @@ Phaser.Group.prototype.constructor = Phaser.Group;
 Object.defineProperty(Phaser.Group.prototype, "total", {
 
     get: function () {
-        return this.iterate('exists', true, Phaser.Group.RETURN_TOTAL);
+
+        if (this._container)
+        {
+            return this.iterate('exists', true, Phaser.Group.RETURN_TOTAL);
+        }
+        else
+        {
+            return 0;
+        }
+
     }
 
 });
@@ -1518,7 +1547,16 @@ Object.defineProperty(Phaser.Group.prototype, "total", {
 Object.defineProperty(Phaser.Group.prototype, "length", {
 
     get: function () {
-        return this._container.children.length;
+
+        if (this._container)
+        {
+            return this._container.children.length;
+        }
+        else
+        {
+            return 0;
+        }
+
     }
 
 });
