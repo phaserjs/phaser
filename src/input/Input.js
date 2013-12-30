@@ -307,6 +307,13 @@ Phaser.Input.prototype = {
     mspointer: null,
 
     /**
+     * The Gamepad Input manager.
+     * @property {Phaser.Gamepad} gamepad - The Gamepad Input manager.
+     * @default
+     */
+    gamepad: null,
+
+    /**
     * A Signal that is dispatched each time a pointer is pressed down.
     * @property {Phaser.Signal} onDown
     * @default
@@ -355,6 +362,7 @@ Phaser.Input.prototype = {
         this.keyboard = new Phaser.Keyboard(this.game);
         this.touch = new Phaser.Touch(this.game);
         this.mspointer = new Phaser.MSPointer(this.game);
+        this.gamepad = new Phaser.Gamepad(this.game);
 
         this.onDown = new Phaser.Signal();
         this.onUp = new Phaser.Signal();
@@ -394,6 +402,7 @@ Phaser.Input.prototype = {
         this.keyboard.stop();
         this.touch.stop();
         this.mspointer.stop();
+        this.gamepad.stop();
 
     },
 
@@ -447,6 +456,8 @@ Phaser.Input.prototype = {
         this._oldPosition.copyFrom(this.position);
         this.mousePointer.update();
 
+        if (this.gamepad.active) { this.gamepad.update(); }
+
         this.pointer1.update();
         this.pointer2.update();
 
@@ -478,6 +489,7 @@ Phaser.Input.prototype = {
 
         this.keyboard.reset();
         this.mousePointer.reset();
+        this.gamepad.reset();
 
         for (var i = 1; i <= 10; i++)
         {
