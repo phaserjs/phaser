@@ -1107,3 +1107,5 @@ Phaser.InputHandler.prototype = {
     }
 
 };
+
+Phaser.InputHandler.prototype.constructor = Phaser.InputHandler;

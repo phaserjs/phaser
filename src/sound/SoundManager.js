@@ -369,6 +369,8 @@ Phaser.SoundManager.prototype = {
 
 };
 
+Phaser.SoundManager.prototype.constructor = Phaser.SoundManager;
+
 /**
 * @name Phaser.SoundManager#mute
 * @property {boolean} mute - Gets or sets the muted state of the SoundManager. This effects all sounds in the game.

@@ -1495,6 +1495,8 @@ Phaser.Group.prototype = {
 
 };
 
+Phaser.Group.prototype.constructor = Phaser.Group;
+
 /**
 * @name Phaser.Group#total
 * @property {number} total - The total number of children in this Group who have a state of exists = true.

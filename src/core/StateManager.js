@@ -512,3 +512,5 @@ Phaser.StateManager.prototype = {
     }
 
 };
+
+Phaser.StateManager.prototype.constructor = Phaser.StateManager;

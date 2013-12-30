@@ -160,3 +160,5 @@ Phaser.SignalBinding.prototype = {
     }
 
 };
+
+Phaser.SignalBinding.prototype.constructor = Phaser.SignalBinding;

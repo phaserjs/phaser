@@ -288,6 +288,8 @@ Phaser.Point.prototype = {
 
 };
 
+Phaser.Point.prototype.constructor = Phaser.Point;
+
 /**
 * Adds the coordinates of two points together to create a new point.
 * @method Phaser.Point.add

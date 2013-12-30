@@ -236,3 +236,5 @@ Phaser.Time.prototype = {
 	}
 
 };
+
+Phaser.Time.prototype.constructor = Phaser.Time;

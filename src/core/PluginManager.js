@@ -295,3 +295,5 @@ Phaser.PluginManager.prototype = {
     }
 
 };
+
+Phaser.PluginManager.prototype.constructor = Phaser.PluginManager;

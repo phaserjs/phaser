@@ -734,6 +734,8 @@ Phaser.StageScaleMode.prototype = {
 
 };
 
+Phaser.StageScaleMode.prototype.constructor = Phaser.StageScaleMode;
+
 /**
 * @name Phaser.StageScaleMode#isFullScreen
 * @property {boolean} isFullScreen - Returns true if the browser is in full screen mode, otherwise false.

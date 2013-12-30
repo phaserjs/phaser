@@ -74,3 +74,5 @@ Phaser.Events.prototype = {
     }
 
 };
+
+Phaser.Events.prototype.constructor = Phaser.Events;

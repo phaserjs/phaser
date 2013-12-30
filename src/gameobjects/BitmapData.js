@@ -957,7 +957,9 @@ Phaser.BitmapData.prototype = {
 
     }
 
-}
+};
+
+Phaser.BitmapData.prototype.constructor = Phaser.BitmapData;
 
 //  EaselJS Tiny API emulation
 

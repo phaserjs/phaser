@@ -1300,3 +1300,5 @@ Phaser.Loader.prototype = {
     }
 
 };
+
+Phaser.Loader.prototype.constructor = Phaser.Loader;

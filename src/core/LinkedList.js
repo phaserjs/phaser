@@ -152,3 +152,5 @@ Phaser.LinkedList.prototype = {
     }
 
 };
+
+Phaser.LinkedList.prototype.constructor = Phaser.LinkedList;

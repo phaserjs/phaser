@@ -204,6 +204,8 @@ Phaser.Tile.prototype = {
 
 };
 
+Phaser.Tile.prototype.constructor = Phaser.Tile;
+
 /**
 * @name Phaser.Tile#bottom
 * @property {number} bottom - The sum of the y and height properties.

@@ -319,3 +319,5 @@ Phaser.GameObjectFactory.prototype = {
     }
 
 };
+
+Phaser.GameObjectFactory.prototype.constructor = Phaser.GameObjectFactory;

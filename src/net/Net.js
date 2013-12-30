@@ -162,3 +162,5 @@ Phaser.Net.prototype = {
     }
 
 };
+
+Phaser.Net.prototype.constructor = Phaser.Net;

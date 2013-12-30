@@ -166,3 +166,5 @@ Phaser.MSPointer.prototype = {
     }
 
 };
+
+Phaser.MSPointer.prototype.constructor = Phaser.MSPointer;

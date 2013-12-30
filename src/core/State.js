@@ -167,3 +167,5 @@ Phaser.State.prototype = {
     }
 
 };
+
+Phaser.State.prototype.constructor = Phaser.State;

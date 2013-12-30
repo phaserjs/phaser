@@ -381,3 +381,5 @@ Phaser.Touch.prototype = {
     }
 
 };
+
+Phaser.Touch.prototype.constructor = Phaser.Touch;

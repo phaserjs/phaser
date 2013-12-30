@@ -135,7 +135,7 @@ function gameOver () {
 
     ball.body.velocity.setTo(0, 0);
     
-    introText.content = "Game Over!";
+    introText.content = 'Game Over!';
     introText.visible = true;
 
 }
@@ -154,7 +154,7 @@ function ballHitBrick (_ball, _brick) {
         //  New level starts
         score += 1000;
         scoreText.content = 'score: ' + score;
-        introText = '- Next Level -';
+        introText.content = '- Next Level -';
 
         //  Let's move the ball back to the paddle
         ballOnPaddle = true;

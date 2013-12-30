@@ -703,6 +703,8 @@ Phaser.Sound.prototype = {
 
 };
 
+Phaser.Sound.prototype.constructor = Phaser.Sound;
+
 /**
 * @name Phaser.Sound#isDecoding
 * @property {boolean} isDecoding - Returns true if the sound file is still decoding.

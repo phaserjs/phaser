@@ -583,6 +583,8 @@ Phaser.Pointer.prototype = {
 
 };
 
+Phaser.Pointer.prototype.constructor = Phaser.Pointer;
+
 /**
 * How long the Pointer has been depressed on the touchscreen. If not currently down it returns -1.
 * @name Phaser.Pointer#duration

@@ -263,3 +263,5 @@ Phaser.QuadTree.prototype = {
     }
 
 };
+
+Phaser.QuadTree.prototype.constructor = Phaser.QuadTree;

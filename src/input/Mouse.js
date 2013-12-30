@@ -327,3 +327,5 @@ Phaser.Mouse.prototype = {
     }
 
 };
+
+Phaser.Mouse.prototype.constructor = Phaser.Mouse;

@@ -626,6 +626,8 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 };
 
+Phaser.Physics.Arcade.Body.prototype.constructor = Phaser.Physics.Arcade.Body;
+
 /**
 * @name Phaser.Physics.Arcade.Body#bottom
 * @property {number} bottom - The bottom value of this Body (same as Body.y + Body.height)

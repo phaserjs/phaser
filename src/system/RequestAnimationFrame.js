@@ -155,3 +155,5 @@ Phaser.RequestAnimationFrame.prototype = {
     }
 
 };
+
+Phaser.RequestAnimationFrame.prototype.constructor = Phaser.RequestAnimationFrame;

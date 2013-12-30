@@ -266,6 +266,8 @@ Phaser.Rectangle.prototype = {
 
 };
 
+Phaser.Rectangle.prototype.constructor = Phaser.Rectangle;
+
 /**
 * @name Phaser.Rectangle#halfWidth
 * @property {number} halfWidth - Half of the width of the Rectangle.

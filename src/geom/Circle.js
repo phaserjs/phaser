@@ -195,6 +195,8 @@ Phaser.Circle.prototype = {
 
 };
 
+Phaser.Circle.prototype.constructor = Phaser.Circle;
+
 /**
 * The largest distance between any two points on the circle. The same as the radius * 2.
 * @name Phaser.Circle#diameter

@@ -300,3 +300,5 @@ Phaser.Signal.prototype = {
     }
 
 };
+
+Phaser.Signal.prototype.constructor = Phaser.Signal;

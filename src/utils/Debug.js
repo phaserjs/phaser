@@ -918,5 +918,6 @@ Phaser.Utils.Debug.prototype = {
 
     }
 
-
 };
+
+Phaser.Utils.Debug.prototype.constructor = Phaser.Utils.Debug;

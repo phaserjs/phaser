@@ -223,6 +223,8 @@ Phaser.FrameData.prototype = {
 
 };
 
+Phaser.FrameData.prototype.constructor = Phaser.FrameData;
+
 /**
 * @name Phaser.FrameData#total
 * @property {number} total - The total number of frames in this FrameData set.

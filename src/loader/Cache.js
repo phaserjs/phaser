@@ -845,3 +845,5 @@ Phaser.Cache.prototype = {
     }
 
 };
+
+Phaser.Cache.prototype.constructor = Phaser.Cache;

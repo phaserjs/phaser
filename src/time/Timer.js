@@ -43,7 +43,7 @@ Phaser.Timer = function (game) {
 
     //  Need to add custom FPS rate, for now we'll just use seconds
 
-}
+};
 
 Phaser.Timer.prototype = {
 
@@ -114,4 +114,6 @@ Phaser.Timer.prototype = {
         return (this.game.time.now - this._started) * 0.001;
     }
 
-}
+};
+
+Phaser.Timer.prototype.constructor = Phaser.Timer;

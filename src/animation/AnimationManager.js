@@ -311,6 +311,8 @@ Phaser.AnimationManager.prototype = {
 
 };
 
+Phaser.AnimationManager.prototype.constructor = Phaser.AnimationManager;
+
 /**
 * @name Phaser.AnimationManager#frameData
 * @property {Phaser.FrameData} frameData - The current animations FrameData.

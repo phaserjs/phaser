@@ -158,3 +158,5 @@ Phaser.Frame.prototype = {
     }
 
 };
+
+Phaser.Frame.prototype.constructor = Phaser.Frame;

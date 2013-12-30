@@ -1086,3 +1086,5 @@ Phaser.Tilemap.prototype = {
     }
 
 };
+
+Phaser.Tilemap.prototype.constructor = Phaser.Tilemap;

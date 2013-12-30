@@ -688,7 +688,7 @@ Phaser.Math = {
     },
 
     /**
-    * Description.
+    * A Linear Interpolation Method, mostly used by Phaser.Tween.
     * @method Phaser.Math#linearInterpolation
     * @param {number} v
     * @param {number} k
@@ -715,7 +715,7 @@ Phaser.Math = {
     },
 
     /**
-    * Description.
+    * A Bezier Interpolation Method, mostly used by Phaser.Tween.
     * @method Phaser.Math#bezierInterpolation
     * @param {number} v
     * @param {number} k
@@ -736,7 +736,7 @@ Phaser.Math = {
     },
 
     /**
-    * Description.
+    * A Catmull Rom Interpolation Method, mostly used by Phaser.Tween.
     * @method Phaser.Math#catmullRomInterpolation
     * @param {number} v
     * @param {number} k

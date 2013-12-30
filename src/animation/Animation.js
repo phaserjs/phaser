@@ -328,6 +328,8 @@ Phaser.Animation.prototype = {
 
 };
 
+Phaser.Animation.prototype.constructor = Phaser.Animation;
+
 /**
 * @name Phaser.Animation#paused
 * @property {boolean} paused - Gets and sets the paused state of this Animation.

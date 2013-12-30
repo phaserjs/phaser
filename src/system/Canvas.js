@@ -146,7 +146,7 @@ Phaser.Canvas = {
     * @method Phaser.Canvas.addToDOM
     * @param {HTMLCanvasElement} canvas - The canvas to set the touch action on.
     * @param {string|HTMLElement} parent - The DOM element to add the canvas to.
-    * @param {boolean} overflowHidden - If set to true it will add the overflow='hidden' style to the parent DOM element.
+    * @param {boolean} [overflowHidden=true] - If set to true it will add the overflow='hidden' style to the parent DOM element.
     * @return {HTMLCanvasElement} Returns the source canvas.
     */
     addToDOM: function (canvas, parent, overflowHidden) {
@@ -167,17 +167,17 @@ Phaser.Canvas = {
                 // quick test for a HTMLelement
                 target = parent;
             }
-
-            if (overflowHidden)
-            {
-                target.style.overflow = 'hidden';
-            }
         }
 
         // Fallback, covers an invalid ID and a non HTMLelement object
         if (!target)
         {
             target = document.body;
+        }
+
+        if (overflowHidden && target.style)
+        {
+            target.style.overflow = 'hidden';
         }
 
         target.appendChild(canvas);

@@ -203,3 +203,5 @@ Phaser.TweenManager.prototype = {
     }
 
 };
+
+Phaser.TweenManager.prototype.constructor = Phaser.TweenManager;

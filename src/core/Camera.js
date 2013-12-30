@@ -322,6 +322,8 @@ Phaser.Camera.prototype = {
 
 };
 
+Phaser.Camera.prototype.constructor = Phaser.Camera;
+
 /**
 * The Cameras x coordinate. This value is automatically clamped if it falls outside of the World bounds.
 * @name Phaser.Camera#x

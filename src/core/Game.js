@@ -635,6 +635,8 @@ Phaser.Game.prototype = {
 
 };
 
+Phaser.Game.prototype.constructor = Phaser.Game;
+
 /**
 * The paused state of the Game. A paused game doesn't update any of its subsystems.
 * When a game is paused the onPause event is dispatched. When it is resumed the onResume event is dispatched.

@@ -689,6 +689,8 @@ Phaser.Input.prototype = {
 
 };
 
+Phaser.Input.prototype.constructor = Phaser.Input;
+
 /**
 * The X coordinate of the most recently active pointer. This value takes game scaling into account automatically. See Pointer.screenX/clientX for source values.
 * @name Phaser.Input#x

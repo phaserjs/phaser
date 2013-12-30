@@ -124,6 +124,8 @@ Phaser.Filter.prototype = {
 
 };
 
+Phaser.Filter.prototype.constructor = Phaser.Filter;
+
 /**
 * @name Phaser.Filter#width
 * @property {number} width - The width (resolution uniform)

@@ -245,3 +245,5 @@ Phaser.RandomDataGenerator.prototype = {
     }
 
 };
+
+Phaser.RandomDataGenerator.prototype.constructor = Phaser.RandomDataGenerator;

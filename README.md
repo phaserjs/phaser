@@ -49,6 +49,7 @@ Significant API changes:
 * Loader.tileset has a new method signature. Please use the new format: load.tileset(key, url, tileWidth, tileHeight, tileMargin, tileSpacing, rows, columns, total).
 * TilemapLayers are now created via the Tilemap object itself: map.createLayer(x, y, width, height, tileset, layer, group) and no longer via the GameObjectFactory.
 * Tilemap.createFromObjects can now turn a bunch of Tiled objects into Sprites in one single call, and copies across all properties as well.
+* Tween.onStartCallback and onCompleteCallback have been removed to avoid confusion. You should use the onStart, onLoop and onComplete events instead.
 
 
 New features:
@@ -66,6 +67,7 @@ New features:
 * Group.set will let you deep set a new propery on a single child of the Group.
 * Stage.display property added. A direct reference to the root Pixi Stage object (very useful for RenderTexture manipulation)
 * Added Ejecta detection to Device (thanks endel)
+* Tweens can now work with relative + and - values. You can do: `tween(sprite).to( { x: '+400' })` and it will add 400 to the current sprite.x value, or '-400'.
 
 
 New Examples:
@@ -104,6 +106,7 @@ Updates:
 * Input doesn't set the cursor to default if it's already set to none.
 * You can now collide a group against itself, to have all children collide, and bodies won't check against themselves (thanks cocoademon)
 * RenderTexture.render / renderXY has a new parameter: renderHidden, a boolean which will allow you to render Sprites even if their visible is set to false.
+* Added in prototype.constructor definitions to every class (thanks darkoverlordofdata)
 
 
 Bug Fixes:
@@ -119,6 +122,8 @@ Bug Fixes:
 * Tween.onStart is now called when the tween starts AFTER the delay value, if given (thanks stevenbouma)
 * Sprites that are fixedToCamera can now be input dragged regardless of world position (thanks RafaelOliveira)
 * RenderTexture now displays correctly in Canvas games.
+* Canvas.addToDOM is now more robust when applying the overflowHidden style.
+* Fixed Pixi.StripShader which should stop the weird TileSprite GPU issues some were reporting (thanks GoodboyDigital)
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
@@ -266,6 +271,7 @@ Versions 1.2 ("Saldaea")
 
 * Integration with the p2.js physics system.
 * Enhance the State Management, so you can perform non-destructive State swaps and persistence.
+* Update to Pixi 1.5 - currently still in dev branch only, but lots of nice internal changes and new features.
 
 Beyond version 1.2
 

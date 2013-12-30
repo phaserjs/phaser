@@ -395,6 +395,8 @@ Phaser.Keyboard.prototype = {
 
 };
 
+Phaser.Keyboard.prototype.constructor = Phaser.Keyboard;
+
 Phaser.Keyboard.A = "A".charCodeAt(0);
 Phaser.Keyboard.B = "B".charCodeAt(0);
 Phaser.Keyboard.C = "C".charCodeAt(0);

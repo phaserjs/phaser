@@ -81,7 +81,7 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     */
     this.total = 0;
 
-}
+};
 
 Phaser.Tileset.prototype = {
 
@@ -151,4 +151,6 @@ Phaser.Tileset.prototype = {
 
     }
 
-}
+};
+
+Phaser.Tileset.prototype.constructor = Phaser.Tileset;

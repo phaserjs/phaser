@@ -230,6 +230,8 @@ Phaser.Stage.prototype = {
 
 };
 
+Phaser.Stage.prototype.constructor = Phaser.Stage;
+
 /**
 * @name Phaser.Stage#backgroundColor
 * @property {number|string} backgroundColor - Gets and sets the background color of the stage. The color can be given as a number: 0xff0000 or a hex string: '#ff0000'

@@ -119,3 +119,5 @@ Phaser.Plugin.prototype = {
     }
 
 };
+
+Phaser.Plugin.prototype.constructor = Phaser.Plugin;

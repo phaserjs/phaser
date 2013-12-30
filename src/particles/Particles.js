@@ -77,3 +77,5 @@ Phaser.Particles.prototype = {
     }
 
 };
+
+Phaser.Particles.prototype.constructor = Phaser.Particles;

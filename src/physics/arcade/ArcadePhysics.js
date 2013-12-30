@@ -1621,3 +1621,5 @@ Phaser.Physics.Arcade.prototype = {
     }
 
 };
+
+Phaser.Physics.Arcade.prototype.constructor = Phaser.Physics.Arcade;

@@ -169,3 +169,5 @@ Phaser.Key.prototype = {
     }
 
 };
+
+Phaser.Key.prototype.constructor = Phaser.Key;

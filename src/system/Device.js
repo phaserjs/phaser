@@ -667,3 +667,5 @@ Phaser.Device.prototype = {
     }
 
 };
+
+Phaser.Device.prototype.constructor = Phaser.Device;
