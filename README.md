@@ -54,6 +54,7 @@ Significant API changes:
 
 New features:
 
+* Gamepad API support has been added with lots of new examples showing how to use it (thanks Karl Macklin)
 * Phaser.Game constructor can now be passed a single object containing game settings + Stage settings, useful for advanced configurations.
 * The width/height given to Phaser.Game can now be percentages, i.e. "100%" will set the width to the maximum window innerWidth.
 * Added a stage.fullScreenScaleMode property to determine scaling when fullscreen (thanks oysterCrusher)
@@ -81,6 +82,7 @@ New Examples:
 * Games - Matching Pairs by Patrick OReilly.
 * Tweens - Example showing how to use the tween events, onStart, onLoop and onComplete.
 * Display - Pixi Render Texture. A Phaser conversion of the Pixi.js Render Texture example.
+* Input - 5 new examples showing how to use the Gamepad API (thanks Karl Macklin)
 
 
 Updates:

@@ -147,6 +147,32 @@
       "title": "vertical collision"
     }
   ],
+  "debug": [
+    {
+      "file": "debug+camera.js",
+      "title": "debug camera"
+    },
+    {
+      "file": "debug+display.js",
+      "title": "debug display"
+    },
+    {
+      "file": "debug+draw.js",
+      "title": "debug draw"
+    },
+    {
+      "file": "debug+input.js",
+      "title": "debug input"
+    },
+    {
+      "file": "debug+physics.js",
+      "title": "debug physics"
+    },
+    {
+      "file": "debug+sprite.js",
+      "title": "debug sprite"
+    }
+  ],
   "display": [
     {
       "file": "bitmapdata+wobble.js",
@@ -179,28 +205,6 @@
     {
       "file": "render+texture+trail.js",
       "title": "render texture trail"
-    }
-  ],
-  "debug":[
-    {
-     "file": "debug+sprite.js",
-     "title": "Sprite data"
-    },
-    {
-      "file": "debug+display.js",
-      "title": "Sprite display"
-    },
-    {
-      "file": "debug+input.js",
-      "title": "Input"
-    },
-    {
-        "file": "debug+camera.js",
-        "title": "Camera"
-    },
-    {
-        "file": "debug+draw.js",
-        "title": "Draw"
     }
   ],
   "filters": [
@@ -283,10 +287,6 @@
       "title": "add a sprite to group"
     },
     {
-      "file": "bring+a+child+to+top.js",
-      "title": "bring a child to top"
-    },
-    {
       "file": "bring+a+group+to+top.js",
       "title": "bring a group to top"
     },
@@ -364,6 +364,10 @@
     }
   ],
   "input": [
+    {
+      "file": "bring+a+child+to+top.js",
+      "title": "bring a child to top"
+    },
     {
       "file": "cursor+key+movement.js",
       "title": "cursor key movement"
@@ -797,6 +801,10 @@
     {
       "file": "tween+loop+event.js",
       "title": "tween loop event"
+    },
+    {
+      "file": "tween+relative.js",
+      "title": "tween relative"
     },
     {
       "file": "tween+several+properties.js",
