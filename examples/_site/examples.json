@@ -5,6 +5,10 @@
       "title": "change texture on click"
     },
     {
+      "file": "group+creation.js",
+      "title": "group creation"
+    },
+    {
       "file": "local+json+object.js",
       "title": "local json object"
     },
@@ -543,8 +547,16 @@
       "title": "no rotation"
     },
     {
+      "file": "rain.js",
+      "title": "rain"
+    },
+    {
       "file": "random+sprite.js",
       "title": "random sprite"
+    },
+    {
+      "file": "snow.js",
+      "title": "snow"
     },
     {
       "file": "when+particles+collide.js",

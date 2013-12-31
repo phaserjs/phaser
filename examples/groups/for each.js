@@ -1,7 +1,7 @@
 
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
-var baseAlphaIncSpeed= 0.006;
+var baseAlphaIncSpeed = 0.006;
 
 function preload() {
     game.load.spritesheet('item', 'assets/buttons/number-buttons-90x90.png', 90, 90);

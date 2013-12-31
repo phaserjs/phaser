@@ -46,7 +46,7 @@ Version 1.1.4 - "Kandor" - In development
 
 Significant API changes:
 
-* Loader.tileset has a new method signature. Please use the new format: load.tileset(key, url, tileWidth, tileHeight, tileMargin, tileSpacing, rows, columns, total).
+* Loader.tileset has been removed as it's no longer required, this was as part of the Tilemap system overhaul.
 * TilemapLayers are now created via the Tilemap object itself: map.createLayer(x, y, width, height, tileset, layer, group) and no longer via the GameObjectFactory.
 * Tilemap.createFromObjects can now turn a bunch of Tiled objects into Sprites in one single call, and copies across all properties as well.
 * Tween.onStartCallback and onCompleteCallback have been removed to avoid confusion. You should use the onStart, onLoop and onComplete events instead.
@@ -54,8 +54,8 @@ Significant API changes:
 
 New features:
 
-* Gamepad API support has been added with lots of new examples showing how to use it (thanks Karl Macklin)
-* Phaser.Game constructor can now be passed a single object containing game settings + Stage settings, useful for advanced configurations.
+* Gamepad API support has been added with lots of new examples (thanks Karl Macklin)
+* Phaser.Game constructor can now be passed a single object containing all of your game settings + Stage settings. Useful for advanced configurations.
 * The width/height given to Phaser.Game can now be percentages, i.e. "100%" will set the width to the maximum window innerWidth.
 * Added a stage.fullScreenScaleMode property to determine scaling when fullscreen (thanks oysterCrusher)
 * Added support for margin and spacing around a frame in Loader.spritesheet.
@@ -83,6 +83,9 @@ New Examples:
 * Tweens - Example showing how to use the tween events, onStart, onLoop and onComplete.
 * Display - Pixi Render Texture. A Phaser conversion of the Pixi.js Render Texture example.
 * Input - 5 new examples showing how to use the Gamepad API (thanks Karl Macklin)
+* Animation - Group Creation, showing how to create animations across all Group children in one call.
+* Particles - Rain by Jens Anders Bakke.
+* Particles - Snow by Jens Anders Bakke.
 
 
 Updates:
@@ -128,7 +131,8 @@ Bug Fixes:
 * Canvas.addToDOM is now more robust when applying the overflowHidden style.
 * Fixed Pixi.StripShader which should stop the weird TileSprite GPU issues some were reporting (thanks GoodboyDigital)
 * Patched desyrel.xml so it doesn't contain any zero width/height characters, as they broke Firefox 25.
-
+* Cache.addSound now implements a locked attribute (thanks haden)
+* Sound now checks for CocoonJS during playback to avoid readyState clash (thanks haden)
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md

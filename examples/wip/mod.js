@@ -56,7 +56,8 @@ function create() {
 	// vu4 = game.add.sprite(400, 250, 'vu3');
 
 	module = new Protracker();
- 	module.buffer = game.cache.getBinary('globaltrash');
+// 	module.buffer = game.cache.getBinary('globaltrash');
+ 	module.buffer = game.cache.getBinary('macrocosm');
     module.parse();
     module.play();
 

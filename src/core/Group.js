@@ -223,7 +223,7 @@ Phaser.Group.prototype = {
     */
     create: function (x, y, key, frame, exists) {
 
-        if (typeof exists == 'undefined') { exists = true; }
+        if (typeof exists === 'undefined') { exists = true; }
 
         var child = new Phaser.Sprite(this.game, x, y, key, frame);
 
@@ -263,7 +263,7 @@ Phaser.Group.prototype = {
     */
     createMultiple: function (quantity, key, frame, exists) {
 
-        if (typeof exists == 'undefined') { exists = false; }
+        if (typeof exists === 'undefined') { exists = false; }
 
         for (var i = 0; i < quantity; i++)
         {
@@ -805,7 +805,7 @@ Phaser.Group.prototype = {
     },
 
     /**
-    * Calls a function on all of the children that have exists=true in this Group.
+    * Returns a reference to a function that exists on a child of the Group based on the given callback array.
     * 
     * @method Phaser.Group#callbackFromArray
     * @param {object} child - The object to inspect.
@@ -863,7 +863,7 @@ Phaser.Group.prototype = {
     * 
     * @method Phaser.Group#callAll
     * @param {string} method - A string containing the name of the function that will be called. The function must exist on the child.
-    * @param {string} [context=''] - A string containing the context under which the method will be executed. Leave to '' to default to the child.
+    * @param {string} [context=null] - A string containing the context under which the method will be executed. Set to null to default to the child.
     * @param {...*} parameter - Additional parameters that will be passed to the method.
     */
     callAll: function (method, context) {
