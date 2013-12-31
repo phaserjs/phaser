@@ -389,6 +389,30 @@
       "title": "game scale"
     },
     {
+      "file": "gamepad+analog+button.js",
+      "title": "gamepad analog button"
+    },
+    {
+      "file": "gamepad+debug.js",
+      "title": "gamepad debug"
+    },
+    {
+      "file": "gamepad+hotkeys.js",
+      "title": "gamepad hotkeys"
+    },
+    {
+      "file": "gamepad+multiple+pads.js",
+      "title": "gamepad multiple pads"
+    },
+    {
+      "file": "gamepad+tanks.js",
+      "title": "gamepad tanks"
+    },
+    {
+      "file": "gamepad.js",
+      "title": "gamepad"
+    },
+    {
       "file": "key.js",
       "title": "key"
     },
@@ -439,6 +463,10 @@
     {
       "file": "snap+on+drag.js",
       "title": "snap on drag"
+    },
+    {
+      "file": "touch+joystick.js",
+      "title": "touch joystick"
     }
   ],
   "loader": [

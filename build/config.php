@@ -76,6 +76,9 @@
 	<script src="$path/src/input/MSPointer.js"></script>
 	<script src="$path/src/input/Pointer.js"></script>
 	<script src="$path/src/input/Touch.js"></script>
+	<script src="$path/src/input/Gamepad.js"></script>
+    <script src="$path/src/input/SinglePad.js"></script>
+    <script src="$path/src/input/GamepadButton.js"></script>
 	<script src="$path/src/input/InputHandler.js"></script>
 
 	<script src="$path/src/gameobjects/Events.js"></script>
