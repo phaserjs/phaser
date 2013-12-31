@@ -12,7 +12,7 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 View the [Official Website](http://phaser.io)<br />
 Follow on [Twitter](https://twitter.com/photonstorm)<br />
 Join the [Forum](http://www.html5gamedevs.com/forum/14-phaser/)<br />
-Try out 170+ [Phaser Examples](http://gametest.mobi/phaser/examples/)
+Try out 200+ [Phaser Examples](http://gametest.mobi/phaser/examples/)
 
 [Subscribe to our new Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E). We'll email you when new versions are released as well as send you our regular Phaser game making magazine.
 
@@ -36,6 +36,8 @@ Getting Started Guides
 
 We have a new [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE. If you're new to HTML5 game development (or are coming from another language like AS3) then we recommend starting there.
 
+There is a comprehensive [How to Learn Phaser](http://gamedevelopment.tutsplus.com/articles/how-to-learn-the-phaser-html5-game-engine--gamedev-13643) guide on the GameDevTuts+ site which is well worth reading through.
+
 There is also this great [Un-official Getting Started Guide](http://www.antonoffplus.com/coding-an-html5-game-for-30-minutes-or-an-introduction-to-the-phaser-framework) which is well worth running through as well.
 
 
@@ -50,6 +52,7 @@ Significant API changes:
 * TilemapLayers are now created via the Tilemap object itself: map.createLayer(x, y, width, height, tileset, layer, group) and no longer via the GameObjectFactory.
 * Tilemap.createFromObjects can now turn a bunch of Tiled objects into Sprites in one single call, and copies across all properties as well.
 * Tween.onStartCallback and onCompleteCallback have been removed to avoid confusion. You should use the onStart, onLoop and onComplete events instead.
+* Button.forceOut default value has changed from true to false, so Buttons will revert to an Up state (if set) when pressed and released.
 
 
 New features:
@@ -69,6 +72,8 @@ New features:
 * Stage.display property added. A direct reference to the root Pixi Stage object (very useful for RenderTexture manipulation)
 * Added Ejecta detection to Device (thanks endel)
 * Tweens can now work with relative + and - values. You can do: `tween(sprite).to( { x: '+400' })` and it will add 400 to the current sprite.x value, or '-400'.
+* Buttons now properly use their upFrame if set.
+* InputHandler now has snapOffsetX and snapOffsetY properties so your snap grid doesn't have to be 0,0 aligned (thanks srmeier)
 
 
 New Examples:
@@ -78,7 +83,7 @@ New Examples:
 * Physics - Bounce accelerator (use the keyboard) by Patrick OReilly.
 * Physics - Bounce knock (use the keyboard) by Patrick OReilly.
 * Physics - Snake (use the keyboard to control the snake like creature) by Patrick OReilly and Richard Davey.
-* Added touch joystick example showing how to use the clay.io virtual game controller (thanks gabehollombe)
+* Input - Touch Joystick example showing how to use the clay.io virtual game controller (thanks gabehollombe)
 * Games - Matching Pairs by Patrick OReilly.
 * Tweens - Example showing how to use the tween events, onStart, onLoop and onComplete.
 * Display - Pixi Render Texture. A Phaser conversion of the Pixi.js Render Texture example.
@@ -90,10 +95,10 @@ New Examples:
 
 Updates:
 
-* Updated to latest Pixi.js dev branch build
-* When a Sprite is destroyed any active filters are removed as well.
+* Updated to latest Pixi.js dev branch build.
+* When a Sprite is destroyed any active filters are removed at the same time.
 * Updated Pixi.js so that removing filters now works correctly without breaking the display list.
-* Phaser.Canvas.create updated to it can be given an ID as the 3rd parameter.
+* Phaser.Canvas.create updated so it can be given an ID as the 3rd parameter (can also be set via new Game configuration object).
 * Updated display/fullscreen example to reflect new full screen change.
 * Loads of updates to the TypeScript definitions files - games fully compile now and lots of missing classes added :)
 * Removed 'null parent' check from Group constructor. Will parent to game.world only if parent value is undefined.
@@ -113,6 +118,7 @@ Updates:
 * RenderTexture.render / renderXY has a new parameter: renderHidden, a boolean which will allow you to render Sprites even if their visible is set to false.
 * Added in prototype.constructor definitions to every class (thanks darkoverlordofdata)
 * Group.destroy has a new parameter: destroyChildren (boolean) which will optionally call the destroy method of all Group children.
+* Button.clearFrames method has been added.
 
 
 Bug Fixes:
@@ -133,6 +139,9 @@ Bug Fixes:
 * Patched desyrel.xml so it doesn't contain any zero width/height characters, as they broke Firefox 25.
 * Cache.addSound now implements a locked attribute (thanks haden)
 * Sound now checks for CocoonJS during playback to avoid readyState clash (thanks haden)
+* Buttons now clear previously set frames correctly if you call setFrames.
+* Sounds will now loop correctly if they are paused and resumed (thanks haden)
+* InputHandler.checkBoundsRect and checkBoundsSprite now take into account if the Sprite is fixedToCamera or not.
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
@@ -185,7 +194,7 @@ Phaser is 321 KB minified and 72 KB gzipped.
 Learn By Example
 ----------------
 
-Phaser comes with an ever growing suite of Examples. Personally I feel that we learn better by looking at small refined code examples, so we created over 170 of them and create new ones to test every new feature added. Inside the `examples` folder you'll find the current set. If you write a particularly good example then please send it to us.
+Phaser comes with an ever growing suite of Examples. Personally I feel that we learn better by looking at small refined code examples, so we created over 200 of them and create new ones to test every new feature added. Inside the `examples` folder you'll find the current set. If you write a particularly good example then please send it to us.
 
 The examples need to be run through a local web server (in order to avoid file access permission errors from your browser). You can use your own web server, or start the included web server using grunt.
 
@@ -193,7 +202,7 @@ Using a locally installed web server browse to the examples folder:
 
     examples/index.html
 
-Alternatively in order to start the included web server, after you've cloned the repo, run `npm install` to install all dependencies, then `grunt connect `to start a local server. After running this command you should be able to access your local webserver at `http://127.0.0.1:8000`. Then browse to the examples folder: `http://127.0.0.1:8000/examples/index.html`
+Alternatively in order to start the included web server, after you've cloned the repo, run `npm install` to install all dependencies, then `grunt connect` to start a local server. After running this command you should be able to access your local webserver at `http://127.0.0.1:8000`. Then browse to the examples folder: `http://127.0.0.1:8000/examples/index.html`
 
 There is a new 'Side View' example viewer as well. This loads all the examples into a left-hand frame for faster navigation.
 
@@ -276,16 +285,15 @@ Road Map
 
 The 1.1 release was a massive under-taking, but we're really happy with how Phaser is progressing. It's becoming more solid and versatile with each iteration. Here is what's on our road map for future versions:
 
-Versions 1.2 ("Saldaea")
+Version 1.2 ("Saldaea")
 
-* Integration with the p2.js physics system.
-* Enhance the State Management, so you can perform non-destructive State swaps and persistence.
-* Update to Pixi 1.5 - currently still in dev branch only, but lots of nice internal changes and new features.
+* Update to Pixi 1.5 - currently still in dev branch only, but lots of nice internal changes and new features we want to take advantage of.
+* Start integration with the p2.js physics system.
 
 Beyond version 1.2
 
+* Enhance the State Management, so you can perform non-destructive State swaps and persistence.
 * Dedicated CocoonJS packaging features (screencanvas, etc)
-* The ability to pass in a configuration option on Game boot, containing more advanced configuration features.
 * A more advanced Particle system, one that can render to a single canvas (rather than spawn hundreds of Sprites), more advanced effects, etc.
 * Massively enhance the audio side of Phaser. Although it does what it does well, it could do with taking more advantage of Web Audio - echo effects, positional sound, etc.
 * Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.
@@ -306,13 +314,15 @@ Beyond version 1.2
 Contributing
 ------------
 
-If you find a bug (highly likely!) then please report it on github or our forum.
+If you find a bug then please report it on github or our forum.
 
-If you have a feature request, or have written a small game or demo that shows Phaser in use, then please get in touch. We'd love to hear from you.
+If you have a feature request, or have written a game or demo that shows Phaser in use, then please get in touch. We'd love to hear from you.
 
 You can do this on the Phaser board that is part of the [HTML5 Game Devs forum](http://www.html5gamedevs.com/forum/14-phaser/) or email: rich@photonstorm.com
 
-Before submitting a pull request, please run your code through [JSHint](http://www.jshint.com/) to check for stylistic or formatting errors. To use JSHint, first install it by running `npm install jshint`, then test your code by running `jshint src`. This isn't a requirement, we are happy to receive pull requests that haven't been JSHinted, so don't let it put you off contributing - but do know that we'll reformat your source before going live with it.
+If you issue a Pull Request for Phaser, please only ever do so againt the `dev` branch and *not* against the `master` branch.
+
+Before submitting a pull request please run your code through [JSHint](http://www.jshint.com/) to check for stylistic or formatting errors. To use JSHint, first install it by running `npm install jshint`, then test your code by running `jshint src`. This isn't a requirement, we are happy to receive pull requests that haven't been JSHinted, so don't let it put you off contributing - but do know that we'll reformat your source before going live with it.
 
 
 Bugs?

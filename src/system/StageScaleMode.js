@@ -260,7 +260,7 @@ Phaser.StageScaleMode.prototype = {
         this._width = this.width;
         this._height = this.height;
 
-        console.log('startFullScreen', this._width, this._height);
+        // console.log('startFullScreen', this._width, this._height);
 
         if (element['requestFullScreen'])
         {
@@ -328,7 +328,6 @@ Phaser.StageScaleMode.prototype = {
                 this.game.stage.scale.setShowAll();
                 this.game.stage.scale.refresh();
             }
-
         }
         else
         {

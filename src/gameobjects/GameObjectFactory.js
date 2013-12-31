@@ -187,14 +187,15 @@ Phaser.GameObjectFactory.prototype = {
     * @param {string|number} [overFrame] This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
     * @param {string|number} [outFrame] This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
     * @param {string|number} [downFrame] This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
+    * @param {string|number} [upFrame] This is the frame or frameName that will be set when this button is in an up state. Give either a number to use a frame ID or a string for a frame name.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.Button} The newly created button object.
     */
-    button: function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, group) {
+    button: function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame, group) {
 
         if (typeof group === 'undefined') { group = this.world; }
 
-        return group.add(new Phaser.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
+        return group.add(new Phaser.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame));
 
     },
 
