@@ -34,7 +34,7 @@ Phaser.Loader = function (game) {
     this._fileIndex = 0;
 
     /**
-    * @property {number} _progressChunk - Indicates assets loading progress. (from 0 to 100)
+    * @property {number} _progressChunk - Indicates the size of 1 file in terms of a percentage out of 100.
     * @private
     * @default
     */
@@ -59,10 +59,16 @@ Phaser.Loader = function (game) {
     this.hasLoaded = false;
 
     /**
-    * @property {number} progress - The Load progress percentage value (from 0 to 100)
+    * @property {number} progress - The rounded load progress percentage value (from 0 to 100)
     * @default
     */
     this.progress = 0;
+
+    /**
+    * @property {number} progressFloat - The non-rounded load progress value (from 0.0 to 100.0)
+    * @default
+    */
+    this.progressFloat = 0;
 
     /**
     * You can optionally link a sprite to the preloader.
@@ -713,6 +719,7 @@ Phaser.Loader.prototype = {
         }
 
         this.progress = 0;
+        this.progressFloat = 0;
         this.hasLoaded = false;
         this.isLoading = true;
 
@@ -727,6 +734,7 @@ Phaser.Loader.prototype = {
         else
         {
             this.progress = 100;
+            this.progressFloat = 100;
             this.hasLoaded = true;
             this.onLoadComplete.dispatch();
         }
@@ -1217,7 +1225,8 @@ Phaser.Loader.prototype = {
     */
     nextFile: function (previousIndex, success) {
 
-        this.progress = Math.round(this.progress + this._progressChunk);
+        this.progressFloat += this._progressChunk;
+        this.progress = Math.round(this.progressFloat);
 
         if (this.progress > 100)
         {
