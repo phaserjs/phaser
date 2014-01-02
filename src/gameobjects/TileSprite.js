@@ -15,18 +15,16 @@
 * @param {number} width - the width of the tilesprite.
 * @param {number} height - the height of the tilesprite.
 * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
-* @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
-Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
+Phaser.TileSprite = function (game, x, y, width, height, key) {
 
     x = x || 0;
     y = y || 0;
     width = width || 256;
     height = height || 256;
     key = key || null;
-    frame = frame || null;
 
-    Phaser.Sprite.call(this, game, x, y, key, frame);
+    Phaser.Sprite.call(this, game, x, y, key);
 
     /**
     * @property {PIXI.Texture} texture - The texture that the sprite renders with.

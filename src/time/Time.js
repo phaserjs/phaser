@@ -58,7 +58,7 @@ Phaser.Time = function (game) {
 	this.now = 0;
 
 	/**
-	* @property {number} elapsed - Elapsed time since the last frame.
+	* @property {number} elapsed - Elapsed time since the last frame (in ms).
 	*/
 	this.elapsed = 0;
 

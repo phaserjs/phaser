@@ -84,8 +84,13 @@ New Examples:
 * Physics - Bounce accelerator (use the keyboard) by Patrick OReilly.
 * Physics - Bounce knock (use the keyboard) by Patrick OReilly.
 * Physics - Snake (use the keyboard to control the snake like creature) by Patrick OReilly and Richard Davey.
+* Physics - Launcher - Angry Birds style ball launcher demo by Patrick OReilly.
+* Physics - Launcher Follow - throw the sprite anywhere in the world by Patrick OReilly.
+* Physics - Launcher Follow World - an advanced version of the Launcher Follow example by Patrick OReilly.
 * Input - Touch Joystick example showing how to use the clay.io virtual game controller (thanks gabehollombe)
 * Games - Matching Pairs by Patrick OReilly.
+* Games - Simon Says by Patrick OReilly.
+* Games - Wabbits by Patrick OReilly.
 * Tweens - Example showing how to use the tween events, onStart, onLoop and onComplete.
 * Display - Pixi Render Texture. A Phaser conversion of the Pixi.js Render Texture example.
 * Input - 5 new examples showing how to use the Gamepad API (thanks Karl Macklin)
@@ -128,7 +133,7 @@ Bug Fixes:
 * Fixed Group.scale so you can now scale a Group directly.
 * Removed World.scale as it was preventing Group.scale from working - you can still scale the world, but you'll need to factor in Input changes yourself.
 * Moved 'dirty' flag for Tilemap to a per-layer flag. Fixes #242
-* Group.length now returns the number of children in the Group regardless of their exists/alive state, or 0 if the Group is has no children.
+* Group.length now returns the number of children in the Group regardless of their exists/alive state, or 0 if the Group has no children.
 * Switch Camera.setBoundsToWorld to match world.bounds instead of world (thanks cocoademon)
 * Fixed an issue where passing null as the Group parent wouldn't set it to game.world as it should have (thanks tito100)
 * Fixed Pixi bug (#425) incorrect width property for multi-line BitmapText (thanks jcd-as)
@@ -143,6 +148,7 @@ Bug Fixes:
 * Buttons now clear previously set frames correctly if you call setFrames.
 * Sounds will now loop correctly if they are paused and resumed (thanks haden)
 * InputHandler.checkBoundsRect and checkBoundsSprite now take into account if the Sprite is fixedToCamera or not.
+* Removed the frame property from TileSprites as it cannot use them, it tiles the whole image only, not just a section of it.
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
@@ -343,3 +349,5 @@ Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 
 [1]: https://github.com/photonstorm/phaser/issues
 [phaser]: https://github.com/photonstorm/phaser
+
+[![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)

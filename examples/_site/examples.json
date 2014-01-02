@@ -255,12 +255,20 @@
       "title": "matching pairs"
     },
     {
+      "file": "simon.js",
+      "title": "simon"
+    },
+    {
       "file": "starstruck.js",
       "title": "starstruck"
     },
     {
       "file": "tanks.js",
       "title": "tanks"
+    },
+    {
+      "file": "wabbits.js",
+      "title": "wabbits"
     }
   ],
   "geometry": [
@@ -607,6 +615,18 @@
     {
       "file": "framerate+independence.js",
       "title": "framerate independence"
+    },
+    {
+      "file": "launcher+follow+world.js",
+      "title": "launcher follow world"
+    },
+    {
+      "file": "launcher+follow.js",
+      "title": "launcher follow"
+    },
+    {
+      "file": "launcher.js",
+      "title": "launcher"
     },
     {
       "file": "mass+velocity+test.js",

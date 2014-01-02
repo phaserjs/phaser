@@ -31,6 +31,11 @@ Phaser.Utils.Debug = function (game) {
     this.font = '14px Courier';
    
     /**
+    * @property {number} columnWidth - The spacing between columns.
+    */
+    this.columnWidth = 100;
+
+    /**
     * @property {number} lineHeight - The line height between the debug text.
     */
     this.lineHeight = 16;
@@ -65,11 +70,12 @@ Phaser.Utils.Debug.prototype = {
     /**
     * Internal method that resets and starts the debug output values.
     * @method Phaser.Utils.Debug#start
-    * @param {number} x - The X value the debug info will start from.
-    * @param {number} y - The Y value the debug info will start from.
-    * @param {string} color - The color the debug info will drawn in.
+    * @param {number} [x=0] - The X value the debug info will start from.
+    * @param {number} [y=0] - The Y value the debug info will start from.
+    * @param {string} [color='rgb(255,255,255)'] - The color the debug text will drawn in.
+    * @param {number} [columnWidth=0] - The spacing between columns.
     */
-    start: function (x, y, color) {
+    start: function (x, y, color, columnWidth) {
 
         if (this.context == null)
         {
@@ -78,13 +84,14 @@ Phaser.Utils.Debug.prototype = {
 
         if (typeof x !== 'number') { x = 0; }
         if (typeof y !== 'number') { y = 0; }
-
         color = color || 'rgb(255,255,255)';
+        if (typeof columnWidth === 'undefined') { columnWidth = 0; }
 
         this.currentX = x;
         this.currentY = y;
         this.currentColor = color;
         this.currentAlpha = this.context.globalAlpha;
+        this.columnWidth = columnWidth;
 
         this.context.save();
         this.context.setTransform(1, 0, 0, 1, 0, 0);
@@ -100,7 +107,6 @@ Phaser.Utils.Debug.prototype = {
     */
     stop: function () {
 
-
         this.context.restore();
         this.context.globalAlpha = this.currentAlpha;
 
@@ -110,8 +116,8 @@ Phaser.Utils.Debug.prototype = {
     * Internal method that outputs a single line of text.
     * @method Phaser.Utils.Debug#line
     * @param {string} text - The line of text to draw.
-    * @param {number} x - The X value the debug info will start from.
-    * @param {number} y - The Y value the debug info will start from.
+    * @param {number} [x] - The X value the debug info will start from.
+    * @param {number} [y] - The Y value the debug info will start from.
     */
     line: function (text, x, y) {
 
@@ -120,16 +126,8 @@ Phaser.Utils.Debug.prototype = {
             return;
         }
 
-        x = x || null;
-        y = y || null;
-
-        if (x !== null) {
-            this.currentX = x;
-        }
-
-        if (y !== null) {
-            this.currentY = y;
-        }
+        if (typeof x !== 'undefined') { this.currentX = x; }
+        if (typeof y !== 'undefined') { this.currentY = y; }
 
         if (this.renderShadow)
         {
@@ -139,6 +137,38 @@ Phaser.Utils.Debug.prototype = {
         }
 
         this.context.fillText(text, this.currentX, this.currentY);
+        this.currentY += this.lineHeight;
+
+    },
+
+    /**
+    * Internal method that outputs a single line of text split over as many columns as needed, one per parameter.
+    * @method Phaser.Utils.Debug#splitline
+    * @param {string} text - The text to render. You can have as many columns of text as you want, just pass them as additional parameters.
+    */
+    splitline: function (text) {
+
+        if (this.context == null)
+        {
+            return;
+        }
+
+        var x = this.currentX;
+
+        for (var i = 0; i < arguments.length; i++)
+        {
+            if (this.renderShadow)
+            {
+                this.context.fillStyle = 'rgb(0,0,0)';
+                this.context.fillText(arguments[i], x + 1, this.currentY + 1);
+                this.context.fillStyle = this.currentColor;
+            }
+
+            this.context.fillText(arguments[i], x, this.currentY);
+
+            x += this.columnWidth;
+        }
+
         this.currentY += this.lineHeight;
 
     },
@@ -399,14 +429,42 @@ Phaser.Utils.Debug.prototype = {
 
         color = color || 'rgb(255,255,255)';
 
-        this.start(x, y, color);
-        this.line('Sprite Collision: (' + sprite.width + ' x ' + sprite.height + ')');
+        this.start(x, y, color, 100);
+
+        this.line('Body: (width: ' + sprite.width + ' height: ' + sprite.height + ')');
         this.line('left: ' + sprite.body.touching.left);
         this.line('right: ' + sprite.body.touching.right);
         this.line('up: ' + sprite.body.touching.up);
         this.line('down: ' + sprite.body.touching.down);
-        this.line('velocity.x: ' + sprite.body.velocity.x);
-        this.line('velocity.y: ' + sprite.body.velocity.y);
+        this.stop();
+
+    },
+
+    /**
+    * Render Sprite Body Physics Data as text.
+    * @method Phaser.Utils.Debug#renderBodyInfo
+    * @param {Phaser.Sprite} sprite - The sprite to be rendered.
+    * @param {number} x - X position of the debug info to be rendered.
+    * @param {number} y - Y position of the debug info to be rendered.
+    * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
+    */
+    renderBodyInfo: function (sprite, x, y, color) {
+
+        color = color || 'rgb(255,255,255)';
+
+        this.start(x, y, color, 220);
+
+        this.splitline('Width: ' + sprite.width, 'Height: ' + sprite.height);
+        this.splitline('x: ' + sprite.body.x.toFixed(2), 'y: ' + sprite.body.y.toFixed(2));
+        this.splitline('old x: ' + sprite.body.preX.toFixed(2), 'y: ' + sprite.body.preY.toFixed(2));
+        this.splitline('drag x: ' + sprite.body.drag.x, 'y: ' + sprite.body.drag.y);
+        this.splitline('gravity x: ' + sprite.body.gravity.x, 'y: ' + sprite.body.gravity.y);
+        this.splitline('acceleration x: ' + sprite.body.acceleration.x.toFixed(2), 'y: ' + sprite.body.acceleration.y.toFixed(2));
+        this.splitline('velocity x: ' + sprite.body.velocity.x.toFixed(2), 'y: ' + sprite.body.velocity.y.toFixed(2));
+        this.splitline('motion x: ' + sprite.body.motionVelocity.x.toFixed(2), 'y: ' + sprite.body.motionVelocity.y.toFixed(2));
+        this.splitline('sleeping: ' + sprite.body.sleeping, 'sleepTimer: ' + sprite.body._sleepTimer.toFixed(2));
+        this.splitline('sleepMin x: ' + sprite.body.sleepMin.x, 'y: ' + sprite.body.sleepMin.y);
+        this.splitline('sleepMax x: ' + sprite.body.sleepMax.x, 'y: ' + sprite.body.sleepMax.y);
         this.stop();
 
     },
