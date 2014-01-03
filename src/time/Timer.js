@@ -55,6 +55,8 @@ Phaser.Timer.prototype = {
         this.events.push({
             delay: delay,
             dispatched: false,
+            repeatCount: 0,
+            loop: false,
             args: Array.prototype.splice.call(arguments, 1)
         });
 
@@ -65,6 +67,29 @@ Phaser.Timer.prototype = {
         //  callbackContext: callbackContext,
         //  args: Array.prototype.splice.call(arguments, 3)
         // });
+
+    },
+
+    repeat: function (delay, count) {
+
+        this.events.push({
+            delay: delay,
+            dispatched: false,
+            repeatCount: count,
+            loop: false,
+            args: Array.prototype.splice.call(arguments, 2)
+        });
+
+    },
+
+    loop: function (delay) {
+
+        this.events.push({
+            delay: delay,
+            dispatched: false,
+            loop: true,
+            args: Array.prototype.splice.call(arguments, 2)
+        });
 
     },
 
@@ -100,10 +125,24 @@ Phaser.Timer.prototype = {
             {
                 if (this.events[i].dispatched === false && seconds >= this.events[i].delay)
                 {
-                    this.events[i].dispatched = true;
-                    // this.events[i].callback.apply(this.events[i].callbackContext, this.events[i].args);
-                    this.onEvent.dispatch.apply(this, this.events[i].args);
-                    //  ought to slice it now
+                    if (this.events[i].loop)
+                    {
+                        this.onEvent.dispatch.apply(this, this.events[i].args);
+                        this.events[i].delay = seconds + this.events[i].delay;
+                    }
+                    else if (this.events[i].repeatCount > 0)
+                    {
+                        this.events[i].repeatCount--;
+                        this.onEvent.dispatch.apply(this, this.events[i].args);
+                        this.events[i].delay = seconds + this.events[i].delay;
+                    }
+                    else
+                    {
+                        this.events[i].dispatched = true;
+                        // this.events[i].callback.apply(this.events[i].callbackContext, this.events[i].args);
+                        this.onEvent.dispatch.apply(this, this.events[i].args);
+                        //  ought to slice it now
+                    }
                 }
             }
         }
