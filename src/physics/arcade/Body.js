@@ -308,13 +308,15 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @default
     */
     this.sleeping = false;
-    this.canSleep = false;
+    this.canSleep = true;
     this.sleepMin = new Phaser.Point(-20, -20);
     this.sleepMax = new Phaser.Point(20, 20);
     this.sleepDuration = 2000; // ms
     this._sleepTimer = 0; // ms
     this._drag = 0;
     this._debug = 0;
+    // this.friction = 0.99;
+    // this._debug = 0;
 
     /**
     * If a body is overlapping with another body, but neither of them are moving (maybe they spawned on-top of each other?) this is set to true.
@@ -415,10 +417,7 @@ Phaser.Physics.Arcade.Body.prototype = {
                     {
                         if (this._sleepTimer >= this.sleepDuration)
                         {
-                            console.log('sleeping true');
                             this.sleeping = true;
-                            // this.preX = this.x;
-                            // this.preY = this.y;
                         }
                         else
                         {
@@ -451,7 +450,43 @@ Phaser.Physics.Arcade.Body.prototype = {
 
     applyMotion: function () {
 
-        //  Apply drag
+        //  Apply drag - this should be proportionally applied, not linearly like below
+        if (this.drag.x !== 0 && this.acceleration.x === 0)
+        {
+            this._drag = this.drag.x * this.game.time.physicsElapsed;
+
+            if (this.velocity.x > 0)
+            {
+                this.velocity.x -= this._drag;
+            }
+            else if (this.velocity.x < 0)
+            {
+                this.velocity.x += this._drag;
+            }
+        }
+
+        if (this.drag.y !== 0 && this.acceleration.y === 0)
+        {
+            this._drag = this.drag.y * this.game.time.physicsElapsed;
+
+            if (this.velocity.y > 0)
+            {
+                this.velocity.y -= this._drag;
+            }
+            else if (this.velocity.y < 0)
+            {
+                this.velocity.y += this._drag;
+            }
+        }
+
+        this.x += this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
+        this.velocity.x += this.motionVelocity.x;
+
+        this.y += this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
+        this.velocity.y += this.motionVelocity.y;
+
+
+        /*
         if (this.drag.x !== 0 && this.acceleration.x === 0)
         {
             this._drag = this.drag.x * this.game.time.physicsElapsed;
@@ -459,19 +494,21 @@ Phaser.Physics.Arcade.Body.prototype = {
             if (this.velocity.x - this._drag > 0)
             {
                 this.velocity.x -= this._drag;
+            this.x += this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
+            this.velocity.x += this.motionVelocity.x;
             }
             else if (this.velocity.x + this.drag.x < 0)
             {
                 this.velocity.x += this._drag;
+            this.x += this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
+            this.velocity.x += this.motionVelocity.x;
             }
             else
             {
                 this.velocity.x = 0;
+                // this.preX = this.x;
                 // this.motionVelocity.x = 0;
             }
-
-            this.x += this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
-            this.velocity.x += this.motionVelocity.x;
         }
         else
         {
@@ -486,25 +523,28 @@ Phaser.Physics.Arcade.Body.prototype = {
             if (this.velocity.y - this._drag > 0)
             {
                 this.velocity.y -= this._drag;
+            this.y += this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
+            this.velocity.y += this.motionVelocity.y;
             }
             else if (this.velocity.y + this.drag.y < 0)
             {
                 this.velocity.y += this._drag;
+            this.y += this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
+            this.velocity.y += this.motionVelocity.y;
             }
             else
             {
                 this.velocity.y = 0;
+                // this.preY = this.y;
                 // this.motionVelocity.y = 0;
             }
-
-            this.y += this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
-            this.velocity.y += this.motionVelocity.y;
         }
         else
         {
             this.y += this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
             this.velocity.y += this.motionVelocity.y;
         }
+        */
 
         if (this.velocity.x > this.maxVelocity.x)
         {
@@ -518,6 +558,16 @@ Phaser.Physics.Arcade.Body.prototype = {
         if (this.collideWorldBounds)
         {
             this.checkWorldBounds();
+
+            if (this.blocked.left || this.blocked.right)
+            {
+                // this.preX = this.x;
+            }
+
+            if (this.blocked.up || this.blocked.down)
+            {
+                // this.preX = this.x;
+            }
         }
 
     },
@@ -556,7 +606,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
             if (this.collideWorldBounds)
             {
-                this.checkWorldBounds();
+                // this.checkWorldBounds();
             }
 
             this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
@@ -587,14 +637,14 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.blocked.left = true;
             this.x = this.game.world.bounds.x;
             this.velocity.x *= -this.bounce.x;
-            console.log(this._debug, 'hit left', vx,'to',this.velocity.x);
+            // console.log(this._debug, 'hit left', vx,'to',this.velocity.x);
         }
         else if (this.right > this.game.world.bounds.right)
         {
             this.blocked.right = true;
             this.x = this.game.world.bounds.right - this.width;
             this.velocity.x *= -this.bounce.x;
-            console.log(this._debug, 'hit right', vx,'to',this.velocity.x);
+            // console.log(this._debug, 'hit right', vx,'to',this.velocity.x);
         }
 
         if (this.y < this.game.world.bounds.y)
@@ -602,14 +652,14 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.blocked.up = true;
             this.y = this.game.world.bounds.y;
             this.velocity.y *= -this.bounce.y;
-            console.log(this._debug, 'hit top', vy,'to',this.velocity.y);
+            // console.log(this._debug, 'hit top', vy,'to',this.velocity.y);
         }
         else if (this.bottom > this.game.world.bounds.bottom)
         {
             this.blocked.down = true;
             this.y = this.game.world.bounds.bottom - this.height;
             this.velocity.y *= -this.bounce.y;
-            console.log(this._debug, 'hit bottom', vy,'to',this.velocity.y);
+            // console.log(this._debug, 'hit bottom', vy,'to',this.velocity.y);
         }
 
     },

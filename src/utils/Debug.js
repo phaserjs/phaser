@@ -454,15 +454,16 @@ Phaser.Utils.Debug.prototype = {
 
         this.start(x, y, color, 220);
 
-        this.splitline('Width: ' + sprite.width, 'Height: ' + sprite.height);
-        this.splitline('x: ' + sprite.body.x.toFixed(2), 'y: ' + sprite.body.y.toFixed(2));
+        this.splitline('x: ' + sprite.body.x.toFixed(2), 'y: ' + sprite.body.y.toFixed(2), 'width: ' + sprite.width, 'height: ' + sprite.height);
         this.splitline('speed: ' + sprite.body.speed.toFixed(2), 'angle: ' + sprite.body.angle.toFixed(2));
-        this.splitline('old x: ' + sprite.body.preX.toFixed(2), 'y: ' + sprite.body.preY.toFixed(2));
+        //this.splitline('old x: ' + sprite.body.preX.toFixed(2), 'y: ' + sprite.body.preY.toFixed(2));
         this.splitline('drag x: ' + sprite.body.drag.x, 'y: ' + sprite.body.drag.y);
         this.splitline('gravity x: ' + sprite.body.gravity.x, 'y: ' + sprite.body.gravity.y);
+        this.splitline('world gravity x: ' + this.game.physics.gravity.x, 'y: ' + this.game.physics.gravity.y);
         this.splitline('acceleration x: ' + sprite.body.acceleration.x.toFixed(2), 'y: ' + sprite.body.acceleration.y.toFixed(2));
         this.splitline('velocity x: ' + sprite.body.velocity.x.toFixed(2), 'y: ' + sprite.body.velocity.y.toFixed(2));
         this.splitline('motion x: ' + sprite.body.motionVelocity.x.toFixed(2), 'y: ' + sprite.body.motionVelocity.y.toFixed(2));
+        this.splitline('bounce x: ' + sprite.body.bounce.x.toFixed(2), 'y: ' + sprite.body.bounce.y.toFixed(2));
         this.splitline('sleeping: ' + sprite.body.sleeping, 'sleepTimer: ' + sprite.body._sleepTimer.toFixed(2));
         this.splitline('sleepMin x: ' + sprite.body.sleepMin.x, 'y: ' + sprite.body.sleepMin.y);
         this.splitline('sleepMax x: ' + sprite.body.sleepMax.x, 'y: ' + sprite.body.sleepMax.y);

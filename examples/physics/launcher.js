@@ -19,7 +19,7 @@ var launchVelocity = 0;
 function create() {
 
     // set global gravity
-    game.physics.gravity.setTo(0,8);
+    game.physics.gravity.y = 100;
     game.stage.backgroundColor = '#0072bc';
     
     var graphics = game.add.graphics(0,0);
@@ -42,7 +42,7 @@ function create() {
     ball.anchor.setTo(0.5, 0.5);
     ball.body.collideWorldBounds = true;
     ball.body.bounce.setTo(0.9, 0.9);
-    ball.body.drag.setTo(50, 50);
+    ball.body.drag.setTo(10, 0);
     
     // Enable input.
     ball.inputEnabled = true;
@@ -66,10 +66,10 @@ function launch() {
     
     arrow.alpha = 0;
     analog.alpha = 0;
-    Xvector = (arrow.x - ball.x) * 4.1;
-    Yvector = (arrow.y - ball.y) * 4.1;
+    Xvector = (arrow.x - ball.x) * 3;
+    Yvector = (arrow.y - ball.y) * 3;
     ball.body.allowGravity = true;  
-    ball.body.velocity.setTo(Xvector,Yvector);
+    ball.body.velocity.setTo(Xvector, Yvector);
 
 }
 
@@ -85,7 +85,7 @@ function update() {
         
         arrow.alpha = 1;    
         analog.alpha = 0.5;
-        analog.rotation = arrow.rotation - 3.14/2;
+        analog.rotation = arrow.rotation - 3.14 / 2;
         analog.height = game.physics.distanceToPointer(arrow);  
         launchVelocity = analog.height;
     }   
@@ -95,7 +95,10 @@ function update() {
 function render() {
 
     game.debug.renderText("Drag the ball and release to launch", 32, 32);
-    game.debug.renderSpriteInfo(ball, 32, 64);
-    game.debug.renderText("Launch Velocity: " + parseInt(launchVelocity), 32, 250);
+
+    game.debug.renderBodyInfo(ball, 32, 64);
+
+    // game.debug.renderSpriteInfo(ball, 32, 64);
+    // game.debug.renderText("Launch Velocity: " + parseInt(launchVelocity), 32, 250);
 
 }
