@@ -16,6 +16,8 @@ Try out 160+ [Phaser Examples](http://gametest.mobi/phaser/examples/)
 
 [Subscribe to our new Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E). We'll email you when new versions are released as well as send you our regular Phaser game making magazine.
 
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/photonstorm/phaser/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
 
 Welcome to Phaser
 -----------------
