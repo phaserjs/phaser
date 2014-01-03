@@ -141,6 +141,10 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this.acceleration = new Phaser.Point();
 
+    this.speed = 0;
+    this.angle = 0;
+
+
     /**
     * @property {Phaser.Point} drag - The drag applied to the motion of the Body.
     */
@@ -303,12 +307,14 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @property {boolean} canSleep - A Body that canSleep will have its velocity set to zero if it falls below sleepThreshold for longer than sleepDuration.
     * @default
     */
-    this.sleeping = true;
-    this.canSleep = true;
+    this.sleeping = false;
+    this.canSleep = false;
     this.sleepMin = new Phaser.Point(-20, -20);
     this.sleepMax = new Phaser.Point(20, 20);
     this.sleepDuration = 2000; // ms
     this._sleepTimer = 0; // ms
+    this._drag = 0;
+    this._debug = 0;
 
     /**
     * If a body is overlapping with another body, but neither of them are moving (maybe they spawned on-top of each other?) this is set to true.
@@ -389,6 +395,9 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.y = this.preY;
         this.rotation = this.preRotation;
 
+        this.speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
+        this.angle = Math.atan2(this.velocity.y, this.velocity.x);
+
         this.blocked.up = false;
         this.blocked.down = false;
         this.blocked.left = false;
@@ -397,20 +406,6 @@ Phaser.Physics.Arcade.Body.prototype = {
         if (this.moves)
         {
             this.game.physics.updateMotion(this);
-
-            if (this.collideWorldBounds)
-            {
-                this.checkWorldBounds();
-            }
-
-            if (this.velocity.x > this.maxVelocity.x)
-            {
-                this.velocity.x = this.maxVelocity.x;
-            }
-            else if (this.velocity.x < -this.maxVelocity.x)
-            {
-                this.velocity.x = -this.maxVelocity.x;
-            }
 
             if (this.canSleep)
             {
@@ -422,8 +417,6 @@ Phaser.Physics.Arcade.Body.prototype = {
                         {
                             console.log('sleeping true');
                             this.sleeping = true;
-                            // this.velocity.setTo(0, 0);
-                            // this.motionVelocity.setTo(0, 0);
                             // this.preX = this.x;
                             // this.preY = this.y;
                         }
@@ -458,11 +451,74 @@ Phaser.Physics.Arcade.Body.prototype = {
 
     applyMotion: function () {
 
-        this.x = this.x + this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
-        this.velocity.x = this.velocity.x + this.motionVelocity.x;
+        //  Apply drag
+        if (this.drag.x !== 0 && this.acceleration.x === 0)
+        {
+            this._drag = this.drag.x * this.game.time.physicsElapsed;
 
-        this.y = this.y + this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
-        this.velocity.y = this.velocity.y + this.motionVelocity.y;
+            if (this.velocity.x - this._drag > 0)
+            {
+                this.velocity.x -= this._drag;
+            }
+            else if (this.velocity.x + this.drag.x < 0)
+            {
+                this.velocity.x += this._drag;
+            }
+            else
+            {
+                this.velocity.x = 0;
+                // this.motionVelocity.x = 0;
+            }
+
+            this.x += this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
+            this.velocity.x += this.motionVelocity.x;
+        }
+        else
+        {
+            this.x += this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
+            this.velocity.x += this.motionVelocity.x;
+        }
+
+        if (this.drag.y !== 0 && this.acceleration.y === 0)
+        {
+            this._drag = this.drag.y * this.game.time.physicsElapsed;
+
+            if (this.velocity.y - this._drag > 0)
+            {
+                this.velocity.y -= this._drag;
+            }
+            else if (this.velocity.y + this.drag.y < 0)
+            {
+                this.velocity.y += this._drag;
+            }
+            else
+            {
+                this.velocity.y = 0;
+                // this.motionVelocity.y = 0;
+            }
+
+            this.y += this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
+            this.velocity.y += this.motionVelocity.y;
+        }
+        else
+        {
+            this.y += this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
+            this.velocity.y += this.motionVelocity.y;
+        }
+
+        if (this.velocity.x > this.maxVelocity.x)
+        {
+            // this.velocity.x = this.maxVelocity.x;
+        }
+        else if (this.velocity.x < -this.maxVelocity.x)
+        {
+            // this.velocity.x = -this.maxVelocity.x;
+        }
+
+        if (this.collideWorldBounds)
+        {
+            this.checkWorldBounds();
+        }
 
     },
 
@@ -476,11 +532,6 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.moves)
         {
-            if (this.collideWorldBounds)
-            {
-                // this.checkWorldBounds();
-            }
-
             if (this.deltaX() < 0 && this.blocked.left === false)
             {
                 this.facing = Phaser.LEFT;
@@ -503,6 +554,11 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.sprite.y += this.deltaY();
             }
 
+            if (this.collideWorldBounds)
+            {
+                this.checkWorldBounds();
+            }
+
             this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
 
             if (this.allowRotation)
@@ -510,6 +566,8 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.sprite.angle += this.deltaZ();
             }
         }
+
+        this._debug++;
 
     },
 
@@ -521,17 +579,22 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     checkWorldBounds: function () {
 
+        var vx = this.velocity.x;
+        var vy = this.velocity.y;
+
         if (this.x < this.game.world.bounds.x)
         {
             this.blocked.left = true;
             this.x = this.game.world.bounds.x;
             this.velocity.x *= -this.bounce.x;
+            console.log(this._debug, 'hit left', vx,'to',this.velocity.x);
         }
         else if (this.right > this.game.world.bounds.right)
         {
             this.blocked.right = true;
             this.x = this.game.world.bounds.right - this.width;
             this.velocity.x *= -this.bounce.x;
+            console.log(this._debug, 'hit right', vx,'to',this.velocity.x);
         }
 
         if (this.y < this.game.world.bounds.y)
@@ -539,12 +602,14 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.blocked.up = true;
             this.y = this.game.world.bounds.y;
             this.velocity.y *= -this.bounce.y;
+            console.log(this._debug, 'hit top', vy,'to',this.velocity.y);
         }
         else if (this.bottom > this.game.world.bounds.bottom)
         {
             this.blocked.down = true;
             this.y = this.game.world.bounds.bottom - this.height;
             this.velocity.y *= -this.bounce.y;
+            console.log(this._debug, 'hit bottom', vy,'to',this.velocity.y);
         }
 
     },

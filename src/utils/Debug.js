@@ -456,6 +456,7 @@ Phaser.Utils.Debug.prototype = {
 
         this.splitline('Width: ' + sprite.width, 'Height: ' + sprite.height);
         this.splitline('x: ' + sprite.body.x.toFixed(2), 'y: ' + sprite.body.y.toFixed(2));
+        this.splitline('speed: ' + sprite.body.speed.toFixed(2), 'angle: ' + sprite.body.angle.toFixed(2));
         this.splitline('old x: ' + sprite.body.preX.toFixed(2), 'y: ' + sprite.body.preY.toFixed(2));
         this.splitline('drag x: ' + sprite.body.drag.x, 'y: ' + sprite.body.drag.y);
         this.splitline('gravity x: ' + sprite.body.gravity.x, 'y: ' + sprite.body.gravity.y);

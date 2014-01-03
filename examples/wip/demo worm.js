@@ -18,9 +18,9 @@ var ad = 0;
 
 function create() {
 
-	bmd = game.add.bitmapData(640, 480);
+	bmd = game.add.bitmapData(800, 600);
 
-	for (var i = 0; i < 30; i++)
+	for (var i = 0; i < 60; i++)
 	{
 		particles.push(new Phaser.Point(0, 0));
 	}
@@ -30,6 +30,8 @@ function create() {
 }
 
 function mycircle(context, x, y, R, color) {
+
+	//R = 64;
 
 	context.fillStyle = color;
 	context.beginPath(); 
@@ -49,22 +51,26 @@ function update() {
 	{
 		var p = particles[t];
 		
-		p.x = Math.sin(n) * 50 + Math.cos(n * 1.5) * 200;
-		p.y = Math.sin(n / 2) * 20 + Math.sin(n * 2) * 150;
+		// p.x = Math.sin(n) * 50 + Math.cos(n * 1.5) * 300;
+		// p.y = Math.sin(n / 2) * 20 + Math.sin(n * 2) * 250;
+
+		p.x = Math.cos(n) * 50 + Math.sin(n * 1.5) * 300;
+		p.y = Math.cos(n / 2) * 20 + Math.cos(n * 2) * 250;
 
 		var tx = p.x;
 		var ty = p.y;
 
 		bmd.context.globalCompositeOperation = 'xor';
 
-		mycircle(bmd.context, p.x + 320, p.y + 240, Math.sin(t * 360 / particles.length / 2 * Math.PI / 180) * 60, 'rgba(255, 255, 255, 1)');
+		//mycircle(bmd.context, p.x + 400, p.y + 300, Math.sin(t * 360 / particles.length / 2 * Math.PI / 180) * 50, 'rgba(255, 255, 0, 1)');
+		mycircle(bmd.context, p.x + 400, p.y + 300, Math.sin(t * 360 / particles.length / 2 * Math.PI / 180) * 50, 'rgba(255, 255, 0, 1)');
 
-		n += 0.1;
+		n += 0.05;
 
-		bmd.context.globalCompositeOperation = 'source-over';
+		//bmd.context.globalCompositeOperation = 'source-over';
 	}
 
-	n = oldn + 0.03;
+	n = oldn + 0.02;
 
 }
 

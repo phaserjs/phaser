@@ -221,8 +221,8 @@ Phaser.Physics.Arcade.prototype = {
 
         if (body.allowGravity)
         {
-            this._gravityX = (this.gravity.x + body.gravity.x);
-            this._gravityY = (this.gravity.y + body.gravity.y);
+            this._gravityX = (this.gravity.x + body.gravity.x) * this.game.time.physicsElapsed;
+            this._gravityY = (this.gravity.y + body.gravity.y) * this.game.time.physicsElapsed;
         }
         else
         {
@@ -236,61 +236,22 @@ Phaser.Physics.Arcade.prototype = {
         // body.rotation += (body.angularVelocity * this.game.time.physicsElapsed);
         // body.angularVelocity += this._velocityDelta;
 
-        // body.motionVelocity.x = (this.computeVelocity(body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x, this._gravityX) - body.velocity.x) * 0.5;
-        // body.motionVelocity.y = (this.computeVelocity(body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y, this._gravityY) - body.velocity.y) * 0.5;
-
         // velocity = velocity + gravity*delta_time/2
         // position = position + velocity*delta_time
         // velocity = velocity + gravity*delta_time/2
+
+        body.velocity.x += this._gravityX;
+        body.velocity.y += this._gravityY;
+
+        body.motionVelocity.x = body.acceleration.x * this.game.time.physicsElapsed;
+        body.motionVelocity.y = body.acceleration.y * this.game.time.physicsElapsed;
 
         // temp = acc*dt
         // pos = pos + dt*(vel + temp/2)
         // vel = vel + temp
 
-        this._drag = 0;
-
-        if (body.drag.x !== 0 && body.velocity.x !== 0 && body.acceleration.x === 0)
-        {
-            if (body.velocity.x - body.drag.x > 0)
-            {
-                this._drag = -body.drag.x;
-            }
-            else if (body.velocity.x + body.drag.x < 0)
-            {
-                this._drag = body.drag.x;
-            }
-        }
-
-        // body.motionVelocity.x = body.acceleration.x + this._gravityX - body.drag.x * this.game.time.physicsElapsed;
-        // body.motionVelocity.x = body.acceleration.x + this._gravityX * this.game.time.physicsElapsed;
-        body.motionVelocity.x = (body.acceleration.x + this._gravityX + this._drag) * this.game.time.physicsElapsed;
-
-        this._drag = 0;
-
-        if (body.drag.y !== 0 && body.velocity.y !== 0 && body.acceleration.y === 0)
-        {
-            if (body.velocity.y - body.drag.y > 0)
-            {
-                this._drag = -body.drag.y;
-            }
-            else if (body.velocity.y + body.drag.y < 0)
-            {
-                this._drag = body.drag.y;
-            }
-        }
-
-        // body.motionVelocity.y = body.acceleration.y + this._gravityY - body.drag.y * this.game.time.physicsElapsed;
-        // body.motionVelocity.y = body.acceleration.y + this._gravityY * this.game.time.physicsElapsed;
-        body.motionVelocity.y = (body.acceleration.y + this._gravityY + this._drag) * this.game.time.physicsElapsed;
-
-        // if (body.sleeping === false)
-        // {
-            // body.x = body.x + this.game.time.physicsElapsed * (body.velocity.x + body.motionVelocity.x / 2);
-            // body.velocity.x = body.velocity.x + body.motionVelocity.x;
-
-            // body.y = body.y + this.game.time.physicsElapsed * (body.velocity.y + body.motionVelocity.y / 2);
-            // body.velocity.y = body.velocity.y + body.motionVelocity.y;
-        // }
+        // body.motionVelocity.x = (body.acceleration.x + this._gravityX) * this.game.time.physicsElapsed;
+        // body.motionVelocity.y = (body.acceleration.y + this._gravityY) * this.game.time.physicsElapsed;
 
     },
 
@@ -306,11 +267,11 @@ Phaser.Physics.Arcade.prototype = {
     * @param {number} gravity - The acceleration due to gravity. Gravity will not induce drag.
     * @return {number} The altered Velocity value.
     */
-    computeVelocity: function (body, velocity, acceleration, drag, max) {
+    computeVelocity: function (body, velocity, acceleration, drag, max, gravity) {
 
         max = max || 10000;
 
-        velocity += acceleration;
+        velocity += (acceleration + gravity) * this.game.time.physicsElapsed;
         
         if (acceleration === 0 && drag !== 0)
         {
@@ -328,15 +289,6 @@ Phaser.Physics.Arcade.prototype = {
             {
                 velocity = 0;
             }
-        }
-
-        if (velocity > max)
-        {
-            velocity = max;
-        }
-        else if (velocity < -max)
-        {
-            velocity = -max;
         }
 
         return velocity;

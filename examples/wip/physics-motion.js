@@ -18,12 +18,12 @@ function create() {
 	bmd.fillStyle('#ffffff');
 	game.add.sprite(0, 0, bmd);
 
-	sprite = game.add.sprite(32, 600, 'chunk');
+	sprite = game.add.sprite(732, 0, 'chunk');
 
 	sprite.body.collideWorldBounds = true;
 	sprite.body.bounce.setTo(0.5, 0.5);
-	sprite.body.drag.setTo(0, -20);
-	// sprite.body.drag.setTo(2, 0);
+	//sprite.body.drag.setTo(0, -20);
+	sprite.body.drag.setTo(5, 0);
 	// sprite.body.sleepMin.setTo(-50, -20);
 	// sprite.body.sleepMax.setTo(50, 20);
 	// sprite.body.sleepDuration = 1000;
@@ -38,9 +38,9 @@ function create() {
 
 function launch() {
 
-	sprite.body.velocity.setTo(0, -300);
+	sprite.body.velocity.setTo(-100, 300);
 
-	// sprite.body.gravity.setTo(0, 200);
+	sprite.body.gravity.setTo(0, -100);
 
 }
 
