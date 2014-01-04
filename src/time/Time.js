@@ -118,9 +118,54 @@ Phaser.Time = function (game) {
 	*/
 	this._justResumed = false;
 
+	/**
+	* @property {array} _timers - Internal store of Phaser.Timer objects.
+    * @private
+	*/
+	this._timers = [];
+
 };
 
 Phaser.Time.prototype = {
+
+    /**
+    * Creates a new Phaser.Timer object.
+    * @method Phaser.Time#create
+	* @param {number} [timeUnit=1000] - The number of ms that represent 1 unit of time. For example a timer that ticks every second would have a timeUnit value of 1000.
+	* @param {boolean} [autoDestroy=true] - A Timer that is set to automatically destroy itself will do so after all of its events have been dispatched (assuming no looping events).
+	* @return {Phaser.Timer} The Timer object that was created.
+    */
+	create: function (timeUnit, autoDestroy) {
+
+		if (typeof autoDestroy === 'undefined') { autoDestroy = true; }
+
+		var timer = new Phaser.Timer(this.game, timeUnit, autoDestroy);
+
+		if (typeof delay !== 'undefined')
+		{
+			timer.add(delay);
+		}
+
+		this._timers.push(timer);
+
+		return timer;
+
+	},
+
+    /**
+    * Remove all Timer objects, regardless of their state.
+    * @method Phaser.Time#removeAll
+    */
+    removeAll: function () {
+
+    	for (var i = 0; i < this._timers.length; i++)
+    	{
+    		this._timers[i].destroy();
+    	}
+
+		this._timers = [];
+
+    },
 
 	/**
 	* Updates the game clock and calculate the fps. This is called automatically by Phaser.Game.
@@ -170,6 +215,23 @@ Phaser.Time.prototype = {
 		{
 			this.pausedTime = this.now - this._pauseStarted;
 		}
+
+        var i = 0;
+        var len = this._timers.length;
+
+        while (i < len)
+        {
+            if (this._timers[i].update(this.now))
+            {
+                i++;
+            }
+            else
+            {
+                this._timers.splice(i, 1);
+
+                len--;
+            }
+        }
 
 	},
 

@@ -81,9 +81,9 @@ Phaser.TweenManager.prototype = {
     * @param {Phaser.Tween} tween - The tween object you want to add.
     * @returns {Phaser.Tween} The tween object you added to the manager.
     */
-    add: function ( tween ) {
+    add: function (tween) {
 
-        this._add.push( tween );
+        this._add.push(tween);
 
     },
 
@@ -106,14 +106,13 @@ Phaser.TweenManager.prototype = {
     * @method Phaser.TweenManager#remove
     * @param {Phaser.Tween} tween - The tween object you want to remove.
     */
-    remove: function ( tween ) {
+    remove: function (tween) {
 
-        var i = this._tweens.indexOf( tween );
+        var i = this._tweens.indexOf(tween);
 
-        if ( i !== -1 ) {
-
+        if (i !== -1)
+        {
             this._tweens[i].pendingDelete = true;
-
         }
 
     },
@@ -126,7 +125,7 @@ Phaser.TweenManager.prototype = {
     */
     update: function () {
 
-        if ( this._tweens.length === 0 && this._add.length === 0 )
+        if (this._tweens.length === 0 && this._add.length === 0)
         {
             return false;
         }
@@ -134,20 +133,18 @@ Phaser.TweenManager.prototype = {
         var i = 0;
         var numTweens = this._tweens.length;
 
-        while ( i < numTweens ) {
-
-            if ( this._tweens[ i ].update( this.game.time.now ) ) {
-
+        while (i < numTweens)
+        {
+            if (this._tweens[i].update(this.game.time.now))
+            {
                 i++;
-
-            } else {
-
-                this._tweens.splice( i, 1 );
+            }
+            else
+            {
+                this._tweens.splice(i, 1);
 
                 numTweens--;
-
             }
-
         }
 
         //  If there are any new tweens to be added, do so now - otherwise they can be spliced out of the array before ever running
@@ -183,7 +180,8 @@ Phaser.TweenManager.prototype = {
     */
     pauseAll: function () {
 
-        for (var i = this._tweens.length - 1; i >= 0; i--) {
+        for (var i = this._tweens.length - 1; i >= 0; i--)
+        {
             this._tweens[i].pause();
         }
 
@@ -196,7 +194,8 @@ Phaser.TweenManager.prototype = {
     */
     resumeAll: function () {
 
-        for (var i = this._tweens.length - 1; i >= 0; i--) {
+        for (var i = this._tweens.length - 1; i >= 0; i--)
+        {
             this._tweens[i].resume();
         }
 
