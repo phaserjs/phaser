@@ -72,10 +72,21 @@ Phaser.Group = function (game, parent, name, useStage) {
     this.type = Phaser.GROUP;
 
     /**
+    * @property {boolean} alive - The alive property is useful for Groups that are children of other Groups and need to be included/excluded in checks like forEachAlive.
+    * @default
+    */
+    this.alive = true;
+
+    /**
     * @property {boolean} exists - If exists is true the the Group is updated, otherwise it is skipped.
     * @default
     */
     this.exists = true;
+
+    /**
+    * @property {Phaser.Group} group - The parent Group of this Group, if a child of another.
+    */
+    this.group = null;
 
     //  Replaces the PIXI.Point with a slightly more flexible one.
     this._container.scale = new Phaser.Point(1, 1);
@@ -141,16 +152,27 @@ Phaser.Group.prototype = {
 
         if (child.group !== this)
         {
-            child.group = this;
-
-            if (child.events)
+            if (child.type && child.type === Phaser.GROUP)
             {
-                child.events.onAddedToGroup.dispatch(child, this);
+                child.group = this;
+
+                this._container.addChild(child._container);
+
+                child._container.updateTransform();
             }
+            else
+            {
+                child.group = this;
 
-            this._container.addChild(child);
+                if (child.events)
+                {
+                    child.events.onAddedToGroup.dispatch(child, this);
+                }
 
-            child.updateTransform();
+                this._container.addChild(child);
+
+                child.updateTransform();
+            }
 
             if (this.cursor === null)
             {
@@ -175,16 +197,27 @@ Phaser.Group.prototype = {
 
         if (child.group !== this)
         {
-            child.group = this;
-
-            if (child.events)
+            if (child.type && child.type === Phaser.GROUP)
             {
-                child.events.onAddedToGroup.dispatch(child, this);
+                child.group = this;
+
+                this._container.addChildAt(child._container, index);
+
+                child._container.updateTransform();
             }
+            else
+            {
+                child.group = this;
 
-            this._container.addChildAt(child, index);
+                if (child.events)
+                {
+                    child.events.onAddedToGroup.dispatch(child, this);
+                }
 
-            child.updateTransform();
+                this._container.addChildAt(child, index);
+
+                child.updateTransform();
+            }
 
             if (this.cursor === null)
             {

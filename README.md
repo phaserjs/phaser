@@ -77,6 +77,8 @@ New features:
 * Buttons now properly use their upFrame if set.
 * InputHandler now has snapOffsetX and snapOffsetY properties so your snap grid doesn't have to be 0,0 aligned (thanks srmeier)
 * Loader.progressFloat contains the actual non-rounded progress value, where-as Loader.progress contains a rounded value. Use progressFloat if you've > 100 files to load.
+* Groups can now be added to other Groups as children via group.add() and group.addAt()
+* Groups now have an 'alive' property, which can be useful when iterating through child groups with functions like forEachAlive.
 
 
 New Examples:
@@ -99,6 +101,7 @@ New Examples:
 * Animation - Group Creation, showing how to create animations across all Group children in one call.
 * Particles - Rain by Jens Anders Bakke.
 * Particles - Snow by Jens Anders Bakke.
+* Groups - Nested Groups - showing how to embed one Group into another Group.
 
 
 Updates:
