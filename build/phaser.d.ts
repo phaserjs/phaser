@@ -240,7 +240,7 @@ declare module Phaser {
         dump(full: boolean): void;
     }
 
-    class World {
+    class World extends Phaser.Group {
         constructor(game: Phaser.Game);
         game: Phaser.Game;
         bounds: Phaser.Rectangle;
