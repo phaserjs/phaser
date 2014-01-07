@@ -253,6 +253,7 @@ declare module Phaser {
             centerY: number;
             randomX: number;
             randomY: number;
+            scale: Phaser.Point;
             boot(): void;
             update(): void;
             setBounds( x:number, y:number, width: number, height: number): void;
@@ -696,7 +697,7 @@ declare module Phaser {
             audio(key: string, volume?: number, loop?: boolean): Phaser.Sound;
             tileSprite(x: number, y: number, width: number, height: number, key?: string, frame?: number): Phaser.TileSprite;
             text(x: number, y: number, text: string, style: any): Phaser.Text;
-            button(x: number, y: number, key: string, callback: Function, callbackContext: Object, overFrame?: any, outFrame?: any, downFrame?: any): Phaser.Button;
+            button(x: number, y: number, key: string, callback: Function, callbackContext: Object, overFrame?: any, outFrame?: any, downFrame?: any, upFrame?: any): Phaser.Button;
             graphics(x: number, y: number): Phaser.Graphics;
             emitter(x: number, y: number, maxParticles: number): Phaser.Particles.Arcade.Emitter;
             bitmapText(x: number, y: number, text: string, style: string): Phaser.BitmapText;
@@ -704,8 +705,10 @@ declare module Phaser {
             renderTexture(key: string, width: number, height: number): Phaser.RenderTexture;
       }
 
-    class Sprite {
-        constructor(game: Phaser.Game, x: number, y: number, key: string, frame: number);
+    class Sprite{
+        constructor(game: Phaser.Game, x: number, y: number, key: string, frame?: any);
+        parent: Phaser.Sprite;
+        children: Array<Phaser.Sprite>;
         game: Phaser.Game;
         exists: boolean;
         alive: boolean;
@@ -810,15 +813,14 @@ declare module Phaser {
       class BitmapText extends Phaser.Text {
       }
 
-      class Button {
-            constructor(game: Phaser.Game, x: number, y: number, key: string, callback: Function, overFrame: number, outFrame: number, downFrame: number);
+      class Button extends Phaser.Sprite{
+            constructor(game: Phaser.Game, x: number, y: number, key: string, callback: Function, overFrame?: any, outFrame?: any, downFrame?: any, upFrame?: any);
             input: Phaser.InputHandler;
             onInputUp: Phaser.Signal;
             onInputDown: Phaser.Signal;
             onInputOut: Phaser.Signal;
             onInputOver: Phaser.Signal;
-            events: Phaser.Event[];
-            setFrames(overFrame?: number, outFrame?: number, downFrame?: number): void;
+            setFrames(overFrame?: any, outFrame?: any, downFrame?: any): void;
             onInputOverHandler(pointer: Phaser.Pointer): void;
             onInputUpHandler(pointer: Phaser.Pointer): void;
             onInputDownHandler(pointer: Phaser.Pointer): void;
@@ -1217,6 +1219,7 @@ declare module Phaser {
 
         class Linear {
             static None(k: number): number;
+            static In(k: number): number;
         }
 
         class Quadratic {
