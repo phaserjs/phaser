@@ -169,6 +169,12 @@ We also provide a Grunt script that will build Phaser from source along with all
 Run `grunt` in the phaser folder for a list of command-line options.
 
 
+Koding
+------
+
+You can [![clone the Phaser repo in Koding](http://learn.koding.com/btn/clone_d.png)][koding] and then start editing and previewing code right away using their web based VM development system.
+
+
 Bower
 -----
 
@@ -295,32 +301,36 @@ Although Phaser 1.0 is a brand new release it is born from years of experience b
 Road Map
 --------
 
-The 1.1 release was a massive under-taking, but we're really happy with how Phaser is progressing. It's becoming more solid and versatile with each iteration. Here is what's on our road map for future versions:
+The 1.1 release was a massive under-taking, but we're really happy with how Phaser is progressing. It's becoming more solid and versatile with each iteration. Here is what's on our road map:
 
 Version 1.2 ("Saldaea")
 
-* Update to Pixi 1.5 - currently still in dev branch only, but lots of nice internal changes and new features we want to take advantage of.
-* Start integration with the p2.js physics system.
+* Update to Pixi 1.4 - this newly released build has lots of internal changes and new features we want to take advantage of.
 
-Beyond version 1.2
+Version 1.3 ("Shienar")
 
 * Enhance the State Management, so you can perform non-destructive State swaps and persistence.
 * Dedicated CocoonJS packaging features (screencanvas, etc)
 * A more advanced Particle system, one that can render to a single canvas (rather than spawn hundreds of Sprites), more advanced effects, etc.
-* Massively enhance the audio side of Phaser. Although it does what it does well, it could do with taking more advantage of Web Audio - echo effects, positional sound, etc.
-* Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.
-* Integration with third party services like Google Play Game Services and Amazon JS SDK.
 * Ability to control DOM elements from the core game and layer them into the game.
 * Touch Gestures.
-* Virtual d-pad support and also support for the Joypad API.
-* Test out packaging with Node-webkit.
-* Flash CC HTML5 export integration.
-* Game parameters stored in Google Docs.
-* Add a d-pad example (http://www.html5gamedevs.com/topic/1574-gameinputondown-question/)
-* Create more touch input examples (http://www.html5gamedevs.com/topic/1556-mobile-touch-event/)
-* Look at HiDPI Canvas settings.
 * Support for parallel asset loading.
 * Fixed width bitmap font support, plus enhanced Bitmap font rendering.
+
+Version 2.0 ("Aes Sedai")
+
+* Integrate p2.js physics system completely.
+* Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.
+* Integration with third party services like Google Play Game Services and Amazon JS SDK.
+* Flash CC HTML5 export integration.
+* Massively enhance the audio side of Phaser. Although it does what it does well, it could do with taking more advantage of Web Audio - echo effects, positional sound, etc.
+
+Beyond version 2.0
+
+* Test out packaging with Node-webkit.
+* Game parameters stored in Google Docs.
+* Look at HiDPI Canvas settings.
+* Multiple Camera support.
 
 
 Contributing
@@ -354,5 +364,6 @@ Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 
 [1]: https://github.com/photonstorm/phaser/issues
 [phaser]: https://github.com/photonstorm/phaser
+[koding]: https://koding.com/Teamwork?import=https://github.com/photonstorm/phaser/archive/master.zip&c=git1
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
