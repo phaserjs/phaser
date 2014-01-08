@@ -150,6 +150,12 @@ Phaser.Device = function () {
     */
     this.vibration = false;
 
+    /**
+    * @property {boolean} quirksMode - Is the browser running in strict mode (false) or quirks mode? (true)
+    * @default
+    */
+    this.quirksMode = false;
+
     //  Browser
 
     /**
@@ -413,6 +419,8 @@ Phaser.Device.prototype = {
         }
         
         this.pointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+
+        this.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
 
     },
 

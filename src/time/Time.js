@@ -108,11 +108,11 @@ Phaser.Time = function (game) {
 	*/
 	this.lastTime = 0;
 
-	this._timer = new Phaser.Timer(this.game, 1, false);
-
-	//	Listen for game pause/resume events
-	this.game.onPause.add(this.gamePaused, this);
-	this.game.onResume.add(this.gameResumed, this);
+	/**
+	* @property {Phaser.Timer} _timer - Internal Phaser.Timer object.
+	* @private
+	*/
+	this._timer = new Phaser.Timer(this.game, false);
 
 	/**
 	* @property {boolean} _justResumed - Internal value used to recover from the game pause state.
@@ -126,29 +126,82 @@ Phaser.Time = function (game) {
 	*/
 	this._timers = [];
 
+	//	Listen for game pause/resume events
+	this.game.onPause.add(this.gamePaused, this);
+	this.game.onResume.add(this.gameResumed, this);
+
 };
 
 Phaser.Time.prototype = {
 
+    /**
+    * @method Phaser.Time#boot
+    */
+	boot: function () {
 
+		this._timer.start();
+
+	},
+
+    /**
+    * Adds a new Event to this Timer. The event will fire after the given amount of 'delay' in milliseconds has passed, once the Timer has started running.
+    * Call Timer.start() once you have added all of the Events you require for this Timer. The delay is in relation to when the Timer starts, not the time it was added.
+    * @method Phaser.Time#addEvent
+    * @param {number} delay - The number of milliseconds that should elapse before the Timer will call the given callback.
+    * @param {function} callback - The callback that will be called when the Timer event occurs.
+    * @param {object} callbackContext - The context in which the callback will be called.
+    * @param {...} arguments - The values to be sent to your callback function when it is called.
+    */
+    addEvent: function (delay, callback, callbackContext) {
+
+        this._timer.create(delay, false, 0, callback, callbackContext, Array.prototype.splice.call(arguments, 3));
+
+    },
+
+    /**
+    * Adds a new Event to this Timer that will repeat for the given number of iterations.
+    * The event will fire after the given amount of 'delay' milliseconds has passed once the Timer has started running.
+    * Call Timer.start() once you have added all of the Events you require for this Timer. The delay is in relation to when the Timer starts, not the time it was added.
+    * @method Phaser.Time#repeatEvent
+    * @param {number} delay - The number of milliseconds that should elapse before the Timer will call the given callback.
+    * @param {number} repeatCount - The number of times to repeat the event.
+    * @param {function} callback - The callback that will be called when the Timer event occurs.
+    * @param {object} callbackContext - The context in which the callback will be called.
+    * @param {...} arguments - The values to be sent to your callback function when it is called.
+    */
+    repeatEvent: function (delay, repeatCount, callback, callbackContext) {
+
+        this._timer.create(delay, false, repeatCount, callback, callbackContext, Array.prototype.splice.call(arguments, 4));
+
+    },
+
+    /**
+    * Adds a new looped Event to this Timer that will repeat forever or until the Timer is stopped.
+    * The event will fire after the given amount of 'delay' milliseconds has passed once the Timer has started running.
+    * Call Timer.start() once you have added all of the Events you require for this Timer. The delay is in relation to when the Timer starts, not the time it was added.
+    * @method Phaser.Time#loopEvent
+    * @param {number} delay - The number of milliseconds that should elapse before the Timer will call the given callback.
+    * @param {function} callback - The callback that will be called when the Timer event occurs.
+    * @param {object} callbackContext - The context in which the callback will be called.
+    * @param {...} arguments - The values to be sent to your callback function when it is called.
+    */
+    loopEvent: function (delay, callback, callbackContext) {
+
+        this._timer.create(delay, true, 0, callback, callbackContext, Array.prototype.splice.call(arguments, 3));
+
+    },
 
     /**
     * Creates a new stand-alone Phaser.Timer object.
     * @method Phaser.Time#create
-	* @param {number} [timeUnit=1000] - The number of ms that represent 1 unit of time. For example a timer that ticks every second would have a timeUnit value of 1000.
 	* @param {boolean} [autoDestroy=true] - A Timer that is set to automatically destroy itself will do so after all of its events have been dispatched (assuming no looping events).
 	* @return {Phaser.Timer} The Timer object that was created.
     */
-	create: function (timeUnit, autoDestroy) {
+	create: function (autoDestroy) {
 
 		if (typeof autoDestroy === 'undefined') { autoDestroy = true; }
 
-		var timer = new Phaser.Timer(this.game, timeUnit, autoDestroy);
-
-		if (typeof delay !== 'undefined')
-		{
-			timer.add(delay);
-		}
+		var timer = new Phaser.Timer(this.game, autoDestroy);
 
 		this._timers.push(timer);
 
@@ -219,6 +272,9 @@ Phaser.Time.prototype = {
 		{
 			this.pausedTime = this.now - this._pauseStarted;
 		}
+
+		//	Our internal timer
+		this._timer.update(this.now);
 
         var i = 0;
         var len = this._timers.length;

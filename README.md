@@ -130,6 +130,9 @@ Updates:
 * Added in prototype.constructor definitions to every class (thanks darkoverlordofdata)
 * Group.destroy has a new parameter: destroyChildren (boolean) which will optionally call the destroy method of all Group children.
 * Button.clearFrames method has been added.
+* Device.quirksMode is a boolean that informs you if the page is in strict (false) or quirks (true) mode.
+* Canvas.getOffset now runs a strict/quirks check and uses document.documentElement when calculating scrollTop and scrollLeft to avoid Chrome console warnings.
+* The Time class now has three new methods: addEvent, repeatEvent and loopEvent. See the new Timer examples to show how to use them.
 
 
 Bug Fixes:

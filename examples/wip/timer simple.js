@@ -4,6 +4,7 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 function preload() {
 
     game.load.image('mushroom', 'assets/sprites/mushroom2.png');
+    game.load.image('sonic', 'assets/sprites/pangball.png');
 
 }
 
@@ -13,33 +14,30 @@ function create() {
 
     game.stage.backgroundColor = '#007236';
 
-    timer = game.time.create(1000, false);
+    //  Every second we will call the addSprite function. This will happen 10 times and then stop.
+    //  The final parameter is the one that will be sent to the addSprite function and in this case is the sprite key.
+    game.time.repeatEvent(Phaser.Timer.SECOND, 10, addSprite, this, 'mushroom');
 
-    timer.repeat(1, 10);
-
-    timer.onEvent.add(addSprite, this);
-
-    timer.start();
-
-    // text = game.add.text(0, 0, "Text Above Sprites", { font: "64px Arial", fill: "#00bff3", align: "center" });
+    //  Every 1.5 seconds we will call the addSprite function. This will happen 5 times and then stop.
+    game.time.repeatEvent(1500, 10, addSprite, this, 'sonic');
 
 }
 
-function addSprite() {
+function addSprite(key) {
 
-    game.add.sprite(game.world.randomX, game.world.randomY, 'mushroom');
+console.log(arguments);
+
+    game.add.sprite(game.world.randomX, game.world.randomY, key);
 
 }
 
 function update() {
 
-
-
 }
 
 function render() {
 
-    game.debug.renderText(timer.ms, 32, 32);
+    game.debug.renderText(game.time._timer.ms, 32, 32);
     // game.debug.renderCameraInfo(game.camera, 32, 32);
 
 }

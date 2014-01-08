@@ -5,7 +5,7 @@
 */
 
 /**
-* The Canvas class handles everything related to the &lt;canvas&gt; tag as a DOM Element, like styles, offset, aspect ratio
+* The Canvas class handles everything related to creating the `canvas` DOM tag that Phaser will use, including styles, offset and aspect ratio.
 *
 * @class Phaser.Canvas
 * @static
@@ -56,8 +56,22 @@ Phaser.Canvas = {
         var box = element.getBoundingClientRect();
         var clientTop = element.clientTop || document.body.clientTop || 0;
         var clientLeft = element.clientLeft || document.body.clientLeft || 0;
-        var scrollTop = window.pageYOffset || element.scrollTop || document.body.scrollTop;
-        var scrollLeft = window.pageXOffset || element.scrollLeft || document.body.scrollLeft;
+
+        //  Without this check Chrome is now throwing console warnings about strict vs. quirks :(
+
+        var scrollTop = 0;
+        var scrollLeft = 0;
+
+        if (document.compatMode === 'CSS1Compat')
+        {
+            scrollTop = window.pageYOffset || document.documentElement.scrollTop || element.scrollTop || 0;
+            scrollLeft = window.pageXOffset || document.documentElement.scrollLeft || element.scrollLeft || 0;
+        }
+        else
+        {
+            scrollTop = window.pageYOffset || document.body.scrollTop || element.scrollTop || 0;
+            scrollLeft = window.pageXOffset || document.body.scrollLeft || element.scrollLeft || 0;
+        }
 
         point.x = box.left + scrollLeft - clientLeft;
         point.y = box.top + scrollTop - clientTop;

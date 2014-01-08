@@ -431,6 +431,7 @@ Phaser.Game.prototype = {
             this.net = new Phaser.Net(this);
             this.debug = new Phaser.Utils.Debug(this);
 
+            this.time.boot();
             this.stage.boot();
             this.world.boot();
             this.input.boot();
