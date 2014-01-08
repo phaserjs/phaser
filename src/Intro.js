@@ -20,7 +20,7 @@
 *
 * Follow Phaser development progress at http://www.photonstorm.com
 *
-* Many thanks to Adam Saltsman (@ADAMATOMIC) for releasing Flixel, from both which Phaser
+* Many thanks to Adam Saltsman (@ADAMATOMIC) for releasing Flixel, from which both Phaser
 * and my love of game development originate.
 *
 * "If you want your children to be intelligent,  read them fairy tales."
