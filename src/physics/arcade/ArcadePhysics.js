@@ -828,12 +828,16 @@ Phaser.Physics.Arcade.prototype = {
     * @returns {boolean} Returns true if the bodies were separated, otherwise false.
     */
     separate: function (body1, body2) {
-        if(body1 !== body2)
+
+        if (body1 !== body2)
         {
             this._result = (this.separateX(body1, body2) || this.separateY(body1, body2));    
-        } else {
+        }
+        else
+        {
             this._result = false;
         }
+
     },
 
     /**
@@ -1037,7 +1041,7 @@ Phaser.Physics.Arcade.prototype = {
                 }
                 else if (!body1.immovable)
                 {
-                    body1.y = body1.y - this._overlap;
+                    body1.y -= this._overlap;
                     body1.velocity.y = this._velocity2 - this._velocity1 * body1.bounce.y;
 
                     //  This is special case code that handles things like horizontal moving platforms you can ride

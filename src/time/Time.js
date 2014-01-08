@@ -108,6 +108,8 @@ Phaser.Time = function (game) {
 	*/
 	this.lastTime = 0;
 
+	this._timer = new Phaser.Timer(this.game, 1, false);
+
 	//	Listen for game pause/resume events
 	this.game.onPause.add(this.gamePaused, this);
 	this.game.onResume.add(this.gameResumed, this);
@@ -128,8 +130,10 @@ Phaser.Time = function (game) {
 
 Phaser.Time.prototype = {
 
+
+
     /**
-    * Creates a new Phaser.Timer object.
+    * Creates a new stand-alone Phaser.Timer object.
     * @method Phaser.Time#create
 	* @param {number} [timeUnit=1000] - The number of ms that represent 1 unit of time. For example a timer that ticks every second would have a timeUnit value of 1000.
 	* @param {boolean} [autoDestroy=true] - A Timer that is set to automatically destroy itself will do so after all of its events have been dispatched (assuming no looping events).

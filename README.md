@@ -111,7 +111,7 @@ Updates:
 * Updated Pixi.js so that removing filters now works correctly without breaking the display list.
 * Phaser.Canvas.create updated so it can be given an ID as the 3rd parameter (can also be set via new Game configuration object).
 * Updated display/fullscreen example to reflect new full screen change.
-* Loads of updates to the TypeScript definitions files - games fully compile now and lots of missing classes added :)
+* Loads of updates to the TypeScript definitions files - games fully compile now and lots of missing classes added :) (thanks Niondir)
 * Removed 'null parent' check from Group constructor. Will parent to game.world only if parent value is undefined.
 * The tutorials have now been translated into Spanish - thanks feiss :)
 * separateY updated to re-implement the 'riding platforms' special condition (thanks cocoademon)
@@ -336,21 +336,21 @@ Beyond version 2.0
 Contributing
 ------------
 
-If you find a bug then please report it on github or our forum.
+We now have a full [Contributors Guide][contribute] which goes into the process in more detail, but here are the headlines:
 
-If you have a feature request, or have written a game or demo that shows Phaser in use, then please get in touch. We'd love to hear from you.
+- If you find a bug then please report it on [GitHub Issues][issues] or our [Support Forum][forum].
 
-You can do this on the Phaser board that is part of the [HTML5 Game Devs forum](http://www.html5gamedevs.com/forum/14-phaser/) or email: rich@photonstorm.com
+- If you have a feature request, or have written a game or demo that shows Phaser in use, then please get in touch. We'd love to hear from you! Either post to our [forum][forum] or email: rich@photonstorm.com
 
-If you issue a Pull Request for Phaser, please only ever do so againt the `dev` branch and *not* against the `master` branch.
+- If you issue a Pull Request for Phaser, please only do so againt the `dev` branch and *not* against the `master` branch.
 
-Before submitting a pull request please run your code through [JSHint](http://www.jshint.com/) to check for stylistic or formatting errors. To use JSHint, first install it by running `npm install jshint`, then test your code by running `jshint src`. This isn't a requirement, we are happy to receive pull requests that haven't been JSHinted, so don't let it put you off contributing - but do know that we'll reformat your source before going live with it.
+- Before submitting a Pull Request please run your code through [JSHint](http://www.jshint.com/) to check for stylistic or formatting errors. To use JSHint, first install it by running `npm install jshint`, then test your code by running `jshint src`. This isn't a strict requirement and we are happy to receive Pull Requests that haven't been JSHinted, so don't let it put you off contributing, but do know that we'll reformat your source before going live with it.
 
 
 Bugs?
 -----
 
-Please add them to the [Issue Tracker][1] with as much info as possible, especially source code demonstrating the issue.
+Please add them to the [Issue Tracker][issues] with as much info as possible, especially source code demonstrating the issue.
 
 ![Phaser Tilemap](http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_tilemap_collision.png)
 
@@ -362,8 +362,10 @@ License
 
 Phaser is released under the [MIT License](http://opensource.org/licenses/MIT).
 
-[1]: https://github.com/photonstorm/phaser/issues
+[issues]: https://github.com/photonstorm/phaser/issues
+[contribute]: https://github.com/photonstorm/phaser/blob/master/CONTRIBUTING.md
 [phaser]: https://github.com/photonstorm/phaser
+[forum]: http://www.html5gamedevs.com/forum/14-phaser/
 [koding]: https://koding.com/Teamwork?import=https://github.com/photonstorm/phaser/archive/master.zip&c=git1
 
 [![Analytics](https://ga-beacon.appspot.com/UA-44006568-2/phaser/index)](https://github.com/igrigorik/ga-beacon)
