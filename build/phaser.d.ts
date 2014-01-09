@@ -80,8 +80,8 @@ declare module Phaser {
     class StateManager {
         constructor(game: Phaser.Game, pendingState: Phaser.State);
         game: Phaser.Game;
-        states: Object;
-        current: Phaser.State;
+        states: { [key: string]: Phaser.State };
+        current: string;
         onInitCallback(): void;
         onPreloadCallback(): void;
         onCreateCallback(): void;
@@ -99,7 +99,7 @@ declare module Phaser {
         dummy(): void;
         checkState(key: string): boolean;
         link(key: string): void;
-        setCurrentState(key: string): void;
+        getCurrentState(): Phaser.State;
         loadComplete(): void;
         update(): void;
         preRender(): void;
@@ -196,8 +196,9 @@ declare module Phaser {
         visibilityChange(event: Event): void;
     }
 
+    // Wraps a PIXI.DisplayObjectContainer
     class Group {
-        constructor(game: Phaser.Game, parent: any, name: string, useStage: boolean);
+        constructor(game: Phaser.Game, parent?: any, name?: string, useStage?: boolean);
         game: Phaser.Game;
         name: string;
         type: number;
@@ -260,6 +261,16 @@ declare module Phaser {
     }
 
     class Game {
+        /*
+         * Defaults:
+         * [width=800] - The width of your game in game pixels.
+         * [height=600] - The height of your game in game pixels.
+         * [renderer=Phaser.AUTO] - Which renderer to use: Phaser.AUTO will auto-detect, Phaser.WEBGL, Phaser.CANVAS or Phaser.HEADLESS (no rendering at all).
+         * [parent=''] - The Games DOM parent.
+         * [state=null] - Description.
+         * [transparent=false] - Use a transparent canvas background or not.
+         * [antialias=true] - Anti-alias graphics.
+         * */
         constructor(width?: number, height?: number, renderer?: number, parent?: string, state?: Object, transparent?: boolean, antialias?: boolean);
         id: number;
         width: number;
@@ -705,7 +716,7 @@ declare module Phaser {
     }
 
     class Sprite {
-        constructor(game: Phaser.Game, x: number, y: number, key: string, frame: number);
+        constructor(game: Phaser.Game, x?: number, y?: number, key?: string, frame?: number);
         game: Phaser.Game;
         exists: boolean;
         alive: boolean;
@@ -722,6 +733,7 @@ declare module Phaser {
         anchor: Phaser.Point;
         x: number;
         y: number;
+        cameraOffset:Phaser.Point;
         position: Phaser.Point;
         autoCull: boolean;
         scale: Phaser.Point;
@@ -740,7 +752,7 @@ declare module Phaser {
         frame: number;
         frameName: string;
         inCamera: boolean;
-        crop: boolean;
+        crop: Phaser.Rectangle;
         cropEnabled: boolean;
         inputEnabled: boolean;
         fixedToCamera:boolean;
@@ -825,9 +837,26 @@ declare module Phaser {
         onInputOutHandler(pointer: Phaser.Pointer): void;
     }
 
+
+    // Actually extends PIXI.Graphics but we skip the abstraction here, since pixi is "part" of phaser
+    // PIXI.Graphics extends PIXI.DisplayObjectContainer extends DisplayObject
     class Graphics extends Phaser.Sprite {
         constructor(game: Phaser.Game, x: number, y: number);
         angle: number;
+        x:number;
+        y:number;
+
+        // Pixi drawing
+        lineStyle(lineWidth:number, color?:number, alpha?:number): void;
+        moveTo(x:number, y:number): void;
+        lineTo(x:number, y:number): void;
+        beginFill(color:number, alpha?:number): void;
+        endFill(): void;
+        drawRect( x:number, y:number, width:number, height:number ): void;
+        drawCircle( x:number, y:number, radius:number): void;
+        drawElipse( x:number, y:number, width:number, height:number): void;
+        clear(): void;
+        updateFilterBounds(): void;
     }
 
     class RenderTexture {

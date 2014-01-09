@@ -280,7 +280,8 @@ Phaser.StateManager.prototype = {
     },
 
     /**
-    * Description.
+    * Checks i a given phaser state is valid.
+    * State must exist and have at least one callback function registered..
     * @method Phaser.StateManager#checkState
     * @param {string} key - The key of the state you want to check.
     * @return {boolean} Description.
@@ -347,7 +348,7 @@ Phaser.StateManager.prototype = {
     * Sets the current State. Should not be called directly (use StateManager.start)
     * @method Phaser.StateManager#setCurrentState
     * @param {string} key - State key.
-    * @protected
+    * @private
     */
     setCurrentState: function (key) {
 
@@ -375,6 +376,17 @@ Phaser.StateManager.prototype = {
 
         this.onInitCallback.call(this.callbackContext, this.game);
 
+    },
+
+    /**
+     * Gets the current State.
+     *
+     * @method Phaser.StateManager#getCurrentState
+     * @return Phaser.State
+     * @public
+     */
+    getCurrentState: function() {
+        return this.states[this.current];
     },
 
     /**
