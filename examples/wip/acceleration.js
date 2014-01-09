@@ -29,6 +29,7 @@ function create() {
     car.body.collideWorldBounds = true;
     car.body.bounce.setTo(0.8, 0.8);
     car.body.allowRotation = true;
+    car.body.friction = 10;
 
     // car.body.drag.x = 10;
     // car.body.drag.y = 10;
@@ -50,36 +51,36 @@ function start() {
 
 function update() {
 
-    if (car.x >= 400 && car.body.velocity.x > 0)
-    {
-        car.body.velocity.x = 0;
-        car.body.acceleration.x = 0;
-        var total = game.time.now - s;
-        console.log(game.time.physicsElapsed);
-        console.log('total ms', total, 'px/sec', car.x/(total/1000));
-    }
+    // if (car.x >= 400 && car.body.velocity.x > 0)
+    // {
+    //     car.body.velocity.x = 0;
+    //     car.body.acceleration.x = 0;
+    //     var total = game.time.now - s;
+    //     console.log(game.time.physicsElapsed);
+    //     console.log('total ms', total, 'px/sec', car.x/(total/1000));
+    // }
 
     // car.body.velocity.x = 0;
     // car.body.velocity.y = 0;
-    // car.body.angularVelocity = 0;
+    car.body.angularVelocity = 0;
 
-    // car.body.acceleration.x = 0;
-    // car.body.acceleration.y = 0;
+    car.body.acceleration.x = 0;
+    car.body.acceleration.y = 0;
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
     {
         car.body.angularVelocity = -200;
-        // car.body.acceleration.x = -10;
+        // car.body.acceleration.x = -100;
     }
     else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
     {
         car.body.angularVelocity = 200;
-        // car.body.acceleration.x = 10;
+        // car.body.acceleration.x = 100;
     }
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
     {
-        // game.physics.accelerationFromRotation(car.rotation, 10, car.body.acceleration);
+        game.physics.accelerationFromRotation(car.rotation, 400, car.body.acceleration);
 
         // car.body.acceleration.x = 10;
         // car.body.acceleration.copyFrom(game.physics.velocityFromAngle(car.angle, 30));
@@ -96,6 +97,7 @@ function update() {
 
 function render() {
 
-    game.debug.renderSpriteInfo(car, 32, 32);
+    // game.debug.renderSpriteInfo(car, 32, 32);
+    game.debug.renderBodyInfo(car, 16, 24);
 
 }

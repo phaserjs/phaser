@@ -260,7 +260,8 @@ Phaser.StageScaleMode.prototype = {
         this._width = this.width;
         this._height = this.height;
 
-        // console.log('startFullScreen', this._width, this._height);
+        //  This needs updating to match the final spec:
+        //  http://generatedcontent.org/post/70347573294/is-your-fullscreen-api-code-up-to-date-find-out-how-to
 
         if (element['requestFullScreen'])
         {
