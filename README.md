@@ -80,6 +80,7 @@ New features:
 * Loader.progressFloat contains the actual non-rounded progress value, where-as Loader.progress contains a rounded value. Use progressFloat if you've > 100 files to load.
 * Groups can now be added to other Groups as children via group.add() and group.addAt()
 * Groups now have an 'alive' property, which can be useful when iterating through child groups with functions like forEachAlive.
+* Added a new Project Template "Full Screen Mobile" which you can find in the resources folder. Contains html / css / layout needed for a deployed Phaser game.
 
 
 New Examples:
@@ -135,6 +136,7 @@ Updates:
 * Device.quirksMode is a boolean that informs you if the page is in strict (false) or quirks (true) mode.
 * Canvas.getOffset now runs a strict/quirks check and uses document.documentElement when calculating scrollTop and scrollLeft to avoid Chrome console warnings.
 * The Time class now has its own Phaser.Timer which you can access through game.time.events. See the new Timer examples to show how to use them.
+* Added StateManager.getCurrentState to return the currently running State object (thanks Niondir)
 
 
 Bug Fixes:

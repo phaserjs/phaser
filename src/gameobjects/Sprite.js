@@ -373,6 +373,11 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.updateCache();
     this.updateBounds();
 
+    /**
+    * @property {PIXI.Point} pivot - The pivot point of the displayObject that it rotates around.
+    */
+
+
 };
 
 //  Needed to keep the PIXI.Sprite constructor in the prototype chain (as the core pixi renderer uses an instanceof check sadly)
