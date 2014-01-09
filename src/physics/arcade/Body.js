@@ -315,8 +315,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this._sleepTimer = 0; // ms
     this._drag = 0;
     this._debug = 0;
-    this.friction = 0.9;
-    // this._debug = 0;
+    this.friction = 0;
 
     /**
     * If a body is overlapping with another body, but neither of them are moving (maybe they spawned on-top of each other?) this is set to true.
@@ -550,8 +549,6 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.sprite.angle += this.deltaZ();
             }
         }
-
-        this._debug++;
 
     },
 
