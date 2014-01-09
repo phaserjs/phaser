@@ -59,6 +59,7 @@ Significant API changes:
 
 New features:
 
+* Phaser.Timer is now feature complete and fully documented. You can create Phaser.TimerEvents on a Timer and lots of new examples have been provided.
 * Gamepad API support has been added with lots of new examples (thanks Karl Macklin)
 * Phaser.Game constructor can now be passed a single object containing all of your game settings + Stage settings. Useful for advanced configurations.
 * The width/height given to Phaser.Game can now be percentages, i.e. "100%" will set the width to the maximum window innerWidth.
@@ -102,6 +103,7 @@ New Examples:
 * Particles - Rain by Jens Anders Bakke.
 * Particles - Snow by Jens Anders Bakke.
 * Groups - Nested Groups - showing how to embed one Group into another Group.
+* Time - Lots of new examples showing how to use the Phaser.Timer class.
 
 
 Updates:
@@ -132,7 +134,7 @@ Updates:
 * Button.clearFrames method has been added.
 * Device.quirksMode is a boolean that informs you if the page is in strict (false) or quirks (true) mode.
 * Canvas.getOffset now runs a strict/quirks check and uses document.documentElement when calculating scrollTop and scrollLeft to avoid Chrome console warnings.
-* The Time class now has three new methods: addEvent, repeatEvent and loopEvent. See the new Timer examples to show how to use them.
+* The Time class now has its own Phaser.Timer which you can access through game.time.events. See the new Timer examples to show how to use them.
 
 
 Bug Fixes:

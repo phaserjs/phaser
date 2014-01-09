@@ -351,6 +351,10 @@
       "title": "group transform"
     },
     {
+      "file": "nested+groups.js",
+      "title": "nested groups"
+    },
+    {
       "file": "recyling.js",
       "title": "recyling"
     },
@@ -795,6 +799,28 @@
     {
       "file": "swap+tiles.js",
       "title": "swap tiles"
+    }
+  ],
+  "time": [
+    {
+      "file": "basic+looped+event.js",
+      "title": "basic looped event"
+    },
+    {
+      "file": "basic+repeat+event.js",
+      "title": "basic repeat event"
+    },
+    {
+      "file": "basic+timed+event.js",
+      "title": "basic timed event"
+    },
+    {
+      "file": "remove+event.js",
+      "title": "remove event"
+    },
+    {
+      "file": "timed+slideshow.js",
+      "title": "timed slideshow"
     }
   ],
   "tweens": [

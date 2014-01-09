@@ -255,9 +255,11 @@ Phaser.Canvas = {
     */
     setImageRenderingCrisp: function (canvas) {
 
+        canvas.style['image-rendering'] = 'optimizeSpeed';
         canvas.style['image-rendering'] = 'crisp-edges';
         canvas.style['image-rendering'] = '-moz-crisp-edges';
         canvas.style['image-rendering'] = '-webkit-optimize-contrast';
+        canvas.style['image-rendering'] = 'optimize-contrast';
         canvas.style.msInterpolationMode = 'nearest-neighbor';
 
         return canvas;

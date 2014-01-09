@@ -113,6 +113,7 @@
 
 	<script src="$path/src/time/Time.js"></script>
 	<script src="$path/src/time/Timer.js"></script>
+	<script src="$path/src/time/TimerEvent.js"></script>
 
 	<script src="$path/src/animation/AnimationManager.js"></script>
 	<script src="$path/src/animation/Animation.js"></script>

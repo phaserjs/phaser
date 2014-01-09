@@ -14,6 +14,8 @@ function create() {
 
     game.stage.backgroundColor = '#007236';
 
+
+
     //  Every second we will call the addSprite function. This will happen 10 times and then stop.
     //  The final parameter is the one that will be sent to the addSprite function and in this case is the sprite key.
     game.time.repeatEvent(Phaser.Timer.SECOND, 10, addSprite, this, 'mushroom');

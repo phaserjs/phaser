@@ -99,6 +99,7 @@ module.exports = function (grunt) {
         'src/tween/Easing.js',
         'src/time/Time.js',
         'src/time/Timer.js',
+        'src/time/TimerEvent.js',
         'src/animation/AnimationManager.js',
         'src/animation/Animation.js',
         'src/animation/Frame.js',
