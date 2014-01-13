@@ -1327,13 +1327,63 @@ declare module Phaser {
         pauseDuration: number;
         timeToCall: number;
         lastTime: number;
-        totalElapsedSeconds(): number;
-        update(time: number): number;
+        events: Phaser.Timer;
+        create(autoDestroy: boolean): Phaser.Timer;
+        removeAll(): void;
+        update(time: number): void;
         gamePaused(): void;
         gameResumed(): void;
+        totalElapsedSeconds(): number;
         elapsedSince(since: number): number;
         elapsedSecondsSince(since: number): number;
         reset(): void;
+    }
+
+    class Timer {
+        constructor(game: Phaser.Game, autoDestroy: boolean);
+        game: Phaser.Game;
+        running: boolean;
+        autoDestroy: boolean;
+        expired: boolean;
+        events: Phaser.TimerEvent[];
+        onComplete: Phaser.Signal;
+        nextTick: number;
+        paused: boolean;
+        static MINUTE: number;
+        static SECOND: number;
+        static HALF: number;
+        static QUARTER: number;
+        create(delay: number, loop: boolean, repeatCount: number, callback: any, callbackContext: any, ...): Phaser.TimerEvent;
+        add(delay: number, callback: any, callbackContext: any, ...): Phaser.TimerEvent;
+        repeat(delay: number, repeatCount: number, callback: any, callbackContext: any, ...): Phaser.TimerEvent;
+        create(delay: number, loop: boolean, repeatCount: number, callback: any, callbackContext: any, ...): Phaser.TimerEvent;
+        loop(delay: number, callback: any, callbackContext: any, ...): Phaser.TimerEvent;
+        start(): void;
+        stop(): void;
+        remove(event: Phaser.TimerEvent): boolean;
+        order():void;
+        sortHandler():number;
+        update(time: number): boolean;
+        pause(): void;
+        resume(): void;
+        destroy(): void;
+        next: number;
+        duration: number;
+        length: number;
+        ms: number;
+        seconds: number;
+    }
+
+    class TimerEvent {
+        constructor(timer: Phaser.Timer, delay: number, tick: number, repeatCount: number, loop: boolean, callback: any, callbackContext, any, args:any[]);
+        timer: Phaser.Timer;
+        delay: number;
+        tick: number;
+        repeatCount: number;
+        loop: boolean;
+        callback: any;
+        callbackContext: any;
+        args: any[];
     }
 
     class AnimationManager {
@@ -1705,7 +1755,7 @@ declare module Phaser {
                 width: number;
                 height: number;
                 halfWidth: number;
-                helfHeight: number;
+                halfHeight: number;
                 velocity: Phaser.Point;
                 acceleration: Phaser.Point;
                 drag: Phaser.Point;

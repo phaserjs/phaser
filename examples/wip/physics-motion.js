@@ -33,7 +33,8 @@ function create() {
 	sprite.body.bounce.setTo(0.8, 0.8);
 
 	//sprite.body.drag.setTo(0, -20);
-	sprite.body.drag.setTo(10, 10);
+	// sprite.body.drag.setTo(10, 10);
+	sprite.body.friction = 0.1;
 
 	// sprite.body.sleepMin.setTo(-50, -20);
 	// sprite.body.sleepMax.setTo(50, 20);

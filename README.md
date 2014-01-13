@@ -104,12 +104,12 @@ New Examples:
 * Particles - Rain by Jens Anders Bakke.
 * Particles - Snow by Jens Anders Bakke.
 * Groups - Nested Groups - showing how to embed one Group into another Group.
-* Time - Lots of new examples showing how to use the Phaser.Timer class.
+* Time - Lots of new examples showing how to use the updated Phaser.Timer class.
 
 
 Updates:
 
-* Updated to latest Pixi.js dev branch build.
+* Updated to latest Pixi.js dev branch build (pre 1.4 release)
 * When a Sprite is destroyed any active filters are removed at the same time.
 * Updated Pixi.js so that removing filters now works correctly without breaking the display list.
 * Phaser.Canvas.create updated so it can be given an ID as the 3rd parameter (can also be set via new Game configuration object).
