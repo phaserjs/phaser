@@ -1621,7 +1621,7 @@ declare module Phaser {
                         width: number;
                         height: number; 
                         halfWidth: number;
-                        helfHeight: number;
+                        halfHeight: number;
                         velocity: Phaser.Point;
                         acceleration: Phaser.Point;
                         drag: Phaser.Point;
