@@ -471,8 +471,8 @@ Phaser.Physics.Arcade.prototype = {
                     this.collideSpriteVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext);
                 }
             }
-            //  GROUPS
-            else if (object1.type == Phaser.GROUP)
+            //  GROUPS OR EMITTERS
+            else if (object1.type == Phaser.GROUP || object1.type == Phaser.EMITTER)
             {
                 if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
                 {
@@ -497,22 +497,6 @@ Phaser.Physics.Arcade.prototype = {
                 else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
                 {
                     this.collideGroupVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext);
-                }
-            }
-            //  EMITTER
-            else if (object1.type == Phaser.EMITTER)
-            {
-                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
-                {
-                    this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext);
-                }
-                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
-                {
-                    this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext);
-                }
-                else if (object2.type == Phaser.TILEMAPLAYER)
-                {
-                    this.collideGroupVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext);
                 }
             }
         }
