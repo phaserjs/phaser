@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="16" height="180" tilewidth="32" tileheight="32">
-<tileset firstgid="1" name="CommandoMap1-1BG_bank.png" tilewidth="32" tileheight="32">
-	<image source="CommandoMap1-1BG_bank.png" width="160" height="608"/>
+<tileset firstgid="1" name="commando" tilewidth="32" tileheight="32">
+	<image source="../tiles/commando.png" width="160" height="608"/>
 </tileset>
-	<layer name="ShoeBox Tile Grab" width="16" height ="180" >
+	<layer name="level1" width="16" height ="180" >
 		<data>
 			<tile gid="1"/>
 			<tile gid="1"/>

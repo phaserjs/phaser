@@ -4,7 +4,8 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 function preload() {
 
     game.load.tilemap('desert', 'assets/maps/desert.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.tileset('tiles', 'assets/tiles/tmw_desert_spacing.png', 32, 32, -1, 1, 1);
+    // game.load.tileset('tiles', 'assets/tiles/tmw_desert_spacing.png', 32, 32, -1, 1, 1);
+    game.load.image('tiles', 'assets/tiles/tmw_desert_spacing.png');
     game.load.image('car', 'assets/sprites/car90.png');
 
 }
@@ -19,6 +20,9 @@ var sprite;
 function create() {
 
     map = game.add.tilemap('desert');
+
+    //  The two parameters are: 1) The Tiled
+    map.addTilesetImage('ground_1x1');
 
     tileset = game.add.tileset('tiles');
     

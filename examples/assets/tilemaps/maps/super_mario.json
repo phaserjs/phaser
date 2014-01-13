@@ -24,11 +24,11 @@
  "tilesets":[
         {
          "firstgid":1,
-         "image":"SuperMarioBros-World1-1_bank.png",
+         "image":"super_mario.png",
          "imageheight":64,
          "imagewidth":176,
          "margin":0,
-         "name":"SuperMarioBros-World1-1_bank.png",
+         "name":"SuperMarioBros-World1-1",
          "properties":
             {
 

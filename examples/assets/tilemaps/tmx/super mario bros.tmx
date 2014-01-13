@@ -3,8 +3,8 @@
  <properties>
   <property name="mapProp" value="123"/>
  </properties>
- <tileset firstgid="1" name="SuperMarioBros-World1-1_bank.png" tilewidth="16" tileheight="16">
-  <image source="SuperMarioBros-World1-1_bank.png" width="176" height="64"/>
+ <tileset firstgid="1" name="SuperMarioBros" tilewidth="16" tileheight="16">
+  <image source="../tiles/super_mario.png" width="176" height="64"/>
   <tile id="10">
    <properties>
     <property name="coin" value="true"/>

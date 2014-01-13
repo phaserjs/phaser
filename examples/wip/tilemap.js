@@ -6,13 +6,13 @@ function preload() {
     // game.load.tilemap('map', 'assets/maps/super_mario.json', null, Phaser.Tilemap.TILED_JSON);
     // game.load.tileset('tiles', 'assets/maps/super_mario.png', 16, 16);
 
-    game.load.tilemap('map', 'assets/maps/newtest.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.tilemap('map', 'assets/tilemaps/maps/features_test.json', null, Phaser.Tilemap.TILED_JSON);
 
     // game.load.image('ground', 'assets/maps/ground_1x1.png');
 
-    game.load.image('ground_1x1', 'assets/maps/ground_1x1.png');
-    game.load.image('walls_1x2', 'assets/maps/walls_1x2.png');
-    game.load.image('tiles2', 'assets/maps/tiles2.png');
+    game.load.image('ground_1x1', 'assets/tilemaps/tiles/ground_1x1.png');
+    game.load.image('walls_1x2', 'assets/tilemaps/tiles/walls_1x2.png');
+    game.load.image('tiles2', 'assets/tilemaps/tiles/tiles2.png');
 
 
     // game.load.tileset('tiles', 'assets/maps/ground_1x1.png', 32, 32);

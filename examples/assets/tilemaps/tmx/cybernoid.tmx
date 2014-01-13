@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="160" height="44" tilewidth="16" tileheight="16">
-<tileset firstgid="1" name="CybernoidMap3BG_bank.png" tilewidth="16" tileheight="16">
-	<image source="CybernoidMap3BG_bank.png" width="176" height="128"/>
+<tileset firstgid="1" name="cybernoid" tilewidth="16" tileheight="16">
+	<image source="../tiles/cybernoid.png" width="176" height="128"/>
 </tileset>
-	<layer name="ShoeBox Tile Grab" width="160" height ="44" >
+	<layer name="level1" width="160" height ="44" >
 		<data>
 			<tile gid="1"/>
 			<tile gid="2"/>

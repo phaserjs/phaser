@@ -4,7 +4,7 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 function preload() {
 
     game.load.tilemap('map', 'assets/maps/commando.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.tileset('tiles', 'assets/maps/commando.png', 32, 32);
+    game.load.image('tiles', 'assets/maps/commando.png');
     game.load.image('phaser', 'assets/sprites/arrow.png');
 
 }
@@ -18,13 +18,10 @@ function create() {
 
     map = game.add.tilemap('map');
 
-    // map.setCollisionByIndexRange(80, 97); // mario
-    // map.setCollisionByIndexRange(14, 18); // mario
-    // map.setCollisionByIndex(1);  // newtest
+    map.addTilesetImage('CommandoMap1-1BG_bank.png', 'tiles');
 
-    layer = game.add.tilemapLayer(0, 0, 800, 600, 'tiles', map, 0);
+    layer = map.createLayer('ShoeBox Tile Grab');
     // layer.debug = true;
-
     layer.resizeWorld();
 
     sprite = game.add.sprite(260, 100, 'phaser');

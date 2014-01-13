@@ -55,6 +55,7 @@ Significant API changes:
 * Tilemap.createFromObjects can now turn a bunch of Tiled objects into Sprites in one single call, and copies across all properties as well.
 * Tween.onStartCallback and onCompleteCallback have been removed to avoid confusion. You should use the onStart, onLoop and onComplete events instead.
 * Button.forceOut default value has changed from true to false, so Buttons will revert to an Up state (if set) when pressed and released.
+* Body.drag has been removed. Please use the new Body.friction value instead (which is a number value, not a Point object)
 
 
 New features:
@@ -81,6 +82,9 @@ New features:
 * Groups can now be added to other Groups as children via group.add() and group.addAt()
 * Groups now have an 'alive' property, which can be useful when iterating through child groups with functions like forEachAlive.
 * Added a new Project Template "Full Screen Mobile" which you can find in the resources folder. Contains html / css / layout needed for a deployed Phaser game.
+* Body.speed - the current speed of the body.
+* Body.friction - This now replaces Body.drag and provides for a much smoother friction experience.
+* Body.sleeping - A Physics Body can now be set to 'go to sleep' if the velocity drops between the given range (sleepMin and sleepMax) for the given period of sleepDuration (see the new examples).
 
 
 New Examples:
@@ -137,6 +141,8 @@ Updates:
 * Canvas.getOffset now runs a strict/quirks check and uses document.documentElement when calculating scrollTop and scrollLeft to avoid Chrome console warnings.
 * The Time class now has its own Phaser.Timer which you can access through game.time.events. See the new Timer examples to show how to use them.
 * Added StateManager.getCurrentState to return the currently running State object (thanks Niondir)
+* Removed the console.log redirect from Utils as it was messing with Firefox.
+* Body.acceleration is now much smoother and less eratic at high speeds.
 
 
 Bug Fixes:

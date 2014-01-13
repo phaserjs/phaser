@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="50" height="18" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="ground_1x1" tilewidth="32" tileheight="32">
-  <image source="ground_1x1.png" width="800" height="32"/>
+  <image source="../tiles/ground_1x1.png" width="800" height="32"/>
   <tile id="1">
    <properties>
     <property name="bounce" value="1"/>
@@ -9,16 +9,16 @@
   </tile>
  </tileset>
  <tileset firstgid="26" name="walls_1x2" tilewidth="32" tileheight="64">
-  <image source="walls_1x2.png" width="256" height="64"/>
+  <image source="../tiles/walls_1x2.png" width="256" height="64"/>
  </tileset>
  <tileset firstgid="34" name="coin" tilewidth="32" tileheight="32">
-  <image source="../sprites/coin.png" width="192" height="32"/>
+  <image source="../../sprites/coin.png" width="192" height="32"/>
  </tileset>
  <tileset firstgid="40" name="tiles2" tilewidth="70" tileheight="70">
-  <image source="tiles2.png" width="840" height="910"/>
+  <image source="../tiles/tiles2.png" width="840" height="910"/>
  </tileset>
  <imagelayer name="Image Layer 1" width="50" height="18">
-  <image source="../sprites/bunny.png" trans="55ffff"/>
+  <image source="../../sprites/bunny.png" trans="55ffff"/>
   <properties>
    <property name="alpha" value="0.8"/>
    <property name="x" value="300"/>
