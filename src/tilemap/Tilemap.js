@@ -661,7 +661,7 @@ Phaser.Tilemap.prototype = {
             }
             else
             {
-                this.layers[layer].data[y][x].index = index;
+                this.layers[layer].data[y][x].index = tile;
             }
 
 			this.layers[layer].dirty = true;
