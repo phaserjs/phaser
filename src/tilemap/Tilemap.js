@@ -357,26 +357,98 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    setTileCallback: function (indexes, layer, callback, callbackContext) {
+
+
+
+    },
+
+    /**
+    * Sets collision the given tile or tiles. You can pass in either a single numeric index or an array of indexes: [ 2, 3, 15, 20].
+    * The `collides` parameter controls if collision will be enabled (true) or disabled (false).
+    *
+    * @method Phaser.Tileset#setCollision
+    * @param {number|array} indexes - Either a single tile index, or an array of tile IDs to be checked for collision.
+    * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to this.currentLayer.
+    */
+    setCollision: function (indexes, collides, layer) {
+
+        if (typeof collides === 'undefined') { collides = true; }
+
+        layer = this.getLayer(layer);
+
+        if (typeof indexes === 'number')
+        {
+            return this.setCollisionByIndex(indexes, collides, layer, true);
+        }
+        else
+        {
+            //  Collide all of the IDs given in the indexes array
+            for (var i = 0, len = indexes.length; i < len; i++)
+            {
+                this.setCollisionByIndex(indexes[i], collides, layer, false);
+            }
+
+            //  Now re-calculate interesting faces
+            this.calculateFaces(layer);
+        }
+
+    },
+
+    /**
+    * Sets collision on a range of tiles where the tile IDs increment sequentially.
+    * Calling this with a start value of 10 and a stop value of 14 would set collision for tiles 10, 11, 12, 13 and 14.
+    * The `collides` parameter controls if collision will be enabled (true) or disabled (false).
+    *
+    * @method Phaser.Tileset#setCollisionBetween
+    * @param {number} start - The first index of the tile to be set for collision.
+    * @param {number} stop - The last index of the tile to be set for collision.
+    * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to this.currentLayer.
+    */
+    setCollisionBetween: function (start, stop, collides, layer) {
+
+        if (typeof collides === 'undefined') { collides = true; }
+
+        layer = this.getLayer(layer);
+
+        if (start > stop)
+        {
+            return;
+        }
+
+        for (var index = start; index <= stop; index++)
+        {
+            this.setCollisionByIndex(index, collides, layer, false);
+        }
+
+        //  Now re-calculate interesting faces
+        this.calculateFaces(layer);
+
+    },
+
     /**
     * Sets collision on all tiles in the given layer, except for the IDs of those in the given array.
+    * The `collides` parameter controls if collision will be enabled (true) or disabled (false).
     *
     * @method Phaser.Tileset#setCollisionByExclusion
     * @param {array} indexes - An array of the tile IDs to not be counted for collision.
-    * @param {number|string|Phaser.TilemapLayer} layer - The layer to operate on. If not given will default to this.currentLayer.
+    * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to this.currentLayer.
     */
-    setCollisionByExclusion: function (indexes, layer) {
+    setCollisionByExclusion: function (indexes, collides, layer) {
 
-        if (typeof layer === 'undefined')
-        {
-            layer = this.currentLayer;
-        }
+        if (typeof collides === 'undefined') { collides = true; }
+
+        layer = this.getLayer(layer);
 
         //  Collide everything, except the IDs given in the indexes array
         for (var i = 0, len = this.tiles.length; i < len; i++)
         {
             if (indexes.indexOf(i) === -1)
             {
-                this.setCollisionByIndex(i, layer, false);
+                this.setCollisionByIndex(i, collides, layer, false);
             }
         }
 
@@ -386,84 +458,22 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Sets collision the given tile index, or array of tiles indexes.
-    *
-    * @method Phaser.Tileset#setCollision
-    * @param {number|array} indexes - Either a single tile index, or an array of tile IDs to be checked for collision.
-    * @param {number|string|Phaser.TilemapLayer} layer - The layer to operate on. If not given will default to this.currentLayer.
-    */
-    setCollision: function (indexes, layer) {
-
-        if (typeof layer === 'undefined')
-        {
-            layer = this.currentLayer;
-        }
-
-        if (typeof indexes === 'number')
-        {
-            return this.setCollisionByIndex(indexes, layer);
-        }
-
-        //  Collide all of the IDs given in the indexes array
-        for (var i = 0, len = indexes.length; i < len; i++)
-        {
-            this.setCollisionByIndex(indexes[i], layer, false);
-        }
-
-        //  Now re-calculate interesting faces
-        this.calculateFaces(layer);
-
-    },
-
-    /**
-    * Sets collision on a range of tiles.
-    *
-    * @method Phaser.Tileset#setCollisionBetween
-    * @param {number} start - The first index of the tile to be set for collision.
-    * @param {number} stop - The last index of the tile to be set for collision.
-    * @param {number|string|Phaser.TilemapLayer} layer - The layer to operate on. If not given will default to this.currentLayer.
-    */
-    setCollisionBetween: function (start, stop, layer) {
-
-        if (start > stop)
-        {
-            return;
-        }
-
-        for (var i = start; i <= stop; i++)
-        {
-            var index = this.setCollisionByIndex(i, layer, false);
-        }
-
-        //  Now re-calculate interesting faces
-        this.calculateFaces(index);
-
-    },
-
-    /**
     * Sets collision values on a tile in the set.
+    * You shouldn't usually call this method directly, instead use setCollision, setCollisionBetween or setCollisionByExclusion.
     *
     * @method Phaser.Tileset#setCollisionByIndex
+    * @protected
     * @param {number} index - The index of the tile on the layer.
-    * @param {number|string|Phaser.TilemapLayer} layer - The layer to operate on. If not given will default to this.currentLayer.
+    * @param {boolean} [collides=true] - If true it will enable collision on the tile. If false it will clear collision values from the tile.
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to this.currentLayer.
     * @param {boolean} [recalculate=true] - Recalculates the tile faces after the update.
     */
-    setCollisionByIndex: function (index, layer, recalculate) {
+    setCollisionByIndex: function (index, collides, layer, recalculate) {
 
-        if (typeof layer === 'undefined')
-        {
-            layer = this.currentLayer;
-        }
-        else if (typeof layer === 'string')
-        {
-            layer = this.getLayerIndex(layer);
-        }
-        else if (layer instanceof Phaser.TilemapLayer)
-        {
-            layer = layer.index;
-        }
+        if (typeof collides === 'undefined') { collides = true; }
+        if (typeof recalculate === 'undefined') { recalculate = true; }
 
-        if (typeof recalculate === "undefined") { recalculate = true; }
+        layer = this.getLayer(layer);
 
         for (var y = 0; y < this.layers[layer].height ; y++)
         {
@@ -473,11 +483,11 @@ Phaser.Tilemap.prototype = {
 
                 if (tile && tile.index === index)
                 {
-                    tile.collides = true;
-                    tile.faceTop = true;
-                    tile.faceBottom = true;
-                    tile.faceLeft = true;
-                    tile.faceRight = true;
+                    tile.collides = collides;
+                    tile.faceTop = collides;
+                    tile.faceBottom = collides;
+                    tile.faceLeft = collides;
+                    tile.faceRight = collides;
                 }
             }
         }
@@ -493,11 +503,38 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
+    * Gets the TilemapLayer index as used in the setCollision calls.
+    *
+    * @method Phaser.Tileset#getLayer
+    * @protected
+    * @param {number|string|Phaser.TilemapLayer} layer - The layer to operate on. If not given will default to this.currentLayer.
+    * @return {number} The TilemapLayer index.
+    */
+    getLayer: function (layer) {
+
+        if (typeof layer === 'undefined')
+        {
+            layer = this.currentLayer;
+        }
+        else if (typeof layer === 'string')
+        {
+            layer = this.getLayerIndex(layer);
+        }
+        else if (layer instanceof Phaser.TilemapLayer)
+        {
+            layer = layer.index;
+        }
+
+        return layer;
+
+    },
+
+    /**
     * Internal function.
     *
     * @method Phaser.Tileset#calculateFaces
     * @protected
-    * @param {number} layer - The layer to operate on.
+    * @param {number} layer - The index of the TilemapLayer to operate on.
     */
     calculateFaces: function (layer) {
 
@@ -680,7 +717,7 @@ Phaser.Tilemap.prototype = {
     * @param {number} tileHeight - The height of the tile in pixels.
     * @param {number} [layer] - The Tilemap Layer to operate on.
     */
-    putTileWorldXY: function (index, x, y, tileWidth, tileHeight, layer) {
+    putTileWorldXY: function (tile, x, y, tileWidth, tileHeight, layer) {
 
         if (typeof layer === "undefined") { layer = this.currentLayer; }
 
@@ -725,10 +762,7 @@ Phaser.Tilemap.prototype = {
         x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
         y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
 
-        if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
-        {
-            return this.layers[layer].data[y][x];
-        }
+        return this.getTile(x, y, layer);
 
     },
 

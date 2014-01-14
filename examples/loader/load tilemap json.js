@@ -3,7 +3,6 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: p
 
 function preload() {
 
-
     //  Tilemaps are split into two parts: The actual map data (usually stored in a CSV or JSON file) 
     //  and the tileset/s used to render the map.
 
@@ -16,27 +15,33 @@ function preload() {
     //  The final one tells Phaser the foramt of the map data, in this case it's a JSON file exported from the Tiled map editor.
     //  This could be Phaser.Tilemap.CSV too.
 
-    game.load.tilemap('mario', 'assets/maps/mario1.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.tilemap('mario', 'assets/tilemaps/maps/super_mario.json', null, Phaser.Tilemap.TILED_JSON);
 
-    //  Next we load the tileset. This consists of an image and a set of values that determine the size of the tiles within the image.
-    //  In this case we give it a unique key, the URL to the PNG file and tell Phaser the tiles are all 16x16 pixels in size.
+    //  Next we load the tileset. This is just an image, loaded in via the normal way we load images:
 
-    game.load.tileset('tiles', 'assets/maps/mario1.png', 16, 16);
+    game.load.image('tiles', 'assets/tilemaps/tiles/super_mario.png');
 
 }
 
 var map;
-var tileset;
 var layer;
 
 function create() {
 
     game.stage.backgroundColor = '#787878';
 
+    //  The 'mario' key here is the Loader key given in game.load.tilemap
     map = game.add.tilemap('mario');
-    
-    tileset = game.add.tileset('tiles');
 
-    layer = game.add.tilemapLayer(0, 0, 800, 600, tileset, map, 0);
+    //  The first parameter is the tileset name, as specified in the Tiled map editor (and in the tilemap json file)
+    //  The second parameter maps this name to the Phaser.Cache key 'tiles'
+    map.addTilesetImage('SuperMarioBros-World1-1', 'tiles');
+    
+    //  Creates a layer from the World1 layer in the map data.
+    //  A Layer is effectively like a Phaser.Sprite, so is added to the display list.
+    layer = map.createLayer('World1');
+
+    //  This resizes the game world to match the layer dimensions
+    layer.resizeWorld();
 
 }
