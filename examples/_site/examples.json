@@ -127,16 +127,16 @@
       "title": "offset bounding box"
     },
     {
+      "file": "process+callback.js",
+      "title": "process callback"
+    },
+    {
       "file": "sprite+tiles.js",
       "title": "sprite tiles"
     },
     {
       "file": "sprite+vs+group.js",
       "title": "sprite vs group"
-    },
-    {
-      "file": "sprite+vs+sprite+custom.js",
-      "title": "sprite vs sprite custom"
     },
     {
       "file": "sprite+vs+sprite.js",
@@ -621,6 +621,10 @@
       "title": "framerate independence"
     },
     {
+      "file": "gravity.js",
+      "title": "gravity"
+    },
+    {
       "file": "launcher+follow+world.js",
       "title": "launcher follow world"
     },
@@ -795,6 +799,10 @@
     {
       "file": "sci+fly.js",
       "title": "sci fly"
+    },
+    {
+      "file": "shuffle+tiles.js",
+      "title": "shuffle tiles"
     },
     {
       "file": "swap+tiles.js",

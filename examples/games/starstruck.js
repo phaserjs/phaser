@@ -4,7 +4,7 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 function preload() {
 
     game.load.tilemap('level1', 'assets/games/starstruck/level1.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.tileset('tiles', 'assets/games/starstruck/tiles-1.png', 16, 16);
+    game.load.image('tiles-1', 'assets/games/starstruck/tiles-1.png');
     game.load.spritesheet('dude', 'assets/games/starstruck/dude.png', 32, 48);
     game.load.spritesheet('droid', 'assets/games/starstruck/droid.png', 32, 32);
     game.load.image('starSmall', 'assets/games/starstruck/star.png');
@@ -32,20 +32,22 @@ function create() {
 
     map = game.add.tilemap('level1');
 
-    tileset = game.add.tileset('tiles');
+    map.addTilesetImage('tiles-1');
 
-    tileset.setCollisionRange(0, tileset.total - 1, true, true, true, true);
+    map.setCollisionByExclusion([ 13, 14, 15, 16, 46, 47, 48, 49, 50, 51 ]);
 
-    tileset.setCollisionRange(12, 16, false, false, false, false);
-    tileset.setCollisionRange(46, 50, false, false, false, false);
+    layer = map.createLayer('Tile Layer 1');
 
-    layer = game.add.tilemapLayer(0, 0, 800, 600, tileset, map, 0);
+    //  Un-comment this on to see the collision tiles
+    // layer.debug = true;
+
     layer.resizeWorld();
+
+    game.physics.gravity.y = 260;
 
     player = game.add.sprite(32, 32, 'dude');
     player.body.bounce.y = 0.2;
     player.body.collideWorldBounds = true;
-    player.body.gravity.y = 6;
     player.body.setSize(16, 32, 8, 16);
 
     player.animations.add('left', [0, 1, 2, 3], 10, true);
@@ -110,13 +112,10 @@ function update() {
         jumpTimer = game.time.now + 750;
     }
 
-    // player.scale.x += 0.001;
-    // player.scale.y += 0.001;
-
 }
 
 function render () {
 
-    game.debug.renderSpriteBody(player);
+    // game.debug.renderSpriteBody(player);
 
 }

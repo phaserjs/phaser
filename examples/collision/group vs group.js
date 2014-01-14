@@ -68,7 +68,8 @@ function update() {
         fireBullet();
     }
 
-    game.physics.collide(bullets, veggies, collisionHandler, null, this);
+    //  As we don't need to exchange any velocities or motion we can use the faster 'overlap' check instead of 'collide':
+    game.physics.overlap(bullets, veggies, collisionHandler, null, this);
 
 }
 

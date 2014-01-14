@@ -581,7 +581,6 @@ Phaser.Game.prototype = {
         else
         {
             this.plugins.preUpdate();
-            this.physics.preUpdate();
             this.world.preUpdate();
 
             this.stage.update();
