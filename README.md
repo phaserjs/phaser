@@ -148,6 +148,7 @@ Updates:
 * Removed the console.log redirect from Utils as it was messing with Firefox.
 * Body.acceleration is now much smoother and less eratic at high speeds.
 * Removed ArcadePhysics binding to the QuadTree, so it can now be used independantly of the physics system.
+* Removed ArcadePhysics.preUpdate and postUpdate as neither are needed any more.
 
 
 Bug Fixes:

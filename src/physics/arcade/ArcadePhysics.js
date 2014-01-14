@@ -35,6 +35,16 @@ Phaser.Physics.Arcade = function (game) {
     this.bounds = new Phaser.Rectangle(0, 0, game.world.width, game.world.height);
 
     /**
+    * @property {number} OVERLAP_BIAS - A value added to the delta values during collision checks.
+    */
+    this.OVERLAP_BIAS = 4;
+
+    /**
+    * @property {Phaser.QuadTree} quadTree - The world QuadTree.
+    */
+    this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
+
+    /**
     * @property {number} maxObjects - Used by the QuadTree to set the maximum number of objects per quad.
     */
     this.maxObjects = 10;
@@ -43,21 +53,6 @@ Phaser.Physics.Arcade = function (game) {
     * @property {number} maxLevels - Used by the QuadTree to set the maximum number of iteration levels.
     */
     this.maxLevels = 4;
-
-    /**
-    * @property {number} OVERLAP_BIAS - A value added to the delta values during collision checks.
-    */
-    this.OVERLAP_BIAS = 4;
-
-    /**
-    * @property {Phaser.QuadTree} quadTree - The world QuadTree.
-    */
-    this.quadTree = new Phaser.QuadTree(this, this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
-
-    /**
-    * @property {number} quadTreeID - The QuadTree ID.
-    */
-    this.quadTreeID = 0;
 
     //  Avoid gc spikes by caching these values for re-use
 
@@ -157,6 +152,17 @@ Phaser.Physics.Arcade = function (game) {
     */
     this._dy = 0;
 
+    /**
+    * @property {number} _gravityX - Internal cache var.
+    * @private
+    */
+    this._gravityX = 0;
+
+    /**
+    * @property {number} _gravityY - Internal cache var.
+    * @private
+    */
+    this._gravityY = 0;
 };
 
 Phaser.Physics.Arcade.prototype = {
@@ -173,13 +179,13 @@ Phaser.Physics.Arcade.prototype = {
 
         if (body.allowGravity)
         {
-            this._gravityX = (this.gravity.x + body.gravity.x);
-            this._gravityY = (this.gravity.y + body.gravity.y);
+            this._gravityX = this.gravity.x + body.gravity.x;
+            this._gravityY = this.gravity.y + body.gravity.y;
         }
         else
         {
-            this._gravityX = 0;
-            this._gravityY = 0;
+            this._gravityX = body.gravity.x;
+            this._gravityY = body.gravity.y;
         }
 
         //  Rotation
@@ -221,24 +227,6 @@ Phaser.Physics.Arcade.prototype = {
         body.motionVelocity.x = (body.acceleration.x + this._gravityX) * this.game.time.physicsElapsed;
         body.motionVelocity.y = (body.acceleration.y + this._gravityY) * this.game.time.physicsElapsed;
 
-    },
-
-    /**
-    * Called automatically by the core game loop.
-    *
-    * @method Phaser.Physics.Arcade#preUpdate
-    * @protected
-    */
-    preUpdate: function () {
-    },
-
-    /**
-    * Called automatically by the core game loop.
-    *
-    * @method Phaser.Physics.Arcade#postUpdate
-    * @protected
-    */
-    postUpdate: function () {
     },
 
     /**
