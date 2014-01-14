@@ -10,13 +10,19 @@
 * @class Phaser.Tile
 * @classdesc A Tile is a representation of a single tile within the Tilemap.
 * @constructor
+* @param {object} layer - The layer in the Tilemap data that this tile belongs to.
 * @param {number} index - The index of this tile type in the core map data.
 * @param {number} x - The x coordinate of this tile.
 * @param {number} y - The y coordinate of this tile.
 * @param {number} width - Width of the tile.
 * @param {number} height - Height of the tile.
 */
-Phaser.Tile = function (index, x, y, width, height) {
+Phaser.Tile = function (layer, index, x, y, width, height) {
+
+    /**
+    * @property {object} layer - The layer in the Tilemap data that this tile belongs to.
+    */
+    this.layer = layer;
 
     /**
     * @property {number} index - The index of this tile within the map data corresponding to the tileset.
@@ -109,38 +115,27 @@ Phaser.Tile = function (index, x, y, width, height) {
     this.collideDown = false;
 
     /**
-    * @property {boolean} separateX - Enable separation at x-axis. 
+    * @property {function} callback - Tile collision callback.
     * @default
     */
-    // this.separateX = true;
+    this.callback = null;
 
     /**
-    * @property {boolean} separateY - Enable separation at y-axis. 
+    * @property {object} callbackContext - The context in which the collision callback will be called.
     * @default
     */
-    // this.separateY = true;
-
-    /**
-    * @property {boolean} collisionCallback - Tilemap collision callback.
-    * @default
-    */
-    this.collisionCallback = null;
-
-    /**
-    * @property {boolean} collisionCallback - Tilemap collision callback context.
-    * @default
-    */
-    this.collisionCallbackContext = this;
+    this.callbackContext = this;
 
 };
 
 Phaser.Tile.prototype = {
 
     /**
-    * Set callback to be called when this tilemap collides.
+    * Set a callback to be called when this tile is hit by an object.
+    * The callback must true true for collision processing to take place.
     * 
     * @method Phaser.Tile#setCollisionCallback
-    * @param {Function} callback - Callback function.
+    * @param {function} callback - Callback function.
     * @param {object} context - Callback will be called with this context.
     */
     setCollisionCallback: function (callback, context) {
@@ -226,6 +221,19 @@ Phaser.Tile.prototype = {
 };
 
 Phaser.Tile.prototype.constructor = Phaser.Tile;
+
+/**
+* @name Phaser.Tile#canCollide
+* @property {boolean} canCollide - True if this tile can collide or has a collision callback.
+* @readonly
+*/
+Object.defineProperty(Phaser.Tile.prototype, "canCollide", {
+    
+    get: function () {
+        return (this.collides || this.collisionCallback || this.layer.callbacks[this.index]);
+    }
+
+});
 
 /**
 * @name Phaser.Tile#bottom

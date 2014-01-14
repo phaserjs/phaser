@@ -94,7 +94,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     this.tileColor = 'rgb(255, 255, 255)';
 
     /**
-    * @property {boolean} debug - If set to true the collideable tile edges path will be rendered.
+    * @property {boolean} debug - If set to true the collideable tile edges path will be rendered. Only works when game is running in Phaser.CANVAS mode.
     * @default
     */
     this.debug = false;
@@ -122,6 +122,12 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     * @default
     */
     this.debugFillColor = 'rgba(0, 255, 0, 0.2)';
+
+    /**
+    * @property {string} debugCallbackColor - If debug is true this is the color used to outline the edges of tiles that have collision callbacks. Provide in hex or rgb/rgba string format.
+    * @default
+    */
+    this.debugCallbackColor = 'rgba(255, 0, 0, 1)';
 
     /**
     * @property {number} scrollFactorX - speed at which this layer scrolls
@@ -485,7 +491,7 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     //  This should apply the layer x/y here
     this._results.length = 0;
 
-    var _tile = null;
+    // var _tile = null;
 
     for (var wy = this._ty; wy < this._ty + this._th; wy++)
     {
@@ -493,13 +499,13 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
         {
             if (this.layer.data[wy] && this.layer.data[wy][wx])
             {
-                _tile = this.layer.data[wy][wx];
+                // _tile = this.layer.data[wy][wx];
         
-                if (_tile)
-                {
-                    if (collides === false || (collides && _tile.collides))
+                // if (_tile && (collides === false || (collides && _tile.collides))
+                // {
+                    if (collides === false || (collides && this.layer.data[wy][wx].canCollide))
                     {
-                        // convert tile coordinates back to camera space for return
+                        //  Convert tile coordinates back to camera space for return
                         var _wx = this._unfixX(wx * this._cw) / this._cw;
                         var _wy = this._unfixY(wy * this._ch) / this._ch;
 
@@ -508,10 +514,11 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
                             y: _wy * this._ch, 
                             right: (_wx * this._cw) + this._cw, 
                             bottom: (_wy * this._ch) + this._ch, 
-                            tile: _tile 
+                            tile: this.layer.data[wy][wx],
+                            layer: this.layer.data[wy][wx].layer
                         });
                     }
-                }
+                // }
             }
         }
     }
@@ -746,6 +753,11 @@ Phaser.TilemapLayer.prototype.render = function () {
 
                     if (set.image)
                     {
+                        if (this.debug === false && tile.alpha !== this.context.globalAlpha)
+                        {
+                            this.context.globalAlpha = tile.alpha;
+                        }
+
                         if (set.tileWidth !== this.map.tileWidth || set.tileHeight !== this.map.tileHeight)
                         {
                             //  TODO: Smaller sized tile check
@@ -868,6 +880,14 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
                 }
 
                 this.context.stroke();
+            }
+
+            //  Collision callback
+            if (tile && (tile.collisionCallback || tile.layer.callbacks[tile.index]))
+            {
+                this.context.fillStyle = this.debugCallbackColor;
+                this.context.fillRect(this._tx, this._ty, this._cw, this._ch);
+                this.context.fillStyle = this.debugFillColor;
             }
 
             this._tx += this.map.tileWidth;

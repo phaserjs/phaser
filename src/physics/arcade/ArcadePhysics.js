@@ -795,6 +795,22 @@ Phaser.Physics.Arcade.prototype = {
 
             if (Phaser.Rectangle.intersects(body, tile))
             {
+                //  They overlap. Any custom callbacks?
+                if (tile.tile.callback || tile.layer.callbacks[tile.tile.index])
+                {
+                    //  A local callback takes priority over a global callback.
+                    if (tile.tile.callback && tile.tile.callback.call(tile.tile.callbackContext, body.sprite, tile) === false)
+                    {
+                        //  Is there a tile specific collision callback? If it returns true then we can carry on, otherwise we should abort.
+                        continue;
+                    }
+                    else if (tile.layer.callbacks[tile.tile.index] && tile.layer.callbacks[tile.tile.index].callback.call(tile.layer.callbacks[tile.tile.index].callbackContext, body.sprite, tile) === false)
+                    {
+                        //  Is there a tile index collision callback? If it returns true then we can carry on, otherwise we should abort.
+                        continue;
+                    }
+                }
+
                 if (body.deltaX() < 0 && body.allowCollision.left && tile.tile.faceRight)
                 {
                     //  LEFT
@@ -921,12 +937,29 @@ Phaser.Physics.Arcade.prototype = {
             return false;
         }
 
+        //  They overlap. Any custom callbacks?
+        if (tile.tile.callback || tile.layer.callbacks[tile.tile.index])
+        {
+            //  A local callback takes priority over a global callback.
+            if (tile.tile.callback && tile.tile.callback.call(tile.tile.callbackContext, body.sprite, tile) === false)
+            {
+                //  Is there a tile specific collision callback? If it returns true then we can carry on, otherwise we should abort.
+                return false;
+            }
+            else if (tile.layer.callbacks[tile.tile.index] && tile.layer.callbacks[tile.tile.index].callback.call(tile.layer.callbacks[tile.tile.index].callbackContext, body.sprite, tile) === false)
+            {
+                //  Is there a tile index collision callback? If it returns true then we can carry on, otherwise we should abort.
+                return false;
+            }
+        }
+
         //  use body var instead
         body.overlapX = 0;
         body.overlapY = 0;
 
         //  Remember - this happens AFTER the body has been moved by the motion update, so it needs moving back again
         // console.log('---------------------------------------------------------------------------------------------');
+        // console.log(tile);
         // console.log('tx', tile.x, 'ty', tile.y, 'tw', tile.width, 'th', tile.height, 'tr', tile.right, 'tb', tile.bottom);
         // console.log('bx', body.x, 'by', body.y, 'bw', body.width, 'bh', body.height, 'br', body.right, 'bb', body.bottom);
         // console.log(Phaser.Rectangle.intersects(body, tile));

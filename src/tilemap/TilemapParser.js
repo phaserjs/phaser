@@ -182,7 +182,8 @@ Phaser.TilemapParser = {
                 alpha: json.layers[i].opacity,
                 visible: json.layers[i].visible,
                 properties: {},
-                indexes: []
+                indexes: [],
+                callbacks: []
 
             };
 
@@ -198,7 +199,7 @@ Phaser.TilemapParser = {
             //  Loop through the data field in the JSON.
 
             //  This is an array containing the tile indexes, one after the other. 0 = no tile, everything else = the tile index (starting at 1)
-            //  If the map contains multiple tilesets then the indexes are relative to that which the set starts from
+            //  If the map contains multiple tilesets then the indexes are relative to that which the set starts from.
             //  Need to set which tileset in the cache = which tileset in the JSON, if you do this manually it means you can use the same map data but a new tileset.
 
             for (var t = 0, len = json.layers[i].data.length; t < len; t++)
@@ -206,7 +207,7 @@ Phaser.TilemapParser = {
                 //  index, x, y, width, height
                 if (json.layers[i].data[t] > 0)
                 {
-                    row.push(new Phaser.Tile(json.layers[i].data[t], x, output.length, json.tilewidth, json.tileheight));
+                    row.push(new Phaser.Tile(layer, json.layers[i].data[t], x, output.length, json.tilewidth, json.tileheight));
                 }
                 else
                 {
