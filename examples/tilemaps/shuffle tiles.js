@@ -44,7 +44,7 @@ function create() {
 
 function randomiseTiles() {
 
-    map.random(layer.getTileX(sprite.x), layer.getTileY(sprite.y), 6, 6);
+    map.shuffle(layer.getTileX(sprite.x), layer.getTileY(sprite.y), 6, 6);
 
 }
 

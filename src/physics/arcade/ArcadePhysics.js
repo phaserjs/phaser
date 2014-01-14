@@ -544,6 +544,7 @@ Phaser.Physics.Arcade.prototype = {
         else
         {
             var i = 0;
+
             if (this.separateTile(sprite.body, this._mapData[i]))
             {
                 //  They collided, is there a custom process callback?
@@ -969,8 +970,8 @@ Phaser.Physics.Arcade.prototype = {
     /**
     * The core separation function to separate a physics body and an array of tiles.
     * @method Phaser.Physics.Arcade#separateTiles
-    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
-    * @param {Phaser.Tile} tile - The tile to collide against.
+    * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
+    * @param {<Phaser.Tile>array} tiles - The array of tiles to collide against.
     * @returns {boolean} Returns true if the bodies were separated, otherwise false.
     */
     separateTiles: function (body, tiles) {
@@ -1068,7 +1069,6 @@ Phaser.Physics.Arcade.prototype = {
             return false;
         }
 
-        // if (body.overlapX !== 0)
         if (body.touching.left || body.touching.right)
         {
             body.x -= body.overlapX;
@@ -1084,7 +1084,6 @@ Phaser.Physics.Arcade.prototype = {
             }
         }
 
-        // if (body.overlapY !== 0)
         if (body.touching.up || body.touching.down)
         {
             body.y -= body.overlapY;

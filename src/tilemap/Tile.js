@@ -19,7 +19,7 @@
 Phaser.Tile = function (index, x, y, width, height) {
 
     /**
-    * @property {number} index - The index of this tile within the map.
+    * @property {number} index - The index of this tile within the map data corresponding to the tileset.
     */
     this.index = index;
     
@@ -127,7 +127,7 @@ Phaser.Tile = function (index, x, y, width, height) {
     this.collisionCallback = null;
 
     /**
-    * @property {boolean} collisionCallback - Tilemap collision callback.
+    * @property {boolean} collisionCallback - Tilemap collision callback context.
     * @default
     */
     this.collisionCallbackContext = this;
@@ -199,6 +199,27 @@ Phaser.Tile.prototype = {
         this.collideRight = false;
         this.collideUp = false;
         this.collideDown = false;
+
+    },
+
+    /**
+    * Copies the tile data and properties from the given tile to this tile.
+    * @method Phaser.Tile#copy
+    * @param {Phaser.Tile} tile - The tile to copy from.
+    */
+    copy: function (tile) {
+
+        this.index = tile.index;
+        this.alpha = tile.alpha;
+        this.properties = tile.properties;
+        this.collides = tile.collides;
+        this.collideNone = tile.collideNone;
+        this.collideUp = tile.collideUp;
+        this.collideDown = tile.collideDown;
+        this.collideLeft = tile.collideLeft;
+        this.collideRight = tile.collideRight;
+        this.collisionCallback = tile.collisionCallback;
+        this.collisionCallbackContext = tile.collisionCallbackContext;
 
     }
 

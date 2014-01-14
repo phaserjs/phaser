@@ -88,7 +88,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     this.cameraOffset = new Phaser.Point(0, 0);
 
     /**
-    * @property {string} tileColor - If no tile set is given the tiles will be rendered as rectangles in this color. Provide in hex or rgb/rgba string format.
+    * @property {string} tileColor - If no tileset is given the tiles will be rendered as rectangles in this color. Provide in hex or rgb/rgba string format.
     * @default
     */
     this.tileColor = 'rgb(255, 255, 255)';

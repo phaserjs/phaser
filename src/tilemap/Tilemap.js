@@ -153,6 +153,14 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Adds an image to the map to be used as a tileset. A single map may use multiple tilesets.
+    * Note that the tileset name can be found in the JSON file exported from Tiled, or in the Tiled editor.
+    *
+    * @method Phaser.Tilemap#addTilesetImage
+    * @param {string} tileset - The name of the tileset as specified in the map data.
+    * @param {string} [key] - The key of the Phaser.Cache image used for this tileset. If not specified it will look for an image with a key matching the tileset parameter.
+    */
     addTilesetImage: function (tileset, key) {
 
         if (typeof key === 'undefined')
@@ -275,9 +283,10 @@ Phaser.Tilemap.prototype = {
     },
 
     /**
-    * Gets the layer index based on a layer name.
+    * Gets the layer index based on the layers name.
     *
     * @method Phaser.Tileset#getIndex
+    * @protected
     * @param {array} location - The local array to search.
     * @param {string} name - The name of the array element to get.
     * @return {number} The index of the element in the array, or null if not found.
@@ -347,8 +356,6 @@ Phaser.Tilemap.prototype = {
         return this.getIndex(this.objects, name);
 
     },
-
-    //  TODO - set collision in an area, REMOVE collision
 
     /**
     * Sets collision on all tiles in the given layer, except for the IDs of those in the given array.
@@ -489,6 +496,7 @@ Phaser.Tilemap.prototype = {
     * Internal function.
     *
     * @method Phaser.Tileset#calculateFaces
+    * @protected
     * @param {number} layer - The layer to operate on.
     */
     calculateFaces: function (layer) {
@@ -636,21 +644,50 @@ Phaser.Tilemap.prototype = {
     /**
     * Puts a tile of the given index value at the coordinate specified.
     * @method Phaser.Tilemap#putTile
-    * @param {number} index - The index of this tile to set.
+    * @param {Phaser.Tile|number} tile - The index of this tile to set or a Phaser.Tile object.
     * @param {number} x - X position to place the tile (given in tile units, not pixels)
     * @param {number} y - Y position to place the tile (given in tile units, not pixels)
     * @param {number} [layer] - The Tilemap Layer to operate on.
     */
-    putTile: function (index, x, y, layer) {
+    putTile: function (tile, x, y, layer) {
 
         if (typeof layer === "undefined") { layer = this.currentLayer; }
 
         if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
         {
-            this.layers[layer].data[y][x] = index;
+            if (tile instanceof Phaser.Tile)
+            {
+                this.layers[layer].data[y][x].copy(tile);
+            }
+            else
+            {
+                this.layers[layer].data[y][x].index = index;
+            }
+
 			this.layers[layer].dirty = true;
             this.calculateFaces(layer);
         }
+
+    },
+
+    /**
+    * Puts a tile into the Tilemap layer. The coordinates are given in pixel values.
+    * @method Phaser.Tilemap#putTileWorldXY
+    * @param {Phaser.Tile|number} tile - The index of this tile to set or a Phaser.Tile object.
+    * @param {number} x - X position to insert the tile (given in pixels)
+    * @param {number} y - Y position to insert the tile (given in pixels)
+    * @param {number} tileWidth - The width of the tile in pixels.
+    * @param {number} tileHeight - The height of the tile in pixels.
+    * @param {number} [layer] - The Tilemap Layer to operate on.
+    */
+    putTileWorldXY: function (index, x, y, tileWidth, tileHeight, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
+        x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
+        y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
+
+        this.putTile(tile, x, y, layer);
 
     },
 
@@ -660,7 +697,7 @@ Phaser.Tilemap.prototype = {
     * @param {number} x - X position to get the tile from (given in tile units, not pixels)
     * @param {number} y - Y position to get the tile from (given in tile units, not pixels)
     * @param {number} [layer] - The Tilemap Layer to operate on.
-    * @return {number} The index of the tile at the given coordinates.
+    * @return {Phaser.Tile} The tile at the given coordinates.
     */
     getTile: function (x, y, layer) {
 
@@ -679,7 +716,7 @@ Phaser.Tilemap.prototype = {
     * @param {number} x - X position to get the tile from (given in pixels)
     * @param {number} y - Y position to get the tile from (given in pixels)
     * @param {number} [layer] - The Tilemap Layer to operate on.
-    * @return {number} The index of the tile at the given coordinates.
+    * @return {Phaser.Tile} The tile at the given coordinates.
     */
     getTileWorldXY: function (x, y, tileWidth, tileHeight, layer) {
 
@@ -691,32 +728,6 @@ Phaser.Tilemap.prototype = {
         if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
         {
             return this.layers[layer].data[y][x];
-        }
-
-    },
-
-    /**
-    * Puts a tile into the Tilemap layer. The coordinates are given in pixel values.
-    * @method Phaser.Tilemap#putTileWorldXY
-    * @param {number} index - The index of the tile to put into the layer.
-    * @param {number} x - X position to insert the tile (given in pixels)
-    * @param {number} y - Y position to insert the tile (given in pixels)
-    * @param {number} tileWidth - The width of the tile in pixels.
-    * @param {number} tileHeight - The height of the tile in pixels.
-    * @param {number} [layer] - The Tilemap Layer to operate on.
-    */
-    putTileWorldXY: function (index, x, y, tileWidth, tileHeight, layer) {
-
-        if (typeof layer === "undefined") { layer = this.currentLayer; }
-
-        x = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
-        y = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
-
-        if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
-        {
-            this.layers[layer].data[y][x] = index;
-			this.layers[layer].dirty = true;
-            this.calculateFaces(layer);
         }
 
     },
@@ -774,7 +785,7 @@ Phaser.Tilemap.prototype = {
         {
             for (var tx = x; tx < x + width; tx++)
             {
-                this._results.push({ x: tx, y: ty, index: this.layers[layer].data[ty][tx] });
+                this._results.push(this.layers[layer].data[ty][tx]);
             }
         }
 
@@ -807,7 +818,7 @@ Phaser.Tilemap.prototype = {
 
         for (var i = 1; i < tileblock.length; i++)
         {
-            this.layers[layer].data[ diffY + tileblock[i].y ][ diffX + tileblock[i].x ] = tileblock[i].index;
+            this.layers[layer].data[ diffY + tileblock[i].y ][ diffX + tileblock[i].x ].copy(tileblock[i]);
         }
 
 		this.layers[layer].dirty = true;
@@ -827,6 +838,8 @@ Phaser.Tilemap.prototype = {
     */
     swap: function (tileA, tileB, x, y, width, height, layer) {
 
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
         this.copy(x, y, width, height, layer);
 
         if (this._results.length < 2)
@@ -839,7 +852,7 @@ Phaser.Tilemap.prototype = {
 
         this._results.forEach(this.swapHandler, this);
 
-        this.paste(x, y, this._results);
+        this.paste(x, y, this._results, layer);
 
     },
 
@@ -875,6 +888,8 @@ Phaser.Tilemap.prototype = {
     */
     forEach: function (callback, context, x, y, width, height, layer) {
 
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
         this.copy(x, y, width, height, layer);
 
         if (this._results.length < 2)
@@ -884,7 +899,7 @@ Phaser.Tilemap.prototype = {
 
         this._results.forEach(callback, context);
 
-        this.paste(x, y, this._results);
+        this.paste(x, y, this._results, layer);
 
     },
 
@@ -901,6 +916,8 @@ Phaser.Tilemap.prototype = {
     */
     replace: function (tileA, tileB, x, y, width, height, layer) {
 
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
+
         this.copy(x, y, width, height, layer);
 
         if (this._results.length < 2)
@@ -916,15 +933,13 @@ Phaser.Tilemap.prototype = {
             }
         }
 
-        this.paste(x, y, this._results);
+        this.paste(x, y, this._results, layer);
 
     },
 
     /**
     * Randomises a set of tiles in a given area.
     * @method Phaser.Tilemap#random
-    * @param {number} tileA - First tile index.
-    * @param {number} tileB - Second tile index.
     * @param {number} x - X position of the top left of the area to operate one, given in tiles, not pixels.
     * @param {number} y - Y position of the top left of the area to operate one, given in tiles, not pixels.
     * @param {number} width - The width in tiles of the area to operate on.
@@ -946,11 +961,14 @@ Phaser.Tilemap.prototype = {
 
         for (var t = 1; t < this._results.length; t++)
         {
-            var idx = this._results[t].index;
-
-            if (indexes.indexOf(idx) === -1)
+            if (this._results[t].index)
             {
-                indexes.push(idx);
+                var idx = this._results[t].index;
+
+                if (indexes.indexOf(idx) === -1)
+                {
+                    indexes.push(idx);
+                }
             }
         }
 
@@ -959,15 +977,13 @@ Phaser.Tilemap.prototype = {
             this._results[i].index = this.game.rnd.pick(indexes);
         }
 
-        this.paste(x, y, this._results);
+        this.paste(x, y, this._results, layer);
 
     },
 
     /**
     * Shuffles a set of tiles in a given area. It will only randomise the tiles in that area, so if they're all the same nothing will appear to have changed!
     * @method Phaser.Tilemap#shuffle
-    * @param {number} tileA - First tile index.
-    * @param {number} tileB - Second tile index.
     * @param {number} x - X position of the top left of the area to operate one, given in tiles, not pixels.
     * @param {number} y - Y position of the top left of the area to operate one, given in tiles, not pixels.
     * @param {number} width - The width in tiles of the area to operate on.
@@ -985,20 +1001,31 @@ Phaser.Tilemap.prototype = {
             return;
         }
 
-        var header = this._results.shift();
+        var indexes = [];
 
-        Phaser.Utils.shuffle(this._results);
+        for (var t = 1; t < this._results.length; t++)
+        {
+            if (this._results[t].index)
+            {
+                indexes.push(this._results[t].index);
+            }
+        }
 
-        this._results.unshift(header);
+        Phaser.Utils.shuffle(indexes);
 
-        this.paste(x, y, this._results);
+        for (var i = 1; i < this._results.length; i++)
+        {
+            this._results[i].index = indexes[i - 1];
+        }
+
+        this.paste(x, y, this._results, layer);
 
     },
 
     /**
-    * Fill a block with a specific tile index.
+    * Fills the given area with the specified tile.
     * @method Phaser.Tilemap#fill
-    * @param {number} index - Index of tiles you want to fill with.
+    * @param {number} index - The index of the tile that the area will be filled with.
     * @param {number} x - X position of the top left of the area to operate one, given in tiles, not pixels.
     * @param {number} y - Y position of the top left of the area to operate one, given in tiles, not pixels.
     * @param {number} width - The width in tiles of the area to operate on.
@@ -1006,6 +1033,8 @@ Phaser.Tilemap.prototype = {
     * @param {number} [layer] - The Tilemap Layer to operate on.
     */
     fill: function (index, x, y, width, height, layer) {
+
+        if (typeof layer === "undefined") { layer = this.currentLayer; }
 
         this.copy(x, y, width, height, layer);
 
@@ -1019,7 +1048,7 @@ Phaser.Tilemap.prototype = {
             this._results[i].index = index;
         }
 
-        this.paste(x, y, this._results);
+        this.paste(x, y, this._results, layer);
 
     },
 

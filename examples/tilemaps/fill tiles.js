@@ -3,15 +3,13 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-    game.load.tilemap('desert', 'assets/maps/desert.json', null, Phaser.Tilemap.TILED_JSON);
-    // game.load.tileset('tiles', 'assets/tiles/tmw_desert_spacing.png', 32, 32, -1, 1, 1);
-    game.load.image('tiles', 'assets/tiles/tmw_desert_spacing.png');
+    game.load.tilemap('desert', 'assets/tilemaps/maps/desert.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.image('tiles', 'assets/tilemaps/tiles/tmw_desert_spacing.png');
     game.load.image('car', 'assets/sprites/car90.png');
 
 }
 
 var map;
-var tileset;
 var layer;
 
 var cursors;
@@ -21,12 +19,9 @@ function create() {
 
     map = game.add.tilemap('desert');
 
-    //  The two parameters are: 1) The Tiled
-    map.addTilesetImage('ground_1x1');
+    map.addTilesetImage('Desert', 'tiles');
 
-    tileset = game.add.tileset('tiles');
-    
-    layer = game.add.tilemapLayer(0, 0, 800, 600, tileset, map, 0);
+    layer = map.createLayer('Ground');
 
     layer.resizeWorld();
 
@@ -43,7 +38,7 @@ function create() {
 
 function fillTiles() {
 
-    map.fill(31, layer.getTileX(sprite.x), layer.getTileY(sprite.y), 6, 6);
+    map.fill(31, layer.getTileX(sprite.x), layer.getTileY(sprite.y), 8, 8);
 
 }
 
