@@ -36,8 +36,7 @@ function update() {
 
 function collisionHandler (obj1, obj2) {
 
+    //  The two sprites are colliding
     game.stage.backgroundColor = '#992d2d';
-
-    console.log(obj1.name + ' collided with ' + obj2.name);
 
 }

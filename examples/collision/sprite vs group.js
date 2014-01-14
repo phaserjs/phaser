@@ -84,6 +84,6 @@ function collisionHandler (obj1, obj2) {
 
 function render () {
 
-    game.debug.renderQuadTree(game.physics.quadTree);
+    // game.debug.renderQuadTree(game.physics.quadTree);
 
 }

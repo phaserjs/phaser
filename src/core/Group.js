@@ -963,6 +963,7 @@ Phaser.Group.prototype = {
     * Allows you to call your own function on each member of this Group. You must pass the callback and context in which it will run.
     * After the checkExists parameter you can add as many parameters as you like, which will all be passed to the callback along with the child.
     * For example: Group.forEach(awardBonusGold, this, true, 100, 500)
+    * Note: Currently this will skip any children which are Groups themselves.
     * 
     * @method Phaser.Group#forEach
     * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.

@@ -20,14 +20,13 @@ function create() {
     sprite1.body.velocity.y = 100;
 
     //  This adjusts the collision body size.
-    //  100x100 is the new width/height.
+    //  220x10 is the new width/height.
     //  See the offset bounding box for another example.
-    sprite1.body.setSize(220, 50, 0, 0);
+    sprite1.body.setSize(220, 10, 0, 0);
 
-    sprite2 = game.add.sprite(400, 500, 'mushroom');
+    sprite2 = game.add.sprite(400, 450, 'mushroom');
     sprite2.name = 'mushroom';
     sprite2.body.immovable = true;
-    // sprite2.body.velocity.x = -100;
 
 }
 
@@ -42,17 +41,14 @@ function collisionHandler (obj1, obj2) {
 
     game.stage.backgroundColor = '#992d2d';
 
-    console.log(obj1.name + ' collided with ' + obj2.name);
-
 }
 
 function render() {
 
     game.debug.renderSpriteInfo(sprite1, 32, 32);
-    game.debug.renderSpriteCollision(sprite1, 32, 400);
+    game.debug.renderSpriteCollision(sprite1, 400, 32);
 
     game.debug.renderSpriteBody(sprite1);
     game.debug.renderSpriteBody(sprite2);
 
 }
-

@@ -141,14 +141,15 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this.acceleration = new Phaser.Point();
 
+    /**
+    * @property {number} speed - The speed in pixels per second sq. of the Body.
+    */
     this.speed = 0;
-    this.angle = 0;
-
 
     /**
-    * @property {Phaser.Point} drag - The drag applied to the motion of the Body.
+    * @property {number} angle - The angle of the Body in radians.
     */
-    this.drag = new Phaser.Point();
+    this.angle = 0;
 
     /**
     * @property {Phaser.Point} gravity - The gravity applied to the motion of the Body.
@@ -197,26 +198,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.mass = 1;
 
     /**
-    * @property {boolean} skipQuadTree - If the Body is an irregular shape you can set this to true to avoid it being added to the World quad tree.
-    * @default
-    */
-    this.skipQuadTree = false;
-
-    /**
-    * @property {Array} quadTreeIDs - Internal ID cache.
-    * @protected
-    */
-    this.quadTreeIDs = [];
-
-    /**
-    * @property {number} quadTreeIndex - Internal ID cache.
-    * @protected
-    */
-    this.quadTreeIndex = -1;
-
-    //  Allow collision
-
-    /**
     * Set the allowCollision properties to control which directions collision is processed for this Body.
     * For example allowCollision.up = false means it won't collide when the collision happened while moving up.
     * @property {object} allowCollision - An object containing allowed collision.
@@ -258,19 +239,19 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.moves = true;
 
     /**
-    * @property {number} rotation - The amount the Body is rotated.
+    * @property {number} rotation - The amount the parent Sprite is rotated. Note: You cannot rotate an AABB.
     * @default
     */
     this.rotation = 0;
 
     /**
-    * @property {boolean} allowRotation - Allow this Body to be rotated? (via angularVelocity, etc)
+    * @property {boolean} allowRotation - Allow angular rotation? This will cause the Sprite to be rotated via angularVelocity, etc. Note that the AABB remains un-rotated.
     * @default
     */
     this.allowRotation = true;
 
     /**
-    * @property {boolean} allowGravity - Allow this Body to be influenced by the global Gravity?
+    * @property {boolean} allowGravity - Allow this Body to be influenced by the global Gravity value? Note: It will always be influenced by the local gravity value.
     * @default
     */
     this.allowGravity = true;
@@ -308,7 +289,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @default
     */
     this.sleeping = false;
-    this.canSleep = true;
+    this.canSleep = false;
     this.sleepMin = new Phaser.Point(-20, -20);
     this.sleepMax = new Phaser.Point(20, 20);
     this.sleepDuration = 2000; // ms
@@ -436,17 +417,16 @@ Phaser.Physics.Arcade.Body.prototype = {
             }
         }
 
-        if (this.skipQuadTree === false && this.allowCollision.none === false && this.sprite.visible && this.sprite.alive)
-        {
-            this.quadTreeIDs = [];
-            this.quadTreeIndex = -1;
-            this.game.physics.quadTree.insert(this);
-        }
-
         this.prevVelocity.copyFrom(this.velocity);
 
     },
 
+    /**
+    * Internal method.
+    *
+    * @method Phaser.Physics.Arcade#applyMotion
+    * @protected
+    */
     applyMotion: function () {
 
         if (this.friction > 0 && this.acceleration.isZero())

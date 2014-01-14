@@ -56,6 +56,9 @@ Significant API changes:
 * Tween.onStartCallback and onCompleteCallback have been removed to avoid confusion. You should use the onStart, onLoop and onComplete events instead.
 * Button.forceOut default value has changed from true to false, so Buttons will revert to an Up state (if set) when pressed and released.
 * Body.drag has been removed. Please use the new Body.friction value instead (which is a number value, not a Point object)
+* The way the collision process callback works has changed significantly and now works as originally intended.
+* The World level quadtree is no longer created, they are now built and ripped down each time you collide a Group, this helps collision accuracy.
+* Bodies are no longer added to a world quadtree, so have had all of their quadtree properties removed such as skipQuadtree, quadTreeIndex, etc.
 
 
 New features:
@@ -85,6 +88,7 @@ New features:
 * Body.speed - the current speed of the body.
 * Body.friction - This now replaces Body.drag and provides for a much smoother friction experience.
 * Body.sleeping - A Physics Body can now be set to 'go to sleep' if the velocity drops between the given range (sleepMin and sleepMax) for the given period of sleepDuration (see the new examples).
+* QuadTree.populate - you can pass it a Group and it'll automatically insert all of the children ready for inspection.
 
 
 New Examples:
@@ -143,6 +147,7 @@ Updates:
 * Added StateManager.getCurrentState to return the currently running State object (thanks Niondir)
 * Removed the console.log redirect from Utils as it was messing with Firefox.
 * Body.acceleration is now much smoother and less eratic at high speeds.
+* Removed ArcadePhysics binding to the QuadTree, so it can now be used independantly of the physics system.
 
 
 Bug Fixes:

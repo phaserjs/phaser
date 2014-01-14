@@ -683,7 +683,7 @@ Phaser.Utils.Debug.prototype = {
     * @param {Phaser.Sprite} sprite - Description.
     * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
     */
-    renderSpriteBody: function (sprite, color) {
+    renderSpriteTouching: function (sprite, color) {
 
         if (this.context == null || sprite.body.touching.none === true)
         {
@@ -740,6 +740,42 @@ Phaser.Utils.Debug.prototype = {
     * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
     * @param {boolean} [fill=false] - If false the bounds outline is rendered, if true the whole rectangle is rendered.
     */
+    renderSpriteBody: function (sprite, color, fill) {
+
+        if (this.context == null)
+        {
+            return;
+        }
+
+        color = color || 'rgb(255,0,255)';
+
+        if (typeof fill === 'undefined') { fill = false; }
+
+        this.start(0, 0, color);
+
+        if (fill)
+        {
+            this.context.fillStyle = color;
+            this.context.fillRect(sprite.bounds.x, sprite.bounds.y, sprite.bounds.width, sprite.bounds.height);
+        }
+        else
+        {
+            this.context.strokeStyle = color;
+            this.context.strokeRect(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height);
+            this.context.stroke();
+        }
+
+        this.stop();
+
+    },
+
+    /**
+    * Renders just the full Sprite bounds.
+    * @method Phaser.Utils.Debug#renderSpriteBounds
+    * @param {Phaser.Sprite} sprite - Description.
+    * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
+    * @param {boolean} [fill=false] - If false the bounds outline is rendered, if true the whole rectangle is rendered.
+    */
     renderSpriteBounds: function (sprite, color, fill) {
 
         if (this.context == null)
@@ -762,16 +798,7 @@ Phaser.Utils.Debug.prototype = {
         {
             this.context.strokeStyle = color;
             this.context.strokeRect(sprite.bounds.x, sprite.bounds.y, sprite.bounds.width, sprite.bounds.height);
-            this.context.strokeRect(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height);
-            // this.context.strokeRect(sprite.body.hull.x, sprite.body.hull.y, sprite.body.hull.width, sprite.body.hull.height);
             this.context.stroke();
-
-            // this.context.strokeStyle = '#ff0000';
-            // this.context.strokeRect(sprite.body.hullX.x, sprite.body.hullX.y, sprite.body.hullX.width, sprite.body.hullX.height);
-            // this.context.stroke();
-            // this.context.strokeStyle = '#00ff00';
-            // this.context.strokeRect(sprite.body.hullY.x, sprite.body.hullY.y, sprite.body.hullY.width, sprite.body.hullY.height);
-            // this.context.stroke();
         }
 
         this.stop();

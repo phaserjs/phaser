@@ -5,18 +5,18 @@
 */
 
 /**
- * Javascript QuadTree 
- * @version 1.0
- * @author Timo Hausmann
- *
- * @version 1.2, September 4th 2013
- * @author Richard Davey
- * The original code was a conversion of the Java code posted to GameDevTuts. However I've tweaked
- * it massively to add node indexing, removed lots of temp. var creation and significantly
- * increased performance as a result.
- *
- * Original version at https://github.com/timohausmann/quadtree-js/
- */
+* Javascript QuadTree 
+* @version 1.0
+* @author Timo Hausmann
+*
+* @version 1.2, September 4th 2013
+* @author Richard Davey
+* The original code was a conversion of the Java code posted to GameDevTuts. However I've tweaked
+* it massively to add node indexing, removed lots of temp. var creation and significantly
+* increased performance as a result.
+*
+* Original version at https://github.com/timohausmann/quadtree-js/
+*/
  
 /**
 * @copyright © 2012 Timo Hausmann
@@ -42,27 +42,23 @@
 */
 
 /**
- * QuadTree Constructor
- * 
- * @class Phaser.QuadTree
- * @classdesc A QuadTree implementation. The original code was a conversion of the Java code posted to GameDevTuts. However I've tweaked
- * it massively to add node indexing, removed lots of temp. var creation and significantly increased performance as a result. Original version at https://github.com/timohausmann/quadtree-js/
- * @constructor
- * @param {Description} physicsManager - Description.
- * @param {Description} x - Description.
- * @param {Description} y - Description.
- * @param {number} width - The width of your game in game pixels.
- * @param {number} height - The height of your game in game pixels.
- * @param {number} maxObjects - Description.
- * @param {number} maxLevels - Description.
- * @param {number} level - Description.
- */
-Phaser.QuadTree = function (physicsManager, x, y, width, height, maxObjects, maxLevels, level) {
+* QuadTree Constructor
+* 
+* @class Phaser.QuadTree
+* @classdesc A QuadTree implementation. The original code was a conversion of the Java code posted to GameDevTuts. 
+* However I've tweaked it massively to add node indexing, removed lots of temp. var creation and significantly increased performance as a result. 
+* Original version at https://github.com/timohausmann/quadtree-js/
+* @constructor
+* @param {number} x - The top left coordinate of the quadtree.
+* @param {number} y - The top left coordinate of the quadtree.
+* @param {number} width - The width of the quadtree in pixels.
+* @param {number} height - The height of the quadtree in pixels.
+* @param {number} [maxObjects=10] - The maximum number of objects per node.
+* @param {number} [maxLevels=4] - The maximum number of levels to iterate to.
+* @param {number} [level=0] - Which level is this?
+*/
+Phaser.QuadTree = function (x, y, width, height, maxObjects, maxLevels, level) {
         
-    this.physicsManager = physicsManager;
-    this.ID = physicsManager.quadTreeID;
-    physicsManager.quadTreeID++;
-
     this.maxObjects = maxObjects || 10;
     this.maxLevels = maxLevels || 4;
     this.level = level || 0;
@@ -86,35 +82,60 @@ Phaser.QuadTree = function (physicsManager, x, y, width, height, maxObjects, max
 Phaser.QuadTree.prototype = {
 
     /*
-    * Split the node into 4 subnodes
+    * Populates this quadtree with the members of the given Group.
     * 
-    * @method Phaser.QuadTree#split
+    * @method Phaser.QuadTree#populate
+    * @param {Phaser.Group} group - The Group to add to the quadtree.
     */
-    split: function() {
+    populate: function (group) {
 
-        this.level++;
-        
-        //  top right node
-        this.nodes[0] = new Phaser.QuadTree(this.physicsManager, this.bounds.right, this.bounds.y, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
-        
-        //  top left node
-        this.nodes[1] = new Phaser.QuadTree(this.physicsManager, this.bounds.x, this.bounds.y, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
-        
-        //  bottom left node
-        this.nodes[2] = new Phaser.QuadTree(this.physicsManager, this.bounds.x, this.bounds.bottom, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
-        
-        //  bottom right node
-        this.nodes[3] = new Phaser.QuadTree(this.physicsManager, this.bounds.right, this.bounds.bottom, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+        group.forEach(this.populateHandler, this, true);
 
     },
 
     /*
-    * Insert the object into the node. If the node
-    * exceeds the capacity, it will split and add all
-    * objects to their corresponding subnodes.
+    * Handler for the populate method.
+    * 
+    * @method Phaser.QuadTree#populateHandler
+    * @param {Phaser.Sprite} sprite - The Sprite to check.
+    */
+    populateHandler: function (sprite) {
+
+        if (sprite.body && sprite.body.allowCollision.none === false && sprite.alive)
+        {
+            this.insert(sprite.body);
+        }
+
+    },
+
+    /*
+    * Split the node into 4 subnodes
+    * 
+    * @method Phaser.QuadTree#split
+    */
+    split: function () {
+
+        this.level++;
+        
+        //  top right node
+        this.nodes[0] = new Phaser.QuadTree(this.bounds.right, this.bounds.y, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+        
+        //  top left node
+        this.nodes[1] = new Phaser.QuadTree(this.bounds.x, this.bounds.y, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+        
+        //  bottom left node
+        this.nodes[2] = new Phaser.QuadTree(this.bounds.x, this.bounds.bottom, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+        
+        //  bottom right node
+        this.nodes[3] = new Phaser.QuadTree(this.bounds.right, this.bounds.bottom, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+
+    },
+
+    /*
+    * Insert the object into the node. If the node exceeds the capacity, it will split and add all objects to their corresponding subnodes.
     * 
     * @method Phaser.QuadTree#insert
-    * @param {object} body - Description.
+    * @param {Phaser.Physics.Arcade.Body|object} body - The Body object to insert into the quadtree.
     */
     insert: function (body) {
         
@@ -166,7 +187,7 @@ Phaser.QuadTree.prototype = {
     * Determine which node the object belongs to.
     * 
     * @method Phaser.QuadTree#getIndex
-    * @param {object} rect - Description.
+    * @param {Phaser.Rectangle|object} rect - The bounds in which to check.
     * @return {number} index - Index of the subnode (0-3), or -1 if rect cannot completely fit within a subnode and is part of the parent node.
     */
     getIndex: function (rect) {
@@ -206,12 +227,12 @@ Phaser.QuadTree.prototype = {
 
     },
 
-     /*
-    * Return all objects that could collide with the given object.
+    /*
+    * Return all objects that could collide with the given Sprite.
     * 
     * @method Phaser.QuadTree#retrieve
-    * @param {object} rect - Description.
-    * @Return {array} - Array with all detected objects.
+    * @param {Phaser.Sprite} sprite - The sprite to check against.
+    * @return {array} - Array with all detected objects.
     */
     retrieve: function (sprite) {
         
@@ -220,7 +241,7 @@ Phaser.QuadTree.prototype = {
         sprite.body.quadTreeIndex = this.getIndex(sprite.body);
 
         //  Temp store for the node IDs this sprite is in, we can use this for fast elimination later
-        sprite.body.quadTreeIDs.push(this.ID);
+        // sprite.body.quadTreeIDs.push(this.ID);
 
         if (this.nodes[0])
         {
@@ -253,7 +274,6 @@ Phaser.QuadTree.prototype = {
      
         for (var i = 0, len = this.nodes.length; i < len; i++)
         {
-            // if (typeof this.nodes[i] !== 'undefined')
             if (this.nodes[i])
             {
                 this.nodes[i].clear();
