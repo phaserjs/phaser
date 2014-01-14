@@ -64,7 +64,7 @@ That is fine too. While Pull Requests are the best thing in the world for us, th
 
 - Follow conventions already in the code, and listen to jshint. Our config is set-up for a reason.
 
-Thanks to Chad for creating the original Contributing file which we adapted for our use.
+Thanks to Chad for creating the original Pixi.js Contributing file which we adapted for Phaser.
 
 [0]: https://github.com/photonstorm/phaser/issues
 [1]: http://jsfiddle.net
