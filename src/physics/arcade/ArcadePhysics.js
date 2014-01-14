@@ -259,7 +259,7 @@ Phaser.Physics.Arcade.prototype = {
             {
                 if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
                 {
-                    this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext, true);
+                    this.collideSpriteVsSprite(object1, object2, overlapCallback, processCallback, callbackContext, true);
                 }
                 else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
                 {
