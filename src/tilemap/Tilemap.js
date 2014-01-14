@@ -400,7 +400,7 @@ Phaser.Tilemap.prototype = {
         //  Collide all of the IDs given in the indexes array
         for (var i = 0, len = indexes.length; i < len; i++)
         {
-            this.setCollisionByIndex(i, layer, false);
+            this.setCollisionByIndex(indexes[i], layer, false);
         }
 
         //  Now re-calculate interesting faces
