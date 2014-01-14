@@ -123,10 +123,10 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this.particleClass = null;
 
     /**
-    * The X and Y drag component of particles launched from the emitter.
-    * @property {Phaser.Point} particleDrag
+    * The friction component of particles launched from the emitter.
+    * @property {number} particleFriction
     */
-    this.particleDrag = new Phaser.Point();
+    this.particleFriction = 0;
 
     /**
     * The angular drag component of particles launched from the emitter if they are rotating.
@@ -477,8 +477,7 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
         particle.scale.setTo(scale, scale);
     }
 
-    particle.body.drag.x = this.particleDrag.x;
-    particle.body.drag.y = this.particleDrag.y;
+    particle.body.friction = this.particleFriction;
     particle.body.angularDrag = this.angularDrag;
 
 }
