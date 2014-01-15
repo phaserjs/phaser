@@ -472,40 +472,50 @@ Phaser.Physics.Arcade.Body.prototype = {
         {
             //  Separate
             this.x += this.overlapX;
-            this.preX = this.x; // because we don't want any delta from a separation
 
-            //  Reflect?
-            if (this.velocity.x > this.minBounceVelocity && this.bounce.x !== 0)
+            // console.log(this._debug, 'blocked left', this.x, this.overlapX);
+
+            this.velocity.x *= -this.bounce.x;
+
+            this._dx = this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
+
+            if (this._dx > this.minBounceVelocity)
             {
-                this.x += this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
+                this.x += this._dx;
                 this.velocity.x += this.motionVelocity.x;
-                this.velocity.x *= -this.bounce.x;
-                // console.log(this._debug, 'blocked down + r', oy, 'v', this.velocity.y, 'mv', this.motionVelocity.y, 'd', this.deltaY());
+                // console.log(this._debug, 'blocked left', this._dx, 'overlap', this.overlapX, 'delta', this.deltaX(), 'newy', this.x);
             }
             else
             {
+                //  Kill it dead :)
+                this.preX = this.x; // because we don't want any delta from a separation
                 this.velocity.x = 0;
                 this.motionVelocity.x = 0;
+                // console.log(this._debug, 'blocked left KILL', this._dx, 'overlap', this.overlapX, 'delta', this.deltaX(), 'newy', this.x);
             }
         }
         else if (this.blocked.right)
         {
             //  Separate
             this.x -= this.overlapX;
-            this.preX = this.x; // because we don't want any delta from a separation
 
-            //  Reflect?
-            if (this.velocity.y < -this.minBounceVelocity && this.bounce.y !== 0)
+            this.velocity.x *= -this.bounce.x;
+
+            this._dx = this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
+
+            if (this._dx < -this.minBounceVelocity)
             {
-                this.x -= this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
+                this.x += this._dx;
                 this.velocity.x += this.motionVelocity.x;
-                this.velocity.x *= -this.bounce.x;
-                // console.log(this._debug, 'blocked up + r', oy, 'v', this.velocity.y, 'mv', this.motionVelocity.y, 'd', this.deltaY());
+                // console.log(this._debug, 'blocked right', this._dx, 'overlap', this.overlapX, 'delta', this.deltaX(), 'newy', this.x);
             }
             else
             {
+                //  Kill it dead :)
+                this.preX = this.x; // because we don't want any delta from a separation
                 this.velocity.x = 0;
                 this.motionVelocity.x = 0;
+                // console.log(this._debug, 'blocked right KILL', this._dx, 'overlap', this.overlapX, 'delta', this.deltaX(), 'newy', this.x);
             }
         }
         else
@@ -520,29 +530,14 @@ Phaser.Physics.Arcade.Body.prototype = {
             //  Separate
             this.y += this.overlapY;
 
-            // console.log(this._debug, 'blocked up', this.overlapY, 'v', this.velocity.y, 'min', this.minBounceVelocity, 'mv', this.motionVelocity.y, 'd', this.deltaY(), 'newy', this.y);
+            this.velocity.y *= -this.bounce.y;
 
-            //  Reflect? It's the velocity AFTER the bounce we need to test! And only if there is a bounce value
-            if (this.bounce.y !== 0 && this.velocity.y != 0)
+            this._dy = this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
+
+            if (this._dy > this.minBounceVelocity)
             {
-                this.velocity.y *= -this.bounce.y;
-
-                this._dy = this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
-
-                if (this._dy > this.minBounceVelocity)
-                {
-                    this.y += this._dy;
-                    this.velocity.y += this.motionVelocity.y;
-                    // console.log(this._debug, 'rb', this._dy, 'delta', this.deltaY(), 'newy', this.y);
-                }
-                else
-                {
-                    //  Kill it dead :)
-                    this.preY = this.y; // because we don't want any delta from a separation
-                    this.velocity.y = 0;
-                    this.motionVelocity.y = 0;
-                    // console.log(this._debug, 'void1', this.velocity.y, 'delta', this.deltaY());
-                }
+                this.y += this._dy;
+                this.velocity.y += this.motionVelocity.y;
             }
             else
             {
@@ -550,7 +545,7 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.preY = this.y; // because we don't want any delta from a separation
                 this.velocity.y = 0;
                 this.motionVelocity.y = 0;
-                // console.log(this._debug, 'void2', this.velocity.y, 'delta', this.deltaY());
+                // console.log(this._debug, 'void1', this.velocity.y, 'delta', this.deltaY());
             }
         }
         else if (this.blocked.down)
@@ -558,29 +553,15 @@ Phaser.Physics.Arcade.Body.prototype = {
             //  Separate
             this.y -= this.overlapY;
 
-            // console.log(this._debug, 'blocked down', this.overlapY, 'v', this.velocity.y, 'min', this.minBounceVelocity, 'mv', this.motionVelocity.y, 'd', this.deltaY(), 'newy', this.y);
+            this.velocity.y *= -this.bounce.y;
 
-            //  Reflect? It's the velocity AFTER the bounce we need to test! And only if there is a bounce value
-            if (this.bounce.y !== 0 && this.velocity.y != 0)
+            this._dy = this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
+
+            if (this._dy < -this.minBounceVelocity)
             {
-                this.velocity.y *= -this.bounce.y;
-
-                this._dy = this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
-
-                if (this._dy < -this.minBounceVelocity)
-                {
-                    this.y += this._dy;
-                    this.velocity.y += this.motionVelocity.y;
-                    // console.log(this._debug, 'rb', this._dy, 'delta', this.deltaY(), 'newy', this.y);
-                }
-                else
-                {
-                    //  Kill it dead :)
-                    this.preY = this.y; // because we don't want any delta from a separation
-                    this.velocity.y = 0;
-                    this.motionVelocity.y = 0;
-                    // console.log(this._debug, 'void1', this.velocity.y, 'delta', this.deltaY());
-                }
+                this.y += this._dy;
+                this.velocity.y += this.motionVelocity.y;
+                // console.log(this._debug, 'rb', this._dy, 'delta', this.deltaY(), 'newy', this.y);
             }
             else
             {
@@ -588,7 +569,7 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.preY = this.y; // because we don't want any delta from a separation
                 this.velocity.y = 0;
                 this.motionVelocity.y = 0;
-                // console.log(this._debug, 'void2', this.velocity.y, 'delta', this.deltaY());
+                // console.log(this._debug, 'void1', this.velocity.y, 'delta', this.deltaY());
             }
         }
         else
@@ -642,13 +623,11 @@ Phaser.Physics.Arcade.Body.prototype = {
             {
                 this.facing = Phaser.UP;
                 this.sprite.y += this.deltaY();
-                // console.log(this._debug, 'post up', this.deltaY(), this.sprite.y);
             }
             else if (this.deltaY() > 0)
             {
                 this.facing = Phaser.DOWN;
                 this.sprite.y += this.deltaY();
-                // console.log(this._debug, 'post down', this.deltaY(), this.sprite.y);
             }
 
             this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
@@ -673,24 +652,26 @@ Phaser.Physics.Arcade.Body.prototype = {
         {
             this.overlapX = this.game.world.bounds.x - this.x;
             this.blocked.left = true;
+            // console.log(this._debug, 'cwl', this.overlapX, this.x, this.game.world.bounds.x);
         }
         else if (this.right > this.game.world.bounds.right)
         {
             this.overlapX = this.right - this.game.world.bounds.right;
             this.blocked.right = true;
+            // console.log(this._debug, 'cwr', this.overlapX, this.x, this.game.world.bounds.x);
         }
 
         if (this.y < this.game.world.bounds.y)
         {
             this.overlapY = this.game.world.bounds.y - this.y;
             this.blocked.up = true;
-            // console.log(this._debug, 'cw', this.overlapY, this.y, this.height, this.bottom, this.game.world.bounds.bottom);
+            // console.log(this._debug, 'cwu', this.overlapY, this.y, this.height, this.bottom, this.game.world.bounds.bottom);
         }
         else if (this.bottom > this.game.world.bounds.bottom)
         {
             this.overlapY = this.bottom - this.game.world.bounds.bottom;
             this.blocked.down = true;
-            // console.log(this._debug, 'cw', this.overlapY, this.y, this.height, this.bottom, this.game.world.bounds.bottom);
+            // console.log(this._debug, 'cwd', this.overlapY, this.y, this.height, this.bottom, this.game.world.bounds.bottom);
         }
 
     },
