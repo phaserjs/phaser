@@ -32,7 +32,7 @@ function create() {
 //	gravity into floor jiggle
 function test8() {
 
-	game.physics.gravity.y = 250;
+	// game.physics.gravity.y = -250;
 
 	sprite = game.add.sprite(400, 100, 'ball');
 	sprite.body.collideWorldBounds = true;
@@ -50,8 +50,8 @@ function test8() {
 
 function launch8() {
 
-	// sprite.body.velocity.y = 200;
-	// sprite2.body.velocity.y = 200;
+	sprite.body.velocity.y = -200;
+	sprite2.body.velocity.y = -200;
 
 }
 
