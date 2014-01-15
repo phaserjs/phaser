@@ -387,34 +387,42 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.moves)
         {
-            this.game.physics.updateMotion(this);
+            if (this.collideWorldBounds)
+            {
+                this.checkWorldBounds();
+            }
 
-            if (this.canSleep)
-            {
-                if (!this.sleeping)
-                {
-                    if (this.velocity.x >= this.sleepMin.x && this.velocity.x <= this.sleepMax.x && this.velocity.y >= this.sleepMin.y && this.velocity.y <= this.sleepMax.y)
-                    {
-                        if (this._sleepTimer >= this.sleepDuration)
-                        {
-                            this.sleeping = true;
-                        }
-                        else
-                        {
-                            this._sleepTimer += this.game.time.elapsed;
-                            this.applyMotion();
-                        }
-                    }
-                    else
-                    {
-                        this.applyMotion();
-                    }
-                }
-            }
-            else
-            {
-                this.applyMotion();
-            }
+            //  Apply world gravity, acceleration + rotation
+            this.game.physics.updateMotion(this);
+            
+            this.applyMotion();
+
+            // if (this.canSleep)
+            // {
+            //     if (!this.sleeping)
+            //     {
+            //         if (this.velocity.x >= this.sleepMin.x && this.velocity.x <= this.sleepMax.x && this.velocity.y >= this.sleepMin.y && this.velocity.y <= this.sleepMax.y)
+            //         {
+            //             if (this._sleepTimer >= this.sleepDuration)
+            //             {
+            //                 this.sleeping = true;
+            //             }
+            //             else
+            //             {
+            //                 this._sleepTimer += this.game.time.elapsed;
+            //                 this.applyMotion();
+            //             }
+            //         }
+            //         else
+            //         {
+            //             this.applyMotion();
+            //         }
+            //     }
+            // }
+            // else
+            // {
+            //     this.applyMotion();
+            // }
         }
 
         this.prevVelocity.copyFrom(this.velocity);
@@ -444,11 +452,35 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.velocity.y = Math.sin(this.angle) * this.speed;
         }
 
-        this.x += this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
-        this.velocity.x += this.motionVelocity.x;
+        //  overlapX/Y values at this point will be penetration into the bounds
+        if (this.blocked.down)
+        {
+            this.y -= this.overlapY;
+        }
+        else if (this.blocked.up)
+        {
+            this.y += this.overlapY;
+        }
 
+        this.x += this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
         this.y += this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
+
+        this.velocity.x += this.motionVelocity.x;
         this.velocity.y += this.motionVelocity.y;
+
+        if (this.blocked.down && this.deltaY() > 0)
+        {
+            this.velocity.y *= -this.bounce.y;
+        }
+        else if (this.blocked.up && this.deltaY() < 0)
+        {
+            this.velocity.y *= -this.bounce.y;
+        }
+
+        if (this.collideWorldBounds)
+        {
+            // this.checkWorldBounds();
+        }
 
         if (this.velocity.x > this.maxVelocity.x)
         {
@@ -468,21 +500,6 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.velocity.y = -this.maxVelocity.y;
         }
 
-        if (this.collideWorldBounds)
-        {
-            this.checkWorldBounds();
-
-            if (this.blocked.left || this.blocked.right)
-            {
-                // this.preX = this.x;
-            }
-
-            if (this.blocked.up || this.blocked.down)
-            {
-                // this.preX = this.x;
-            }
-        }
-
     },
 
     /**
@@ -495,31 +512,42 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.moves)
         {
-            if (this.deltaX() < 0 && this.blocked.left === false)
+            if (this.deltaX() < 0)
             {
                 this.facing = Phaser.LEFT;
-                this.sprite.x += this.deltaX();
+
+                if (this.blocked.left === false)
+                {
+                    this.sprite.x += this.deltaX();
+                }
             }
-            else if (this.deltaX() > 0 && this.blocked.right === false)
+            else if (this.deltaX() > 0)
             {
                 this.facing = Phaser.RIGHT;
-                this.sprite.x += this.deltaX();
+
+                if (this.blocked.right === false)
+                {
+                    this.sprite.x += this.deltaX();
+                }
             }
 
-            if (this.deltaY() < 0 && this.blocked.up === false)
+            if (this.deltaY() < 0)
             {
                 this.facing = Phaser.UP;
-                this.sprite.y += this.deltaY();
+
+                if (this.blocked.up === false)
+                {
+                    this.sprite.y += this.deltaY();
+                }
             }
-            else if (this.deltaY() > 0 && this.blocked.down === false)
+            else if (this.deltaY() > 0)
             {
                 this.facing = Phaser.DOWN;
-                this.sprite.y += this.deltaY();
-            }
 
-            if (this.collideWorldBounds)
-            {
-                this.checkWorldBounds();
+                if (this.blocked.down === false)
+                {
+                    this.sprite.y += this.deltaY();
+                }
             }
 
             this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
@@ -540,38 +568,41 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     checkWorldBounds: function () {
 
-        var vx = this.velocity.x;
-        var vy = this.velocity.y;
-
-        if (this.x < this.game.world.bounds.x)
+        if (this.x <= this.game.world.bounds.x)
         {
+            this.overlapX = this.game.world.bounds.x - this.x;
             this.blocked.left = true;
-            this.x = this.game.world.bounds.x;
-            this.velocity.x *= -this.bounce.x;
-            // console.log(this._debug, 'hit left', vx,'to',this.velocity.x);
+            // this.x = this.game.world.bounds.x;
+            // this.preX = this.x;
+            // this.velocity.x *= -this.bounce.x;
         }
-        else if (this.right > this.game.world.bounds.right)
+        else if (this.right >= this.game.world.bounds.right)
         {
+            this.overlapX = this.right - this.game.world.bounds.right;
             this.blocked.right = true;
-            this.x = this.game.world.bounds.right - this.width;
-            this.velocity.x *= -this.bounce.x;
-            // console.log(this._debug, 'hit right', vx,'to',this.velocity.x);
+            // this.x = this.game.world.bounds.right - this.width;
+            // this.preX = this.x;
+            // this.velocity.x *= -this.bounce.x;
         }
 
         if (this.y < this.game.world.bounds.y)
         {
+            this.overlapY = this.game.world.bounds.y - this.y;
             this.blocked.up = true;
-            this.y = this.game.world.bounds.y;
-            this.velocity.y *= -this.bounce.y;
-            // console.log(this._debug, 'hit top', vy,'to',this.velocity.y);
+            // this.y = this.game.world.bounds.y;
+            // this.preY = this.y;
+            // this.velocity.y *= -this.bounce.y;
         }
         else if (this.bottom > this.game.world.bounds.bottom)
         {
+            this.overlapY = this.bottom - this.game.world.bounds.bottom;
             this.blocked.down = true;
-            this.y = this.game.world.bounds.bottom - this.height;
-            this.velocity.y *= -this.bounce.y;
-            // console.log(this._debug, 'hit bottom', vy,'to',this.velocity.y);
+            // this.y = this.game.world.bounds.bottom - this.height;
+            // this.preY = this.y;
+            // this.velocity.y *= -this.bounce.y;
         }
+
+        console.log('checkWorldBounds', this.overlapX, this.overlapY);
 
     },
 

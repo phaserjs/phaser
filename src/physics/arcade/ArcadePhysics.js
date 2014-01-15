@@ -177,6 +177,7 @@ Phaser.Physics.Arcade.prototype = {
 
         //  If you're wondering why the velocity is halved and applied twice, read this: http://www.niksula.hut.fi/~hkankaan/Homepages/gravity.html
 
+        //  World gravity is allowed
         if (body.allowGravity)
         {
             this._gravityX = this.gravity.x + body.gravity.x;
@@ -186,6 +187,17 @@ Phaser.Physics.Arcade.prototype = {
         {
             this._gravityX = body.gravity.x;
             this._gravityY = body.gravity.y;
+        }
+
+        //  Don't apply gravity to any body that is blocked
+        if ((this._gravityX < 0 && body.blocked.left) || (this._gravityX > 0 && body.blocked.right))
+        {
+            this._gravityX = 0;
+        }
+
+        if ((this._gravityY < 0 && body.blocked.up) || (this._gravityY > 0 && body.blocked.down))
+        {
+            this._gravityY = 0;
         }
 
         //  Rotation
@@ -638,30 +650,92 @@ Phaser.Physics.Arcade.prototype = {
 
                 if (!body1.immovable && !body2.immovable)
                 {
-                    this._overlap *= 0.5;
-                    body1.overlapX = this._overlap;
-                    body2.overlapX = this._overlap;
+                    //  If either of the bodies are blocked on either side then we don't exchange velocity but treat it like an immovable collision
+                    if (body1.blocked.left || body1.blocked.right)
+                    {
+                        if (body1.blocked.left && body2.deltaX() < 0)
+                        {
+                            body2.x += this._overlap;
+                            body2.velocity.x *= -body2.bounce.x;
+                        }
+                        else if (body1.blocked.right && body2.deltaX() > 0)
+                        {
+                            body2.x -= this._overlap;
+                            body2.velocity.x *= -body2.bounce.x;
+                        }
+                    }
+                    else if (body2.blocked.left || body2.blocked.right)
+                    {
+                        if (body2.blocked.left && body1.deltaX() < 0)
+                        {
+                            body1.x += this._overlap;
+                            body1.velocity.x *= -body1.bounce.x;
+                        }
+                        else if (body2.blocked.right && body1.deltaX() > 0)
+                        {
+                            body1.x -= this._overlap;
+                            body1.velocity.x *= -body1.bounce.x;
+                        }
+                    }
+                    else
+                    {
+                        //  Exchange velocities
+                        this._overlap *= 0.5;
+                        body1.overlapX = this._overlap;
+                        body2.overlapX = this._overlap;
 
-                    body1.x = body1.x - this._overlap;
-                    body2.x += this._overlap;
+                        this._newVelocity1 = Math.sqrt((this._velocity2 * this._velocity2 * body2.mass) / body1.mass) * ((this._velocity2 > 0) ? 1 : -1);
+                        this._newVelocity2 = Math.sqrt((this._velocity1 * this._velocity1 * body1.mass) / body2.mass) * ((this._velocity1 > 0) ? 1 : -1);
+                        this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
+                        this._newVelocity1 -= this._average;
+                        this._newVelocity2 -= this._average;
 
-                    this._newVelocity1 = Math.sqrt((this._velocity2 * this._velocity2 * body2.mass) / body1.mass) * ((this._velocity2 > 0) ? 1 : -1);
-                    this._newVelocity2 = Math.sqrt((this._velocity1 * this._velocity1 * body1.mass) / body2.mass) * ((this._velocity1 > 0) ? 1 : -1);
-                    this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
-                    this._newVelocity1 -= this._average;
-                    this._newVelocity2 -= this._average;
+                        if (body1.deltaX() < 0)
+                        {
+                            body1.x += this._overlap;
+                        }
+                        else
+                        {
+                            body1.x -= this._overlap;
+                        }
 
-                    body1.velocity.x = this._average + this._newVelocity1 * body1.bounce.x;
-                    body2.velocity.x = this._average + this._newVelocity2 * body2.bounce.x;
+                        if (body2.deltaX() < 0)
+                        {
+                            body2.x += this._overlap;
+                        }
+                        else
+                        {
+                            body2.x -= this._overlap;
+                        }
+
+                        body1.velocity.x = this._average + this._newVelocity1 * body1.bounce.x;
+                        body2.velocity.x = this._average + this._newVelocity2 * body2.bounce.x;
+                    }
                 }
                 else if (!body1.immovable)
                 {
-                    body1.x = body1.x - this._overlap;
+                    if (body1.deltaX() < 0)
+                    {
+                        body1.x += this._overlap;
+                    }
+                    else
+                    {
+                        body1.x -= this._overlap;
+                    }
+
                     body1.velocity.x = this._velocity2 - this._velocity1 * body1.bounce.x;
                 }
                 else if (!body2.immovable)
                 {
-                    body2.x += this._overlap;
+                    if (body2.deltaX() < 0)
+                    {
+                        body2.x += this._overlap;
+                    }
+                    else
+                    {
+                        body2.x -= this._overlap;
+                    }
+
                     body2.velocity.x = this._velocity1 - this._velocity2 * body2.bounce.x;
                 }
             }
@@ -722,25 +796,79 @@ Phaser.Physics.Arcade.prototype = {
 
                 if (!body1.immovable && !body2.immovable)
                 {
-                    this._overlap *= 0.5;
-                    body1.overlapY = this._overlap;
-                    body2.overlapY = this._overlap;
+                    //  If either of the bodies are blocked on either side then we don't exchange velocity but treat it like an immovable collision
+                    if (body1.blocked.up || body1.blocked.down)
+                    {
+                        if (body1.blocked.up && body2.deltaY() < 0)
+                        {
+                            body2.y += this._overlap;
+                            body2.velocity.y *= -body2.bounce.y;
+                        }
+                        else if (body1.blocked.down && body2.deltaY() > 0)
+                        {
+                            body2.y -= this._overlap;
+                            body2.velocity.y *= -body2.bounce.y;
+                        }
+                    }
+                    else if (body2.blocked.up || body2.blocked.down)
+                    {
+                        if (body2.blocked.up && body1.deltaY() < 0)
+                        {
+                            body1.y += this._overlap;
+                            body1.velocity.y *= -body1.bounce.y;
+                        }
+                        else if (body2.blocked.down && body1.deltaY() > 0)
+                        {
+                            body1.y -= this._overlap;
+                            body1.velocity.y *= -body1.bounce.y;
+                        }
+                    }
+                    else
+                    {
+                        //  Exchange velocities
+                        this._overlap *= 0.5;
+                        body1.overlapY = this._overlap;
+                        body2.overlapY = this._overlap;
 
-                    body1.y = body1.y - this._overlap;
-                    body2.y += this._overlap;
+                        this._newVelocity1 = Math.sqrt((this._velocity2 * this._velocity2 * body2.mass) / body1.mass) * ((this._velocity2 > 0) ? 1 : -1);
+                        this._newVelocity2 = Math.sqrt((this._velocity1 * this._velocity1 * body1.mass) / body2.mass) * ((this._velocity1 > 0) ? 1 : -1);
+                        this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
+                        this._newVelocity1 -= this._average;
+                        this._newVelocity2 -= this._average;
 
-                    this._newVelocity1 = Math.sqrt((this._velocity2 * this._velocity2 * body2.mass) / body1.mass) * ((this._velocity2 > 0) ? 1 : -1);
-                    this._newVelocity2 = Math.sqrt((this._velocity1 * this._velocity1 * body1.mass) / body2.mass) * ((this._velocity1 > 0) ? 1 : -1);
-                    this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
-                    this._newVelocity1 -= this._average;
-                    this._newVelocity2 -= this._average;
+                        if (body1.deltaY() < 0)
+                        {
+                            body1.y += this._overlap;
+                        }
+                        else
+                        {
+                            body1.y -= this._overlap;
+                        }
 
-                    body1.velocity.y = this._average + this._newVelocity1 * body1.bounce.y;
-                    body2.velocity.y = this._average + this._newVelocity2 * body2.bounce.y;
+                        if (body2.deltaY() < 0)
+                        {
+                            body2.y += this._overlap;
+                        }
+                        else
+                        {
+                            body2.y -= this._overlap;
+                        }
+
+                        body1.velocity.y = this._average + this._newVelocity1 * body1.bounce.y;
+                        body2.velocity.y = this._average + this._newVelocity2 * body2.bounce.y;
+                    }
                 }
                 else if (!body1.immovable)
                 {
-                    body1.y -= this._overlap;
+                    if (body1.deltaY() < 0)
+                    {
+                        body1.y += this._overlap;
+                    }
+                    else
+                    {
+                        body1.y -= this._overlap;
+                    }
+
                     body1.velocity.y = this._velocity2 - this._velocity1 * body1.bounce.y;
 
                     //  This is special case code that handles things like horizontal moving platforms you can ride
@@ -751,7 +879,15 @@ Phaser.Physics.Arcade.prototype = {
                 }
                 else if (!body2.immovable)
                 {
-                    body2.y += this._overlap;
+                    if (body2.deltaY() < 0)
+                    {
+                        body2.y += this._overlap;
+                    }
+                    else
+                    {
+                        body2.y -= this._overlap;
+                    }
+
                     body2.velocity.y = this._velocity1 - this._velocity2 * body2.bounce.y;
 
                     //  This is special case code that handles things like horizontal moving platforms you can ride
