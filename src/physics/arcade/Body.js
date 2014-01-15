@@ -120,11 +120,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.velocity = new Phaser.Point();
 
     /**
-    * @property {Phaser.Point} prevVelocity - The velocity in pixels per second sq. of the Body.
-    */
-    this.prevVelocity = new Phaser.Point();
-
-    /**
     * @property {Phaser.Point} acceleration - The velocity in pixels per second sq. of the Body.
     */
     this.acceleration = new Phaser.Point();
@@ -380,12 +375,6 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.preY = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
         this.preRotation = this.sprite.angle;
 
-        // if (this.canSleep && this.sleeping && (this.velocity.equals(this.prevVelocity) === false || this.acceleration.isZero() === false))
-        // {
-        //     this.sleeping = false;
-        //     this._sleepTimer = 0;
-        // }
-
         this.x = this.preX;
         this.y = this.preY;
         this.rotation = this.preRotation;
@@ -407,40 +396,10 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.checkWorldBounds();
             }
 
-            //  Apply world gravity, acceleration + rotation
             this.game.physics.updateMotion(this);
             
             this.applyMotion();
-
-            // if (this.canSleep)
-            // {
-            //     if (!this.sleeping)
-            //     {
-            //         if (this.velocity.x >= this.sleepMin.x && this.velocity.x <= this.sleepMax.x && this.velocity.y >= this.sleepMin.y && this.velocity.y <= this.sleepMax.y)
-            //         {
-            //             if (this._sleepTimer >= this.sleepDuration)
-            //             {
-            //                 this.sleeping = true;
-            //             }
-            //             else
-            //             {
-            //                 this._sleepTimer += this.game.time.elapsed;
-            //                 this.applyMotion();
-            //             }
-            //         }
-            //         else
-            //         {
-            //             this.applyMotion();
-            //         }
-            //     }
-            // }
-            // else
-            // {
-            //     this.applyMotion();
-            // }
         }
-
-        this.prevVelocity.copyFrom(this.velocity);
 
     },
 
@@ -788,7 +747,6 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
     * @return {number}
     */
     get: function () {
-        // return Math.floor(this.y + this.height);
         return this.y + this.height;
     },
 
@@ -825,7 +783,6 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
     * @return {number}
     */
     get: function () {
-        // return Math.floor(this.x + this.width);
         return this.x + this.width;
     },
 

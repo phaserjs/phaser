@@ -87,7 +87,7 @@ New features:
 * Added a new Project Template "Full Screen Mobile" which you can find in the resources folder. Contains html / css / layout needed for a deployed Phaser game.
 * Body.speed - the current speed of the body.
 * Body.friction - This now replaces Body.drag and provides for a much smoother friction experience.
-* Body.sleeping - A Physics Body can now be set to 'go to sleep' if the velocity drops between the given range (sleepMin and sleepMax) for the given period of sleepDuration (see the new examples).
+* Body.minBounceVelocity - If a Body has bounce set, this threshold controls if it should rebound or not. Use it to stop 'jittering' on bounds/tiles with super-low velocities.
 * QuadTree.populate - you can pass it a Group and it'll automatically insert all of the children ready for inspection.
 
 
@@ -149,6 +149,7 @@ Updates:
 * Body.acceleration is now much smoother and less eratic at high speeds.
 * Removed ArcadePhysics binding to the QuadTree, so it can now be used independantly of the physics system.
 * Removed ArcadePhysics.preUpdate and postUpdate as neither are needed any more.
+* Body.bottom and Body.right are no longer rounded, so will give accurate sub-pixel values.
 
 
 Bug Fixes:
@@ -173,6 +174,7 @@ Bug Fixes:
 * Sounds will now loop correctly if they are paused and resumed (thanks haden)
 * InputHandler.checkBoundsRect and checkBoundsSprite now take into account if the Sprite is fixedToCamera or not.
 * Removed the frame property from TileSprites as it cannot use them, it tiles the whole image only, not just a section of it.
+* Fixed WebGLRenderer updateGraphics bug (thanks theadam)
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md

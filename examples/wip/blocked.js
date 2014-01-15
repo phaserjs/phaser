@@ -25,25 +25,47 @@ function create() {
 	var bg = game.add.sprite(0, 0, bmd);
 	bg.body.moves = false;
 
-	test8();
+	test9();
+
+}
+
+//	stacked
+function test9() {
+
+	game.physics.gravity.y = 500;
+
+	sprite = game.add.sprite(400, 100, 'ball');
+	sprite.body.collideWorldBounds = true;
+	sprite.body.bounce.setTo(0.8, 0.8);
+	sprite.body.minBounceVelocity = 0.8;
+
+	sprite2 = game.add.sprite(400, 300, 'ball');
+	sprite2.body.collideWorldBounds = true;
+	sprite2.body.bounce.setTo(0.5, 0.5);
+	sprite2.body.minBounceVelocity = 0.8;
+
+	// game.input.onDown.add(launch8, this);
 
 }
 
 //	gravity into floor jiggle
 function test8() {
 
-	game.physics.gravity.y = 150;
+	game.physics.gravity.y = 1000;
 
 	sprite = game.add.sprite(400, 100, 'ball');
 	sprite.body.collideWorldBounds = true;
+	//	it's all about tweaking these values
 	sprite.body.bounce.setTo(0.8, 0.8);
-	sprite.body.minBounceVelocity = 0.8;
+	sprite.body.minBounceVelocity = 1.2;
 	sprite.body.velocity.x = -400;
+	sprite.body.friction = 1.2;
 
 	sprite2 = game.add.sprite(500, 100, 'ball');
 	sprite2.body.collideWorldBounds = true;
 	sprite2.body.bounce.setTo(0.5, 0.5);
 	sprite2.body.minBounceVelocity = 0.8;
+	sprite2.body.friction = 0.5;
 
 	game.input.onDown.add(launch8, this);
 

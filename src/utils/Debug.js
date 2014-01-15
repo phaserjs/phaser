@@ -463,9 +463,6 @@ Phaser.Utils.Debug.prototype = {
         this.splitline('velocity x: ' + sprite.body.velocity.x.toFixed(2), 'y: ' + sprite.body.velocity.y.toFixed(2), 'deltaX: ' + sprite.body.deltaX().toFixed(2), 'deltaY: ' + sprite.body.deltaY().toFixed(2));
         this.splitline('motion x: ' + sprite.body.motionVelocity.x.toFixed(2), 'y: ' + sprite.body.motionVelocity.y.toFixed(2));
         this.splitline('bounce x: ' + sprite.body.bounce.x.toFixed(2), 'y: ' + sprite.body.bounce.y.toFixed(2));
-        // this.splitline('sleeping: ' + sprite.body.sleeping, 'sleepTimer: ' + sprite.body._sleepTimer.toFixed(2));
-        // this.splitline('sleepMin x: ' + sprite.body.sleepMin.x, 'y: ' + sprite.body.sleepMin.y);
-        // this.splitline('sleepMax x: ' + sprite.body.sleepMax.x, 'y: ' + sprite.body.sleepMax.y);
         this.stop();
 
     },
