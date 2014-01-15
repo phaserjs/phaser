@@ -59,10 +59,10 @@ Phaser.Tileset = function (name, firstgid, width, height, margin, spacing, prope
     /**
     * @property {object} tilePproperties - Tile specific properties (typically defined in the Tiled editor).
     */
-    this.tileProperties = {};
+    // this.tileProperties = {};
 
     /**
-    * @property {object} image - The image used for rendering.
+    * @property {object} image - The image used for rendering. This is a reference to the image stored in Phaser.Cache.
     */
     this.image = null;
 
@@ -91,12 +91,12 @@ Phaser.Tileset.prototype = {
     * @method Phaser.Tileset#getTile
     * @param {number} index - The index of the tile within the set.
     * @return {object} The tile object.
-    */
     getTile: function (index) {
 
         return this.tiles[index];
 
     },
+    */
 
     /**
     * Gets a Tile from this set.
@@ -104,12 +104,12 @@ Phaser.Tileset.prototype = {
     * @method Phaser.Tileset#getTileX
     * @param {number} index - The index of the tile within the set.
     * @return {object} The tile object.
-    */
     getTileX: function (index) {
 
         return this.tiles[index][0];
 
     },
+    */
 
     /**
     * Gets a Tile from this set.
@@ -117,12 +117,12 @@ Phaser.Tileset.prototype = {
     * @method Phaser.Tileset#getTileY
     * @param {number} index - The index of the tile within the set.
     * @return {object} The tile object.
-    */
     getTileY: function (index) {
 
         return this.tiles[index][1];
 
     },
+    */
 
     /**
     * Sets tile spacing and margins.
@@ -144,12 +144,12 @@ Phaser.Tileset.prototype = {
     * @method Phaser.Tileset#checkTileIndex
     * @param {number} index - The index of the tile within the set.
     * @return {boolean} True if a tile exists at the given index otherwise false.
-    */
     checkTileIndex: function (index) {
 
         return (this.tiles[index]);
 
     }
+    */
 
 };
 

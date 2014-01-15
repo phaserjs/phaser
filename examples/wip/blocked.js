@@ -32,20 +32,17 @@ function create() {
 //	gravity into floor jiggle
 function test8() {
 
-	game.physics.gravity.y = 150;
+	game.physics.gravity.y = 250;
 
-	sprite = game.add.sprite(400, 600-100, 'ball');
-	sprite.body.moves = false;
+	sprite = game.add.sprite(400, 100, 'ball');
 	sprite.body.collideWorldBounds = true;
 	sprite.body.bounce.setTo(0.8, 0.8);
+	sprite.body.minBounceVelocity = 0.8;
 
 	sprite2 = game.add.sprite(500, 100, 'ball');
 	sprite2.body.collideWorldBounds = true;
 	sprite2.body.bounce.setTo(0.5, 0.5);
-	// sprite2.body.friction = 0.1;
-	// sprite2.body.canSleep = true;
-
-	track = sprite2;
+	sprite2.body.minBounceVelocity = 0.5;
 
 	game.input.onDown.add(launch8, this);
 
@@ -53,7 +50,7 @@ function test8() {
 
 function launch8() {
 
-	sprite.body.velocity.y = -200;
+	// sprite.body.velocity.y = 200;
 	// sprite2.body.velocity.y = 200;
 
 }
@@ -232,14 +229,30 @@ function update() {
 
 	// sprite.rotation = sprite.body.angle;
 
-	bmd.fillStyle('#ffff00');
-	bmd.fillRect(track.body.center.x, track.body.center.y, 2, 2);
+	if (sprite)
+	{
+		bmd.fillStyle('#ffff00');
+		bmd.fillRect(sprite.body.center.x, sprite.body.center.y, 2, 2);
+	}
+
+	if (sprite2)
+	{
+		bmd.fillStyle('#ff00ff');
+		bmd.fillRect(sprite2.body.center.x, sprite2.body.center.y, 2, 2);
+	}
 
 }
 
 function render() {
 
-	game.debug.renderBodyInfo(sprite, 16, 24);
-	game.debug.renderBodyInfo(sprite2, 16, 190);
+	if (sprite)
+	{
+		game.debug.renderBodyInfo(sprite, 16, 24);
+	}
+
+	if (sprite2)
+	{
+		game.debug.renderBodyInfo(sprite2, 16, 190);
+	}
 
 }
