@@ -770,6 +770,9 @@ declare module Phaser {
         alpha: number;
         visible: boolean;
         renderable: boolean;
+        width: number;
+        health: number;
+        damage(amount: number): Phaser.Sprite;
     }
 
     class Events {
