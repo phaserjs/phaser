@@ -507,6 +507,7 @@ declare module Phaser {
         static NUM_LOCK: number;
         start(): void;
         stop(): void;
+        addKey(keycode: number): Phaser.Key;
         addKeyCapture(keycode: any): void;
         removeKeyCapture(keycode: number): void;
         clearCaptures(): void;
