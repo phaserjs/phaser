@@ -800,7 +800,7 @@ declare module Phaser {
     }
 
     class Text {
-        constructor(game: Phaser.Game, x: number, y: number, text: string, style: string);
+        constructor(game: Phaser.Game, x: number, y: number, text: string, style: any);
         exists: boolean;
         alive: boolean;
         group: Phaser.Group;
@@ -810,7 +810,7 @@ declare module Phaser {
         type: number;
         text: string;
         angle: number;
-        style: string;
+        style: any;
         visible: boolean;
         position: Phaser.Point;
         anchor: Phaser.Point;
