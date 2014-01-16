@@ -1353,11 +1353,11 @@ declare module Phaser {
         static SECOND: number;
         static HALF: number;
         static QUARTER: number;
-        create(delay: number, loop: boolean, repeatCount: number, callback: any, callbackContext: any, ...): Phaser.TimerEvent;
-        add(delay: number, callback: any, callbackContext: any, ...): Phaser.TimerEvent;
-        repeat(delay: number, repeatCount: number, callback: any, callbackContext: any, ...): Phaser.TimerEvent;
-        create(delay: number, loop: boolean, repeatCount: number, callback: any, callbackContext: any, ...): Phaser.TimerEvent;
-        loop(delay: number, callback: any, callbackContext: any, ...): Phaser.TimerEvent;
+        create(delay: number, loop: boolean, repeatCount: number, callback: any, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
+        add(delay: number, callback: any, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
+        repeat(delay: number, repeatCount: number, callback: any, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
+        create(delay: number, loop: boolean, repeatCount: number, callback: any, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
+        loop(delay: number, callback: any, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
         start(): void;
         stop(): void;
         remove(event: Phaser.TimerEvent): boolean;
