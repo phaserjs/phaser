@@ -507,7 +507,6 @@ declare module Phaser {
         static NUM_LOCK: number;
         start(): void;
         stop(): void;
-        addKey(keycode: number): Phaser.Key;
         addKeyCapture(keycode: any): void;
         removeKeyCapture(keycode: number): void;
         clearCaptures(): void;
@@ -800,7 +799,7 @@ declare module Phaser {
     }
 
     class Text {
-        constructor(game: Phaser.Game, x: number, y: number, text: string, style: any);
+        constructor(game: Phaser.Game, x: number, y: number, text: string, style: string);
         exists: boolean;
         alive: boolean;
         group: Phaser.Group;
@@ -810,7 +809,7 @@ declare module Phaser {
         type: number;
         text: string;
         angle: number;
-        style: any;
+        style: string;
         visible: boolean;
         position: Phaser.Point;
         anchor: Phaser.Point;
@@ -1354,11 +1353,10 @@ declare module Phaser {
         static SECOND: number;
         static HALF: number;
         static QUARTER: number;
-        create(delay: number, loop: boolean, repeatCount: number, callback: any, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
-        add(delay: number, callback: any, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
-        repeat(delay: number, repeatCount: number, callback: any, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
-        create(delay: number, loop: boolean, repeatCount: number, callback: any, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
-        loop(delay: number, callback: any, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
+        create(delay: number, loop: boolean, repeatCount: number, callback: any, callbackContext: any, ... params): Phaser.TimerEvent;
+        add(delay: number, callback: any, callbackContext: any, ... params): Phaser.TimerEvent;
+        repeat(delay: number, repeatCount: number, callback: any, callbackContext: any, ... params): Phaser.TimerEvent;
+        loop(delay: number, callback: any, callbackContext: any, ... params): Phaser.TimerEvent;
         start(): void;
         stop(): void;
         remove(event: Phaser.TimerEvent): boolean;
