@@ -85,6 +85,7 @@
                 $f = $_GET['f'];
         ?>
         <script src="wip/<?php echo $f?>" type="text/javascript"></script>
+        <script src="wip/SAT.js" type="text/javascript"></script>
         <?php
             }
         ?>

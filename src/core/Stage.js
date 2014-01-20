@@ -217,7 +217,7 @@ Phaser.Stage.prototype = {
             return;
         }
 
-        if (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] === true || document['webkitHidden'] === true)
+        if (this.game.paused === false && (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] === true || document['webkitHidden'] === true))
         {
             this.game.paused = true;
         }

@@ -76,6 +76,18 @@ Phaser.Utils = {
     },
 
     /**
+    * Returns true if the object is an Array, otherwise false.
+    * @method Phaser.Utils.isArray
+    * @param {object} obj - The object to inspect.
+    * @return {boolean} - true if the object is an array, otherwise false.
+    */
+    isArray: function (obj) {
+
+        return toString.call(obj) === "[object Array]";
+
+    },
+
+    /**
     * This is a slightly modified version of jQuery.isPlainObject. A plain object is an object whose internal class property is [object Object].
     * @method Phaser.Utils.isPlainObject
     * @param {object} obj - The object to inspect.

@@ -20,32 +20,32 @@ Phaser.Time = function (game) {
     this.game = game;
 
     /**
-    * @property {number} physicsElapsed - The elapsed time calculated for the physics motion updates.
-    */
-    this.physicsElapsed = 0;
-
-    /**
-    * @property {number} time - Game time counter.
+    * @property {number} time - Game time counter. If you need a value for in-game calculation please use Phaser.Time.now instead.
+    * @protected
     */
     this.time = 0;
 
     /**
-    * @property {number} pausedTime - Records how long the game has been paused for. Is reset each time the game pauses.
-    */
-    this.pausedTime = 0;
-
-    /**
     * @property {number} now - The time right now.
+    * @protected
     */
     this.now = 0;
 
     /**
     * @property {number} elapsed - Elapsed time since the last frame (in ms).
+    * @protected
     */
     this.elapsed = 0;
 
     /**
+    * @property {number} pausedTime - Records how long the game has been paused for. Is reset each time the game pauses.
+    * @protected
+    */
+    this.pausedTime = 0;
+
+    /**
     * @property {number} fps - Frames per second.
+    * @protected
     */
     this.fps = 0;
 
@@ -69,6 +69,11 @@ Phaser.Time = function (game) {
     * @property {number} msMax - The maximum amount of time the game has taken between two frames.
     */
     this.msMax = 0;
+
+    /**
+    * @property {number} physicsElapsed - The elapsed time calculated for the physics motion updates.
+    */
+    this.physicsElapsed = 0;
 
     /**
     * @property {number} frames - The number of frames record in the last second.

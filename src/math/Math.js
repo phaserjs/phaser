@@ -327,7 +327,7 @@ Phaser.Math = {
     },
 
     /**
-    * Find the angle of a segment from (x1, y1) -> (x2, y2 ).
+    * Find the angle of a segment from (x1, y1) -> (x2, y2).
     * @method Phaser.Math#angleBetween
     * @param {number} x1
     * @param {number} y1
@@ -971,7 +971,7 @@ Phaser.Math = {
     * @param {number} y1
     * @param {number} x2
     * @param {number} y2
-    * @return {number} The distance between this Point object and the destination Point object.
+    * @return {number} The distance between the two sets of coordinates.
     */
     distance: function (x1, y1, x2, y2) {
 
@@ -979,6 +979,25 @@ Phaser.Math = {
         var dy = y1 - y2;
 
         return Math.sqrt(dx * dx + dy * dy);
+
+    },
+
+    /**
+    * Returns the distance between the two given set of coordinates at the power given.
+    * 
+    * @method Phaser.Math#distancePow
+    * @param {number} x1
+    * @param {number} y1
+    * @param {number} x2
+    * @param {number} y2
+    * @param {number} [pow=2]
+    * @return {number} The distance between the two sets of coordinates.
+    */
+    distancePow: function (x1, y1, x2, y2, pow) {
+
+        if (typeof pow === 'undefined') { pow = 2; }
+
+        return Math.sqrt(Math.pow(x2 - x1, pow) + Math.pow(y2 - y1, pow));
 
     },
 

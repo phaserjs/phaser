@@ -100,7 +100,7 @@ Phaser.Text = function (game, x, y, text, style) {
     /**
     * @property {Phaser.Point} cameraOffset - If this object is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.
     */
-    this.cameraOffset = new Phaser.Point();
+    this.cameraOffset = new Phaser.Point(x, y);
 
     /**
     * @property {object} _cache - A mini cache for storing all of the calculated values.

@@ -12,7 +12,8 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 View the [Official Website](http://phaser.io)<br />
 Follow on [Twitter](https://twitter.com/photonstorm)<br />
 Join the [Forum](http://www.html5gamedevs.com/forum/14-phaser/)<br />
-Try out 200+ [Phaser Examples](http://gametest.mobi/phaser/examples/)
+Try out 200+ [Phaser Examples](http://gametest.mobi/phaser/examples/)<br />
+Read the [documentation online](http://docs.phaser.io)
 
 [Subscribe to our new Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E). We'll email you when new versions are released as well as send you our regular Phaser game making magazine.
 
@@ -36,11 +37,11 @@ Phaser is everything we ever wanted from an HTML5 game framework. It powers all 
 Getting Started Guides
 ----------------------
 
-We have a new [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE. If you're new to HTML5 game development (or are coming from another language like AS3) then we recommend starting there.
+We have a new [Getting Started Guide](http://phaser.io/getting-started-js.php) which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE. If you're new to HTML5 game development, or are coming from another language like AS3, then we recommend starting there.
 
-There is a comprehensive [How to Learn Phaser](http://gamedevelopment.tutsplus.com/articles/how-to-learn-the-phaser-html5-game-engine--gamedev-13643) guide on the GameDevTuts+ site which is well worth reading through.
+There is a comprehensive [How to Learn Phaser](http://gamedevelopment.tutsplus.com/articles/how-to-learn-the-phaser-html5-game-engine--gamedev-13643) guide on the GameDevTuts+ site which is a great place to learn where to find tutorials, examples and support.
 
-There is also this great [Un-official Getting Started Guide](http://www.antonoffplus.com/coding-an-html5-game-for-30-minutes-or-an-introduction-to-the-phaser-framework) which is well worth running through as well.
+There is also an [un-official Getting Started Guide](http://www.antonoffplus.com/coding-an-html5-game-for-30-minutes-or-an-introduction-to-the-phaser-framework).
 
 
 Change Log
@@ -89,6 +90,9 @@ New features:
 * Body.friction - This now replaces Body.drag and provides for a much smoother friction experience.
 * Body.minBounceVelocity - If a Body has bounce set, this threshold controls if it should rebound or not. Use it to stop 'jittering' on bounds/tiles with super-low velocities.
 * QuadTree.populate - you can pass it a Group and it'll automatically insert all of the children ready for inspection.
+* Input.setMoveCallback allows you to set a callback that will be fired each time the activePointer receives a DOM move event.
+* Math.distancePow(x1,y1,x2,y2,power) returns the distance between two coordinates at the given power.
+* Physics.collideArray(obj, array) for when you want to collide an object against a number of sprites that aren't all in the same Group.
 
 
 New Examples:
