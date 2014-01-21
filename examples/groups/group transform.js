@@ -1,4 +1,3 @@
-
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, render: render });
 
 var robot;
@@ -55,8 +54,8 @@ function render() {
     game.debug.renderSpriteInfo(rightArm, 32, 180);
     game.debug.renderSpriteInfo(leftLeg, 32, 325);
     game.debug.renderSpriteInfo(rightLeg, 32, 470);
-    game.debug.renderSpriteInfo(rightLeg, 450, 30);
-    game.debug.renderSpriteInfo(rightLeg, 450, 180);
+    game.debug.renderSpriteInfo(body, 450, 30);
+    game.debug.renderSpriteInfo(eye, 450, 180);
 
     game.debug.renderText('The robot is a group and every component is a sprite.', 240, 580);
     game.debug.renderText('Drag each part to re-position them. ', 288, 592);
