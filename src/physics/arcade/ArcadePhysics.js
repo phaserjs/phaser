@@ -386,6 +386,12 @@ Phaser.Physics.Arcade.prototype = {
     collideHandler: function (object1, object2, collideCallback, processCallback, callbackContext) {
 
         //  Only collide valid objects
+        if (typeof object2 === 'undefined' && object1.type === Phaser.GROUP)
+        {
+            this.collideGroupVsSelf(object1, collideCallback, processCallback, callbackContext, false);
+            return;
+        }
+
         if (object1 && object2 && object1.exists && object2.exists)
         {
             //  SPRITES
@@ -505,6 +511,34 @@ Phaser.Physics.Arcade.prototype = {
                 }
 
                 this._total++;
+            }
+        }
+
+    },
+
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    *
+    * @method Phaser.Physics.Arcade#collideGroupVsSelf
+    * @private
+    */
+    collideGroupVsSelf: function (group, collideCallback, processCallback, callbackContext, overlapOnly) {
+
+        if (group.length === 0)
+        {
+            return;
+        }
+
+        var len = group._container.children.length;
+
+        for (var i = 0; i < len; i++)
+        {
+            for (var j = i + 1; j <= len; j++)
+            {
+                if (group._container.children[i] && group._container.children[j] && group._container.children[i].exists && group._container.children[j].exists)
+                {
+                    this.collideSpriteVsSprite(group._container.children[i], group._container.children[j], collideCallback, processCallback, callbackContext, overlapOnly);
+                }
             }
         }
 
@@ -646,342 +680,23 @@ Phaser.Physics.Arcade.prototype = {
             return false;
         }
 
-        var r = false;
-
-        if (body1.deltaX() === 0 && body2.deltaX() === 0)
+        if (overlapOnly)
         {
-            //  They overlap but neither of them are moving
-            body1.embedded = true;
-            body2.embedded = true;
-        }
-        else if (body1.deltaX() != 0 && body2.deltaX() === 0)
-        {
-            r = body1.separate(body2);
-        }
-        else if (body2.deltaX() != 0 && body1.deltaX() === 0)
-        {
-            r = body2.separate(body1);
+            return body1.overlap(body2);
         }
         else
         {
-            //  Dual motion thingy
-            r = body1.separate(body2);
-        }
-
-        return r;
-
-
-
-        // return body2.separate(body1);
-
-        /*
-
-        //  We got this far, so the bodies overlap and our process was good, which means we can separate ...
-        this._overlap = 0;
-
-        this._maxOverlap = body1.deltaAbsX() + body2.deltaAbsX() + this.OVERLAP_BIAS;
-
-        if (body1.deltaX() === 0 && body2.deltaX() === 0)
-        {
-            //  They overlap but neither of them are moving
-            body1.embedded = true;
-            body2.embedded = true;
-        }
-        else if (body1.deltaX() > body2.deltaX())
-        {
-            //  Body1 is moving right and/or Body2 is moving left
-            this._overlap = body1.x + body1.width - body2.x;
-
-            if ((this._overlap > this._maxOverlap) || body1.allowCollision.right === false || body2.allowCollision.left === false)
+            if (body1.overlap(body2))
             {
-                this._overlap = 0;
-            }
-            else
-            {
-                body1.touching.right = true;
-                body2.touching.left = true;
-            }
-        }
-        else if (body1.deltaX() < body2.deltaX())
-        {
-            //  Body1 is moving left and/or Body2 is moving right
-            this._overlap = body1.x - body2.width - body2.x;
+                // console.log('-----------------------------------------------------------------------------');
+                // console.log(body1.sprite.name, 'overlaps', body2.sprite.name, 'x', body1.overlapX, 'y', body1.overlapY);
 
-            if ((-this._overlap > this._maxOverlap) || body1.allowCollision.left === false || body2.allowCollision.right === false)
-            {
-                this._overlap = 0;
-            }
-            else
-            {
-                body1.touching.left = true;
-                body2.touching.right = true;
+                body1.separate(body2);
+                return true;
             }
         }
 
-        //  Then adjust their positions and velocities accordingly (if there was any overlap)
-        if (this._overlap !== 0)
-        {
-            body1.overlapX = this._overlap;
-            body2.overlapX = this._overlap;
-
-            if (!overlapOnly && !body1.customSeparateX && !body2.customSeparateX)
-            {
-                this._velocity1 = body1.velocity.x;
-                this._velocity2 = body2.velocity.x;
-
-                if (!body1.immovable && !body2.immovable)
-                {
-                    //  If either of the bodies are blocked on either side then we don't exchange velocity but treat it like an immovable collision
-                    if (body1.blocked.left || body1.blocked.right)
-                    {
-                        if (body1.blocked.left && body2.deltaX() < 0)
-                        {
-                            body2.x += this._overlap;
-                            body2.velocity.x *= -body2.bounce.x;
-                        }
-                        else if (body1.blocked.right && body2.deltaX() > 0)
-                        {
-                            body2.x -= this._overlap;
-                            body2.velocity.x *= -body2.bounce.x;
-                        }
-                    }
-                    else if (body2.blocked.left || body2.blocked.right)
-                    {
-                        if (body2.blocked.left && body1.deltaX() < 0)
-                        {
-                            body1.x += this._overlap;
-                            body1.velocity.x *= -body1.bounce.x;
-                        }
-                        else if (body2.blocked.right && body1.deltaX() > 0)
-                        {
-                            body1.x -= this._overlap;
-                            body1.velocity.x *= -body1.bounce.x;
-                        }
-                    }
-                    else
-                    {
-                        //  Exchange velocities
-                        this._overlap *= 0.5;
-                        body1.overlapX = this._overlap;
-                        body2.overlapX = this._overlap;
-
-                        this._newVelocity1 = Math.sqrt((this._velocity2 * this._velocity2 * body2.mass) / body1.mass) * ((this._velocity2 > 0) ? 1 : -1);
-                        this._newVelocity2 = Math.sqrt((this._velocity1 * this._velocity1 * body1.mass) / body2.mass) * ((this._velocity1 > 0) ? 1 : -1);
-                        this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
-                        this._newVelocity1 -= this._average;
-                        this._newVelocity2 -= this._average;
-
-                        if (body1.deltaX() < 0)
-                        {
-                            body1.x += this._overlap;
-                        }
-                        else
-                        {
-                            body1.x -= this._overlap;
-                        }
-
-                        if (body2.deltaX() < 0)
-                        {
-                            body2.x += this._overlap;
-                        }
-                        else
-                        {
-                            body2.x -= this._overlap;
-                        }
-
-                        body1.velocity.x = this._average + this._newVelocity1 * body1.bounce.x;
-                        body2.velocity.x = this._average + this._newVelocity2 * body2.bounce.x;
-                    }
-                }
-                else if (!body1.immovable)
-                {
-                    if (body1.deltaX() < 0)
-                    {
-                        body1.x += this._overlap;
-                    }
-                    else
-                    {
-                        body1.x -= this._overlap;
-                    }
-
-                    body1.velocity.x = this._velocity2 - this._velocity1 * body1.bounce.x;
-                }
-                else if (!body2.immovable)
-                {
-                    if (body2.deltaX() < 0)
-                    {
-                        body2.x += this._overlap;
-                    }
-                    else
-                    {
-                        body2.x -= this._overlap;
-                    }
-
-                    body2.velocity.x = this._velocity1 - this._velocity2 * body2.bounce.x;
-                }
-            }
-        }
-
-        //  Now for the vertical
-        this._overlap = 0;
-
-        this._maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + this.OVERLAP_BIAS;
-
-        if (body1.deltaY() === 0 && body2.deltaY() === 0)
-        {
-            //  They overlap but neither of them are moving
-            body1.embedded = true;
-            body2.embedded = true;
-        }
-        else if (body1.deltaY() > body2.deltaY())
-        {
-            //  Body1 is moving down and/or Body2 is moving up
-            this._overlap = body1.y + body1.height - body2.y;
-
-            if ((this._overlap > this._maxOverlap) || body1.allowCollision.down === false || body2.allowCollision.up === false)
-            {
-                this._overlap = 0;
-            }
-            else
-            {
-                body1.touching.down = true;
-                body2.touching.up = true;
-            }
-        }
-        else if (body1.deltaY() < body2.deltaY())
-        {
-            //  Body1 is moving up and/or Body2 is moving down
-            this._overlap = body1.y - body2.height - body2.y;
-
-            if ((-this._overlap > this._maxOverlap) || body1.allowCollision.up === false || body2.allowCollision.down === false)
-            {
-                this._overlap = 0;
-            }
-            else
-            {
-                body1.touching.up = true;
-                body2.touching.down = true;
-            }
-        }
-
-        //  Then adjust their positions and velocities accordingly (if there was any overlap)
-        if (this._overlap !== 0)
-        {
-            body1.overlapY = this._overlap;
-            body2.overlapY = this._overlap;
-
-            if (!overlapOnly && !body1.customSeparateY && !body2.customSeparateY)
-            {
-                this._velocity1 = body1.velocity.y;
-                this._velocity2 = body2.velocity.y;
-
-                if (!body1.immovable && !body2.immovable)
-                {
-                    //  If either of the bodies are blocked on either side then we don't exchange velocity but treat it like an immovable collision
-                    if (body1.blocked.up || body1.blocked.down)
-                    {
-                        if (body1.blocked.up && body2.deltaY() < 0)
-                        {
-                            body2.y += this._overlap;
-                            body2.velocity.y *= -body2.bounce.y;
-                        }
-                        else if (body1.blocked.down && body2.deltaY() > 0)
-                        {
-                            body2.y -= this._overlap;
-                            body2.velocity.y *= -body2.bounce.y;
-                        }
-                    }
-                    else if (body2.blocked.up || body2.blocked.down)
-                    {
-                        if (body2.blocked.up && body1.deltaY() < 0)
-                        {
-                            body1.y += this._overlap;
-                            body1.velocity.y *= -body1.bounce.y;
-                        }
-                        else if (body2.blocked.down && body1.deltaY() > 0)
-                        {
-                            body1.y -= this._overlap;
-                            body1.velocity.y *= -body1.bounce.y;
-                        }
-                    }
-                    else
-                    {
-                        //  Exchange velocities
-                        this._overlap *= 0.5;
-                        body1.overlapY = this._overlap;
-                        body2.overlapY = this._overlap;
-
-                        this._newVelocity1 = Math.sqrt((this._velocity2 * this._velocity2 * body2.mass) / body1.mass) * ((this._velocity2 > 0) ? 1 : -1);
-                        this._newVelocity2 = Math.sqrt((this._velocity1 * this._velocity1 * body1.mass) / body2.mass) * ((this._velocity1 > 0) ? 1 : -1);
-                        this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
-                        this._newVelocity1 -= this._average;
-                        this._newVelocity2 -= this._average;
-
-                        if (body1.deltaY() < 0)
-                        {
-                            body1.y += this._overlap;
-                        }
-                        else
-                        {
-                            body1.y -= this._overlap;
-                        }
-
-                        if (body2.deltaY() < 0)
-                        {
-                            body2.y += this._overlap;
-                        }
-                        else
-                        {
-                            body2.y -= this._overlap;
-                        }
-
-                        body1.velocity.y = this._average + this._newVelocity1 * body1.bounce.y;
-                        body2.velocity.y = this._average + this._newVelocity2 * body2.bounce.y;
-                    }
-                }
-                else if (!body1.immovable)
-                {
-                    if (body1.deltaY() < 0)
-                    {
-                        body1.y += this._overlap;
-                    }
-                    else
-                    {
-                        body1.y -= this._overlap;
-                    }
-
-                    body1.velocity.y = this._velocity2 - this._velocity1 * body1.bounce.y;
-
-                    //  This is special case code that handles things like horizontal moving platforms you can ride
-                    if (body2.moves)
-                    {
-                        body1.x += body2.x - body2.preX;
-                    }
-                }
-                else if (!body2.immovable)
-                {
-                    if (body2.deltaY() < 0)
-                    {
-                        body2.y += this._overlap;
-                    }
-                    else
-                    {
-                        body2.y -= this._overlap;
-                    }
-
-                    body2.velocity.y = this._velocity1 - this._velocity2 * body2.bounce.y;
-
-                    //  This is special case code that handles things like horizontal moving platforms you can ride
-                    if (body1.moves)
-                    {
-                        body2.x += body1.x - body1.preX;
-                    }
-                }
-            }
-        }
-
-        return true;
-    */
+        return false;
 
     },
 

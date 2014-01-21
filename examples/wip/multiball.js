@@ -5,9 +5,11 @@ function preload() {
 
 	game.load.image('arrow', 'assets/sprites/asteroids_ship.png');
 	game.load.image('ball', 'assets/sprites/shinyball.png');
+	game.load.spritesheet('gameboy', 'assets/sprites/gameboy_seize_color_40x60.png', 40, 60);
 
 }
 
+var gameboy;
 var sprites;
 var bmd;
 
@@ -24,23 +26,34 @@ function create() {
 
 	sprites = game.add.group();
 
-	for (var i = 0; i < 50; i++)
+	for (var i = 0; i < 100; i++)
 	{
 		var s = sprites.create(game.rnd.integerInRange(100, 700), game.rnd.integerInRange(32, 200), 'ball');
 		s.body.velocity.x = game.rnd.integerInRange(-400, 400);
 		s.body.velocity.y = game.rnd.integerInRange(-200, 200);
+		s.name = 'ball' + i;
 	}
 
 	sprites.setAll('body.collideWorldBounds', true);
-	sprites.setAll('body.bounce.x', 0.8);
-	sprites.setAll('body.bounce.y', 0.8);
+	sprites.setAll('body.bounce.x', 0.9);
+	sprites.setAll('body.bounce.y', 0.9);
 	sprites.setAll('body.minBounceVelocity', 0.8);
+
+	console.log(sprites._container.children);
+
+	gameboy = game.add.sprite(300, 50, 'gameboy', 0);
+	gameboy.name = 'gameboy';
+	gameboy.body.collideWorldBounds = true;
+	gameboy.body.bounce.setTo(0.9, 0.9);
+	gameboy.body.velocity.x = game.rnd.integerInRange(-400, 400);
+	gameboy.body.velocity.y = game.rnd.integerInRange(-200, 200);
 
 }
 
 function update() {
 
-	// game.physics.collide(sprites, sprites);
+	// game.physics.collide(gameboy, sprites);
+	game.physics.collide(sprites);
 
 	// sprite.rotation = sprite.body.angle;
 

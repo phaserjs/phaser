@@ -95,6 +95,20 @@
     return this;
   };
 
+  // Rotate this vector (counter-clockwise) by the specified angle (in radians) which has already been calculated into sin and cos.
+  /**
+   * @param {number} sin - The Math.sin(angle)
+   * @param {number} cos - The Math.cos(angle)
+   * @return {Vector} This for chaining.
+   */
+  Vector.prototype['rotatePrecalc'] = Vector.prototype.rotatePrecalc = function (sin, cos) {
+    var x = this['x'];
+    var y = this['y'];
+    this['x'] = x * cos - y * sin;
+    this['y'] = x * sin + y * cos;
+    return this;
+  };
+
   // Reverse this vector.
   /**
    * @return {Vector} This for chaining.
@@ -318,10 +332,36 @@
     var edges = this['edges'];
     var normals = this['normals'];
     var len = points.length;
+
+    //  Calc it just the once, rather than 4 times per array element
+    var cos = Math.cos(angle);
+    var sin = Math.sin(angle);
+
     for (i = 0; i < len; i++) {
-      points[i].rotate(angle);
-      edges[i].rotate(angle);
-      normals[i].rotate(angle);
+      points[i].rotatePrecalc(sin, cos);
+      edges[i].rotatePrecalc(sin, cos);
+      normals[i].rotatePrecalc(sin, cos);
+    }
+    return this;
+  };
+
+  // Rotates this polygon counter-clockwise around the origin of *its local coordinate system* (i.e. `pos`).
+  //
+  // Note: You do **not** need to call `recalc` after rotation.
+  /**
+   * @param {number} angle The angle to rotate (in radians)
+   * @return {Polygon} This for chaining.
+   */
+  Polygon.prototype['scale'] = Polygon.prototype.scale = function(x, y) {
+    var i;
+    var points = this['points'];
+    var edges = this['edges'];
+    var normals = this['normals'];
+    var len = points.length;
+    for (i = 0; i < len; i++) {
+      points[i].scale(x,y);
+      edges[i].scale(x,y);
+      normals[i].scale(x,y);
     }
     return this;
   };

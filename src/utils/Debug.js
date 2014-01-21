@@ -923,6 +923,40 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
+    * Renders the corners and point information of the given Sprite.
+    * @method Phaser.Utils.Debug#renderPolygon
+    * @param {array} polygon
+    * @param {string} [color='rgb(255,255,255)'] - The color the polygon is stroked in.
+    */
+    renderPolygon: function (polygon, color, context) {
+
+        if (this.context === null && context === null)
+        {
+            return;
+        }
+
+        color = color || 'rgb(255,255,255)';
+
+        this.start(0, 0, color);
+
+        this.context.beginPath();
+        this.context.moveTo(polygon[0].x, polygon[0].y);
+
+        for (var i = 1; i < polygon.length; i++)
+        {
+            this.context.lineTo(polygon[i].x, polygon[i].y);
+        }
+
+        this.context.closePath();
+        // this.context.strokeStyle = 'rgba(255, 0, 255, 0.7)';
+        this.context.strokeStyle = color;
+        this.context.stroke();
+
+        this.stop();
+
+    },
+
+    /**
     * Dumps the Linked List to the console.
     * 
     * @method Phaser.Utils.Debug#Phaser.LinkedList#dump 

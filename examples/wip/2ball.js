@@ -14,6 +14,7 @@ function preload() {
 var sprite;
 var sprite2;
 var sprite3;
+var group;
 
 var bmd;
 
@@ -30,24 +31,60 @@ function create() {
 
 }
 
+function test4() {
+
+	game.physics.gravity.y = 50;
+
+	sprite = game.add.sprite(300, 0, 'gameboy', 0);
+	sprite.name = 'red';
+	sprite.body.collideWorldBounds = true;
+	sprite.body.bounce.setTo(0.9, 0.9);
+
+	sprite2 = game.add.sprite(310, 500, 'gameboy', 2);
+	sprite2.name = 'green';
+	sprite2.body.collideWorldBounds = true;
+	// sprite2.body.bounce.setTo(0.9, 0.9);
+
+	game.input.onDown.add(launch4, this);
+
+}
+
+function launch4() {
+
+	sprite.body.velocity.y = 200;
+
+}
+
 function test3() {
 
-	// game.physics.gravity.y = 100;
+	game.physics.gravity.y = 50;
+
+	// group = game.add.group();
 
 	sprite = game.add.sprite(500, 400, 'gameboy', 0);
 	sprite.name = 'red';
 	sprite.body.collideWorldBounds = true;
-	sprite.body.bounce.setTo(0.5, 0.5);
+	sprite.body.bounce.setTo(0.9, 0.9);
 
-	sprite2 = game.add.sprite(0, 400, 'gameboy', 2);
+	sprite2 = game.add.sprite(100, 400, 'gameboy', 2);
 	sprite2.name = 'green';
 	sprite2.body.collideWorldBounds = true;
+	sprite2.body.bounce.setTo(0.9, 0.9);
+
+	// sprite2.body.immovable = true;
+	// sprite2.body.bounce.setTo(0.5, 0.5);
 
 	sprite3 = game.add.sprite(700, 400, 'gameboy', 3);
 	sprite3.name = 'yellow';
 	sprite3.body.collideWorldBounds = true;
+	sprite3.body.bounce.setTo(0.5, 0.5);
 
-	sprite.body.velocity.x = -300;
+	// sprite.body.velocity.x = -300;
+	// sprite.body.velocity.y = -200;
+
+	// group.add(sprite);
+	// group.add(sprite2);
+	// group.add(sprite3);
 
 	game.input.onDown.add(launch3, this);
 
@@ -55,7 +92,8 @@ function test3() {
 
 function launch3() {
 
-	sprite.body.velocity.x *= 10;
+	sprite.body.velocity.x = -200;
+	sprite.body.velocity.y = -200;
 
 }
 
@@ -116,11 +154,18 @@ function launch1() {
 
 function update() {
 
-	// game.physics.collide(sprite, sprite2);
-	// game.physics.collide(sprite2, sprite3);
-	game.physics.collideArray(sprite, [sprite2, sprite3]);
+	// game.physics.collide(group, group);
 
-	// sprite.rotation = sprite.body.angle;
+	if (sprite3)
+	{
+		game.physics.collideArray(sprite, [sprite2, sprite3]);
+		game.physics.collide(sprite2, sprite3);
+	}
+	else
+	{
+		game.physics.collide(sprite, sprite2);
+	}
+
 
 	if (sprite)
 	{
@@ -132,6 +177,12 @@ function update() {
 	{
 		bmd.fillStyle('#ff00ff');
 		bmd.fillRect(sprite2.body.center.x, sprite2.body.center.y, 2, 2);
+	}
+
+	if (sprite3)
+	{
+		bmd.fillStyle('#0000ff');
+		bmd.fillRect(sprite3.body.center.x, sprite3.body.center.y, 2, 2);
 	}
 
 }

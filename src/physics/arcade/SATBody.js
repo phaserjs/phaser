@@ -61,48 +61,14 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.preRotation = sprite.angle;
 
     /**
-    * @property {number} screenX - The x position of the physics body translated to screen space.
-    * @readonly
-    */
-    this.screenX = sprite.x;
-
-    /**
-    * @property {number} screenY - The y position of the physics body translated to screen space.
-    * @readonly
-    */
-    this.screenY = sprite.y;
-
-    /**
-    * @property {number} sourceWidth - The un-scaled original size.
-    * @readonly
-    */
-    this.sourceWidth = sprite.currentFrame.sourceSizeW;
-
-    /**
-    * @property {number} sourceHeight - The un-scaled original size.
-    * @readonly
-    */
-    this.sourceHeight = sprite.currentFrame.sourceSizeH;
-
-    /**
     * @property {number} width - The calculated width of the physics body.
     */
     this.width = sprite.currentFrame.sourceSizeW;
 
     /**
-    * @property .numInternal ID cache
+    * @property {number} height - The calculated height of the physics body.
     */
     this.height = sprite.currentFrame.sourceSizeH;
-
-    /**
-    * @property {number} halfWidth - The calculated width / 2 of the physics body.
-    */
-    this.halfWidth = Math.floor(sprite.currentFrame.sourceSizeW / 2);
-
-    /**
-    * @property {number} halfHeight - The calculated height / 2 of the physics body.
-    */
-    this.halfHeight = Math.floor(sprite.currentFrame.sourceSizeH / 2);
 
     /**
     * @property {Phaser.Point} center - The center coordinate of the Physics Body.
@@ -206,19 +172,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @property {object} touching - An object containing touching results.
     */
     this.touching = { none: true, up: false, down: false, left: false, right: false };
-    this.touchingPoint = new Phaser.Point(this.x, this.y);
-
-    /**
-    * This object is populated with previous touching values from the bodies previous collision.
-    * @property {object} wasTouching - An object containing previous touching results.
-    */
-    this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
-
-    /**
-    * @property {number} facing - A const reference to the direction the Body is traveling or facing.
-    * @default
-    */
-    this.facing = Phaser.NONE;
 
     /**
     * @property {boolean} immovable - An immovable Body will not receive any impacts or exchanges of velocity from other bodies.
@@ -285,12 +238,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.friction = 0;
 
     /**
-    * If a body is overlapping with another body, but neither of them are moving (maybe they spawned on-top of each other?) this is set to true.
-    * @property {boolean} embedded - Body embed value.
-    */
-    this.embedded = false;
-
-    /**
     * A Body can be set to collide against the World bounds automatically and rebound back into the World if this is set to true. Otherwise it will leave the World.
     * @property {boolean} collideWorldBounds - Should the Body collide with the World bounds?
     */
@@ -302,7 +249,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @property {object} blocked - An object containing on which faces this Body is blocked from moving, if any.
     */
     this.blocked = { up: false, down: false, left: false, right: false };
-    this.blockedPoint = new Phaser.Point();
 
     /**
     * @property {number} _dx - Internal cache var.
@@ -328,6 +274,10 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this._sy = sprite.scale.y;
 
+    this.shape = new SAT.Box(new SAT.Vector(this.x, this.y), this.width, this.height);
+    this.polygon = this.shape.toPolygon();
+    this.response = new SAT.Response();
+
 };
 
 Phaser.Physics.Arcade.Body.prototype = {
@@ -340,16 +290,16 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     updateBounds: function (centerX, centerY, scaleX, scaleY) {
 
-        if (scaleX != this._sx || scaleY != this._sy)
-        {
-            this.width = this.sourceWidth * scaleX;
-            this.height = this.sourceHeight * scaleY;
-            this.halfWidth = Math.floor(this.width / 2);
-            this.halfHeight = Math.floor(this.height / 2);
-            this._sx = scaleX;
-            this._sy = scaleY;
-            this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
-        }
+        // if (scaleX != this._sx || scaleY != this._sy)
+        // {
+        //     this.width = this.sourceWidth * scaleX;
+        //     this.height = this.sourceHeight * scaleY;
+        //     this.halfWidth = Math.floor(this.width / 2);
+        //     this.halfHeight = Math.floor(this.height / 2);
+        //     this._sx = scaleX;
+        //     this._sy = scaleY;
+        //     this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
+        // }
 
     },
 
@@ -361,42 +311,23 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     preUpdate: function () {
 
-        //  Store and reset collision flags
-        this.wasTouching.none = this.touching.none;
-        this.wasTouching.up = this.touching.up;
-        this.wasTouching.down = this.touching.down;
-        this.wasTouching.left = this.touching.left;
-        this.wasTouching.right = this.touching.right;
-
-        this.screenX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-        this.screenY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+        // this.screenX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+        // this.screenY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 
         this.preX = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
         this.preY = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
-        this.preRotation = this.sprite.angle;
+        // this.preRotation = this.sprite.angle;
+        this.preRotation = this.sprite.rotation;
 
         //  This all needs to move - because a body may start the preUpdate already touching something
-        //  See if we can reduce this down?
         this.blocked.up = false;
         this.blocked.down = false;
         this.blocked.left = false;
         this.blocked.right = false;
 
-        this.embedded = false;
-
         this.x = this.preX;
         this.y = this.preY;
-        this.rotation = this.preRotation;
-
-        // if (this.deltaX() == 0 && (this.touchingPoint.x !== this.x || this.touchingPoint.y !== this.y))
-        // {
-        //     console.log('touch reset', this.x, this.y, this.touchingPoint);
-        //     this.touching.none = true;
-        //     this.touching.up = false;
-        //     this.touching.down = false;
-        //     this.touching.left = false;
-        //     this.touching.right = false;
-        // }
+        // this.rotation = this.preRotation;
 
         this.speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
         this.angle = Math.atan2(this.velocity.y, this.velocity.x);
@@ -414,6 +345,16 @@ Phaser.Physics.Arcade.Body.prototype = {
             
             this.applyMotion();
         }
+
+        this.polygon.pos.x = this.x;
+        this.polygon.pos.y = this.y;
+
+        if (this.deltaZ() !== 0)
+        {
+            // this.polygon.rotate(this.sprite.rotation);
+            // console.log(this.sprite.rotation);
+        }
+        // this.polygon.rotate(this.game.math.degToRad(this.rotation));
 
     },
 
@@ -612,142 +553,31 @@ Phaser.Physics.Arcade.Body.prototype = {
 
     },
 
-    //  This body is the one that is checking against 'body'
-    separateX: function (body) {
+    collide: function (body) {
 
-        //  Doesn't matter if this is moving or not
-        console.log('--- separateX -----------------------------------------------------------------------------');
-        console.log(this.sprite.name, 'testing against', body.sprite.name);
-        console.log(this.sprite.name, 'moving left:', (this.deltaX() < 0), 'moving right:', (this.deltaX() > 0));
+        this.response.clear();
 
-        this.overlapX = 0;
+        // if (this._debug === 100)
+        // {
+        //     console.log(this.sprite.name, this.polygon);
+        // }
 
-        if (this.x < body.x)
+        if (SAT.testPolygonPolygon(this.polygon, body.polygon, this.response))
         {
-            this.overlapX = this.right - body.x;
+
+            // b1.pos.sub(r.overlapV);
+            // sprite.body.velocity.x *= -sprite.body.bounce.x;
+
+            this.velocity.x = 0;
+
+            //  separate
+            this.x += Math.ceil(Math.abs(this.response.overlapV.x));
+            this.y += Math.ceil(Math.abs(this.response.overlapV.y));
+
+            console.log(this.response, this.deltaX());
+
+            console.log('sprite moved to', this.x, this.deltaX());
         }
-        else
-        {
-            this.overlapX = body.right - this.x;
-        }
-
-        //  There are 5 possible collisions taking place
-        // if (this.deltaX() === 0 && body.deltaX())
-
-        // if (this.deltaX() < 0 )
-
-        // if (this.deltaX() < 0 && this.allowCollision.left && body.allowCollision.right)
-
-        //  This body is moving, the body it collided with is not
-
-    },
-
-    separate: function (body) {
-
-        console.log('-----------------------------------------------------------------------------');
-        console.log(this.sprite.name, 'testing against', body.sprite.name);
-        console.log(this.sprite.name, 'moving left:', (this.deltaX() < 0), 'moving right:', (this.deltaX() > 0));
-
-        this.overlapX = 0;
-        this.overlapY = 0;
-
-        if (this.deltaX() < 0 && this.allowCollision.left && body.allowCollision.right)
-        {
-            //  LEFT (will create a negative overlapX value)
-            this.overlapX = this.x - body.right;
-            console.log(this.sprite.name, 'check left', body.right, this.overlapX);
-        }
-        else if (this.deltaX() > 0 && this.allowCollision.right && body.allowCollision.left)
-        {
-            //  RIGHT (will create a positive overlapX value)
-            this.overlapX = this.right - body.x;
-            console.log(this.sprite.name, 'check right', this.overlapX);
-        }
-
-        if (this.deltaY() < 0 && this.allowCollision.up && body.allowCollision.down)
-        {
-            //  UP (will create a negative overlapY value)
-            this.overlapY = this.y - body.bottom;
-        }
-        else if (this.deltaY() > 0 && this.allowCollision.down && body.allowCollision.up)
-        {
-            //  DOWN
-            this.overlapY = this.bottom - body.y;
-        }
-
-        if (this.overlapX === 0 && this.overlapY === 0)
-        {
-            return false;
-        }
-        else
-        {
-            this.overlapHandler(this.overlapX, this.overlapY, body);
-            body.overlapHandler(this.overlapX, this.overlapY, this);
-
-            return true;
-        }
-
-    },
-
-    overlapHandler: function (x, y, body) {
-
-        if (x !== 0)
-        {
-            //  Both moving, so let's cut the overlap in half
-            if (this.deltaX() != 0 && body.deltaX() != 0)
-            {
-                console.log(this.sprite.name, 'both overlap, halving');
-                x * 0.5;
-            }
-
-            if (this.deltaX() !== 0)
-            {
-                //  Not moving, caught impact from another object
-
-            }
-            else
-            {
-
-            }
-
-            if (this.deltaX() < 0 && !this.blocked.right)
-            {
-                //  This body is moving left
-                this.x += x;
-                console.log(this.sprite.name, 'touch h-left', this.x, x);
-            }
-            else if (this.deltaX() > 0 && !this.body.blocked.left)
-            {
-                this.x -= x;
-                console.log(this.sprite.name, 'touch h-right', this.x);
-            }
-            else
-            {
-            }
-
-            if (this.bounce.x === 0)
-            {
-                this.velocity.x = 0;
-            }
-            else
-            {
-                this.velocity.x = -this.velocity.x * this.bounce.x;
-
-                if (Math.abs(this.velocity.x) < this.minVelocity.x)
-                {
-                    this.velocity.x = 0;
-                }
-            }
-        }
-
-        this.sprite.x += this.deltaX();
-        this.sprite.y += this.deltaY();
-
-        console.log(this.sprite.name, 'separate finished. Sprite.x', this.sprite.x, 'body x', this.x);
-
-        //  reset delta ready for next collision
-        this.preX = this.x;
-        this.preY = this.y;
 
     },
 
@@ -761,65 +591,21 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.moves)
         {
-            // if (this.deltaX() < 0)
-            // {
-            //     this.facing = Phaser.LEFT;
-            // }
-            // else if (this.deltaX() > 0)
-            // {
-            //     this.facing = Phaser.RIGHT;
-            //     this.sprite.x += this.deltaX();
-            // }
-
-            // if (this.deltaY() < 0)
-            // {
-            //     this.facing = Phaser.UP;
-            //     this.sprite.y += this.deltaY();
-            // }
-            // else if (this.deltaY() > 0)
-            // {
-            //     this.facing = Phaser.DOWN;
-            // }
-
             this.sprite.x += this.deltaX();
             this.sprite.y += this.deltaY();
 
+            this.sprite.worldTransform[2] += this.deltaX();
+            this.sprite.worldTransform[5] += this.deltaY();
+
             this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
+
+            this.rotation = this.preRotation;
 
             if (this.allowRotation)
             {
-                this.sprite.angle += this.deltaZ();
+                // this.sprite.angle += this.deltaZ();
             }
         }
-
-    },
-
-
-    /**
-    * You can modify the size of the physics Body to be any dimension you need.
-    * So it could be smaller or larger than the parent Sprite. You can also control the x and y offset, which
-    * is the position of the Body relative to the top-left of the Sprite.
-    *
-    * @method Phaser.Physics.Arcade#setSize
-    * @param {number} width - The width of the Body.
-    * @param {number} height - The height of the Body.
-    * @param {number} offsetX - The X offset of the Body from the Sprite position.
-    * @param {number} offsetY - The Y offset of the Body from the Sprite position.
-    */
-    setSize: function (width, height, offsetX, offsetY) {
-
-        offsetX = offsetX || this.offset.x;
-        offsetY = offsetY || this.offset.y;
-
-        this.sourceWidth = width;
-        this.sourceHeight = height;
-        this.width = this.sourceWidth * this._sx;
-        this.height = this.sourceHeight * this._sy;
-        this.halfWidth = Math.floor(this.width / 2);
-        this.halfHeight = Math.floor(this.height / 2);
-        this.offset.setTo(offsetX, offsetY);
-
-        this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
 
     },
 

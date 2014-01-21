@@ -340,7 +340,7 @@ Phaser.Math = {
     },
 
     /**
-    * Set an angle  within the bounds of -&pi; to&pi;.
+    * Set an angle within the bounds of -&pi; to &pi;.
     * @method Phaser.Math#normalizeAngle
     * @param {number} angle
     * @param {boolean} radians - True if angle size is expressed in radians.
