@@ -254,6 +254,18 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.customSeparateContext = null;
 
     /**
+    * @property {function} collideCallback - If set this callback will be fired whenever this Body is hit (on any face). It will send three parameters, the face it hit on, this Body and the Body that hit it.
+    * @default
+    */
+    this.collideCallback = null;
+
+    /**
+    * @property {object} collideCallbackContext - The context in which the collideCallback is called.
+    * @default
+    */
+    this.collideCallbackContext = null;
+
+    /**
     * When this body collides with another, the amount of overlap is stored here.
     * @property {number} overlapX - The amount of horizontal overlap during the collision.
     */
@@ -378,14 +390,17 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.blocked.left = false;
         this.blocked.right = false;
 
+        this.touching.up = false;
+        this.touching.down = false;
+        this.touching.left = false;
+        this.touching.right = false;
+
         this.x = this.preX;
         this.y = this.preY;
         this.rotation = this.preRotation;
 
         this.speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
         this.angle = Math.atan2(this.velocity.y, this.velocity.x);
-
-        this._debug++;
 
         if (this.moves)
         {
@@ -399,17 +414,17 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.applyMotion();
         }
 
-        if (this.deltaX() != 0)
-        {
-            this.touching.left = false;
-            this.touching.right = false;
-        }
+        // if (this.deltaX() != 0)
+        // {
+        //     this.touching.left = false;
+        //     this.touching.right = false;
+        // }
 
-        if (this.deltaY() != 0)
-        {
-            this.touching.up = false;
-            this.touching.down = false;
-        }
+        // if (this.deltaY() != 0)
+        // {
+        //     this.touching.up = false;
+        //     this.touching.down = false;
+        // }
 
     },
 
@@ -426,31 +441,23 @@ Phaser.Physics.Arcade.Body.prototype = {
         if (this.x < this.game.world.bounds.x)
         {
             this.blockedPoint.x = this.game.world.bounds.x - this.x;
-            // this.overlapX = this.game.world.bounds.x - this.x;
             this.blocked.left = true;
-            // console.log(this._debug, 'cwl', this.overlapX, this.x, this.game.world.bounds.x);
         }
         else if (this.right > this.game.world.bounds.right)
         {
             this.blockedPoint.x = this.right - this.game.world.bounds.right;
-            // this.overlapX = this.right - this.game.world.bounds.right;
             this.blocked.right = true;
-            // console.log(this._debug, 'cwr', this.overlapX, this.x, this.game.world.bounds.x);
         }
 
         if (this.y < this.game.world.bounds.y)
         {
             this.blockedPoint.y =  this.game.world.bounds.y - this.y;
-            // this.overlapY = this.game.world.bounds.y - this.y;
             this.blocked.up = true;
-            // console.log(this._debug, 'cwu', this.overlapY, this.y, this.height, this.bottom, this.game.world.bounds.bottom);
         }
         else if (this.bottom > this.game.world.bounds.bottom)
         {
             this.blockedPoint.y = this.bottom - this.game.world.bounds.bottom;
-            // this.overlapY = this.bottom - this.game.world.bounds.bottom;
             this.blocked.down = true;
-            // console.log(this._debug, 'cwd', this.overlapY, this.y, this.height, this.bottom, this.game.world.bounds.bottom);
         }
 
     },
@@ -482,37 +489,27 @@ Phaser.Physics.Arcade.Body.prototype = {
         if (this.blocked.left && this.blockedPoint.x > 0)
         {
             //  Separate
-            // this.x += this.overlapX;
             this.x += this.blockedPoint.x;
-
-            // console.log(this._debug, 'blocked left', this.x, this.overlapX);
-
             this.velocity.x *= -this.bounce.x;
 
             this._dx = this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
 
             if (this._dx > this.minBounceVelocity)
-            // if (Math.abs(this.velocity.x) > this.minVelocity.x)
             {
                 this.x += this._dx;
                 this.velocity.x += this.motionVelocity.x;
-                // console.log(this._debug, 'blocked left', this._dx, 'overlap', this.overlapX, 'delta', this.deltaX(), 'newy', this.x);
             }
             else
             {
-                //  Kill it dead :)
                 this.preX = this.x; // because we don't want any delta from a separation
                 this.velocity.x = 0;
                 this.motionVelocity.x = 0;
-                // console.log(this._debug, 'blocked left KILL', this._dx, 'overlap', this.overlapX, 'delta', this.deltaX(), 'newy', this.x);
             }
         }
         else if (this.blocked.right && this.blockedPoint.x > 0)
         {
             //  Separate
             this.x -= this.blockedPoint.x;
-            // this.x -= this.overlapX;
-
             this.velocity.x *= -this.bounce.x;
 
             this._dx = this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
@@ -521,15 +518,12 @@ Phaser.Physics.Arcade.Body.prototype = {
             {
                 this.x += this._dx;
                 this.velocity.x += this.motionVelocity.x;
-                // console.log(this._debug, 'blocked right', this._dx, 'overlap', this.overlapX, 'delta', this.deltaX(), 'newy', this.x);
             }
             else
             {
-                //  Kill it dead :)
                 this.preX = this.x; // because we don't want any delta from a separation
                 this.velocity.x = 0;
                 this.motionVelocity.x = 0;
-                // console.log(this._debug, 'blocked right KILL', this._dx, 'overlap', this.overlapX, 'delta', this.deltaX(), 'newy', this.x);
             }
         }
         else
@@ -542,52 +536,41 @@ Phaser.Physics.Arcade.Body.prototype = {
         if (this.blocked.up && this.blockedPoint.y > 0)
         {
             //  Separate
-            // this.y += this.overlapY;
             this.y += this.blockedPoint.y;
-
             this.velocity.y *= -this.bounce.y;
 
             this._dy = this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
 
             if (this._dy > this.minBounceVelocity)
-            // if (Math.abs(this.velocity.y) > this.minVelocity.y)
             {
                 this.y += this._dy;
                 this.velocity.y += this.motionVelocity.y;
             }
             else
             {
-                //  Kill it dead :)
                 this.preY = this.y; // because we don't want any delta from a separation
                 this.velocity.y = 0;
                 this.motionVelocity.y = 0;
-                // console.log(this._debug, 'void1', this.velocity.y, 'delta', this.deltaY());
             }
         }
         else if (this.blocked.down && this.blockedPoint.y > 0)
         {
             //  Separate
-            // this.y -= this.overlapY;
             this.y -= this.blockedPoint.y;
-
             this.velocity.y *= -this.bounce.y;
 
             this._dy = this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
 
             if (this._dy < -this.minBounceVelocity)
-            // if (Math.abs(this.velocity.y) > this.minVelocity.y)
             {
                 this.y += this._dy;
                 this.velocity.y += this.motionVelocity.y;
-                // console.log(this._debug, 'rb', this._dy, 'delta', this.deltaY(), 'newy', this.y);
             }
             else
             {
-                //  Kill it dead :)
                 this.preY = this.y; // because we don't want any delta from a separation
                 this.velocity.y = 0;
                 this.motionVelocity.y = 0;
-                // console.log(this._debug, 'void1', this.velocity.y, 'delta', this.deltaY());
             }
         }
         else
@@ -616,6 +599,14 @@ Phaser.Physics.Arcade.Body.prototype = {
 
     },
 
+    /**
+    * Checks for an overlap between this Body and the given Body, taking into account the allowCollision flags on both bodies.
+    * If an overlap occurs the Body.touching flags are set and the results are stored in overlapX and overlapY.
+    *
+    * @method Phaser.Physics.Arcade#overlap
+    * @param {Phaser.Physics.Arcade.Body} body - The Body that collided.
+    * @return {boolean} True if the two bodies overlap, otherwise false.
+    */
     overlap: function (body) {
 
         this.overlapX = 0;
@@ -650,9 +641,7 @@ Phaser.Physics.Arcade.Body.prototype = {
         //  Which is the largest?
         if (this.overlapX !== 0 && this.overlapY !== 0)
         {
-            // console.log('pcheck', Math.abs(this.overlapX), Math.abs(this.overlapY));
-
-            //  find out which is the largest penetration side
+            //  Crudely find out which is the largest penetration side
             if (Math.abs(this.overlapX) > Math.abs(this.overlapY))
             {
                 //  Vertical penetration (as x is larger than y)
@@ -674,14 +663,23 @@ Phaser.Physics.Arcade.Body.prototype = {
 
     },
 
-    //  The left-hand face of this Body was hit (so it gets moved to the right)
-    //  overlapX will be a positive value
+    /**
+    * Process a collision with the left face of this Body. If possible the Body will be moved right.
+    * Uses overlayX which will be positive.
+    *
+    * @method Phaser.Physics.Arcade#hitLeft
+    * @protected
+    * @param {number} x - The overlapX value.
+    * @param {Phaser.Physics.Arcade.Body} body - The Body that collided.
+    * @param {number} nv1 - The new velocity for this Body.
+    * @param {number} nv2 - The new velocity for the colliding Body.
+    * @param {number} avg - The new average velocity between the two Bodies.
+    */
     hitLeft: function (x, body, nv1, nv2, avg) {
 
         //  This body isn't moving horizontally, so it was hit by something moving right
         if (this.immovable || this.blocked.right)
         {
-            // console.log(this.sprite.name, 'hitLeft', 'immovable');
             body.x -= x;
             body.velocity.x = this.velocity.x - body.velocity.x * body.bounce.x;
         }
@@ -689,7 +687,6 @@ Phaser.Physics.Arcade.Body.prototype = {
         {
             if (body.immovable || body.blocked.left)
             {
-                // console.log(this.sprite.name, 'hitLeft', 'full');
                 //  We take the full separation as what hit is isn't moveable
                 this.x += x;
                 this.velocity.x = body.velocity.x - this.velocity.x * this.bounce.x;
@@ -702,7 +699,6 @@ Phaser.Physics.Arcade.Body.prototype = {
             }
             else
             {
-                // console.log(this.sprite.name, 'hitLeft', 'shared');
                 //  Share the separation
                 x *= 0.5;
                 this.x += x;
@@ -725,16 +721,30 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.x -= this.right - this.game.world.bounds.right;
         }
 
+        if (this.collideCallback)
+        {
+            this.collideCallback.call(this.collideCallbackContext, Phaser.LEFT, this, body);
+        }
+
     },
 
-    //  The right-hand face of this Body was hit (so will be moved to the left)
-    //  overlapX will be a negative value
+    /**
+    * Process a collision with the right face of this Body. If possible the Body will be moved left.
+    * Uses overlayX which will be negative.
+    *
+    * @method Phaser.Physics.Arcade#hitRight
+    * @protected
+    * @param {number} x - The overlapX value.
+    * @param {Phaser.Physics.Arcade.Body} body - The Body that collided.
+    * @param {number} nv1 - The new velocity for this Body.
+    * @param {number} nv2 - The new velocity for the colliding Body.
+    * @param {number} avg - The new average velocity between the two Bodies.
+    */
     hitRight: function (x, body, nv1, nv2, avg) {
 
         //  This body isn't moving horizontally, so it was hit by something moving right
         if (this.immovable || this.blocked.left)
         {
-            // console.log(this.sprite.name, 'hitRight', 'immovable');
             body.x -= x;
             body.velocity.x = this.velocity.x - body.velocity.x * body.bounce.x;
         }
@@ -742,7 +752,6 @@ Phaser.Physics.Arcade.Body.prototype = {
         {
             if (body.immovable || body.blocked.right)
             {
-                // console.log(this.sprite.name, 'hitRight', 'full');
                 //  We take the full separation as what hit is isn't moveable
                 this.x += x;
                 this.velocity.x = body.velocity.x - this.velocity.x * this.bounce.x;
@@ -755,7 +764,6 @@ Phaser.Physics.Arcade.Body.prototype = {
             }
             else
             {
-                // console.log(this.sprite.name, 'hitRight', 'shared');
                 //  Share the separation
                 x *= 0.5;
                 this.x += x;
@@ -778,16 +786,30 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.x += this.game.world.bounds.x - this.x;
         }
 
+        if (this.collideCallback)
+        {
+            this.collideCallback.call(this.collideCallbackContext, Phaser.RIGHT, this, body);
+        }
+
     },
 
-    //  The top face of this Body was hit (so it will get pushed down)
-    //  overlapY will be a positive value
+    /**
+    * Process a collision with the top face of this Body. If possible the Body will be moved down.
+    * Uses overlayY which will be positive.
+    *
+    * @method Phaser.Physics.Arcade#hitUp
+    * @protected
+    * @param {number} y - The overlapY value.
+    * @param {Phaser.Physics.Arcade.Body} body - The Body that collided.
+    * @param {number} nv1 - The new velocity for this Body.
+    * @param {number} nv2 - The new velocity for the colliding Body.
+    * @param {number} avg - The new average velocity between the two Bodies.
+    */
     hitUp: function (y, body, nv1, nv2, avg) {
 
         //  This body isn't moving horizontally, so it was hit by something moving right
         if (this.immovable || this.blocked.down)
         {
-            // console.log(this.sprite.name, 'hitUp', 'immovable');
             body.y -= y;
             body.velocity.y = this.velocity.y - body.velocity.y * body.bounce.y;
         }
@@ -795,7 +817,6 @@ Phaser.Physics.Arcade.Body.prototype = {
         {
             if (body.immovable || body.blocked.up)
             {
-                // console.log(this.sprite.name, 'hitUp', 'full');
                 //  We take the full separation as what hit is isn't moveable
                 this.y += y;
                 this.velocity.y = body.velocity.y - this.velocity.y * this.bounce.y;
@@ -808,7 +829,6 @@ Phaser.Physics.Arcade.Body.prototype = {
             }
             else
             {
-                // console.log(this.sprite.name, 'hitUp', 'shared');
                 //  Share the separation
                 y *= 0.5;
                 this.y += y;
@@ -831,16 +851,30 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.y -= this.bottom - this.game.world.bounds.bottom;
         }
 
+        if (this.collideCallback)
+        {
+            this.collideCallback.call(this.collideCallbackContext, Phaser.UP, this, body);
+        }
+
     },
 
-    //  The bottom face of this Body was hit (so it will be pushed up)
-    //  overlapY will be a negative value
+    /**
+    * Process a collision with the bottom face of this Body. If possible the Body will be moved up.
+    * Uses overlayY which will be negative.
+    *
+    * @method Phaser.Physics.Arcade#hitDown
+    * @protected
+    * @param {number} y - The overlapY value.
+    * @param {Phaser.Physics.Arcade.Body} body - The Body that collided.
+    * @param {number} nv1 - The new velocity for this Body.
+    * @param {number} nv2 - The new velocity for the colliding Body.
+    * @param {number} avg - The new average velocity between the two Bodies.
+    */
     hitDown: function (y, body, nv1, nv2, avg) {
 
         //  This body isn't moving horizontally, so it was hit by something moving right
         if (this.immovable || this.blocked.up)
         {
-            // console.log(this.sprite.name, 'hitDown', 'immovable');
             body.y -= y;
             body.velocity.y = this.velocity.y - body.velocity.y * body.bounce.y;
         }
@@ -848,7 +882,6 @@ Phaser.Physics.Arcade.Body.prototype = {
         {
             if (body.immovable || body.blocked.down)
             {
-                // console.log(this.sprite.name, 'hitDown', 'full');
                 //  We take the full separation as what hit is isn't moveable
                 this.y += y;
                 this.velocity.y = body.velocity.y - this.velocity.y * this.bounce.y;
@@ -861,7 +894,6 @@ Phaser.Physics.Arcade.Body.prototype = {
             }
             else
             {
-                // console.log(this.sprite.name, 'hitDown', 'shared');
                 //  Share the separation
                 y *= 0.5;
                 this.y += y;
@@ -884,8 +916,22 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.y += this.game.world.bounds.y - this.y;
         }
 
+        if (this.collideCallback)
+        {
+            this.collideCallback.call(this.collideCallbackContext, Phaser.DOWN, this, body);
+        }
+
     },
 
+    /**
+    * This separates this Body from the given Body unless a customSeparateCallback is set.
+    * It assumes they have already been overlap checked and the resulting overlap is stored in overlapX and overlapY.
+    *
+    * @method Phaser.Physics.Arcade#separate
+    * @protected
+    * @param {Phaser.Physics.Arcade.Body} body - The Body to be separated from this one.
+    * @return {boolean}
+    */
     separate: function (body) {
 
         if (this.customSeparateCallback)
