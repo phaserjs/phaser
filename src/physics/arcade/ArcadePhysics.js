@@ -737,7 +737,7 @@ Phaser.Physics.Arcade.prototype = {
 
                     if (localOverlapX >= body.deltaX())
                     {
-                        // console.log('m left overlapX', localOverlapX, body.deltaX());
+                        console.log('m left overlapX', localOverlapX, body.deltaX());
                         //  use touching instead of blocked?
                         body.blocked.left = true;
                         body.touching.left = true;
@@ -752,7 +752,7 @@ Phaser.Physics.Arcade.prototype = {
                     //  Distance check
                     if (localOverlapX <= body.deltaX())
                     {
-                        // console.log('m right overlapX', localOverlapX, body.deltaX());
+                        console.log('m right overlapX', localOverlapX, body.deltaX());
                         body.blocked.right = true;
                         body.touching.right = true;
                         body.touching.none = false;
@@ -767,7 +767,7 @@ Phaser.Physics.Arcade.prototype = {
                     //  Distance check
                     if (localOverlapY >= body.deltaY())
                     {
-                        // console.log('m up overlapY', localOverlapY, body.deltaY());
+                        console.log('m up overlapY', localOverlapY, body.deltaY());
                         body.blocked.up = true;
                         body.touching.up = true;
                         body.touching.none = false;
@@ -780,7 +780,7 @@ Phaser.Physics.Arcade.prototype = {
 
                     if (localOverlapY <= body.deltaY())
                     {
-                        // console.log('m down overlapY', localOverlapY, body.deltaY());
+                        console.log('m down overlapY', localOverlapY, body.deltaY());
                         body.blocked.down = true;
                         body.touching.down = true;
                         body.touching.none = false;
@@ -850,7 +850,7 @@ Phaser.Physics.Arcade.prototype = {
         //  Can't separate two immovable objects (tiles are always immovable)
         if (body.immovable || Phaser.Rectangle.intersects(body, tile) === false)
         {
-            // console.log('no intersects');
+            console.log('no intersects');
             // console.log('tx', tile.x, 'ty', tile.y, 'tw', tile.width, 'th', tile.height, 'tr', tile.right, 'tb', tile.bottom);
             // console.log('bx', body.x, 'by', body.y, 'bw', body.width, 'bh', body.height, 'br', body.right, 'bb', body.bottom);
             return false;
@@ -877,7 +877,7 @@ Phaser.Physics.Arcade.prototype = {
         body.overlapY = 0;
 
         //  Remember - this happens AFTER the body has been moved by the motion update, so it needs moving back again
-        // console.log('---------------------------------------------------------------------------------------------');
+        console.log('---------------------------------------------------------------------------------------------');
         // console.log(tile);
         // console.log('tx', tile.x, 'ty', tile.y, 'tw', tile.width, 'th', tile.height, 'tr', tile.right, 'tb', tile.bottom);
         // console.log('bx', body.x, 'by', body.y, 'bw', body.width, 'bh', body.height, 'br', body.right, 'bb', body.bottom);
@@ -891,7 +891,7 @@ Phaser.Physics.Arcade.prototype = {
 
             if (body.overlapX >= body.deltaX())
             {
-                // console.log('left overlapX', body.overlapX, body.deltaX());
+                console.log('left overlapX', body.overlapX, body.deltaX());
                 //  use touching instead of blocked?
                 body.blocked.left = true;
                 body.touching.left = true;
@@ -906,7 +906,7 @@ Phaser.Physics.Arcade.prototype = {
             //  Distance check
             if (body.overlapX <= body.deltaX())
             {
-                // console.log('right overlapX', body.overlapX, body.deltaX());
+                console.log('right overlapX', body.overlapX, body.deltaX());
                 body.blocked.right = true;
                 body.touching.right = true;
                 body.touching.none = false;
@@ -921,7 +921,7 @@ Phaser.Physics.Arcade.prototype = {
             //  Distance check
             if (body.overlapY >= body.deltaY())
             {
-                // console.log('up overlapY', body.overlapY, body.deltaY());
+                console.log('up overlapY', body.overlapY, body.deltaY());
                 body.blocked.up = true;
                 body.touching.up = true;
                 body.touching.none = false;
@@ -934,7 +934,7 @@ Phaser.Physics.Arcade.prototype = {
 
             if (body.overlapY <= body.deltaY())
             {
-                // console.log('down overlapY', body.overlapY, body.deltaY());
+                console.log('down overlapY', body.overlapY, body.deltaY());
                 body.blocked.down = true;
                 body.touching.down = true;
                 body.touching.none = false;
@@ -951,6 +951,7 @@ Phaser.Physics.Arcade.prototype = {
         // if (body.overlapX !== 0)
         if (body.touching.left || body.touching.right)
         {
+            console.log('touch left/r', body.overlapX);
             body.x -= body.overlapX;
             body.preX -= body.overlapX;
 
@@ -967,6 +968,7 @@ Phaser.Physics.Arcade.prototype = {
         // if (body.overlapY !== 0)
         if (body.touching.up || body.touching.down)
         {
+            console.log('touch up/d', body.overlapY);
             body.y -= body.overlapY;
             body.preY -= body.overlapY;
 

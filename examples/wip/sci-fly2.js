@@ -33,13 +33,6 @@ function create() {
 
     layer.resizeWorld();
 
-    sprite = game.add.sprite(450, 80, 'phaser');
-    sprite.anchor.setTo(0.5, 0.5);
-    sprite.angle = 5;
-
-    game.camera.follow(sprite);
-    // game.camera.deadzone = new Phaser.Rectangle(160, 160, layer.renderWidth-320, layer.renderHeight-320);
-
     cursors = game.input.keyboard.createCursorKeys();
 
     emitter = game.add.emitter(0, 0, 200);
@@ -50,15 +43,24 @@ function create() {
     emitter.gravity = 150;
     emitter.bounce.setTo(0.5, 0.5);
 
-    game.input.onDown.add(particleBurst, this);
+    sprite = game.add.sprite(450, 80, 'phaser');
+    sprite.anchor.setTo(0.5, 0.5);
+
+    game.camera.follow(sprite);
+    // game.camera.deadzone = new Phaser.Rectangle(160, 160, layer.renderWidth-320, layer.renderHeight-320);
+
+    // game.input.onDown.add(particleBurst, this);
 
 }
 
 function particleBurst() {
 
-    emitter.x = game.input.worldX;
-    emitter.y = game.input.worldY;
-    emitter.start(true, 4000, null, 10);
+    emitter.x = sprite.x;
+    emitter.y = sprite.y;
+    // emitter.x = game.input.worldX;
+    // emitter.y = game.input.worldY;
+    // emitter.start(true, 4000, null, 10);
+    emitter.start(true, 2000, null, 1);
 
 }
 
@@ -73,21 +75,25 @@ function update() {
     if (cursors.up.isDown)
     {
         sprite.body.velocity.y = -150;
+        particleBurst();
     }
     else if (cursors.down.isDown)
     {
         sprite.body.velocity.y = 150;
+        particleBurst();
     }
 
     if (cursors.left.isDown)
     {
         sprite.body.velocity.x = -150;
         sprite.scale.x = -1;
+        particleBurst();
     }
     else if (cursors.right.isDown)
     {
         sprite.body.velocity.x = 150;
         sprite.scale.x = 1;
+        particleBurst();
     }
 
 }

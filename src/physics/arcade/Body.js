@@ -961,11 +961,17 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.facing = Phaser.DOWN;
             }
 
-            this.sprite.x += this.deltaX();
-            this.sprite.y += this.deltaY();
+            if ((this.deltaX() < 0 && !this.blocked.left) || (this.deltaX() > 0 && !this.blocked.right))
+            {
+                this.sprite.x += this.deltaX();
+                this.sprite.worldTransform[2] += this.deltaX();
+            }
 
-            this.sprite.worldTransform[2] += this.deltaX();
-            this.sprite.worldTransform[5] += this.deltaY();
+            if ((this.deltaY() < 0 && !this.blocked.up) || (this.deltaY() > 0 && !this.blocked.down))
+            {
+                this.sprite.y += this.deltaY();
+                this.sprite.worldTransform[5] += this.deltaY();
+            }
 
             this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
 
