@@ -37,7 +37,7 @@ function create() {
     player.anchor.setTo(0.5, 0.5);
     player.body.collideWorldBounds = true;
     player.body.bounce.setTo(0.9, 0.9);
-    player.body.drag.setTo(50, 50);
+    player.body.friction = 0.2;
 
     // Enable input.
     player.inputEnabled = true;

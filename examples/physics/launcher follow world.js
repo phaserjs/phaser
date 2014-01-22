@@ -42,7 +42,7 @@ function create() {
     player.anchor.setTo(0.5, 0.5);
     player.body.collideWorldBounds = true;
     player.body.bounce.setTo(0.9, 0.9);
-    player.body.drag.setTo(100, 100);
+    player.body.friction = 0.2;
     player.body.gravity.setTo(0, 8);
 
     // Enable input.

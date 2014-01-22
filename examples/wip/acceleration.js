@@ -29,10 +29,7 @@ function create() {
     car.body.collideWorldBounds = true;
     car.body.bounce.setTo(0.8, 0.8);
     car.body.allowRotation = true;
-    car.body.friction = 10;
-
-    // car.body.drag.x = 10;
-    // car.body.drag.y = 10;
+    car.body.friction = 0.4;
 
     // car.body.acceleration.x = 10;
     game.input.onDown.add(start, this);

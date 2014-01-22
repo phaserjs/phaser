@@ -42,7 +42,7 @@ function create() {
 		wab.name = 'wab' + i;
 		wab.body.collideWorldBounds = true;
 		wab.body.mass = 0.1;
-		wab.body.drag.setTo(50, 50);
+		wab.body.friction = 0.2;
 	}
 	
 	hill = game.add.sprite(450, 400, 'hill');
@@ -53,7 +53,7 @@ function create() {
 	block = game.add.sprite(575, 300, 'block');
 	block.body.collideWorldBounds = true;
 	block.body.mass = 5;
-	block.body.drag.setTo(100, 100);
+	block.body..friction = 0.4;
 	
 	analog = game.add.sprite(200, 450, 'analog');
 	analog.body.allowGravity = false;
@@ -72,7 +72,7 @@ function create() {
 	ball.inputEnabled = true;
    	ball.body.collideWorldBounds = true;
 	ball.body.bounce.setTo(0.9, 0.9);
-	ball.body.drag.setTo(100, 100);
+	ball.body..friction = 0.2;
 	
 	// Enable input.
 	ball.input.start(0, true);

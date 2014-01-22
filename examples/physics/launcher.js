@@ -42,7 +42,6 @@ function create() {
     ball.anchor.setTo(0.5, 0.5);
     ball.body.collideWorldBounds = true;
     ball.body.bounce.setTo(0.9, 0.9);
-    ball.body.drag.setTo(10, 0);
     
     // Enable input.
     ball.inputEnabled = true;

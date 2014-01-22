@@ -133,7 +133,7 @@ function create () {
     // tank.play('move');
 
     //  This will force it to decelerate and limit its speed
-    tank.body.drag.setTo(200, 200);
+    tank.body.friction = 0.2;
     tank.body.maxVelocity.setTo(400, 400);
     tank.body.collideWorldBounds = true;
 

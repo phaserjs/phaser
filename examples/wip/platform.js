@@ -46,7 +46,6 @@ function launch() {
 
 }
 
-
 function hit(face, body1, body2) {
 
     console.log('hit', face);
