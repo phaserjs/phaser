@@ -340,24 +340,58 @@ Phaser.Math = {
     },
 
     /**
-    * Set an angle within the bounds of -&pi; to &pi;.
-    * @method Phaser.Math#normalizeAngle
-    * @param {number} angle
-    * @param {boolean} radians - True if angle size is expressed in radians.
-    * @return {number}
+    * Reverses an angle.
+    * @method Phaser.Math#reverseAngle
+    * @param {number} angleRad - The angle to reverse, in radians.
+    * @return {number} Returns the reverse angle, in radians.
     */
-    normalizeAngle: function (angle, radians) {
+    reverseAngle: function (angleRad) {
+        return this.normalizeAngle(angleRad + Math.PI, true);
+    },
 
-        if (typeof radians === "undefined") { radians = true; }
+    /**
+    * Normalizes an angle to the [0,2pi) range.
+    * @method Phaser.Math#normalizeAngle
+    * @param {number} angleRad - The angle to normalize, in radians.
+    * @return {number} Returns the angle, fit within the [0,2pi] range, in radians.
+    */
+    normalizeAngle: function (angleRad) {
 
-        var rd = (radians) ? Math.PI : 180;
-        return this.wrap(angle, -rd, rd);
+        angleRad = angleRad % (2 * Math.PI);
+        return angleRad >= 0 ? angleRad : angleRad + 2 * Math.PI;
         
     },
 
     /**
-    * Closest angle between two angles from a1 to a2
-    * absolute value the return for exact angle
+    * Normalizes a latitude to the [-90,90] range. Latitudes above 90 or below -90 are capped, not wrapped.
+    * @method Phaser.Math#normalizeLatitude
+    * @param {number} lat - The latitude to normalize, in degrees.
+    * @return {number} Returns the latitude, fit within the [-90,90] range.
+    */
+    normalizeLatitude: function (lat) {
+        return Math.max(-90, Math.min(90, lat));
+    },
+
+    /**
+    * Normalizes a longitude to the [-180,180] range. Longitudes above 180 or below -180 are wrapped.
+    * @method Phaser.Math#normalizeLongitude
+    * @param {number} lng - The longitude to normalize, in degrees.
+    * @return {number} Returns the longitude, fit within the [-180,180] range.
+    */
+    normalizeLongitude: function (lng) {
+
+        if (lng % 360 == 180)
+        {
+            return 180;
+        }
+
+        lng = lng % 360;
+        return lng < -180 ? lng + 360 : lng > 180 ? lng - 360 : lng;
+
+    },
+
+    /**
+    * Closest angle between two angles from a1 to a2 absolute value the return for exact angle
     * @method Phaser.Math#nearestAngleBetween
     * @param {number} a1
     * @param {number} a2
@@ -511,13 +545,13 @@ Phaser.Math = {
 
     /**
     * Ensures that the value always stays between min and max, by wrapping the value around.
-    * <p>max should be larger than min, or the function will return 0</p>
+    * max should be larger than min, or the function will return 0.
     *
     * @method Phaser.Math#wrap
-    * @param value The value to wrap
-    * @param min The minimum the value is allowed to be
-    * @param max The maximum the value is allowed to be
-    * @return {number} The wrapped value
+    * @param {number} value - The value to wrap.
+    * @param {number} min - The minimum the value is allowed to be.
+    * @param {number} max - The maximum the value is allowed to be.
+    * @return {number} The wrapped value.
     */
     wrap: function (value, min, max) {
 

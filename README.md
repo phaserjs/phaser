@@ -93,6 +93,10 @@ New features:
 * Input.setMoveCallback allows you to set a callback that will be fired each time the activePointer receives a DOM move event.
 * Math.distancePow(x1,y1,x2,y2,power) returns the distance between two coordinates at the given power.
 * Physics.collideArray(obj, array) for when you want to collide an object against a number of sprites that aren't all in the same Group.
+* Math.reverseAngle - reverses an angle (in radians).
+* Math.normalizeAngle - normalises an angle, now in radians only.
+* Math.normalizeLatitude - Normalizes a latitude to the [-90,90] range.
+* Math.normalizeLongitude - Normalizes a longitude to the [-180,180] range.
 
 
 New Examples:

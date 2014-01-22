@@ -26,7 +26,7 @@ function create() {
 
 	sprites = game.add.group();
 
-	for (var i = 0; i < 100; i++)
+	for (var i = 0; i < 40; i++)
 	{
 		var s = sprites.create(game.rnd.integerInRange(100, 700), game.rnd.integerInRange(32, 200), 'ball');
 		s.body.velocity.x = game.rnd.integerInRange(-400, 400);
@@ -39,8 +39,6 @@ function create() {
 	sprites.setAll('body.bounce.y', 0.9);
 	sprites.setAll('body.minBounceVelocity', 0.8);
 
-	console.log(sprites._container.children);
-
 	gameboy = game.add.sprite(300, 50, 'gameboy', 0);
 	gameboy.name = 'gameboy';
 	gameboy.body.collideWorldBounds = true;
@@ -52,7 +50,7 @@ function create() {
 
 function update() {
 
-	// game.physics.collide(gameboy, sprites);
+	game.physics.collide(gameboy, sprites);
 	game.physics.collide(sprites);
 
 	// sprite.rotation = sprite.body.angle;

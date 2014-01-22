@@ -15,6 +15,7 @@ var sprite;
 var sprite2;
 var sprite3;
 var group;
+var flag = false;
 
 var bmd;
 
@@ -27,9 +28,93 @@ function create() {
 	var bg = game.add.sprite(0, 0, bmd);
 	bg.body.moves = false;
 
-	test3();
+	test7();
 
 }
+
+function test7() {
+
+	game.physics.gravity.x = 200;
+
+	sprite = game.add.sprite(300, 300, 'gameboy', 0);
+	sprite.name = 'red';
+	sprite.body.collideWorldBounds = true;
+	sprite.body.bounce.setTo(0.8, 0.8);
+	// sprite.body.velocity.y = 100;
+
+	// sprite.body.gravity.y = 200;
+
+	// sprite.body.friction = 0.2;
+
+	game.input.onDown.add(launch7, this);
+
+}
+
+function launch7() {
+
+	sprite.body.velocity.x = -200;
+	sprite.body.velocity.y = 200;
+
+}
+
+
+
+
+function test6() {
+
+	game.physics.gravity.y = 100;
+
+	sprite = game.add.sprite(300, 200, 'gameboy', 0);
+	sprite.name = 'red';
+	sprite.body.collideWorldBounds = true;
+	sprite.body.bounce.setTo(0.5, 0.5);
+
+	game.input.onDown.add(launch6, this);
+
+}
+
+function launch6() {
+
+	sprite.body.velocity.x = 200;
+	sprite.body.velocity.y = -200;
+
+}
+
+
+
+
+function test5() {
+
+	sprite = game.add.sprite(0, 600, 'gameboy', 0);
+	sprite.name = 'red';
+	sprite.body.collideWorldBounds = true;
+	// sprite.body.bounce.setTo(0.9, 0.9);
+
+	game.input.onDown.add(launch5, this);
+
+}
+
+function launch5() {
+
+	sprite.body.velocity.x = 100;
+	sprite.body.velocity.y = -100;
+    game.time.events.add(Phaser.Timer.SECOND * 4, stop5, this);
+
+}
+
+function stop5() {
+
+	sprite.body.velocity.x = -100;
+	// sprite.body.velocity.y = 100;
+	console.log(sprite.x, sprite.body.x);
+
+}
+
+
+
+
+
+
 
 function test4() {
 
@@ -156,15 +241,15 @@ function update() {
 
 	// game.physics.collide(group, group);
 
-	if (sprite3)
-	{
-		game.physics.collideArray(sprite, [sprite2, sprite3]);
-		game.physics.collide(sprite2, sprite3);
-	}
-	else
-	{
-		game.physics.collide(sprite, sprite2);
-	}
+	// if (sprite3)
+	// {
+	// 	game.physics.collideArray(sprite, [sprite2, sprite3]);
+	// 	game.physics.collide(sprite2, sprite3);
+	// }
+	// else
+	// {
+	// 	game.physics.collide(sprite, sprite2);
+	// }
 
 
 	if (sprite)
@@ -192,7 +277,8 @@ function render() {
 	if (sprite)
 	{
 		game.debug.renderBodyInfo(sprite, 16, 24);
-		game.debug.renderText(sprite.name + ' x: ' + sprite.x, 16, 500);
+		game.debug.renderText(sprite.name + ' x: ' + sprite.x.toFixed(2) + '  dx: ' + sprite.body._dx.toFixed(2), 16, 500);
+		game.debug.renderText(sprite.name + ' y: ' + sprite.y.toFixed(2) + '  dy: ' + sprite.body._dy.toFixed(2), 16, 520);
 	}
 
 	if (sprite2)
