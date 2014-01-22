@@ -23,10 +23,11 @@ function create() {
 	bg.body.moves = false;
 
 	game.physics.gravity.y = 250;
+	// game.physics.gravity.x = 250;
 
 	sprites = game.add.group();
 
-	for (var i = 0; i < 40; i++)
+	for (var i = 0; i < 20; i++)
 	{
 		var s = sprites.create(game.rnd.integerInRange(100, 700), game.rnd.integerInRange(32, 200), 'ball');
 		s.body.velocity.x = game.rnd.integerInRange(-400, 400);

@@ -28,7 +28,7 @@ function create() {
 	var bg = game.add.sprite(0, 0, bmd);
 	bg.body.moves = false;
 
-	test7();
+	test4();
 
 }
 
@@ -36,7 +36,7 @@ function test7() {
 
 	game.physics.gravity.y = 200;
 
-	sprite = game.add.sprite(300, 300, 'gameboy', 0);
+	sprite = game.add.sprite(0, 300, 'gameboy', 0);
 	sprite.name = 'red';
 	sprite.body.collideWorldBounds = true;
 	sprite.body.bounce.setTo(0.8, 0.8);
@@ -119,7 +119,7 @@ function stop5() {
 
 function test4() {
 
-	game.physics.gravity.y = 50;
+	game.physics.gravity.y = 150;
 
 	sprite = game.add.sprite(300, 0, 'gameboy', 0);
 	sprite.name = 'red';
@@ -242,15 +242,15 @@ function update() {
 
 	// game.physics.collide(group, group);
 
-	// if (sprite3)
-	// {
-	// 	game.physics.collideArray(sprite, [sprite2, sprite3]);
-	// 	game.physics.collide(sprite2, sprite3);
-	// }
-	// else
-	// {
-	// 	game.physics.collide(sprite, sprite2);
-	// }
+	if (sprite3)
+	{
+		game.physics.collideArray(sprite, [sprite2, sprite3]);
+		game.physics.collide(sprite2, sprite3);
+	}
+	else
+	{
+		game.physics.collide(sprite, sprite2);
+	}
 
 
 	if (sprite)

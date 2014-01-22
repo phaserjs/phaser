@@ -32,12 +32,7 @@ Phaser.Physics.Arcade = function (game) {
     /**
     * @property {Phaser.Rectangle} bounds - The bounds inside of which the physics world exists. Defaults to match the world bounds.
     */
-    this.bounds = new Phaser.Rectangle(0, 0, game.world.width, game.world.height);
-
-    /**
-    * @property {number} OVERLAP_BIAS - A value added to the delta values during collision checks.
-    */
-    this.OVERLAP_BIAS = 4;
+    // this.bounds = new Phaser.Rectangle(0, 0, game.world.width, game.world.height);
 
     /**
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
@@ -60,55 +55,55 @@ Phaser.Physics.Arcade = function (game) {
     * @property {Phaser.Rectangle} _bounds1 - Internal cache var.
     * @private
     */
-    this._bounds1 = new Phaser.Rectangle();
+    // this._bounds1 = new Phaser.Rectangle();
 
     /**
     * @property {Phaser.Rectangle} _bounds2 - Internal cache var.
     * @private
     */
-    this._bounds2 = new Phaser.Rectangle();
+    // this._bounds2 = new Phaser.Rectangle();
 
     /**
     * @property {number} _overlap - Internal cache var.
     * @private
     */
-    this._overlap = 0;
+    // this._overlap = 0;
 
     /**
     * @property {number} _maxOverlap - Internal cache var.
     * @private
     */
-    this._maxOverlap = 0;
+    // this._maxOverlap = 0;
 
     /**
     * @property {number} _velocity1 - Internal cache var.
     * @private
     */
-    this._velocity1 = 0;
+    // this._velocity1 = 0;
 
     /**
     * @property {number} _velocity2 - Internal cache var.
     * @private
     */
-    this._velocity2 = 0;
+    // this._velocity2 = 0;
 
     /**
     * @property {number} _newVelocity1 - Internal cache var.
     * @private
     */
-    this._newVelocity1 = 0;
+    // this._newVelocity1 = 0;
 
     /**
     * @property {number} _newVelocity2 - Internal cache var.
     * @private
     */
-    this._newVelocity2 = 0;
+    // this._newVelocity2 = 0;
 
     /**
     * @property {number} _average - Internal cache var.
     * @private
     */
-    this._average = 0;
+    // this._average = 0;
 
     /**
     * @property {Array} _mapData - Internal cache var.
@@ -263,45 +258,39 @@ Phaser.Physics.Arcade.prototype = {
         this._result = false;
         this._total = 0;
 
-        //  Only test valid objects
-        if (object1 && object2 && object1.exists && object2.exists)
+        this.collideHandler(object1, object2, overlapCallback, processCallback, callbackContext, true);
+
+        return (this._total > 0);
+
+    },
+
+    /**
+    * Checks for overlaps between a game object and a array of game objects. You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap Layer or Group vs. Tilemap Layer checks.
+    * Unlike collide the objects are NOT automatically separated or have any physics applied, they merely test for overlap results.
+    * An optional processCallback can be provided. If given this function will be called when two sprites are found to be overlapping,
+    * giving you the chance to perform additional checks. If the function returns true then the overlap takes place. If it returns false it is skipped.
+    * The collideCallback is an optional function that is only called if two sprites collide. If a processCallback has been set then it needs to return true for overlapCallback to be called.
+    *
+    * @method Phaser.Physics.Arcade#overlapArray
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap.
+    * @param {<Phaser.Sprite>array|<Phaser.Group>array|<Phaser.Particles.Emitter>array|<Phaser.Tilemap>array} objectArray - An array of objects to check. Can contain instances of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap.
+    * @param {function} [overlapCallback=null] - An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {object} [callbackContext] - The context in which to run the callbacks.
+    * @returns {boolean} True if a collision occured otherwise false.
+    */
+    overlapArray: function (object1, objectArray, overlapCallback, processCallback, callbackContext) {
+
+        overlapCallback = overlapCallback || null;
+        processCallback = processCallback || null;
+        callbackContext = callbackContext || overlapCallback;
+
+        this._result = false;
+        this._total = 0;
+
+        for (var i = 0,  len = objectArray.length; i < len; i++)
         {
-            //  SPRITES
-            if (object1.type == Phaser.SPRITE || object1.type == Phaser.TILESPRITE)
-            {
-                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
-                {
-                    this.collideSpriteVsSprite(object1, object2, overlapCallback, processCallback, callbackContext, true);
-                }
-                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
-                {
-                    this.collideSpriteVsGroup(object1, object2, overlapCallback, processCallback, callbackContext, true);
-                }
-            }
-            //  GROUPS
-            else if (object1.type == Phaser.GROUP)
-            {
-                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
-                {
-                    this.collideSpriteVsGroup(object2, object1, overlapCallback, processCallback, callbackContext, true);
-                }
-                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
-                {
-                    this.collideGroupVsGroup(object1, object2, overlapCallback, processCallback, callbackContext, true);
-                }
-            }
-            //  EMITTER
-            else if (object1.type == Phaser.EMITTER)
-            {
-                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
-                {
-                    this.collideSpriteVsGroup(object2, object1, overlapCallback, processCallback, callbackContext, true);
-                }
-                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
-                {
-                    this.collideGroupVsGroup(object1, object2, overlapCallback, processCallback, callbackContext, true);
-                }
-            }
+            this.collideHandler(object1, objectArray[i], overlapCallback, processCallback, callbackContext, true);
         }
 
         return (this._total > 0);
@@ -333,7 +322,7 @@ Phaser.Physics.Arcade.prototype = {
         this._result = false;
         this._total = 0;
 
-        this.collideHandler(object1, object2, collideCallback, processCallback, callbackContext);
+        this.collideHandler(object1, object2, collideCallback, processCallback, callbackContext, false);
 
         return (this._total > 0);
 
@@ -365,7 +354,7 @@ Phaser.Physics.Arcade.prototype = {
 
         for (var i = 0,  len = objectArray.length; i < len; i++)
         {
-            this.collideHandler(object1, objectArray[i], collideCallback, processCallback, callbackContext);
+            this.collideHandler(object1, objectArray[i], collideCallback, processCallback, callbackContext, false);
         }
 
         return (this._total > 0);
@@ -379,16 +368,17 @@ Phaser.Physics.Arcade.prototype = {
     * @private
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap.
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object2 - The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap. Can also be an array of objects to check.
-    * @param {function} [collideCallback=null] - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
-    * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
-    * @param {object} [callbackContext] - The context in which to run the callbacks.
+    * @param {function} collideCallback - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} processCallback - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {object} callbackContext - The context in which to run the callbacks.
+    * @param {boolean} overlapOnly - Just run an overlap or a full collision.
     */
-    collideHandler: function (object1, object2, collideCallback, processCallback, callbackContext) {
+    collideHandler: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly) {
 
         //  Only collide valid objects
         if (typeof object2 === 'undefined' && object1.type === Phaser.GROUP)
         {
-            this.collideGroupVsSelf(object1, collideCallback, processCallback, callbackContext, false);
+            this.collideGroupVsSelf(object1, collideCallback, processCallback, callbackContext, overlapOnly);
             return;
         }
 
@@ -399,11 +389,11 @@ Phaser.Physics.Arcade.prototype = {
             {
                 if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
                 {
-                    this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext, false);
+                    this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
                 }
                 else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
                 {
-                    this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext, false);
+                    this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
                 }
                 else if (object2.type == Phaser.TILEMAPLAYER)
                 {
@@ -415,11 +405,11 @@ Phaser.Physics.Arcade.prototype = {
             {
                 if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
                 {
-                    this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext, false);
+                    this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
                 }
                 else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
                 {
-                    this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext, false);
+                    this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
                 }
                 else if (object2.type == Phaser.TILEMAPLAYER)
                 {
@@ -443,11 +433,11 @@ Phaser.Physics.Arcade.prototype = {
             {
                 if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
                 {
-                    this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext, false);
+                    this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
                 }
                 else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
                 {
-                    this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext, false);
+                    this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
                 }
                 else if (object2.type == Phaser.TILEMAPLAYER)
                 {
@@ -688,11 +678,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             if (body1.overlap(body2))
             {
-                // console.log('-----------------------------------------------------------------------------');
-                // console.log(body1.sprite.name, 'overlaps', body2.sprite.name, 'x', body1.overlapX, 'y', body1.overlapY);
-
-                body1.separate(body2);
-                return true;
+                return body1.separate(body2);
             }
         }
 

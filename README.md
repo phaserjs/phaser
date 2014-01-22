@@ -56,10 +56,15 @@ Significant API changes:
 * Tilemap.createFromObjects can now turn a bunch of Tiled objects into Sprites in one single call, and copies across all properties as well.
 * Tween.onStartCallback and onCompleteCallback have been removed to avoid confusion. You should use the onStart, onLoop and onComplete events instead.
 * Button.forceOut default value has changed from true to false, so Buttons will revert to an Up state (if set) when pressed and released.
-* Body.drag has been removed. Please use the new Body.friction value instead (which is a number value, not a Point object)
 * The way the collision process callback works has changed significantly and now works as originally intended.
 * The World level quadtree is no longer created, they are now built and ripped down each time you collide a Group, this helps collision accuracy.
 * Bodies are no longer added to a world quadtree, so have had all of their quadtree properties removed such as skipQuadtree, quadTreeIndex, etc.
+* Body.drag has been removed. Please use the new Body.friction value instead (which is a number value, not a Point object)
+* Body.embedded and Body.wasTouching have been removed as they are no longer required.
+* Body.customSeparateX/Y have been removed as you should now use Body.customSeparateCallback.
+* Body.maxVelocity defaults have been removed from 10,000 to 2000.
+* Body.friction is new and has a default value of 0.1 - you may need to set this to zero depending on the type of game you're making.
+* Body.customSeparateCallback allows you to set your own callback when two Bodies need to separate rather than using the built-in method.
 
 
 New features:
@@ -87,12 +92,14 @@ New features:
 * Groups now have an 'alive' property, which can be useful when iterating through child groups with functions like forEachAlive.
 * Added a new Project Template "Full Screen Mobile" which you can find in the resources folder. Contains html / css / layout needed for a deployed Phaser game.
 * Body.speed - the current speed of the body.
+* Body.angle - the current angle the Body is facing based on its velocity. This is not the same as the Sprite angle that may own the body.
 * Body.friction - This now replaces Body.drag and provides for a much smoother friction experience.
 * Body.minBounceVelocity - If a Body has bounce set, this threshold controls if it should rebound or not. Use it to stop 'jittering' on bounds/tiles with super-low velocities.
 * QuadTree.populate - you can pass it a Group and it'll automatically insert all of the children ready for inspection.
 * Input.setMoveCallback allows you to set a callback that will be fired each time the activePointer receives a DOM move event.
 * Math.distancePow(x1,y1,x2,y2,power) returns the distance between two coordinates at the given power.
 * Physics.collideArray(obj, array) for when you want to collide an object against a number of sprites that aren't all in the same Group.
+* Physics.overlapArray(obj, array) for when you want to overlap test an object against a number of sprites that aren't all in the same Group.
 * Math.reverseAngle - reverses an angle (in radians).
 * Math.normalizeAngle - normalises an angle, now in radians only.
 * Math.normalizeLatitude - Normalizes a latitude to the [-90,90] range.

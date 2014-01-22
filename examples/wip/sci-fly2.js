@@ -3,8 +3,8 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: p
 
 function preload() {
 
-    game.load.tilemap('level3', 'assets/maps/cybernoid.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.image('tiles', 'assets/maps/cybernoid.png', 16, 16);
+    game.load.tilemap('level3', 'assets/tilemaps/maps/cybernoid.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.image('tiles', 'assets/tilemaps/tiles/cybernoid.png', 16, 16);
     game.load.image('phaser', 'assets/sprites/phaser-ship.png');
     game.load.image('chunk', 'assets/sprites/chunk.png');
 
@@ -29,7 +29,7 @@ function create() {
     //  Basically this sets EVERY SINGLE tile to fully collide on all faces
     map.setCollisionByExclusion([7, 32, 35, 36, 47]);
 
-    // layer.debug = true;
+    layer.debug = true;
 
     layer.resizeWorld();
 
@@ -47,7 +47,7 @@ function create() {
     emitter.makeParticles('chunk');
     emitter.minRotation = 0;
     emitter.maxRotation = 0;
-    emitter.gravity = 5;
+    emitter.gravity = 150;
     emitter.bounce.setTo(0.5, 0.5);
 
     game.input.onDown.add(particleBurst, this);
