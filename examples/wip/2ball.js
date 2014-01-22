@@ -34,12 +34,13 @@ function create() {
 
 function test7() {
 
-	game.physics.gravity.x = 200;
+	game.physics.gravity.y = 200;
 
 	sprite = game.add.sprite(300, 300, 'gameboy', 0);
 	sprite.name = 'red';
 	sprite.body.collideWorldBounds = true;
 	sprite.body.bounce.setTo(0.8, 0.8);
+
 	// sprite.body.velocity.y = 100;
 
 	// sprite.body.gravity.y = 200;
@@ -277,14 +278,14 @@ function render() {
 	if (sprite)
 	{
 		game.debug.renderBodyInfo(sprite, 16, 24);
-		game.debug.renderText(sprite.name + ' x: ' + sprite.x.toFixed(2) + '  dx: ' + sprite.body._dx.toFixed(2), 16, 500);
-		game.debug.renderText(sprite.name + ' y: ' + sprite.y.toFixed(2) + '  dy: ' + sprite.body._dy.toFixed(2), 16, 520);
+		// game.debug.renderText(sprite.name + ' x: ' + sprite.x.toFixed(2) + '  dx: ' + sprite.body._dx.toFixed(2), 16, 500);
+		// game.debug.renderText(sprite.name + ' y: ' + sprite.y.toFixed(2) + '  dy: ' + sprite.body._dy.toFixed(2), 16, 520);
 	}
 
 	if (sprite2)
 	{
-		game.debug.renderBodyInfo(sprite2, 16, 190);
-		game.debug.renderText(sprite2.name + ' x: ' + sprite2.x, 400, 500);
+		// game.debug.renderBodyInfo(sprite2, 16, 190);
+		// game.debug.renderText(sprite2.name + ' x: ' + sprite2.x, 400, 500);
 	}
 
 }
