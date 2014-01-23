@@ -603,7 +603,8 @@ Phaser.Physics.Arcade.prototype = {
     separate: function (body1, body2, processCallback, callbackContext, overlapOnly) {
 
         //  Can't separate two immovable bodies and the same body cannot collide with itself
-        if (body1 === body2 || (body1.immovable && body2.immovable) || Phaser.Rectangle.intersects(body1, body2) === false)
+        // if (body1 === body2 || (body1.immovable && body2.immovable) || Phaser.Rectangle.intersects(body1, body2) === false)
+        if (body1 === body2 || Phaser.Rectangle.intersects(body1, body2) === false)
         {
             return false;
         }
@@ -674,7 +675,7 @@ Phaser.Physics.Arcade.prototype = {
                     }
                 }
 
-                if (body.deltaX() < 0 && body.allowCollision.left && tile.tile.faceRight)
+                if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight)
                 {
                     //  LEFT
                     localOverlapX = body.x - tile.right;
@@ -686,7 +687,7 @@ Phaser.Physics.Arcade.prototype = {
                         body.touching.none = false;
                     }
                 }
-                else if (body.deltaX() > 0 && body.allowCollision.right && tile.tile.faceLeft)
+                else if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft)
                 {
                     //  RIGHT
                     localOverlapX = body.right - tile.x;
@@ -700,7 +701,7 @@ Phaser.Physics.Arcade.prototype = {
                     }
                 }
 
-                if (body.deltaY() < 0 && body.allowCollision.up && tile.tile.faceBottom)
+                if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom)
                 {
                     //  UP
                     localOverlapY = body.y - tile.bottom;
@@ -713,7 +714,7 @@ Phaser.Physics.Arcade.prototype = {
                         body.touching.none = false;
                     }
                 }
-                else if (body.deltaY() > 0 && body.allowCollision.down && tile.tile.faceTop)
+                else if (body.deltaY() > 0 && body.checkCollision.down && tile.tile.faceTop)
                 {
                     //  DOWN
                     localOverlapY = body.bottom - tile.y;
@@ -778,7 +779,7 @@ Phaser.Physics.Arcade.prototype = {
         body.overlapY = 0;
 
         //  Remember - this happens AFTER the body has been moved by the motion update, so it needs moving back again
-        if (body.deltaX() < 0 && body.allowCollision.left && tile.tile.faceRight)
+        if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight)
         {
             //  LEFT
             body.overlapX = body.x - tile.right;
@@ -791,7 +792,7 @@ Phaser.Physics.Arcade.prototype = {
                 body.touching.none = false;
             }
         }
-        else if (body.deltaX() > 0 && body.allowCollision.right && tile.tile.faceLeft)
+        else if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft)
         {
             //  RIGHT
             body.overlapX = body.right - tile.x;
@@ -805,7 +806,7 @@ Phaser.Physics.Arcade.prototype = {
             }
         }
 
-        if (body.deltaY() < 0 && body.allowCollision.up && tile.tile.faceBottom)
+        if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom)
         {
             //  UP
             body.overlapY = body.y - tile.bottom;
@@ -818,7 +819,7 @@ Phaser.Physics.Arcade.prototype = {
                 body.touching.none = false;
             }
         }
-        else if (body.deltaY() > 0 && body.allowCollision.down && tile.tile.faceTop)
+        else if (body.deltaY() > 0 && body.checkCollision.down && tile.tile.faceTop)
         {
             //  DOWN
             body.overlapY = body.bottom - tile.y;

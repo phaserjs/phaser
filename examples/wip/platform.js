@@ -36,7 +36,7 @@ function create() {
 
     for (var i = 0; i < 50; i++)
     {
-        var s = balls.create(game.rnd.integerInRange(100, 700), game.rnd.integerInRange(100, 200), 'balls', game.rnd.integerInRange(0, 5));
+        var s = balls.create(game.rnd.integerInRange(100, 700), game.rnd.integerInRange(100, 200), 'balls', game.rnd.integerInRange(0, 6));
         s.body.velocity.x = game.rnd.integerInRange(-400, 400);
         s.body.velocity.y = game.rnd.integerInRange(-100, -200);
         s.name = 'ball' + i;
@@ -45,11 +45,15 @@ function create() {
     balls.setAll('body.collideWorldBounds', true);
     balls.setAll('body.bounce.x', 0.8);
     balls.setAll('body.bounce.y', 0.9);
+    balls.setAll('body.minBounceVelocity', 0.9);
+    balls.setAll('body.friction', 0.5);
 
     sprite = game.add.sprite(300, 100, 'gameboy', 0);
     sprite.name = 'red';
     sprite.body.collideWorldBounds = true;
-    sprite.body.bounce.setTo(0.5, 0.5);
+    sprite.body.minBounceVelocity = 0.9;
+    sprite.body.bounce.setTo(0.5, 0.9);
+    sprite.body.friction = 0.5;
 
     sprite2 = game.add.sprite(300, 250, 'gameboy', 2);
     sprite2.name = 'yellow';

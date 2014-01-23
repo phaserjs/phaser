@@ -923,7 +923,7 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-    * Renders the corners and point information of the given Sprite.
+    * 
     * @method Phaser.Utils.Debug#renderPolygon
     * @param {array} polygon
     * @param {string} [color='rgb(255,255,255)'] - The color the polygon is stroked in.
@@ -937,14 +937,18 @@ Phaser.Utils.Debug.prototype = {
 
         color = color || 'rgb(255,255,255)';
 
+        var points = polygon.points;
+        var x = polygon.pos.x;
+        var y = polygon.pos.y;
+
         this.start(0, 0, color);
 
         this.context.beginPath();
-        this.context.moveTo(polygon[0].x, polygon[0].y);
+        this.context.moveTo(x + points[0].x, y + points[0].y);
 
-        for (var i = 1; i < polygon.length; i++)
+        for (var i = 1; i < points.length; i++)
         {
-            this.context.lineTo(polygon[i].x, polygon[i].y);
+            this.context.lineTo(x + points[i].x, y + points[i].y);
         }
 
         this.context.closePath();

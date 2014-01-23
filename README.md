@@ -65,6 +65,8 @@ Significant API changes:
 * Body.maxVelocity defaults have been removed from 10,000 to 2000.
 * Body.friction is new and has a default value of 0.1 - you may need to set this to zero depending on the type of game you're making.
 * Body.customSeparateCallback allows you to set your own callback when two Bodies need to separate rather than using the built-in method.
+* Body.collideCallback allows you to set a callback that is fired whenever the Body is hit on any of its active faces.
+* Body.allowCollision has been renamed to Body.checkCollision.
 
 
 New features:
