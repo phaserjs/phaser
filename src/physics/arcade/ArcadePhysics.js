@@ -49,62 +49,6 @@ Phaser.Physics.Arcade = function (game) {
     */
     this.maxLevels = 4;
 
-    //  Avoid gc spikes by caching these values for re-use
-
-    /**
-    * @property {Phaser.Rectangle} _bounds1 - Internal cache var.
-    * @private
-    */
-    // this._bounds1 = new Phaser.Rectangle();
-
-    /**
-    * @property {Phaser.Rectangle} _bounds2 - Internal cache var.
-    * @private
-    */
-    // this._bounds2 = new Phaser.Rectangle();
-
-    /**
-    * @property {number} _overlap - Internal cache var.
-    * @private
-    */
-    // this._overlap = 0;
-
-    /**
-    * @property {number} _maxOverlap - Internal cache var.
-    * @private
-    */
-    // this._maxOverlap = 0;
-
-    /**
-    * @property {number} _velocity1 - Internal cache var.
-    * @private
-    */
-    // this._velocity1 = 0;
-
-    /**
-    * @property {number} _velocity2 - Internal cache var.
-    * @private
-    */
-    // this._velocity2 = 0;
-
-    /**
-    * @property {number} _newVelocity1 - Internal cache var.
-    * @private
-    */
-    // this._newVelocity1 = 0;
-
-    /**
-    * @property {number} _newVelocity2 - Internal cache var.
-    * @private
-    */
-    // this._newVelocity2 = 0;
-
-    /**
-    * @property {number} _average - Internal cache var.
-    * @private
-    */
-    // this._average = 0;
-
     /**
     * @property {Array} _mapData - Internal cache var.
     * @private
@@ -918,12 +862,7 @@ Phaser.Physics.Arcade.prototype = {
             else
             {
                 body.velocity.x = -body.velocity.x * body.bounce.x;
-
-                //  Rebound check
-                if (Math.abs(body.velocity.x) < body.minVelocity.x)
-                {
-                    body.velocity.x = 0;
-                }
+                body.reboundCheck(true, false);
             }
         }
 
@@ -939,12 +878,7 @@ Phaser.Physics.Arcade.prototype = {
             else
             {
                 body.velocity.y = -body.velocity.y * body.bounce.y;
-
-                //  Rebound check
-                if (Math.abs(body.velocity.y) < body.minVelocity.y)
-                {
-                    body.velocity.y = 0;
-                }
+                body.reboundCheck(false, true);
             }
         }
 

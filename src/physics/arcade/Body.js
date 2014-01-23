@@ -390,6 +390,7 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.blocked.left = false;
         this.blocked.right = false;
 
+        this.touching.none = true;
         this.touching.up = false;
         this.touching.down = false;
         this.touching.left = false;
@@ -414,18 +415,6 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.applyMotion();
         }
 
-        // if (this.deltaX() != 0)
-        // {
-        //     this.touching.left = false;
-        //     this.touching.right = false;
-        // }
-
-        // if (this.deltaY() != 0)
-        // {
-        //     this.touching.up = false;
-        //     this.touching.down = false;
-        // }
-
     },
 
     /**
@@ -442,22 +431,26 @@ Phaser.Physics.Arcade.Body.prototype = {
         {
             this.blockedPoint.x = this.game.world.bounds.x - this.x;
             this.blocked.left = true;
+            this.touching.left = true;
         }
         else if (this.right > this.game.world.bounds.right)
         {
             this.blockedPoint.x = this.right - this.game.world.bounds.right;
             this.blocked.right = true;
+            this.touching.right = true;
         }
 
         if (this.y < this.game.world.bounds.y)
         {
             this.blockedPoint.y =  this.game.world.bounds.y - this.y;
             this.blocked.up = true;
+            this.touching.up = true;
         }
         else if (this.bottom > this.game.world.bounds.bottom)
         {
             this.blockedPoint.y = this.bottom - this.game.world.bounds.bottom;
             this.blocked.down = true;
+            this.touching.down = true;
         }
 
     },
@@ -491,19 +484,19 @@ Phaser.Physics.Arcade.Body.prototype = {
             //  Separate
             this.x += this.blockedPoint.x;
             this.velocity.x *= -this.bounce.x;
+            this.reboundCheck(true, false);
 
             this._dx = this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
 
-            if (this._dx > this.minBounceVelocity)
+            if (this._dx > this.minBounceVelocity || this.getTotalGravityX() > 0)
             {
                 this.x += this._dx;
                 this.velocity.x += this.motionVelocity.x;
             }
             else
             {
-                this.preX = this.x; // because we don't want any delta from a separation
+                this.preX = this.x;
                 this.velocity.x = 0;
-                this.motionVelocity.x = 0;
             }
         }
         else if (this.blocked.right && this.blockedPoint.x > 0)
@@ -511,19 +504,19 @@ Phaser.Physics.Arcade.Body.prototype = {
             //  Separate
             this.x -= this.blockedPoint.x;
             this.velocity.x *= -this.bounce.x;
+            this.reboundCheck(true, false);
 
             this._dx = this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
 
-            if (this._dx < -this.minBounceVelocity)
+            if (this._dx < -this.minBounceVelocity || this.getTotalGravityX() < 0)
             {
                 this.x += this._dx;
                 this.velocity.x += this.motionVelocity.x;
             }
             else
             {
-                this.preX = this.x; // because we don't want any delta from a separation
+                this.preX = this.x;
                 this.velocity.x = 0;
-                this.motionVelocity.x = 0;
             }
         }
         else
@@ -538,19 +531,19 @@ Phaser.Physics.Arcade.Body.prototype = {
             //  Separate
             this.y += this.blockedPoint.y;
             this.velocity.y *= -this.bounce.y;
+            this.reboundCheck(false, true);
 
             this._dy = this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
 
-            if (this._dy > this.minBounceVelocity)
+            if (this._dy > this.minBounceVelocity || this.getTotalGravityY() > 0)
             {
                 this.y += this._dy;
                 this.velocity.y += this.motionVelocity.y;
             }
             else
             {
-                this.preY = this.y; // because we don't want any delta from a separation
+                this.preY = this.y;
                 this.velocity.y = 0;
-                this.motionVelocity.y = 0;
             }
         }
         else if (this.blocked.down && this.blockedPoint.y > 0)
@@ -558,19 +551,19 @@ Phaser.Physics.Arcade.Body.prototype = {
             //  Separate
             this.y -= this.blockedPoint.y;
             this.velocity.y *= -this.bounce.y;
+            this.reboundCheck(false, true);
 
             this._dy = this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
 
-            if (this._dy < -this.minBounceVelocity)
+            if (this._dy < -this.minBounceVelocity || this.getTotalGravityY() < 0)
             {
                 this.y += this._dy;
                 this.velocity.y += this.motionVelocity.y;
             }
             else
             {
-                this.preY = this.y; // because we don't want any delta from a separation
+                this.preY = this.y;
                 this.velocity.y = 0;
-                this.motionVelocity.y = 0;
             }
         }
         else
@@ -663,6 +656,57 @@ Phaser.Physics.Arcade.Body.prototype = {
 
     },
 
+    //  Check if we're below minVelocity and gravity isn't trying to drag us in the opposite direction
+    reboundCheck: function (x, y) {
+
+        if (x)
+        {
+            var gx = this.getTotalGravityX();
+    
+            if (Math.abs(this.velocity.x) < this.minVelocity.x && (this.blocked.left && gx < 0 || this.blocked.right && gx > 0))
+            {
+                this.velocity.x = 0;
+            }
+        }
+
+        if (y)
+        {
+            var gy = this.getTotalGravityY();
+    
+            if (Math.abs(this.velocity.y) < this.minVelocity.y && (this.blocked.up && gy < 0 || this.blocked.down && gy > 0))
+            {
+                this.velocity.y = 0;
+            }
+        }
+
+    },
+
+    getTotalGravityX: function () {
+
+        if (this.allowGravity)
+        {
+            return this.gravity.x + this.game.physics.gravity.x;
+        }
+        else
+        {
+            return this.gravity.x;
+        }
+
+    },
+
+    getTotalGravityY: function () {
+
+        if (this.allowGravity)
+        {
+            return this.gravity.y + this.game.physics.gravity.y;
+        }
+        else
+        {
+            return this.gravity.y;
+        }
+
+    },
+
     /**
     * Process a collision with the left face of this Body. If possible the Body will be moved right.
     * Uses overlayX which will be positive.
@@ -682,6 +726,7 @@ Phaser.Physics.Arcade.Body.prototype = {
         {
             body.x -= x;
             body.velocity.x = this.velocity.x - body.velocity.x * body.bounce.x;
+            body.reboundCheck(true, false);
         }
         else
         {
@@ -690,12 +735,7 @@ Phaser.Physics.Arcade.Body.prototype = {
                 //  We take the full separation as what hit is isn't moveable
                 this.x += x;
                 this.velocity.x = body.velocity.x - this.velocity.x * this.bounce.x;
-
-                //  Rebound check
-                if (Math.abs(this.velocity.x) < this.minVelocity.x)
-                {
-                    this.velocity.x = 0;
-                }
+                this.reboundCheck(true, false);
             }
             else
             {
@@ -706,11 +746,8 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.velocity.x = avg + nv1 * this.bounce.x;
                 body.velocity.x = avg + nv2 * body.bounce.x;
 
-                //  Rebound check
-                if (Math.abs(this.velocity.x) < this.minVelocity.x)
-                {
-                    this.velocity.x = 0;
-                }
+                this.reboundCheck(true, false);
+                body.reboundCheck(true, false);
             }
         }
 
@@ -747,6 +784,7 @@ Phaser.Physics.Arcade.Body.prototype = {
         {
             body.x -= x;
             body.velocity.x = this.velocity.x - body.velocity.x * body.bounce.x;
+            body.reboundCheck(true, false);
         }
         else
         {
@@ -755,12 +793,7 @@ Phaser.Physics.Arcade.Body.prototype = {
                 //  We take the full separation as what hit is isn't moveable
                 this.x += x;
                 this.velocity.x = body.velocity.x - this.velocity.x * this.bounce.x;
-
-                //  Rebound check
-                if (Math.abs(this.velocity.x) < this.minVelocity.x)
-                {
-                    this.velocity.x = 0;
-                }
+                this.reboundCheck(true, false);
             }
             else
             {
@@ -770,12 +803,9 @@ Phaser.Physics.Arcade.Body.prototype = {
                 body.x -= x;
                 this.velocity.x = avg + nv1 * this.bounce.x;
                 body.velocity.x = avg + nv2 * body.bounce.x;
-
-                //  Rebound check
-                if (Math.abs(this.velocity.x) < this.minVelocity.x)
-                {
-                    this.velocity.x = 0;
-                }
+    
+                this.reboundCheck(true, false);
+                body.reboundCheck(true, false);
             }
         }
 
@@ -812,6 +842,7 @@ Phaser.Physics.Arcade.Body.prototype = {
         {
             body.y -= y;
             body.velocity.y = this.velocity.y - body.velocity.y * body.bounce.y;
+            body.reboundCheck(true, false);
         }
         else
         {
@@ -820,12 +851,7 @@ Phaser.Physics.Arcade.Body.prototype = {
                 //  We take the full separation as what hit is isn't moveable
                 this.y += y;
                 this.velocity.y = body.velocity.y - this.velocity.y * this.bounce.y;
-
-                //  Rebound check
-                if (Math.abs(this.velocity.y) < this.minVelocity.y)
-                {
-                    this.velocity.y = 0;
-                }
+                this.reboundCheck(false, true);
             }
             else
             {
@@ -835,12 +861,9 @@ Phaser.Physics.Arcade.Body.prototype = {
                 body.y -= y;
                 this.velocity.y = avg + nv1 * this.bounce.y;
                 body.velocity.y = avg + nv2 * body.bounce.y;
-
-                //  Rebound check
-                if (Math.abs(this.velocity.y) < this.minVelocity.y)
-                {
-                    this.velocity.y = 0;
-                }
+    
+                this.reboundCheck(false, true);
+                body.reboundCheck(true, false);
             }
         }
 
@@ -877,6 +900,7 @@ Phaser.Physics.Arcade.Body.prototype = {
         {
             body.y -= y;
             body.velocity.y = this.velocity.y - body.velocity.y * body.bounce.y;
+            body.reboundCheck(true, false);
         }
         else
         {
@@ -885,12 +909,7 @@ Phaser.Physics.Arcade.Body.prototype = {
                 //  We take the full separation as what hit is isn't moveable
                 this.y += y;
                 this.velocity.y = body.velocity.y - this.velocity.y * this.bounce.y;
-
-                //  Rebound check
-                if (Math.abs(this.velocity.y) < this.minVelocity.y)
-                {
-                    this.velocity.y = 0;
-                }
+                this.reboundCheck(false, true);
             }
             else
             {
@@ -900,12 +919,8 @@ Phaser.Physics.Arcade.Body.prototype = {
                 body.y -= y;
                 this.velocity.y = avg + nv1 * this.bounce.y;
                 body.velocity.y = avg + nv2 * body.bounce.y;
-
-                //  Rebound check
-                if (Math.abs(this.velocity.y) < this.minVelocity.y)
-                {
-                    this.velocity.y = 0;
-                }
+                this.reboundCheck(false, true);
+                body.reboundCheck(true, false);
             }
         }
 
