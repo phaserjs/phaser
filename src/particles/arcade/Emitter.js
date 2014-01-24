@@ -322,12 +322,12 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
 
         if (collide > 0)
         {
-            particle.body.allowCollision.any = true;
-            particle.body.allowCollision.none = false;
+            particle.body.checkCollision.any = true;
+            particle.body.checkCollision.none = false;
         }
         else
         {
-            particle.body.allowCollision.none = true;
+            particle.body.checkCollision.none = true;
         }
 
         particle.body.collideWorldBounds = collideWorldBounds;

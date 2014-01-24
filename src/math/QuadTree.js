@@ -101,7 +101,7 @@ Phaser.QuadTree.prototype = {
     */
     populateHandler: function (sprite) {
 
-        if (sprite.body && sprite.body.allowCollision.none === false && sprite.alive)
+        if (sprite.body && sprite.body.checkCollision.none === false && sprite.alive)
         {
             this.insert(sprite.body);
         }

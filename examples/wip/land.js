@@ -9,7 +9,6 @@ function preload() {
 
 var sprite;
 var sprite2;
-
 var land;
 
 function create() {
@@ -18,47 +17,31 @@ function create() {
 
 	game.physics.gravity.y = 100;
 
-	sprite = game.add.sprite(200, 300, 'gameboy', 0);
+	sprite = game.add.sprite(200, 200, 'gameboy', 0);
 	sprite.name = 'red';
 	sprite.body.collideWorldBounds = true;
-	// sprite.body.checkCollision.right = false;
 	sprite.body.bounce.setTo(0.9, 0.9);
-	// sprite.body.bounce.setTo(1, 1);
-	// sprite.body.friction = 0;
-	// sprite.scale.setTo(2, 2);
-	sprite.body.mass = 2;
 
-	// sprite2 = game.add.sprite(500, 300, 'gameboy', 2);
-	sprite2 = game.add.sprite(500, 300, 'gameboy', 2);
-	sprite2.name = 'green';
-	sprite2.body.collideWorldBounds = true;
-	sprite2.body.bounce.setTo(0.9, 0.9);
-	sprite2.body.mass = 1;
-	// sprite2.body.bounce.setTo(1, 1);
-	// sprite2.body.friction = 0;
+	// sprite2 = game.add.sprite(500, 200, 'gameboy', 2);
+	// sprite2.name = 'green';
+	// sprite2.body.collideWorldBounds = true;
+	// sprite2.body.bounce.setTo(0.9, 0.9);
 
-	land = new SAT.Polygon(new SAT.Vector(), [
+	land = game.add.sprite(10, 490);
+	land.name = 'land';
+	land.body.immovable = true;
+	land.body.allowGravity = false;
+	land.body.setSize(780, 100, 0, 0);
+	land.body.polygons = new SAT.Polygon(new SAT.Vector(10, 490), [
 		new SAT.Vector(),
 		new SAT.Vector(100,0),
-		new SAT.Vector(50,75),
+		new SAT.Vector(200,50),
+		new SAT.Vector(400,20),
+		new SAT.Vector(780,0),
+		new SAT.Vector(780,100),
+		new SAT.Vector(0,100),
 	]);
-
-	land.pos.x = 300;
-	land.pos.y = 500;
-
-	// sprite2.x = sprite.body.right + 10;
-	// sprite2.y = sprite.body.bottom + 10;
-
-	// sprite.x = 300;
-	// sprite.y = 100;
-	// sprite2.x = 300;
-	// sprite2.y = 300;
-
-	// sprite2.body.velocity.y = -100;
-	sprite2.body.velocity.x = -300;
-
-	// game.add.tween(sprite.scale).to({x: 3, y: 3}, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
-    // to: function (properties, duration, ease, autoStart, delay, repeat, yoyo) {
+	console.log(land);
 
 	game.input.onDown.add(launch, this);
 
@@ -98,14 +81,23 @@ function launch() {
 
 function update() {
 
-	game.physics.collide(sprite, sprite2);
+	// game.physics.collide(sprite, land);
+
+	if (sprite.body.overlap(land.body))
+	{
+		console.log('o', sprite.body.response);
+		sprite.body.separate(land.body);
+	}
+
+
+	// game.physics.collide(sprite, sprite2);
+	// game.physics.collide(sprite2, land);
 
 }
 
 function render() {
 
-	game.debug.renderPolygon(land);
-
+	game.debug.renderPolygon(land.body.polygons);
 
 	if (sprite)
 	{
@@ -121,6 +113,8 @@ function render() {
 	{
 		game.debug.renderPolygon(sprite2.body.polygons);
 	}
+
+	game.debug.renderRectangle(land.body);
 
 
 }
