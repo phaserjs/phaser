@@ -1898,7 +1898,8 @@ declare module Phaser {
     }
 
     class TilemapLayer {
-        constructor(parent: Tilemap, id: number, key: string, mapFormat: number, name: string, tileWidth: number, tileHeight: number);
+        constructor(game:Phaser.Game, tilemap:Phaser.Tilemap, index:number, width:number, height:number);
+        //constructor(parent: Tilemap, id: number, key: string, mapFormat: number, name: string, tileWidth: number, tileHeight: number);
         exists: boolean;
         visible: boolean;
         widthInTiles: number;
