@@ -17,10 +17,10 @@ function create() {
 
 	game.physics.gravity.y = 100;
 
-	sprite = game.add.sprite(200, 200, 'gameboy', 0);
+	sprite = game.add.sprite(200, 300, 'gameboy', 0);
 	sprite.name = 'red';
 	sprite.body.collideWorldBounds = true;
-	sprite.body.bounce.setTo(0.9, 0.9);
+	// sprite.body.bounce.setTo(0.9, 0.9);
 
 	// sprite2 = game.add.sprite(500, 200, 'gameboy', 2);
 	// sprite2.name = 'green';
@@ -33,15 +33,14 @@ function create() {
 	land.body.allowGravity = false;
 	land.body.setSize(780, 100, 0, 0);
 	land.body.polygons = new SAT.Polygon(new SAT.Vector(10, 490), [
-		new SAT.Vector(),
-		new SAT.Vector(100,0),
-		new SAT.Vector(200,50),
-		new SAT.Vector(400,20),
-		new SAT.Vector(780,0),
+		new SAT.Vector(0,50),
+		new SAT.Vector(300,0),
+		new SAT.Vector(780,50),
 		new SAT.Vector(780,100),
 		new SAT.Vector(0,100),
 	]);
 	console.log(land);
+	sprite.body.velocity.x = 100;
 
 	game.input.onDown.add(launch, this);
 
@@ -49,7 +48,7 @@ function create() {
 
 function launch() {
 
-	sprite.body.velocity.x = -300;
+	sprite.body.velocity.x = 100;
 	sprite.body.velocity.y = -300;
 	sprite2.body.velocity.x = 200;
 	sprite2.body.velocity.y = -200;

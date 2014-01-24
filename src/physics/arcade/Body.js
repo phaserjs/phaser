@@ -319,9 +319,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this.polygons = new SAT.Box(new SAT.Vector(this.x, this.y), this.width, this.height).toPolygon();
 
-    //  This needs to move to a global ArcadePhysics one
-    this.response = new SAT.Response();
-
     this._debug = 0;
 
 };
@@ -586,13 +583,12 @@ Phaser.Physics.Arcade.Body.prototype = {
     *
     * @method Phaser.Physics.Arcade#overlap
     * @param {Phaser.Physics.Arcade.Body} body - The Body that collided.
+    * @param {SAT.Response} response - SAT Response handler.
     * @return {boolean} True if the two bodies overlap, otherwise false.
     */
-    overlap: function (body) {
+    overlap: function (body, response) {
 
-        this.response.clear();
-
-        return SAT.testPolygonPolygon(this.polygons, body.polygons, this.response);
+        return SAT.testPolygonPolygon(this.polygons, body.polygons, response);
 
     },
 
@@ -788,6 +784,17 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     hitLeft: function (body, response) {
 
+        //  We know that Body is overlapping with This on the left-hand side
+        if ((body.deltaX() < 0 && !this.checkCollision.right) || (body.deltaX() > 0 && !this.checkCollision.left))
+        {
+            return;
+        }
+
+        if ((body.deltaY() < 0 && !this.checkCollision.down) || (body.deltaY() > 0 && !this.checkCollision.up) || (body.deltaY() > 0 && !this.checkCollision.up) || (body.deltaY() > 0 && !this.checkCollision.down))
+        {
+            return;
+        }
+
         //  This body isn't moving horizontally, so it was hit by something moving right
         if (this.immovable || this.blocked.right)
         {
@@ -832,6 +839,17 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @param {SAT.Response} response - The SAT Response object containing the collision data.
     */
     hitRight: function (body, response) {
+
+        //  We know that Body is overlapping with This on the right-hand side
+        if ((body.deltaX() < 0 && !this.checkCollision.right) || (body.deltaX() > 0 && !this.checkCollision.left))
+        {
+            return;
+        }
+
+        if ((body.deltaY() < 0 && !this.checkCollision.down) || (body.deltaY() > 0 && !this.checkCollision.up) || (body.deltaY() > 0 && !this.checkCollision.up) || (body.deltaY() > 0 && !this.checkCollision.down))
+        {
+            return;
+        }
 
         //  This body isn't moving horizontally, so it was hit by something moving left
         if (this.immovable || this.blocked.left)
@@ -878,6 +896,12 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     hitTop: function (body, response) {
 
+        //  We know that Body is overlapping with This on the top side (deltaY > 0 = moving down < 0 = moving up)
+        if ((body.deltaY() > 0 && (!this.checkCollision.up || !this.checkCollision.down)) || (body.deltaY() < 0 && (!this.checkCollision.down || !this.checkCollision.up)))
+        {
+            return;
+        }
+
         //  This body isn't moving vertically, so it was hit by something moving down
         if (this.immovable || this.blocked.down)
         {
@@ -922,6 +946,12 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @param {SAT.Response} response - The SAT Response object containing the collision data.
     */
     hitBottom: function (body, response) {
+
+        //  We know that Body is overlapping with This on the bottom side (deltaY > 0 = moving down < 0 = moving up)
+        if ((body.deltaY() < 0 && (!this.checkCollision.down || !this.checkCollision.up)) || (body.deltaY() < 0 && (!this.checkCollision.down || !this.checkCollision.up)))
+        {
+            return;
+        }
 
         //  This body isn't moving vertically, so it was hit by something moving up
         if (this.immovable || this.blocked.up)
@@ -993,13 +1023,14 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade#separate
     * @protected
     * @param {Phaser.Physics.Arcade.Body} body - The Body to be separated from this one.
+    * @param {SAT.Response} response - SAT Response handler.
     * @return {boolean}
     */
-    separate: function (body) {
+    separate: function (body, response) {
 
         if (this.customSeparateCallback)
         {
-            return this.customSeparateCallback.call(this.customSeparateContext, this, this.response);
+            return this.customSeparateCallback.call(this.customSeparateContext, this, response);
         }
 
         var distances = [
@@ -1009,32 +1040,32 @@ Phaser.Physics.Arcade.Body.prototype = {
             (this.bottom - body.y) // distance of box 'b' to face on 'top' side of 'a'.
         ];
 
-        if (this.response.overlapN.x)
+        if (response.overlapN.x)
         {
             //  Which is smaller? Left or Right?
             if (distances[0] < distances[1])
             {
-                console.log(this.sprite.name, 'collided on the LEFT with', body.sprite.name, this.response);
-                this.hitLeft(body, this.response);
+                console.log(this.sprite.name, 'collided on the LEFT with', body.sprite.name, response);
+                this.hitLeft(body, response);
             }
             else if (distances[1] < distances[0])
             {
-                console.log(this.sprite.name, 'collided on the RIGHT with', body.sprite.name, this.response);
-                this.hitRight(body, this.response);
+                console.log(this.sprite.name, 'collided on the RIGHT with', body.sprite.name, response);
+                this.hitRight(body, response);
             }
         }
-        else if (this.response.overlapN.y)
+        else if (response.overlapN.y)
         {
             //  Which is smaller? Top or Bottom?
             if (distances[2] < distances[3])
             {
-                console.log(this.sprite.name, 'collided on the TOP with', body.sprite.name, this.response);
-                this.hitTop(body, this.response);
+                console.log(this.sprite.name, 'collided on the TOP with', body.sprite.name, response);
+                this.hitTop(body, response);
             }
             else if (distances[3] < distances[2])
             {
-                console.log(this.sprite.name, 'collided on the BOTTOM with', body.sprite.name, this.response);
-                this.hitBottom(body, this.response);
+                console.log(this.sprite.name, 'collided on the BOTTOM with', body.sprite.name, response);
+                this.hitBottom(body, response);
             }
         }
 
@@ -1146,6 +1177,9 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.y = this.preY;
         this.rotation = this.preRotation;
         
+        this.polygons.pos.x = this.x;
+        this.polygons.pos.y = this.y;
+
         this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
 
     },
@@ -1267,5 +1301,22 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
         }
 
     }
+
+});
+
+/**
+* @name Phaser.Physics.Arcade.Body#movingLeft
+* @property {boolean} movingLeft - True if this Body is moving left, based on its angle and speed.
+*/
+Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "movingLeft", {
+    
+    /**
+    * True if this Body is moving left, based on its angle and speed.
+    * @method movingLeft
+    * @return {boolean}
+    */
+    get: function () {
+        return (this.speed > 0 && this.angle >= 0 && this.angle <= 0);
+    },
 
 });

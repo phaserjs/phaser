@@ -28,9 +28,86 @@ function create() {
 	var bg = game.add.sprite(0, 0, bmd);
 	bg.body.moves = false;
 
-	test4();
+	test10();
 
 }
+
+function test10() {
+
+	// game.physics.gravity.y = 150;
+
+	sprite = game.add.sprite(300, 200, 'gameboy', 0);
+	sprite.name = 'red';
+	sprite.body.collideWorldBounds = true;
+	sprite.body.checkCollision.down = false;
+
+	sprite2 = game.add.sprite(330, 400, 'gameboy', 2);
+	sprite2.name = 'green';
+	sprite2.body.collideWorldBounds = true;
+	sprite2.body.bounce.setTo(0.9, 0.9);
+
+	game.input.onDown.add(launch10, this);
+
+}
+
+function launch10() {
+
+	sprite2.body.velocity.y = -100;
+
+}
+
+function test9() {
+
+	// game.physics.gravity.y = 150;
+
+	sprite = game.add.sprite(300, 400, 'gameboy', 0);
+	sprite.name = 'red';
+	sprite.body.collideWorldBounds = true;
+	sprite.body.checkCollision.up = false;
+	// sprite.body.checkCollision.right = false;
+
+	sprite2 = game.add.sprite(330, 100, 'gameboy', 2);
+	sprite2.name = 'green';
+	sprite2.body.collideWorldBounds = true;
+	sprite2.body.bounce.setTo(0.9, 0.9);
+
+	game.input.onDown.add(launch9, this);
+
+}
+
+function launch9() {
+
+	sprite2.body.velocity.y = 100;
+
+}
+
+function test8() {
+
+	game.physics.gravity.y = 150;
+
+	sprite = game.add.sprite(300, 400, 'gameboy', 0);
+	sprite.name = 'red';
+	sprite.body.collideWorldBounds = true;
+	sprite.body.checkCollision.left = false;
+	sprite.body.checkCollision.right = false;
+
+	sprite2 = game.add.sprite(500, 400, 'gameboy', 2);
+	sprite2.name = 'green';
+	sprite2.body.collideWorldBounds = true;
+	sprite2.body.bounce.setTo(0.9, 0.9);
+
+	game.input.onDown.add(launch8, this);
+
+}
+
+function launch8() {
+
+	sprite.body.velocity.x = -50;
+	sprite2.body.velocity.x = -200;
+
+}
+
+
 
 function test7() {
 
@@ -277,7 +354,7 @@ function render() {
 
 	if (sprite)
 	{
-		game.debug.renderBodyInfo(sprite, 16, 24);
+		game.debug.renderBodyInfo(sprite2, 16, 24);
 		// game.debug.renderText(sprite.name + ' x: ' + sprite.x.toFixed(2) + '  dx: ' + sprite.body._dx.toFixed(2), 16, 500);
 		// game.debug.renderText(sprite.name + ' y: ' + sprite.y.toFixed(2) + '  dy: ' + sprite.body._dy.toFixed(2), 16, 520);
 	}

@@ -102,6 +102,13 @@ Phaser.Physics.Arcade = function (game) {
     * @private
     */
     this._gravityY = 0;
+
+    /**
+    * @property {SAT.Response} _response - Internal cache var.
+    * @private
+    */
+    this._response = new SAT.Response();
+
 };
 
 Phaser.Physics.Arcade.prototype = {
@@ -602,8 +609,6 @@ Phaser.Physics.Arcade.prototype = {
     */
     separate: function (body1, body2, processCallback, callbackContext, overlapOnly) {
 
-        //  Can't separate two immovable bodies and the same body cannot collide with itself
-        // if (body1 === body2 || (body1.immovable && body2.immovable) || Phaser.Rectangle.intersects(body1, body2) === false)
         if (body1 === body2 || Phaser.Rectangle.intersects(body1, body2) === false)
         {
             return false;
@@ -615,15 +620,17 @@ Phaser.Physics.Arcade.prototype = {
             return false;
         }
 
+        this._response.clear();
+
         if (overlapOnly)
         {
-            return body1.overlap(body2);
+            return body1.overlap(body2, this._response);
         }
         else
         {
-            if (body1.overlap(body2))
+            if (body1.overlap(body2, this._response))
             {
-                return body1.separate(body2);
+                return body1.separate(body2, this._response);
             }
         }
 
