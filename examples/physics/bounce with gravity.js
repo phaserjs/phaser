@@ -31,8 +31,8 @@ function create() {
     image.body.bounce.setTo(0.8, 0.8);
     
     //  This sets the gravity the sprite responds to in the world, as a point
-    //  Leave x=0 and set y=8 to simulate falling
-    image.body.gravity.setTo(0, 8);
+    //  Leave x=0 and set y=180 to simulate falling
+    image.body.gravity.setTo(0, 180);
 
 }
 

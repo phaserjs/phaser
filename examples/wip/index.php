@@ -77,7 +77,6 @@
         <meta charset="UTF-8" />
         <title>phaser</title>
         <base href="../"></base>
-        <script src="wip/SAT.js" type="text/javascript"></script>
         <?php
             require('../../build/config.php');
 

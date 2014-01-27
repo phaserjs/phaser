@@ -15,15 +15,13 @@ function create() {
 
     game.stage.backgroundColor = '#2d2d2d';
 
-    sprite1 = game.add.sprite(50, 200, 'atari');
+    sprite1 = game.add.sprite(150, 200, 'atari');
     sprite1.name = 'atari';
-    sprite1.body.velocity.x = 100;
 
-    //  This adjusts the collision body size.
-    //  100x50 is the new width/height.
+    //  This adjusts the collision body size to be a 100x50 box.
     //  50, 25 is the X and Y offset of the newly sized box.
-    //  In this case the box is 50px in and 25px down.
     sprite1.body.setSize(100, 50, 50, 25);
+    sprite1.body.immovable = true;
 
     sprite2 = game.add.sprite(700, 220, 'mushroom');
     sprite2.name = 'mushroom';
@@ -42,13 +40,13 @@ function collisionHandler (obj1, obj2) {
 
     game.stage.backgroundColor = '#992d2d';
 
-    console.log(obj1.name + ' collided with ' + obj2.name);
-
 }
 
 function render() {
 
-    game.debug.renderRectangle(sprite1.body);
-    game.debug.renderRectangle(sprite2.body);
+    game.debug.renderBodyInfo(sprite1, 32, 32);
+
+    game.debug.renderPolygon(sprite1.body.polygons, 'rgb(255,0,0)');
+    game.debug.renderPolygon(sprite2.body.polygons, 'rgb(255,0,0)');
 
 }

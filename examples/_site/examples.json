@@ -111,12 +111,20 @@
   ],
   "collision": [
     {
+      "file": "body+scale.js",
+      "title": "body scale"
+    },
+    {
       "file": "bounding+box.js",
       "title": "bounding box"
     },
     {
       "file": "group+vs+group.js",
       "title": "group vs group"
+    },
+    {
+      "file": "group+vs+self.js",
+      "title": "group vs self"
     },
     {
       "file": "larger+bounding+box.js",
@@ -131,20 +139,12 @@
       "title": "process callback"
     },
     {
-      "file": "sprite+tiles.js",
-      "title": "sprite tiles"
-    },
-    {
       "file": "sprite+vs+group.js",
       "title": "sprite vs group"
     },
     {
       "file": "sprite+vs+sprite.js",
       "title": "sprite vs sprite"
-    },
-    {
-      "file": "transform.js",
-      "title": "transform"
     },
     {
       "file": "vertical+collision.js",

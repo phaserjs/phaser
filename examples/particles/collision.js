@@ -17,9 +17,8 @@ function create() {
 
     emitter.minParticleSpeed.setTo(-200, -300);
     emitter.maxParticleSpeed.setTo(200, -400);
-    emitter.gravity = 8;
+    emitter.gravity = 150;
     emitter.bounce.setTo(0.5, 0.5);
-    emitter.particleDrag.x = 10;
     emitter.angularDrag = 30;
 
     emitter.start(false, 8000, 400);
@@ -28,6 +27,6 @@ function create() {
 
 function update() {
 
-    game.physics.collide(emitter, emitter);
+    game.physics.collide(emitter);
 
 }

@@ -16,7 +16,7 @@ function create() {
     emitter = game.add.emitter(0, 0, 200);
 
     emitter.makeParticles('diamond');
-    emitter.gravity = 10;
+    emitter.gravity = 200;
 
     game.input.onDown.add(particleBurst, this);
 

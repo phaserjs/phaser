@@ -15,7 +15,7 @@ var platform;
 function create() {
 
 	//	Our ball sprite
-	ball = game.add.sprite(420, 100, 'wizball');
+	ball = game.add.sprite(440, 100, 'wizball');
 	ball.anchor.setTo(0.5, 0.5);
 
 	ball.body.customSeparateX = true;
@@ -42,25 +42,20 @@ function update() {
 	circle.y = ball.y;
 
 	//	This is a rect vs. rect collision. The callback will check the circle.
-	game.physics.overlap(ball, platform, null, processCallback, this);
+	game.physics.overlap(ball, platform, collisionCallback, processCallback, this);
+
+}
+
+function collisionCallback(a, b) {
+
+    ball.body.y -= 10;
+    ball.body.velocity.y *= -1 * ball.body.bounce.y;
 
 }
 
 function processCallback(a, b) {
 
-	// console.log('p', a.y, b.y);
-
-	if (Phaser.Circle.intersectsRectangle(circle, platform.body))
-	{
-		console.log('boom', ball.body.overlapX, ball.body.overlapY);
-        // ball.body.x = ball.body.x - ball.body.overlapX;
-        // ball.body.velocity.x = platform.body.velocity.x - ball.body.velocity.x * ball.body.bounce.x;
-
-        ball.body.y -= 10;
-        ball.body.velocity.y *= -1 * ball.body.bounce.y;
-	}
-
-	return true;
+	return (Phaser.Circle.intersectsRectangle(circle, platform.body));
 
 }
 

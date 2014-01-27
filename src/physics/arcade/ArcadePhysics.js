@@ -111,6 +111,18 @@ Phaser.Physics.Arcade = function (game) {
 
 };
 
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Physics.Arcade.RECT = 0;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Physics.Arcade.CIRCLE = 1;
+
 Phaser.Physics.Arcade.prototype = {
 
     /**
@@ -327,7 +339,7 @@ Phaser.Physics.Arcade.prototype = {
     collideHandler: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly) {
 
         //  Only collide valid objects
-        if (typeof object2 === 'undefined' && object1.type === Phaser.GROUP)
+        if (typeof object2 === 'undefined' && (object1.type === Phaser.GROUP || object1.type === Phaser.EMITTER))
         {
             this.collideGroupVsSelf(object1, collideCallback, processCallback, callbackContext, overlapOnly);
             return;

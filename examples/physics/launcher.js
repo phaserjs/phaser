@@ -19,7 +19,7 @@ var launchVelocity = 0;
 function create() {
 
     // set global gravity
-    game.physics.gravity.y = 100;
+    game.physics.gravity.y = 200;
     game.stage.backgroundColor = '#0072bc';
     
     var graphics = game.add.graphics(0,0);

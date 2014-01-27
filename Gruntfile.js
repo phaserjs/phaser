@@ -112,6 +112,7 @@ module.exports = function (grunt) {
         'src/sound/SoundManager.js',
         'src/utils/Debug.js',
         'src/utils/Color.js',
+        'src/physics/arcade/SAT.js',
         'src/physics/arcade/ArcadePhysics.js',
         'src/physics/arcade/Body.js',
         'src/particles/Particles.js',

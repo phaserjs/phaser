@@ -20,7 +20,9 @@ function create() {
     //  displays it on-screen
     //  and assign it to a variable
     ball = game.add.sprite(400, 200, 'ball');
+
     knocker = game.add.sprite(400, 200, 'dude');
+    knocker.body.immovable = true;
 
     //  This gets it moving
     ball.body.velocity.setTo(200, 200);
@@ -33,37 +35,37 @@ function create() {
     ball.body.bounce.setTo(1, 1);
 
     //  This sets the gravity the sprite responds to in the world, as a point
-    //  Here we leave x=0 and set y=8 to simulate falling
-    ball.body.gravity.setTo(0, 8);
+    //  Here we leave x=0 and set y=80 to simulate falling
+    ball.body.gravity.setTo(0, 80);
 
 }
 
 //  Move the knocker with the arrow keys
 function update () {
 
+    //  Enable physics between the knocker and the ball
+    game.physics.collide(knocker, ball);
+
     if (cursors.up.isDown)
     {
-        knocker.body.velocity.y = -400;
+        knocker.body.velocity.y = -300;
     }
     else if (cursors.down.isDown)
     {
-        knocker.body.velocity.y =  400;
+        knocker.body.velocity.y =  300;
     }
     else if (cursors.left.isDown)
     {
-        knocker.body.velocity.x = -400;
+        knocker.body.velocity.x = -300;
     }
     else if (cursors.right.isDown)
     {
-        knocker.body.velocity.x = 400;
+        knocker.body.velocity.x = 300;
     } 
     else
     {
         knocker.body.velocity.setTo(0, 0);
     }
-        
-    //  Enable physics between the knocker and the ball
-    game.physics.collide(knocker, ball);
     
 }
 

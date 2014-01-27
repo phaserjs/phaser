@@ -131,6 +131,7 @@
 	<script src="$path/src/utils/Debug.js"></script>
 	<script src="$path/src/utils/Color.js"></script>
 
+	<script src="$path/src/physics/arcade/SAT.js"></script>
 	<script src="$path/src/physics/arcade/ArcadePhysics.js"></script>
 	<script src="$path/src/physics/arcade/Body.js"></script>
 

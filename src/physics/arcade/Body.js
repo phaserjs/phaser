@@ -212,6 +212,12 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.facing = Phaser.NONE;
 
     /**
+    * @property {boolean} rebound - A Body set to rebound will exchange velocity with another Body during collision. Set to false to allow this body to be 'pushed' rather than exchange velocity.
+    * @default
+    */
+    this.rebound = true;
+
+    /**
     * @property {boolean} immovable - An immovable Body will not receive any impacts or exchanges of velocity from other bodies.
     * @default
     */
@@ -290,6 +296,22 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.blockedPoint = new Phaser.Point(0, 0);
 
     /**
+    * @property {Phaser.Physics.Arcade.RECT|Phaser.Physics.Arcade.CIRCLE} type - The type of SAT Shape.
+    */
+    this.type = Phaser.Physics.Arcade.RECT;
+
+    /**
+    * @property {SAT.Box|SAT.Circle|SAT.Polygon} shape - The SAT Collision shape.
+    */
+    this.shape = new SAT.Box(new SAT.Vector(this.x, this.y), this.width, this.height);
+
+    /**
+    * @property {SAT.Polygon} polygons - The SAT Polygons, as derived from the Shape.
+    * @private
+    */
+    this.polygons = this.shape.toPolygon();
+
+    /**
     * @property {number} _dx - Internal cache var.
     * @private
     */
@@ -314,16 +336,32 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this._sy = sprite.scale.y;
 
     /**
-    * @property {number} _average - Internal cache var.
+    * @property {array} _distances - Internal cache var.
     * @private
     */
-    this.polygons = new SAT.Box(new SAT.Vector(this.x, this.y), this.width, this.height).toPolygon();
+    this._distances = [0, 0, 0, 0];
 
     this._debug = 0;
 
 };
 
 Phaser.Physics.Arcade.Body.prototype = {
+
+    setCircle: function (radius) {
+
+        this.shape = new SAT.Circle(new SAT.Vector(this.x, this.y), radius);
+        this.polygons = null;
+        this.type = Phaser.Physics.Arcade.CIRCLE;
+
+    },
+
+    setBox: function () {
+
+        this.shape = new SAT.Box(new SAT.Vector(this.x, this.y), this.width, this.height);
+        this.polygons = this.shape.toPolygon();
+        this.type = Phaser.Physics.Arcade.RECT;
+
+    },
 
     /**
     * Internal method.
@@ -340,8 +378,10 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.halfWidth = Math.floor(this.width / 2);
             this.halfHeight = Math.floor(this.height / 2);
 
-            //  Scale by the difference between this and what it was previously
-            this.polygons.scale(scaleX / this._sx, scaleY / this._sy);
+            if (this.polygons)
+            {
+                this.polygons.scale(scaleX / this._sx, scaleY / this._sy);
+            }
 
             this._sx = scaleX;
             this._sy = scaleY;
@@ -395,8 +435,7 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.applyMotion();
         }
 
-        this.polygons.pos.x = this.x;
-        this.polygons.pos.y = this.y;
+        this.syncPosition();
 
     },
 
@@ -573,22 +612,7 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.velocity.y = -this.maxVelocity.y;
         }
 
-        this.polygons.pos.x = this.x;
-        this.polygons.pos.y = this.y;
-
-    },
-
-    /**
-    * Checks for an overlap between this Body and the given Body.
-    *
-    * @method Phaser.Physics.Arcade#overlap
-    * @param {Phaser.Physics.Arcade.Body} body - The Body that collided.
-    * @param {SAT.Response} response - SAT Response handler.
-    * @return {boolean} True if the two bodies overlap, otherwise false.
-    */
-    overlap: function (body, response) {
-
-        return SAT.testPolygonPolygon(this.polygons, body.polygons, response);
+        this.syncPosition();
 
     },
 
@@ -665,6 +689,34 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     /**
+    * Subtracts the given Vector from this Body.
+    *
+    * @method Phaser.Physics.Arcade#sub
+    * @protected
+    * @param {SAT.Vector} v - The vector to substract from this Body.
+    */
+    sub: function (v) {
+
+        this.x -= v.x;
+        this.y -= v.y;
+
+    },
+
+    /**
+    * Adds the given Vector from this Body.
+    *
+    * @method Phaser.Physics.Arcade#add
+    * @protected
+    * @param {SAT.Vector} v - The vector to add to this Body.
+    */
+    add: function (v) {
+
+        this.x += v.x;
+        this.y += v.y;
+
+    },
+
+    /**
     * Separation response handler.
     *
     * @method Phaser.Physics.Arcade#give
@@ -675,7 +727,11 @@ Phaser.Physics.Arcade.Body.prototype = {
     give: function (body, response) {
 
         this.add(response.overlapV);
-        this.rebound(body);
+
+        if (this.rebound)
+        {
+            this.processRebound(body);
+        }
 
     },
 
@@ -690,7 +746,11 @@ Phaser.Physics.Arcade.Body.prototype = {
     take: function (body, response) {
 
         this.sub(response.overlapV);
-        this.rebound(body);
+
+        if (this.rebound)
+        {
+            this.processRebound(body);
+        }
 
     },
 
@@ -708,7 +768,10 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.sub(response.overlapV);
         body.add(response.overlapV);
 
-        this.exchange(body);
+        if (this.rebound)
+        {
+            this.exchange(body);
+        }
 
     },
 
@@ -721,9 +784,9 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     exchange: function (body) {
 
-        if (this.mass === body.mass)
+        if (this.mass === body.mass && this.speed > 0 && body.speed > 0)
         {
-            //  A direct velocity exchange
+            //  A direct velocity exchange (as they are both moving and have the same mass)
             this._dx = body.velocity.x;
             this._dy = body.velocity.y;
 
@@ -762,11 +825,11 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Rebound the velocity of this Body.
     *
-    * @method Phaser.Physics.Arcade#rebound
+    * @method Phaser.Physics.Arcade#processRebound
     * @protected
     * @param {Phaser.Physics.Arcade.Body} body - The Body that collided.
     */
-    rebound: function (body) {
+    processRebound: function (body) {
 
         this.velocity.x = body.velocity.x - this.velocity.x * this.bounce.x;
         this.velocity.y = body.velocity.y - this.velocity.y * this.bounce.y;
@@ -775,7 +838,98 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     /**
+    * Checks for an overlap between this Body and the given Body.
+    *
+    * @method Phaser.Physics.Arcade#overlap
+    * @param {Phaser.Physics.Arcade.Body} body - The Body that is being checked against this Body.
+    * @param {SAT.Response} response - SAT Response handler.
+    * @return {boolean} True if the two bodies overlap, otherwise false.
+    */
+    overlap: function (body, response) {
+
+        if (this.type === Phaser.Physics.Arcade.RECT && body.type === Phaser.Physics.Arcade.RECT)
+        {
+            return SAT.testPolygonPolygon(this.polygons, body.polygons, response);
+        }
+        else if (this.type === Phaser.Physics.Arcade.CIRCLE && body.type === Phaser.Physics.Arcade.CIRCLE)
+        {
+            return SAT.testCircleCircle(this.shape, body.shape, response);
+        }
+        else if (this.type === Phaser.Physics.Arcade.RECT && body.type === Phaser.Physics.Arcade.CIRCLE)
+        {
+            return SAT.testPolygonCircle(this.polygons, body.shape, response);
+        }
+        else if (this.type === Phaser.Physics.Arcade.CIRCLE && body.type === Phaser.Physics.Arcade.RECT)
+        {
+            return SAT.testCirclePolygon(this.shape, body.polygons, response);
+        }
+
+    },
+
+    /**
+    * This separates this Body from the given Body unless a customSeparateCallback is set.
+    * It assumes they have already been overlap checked and the resulting overlap is stored in overlapX and overlapY.
+    *
+    * @method Phaser.Physics.Arcade#separate
+    * @protected
+    * @param {Phaser.Physics.Arcade.Body} body - The Body to be separated from this one.
+    * @param {SAT.Response} response - SAT Response handler.
+    * @return {boolean}
+    */
+    separate: function (body, response) {
+
+        if (this.customSeparateCallback)
+        {
+            return this.customSeparateCallback.call(this.customSeparateContext, this, response);
+        }
+
+        this._distances[0] = body.right - this.x;   // Distance of B to face on left side of A
+        this._distances[1] = this.right - body.x;   // Distance of B to face on right side of A
+        this._distances[2] = body.bottom - this.y;  // Distance of B to face on bottom side of A
+        this._distances[3] = this.bottom - body.y;  // Distance of B to face on top side of A
+
+        if (response.overlapN.x)
+        {
+            //  Which is smaller? Left or Right?
+            if (this._distances[0] < this._distances[1])
+            {
+                // console.log(this.sprite.name, 'collided on the LEFT with', body.sprite.name, response);
+                this.hitLeft(body, response);
+            }
+            else if (this._distances[1] < this._distances[0])
+            {
+                // console.log(this.sprite.name, 'collided on the RIGHT with', body.sprite.name, response);
+                this.hitRight(body, response);
+            }
+        }
+        else if (response.overlapN.y)
+        {
+            //  Which is smaller? Top or Bottom?
+            if (this._distances[2] < this._distances[3])
+            {
+                // console.log(this.sprite.name, 'collided on the TOP with', body.sprite.name, response);
+                this.hitTop(body, response);
+            }
+            else if (this._distances[3] < this._distances[2])
+            {
+                // console.log(this.sprite.name, 'collided on the BOTTOM with', body.sprite.name, response);
+                this.hitBottom(body, response);
+            }
+        }
+
+        this.syncPosition();
+        body.syncPosition();
+
+        return true;
+
+    },
+
+    /**
     * Process a collision with the left face of this Body.
+    * Collision and separation can be further checked by setting a collideCallback.
+    * This callback will be sent 4 parameters: The face of collision, this Body, the colliding Body and the SAT Response.
+    * If the callback returns true then separation, rebounds and the touching flags will all be set.
+    * If it returns false this will be skipped and must be handled manually.
     *
     * @method Phaser.Physics.Arcade#hitLeft
     * @protected
@@ -784,13 +938,13 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     hitLeft: function (body, response) {
 
-        //  We know that Body is overlapping with This on the left-hand side
-        if ((body.deltaX() < 0 && !this.checkCollision.right) || (body.deltaX() > 0 && !this.checkCollision.left))
+        //  We know that Body is overlapping with This on the left hand side (deltaX < 0 = moving left, > 0 = moving right)
+        if (body.speed > 0 && (body.deltaX() <= 0 || (body.deltaX() > 0 && !this.checkCollision.left)))
         {
             return;
         }
 
-        if ((body.deltaY() < 0 && !this.checkCollision.down) || (body.deltaY() > 0 && !this.checkCollision.up) || (body.deltaY() > 0 && !this.checkCollision.up) || (body.deltaY() > 0 && !this.checkCollision.down))
+        if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.LEFT, this, body, response))
         {
             return;
         }
@@ -823,15 +977,14 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.x -= this.right - this.game.world.bounds.right;
         }
 
-        if (this.collideCallback)
-        {
-            this.collideCallback.call(this.collideCallbackContext, Phaser.LEFT, this, body);
-        }
-
     },
 
     /**
     * Process a collision with the right face of this Body.
+    * Collision and separation can be further checked by setting a collideCallback.
+    * This callback will be sent 4 parameters: The face of collision, this Body, the colliding Body and the SAT Response.
+    * If the callback returns true then separation, rebounds and the touching flags will all be set.
+    * If it returns false this will be skipped and must be handled manually.
     *
     * @method Phaser.Physics.Arcade#hitRight
     * @protected
@@ -840,13 +993,13 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     hitRight: function (body, response) {
 
-        //  We know that Body is overlapping with This on the right-hand side
-        if ((body.deltaX() < 0 && !this.checkCollision.right) || (body.deltaX() > 0 && !this.checkCollision.left))
+        //  We know that Body is overlapping with This on the right hand side (deltaX < 0 = moving left, > 0 = moving right)
+        if (body.speed > 0 && (body.deltaX() >= 0 || (body.deltaX() < 0 && !this.checkCollision.right)))
         {
             return;
         }
 
-        if ((body.deltaY() < 0 && !this.checkCollision.down) || (body.deltaY() > 0 && !this.checkCollision.up) || (body.deltaY() > 0 && !this.checkCollision.up) || (body.deltaY() > 0 && !this.checkCollision.down))
+        if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.RIGHT, this, body))
         {
             return;
         }
@@ -879,15 +1032,14 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.x += this.game.world.bounds.x - this.x;
         }
 
-        if (this.collideCallback)
-        {
-            this.collideCallback.call(this.collideCallbackContext, Phaser.RIGHT, this, body);
-        }
-
     },
 
     /**
     * Process a collision with the top face of this Body.
+    * Collision and separation can be further checked by setting a collideCallback.
+    * This callback will be sent 4 parameters: The face of collision, this Body, the colliding Body and the SAT Response.
+    * If the callback returns true then separation, rebounds and the touching flags will all be set.
+    * If it returns false this will be skipped and must be handled manually.
     *
     * @method Phaser.Physics.Arcade#hitTop
     * @protected
@@ -896,8 +1048,13 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     hitTop: function (body, response) {
 
-        //  We know that Body is overlapping with This on the top side (deltaY > 0 = moving down < 0 = moving up)
-        if ((body.deltaY() > 0 && (!this.checkCollision.up || !this.checkCollision.down)) || (body.deltaY() < 0 && (!this.checkCollision.down || !this.checkCollision.up)))
+        //  We know that Body is overlapping with This on the bottom side (deltaY < 0 = moving up, > 0 = moving down)
+        if (body.speed > 0 && (body.deltaY() <= 0 || (body.deltaY() > 0 && !this.checkCollision.up)))
+        {
+            return;
+        }
+
+        if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.UP, this, body))
         {
             return;
         }
@@ -930,15 +1087,14 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.y -= this.bottom - this.game.world.bounds.bottom;
         }
 
-        if (this.collideCallback)
-        {
-            this.collideCallback.call(this.collideCallbackContext, Phaser.UP, this, body);
-        }
-
     },
 
     /**
     * Process a collision with the bottom face of this Body.
+    * Collision and separation can be further checked by setting a collideCallback.
+    * This callback will be sent 4 parameters: The face of collision, this Body, the colliding Body and the SAT Response.
+    * If the callback returns true then separation, rebounds and the touching flags will all be set.
+    * If it returns false this will be skipped and must be handled manually.
     *
     * @method Phaser.Physics.Arcade#hitBottom
     * @protected
@@ -947,8 +1103,13 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     hitBottom: function (body, response) {
 
-        //  We know that Body is overlapping with This on the bottom side (deltaY > 0 = moving down < 0 = moving up)
-        if ((body.deltaY() < 0 && (!this.checkCollision.down || !this.checkCollision.up)) || (body.deltaY() < 0 && (!this.checkCollision.down || !this.checkCollision.up)))
+        //  We know that Body is overlapping with This on the bottom side (deltaY < 0 = moving up, > 0 = moving down)
+        if (body.speed > 0 && (body.deltaY() >= 0 || (body.deltaY() < 0 && !this.checkCollision.down)))
+        {
+            return;
+        }
+
+        if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.DOWN, this, body))
         {
             return;
         }
@@ -981,101 +1142,24 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.y += this.game.world.bounds.y - this.y;
         }
 
-        if (this.collideCallback)
-        {
-            this.collideCallback.call(this.collideCallbackContext, Phaser.DOWN, this, body);
-        }
-
     },
 
     /**
-    * Subtracts the given Vector from this Body.
+    * Internal method that syncs the Body coordinates with the SAT shape and polygon positions.
     *
-    * @method Phaser.Physics.Arcade#sub
+    * @method Phaser.Physics.Arcade#syncPosition
     * @protected
-    * @param {SAT.Vector} v - The vector to substract from this Body.
     */
-    sub: function (v) {
+    syncPosition: function () {
 
-        this.x -= v.x;
-        this.y -= v.y;
+        this.shape.pos.x = this.x;
+        this.shape.pos.y = this.y;
 
-    },
-
-    /**
-    * Adds the given Vector from this Body.
-    *
-    * @method Phaser.Physics.Arcade#add
-    * @protected
-    * @param {SAT.Vector} v - The vector to add to this Body.
-    */
-    add: function (v) {
-
-        this.x += v.x;
-        this.y += v.y;
-
-    },
-
-    /**
-    * This separates this Body from the given Body unless a customSeparateCallback is set.
-    * It assumes they have already been overlap checked and the resulting overlap is stored in overlapX and overlapY.
-    *
-    * @method Phaser.Physics.Arcade#separate
-    * @protected
-    * @param {Phaser.Physics.Arcade.Body} body - The Body to be separated from this one.
-    * @param {SAT.Response} response - SAT Response handler.
-    * @return {boolean}
-    */
-    separate: function (body, response) {
-
-        if (this.customSeparateCallback)
+        if (this.polygons)
         {
-            return this.customSeparateCallback.call(this.customSeparateContext, this, response);
+            this.polygons.pos.x = this.x;
+            this.polygons.pos.y = this.y;
         }
-
-        var distances = [
-            (body.right - this.x), // distance of box 'b' to face on 'left' side of 'a'.
-            (this.right - body.x), // distance of box 'b' to face on 'right' side of 'a'.
-            (body.bottom - this.y), // distance of box 'b' to face on 'bottom' side of 'a'.
-            (this.bottom - body.y) // distance of box 'b' to face on 'top' side of 'a'.
-        ];
-
-        if (response.overlapN.x)
-        {
-            //  Which is smaller? Left or Right?
-            if (distances[0] < distances[1])
-            {
-                console.log(this.sprite.name, 'collided on the LEFT with', body.sprite.name, response);
-                this.hitLeft(body, response);
-            }
-            else if (distances[1] < distances[0])
-            {
-                console.log(this.sprite.name, 'collided on the RIGHT with', body.sprite.name, response);
-                this.hitRight(body, response);
-            }
-        }
-        else if (response.overlapN.y)
-        {
-            //  Which is smaller? Top or Bottom?
-            if (distances[2] < distances[3])
-            {
-                console.log(this.sprite.name, 'collided on the TOP with', body.sprite.name, response);
-                this.hitTop(body, response);
-            }
-            else if (distances[3] < distances[2])
-            {
-                console.log(this.sprite.name, 'collided on the BOTTOM with', body.sprite.name, response);
-                this.hitBottom(body, response);
-            }
-        }
-
-        this.polygons.pos.x = this.x;
-        this.polygons.pos.y = this.y;
-
-        body.polygons.pos.x = body.x;
-        body.polygons.pos.y = body.y;
-
-        return true;
 
     },
 
@@ -1152,8 +1236,16 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.halfWidth = Math.floor(this.width / 2);
         this.halfHeight = Math.floor(this.height / 2);
         this.offset.setTo(offsetX, offsetY);
-
         this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
+
+        if (this.type === Phaser.Physics.Arcade.RECT)
+        {
+            this.setBox();
+        }
+        else
+        {
+            this.setCircle();
+        }
 
     },
 
@@ -1177,8 +1269,14 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.y = this.preY;
         this.rotation = this.preRotation;
         
-        this.polygons.pos.x = this.x;
-        this.polygons.pos.y = this.y;
+        this.shape.pos.x = this.x;
+        this.shape.pos.y = this.y;
+
+        if (this.polygons)
+        {
+            this.polygons.pos.x = this.x;
+            this.polygons.pos.y = this.y;
+        }
 
         this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
 
@@ -1301,22 +1399,5 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
         }
 
     }
-
-});
-
-/**
-* @name Phaser.Physics.Arcade.Body#movingLeft
-* @property {boolean} movingLeft - True if this Body is moving left, based on its angle and speed.
-*/
-Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "movingLeft", {
-    
-    /**
-    * True if this Body is moving left, based on its angle and speed.
-    * @method movingLeft
-    * @return {boolean}
-    */
-    get: function () {
-        return (this.speed > 0 && this.angle >= 0 && this.angle <= 0);
-    },
 
 });

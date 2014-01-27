@@ -28,7 +28,61 @@ function create() {
 	var bg = game.add.sprite(0, 0, bmd);
 	bg.body.moves = false;
 
-	test10();
+	test12();
+
+}
+
+function test12() {
+
+	// game.physics.gravity.y = 150;
+
+	sprite = game.add.sprite(200, 300, 'gameboy', 0);
+	sprite.name = 'red';
+	sprite.body.collideWorldBounds = true;
+	sprite.body.checkCollision.right = false;
+	// sprite.body.checkCollision.up = false;
+	// sprite.body.immovable = true;
+
+	sprite2 = game.add.sprite(400, 358, 'gameboy', 2);
+	sprite2.name = 'green';
+	sprite2.body.collideWorldBounds = true;
+	sprite2.body.bounce.setTo(0.9, 0.9);
+
+	game.input.onDown.add(launch12, this);
+
+}
+
+function launch12() {
+
+	sprite2.body.velocity.x = -200;
+	// sprite2.body.velocity.y = -60;
+
+}
+
+function test11() {
+
+	// game.physics.gravity.y = 150;
+
+	sprite = game.add.sprite(300, 200, 'gameboy', 0);
+	sprite.name = 'red';
+	sprite.body.collideWorldBounds = true;
+	// sprite.body.checkCollision.down = false;
+	// sprite.body.checkCollision.up = false;
+	sprite.body.checkCollision.right = false;
+	// sprite.body.immovable = true;
+
+	sprite2 = game.add.sprite(290, 400, 'gameboy', 2);
+	sprite2.name = 'green';
+	sprite2.body.collideWorldBounds = true;
+	sprite2.body.bounce.setTo(0.9, 0.9);
+
+	game.input.onDown.add(launch11, this);
+
+}
+
+function launch11() {
+
+	sprite2.body.velocity.y = -200;
 
 }
 

@@ -67,6 +67,7 @@ Significant API changes:
 * Body.customSeparateCallback allows you to set your own callback when two Bodies need to separate rather than using the built-in method.
 * Body.collideCallback allows you to set a callback that is fired whenever the Body is hit on any of its active faces.
 * Body.allowCollision has been renamed to Body.checkCollision.
+* Body.rebound is a boolean that controls if a body will exchange velocity on collision. Set to false to allow it to be 'pushed' (see new examples).
 
 
 New features:
@@ -167,6 +168,7 @@ Updates:
 * Removed ArcadePhysics binding to the QuadTree, so it can now be used independantly of the physics system.
 * Removed ArcadePhysics.preUpdate and postUpdate as neither are needed any more.
 * Body.bottom and Body.right are no longer rounded, so will give accurate sub-pixel values.
+* Fixed lots of documentation in the Emitter class.
 
 
 Bug Fixes:
