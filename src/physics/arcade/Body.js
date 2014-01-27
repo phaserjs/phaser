@@ -135,9 +135,9 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.angle = 0;
 
     /**
-    * @property {number} minBounceVelocity - The minimum bounce velocity (could just be the bounce value?).
+    * @property {number} minBounceVelocity - Optional minimum bounce velocity.
     */
-    this.minBounceVelocity = 0.5;
+    this.minBounceVelocity = 0.1;
 
     /**
     * @property {Phaser.Point} gravity - The gravity applied to the motion of the Body. This works in addition to any gravity set on the world.
@@ -478,6 +478,38 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     /**
+    * Internal method used to check the Body against the World Bounds.
+    *
+    * @method Phaser.Physics.Arcade#adjustWorldBounds
+    * @protected
+    */
+    adjustWorldBounds: function () {
+
+        if (this.x < this.game.world.bounds.x)
+        {
+            this.x += this.game.world.bounds.x - this.x;
+            this.preX += this.game.world.bounds.x - this.x;
+        }
+        else if (this.right > this.game.world.bounds.right)
+        {
+            this.x -= this.right - this.game.world.bounds.right;
+            this.preX -= this.right - this.game.world.bounds.right;
+        }
+
+        if (this.y < this.game.world.bounds.y)
+        {
+            this.y += this.game.world.bounds.y - this.y;
+            this.preY += this.game.world.bounds.y - this.y;
+        }
+        else if (this.bottom > this.game.world.bounds.bottom)
+        {
+            this.y -= this.bottom - this.game.world.bounds.bottom;
+            this.preY -= this.bottom - this.game.world.bounds.bottom;
+        }
+
+    },
+
+    /**
     * Internal method.
     *
     * @method Phaser.Physics.Arcade#applyMotion
@@ -510,16 +542,16 @@ Phaser.Physics.Arcade.Body.prototype = {
 
             this._dx = this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
 
-            if (this._dx > this.minBounceVelocity || this.getTotalGravityX() > 0)
-            {
+            // if (this._dx > this.minBounceVelocity || this.getTotalGravityX() > 0)
+            // {
                 this.x += this._dx;
                 this.velocity.x += this.motionVelocity.x;
-            }
-            else
-            {
-                this.preX = this.x;
-                this.velocity.x = 0;
-            }
+            // }
+            // else
+            // {
+            //     this.preX = this.x;
+            //     this.velocity.x = 0;
+            // }
         }
         else if (this.blocked.right && this.blockedPoint.x > 0)
         {
@@ -530,16 +562,16 @@ Phaser.Physics.Arcade.Body.prototype = {
 
             this._dx = this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
 
-            if (this._dx < -this.minBounceVelocity || this.getTotalGravityX() < 0)
-            {
+            // if (this._dx < -this.minBounceVelocity || this.getTotalGravityX() < 0)
+            // {
                 this.x += this._dx;
                 this.velocity.x += this.motionVelocity.x;
-            }
-            else
-            {
-                this.preX = this.x;
-                this.velocity.x = 0;
-            }
+            // }
+            // else
+            // {
+            //     this.preX = this.x;
+            //     this.velocity.x = 0;
+            // }
         }
         else
         {
@@ -557,16 +589,16 @@ Phaser.Physics.Arcade.Body.prototype = {
 
             this._dy = this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
 
-            if (this._dy > this.minBounceVelocity || this.getTotalGravityY() > 0)
-            {
+            // if (this._dy > this.minBounceVelocity || this.getTotalGravityY() > 0)
+            // {
                 this.y += this._dy;
                 this.velocity.y += this.motionVelocity.y;
-            }
-            else
-            {
-                this.preY = this.y;
-                this.velocity.y = 0;
-            }
+            // }
+            // else
+            // {
+            //     this.preY = this.y;
+            //     this.velocity.y = 0;
+            // }
         }
         else if (this.blocked.down && this.blockedPoint.y > 0)
         {
@@ -577,16 +609,16 @@ Phaser.Physics.Arcade.Body.prototype = {
 
             this._dy = this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
 
-            if (this._dy < -this.minBounceVelocity || this.getTotalGravityY() < 0)
-            {
+            // if (this._dy < -this.minBounceVelocity || this.getTotalGravityY() < 0)
+            // {
                 this.y += this._dy;
                 this.velocity.y += this.motionVelocity.y;
-            }
-            else
-            {
-                this.preY = this.y;
-                this.velocity.y = 0;
-            }
+            // }
+            // else
+            // {
+            //     this.preY = this.y;
+            //     this.velocity.y = 0;
+            // }
         }
         else
         {
@@ -1164,7 +1196,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     /**
-    * Internal method. This is called directly before the sprites are sent to the renderer.
+    * Internal method. This is called directly before the sprites are sent to the renderer and after the update function has finished.
     *
     * @method Phaser.Physics.Arcade#postUpdate
     * @protected
@@ -1173,6 +1205,8 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.moves)
         {
+            this.adjustWorldBounds();
+
             if (this.deltaX() < 0)
             {
                 this.facing = Phaser.LEFT;

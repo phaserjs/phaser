@@ -73,7 +73,7 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject, rend
                         displayObject.worldTransform[4],
                         displayObject.worldTransform[2],
                         displayObject.worldTransform[5]);
-                
+
                 if (displayObject.texture.trimmed)
                 {
                     this.context.transform(1, 0, 0, 1, displayObject.texture.trim.x, displayObject.texture.trim.y);

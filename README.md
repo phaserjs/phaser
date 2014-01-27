@@ -169,6 +169,7 @@ Updates:
 * Removed ArcadePhysics.preUpdate and postUpdate as neither are needed any more.
 * Body.bottom and Body.right are no longer rounded, so will give accurate sub-pixel values.
 * Fixed lots of documentation in the Emitter class.
+* The delta timer value used for physics calculations has had its cap limit modified from 1.0 to 0.05 in line with the core updates.
 
 
 Bug Fixes:

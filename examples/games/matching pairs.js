@@ -6,7 +6,7 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 function preload() {
 
     game.load.tilemap('matching', 'assets/maps/phaser_tiles.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.tileset('tiles', 'assets/tiles/phaser_tiles.png', 100, 100, -1, 1, 1);
+    game.load.image('tiles', 'assets/tiles/phaser_tiles.png');
 
 }
 
@@ -41,9 +41,9 @@ function create() {
 
     map = game.add.tilemap('matching');
 
-    tileset = game.add.tileset('tiles');
+    // tileset = game.add.tileset('tiles');
 
-    layer = game.add.tilemapLayer(0, 0, 600, 600, tileset, map, 0);
+    // layer = game.add.tilemapLayer(0, 0, 600, 600, tileset, map, 0);
 
     marker = game.add.graphics();
     marker.lineStyle(2, 0x00FF00, 1);

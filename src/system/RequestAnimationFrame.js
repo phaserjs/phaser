@@ -60,7 +60,7 @@ Phaser.RequestAnimationFrame = function(game) {
 Phaser.RequestAnimationFrame.prototype = {
 
     /**
-    * Starts the requestAnimatioFrame running or setTimeout if unavailable in browser
+    * Starts the requestAnimationFrame running or setTimeout if unavailable in browser
     * @method Phaser.RequestAnimationFrame#start
     */
     start: function () {

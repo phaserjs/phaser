@@ -21,18 +21,24 @@ function create() {
         s.name = 'alien' + s;
         s.body.collideWorldBounds = true;
         s.body.bounce.setTo(0.8, 0.8);
+        s.body.friction = 0;
+        s.body.minVelocity.setTo(0, 0);
         s.body.velocity.setTo(10 + Math.random() * 40, 10 + Math.random() * 40);
     }
 
     car = game.add.sprite(400, 300, 'car');
     car.anchor.setTo(0.5, 0.5);
     car.body.collideWorldBounds = true;
-    car.body.bounce.setTo(0.8, 0.8);
+    // car.body.bounce.setTo(0.8, 0.8);
     car.body.allowRotation = true;
+    // car.body.immovable = true;
+    // car.body.minBounceVelocity = 0;
 
 }
 
 function update() {
+
+    game.physics.collide(car, aliens);
 
     car.body.velocity.x = 0;
     car.body.velocity.y = 0;
@@ -52,12 +58,10 @@ function update() {
         car.body.velocity.copyFrom(game.physics.velocityFromAngle(car.angle, 300));
     }
 
-    game.physics.collide(car, aliens);
-
 }
 
 function render() {
 
-    game.debug.renderSpriteInfo(car, 32, 32);
+    game.debug.renderBodyInfo(car, 16, 24);
 
 }
