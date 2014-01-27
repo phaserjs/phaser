@@ -263,7 +263,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
     var particle;
     var i = 0;
     var rndKey = keys;
-    var rndFrame = 0;
+    var rndFrame = frames;
 
     while (i < quantity)
     {

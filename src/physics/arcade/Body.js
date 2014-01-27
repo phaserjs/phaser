@@ -341,6 +341,9 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this._distances = [0, 0, 0, 0];
 
+    this._x = 0;
+    this._y = 0;
+
     this._debug = 0;
 
 };
@@ -401,8 +404,11 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.screenX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
         this.screenY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 
+        this._x = this.sprite.x;
+        this._y = this.sprite.y;
         this.preX = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
         this.preY = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
+
         this.preRotation = this.sprite.angle;
 
         this.blocked.up = false;
@@ -447,66 +453,55 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     checkWorldBounds: function () {
 
-        this.blockedPoint.setTo(0, 0);
+        if (this.x <= this.game.world.bounds.x)
+        {
+            this.x += this.game.world.bounds.x - this.x;
+            this.blocked.left = true;
+        }
+        else if (this.right >= this.game.world.bounds.right)
+        {
+            this.x -= this.right - this.game.world.bounds.right;
+            this.blocked.right = true;
+        }
 
+        if (this.y <= this.game.world.bounds.y)
+        {
+            this.y += this.game.world.bounds.y - this.y;
+            this.blocked.up = true;
+        }
+        else if (this.bottom >= this.game.world.bounds.bottom)
+        {
+            this.y -= this.bottom - this.game.world.bounds.bottom;
+            this.blocked.down = true;
+        }
+
+/*
         if (this.x <= this.game.world.bounds.x)
         {
             this.blockedPoint.x = this.game.world.bounds.x - this.x;
-            this.blocked.left = true;
             this.touching.left = true;
+            // console.log('cw left', this.blockedPoint.x);
         }
         else if (this.right >= this.game.world.bounds.right)
         {
             this.blockedPoint.x = this.right - this.game.world.bounds.right;
-            this.blocked.right = true;
             this.touching.right = true;
+            // console.log('cw right', this.blockedPoint.x);
         }
 
         if (this.y <= this.game.world.bounds.y)
         {
             this.blockedPoint.y =  this.game.world.bounds.y - this.y;
-            this.blocked.up = true;
             this.touching.up = true;
+            // console.log('cw up', this.blockedPoint.y);
         }
         else if (this.bottom >= this.game.world.bounds.bottom)
         {
             this.blockedPoint.y = this.bottom - this.game.world.bounds.bottom;
-            this.blocked.down = true;
             this.touching.down = true;
+            // console.log('cw down', this.blockedPoint.y);
         }
-
-    },
-
-    /**
-    * Internal method used to check the Body against the World Bounds.
-    *
-    * @method Phaser.Physics.Arcade#adjustWorldBounds
-    * @protected
-    */
-    adjustWorldBounds: function () {
-
-        if (this.x < this.game.world.bounds.x)
-        {
-            this.x += this.game.world.bounds.x - this.x;
-            this.preX += this.game.world.bounds.x - this.x;
-        }
-        else if (this.right > this.game.world.bounds.right)
-        {
-            this.x -= this.right - this.game.world.bounds.right;
-            this.preX -= this.right - this.game.world.bounds.right;
-        }
-
-        if (this.y < this.game.world.bounds.y)
-        {
-            this.y += this.game.world.bounds.y - this.y;
-            this.preY += this.game.world.bounds.y - this.y;
-        }
-        else if (this.bottom > this.game.world.bounds.bottom)
-        {
-            this.y -= this.bottom - this.game.world.bounds.bottom;
-            this.preY -= this.bottom - this.game.world.bounds.bottom;
-        }
-
+*/
     },
 
     /**
@@ -532,46 +527,41 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.velocity.y = Math.sin(this.angle) * this.speed;
         }
 
-        //  overlapX/Y values at this point will be penetration into the bounds and DELTA WILL BE ZERO
-        if (this.blocked.left && this.blockedPoint.x > 0)
+        if (this.blocked.left)
         {
-            //  Separate
-            this.x += this.blockedPoint.x;
             this.velocity.x *= -this.bounce.x;
             this.reboundCheck(true, false);
 
             this._dx = this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
 
-            // if (this._dx > this.minBounceVelocity || this.getTotalGravityX() > 0)
-            // {
+            if (this._dx > this.minBounceVelocity || this.getTotalGravityX() > 0)
+            {
                 this.x += this._dx;
                 this.velocity.x += this.motionVelocity.x;
-            // }
-            // else
-            // {
-            //     this.preX = this.x;
-            //     this.velocity.x = 0;
-            // }
+            }
+            else
+            {
+                this.preX = this.x;
+                this.velocity.x = 0;
+            }
         }
-        else if (this.blocked.right && this.blockedPoint.x > 0)
+        else if (this.blocked.right)
         {
-            //  Separate
-            this.x -= this.blockedPoint.x;
             this.velocity.x *= -this.bounce.x;
             this.reboundCheck(true, false);
 
             this._dx = this.game.time.physicsElapsed * (this.velocity.x + this.motionVelocity.x / 2);
 
-            // if (this._dx < -this.minBounceVelocity || this.getTotalGravityX() < 0)
-            // {
+            if (this._dx < -this.minBounceVelocity || this.getTotalGravityX() < 0)
+            {
                 this.x += this._dx;
                 this.velocity.x += this.motionVelocity.x;
-            // }
-            // else
-            // {
-            //     this.preX = this.x;
-            //     this.velocity.x = 0;
-            // }
+            }
+            else
+            {
+                this.preX = this.x;
+                this.velocity.x = 0;
+            }
         }
         else
         {
@@ -580,45 +570,41 @@ Phaser.Physics.Arcade.Body.prototype = {
         }
 
         //  overlapX/Y values at this point will be penetration into the bounds and DELTA WILL BE ZERO
-        if (this.blocked.up && this.blockedPoint.y > 0)
+        if (this.blocked.up)
         {
-            //  Separate
-            this.y += this.blockedPoint.y;
             this.velocity.y *= -this.bounce.y;
             this.reboundCheck(false, true);
 
             this._dy = this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
 
-            // if (this._dy > this.minBounceVelocity || this.getTotalGravityY() > 0)
-            // {
+            if (this._dy > this.minBounceVelocity || this.getTotalGravityY() > 0)
+            {
                 this.y += this._dy;
                 this.velocity.y += this.motionVelocity.y;
-            // }
-            // else
-            // {
-            //     this.preY = this.y;
-            //     this.velocity.y = 0;
-            // }
+            }
+            else
+            {
+                this.preY = this.y;
+                this.velocity.y = 0;
+            }
         }
-        else if (this.blocked.down && this.blockedPoint.y > 0)
+        else if (this.blocked.down)
         {
-            //  Separate
-            this.y -= this.blockedPoint.y;
             this.velocity.y *= -this.bounce.y;
             this.reboundCheck(false, true);
 
             this._dy = this.game.time.physicsElapsed * (this.velocity.y + this.motionVelocity.y / 2);
 
-            // if (this._dy < -this.minBounceVelocity || this.getTotalGravityY() < 0)
-            // {
+            if (this._dy < -this.minBounceVelocity || this.getTotalGravityY() < 0)
+            {
                 this.y += this._dy;
                 this.velocity.y += this.motionVelocity.y;
-            // }
-            // else
-            // {
-            //     this.preY = this.y;
-            //     this.velocity.y = 0;
-            // }
+            }
+            else
+            {
+                this.preY = this.y;
+                this.velocity.y = 0;
+            }
         }
         else
         {
@@ -1205,7 +1191,9 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.moves)
         {
-            this.adjustWorldBounds();
+            this.checkWorldBounds();
+
+            this.syncPosition();
 
             if (this.deltaX() < 0)
             {
@@ -1225,6 +1213,10 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.facing = Phaser.DOWN;
             }
 
+            this.sprite.x = this.sprite.worldTransform[2] = this.x - (this.preX - this._x);
+            this.sprite.y = this.sprite.worldTransform[5] = this.y - (this.preY - this._y);
+
+/*
             if ((this.deltaX() < 0 && !this.blocked.left) || (this.deltaX() > 0 && !this.blocked.right))
             {
                 this.sprite.x += this.deltaX();
@@ -1236,7 +1228,7 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.sprite.y += this.deltaY();
                 this.sprite.worldTransform[5] += this.deltaY();
             }
-
+*/
             this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
 
             if (this.allowRotation)

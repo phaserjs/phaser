@@ -62,6 +62,7 @@ function update() {
 
 function render() {
 
-    game.debug.renderBodyInfo(car, 16, 24);
+    // game.debug.renderBodyInfo(car, 16, 24);
+    game.debug.renderBodyInfo(aliens.getFirstAlive(), 16, 24);
 
 }

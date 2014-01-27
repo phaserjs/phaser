@@ -10,6 +10,7 @@ function preload() {
 var sprite;
 var sprite2;
 var land;
+var cursors;
 
 function create() {
 
@@ -39,10 +40,13 @@ function create() {
 		new SAT.Vector(780,100),
 		new SAT.Vector(0,100),
 	]);
-	console.log(land);
-	sprite.body.velocity.x = 100;
 
-	game.input.onDown.add(launch, this);
+	console.log(land);
+
+	// sprite.body.velocity.x = 150;
+
+    cursors = game.input.keyboard.createCursorKeys();
+	// game.input.onDown.add(launch, this);
 
 }
 
@@ -55,42 +59,26 @@ function launch() {
 
 }
 
-/*
-	Tweening body scale test!
-
-	sprite = game.add.sprite(300, 300, 'gameboy', 0);
-	sprite.name = 'red';
-	sprite.body.collideWorldBounds = true;
-	// sprite.body.checkCollision.right = false;
-	sprite.body.bounce.setTo(1, 1);
-	sprite.body.friction = 0;
-	// sprite.scale.setTo(2, 2);
-
-	sprite2 = game.add.sprite(500, 300, 'gameboy', 2);
-	sprite2.name = 'green';
-	sprite2.body.collideWorldBounds = true;
-	sprite2.body.bounce.setTo(1, 1);
-	sprite2.body.friction = 0;
-
-	game.add.tween(sprite.scale).to({x: 3, y: 3}, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
-    // to: function (properties, duration, ease, autoStart, delay, repeat, yoyo) {
-
-
-*/
-
 function update() {
 
-	// game.physics.collide(sprite, land);
+	game.physics.collide(sprite, land);
 
-	if (sprite.body.overlap(land.body))
-	{
-		console.log('o', sprite.body.response);
-		sprite.body.separate(land.body);
-	}
+	sprite.body.velocity.x = 0;
+	// sprite.body.velocity.y = 0;
 
+    if (cursors.left.isDown)
+    {
+		sprite.body.velocity.x = -100;
+    }
+    else if (cursors.right.isDown)
+    {
+		sprite.body.velocity.x = 100;
+    }
 
-	// game.physics.collide(sprite, sprite2);
-	// game.physics.collide(sprite2, land);
+    if (cursors.up.isDown)
+    {
+		sprite.body.velocity.y = -200;
+    }
 
 }
 
@@ -113,7 +101,7 @@ function render() {
 		game.debug.renderPolygon(sprite2.body.polygons);
 	}
 
-	game.debug.renderRectangle(land.body);
+	// game.debug.renderRectangle(land.body);
 
 
 }

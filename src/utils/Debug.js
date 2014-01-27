@@ -455,6 +455,7 @@ Phaser.Utils.Debug.prototype = {
         this.start(x, y, color, 220);
 
         this.splitline('x: ' + sprite.body.x.toFixed(2), 'y: ' + sprite.body.y.toFixed(2), 'width: ' + sprite.width, 'height: ' + sprite.height);
+        this.splitline('_x: ' + sprite.body._x.toFixed(2), '_y: ' + sprite.body._y.toFixed(2), 'wx: ' + sprite.worldTransform[2].toFixed(2), 'wy: ' + sprite.worldTransform[5].toFixed(2));
         this.splitline('speed: ' + sprite.body.speed.toFixed(2), 'angle: ' + sprite.body.angle.toFixed(2), 'friction: ' + sprite.body.friction);
         this.splitline('blocked left: ' + sprite.body.blocked.left, 'right: ' + sprite.body.blocked.right, 'up: ' + sprite.body.blocked.up, 'down: ' + sprite.body.blocked.down);
         this.splitline('touching left: ' + sprite.body.touching.left, 'right: ' + sprite.body.touching.right, 'up: ' + sprite.body.touching.up, 'down: ' + sprite.body.touching.down);

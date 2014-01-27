@@ -58,6 +58,7 @@ Significant API changes:
 * Button.forceOut default value has changed from true to false, so Buttons will revert to an Up state (if set) when pressed and released.
 * The way the collision process callback works has changed significantly and now works as originally intended.
 * The World level quadtree is no longer created, they are now built and ripped down each time you collide a Group, this helps collision accuracy.
+* A SAT system has been integrated for Body collision and separation.
 * Bodies are no longer added to a world quadtree, so have had all of their quadtree properties removed such as skipQuadtree, quadTreeIndex, etc.
 * Body.drag has been removed. Please use the new Body.friction value instead (which is a number value, not a Point object)
 * Body.embedded and Body.wasTouching have been removed as they are no longer required.
@@ -195,6 +196,7 @@ Bug Fixes:
 * InputHandler.checkBoundsRect and checkBoundsSprite now take into account if the Sprite is fixedToCamera or not.
 * Removed the frame property from TileSprites as it cannot use them, it tiles the whole image only, not just a section of it.
 * Fixed WebGLRenderer updateGraphics bug (thanks theadam)
+* Removed duplicate Timer.create line (thanks hstolte)
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
