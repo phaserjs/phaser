@@ -1357,7 +1357,6 @@ declare module Phaser {
         create(delay: number, loop: boolean, repeatCount: number, callback: any, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
         add(delay: number, callback: any, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
         repeat(delay: number, repeatCount: number, callback: any, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
-        create(delay: number, loop: boolean, repeatCount: number, callback: any, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
         loop(delay: number, callback: any, callbackContext: any, ...args: any[]): Phaser.TimerEvent;
         start(): void;
         stop(): void;
