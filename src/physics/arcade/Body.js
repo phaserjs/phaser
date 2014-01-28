@@ -441,26 +441,31 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.updateBounds();
 
-        if (this.blocked.left && this.blockFlags[0] !== this.left)
-        {
-            this.blocked.left = false;
-        }
+        // if (this.blocked.left && this.blockFlags[0] !== this.left)
+        // {
+        //     this.blocked.left = false;
+        // }
 
-        if (this.blocked.right && this.blockFlags[1] !== this.right)
-        {
-            this.blocked.right = false;
-        }
+        // if (this.blocked.right && this.blockFlags[1] !== this.right)
+        // {
+        //     this.blocked.right = false;
+        // }
 
-        if (this.blocked.up && this.blockFlags[2] !== this.top)
-        {
-            this.blocked.up = false;
-        }
+        // if (this.blocked.up && this.blockFlags[2] !== this.top)
+        // {
+        //     this.blocked.up = false;
+        // }
 
-        if (this.blocked.down && this.blockFlags[3] !== this.bottom)
-        {
-            console.log('reset down block flag', this.blockFlags[3], this.bottom);
-            this.blocked.down = false;
-        }
+        // if (this.blocked.down && this.blockFlags[3] !== this.bottom)
+        // {
+        //     console.log('reset down block flag', this.blockFlags[3], this.bottom);
+        //     this.blocked.down = false;
+        // }
+
+        this.blocked.left = false;
+        this.blocked.right = false;
+        this.blocked.up = false;
+        this.blocked.down = false;
 
         this.touching.none = true;
         this.touching.up = false;
@@ -485,25 +490,25 @@ Phaser.Physics.Arcade.Body.prototype = {
         if (left)
         {
             this.blockFlags[0] = this.left + x;
-            console.log('left flag set to', this.blockFlags[0]);
+            // console.log('left flag set to', this.blockFlags[0]);
         }
         else if (right)
         {
             this.blockFlags[1] = this.right + y;
-            console.log('right flag set to', this.blockFlags[1]);
+            // console.log('right flag set to', this.blockFlags[1]);
         }
 
         if (up)
         {
             this.blockFlags[2] = this.top + y;
             // this.blockFlags[2] = this.top;
-            console.log('up flag set to', this.blockFlags[2]);
+            // console.log('up flag set to', this.blockFlags[2]);
         }
         else if (down)
         {
             this.blockFlags[3] = this.bottom + y;
             // this.blockFlags[3] = this.bottom;
-            console.log('down flag set to', this.blockFlags[3]);
+            // console.log('down flag set to', this.blockFlags[3]);
         }
 
     },

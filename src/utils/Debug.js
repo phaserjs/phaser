@@ -925,6 +925,10 @@ Phaser.Utils.Debug.prototype = {
             this.context.arc(x, y, body.shape.r, 0, Math.PI * 2, false);
             this.context.stroke();
             this.context.closePath();
+
+            this.context.strokeStyle = 'rgb(0,0,255)';
+            this.context.strokeRect(body.left, body.top, body.width, body.height);
+
             this.stop();
         }
         else
@@ -952,6 +956,9 @@ Phaser.Utils.Debug.prototype = {
             {
                 this.context.fillRect(x + points[i].x - 2, y + points[i].y - 2, 5, 5);
             }
+
+            this.context.strokeStyle = 'rgb(0,0,255)';
+            this.context.strokeRect(body.left, body.top, body.width, body.height);
 
             this.stop();
         }

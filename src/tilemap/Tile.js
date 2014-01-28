@@ -60,6 +60,11 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     this.properties = {};
 
     /**
+    * @property {boolean} walked - Has this tile been walked / turned into a poly?
+    */
+    this.walked = false;
+
+    /**
     * @property {boolean} faceTop - Is the top of this tile an interesting edge?
     */
     this.faceTop = false;

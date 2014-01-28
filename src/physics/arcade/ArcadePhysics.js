@@ -1063,8 +1063,8 @@ Phaser.Physics.Arcade.prototype = {
         body.x += body.overlapX;
         body.y += body.overlapY;
 
-        body.setBlockFlag(body.blocked.left, body.blocked.right, body.blocked.up, body.blocked.down, body.overlapX, body.overlapY);
-        body.reboundCheck(true, true, true);
+        // body.setBlockFlag(body.blocked.left, body.blocked.right, body.blocked.up, body.blocked.down, body.overlapX, body.overlapY);
+        // body.reboundCheck(true, true, true);
 
         return true;
 
