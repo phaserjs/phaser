@@ -28,7 +28,7 @@ function create() {
 
     layer = map.createLayer('Tile Layer 1');
 
-    // layer.debug = true;
+    layer.debug = true;
 
     game.physics.gravity.y = 150;
 
@@ -48,7 +48,7 @@ function create() {
     balls.setAll('body.minBounceVelocity', 0.9);
     balls.setAll('body.friction', 0.5);
 
-    sprite2 = game.add.sprite(300, 250, 'gameboy', 2);
+    sprite2 = game.add.sprite(340, 250, 'gameboy', 2);
     sprite2.name = 'green';
     sprite2.body.collideWorldBounds = true;
     // sprite2.body.bounce.setTo(0.5, 0.5);
@@ -67,8 +67,11 @@ function create() {
 
 function launch() {
 
-    sprite.body.velocity.x = -200;
-    sprite.body.velocity.y = -200;
+    // sprite.body.velocity.x = -200;
+    // sprite.body.velocity.y = -200;
+
+    sprite2.body.velocity.x = -200;
+    sprite2.body.velocity.y = -200;
 
 }
 
@@ -91,7 +94,14 @@ function update() {
 
 function render() {
 
-    game.debug.renderText(game.time.fps + ' (min: ' + game.time.fpsMin + ' max: ' + game.time.fpsMax + ') ' + game.time.physicsElapsed, 32, 32);
+    game.debug.renderBodyInfo(sprite2, 32, 32);
+    // game.debug.renderPhysicsBody(sprite2.body);
+
+
+    // game.debug.renderText(sprite2.body.left, 32, 30);
+    // game.debug.renderText(sprite2.body.right, 32, 50);
+    // game.debug.renderText(sprite2.body.top, 32, 70);
+    // game.debug.renderText(sprite2.body.bottom, 32, 90);
 
     // if (sprite)
     // {

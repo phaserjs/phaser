@@ -653,13 +653,6 @@ Phaser.Rectangle.intersects = function (a, b) {
 
     return !(a.right < b.x || a.bottom < b.y || a.x > b.right || a.y > b.bottom);
 
-    // return (a.x < b.right && b.x < a.right && a.y < b.bottom && b.y < a.bottom);
-
-    // return (a.x <= b.right && b.x <= a.right && a.y <= b.bottom && b.y <= a.bottom);
-
-    // return (a.left <= b.right && b.left <= a.right && a.top <= b.bottom && b.top <= a.bottom);
-    // return !(a.x > b.right + tolerance || a.right < b.x - tolerance || a.y > b.bottom + tolerance || a.bottom < b.y - tolerance);
-
 };
 
 /**

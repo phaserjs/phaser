@@ -236,14 +236,14 @@ Object.defineProperty(Phaser.Tile.prototype, "canCollide", {
 });
 
 /**
-* @name Phaser.Tile#bottom
-* @property {number} bottom - The sum of the y and height properties.
+* @name Phaser.Tile#left
+* @property {number} left - The x value.
 * @readonly
 */
-Object.defineProperty(Phaser.Tile.prototype, "bottom", {
+Object.defineProperty(Phaser.Tile.prototype, "left", {
     
     get: function () {
-        return this.y + this.height;
+        return this.x;
     }
 
 });
@@ -257,6 +257,32 @@ Object.defineProperty(Phaser.Tile.prototype, "right", {
     
     get: function () {
         return this.x + this.width;
+    }
+
+});
+
+/**
+* @name Phaser.Tile#top
+* @property {number} top - The y value.
+* @readonly
+*/
+Object.defineProperty(Phaser.Tile.prototype, "top", {
+    
+    get: function () {
+        return this.y;
+    }
+
+});
+
+/**
+* @name Phaser.Tile#bottom
+* @property {number} bottom - The sum of the y and height properties.
+* @readonly
+*/
+Object.defineProperty(Phaser.Tile.prototype, "bottom", {
+    
+    get: function () {
+        return this.y + this.height;
     }
 
 });

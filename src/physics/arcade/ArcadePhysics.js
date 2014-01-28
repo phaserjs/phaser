@@ -706,7 +706,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext) {
 
-        this._mapData = tilemapLayer.getTiles(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height, true);
+        this._mapData = tilemapLayer.getTiles(sprite.body.left, sprite.body.top, sprite.body.width, sprite.body.height, true);
 
         if (this._mapData.length === 0)
         {
@@ -715,7 +715,6 @@ Phaser.Physics.Arcade.prototype = {
 
         if (this._mapData.length > 1)
         {
-            // console.log(' multi sep ---------------------------------------------------------------------------------------------');
             this.separateTiles(sprite.body, this._mapData);
         }
         else
@@ -792,8 +791,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     separate: function (body1, body2, processCallback, callbackContext, overlapOnly) {
 
-        // if (body1 === body2 || Phaser.Rectangle.intersects(body1, body2) === false)
-        if (body1 === body2)
+        if (body1 === body2 || this.intersects(body1, body2) === false)
         {
             return false;
         }
@@ -823,6 +821,25 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
+    * Performs a rect intersection test against the two objects.
+    * Objects must expose properties: width, height, left, right, top, bottom.
+    * @method Phaser.Physics.Arcade#intersects
+    * @param {object} a - The first object to test.
+    * @param {object} b - The second object to test.
+    * @returns {boolean} Returns true if the objects intersect, otherwise false.
+    */
+    intersects: function (a, b) {
+
+        if (a.width <= 0 || a.height <= 0 || b.width <= 0 || b.height <= 0)
+        {
+            return false;
+        }
+
+        return !(a.right < b.left || a.bottom < b.top || a.left > b.right || a.top > b.bottom);
+
+    },
+
+    /**
     * The core separation function to separate a physics body and an array of tiles.
     * @method Phaser.Physics.Arcade#separateTiles
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
@@ -848,7 +865,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             tile = tiles[i];
 
-            if (Phaser.Rectangle.intersects(body, tile))
+            if (this.intersects(body, tile))
             {
                 //  They overlap. Any custom callbacks?
                 if (tile.tile.callback || tile.layer.callbacks[tile.tile.index])
@@ -869,7 +886,7 @@ Phaser.Physics.Arcade.prototype = {
                 if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight)
                 {
                     //  LEFT
-                    localOverlapX = body.x - tile.right;
+                    localOverlapX = body.left - tile.right;
 
                     if (localOverlapX >= body.deltaX())
                     {
@@ -895,7 +912,7 @@ Phaser.Physics.Arcade.prototype = {
                 if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom)
                 {
                     //  UP
-                    localOverlapY = body.y - tile.bottom;
+                    localOverlapY = body.top - tile.bottom;
 
                     //  Distance check
                     if (localOverlapY >= body.deltaY())
@@ -944,7 +961,7 @@ Phaser.Physics.Arcade.prototype = {
     separateTile: function (body, tile) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
-        if (body.immovable || Phaser.Rectangle.intersects(body, tile) === false)
+        if (body.immovable || this.intersects(body, tile) === false)
         {
             return false;
         }
@@ -973,7 +990,7 @@ Phaser.Physics.Arcade.prototype = {
         if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight)
         {
             //  LEFT
-            body.overlapX = body.x - tile.right;
+            body.overlapX = body.left - tile.right;
 
             if (body.overlapX >= body.deltaX())
             {
@@ -1000,7 +1017,7 @@ Phaser.Physics.Arcade.prototype = {
         if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom)
         {
             //  UP
-            body.overlapY = body.y - tile.bottom;
+            body.overlapY = body.top - tile.bottom;
 
             //  Distance check
             if (body.overlapY >= body.deltaY())
@@ -1037,42 +1054,17 @@ Phaser.Physics.Arcade.prototype = {
     */
     processTileSeparation: function (body) {
 
+        //  Swap for a hit tile?
         if (body.touching.none)
         {
             return false;
         }
 
-        if (body.touching.left || body.touching.right)
-        {
-            body.x -= body.overlapX;
-            body.preX -= body.overlapX;
+        body.x += body.overlapX;
+        body.y += body.overlapY;
 
-            if (body.bounce.x === 0)
-            {
-                body.velocity.x = 0;
-            }
-            else
-            {
-                body.velocity.x = -body.velocity.x * body.bounce.x;
-                body.reboundCheck(true, false);
-            }
-        }
-
-        if (body.touching.up || body.touching.down)
-        {
-            body.y -= body.overlapY;
-            body.preY -= body.overlapY;
-
-            if (body.bounce.y === 0)
-            {
-                body.velocity.y = 0;
-            }
-            else
-            {
-                body.velocity.y = -body.velocity.y * body.bounce.y;
-                body.reboundCheck(false, true);
-            }
-        }
+        body.setBlockFlag(body.blocked.left, body.blocked.right, body.blocked.up, body.blocked.down, body.overlapX, body.overlapY);
+        body.reboundCheck(true, true, true);
 
         return true;
 

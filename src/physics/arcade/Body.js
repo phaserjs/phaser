@@ -31,18 +31,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.offset = new Phaser.Point();
 
     /**
-    * @property {number} x - The x position of the physics body.
-    * @readonly
-    */
-    // this.x = sprite.x;
-
-    /**
-    * @property {number} y - The y position of the physics body.
-    * @readonly
-    */
-    // this.y = sprite.y;
-
-    /**
     * @property {number} preX - The previous x position of the physics body.
     * @readonly
     */
@@ -61,43 +49,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.preRotation = sprite.angle;
 
     /**
-    * @property {number} sourceWidth - The un-scaled original size.
-    * @readonly
-    */
-    // this.sourceWidth = sprite.currentFrame.sourceSizeW;
-
-    /**
-    * @property {number} sourceHeight - The un-scaled original size.
-    * @readonly
-    */
-    // this.sourceHeight = sprite.currentFrame.sourceSizeH;
-
-    /**
-    * @property {number} width - The calculated width of the physics body.
-    */
-    // this.width = sprite.currentFrame.sourceSizeW;
-
-    /**
-    * @property .numInternal ID cache
-    */
-    // this.height = sprite.currentFrame.sourceSizeH;
-
-    /**
-    * @property {number} halfWidth - The calculated width / 2 of the physics body.
-    */
-    // this.halfWidth = Math.floor(sprite.currentFrame.sourceSizeW / 2);
-
-    /**
-    * @property {number} halfHeight - The calculated height / 2 of the physics body.
-    */
-    // this.halfHeight = Math.floor(sprite.currentFrame.sourceSizeH / 2);
-
-    /**
-    * @property {Phaser.Point} center - The center coordinate of the Physics Body.
-    */
-    // this.center = new Phaser.Point(this.x + this.halfWidth, this.y + this.halfHeight);
-
-    /**
     * @property {Phaser.Point} velocity - The velocity of the Body.
     */
     this.velocity = new Phaser.Point();
@@ -113,7 +64,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.speed = 0;
 
     /**
-    * @property {number} angle - The angle of the Body in radians.
+    * @property {number} angle - The angle of the Body based on its velocity in radians.
     */
     this.angle = 0;
 
@@ -284,6 +235,42 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.polygon = null;
 
     /**
+    * @property {number} left - The left-most point of this Body.
+    * @readonly
+    */
+    this.left = 0;
+
+    /**
+    * @property {number} right - The right-most point of this Body.
+    * @readonly
+    */
+    this.right = 0;
+
+    /**
+    * @property {number} top - The top-most point of this Body.
+    * @readonly
+    */
+    this.top = 0;
+
+    /**
+    * @property {number} bottom - The bottom-most point of this Body.
+    * @readonly
+    */
+    this.bottom = 0;
+
+    /**
+    * @property {number} width - The current width of the Body, taking into account the point rotation.
+    * @readonly
+    */
+    this.width = 0;
+
+    /**
+    * @property {number} height - The current height of the Body, taking into account the point rotation.
+    * @readonly
+    */
+    this.height = 0;
+
+    /**
     * @property {Phaser.Point} _temp - Internal cache var.
     * @private
     */
@@ -318,6 +305,11 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @private
     */
     this._distances = [0, 0, 0, 0];
+
+    this.blockFlags = [0, 0, 0, 0];
+
+    this.overlapX = 0;
+    this.overlapY = 0;
 
     //  Set-up the default shape
     this.setRectangle(sprite.width, sprite.height, -sprite._cache.halfWidth, -sprite._cache.halfHeight);
@@ -447,10 +439,28 @@ Phaser.Physics.Arcade.Body.prototype = {
             }
         }
 
-        this.blocked.up = false;
-        this.blocked.down = false;
-        this.blocked.left = false;
-        this.blocked.right = false;
+        this.updateBounds();
+
+        if (this.blocked.left && this.blockFlags[0] !== this.left)
+        {
+            this.blocked.left = false;
+        }
+
+        if (this.blocked.right && this.blockFlags[1] !== this.right)
+        {
+            this.blocked.right = false;
+        }
+
+        if (this.blocked.up && this.blockFlags[2] !== this.top)
+        {
+            this.blocked.up = false;
+        }
+
+        if (this.blocked.down && this.blockFlags[3] !== this.bottom)
+        {
+            console.log('reset down block flag', this.blockFlags[3], this.bottom);
+            this.blocked.down = false;
+        }
 
         this.touching.none = true;
         this.touching.up = false;
@@ -466,6 +476,100 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.game.physics.checkBounds(this);
 
             this.applyFriction();
+        }
+
+    },
+
+    setBlockFlag: function (left, right, up, down, x, y) {
+
+        if (left)
+        {
+            this.blockFlags[0] = this.left + x;
+            console.log('left flag set to', this.blockFlags[0]);
+        }
+        else if (right)
+        {
+            this.blockFlags[1] = this.right + y;
+            console.log('right flag set to', this.blockFlags[1]);
+        }
+
+        if (up)
+        {
+            this.blockFlags[2] = this.top + y;
+            // this.blockFlags[2] = this.top;
+            console.log('up flag set to', this.blockFlags[2]);
+        }
+        else if (down)
+        {
+            this.blockFlags[3] = this.bottom + y;
+            // this.blockFlags[3] = this.bottom;
+            console.log('down flag set to', this.blockFlags[3]);
+        }
+
+    },
+
+    /**
+    * Internal method that updates the left, right, top, bottom, width and height properties.
+    *
+    * @method Phaser.Physics.Arcade#updateBounds
+    * @protected
+    */
+    updateBounds: function () {
+
+        if (this.type === Phaser.Physics.Arcade.CIRCLE)
+        {
+            this.left = this.shape.pos.x - this.shape.r;
+            this.right = this.shape.pos.x + this.shape.r;
+            this.top = this.shape.pos.y - this.shape.r;
+            this.bottom = this.shape.pos.y + this.shape.r;
+        }
+        else
+        {
+            this.left = this.polygon.pos.x - this.polygon.points[0].x;
+            this.right = this.polygon.pos.x + this.polygon.points[0].x;
+            this.top = this.polygon.pos.y - this.polygon.points[0].y;
+            this.bottom = this.polygon.pos.y + this.polygon.points[0].y;
+
+            var temp;
+
+            for (var i = 1, len = this.polygon.points.length; i < len; i++)
+            {
+                //  Left
+                temp = this.polygon.pos.x - this.polygon.points[i].x;
+
+                if (temp < this.left)
+                {
+                    this.left = temp;
+                }
+
+                //  Right
+                temp = this.polygon.pos.x + this.polygon.points[i].x;
+
+                if (temp > this.right)
+                {
+                    this.right = temp;
+                }
+
+                //  Top
+                temp = this.polygon.pos.y - this.polygon.points[i].y;
+
+                if (temp < this.top)
+                {
+                    this.top = temp;
+                }
+
+                //  Bottom
+                temp = this.polygon.pos.y + this.polygon.points[i].y;
+
+                if (temp > this.bottom)
+                {
+                    this.bottom = temp;
+                }
+            }
+
+            this.width = this.right - this.left;
+            this.height = this.bottom - this.top;
+
         }
 
     },
@@ -523,7 +627,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (y)
         {
-            if (rebound && (this.blocked.up || this.blocked.down))
+            if (rebound && this.bounce.y && (this.blocked.up || this.blocked.down))
             {
                 this.velocity.y *= -this.bounce.y;
             }
@@ -776,6 +880,8 @@ Phaser.Physics.Arcade.Body.prototype = {
             return this.customSeparateCallback.call(this.customSeparateContext, this, response);
         }
 
+        console.log(this.sprite.name, 'collided with', body.sprite.name, response);
+
         this._distances[0] = body.right - this.x;   // Distance of B to face on left side of A
         this._distances[1] = this.right - body.x;   // Distance of B to face on right side of A
         this._distances[2] = body.bottom - this.y;  // Distance of B to face on bottom side of A
@@ -810,20 +916,8 @@ Phaser.Physics.Arcade.Body.prototype = {
             }
         }
 
-        if (this.collideWorldBounds)
-        {
-            // this.checkWorldBounds();
-            this.adjustWorldBounds();
-        }
-
-        if (body.collideWorldBounds)
-        {
-            // body.checkWorldBounds();
-            body.adjustWorldBounds();
-        }
-
-        this.syncPosition();
-        body.syncPosition();
+        this.game.physics.checkBounds(this);
+        this.game.physics.checkBounds(body);
 
         return true;
 
@@ -1024,26 +1118,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     /**
-    * Internal method that syncs the Body coordinates with the SAT shape and polygon positions.
-    *
-    * @method Phaser.Physics.Arcade#syncPosition
-    * @protected
-    */
-    syncPosition: function () {
-
-        this.shape.pos.x = this.x;
-        this.shape.pos.y = this.y;
-
-        if (this.polygon)
-        {
-            this.polygon.pos.x = this.x;
-            this.polygon.pos.y = this.y;
-        }
-
-    },
-
-    /**
-    * Internal method.
+    * Internal method. Integrates velocity, global gravity and the delta timer.
     *
     * @method Phaser.Physics.Arcade#integrateVelocity
     * @protected
@@ -1067,6 +1142,7 @@ Phaser.Physics.Arcade.Body.prototype = {
         {
             this.y += this._dy;
             this.velocity.y += this._temp.y;
+            // console.log('y added', this._dy);
         }
 
         if (this.velocity.x > this.maxVelocity.x)
@@ -1137,43 +1213,8 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     /**
-    * You can modify the size of the physics Body to be any dimension you need.
-    * So it could be smaller or larger than the parent Sprite. You can also control the x and y offset, which
-    * is the position of the Body relative to the top-left of the Sprite.
-    *
-    * @method Phaser.Physics.Arcade#setSize
-    * @param {number} width - The width of the Body.
-    * @param {number} height - The height of the Body.
-    * @param {number} [offsetX=0] - The X offset of the Body from the Sprite position.
-    * @param {number} [offsetY=0] - The Y offset of the Body from the Sprite position.
-    setSize: function (width, height, offsetX, offsetY) {
-
-        if (typeof offsetX === 'undefined') { offsetX = 0; }
-        if (typeof offsetY === 'undefined') { offsetY = 0; }
-
-        this.sourceWidth = width;
-        this.sourceHeight = height;
-        this.width = this.sourceWidth * this._sx;
-        this.height = this.sourceHeight * this._sy;
-        this.halfWidth = Math.floor(this.width / 2);
-        this.halfHeight = Math.floor(this.height / 2);
-        this.offset.setTo(offsetX, offsetY);
-        this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
-
-        if (this.type === Phaser.Physics.Arcade.RECT)
-        {
-            this.setBox();
-        }
-        else
-        {
-            this.setCircle();
-        }
-
-    },
-    */
-
-    /**
-    * Resets all Body values (velocity, acceleration, rotation, etc)
+    * Resets the Body motion values: velocity, acceleration, angularVelocity and angularAcceleration.
+    * Also resets the forces to defaults: gravity, bounce, minVelocity,maxVelocity, angularDrag, maxAngular, mass, friction and checkCollision.
     *
     * @method Phaser.Physics.Arcade#reset
     */
@@ -1181,27 +1222,17 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.velocity.setTo(0, 0);
         this.acceleration.setTo(0, 0);
-
         this.angularVelocity = 0;
         this.angularAcceleration = 0;
-        this.preX = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
-        this.preY = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
-        this.preRotation = this.sprite.angle;
-
-        this.x = this.preX;
-        this.y = this.preY;
-        this.rotation = this.preRotation;
-        
-        this.shape.pos.x = this.x;
-        this.shape.pos.y = this.y;
-
-        if (this.polygon)
-        {
-            this.polygon.pos.x = this.x;
-            this.polygon.pos.y = this.y;
-        }
-
-        this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
+        this.gravity.setTo(0, 0);
+        this.bounce.setTo(0, 0);
+        this.minVelocity.setTo(5, 5);
+        this.maxVelocity.setTo(1000, 1000);
+        this.angularDrag = 0;
+        this.maxAngular = 1000;
+        this.mass = 1;
+        this.friction = 0.1;
+        this.checkCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
 
     },
 
@@ -1238,79 +1269,6 @@ Phaser.Physics.Arcade.Body.prototype = {
 };
 
 Phaser.Physics.Arcade.Body.prototype.constructor = Phaser.Physics.Arcade.Body;
-
-/**
-* @name Phaser.Physics.Arcade.Body#bottom
-* @property {number} bottom - The bottom value of this Body (same as Body.y + Body.height)
-*/
-Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
-    
-    /**
-    * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
-    * @method bottom
-    * @return {number}
-    */
-    get: function () {
-        return this.y + this.height;
-    },
-
-    /**
-    * The sum of the y and height properties. Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
-    * @method bottom
-    * @param {number} value
-    */
-    set: function (value) {
-
-        if (value <= this.y)
-        {
-            this.height = 0;
-        }
-        else
-        {
-            this.height = (this.y - value);
-        }
-        
-    }
-
-});
-
-/**
-* @name Phaser.Physics.Arcade.Body#right
-* @property {number} right - The right value of this Body (same as Body.x + Body.width)
-*/
-Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
-    
-    /**
-    * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
-    * However it does affect the width property.
-    * @method right
-    * @return {number}
-    */
-    get: function () {
-        return this.x + this.width;
-    },
-
-    /**
-    * The sum of the x and width properties. Changing the right property of a Rectangle object has no effect on the x, y and height properties.
-    * However it does affect the width property.
-    * @method right
-    * @param {number} value
-    */
-    set: function (value) {
-
-        if (value <= this.x)
-        {
-            this.width = 0;
-        }
-        else
-        {
-            this.width = this.x + value;
-        }
-
-    }
-
-});
-
 
 /**
 * @name Phaser.Physics.Arcade.Body#x
@@ -1392,6 +1350,21 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "y", {
             this.polygon.pos.y = value;
         }
 
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Arcade.Body#movingLeft
+* @property {number} movingLeft
+*/
+Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "movingLeft", {
+    
+    /**
+    * @method movingLeft
+    * @return {boolean}
+    */
+    get: function () {
     }
 
 });
