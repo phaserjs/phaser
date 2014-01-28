@@ -507,7 +507,6 @@ Phaser.Sprite.prototype.updateAnimation = function() {
         this._cache.halfHeight = Math.floor(this._cache.height / 2);
 
         this._cache.dirty = true;
-
     }
 
 };
@@ -992,6 +991,34 @@ Phaser.Sprite.prototype.play = function (name, frameRate, loop, killOnComplete) 
     }
 
 };
+
+/**
+* Returns the delta x value. The difference between Sprite.x now and in the previous step.
+* @name Phaser.Sprite#deltaX
+* @property {number} deltaX - The delta value. Positive if the motion was to the right, negative if to the left.
+* @readonly
+*/
+Object.defineProperty(Phaser.Sprite.prototype, 'deltaX', {
+
+    get: function() {
+        return this.world.x - this._cache.prevX;
+    }
+
+});
+
+/**
+* Returns the delta x value. The difference between Sprite.y now and in the previous step.
+* @name Phaser.Sprite#deltaY
+* @property {number} deltaY - The delta value. Positive if the motion was downwards, negative if upwards.
+* @readonly
+*/
+Object.defineProperty(Phaser.Sprite.prototype, 'deltaY', {
+
+    get: function() {
+        return this.world.y - this._cache.prevY;
+    }
+
+});
 
 /**
 * Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.

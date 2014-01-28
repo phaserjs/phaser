@@ -30,11 +30,6 @@ Phaser.Physics.Arcade = function (game) {
     this.gravity = new Phaser.Point();
 
     /**
-    * @property {Phaser.Rectangle} bounds - The bounds inside of which the physics world exists. Defaults to match the world bounds.
-    */
-    // this.bounds = new Phaser.Rectangle(0, 0, game.world.width, game.world.height);
-
-    /**
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
     */
     this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
@@ -92,6 +87,12 @@ Phaser.Physics.Arcade = function (game) {
     this._dy = 0;
 
     /**
+    * @property {Phaser.Point} _p - Internal cache var.
+    * @private
+    */
+    this._p = new Phaser.Point(0, 0);
+
+    /**
     * @property {number} _gravityX - Internal cache var.
     * @private
     */
@@ -122,6 +123,12 @@ Phaser.Physics.Arcade.RECT = 0;
 * @type {number}
 */
 Phaser.Physics.Arcade.CIRCLE = 1;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Physics.Arcade.POLYGON = 2;
 
 Phaser.Physics.Arcade.prototype = {
 
@@ -194,8 +201,9 @@ Phaser.Physics.Arcade.prototype = {
         // pos = pos + dt*(vel + temp/2)
         // vel = vel + temp
 
-        body.motionVelocity.x = (body.acceleration.x + this._gravityX) * this.game.time.physicsElapsed;
-        body.motionVelocity.y = (body.acceleration.y + this._gravityY) * this.game.time.physicsElapsed;
+        this._p.setTo((body.acceleration.x + this._gravityX) * this.game.time.physicsElapsed, (body.acceleration.y + this._gravityY) * this.game.time.physicsElapsed);
+
+        return this._p;
 
     },
 

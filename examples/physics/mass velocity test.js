@@ -15,6 +15,8 @@ function create() {
 
     aliens = game.add.group();
 
+    game.physics.gravity.y = 100;
+
     for (var i = 0; i < 50; i++)
     {
         var s = aliens.create(game.world.randomX, game.world.randomY, 'baddie');
@@ -27,6 +29,7 @@ function create() {
     }
 
     car = game.add.sprite(400, 300, 'car');
+    car.name = 'car';
     car.anchor.setTo(0.5, 0.5);
     car.body.collideWorldBounds = true;
     // car.body.bounce.setTo(0.8, 0.8);
@@ -62,7 +65,17 @@ function update() {
 
 function render() {
 
+    for (var i = 0; i < aliens._container.children.length; i++)
+    {
+        game.debug.renderPolygon(aliens._container.children[i].body.polygons);
+    }
+
+    game.debug.renderPolygon(car.body.polygons);
+
+    // game.debug.renderBodyInfo(aliens._container.children[0], 32, 32);
+    game.debug.renderBodyInfo(aliens._container.children[0], 32, 32);
+
     // game.debug.renderBodyInfo(car, 16, 24);
-    game.debug.renderBodyInfo(aliens.getFirstAlive(), 16, 24);
+    // game.debug.renderBodyInfo(aliens.getFirstAlive(), 16, 24);
 
 }

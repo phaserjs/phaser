@@ -77,7 +77,9 @@ Phaser.World.prototype.preUpdate = function () {
             if (currentNode['preUpdate'] && !currentNode.preUpdate())
             {
                 currentNode = currentNode.last._iNext;
-            } else {
+            }
+            else
+            {
                 currentNode = currentNode._iNext;
             }
             
@@ -106,7 +108,9 @@ Phaser.World.prototype.update = function () {
             if (currentNode['update'] && !currentNode.update())
             {
                 currentNode = currentNode.last._iNext;
-            } else {
+            }
+            else
+            {
                 currentNode = currentNode._iNext;
             }
             

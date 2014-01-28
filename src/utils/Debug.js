@@ -452,17 +452,15 @@ Phaser.Utils.Debug.prototype = {
 
         color = color || 'rgb(255,255,255)';
 
-        this.start(x, y, color, 220);
+        this.start(x, y, color, 210);
 
         this.splitline('x: ' + sprite.body.x.toFixed(2), 'y: ' + sprite.body.y.toFixed(2), 'width: ' + sprite.width, 'height: ' + sprite.height);
-        this.splitline('_x: ' + sprite.body._x.toFixed(2), '_y: ' + sprite.body._y.toFixed(2), 'wx: ' + sprite.worldTransform[2].toFixed(2), 'wy: ' + sprite.worldTransform[5].toFixed(2));
         this.splitline('speed: ' + sprite.body.speed.toFixed(2), 'angle: ' + sprite.body.angle.toFixed(2), 'friction: ' + sprite.body.friction);
         this.splitline('blocked left: ' + sprite.body.blocked.left, 'right: ' + sprite.body.blocked.right, 'up: ' + sprite.body.blocked.up, 'down: ' + sprite.body.blocked.down);
         this.splitline('touching left: ' + sprite.body.touching.left, 'right: ' + sprite.body.touching.right, 'up: ' + sprite.body.touching.up, 'down: ' + sprite.body.touching.down);
         this.splitline('gravity x: ' + sprite.body.gravity.x, 'y: ' + sprite.body.gravity.y, 'world gravity x: ' + this.game.physics.gravity.x, 'y: ' + this.game.physics.gravity.y);
         this.splitline('acceleration x: ' + sprite.body.acceleration.x.toFixed(2), 'y: ' + sprite.body.acceleration.y.toFixed(2));
         this.splitline('velocity x: ' + sprite.body.velocity.x.toFixed(2), 'y: ' + sprite.body.velocity.y.toFixed(2), 'deltaX: ' + sprite.body.deltaX().toFixed(2), 'deltaY: ' + sprite.body.deltaY().toFixed(2));
-        this.splitline('motion x: ' + sprite.body.motionVelocity.x.toFixed(2), 'y: ' + sprite.body.motionVelocity.y.toFixed(2));
         this.splitline('bounce x: ' + sprite.body.bounce.x.toFixed(2), 'y: ' + sprite.body.bounce.y.toFixed(2));
         this.stop();
 
@@ -526,17 +524,15 @@ Phaser.Utils.Debug.prototype = {
         //  4 = scaleY
         //  5 = translateY
 
-        // this.line('id: ' + sprite._id);
-        // this.line('scale x: ' + sprite.worldTransform[0]);
-        // this.line('scale y: ' + sprite.worldTransform[4]);
-        // this.line('tx: ' + sprite.worldTransform[2]);
-        // this.line('ty: ' + sprite.worldTransform[5]);
-        // this.line('skew x: ' + sprite.worldTransform[3]);
-        // this.line('skew y: ' + sprite.worldTransform[1]);
-        this.line('deltaX: ' + sprite.body.deltaX());
-        this.line('deltaY: ' + sprite.body.deltaY());
-        // this.line('sdx: ' + sprite.deltaX());
-        // this.line('sdy: ' + sprite.deltaY());
+        this.line('id: ' + sprite._id);
+        this.line('scale x: ' + sprite.worldTransform[0]);
+        this.line('scale y: ' + sprite.worldTransform[4]);
+        this.line('tx: ' + sprite.worldTransform[2]);
+        this.line('ty: ' + sprite.worldTransform[5]);
+        this.line('skew x: ' + sprite.worldTransform[3]);
+        this.line('skew y: ' + sprite.worldTransform[1]);
+        this.line('sdx: ' + sprite.deltaX);
+        this.line('sdy: ' + sprite.deltaY);
 
         // this.line('inCamera: ' + this.game.renderer.spriteRenderer.inCamera(this.game.camera, sprite));
         this.stop();
@@ -629,25 +625,6 @@ Phaser.Utils.Debug.prototype = {
         this.line('t y: ' + sprite.worldTransform[5]);
         this.line('world x: ' + sprite.world.x);
         this.line('world y: ' + sprite.world.y);
-
-        this.stop();
-
-    },
-
-    renderGroupInfo: function (group, x, y, color) {
-
-        if (this.context == null)
-        {
-            return;
-        }
-
-        color = color || 'rgb(255, 255, 255)';
-
-        this.start(x, y, color);
-
-        this.line('Group (size: ' + group.length + ')');
-        this.line('x: ' + group.x);
-        this.line('y: ' + group.y);
 
         this.stop();
 

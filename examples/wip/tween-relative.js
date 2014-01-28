@@ -29,17 +29,19 @@ function create() {
 
 function move() {
 
+	console.log('moving');
+
 	if (sprite.x === 100)
 	{
 		//	Here you'll notice we are using a relative value for the tween.
 		//	You can specify a number as a string with either + or - at the start of it.
 		//	When the tween starts it will take the sprites current X value and add +300 to it.
 
-		game.add.tween(sprite).to( { x: '+300' }, 2000, Phaser.Easing.Linear.None, true);
+		// game.add.tween(sprite).to( { x: '+300' }, 2000, Phaser.Easing.Linear.None, true);
 	}
 	else if (sprite.x === 400)
 	{
-		game.add.tween(sprite).to( { x: '-300' }, 2000, Phaser.Easing.Linear.None, true);
+		// game.add.tween(sprite).to( { x: '-300' }, 2000, Phaser.Easing.Linear.None, true);
 	}
 
 }
@@ -48,10 +50,17 @@ function render() {
 
 	if (sprite.x === 100 || sprite.x === 400)
 	{
-		game.debug.renderText('Click sprite to tween', 32, 32);
+		// game.debug.renderText('Click sprite to tween', 32, 32);
 	}
 
 	game.debug.renderText('x: ' + arrowStart.x, arrowStart.x, arrowStart.y - 4);
 	game.debug.renderText('x: ' + arrowEnd.x, arrowEnd.x, arrowEnd.y - 4);
+
+	game.debug.renderText('sprite.x: ' + sprite.x + ' deltaX: ' + sprite.deltaX, 32, 32);
+	game.debug.renderText('sprite.y: ' + sprite.y + ' deltaY: ' + sprite.deltaY, 32, 48);
+
+	game.debug.renderPolygon(sprite.body.polygons);
+
+	game.debug.renderPoint(sprite.center);
 
 }

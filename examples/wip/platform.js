@@ -67,10 +67,8 @@ function create() {
 
 function launch() {
 
-    game.time._x = true;
-
-    // sprite.body.velocity.x = -200;
-    // sprite.body.velocity.y = -200;
+    sprite.body.velocity.x = -200;
+    sprite.body.velocity.y = -200;
 
 }
 

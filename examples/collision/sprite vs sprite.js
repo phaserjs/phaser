@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
@@ -38,5 +38,14 @@ function collisionHandler (obj1, obj2) {
 
     //  The two sprites are colliding
     game.stage.backgroundColor = '#992d2d';
+
+}
+
+function render() {
+
+    // game.debug.renderBodyInfo(sprite1, 16, 16);
+
+    game.debug.renderPolygon(sprite1.body.polygons);
+    game.debug.renderPolygon(sprite2.body.polygons);
 
 }

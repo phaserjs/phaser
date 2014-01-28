@@ -69,6 +69,8 @@ Significant API changes:
 * Body.collideCallback allows you to set a callback that is fired whenever the Body is hit on any of its active faces.
 * Body.allowCollision has been renamed to Body.checkCollision.
 * Body.rebound is a boolean that controls if a body will exchange velocity on collision. Set to false to allow it to be 'pushed' (see new examples).
+* Removed Body.deltaAbsX and deltaAbsY as they are no longer used internally.
+* Body.screenX and screenY moved to getters, no longer calculated every frame.
 
 
 New features:
