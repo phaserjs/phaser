@@ -71,6 +71,7 @@ Significant API changes:
 * Body.rebound is a boolean that controls if a body will exchange velocity on collision. Set to false to allow it to be 'pushed' (see new examples).
 * Removed Body.deltaAbsX and deltaAbsY as they are no longer used internally.
 * Body.screenX and screenY moved to getters, no longer calculated every frame.
+* ArcadePhysics now has setBounds and setBoundsToWorld, and you can specify which walls are created or not (left, right, up, down)
 
 
 New features:

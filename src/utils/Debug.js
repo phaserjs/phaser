@@ -901,6 +901,65 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
+    * @method Phaser.Utils.Debug#renderPhysicsBody
+    * @param {array} body
+    * @param {string} [color='rgb(255,255,255)'] - The color the polygon is stroked in.
+    */
+    renderPhysicsBody: function (body, color, context) {
+
+        if (this.context === null && context === null)
+        {
+            return;
+        }
+
+        color = color || 'rgb(255,255,255)';
+
+        var x = body.x;
+        var y = body.y;
+
+        if (body.type === Phaser.Physics.Arcade.CIRCLE)
+        {
+            this.start(0, 0, color);
+            this.context.beginPath();
+            this.context.strokeStyle = color;
+            this.context.arc(x, y, body.shape.r, 0, Math.PI * 2, false);
+            this.context.stroke();
+            this.context.closePath();
+            this.stop();
+        }
+        else
+        {
+            var points = body.polygon.points;
+
+            this.start(0, 0, color);
+
+            this.context.beginPath();
+            this.context.moveTo(x + points[0].x, y + points[0].y);
+
+            for (var i = 1; i < points.length; i++)
+            {
+                this.context.lineTo(x + points[i].x, y + points[i].y);
+            }
+
+            this.context.closePath();
+            this.context.strokeStyle = color;
+            this.context.stroke();
+
+            this.context.fillStyle = 'rgb(255,0,0)';
+            this.context.fillRect(x + points[0].x - 2, y + points[0].y - 2, 5, 5);
+
+            for (var i = 1; i < points.length; i++)
+            {
+                this.context.fillRect(x + points[i].x - 2, y + points[i].y - 2, 5, 5);
+            }
+
+            this.stop();
+        }
+
+    },
+
+
+    /**
     * 
     * @method Phaser.Utils.Debug#renderPolygon
     * @param {array} polygon

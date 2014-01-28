@@ -34,13 +34,13 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @property {number} x - The x position of the physics body.
     * @readonly
     */
-    this.x = sprite.x;
+    // this.x = sprite.x;
 
     /**
     * @property {number} y - The y position of the physics body.
     * @readonly
     */
-    this.y = sprite.y;
+    // this.y = sprite.y;
 
     /**
     * @property {number} preX - The previous x position of the physics body.
@@ -64,38 +64,38 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @property {number} sourceWidth - The un-scaled original size.
     * @readonly
     */
-    this.sourceWidth = sprite.currentFrame.sourceSizeW;
+    // this.sourceWidth = sprite.currentFrame.sourceSizeW;
 
     /**
     * @property {number} sourceHeight - The un-scaled original size.
     * @readonly
     */
-    this.sourceHeight = sprite.currentFrame.sourceSizeH;
+    // this.sourceHeight = sprite.currentFrame.sourceSizeH;
 
     /**
     * @property {number} width - The calculated width of the physics body.
     */
-    this.width = sprite.currentFrame.sourceSizeW;
+    // this.width = sprite.currentFrame.sourceSizeW;
 
     /**
     * @property .numInternal ID cache
     */
-    this.height = sprite.currentFrame.sourceSizeH;
+    // this.height = sprite.currentFrame.sourceSizeH;
 
     /**
     * @property {number} halfWidth - The calculated width / 2 of the physics body.
     */
-    this.halfWidth = Math.floor(sprite.currentFrame.sourceSizeW / 2);
+    // this.halfWidth = Math.floor(sprite.currentFrame.sourceSizeW / 2);
 
     /**
     * @property {number} halfHeight - The calculated height / 2 of the physics body.
     */
-    this.halfHeight = Math.floor(sprite.currentFrame.sourceSizeH / 2);
+    // this.halfHeight = Math.floor(sprite.currentFrame.sourceSizeH / 2);
 
     /**
     * @property {Phaser.Point} center - The center coordinate of the Physics Body.
     */
-    this.center = new Phaser.Point(this.x + this.halfWidth, this.y + this.halfHeight);
+    // this.center = new Phaser.Point(this.x + this.halfWidth, this.y + this.halfHeight);
 
     /**
     * @property {Phaser.Point} velocity - The velocity of the Body.
@@ -170,6 +170,12 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.mass = 1;
 
     /**
+    * @property {number} friction - The amount of friction this body experiences during motion.
+    * @default
+    */
+    this.friction = 0.1;
+
+    /**
     * Set the checkCollision properties to control which directions collision is processed for this Body.
     * For example checkCollision.up = false means it won't collide when the collision happened while moving up.
     * @property {object} checkCollision - An object containing allowed collision.
@@ -202,25 +208,25 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.immovable = false;
 
     /**
-    * @property {boolean} moves - Set to true to allow the Physics system to move this Body, or false to move it manually.
+    * @property {boolean} moves - Set to true to allow the Physics system (such as velocity) to move this Body, or false to move it manually.
     * @default
     */
     this.moves = true;
 
     /**
-    * @property {number} rotation - The amount the parent Sprite is rotated. Note: You cannot rotate an AABB.
+    * @property {number} rotation - The amount the parent Sprite is rotated.
     * @default
     */
     this.rotation = 0;
 
     /**
-    * @property {boolean} allowRotation - Allow angular rotation? This will cause the Sprite to be rotated via angularVelocity, etc. Note that the AABB remains un-rotated.
+    * @property {boolean} allowRotation - Allow angular rotation? This will cause the Sprite to be rotated via angularVelocity, etc.
     * @default
     */
     this.allowRotation = true;
 
     /**
-    * @property {boolean} allowGravity - Allow this Body to be influenced by the global Gravity value? Note: It will always be influenced by the local gravity value.
+    * @property {boolean} allowGravity - Allow this Body to be influenced by the global Gravity value? Note: It will always be influenced by the local gravity if set.
     * @default
     */
     this.allowGravity = true;
@@ -250,12 +256,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.collideCallbackContext = null;
 
     /**
-    * @property {number} friction - The amount of friction this body experiences during motion.
-    * @default
-    */
-    this.friction = 0.1;
-
-    /**
     * A Body can be set to collide against the World bounds automatically and rebound back into the World if this is set to true. Otherwise it will leave the World.
     * @property {boolean} collideWorldBounds - Should the Body collide with the World bounds?
     */
@@ -276,13 +276,12 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     /**
     * @property {SAT.Box|SAT.Circle|SAT.Polygon} shape - The SAT Collision shape.
     */
-    this.shape = new SAT.Box(new SAT.Vector(this.x, this.y), this.width, this.height);
+    this.shape = null;
 
     /**
-    * @property {SAT.Polygon} polygons - The SAT Polygons, as derived from the Shape.
-    * @private
+    * @property {SAT.Polygon} polygon - The SAT Polygons, as derived from the Shape.
     */
-    this.polygons = this.shape.toPolygon();
+    this.polygon = null;
 
     /**
     * @property {Phaser.Point} _temp - Internal cache var.
@@ -320,49 +319,105 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this._distances = [0, 0, 0, 0];
 
+    //  Set-up the default shape
+    this.setRectangle(sprite.width, sprite.height, -sprite._cache.halfWidth, -sprite._cache.halfHeight);
+
 };
 
 Phaser.Physics.Arcade.Body.prototype = {
 
-    setCircle: function (radius) {
+    /**
+    * Sets this Body to use a circle of the given radius for all collision.
+    * The Circle will be centered on the center of the Sprite by default, but can be adjusted via the Body.offset property and the setCircle x/y parameters.
+    *
+    * @method Phaser.Physics.Arcade#setCircle
+    * @param {number} radius - The radius of this circle (in pixels)
+    * @param {number} [offsetX=0] - The x amount the circle will be offset from the Sprites center.
+    * @param {number} [offsetY=0] - The y amount the circle will be offset from the Sprites center.
+    */
+    setCircle: function (radius, offsetX, offsetY) {
 
-        this.shape = new SAT.Circle(new SAT.Vector(this.x, this.y), radius);
-        this.polygons = null;
+        if (typeof offsetX === 'undefined') { offsetX = 0; }
+        if (typeof offsetY === 'undefined') { offsetY = 0; }
+
         this.type = Phaser.Physics.Arcade.CIRCLE;
+        this.shape = new SAT.Circle(new SAT.Vector(this.sprite.center.x, this.sprite.center.y), radius);
+        this.polygon = null;
+
+        this.offset.setTo(offsetX, offsetY);
 
     },
 
-    setBox: function () {
+    /**
+    * Sets this Body to use a rectangle for all collision.
+    * If you don't specify any parameters it will be sized to match the parent Sprites current width and height (including scale factor) and centered on the sprite.
+    *
+    * @method Phaser.Physics.Arcade#setRectangle
+    * @param {number} [width] - The width of the rectangle. If not specified it will default to the width of the parent Sprite.
+    * @param {number} [height] - The height of the rectangle. If not specified it will default to the height of the parent Sprite.
+    * @param {number} [translateX] - The x amount the rectangle will be translated from the Sprites center.
+    * @param {number} [translateY] - The y amount the rectangle will be translated from the Sprites center.
+    */
+    setRectangle: function (width, height, translateX, translateY) {
 
-        this.shape = new SAT.Box(new SAT.Vector(this.x, this.y), this.width, this.height);
-        this.polygons = this.shape.toPolygon();
+        if (typeof width === 'undefined') { width = this.sprite.width; }
+        if (typeof height === 'undefined') { height = this.sprite.height; }
+        if (typeof translateX === 'undefined') { translateX = -this.sprite._cache.halfWidth; }
+        if (typeof translateY === 'undefined') { translateY = -this.sprite._cache.halfHeight; }
+
         this.type = Phaser.Physics.Arcade.RECT;
+        this.shape = new SAT.Box(new SAT.Vector(this.sprite.center.x, this.sprite.center.y), width, height);
+        this.polygon = this.shape.toPolygon();
+        this.polygon.translate(translateX, translateY);
+
+        this.offset.setTo(0, 0);
+
+    },
+
+    /**
+    * Sets this Body to use a convex polygon for all collision. The points are specified in a counter-clockwise direction and must create a convex polygon.
+    * It will be centered on the parent Sprite.
+    *
+    * @method Phaser.Physics.Arcade#setPolygon
+    * @param {array<SAT.Vector>} points - An array of vectors representing the points in the polygon, in counter-clockwise order.
+    * @param {number} [translateX=0] - The x amount the rectangle will be translated by from the Sprites center.
+    * @param {number} [translateY=0] - The y amount the rectangle will be translated by from the Sprites center.
+    */
+    setPolygon: function (points, translateX, translateY) {
+
+        if (typeof translateX === 'undefined') { translateX = 0; }
+        if (typeof translateY === 'undefined') { translateY = 0; }
+
+        this.type = Phaser.Physics.Arcade.POLYGON;
+        this.shape = null;
+        this.polygon = new SAT.Polygon(new SAT.Vector(this.sprite.center.x, this.sprite.center.y), points);
+        this.polygon.translate(translateX, translateY);
+
+        this.offset.setTo(0, 0);
 
     },
 
     /**
     * Internal method.
     *
-    * @method Phaser.Physics.Arcade#updateBounds
-    * @protected
+    * @method Phaser.Physics.Arcade#updateScale
+    * @private
     */
-    updateBounds: function (centerX, centerY, scaleX, scaleY) {
+    updateScale: function (scaleX, scaleY) {
 
         if (scaleX != this._sx || scaleY != this._sy)
         {
-            this.width = this.sourceWidth * scaleX;
-            this.height = this.sourceHeight * scaleY;
-            this.halfWidth = Math.floor(this.width / 2);
-            this.halfHeight = Math.floor(this.height / 2);
-
-            if (this.polygons)
+            if (this.polygon)
             {
-                this.polygons.scale(scaleX / this._sx, scaleY / this._sy);
+                this.polygon.scale(scaleX / this._sx, scaleY / this._sy);
+            }
+            else
+            {
+                this.shape.r *= Math.max(scaleX, scaleY);
             }
 
             this._sx = scaleX;
             this._sy = scaleY;
-            this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
         }
 
     },
@@ -377,11 +432,20 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.preX = this.x;
         this.preY = this.y;
-        this.preRotation = this.rotation;
 
-        this.x = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
-        this.y = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
-        this.rotation = this.sprite.angle;
+        this.x = this.sprite.center.x + this.offset.x;
+        this.y = this.sprite.center.y + this.offset.y;
+
+        if (this.allowRotation)
+        {
+            this.preRotation = this.rotation;
+            this.rotation = this.sprite.rotation;
+
+            if (this.type !== Phaser.Physics.Arcade.CIRCLE && this.deltaZ() !== 0)
+            {
+                this.polygon.rotate(this.deltaZ());
+            }
+        }
 
         this.blocked.up = false;
         this.blocked.down = false;
@@ -399,71 +463,9 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.moves)
         {
-            if (this.collideWorldBounds)
-            {
-                this.checkWorldBounds();
-                this.adjustWorldBounds();
-            }
+            this.game.physics.checkBounds(this);
 
             this.applyFriction();
-        }
-
-        this.syncPosition();
-
-    },
-
-    /**
-    * Internal method used to check the Body against the World Bounds.
-    *
-    * @method Phaser.Physics.Arcade#checkWorldBounds
-    * @protected
-    */
-    checkWorldBounds: function () {
-
-        if (this.x <= this.game.world.bounds.x)
-        {
-            this.blocked.left = true;
-        }
-        else if (this.right >= this.game.world.bounds.right)
-        {
-            this.blocked.right = true;
-        }
-
-        if (this.y <= this.game.world.bounds.y)
-        {
-            this.blocked.up = true;
-        }
-        else if (this.bottom >= this.game.world.bounds.bottom)
-        {
-            this.blocked.down = true;
-        }
-
-    },
-
-    /**
-    * Internal method used to adjust the position of the Body against the World Bounds.
-    *
-    * @method Phaser.Physics.Arcade#adjustWorldBounds
-    * @protected
-    */
-    adjustWorldBounds: function () {
-
-        if (this.x < this.game.world.bounds.x)
-        {
-            this.x += this.game.world.bounds.x - this.x;
-        }
-        else if (this.right > this.game.world.bounds.right)
-        {
-            this.x -= this.right - this.game.world.bounds.right;
-        }
-
-        if (this.y < this.game.world.bounds.y)
-        {
-            this.y += this.game.world.bounds.y - this.y;
-        }
-        else if (this.bottom > this.game.world.bounds.bottom)
-        {
-            this.y -= this.bottom - this.game.world.bounds.bottom;
         }
 
     },
@@ -506,7 +508,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (x)
         {
-            if (rebound)
+            if (rebound && (this.blocked.left || this.blocked.right))
             {
                 this.velocity.x *= -this.bounce.x;
             }
@@ -521,7 +523,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (y)
         {
-            if (rebound)
+            if (rebound && (this.blocked.up || this.blocked.down))
             {
                 this.velocity.y *= -this.bounce.y;
             }
@@ -740,7 +742,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.type === Phaser.Physics.Arcade.RECT && body.type === Phaser.Physics.Arcade.RECT)
         {
-            return SAT.testPolygonPolygon(this.polygons, body.polygons, response);
+            return SAT.testPolygonPolygon(this.polygon, body.polygon, response);
         }
         else if (this.type === Phaser.Physics.Arcade.CIRCLE && body.type === Phaser.Physics.Arcade.CIRCLE)
         {
@@ -748,11 +750,11 @@ Phaser.Physics.Arcade.Body.prototype = {
         }
         else if (this.type === Phaser.Physics.Arcade.RECT && body.type === Phaser.Physics.Arcade.CIRCLE)
         {
-            return SAT.testPolygonCircle(this.polygons, body.shape, response);
+            return SAT.testPolygonCircle(this.polygon, body.shape, response);
         }
         else if (this.type === Phaser.Physics.Arcade.CIRCLE && body.type === Phaser.Physics.Arcade.RECT)
         {
-            return SAT.testCirclePolygon(this.shape, body.polygons, response);
+            return SAT.testCirclePolygon(this.shape, body.polygon, response);
         }
 
     },
@@ -1032,10 +1034,10 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.shape.pos.x = this.x;
         this.shape.pos.y = this.y;
 
-        if (this.polygons)
+        if (this.polygon)
         {
-            this.polygons.pos.x = this.x;
-            this.polygons.pos.y = this.y;
+            this.polygon.pos.x = this.x;
+            this.polygon.pos.y = this.y;
         }
 
     },
@@ -1097,24 +1099,11 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.moves)
         {
-            if (this.bounce.x !== 0 && (this.blocked.left || this.blocked.right))
-            {
-                this.reboundCheck(true, false, true);
-            }
-
-            if (this.bounce.y !== 0 && (this.blocked.up || this.blocked.down))
-            {
-                this.reboundCheck(false, true, true);
-            }
+            this.reboundCheck(true, true, true);
 
             this.integrateVelocity();
 
-            if (this.collideWorldBounds)
-            {
-                this.adjustWorldBounds();
-            }
-
-            this.syncPosition();
+            this.game.physics.checkBounds(this);
 
             if (this.deltaX() < 0)
             {
@@ -1134,14 +1123,14 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.facing = Phaser.DOWN;
             }
 
-            this.sprite.x = this.sprite.worldTransform[2] = this.x - (this.preX - this.sprite.x);
-            this.sprite.y = this.sprite.worldTransform[5] = this.y - (this.preY - this.sprite.y);
-
-            this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
+            this.sprite.x = this.x + (this.sprite.x - this.sprite.center.x) - this.offset.x;
+            this.sprite.y = this.y + (this.sprite.y - this.sprite.center.y) - this.offset.y;
 
             if (this.allowRotation)
             {
-                this.sprite.angle += this.deltaZ();
+                // this.sprite.rotation = this.rotation;
+                // this.sprite.angle += this.deltaZ();
+                // this.sprite.angle = this.angle;
             }
         }
 
@@ -1155,13 +1144,12 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade#setSize
     * @param {number} width - The width of the Body.
     * @param {number} height - The height of the Body.
-    * @param {number} offsetX - The X offset of the Body from the Sprite position.
-    * @param {number} offsetY - The Y offset of the Body from the Sprite position.
-    */
+    * @param {number} [offsetX=0] - The X offset of the Body from the Sprite position.
+    * @param {number} [offsetY=0] - The Y offset of the Body from the Sprite position.
     setSize: function (width, height, offsetX, offsetY) {
 
-        offsetX = offsetX || this.offset.x;
-        offsetY = offsetY || this.offset.y;
+        if (typeof offsetX === 'undefined') { offsetX = 0; }
+        if (typeof offsetY === 'undefined') { offsetY = 0; }
 
         this.sourceWidth = width;
         this.sourceHeight = height;
@@ -1182,6 +1170,7 @@ Phaser.Physics.Arcade.Body.prototype = {
         }
 
     },
+    */
 
     /**
     * Resets all Body values (velocity, acceleration, rotation, etc)
@@ -1206,10 +1195,10 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.shape.pos.x = this.x;
         this.shape.pos.y = this.y;
 
-        if (this.polygons)
+        if (this.polygon)
         {
-            this.polygons.pos.x = this.x;
-            this.polygons.pos.y = this.y;
+            this.polygon.pos.x = this.x;
+            this.polygon.pos.y = this.y;
         }
 
         this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
@@ -1322,36 +1311,87 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
 
 });
 
+
 /**
-* @name Phaser.Physics.Arcade.Body#screenX
-* @property {number} screenX - The x position of the physics body translated to screen space.
+* @name Phaser.Physics.Arcade.Body#x
+* @property {number} x
 */
-Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "screenX", {
+Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "x", {
     
     /**
-    * The x position of the physics body translated to screen space.
-    * @method screenX
+    * @method x
     * @return {number}
     */
     get: function () {
-        return (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+        
+        if (this.type === Phaser.Physics.Arcade.CIRCLE)
+        {
+            return this.shape.pos.x;
+        }
+        else
+        {
+            return this.polygon.pos.x;
+        }
+
+    },
+
+    /**
+    * @method x
+    * @param {number} value
+    */
+    set: function (value) {
+
+        if (this.type === Phaser.Physics.Arcade.CIRCLE)
+        {
+            this.shape.pos.x = value;
+        }
+        else
+        {
+            this.polygon.pos.x = value;
+        }
+
     }
 
 });
 
 /**
-* @name Phaser.Physics.Arcade.Body#screenY
-* @property {number} screenY - The y position of the physics body translated to screen space.
+* @name Phaser.Physics.Arcade.Body#y
+* @property {number} y
 */
-Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "screenY", {
+Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "y", {
     
     /**
-    * The y position of the physics body translated to screen space.
-    * @method screenY
+    * @method y
     * @return {number}
     */
     get: function () {
-        return (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+        
+        if (this.type === Phaser.Physics.Arcade.CIRCLE)
+        {
+            return this.shape.pos.y;
+        }
+        else
+        {
+            return this.polygon.pos.y;
+        }
+
+    },
+
+    /**
+    * @method y
+    * @param {number} value
+    */
+    set: function (value) {
+
+        if (this.type === Phaser.Physics.Arcade.CIRCLE)
+        {
+            this.shape.pos.y = value;
+        }
+        else
+        {
+            this.polygon.pos.y = value;
+        }
+
     }
 
 });

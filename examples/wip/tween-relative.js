@@ -16,20 +16,56 @@ function create() {
 
 	game.stage.backgroundColor = '#2384e7';
 
-	arrowStart = game.add.sprite(100, 100, 'arrows', 0);
+	// game.physics.setBoundsToWorld(true, true, false, false);
 
-	arrowEnd = game.add.sprite(400, 100, 'arrows', 1);
+	// arrowStart = game.add.sprite(100, 100, 'arrows', 0);
+	// arrowEnd = game.add.sprite(400, 100, 'arrows', 1);
 
-	sprite = game.add.sprite(100, 164, 'phaser');
+	// sprite = game.add.sprite(100, 164, 'phaser');
+	sprite = game.add.sprite(300, 364, 'phaser');
+	sprite.anchor.setTo(0.5, 0.5);
 	sprite.inputEnabled = true;
+	sprite.body.collideWorldBounds = true;
+	sprite.body.bounce.setTo(1, 1);
+
+	// sprite.body.allowRotation = true;
+	// sprite.body.polygon.translate(100, 0);
+
+
+	sprite.body.setPolygon([new SAT.Vector(0,0), new SAT.Vector(60, 0), new SAT.Vector(100, 40), new SAT.Vector(60, 80), new SAT.Vector(0, 80)], -50, -40);
+
+
+	// sprite.body.setCircle(50);
+	// sprite.body.offset.setTo(50, 50);
+
+	// console.log(sprite.body.x, sprite.body.y, sprite.body.shape.radius);
 
 	sprite.events.onInputDown.add(move, this);
+
+	// sprite.body.polygons.rotate(0.4);
+	// sprite.rotation = 0.4;
+
+	// console.log(sprite.body.polygons);
 
 }
 
 function move() {
 
-	console.log('moving');
+	console.log('move');
+
+	sprite.body.velocity.x = 200;
+	sprite.body.velocity.y = -200;
+	// sprite.body.angularVelocity = 2;
+
+	// sprite.rotation = 0.4;
+
+	// console.log(sprite.body.polygon.points);
+
+    // to: function (properties, duration, ease, autoStart, delay, repeat, yoyo) {
+
+	game.add.tween(sprite).to( { angle: 359 }, 4000, Phaser.Easing.Linear.None, true, 0, 1000, false);
+
+	// sprite.scale.setTo(2, 2);
 
 	if (sprite.x === 100)
 	{
@@ -53,13 +89,13 @@ function render() {
 		// game.debug.renderText('Click sprite to tween', 32, 32);
 	}
 
-	game.debug.renderText('x: ' + arrowStart.x, arrowStart.x, arrowStart.y - 4);
-	game.debug.renderText('x: ' + arrowEnd.x, arrowEnd.x, arrowEnd.y - 4);
+	// game.debug.renderText('x: ' + arrowStart.x, arrowStart.x, arrowStart.y - 4);
+	// game.debug.renderText('x: ' + arrowEnd.x, arrowEnd.x, arrowEnd.y - 4);
 
 	game.debug.renderText('sprite.x: ' + sprite.x + ' deltaX: ' + sprite.deltaX, 32, 32);
 	game.debug.renderText('sprite.y: ' + sprite.y + ' deltaY: ' + sprite.deltaY, 32, 48);
 
-	game.debug.renderPolygon(sprite.body.polygons);
+	game.debug.renderPhysicsBody(sprite.body);
 
 	game.debug.renderPoint(sprite.center);
 

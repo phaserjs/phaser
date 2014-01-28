@@ -604,7 +604,7 @@ Phaser.Sprite.prototype.updateBounds = function() {
     //  Update our physics bounds
     if (this.body)
     {
-        this.body.updateBounds(this.center.x, this.center.y, this._cache.scaleX, this._cache.scaleY);
+        this.body.updateScale(this._cache.scaleX, this._cache.scaleY);
     }
 
 };

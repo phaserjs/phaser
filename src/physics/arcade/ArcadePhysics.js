@@ -30,6 +30,31 @@ Phaser.Physics.Arcade = function (game) {
     this.gravity = new Phaser.Point();
 
     /**
+    * @property {SAT.Box} worldLeft - The left hand side of the physics bounds.
+    */
+    this.worldLeft = null;
+
+    /**
+    * @property {SAT.Box} worldRight - The right hand side of the physics bounds.
+    */
+    this.worldRight = null;
+
+    /**
+    * @property {SAT.Box} worldTop - The top side of the physics bounds.
+    */
+    this.worldTop = null;
+
+    /**
+    * @property {SAT.Box} worldBottom - The bottom of the physics bounds.
+    */
+    this.worldBottom = null;
+
+    /**
+    * @property {array<SAT.Polygon>} worldPolys - An array of the polygon data from the physics bounds.
+    */
+    this.worldPolys = [ null, null, null, null ];
+
+    /**
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
     */
     this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
@@ -110,6 +135,9 @@ Phaser.Physics.Arcade = function (game) {
     */
     this._response = new SAT.Response();
 
+    //  Set the bounds to the world as default
+    this.setBoundsToWorld(true, true, true, true);
+
 };
 
 /**
@@ -131,6 +159,141 @@ Phaser.Physics.Arcade.CIRCLE = 1;
 Phaser.Physics.Arcade.POLYGON = 2;
 
 Phaser.Physics.Arcade.prototype = {
+
+    /**
+    * Checks the given Physics.Body against the Physics Bounds, if any are set and separates them, setting the blocked flags on the Body as it does so.
+    *
+    * @method Phaser.Physics.Arcade#checkBounds
+    * @param {Phaser.Physics.Arcade.Body} The Body object to be checked.
+    */
+    checkBounds: function (body) {
+
+        if (!body.collideWorldBounds || (!this.worldLeft && !this.worldRight && !this.worldTop && !this.worldBottom))
+        {
+            return;
+        }
+
+        this._response.clear();
+
+        var test = SAT.testPolygonPolygon;
+        var part = body.polygon;
+
+        if (body.type === Phaser.Physics.Arcade.CIRCLE)
+        {
+            test = SAT.testPolygonCircle;
+            part = body.shape;
+        }
+
+        if (this.worldLeft && test(this.worldPolys[0], part, this._response))
+        {
+            body.blocked.left = true;
+            part.pos.add(this._response.overlapV);
+        }
+        else if (this.worldRight && test(this.worldPolys[1], part, this._response))
+        {
+            body.blocked.right = true;
+            part.pos.add(this._response.overlapV);
+        }
+
+        this._response.clear();
+
+        if (this.worldTop && test(this.worldPolys[2], part, this._response))
+        {
+            body.blocked.up = true;
+            part.pos.add(this._response.overlapV);
+        }
+        else if (this.worldBottom && test(this.worldPolys[3], part, this._response))
+        {
+            body.blocked.down = true;
+            part.pos.add(this._response.overlapV);
+        }
+
+    },
+
+    /**
+    * Sets the bounds of the Physics world to match the Game.World.
+    * You can optionally set which 'walls' to create: left, right, top or bottom.
+    *
+    * @method Phaser.Physics.Arcade#setBoundsToWorld
+    * @param {boolean} [left=true] - If true will create the left bounds wall.
+    * @param {boolean} [right=true] - If true will create the right bounds wall.
+    * @param {boolean} [top=true] - If true will create the top bounds wall.
+    * @param {boolean} [bottom=true] - If true will create the bottom bounds wall.
+    */
+    setBoundsToWorld: function (left, right, top, bottom) {
+
+        this.setBounds(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, left, right, top, bottom);
+
+    },
+
+    /**
+    * Sets the bounds of the Physics world to match the given world pixel dimensions.
+    * You can optionally set which 'walls' to create: left, right, top or bottom.
+    *
+    * @method Phaser.Physics.Arcade#setBounds
+    * @param {number} x - The x coordinate of the top-left corner of the bounds.
+    * @param {number} y - The y coordinate of the top-left corner of the bounds.
+    * @param {number} width - The width of the bounds.
+    * @param {number} height - The height of the bounds.
+    * @param {boolean} [left=true] - If true will create the left bounds wall.
+    * @param {boolean} [right=true] - If true will create the right bounds wall.
+    * @param {boolean} [top=true] - If true will create the top bounds wall.
+    * @param {boolean} [bottom=true] - If true will create the bottom bounds wall.
+    */
+    setBounds: function (x, y, width, height, left, right, top, bottom) {
+
+        if (typeof left === 'undefined') { left = true; }
+        if (typeof right === 'undefined') { right = true; }
+        if (typeof top === 'undefined') { top = true; }
+        if (typeof bottom === 'undefined') { bottom = true; }
+
+        var thickness = 100;
+
+        if (left)
+        {
+            this.worldLeft = new SAT.Box(new SAT.Vector(x - thickness, y), thickness, height);
+            this.worldPolys[0] = this.worldLeft.toPolygon();
+        }
+        else
+        {
+            this.worldLeft = null;
+            this.worldPolys[0] = null;
+        }
+
+        if (right)
+        {
+            this.worldRight = new SAT.Box(new SAT.Vector(x + width, y), thickness, height);
+            this.worldPolys[1] = this.worldRight.toPolygon();
+        }
+        else
+        {
+            this.worldRight = null;
+            this.worldPolys[1] = null;
+        }
+
+        if (top)
+        {
+            this.worldTop = new SAT.Box(new SAT.Vector(x, y - thickness), width, thickness);
+            this.worldPolys[2] = this.worldTop.toPolygon();
+        }
+        else
+        {
+            this.worldTop = null;
+            this.worldPolys[2] = null;
+        }
+
+        if (bottom)
+        {
+            this.worldBottom = new SAT.Box(new SAT.Vector(x, y + height), width, thickness);
+            this.worldPolys[3] = this.worldBottom.toPolygon();
+        }
+        else
+        {
+            this.worldBottom = null;
+            this.worldPolys[3] = null;
+        }
+
+    },
 
     /**
     * Called automatically by a Physics body, it updates all motion related values on the Body.
@@ -629,7 +792,8 @@ Phaser.Physics.Arcade.prototype = {
     */
     separate: function (body1, body2, processCallback, callbackContext, overlapOnly) {
 
-        if (body1 === body2 || Phaser.Rectangle.intersects(body1, body2) === false)
+        // if (body1 === body2 || Phaser.Rectangle.intersects(body1, body2) === false)
+        if (body1 === body2)
         {
             return false;
         }
