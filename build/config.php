@@ -104,6 +104,7 @@
 	<script src="$path/src/geom/Circle.js"></script>
 	<script src="$path/src/geom/Point.js"></script>
 	<script src="$path/src/geom/Rectangle.js"></script>
+	<script src="$path/src/geom/Line.js"></script>
 
 	<script src="$path/src/net/Net.js"></script>
 

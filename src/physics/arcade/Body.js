@@ -4,6 +4,27 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+/*
+
+The SKPhysicsBody class defines properties that determine how the physics body is simulated. These properties affect how the body reacts to forces, what forces it generates on itself (to simulate friction), and how it reacts to collisions in the scene. In most cases, the properties are used to simulate physical effects.
+
+Each individual body also has its own property values that determine exactly how it reacts to forces and collisions in the scene. Here are the most important properties:
+
+The mass property determines how forces affect the body, as well as how much momentum the body has when it is involved in a collision.
+The friction property determines the roughness of the body’s surface. It is used to calculate the frictional force that a body applies to other bodies moving along its surface.
+The linearDamping and angularDamping properties are used to calculate friction on the body as it moves through the world. For example, this might be used to simulate air or water friction.
+The restitution property determines how much energy a body maintains during a collision—its bounciness.
+Other properties are used to determine how the simulation is performed on the body itself:
+
+The dynamic property determines whether the body is simulated by the physics subsystem.
+The affectedByGravity property determines whether the simulation exerts a gravitational force on the body. For more information on the physics world, see “Configuring the Physics World.”
+The allowsRotation property determines whether forces can impart angular velocity on the body.
+
+
+*/
+
+
+
 /**
 * The Physics Body is linked to a single Sprite. All physics operations should be performed against the body rather than
 * the Sprite itself. For example you can set the velocity, acceleration, bounce values etc all on the Body.

@@ -111,6 +111,7 @@ New features:
 * Math.normalizeAngle - normalises an angle, now in radians only.
 * Math.normalizeLatitude - Normalizes a latitude to the [-90,90] range.
 * Math.normalizeLongitude - Normalizes a longitude to the [-180,180] range.
+* Phaser.Line added to the group of geometry classes, with full point on line/segment and intersection tests (see new examples)
 
 
 New Examples:

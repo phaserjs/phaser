@@ -95,6 +95,7 @@ Phaser.Utils.Debug.prototype = {
 
         this.context.save();
         this.context.setTransform(1, 0, 0, 1, 0, 0);
+        this.context.strokeStyle = color;
         this.context.fillStyle = color;
         this.context.font = this.font;
         this.context.globalAlpha = 1;
@@ -626,6 +627,56 @@ Phaser.Utils.Debug.prototype = {
         this.line('world x: ' + sprite.world.x);
         this.line('world y: ' + sprite.world.y);
 
+        this.stop();
+
+    },
+
+    /**
+    * Renders a Line object in the given color.
+    * @method Phaser.Utils.Debug#renderLine
+    * @param {Phaser.Line} line - The Line to render.
+    * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
+    */
+    renderLine: function (line, color) {
+
+        if (this.context == null)
+        {
+            return;
+        }
+
+        color = color || 'rgb(255, 255, 255)';
+
+        this.start(0, 0, color);
+        this.context.beginPath();
+        this.context.moveTo(line.start.x, line.start.y);
+        this.context.lineTo(line.end.x, line.end.y);
+        this.context.closePath();
+        this.context.stroke();
+        this.stop();
+
+    },
+
+    /**
+    * Renders Line information in the given color.
+    * @method Phaser.Utils.Debug#renderLineInfo
+    * @param {Phaser.Line} line - The Line to render.
+    * @param {number} x - X position of the debug info to be rendered.
+    * @param {number} y - Y position of the debug info to be rendered.
+    * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
+    */
+    renderLineInfo: function (line, x, y, color) {
+
+        if (this.context == null)
+        {
+            return;
+        }
+
+        color = color || 'rgb(255, 255, 255)';
+
+        this.start(x, y, color, 80);
+        this.splitline('start.x:', line.start.x.toFixed(2), 'start.y:', line.start.y.toFixed(2));
+        this.splitline('end.x:', line.end.x.toFixed(2), 'end.y:', line.end.y.toFixed(2));
+        this.splitline('length:', line.length.toFixed(2), 'angle:', line.angle);
         this.stop();
 
     },
