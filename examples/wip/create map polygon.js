@@ -3,172 +3,232 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-    game.load.tilemap('map', 'assets/tilemaps/maps/platform.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.image('platformer_tiles', 'assets/tilemaps/tiles/platformer_tiles.png');
-    game.load.spritesheet('gameboy', 'assets/sprites/gameboy_seize_color_40x60.png', 40, 60);
-    game.load.spritesheet('balls', 'assets/sprites/balls.png', 17, 17);
+    // game.load.tilemap('map', 'assets/tilemaps/maps/platform.json', null, Phaser.Tilemap.TILED_JSON);
+    // game.load.image('platformer_tiles', 'assets/tilemaps/tiles/platformer_tiles.png');
+
+    game.load.tilemap('map', 'assets/tilemaps/maps/features_test.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.image('ground_1x1', 'assets/tilemaps/tiles/ground_1x1.png');
+    game.load.image('walls_1x2', 'assets/tilemaps/tiles/walls_1x2.png');
+    game.load.image('tiles2', 'assets/tilemaps/tiles/tiles2.png');
+
 
 }
 
 var map;
 var layer;
-var sprite;
-var sprite2;
-var balls;
+var mapLayer;
+
+var polys = [];
+var tiles = [];
+var idx = 0;
+var group = [];
 
 function create() {
 
     game.stage.backgroundColor = '#124184';
 
-    map = game.add.tilemap('map');
-
-    map.addTilesetImage('platformer_tiles');
-
-    map.setCollisionBetween(21, 53);
-
-    layer = map.createLayer('Tile Layer 1');
-
+    // map = game.add.tilemap('map');
+    // map.addTilesetImage('platformer_tiles');
+    // map.setCollisionBetween(21, 53);
+    // layer = map.createLayer('Tile Layer 1');
     // layer.debug = true;
 
-    // var mapLayer = map.layers[0];
+    map = game.add.tilemap('map');
+    map.addTilesetImage('ground_1x1');
+    map.addTilesetImage('walls_1x2');
+    map.addTilesetImage('tiles2');
+    map.setCollisionBetween(1, 12);
+    layer = map.createLayer('Tile Layer 1');
+
+    mapLayer = map.layers[0];
+
+    tiles = getInterestingTiles();
+
+    console.log('found',tiles.length,'interesting tiles');
+
+
+        // group = [];
+
+        // var tile = getFirstUnscanned();
+
+        // console.log('starting from', tile);
+
+        // floodFill(tile);
+
+        // console.log('group collected, size', group.length);
+
+        //  now scan the group
+        // scanEdges();
 
 
 
-    // var p = [];
-    // var direction = 'e';
+    //  works great :)
+    while (getScannedLeft() > 0) {
 
-    // var x = 0;
-    // var y = 0;
+        // group = [];
 
-    // for (var y = 0, h = mapLayer.height; y < h; y++)
-    // {
-    //     for (var x = 0, w = mapLayer.width; x < w; x++)
-    //     {
-    //         var tile = mapLayer.data[y][x];
+        var tile = getFirstUnscanned();
 
-    //         if (tile)
-    //         {
-    //             if (tile.faceTop)
-    //             tile.faceTop = false;
-    //             tile.faceBottom = false;
-    //             tile.faceLeft = false;
-    //             tile.faceRight = false;
-    //         }
-    //     }
-    // }
+        console.log('starting from', tile);
 
-    // sprite = game.add.sprite(270, 100, 'gameboy', 0);
-    // sprite.name = 'red';
-    // sprite.body.collideWorldBounds = true;
-    // sprite.body.minBounceVelocity = 0.9;
-    // sprite.body.bounce.setTo(0.5, 0.9);
-    // sprite.body.friction = 0.5;
+        floodFill(tile);
+
+        console.log('group collected, size', group.length);
+
+        console.log('remaining: ', getScannedLeft());
+
+    }
 
 }
 
+function getFirstUnscanned() {
 
-
-/*---------------------------------------------------------------------------
-Returns an Object with the following properties:
-intersects        -Boolean indicating if an intersection exists.
-start_inside      -Boolean indicating if Point A is inside of the polygon.
-end_inside       -Boolean indicating if Point B is inside of the polygon.
-intersections    -Array of intersection Points along the polygon.
-centroid          -A Point indicating "center of mass" of the polygon.
- 
-"pArry" is an Array of Points.
-----------------------------------------------------------------------------*/
-function lineIntersectPoly(A : Point, B : Point, pArry:Array):Object {
-    var An:int=1;
-    var Bn:int=1;
-    var C:Point;
-    var D:Point;
-    var i:Point;
-    var cx:Number=0;
-    var cy:Number=0;
-    var result:Object = new Object();
-    var pa:Array=pArry.slice(); //Copy to prevent growing points when connecting ends.
-        pa.push(pa[0]); //Create line from last Point to beginning Point 
-    result.intersects = false;
-    result.intersections=[];
-    result.start_inside=false;
-    result.end_inside=false;    
-    var n:int=pa.length-1;  
-    while(n > -1){
-        C=Point(pa[n]);
-        if(n > 0){
-            cx+=C.x;
-            cy+=C.y;                    
-            D=Point(pa[n-1])||Point(pa[0]);
-            i=lineIntersectLine(A,B,C,D);
-            if(i != null){
-                result.intersections.push(i);
-            }
-            if(lineIntersectLine(A,new Point(C.x+D.x,A.y),C,D) != null){
-                An++;
-            }
-            if(lineIntersectLine(B,new Point(C.x+D.x,B.y),C,D) != null){
-                Bn++;
-            }           
+    for (var i = 0; i < tiles.length; i++)
+    {
+        if (!tiles[i].scanned)
+        {
+            return tiles[i];
         }
-        n--;
     }
-    if(An % 2 == 0){
-        result.start_inside=true;
-    }
-    if(Bn % 2 == 0){
-        result.end_inside=true;
-    }       
-    result.centroid=new Point(cx/(pa.length-1),cy/(pa.length-1));
-    result.intersects = result.intersections.length > 0;
-    return result;
+
 }
- 
+
+function getScannedLeft() {
+
+    var total = tiles.length;
+
+    for (var i = 0; i < tiles.length; i++)
+    {
+        if (tiles[i].scanned)
+        {
+            total--;
+        }
+    }
+
+    return total;
+
+}
+
+var current;
+
+function scanEdges() {
+
+    var points = [];
+
+    var start = group[0];
+
+    // special case for when group.length = 1 should go here
 
 
 
+}
 
+function scanTop(origin) {
 
-function launch() {
+}
 
-    // sprite.body.velocity.x = -200;
-    // sprite.body.velocity.y = -200;
+function floodFill(origin) {
 
-    sprite2.body.velocity.x = -200;
-    sprite2.body.velocity.y = -200;
+    if (origin.scanned === true)
+    {
+        return;
+    }
+
+    origin.scanned = true;
+
+    group.push(origin);
+
+    // console.log('ff origin', origin.x, origin.y);
+
+    var west = map.getTileLeft(0, origin.x, origin.y);
+
+    if (west && (west.faceTop || west.faceBottom || west.faceLeft || west.faceRight))
+    {
+        // console.log('west found', west);
+        floodFill(west);
+    }
+
+    var east = map.getTileRight(0, origin.x, origin.y);
+
+    if (east && (east.faceTop || east.faceBottom || east.faceLeft || east.faceRight))
+    {
+        // console.log('east found', east);
+        floodFill(east);
+    }
+
+    var north = map.getTileAbove(0, origin.x, origin.y);
+
+    if (north && (north.faceTop || north.faceBottom || north.faceLeft || north.faceRight))
+    {
+        // console.log('north found', north);
+        floodFill(north);
+    }
+
+    var south = map.getTileBelow(0, origin.x, origin.y);
+
+    if (south && (south.faceTop || south.faceBottom || south.faceLeft || south.faceRight))
+    {
+        // console.log('south found', south);
+        floodFill(south);
+    }
+
+}
+
+function getInterestingTiles() {
+
+    var tiles = [];
+
+    for (var y = 0, h = mapLayer.height; y < h; y++)
+    {
+        for (var x = 0, w = mapLayer.width; x < w; x++)
+        {
+            var tile = mapLayer.data[y][x];
+
+            if (tile && (tile.faceTop || tile.faceBottom || tile.faceLeft || tile.faceRight))
+            {
+                //  reset the scanned status
+                tile.scanned = false;
+                tiles.push(tile);
+            }
+        }
+    }
+
+    return tiles;
+
+}
+
+function getTile() {
+
+    for (var y = 0, h = mapLayer.height; y < h; y++)
+    {
+        for (var x = 0, w = mapLayer.width; x < w; x++)
+        {
+            var tile = mapLayer.data[y][x];
+
+            if (tile && (tile.faceTop || tile.faceBottom || tile.faceLeft || tile.faceRight))
+            {
+                return tile;
+            }
+        }
+    }
 
 }
 
 function update() {
 
-    // game.physics.collide(balls, layer);
-    // game.physics.collide(sprite, layer);
-    // game.physics.collide(sprite2, layer);
-    // game.physics.collide(sprite, sprite2);
  
 }
 
 function render() {
 
-    // game.debug.renderBodyInfo(sprite2, 32, 32);
-    // game.debug.renderPhysicsBody(sprite2.body);
+    if (group)
+    {
+        game.context.fillStyle = 'rgba(255,0,0,0.7)';
 
-
-    // game.debug.renderText(sprite2.body.left, 32, 30);
-    // game.debug.renderText(sprite2.body.right, 32, 50);
-    // game.debug.renderText(sprite2.body.top, 32, 70);
-    // game.debug.renderText(sprite2.body.bottom, 32, 90);
-
- 
-    // for (var i = 0; i < balls._container.length; i++)
-    // {
-
-    // }
-
-    // if (sprite)
-    // {
-    //     // game.debug.renderBodyInfo(sprite, 20, 30);
-        // game.debug.renderBodyInfo(sprite2, 20, 230);
-    // }
+        for (var i = 0; i < group.length; i++)
+        {
+            game.context.fillRect(group[i].x * group[i].width, group[i].y * group[i].height, group[i].width, group[i].height);
+        }
+    }
 
 }

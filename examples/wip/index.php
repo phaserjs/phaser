@@ -77,6 +77,7 @@
         <meta charset="UTF-8" />
         <title>phaser</title>
         <base href="../"></base>
+        <script src="_site/js/jquery-2.0.3.min.js" type="text/javascript"></script>
         <?php
             require('../../build/config.php');
 
@@ -98,6 +99,8 @@
     <body>
 
         <div id="phaser-example"></div>
+
+        <input type="button" id="step" value="step" />
 
         <h2>work in progress examples</h2>
 

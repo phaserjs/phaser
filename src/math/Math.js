@@ -660,7 +660,7 @@ Phaser.Math = {
     },
 
     /**
-    * Significantly faster version of Math.min
+    * Updated version of Math.min that can be passed either an array of numbers or the numbers as parameters.
     * See http://jsperf.com/math-s-min-max-vs-homemade/5
     *
     * @method Phaser.Math#min
@@ -668,15 +668,113 @@ Phaser.Math = {
     */
     min: function () {
 
-        for (var i =1 , min = 0, len = arguments.length; i < len; i++)
+        if (arguments.length === 1 && typeof arguments[0] === 'object')
         {
-            if (arguments[i] < arguments[min])
+            var data = arguments[0];
+        }
+        else
+        {
+            var data = arguments;
+        }
+
+        for (var i = 1, min = 0, len = data.length; i < len; i++)
+        {
+            if (data[i] < data[min])
             {
                 min = i;
             }
         }
 
-        return arguments[min];
+        return data[min];
+
+    },
+
+    /**
+    * Updated version of Math.max that can be passed either an array of numbers or the numbers as parameters.
+    *
+    * @method Phaser.Math#max
+    * @return {number} The largest value from those given.
+    */
+    max: function () {
+
+        if (arguments.length === 1 && typeof arguments[0] === 'object')
+        {
+            var data = arguments[0];
+        }
+        else
+        {
+            var data = arguments;
+        }
+
+        for (var i = 1, max = 0, len = data.length; i < len; i++)
+        {
+            if (data[i] > data[max])
+            {
+                max = i;
+            }
+        }
+
+        return data[max];
+
+    },
+
+    /**
+    * Updated version of Math.min that can be passed a property and either an array of objects or the objects as parameters.
+    * It will find the lowest matching property value from the given objects.
+    *
+    * @method Phaser.Math#minProperty
+    * @return {number} The lowest value from those given.
+    */
+    minProperty: function (property) {
+
+        if (arguments.length === 2 && typeof arguments[1] === 'object')
+        {
+            var data = arguments[1];
+        }
+        else
+        {
+            var data = arguments.slice(1);
+        }
+
+        for (var i = 1, min = 0, len = data.length; i < len; i++)
+        {
+            if (data[i][property] < data[min][property])
+            {
+                min = i;
+            }
+        }
+
+        return data[min][property];
+
+    },
+
+    /**
+    * Updated version of Math.max that can be passed a property and either an array of objects or the objects as parameters.
+    * It will find the largest matching property value from the given objects.
+    *
+    * @method Phaser.Math#maxProperty
+    * @return {number} The largest value from those given.
+    */
+    maxProperty: function (property) {
+
+        if (arguments.length === 2 && typeof arguments[1] === 'object')
+        {
+            var data = arguments[1];
+        }
+        else
+        {
+            var data = arguments.slice(1);
+        }
+
+        for (var i = 1, max = 0, len = data.length; i < len; i++)
+        {
+            if (data[i][property] > data[max][property])
+            {
+                max = i;
+            }
+        }
+
+        return data[max][property];
 
     },
 

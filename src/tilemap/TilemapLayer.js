@@ -492,6 +492,8 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     this._results.length = 0;
 
     // var _tile = null;
+    // this.context.fillStyle = 'rgba(255,0,0,0.3)';
+    // this.context.fillRect(this._tx * this._cw, this._ty * this._ch, this._tw * this._cw, this._th * this._ch);
 
     for (var wy = this._ty; wy < this._ty + this._th; wy++)
     {
@@ -517,6 +519,7 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
                             tile: this.layer.data[wy][wx],
                             layer: this.layer.data[wy][wx].layer
                         });
+
                     }
                 // }
             }

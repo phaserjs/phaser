@@ -373,6 +373,8 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.updateCache();
     this.updateBounds();
 
+    this.debug = false;
+
     /**
     * @property {PIXI.Point} pivot - The pivot point of the displayObject that it rotates around.
     */
@@ -391,6 +393,11 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 * @memberof Phaser.Sprite
 */
 Phaser.Sprite.prototype.preUpdate = function() {
+
+if (this.debug)
+{
+    console.log('Sprite preUpdate xy: ', this.x, this.y, 'wxy:', this.world.x, this.world.y);
+}
 
     if (!this.exists || (this.group && !this.group.exists))
     {
@@ -617,9 +624,7 @@ Phaser.Sprite.prototype.updateBounds = function() {
 * @memberof Phaser.Sprite
 * @param {Phaser.Point} p - The Point object to store the results in.
 * @param {number} x - x coordinate within the Sprite to translate.
-* @param {number} y - x coordinate within the Sprite to translate.
-* @param {number} sx - Scale factor to be applied.
-* @param {number} sy - Scale factor to be applied.
+* @param {number} y - y coordinate within the Sprite to translate.
 * @return {Phaser.Point} The translated point.
 */
 Phaser.Sprite.prototype.getLocalPosition = function(p, x, y) {
@@ -638,8 +643,8 @@ Phaser.Sprite.prototype.getLocalPosition = function(p, x, y) {
 * @method Phaser.Sprite#getLocalUnmodifiedPosition
 * @memberof Phaser.Sprite
 * @param {Phaser.Point} p - The Point object to store the results in.
-* @param {number} x - x coordinate within the Sprite to translate.
-* @param {number} y - x coordinate within the Sprite to translate.
+* @param {number} gx - x coordinate within the Sprite to translate.
+* @param {number} gy - y coordinate within the Sprite to translate.
 * @return {Phaser.Point} The translated point.
 */
 Phaser.Sprite.prototype.getLocalUnmodifiedPosition = function(p, gx, gy) {
@@ -701,6 +706,12 @@ Phaser.Sprite.prototype.postUpdate = function() {
 
         this.position.x = this._cache.x;
         this.position.y = this._cache.y;
+
+if (this.debug)
+{
+    console.log('Sprite postUpdate xy: ', this.x, this.y, 'right:', this.right);
+}
+
     }
 
 };
@@ -1080,6 +1091,32 @@ Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
     
     get: function () {
         return this._cache.cameraVisible;
+    }
+
+});
+
+/**
+* @name Phaser.Sprite#worldCenterX
+* @property {number} worldCenterX - The center of the Sprite in world coordinates.
+* @readonly
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "worldCenterX", {
+    
+    get: function () {
+        return this.game.camera.x + this.center.x;
+    }
+
+});
+
+/**
+* @name Phaser.Sprite#worldCenterY
+* @property {number} worldCenterY - The center of the Sprite in world coordinates.
+* @readonly
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "worldCenterY", {
+    
+    get: function () {
+        return this.game.camera.y + this.center.y;
     }
 
 });

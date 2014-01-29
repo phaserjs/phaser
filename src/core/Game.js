@@ -283,6 +283,10 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
         window.addEventListener('load', this._onBoot, false);
     }
 
+    this.pendingStep = false;
+    this.stepping = true;
+    this.stepCount = 0;
+
     return this;
 
 };
@@ -580,20 +584,32 @@ Phaser.Game.prototype = {
         }
         else
         {
-            this.plugins.preUpdate();
-            this.world.preUpdate();
+            if (!this.pendingStep)
+            {
+                if (this.stepping)
+                {
+                    this.pendingStep = true;
+                }
 
-            this.stage.update();
-            this.input.update();
-            this.tweens.update();
-            this.sound.update();
-            this.state.update();
-            this.world.update();
-            this.particles.update();            
-            this.plugins.update();
+                this.plugins.preUpdate();
+        console.log('world preUpdate');
+                this.world.preUpdate();
 
-            this.world.postUpdate();
-            this.plugins.postUpdate();
+                this.stage.update();
+                this.input.update();
+                this.tweens.update();
+                this.sound.update();
+        console.log('state update');
+                this.state.update();
+        console.log('world update');
+                this.world.update();
+                this.particles.update();            
+                this.plugins.update();
+
+        console.log('world postUpdate');
+                this.world.postUpdate();
+                this.plugins.postUpdate();
+            }
 
             if (this.renderType !== Phaser.HEADLESS)
             {
@@ -603,8 +619,23 @@ Phaser.Game.prototype = {
 
                 this.plugins.postRender();
             }
-
         }
+
+    },
+
+    enableStep: function () {
+
+        this.stepping = true;
+        this.pendingStep = false;
+        this.stepCount = 0;
+
+    },
+
+    step: function () {
+
+        this.pendingStep = false;
+        this.stepCount++;
+        console.log('--------- Game step', this.stepCount);
 
     },
 

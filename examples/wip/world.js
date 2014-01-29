@@ -17,6 +17,7 @@ function create() {
 
     sprite = game.add.sprite(200, 250, 'gameboy', 4);
     sprite.name = 'green';
+    sprite.body.collideWorldBounds = true;
     // sprite.anchor.setTo(0.5, 0.5);
 
     sprite.body.bounce.setTo(0.9, 0.9);
@@ -33,6 +34,6 @@ function update() {
 function render() {
 
 	game.debug.renderBodyInfo(sprite, 32, 32);
-	game.debug.renderPolygon(sprite.body.polygons);
+	game.debug.renderPhysicsBody(sprite.body);
 
 }

@@ -70,11 +70,9 @@ Phaser.Line.prototype = {
     },
 
     /**
-    * Checks for intersection between two lines.
-    * If asSegment is true it will check for segment intersection.
-    * If asSegment is false it will check for line intersection.
+    * Checks for intersection between this line and another Line.
+    * If asSegment is true it will check for segment intersection. If asSegment is false it will check for line intersection.
     * Returns the intersection segment of AB and EF as a Point, or null if there is no intersection.
-    * Adapted from code by Keith Hair
     *
     * @method Phaser.Line#intersects
     * @param {Phaser.Line} line - The line to check against this one.
@@ -84,7 +82,7 @@ Phaser.Line.prototype = {
     */
     intersects: function (line, asSegment, result) {
 
-        return Phaser.Line.intersects(this, line, asSegment, result);
+        return Phaser.Line.intersectsPoints(this.start, this.end, line.start, line.end, asSegment, result);
 
     },
 
@@ -174,6 +172,69 @@ Object.defineProperty(Phaser.Line.prototype, "perpSlope", {
 });
 
 /**
+* Checks for intersection between two lines as defined by the given start and end points.
+* If asSegment is true it will check for line segment intersection. If asSegment is false it will check for line intersection.
+* Returns the intersection segment of AB and EF as a Point, or null if there is no intersection.
+* Adapted from code by Keith Hair
+*
+* @method Phaser.Line.intersects
+* @param {Phaser.Point} a - The start of the first Line to be checked.
+* @param {Phaser.Point} b - The end of the first line to be checked.
+* @param {Phaser.Point} e - The start of the second Line to be checked.
+* @param {Phaser.Point} f - The end of the second line to be checked.
+* @param {boolean} [asSegment=true] - If true it will check for segment intersection, otherwise full line intersection.
+* @param {Phaser.Point} [result] - A Point object to store the result in, if not given a new one will be created.
+* @return {Phaser.Point} The intersection segment of the two lines as a Point, or null if there is no intersection.
+*/
+Phaser.Line.intersectsPoints = function (a, b, e, f, asSegment, result) {
+
+    if (typeof asSegment === 'undefined') { asSegment = true; }
+    if (typeof result === 'undefined') { result = new Phaser.Point(); }
+
+    var a1 = b.y - a.y;
+    var a2 = f.y - e.y;
+    var b1 = a.x - b.x;
+    var b2 = e.x - f.x;
+    var c1 = (b.x * a.y) - (a.x * b.y);
+    var c2 = (f.x * e.y) - (e.x * f.y);
+    var denom = (a1 * b2) - (a2 * b1);
+
+    if (denom === 0)
+    {
+        return null;
+    }
+
+    result.x = ((b1 * c2) - (b2 * c1)) / denom;
+    result.y = ((a2 * c1) - (a1 * c2)) / denom;
+ 
+    if (asSegment)
+    {
+        if (Math.pow((result.x - b.x) + (result.y - b.y), 2) > Math.pow((a.x - b.x) + (a.y - b.y), 2))
+        {
+            return null;
+        }
+
+        if (Math.pow((result.x - a.x) + (result.y - a.y), 2) > Math.pow((a.x - b.x) + (a.y - b.y), 2))
+        {
+            return null;
+        }
+
+        if (Math.pow((result.x - f.x) + (result.y - f.y), 2) > Math.pow((e.x - f.x) + (e.y - f.y), 2))
+        {
+            return null;
+        }
+
+        if (Math.pow((result.x - e.x) + (result.y - e.y), 2) > Math.pow((e.x - f.x) + (e.y - f.y), 2))
+        {
+            return null;
+        }
+    }
+
+    return result;
+
+};
+
+/**
 * Checks for intersection between two lines.
 * If asSegment is true it will check for segment intersection.
 * If asSegment is false it will check for line intersection.
@@ -189,61 +250,6 @@ Object.defineProperty(Phaser.Line.prototype, "perpSlope", {
 */
 Phaser.Line.intersects = function (a, b, asSegment, result) {
 
-    if (typeof asSegment === 'undefined') { asSegment = true; }
-    if (typeof result === 'undefined') { result = new Phaser.Point(); }
-
-    // var a1 = B.y - A.y;
-    // var a2 = F.y - E.y;
-    // var b1 = A.x - B.x;
-    // var b2 = E.x - F.x;
-    // var c1 = (B.x * A.y) - (A.x * B.y);
-    // var c2 = (F.x * E.y) - (E.x * F.y);
-    // var denom = (a1 * b2) - (a2 * b1);
-
-    //  A = a.start
-    //  B = a.end
-    //  E = b.start
-    //  F = b.end
-
-    var a1 = a.end.y - a.start.y;
-    var a2 = b.end.y - b.start.y;
-    var b1 = a.start.x - a.end.x;
-    var b2 = b.start.x - b.end.x;
-    var c1 = (a.end.x * a.start.y) - (a.start.x * a.end.y);
-    var c2 = (b.end.x * b.start.y) - (b.start.x * b.end.y);
-    var denom = (a1 * b2) - (a2 * b1);
-
-    if (denom === 0)
-    {
-        return null;
-    }
-
-    result.x = ((b1 * c2) - (b2 * c1)) / denom;
-    result.y = ((a2 * c1) - (a1 * c2)) / denom;
- 
-    if (asSegment)
-    {
-        if (Math.pow((result.x - a.end.x) + (result.y - a.end.y), 2) > Math.pow((a.start.x - a.end.x) + (a.start.y - a.end.y), 2))
-        {
-            return null;
-        }
-
-        if (Math.pow((result.x - a.start.x) + (result.y - a.start.y), 2) > Math.pow((a.start.x - a.end.x) + (a.start.y - a.end.y), 2))
-        {
-            return null;
-        }
-
-        if (Math.pow((result.x - b.end.x) + (result.y - b.end.y), 2) > Math.pow((b.start.x - b.end.x) + (b.start.y - b.end.y), 2))
-        {
-            return null;
-        }
-
-        if (Math.pow((result.x - b.start.x) + (result.y - b.start.y), 2) > Math.pow((b.start.x - b.end.x) + (b.start.y - b.end.y), 2))
-        {
-            return null;
-        }
-    }
-
-    return result;
+    return Phaser.Line.intersectsPoints(a.start, a.end, b.start, b.end, asSegment, result);
 
 };

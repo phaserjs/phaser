@@ -15,6 +15,7 @@ var layer;
 var sprite;
 var sprite2;
 var balls;
+var cursors;
 
 function create() {
 
@@ -30,7 +31,7 @@ function create() {
 
     layer.debug = true;
 
-    game.physics.gravity.y = 150;
+    // game.physics.gravity.y = 150;
 
 /*
     balls = game.add.group();

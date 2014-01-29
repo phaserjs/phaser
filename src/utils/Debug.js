@@ -609,23 +609,16 @@ Phaser.Utils.Debug.prototype = {
 
         color = color || 'rgb(255, 255, 255)';
 
-        this.start(x, y, color);
+        this.start(x, y, color, 100);
 
         if (sprite.name)
         {
             this.line(sprite.name);
         }
 
-        this.line('x: ' + sprite.x);
-        this.line('y: ' + sprite.y);
-        this.line('pos x: ' + sprite.position.x);
-        this.line('pos y: ' + sprite.position.y);
-        this.line('local x: ' + sprite.localTransform[2]);
-        this.line('local y: ' + sprite.localTransform[5]);
-        this.line('t x: ' + sprite.worldTransform[2]);
-        this.line('t y: ' + sprite.worldTransform[5]);
-        this.line('world x: ' + sprite.world.x);
-        this.line('world y: ' + sprite.world.y);
+        this.splitline('x:', sprite.x.toFixed(2), 'y:', sprite.y.toFixed(2));
+        this.splitline('pos x:', sprite.position.x.toFixed(2), 'pos y:', sprite.position.y.toFixed(2));
+        this.splitline('world x:', sprite.world.x.toFixed(2), 'world y:', sprite.world.y.toFixed(2));
 
         this.stop();
 
@@ -965,8 +958,8 @@ Phaser.Utils.Debug.prototype = {
 
         color = color || 'rgb(255,255,255)';
 
-        var x = body.x;
-        var y = body.y;
+        var x = body.x - this.game.camera.x;
+        var y = body.y - this.game.camera.y;
 
         if (body.type === Phaser.Physics.Arcade.CIRCLE)
         {
@@ -977,8 +970,8 @@ Phaser.Utils.Debug.prototype = {
             this.context.stroke();
             this.context.closePath();
 
-            this.context.strokeStyle = 'rgb(0,0,255)';
-            this.context.strokeRect(body.left, body.top, body.width, body.height);
+            // this.context.strokeStyle = 'rgb(0,0,255)';
+            // this.context.strokeRect(body.left, body.top, body.width, body.height);
 
             this.stop();
         }
@@ -988,27 +981,27 @@ Phaser.Utils.Debug.prototype = {
 
             this.start(0, 0, color);
 
-            this.context.beginPath();
-            this.context.moveTo(x + points[0].x, y + points[0].y);
+            // this.context.beginPath();
+            // this.context.moveTo(x + points[0].x, y + points[0].y);
 
-            for (var i = 1; i < points.length; i++)
-            {
-                this.context.lineTo(x + points[i].x, y + points[i].y);
-            }
+            // for (var i = 1; i < points.length; i++)
+            // {
+            //     this.context.lineTo(x + points[i].x, y + points[i].y);
+            // }
 
-            this.context.closePath();
-            this.context.strokeStyle = color;
-            this.context.stroke();
+            // this.context.closePath();
+            // this.context.strokeStyle = color;
+            // this.context.stroke();
 
-            this.context.fillStyle = 'rgb(255,0,0)';
-            this.context.fillRect(x + points[0].x - 2, y + points[0].y - 2, 5, 5);
+            // this.context.fillStyle = 'rgb(255,0,0)';
+            // this.context.fillRect(x + points[0].x - 2, y + points[0].y - 2, 5, 5);
 
-            for (var i = 1; i < points.length; i++)
-            {
-                this.context.fillRect(x + points[i].x - 2, y + points[i].y - 2, 5, 5);
-            }
+            // for (var i = 1; i < points.length; i++)
+            // {
+            //     this.context.fillRect(x + points[i].x - 2, y + points[i].y - 2, 5, 5);
+            // }
 
-            this.context.strokeStyle = 'rgb(0,0,255)';
+            this.context.strokeStyle = 'rgb(0,255,255)';
             this.context.strokeRect(body.left, body.top, body.width, body.height);
 
             this.stop();
@@ -1047,7 +1040,6 @@ Phaser.Utils.Debug.prototype = {
         }
 
         this.context.closePath();
-        // this.context.strokeStyle = 'rgba(255, 0, 255, 0.7)';
         this.context.strokeStyle = color;
         this.context.stroke();
 

@@ -175,6 +175,9 @@ Updates:
 * Body.bottom and Body.right are no longer rounded, so will give accurate sub-pixel values.
 * Fixed lots of documentation in the Emitter class.
 * The delta timer value used for physics calculations has had its cap limit modified from 1.0 to 0.05 in line with the core updates.
+* Phaser.Math.min enhanced so you can now pass in either an array of numbers or lots of numbers as parameters to get the lowest.
+* Phaser.Math.max added as the opposite of Math.min.
+* Phaser.Math.minProperty and maxProperty added. Like Math.min/max but can be given a property an an array or list of objects to inspect.
 
 
 Bug Fixes:

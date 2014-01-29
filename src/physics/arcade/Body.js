@@ -55,13 +55,13 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @property {number} preX - The previous x position of the physics body.
     * @readonly
     */
-    this.preX = sprite.x;
+    this.preX = sprite.world.x;
 
     /**
     * @property {number} preY - The previous y position of the physics body.
     * @readonly
     */
-    this.preY = sprite.y;
+    this.preY = sprite.world.y;
 
     /**
     * @property {number} preRotation - The previous rotation of the physics body.
@@ -333,7 +333,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.overlapY = 0;
 
     //  Set-up the default shape
-    this.setRectangle(sprite.width, sprite.height, -sprite._cache.halfWidth, -sprite._cache.halfHeight);
+    this.setRectangle(sprite.width, sprite.height, 0, 0);
 
 };
 
@@ -350,11 +350,11 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     setCircle: function (radius, offsetX, offsetY) {
 
-        if (typeof offsetX === 'undefined') { offsetX = 0; }
-        if (typeof offsetY === 'undefined') { offsetY = 0; }
+        if (typeof offsetX === 'undefined') { offsetX = this.sprite._cache.halfWidth; }
+        if (typeof offsetY === 'undefined') { offsetY = this.sprite._cache.halfHeight; }
 
         this.type = Phaser.Physics.Arcade.CIRCLE;
-        this.shape = new SAT.Circle(new SAT.Vector(this.sprite.center.x, this.sprite.center.y), radius);
+        this.shape = new SAT.Circle(new SAT.Vector(this.sprite.x, this.sprite.y), radius);
         this.polygon = null;
 
         this.offset.setTo(offsetX, offsetY);
@@ -379,7 +379,7 @@ Phaser.Physics.Arcade.Body.prototype = {
         if (typeof translateY === 'undefined') { translateY = -this.sprite._cache.halfHeight; }
 
         this.type = Phaser.Physics.Arcade.RECT;
-        this.shape = new SAT.Box(new SAT.Vector(this.sprite.center.x, this.sprite.center.y), width, height);
+        this.shape = new SAT.Box(new SAT.Vector(this.sprite.world.x, this.sprite.world.y), width, height);
         this.polygon = this.shape.toPolygon();
         this.polygon.translate(translateX, translateY);
 
@@ -446,8 +446,11 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.preX = this.x;
         this.preY = this.y;
 
-        this.x = this.sprite.center.x + this.offset.x;
-        this.y = this.sprite.center.y + this.offset.y;
+        // this.x = this.sprite.center.x + this.offset.x;
+        // this.y = this.sprite.center.y + this.offset.y;
+
+        this.x = this.sprite.world.x + this.offset.x;
+        this.y = this.sprite.world.y + this.offset.y;
 
         if (this.allowRotation)
         {
@@ -462,26 +465,32 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.updateBounds();
 
-        // if (this.blocked.left && this.blockFlags[0] !== this.left)
-        // {
-        //     this.blocked.left = false;
-        // }
+if (this.sprite.debug)
+{
+    console.log('Body postUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right);
+}
 
-        // if (this.blocked.right && this.blockFlags[1] !== this.right)
-        // {
-        //     this.blocked.right = false;
-        // }
 
-        // if (this.blocked.up && this.blockFlags[2] !== this.top)
-        // {
-        //     this.blocked.up = false;
-        // }
+        if (this.blocked.left && this.blockFlags[0] !== this.left)
+        {
+            this.blocked.left = false;
+        }
 
-        // if (this.blocked.down && this.blockFlags[3] !== this.bottom)
-        // {
-        //     console.log('reset down block flag', this.blockFlags[3], this.bottom);
-        //     this.blocked.down = false;
-        // }
+        if (this.blocked.right && this.blockFlags[1] !== this.right)
+        {
+            this.blocked.right = false;
+        }
+
+        if (this.blocked.up && this.blockFlags[2] !== this.top)
+        {
+            this.blocked.up = false;
+        }
+
+        if (this.blocked.down && this.blockFlags[3] !== this.bottom)
+        {
+            // console.log('reset down block flag', this.blockFlags[3], this.bottom);
+            this.blocked.down = false;
+        }
 
         this.blocked.left = false;
         this.blocked.right = false;
@@ -508,26 +517,32 @@ Phaser.Physics.Arcade.Body.prototype = {
 
     setBlockFlag: function (left, right, up, down, x, y) {
 
+        this.updateBounds();
+
         if (left)
         {
-            this.blockFlags[0] = this.left + x;
+            this.blockFlags[0] = this.left;
+            // this.blockFlags[0] = this.left + x;
             // console.log('left flag set to', this.blockFlags[0]);
         }
         else if (right)
         {
-            this.blockFlags[1] = this.right + y;
+            this.blockFlags[1] = this.right;
+            // this.blockFlags[1] = this.right + x;
             // console.log('right flag set to', this.blockFlags[1]);
         }
 
         if (up)
         {
-            this.blockFlags[2] = this.top + y;
+            this.blockFlags[2] = this.top;
+            // this.blockFlags[2] = this.top + y;
             // this.blockFlags[2] = this.top;
             // console.log('up flag set to', this.blockFlags[2]);
         }
         else if (down)
         {
-            this.blockFlags[3] = this.bottom + y;
+            this.blockFlags[3] = this.bottom;
+            // this.blockFlags[3] = this.bottom + y;
             // this.blockFlags[3] = this.bottom;
             // console.log('down flag set to', this.blockFlags[3]);
         }
@@ -551,52 +566,14 @@ Phaser.Physics.Arcade.Body.prototype = {
         }
         else
         {
-            this.left = this.polygon.pos.x - this.polygon.points[0].x;
-            this.right = this.polygon.pos.x + this.polygon.points[0].x;
-            this.top = this.polygon.pos.y - this.polygon.points[0].y;
-            this.bottom = this.polygon.pos.y + this.polygon.points[0].y;
-
-            var temp;
-
-            for (var i = 1, len = this.polygon.points.length; i < len; i++)
-            {
-                //  Left
-                temp = this.polygon.pos.x - this.polygon.points[i].x;
-
-                if (temp < this.left)
-                {
-                    this.left = temp;
-                }
-
-                //  Right
-                temp = this.polygon.pos.x + this.polygon.points[i].x;
-
-                if (temp > this.right)
-                {
-                    this.right = temp;
-                }
-
-                //  Top
-                temp = this.polygon.pos.y - this.polygon.points[i].y;
-
-                if (temp < this.top)
-                {
-                    this.top = temp;
-                }
-
-                //  Bottom
-                temp = this.polygon.pos.y + this.polygon.points[i].y;
-
-                if (temp > this.bottom)
-                {
-                    this.bottom = temp;
-                }
-            }
-
-            this.width = this.right - this.left;
-            this.height = this.bottom - this.top;
-
+            this.left = Phaser.Math.minProperty('x', this.polygon.points) + this.polygon.pos.x;
+            this.right = Phaser.Math.maxProperty('x', this.polygon.points) + this.polygon.pos.x;
+            this.top = Phaser.Math.minProperty('y', this.polygon.points) + this.polygon.pos.y;
+            this.bottom = Phaser.Math.maxProperty('y', this.polygon.points) + this.polygon.pos.y;
         }
+
+        this.width = this.right - this.left;
+        this.height = this.bottom - this.top;
 
     },
 
@@ -906,7 +883,7 @@ Phaser.Physics.Arcade.Body.prototype = {
             return this.customSeparateCallback.call(this.customSeparateContext, this, response);
         }
 
-        console.log(this.sprite.name, 'collided with', body.sprite.name, response);
+        // console.log(this.sprite.name, 'collided with', body.sprite.name, response);
 
         this._distances[0] = body.right - this.x;   // Distance of B to face on left side of A
         this._distances[1] = this.right - body.x;   // Distance of B to face on right side of A
@@ -918,12 +895,12 @@ Phaser.Physics.Arcade.Body.prototype = {
             //  Which is smaller? Left or Right?
             if (this._distances[0] < this._distances[1])
             {
-                console.log(this.sprite.name, 'collided on the LEFT with', body.sprite.name, response);
+                // console.log(this.sprite.name, 'collided on the LEFT with', body.sprite.name, response);
                 this.hitLeft(body, response);
             }
             else if (this._distances[1] < this._distances[0])
             {
-                console.log(this.sprite.name, 'collided on the RIGHT with', body.sprite.name, response);
+                // console.log(this.sprite.name, 'collided on the RIGHT with', body.sprite.name, response);
                 this.hitRight(body, response);
             }
         }
@@ -932,12 +909,12 @@ Phaser.Physics.Arcade.Body.prototype = {
             //  Which is smaller? Top or Bottom?
             if (this._distances[2] < this._distances[3])
             {
-                console.log(this.sprite.name, 'collided on the TOP with', body.sprite.name, response);
+                // console.log(this.sprite.name, 'collided on the TOP with', body.sprite.name, response);
                 this.hitTop(body, response);
             }
             else if (this._distances[3] < this._distances[2])
             {
-                console.log(this.sprite.name, 'collided on the BOTTOM with', body.sprite.name, response);
+                // console.log(this.sprite.name, 'collided on the BOTTOM with', body.sprite.name, response);
                 this.hitBottom(body, response);
             }
         }
@@ -964,17 +941,17 @@ Phaser.Physics.Arcade.Body.prototype = {
     hitLeft: function (body, response) {
 
         //  We know that Body is overlapping with This on the left hand side (deltaX < 0 = moving left, > 0 = moving right)
-        if (body.speed > 0 && (body.deltaX() <= 0 || (body.deltaX() > 0 && !this.checkCollision.left)))
-        {
-            return;
-        }
+        // if (body.speed > 0 && (body.deltaX() <= 0 || (body.deltaX() > 0 && !this.checkCollision.left)))
+        // {
+        //     return;
+        // }
 
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.LEFT, this, body, response))
         {
             return;
         }
 
-        if (this.immovable || this.blocked.right || this.touching.right)
+        if (!this.moves || this.immovable || this.blocked.right || this.touching.right)
         {
             body.give(this, response);
         }
@@ -1012,11 +989,11 @@ Phaser.Physics.Arcade.Body.prototype = {
     hitRight: function (body, response) {
 
         //  We know that Body is overlapping with This on the right hand side (deltaX < 0 = moving left, > 0 = moving right)
-        if (body.speed > 0 && (body.deltaX() >= 0 || (body.deltaX() < 0 && !this.checkCollision.right)))
-        {
-            console.log('bail 1', body.deltaX());
-            return;
-        }
+        // if (body.speed > 0 && (body.deltaX() >= 0 || (body.deltaX() < 0 && !this.checkCollision.right)))
+        // {
+        //     console.log('bail 1', body.deltaX());
+        //     return;
+        // }
 
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.RIGHT, this, body))
         {
@@ -1024,7 +1001,7 @@ Phaser.Physics.Arcade.Body.prototype = {
             return;
         }
 
-        if (this.immovable || this.blocked.left || this.touching.left)
+        if (!this.moves || this.immovable || this.blocked.left || this.touching.left)
         {
             body.give(this, response);
         }
@@ -1062,17 +1039,19 @@ Phaser.Physics.Arcade.Body.prototype = {
     hitTop: function (body, response) {
 
         //  We know that Body is overlapping with This on the bottom side (deltaY < 0 = moving up, > 0 = moving down)
-        if (body.speed > 0 && (body.deltaY() <= 0 || (body.deltaY() > 0 && !this.checkCollision.up)))
-        {
-            return;
-        }
+        // if (body.speed > 0 && (body.deltaY() <= 0 || (body.deltaY() > 0 && !this.checkCollision.up)))
+        // if (body.speed > 0 && (body.deltaY() <= 0 || (body.deltaY() > 0 && !this.checkCollision.up)))
+        // {
+            // console.log('bail', body.sprite.name, body.deltaY());
+            // return;
+        // }
 
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.UP, this, body))
         {
             return;
         }
 
-        if (this.immovable || this.blocked.down || this.touching.down)
+        if (!this.moves || this.immovable || this.blocked.down || this.touching.down)
         {
             body.give(this, response);
         }
@@ -1110,17 +1089,17 @@ Phaser.Physics.Arcade.Body.prototype = {
     hitBottom: function (body, response) {
 
         //  We know that Body is overlapping with This on the bottom side (deltaY < 0 = moving up, > 0 = moving down)
-        if (body.speed > 0 && (body.deltaY() >= 0 || (body.deltaY() < 0 && !this.checkCollision.down)))
-        {
-            return;
-        }
+        // if (body.speed > 0 && (body.deltaY() >= 0 || (body.deltaY() < 0 && !this.checkCollision.down)))
+        // {
+        //     return;
+        // }
 
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.DOWN, this, body))
         {
             return;
         }
 
-        if (this.immovable || this.blocked.up || this.touching.up)
+        if (!this.moves || this.immovable || this.blocked.up || this.touching.up)
         {
             body.give(this, response);
         }
@@ -1162,13 +1141,14 @@ Phaser.Physics.Arcade.Body.prototype = {
         {
             this.x += this._dx;
             this.velocity.x += this._temp.x;
+            console.log('x added', this._dx);
         }
 
         if ((this._dy < 0 && !this.blocked.up && !this.touching.up) || (this._dy > 0 && !this.blocked.down && !this.touching.down))
         {
             this.y += this._dy;
             this.velocity.y += this._temp.y;
-            // console.log('y added', this._dy);
+            console.log('y added', this._dy);
         }
 
         if (this.velocity.x > this.maxVelocity.x)
@@ -1225,8 +1205,37 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.facing = Phaser.DOWN;
             }
 
-            this.sprite.x = this.x + (this.sprite.x - this.sprite.center.x) - this.offset.x;
-            this.sprite.y = this.y + (this.sprite.y - this.sprite.center.y) - this.offset.y;
+            this.updateBounds();
+
+if (this.sprite.debug)
+{
+    console.log('Body postUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right);
+}
+
+            // this.sprite.x = this.x + (this.sprite.x - this.sprite.center.x) - this.offset.x;
+            // this.sprite.y = this.y + (this.sprite.y - this.sprite.center.y) - this.offset.y;
+
+            if (this.sprite.name === 'mushroom')
+            {
+                // console.log('old x', this.preX, 'new x', this.x, 'delta', this.deltaX());
+                // console.log('old y', this.preY, 'new y', this.y);
+            }
+
+            this.sprite.x = this.x - this.offset.x;
+            this.sprite.y = this.y - this.offset.y;
+            this.sprite.worldTransform[2] = this.x - this.offset.x;
+            this.sprite.worldTransform[5] = this.y - this.offset.y;
+
+
+
+    // this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
+
+
+            // this.sprite.x = this.x + (this.sprite.world.x - this.game.camera.x) - this.offset.x;
+            // this.sprite.y = this.y + (this.sprite.world.y - this.game.camera.y) - this.offset.y;
+
+        // this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
+
 
             if (this.allowRotation)
             {
@@ -1269,7 +1278,16 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @return {number} The delta value. Positive if the motion was to the right, negative if to the left.
     */
     deltaX: function () {
-        return this.x - this.preX;
+
+        if (this.moves)
+        {
+            return this.x - this.preX;
+        }
+        else
+        {
+            return this.sprite.deltaX;
+        }
+
     },
 
     /**
@@ -1279,7 +1297,16 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @return {number} The delta value. Positive if the motion was downwards, negative if upwards.
     */
     deltaY: function () {
-        return this.y - this.preY;
+
+        if (this.moves)
+        {
+            return this.y - this.preY;
+        }
+        else
+        {
+            return this.sprite.deltaY;
+        }
+
     },
 
     /**
@@ -1334,6 +1361,8 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "x", {
             this.polygon.pos.x = value;
         }
 
+        // this.updateBounds();
+
     }
 
 });
@@ -1375,6 +1404,8 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "y", {
         {
             this.polygon.pos.y = value;
         }
+
+        // this.updateBounds();
 
     }
 

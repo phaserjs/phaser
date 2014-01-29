@@ -706,6 +706,9 @@ Phaser.Physics.Arcade.prototype = {
     */
     collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext) {
 
+    console.log('collideSpriteVsTilemapLayer x:', sprite.x, 'y:', sprite.y, 'body left:', sprite.body.left, 'right:', sprite.body.right);
+
+
         this._mapData = tilemapLayer.getTiles(sprite.body.left, sprite.body.top, sprite.body.width, sprite.body.height, true);
 
         if (this._mapData.length === 0)
@@ -840,6 +843,37 @@ Phaser.Physics.Arcade.prototype = {
     },
 
     /**
+    * Performs a rect intersection test against the two objects.
+    * Objects must expose properties: width, height, left, right, top, bottom.
+    * @method Phaser.Physics.Arcade#intersects
+    * @param {object} body - The Body to test.
+    * @param {object} tile - The Tile to test.
+    * @returns {boolean} Returns true if the objects intersect, otherwise false.
+    */
+    tileIntersects: function (body, tile) {
+
+        if (body.width <= 0 || body.height <= 0 || tile.width <= 0 || tile.height <= 0)
+        {
+            return false;
+        }
+
+        // console.log('body: ', body.left, body.top, body.right, body.bottom);
+        // console.log('tile: ', tile.x, tile.y, tile.right, tile.bottom);
+
+        // console.log('intersect #1', body.right < tile.x, body.right, tile.x);
+        // console.log('intersect #2', body.bottom < tile.y, body.bottom, tile.y);
+        // console.log('intersect #3', body.left > tile.right, body.left, tile.right);
+        // console.log('intersect #4', body.top > tile.bottom, body.top, tile.bottom);
+
+        // return !(a.right < b.x       || a.bottom < b.y       || a.x > b.right          || a.y > b.bottom);
+
+        result = !(body.right < tile.x || body.bottom < tile.y || body.left > tile.right || body.top > tile.bottom);
+
+        return result;
+
+    },
+
+    /**
     * The core separation function to separate a physics body and an array of tiles.
     * @method Phaser.Physics.Arcade#separateTiles
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
@@ -860,12 +894,13 @@ Phaser.Physics.Arcade.prototype = {
         var tile;
         var localOverlapX = 0;
         var localOverlapY = 0;
+        var process = false;
 
         for (var i = 0; i < tiles.length; i++)
         {
             tile = tiles[i];
 
-            if (this.intersects(body, tile))
+            if (this.tileIntersects(body, tile))
             {
                 //  They overlap. Any custom callbacks?
                 if (tile.tile.callback || tile.layer.callbacks[tile.tile.index])
@@ -883,22 +918,27 @@ Phaser.Physics.Arcade.prototype = {
                     }
                 }
 
-                if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight)
+                if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight && !body.blocked.left)
                 {
                     //  LEFT
                     localOverlapX = body.left - tile.right;
+
+                    console.log('STS left', localOverlapX, body.deltaX(), 'bt', body.left, tile.right);
 
                     if (localOverlapX >= body.deltaX())
                     {
                         body.blocked.left = true;
                         body.touching.left = true;
                         body.touching.none = false;
+                        process = true;
                     }
                 }
-                else if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft)
+                else if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft && !body.blocked.right)
                 {
                     //  RIGHT
                     localOverlapX = body.right - tile.x;
+
+                    console.log('STS right', localOverlapX, body.deltaX(), 'bt', body.right, tile.x);
 
                     //  Distance check
                     if (localOverlapX <= body.deltaX())
@@ -906,13 +946,16 @@ Phaser.Physics.Arcade.prototype = {
                         body.blocked.right = true;
                         body.touching.right = true;
                         body.touching.none = false;
+                        process = true;
                     }
                 }
 
-                if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom)
+                if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom && !body.blocked.up)
                 {
                     //  UP
                     localOverlapY = body.top - tile.bottom;
+
+                    console.log('STS up', localOverlapY, body.deltaY(), 'bt', body.top, tile.bottom);
 
                     //  Distance check
                     if (localOverlapY >= body.deltaY())
@@ -920,18 +963,22 @@ Phaser.Physics.Arcade.prototype = {
                         body.blocked.up = true;
                         body.touching.up = true;
                         body.touching.none = false;
+                        process = true;
                     }
                 }
-                else if (body.deltaY() > 0 && body.checkCollision.down && tile.tile.faceTop)
+                else if (body.deltaY() > 0 && body.checkCollision.down && tile.tile.faceTop && !body.blocked.down)
                 {
                     //  DOWN
                     localOverlapY = body.bottom - tile.y;
+
+                    console.log('STS down', localOverlapY, body.deltaY(), 'bt', body.bottom, tile.y);
 
                     if (localOverlapY <= body.deltaY())
                     {
                         body.blocked.down = true;
                         body.touching.down = true;
                         body.touching.none = false;
+                        process = true;
                     }
                 }
             }
@@ -947,7 +994,14 @@ Phaser.Physics.Arcade.prototype = {
             body.overlapY = localOverlapY;
         }
 
-        return this.processTileSeparation(body);
+        if (process)
+        {
+            return this.processTileSeparation(body);
+        }
+        else
+        {
+            return false;
+        }
 
     },
 
@@ -961,10 +1015,15 @@ Phaser.Physics.Arcade.prototype = {
     separateTile: function (body, tile) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
-        if (body.immovable || this.intersects(body, tile) === false)
+        if (body.immovable || this.tileIntersects(body, tile) === false)
         {
+            console.log('fail');
+            console.log('body: ', body.left, body.top, body.right, body.bottom);
+            console.log('tile: ', tile.x, tile.y, tile.right, tile.bottom);
             return false;
         }
+
+        console.log('CHECK');
 
         //  They overlap. Any custom callbacks?
         if (tile.tile.callback || tile.layer.callbacks[tile.tile.index])
@@ -986,62 +1045,87 @@ Phaser.Physics.Arcade.prototype = {
         body.overlapX = 0;
         body.overlapY = 0;
 
-        //  Remember - this happens AFTER the body has been moved by the motion update, so it needs moving back again
-        if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight)
+        var process = false;
+
+        if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight && !body.blocked.left)
         {
             //  LEFT
             body.overlapX = body.left - tile.right;
 
-            if (body.overlapX >= body.deltaX())
+            console.log('ST left', body.overlapX, body.deltaX(), 'bt', body.left, tile.right);
+
+            if (body.overlapX <= body.deltaX())
             {
-                //  use touching instead of blocked?
+                console.log('pass');
                 body.blocked.left = true;
                 body.touching.left = true;
                 body.touching.none = false;
+                process = true;
             }
         }
-        else if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft)
+        else if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft && !body.blocked.right)
         {
             //  RIGHT
             body.overlapX = body.right - tile.x;
 
+            console.log(tile);
+
+            console.log('ST right', body.overlapX, body.deltaX(), 'bt', body.right, tile.x);
+
             //  Distance check
-            if (body.overlapX <= body.deltaX())
+            if (body.overlapX >= body.deltaX())
             {
+                console.log('pass');
                 body.blocked.right = true;
                 body.touching.right = true;
                 body.touching.none = false;
+                process = true;
             }
         }
 
-        if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom)
+        if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom && !body.blocked.up)
         {
             //  UP
             body.overlapY = body.top - tile.bottom;
 
+            console.log('ST up', body.overlapY, body.deltaY(), 'bt', body.top, tile.bottom);
+
             //  Distance check
             if (body.overlapY >= body.deltaY())
             {
+                console.log('pass');
                 body.blocked.up = true;
                 body.touching.up = true;
                 body.touching.none = false;
+                process = true;
             }
         }
-        else if (body.deltaY() > 0 && body.checkCollision.down && tile.tile.faceTop)
+        else if (body.deltaY() > 0 && body.checkCollision.down && tile.tile.faceTop && !body.blocked.down)
         {
             //  DOWN
             body.overlapY = body.bottom - tile.y;
 
+            console.log('ST down', body.overlapY, body.deltaY(), 'bt', body.bottom, tile.y);
+
             if (body.overlapY <= body.deltaY())
             {
+                console.log('pass');
                 body.blocked.down = true;
                 body.touching.down = true;
                 body.touching.none = false;
+                process = true;
             }
         }
 
         //  Separate in a single sweep
-        return this.processTileSeparation(body);
+        if (process)
+        {
+            return this.processTileSeparation(body);
+        }
+        else
+        {
+            return false;
+        }
 
     },
 
@@ -1057,13 +1141,26 @@ Phaser.Physics.Arcade.prototype = {
         //  Swap for a hit tile?
         if (body.touching.none)
         {
+            console.log('processTileSeparation QUIT');
             return false;
         }
 
-        body.x += body.overlapX;
-        body.y += body.overlapY;
+        console.log('pre processTileSeparation', body.x, body.y);
 
-        // body.setBlockFlag(body.blocked.left, body.blocked.right, body.blocked.up, body.blocked.down, body.overlapX, body.overlapY);
+        if (body.touching.left || body.touching.right || body.blocked.left || body.blocked.right)
+        {
+            body.x -= body.overlapX;
+        }
+
+        if (body.touching.up || body.touching.down || body.blocked.up || body.blocked.down)
+        {
+            body.y -= body.overlapY;
+        }
+
+        console.log('post processTileSeparation', body.x, body.y, body.right);
+
+        body.setBlockFlag(body.blocked.left, body.blocked.right, body.blocked.up, body.blocked.down, body.overlapX, body.overlapY);
+
         // body.reboundCheck(true, true, true);
 
         return true;

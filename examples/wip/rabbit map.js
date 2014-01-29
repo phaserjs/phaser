@@ -3,25 +3,14 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-    // game.load.tilemap('map', 'assets/maps/super_mario.json', null, Phaser.Tilemap.TILED_JSON);
-    // game.load.tileset('tiles', 'assets/maps/super_mario.png', 16, 16);
-
     game.load.tilemap('map', 'assets/tilemaps/maps/features_test.json', null, Phaser.Tilemap.TILED_JSON);
-
-    // game.load.image('ground', 'assets/maps/ground_1x1.png');
-
     game.load.image('ground_1x1', 'assets/tilemaps/tiles/ground_1x1.png');
     game.load.image('walls_1x2', 'assets/tilemaps/tiles/walls_1x2.png');
     game.load.image('tiles2', 'assets/tilemaps/tiles/tiles2.png');
 
-
-    // game.load.tileset('tiles', 'assets/maps/ground_1x1.png', 32, 32);
-    // game.load.image('phaser', 'assets/sprites/phaser-ship.png');
+    game.load.image('phaser', 'assets/sprites/shinyball.png');
+    // game.load.image('phaser', 'assets/sprites/atari130xe.png');
     // game.load.image('phaser', 'assets/sprites/mushroom2.png');
-    game.load.image('phaser', 'assets/sprites/wabbit.png');
-    // game.load.image('phaser', 'assets/sprites/arrow.png');
-    game.load.spritesheet('coin', 'assets/sprites/coin.png', 32, 32);
-    // game.load.image('phaser', 'assets/sprites/darkwing_crazy.png');
 
 }
 
@@ -37,6 +26,10 @@ var sprite;
 
 function create() {
 
+    $('#step').click(function(){
+        game.step();
+    });
+
     map = game.add.tilemap('map');
 
     map.addTilesetImage('ground_1x1');
@@ -45,71 +38,36 @@ function create() {
 
     map.setCollisionBetween(1, 12);
 
-    //  mario tiles
-    // map.setCollisionByIndex(15);
-    // map.setCollisionByIndex(40);
-    // map.setCollisionByIndexRange(14, 16);
-    // map.setCollisionByIndexRange(20, 25);
-    // map.setCollisionByIndexRange(27, 29);
-
-    // layer3 = map.createLayer('Tile Layer 3');
-    // layer3.scrollFactorX = 0.5;
-
-    // layer2 = map.createLayer('Tile Layer 2');
-    // layer2.alpha = 0.5;
-
     layer = map.createLayer('Tile Layer 1');
 
-    layer.debug = true;
+    // layer.debug = true;
 
     layer.resizeWorld();
 
-    //coins = 
-    map.createFromObjects('Object Layer 1', 34, 'coin', 0);
+    sprite = game.add.sprite(170, 450, 'phaser');
+    sprite.debug = true;
 
-    // layer2 = game.add.tilemapLayer(0, 0, 400, 600, null, map, 0);
-    // layer.cameraOffset.x = 400;
-    // layer.alpha = 0.5;
+    sprite.body.velocity.x = 200;
 
 
-    sprite = game.add.sprite(260, 100, 'phaser');
     // sprite.anchor.setTo(0.5, 0.5);
 
-    //  This adjusts the collision body size.
-    //  100x50 is the new width/height.
-    //  50, 25 is the X and Y offset of the newly sized box.
-    //  In this case the box is 50px in and 25px down.
-    // sprite.body.setSize(16, 16, 8, 8);
-
     //  We'll set a lower max angular velocity here to keep it from going totally nuts
-    sprite.body.maxAngular = 500;
+    // sprite.body.maxAngular = 500;
 
     //  Apply a drag otherwise the sprite will just spin and never slow down
-    sprite.body.angularDrag = 50;
+    // sprite.body.angularDrag = 50;
 
-    // sprite.body.drag.x = 50;
-    // sprite.body.drag.y = 20;
-
-    // sprite.body.velocity.x = 50;
-
-    sprite.body.bounce.x = 0.8;
-    sprite.body.bounce.y = 0.8;
+    // sprite.body.bounce.x = 0.8;
+    // sprite.body.bounce.y = 0.8;
 
     // sprite.angle = 35;
 
-    // game.camera.follow(sprite);
+    game.camera.follow(sprite);
 
     // game.input.onDown.add(getIt, this);
 
     cursors = game.input.keyboard.createCursorKeys();
-
-}
-
-function getIt() {
-
-    // console.log('cam', game.camera.bounds);
-    // console.log('w', game.world.bounds);
-    // console.log(layer.getTiles(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height, true, true));
 
 }
 
@@ -136,9 +94,9 @@ function update() {
 */
     game.physics.collide(sprite, layer);
 
-    sprite.body.velocity.x = 0;
-    sprite.body.velocity.y = 0;
-    sprite.body.angularVelocity = 0;
+    // sprite.body.velocity.x = 0;
+    // sprite.body.velocity.y = 0;
+    // sprite.body.angularVelocity = 0;
 
     // sprite.body.acceleration.x = 0;
     // sprite.body.angularAcceleration = 0;
@@ -202,7 +160,9 @@ function render() {
 
     // game.debug.renderSpriteBody(sprite);
     // game.debug.renderSpriteBounds(sprite);
+
     game.debug.renderPhysicsBody(sprite.body);
+    game.debug.renderBodyInfo(sprite, 32, 32);
 
     // game.debug.renderText(sprite.deltaX, 32, 32);
     // game.debug.renderText(sprite.deltaY, 32, 48);
@@ -210,8 +170,8 @@ function render() {
     // game.debug.renderText(sprite.body.deltaY(), 232, 48);
 
     // game.debug.renderText(sprite.body.left, 32, 32);
-    // game.debug.renderText(sprite.body.right, 32, 48);
+    // game.debug.renderText(sprite.body.top, 32, 48);
 
-    game.debug.renderSpriteCoords(sprite, 32, 32);
+    // game.debug.renderSpriteCoords(sprite, 32, 320);
 
 }

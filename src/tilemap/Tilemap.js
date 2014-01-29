@@ -1227,6 +1227,7 @@ Phaser.Tilemap.prototype = {
     destroy: function () {
 
         this.removeAllLayers();
+        this.data = [];
         this.game = null;
 
     }

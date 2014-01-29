@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render : render });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
@@ -16,7 +16,7 @@ var d;
 function create() {
 
     //  Modify the world and camera bounds
-    game.world.setBounds(-1000, -1000, 1000, 1000);
+    game.world.setBounds(-2000, -2000, 4000, 4000);
 
     for (var i = 0; i < 100; i++)
     {

@@ -371,8 +371,6 @@ Phaser.TilemapParser = {
 
         }
 
-        console.log(map);
-
         return map;
 
     }
