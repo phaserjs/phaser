@@ -72,6 +72,7 @@ Significant API changes:
 * Removed Body.deltaAbsX and deltaAbsY as they are no longer used internally.
 * Body.screenX and screenY moved to getters, no longer calculated every frame.
 * ArcadePhysics now has setBounds and setBoundsToWorld, and you can specify which walls are created or not (left, right, up, down)
+* Removed: Debug.renderSpriteTouching, Debug.renderLocalTransformInfo, Debug.renderWorldTransformInfo, Debug.renderSpriteCollision and Debug.dumpLinkedList.
 
 
 New features:
@@ -91,7 +92,7 @@ New features:
 * Group.set will let you deep set a new propery on a single child of the Group.
 * Stage.display property added. A direct reference to the root Pixi Stage object (very useful for RenderTexture manipulation)
 * Added Ejecta detection to Device (thanks endel)
-* Tweens can now work with relative + and - values. You can do: `tween(sprite).to( { x: '+400' })` and it will add 400 to the current sprite.x value, or '-400'.
+* Tweens can now work with relative + and - values. You can do: `tween(sprite).to( { x: '+400' })` and it will add 400 to the current sprite.x value.
 * Buttons now properly use their upFrame if set.
 * InputHandler now has snapOffsetX and snapOffsetY properties so your snap grid doesn't have to be 0,0 aligned (thanks srmeier)
 * Loader.progressFloat contains the actual non-rounded progress value, where-as Loader.progress contains a rounded value. Use progressFloat if you've > 100 files to load.
@@ -111,12 +112,15 @@ New features:
 * Math.normalizeAngle - normalises an angle, now in radians only.
 * Math.normalizeLatitude - Normalizes a latitude to the [-90,90] range.
 * Math.normalizeLongitude - Normalizes a longitude to the [-180,180] range.
-* Phaser.Line added to the group of geometry classes, with full point on line/segment and intersection tests (see new examples)
+* Phaser.Line added to the geometry classes, with full point on line/segment and intersection tests (see new examples)
 * Phaser.CANVAS_PX_ROUND is a boolean. If 'true' the Canvas renderer will Math.floor() all coordinates before drawImage, stopping pixel interpolation. Defaults to false.
 * Phaser.CANVAS_CLEAR_RECT is a boolean. If 'true' (the default) it will context.clearRect() every frame. If false this is skipped (useful if you know you don't need it)
 * Collision now works between Sprites positioned via sprite.x/y, sprite.body.x/y or sprite.body.velocity.
 * If you are tweening a sprite and still want physics collision, set `sprite.body.moves = false` otherwise it will fight against the tween motion.
-
+* Game.enableStep will enable core game loop stepping. When enabled you must call game.step() directly (perhaps via a DOM button?), very useful for debugging!
+* Game.disableStep turns core update loop stepping off.
+* Debug.renderPhysicsBody(body, color) is extremely useful for debugging the new physics bodies. Will draw the outline + points in the color given.
+* Debug.renderBodyInfo(sprite, x, y, color) will display lots of Sprite body data.
 
 
 New Examples:

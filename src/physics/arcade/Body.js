@@ -447,26 +447,21 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.preX = this.x;
         this.preY = this.y;
-        this.preRotation = this.rotation;
+        this.preRotation = this.sprite.angle;
 
-        this.x = this.sprite.world.x + this.offset.x;
-        this.y = this.sprite.world.y + this.offset.y;
+        // this.x = this.sprite.world.x + this.offset.x;
+        // this.y = this.sprite.world.y + this.offset.y;
 
-        if (this.allowRotation)
-        {
-            this.rotation = this.sprite.rotation;
-
-            if (this.type !== Phaser.Physics.Arcade.CIRCLE && this.deltaZ() !== 0)
-            {
-                this.polygon.rotate(this.deltaZ());
-            }
-        }
+        this.x = (this.sprite.world.x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
+        this.y = (this.sprite.world.y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;
+        this.rotation = this.preRotation;
 
 if (this.sprite.debug)
 {
-    console.log('Body preUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right, 'WAS', this.preX, this.preY);
-    console.log('Body preUpdate blocked:', this.blocked, this.blockFlags);
-    console.log('Body preUpdate velocity:', this.velocity.x, this.velocity.y);
+    // console.log('Body preUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right, 'WAS', this.preX, this.preY);
+    // console.log('Body preUpdate blocked:', this.blocked, this.blockFlags);
+    // console.log('Body preUpdate velocity:', this.velocity.x, this.velocity.y);
+    console.log('Body preUpdate rotation:', this.rotation, this.preRotation);
 }
 
         this.checkBlocked();
@@ -613,8 +608,8 @@ if (this.sprite.debug)
 
         if (this.sprite.debug)
         {
-            console.log('reboundCheck start', this.velocity.x, this.velocity.y);
-            console.log('reBound blocked state', this.blocked);
+            // console.log('reboundCheck start', this.velocity.x, this.velocity.y);
+            // console.log('reBound blocked state', this.blocked);
         }
 
         if (x)
@@ -626,7 +621,7 @@ if (this.sprite.debug)
 
                 if (this.sprite.debug)
                 {
-                    console.log('X rebound applied');
+                    // console.log('X rebound applied');
                 }
             }
 
@@ -640,14 +635,14 @@ if (this.sprite.debug)
 
                     if (this.sprite.debug)
                     {
-                        console.log('reboundCheck X zeroed');
+                        // console.log('reboundCheck X zeroed');
                     }
                 }
             }
 
             if (this.sprite.debug)
             {
-                console.log('reboundCheck X', this.velocity.x, 'gravity', gx);
+                // console.log('reboundCheck X', this.velocity.x, 'gravity', gx);
             }
         }
 
@@ -660,7 +655,7 @@ if (this.sprite.debug)
 
                 if (this.sprite.debug)
                 {
-                    console.log('Y rebound applied');
+                    // console.log('Y rebound applied');
                 }
             }
 
@@ -674,14 +669,14 @@ if (this.sprite.debug)
 
                     if (this.sprite.debug)
                     {
-                        console.log('reboundCheck Y zeroed');
+                        // console.log('reboundCheck Y zeroed');
                     }
                 }
             }
 
             if (this.sprite.debug)
             {
-                console.log('reboundCheck Y', this.velocity.y, 'gravity', gy);
+                // console.log('reboundCheck Y', this.velocity.y, 'gravity', gy);
             }
         }
 
@@ -1181,7 +1176,7 @@ if (this.sprite.debug)
 
         if (this.sprite.debug)
         {
-            console.log('integrateVelocity TEMP:', this._temp.x, this._temp.y);
+            // console.log('integrateVelocity TEMP:', this._temp.x, this._temp.y);
         }
 
         //  positive = RIGHT / DOWN
@@ -1193,14 +1188,14 @@ if (this.sprite.debug)
             this.velocity.x += this._temp.x;
             if (this.sprite.debug)
             {
-                console.log('integrateVelocity x added', this._dx, this.x);
+                // console.log('integrateVelocity x added', this._dx, this.x);
             }
         }
         else
         {
             if (this.sprite.debug)
             {
-                console.log('integrateVelocity x failed or zero, blocked left/right', this._dx);
+                // console.log('integrateVelocity x failed or zero, blocked left/right', this._dx);
             }
         }
 
@@ -1210,14 +1205,14 @@ if (this.sprite.debug)
             this.velocity.y += this._temp.y;
             if (this.sprite.debug)
             {
-                console.log('integrateVelocity y added', this._dy, this.y);
+                // console.log('integrateVelocity y added', this._dy, this.y);
             }
         }
         else
         {
             if (this.sprite.debug)
             {
-                console.log('integrateVelocity y failed or zero, blocked up/down', this._dy);
+                // console.log('integrateVelocity y failed or zero, blocked up/down', this._dy);
             }
         }
 
@@ -1275,22 +1270,29 @@ if (this.sprite.debug)
 
 if (this.sprite.debug)
 {
-    console.log('Body postUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right, 'WAS', this.preX, this.preY);
-    console.log('Body postUpdate blocked:', this.blocked, this.blockFlags);
-    console.log('Body postUpdate velocity:', this.velocity.x, this.velocity.y);
-    console.log('Body postUpdate Sprite:', this.sprite.x, this.sprite.y, 'cached', this.sprite._cache.x, this.sprite._cache.y);
+    // console.log('Body postUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right, 'WAS', this.preX, this.preY);
+    // console.log('Body postUpdate blocked:', this.blocked, this.blockFlags);
+    // console.log('Body postUpdate velocity:', this.velocity.x, this.velocity.y);
+    // console.log('Body postUpdate Sprite:', this.sprite.x, this.sprite.y, 'cached', this.sprite._cache.x, this.sprite._cache.y);
+    console.log('Body postUpdate Rotation:', this.rotation);
 }
 
             if (this.deltaX() !== 0 || this.deltaY() !== 0)
             {
-                this.sprite.worldTransform[2] = this.sprite.x = (this.x - this.offset.x);
-                this.sprite.worldTransform[5] = this.sprite.y = (this.y - this.offset.y);
+                // this.sprite.worldTransform[2] = this.sprite.x = (this.x - this.offset.x);
+                // this.sprite.worldTransform[5] = this.sprite.y = (this.y - this.offset.y);
+
+                this.sprite.worldTransform[2] = this.sprite.x = (this.x + (this.sprite.anchor.x * this.sprite.width) - this.offset.x);
+                this.sprite.worldTransform[5] = this.sprite.y = (this.y + (this.sprite.anchor.y * this.sprite.height) - this.offset.y);
+
+                // this.x = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
+                // this.y = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
             }
 
-            if (this.allowRotation)
+            if (this.allowRotation && this.deltaZ() !== 0)
             {
                 // this.sprite.rotation = this.rotation;
-                // this.sprite.angle += this.deltaZ();
+                this.sprite.angle += this.deltaZ();
                 // this.sprite.angle = this.angle;
             }
 

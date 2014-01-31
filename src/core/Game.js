@@ -226,6 +226,27 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     */
     this.particles = null;
 
+    /**
+    * @property {boolean} stepping - Enable core loop stepping with Game.enableStep().
+    * @default
+    * @readonly
+    */
+    this.stepping = false;
+
+    /**
+    * @property {boolean} stepping - An internal property used by enableStep, but also useful to query from your own game objects.
+    * @default
+    * @readonly
+    */
+    this.pendingStep = false;
+
+    /**
+    * @property {number} stepCount - When stepping is enabled this contains the current step cycle.
+    * @default
+    * @readonly
+    */
+    this.stepCount = 0;
+
     //  Parse the configuration object (if any)
     if (arguments.length === 1 && typeof arguments[0] === 'object')
     {
@@ -282,10 +303,6 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
         document.addEventListener('DOMContentLoaded', this._onBoot, false);
         window.addEventListener('load', this._onBoot, false);
     }
-
-    this.pendingStep = false;
-    this.stepping = false;
-    this.stepCount = 0;
 
     return this;
 
@@ -592,21 +609,17 @@ Phaser.Game.prototype = {
                 }
 
                 this.plugins.preUpdate();
-        // console.log('world preUpdate');
                 this.world.preUpdate();
 
                 this.stage.update();
                 this.input.update();
                 this.tweens.update();
                 this.sound.update();
-        // console.log('state update');
                 this.state.update();
-        // console.log('world update');
                 this.world.update();
                 this.particles.update();            
                 this.plugins.update();
 
-        // console.log('world postUpdate');
                 this.world.postUpdate();
                 this.plugins.postUpdate();
             }
@@ -623,6 +636,12 @@ Phaser.Game.prototype = {
 
     },
 
+    /**
+    * Enable core game loop stepping. When enabled you must call game.step() directly (perhaps via a DOM button?)
+    * Calling step will advance the game loop by one frame. This is extremely useful to hard to track down errors!
+    *
+    * @method Phaser.Game#enableStep
+    */
     enableStep: function () {
 
         this.stepping = true;
@@ -631,12 +650,28 @@ Phaser.Game.prototype = {
 
     },
 
+    /**
+    * Disables core game loop stepping.
+    *
+    * @method Phaser.Game#disableStep
+    */
+    disableStep: function () {
+
+        this.stepping = false;
+        this.pendingStep = false;
+
+    },
+
+    /**
+    * When stepping is enabled you must call this function directly (perhaps via a DOM button?) to advance the game loop by one frame.
+    * This is extremely useful to hard to track down errors! Use the internal stepCount property to monitor progress.
+    *
+    * @method Phaser.Game#step
+    */
     step: function () {
 
         this.pendingStep = false;
         this.stepCount++;
-        console.log('');
-        console.log('----------------------------- Game step', this.stepCount);
 
     },
 

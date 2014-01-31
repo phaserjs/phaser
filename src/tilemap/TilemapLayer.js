@@ -482,22 +482,14 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
         height = this.layer.heightInPixels;
     }
 
-    // console.log('getTiles', x, y, width, height, collides);
-
     //  Convert the pixel values into tile coordinates
     this._tx = this.game.math.snapToFloor(x, this._cw) / this._cw;
     this._ty = this.game.math.snapToFloor(y, this._ch) / this._ch;
     this._tw = (this.game.math.snapToCeil(width, this._cw) + this._cw) / this._cw;
     this._th = (this.game.math.snapToCeil(height, this._ch) + this._ch) / this._ch;
 
-    // console.log('getTiles snapped', this._tx, this._ty, this._tw, this._th);
-
     //  This should apply the layer x/y here
     this._results.length = 0;
-
-    // var _tile = null;
-    // this.context.fillStyle = 'rgba(255,0,0,0.3)';
-    // this.context.fillRect(this._tx * this._cw, this._ty * this._ch, this._tw * this._cw, this._th * this._ch);
 
     for (var wy = this._ty; wy < this._ty + this._th; wy++)
     {
@@ -505,170 +497,21 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
         {
             if (this.layer.data[wy] && this.layer.data[wy][wx])
             {
-                // _tile = this.layer.data[wy][wx];
-        
-                // if (_tile && (collides === false || (collides && _tile.collides))
-                // {
-                    if (collides === false || (collides && this.layer.data[wy][wx].canCollide))
-                    {
-                        //  Convert tile coordinates back to camera space for return
-                        var _wx = this._unfixX(wx * this._cw) / this._cw;
-                        var _wy = this._unfixY(wy * this._ch) / this._ch;
-
-                        this._results.push({ 
-                            x: _wx * this._cw, 
-                            y: _wy * this._ch, 
-                            right: (_wx * this._cw) + this._cw, 
-                            bottom: (_wy * this._ch) + this._ch, 
-                            tile: this.layer.data[wy][wx],
-                            layer: this.layer.data[wy][wx].layer
-                        });
-
-                    }
-                // }
-            }
-        }
-    }
-
-    // console.log('getTiles results', this._results);
-
-    return this._results;
-
-}
-
-/**
-* Get all tiles that exist within the given area, defined by the top-left corner, width and height. Values given are in pixels, not tiles.
-* This function also draws to the context all of the debug areas.
-* @method Phaser.TilemapLayer#debugGetTiles
-* @memberof Phaser.TilemapLayer
-* @param {number} x - X position of the top left corner.
-* @param {number} y - Y position of the top left corner.
-* @param {number} width - Width of the area to get.
-* @param {number} height - Height of the area to get.
-* @param {boolean} [collides=false] - If true only return tiles that collide on one or more faces.
-* @return {array} Array with tiles informations (each contains x, y, and the tile).
-Phaser.TilemapLayer.prototype.debugGetTiles = function (x, y, width, height, collides) {
-
-    if (this.tilemap === null)
-    {
-        return;
-    }
-
-    //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
-    if (typeof collides === 'undefined') { collides = false; }
-    if (typeof debug === 'undefined') { debug = false; }
-
-    // adjust the x,y coordinates for scrollFactor
-    x = this._fixX(x);
-    y = this._fixY(y);
-
-    if (width > this.widthInPixels)
-    {
-        width = this.widthInPixels;
-    }
-
-    if (height > this.heightInPixels)
-    {
-        height = this.heightInPixels;
-    }
-
-    if (debug)
-    {
-        console.log('x', x, 'y', y, 'w', width, 'h', height);
-    }
-
-    // this.context.fillStyle = 'rgba(255,0,255,0.5)';
-    // this.context.fillRect(x, y, width, height);
-
-    var tileWidth = this.tileWidth * this.scale.x;
-    var tileHeight = this.tileHeight * this.scale.y;
-
-    //  Convert the pixel values into tile coordinates
-    this._tx = this.game.math.snapToFloor(x, tileWidth) / tileWidth;
-    this._ty = this.game.math.snapToFloor(y, tileHeight) / tileHeight;
-    this._tw = (this.game.math.snapToCeil(width, tileWidth) + tileWidth) / tileWidth;
-    this._th = (this.game.math.snapToCeil(height, tileHeight) + tileHeight) / tileHeight;
-
-    if (debug)
-    {
-        console.log('tx', this._tx, 'ty', this._ty, 'tw', this._tw, 'th', this._th);
-    }
-
-    // this.context.fillRect(this._tx * tileWidth, this._ty * tileHeight, this._tw * tileWidth, this._th * tileHeight);
-
-    //  This should apply the layer x/y here
-    this._results.length = 0;
-
-    var _index = 0;
-    var _tile = null;
-    var sx = 0;
-    var sy = 0;
-
-    this.context.fillStyle = 'rgba(255,0,0,1)';
-    // this.context.strokeStyle = 'rgba(0,0,0,1)';
-
-    for (var wy = this._ty; wy < this._ty + this._th; wy++)
-    {
-        if (debug)
-        {
-            console.log('wy', wy);
-        }
-
-        for (var wx = this._tx; wx < this._tx + this._tw; wx++)
-        {
-            if (debug)
-            {
-                console.log('wx', wx);
-            }
-
-            if (this.layer.data[wy] && this.layer.data[wy][wx])
-            {
-                //  Could combine
-                // _index = this.layer.data[wy][wx] - 1;
-                // _tile = this.tileset.getTile(_index);
-                _tile = this.layer.data[wy][wx];
-        
-                if (debug)
+                if (collides === false || (collides && this.layer.data[wy][wx].canCollide))
                 {
-                    console.log('tile', _tile);
+                    //  Convert tile coordinates back to camera space for return
+                    var _wx = this._unfixX(wx * this._cw) / this._cw;
+                    var _wy = this._unfixY(wy * this._ch) / this._ch;
+
+                    this._results.push({ 
+                        x: _wx * this._cw, 
+                        y: _wy * this._ch, 
+                        right: (_wx * this._cw) + this._cw, 
+                        bottom: (_wy * this._ch) + this._ch, 
+                        tile: this.layer.data[wy][wx],
+                        layer: this.layer.data[wy][wx].layer
+                    });
                 }
-
-                if (_tile)
-                {
-
-                    // sx = _tile.width * this.scale.x;
-                    // sy = _tile.height * this.scale.y;
-                    sx = this.tileWidth * this.scale.x;
-                    sy = this.tileHeight * this.scale.y;
-
-                    if (collides === false || (collides && _tile.collides))
-                    {
-                        if (debug)
-                        {
-                            this.context.fillRect(_tile.x * this.tileWidth, _tile.y * this.tileHeight, this.tileWidth, this.tileHeight);
-                        }
-
-                        // this.context.strokeRect(_tile.x * this.tileWidth, _tile.y * this.tileHeight, this.tileWidth, this.tileHeight);
-
-                        // convert tile coordinates back to camera space for return
-                        var _wx = this._unfixX(wx * sx) / this.tileWidth;
-                        var _wy = this._unfixY(wy * sy) / this.tileHeight;
-
-                        this._results.push({ 
-                            x: _wx * sx, 
-                            y: _wy * sy, 
-                            width: sx, 
-                            height: sy, 
-                            right: (_wx * sx) + sx, 
-                            bottom: (_wy * sy) + sy, 
-                            tx: _wx, 
-                            ty: _wy, 
-                            tile: _tile 
-                        });
-                    }
-
-                }
-
             }
         }
     }
@@ -676,7 +519,6 @@ Phaser.TilemapLayer.prototype.debugGetTiles = function (x, y, width, height, col
     return this._results;
 
 }
-*/
 
 /**
 * Internal function to update maximum values.
@@ -703,8 +545,6 @@ Phaser.TilemapLayer.prototype.updateMax = function () {
 
     this.dirty = true;
 
-    // console.log('updateMax', this._maxX, this._maxY, 'px', this.layer.widthInPixels, this.layer.heightInPixels, 'rwh', this.layer.width, this.layer.height);
-
 }
 
 /**
@@ -714,15 +554,15 @@ Phaser.TilemapLayer.prototype.updateMax = function () {
 */
 Phaser.TilemapLayer.prototype.render = function () {
 
-	// if (this.layer.dirty)
- //    {
- //        this.dirty = true;
- //    }
+	if (this.layer.dirty)
+    {
+        this.dirty = true;
+    }
 
- //    if (!this.dirty || !this.visible)
- //    {
- //        return;
- //    }
+    if (!this.dirty || !this.visible)
+    {
+        return;
+    }
 
     this._prevX = this._dx;
     this._prevY = this._dy;

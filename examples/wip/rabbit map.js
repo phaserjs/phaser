@@ -54,15 +54,20 @@ console.log(' --- state create start ---');
 
     layer.resizeWorld();
 
-    // game.physics.gravity.y = 200;
+    game.physics.gravity.y = 200;
 
 
-    sprite = game.add.sprite(100, 180, 'phaser');
-    sprite.body.moves = false;
+    sprite = game.add.sprite(100, 240, 'phaser');
+    // sprite.anchor.setTo(0.5, 0.5);
+    // sprite.body.setCircle(20);
+
+    // sprite.body.moves = false;
 
     ball = game.add.sprite(200, 180, 'ball');
 
-    game.add.tween(sprite).to({x: 500},5000,Phaser.Easing.Linear.None,true);
+    // game.add.tween(sprite).to({x: 500},5000,Phaser.Easing.Linear.None,true);
+
+    // game.add.tween(sprite).to({angle: 360},5000,Phaser.Easing.Linear.None,true);
 
     // sprite = game.add.sprite(200, 240, 'phaser'); // 3-block corner test
 
@@ -74,7 +79,9 @@ console.log(' --- state create start ---');
     // sprite.body.velocity.y = 200;
 
 
-    // sprite.anchor.setTo(0.5, 0.5);
+
+
+
 
     //  We'll set a lower max angular velocity here to keep it from going totally nuts
     // sprite.body.maxAngular = 500;
@@ -83,7 +90,7 @@ console.log(' --- state create start ---');
     // sprite.body.angularDrag = 50;
 
     // sprite.body.bounce.x = 0.8;
-    // sprite.body.bounce.y = 0.8;
+    sprite.body.bounce.y = 0.8;
 
     // sprite.angle = 35;
 
@@ -124,6 +131,10 @@ function update() {
 
     // sprite.body.velocity.y = -300;
 
+        // sprite.body.angularVelocity = -100;
+        // sprite.body.angularAcceleration = 200;
+
+
     // sprite.body.velocity.x = 0;
     // sprite.body.velocity.y = 0;
     // sprite.body.angularVelocity = 0;
@@ -131,7 +142,6 @@ function update() {
     // sprite.body.acceleration.x = 0;
     // sprite.body.angularAcceleration = 0;
 
-    /*
     if (cursors.left.isDown)
     {
         // sprite.body.acceleration.x = -200;
@@ -149,11 +159,6 @@ function update() {
     {
         game.physics.velocityFromAngle(sprite.angle, 300, sprite.body.velocity);
     }
-    else
-    {
-        // game.physics.velocityFromAngle(sprite.angle, sprite.body.velocity, sprite.body.velocity);
-    }
-    */
 
 
 
@@ -201,23 +206,23 @@ function update() {
     //     sprite.x += 2;
     // }
 
-    if (cursors.up.isDown)
-    {
-        sprite.body.y -= 2;
-    }
-    else if (cursors.down.isDown)
-    {
-        sprite.body.y += 2;
-    }
+    // if (cursors.up.isDown)
+    // {
+    //     sprite.body.y -= 2;
+    // }
+    // else if (cursors.down.isDown)
+    // {
+    //     sprite.body.y += 2;
+    // }
 
-    if (cursors.left.isDown)
-    {
-        sprite.body.x -= 2;
-    }
-    else if (cursors.right.isDown)
-    {
-        sprite.body.x += 2;
-    }
+    // if (cursors.left.isDown)
+    // {
+    //     sprite.body.x -= 2;
+    // }
+    // else if (cursors.right.isDown)
+    // {
+    //     sprite.body.x += 2;
+    // }
 
 
 
@@ -228,7 +233,7 @@ function render() {
     // game.debug.renderSpriteBody(sprite);
     // game.debug.renderSpriteBounds(sprite);
 
-    // game.debug.renderPhysicsBody(sprite.body);
+    game.debug.renderPhysicsBody(sprite.body);
     game.debug.renderBodyInfo(sprite, 32, 32);
 
     // game.debug.renderLine(marker, 'rgba(255,255,255,0.5)');

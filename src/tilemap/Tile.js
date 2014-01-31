@@ -131,8 +131,6 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     */
     this.callbackContext = this;
 
-    this.debug = false;
-
 };
 
 Phaser.Tile.prototype = {

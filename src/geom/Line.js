@@ -54,6 +54,14 @@ Phaser.Line.prototype = {
 
     },
 
+    /**
+    * Sets the line to match the x/y coordinates of the two given sprites.
+    * Can optionally be calculated from their center coordinates.
+    * @method Phaser.Line#fromSprite
+    * @param {Phaser.Sprite} startSprite - The coordinates of this Sprite will be set to the Line.start point.
+    * @param {Phaser.Sprite} endSprite - The coordinates of this Sprite will be set to the Line.start point.
+    * @param {boolean} [useCenter=true] - If true it will use startSprite.center.x, if false startSprite.x.
+    */
     fromSprite: function (startSprite, endSprite, useCenter) {
 
         if (typeof useCenter === 'undefined') { useCenter = true; }

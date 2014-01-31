@@ -100,6 +100,12 @@ Phaser.Physics.Arcade = function (game) {
     this._angle = 0;
 
     /**
+    * @property {number} _drag - Internal cache var.
+    * @private
+    */
+    this._drag = 0;
+
+    /**
     * @property {number} _dx - Internal cache var.
     * @private
     */
@@ -376,7 +382,8 @@ Phaser.Physics.Arcade.prototype = {
 
         if (body.sprite.debug)
         {
-            console.log('updateMotion: acx', body.acceleration.x, 'acy', body.acceleration.y, 'gravx', this._gravityX, 'gravy', this._gravityY, 'elapsed', this.game.time.physicsElapsed);
+            // console.log('updateMotion: acx', body.acceleration.x, 'acy', body.acceleration.y, 'gravx', this._gravityX, 'gravy', this._gravityY, 'elapsed', this.game.time.physicsElapsed);
+            console.log('updateMotion: rotation', body.rotation, 'vd', this._velocityDelta, 'drag', this._drag, 'acceleration', body.angularAcceleration);
         }
 
         this._p.setTo((body.acceleration.x + this._gravityX) * this.game.time.physicsElapsed, (body.acceleration.y + this._gravityY) * this.game.time.physicsElapsed);

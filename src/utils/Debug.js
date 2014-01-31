@@ -419,29 +419,6 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-    * Render Sprite collision.
-    * @method Phaser.Utils.Debug#renderSpriteCollision
-    * @param {Phaser.Sprite} sprite - The sprite to be rendered.
-    * @param {number} x - X position of the debug info to be rendered.
-    * @param {number} y - Y position of the debug info to be rendered.
-    * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
-    */
-    renderSpriteCollision: function (sprite, x, y, color) {
-
-        color = color || 'rgb(255,255,255)';
-
-        this.start(x, y, color, 100);
-
-        this.line('Body: (width: ' + sprite.width + ' height: ' + sprite.height + ')');
-        this.line('left: ' + sprite.body.touching.left);
-        this.line('right: ' + sprite.body.touching.right);
-        this.line('up: ' + sprite.body.touching.up);
-        this.line('down: ' + sprite.body.touching.down);
-        this.stop();
-
-    },
-
-    /**
     * Render Sprite Body Physics Data as text.
     * @method Phaser.Utils.Debug#renderBodyInfo
     * @param {Phaser.Sprite} sprite - The sprite to be rendered.
@@ -541,65 +518,13 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-    * Render the World Transform information of the given Sprite.
-    * @method Phaser.Utils.Debug#renderWorldTransformInfo
-    * @param {Phaser.Sprite} sprite - Description.
+    * Renders the sprite coordinates in local, positional and world space.
+    * @method Phaser.Utils.Debug#renderSpriteCoords
+    * @param {Phaser.Sprite} line - The sprite to inspect.
     * @param {number} x - X position of the debug info to be rendered.
     * @param {number} y - Y position of the debug info to be rendered.
     * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
     */
-    renderWorldTransformInfo: function (sprite, x, y, color) {
-
-        if (this.context == null)
-        {
-            return;
-        }
-
-        color = color || 'rgb(255, 255, 255)';
-
-        this.start(x, y, color);
-
-        this.line('World Transform');
-        this.line('skewX:  ' + sprite.worldTransform[3]);
-        this.line('skewY:  ' + sprite.worldTransform[1]);
-        this.line('scaleX: ' + sprite.worldTransform[0]);
-        this.line('scaleY: ' + sprite.worldTransform[4]);
-        this.line('transX: ' + sprite.worldTransform[2]);
-        this.line('transY: ' + sprite.worldTransform[5]);
-        this.stop();
-
-    },
-
-    /**
-    * Render the Local Transform information of the given Sprite.
-    * @method Phaser.Utils.Debug#renderLocalTransformInfo
-    * @param {Phaser.Sprite} sprite - Description.
-    * @param {number} x - X position of the debug info to be rendered.
-    * @param {number} y - Y position of the debug info to be rendered.
-    * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
-    */
-    renderLocalTransformInfo: function (sprite, x, y, color) {
-
-        if (this.context == null)
-        {
-            return;
-        }
-
-        color = color || 'rgb(255, 255, 255)';
-
-        this.start(x, y, color);
-
-        this.line('Local Transform');
-        this.line('skewX:  ' + sprite.localTransform[3]);
-        this.line('skewY:  ' + sprite.localTransform[1]);
-        this.line('scaleX: ' + sprite.localTransform[0]);
-        this.line('scaleY: ' + sprite.localTransform[4]);
-        this.line('transX: ' + sprite.localTransform[2]);
-        this.line('transY: ' + sprite.localTransform[5]);
-        this.stop();
-
-    },
-
     renderSpriteCoords: function (sprite, x, y, color) {
 
         if (this.context == null)
@@ -699,62 +624,6 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-    * Renders just the Sprite.body bounds.
-    * @method Phaser.Utils.Debug#renderSpriteBody
-    * @param {Phaser.Sprite} sprite - Description.
-    * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
-    */
-    renderSpriteTouching: function (sprite, color) {
-
-        if (this.context == null || sprite.body.touching.none === true)
-        {
-            return;
-        }
-
-        color = color || 'rgba(255,0,255, 0.3)';
-
-        this.start(0, 0, color);
-
-        this.context.fillStyle = color;
-        this.context.fillRect(sprite.body.screenX, sprite.body.screenY, sprite.body.width, sprite.body.height);
-
-        this.stop();
-        this.start(0, 0, color);
-
-        this.context.beginPath();
-        this.context.strokeStyle = '#000000';
-
-        if (sprite.body.touching.up)
-        {
-            this.context.moveTo(sprite.body.x, sprite.body.y);
-            this.context.lineTo(sprite.body.x + sprite.body.width, sprite.body.y);
-        }
-
-        if (sprite.body.touching.down)
-        {
-            this.context.moveTo(sprite.body.x, sprite.body.y + sprite.body.height);
-            this.context.lineTo(sprite.body.x + sprite.body.width, sprite.body.y + sprite.body.height);
-        }
-
-        if (sprite.body.touching.left)
-        {
-            this.context.moveTo(sprite.body.x, sprite.body.y);
-            this.context.lineTo(sprite.body.x, sprite.body.y + sprite.body.height);
-        }
-
-        if (sprite.body.touching.right)
-        {
-            this.context.moveTo(sprite.body.x + sprite.body.width, sprite.body.y);
-            this.context.lineTo(sprite.body.x + sprite.body.width, sprite.body.y + sprite.body.height);
-        }
-
-        this.context.stroke();
-
-        this.stop();
-
-    },
-
-    /**
     * Renders just the full Sprite bounds.
     * @method Phaser.Utils.Debug#renderSpriteBounds
     * @param {Phaser.Sprite} sprite - Description.
@@ -777,12 +646,12 @@ Phaser.Utils.Debug.prototype = {
         if (fill)
         {
             this.context.fillStyle = color;
-            this.context.fillRect(sprite.bounds.x, sprite.bounds.y, sprite.bounds.width, sprite.bounds.height);
+            this.context.fillRect(sprite.body.left, sprite.body.top, sprite.body.width, sprite.body.height);
         }
         else
         {
             this.context.strokeStyle = color;
-            this.context.strokeRect(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height);
+            this.context.strokeRect(sprite.body.left, sprite.body.top, sprite.body.width, sprite.body.height);
             this.context.stroke();
         }
 
@@ -982,37 +851,35 @@ Phaser.Utils.Debug.prototype = {
 
             this.start(0, 0, color);
 
-            // this.context.beginPath();
-            // this.context.moveTo(x + points[0].x, y + points[0].y);
+            this.context.beginPath();
+            this.context.moveTo(x + points[0].x, y + points[0].y);
 
-            // for (var i = 1; i < points.length; i++)
-            // {
-            //     this.context.lineTo(x + points[i].x, y + points[i].y);
-            // }
+            for (var i = 1; i < points.length; i++)
+            {
+                this.context.lineTo(x + points[i].x, y + points[i].y);
+            }
 
-            // this.context.closePath();
-            // this.context.strokeStyle = color;
-            // this.context.stroke();
+            this.context.closePath();
+            this.context.strokeStyle = color;
+            this.context.stroke();
 
-            // this.context.fillStyle = 'rgb(255,0,0)';
-            // this.context.fillRect(x + points[0].x - 2, y + points[0].y - 2, 5, 5);
+            this.context.fillStyle = 'rgb(255,0,0)';
+            this.context.fillRect(x + points[0].x - 2, y + points[0].y - 2, 5, 5);
 
-            // for (var i = 1; i < points.length; i++)
-            // {
-            //     this.context.fillRect(x + points[i].x - 2, y + points[i].y - 2, 5, 5);
-            // }
+            for (var i = 1; i < points.length; i++)
+            {
+                this.context.fillRect(x + points[i].x - 2, y + points[i].y - 2, 5, 5);
+            }
 
-            this.context.strokeStyle = 'rgb(0,255,255)';
-            this.context.strokeRect(body.left, body.top, body.width, body.height);
+            // this.context.strokeStyle = 'rgb(0,255,255)';
+            // this.context.strokeRect(body.left, body.top, body.width, body.height);
 
             this.stop();
         }
 
     },
 
-
     /**
-    * 
     * @method Phaser.Utils.Debug#renderPolygon
     * @param {array} polygon
     * @param {string} [color='rgb(255,255,255)'] - The color the polygon is stroked in.
@@ -1045,85 +912,6 @@ Phaser.Utils.Debug.prototype = {
         this.context.stroke();
 
         this.stop();
-
-    },
-
-    /**
-    * Dumps the Linked List to the console.
-    * 
-    * @method Phaser.Utils.Debug#Phaser.LinkedList#dump 
-    * @param {Phaser.LinkedList} list - The LinkedList to dump.
-    */
-    dumpLinkedList: function (list) {
-
-        var spacing = 20;
-
-        var output = "\n" + Phaser.Utils.pad('Node', spacing) + "|" + Phaser.Utils.pad('Next', spacing) + "|" + Phaser.Utils.pad('Previous', spacing) + "|" + Phaser.Utils.pad('First', spacing) + "|" + Phaser.Utils.pad('Last', spacing);
-        console.log(output);
-
-        var output = Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing);
-        console.log(output);
-
-        var entity = list;
-
-        var testObject = entity.last.next;
-        entity = entity.first;
-        
-        do
-        {
-            var name = entity.sprite.name || '*';
-            var nameNext = '-';
-            var namePrev = '-';
-            var nameFirst = '-';
-            var nameLast = '-';
-
-            if (entity.next)
-            {
-                nameNext = entity.next.sprite.name;
-            }
-
-            if (entity.prev)
-            {
-                namePrev = entity.prev.sprite.name;
-            }
-
-            if (entity.first)
-            {
-                nameFirst = entity.first.sprite.name;
-            }
-
-            if (entity.last)
-            {
-                nameLast = entity.last.sprite.name;
-            }
-
-            if (typeof nameNext === 'undefined')
-            {
-                nameNext = '-';
-            }
-
-            if (typeof namePrev === 'undefined')
-            {
-                namePrev = '-';
-            }
-
-            if (typeof nameFirst === 'undefined')
-            {
-                nameFirst = '-';
-            }
-
-            if (typeof nameLast === 'undefined')
-            {
-                nameLast = '-';
-            }
-
-            var output = Phaser.Utils.pad(name, spacing) + "|" + Phaser.Utils.pad(nameNext, spacing) + "|" + Phaser.Utils.pad(namePrev, spacing) + "|" + Phaser.Utils.pad(nameFirst, spacing) + "|" + Phaser.Utils.pad(nameLast, spacing);
-            console.log(output);
-
-            entity = entity.next;
-
-        }
-        while(entity != testObject)
 
     }
 

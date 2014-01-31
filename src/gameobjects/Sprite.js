@@ -373,12 +373,9 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.updateCache();
     this.updateBounds();
 
-    this.debug = false;
-
     /**
     * @property {PIXI.Point} pivot - The pivot point of the displayObject that it rotates around.
     */
-
 
 };
 
@@ -393,11 +390,6 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 * @memberof Phaser.Sprite
 */
 Phaser.Sprite.prototype.preUpdate = function() {
-
-if (this.debug)
-{
-    console.log('Sprite preUpdate xy: ', this.x, this.y, 'wxy:', this.world.x, this.world.y);
-}
 
     if (!this.exists || (this.group && !this.group.exists))
     {
@@ -706,12 +698,6 @@ Phaser.Sprite.prototype.postUpdate = function() {
 
         this.position.x = this._cache.x;
         this.position.y = this._cache.y;
-
-if (this.debug)
-{
-    console.log('Sprite postUpdate xy: ', this.x, this.y, 'right:', this.right);
-}
-
     }
 
 };
