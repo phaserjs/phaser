@@ -34,6 +34,9 @@ console.log(' --- state create start ---');
         game.step();
     });
 
+    // game.stage.backgroundColor = '#124184';
+
+
     marker = new Phaser.Line(256, 0, 256, 600);
 
     map = game.add.tilemap('map');
@@ -48,22 +51,21 @@ console.log(' --- state create start ---');
 
     // layer.debug = true;
 
-    // layer.resizeWorld();
+    layer.resizeWorld();
 
-    game.physics.gravity.y = 200;
+    // game.physics.gravity.y = 200;
 
 
     sprite = game.add.sprite(100, 300, 'phaser'); // up test
 
     // sprite = game.add.sprite(200, 240, 'phaser'); // 3-block corner test
 
-    sprite.debug = true;
-
-    game.stepping = true;
+    // sprite.debug = true;
+    // game.stepping = true;
 
     // sprite.body.velocity.y = -300;
 
-    sprite.body.velocity.y = 200;
+    // sprite.body.velocity.y = 200;
 
 
     // sprite.anchor.setTo(0.5, 0.5);
@@ -79,7 +81,7 @@ console.log(' --- state create start ---');
 
     // sprite.angle = 35;
 
-    // game.camera.follow(sprite);
+    game.camera.follow(sprite);
 
     // game.input.onDown.add(getIt, this);
 
@@ -89,7 +91,7 @@ console.log(' --- state create start ---');
 
 function update() {
 
-console.log(' --- state update start ---');
+// console.log(' --- state update start ---');
 
 /*
     if (cursors.left.isDown)
@@ -114,8 +116,8 @@ console.log(' --- state update start ---');
 
     // sprite.body.velocity.y = -300;
 
-    // sprite.body.velocity.x = 0;
-    // sprite.body.velocity.y = 0;
+    sprite.body.velocity.x = 0;
+    sprite.body.velocity.y = 0;
     // sprite.body.angularVelocity = 0;
 
     // sprite.body.acceleration.x = 0;
@@ -157,8 +159,8 @@ console.log(' --- state update start ---');
 
     if (cursors.up.isDown)
     {
-        console.log('cursor up');
-        sprite.body.velocity.y = -300;
+        // console.log('cursor up');
+        sprite.body.velocity.y = -200;
     }
     else if (cursors.down.isDown)
     {
@@ -167,13 +169,12 @@ console.log(' --- state update start ---');
 
     if (cursors.left.isDown)
     {
-        sprite.body.velocity.x = -100;
+        sprite.body.velocity.x = -200;
     }
     else if (cursors.right.isDown)
     {
-        sprite.body.velocity.x = 100;
+        sprite.body.velocity.x = 200;
     }
-
 
 }
 

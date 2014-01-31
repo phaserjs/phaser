@@ -100,7 +100,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.bounce = new Phaser.Point();
 
     /**
-    * @property {Phaser.Point} minVelocity - When a body rebounds off another or a wall the minVelocity is checked. If the new velocity is lower than minVelocity the body is stopped.
+    * @property {Phaser.Point} minVelocity - When a body rebounds off another body or a wall the minVelocity is checked. If the new velocity is lower than minVelocity the body is stopped.
     * @default
     */
     this.minVelocity = new Phaser.Point(5, 5);
@@ -521,14 +521,14 @@ if (this.sprite.debug)
 
         if (this.blocked.left || this.blocked.right && (Math.floor(this.x) !== this.blocked.x || Math.floor(this.y) !== this.blocked.y))
         {
-            console.log('resetBlocked unlocked left + right');
+            // console.log('resetBlocked unlocked left + right');
             this.blocked.left = false;
             this.blocked.right = false;
         }
 
         if (this.blocked.up || this.blocked.down && (this.x !== this.blocked.x || this.y !== this.blocked.y))
         {
-            console.log('resetBlocked unlocked up + down');
+            // console.log('resetBlocked unlocked up + down');
             this.blocked.up = false;
             this.blocked.down = false;
         }

@@ -61,7 +61,8 @@ Phaser.World.prototype.boot = function () {
 }
 
 /**
-* This is called automatically every frame, and is where main logic happens.
+* This is called automatically after the plugins preUpdate and before the State.update.
+* Most objects have preUpdate methods and it's where initial movement, drawing and calculations are done.
 * 
 * @method Phaser.World#update
 */
@@ -90,7 +91,8 @@ Phaser.World.prototype.preUpdate = function () {
 }
 
 /**
-* This is called automatically every frame, and is where main logic happens.
+* This is called automatically after the State.update, but before particles or plugins update.
+* Most objects won't have an update method set unless explicitly given one.
 * 
 * @method Phaser.World#update
 */
@@ -121,31 +123,58 @@ Phaser.World.prototype.update = function () {
 }
 
 /**
-* This is called automatically every frame, and is where main logic happens.
+* This is called automatically before the renderer runs and after the plugins have updated.
+* In postUpdate this is where all the final physics calculatations and object positioning happens.
+* The objects are processed in the order of the display list.
+* The only exception to this is if the camera is following an object, in which case that is updated first.
+* 
 * @method Phaser.World#postUpdate
 */
 Phaser.World.prototype.postUpdate = function () {
 
-    this.camera.update();
-
-    if (this.game.stage._stage.first._iNext)
+    if (this.camera.target && this.camera.target['postUpdate'])
     {
-        var currentNode = this.game.stage._stage.first._iNext;
-        
-        do
+        this.camera.target.postUpdate();
+
+        this.camera.update();
+
+        if (this.game.stage._stage.first._iNext)
         {
-            if (currentNode['postUpdate'])
-            {
-                currentNode.postUpdate();
-            }
+            var currentNode = this.game.stage._stage.first._iNext;
             
-            currentNode = currentNode._iNext;
+            do
+            {
+                if (currentNode['postUpdate'] && currentNode !== this.camera.target)
+                {
+                    currentNode.postUpdate();
+                }
+                
+                currentNode = currentNode._iNext;
+            }
+            while (currentNode != this.game.stage._stage.last._iNext)
         }
-        while (currentNode != this.game.stage._stage.last._iNext)
+    }
+    else
+    {
+        this.camera.update();
+
+        if (this.game.stage._stage.first._iNext)
+        {
+            var currentNode = this.game.stage._stage.first._iNext;
+            
+            do
+            {
+                if (currentNode['postUpdate'])
+                {
+                    currentNode.postUpdate();
+                }
+                
+                currentNode = currentNode._iNext;
+            }
+            while (currentNode != this.game.stage._stage.last._iNext)
+        }
     }
 
-    this.camera.update();
-    
 }
 
 /**
@@ -154,8 +183,8 @@ Phaser.World.prototype.postUpdate = function () {
 * @method Phaser.World#setBounds
 * @param {number} x - Top left most corner of the world.
 * @param {number} y - Top left most corner of the world.
-* @param {number} width - New width of the world.
-* @param {number} height - New height of the world.
+* @param {number} width - New width of the world. Can never be smaller than the Game.width.
+* @param {number} height - New height of the world. Can never be smaller than the Game.height.
 */
 Phaser.World.prototype.setBounds = function (x, y, width, height) {
 

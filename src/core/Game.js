@@ -592,7 +592,7 @@ Phaser.Game.prototype = {
                 }
 
                 this.plugins.preUpdate();
-        console.log('world preUpdate');
+        // console.log('world preUpdate');
                 this.world.preUpdate();
 
                 this.stage.update();
@@ -606,7 +606,7 @@ Phaser.Game.prototype = {
                 this.particles.update();            
                 this.plugins.update();
 
-        console.log('world postUpdate');
+        // console.log('world postUpdate');
                 this.world.postUpdate();
                 this.plugins.postUpdate();
             }

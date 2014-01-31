@@ -118,6 +118,12 @@ Phaser.Physics.Arcade = function (game) {
     this._p = new Phaser.Point(0, 0);
 
     /**
+    * @property {number} _intersection - Internal cache var.
+    * @private
+    */
+    this._intersection = [0,0,0,0];
+
+    /**
     * @property {number} _gravityX - Internal cache var.
     * @private
     */
@@ -715,10 +721,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext) {
 
-        //  At this stage the body.left value is WRONG (it's the old value)
-    // console.log('collideSpriteVsTilemapLayer sx:', sprite.x, 'sy:', sprite.y, 'body left:', sprite.body.left, 'right:', sprite.body.right);
-    console.log('collideSpriteVsTilemapLayer x:', sprite.body.x, 'y:', sprite.body.y, 'body left:', sprite.body.left, 'right:', sprite.body.right);
-
+        // console.log('collideSpriteVsTilemapLayer x:', sprite.body.x, 'y:', sprite.body.y, 'body left:', sprite.body.left, 'right:', sprite.body.right);
 
         this._mapData = tilemapLayer.getTiles(sprite.body.left, sprite.body.top, sprite.body.width, sprite.body.height, true);
 
@@ -865,30 +868,27 @@ Phaser.Physics.Arcade.prototype = {
 
         if (body.width <= 0 || body.height <= 0 || tile.width <= 0 || tile.height <= 0)
         {
-            return null;
+            this._intersection[4] = 0;
+            return this._intersection;
         }
 
-        console.log('____ tileIntersects');
-        console.log('body: ', body.left, body.top, body.right, body.bottom);
-        console.log('tile: ', tile.x, tile.y, tile.right, tile.bottom);
-        // console.log('intersect #1', body.right < tile.x, body.right, tile.x);
-        // console.log('intersect #2', body.bottom < tile.y, body.bottom, tile.y);
-        // console.log('intersect #3', body.left > tile.right, body.left, tile.right);
-        // console.log('intersect #4', body.top > tile.bottom, body.top, tile.bottom);
+        // console.log('____ tileIntersects');
+        // console.log('body: ', body.left, body.top, body.right, body.bottom);
+        // console.log('tile: ', tile.x, tile.y, tile.right, tile.bottom);
 
         if (!(body.right < tile.x || body.bottom < tile.y || body.left > tile.right || body.top > tile.bottom))
         {
-            var out = [0,0,0,0];
+            this._intersection[0] = Math.max(body.left, tile.x);                                    // x
+            this._intersection[1] = Math.max(body.top, tile.y);                                     // y
+            this._intersection[2] = Math.min(body.right, tile.right) - this._intersection[0];       // width
+            this._intersection[3] = Math.min(body.bottom, tile.bottom) - this._intersection[1];     // height
+            this._intersection[4] = 1;
 
-            out[0]= Math.max(body.left, tile.x);                    // x
-            out[1] = Math.max(body.top, tile.y);                    // y
-            out[2] = Math.min(body.right, tile.right) - out[0];     // width
-            out[3] = Math.min(body.bottom, tile.bottom) - out[1];   // height
-
-            return out;
+            return this._intersection;
         }
 
-        return null;
+        this._intersection[4] = 0;
+        return this._intersection;
 
     },
 
@@ -901,7 +901,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     separateTiles: function (body, tiles) {
 
-        console.log('!!! separateTiles', tiles);
+        // console.log('!!! separateTiles', tiles);
 
         var tile;
         var result = false;
@@ -929,17 +929,17 @@ Phaser.Physics.Arcade.prototype = {
     */
     separateTile: function (body, tile) {
 
-        var intersection = this.tileIntersects(body, tile);
+        this._intersection = this.tileIntersects(body, tile);
 
         //  If the intersection area is either entirely null, or has a width/height of zero, we bail out now
-        if (intersection === null || intersection[2] === 0 || intersection[3] === 0)
+        if (this._intersection[4] === 0 || this._intersection[2] === 0 || this._intersection[3] === 0)
         {
-            console.log('Tile does not intersect body');
+            // console.log('Tile does not intersect body');
             return false;
         }
 
-        console.log('*** separateTile', tile);
-        console.log('intersection', intersection);
+        // console.log('*** separateTile', tile);
+        // console.log('intersection', this._intersection);
 
         tile.tile.debug = true;
 
@@ -969,7 +969,7 @@ Phaser.Physics.Arcade.prototype = {
             //  LEFT
             body.overlapX = body.left - tile.right;
 
-            console.log('ST left', body.overlapX, body.deltaX(), 'bt', body.left, tile.right);
+            // console.log('ST left', body.overlapX, body.deltaX(), 'bt', body.left, tile.right);
 
             if (body.overlapX < 0)
             {
@@ -985,7 +985,7 @@ Phaser.Physics.Arcade.prototype = {
             //  RIGHT
             body.overlapX = body.right - tile.x;
 
-            console.log('ST right', body.overlapX, body.deltaX(), 'bt', body.right, tile.x);
+            // console.log('ST right', body.overlapX, body.deltaX(), 'bt', body.right, tile.x);
 
             if (body.overlapX > 0)
             {
@@ -1002,7 +1002,7 @@ Phaser.Physics.Arcade.prototype = {
             //  UP
             body.overlapY = body.top - tile.bottom;
 
-            console.log('ST up', body.overlapY, body.deltaY(), 'bt', body.top, tile.bottom);
+            // console.log('ST up', body.overlapY, body.deltaY(), 'bt', body.top, tile.bottom);
 
             if (body.overlapY < 0)
             {
@@ -1018,7 +1018,7 @@ Phaser.Physics.Arcade.prototype = {
             //  DOWN
             body.overlapY = body.bottom - tile.y;
 
-            console.log('ST down', body.overlapY, body.deltaY(), 'bt', body.bottom, tile.y);
+            // console.log('ST down', body.overlapY, body.deltaY(), 'bt', body.bottom, tile.y);
 
             if (body.overlapY > 0)
             {
@@ -1064,7 +1064,7 @@ Phaser.Physics.Arcade.prototype = {
     */
     processTileSeparation: function (body) {
 
-        console.log('PRE processTileSeparation xy', body.x, body.y, 'left', body.left, 'right', body.right, 'up', body.up, 'down', body.down);
+        // console.log('PRE processTileSeparation xy', body.x, body.y, 'left', body.left, 'right', body.right, 'up', body.up, 'down', body.down);
 
         if (body.overlapX < 0)
         {
@@ -1109,7 +1109,7 @@ Phaser.Physics.Arcade.prototype = {
             body.touching.none = false;
         }
 
-        console.log('POST processTileSeparation xy', body.x, body.y, 'left', body.left, 'right', body.right, 'up', body.up, 'down', body.down);
+        // console.log('POST processTileSeparation xy', body.x, body.y, 'left', body.left, 'right', body.right, 'up', body.up, 'down', body.down);
 
         return true;
 
