@@ -390,25 +390,58 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     /**
-    * Sets this Body to use a convex polygon for all collision. The points are specified in a counter-clockwise direction and must create a convex polygon.
-    * It will be centered on the parent Sprite.
+    * Sets this Body to use a convex polygon for collision.
+    * The points are specified in a counter-clockwise direction and must create a convex polygon.
+    * Use Body.translate and/or Body.offset to re-position the polygon from the Sprite origin.
     *
     * @method Phaser.Physics.Arcade#setPolygon
-    * @param {array<SAT.Vector>} points - An array of vectors representing the points in the polygon, in counter-clockwise order.
-    * @param {number} [translateX=0] - The x amount the rectangle will be translated by from the Sprites center.
-    * @param {number} [translateY=0] - The y amount the rectangle will be translated by from the Sprites center.
+    * @param {array<SAT.Vector>|Array<Number>|SAT.Vector...|Number...} points - This can be an array of Vectors that form the polygon,
+    *      a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
+    *      all the points of the polygon e.g. `setPolygon(new SAT.Vector(), new SAT.Vector(), ...)`, or the
+    *      arguments passed can be flat x,y values e.g. `setPolygon(x,y, x,y, x,y, ...)` where `x` and `y` are Numbers.
     */
-    setPolygon: function (points, translateX, translateY) {
-
-        if (typeof translateX === 'undefined') { translateX = 0; }
-        if (typeof translateY === 'undefined') { translateY = 0; }
+    setPolygon: function (points) {
 
         this.type = Phaser.Physics.Arcade.POLYGON;
         this.shape = null;
+
+        if (!(points instanceof Array))
+        {
+            points = Array.prototype.slice.call(arguments);
+        }
+
+        if (typeof points[0] === 'number')
+        {
+            var p = [];
+
+            for (var i = 0, len = points.length; i < len; i += 2)
+            {
+                p.push(new SAT.Vector(points[i], points[i + 1]));
+            }
+
+            points = p;
+        }
+
         this.polygon = new SAT.Polygon(new SAT.Vector(this.sprite.center.x, this.sprite.center.y), points);
-        this.polygon.translate(translateX, translateY);
 
         this.offset.setTo(0, 0);
+
+    },
+
+    /**
+    * Used for translating rectangle and polygon bodies from the Sprite parent. Doesn't apply to Circles.
+    * See also the Body.offset property.
+    *
+    * @method Phaser.Physics.Arcade#translate
+    * @param {number} x - The x amount the polygon or rectangle will be translated by from the Sprite.
+    * @param {number} y - The y amount the polygon or rectangle will be translated by from the Sprite.
+    */
+    translate: function (x, y) {
+
+        if (this.polygon)
+        {
+            this.polygon.translate(x, y);
+        }
 
     },
 
@@ -418,22 +451,21 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @method Phaser.Physics.Arcade#updateScale
     * @private
     */
-    updateScale: function (scaleX, scaleY) {
+    updateScale: function () {
 
-        if (scaleX != this._sx || scaleY != this._sy)
+        if (this.polygon)
         {
-            if (this.polygon)
-            {
-                this.polygon.scale(scaleX / this._sx, scaleY / this._sy);
-            }
-            else
-            {
-                this.shape.r *= Math.max(scaleX, scaleY);
-            }
-
-            this._sx = scaleX;
-            this._sy = scaleY;
+            this.polygon.scale(this.sprite.scale.x / this._sx, this.sprite.scale.y / this._sy);
         }
+        else
+        {
+            this.shape.r *= Math.max(this.sprite.scale.x, this.sprite.scale.y);
+        }
+
+        this._sx = this.sprite.scale.x;
+        this._sy = this.sprite.scale.y;
+
+        console.log('updateScale', this.sprite.scale.x, this.sprite.scale.y);
 
     },
 
@@ -449,19 +481,21 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.preY = this.y;
         this.preRotation = this.sprite.angle;
 
-        // this.x = this.sprite.world.x + this.offset.x;
-        // this.y = this.sprite.world.y + this.offset.y;
-
         this.x = (this.sprite.world.x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
         this.y = (this.sprite.world.y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;
         this.rotation = this.preRotation;
 
+        if (this.sprite.scale.x !== this._sx || this.sprite.scale.y !== this._sy)
+        {
+            this.updateScale();
+        }
+
 if (this.sprite.debug)
 {
-    // console.log('Body preUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right, 'WAS', this.preX, this.preY);
-    // console.log('Body preUpdate blocked:', this.blocked, this.blockFlags);
-    // console.log('Body preUpdate velocity:', this.velocity.x, this.velocity.y);
-    console.log('Body preUpdate rotation:', this.rotation, this.preRotation);
+    console.log('Body preUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right, 'WAS', this.preX, this.preY);
+    console.log('Body preUpdate blocked:', this.blocked, this.blockFlags);
+    console.log('Body preUpdate velocity:', this.velocity.x, this.velocity.y);
+    // console.log('Body preUpdate rotation:', this.rotation, this.preRotation);
 }
 
         this.checkBlocked();
@@ -487,7 +521,10 @@ if (this.sprite.debug)
                 }
             }
 
-            this.game.physics.checkBounds(this);
+            if (this.game.physics.checkBounds(this))
+            {
+                this.reboundCheck(true, true, true);
+            }
 
             this.applyFriction();
 
@@ -514,16 +551,16 @@ if (this.sprite.debug)
 
     checkBlocked: function () {
 
-        if (this.blocked.left || this.blocked.right && (Math.floor(this.x) !== this.blocked.x || Math.floor(this.y) !== this.blocked.y))
+        if ((this.blocked.left || this.blocked.right) && (Math.floor(this.x) !== this.blocked.x || Math.floor(this.y) !== this.blocked.y))
         {
-            // console.log('resetBlocked unlocked left + right');
+            // console.log('resetBlocked unlocked left + right', Math.floor(this.x), this.blocked.x);
             this.blocked.left = false;
             this.blocked.right = false;
         }
 
-        if (this.blocked.up || this.blocked.down && (this.x !== this.blocked.x || this.y !== this.blocked.y))
+        if ((this.blocked.up || this.blocked.down) && (Math.floor(this.x) !== this.blocked.x || Math.floor(this.y) !== this.blocked.y))
         {
-            // console.log('resetBlocked unlocked up + down');
+            // console.log('resetBlocked unlocked up + down', Math.floor(this.y), this.blocked.y, 'x', Math.floor(this.x), this.blocked.x);
             this.blocked.up = false;
             this.blocked.down = false;
         }
@@ -608,8 +645,8 @@ if (this.sprite.debug)
 
         if (this.sprite.debug)
         {
-            // console.log('reboundCheck start', this.velocity.x, this.velocity.y);
-            // console.log('reBound blocked state', this.blocked);
+            console.log('reboundCheck start', this.velocity.x, this.velocity.y);
+            console.log('reBound blocked state', this.blocked);
         }
 
         if (x)
@@ -621,7 +658,7 @@ if (this.sprite.debug)
 
                 if (this.sprite.debug)
                 {
-                    // console.log('X rebound applied');
+                    console.log('X rebound applied');
                 }
             }
 
@@ -635,14 +672,14 @@ if (this.sprite.debug)
 
                     if (this.sprite.debug)
                     {
-                        // console.log('reboundCheck X zeroed');
+                        console.log('reboundCheck X zeroed');
                     }
                 }
             }
 
             if (this.sprite.debug)
             {
-                // console.log('reboundCheck X', this.velocity.x, 'gravity', gx);
+                console.log('reboundCheck X', this.velocity.x, 'gravity', gx);
             }
         }
 
@@ -655,7 +692,7 @@ if (this.sprite.debug)
 
                 if (this.sprite.debug)
                 {
-                    // console.log('Y rebound applied');
+                    console.log('Y rebound applied');
                 }
             }
 
@@ -669,14 +706,14 @@ if (this.sprite.debug)
 
                     if (this.sprite.debug)
                     {
-                        // console.log('reboundCheck Y zeroed');
+                        console.log('reboundCheck Y zeroed');
                     }
                 }
             }
 
             if (this.sprite.debug)
             {
-                // console.log('reboundCheck Y', this.velocity.y, 'gravity', gy);
+                console.log('reboundCheck Y', this.velocity.y, 'gravity', gy);
             }
         }
 
@@ -887,7 +924,7 @@ if (this.sprite.debug)
     */
     overlap: function (body, response) {
 
-        if (this.type === Phaser.Physics.Arcade.RECT && body.type === Phaser.Physics.Arcade.RECT)
+        if ((this.type === Phaser.Physics.Arcade.RECT || this.type === Phaser.Physics.Arcade.POLYGON) && (body.type === Phaser.Physics.Arcade.RECT || body.type === Phaser.Physics.Arcade.POLYGON))
         {
             return SAT.testPolygonPolygon(this.polygon, body.polygon, response);
         }
@@ -895,11 +932,11 @@ if (this.sprite.debug)
         {
             return SAT.testCircleCircle(this.shape, body.shape, response);
         }
-        else if (this.type === Phaser.Physics.Arcade.RECT && body.type === Phaser.Physics.Arcade.CIRCLE)
+        else if ((this.type === Phaser.Physics.Arcade.RECT || this.type === Phaser.Physics.Arcade.POLYGON) && body.type === Phaser.Physics.Arcade.CIRCLE)
         {
             return SAT.testPolygonCircle(this.polygon, body.shape, response);
         }
-        else if (this.type === Phaser.Physics.Arcade.CIRCLE && body.type === Phaser.Physics.Arcade.RECT)
+        else if (this.type === Phaser.Physics.Arcade.CIRCLE && (body.type === Phaser.Physics.Arcade.RECT || body.type === Phaser.Physics.Arcade.POLYGON))
         {
             return SAT.testCirclePolygon(this.shape, body.polygon, response);
         }
@@ -1279,21 +1316,18 @@ if (this.sprite.debug)
 
             if (this.deltaX() !== 0 || this.deltaY() !== 0)
             {
-                // this.sprite.worldTransform[2] = this.sprite.x = (this.x - this.offset.x);
-                // this.sprite.worldTransform[5] = this.sprite.y = (this.y - this.offset.y);
-
                 this.sprite.worldTransform[2] = this.sprite.x = (this.x + (this.sprite.anchor.x * this.sprite.width) - this.offset.x);
                 this.sprite.worldTransform[5] = this.sprite.y = (this.y + (this.sprite.anchor.y * this.sprite.height) - this.offset.y);
-
-                // this.x = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
-                // this.y = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
             }
 
             if (this.allowRotation && this.deltaZ() !== 0)
             {
-                // this.sprite.rotation = this.rotation;
                 this.sprite.angle += this.deltaZ();
-                // this.sprite.angle = this.angle;
+            }
+            
+            if (this.sprite.scale.x !== this._sx || this.sprite.scale.y !== this._sy)
+            {
+                this.updateScale();
             }
 
         }
@@ -1322,6 +1356,9 @@ if (this.sprite.debug)
         this.friction = 0.1;
         this.checkCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
         this.blocked = { x: 0, y: 0, up: false, down: false, left: false, right: false };
+        this.x = (this.sprite.world.x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
+        this.y = (this.sprite.world.y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;
+        this.updateBounds();
 
     },
 

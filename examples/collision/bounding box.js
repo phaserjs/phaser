@@ -17,9 +17,8 @@ function create() {
     sprite1 = game.add.sprite(150, 300, 'atari');
     sprite1.name = 'atari';
 
-    //  This adjusts the collision body size to be 104 x 104.
-    //  See the offset bounding box for another example.
-    sprite1.body.setSize(104, 104, 0, 0);
+    //  Here you can visually see the two bounding boxes the sprites are using for collision.
+
     sprite1.body.immovable = true;
 
     sprite2 = game.add.sprite(700, 320, 'mushroom');
@@ -30,7 +29,6 @@ function create() {
 
 function update() {
 
-    // object1, object2, collideCallback, processCallback, callbackContext
     game.physics.collide(sprite1, sprite2, collisionHandler, null, this);
 
 }
@@ -45,7 +43,7 @@ function render() {
 
     game.debug.renderBodyInfo(sprite1, 32, 32);
 
-    game.debug.renderPolygon(sprite1.body.polygons, 'rgb(255,0,0)');
-    game.debug.renderPolygon(sprite2.body.polygons, 'rgb(255,0,0)');
+    game.debug.renderPhysicsBody(sprite1.body);
+    game.debug.renderPhysicsBody(sprite2.body);
 
 }

@@ -868,6 +868,7 @@ Phaser.Utils.Debug.prototype = {
 
             for (var i = 1; i < points.length; i++)
             {
+                this.context.fillStyle = 'rgb(255,' + (i * 40) + ',0)';
                 this.context.fillRect(x + points[i].x - 2, y + points[i].y - 2, 5, 5);
             }
 

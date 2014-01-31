@@ -137,7 +137,7 @@ function update() {
 
     // sprite.body.velocity.x = 0;
     // sprite.body.velocity.y = 0;
-    // sprite.body.angularVelocity = 0;
+    sprite.body.angularVelocity = 0;
 
     // sprite.body.acceleration.x = 0;
     // sprite.body.angularAcceleration = 0;

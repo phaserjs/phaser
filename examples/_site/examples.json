@@ -119,6 +119,14 @@
       "title": "bounding box"
     },
     {
+      "file": "circle+body.js",
+      "title": "circle body"
+    },
+    {
+      "file": "circle+vs+polygon.js",
+      "title": "circle vs polygon"
+    },
+    {
       "file": "group+vs+group.js",
       "title": "group vs group"
     },
@@ -135,8 +143,16 @@
       "title": "offset bounding box"
     },
     {
+      "file": "polygon+body.js",
+      "title": "polygon body"
+    },
+    {
       "file": "process+callback.js",
       "title": "process callback"
+    },
+    {
+      "file": "rotated+bounding+box.js",
+      "title": "rotated bounding box"
     },
     {
       "file": "sprite+vs+group.js",
@@ -275,6 +291,10 @@
     {
       "file": "circle.js",
       "title": "circle"
+    },
+    {
+      "file": "line+intersection.js",
+      "title": "line intersection"
     },
     {
       "file": "line.js",

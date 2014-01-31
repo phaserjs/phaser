@@ -173,10 +173,11 @@ Phaser.Physics.Arcade.POLYGON = 2;
 Phaser.Physics.Arcade.prototype = {
 
     /**
-    * Checks the given Physics.Body against the Physics Bounds, if any are set and separates them, setting the blocked flags on the Body as it does so.
+    * Checks the given Physics.Body against the Physics Bounds, if any are set, and separates them, setting the blocked flags on the Body as it does so.
     *
     * @method Phaser.Physics.Arcade#checkBounds
     * @param {Phaser.Physics.Arcade.Body} The Body object to be checked.
+    * @return {boolean} True if the body hit the bounds, otherwise false.
     */
     checkBounds: function (body) {
 
@@ -189,6 +190,7 @@ Phaser.Physics.Arcade.prototype = {
 
         var test = SAT.testPolygonPolygon;
         var part = body.polygon;
+        var rebounded = false;
 
         if (body.type === Phaser.Physics.Arcade.CIRCLE)
         {
@@ -200,13 +202,17 @@ Phaser.Physics.Arcade.prototype = {
         {
             body.blocked.left = true;
             part.pos.add(this._response.overlapV);
-            console.log('World checkBounds Left', this._response.overlapV);
+            body.blocked.x = Math.floor(body.x);
+            body.blocked.y = Math.floor(body.y);
+            rebounded = true;
         }
         else if (this.worldRight && test(this.worldPolys[1], part, this._response))
         {
             body.blocked.right = true;
             part.pos.add(this._response.overlapV);
-            console.log('World checkBounds Right', this._response.overlapV);
+            body.blocked.x = Math.floor(body.x);
+            body.blocked.y = Math.floor(body.y);
+            rebounded = true;
         }
 
         this._response.clear();
@@ -215,13 +221,24 @@ Phaser.Physics.Arcade.prototype = {
         {
             body.blocked.up = true;
             part.pos.add(this._response.overlapV);
-            console.log('World checkBounds Up', this._response.overlapV);
+            body.blocked.x = Math.floor(body.x);
+            body.blocked.y = Math.floor(body.y);
+            rebounded = true;
         }
         else if (this.worldBottom && test(this.worldPolys[3], part, this._response))
         {
             body.blocked.down = true;
             part.pos.add(this._response.overlapV);
-            console.log('World checkBounds Down', this._response.overlapV);
+            body.blocked.x = Math.floor(body.x);
+            body.blocked.y = Math.floor(body.y);
+            rebounded = true;
+        }
+
+        return rebounded;
+
+        if (body.sprite.debug)
+        {
+            console.log('checkBounds finished', body.blocked);
         }
 
     },
@@ -382,8 +399,8 @@ Phaser.Physics.Arcade.prototype = {
 
         if (body.sprite.debug)
         {
-            // console.log('updateMotion: acx', body.acceleration.x, 'acy', body.acceleration.y, 'gravx', this._gravityX, 'gravy', this._gravityY, 'elapsed', this.game.time.physicsElapsed);
-            console.log('updateMotion: rotation', body.rotation, 'vd', this._velocityDelta, 'drag', this._drag, 'acceleration', body.angularAcceleration);
+            console.log('updateMotion: acx', body.acceleration.x, 'acy', body.acceleration.y, 'gravx', this._gravityX, 'gravy', this._gravityY, 'elapsed', this.game.time.physicsElapsed);
+            // console.log('updateMotion: rotation', body.rotation, 'vd', this._velocityDelta, 'drag', this._drag, 'acceleration', body.angularAcceleration);
         }
 
         this._p.setTo((body.acceleration.x + this._gravityX) * this.game.time.physicsElapsed, (body.acceleration.y + this._gravityY) * this.game.time.physicsElapsed);
@@ -948,7 +965,7 @@ Phaser.Physics.Arcade.prototype = {
         // console.log('*** separateTile', tile);
         // console.log('intersection', this._intersection);
 
-        tile.tile.debug = true;
+        // tile.tile.debug = true;
 
         //  They overlap. Any custom callbacks?
         if (tile.tile.callback || tile.layer.callbacks[tile.tile.index])
@@ -1079,6 +1096,7 @@ Phaser.Physics.Arcade.prototype = {
             body.left -= body.overlapX;
             body.right -= body.overlapX;
             body.blocked.x = Math.floor(body.x);
+            body.blocked.y = Math.floor(body.y);
             body.blocked.left = true;
             body.touching.left = true;
             body.touching.none = false;
@@ -1089,6 +1107,7 @@ Phaser.Physics.Arcade.prototype = {
             body.left -= body.overlapX;
             body.right -= body.overlapX;
             body.blocked.x = Math.floor(body.x);
+            body.blocked.y = Math.floor(body.y);
             body.blocked.right = true;
             body.touching.right = true;
             body.touching.none = false;
@@ -1099,6 +1118,7 @@ Phaser.Physics.Arcade.prototype = {
             body.y -= body.overlapY;
             body.top -= body.overlapY;
             body.bottom -= body.overlapY;
+            body.blocked.x = Math.floor(body.x);
             body.blocked.y = Math.floor(body.y);
             body.blocked.up = true;
             body.touching.up = true;
@@ -1110,6 +1130,7 @@ Phaser.Physics.Arcade.prototype = {
             body.y -= body.overlapY;
             body.top -= body.overlapY;
             body.bottom -= body.overlapY;
+            body.blocked.x = Math.floor(body.x);
             body.blocked.y = Math.floor(body.y);
             body.blocked.down = true;
             body.touching.down = true;

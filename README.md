@@ -73,6 +73,7 @@ Significant API changes:
 * Body.screenX and screenY moved to getters, no longer calculated every frame.
 * ArcadePhysics now has setBounds and setBoundsToWorld, and you can specify which walls are created or not (left, right, up, down)
 * Removed: Debug.renderSpriteTouching, Debug.renderLocalTransformInfo, Debug.renderWorldTransformInfo, Debug.renderSpriteCollision and Debug.dumpLinkedList.
+* Body.setSize has been removed. Please use Body.setCircle, setRectangle or setPolygon instead.
 
 
 New features:

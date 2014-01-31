@@ -29,7 +29,7 @@ function create() {
     //  Basically this sets EVERY SINGLE tile to fully collide on all faces
     map.setCollisionByExclusion([7, 32, 35, 36, 47]);
 
-    layer.debug = true;
+    // layer.debug = true;
 
     layer.resizeWorld();
 
@@ -43,13 +43,10 @@ function create() {
     emitter.gravity = 150;
     emitter.bounce.setTo(0.5, 0.5);
 
-    sprite = game.add.sprite(450, 80, 'phaser');
+    sprite = game.add.sprite(200, 70, 'phaser');
     sprite.anchor.setTo(0.5, 0.5);
 
     game.camera.follow(sprite);
-    // game.camera.deadzone = new Phaser.Rectangle(160, 160, layer.renderWidth-320, layer.renderHeight-320);
-
-    // game.input.onDown.add(particleBurst, this);
 
 }
 
@@ -57,9 +54,6 @@ function particleBurst() {
 
     emitter.x = sprite.x;
     emitter.y = sprite.y;
-    // emitter.x = game.input.worldX;
-    // emitter.y = game.input.worldY;
-    // emitter.start(true, 4000, null, 10);
     emitter.start(true, 2000, null, 1);
 
 }

@@ -3,7 +3,7 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-    game.load.image('atari', 'assets/sprites/atari130xe.png');
+    game.load.image('wizball', 'assets/sprites/wizball.png');
     game.load.image('mushroom', 'assets/sprites/mushroom2.png');
 
 }
@@ -15,11 +15,12 @@ function create() {
 
     game.stage.backgroundColor = '#2d2d2d';
 
-    sprite1 = game.add.sprite(130, 200, 'atari');
-    sprite1.name = 'atari';
+    sprite1 = game.add.sprite(130, 250, 'wizball');
 
-    //  In this example the new collision box is much larger than the original sprite
-    sprite1.body.setRectangle(400, 50, -100, 20);
+    //  Here we've replaced the sprites body with a circle instead of a rectangle
+    //  The value is the radius of the body in pixels
+
+    sprite1.body.setCircle(46);
     sprite1.body.immovable = true;
 
     sprite2 = game.add.sprite(700, 210, 'mushroom');
@@ -42,7 +43,7 @@ function collisionHandler (obj1, obj2) {
 
 function render() {
 
-    game.debug.renderBodyInfo(sprite1, 32, 32);
+    game.debug.renderBodyInfo(sprite2, 32, 32);
 
     game.debug.renderPhysicsBody(sprite1.body);
     game.debug.renderPhysicsBody(sprite2.body);

@@ -18,8 +18,10 @@ function create() {
     sprite1 = game.add.sprite(130, 200, 'atari');
     sprite1.name = 'atari';
 
-    //  In this example the new collision box is much larger than the original sprite
-    sprite1.body.setRectangle(400, 50, -100, 20);
+    //  Here we're rotated both the sprite and the physics body
+
+    sprite1.rotation = 0.6;
+    sprite1.body.polygon.rotate(0.6);
     sprite1.body.immovable = true;
 
     sprite2 = game.add.sprite(700, 210, 'mushroom');

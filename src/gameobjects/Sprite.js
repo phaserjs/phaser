@@ -370,6 +370,12 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */
     this.cropEnabled = false;
 
+    /**
+    * @property {boolean} debug - Handy flag to use with Game.enableStep
+    * @default
+    */
+    this.debug = false;
+
     this.updateCache();
     this.updateBounds();
 
@@ -598,12 +604,6 @@ Phaser.Sprite.prototype.updateBounds = function() {
     {
         //  Won't get rendered but will still get its transform updated
         this.renderable = this._cache.cameraVisible;
-    }
-
-    //  Update our physics bounds
-    if (this.body)
-    {
-        this.body.updateScale(this._cache.scaleX, this._cache.scaleY);
     }
 
 };
@@ -926,6 +926,7 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
 
     this.x = x;
     this.y = y;
+    this.world.setTo(x, y);
     this.position.x = this.x;
     this.position.y = this.y;
     this.alive = true;

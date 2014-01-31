@@ -22,7 +22,7 @@ function create() {
     //  This adjusts the collision body size.
     //  220x10 is the new width/height.
     //  See the offset bounding box for another example.
-    sprite1.body.setSize(220, 10, 0, 0);
+    sprite1.body.setRectangle(220, 10, 0, 0);
 
     sprite2 = game.add.sprite(400, 450, 'mushroom');
     sprite2.name = 'mushroom';
@@ -32,7 +32,6 @@ function create() {
 
 function update() {
 
-    // object1, object2, collideCallback, processCallback, callbackContext
     game.physics.collide(sprite1, sprite2, collisionHandler, null, this);
 
 }
@@ -45,10 +44,7 @@ function collisionHandler (obj1, obj2) {
 
 function render() {
 
-    game.debug.renderSpriteInfo(sprite1, 32, 32);
-    game.debug.renderSpriteCollision(sprite1, 400, 32);
-
-    game.debug.renderSpriteBody(sprite1);
-    game.debug.renderSpriteBody(sprite2);
+    game.debug.renderPhysicsBody(sprite1.body);
+    game.debug.renderPhysicsBody(sprite2.body);
 
 }
