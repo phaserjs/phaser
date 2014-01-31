@@ -891,7 +891,7 @@ declare module Phaser {
         forcePortrait: boolean;
         incorrectOrientation: boolean;
         pageAlignHorizontally: boolean;
-        pageAlignVeritcally: boolean;
+        pageAlignVertically: boolean;
         minWidth: number;
         maxWidth: number;
         minHeight: number;
