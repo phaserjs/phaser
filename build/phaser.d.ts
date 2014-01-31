@@ -1531,7 +1531,7 @@ declare module Phaser {
         onLoadStart: Phaser.Signal;
         onLoadComplete: Phaser.Signal;
         setPreloadSprite(sprite: Phaser.Sprite, direction?: number): void;
-        checkKeyExists(key: string): boolean;
+        checkKeyExists(type: string, key: string): boolean;
         reset(): void;
         addToFileList(type: string, key: string, url: string, properties: Array<any>): void;
         image(key: string, url: string, overwrite?: boolean): void;
