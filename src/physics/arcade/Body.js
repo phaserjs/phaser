@@ -103,7 +103,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @property {Phaser.Point} minVelocity - When a body rebounds off another body or a wall the minVelocity is checked. If the new velocity is lower than minVelocity the body is stopped.
     * @default
     */
-    this.minVelocity = new Phaser.Point(5, 5);
+    this.minVelocity = new Phaser.Point();
 
     /**
     * @property {Phaser.Point} maxVelocity - The maximum velocity that the Body can reach.
@@ -145,7 +145,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @property {number} friction - The amount of friction this body experiences during motion.
     * @default
     */
-    this.friction = 0.1;
+    this.friction = 0.0;
 
     /**
     * Set the checkCollision properties to control which directions collision is processed for this Body.
@@ -1322,9 +1322,9 @@ if (this.sprite.debug)
 
             if (this.allowRotation && this.deltaZ() !== 0)
             {
-                this.sprite.angle += this.deltaZ();
+                // this.sprite.angle += this.deltaZ();
             }
-            
+
             if (this.sprite.scale.x !== this._sx || this.sprite.scale.y !== this._sy)
             {
                 this.updateScale();
@@ -1336,25 +1336,32 @@ if (this.sprite.debug)
 
     /**
     * Resets the Body motion values: velocity, acceleration, angularVelocity and angularAcceleration.
-    * Also resets the forces to defaults: gravity, bounce, minVelocity,maxVelocity, angularDrag, maxAngular, mass, friction and checkCollision.
+    * Also resets the forces to defaults: gravity, bounce, minVelocity,maxVelocity, angularDrag, maxAngular, mass, friction and checkCollision if 'full' specified.
     *
     * @method Phaser.Physics.Arcade#reset
+    * @param {boolean} [full=false] - A full reset clears down settings you may have set, such as gravity, bounce and drag. A non-full reset just clears motion values.
     */
-    reset: function () {
+    reset: function (full) {
+
+        if (typeof full === 'undefined') { full = false; }
+
+        if (full)
+        {
+            this.gravity.setTo(0, 0);
+            this.bounce.setTo(0, 0);
+            this.minVelocity.setTo(5, 5);
+            this.maxVelocity.setTo(1000, 1000);
+            this.angularDrag = 0;
+            this.maxAngular = 1000;
+            this.mass = 1;
+            this.friction = 0.0;
+            this.checkCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
+        }
 
         this.velocity.setTo(0, 0);
         this.acceleration.setTo(0, 0);
         this.angularVelocity = 0;
         this.angularAcceleration = 0;
-        this.gravity.setTo(0, 0);
-        this.bounce.setTo(0, 0);
-        this.minVelocity.setTo(5, 5);
-        this.maxVelocity.setTo(1000, 1000);
-        this.angularDrag = 0;
-        this.maxAngular = 1000;
-        this.mass = 1;
-        this.friction = 0.1;
-        this.checkCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
         this.blocked = { x: 0, y: 0, up: false, down: false, left: false, right: false };
         this.x = (this.sprite.world.x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
         this.y = (this.sprite.world.y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;

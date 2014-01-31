@@ -39,7 +39,7 @@ function create() {
 function update() {
 
     // Change parent's rotation to change all the childs.
-    robot.angle += 2;
+    robot.rotation += 0.02;
 
 }
 

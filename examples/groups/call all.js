@@ -47,6 +47,7 @@ function reviveAll() {
 
 function render() {
 
-    game.debug.renderText('Tap or click an item to kill it, and press the revive button to revive them all.', 160, 500);
+    game.debug.renderText('Tap or click an item to kill it', 160, 500);
+    game.debug.renderText('Press the Revive button to revive them all.', 160, 520);
 
 }

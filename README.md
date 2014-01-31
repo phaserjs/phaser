@@ -12,7 +12,7 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 View the [Official Website](http://phaser.io)<br />
 Follow on [Twitter](https://twitter.com/photonstorm)<br />
 Join the [Forum](http://www.html5gamedevs.com/forum/14-phaser/)<br />
-Try out 200+ [Phaser Examples](http://gametest.mobi/phaser/examples/)<br />
+Try out 210+ [Phaser Examples](http://examples.phaser.io)<br />
 Read the [documentation online](http://docs.phaser.io)
 
 [Subscribe to our new Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E). We'll email you when new versions are released as well as send you our regular Phaser game making magazine.
@@ -188,6 +188,7 @@ Updates:
 * Phaser.Math.min enhanced so you can now pass in either an array of numbers or lots of numbers as parameters to get the lowest.
 * Phaser.Math.max added as the opposite of Math.min.
 * Phaser.Math.minProperty and maxProperty added. Like Math.min/max but can be given a property an an array or list of objects to inspect.
+* Added 'full' paramter to Body.reset, allowing you to control if motion or all data is reset or not.
 
 
 Bug Fixes:

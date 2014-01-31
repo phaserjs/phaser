@@ -3,9 +3,9 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 function preload() {
 
     game.load.image('phaser', 'assets/sprites/phaser-dude.png');
-    game.load.tilemap('desert', 'assets/maps/burd.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.tileset('tiles', 'assets/maps/ground_1x1.png', 32, 32);
-    game.load.spritesheet('trees', 'assets/maps/walls_1x2.png', 32, 64);
+    game.load.tilemap('desert', 'assets/tilemaps/maps/depthsort.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.image('ground_1x1', 'assets/tilemaps/tiles/ground_1x1.png');
+    game.load.spritesheet('trees', 'assets/tilemaps/tiles/walls_1x2.png', 32, 64);
 
 }
 
@@ -22,8 +22,12 @@ function create() {
 
     //  Create our tilemap to walk around
     map = game.add.tilemap('desert');
-    tileset = game.add.tileset('tiles');
-    layer = game.add.tilemapLayer(0, 0, 800, 600, tileset, map, 0);
+
+    map.addTilesetImage('ground_1x1');
+
+    layer = map.createLayer('Tile Layer 1');
+
+    layer.resizeWorld();
 
     //  This group will hold the main player + all the tree sprites to depth sort against
     group = game.add.group();
@@ -51,27 +55,27 @@ function update() {
 
     if (cursors.left.isDown)
     {
-        sprite.body.velocity.x = -200;
+        sprite.body.velocity.x = -150;
     }
     else if (cursors.right.isDown)
     {
-        sprite.body.velocity.x = 200;
+        sprite.body.velocity.x = 150;
     }
 
     if (cursors.up.isDown)
     {
-        sprite.body.velocity.y = -200;
+        sprite.body.velocity.y = -150;
     }
     else if (cursors.down.isDown)
     {
-        sprite.body.velocity.y = 200;
+        sprite.body.velocity.y = 150;
     }
 
     if (sprite.y !== oldY)
     {
         //  Group.sort() is an expensive operation
         //  You really want to minimise how often it is called as much as possible.
-        //  So this little check helps at least, but if you can do it even less than this.
+        //  So this little check helps at least, but if you can, do it even less than this.
         group.sort();
         oldY = sprite.y;
     }

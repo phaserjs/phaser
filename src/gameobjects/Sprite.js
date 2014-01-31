@@ -939,7 +939,7 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
 
     if (this.body)
     {
-        this.body.reset();
+        this.body.reset(false);
     }
 
     return this;
