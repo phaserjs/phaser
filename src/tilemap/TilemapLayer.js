@@ -482,11 +482,15 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
         height = this.layer.heightInPixels;
     }
 
+    // console.log('getTiles', x, y, width, height, collides);
+
     //  Convert the pixel values into tile coordinates
     this._tx = this.game.math.snapToFloor(x, this._cw) / this._cw;
     this._ty = this.game.math.snapToFloor(y, this._ch) / this._ch;
     this._tw = (this.game.math.snapToCeil(width, this._cw) + this._cw) / this._cw;
     this._th = (this.game.math.snapToCeil(height, this._ch) + this._ch) / this._ch;
+
+    // console.log('getTiles snapped', this._tx, this._ty, this._tw, this._th);
 
     //  This should apply the layer x/y here
     this._results.length = 0;
@@ -525,6 +529,8 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
             }
         }
     }
+
+    // console.log('getTiles results', this._results);
 
     return this._results;
 
@@ -708,15 +714,15 @@ Phaser.TilemapLayer.prototype.updateMax = function () {
 */
 Phaser.TilemapLayer.prototype.render = function () {
 
-	if (this.layer.dirty)
-    {
-        this.dirty = true;
-    }
+	// if (this.layer.dirty)
+ //    {
+ //        this.dirty = true;
+ //    }
 
-    if (!this.dirty || !this.visible)
-    {
-        return;
-    }
+ //    if (!this.dirty || !this.visible)
+ //    {
+ //        return;
+ //    }
 
     this._prevX = this._dx;
     this._prevY = this._dy;
@@ -789,6 +795,12 @@ Phaser.TilemapLayer.prototype.render = function () {
                                 this.map.tileWidth,
                                 this.map.tileHeight
                             );
+                        }
+
+                        if (tile.debug)
+                        {
+                            this.context.fillStyle = 'rgba(0,255,0,0.5)';
+                            this.context.fillRect(Math.floor(this._tx), Math.floor(this._ty), this.map.tileWidth, this.map.tileHeight);
                         }
                     }
                     else

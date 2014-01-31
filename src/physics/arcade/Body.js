@@ -162,6 +162,13 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.touching = { none: true, up: false, down: false, left: false, right: false };
 
     /**
+    * This object is populated with boolean values when the Body collides with the World bounds or a Tile.
+    * For example if blocked.up is true then the Body cannot move up.
+    * @property {object} blocked - An object containing on which faces this Body is blocked from moving, if any.
+    */
+    this.blocked = { x: 0, y: 0, up: false, down: false, left: false, right: false };
+
+    /**
     * @property {number} facing - A const reference to the direction the Body is traveling or facing.
     * @default
     */
@@ -232,13 +239,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @property {boolean} collideWorldBounds - Should the Body collide with the World bounds?
     */
     this.collideWorldBounds = false;
-
-    /**
-    * This object is populated with boolean values when the Body collides with the World bounds or a Tile.
-    * For example if blocked.up is true then the Body cannot move up.
-    * @property {object} blocked - An object containing on which faces this Body is blocked from moving, if any.
-    */
-    this.blocked = { up: false, down: false, left: false, right: false };
 
     /**
     * @property {Phaser.Physics.Arcade.RECT|Phaser.Physics.Arcade.CIRCLE} type - The type of SAT Shape.
@@ -327,10 +327,12 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this._distances = [0, 0, 0, 0];
 
-    this.blockFlags = [0, 0, 0, 0];
-
     this.overlapX = 0;
     this.overlapY = 0;
+
+    //  Velocity cache
+    this._vx = 0;
+    this._vy = 0;
 
     //  Set-up the default shape
     this.setRectangle(sprite.width, sprite.height, 0, 0);
@@ -445,16 +447,13 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.preX = this.x;
         this.preY = this.y;
-
-        // this.x = this.sprite.center.x + this.offset.x;
-        // this.y = this.sprite.center.y + this.offset.y;
+        this.preRotation = this.rotation;
 
         this.x = this.sprite.world.x + this.offset.x;
         this.y = this.sprite.world.y + this.offset.y;
 
         if (this.allowRotation)
         {
-            this.preRotation = this.rotation;
             this.rotation = this.sprite.rotation;
 
             if (this.type !== Phaser.Physics.Arcade.CIRCLE && this.deltaZ() !== 0)
@@ -463,39 +462,14 @@ Phaser.Physics.Arcade.Body.prototype = {
             }
         }
 
-        this.updateBounds();
-
 if (this.sprite.debug)
 {
-    console.log('Body postUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right);
+    console.log('Body preUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right, 'WAS', this.preX, this.preY);
+    console.log('Body preUpdate blocked:', this.blocked, this.blockFlags);
+    console.log('Body preUpdate velocity:', this.velocity.x, this.velocity.y);
 }
 
-
-        if (this.blocked.left && this.blockFlags[0] !== this.left)
-        {
-            this.blocked.left = false;
-        }
-
-        if (this.blocked.right && this.blockFlags[1] !== this.right)
-        {
-            this.blocked.right = false;
-        }
-
-        if (this.blocked.up && this.blockFlags[2] !== this.top)
-        {
-            this.blocked.up = false;
-        }
-
-        if (this.blocked.down && this.blockFlags[3] !== this.bottom)
-        {
-            // console.log('reset down block flag', this.blockFlags[3], this.bottom);
-            this.blocked.down = false;
-        }
-
-        this.blocked.left = false;
-        this.blocked.right = false;
-        this.blocked.up = false;
-        this.blocked.down = false;
+        this.checkBlocked();
 
         this.touching.none = true;
         this.touching.up = false;
@@ -503,48 +477,60 @@ if (this.sprite.debug)
         this.touching.left = false;
         this.touching.right = false;
 
-        this.speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
-        this.angle = Math.atan2(this.velocity.y, this.velocity.x);
-
         if (this.moves)
         {
+            if (this._vx !== this.velocity.x || this._vy !== this.velocity.y)
+            {
+                //  No need to re-calc these if they haven't changed
+                this._vx = this.velocity.x;
+                this._vy = this.velocity.y;
+                this.speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
+                this.angle = Math.atan2(this.velocity.y, this.velocity.x);
+                if (this.sprite.debug)
+                {
+                    console.log('Body preUpdate speed / angle adjust', this.speed, this.angle);
+                }
+            }
+
             this.game.physics.checkBounds(this);
 
             this.applyFriction();
+
+            this.integrateVelocity();
+
+            this.updateBounds();
+
+            this.checkBlocked();
         }
+        else
+        {
+            this.updateBounds();
+        }
+
+
+if (this.sprite.debug)
+{
+    console.log('Body preUpdate AFTER integration x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right);
+    console.log('Body preUpdate velocity:', this.velocity.x, this.velocity.y);
+}
+
 
     },
 
-    setBlockFlag: function (left, right, up, down, x, y) {
+    checkBlocked: function () {
 
-        this.updateBounds();
-
-        if (left)
+        if (this.blocked.left || this.blocked.right && (Math.floor(this.x) !== this.blocked.x || Math.floor(this.y) !== this.blocked.y))
         {
-            this.blockFlags[0] = this.left;
-            // this.blockFlags[0] = this.left + x;
-            // console.log('left flag set to', this.blockFlags[0]);
-        }
-        else if (right)
-        {
-            this.blockFlags[1] = this.right;
-            // this.blockFlags[1] = this.right + x;
-            // console.log('right flag set to', this.blockFlags[1]);
+            console.log('resetBlocked unlocked left + right');
+            this.blocked.left = false;
+            this.blocked.right = false;
         }
 
-        if (up)
+        if (this.blocked.up || this.blocked.down && (this.x !== this.blocked.x || this.y !== this.blocked.y))
         {
-            this.blockFlags[2] = this.top;
-            // this.blockFlags[2] = this.top + y;
-            // this.blockFlags[2] = this.top;
-            // console.log('up flag set to', this.blockFlags[2]);
-        }
-        else if (down)
-        {
-            this.blockFlags[3] = this.bottom;
-            // this.blockFlags[3] = this.bottom + y;
-            // this.blockFlags[3] = this.bottom;
-            // console.log('down flag set to', this.blockFlags[3]);
+            console.log('resetBlocked unlocked up + down');
+            this.blocked.up = false;
+            this.blocked.down = false;
         }
 
     },
@@ -596,8 +582,20 @@ if (this.sprite.debug)
                 this.speed = 0;
             }
 
-            this.velocity.x = Math.cos(this.angle) * this.speed;
-            this.velocity.y = Math.sin(this.angle) * this.speed;
+            //  Don't bother if speed 0
+            if (this.speed > 0)
+            {
+                this.velocity.x = Math.cos(this.angle) * this.speed;
+                this.velocity.y = Math.sin(this.angle) * this.speed;
+
+                this.speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
+                this.angle = Math.atan2(this.velocity.y, this.velocity.x);
+            }
+        }
+
+        if (this.sprite.debug)
+        {
+            console.log('Body applyFriction velocity:', this.velocity.x, this.velocity.y, 'speed', this.speed);
         }
 
     },
@@ -613,74 +611,116 @@ if (this.sprite.debug)
     */
     reboundCheck: function (x, y, rebound) {
 
+        if (this.sprite.debug)
+        {
+            console.log('reboundCheck start', this.velocity.x, this.velocity.y);
+            console.log('reBound blocked state', this.blocked);
+        }
+
         if (x)
         {
-            if (rebound && (this.blocked.left || this.blocked.right))
+            if (rebound && this.bounce.x !== 0 && (this.blocked.left || this.blocked.right))
             {
                 this.velocity.x *= -this.bounce.x;
+                this.angle = Math.atan2(this.velocity.y, this.velocity.x);
+
+                if (this.sprite.debug)
+                {
+                    console.log('X rebound applied');
+                }
             }
 
-            var gx = this.getTotalGravityX();
-    
-            if (Math.abs(this.velocity.x) < this.minVelocity.x && (this.blocked.left && gx < 0 || this.blocked.right && gx > 0))
+            if (this.bounce.x === 0 || Math.abs(this.velocity.x) < this.minVelocity.x)
             {
-                this.velocity.x = 0;
+                var gx = this.getUpwardForce();
+
+                if ((this.blocked.left && (gx < 0 || this.velocity.x < 0)) || (this.blocked.right && (gx > 0 || this.velocity.x > 0)))
+                {
+                    this.velocity.x = 0;
+
+                    if (this.sprite.debug)
+                    {
+                        console.log('reboundCheck X zeroed');
+                    }
+                }
+            }
+
+            if (this.sprite.debug)
+            {
+                console.log('reboundCheck X', this.velocity.x, 'gravity', gx);
             }
         }
 
         if (y)
         {
-            if (rebound && this.bounce.y && (this.blocked.up || this.blocked.down))
+            if (rebound && this.bounce.y !== 0 && (this.blocked.up || this.blocked.down))
             {
                 this.velocity.y *= -this.bounce.y;
+                this.angle = Math.atan2(this.velocity.y, this.velocity.x);
+
+                if (this.sprite.debug)
+                {
+                    console.log('Y rebound applied');
+                }
             }
 
-            var gy = this.getTotalGravityY();
-    
-            if (Math.abs(this.velocity.y) < this.minVelocity.y && (this.blocked.up && gy < 0 || this.blocked.down && gy > 0))
+            if (this.bounce.y === 0 || Math.abs(this.velocity.y) < this.minVelocity.y)
             {
-                this.velocity.y = 0;
+                var gy = this.getDownwardForce();
+
+                if ((this.blocked.up && (gy < 0 || this.velocity.y < 0)) || (this.blocked.down && (gy > 0 || this.velocity.y > 0)))
+                {
+                    this.velocity.y = 0;
+
+                    if (this.sprite.debug)
+                    {
+                        console.log('reboundCheck Y zeroed');
+                    }
+                }
+            }
+
+            if (this.sprite.debug)
+            {
+                console.log('reboundCheck Y', this.velocity.y, 'gravity', gy);
             }
         }
 
     },
 
     /**
-    * Gets the total gravity to be applied on the X axis.
+    * Gets the total force being applied on the X axis, including gravity and velocity.
     *
-    * @method Phaser.Physics.Arcade#getTotalGravityX
-    * @protected
-    * @return {number} The total gravity to be applied on the X axis.
+    * @method Phaser.Physics.Arcade#getUpwardForce
+    * @return {number} The total force being applied on the X axis.
     */
-    getTotalGravityX: function () {
+    getUpwardForce: function () {
 
         if (this.allowGravity)
         {
-            return this.gravity.x + this.game.physics.gravity.x;
+            return this.gravity.x + this.game.physics.gravity.x + this.velocity.x;
         }
         else
         {
-            return this.gravity.x;
+            return this.gravity.x + this.velocity.x;
         }
 
     },
 
     /**
-    * Gets the total gravity to be applied on the Y axis.
+    * Gets the total force being applied on the X axis, including gravity and velocity.
     *
-    * @method Phaser.Physics.Arcade#getTotalGravityY
-    * @protected
-    * @return {number} The total gravity to be applied on the Y axis.
+    * @method Phaser.Physics.Arcade#getDownwardForce
+    * @return {number} The total force being applied on the Y axis.
     */
-    getTotalGravityY: function () {
+    getDownwardForce: function () {
 
         if (this.allowGravity)
         {
-            return this.gravity.y + this.game.physics.gravity.y;
+            return this.gravity.y + this.game.physics.gravity.y + this.velocity.y;
         }
         else
         {
-            return this.gravity.y;
+            return this.gravity.y + this.velocity.y;
         }
 
     },
@@ -820,6 +860,8 @@ if (this.sprite.debug)
             body.velocity.y = nv2;
         }
 
+        //  update speed / angle?
+
     },
 
     /**
@@ -833,6 +875,9 @@ if (this.sprite.debug)
 
         this.velocity.x = body.velocity.x - this.velocity.x * this.bounce.x;
         this.velocity.y = body.velocity.y - this.velocity.y * this.bounce.y;
+
+        this.angle = Math.atan2(this.velocity.y, this.velocity.x);
+
         this.reboundCheck(true, true, false);
 
     },
@@ -1134,6 +1179,11 @@ if (this.sprite.debug)
         this._dx = this.game.time.physicsElapsed * (this.velocity.x + this._temp.x / 2);
         this._dy = this.game.time.physicsElapsed * (this.velocity.y + this._temp.y / 2);
 
+        if (this.sprite.debug)
+        {
+            console.log('integrateVelocity TEMP:', this._temp.x, this._temp.y);
+        }
+
         //  positive = RIGHT / DOWN
         //  negative = LEFT / UP
 
@@ -1141,14 +1191,34 @@ if (this.sprite.debug)
         {
             this.x += this._dx;
             this.velocity.x += this._temp.x;
-            console.log('x added', this._dx);
+            if (this.sprite.debug)
+            {
+                console.log('integrateVelocity x added', this._dx, this.x);
+            }
+        }
+        else
+        {
+            if (this.sprite.debug)
+            {
+                console.log('integrateVelocity x failed or zero, blocked left/right', this._dx);
+            }
         }
 
         if ((this._dy < 0 && !this.blocked.up && !this.touching.up) || (this._dy > 0 && !this.blocked.down && !this.touching.down))
         {
             this.y += this._dy;
             this.velocity.y += this._temp.y;
-            console.log('y added', this._dy);
+            if (this.sprite.debug)
+            {
+                console.log('integrateVelocity y added', this._dy, this.y);
+            }
+        }
+        else
+        {
+            if (this.sprite.debug)
+            {
+                console.log('integrateVelocity y failed or zero, blocked up/down', this._dy);
+            }
         }
 
         if (this.velocity.x > this.maxVelocity.x)
@@ -1183,8 +1253,6 @@ if (this.sprite.debug)
         {
             this.reboundCheck(true, true, true);
 
-            this.integrateVelocity();
-
             this.game.physics.checkBounds(this);
 
             if (this.deltaX() < 0)
@@ -1205,37 +1273,19 @@ if (this.sprite.debug)
                 this.facing = Phaser.DOWN;
             }
 
-            this.updateBounds();
+            // this.updateBounds();
 
 if (this.sprite.debug)
 {
-    console.log('Body postUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right);
+    console.log('Body postUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right, 'WAS', this.preX, this.preY);
+    console.log('Body postUpdate blocked:', this.blocked, this.blockFlags);
+    console.log('Body postUpdate velocity:', this.velocity.x, this.velocity.y);
 }
-
-            // this.sprite.x = this.x + (this.sprite.x - this.sprite.center.x) - this.offset.x;
-            // this.sprite.y = this.y + (this.sprite.y - this.sprite.center.y) - this.offset.y;
-
-            if (this.sprite.name === 'mushroom')
-            {
-                // console.log('old x', this.preX, 'new x', this.x, 'delta', this.deltaX());
-                // console.log('old y', this.preY, 'new y', this.y);
-            }
 
             this.sprite.x = this.x - this.offset.x;
             this.sprite.y = this.y - this.offset.y;
             this.sprite.worldTransform[2] = this.x - this.offset.x;
             this.sprite.worldTransform[5] = this.y - this.offset.y;
-
-
-
-    // this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
-
-
-            // this.sprite.x = this.x + (this.sprite.world.x - this.game.camera.x) - this.offset.x;
-            // this.sprite.y = this.y + (this.sprite.world.y - this.game.camera.y) - this.offset.y;
-
-        // this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
-
 
             if (this.allowRotation)
             {
@@ -1243,6 +1293,7 @@ if (this.sprite.debug)
                 // this.sprite.angle += this.deltaZ();
                 // this.sprite.angle = this.angle;
             }
+
         }
 
     },
@@ -1268,6 +1319,7 @@ if (this.sprite.debug)
         this.mass = 1;
         this.friction = 0.1;
         this.checkCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
+        this.blocked
 
     },
 
@@ -1407,21 +1459,6 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "y", {
 
         // this.updateBounds();
 
-    }
-
-});
-
-/**
-* @name Phaser.Physics.Arcade.Body#movingLeft
-* @property {number} movingLeft
-*/
-Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "movingLeft", {
-    
-    /**
-    * @method movingLeft
-    * @return {boolean}
-    */
-    get: function () {
     }
 
 });

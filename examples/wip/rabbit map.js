@@ -8,7 +8,8 @@ function preload() {
     game.load.image('walls_1x2', 'assets/tilemaps/tiles/walls_1x2.png');
     game.load.image('tiles2', 'assets/tilemaps/tiles/tiles2.png');
 
-    game.load.image('phaser', 'assets/sprites/shinyball.png');
+    // game.load.image('phaser', 'assets/sprites/shinyball.png');
+    game.load.image('phaser', 'assets/sprites/firstaid.png');
     // game.load.image('phaser', 'assets/sprites/atari130xe.png');
     // game.load.image('phaser', 'assets/sprites/mushroom2.png');
 
@@ -23,12 +24,17 @@ var layer2;
 var layer3;
 
 var sprite;
+var marker;
 
 function create() {
+
+console.log(' --- state create start ---');
 
     $('#step').click(function(){
         game.step();
     });
+
+    marker = new Phaser.Line(256, 0, 256, 600);
 
     map = game.add.tilemap('map');
 
@@ -42,12 +48,22 @@ function create() {
 
     // layer.debug = true;
 
-    layer.resizeWorld();
+    // layer.resizeWorld();
 
-    sprite = game.add.sprite(170, 450, 'phaser');
+    game.physics.gravity.y = 200;
+
+
+    sprite = game.add.sprite(100, 300, 'phaser'); // up test
+
+    // sprite = game.add.sprite(200, 240, 'phaser'); // 3-block corner test
+
     sprite.debug = true;
 
-    sprite.body.velocity.x = 200;
+    game.stepping = true;
+
+    // sprite.body.velocity.y = -300;
+
+    sprite.body.velocity.y = 200;
 
 
     // sprite.anchor.setTo(0.5, 0.5);
@@ -63,7 +79,7 @@ function create() {
 
     // sprite.angle = 35;
 
-    game.camera.follow(sprite);
+    // game.camera.follow(sprite);
 
     // game.input.onDown.add(getIt, this);
 
@@ -72,6 +88,8 @@ function create() {
 }
 
 function update() {
+
+console.log(' --- state update start ---');
 
 /*
     if (cursors.left.isDown)
@@ -93,6 +111,8 @@ function update() {
     }
 */
     game.physics.collide(sprite, layer);
+
+    // sprite.body.velocity.y = -300;
 
     // sprite.body.velocity.x = 0;
     // sprite.body.velocity.y = 0;
@@ -137,7 +157,8 @@ function update() {
 
     if (cursors.up.isDown)
     {
-        sprite.body.velocity.y = -100;
+        console.log('cursor up');
+        sprite.body.velocity.y = -300;
     }
     else if (cursors.down.isDown)
     {
@@ -161,8 +182,10 @@ function render() {
     // game.debug.renderSpriteBody(sprite);
     // game.debug.renderSpriteBounds(sprite);
 
-    game.debug.renderPhysicsBody(sprite.body);
+    // game.debug.renderPhysicsBody(sprite.body);
     game.debug.renderBodyInfo(sprite, 32, 32);
+
+    // game.debug.renderLine(marker, 'rgba(255,255,255,0.5)');
 
     // game.debug.renderText(sprite.deltaX, 32, 32);
     // game.debug.renderText(sprite.deltaY, 32, 48);

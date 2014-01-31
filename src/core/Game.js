@@ -284,7 +284,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     }
 
     this.pendingStep = false;
-    this.stepping = true;
+    this.stepping = false;
     this.stepCount = 0;
 
     return this;
@@ -599,9 +599,9 @@ Phaser.Game.prototype = {
                 this.input.update();
                 this.tweens.update();
                 this.sound.update();
-        console.log('state update');
+        // console.log('state update');
                 this.state.update();
-        console.log('world update');
+        // console.log('world update');
                 this.world.update();
                 this.particles.update();            
                 this.plugins.update();
@@ -635,7 +635,8 @@ Phaser.Game.prototype = {
 
         this.pendingStep = false;
         this.stepCount++;
-        console.log('--------- Game step', this.stepCount);
+        console.log('');
+        console.log('----------------------------- Game step', this.stepCount);
 
     },
 

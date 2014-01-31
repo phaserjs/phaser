@@ -640,9 +640,10 @@ Phaser.Utils.Debug.prototype = {
         color = color || 'rgb(255, 255, 255)';
 
         this.start(0, 0, color);
+        this.context.lineWidth = 1;
         this.context.beginPath();
-        this.context.moveTo(line.start.x, line.start.y);
-        this.context.lineTo(line.end.x, line.end.y);
+        this.context.moveTo(line.start.x + 0.5, line.start.y + 0.5);
+        this.context.lineTo(line.end.x + 0.5, line.end.y + 0.5);
         this.context.closePath();
         this.context.stroke();
         this.stop();
