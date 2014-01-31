@@ -700,7 +700,7 @@ declare module Phaser {
         constructor(game: Phaser.Game);
         game: Phaser.Game;
         world: Phaser.World;
-        existing(object: any): boolean;
+        existing(object: any): any;
         sprite(x: number, y: number, key?: string, frame?: any): Phaser.Sprite;
         child(parent: any, x: number, y: number, key?: string, frame?: number): Phaser.Sprite;
         tween(obj: Object): Phaser.Tween;
