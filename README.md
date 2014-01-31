@@ -112,6 +112,11 @@ New features:
 * Math.normalizeLatitude - Normalizes a latitude to the [-90,90] range.
 * Math.normalizeLongitude - Normalizes a longitude to the [-180,180] range.
 * Phaser.Line added to the group of geometry classes, with full point on line/segment and intersection tests (see new examples)
+* Phaser.CANVAS_PX_ROUND is a boolean. If 'true' the Canvas renderer will Math.floor() all coordinates before drawImage, stopping pixel interpolation. Defaults to false.
+* Phaser.CANVAS_CLEAR_RECT is a boolean. If 'true' (the default) it will context.clearRect() every frame. If false this is skipped (useful if you know you don't need it)
+* Collision now works between Sprites positioned via sprite.x/y, sprite.body.x/y or sprite.body.velocity.
+* If you are tweening a sprite and still want physics collision, set `sprite.body.moves = false` otherwise it will fight against the tween motion.
+
 
 
 New Examples:
@@ -204,6 +209,8 @@ Bug Fixes:
 * Removed the frame property from TileSprites as it cannot use them, it tiles the whole image only, not just a section of it.
 * Fixed WebGLRenderer updateGraphics bug (thanks theadam)
 * Removed duplicate Timer.create line (thanks hstolte)
+* Fixed issue with the camera being slightly out of sync with 'fixedToCamera' sprites.
+* 1px camera jitter issue fixed where map is same size, or smaller than the game size.
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md

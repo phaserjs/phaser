@@ -1273,19 +1273,19 @@ if (this.sprite.debug)
                 this.facing = Phaser.DOWN;
             }
 
-            // this.updateBounds();
-
 if (this.sprite.debug)
 {
     console.log('Body postUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right, 'WAS', this.preX, this.preY);
     console.log('Body postUpdate blocked:', this.blocked, this.blockFlags);
     console.log('Body postUpdate velocity:', this.velocity.x, this.velocity.y);
+    console.log('Body postUpdate Sprite:', this.sprite.x, this.sprite.y, 'cached', this.sprite._cache.x, this.sprite._cache.y);
 }
 
-            this.sprite.x = this.x - this.offset.x;
-            this.sprite.y = this.y - this.offset.y;
-            this.sprite.worldTransform[2] = this.x - this.offset.x;
-            this.sprite.worldTransform[5] = this.y - this.offset.y;
+            if (this.deltaX() !== 0 || this.deltaY() !== 0)
+            {
+                this.sprite.worldTransform[2] = this.sprite.x = (this.x - this.offset.x);
+                this.sprite.worldTransform[5] = this.sprite.y = (this.y - this.offset.y);
+            }
 
             if (this.allowRotation)
             {
@@ -1319,7 +1319,7 @@ if (this.sprite.debug)
         this.mass = 1;
         this.friction = 0.1;
         this.checkCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
-        this.blocked
+        this.blocked = { x: 0, y: 0, up: false, down: false, left: false, right: false };
 
     },
 

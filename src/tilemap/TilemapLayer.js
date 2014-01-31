@@ -734,8 +734,6 @@ Phaser.TilemapLayer.prototype.render = function () {
     this._ty = this._dy;
 
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    // this.context.fillStyle = '#ff00ff';
-    // this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.context.fillStyle = this.tileColor;
 
@@ -802,7 +800,7 @@ Phaser.TilemapLayer.prototype.render = function () {
 
                         if (tile.debug)
                         {
-                            this.context.fillStyle = 'rgba(0,255,0,0.5)';
+                            this.context.fillStyle = 'rgba(0, 255, 0, 0.4)';
                             this.context.fillRect(Math.floor(this._tx), Math.floor(this._ty), this.map.tileWidth, this.map.tileHeight);
                         }
                     }

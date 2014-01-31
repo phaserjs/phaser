@@ -4,6 +4,7 @@
 * 1) Added support for Trimmed sprite sheets
 * 2) Skip display objects with an alpha of zero
 * 3) Avoid Style Recalculation from the incorrect bgcolor value
+* 4) Added support for Canvas unit rounding via Phaser.CANVAS_PX_ROUND boolean (disabled by default).
 *
 * Hopefully we can remove this once Pixi has been updated to support these things.
 */
@@ -23,7 +24,12 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
     stage.updateTransform();
 
     this.context.setTransform(1, 0, 0, 1, 0, 0);
-    this.context.clearRect(0, 0, this.width, this.height)
+
+    if (Phaser.CANVAS_CLEAR_RECT)
+    {
+        this.context.clearRect(0, 0, this.width, this.height)
+    }
+
     this.renderDisplayObject(stage, false);
    
     //  Remove frame updates
@@ -44,8 +50,6 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject, rend
     
     do
     {
-        //transform = displayObject.worldTransform;
-        
         if (!displayObject.visible && !renderHidden)
         {
             displayObject = displayObject.last._iNext;
@@ -60,27 +64,30 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject, rend
         
         if (displayObject instanceof PIXI.Sprite)
         {
-            // var frame = displayObject.texture.frame;
-            
             if (displayObject.texture.frame)
             {
                 this.context.globalAlpha = displayObject.worldAlpha;
 
-                // this.context.setTransform(
-                //         displayObject.worldTransform[0],
-                //         displayObject.worldTransform[3],
-                //         displayObject.worldTransform[1],
-                //         displayObject.worldTransform[4],
-                //         displayObject.worldTransform[2],
-                //         displayObject.worldTransform[5]);
-
-                this.context.setTransform(
-                        displayObject.worldTransform[0],
-                        displayObject.worldTransform[3],
-                        displayObject.worldTransform[1],
-                        displayObject.worldTransform[4],
-                        Math.floor(displayObject.worldTransform[2]),
-                        Math.floor(displayObject.worldTransform[5]));
+                if (Phaser.CANVAS_PX_ROUND)
+                {
+                    this.context.setTransform(
+                            displayObject.worldTransform[0],
+                            displayObject.worldTransform[3],
+                            displayObject.worldTransform[1],
+                            displayObject.worldTransform[4],
+                            Math.floor(displayObject.worldTransform[2]),
+                            Math.floor(displayObject.worldTransform[5]));
+                }
+                else
+                {
+                    this.context.setTransform(
+                            displayObject.worldTransform[0],
+                            displayObject.worldTransform[3],
+                            displayObject.worldTransform[1],
+                            displayObject.worldTransform[4],
+                            displayObject.worldTransform[2],
+                            displayObject.worldTransform[5]);
+                }
 
                 if (displayObject.texture.trimmed)
                 {

@@ -39,7 +39,10 @@ var Phaser = Phaser || {
 	LEFT: 1,
 	RIGHT: 2,
 	UP: 3,
-	DOWN: 4
+	DOWN: 4,
+
+	CANVAS_PX_ROUND: false,
+	CANVAS_CLEAR_RECT: true
 
  };
 

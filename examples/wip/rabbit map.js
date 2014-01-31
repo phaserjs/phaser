@@ -8,7 +8,7 @@ function preload() {
     game.load.image('walls_1x2', 'assets/tilemaps/tiles/walls_1x2.png');
     game.load.image('tiles2', 'assets/tilemaps/tiles/tiles2.png');
 
-    // game.load.image('phaser', 'assets/sprites/shinyball.png');
+    game.load.image('ball', 'assets/sprites/shinyball.png');
     game.load.image('phaser', 'assets/sprites/firstaid.png');
     // game.load.image('phaser', 'assets/sprites/atari130xe.png');
     // game.load.image('phaser', 'assets/sprites/mushroom2.png');
@@ -24,6 +24,7 @@ var layer2;
 var layer3;
 
 var sprite;
+var ball;
 var marker;
 
 function create() {
@@ -34,7 +35,7 @@ console.log(' --- state create start ---');
         game.step();
     });
 
-    // game.stage.backgroundColor = '#124184';
+    game.stage.backgroundColor = '#124184';
 
 
     marker = new Phaser.Line(256, 0, 256, 600);
@@ -56,7 +57,12 @@ console.log(' --- state create start ---');
     // game.physics.gravity.y = 200;
 
 
-    sprite = game.add.sprite(100, 300, 'phaser'); // up test
+    sprite = game.add.sprite(100, 180, 'phaser');
+    sprite.body.moves = false;
+
+    ball = game.add.sprite(200, 180, 'ball');
+
+    game.add.tween(sprite).to({x: 500},5000,Phaser.Easing.Linear.None,true);
 
     // sprite = game.add.sprite(200, 240, 'phaser'); // 3-block corner test
 
@@ -112,12 +118,14 @@ function update() {
         layer.scrollY += 4;
     }
 */
+
     game.physics.collide(sprite, layer);
+    game.physics.collide(sprite, ball);
 
     // sprite.body.velocity.y = -300;
 
-    sprite.body.velocity.x = 0;
-    sprite.body.velocity.y = 0;
+    // sprite.body.velocity.x = 0;
+    // sprite.body.velocity.y = 0;
     // sprite.body.angularVelocity = 0;
 
     // sprite.body.acceleration.x = 0;
@@ -157,24 +165,61 @@ function update() {
     sprite.angle = sprite.angle + 1;
     */
 
+    // if (cursors.up.isDown)
+    // {
+    //     sprite.body.velocity.y = -200;
+    // }
+    // else if (cursors.down.isDown)
+    // {
+    //     sprite.body.velocity.y = 100;
+    // }
+
+    // if (cursors.left.isDown)
+    // {
+    //     sprite.body.velocity.x = -200;
+    // }
+    // else if (cursors.right.isDown)
+    // {
+    //     sprite.body.velocity.x = 200;
+    // }
+
+    // if (cursors.up.isDown)
+    // {
+    //     sprite.y -= 2;
+    // }
+    // else if (cursors.down.isDown)
+    // {
+    //     sprite.y += 2;
+    // }
+
+    // if (cursors.left.isDown)
+    // {
+    //     sprite.x -= 2;
+    // }
+    // else if (cursors.right.isDown)
+    // {
+    //     sprite.x += 2;
+    // }
+
     if (cursors.up.isDown)
     {
-        // console.log('cursor up');
-        sprite.body.velocity.y = -200;
+        sprite.body.y -= 2;
     }
     else if (cursors.down.isDown)
     {
-        sprite.body.velocity.y = 100;
+        sprite.body.y += 2;
     }
 
     if (cursors.left.isDown)
     {
-        sprite.body.velocity.x = -200;
+        sprite.body.x -= 2;
     }
     else if (cursors.right.isDown)
     {
-        sprite.body.velocity.x = 200;
+        sprite.body.x += 2;
     }
+
+
 
 }
 
