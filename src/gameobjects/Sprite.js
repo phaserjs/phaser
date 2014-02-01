@@ -209,6 +209,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */
     this._cache = {
 
+        fresh: true,
         dirty: false,
 
         //  Transform cache
@@ -376,6 +377,8 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */
     this.debug = false;
 
+    // this.events.onAddedToGroup.add(this.initGroup, this);
+
     this.updateCache();
     this.updateBounds();
 
@@ -389,6 +392,18 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 Phaser.Sprite.prototype = Object.create(PIXI.Sprite.prototype);
 Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 
+
+/*
+Phaser.Sprite.prototype.initGroup = function() {
+
+    // this.world.setTo(this.parent.position.x + this.x, this.parent.position.y + this.y);
+
+    // console.log('Sprite initGroup', this.world);
+    console.log('Sprite initGroup', this.group.x, this.group.y);
+
+}
+*/
+
 /**
 * Automatically called by World.preUpdate. Handles cache updates, lifespan checks, animation updates and physics updates.
 *
@@ -396,6 +411,34 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 * @memberof Phaser.Sprite
 */
 Phaser.Sprite.prototype.preUpdate = function() {
+
+    if (this._cache.fresh)
+    {
+        this.world.setTo(this.parent.position.x + this.x, this.parent.position.y + this.y);
+        this.worldTransform[2] = this.world.x;
+        this.worldTransform[5] = this.world.y;
+        console.log('Sprite initGroup', this.world);
+        // console.log('Sprite initGroup', this.group.x, this.group.y);
+        // console.log('Sprite initGroup', this.parent.position);
+        this._cache.fresh = false;
+
+        if (this.body)
+        {
+            this.body.x = (this.world.x - (this.anchor.x * this.width)) + this.body.offset.x;
+            this.body.y = (this.world.y - (this.anchor.y * this.height)) + this.body.offset.y;
+            // this.body.preUpdate();
+            this.body.preX = this.body.x;
+            this.body.preY = this.body.y;
+        }
+
+        return;
+    }
+
+    if (this.debug)
+    {
+        console.log('Sprite preUpdate', this.parent.worldTransform[2], this.parent.worldTransform[5], 'LT', this.parent.localTransform[2], this.parent.localTransform[5], 'xy', this.parent.position.x, this.parent.position.y);
+        console.log('Sprite preUpdate', this.x, this.y, 'world', this.world.x, this.world.y);
+    }
 
     if (!this.exists || (this.group && !this.group.exists))
     {
@@ -454,6 +497,11 @@ Phaser.Sprite.prototype.updateCache = function() {
 
     this._cache.prevX = this.world.x;
     this._cache.prevY = this.world.y;
+
+    if (this.debug)
+    {
+        console.log('Sprite updateCache', this._cache.prevX, this._cache.prevY);
+    }
 
     if (this.fixedToCamera)
     {
@@ -677,10 +725,19 @@ Phaser.Sprite.prototype.postUpdate = function() {
 
     if (this.exists)
     {
-        //  The sprite is positioned in this call, after taking into consideration motion updates and collision
         if (this.body)
         {
             this.body.postUpdate();
+
+            console.log('Sprite postUpdate wt', this.worldTransform[2], this.worldTransform[5], 'xy', this.x, this.y);
+
+            // this._cache.x = this.x;
+            // this._cache.y = this.y;
+
+            // this.position.x = this._cache.x;
+            // this.position.y = this._cache.y;
+
+            // this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
         }
 
         if (this.fixedToCamera)
@@ -698,6 +755,12 @@ Phaser.Sprite.prototype.postUpdate = function() {
 
         this.position.x = this._cache.x;
         this.position.y = this._cache.y;
+
+        if (this.debug)
+        {
+            console.log('Sprite postUpdate delta', this.deltaX, this.deltaY, 'prev', this._cache.prevX, this._cache.prevY);
+        }
+
     }
 
 };

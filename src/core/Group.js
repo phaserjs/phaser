@@ -97,6 +97,11 @@ Phaser.Group = function (game, parent, name, useStage) {
     this.scale = this._container.scale;
 
     /**
+    * @property {Phaser.Point} pivot - The pivot point of the Group container.
+    */
+    this.pivot = this._container.pivot;
+
+    /**
     * The cursor is a simple way to iterate through the objects in a Group using the Group.next and Group.previous functions.
     * The cursor is set to the first child added to the Group and doesn't change unless you call next, previous or set it directly with Group.cursor.
     * @property {any} cursor - The current display object that the Group cursor is pointing to.
@@ -164,14 +169,14 @@ Phaser.Group.prototype = {
             {
                 child.group = this;
 
+                this._container.addChild(child);
+
+                child.updateTransform();
+
                 if (child.events)
                 {
                     child.events.onAddedToGroup.dispatch(child, this);
                 }
-
-                this._container.addChild(child);
-
-                child.updateTransform();
             }
 
             if (this.cursor === null)
@@ -209,14 +214,14 @@ Phaser.Group.prototype = {
             {
                 child.group = this;
 
+                this._container.addChildAt(child, index);
+
+                child.updateTransform();
+
                 if (child.events)
                 {
                     child.events.onAddedToGroup.dispatch(child, this);
                 }
-
-                this._container.addChildAt(child, index);
-
-                child.updateTransform();
             }
 
             if (this.cursor === null)
@@ -265,14 +270,14 @@ Phaser.Group.prototype = {
         child.visible = exists;
         child.alive = exists;
 
+        this._container.addChild(child);
+            
+        child.updateTransform();
+
         if (child.events)
         {
             child.events.onAddedToGroup.dispatch(child, this);
         }
-
-        this._container.addChild(child);
-            
-        child.updateTransform();
 
         if (this.cursor === null)
         {
@@ -307,13 +312,14 @@ Phaser.Group.prototype = {
             child.visible = exists;
             child.alive = exists;
 
+            this._container.addChild(child);
+
+            child.updateTransform();
+
             if (child.events)
             {
                 child.events.onAddedToGroup.dispatch(child, this);
             }
-
-            this._container.addChild(child);
-            child.updateTransform();
 
             if (this.cursor === null)
             {

@@ -477,13 +477,26 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     preUpdate: function () {
 
+        // this.preX = this.x;
+        // this.preY = this.y;
+        // this.preRotation = this.sprite.angle;
+
+        //  If the GROUP is moving, then this doesn't work!!!
+        this.x = (this.sprite.x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
+        this.y = (this.sprite.y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;
+
+        //  If the SPRITE is moving, but in a Group, this doesn't work!!!
+        // this.x = (this.sprite.world.x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
+        // this.y = (this.sprite.world.y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;
+
+        //  I think I need to record both the world AND local X/Y values and decide if they should update?
+
+        this.rotation = this.preRotation;
+
         this.preX = this.x;
         this.preY = this.y;
         this.preRotation = this.sprite.angle;
 
-        this.x = (this.sprite.world.x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
-        this.y = (this.sprite.world.y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;
-        this.rotation = this.preRotation;
 
         if (this.sprite.scale.x !== this._sx || this.sprite.scale.y !== this._sy)
         {
@@ -492,9 +505,15 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 if (this.sprite.debug)
 {
-    console.log('Body preUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right, 'WAS', this.preX, this.preY);
-    console.log('Body preUpdate blocked:', this.blocked, this.blockFlags);
-    console.log('Body preUpdate velocity:', this.velocity.x, this.velocity.y);
+    console.log('Body preUpdate x:', this.x, 'y:', this.y);
+    console.log('Body preUpdate Sprite x:', this.sprite.x, 'y:', this.sprite.y);
+    console.log('Body preUpdate Sprite world:', this.sprite.world.x, 'y:', this.sprite.world.y);
+    // console.log('Body preUpdate Sprite position:', this.sprite.position.x, 'y:', this.sprite.position.y);
+    // console.log('Body preUpdate Sprite localTransform:', this.sprite.localTransform[2], 'y:', this.sprite.localTransform[5]);
+    // console.log('Body preUpdate Sprite worldTransform:', this.sprite.worldTransform[2], 'y:', this.sprite.worldTransform[5]);
+    // console.log('Body preUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right, 'WAS', this.preX, this.preY);
+    // console.log('Body preUpdate blocked:', this.blocked, this.blockFlags);
+    // console.log('Body preUpdate velocity:', this.velocity.x, this.velocity.y);
     // console.log('Body preUpdate rotation:', this.rotation, this.preRotation);
 }
 
@@ -1305,24 +1324,40 @@ if (this.sprite.debug)
                 this.facing = Phaser.DOWN;
             }
 
-if (this.sprite.debug)
-{
-    // console.log('Body postUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right, 'WAS', this.preX, this.preY);
-    // console.log('Body postUpdate blocked:', this.blocked, this.blockFlags);
-    // console.log('Body postUpdate velocity:', this.velocity.x, this.velocity.y);
-    // console.log('Body postUpdate Sprite:', this.sprite.x, this.sprite.y, 'cached', this.sprite._cache.x, this.sprite._cache.y);
-    console.log('Body postUpdate Rotation:', this.rotation);
-}
-
-            if (this.deltaX() !== 0 || this.deltaY() !== 0)
+            if (this.sprite.debug)
             {
-                this.sprite.worldTransform[2] = this.sprite.x = (this.x + (this.sprite.anchor.x * this.sprite.width) - this.offset.x);
-                this.sprite.worldTransform[5] = this.sprite.y = (this.y + (this.sprite.anchor.y * this.sprite.height) - this.offset.y);
+                //  Temp. Debugging Stuff
+                // console.log('Body postUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right, 'WAS', this.preX, this.preY);
+                // console.log('Body postUpdate blocked:', this.blocked, this.blockFlags);
+                // console.log('Body postUpdate velocity:', this.velocity.x, this.velocity.y);
+                // console.log('Body postUpdate delta:', this.deltaX(), this.deltaY());
+                // console.log('Body postUpdate Sprite:', this.sprite.x, this.sprite.y, 'cached', this.sprite._cache.x, this.sprite._cache.y);
+                // console.log('Body postUpdate Rotation:', this.rotation);
+
+                // console.log('Body postUpdate Sprite x:', this.sprite.x, 'y:', this.sprite.y);
+                // console.log('Body postUpdate Sprite world:', this.sprite.world.x, 'y:', this.sprite.world.y);
+                // console.log('Body postUpdate Sprite position:', this.sprite.position.x, 'y:', this.sprite.position.y);
+                // console.log('Body postUpdate Sprite localTransform:', this.sprite.localTransform[2], 'y:', this.sprite.localTransform[5]);
+                // console.log('Body postUpdate Sprite worldTransform:', this.sprite.worldTransform[2], 'y:', this.sprite.worldTransform[5]);
+
+            }
+
+            if (this.preX !== this.x || this.preY !== this.y)
+            {
+                console.log('BoDY APPLIED', this.x, this.y, 'pre', this.preX, this.preY);
+                // this.sprite.x = (this.x + (this.sprite.anchor.x * this.sprite.width) - this.offset.x);
+                // this.sprite.y = (this.y + (this.sprite.anchor.y * this.sprite.height) - this.offset.y);
+
+                this.sprite.x = (this.x + (this.sprite.anchor.x * this.sprite.width) - this.offset.x);
+                this.sprite.y = (this.y + (this.sprite.anchor.y * this.sprite.height) - this.offset.y);
+
+                // this.sprite.position.x = this.sprite.x = this.x + (this.sprite.anchor.x * this.sprite.width) - this.offset.x;
+                // this.sprite.position.y = this.sprite.y = this.y + (this.sprite.anchor.y * this.sprite.height) - this.offset.y;
             }
 
             if (this.allowRotation && this.deltaZ() !== 0)
             {
-                // this.sprite.angle += this.deltaZ();
+                this.sprite.angle += this.deltaZ();
             }
 
             if (this.sprite.scale.x !== this._sx || this.sprite.scale.y !== this._sy)

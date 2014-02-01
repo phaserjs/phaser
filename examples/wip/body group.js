@@ -30,28 +30,38 @@ var firingTimer = 0;
 var stateText;
 var livingEnemies = [];
 
+var bob;
+
 function create() {
 
+    $('#step').click(function(){
+        console.log('---- STEP', game.stepCount, '-------------------------------');
+        game.step();
+    });
+
+    game.enableStep();
+
+
     //  The scrolling starfield background
-    starfield = game.add.tileSprite(0, 0, 800, 600, 'starfield');
+    // starfield = game.add.tileSprite(0, 0, 800, 600, 'starfield');
 
     //  Our bullet group
-    bullets = game.add.group();
-    bullets.createMultiple(30, 'bullet');
-    bullets.setAll('anchor.x', 0.5);
-    bullets.setAll('anchor.y', 1);
-    bullets.setAll('outOfBoundsKill', true);
+    // bullets = game.add.group();
+    // bullets.createMultiple(30, 'bullet');
+    // bullets.setAll('anchor.x', 0.5);
+    // bullets.setAll('anchor.y', 1);
+    // bullets.setAll('outOfBoundsKill', true);
 
     // The enemy's bullets
-    enemyBullets = game.add.group();
-    enemyBullets.createMultiple(30, 'enemyBullet');
-    enemyBullets.setAll('anchor.x', 0.5);
-    enemyBullets.setAll('anchor.y', 1);
-    enemyBullets.setAll('outOfBoundsKill', true);
+    // enemyBullets = game.add.group();
+    // enemyBullets.createMultiple(30, 'enemyBullet');
+    // enemyBullets.setAll('anchor.x', 0.5);
+    // enemyBullets.setAll('anchor.y', 1);
+    // enemyBullets.setAll('outOfBoundsKill', true);
 
     //  The hero!
-    player = game.add.sprite(400, 500, 'ship');
-    player.anchor.setTo(0.5, 0.5);
+    // player = game.add.sprite(400, 500, 'ship');
+    // player.anchor.setTo(0.5, 0.5);
 
     //  The baddies!
     aliens = game.add.group();
@@ -59,38 +69,39 @@ function create() {
     createAliens();
 
     //  The score
-    scoreString = 'Score : ';
-    scoreText = game.add.text(10, 10, scoreString + score, { fontSize: '34px', fill: '#fff' });
+    // scoreString = 'Score : ';
+    // scoreText = game.add.text(10, 10, scoreString + score, { fontSize: '34px', fill: '#fff' });
 
     //  Lives
-    lives = game.add.group();
-    game.add.text(game.world.width - 100, 10, 'Lives : ', { fontSize: '34px', fill: '#fff' });
+    // lives = game.add.group();
+    // game.add.text(game.world.width - 100, 10, 'Lives : ', { fontSize: '34px', fill: '#fff' });
 
     //  Text
-    stateText = game.add.text(game.world.centerX,game.world.centerY,'', { fontSize: '84px', fill: '#fff' });
-    stateText.anchor.setTo(0.5, 0.5);
-    stateText.visible = false;
+    // stateText = game.add.text(game.world.centerX,game.world.centerY,'', { fontSize: '84px', fill: '#fff' });
+    // stateText.anchor.setTo(0.5, 0.5);
+    // stateText.visible = false;
 
-    for (var i = 0; i < 3; i++) 
-    {
-        var ship = lives.create(game.world.width - 100 + (30 * i), 60, 'ship');
-        ship.anchor.setTo(0.5, 0.5);
-        ship.angle = 90;
-        ship.alpha = 0.4;
-    }
+    // for (var i = 0; i < 3; i++) 
+    // {
+    //     var ship = lives.create(game.world.width - 100 + (30 * i), 60, 'ship');
+    //     ship.anchor.setTo(0.5, 0.5);
+    //     ship.angle = 90;
+    //     ship.alpha = 0.4;
+    // }
 
     //  An explosion pool
-    explosions = game.add.group();
-    explosions.createMultiple(30, 'kaboom');
-    explosions.forEach(setupInvader, this);
+    // explosions = game.add.group();
+    // explosions.createMultiple(30, 'kaboom');
+    // explosions.forEach(setupInvader, this);
 
     //  And some controls to play the game with
     cursors = game.input.keyboard.createCursorKeys();
-    fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    // fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 }
 
 function createAliens () {
 
+/*
     for (var y = 0; y < 4; y++)
     {
         for (var x = 0; x < 10; x++)
@@ -101,15 +112,20 @@ function createAliens () {
             alien.play('fly');
         }
     }
+*/
+
+            bob = aliens.create(48, 50, 'invader');
+
+            bob.debug = true;
 
     aliens.x = 100;
     aliens.y = 50;
 
     //  All this does is basically start the invaders moving. Notice we're moving the Group they belong to, rather than the invaders directly.
-    var tween = game.add.tween(aliens).to( { x: 200 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+    // var tween = game.add.tween(aliens).to( { x: 200 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
 
     //  When the tween completes it calls descend, before looping again
-    tween.onComplete.add(descend, this);
+    // tween.onComplete.add(descend, this);
 }
 
 function setupInvader (invader) {
@@ -122,16 +138,22 @@ function setupInvader (invader) {
 
 function descend() {
 
+console.log('descend');
     aliens.y += 10;
 
 }
 
 function update() {
 
+    aliens.x += 1;
+    // bob.body.velocity.x = 100;
+
     //  Scroll the background
-    starfield.tilePosition.y += 2;
+    // starfield.tilePosition.y += 2;
 
     //  Reset the player, then check for movement keys
+
+/*
     player.body.velocity.setTo(0, 0);
 
     if (cursors.left.isDown)
@@ -157,8 +179,11 @@ function update() {
     //  Run collision
     game.physics.collide(bullets, aliens, collisionHandler, null, this);
     game.physics.collide(enemyBullets, player, enemyHitsPlayer, null, this);
+*/    
 
 }
+
+/*
 
 function collisionHandler (bullet, alien) {
 
@@ -293,6 +318,8 @@ function restart () {
     stateText.visible = false;
 
 }
+
+*/
 
 function render() {
 

@@ -189,6 +189,7 @@ Updates:
 * Phaser.Math.max added as the opposite of Math.min.
 * Phaser.Math.minProperty and maxProperty added. Like Math.min/max but can be given a property an an array or list of objects to inspect.
 * Added 'full' paramter to Body.reset, allowing you to control if motion or all data is reset or not.
+* Exposed Group.pivot and Sprite.pivot to allow you to directly set the pivot points for rotation.
 
 
 Bug Fixes:
