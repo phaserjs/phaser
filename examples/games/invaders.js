@@ -300,5 +300,7 @@ function render() {
     {
         game.debug.renderPhysicsBody(aliens._container.children[i].body);
     }
+        
+    game.debug.renderPhysicsBody(player.body);
 
 }

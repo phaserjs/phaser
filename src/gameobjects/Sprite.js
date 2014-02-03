@@ -729,7 +729,7 @@ Phaser.Sprite.prototype.postUpdate = function() {
         {
             this.body.postUpdate();
 
-            console.log('Sprite postUpdate wt', this.worldTransform[2], this.worldTransform[5], 'xy', this.x, this.y);
+            // console.log('Sprite postUpdate wt', this.worldTransform[2], this.worldTransform[5], 'xy', this.x, this.y);
 
             // this._cache.x = this.x;
             // this._cache.y = this.y;
@@ -751,7 +751,7 @@ Phaser.Sprite.prototype.postUpdate = function() {
             this._cache.y = this.y;
         }
 
-        this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
+        // this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
 
         this.position.x = this._cache.x;
         this.position.y = this._cache.y;

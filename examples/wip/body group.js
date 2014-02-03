@@ -114,7 +114,9 @@ function createAliens () {
     }
 */
 
-            bob = aliens.create(48, 50, 'invader');
+bob = game.add.sprite(32, 32, 'invader');
+
+            // bob = aliens.create(48, 50, 'invader');
 
             bob.debug = true;
 
@@ -145,8 +147,9 @@ console.log('descend');
 
 function update() {
 
-    aliens.x += 1;
-    // bob.body.velocity.x = 100;
+    // aliens.x += 1;
+    bob.body.velocity.x = 100;
+    // bob.body.velocity.y = 100;
 
     //  Scroll the background
     // starfield.tilePosition.y += 2;
@@ -325,7 +328,9 @@ function render() {
 
     for (var i = 0; i < aliens._container.children.length; i++)
     {
-        game.debug.renderPhysicsBody(aliens._container.children[i].body);
+        // game.debug.renderPhysicsBody(aliens._container.children[i].body);
     }
-
+ 
+       game.debug.renderPhysicsBody(bob.body);
+ 
 }
