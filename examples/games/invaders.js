@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
 
 function preload() {
 
@@ -291,16 +291,5 @@ function restart () {
     player.revive();
     //hides the text
     stateText.visible = false;
-
-}
-
-function render() {
-
-    for (var i = 0; i < aliens._container.children.length; i++)
-    {
-        game.debug.renderPhysicsBody(aliens._container.children[i].body);
-    }
-        
-    game.debug.renderPhysicsBody(player.body);
 
 }

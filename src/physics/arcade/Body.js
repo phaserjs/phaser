@@ -4,30 +4,10 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-/*
-
-The SKPhysicsBody class defines properties that determine how the physics body is simulated. These properties affect how the body reacts to forces, what forces it generates on itself (to simulate friction), and how it reacts to collisions in the scene. In most cases, the properties are used to simulate physical effects.
-
-Each individual body also has its own property values that determine exactly how it reacts to forces and collisions in the scene. Here are the most important properties:
-
-The mass property determines how forces affect the body, as well as how much momentum the body has when it is involved in a collision.
-The friction property determines the roughness of the body’s surface. It is used to calculate the frictional force that a body applies to other bodies moving along its surface.
-The linearDamping and angularDamping properties are used to calculate friction on the body as it moves through the world. For example, this might be used to simulate air or water friction.
-The restitution property determines how much energy a body maintains during a collision—its bounciness.
-Other properties are used to determine how the simulation is performed on the body itself:
-
-The dynamic property determines whether the body is simulated by the physics subsystem.
-The affectedByGravity property determines whether the simulation exerts a gravitational force on the body. For more information on the physics world, see “Configuring the Physics World.”
-The allowsRotation property determines whether forces can impart angular velocity on the body.
-
-
-*/
-
-
-
 /**
-* The Physics Body is linked to a single Sprite. All physics operations should be performed against the body rather than
-* the Sprite itself. For example you can set the velocity, acceleration, bounce values etc all on the Body.
+* The Physics Body is linked to a single Sprite and defines properties that determine how the physics body is simulated.
+* These properties affect how the body reacts to forces, what forces it generates on itself (to simulate friction), and how it reacts to collisions in the scene. In most cases, the properties are used to simulate physical effects.
+* Each body also has its own property values that determine exactly how it reacts to forces and collisions in the scene.
 *
 * @class Phaser.Physics.Arcade.Body
 * @classdesc Arcade Physics Body Constructor
@@ -95,7 +75,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.gravity = new Phaser.Point();
 
     /**
-    * @property {Phaser.Point} bounce - The elasticitiy of the Body when colliding. bounce.x/y = 1 means full rebound, bounce.x/y = 0.5 means 50% rebound velocity.
+    * @property {Phaser.Point} bounce - The elasticitiy of the Body when colliding. This property determines how much energy a body maintains during a collision, i.e. its bounciness.
     */
     this.bounce = new Phaser.Point();
 
@@ -124,7 +104,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.angularAcceleration = 0;
 
     /**
-    * @property {number} angularDrag - The angular drag applied to the rotation of the Body.
+    * @property {number} angularDrag - angularDrag is used to calculate friction on the body as it rotates.
     * @default
     */
     this.angularDrag = 0;
@@ -136,16 +116,16 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.maxAngular = 1000;
 
     /**
-    * @property {number} mass - The mass of the Body.
+    * @property {number} mass - The mass property determines how forces affect the body, as well as how much momentum the body has when it is involved in a collision.
     * @default
     */
     this.mass = 1;
 
     /**
-    * @property {number} friction - The amount of friction this body experiences during motion.
+    * @property {number} linearDamping - linearDamping is used to calculate friction on the body as it moves through the world. For example, this might be used to simulate air or water friction.
     * @default
     */
-    this.friction = 0.0;
+    this.linearDamping = 0.0;
 
     /**
     * Set the checkCollision properties to control which directions collision is processed for this Body.
@@ -465,8 +445,6 @@ Phaser.Physics.Arcade.Body.prototype = {
         this._sx = this.sprite.scale.x;
         this._sy = this.sprite.scale.y;
 
-        console.log('updateScale', this.sprite.scale.x, this.sprite.scale.y);
-
     },
 
     /**
@@ -477,33 +455,15 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     preUpdate: function () {
 
-
-        //  If the GROUP is moving, then this doesn't work!!!
-        // this.x = (this.sprite.x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
-        // this.y = (this.sprite.y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;
-
-        //  If the SPRITE is moving, but in a Group, this doesn't work!!!
         this.x = (this.sprite.world.x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
         this.y = (this.sprite.world.y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;
 
-        //  This covers any motion that happens during this frame, no since the last frame
+        //  This covers any motion that happens during this frame, not since the last frame
         this.preX = this.x;
         this.preY = this.y;
         this.preRotation = this.sprite.angle;
 
-
-
-        //  I think I need to record both the world AND local X/Y values and decide if they should update?
-
-        //  Velocity will adjust a sprites local x/y, but it may still be being updated by a group x/y too, so don't over-write both!
-        //  Equally don't use world x/y changes as delta, but DO use them for precise positioning of the Body.
-
         this.rotation = this.preRotation;
-
-        // this.preX = this.x;
-        // this.preY = this.y;
-        // this.preRotation = this.sprite.angle;
-
 
         if (this.sprite.scale.x !== this._sx || this.sprite.scale.y !== this._sy)
         {
@@ -512,9 +472,9 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 if (this.sprite.debug)
 {
-    console.log('Body preUpdate x:', this.x, 'y:', this.y);
-    console.log('Body preUpdate Sprite x:', this.sprite.x, 'y:', this.sprite.y);
-    console.log('Body preUpdate Sprite world:', this.sprite.world.x, 'y:', this.sprite.world.y);
+    // console.log('Body preUpdate x:', this.x, 'y:', this.y);
+    // console.log('Body preUpdate Sprite x:', this.sprite.x, 'y:', this.sprite.y);
+    // console.log('Body preUpdate Sprite world:', this.sprite.world.x, 'y:', this.sprite.world.y);
     // console.log('Body preUpdate Sprite position:', this.sprite.position.x, 'y:', this.sprite.position.y);
     // console.log('Body preUpdate Sprite localTransform:', this.sprite.localTransform[2], 'y:', this.sprite.localTransform[5]);
     // console.log('Body preUpdate Sprite worldTransform:', this.sprite.worldTransform[2], 'y:', this.sprite.worldTransform[5]);
@@ -541,10 +501,6 @@ if (this.sprite.debug)
                 this._vy = this.velocity.y;
                 this.speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
                 this.angle = Math.atan2(this.velocity.y, this.velocity.x);
-                if (this.sprite.debug)
-                {
-                    console.log('Body preUpdate speed / angle adjust', this.speed, this.angle);
-                }
             }
 
             if (this.game.physics.checkBounds(this))
@@ -552,7 +508,7 @@ if (this.sprite.debug)
                 this.reboundCheck(true, true, true);
             }
 
-            this.applyFriction();
+            this.applyDamping();
 
             this.integrateVelocity();
 
@@ -565,16 +521,20 @@ if (this.sprite.debug)
             this.updateBounds();
         }
 
-
 if (this.sprite.debug)
 {
     console.log('Body preUpdate AFTER integration x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right);
     console.log('Body preUpdate velocity:', this.velocity.x, this.velocity.y);
 }
 
-
     },
 
+    /**
+    * Internal method that checks and potentially resets the blocke status.
+    *
+    * @method Phaser.Physics.Arcade#checkBlocked
+    * @protected
+    */
     checkBlocked: function () {
 
         if ((this.blocked.left || this.blocked.right) && (Math.floor(this.x) !== this.blocked.x || Math.floor(this.y) !== this.blocked.y))
@@ -622,18 +582,18 @@ if (this.sprite.debug)
     },
 
     /**
-    * Internal method.
+    * Internal method that checks the acceleration and applies damping if not set.
     *
-    * @method Phaser.Physics.Arcade#applyFriction
+    * @method Phaser.Physics.Arcade#applyDamping
     * @protected
     */
-    applyFriction: function () {
+    applyDamping: function () {
 
-        if (this.friction > 0 && this.acceleration.isZero())
+        if (this.linearDamping > 0 && this.acceleration.isZero())
         {
-            if (this.speed > this.friction)
+            if (this.speed > this.linearDamping)
             {
-                this.speed -= this.friction;
+                this.speed -= this.linearDamping;
             }
             else
             {
@@ -649,11 +609,6 @@ if (this.sprite.debug)
                 this.speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
                 this.angle = Math.atan2(this.velocity.y, this.velocity.x);
             }
-        }
-
-        if (this.sprite.debug)
-        {
-            console.log('Body applyFriction velocity:', this.velocity.x, this.velocity.y, 'speed', this.speed);
         }
 
     },
@@ -986,24 +941,25 @@ if (this.sprite.debug)
             return this.customSeparateCallback.call(this.customSeparateContext, this, response);
         }
 
-        // console.log(this.sprite.name, 'collided with', body.sprite.name, response);
-
         this._distances[0] = body.right - this.x;   // Distance of B to face on left side of A
         this._distances[1] = this.right - body.x;   // Distance of B to face on right side of A
         this._distances[2] = body.bottom - this.y;  // Distance of B to face on bottom side of A
         this._distances[3] = this.bottom - body.y;  // Distance of B to face on top side of A
+
+        console.log(this.sprite.name, 'collided with', body.sprite.name, response.overlapN, this._distances);
+
 
         if (response.overlapN.x)
         {
             //  Which is smaller? Left or Right?
             if (this._distances[0] < this._distances[1])
             {
-                // console.log(this.sprite.name, 'collided on the LEFT with', body.sprite.name, response);
+                console.log(this.sprite.name, 'collided on the LEFT with', body.sprite.name, response);
                 this.hitLeft(body, response);
             }
             else if (this._distances[1] < this._distances[0])
             {
-                // console.log(this.sprite.name, 'collided on the RIGHT with', body.sprite.name, response);
+                console.log(this.sprite.name, 'collided on the RIGHT with', body.sprite.name, response);
                 this.hitRight(body, response);
             }
         }
@@ -1012,12 +968,12 @@ if (this.sprite.debug)
             //  Which is smaller? Top or Bottom?
             if (this._distances[2] < this._distances[3])
             {
-                // console.log(this.sprite.name, 'collided on the TOP with', body.sprite.name, response);
+                console.log(this.sprite.name, 'collided on the TOP with', body.sprite.name, response);
                 this.hitTop(body, response);
             }
             else if (this._distances[3] < this._distances[2])
             {
-                // console.log(this.sprite.name, 'collided on the BOTTOM with', body.sprite.name, response);
+                console.log(this.sprite.name, 'collided on the BOTTOM with', body.sprite.name, response);
                 this.hitBottom(body, response);
             }
         }
@@ -1044,10 +1000,15 @@ if (this.sprite.debug)
     hitLeft: function (body, response) {
 
         //  We know that Body is overlapping with This on the left hand side (deltaX < 0 = moving left, > 0 = moving right)
-        // if (body.speed > 0 && (body.deltaX() <= 0 || (body.deltaX() > 0 && !this.checkCollision.left)))
-        // {
-        //     return;
-        // }
+        if (body.speed > 0 && (body.deltaX() <= 0 || (body.deltaX() > 0 && !this.checkCollision.left)))
+        {
+            return;
+        }
+
+        if (this.speed > 0 && (this.deltaX() >= 0 || (this.deltaX() < 0 && !body.checkCollision.right)))
+        {
+            return;
+        }
 
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.LEFT, this, body, response))
         {
@@ -1092,15 +1053,18 @@ if (this.sprite.debug)
     hitRight: function (body, response) {
 
         //  We know that Body is overlapping with This on the right hand side (deltaX < 0 = moving left, > 0 = moving right)
-        // if (body.speed > 0 && (body.deltaX() >= 0 || (body.deltaX() < 0 && !this.checkCollision.right)))
-        // {
-        //     console.log('bail 1', body.deltaX());
-        //     return;
-        // }
+        if (body.speed > 0 && (body.deltaX() >= 0 || (body.deltaX() < 0 && !this.checkCollision.right)))
+        {
+            return;
+        }
+
+        if (this.speed > 0 && (this.deltaX() <= 0 || (this.deltaX() > 0 && !body.checkCollision.left)))
+        {
+            return;
+        }
 
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.RIGHT, this, body))
         {
-            console.log('bail 2');
             return;
         }
 
@@ -1142,12 +1106,15 @@ if (this.sprite.debug)
     hitTop: function (body, response) {
 
         //  We know that Body is overlapping with This on the bottom side (deltaY < 0 = moving up, > 0 = moving down)
-        // if (body.speed > 0 && (body.deltaY() <= 0 || (body.deltaY() > 0 && !this.checkCollision.up)))
-        // if (body.speed > 0 && (body.deltaY() <= 0 || (body.deltaY() > 0 && !this.checkCollision.up)))
-        // {
-            // console.log('bail', body.sprite.name, body.deltaY());
-            // return;
-        // }
+        if (body.speed > 0 && (body.deltaY() <= 0 || (body.deltaY() > 0 && !this.checkCollision.up)))
+        {
+            return;
+        }
+
+        if (this.speed > 0 && (this.deltaY() >= 0 || (this.deltaY() < 0 && !body.checkCollision.down)))
+        {
+            return;
+        }
 
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.UP, this, body))
         {
@@ -1192,10 +1159,15 @@ if (this.sprite.debug)
     hitBottom: function (body, response) {
 
         //  We know that Body is overlapping with This on the bottom side (deltaY < 0 = moving up, > 0 = moving down)
-        // if (body.speed > 0 && (body.deltaY() >= 0 || (body.deltaY() < 0 && !this.checkCollision.down)))
-        // {
-        //     return;
-        // }
+        if (body.speed > 0 && (body.deltaY() >= 0 || (body.deltaY() < 0 && !this.checkCollision.down)))
+        {
+            return;
+        }
+
+        if (this.speed > 0 && (this.deltaY() <= 0 || (this.deltaY() > 0 && !body.checkCollision.up)))
+        {
+            return;
+        }
 
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.DOWN, this, body))
         {
@@ -1313,60 +1285,32 @@ if (this.sprite.debug)
 
             this.game.physics.checkBounds(this);
 
-            if (this.deltaX() < 0)
+            this._dx = this.deltaX();
+            this._dy = this.deltaY();
+
+            if (this._dx < 0)
             {
                 this.facing = Phaser.LEFT;
             }
-            else if (this.deltaX() > 0)
+            else if (this._dx > 0)
             {
                 this.facing = Phaser.RIGHT;
             }
 
-            if (this.deltaY() < 0)
+            if (this._dy < 0)
             {
                 this.facing = Phaser.UP;
             }
-            else if (this.deltaY() > 0)
+            else if (this._dy > 0)
             {
                 this.facing = Phaser.DOWN;
             }
 
-            if (this.sprite.debug)
+            if (this._dx !== 0 || this._dy !== 0)
             {
-                //  Temp. Debugging Stuff
-                // console.log('Body postUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right, 'WAS', this.preX, this.preY);
-                // console.log('Body postUpdate blocked:', this.blocked, this.blockFlags);
-                // console.log('Body postUpdate velocity:', this.velocity.x, this.velocity.y);
-                // console.log('Body postUpdate delta:', this.deltaX(), this.deltaY());
-                // console.log('Body postUpdate Sprite:', this.sprite.x, this.sprite.y, 'cached', this.sprite._cache.x, this.sprite._cache.y);
-                // console.log('Body postUpdate Rotation:', this.rotation);
-
-                console.log('Body postUpdate Sprite x:', this.sprite.x, 'y:', this.sprite.y);
-                console.log('Body postUpdate Sprite world:', this.sprite.world.x, 'y:', this.sprite.world.y);
-                // console.log('Body postUpdate Sprite position:', this.sprite.position.x, 'y:', this.sprite.position.y);
-                // console.log('Body postUpdate Sprite localTransform:', this.sprite.localTransform[2], 'y:', this.sprite.localTransform[5]);
-                // console.log('Body postUpdate Sprite worldTransform:', this.sprite.worldTransform[2], 'y:', this.sprite.worldTransform[5]);
-
+                this.sprite.x += this._dx;
+                this.sprite.y += this._dy;
             }
-
-            if (this.deltaX() !== 0 || this.deltaY() !== 0)
-            {
-                // console.log('BoDY APPLIED', this.x, this.y, 'pre', this.preX, this.preY, 'delta', this.deltaX(), this.deltaY());
-
-                this.sprite.x += this.deltaX();
-                this.sprite.y += this.deltaY();
-            }
-
-
-                // this.sprite.x = (this.x + (this.sprite.anchor.x * this.sprite.width) - this.offset.x);
-                // this.sprite.y = (this.y + (this.sprite.anchor.y * this.sprite.height) - this.offset.y);
-
-                // this.sprite.x = (this.x + (this.sprite.anchor.x * this.sprite.width) - this.offset.x);
-                // this.sprite.y = (this.y + (this.sprite.anchor.y * this.sprite.height) - this.offset.y);
-
-                // this.sprite.position.x = this.sprite.x = this.x + (this.sprite.anchor.x * this.sprite.width) - this.offset.x;
-                // this.sprite.position.y = this.sprite.y = this.y + (this.sprite.anchor.y * this.sprite.height) - this.offset.y;
-            // }
 
             if (this.allowRotation && this.deltaZ() !== 0)
             {
@@ -1420,45 +1364,47 @@ if (this.sprite.debug)
     },
 
     /**
-    * Returns the delta x value. The difference between Body.x now and in the previous step.
+    * Determines if this Body is 'on the floor', which means in contact with a Tile or World bounds, or other object that has set 'down' as blocked.
+    *
+    * @method Phaser.Physics.Arcade.Body#onFloor
+    * @return {boolean} True if this Body is 'on the floor', which means in contact with a Tile or World bounds, or object that has set 'down' as blocked.
+    */
+    onFloor: function () {
+        return this.blocked.down;
+    },
+
+    /**
+    * Determins if this Body is 'on a wall', which means horizontally in contact with a Tile or World bounds, or other object but not the ground.
+    *
+    * @method Phaser.Physics.Arcade.Body#onWall
+    * @return {boolean} True if this Body is 'on a wall', which means horizontally in contact with a Tile or World bounds, or other object but not the ground.
+    */
+    onWall: function () {
+        return (!this.blocked.down && (this.blocked.left || this.blocked.right));
+    },
+
+    /**
+    * Returns the delta x value. The amount the Body has moved horizontally in the current step.
     *
     * @method Phaser.Physics.Arcade.Body#deltaX
     * @return {number} The delta value. Positive if the motion was to the right, negative if to the left.
     */
     deltaX: function () {
-
-        // if (this.moves)
-        // {
-            return this.x - this.preX;
-        // }
-        // else
-        // {
-        //     return this.sprite.deltaX;
-        // }
-
+        return this.x - this.preX;
     },
 
     /**
-    * Returns the delta y value. The difference between Body.y now and in the previous step.
+    * Returns the delta y value. The amount the Body has moved vertically in the current step.
     *
     * @method Phaser.Physics.Arcade.Body#deltaY
     * @return {number} The delta value. Positive if the motion was downwards, negative if upwards.
     */
     deltaY: function () {
-
-        // if (this.moves)
-        // {
-            return this.y - this.preY;
-        // }
-        // else
-        // {
-        //     return this.sprite.deltaY;
-        // }
-
+        return this.y - this.preY;
     },
 
     /**
-    * Returns the delta z value. The difference between Body.rotation now and in the previous step.
+    * Returns the delta z value. The amount the Body has rotated in the current step.
     *
     * @method Phaser.Physics.Arcade.Body#deltaZ
     * @return {number} The delta value.
@@ -1509,8 +1455,6 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "x", {
             this.polygon.pos.x = value;
         }
 
-        // this.updateBounds();
-
     }
 
 });
@@ -1552,8 +1496,6 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "y", {
         {
             this.polygon.pos.y = value;
         }
-
-        // this.updateBounds();
 
     }
 

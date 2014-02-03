@@ -1098,8 +1098,8 @@ Phaser.Physics.Arcade.prototype = {
             body.blocked.x = Math.floor(body.x);
             body.blocked.y = Math.floor(body.y);
             body.blocked.left = true;
-            body.touching.left = true;
-            body.touching.none = false;
+            // body.touching.left = true;
+            // body.touching.none = false;
         }
         else if (body.overlapX > 0)
         {
@@ -1109,8 +1109,8 @@ Phaser.Physics.Arcade.prototype = {
             body.blocked.x = Math.floor(body.x);
             body.blocked.y = Math.floor(body.y);
             body.blocked.right = true;
-            body.touching.right = true;
-            body.touching.none = false;
+            // body.touching.right = true;
+            // body.touching.none = false;
         }
 
         if (body.overlapY < 0)
@@ -1121,8 +1121,8 @@ Phaser.Physics.Arcade.prototype = {
             body.blocked.x = Math.floor(body.x);
             body.blocked.y = Math.floor(body.y);
             body.blocked.up = true;
-            body.touching.up = true;
-            body.touching.none = false;
+            // body.touching.up = true;
+            // body.touching.none = false;
 
         }
         else if (body.overlapY > 0)
@@ -1133,8 +1133,8 @@ Phaser.Physics.Arcade.prototype = {
             body.blocked.x = Math.floor(body.x);
             body.blocked.y = Math.floor(body.y);
             body.blocked.down = true;
-            body.touching.down = true;
-            body.touching.none = false;
+            // body.touching.down = true;
+            // body.touching.none = false;
         }
 
         // console.log('POST processTileSeparation xy', body.x, body.y, 'left', body.left, 'right', body.right, 'up', body.up, 'down', body.down);

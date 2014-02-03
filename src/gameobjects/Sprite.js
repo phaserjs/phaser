@@ -417,16 +417,12 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this.world.setTo(this.parent.position.x + this.x, this.parent.position.y + this.y);
         this.worldTransform[2] = this.world.x;
         this.worldTransform[5] = this.world.y;
-        console.log('Sprite initGroup', this.world);
-        // console.log('Sprite initGroup', this.group.x, this.group.y);
-        // console.log('Sprite initGroup', this.parent.position);
         this._cache.fresh = false;
 
         if (this.body)
         {
             this.body.x = (this.world.x - (this.anchor.x * this.width)) + this.body.offset.x;
             this.body.y = (this.world.y - (this.anchor.y * this.height)) + this.body.offset.y;
-            // this.body.preUpdate();
             this.body.preX = this.body.x;
             this.body.preY = this.body.y;
         }
