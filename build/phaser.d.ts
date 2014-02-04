@@ -1142,7 +1142,7 @@ declare module Phaser {
         static multiply(a: Phaser.Point, b: Phaser.Point, out?: Phaser.Point): Phaser.Point;
         static divide(a: Phaser.Point, b: Phaser.Point, out?: Phaser.Point): Phaser.Point;
         static equals(a: Phaser.Point, b: Phaser.Point): boolean;
-        static distance(a: Phaser.Point, b: Phaser.Point, round: boolean): number;
+        static distance(a: Phaser.Point, b: Phaser.Point, round?: boolean): number;
         static rotate(a: Phaser.Point, x: number, y: number, angle: number, asDegrees: boolean, distance: boolean): Phaser.Point;
     }
 
