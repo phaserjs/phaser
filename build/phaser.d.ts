@@ -1076,9 +1076,7 @@ declare module Phaser {
     }
 
     class QuadTree {
-        constructor(physicsManager: Phaser.Physics.Arcade, x: number, y: number, width: number, height: number, maxObject?: number, maxLevels?: number, level?: number);
-        physicsManager: Phaser.Physics.Arcade;
-        ID: number;
+        constructor(x: number, y: number, width: number, height: number, maxObject?: number, maxLevels?: number, level?: number);
         maxObjects: number;
         maxLevels: number;
         level: number;
@@ -1094,11 +1092,30 @@ declare module Phaser {
         };
         objects: Array<any>;
         nodes: Array<any>;
+        populate(group:Phaser.Group): void;
+        populateHandler(sprite:Phaser.Sprite): void;
         split(): void;
         insert(body: Object): void;
         getIndex(rect: Object): number;
         retrieve(sprite: Object): Array<any>;
         clear(): void;
+    }
+
+    class Line {
+        constructor(x1?: number, y1?: number, x2?: number, y2?: number);
+        start: Phaser.Point;
+        end: Phaser.Point;
+        setTo(x1?: number, y1?: number, x2?: number, y2?: number): Phaser.Line;
+        fromSprite(startSprite: Phaser.Sprite, endSprite: Phaser.Sprite, useCenter: boolean): Phaser.Line;
+        intersects(line: Phaser.Line, asSegment?: boolean, result?: Phaser.Point): Phaser.Point;
+        pointOnLine(x: number, y: number): boolean;
+        pointOnSegment(x: number, y: number): boolean;
+        length: number;
+        angle: number;
+        slope: number;
+        perpSlope: number;
+        static intersectsPoints(a: Phaser.Point, b: Phaser.Point, e: Phaser.Point, f: Phaser.Point, asSegment?: boolean, result?: Phaser.Point): Phaser.Point;
+        static intersects(a: Phaser.Line, b: Phaser.Line, asSegment?: boolean, result?: Phaser.Point): Phaser.Point;
     }
 
     class Circle {
@@ -1223,7 +1240,6 @@ declare module Phaser {
     class TweenManager {
         constructor(game: Phaser.Game);
         game: Phaser.Game;
-        REVISION: string;
         getAll(): Phaser.Tween[];
         removeAll(): void;
         add(tween: Phaser.Tween): Phaser.Tween;
@@ -1705,112 +1721,154 @@ declare module Phaser {
             constructor(game: Phaser.Game)
             game: Phaser.Game;
             gravity: Phaser.Point;
-            bounds: Phaser.Rectangle;
+            worldLeft: SAT.Box;
+            worldRight: SAT.Box;
+            worldTop: SAT.Box;
+            worldBottom: SAT.Box;
+            worldPolys: any;
+            quadTree: Phaser.QuadTree;
             maxObjects: number;
             maxLevels: number;
-            OVERLAP_BIAS: number;
-            TILE_OVERLAP: number;
-            quadTree: Phaser.QuadTree;
-            quadTreeID: number;
-            updateMotion(body: Phaser.Physics.Arcade.Body);
-            computeVelocity(axis: number, body: Phaser.Physics.Arcade.Body, velocity: number, acceleration: number, drag: number, max: number): void;
-            preUpdate(): void;
-            postUpdate(): void;
+            RECT: number;
+            CIRCLE: number;
+            POLYGON: number;
+            checkBounds(body: Phaser.Physics.Arcade.Body): boolean;
+            setBoundsToWorld(left: boolean, right: boolean, top: boolean, bottom: boolean): void;
+            setBounds(x: number, y: number, width: number, height: number, left: boolean, right: boolean, top: boolean, bottom: boolean): void;
+            updateMotion(body: Phaser.Physics.Arcade.Body): Phaser.Point;
             overlap(object1: any, object2: any, overlapCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
-            overlapSpriteVsSprite(sprite1: Phaser.Sprite, sprite2: Phaser.Sprite,  overlapCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
-            overlapSpriteVsGroup(sprite1: Phaser.Sprite, group: Phaser.Group,  overlapCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
-            overlapGroupVsGroup(group: Phaser.Group, group2: Phaser.Group,  overlapCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
             collide(object1: any, object2: any, collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
-            collideSpriteVsSprite(sprite1: Phaser.Sprite, sprite2: Phaser.Sprite,  collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
-            collideSpriteVsTilemap(sprite1: Phaser.Sprite, tilemap: Phaser.Tilemap,  collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
-            collideSpriteVsGroup(sprite1: Phaser.Sprite, group: Phaser.Group,  collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
-            collideGroupVsTilemap(group: Phaser.Group, tilemap: Phaser.Tilemap,  collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
-            collideGroupVsGroup(group: Phaser.Group, group2: Phaser.Group,  collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
-            separate(body: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body): void;
-            separateX(body: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body): void;
-            separateY(body: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body): void;
-            separateTile(object: Object, x: number, y: number, width: number, height: number, mass: number, collideLeft: boolean, collideRight: boolean, collideUp: boolean, collideDown: boolean, separateX: boolean, separateY: boolean): boolean;
-            separateTileX(object: Object, x: number, y: number, width: number, height: number, mass: number, collideLeft: boolean, collideRight: boolean, collideUp: boolean, collideDown: boolean, separateX: boolean, separateY: boolean): boolean;
-            separateTileY(object: Object, x: number, y: number, width: number, height: number, mass: number, collideLeft: boolean, collideRight: boolean, collideUp: boolean, collideDown: boolean, separateX: boolean, separateY: boolean): boolean;
+            collideHandler(object1: any, object2: any, collideCallback?: Function, processCallback?: Function, callbackContext?: any, overlapOnly: boolean): boolean;
+            collideSpriteVsSprite(sprite1: Phaser.Sprite, sprite2: Phaser.Sprite,  collideCallback?: Function, processCallback?: Function, callbackContext?: any, overlapOnly: boolean): boolean;
+            collideSpriteVsGroup(sprite1: Phaser.Sprite, group: Phaser.Group,  collideCallback?: Function, processCallback?: Function, callbackContext?: any, overlapOnly: boolean): boolean;
+            collideGroupVsSelf(group: Phaser.Group,  collideCallback?: Function, processCallback?: Function, callbackContext?: any, overlapOnly: boolean): boolean;
+            collideGroupVsGroup(group: Phaser.Group, group2: Phaser.Group,  collideCallback?: Function, processCallback?: Function, callbackContext?: any, overlapOnly: boolean): boolean;
+            collideSpriteVsTilemapLayer(sprite: Phaser.Sprite, tilemapLayer: Phaser.TilemapLayer,  collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
+            collideGroupVsTilemapLayer(group: Phaser.Group, tilemapLayer: Phaser.TilemapLayer,  collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
+            separate(body: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body, processCallback?: Function, callbackContext?: any, overlapOnly: boolean): boolean;
+            intersects(a: Phaser.Physics.Arcade.Body, b: Phaser.Physics.Arcade.Body): boolean;
+            tileIntersects(body: Phaser.Physics.Arcade.Body, tile: Phaser.Tile): boolean;
+            separateTiles(body: Phaser.Physics.Arcade.Body, tile: <Phaser.Tile>Array): boolean;
+            separateTile(body: Phaser.Physics.Arcade.Body, tile: Phaser.Tile): boolean;
+            processTileSeparation(body: Phaser.Physics.Arcade.Body): boolean;
+            moveToObject(displayObject: Phaser.Sprite, destination: Phaser.Sprite, speed?: number, maxTime?: number): number;
+            moveToPointer(displayObject: Phaser.Sprite, speed?: number, pointer?: Phaser.Pointer, maxTime?: number): number;
+            moveToXY(displayObject: Phaser.Sprite, x: number, y: number, speed?: number, maxTime?: number): number;
             velocityFromAngle(angle: number, speed?: number, point?: Phaser.Point): Phaser.Point;
-            moveToObject(source: Phaser.Sprite, dest: Phaser.Sprite, speed?: number, maxTime?: number): void;
-            accelerateTowardsObject(source: Phaser.Sprite, dest: Phaser.Sprite, speed?: number, xSpeedMax?: number, ySpeedMax?: number): void;
-            moveToMouse(source: Phaser.Sprite, speed?: number, maxTime?: number): void;
-            accelerateTowardsMouse(source: Phaser.Sprite, speed: number, xSpeedMax?: number, ySpeedMax?: number): void;
-            moveToPoint(source: Phaser.Sprite, target: Phaser.Point, speed?: number, maxTime?: number): void;
-            accelerateTowardsPoint(source: Phaser.Sprite, target: Phaser.Point, speed: number, xSpeedMax?: number, ySpeedMax?: number): void;
-            distanceBetween(a: Phaser.Sprite, b: Phaser.Sprite): number;
-            distanceToPoint(a: Phaser.Sprite, target: Phaser.Point): number;
-            distanceToMouse(a: Phaser.Sprite): number;
-            angleBetweenPoint(a: Phaser.Sprite, target: Phaser.Point, asDegrees?: boolean): number;
-            angleBetween(a: Phaser.Sprite, b: Phaser.Sprite, asDegrees?: boolean): number;
-            velocityFromFacing(parent: Phaser.Sprite, speed: number): Phaser.Point;
-            angleBetweenMouse(a: Phaser.Sprite, asDegress?: boolean): number;
+            velocityFromRotation(rotation: number, speed?: number, point?: Phaser.Point): Phaser.Point;
+            accelerationFromRotation(rotation: number, speed?: number, point?: Phaser.Point): Phaser.Point;
+            accelerateToObject(displayObject: Phaser.Sprite, destination: Phaser.Sprite, speed?: number, xSpeedMax?: number, ySpeedMax?: number): number;
+            accelerateToPointer(displayObject: Phaser.Sprite, pointer: Phaser.Pointer, speed?: number, xSpeedMax?: number, ySpeedMax?: number): number;
+            accelerateToXY(displayObject: Phaser.Sprite, x: number, y: number, speed?: number, xSpeedMax?: number, ySpeedMax?: number): number;
+            distanceTo(source: Phaser.Sprite, target: Phaser.Sprite): number;
+            distanceToXY(displayObject: Phaser.Sprite, x: number, y: number): number;
+            distanceToPointer(displayObject: Phaser.Sprite, pointer: Phaser.Pointer): number;
+            angleBetween(source: Phaser.Sprite, target: Phaser.Sprite): number;
+            angleToXY(displayObject: Phaser.Sprite, x: number, y: number): number;
+            angleToPointer(displayObject: Phaser.Sprite, pointer: Phaser.Pointer): number;
         }
 
         module Arcade {
-            class BorderChoices {
+
+            class FaceChoices {
                 none: boolean;
                 any: boolean;
                 up: boolean;
                 down: boolean;
                 left: boolean;
                 right: boolean;
-            }
+                x: number;
+                y: number;
+            }        
 
             class Body {
                 constructor(sprite: Phaser.Sprite);
                 sprite: Phaser.Sprite;
                 game: Phaser.Game;
                 offset: Phaser.Point;
-                x: number;
-                y: number;
-                lastX: number;
-                lastY: number;
-                sourceWidth: number;
-                sourceHeight: number;
-                width: number;
-                height: number;
-                halfWidth: number;
-                halfHeight: number;
+                preX: number;
+                preY: number;
+                preRotation: number;
                 velocity: Phaser.Point;
                 acceleration: Phaser.Point;
-                drag: Phaser.Point;
+                speed: number;
+                angle: number;
                 gravity: Phaser.Point;
                 bounce: Phaser.Point;
+                minVelocity: Phaser.Point;
                 maxVelocity: Phaser.Point;
                 angularVelocity: number;
                 angularAcceleration: number;
                 angularDrag: number;
                 maxAngular: number;
                 mass: number;
-                quadTreeIDs: string[];
-                quadTreeIndex: number;
-                allowCollision: BorderChoices;
-                touching: BorderChoices;
-                wasTouching: BorderChoices;
+                linearDamping: number;
+                checkCollision: FaceChoices;
+                touching: FaceChoices;
+                blocked: FaceChoices;
+                facing: number;
+                rebound: boolean;
                 immovable: boolean;
                 moves: boolean;
                 rotation: number;
                 allowRotation: boolean;
                 allowGravity: boolean;
-                customSeparateX: boolean;
-                customSeparateY: boolean;
+                customSeparateCallback: any;
+                customSeparateContext: any;
+                collideCallback: any;
+                collideCallbackContext: any;
+                collideWorldBounds: boolean;
+                type: number;
+                shape: any;
+                polygon: any;
+                left: number;
+                right: number;
+                top: number;
+                bottom: number;
+                width: number;
+                height: number;
+                contacts: any;
                 overlapX: number;
                 overlapY: number;
-                collideWorldBounds: boolean;
-                bottom: number;
-                right: number;
-                updateBounds(centerX: number, centerY: number, scaleX: number, scaleY: number): void;
-                update(): void;
+                updateScale(): void;
+                preUpdate(): void;
+                checkBlocked(): void;
+                updateBounds(): void;
+                applyDamping(): void;
+                reboundCheck(x: number, y: number, rebound: boolean): void;
+                getUpwardForce(): number;
+                getDownwardForce(): number;
+                sub(x: number): void;
+                add(x: number): void;
+                give(body: Phaser.Physics.Arcade.Body, response: SAT.Response): void;
+                take(body: Phaser.Physics.Arcade.Body, response: SAT.Response): void;
+                split(body: Phaser.Physics.Arcade.Body, response: SAT.Response): void;
+                exchange(body: Phaser.Physics.Arcade.Body): void;
+                processRebound(body: Phaser.Physics.Arcade.Body): void;
+                overlap(body: Phaser.Physics.Arcade.Body, response: SAT.Response): boolean;
+                inContact(body: Phaser.Physics.Arcade.Body): boolean;
+                addContact(body: Phaser.Physics.Arcade.Body): boolean;
+                removeContact(body: Phaser.Physics.Arcade.Body): boolean;
+                separate(body: Phaser.Physics.Arcade.Body, response: SAT.Response): boolean;
+                hitLeft(body: Phaser.Physics.Arcade.Body, response: SAT.Response): void;
+                hitRight(body: Phaser.Physics.Arcade.Body, response: SAT.Response): void;
+                hitTop(body: Phaser.Physics.Arcade.Body, response: SAT.Response): void;
+                hitBottom(body: Phaser.Physics.Arcade.Body, response: SAT.Response): void;
+                integrateVelocity():void;
                 postUpdate(): void;
-                checkWorldBounds(): void;
-                setSize(width: number, height: number, offsetX: number, offsetY: number): void;
-                reset(): void;
-                deltaAbsX(): number;
-                deltaAbsY(): number;
+                reset(full: boolean): void;
+                destroy(): void;
+                setCircle(radius: number, offsetX: number, offsetY: number): void;
+                setRectangle(width: number, height: number, translateX: number, translateY: number): void;
+                setPoints(points: any): void;
+                translate(x: number, y: number): void;
+                onFloor(): boolean;
+                onWall(): boolean;
                 deltaX(): number;
                 deltaY(): number;
+                deltaZ(): number;
+                x: number;
+                y: number;
             }
         }
     }

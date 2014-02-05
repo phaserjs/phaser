@@ -61,6 +61,7 @@ Phaser.Line.prototype = {
     * @param {Phaser.Sprite} startSprite - The coordinates of this Sprite will be set to the Line.start point.
     * @param {Phaser.Sprite} endSprite - The coordinates of this Sprite will be set to the Line.start point.
     * @param {boolean} [useCenter=true] - If true it will use startSprite.center.x, if false startSprite.x.
+    * @return {Phaser.Line} This line object
     */
     fromSprite: function (startSprite, endSprite, useCenter) {
 
@@ -68,11 +69,11 @@ Phaser.Line.prototype = {
 
         if (useCenter)
         {
-            this.setTo(startSprite.center.x, startSprite.center.y, endSprite.center.x, endSprite.center.y);
+            return this.setTo(startSprite.center.x, startSprite.center.y, endSprite.center.x, endSprite.center.y);
         }
         else
         {
-            this.setTo(startSprite.x, startSprite.y, endSprite.x, endSprite.y);
+            return this.setTo(startSprite.x, startSprite.y, endSprite.x, endSprite.y);
         }
 
     },
