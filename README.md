@@ -73,6 +73,8 @@ Updates:
 
 Bug Fixes:
 
+* Explicitly paused Timer continues if you un-focus and focus the browser window (thanks georgiee)
+* Added TimerEvent.pendingDelete and checks in Timer.update, so that removing an event in a callback no longer throws an exception (thanks georgiee)
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
