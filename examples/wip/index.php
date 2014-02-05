@@ -101,6 +101,7 @@
         <div id="phaser-example"></div>
 
         <input type="button" id="step" value="step" />
+        <input type="button" id="start" value="start" style="margin-left: 32px" />
 
         <h2>work in progress examples</h2>
 

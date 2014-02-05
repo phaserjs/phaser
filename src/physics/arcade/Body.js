@@ -395,15 +395,15 @@ Phaser.Physics.Arcade.Body.prototype = {
 
 if (this.sprite.debug)
 {
-    // console.log('Body preUpdate x:', this.x, 'y:', this.y);
+    console.log('Body preUpdate x:', this.x, 'y:', this.y);
     // console.log('Body preUpdate Sprite x:', this.sprite.x, 'y:', this.sprite.y);
     // console.log('Body preUpdate Sprite world:', this.sprite.world.x, 'y:', this.sprite.world.y);
     // console.log('Body preUpdate Sprite position:', this.sprite.position.x, 'y:', this.sprite.position.y);
     // console.log('Body preUpdate Sprite localTransform:', this.sprite.localTransform[2], 'y:', this.sprite.localTransform[5]);
     // console.log('Body preUpdate Sprite worldTransform:', this.sprite.worldTransform[2], 'y:', this.sprite.worldTransform[5]);
     // console.log('Body preUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right, 'WAS', this.preX, this.preY);
-    // console.log('Body preUpdate blocked:', this.blocked, this.blockFlags);
-    // console.log('Body preUpdate velocity:', this.velocity.x, this.velocity.y);
+    console.log('Body preUpdate blocked:', this.blocked, this.blockFlags);
+    console.log('Body preUpdate velocity:', this.velocity.x, this.velocity.y);
     // console.log('Body preUpdate rotation:', this.rotation, this.preRotation);
 }
 
@@ -555,14 +555,18 @@ if (this.sprite.debug)
 
         if (x)
         {
-            if (rebound && this.bounce.x !== 0 && (this.blocked.left || this.blocked.right))
+            if (rebound && this.bounce.x !== 0 && (this.blocked.left || this.blocked.right || this.touching.left || this.touching.right))
             {
-                this.velocity.x *= -this.bounce.x;
-                this.angle = Math.atan2(this.velocity.y, this.velocity.x);
-
-                if (this.sprite.debug)
+                //  Don't rebound if they've already rebounded in this frame
+                if (!(this._vx <= 0 && this.velocity.x > 0) && !(this._vx >= 0 && this.velocity.x < 0))
                 {
-                    console.log('X rebound applied');
+                    this.velocity.x *= -this.bounce.x;
+                    this.angle = Math.atan2(this.velocity.y, this.velocity.x);
+
+                    if (this.sprite.debug)
+                    {
+                        console.log('X rebound applied', this._vx, 'to', this.velocity.x);
+                    }
                 }
             }
 
@@ -570,7 +574,7 @@ if (this.sprite.debug)
             {
                 var gx = this.getUpwardForce();
 
-                if ((this.blocked.left && (gx < 0 || this.velocity.x < 0)) || (this.blocked.right && (gx > 0 || this.velocity.x > 0)))
+                if (((this.blocked.left || this.touching.left) && (gx < 0 || this.velocity.x < 0)) || ((this.blocked.right || this.touching.right) && (gx > 0 || this.velocity.x > 0)))
                 {
                     this.velocity.x = 0;
 
@@ -579,24 +583,30 @@ if (this.sprite.debug)
                         console.log('reboundCheck X zeroed');
                     }
                 }
-            }
 
-            if (this.sprite.debug)
-            {
-                console.log('reboundCheck X', this.velocity.x, 'gravity', gx);
+                if (this.sprite.debug)
+                {
+                    console.log('reboundCheck X', this.velocity.x, 'gravity', gx);
+                }
             }
         }
 
         if (y)
         {
-            if (rebound && this.bounce.y !== 0 && (this.blocked.up || this.blocked.down))
+            if (rebound && this.bounce.y !== 0 && (this.blocked.up || this.blocked.down || this.touching.up || this.touching.down))
             {
-                this.velocity.y *= -this.bounce.y;
-                this.angle = Math.atan2(this.velocity.y, this.velocity.x);
-
-                if (this.sprite.debug)
+                //  Don't rebound if they've already rebounded in this frame
+                if (!(this._vy <= 0 && this.velocity.y > 0) && !(this._vy >= 0 && this.velocity.y < 0))
                 {
-                    console.log('Y rebound applied');
+                    this.velocity.y *= -this.bounce.y;
+                    this.angle = Math.atan2(this.velocity.y, this.velocity.x);
+
+                    if (this.sprite.debug)
+                    {
+                        console.log('Y rebound applied', this._vy, 'to', this.velocity.y);
+                        console.log('Y rebound check 1', !(this._vy <= 0 && this.velocity.y > 0));
+                        console.log('Y rebound check 2', !(this._vy >= 0 && this.velocity.y < 0));
+                    }
                 }
             }
 
@@ -604,7 +614,7 @@ if (this.sprite.debug)
             {
                 var gy = this.getDownwardForce();
 
-                if ((this.blocked.up && (gy < 0 || this.velocity.y < 0)) || (this.blocked.down && (gy > 0 || this.velocity.y > 0)))
+                if (((this.blocked.up || this.touching.up) && (gy < 0 || this.velocity.y < 0)) || ((this.blocked.down || this.touching.down) && (gy > 0 || this.velocity.y > 0)))
                 {
                     this.velocity.y = 0;
 
@@ -613,11 +623,11 @@ if (this.sprite.debug)
                         console.log('reboundCheck Y zeroed');
                     }
                 }
-            }
 
-            if (this.sprite.debug)
-            {
-                console.log('reboundCheck Y', this.velocity.y, 'gravity', gy);
+                if (this.sprite.debug)
+                {
+                    console.log('reboundCheck Y', this.velocity.y, 'gravity', gy);
+                }
             }
         }
 
@@ -989,12 +999,17 @@ if (this.sprite.debug)
 
         if (hasSeparated)
         {
+            console.log('Body hasSeparated');
             this.game.physics.checkBounds(this);
             this.game.physics.checkBounds(body);
         }
         else
         {
-            this.addContact(body);
+            //  They can only contact like this if at least one of their sides is open, otherwise it's a separation
+            if (!this.checkCollision.up || !this.checkCollision.down || !this.checkCollision.left || !this.checkCollision.right || !body.checkCollision.up || !body.checkCollision.down || !body.checkCollision.left || !body.checkCollision.right)
+            {
+                this.addContact(body);
+            }
         }
 
         return hasSeparated;

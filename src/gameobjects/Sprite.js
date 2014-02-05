@@ -377,8 +377,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */
     this.debug = false;
 
-    // this.events.onAddedToGroup.add(this.initGroup, this);
-
     this.updateCache();
     this.updateBounds();
 
@@ -428,12 +426,6 @@ Phaser.Sprite.prototype.preUpdate = function() {
         }
 
         return;
-    }
-
-    if (this.debug)
-    {
-        console.log('Sprite preUpdate', this.parent.worldTransform[2], this.parent.worldTransform[5], 'LT', this.parent.localTransform[2], this.parent.localTransform[5], 'xy', this.parent.position.x, this.parent.position.y);
-        console.log('Sprite preUpdate', this.x, this.y, 'world', this.world.x, this.world.y);
     }
 
     if (!this.exists || (this.group && !this.group.exists))
@@ -493,11 +485,6 @@ Phaser.Sprite.prototype.updateCache = function() {
 
     this._cache.prevX = this.world.x;
     this._cache.prevY = this.world.y;
-
-    if (this.debug)
-    {
-        console.log('Sprite updateCache', this._cache.prevX, this._cache.prevY);
-    }
 
     if (this.fixedToCamera)
     {
@@ -724,16 +711,6 @@ Phaser.Sprite.prototype.postUpdate = function() {
         if (this.body)
         {
             this.body.postUpdate();
-
-            // console.log('Sprite postUpdate wt', this.worldTransform[2], this.worldTransform[5], 'xy', this.x, this.y);
-
-            // this._cache.x = this.x;
-            // this._cache.y = this.y;
-
-            // this.position.x = this._cache.x;
-            // this.position.y = this._cache.y;
-
-            // this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
         }
 
         if (this.fixedToCamera)
@@ -747,16 +724,8 @@ Phaser.Sprite.prototype.postUpdate = function() {
             this._cache.y = this.y;
         }
 
-        // this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
-
         this.position.x = this._cache.x;
         this.position.y = this._cache.y;
-
-        if (this.debug)
-        {
-            console.log('Sprite postUpdate delta', this.deltaX, this.deltaY, 'prev', this._cache.prevX, this._cache.prevY);
-        }
-
     }
 
 };

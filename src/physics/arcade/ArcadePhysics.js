@@ -183,7 +183,7 @@ Phaser.Physics.Arcade.prototype = {
 
         if (!body.collideWorldBounds || (!this.worldLeft && !this.worldRight && !this.worldTop && !this.worldBottom))
         {
-            return;
+            return false;
         }
 
         this._response.clear();
@@ -234,12 +234,12 @@ Phaser.Physics.Arcade.prototype = {
             rebounded = true;
         }
 
-        return rebounded;
-
         if (body.sprite.debug)
         {
-            console.log('checkBounds finished', body.blocked);
+            console.log('checkBounds finished', rebounded, body.blocked);
         }
+
+        return rebounded;
 
     },
 
