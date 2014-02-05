@@ -32,7 +32,7 @@
 
     function dirToArray($dir) { 
 
-        $ignore = array('.', '..', '_site', 'assets', 'states', 'book');
+        $ignore = array('.', '..', '_site', 'assets', 'states', 'book', 'filters');
         $result = array(); 
         $root = scandir($dir); 
         $dirs = array_diff($root, $ignore);
@@ -77,6 +77,7 @@
         <meta charset="UTF-8" />
         <title>phaser</title>
         <base href="../"></base>
+        <script src="_site/js/jquery-2.0.3.min.js" type="text/javascript"></script>
         <?php
             require('../../build/config.php');
 
@@ -98,6 +99,9 @@
     <body>
 
         <div id="phaser-example"></div>
+
+        <input type="button" id="step" value="step" />
+        <input type="button" id="start" value="start" style="margin-left: 32px" />
 
         <h2>work in progress examples</h2>
 

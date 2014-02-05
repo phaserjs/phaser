@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update,render : render });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
@@ -9,7 +9,7 @@ function preload() {
 }
 
 var card;
-var Keys = Phaser.Keyboard;
+var cursors;
 
 function create() {
 
@@ -19,27 +19,28 @@ function create() {
 
     card = game.add.sprite(200, 200, 'card');
 
-    card.body.velocity.x = 50;
-    card.scale.setTo(2, 2);
+    game.camera.follow(card);
+
+    cursors = game.input.keyboard.createCursorKeys();
 
 }
 
 function update() {
 
-    if (game.input.keyboard.isDown(Keys.LEFT))
+    if (cursors.left.isDown)
     {
         card.x -= 4;
     }
-    else if (game.input.keyboard.isDown(Keys.RIGHT))
+    else if (cursors.right.isDown)
     {
         card.x += 4;
     }
 
-    if (game.input.keyboard.isDown(Keys.UP))
+    if (cursors.up.isDown)
     {
         card.y -= 4;
     }
-    else if (game.input.keyboard.isDown(Keys.DOWN))
+    else if (cursors.down.isDown)
     {
         card.y += 4;
     }
@@ -48,7 +49,8 @@ function update() {
 
 function render() {
 
-    game.debug.renderCameraInfo(game.camera, 32, 32);
-    game.debug.renderSpriteInfo(card, 32, 200);
+    game.debug.renderCameraInfo(game.camera, 500, 32);
+    game.debug.renderSpriteCoords(card, 32, 32);
+    // game.debug.renderPhysicsBody(card.body);
 
 }

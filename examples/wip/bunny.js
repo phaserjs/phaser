@@ -40,9 +40,9 @@
             this.bunny.body.velocity.x = -500;
         }
 
-        // var melon = this.melonGroup.getFirstExists(true);
-        // melon.x = this.bunny.x;
-        // melon.y = this.bunny.y - 40;
+        var melon = this.melonGroup.getFirstExists(true);
+        melon.x = this.bunny.x;
+        melon.y = this.bunny.y - 40;
 
         this.carrot.x = this.bunny.x;
         this.carrot.y = this.bunny.y - 20;

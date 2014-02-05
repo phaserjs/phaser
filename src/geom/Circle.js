@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -9,9 +9,9 @@
 * @class Circle
 * @classdesc Phaser - Circle
 * @constructor
-* @param {number} [x] The x coordinate of the center of the circle.
-* @param {number} [y] The y coordinate of the center of the circle.
-* @param {number} [diameter] The diameter of the circle.
+* @param {number} [x=0] - The x coordinate of the center of the circle.
+* @param {number} [y=0] - The y coordinate of the center of the circle.
+* @param {number} [diameter=0] - The diameter of the circle.
 * @return {Phaser.Circle} This circle object
 */
 Phaser.Circle = function (x, y, diameter) {
@@ -194,6 +194,8 @@ Phaser.Circle.prototype = {
     }
 
 };
+
+Phaser.Circle.prototype.constructor = Phaser.Circle;
 
 /**
 * The largest distance between any two points on the circle. The same as the radius * 2.

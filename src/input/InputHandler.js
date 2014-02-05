@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -27,36 +27,6 @@ Phaser.InputHandler = function (sprite) {
     * @default
     */
     this.enabled = false;
-
-    /**
-    * @property {Description} parent - Description. 
-    * @default
-    */
-    // this.parent = null;
-    
-    /**
-    * @property {Description} next - Linked List
-    * @default
-    */
-    // this.next = null;
-    
-    /**
-    * @property {Description} prev - Description. 
-    * @default
-    */
-    // this.prev = null;
-    
-    /**
-    * @property {Description} last - Description. 
-    * @default
-    */
-    // this.last = this;
-    
-    /**
-    * @property {Description} first - Description. 
-    * @default
-    */
-    // this.first = this;
 
     /**
     * @property {number} priorityID - The PriorityID controls which Sprite receives an Input event first if they should overlap.
@@ -123,6 +93,18 @@ Phaser.InputHandler = function (sprite) {
     * @default
     */
     this.snapY = 0;
+
+    /**
+    * @property {number} snapOffsetX - This defines the top-left X coordinate of the snap grid.
+    * @default
+    */
+    this.snapOffsetX = 0;
+    
+    /**
+    * @property {number} snapOffsetY - This defines the top-left Y coordinate of the snap grid..
+    * @default
+    */
+    this.snapOffsetY = 0;
 
     /**
     * @property {number} pixelPerfect - Should we use pixel perfect hit detection? Warning: expensive. Only enable if you really need it!
@@ -198,8 +180,6 @@ Phaser.InputHandler.prototype = {
     * @return {Phaser.Sprite} The Sprite object to which the Input Handler is bound.
     */
     start: function (priority, useHandCursor) {
-
-        console.log('InputHandler start');
 
         priority = priority || 0;
         if (typeof useHandCursor == 'undefined') { useHandCursor = false; }
@@ -616,7 +596,7 @@ Phaser.InputHandler.prototype = {
 
             if (this.useHandCursor && this._pointerData[pointer.id].isDragged === false)
             {
-                this.game.stage.canvas.style.cursor = "pointer";
+                this.game.canvas.style.cursor = "pointer";
             }
 
             this.sprite.events.onInputOver.dispatch(this.sprite, pointer);
@@ -637,7 +617,7 @@ Phaser.InputHandler.prototype = {
 
         if (this.useHandCursor && this._pointerData[pointer.id].isDragged === false)
         {
-            this.game.stage.canvas.style.cursor = "default";
+            this.game.canvas.style.cursor = "default";
         }
 
         if (this.sprite && this.sprite.events)
@@ -698,15 +678,18 @@ Phaser.InputHandler.prototype = {
             //  Only release the InputUp signal if the pointer is still over this sprite
             if (this.checkPointerOver(pointer))
             {
-                //console.log('releasedHandler: ' + Date.now());
-                this.sprite.events.onInputUp.dispatch(this.sprite, pointer);
+                //  Release the inputUp signal and provide optional parameter if pointer is still over the sprite or not
+                this.sprite.events.onInputUp.dispatch(this.sprite, pointer, true);
             }
             else
             {
+                //  Release the inputUp signal and provide optional parameter if pointer is still over the sprite or not
+                this.sprite.events.onInputUp.dispatch(this.sprite, pointer, false);
+
                 //  Pointer outside the sprite? Reset the cursor
                 if (this.useHandCursor)
                 {
-                    this.game.stage.canvas.style.cursor = "default";
+                    this.game.canvas.style.cursor = "default";
                 }
             }
 
@@ -733,30 +716,61 @@ Phaser.InputHandler.prototype = {
             return false;
         }
 
-        if (this.allowHorizontalDrag)
+        if (this.sprite.fixedToCamera)
         {
-            this.sprite.x = pointer.x + this._dragPoint.x + this.dragOffset.x;
-        }
+            if (this.allowHorizontalDrag)
+            {
+                this.sprite.cameraOffset.x = pointer.x + this._dragPoint.x + this.dragOffset.x;
+            }
 
-        if (this.allowVerticalDrag)
-        {
-            this.sprite.y = pointer.y + this._dragPoint.y + this.dragOffset.y;
-        }
+            if (this.allowVerticalDrag)
+            {
+                this.sprite.cameraOffset.y = pointer.y + this._dragPoint.y + this.dragOffset.y;
+            }
 
-        if (this.boundsRect)
-        {
-            this.checkBoundsRect();
-        }
+            if (this.boundsRect)
+            {
+                this.checkBoundsRect();
+            }
 
-        if (this.boundsSprite)
-        {
-            this.checkBoundsSprite();
-        }
+            if (this.boundsSprite)
+            {
+                this.checkBoundsSprite();
+            }
 
-        if (this.snapOnDrag)
+            if (this.snapOnDrag)
+            {
+                this.sprite.cameraOffset.x = Math.round((this.sprite.cameraOffset.x - (this.snapOffsetX % this.snapX)) / this.snapX) * this.snapX + (this.snapOffsetX % this.snapX);
+                this.sprite.cameraOffset.y = Math.round((this.sprite.cameraOffset.y - (this.snapOffsetY % this.snapY)) / this.snapY) * this.snapY + (this.snapOffsetY % this.snapY);
+            }
+        }
+        else
         {
-            this.sprite.x = Math.round(this.sprite.x / this.snapX) * this.snapX;
-            this.sprite.y = Math.round(this.sprite.y / this.snapY) * this.snapY;
+            if (this.allowHorizontalDrag)
+            {
+                this.sprite.x = pointer.x + this._dragPoint.x + this.dragOffset.x;
+            }
+
+            if (this.allowVerticalDrag)
+            {
+                this.sprite.y = pointer.y + this._dragPoint.y + this.dragOffset.y;
+            }
+
+            if (this.boundsRect)
+            {
+                this.checkBoundsRect();
+            }
+
+            if (this.boundsSprite)
+            {
+                this.checkBoundsSprite();
+            }
+
+            if (this.snapOnDrag)
+            {
+                this.sprite.x = Math.round((this.sprite.x - (this.snapOffsetX % this.snapX)) / this.snapX) * this.snapX + (this.snapOffsetX % this.snapX);
+                this.sprite.y = Math.round((this.sprite.y - (this.snapOffsetY % this.snapY)) / this.snapY) * this.snapY + (this.snapOffsetY % this.snapY);
+            }
         }
 
         return true;
@@ -936,14 +950,29 @@ Phaser.InputHandler.prototype = {
         this._draggedPointerID = pointer.id;
         this._pointerData[pointer.id].isDragged = true;
 
-        if (this.dragFromCenter)
+        if (this.sprite.fixedToCamera)
         {
-            this.sprite.centerOn(pointer.x, pointer.y);
-            this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
+            if (this.dragFromCenter)
+            {
+                this.sprite.centerOn(pointer.x, pointer.y);
+                this._dragPoint.setTo(this.sprite.cameraOffset.x - pointer.x, this.sprite.cameraOffset.y - pointer.y);
+            }
+            else
+            {
+                this._dragPoint.setTo(this.sprite.cameraOffset.x - pointer.x, this.sprite.cameraOffset.y - pointer.y);
+            }
         }
         else
         {
-            this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
+            if (this.dragFromCenter)
+            {
+                this.sprite.centerOn(pointer.x, pointer.y);
+                this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
+            }
+            else
+            {
+                this._dragPoint.setTo(this.sprite.x - pointer.x, this.sprite.y - pointer.y);
+            }
         }
 
         this.updateDrag(pointer);
@@ -970,8 +999,16 @@ Phaser.InputHandler.prototype = {
         
         if (this.snapOnRelease)
         {
-            this.sprite.x = Math.round(this.sprite.x / this.snapX) * this.snapX;
-            this.sprite.y = Math.round(this.sprite.y / this.snapY) * this.snapY;
+            if (this.sprite.fixedToCamera)
+            {
+                this.sprite.cameraOffset.x = Math.round((this.sprite.cameraOffset.x - (this.snapOffsetX % this.snapX)) / this.snapX) * this.snapX + (this.snapOffsetX % this.snapX);
+                this.sprite.cameraOffset.y = Math.round((this.sprite.cameraOffset.y - (this.snapOffsetY % this.snapY)) / this.snapY) * this.snapY + (this.snapOffsetY % this.snapY);
+            }
+            else
+            {
+                this.sprite.x = Math.round((this.sprite.x - (this.snapOffsetX % this.snapX)) / this.snapX) * this.snapX + (this.snapOffsetX % this.snapX);
+                this.sprite.y = Math.round((this.sprite.y - (this.snapOffsetY % this.snapY)) / this.snapY) * this.snapY + (this.snapOffsetY % this.snapY);
+            }
         }
 
         this.sprite.events.onDragStop.dispatch(this.sprite, pointer);
@@ -1008,14 +1045,20 @@ Phaser.InputHandler.prototype = {
     * @param {number} snapY - The height of the grid cell to snap to.
     * @param {boolean} [onDrag=true] - If true the sprite will snap to the grid while being dragged.
     * @param {boolean} [onRelease=false] - If true the sprite will snap to the grid when released.
+    * @param {number} [snapOffsetX=0] - Used to offset the top-left starting point of the snap grid.
+    * @param {number} [snapOffsetX=0] - Used to offset the top-left starting point of the snap grid.
     */
-    enableSnap: function (snapX, snapY, onDrag, onRelease) {
+    enableSnap: function (snapX, snapY, onDrag, onRelease, snappOffsetX, snappOffsetY) {
 
         if (typeof onDrag == 'undefined') { onDrag = true; }
         if (typeof onRelease == 'undefined') { onRelease = false; }
+        if (typeof snapOffsetX == 'undefined') { snapOffsetX = 0; }
+        if (typeof snapOffsetY == 'undefined') { snapOffsetY = 0; }
 
         this.snapX = snapX;
         this.snapY = snapY;
+        this.snapOffsetX = snapOffsetX;
+        this.snapOffsetY = snapOffsetY;
         this.snapOnDrag = onDrag;
         this.snapOnRelease = onRelease;
 
@@ -1038,22 +1081,45 @@ Phaser.InputHandler.prototype = {
     */
     checkBoundsRect: function () {
 
-        if (this.sprite.x < this.boundsRect.left)
+        if (this.sprite.fixedToCamera)
         {
-            this.sprite.x = this.boundsRect.x;
-        }
-        else if ((this.sprite.x + this.sprite.width) > this.boundsRect.right)
-        {
-            this.sprite.x = this.boundsRect.right - this.sprite.width;
-        }
+            if (this.sprite.cameraOffset.x < this.boundsRect.left)
+            {
+                this.sprite.cameraOffset.x = this.boundsRect.cameraOffset.x;
+            }
+            else if ((this.sprite.cameraOffset.x + this.sprite.width) > this.boundsRect.right)
+            {
+                this.sprite.cameraOffset.x = this.boundsRect.right - this.sprite.width;
+            }
 
-        if (this.sprite.y < this.boundsRect.top)
-        {
-            this.sprite.y = this.boundsRect.top;
+            if (this.sprite.cameraOffset.y < this.boundsRect.top)
+            {
+                this.sprite.cameraOffset.y = this.boundsRect.top;
+            }
+            else if ((this.sprite.cameraOffset.y + this.sprite.height) > this.boundsRect.bottom)
+            {
+                this.sprite.cameraOffset.y = this.boundsRect.bottom - this.sprite.height;
+            }
         }
-        else if ((this.sprite.y + this.sprite.height) > this.boundsRect.bottom)
+        else
         {
-            this.sprite.y = this.boundsRect.bottom - this.sprite.height;
+            if (this.sprite.x < this.boundsRect.left)
+            {
+                this.sprite.x = this.boundsRect.x;
+            }
+            else if ((this.sprite.x + this.sprite.width) > this.boundsRect.right)
+            {
+                this.sprite.x = this.boundsRect.right - this.sprite.width;
+            }
+
+            if (this.sprite.y < this.boundsRect.top)
+            {
+                this.sprite.y = this.boundsRect.top;
+            }
+            else if ((this.sprite.y + this.sprite.height) > this.boundsRect.bottom)
+            {
+                this.sprite.y = this.boundsRect.bottom - this.sprite.height;
+            }
         }
 
     },
@@ -1064,24 +1130,49 @@ Phaser.InputHandler.prototype = {
     */
     checkBoundsSprite: function () {
 
-        if (this.sprite.x < this.boundsSprite.x)
+        if (this.sprite.fixedToCamera && this.boundsSprite.fixedToCamera)
         {
-            this.sprite.x = this.boundsSprite.x;
-        }
-        else if ((this.sprite.x + this.sprite.width) > (this.boundsSprite.x + this.boundsSprite.width))
-        {
-            this.sprite.x = (this.boundsSprite.x + this.boundsSprite.width) - this.sprite.width;
-        }
+            if (this.sprite.cameraOffset.x < this.boundsSprite.camerOffset.x)
+            {
+                this.sprite.cameraOffset.x = this.boundsSprite.camerOffset.x;
+            }
+            else if ((this.sprite.cameraOffset.x + this.sprite.width) > (this.boundsSprite.camerOffset.x + this.boundsSprite.width))
+            {
+                this.sprite.cameraOffset.x = (this.boundsSprite.camerOffset.x + this.boundsSprite.width) - this.sprite.width;
+            }
 
-        if (this.sprite.y < this.boundsSprite.y)
-        {
-            this.sprite.y = this.boundsSprite.y;
+            if (this.sprite.cameraOffset.y < this.boundsSprite.camerOffset.y)
+            {
+                this.sprite.cameraOffset.y = this.boundsSprite.camerOffset.y;
+            }
+            else if ((this.sprite.cameraOffset.y + this.sprite.height) > (this.boundsSprite.camerOffset.y + this.boundsSprite.height))
+            {
+                this.sprite.cameraOffset.y = (this.boundsSprite.camerOffset.y + this.boundsSprite.height) - this.sprite.height;
+            }
         }
-        else if ((this.sprite.y + this.sprite.height) > (this.boundsSprite.y + this.boundsSprite.height))
+        else
         {
-            this.sprite.y = (this.boundsSprite.y + this.boundsSprite.height) - this.sprite.height;
+            if (this.sprite.x < this.boundsSprite.x)
+            {
+                this.sprite.x = this.boundsSprite.x;
+            }
+            else if ((this.sprite.x + this.sprite.width) > (this.boundsSprite.x + this.boundsSprite.width))
+            {
+                this.sprite.x = (this.boundsSprite.x + this.boundsSprite.width) - this.sprite.width;
+            }
+
+            if (this.sprite.y < this.boundsSprite.y)
+            {
+                this.sprite.y = this.boundsSprite.y;
+            }
+            else if ((this.sprite.y + this.sprite.height) > (this.boundsSprite.y + this.boundsSprite.height))
+            {
+                this.sprite.y = (this.boundsSprite.y + this.boundsSprite.height) - this.sprite.height;
+            }
         }
 
     }
 
 };
+
+Phaser.InputHandler.prototype.constructor = Phaser.InputHandler;

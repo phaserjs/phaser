@@ -3,7 +3,7 @@
  */
 
 /**
- * The image loader class is responsible for loading images file formats ("jpeg", "jpg", "png" and "gif")
+ * The image loader class is responsible for loading images file formats ('jpeg', 'jpg', 'png' and 'gif')
  * Once the image has been loaded it is stored in the PIXI texture cache and can be accessed though PIXI.Texture.fromFrameId() and PIXI.Sprite.fromFromeId()
  * When loaded this class will dispatch a 'loaded' event
  *
@@ -18,18 +18,18 @@ PIXI.ImageLoader = function(url, crossorigin)
     PIXI.EventTarget.call(this);
 
     /**
-    * The texture being loaded
-    *
-    * @property texture
-    * @type Texture
-    */
+     * The texture being loaded
+     *
+     * @property texture
+     * @type Texture
+     */
     this.texture = PIXI.Texture.fromImage(url, crossorigin);
 
     /**
-    * if the image is loaded with loadFramedSpriteSheet
-    * frames will contain the sprite sheet frames
-    *
-    */
+     * if the image is loaded with loadFramedSpriteSheet
+     * frames will contain the sprite sheet frames
+     *
+     */
     this.frames = [];
 };
 
@@ -46,7 +46,7 @@ PIXI.ImageLoader.prototype.load = function()
     if(!this.texture.baseTexture.hasLoaded)
     {
         var scope = this;
-        this.texture.baseTexture.addEventListener("loaded", function()
+        this.texture.baseTexture.addEventListener('loaded', function()
         {
             scope.onLoaded();
         });
@@ -65,7 +65,7 @@ PIXI.ImageLoader.prototype.load = function()
  */
 PIXI.ImageLoader.prototype.onLoaded = function()
 {
-    this.dispatchEvent({type: "loaded", content: this});
+    this.dispatchEvent({type: 'loaded', content: this});
 };
 
 /**
@@ -75,7 +75,7 @@ PIXI.ImageLoader.prototype.onLoaded = function()
  * @method loadFramedSpriteSheet
  * @param frameWidth {Number} with of each frame
  * @param frameHeight {Number} height of each frame
- * @param textureName {String} if given, the frames will be cached in <textureName>-<ord> format 
+ * @param textureName {String} if given, the frames will be cached in <textureName>-<ord> format
  */
 PIXI.ImageLoader.prototype.loadFramedSpriteSheet = function(frameWidth, frameHeight, textureName)
 {
@@ -96,14 +96,14 @@ PIXI.ImageLoader.prototype.loadFramedSpriteSheet = function(frameWidth, frameHei
             });
 
             this.frames.push(texture);
-            if (textureName) PIXI.TextureCache[textureName+'-'+i] = texture;
+            if (textureName) PIXI.TextureCache[textureName + '-' + i] = texture;
         }
     }
 
     if(!this.texture.baseTexture.hasLoaded)
     {
         var scope = this;
-        this.texture.baseTexture.addEventListener("loaded", function() {
+        this.texture.baseTexture.addEventListener('loaded', function() {
             scope.onLoaded();
         });
     }

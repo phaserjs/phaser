@@ -28,12 +28,12 @@ var lives;
 var enemyBullet;
 var firingTimer = 0;
 var stateText;
+var livingEnemies = [];
 
 function create() {
 
     //  The scrolling starfield background
     starfield = game.add.tileSprite(0, 0, 800, 600, 'starfield');
-
 
     //  Our bullet group
     bullets = game.add.group();
@@ -155,8 +155,8 @@ function update() {
     }
 
     //  Run collision
-    game.physics.collide(bullets, aliens, collisionHandler, null, this);
-    game.physics.collide(enemyBullets, player, enemyHitsPlayer, null, this);
+    game.physics.overlap(bullets, aliens, collisionHandler, null, this);
+    game.physics.overlap(enemyBullets, player, enemyHitsPlayer, null, this);
 
 }
 
@@ -167,8 +167,8 @@ function collisionHandler (bullet, alien) {
     alien.kill();
 
     //  Increase the score
-    score+=20;
-    scoreText.content=scoreString+score;
+    score += 20;
+    scoreText.content = scoreString + score;
 
     //  And create an explosion :)
     var explosion = explosions.getFirstDead();
@@ -226,7 +226,7 @@ function enemyFires () {
     //  Grab the first bullet we can from the pool
     enemyBullet = enemyBullets.getFirstExists(false);
 
-    var livingEnemies=[];
+    livingEnemies.length=0;
 
     aliens.forEachAlive(function(alien){
 

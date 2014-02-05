@@ -2,12 +2,6 @@
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, render: render });
 
 var robot;
-var eye;
-var body;
-var leftArm;
-var rightArm;
-var leftLeg;
-var rightLeg;
 
 function preload() {
 
@@ -22,44 +16,31 @@ function preload() {
 
 function create() {
 
+    game.stage.backgroundColor = '#124184';
+
     // Use groups of sprites to create a big robot.
     // Robot itself, you can subclass group class in a real game.
     robot = game.add.group();
 
     // Robot components.
-    leftArm = robot.create(90, 175, 'arm-l');
-    rightArm = robot.create(549, 175, 'arm-r');
-    leftLeg = robot.create(270, 325, 'leg-l');
-    rightLeg = robot.create(410, 325, 'leg-r');
-    body = robot.create(219, 32, 'body');
-    eye = robot.create(335, 173,'eye');
+    robot.create(90, 175, 'arm-l');
+    robot.create(549, 175, 'arm-r');
+    robot.create(270, 325, 'leg-l');
+    robot.create(410, 325, 'leg-r');
+    robot.create(219, 32, 'body');
+    robot.create(335, 173,'eye');
 
-    leftArm.input.start(0, false, true);
-    leftArm.input.enableDrag();
-    rightArm.input.start(0, false, true);
-    rightArm.input.enableDrag();
-    leftLeg.input.start(0, false, true);
-    leftLeg.input.enableDrag();
-    rightLeg.input.start(0, false, true);
-    rightLeg.input.enableDrag();
-    body.input.start(0, false, true);
-    body.input.enableDrag();
-    eye.input.start(0, false, true);
-    eye.input.enableDrag();
+    //  Make them all input enabled
+    robot.setAll('inputEnabled', true);
+
+    //  And allow them all to be dragged
+    robot.callAll('input.enableDrag', 'input');
 
 }
 
 function render() {
 
-    game.debug.renderSpriteInfo(leftArm, 32, 30);
-    game.debug.renderSpriteInfo(rightArm, 32, 180);
-    game.debug.renderSpriteInfo(leftLeg, 32, 325);
-    game.debug.renderSpriteInfo(rightLeg, 32, 470);
-    game.debug.renderSpriteInfo(rightLeg, 450, 30);
-    game.debug.renderSpriteInfo(rightLeg, 450, 180);
-
-    game.debug.renderText('The robot is a group and every component is a sprite.', 240, 580);
-    game.debug.renderText('Drag each part to re-position them. ', 288, 592);
+    game.debug.renderText('The robot is a group and every component is a sprite.', 16, 20);
+    game.debug.renderText('Drag parts to re-position them. ', 16, 40);
 
 }
-

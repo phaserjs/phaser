@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -12,17 +12,13 @@
 * the world at world-based coordinates. By default a world is created the same size as your Stage.
 *
 * @class Phaser.World
+* @extends Phaser.Group
 * @constructor
 * @param {Phaser.Game} game - Reference to the current game instance.
 */
 Phaser.World = function (game) {
 
     Phaser.Group.call(this, game, null, '__world', false);
-
-    /**
-    * @property {Phaser.Point} scale - Replaces the PIXI.Point with a slightly more flexible one.
-    */
-    this.scale = new Phaser.Point(1, 1);
 
     /**
     * The World has no fixed size, but it does have a bounds outside of which objects are no longer considered as being "in world" and you should use this to clean-up the display list and purge dead objects.
@@ -65,34 +61,21 @@ Phaser.World.prototype.boot = function () {
 }
 
 /**
-* This is called automatically every frame, and is where main logic happens.
+* This is called automatically after the plugins preUpdate and before the State.update.
+* Most objects have preUpdate methods and it's where initial movement, drawing and calculations are done.
 * 
 * @method Phaser.World#update
 */
-Phaser.World.prototype.update = function () {
-
-    this.currentRenderOrderID = 0;
+Phaser.World.prototype.preUpdate = function () {
     
     if (this.game.stage._stage.first._iNext)
     {
         var currentNode = this.game.stage._stage.first._iNext;
-        var skipChildren;
         
         do
         {
-            skipChildren = false;
-
-            if (currentNode['preUpdate'])
-            {
-                skipChildren = (currentNode.preUpdate() === false);
-            }
-
-            if (currentNode['update'])
-            {
-                skipChildren = (currentNode.update() === false) || skipChildren;
-            }
-            
-            if (skipChildren)
+            // If preUpdate exists, and it returns false, skip PIXI child objects
+            if (currentNode['preUpdate'] && !currentNode.preUpdate())
             {
                 currentNode = currentNode.last._iNext;
             }
@@ -108,47 +91,122 @@ Phaser.World.prototype.update = function () {
 }
 
 /**
-* This is called automatically every frame, and is where main logic happens.
-* @method Phaser.World#postUpdate
+* This is called automatically after the State.update, but before particles or plugins update.
+* Most objects won't have an update method set unless explicitly given one.
+* 
+* @method Phaser.World#update
 */
-Phaser.World.prototype.postUpdate = function () {
+Phaser.World.prototype.update = function () {
 
+    this.currentRenderOrderID = 0;
+    
     if (this.game.stage._stage.first._iNext)
     {
         var currentNode = this.game.stage._stage.first._iNext;
         
         do
         {
-            if (currentNode['postUpdate'])
+            // If update exists, and it returns false, skip PIXI child objects
+            if (currentNode['update'] && !currentNode.update())
             {
-                currentNode.postUpdate();
+                currentNode = currentNode.last._iNext;
+            }
+            else
+            {
+                currentNode = currentNode._iNext;
             }
             
-            currentNode = currentNode._iNext;
         }
         while (currentNode != this.game.stage._stage.last._iNext)
     }
 
-    this.camera.update();
+}
+
+/**
+* This is called automatically before the renderer runs and after the plugins have updated.
+* In postUpdate this is where all the final physics calculatations and object positioning happens.
+* The objects are processed in the order of the display list.
+* The only exception to this is if the camera is following an object, in which case that is updated first.
+* 
+* @method Phaser.World#postUpdate
+*/
+Phaser.World.prototype.postUpdate = function () {
+
+    if (this.camera.target && this.camera.target['postUpdate'])
+    {
+        this.camera.target.postUpdate();
+
+        this.camera.update();
+
+        if (this.game.stage._stage.first._iNext)
+        {
+            var currentNode = this.game.stage._stage.first._iNext;
+            
+            do
+            {
+                if (currentNode['postUpdate'] && currentNode !== this.camera.target)
+                {
+                    currentNode.postUpdate();
+                }
+                
+                currentNode = currentNode._iNext;
+            }
+            while (currentNode != this.game.stage._stage.last._iNext)
+        }
+    }
+    else
+    {
+        this.camera.update();
+
+        if (this.game.stage._stage.first._iNext)
+        {
+            var currentNode = this.game.stage._stage.first._iNext;
+            
+            do
+            {
+                if (currentNode['postUpdate'])
+                {
+                    currentNode.postUpdate();
+                }
+                
+                currentNode = currentNode._iNext;
+            }
+            while (currentNode != this.game.stage._stage.last._iNext)
+        }
+    }
+
 }
 
 /**
 * Updates the size of this world. Note that this doesn't modify the world x/y coordinates, just the width and height.
-* If you need to adjust the bounds of the world
+*
 * @method Phaser.World#setBounds
 * @param {number} x - Top left most corner of the world.
 * @param {number} y - Top left most corner of the world.
-* @param {number} width - New width of the world.
-* @param {number} height - New height of the world.
+* @param {number} width - New width of the world. Can never be smaller than the Game.width.
+* @param {number} height - New height of the world. Can never be smaller than the Game.height.
 */
 Phaser.World.prototype.setBounds = function (x, y, width, height) {
+
+    if (width < this.game.width)
+    {
+        width = this.game.width;
+    }
+
+    if (height < this.game.height)
+    {
+        height = this.game.height;
+    }
 
     this.bounds.setTo(x, y, width, height);
 
     if (this.camera.bounds)
     {
+        //  The Camera can never be smaller than the game size
         this.camera.bounds.setTo(x, y, width, height);
     }
+
+    this.game.physics.setBoundsToWorld();
 
 }
 

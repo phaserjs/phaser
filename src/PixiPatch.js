@@ -4,6 +4,7 @@
 * 1) Added support for Trimmed sprite sheets
 * 2) Skip display objects with an alpha of zero
 * 3) Avoid Style Recalculation from the incorrect bgcolor value
+* 4) Added support for Canvas unit rounding via Phaser.CANVAS_PX_ROUND boolean (disabled by default).
 *
 * Hopefully we can remove this once Pixi has been updated to support these things.
 */
@@ -23,8 +24,13 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
     stage.updateTransform();
 
     this.context.setTransform(1, 0, 0, 1, 0, 0);
-    this.context.clearRect(0, 0, this.width, this.height)
-    this.renderDisplayObject(stage);
+
+    if (Phaser.CANVAS_CLEAR_RECT)
+    {
+        this.context.clearRect(0, 0, this.width, this.height)
+    }
+
+    this.renderDisplayObject(stage, false);
    
     //  Remove frame updates
     if (PIXI.Texture.frameUpdates.length > 0)
@@ -34,7 +40,9 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
     
 }
 
-PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
+// @param {boolean} [renderHidden=false] - If true displayObjects that have their visible property set to false will still be rendered.
+
+PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject, renderHidden)
 {
     // Once the display object hits this we can break the loop  
     var testObject = displayObject.last._iNext;
@@ -42,9 +50,7 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
     
     do
     {
-        //transform = displayObject.worldTransform;
-        
-        if (!displayObject.visible)
+        if (!displayObject.visible && !renderHidden)
         {
             displayObject = displayObject.last._iNext;
             continue;
@@ -58,19 +64,41 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
         
         if (displayObject instanceof PIXI.Sprite)
         {
-            // var frame = displayObject.texture.frame;
-            
             if (displayObject.texture.frame)
             {
                 this.context.globalAlpha = displayObject.worldAlpha;
-                
-                if (displayObject.texture.trimmed)
+
+                if (Phaser.CANVAS_PX_ROUND)
                 {
-                    this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2] + displayObject.texture.trim.x, displayObject.worldTransform[5] + displayObject.texture.trim.y);
+                    this.context.setTransform(
+                            displayObject.worldTransform[0],
+                            displayObject.worldTransform[3],
+                            displayObject.worldTransform[1],
+                            displayObject.worldTransform[4],
+                            Math.floor(displayObject.worldTransform[2]),
+                            Math.floor(displayObject.worldTransform[5]));
                 }
                 else
                 {
-                    this.context.setTransform(displayObject.worldTransform[0], displayObject.worldTransform[3], displayObject.worldTransform[1], displayObject.worldTransform[4], displayObject.worldTransform[2], displayObject.worldTransform[5]);
+                    this.context.setTransform(
+                            displayObject.worldTransform[0],
+                            displayObject.worldTransform[3],
+                            displayObject.worldTransform[1],
+                            displayObject.worldTransform[4],
+                            displayObject.worldTransform[2],
+                            displayObject.worldTransform[5]);
+                }
+
+                if (displayObject.texture.trimmed)
+                {
+                    this.context.transform(1, 0, 0, 1, displayObject.texture.trim.x, displayObject.texture.trim.y);
+                }
+
+                //if smoothingEnabled is supported and we need to change the smoothing property for this texture
+                if (this.smoothProperty && this.scaleMode !== displayObject.texture.baseTexture.scaleMode)
+                {
+                    this.scaleMode = displayObject.texture.baseTexture.scaleMode;
+                    this.context[this.smoothProperty] = (this.scaleMode === PIXI.BaseTexture.SCALE_MODE.LINEAR);
                 }
                     
                 this.context.drawImage(
@@ -79,8 +107,8 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
                     displayObject.texture.frame.y,
                     displayObject.texture.frame.width,
                     displayObject.texture.frame.height,
-                    (displayObject.anchor.x) * -displayObject.texture.frame.width,
-                    (displayObject.anchor.y) * -displayObject.texture.frame.height,
+                    Math.floor((displayObject.anchor.x) * -displayObject.texture.frame.width),
+                    Math.floor((displayObject.anchor.y) * -displayObject.texture.frame.height),
                     displayObject.texture.frame.width,
                     displayObject.texture.frame.height);
             }

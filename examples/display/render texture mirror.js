@@ -27,9 +27,11 @@ function create() {
 
 function update() {
 
-	//	This time we'll draw the ball sprite twice, in a mirror effect
-
-	texture.renderXY(ball, game.input.activePointer.x, game.input.activePointer.y, false);
-	texture.renderXY(ball, game.input.activePointer.x, 600 - game.input.activePointer.y, false);
+	if (!game.input.activePointer.position.isZero())
+	{
+		//	This time we'll draw the ball sprite twice, in a mirror effect
+		texture.renderXY(ball, game.input.activePointer.x, game.input.activePointer.y, false, true);
+		texture.renderXY(ball, game.input.activePointer.x, 600 - game.input.activePointer.y, false, true);
+	}
 
 }

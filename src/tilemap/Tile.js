@@ -1,34 +1,44 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
-* Create a new `Tile` object. Tiles live inside of Tilesets and are rendered via TilemapLayers.
+* Create a new `Tile` object.
 *
 * @class Phaser.Tile
-* @classdesc A Tile is a single representation of a tile within a Tilemap.
+* @classdesc A Tile is a representation of a single tile within the Tilemap.
 * @constructor
-* @param {Phaser.Tileset} tileset - The tileset this tile belongs to.
+* @param {object} layer - The layer in the Tilemap data that this tile belongs to.
 * @param {number} index - The index of this tile type in the core map data.
 * @param {number} x - The x coordinate of this tile.
 * @param {number} y - The y coordinate of this tile.
 * @param {number} width - Width of the tile.
 * @param {number} height - Height of the tile.
 */
-Phaser.Tile = function (tileset, index, x, y, width, height) {
+Phaser.Tile = function (layer, index, x, y, width, height) {
 
     /**
-    * @property {Phaser.Tileset} tileset - The tileset this tile belongs to.
+    * @property {object} layer - The layer in the Tilemap data that this tile belongs to.
     */
-    this.tileset = tileset;
-    
+    this.layer = layer;
+
     /**
-    * @property {number} index - The index of this tile within the tileset.
+    * @property {number} index - The index of this tile within the map data corresponding to the tileset.
     */
     this.index = index;
     
+    /**
+    * @property {number} x - The x map coordinate of this tile.
+    */
+    this.x = x;
+    
+    /**
+    * @property {number} y - The y map coordinate of this tile.
+    */
+    this.y = y;
+
     /**
     * @property {number} width - The width of the tile in pixels.
     */
@@ -40,22 +50,44 @@ Phaser.Tile = function (tileset, index, x, y, width, height) {
     this.height = height;
 
     /**
-    * @property {number} x - The top-left corner of the tile within the tileset.
+    * @property {number} alpha - The alpha value at which this tile is drawn to the canvas.
     */
-    this.x = x;
-    
-    /**
-    * @property {number} y - The top-left corner of the tile within the tileset.
-    */
-    this.y = y;
-
-    //  Any extra meta data info we need here
+    this.alpha = 1;
 
     /**
-    * @property {number} mass - The virtual mass of the tile.
-    * @default
+    * @property {object} properties - Tile specific properties.
     */
-    this.mass = 1.0;
+    this.properties = {};
+
+    /**
+    * @property {boolean} scanned - Has this tile been walked / turned into a poly?
+    */
+    this.scanned = false;
+
+    /**
+    * @property {boolean} faceTop - Is the top of this tile an interesting edge?
+    */
+    this.faceTop = false;
+
+    /**
+    * @property {boolean} faceBottom - Is the bottom of this tile an interesting edge?
+    */
+    this.faceBottom = false;
+
+    /**
+    * @property {boolean} faceLeft - Is the left of this tile an interesting edge?
+    */
+    this.faceLeft = false;
+
+    /**
+    * @property {boolean} faceRight - Is the right of this tile an interesting edge?
+    */
+    this.faceRight = false;
+
+    /**
+    * @property {boolean} collides - Does this tile collide at all?
+    */
+    this.collides = false;
 
     /**
     * @property {boolean} collideNone - Indicating this Tile doesn't collide at all.
@@ -88,38 +120,27 @@ Phaser.Tile = function (tileset, index, x, y, width, height) {
     this.collideDown = false;
 
     /**
-    * @property {boolean} separateX - Enable separation at x-axis. 
+    * @property {function} callback - Tile collision callback.
     * @default
     */
-    this.separateX = true;
+    this.callback = null;
 
     /**
-    * @property {boolean} separateY - Enable separation at y-axis. 
+    * @property {object} callbackContext - The context in which the collision callback will be called.
     * @default
     */
-    this.separateY = true;
-
-    /**
-    * @property {boolean} collisionCallback - Tilemap collision callback.
-    * @default
-    */
-    this.collisionCallback = null;
-
-    /**
-    * @property {boolean} collisionCallback - Tilemap collision callback.
-    * @default
-    */
-    this.collisionCallbackContext = this;
+    this.callbackContext = this;
 
 };
 
 Phaser.Tile.prototype = {
 
     /**
-    * Set callback to be called when this tilemap collides.
+    * Set a callback to be called when this tile is hit by an object.
+    * The callback must true true for collision processing to take place.
     * 
     * @method Phaser.Tile#setCollisionCallback
-    * @param {Function} callback - Callback function.
+    * @param {function} callback - Callback function.
     * @param {object} context - Callback will be called with this context.
     */
     setCollisionCallback: function (callback, context) {
@@ -135,7 +156,9 @@ Phaser.Tile.prototype = {
     */
     destroy: function () {
 
-        this.tileset = null;
+        this.collisionCallback = null;
+        this.collisionCallbackContext = null;
+        this.properties = null;
         
     },
 
@@ -177,19 +200,55 @@ Phaser.Tile.prototype = {
         this.collideUp = false;
         this.collideDown = false;
 
+    },
+
+    /**
+    * Copies the tile data and properties from the given tile to this tile.
+    * @method Phaser.Tile#copy
+    * @param {Phaser.Tile} tile - The tile to copy from.
+    */
+    copy: function (tile) {
+
+        this.index = tile.index;
+        this.alpha = tile.alpha;
+        this.properties = tile.properties;
+        this.collides = tile.collides;
+        this.collideNone = tile.collideNone;
+        this.collideUp = tile.collideUp;
+        this.collideDown = tile.collideDown;
+        this.collideLeft = tile.collideLeft;
+        this.collideRight = tile.collideRight;
+        this.collisionCallback = tile.collisionCallback;
+        this.collisionCallbackContext = tile.collisionCallbackContext;
+
     }
 
 };
 
+Phaser.Tile.prototype.constructor = Phaser.Tile;
+
 /**
-* @name Phaser.Tile#bottom
-* @property {number} bottom - The sum of the y and height properties.
+* @name Phaser.Tile#canCollide
+* @property {boolean} canCollide - True if this tile can collide or has a collision callback.
 * @readonly
 */
-Object.defineProperty(Phaser.Tile.prototype, "bottom", {
+Object.defineProperty(Phaser.Tile.prototype, "canCollide", {
     
     get: function () {
-        return this.y + this.height;
+        return (this.collides || this.collisionCallback || this.layer.callbacks[this.index]);
+    }
+
+});
+
+/**
+* @name Phaser.Tile#left
+* @property {number} left - The x value.
+* @readonly
+*/
+Object.defineProperty(Phaser.Tile.prototype, "left", {
+    
+    get: function () {
+        return this.x;
     }
 
 });
@@ -203,6 +262,32 @@ Object.defineProperty(Phaser.Tile.prototype, "right", {
     
     get: function () {
         return this.x + this.width;
+    }
+
+});
+
+/**
+* @name Phaser.Tile#top
+* @property {number} top - The y value.
+* @readonly
+*/
+Object.defineProperty(Phaser.Tile.prototype, "top", {
+    
+    get: function () {
+        return this.y;
+    }
+
+});
+
+/**
+* @name Phaser.Tile#bottom
+* @property {number} bottom - The sum of the y and height properties.
+* @readonly
+*/
+Object.defineProperty(Phaser.Tile.prototype, "bottom", {
+    
+    get: function () {
+        return this.y + this.height;
     }
 
 });

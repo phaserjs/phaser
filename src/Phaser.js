@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -10,7 +10,7 @@
 var Phaser = Phaser || {
 
 	VERSION: '<%= version %>',
-	DEV_VERSION: '1.1.3',
+	DEV_VERSION: '1.1.4',
 	GAMES: [],
 
 	AUTO: 0,
@@ -39,7 +39,10 @@ var Phaser = Phaser || {
 	LEFT: 1,
 	RIGHT: 2,
 	UP: 3,
-	DOWN: 4
+	DOWN: 4,
+
+	CANVAS_PX_ROUND: false,
+	CANVAS_CLEAR_RECT: true
 
  };
 

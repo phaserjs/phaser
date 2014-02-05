@@ -91,6 +91,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.DOMSprite.html">DOMSprite</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -163,6 +167,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -184,6 +196,10 @@
 						
 						<li>
 							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Line.html">Line</a>
 						</li>
 						
 						<li>
@@ -279,6 +295,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Sound.html">Sound</a>
 						</li>
 						
@@ -343,6 +363,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
 						</li>
 						
@@ -368,36 +392,6 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
-						</li>
-						
-						<li>
-							<a href="global.html#render">render</a>
-						</li>
-						
-						<li>
-							<a href="global.html#renderXY">renderXY</a>
-						</li>
-						
-						<li>
-							<a href="global.html#right">right</a>
 						</li>
 						
 
@@ -790,7 +784,7 @@
     
     
     <div class="description">
-        <p>Creates a new instance of the Sound class.</p>
+        <p>Creates a new Sound object.</p>
     </div>
     
 
@@ -1005,7 +999,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-102">line 102</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-106">line 106</a>
     </li></ul></dd>
     
 
@@ -1064,7 +1058,7 @@
     
     
     <div class="description">
-        <p>A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.</p>
+        <p>Experimental: A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.</p>
     </div>
     
 
@@ -1205,7 +1199,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-280">line 280</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-287">line 287</a>
     </li></ul></dd>
     
 
@@ -1256,7 +1250,7 @@
         
             
 <dt>
-    <h4 class="name" id="bitmapText"><span class="type-signature"></span>bitmapText<span class="signature">(x, y, text, style)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapText.html">Phaser.BitmapText</a>}</span></h4>
+    <h4 class="name" id="bitmapText"><span class="type-signature"></span>bitmapText<span class="signature">(x, y, text, style, <span class="optional">group</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapText.html">Phaser.BitmapText</a>}</span></h4>
     
     
 </dt>
@@ -1265,7 +1259,7 @@
     
     <div class="description">
         <ul>
-<li>Create a new &lt;code&gt;BitmapText&lt;/code&gt;.</li>
+<li>Create a new BitmapText object.</li>
 </ul>
     </div>
     
@@ -1287,6 +1281,8 @@
 
 		<th>Type</th>
 
+		
+		<th>Argument</th>
 		
 
 		
@@ -1313,6 +1309,14 @@
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -1335,6 +1339,14 @@
             
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -1359,6 +1371,14 @@
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -1382,10 +1402,51 @@
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
             <td class="description last"><p>The style object containing style attributes like font, font size , etc.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional Group to add the object to. If not specified it will be added to the World group.</p></td>
         </tr>
 
 	
@@ -1417,7 +1478,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-203">line 203</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-235">line 235</a>
     </li></ul></dd>
     
 
@@ -1468,7 +1529,7 @@
         
             
 <dt>
-    <h4 class="name" id="button"><span class="type-signature"></span>button<span class="signature">(<span class="optional">x</span>, <span class="optional">y</span>, <span class="optional">key</span>, <span class="optional">callback</span>, <span class="optional">callbackContext</span>, <span class="optional">overFrame</span>, <span class="optional">outFrame</span>, <span class="optional">downFrame</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Button.html">Phaser.Button</a>}</span></h4>
+    <h4 class="name" id="button"><span class="type-signature"></span>button<span class="signature">(<span class="optional">x</span>, <span class="optional">y</span>, <span class="optional">key</span>, <span class="optional">callback</span>, <span class="optional">callbackContext</span>, <span class="optional">overFrame</span>, <span class="optional">outFrame</span>, <span class="optional">downFrame</span>, <span class="optional">upFrame</span>, <span class="optional">group</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Button.html">Phaser.Button</a>}</span></h4>
     
     
 </dt>
@@ -1476,7 +1537,7 @@
     
     
     <div class="description">
-        <p>Creates a new &lt;code&gt;Button&lt;/code&gt; object.</p>
+        <p>Creates a new Button object.</p>
     </div>
     
 
@@ -1782,6 +1843,75 @@
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>upFrame</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>This is the frame or frameName that will be set when this button is in an up state. Give either a number to use a frame ID or a string for a frame name.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional Group to add the object to. If not specified it will be added to the World group.</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 
@@ -1810,7 +1940,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-152">line 152</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-177">line 177</a>
     </li></ul></dd>
     
 
@@ -1869,7 +1999,8 @@
     
     
     <div class="description">
-        <p>Create a new Sprite with specific position and sprite sheet key that will automatically be added as a child of the given parent.</p>
+        <p>DEPRECATED - will be removed in Phaser 1.2
+Create a new Sprite with specific position and sprite sheet key that will automatically be added as a child of the given parent.</p>
     </div>
     
 
@@ -2095,7 +2226,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-58">line 58</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-61">line 61</a>
     </li></ul></dd>
     
 
@@ -2336,7 +2467,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-186">line 186</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-218">line 218</a>
     </li></ul></dd>
     
 
@@ -2641,7 +2772,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-294">line 294</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-301">line 301</a>
     </li></ul></dd>
     
 
@@ -2692,7 +2823,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
         
             
 <dt>
-    <h4 class="name" id="graphics"><span class="type-signature"></span>graphics<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {<a href="Phaser.Graphics.html">Phaser.Graphics</a>}</span></h4>
+    <h4 class="name" id="graphics"><span class="type-signature"></span>graphics<span class="signature">(x, y, <span class="optional">group</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Graphics.html">Phaser.Graphics</a>}</span></h4>
     
     
 </dt>
@@ -2700,7 +2831,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     
     <div class="description">
-        <p>Creates a new &lt;code&gt;Graphics&lt;/code&gt; object.</p>
+        <p>Creates a new Graphics object.</p>
     </div>
     
 
@@ -2721,6 +2852,8 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 
 		<th>Type</th>
 
+		
+		<th>Argument</th>
 		
 
 		
@@ -2747,6 +2880,14 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -2770,10 +2911,51 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
             <td class="description last"><p>Y position of the new graphics object.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional Group to add the object to. If not specified it will be added to the World group.</p></td>
         </tr>
 
 	
@@ -2805,7 +2987,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-172">line 172</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-201">line 201</a>
     </li></ul></dd>
     
 
@@ -2908,7 +3090,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             <td class="type">
             
                 
-<span class="param-type">*</span>
+<span class="param-type">any</span>
 
 
             
@@ -2964,7 +3146,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             
                 <td class="default">
                 
-                    group
+                    'group'
                 
                 </td>
             
@@ -3001,7 +3183,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-88">line 88</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-92">line 92</a>
     </li></ul></dd>
     
 
@@ -3188,7 +3370,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-261">line 261</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-268">line 268</a>
     </li></ul></dd>
     
 
@@ -3239,7 +3421,281 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
         
             
 <dt>
-    <h4 class="name" id="sprite"><span class="type-signature"></span>sprite<span class="signature">(x, y, key, <span class="optional">frame</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Sprite.html">Phaser.Sprite</a>}</span></h4>
+    <h4 class="name" id="sound"><span class="type-signature"></span>sound<span class="signature">(key, <span class="optional">volume</span>, <span class="optional">loop</span>, <span class="optional">connect</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Sound.html">Phaser.Sound</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Creates a new Sound object.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The Game.cache key of the sound that this object will use.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>volume</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    1
+                
+                </td>
+            
+
+            <td class="description last"><p>The volume at which the sound will be played.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>loop</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether or not the sound will loop.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>connect</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>Controls if the created Sound object will connect to the master gainNode of the SoundManager when running under WebAudio.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-122">line 122</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The newly created text object.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Sound.html">Phaser.Sound</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="sprite"><span class="type-signature"></span>sprite<span class="signature">(x, y, key, <span class="optional">frame</span>, <span class="optional">group</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Sprite.html">Phaser.Sprite</a>}</span></h4>
     
     
 </dt>
@@ -3415,6 +3871,39 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional Group to add the object to. If not specified it will be added to the World group.</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 
@@ -3494,7 +3983,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
         
             
 <dt>
-    <h4 class="name" id="text"><span class="type-signature"></span>text<span class="signature">(x, y, text, style)</span><span class="type-signature"> &rarr; {<a href="Phaser.Text.html">Phaser.Text</a>}</span></h4>
+    <h4 class="name" id="text"><span class="type-signature"></span>text<span class="signature">(x, y, text, style, <span class="optional">group</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Text.html">Phaser.Text</a>}</span></h4>
     
     
 </dt>
@@ -3502,7 +3991,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     
     <div class="description">
-        <p>Creates a new &lt;code&gt;Text&lt;/code&gt;.</p>
+        <p>Creates a new Text object.</p>
     </div>
     
 
@@ -3523,6 +4012,8 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 
 		<th>Type</th>
 
+		
+		<th>Argument</th>
 		
 
 		
@@ -3549,6 +4040,14 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -3571,6 +4070,14 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -3595,6 +4102,14 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -3618,10 +4133,51 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
             <td class="description last"><p>The style object containing style attributes like font, font size , etc.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional Group to add the object to. If not specified it will be added to the World group.</p></td>
         </tr>
 
 	
@@ -3653,7 +4209,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-136">line 136</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-158">line 158</a>
     </li></ul></dd>
     
 
@@ -3704,7 +4260,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
         
             
 <dt>
-    <h4 class="name" id="tilemap"><span class="type-signature"></span>tilemap<span class="signature">(key)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tilemap.html">Phaser.Tilemap</a>}</span></h4>
+    <h4 class="name" id="tilemap"><span class="type-signature"></span>tilemap<span class="signature">(key, tilesets)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tilemap.html">Phaser.Tilemap</a>}</span></h4>
     
     
 </dt>
@@ -3762,7 +4318,33 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 
             
 
-            <td class="description last"><p>Asset key for the JSON file.</p></td>
+            <td class="description last"><p>Asset key for the JSON or CSV map data in the cache.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>tilesets</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>An object mapping Cache.tileset keys with the tileset names in the JSON file. If a string is provided that will be used.</p></td>
         </tr>
 
 	
@@ -3794,7 +4376,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-219">line 219</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-254">line 254</a>
     </li></ul></dd>
     
 
@@ -3845,7 +4427,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
         
             
 <dt>
-    <h4 class="name" id="tilemapLayer"><span class="type-signature"></span>tilemapLayer<span class="signature">(x, y, width, height)</span><span class="type-signature"> &rarr; {<a href="Phaser.TilemapLayer.html">Phaser.TilemapLayer</a>}</span></h4>
+    <h4 class="name" id="tileSprite"><span class="type-signature"></span>tileSprite<span class="signature">(x, y, width, height, key, <span class="optional">group</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.TileSprite.html">Phaser.TileSprite</a>}</span></h4>
     
     
 </dt>
@@ -3853,7 +4435,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     
     <div class="description">
-        <p>Creates a new Tilemap Layer object.</p>
+        <p>Creates a new TileSprite object.</p>
     </div>
     
 
@@ -3874,6 +4456,8 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 
 		<th>Type</th>
 
+		
+		<th>Argument</th>
 		
 
 		
@@ -3900,356 +4484,13 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             </td>
 
             
-
-            
-
-            <td class="description last"><p>X position of the new tilemapLayer.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
+                <td class="attributes">
                 
-<span class="param-type">number</span>
 
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Y position of the new tilemapLayer.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
                 
-<span class="param-type">number</span>
 
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>the width of the tilemapLayer.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
                 
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>the height of the tilemapLayer.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-245">line 245</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The newly created tilemaplayer object.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.TilemapLayer.html">Phaser.TilemapLayer</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="tileset"><span class="type-signature"></span>tileset<span class="signature">(key)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tileset.html">Phaser.Tileset</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Creates a new Tileset object.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>key</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The image key as defined in the Game.Cache to use as the tileset.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-232">line 232</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The newly created tileset object.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.Tileset.html">Phaser.Tileset</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="tileSprite"><span class="type-signature"></span>tileSprite<span class="signature">(x, y, width, height, key, frame)</span><span class="type-signature"> &rarr; {<a href="Phaser.TileSprite.html">Phaser.TileSprite</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Creates a new &lt;code&gt;TileSprite&lt;/code&gt;.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
+                </td>
             
 
             
@@ -4274,6 +4515,14 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -4297,6 +4546,14 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -4319,6 +4576,14 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -4349,6 +4614,14 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -4359,26 +4632,33 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 
         <tr>
             
-                <td class="name"><code>frame</code></td>
+                <td class="name"><code>group</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
-|
-
-<span class="param-type">number</span>
+<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.</p></td>
+            <td class="description last"><p>Optional Group to add the object to. If not specified it will be added to the World group.</p></td>
         </tr>
 
 	
@@ -4410,7 +4690,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-118">line 118</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-138">line 138</a>
     </li></ul></dd>
     
 
@@ -4551,7 +4831,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-75">line 75</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-79">line 79</a>
     </li></ul></dd>
     
 
@@ -4619,13 +4899,13 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		Phaser Copyright © 2012-2014 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 28 2013 15:56:29 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 05 2014 06:28:29 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

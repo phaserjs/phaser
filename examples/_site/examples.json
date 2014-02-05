@@ -5,6 +5,10 @@
       "title": "change texture on click"
     },
     {
+      "file": "group+creation.js",
+      "title": "group creation"
+    },
+    {
       "file": "local+json+object.js",
       "title": "local json object"
     },
@@ -37,6 +41,10 @@
     {
       "file": "play+music.js",
       "title": "play music"
+    },
+    {
+      "file": "protracker.js",
+      "title": "protracker"
     }
   ],
   "basics": [
@@ -107,12 +115,28 @@
   ],
   "collision": [
     {
+      "file": "body+scale.js",
+      "title": "body scale"
+    },
+    {
       "file": "bounding+box.js",
       "title": "bounding box"
     },
     {
+      "file": "circle+body.js",
+      "title": "circle body"
+    },
+    {
+      "file": "circle+vs+polygon.js",
+      "title": "circle vs polygon"
+    },
+    {
       "file": "group+vs+group.js",
       "title": "group vs group"
+    },
+    {
+      "file": "group+vs+self.js",
+      "title": "group vs self"
     },
     {
       "file": "larger+bounding+box.js",
@@ -123,28 +147,58 @@
       "title": "offset bounding box"
     },
     {
-      "file": "sprite+tiles.js",
-      "title": "sprite tiles"
+      "file": "one+way+collision.js",
+      "title": "one way collision"
+    },
+    {
+      "file": "polygon+body.js",
+      "title": "polygon body"
+    },
+    {
+      "file": "process+callback.js",
+      "title": "process callback"
+    },
+    {
+      "file": "rotated+bounding+box.js",
+      "title": "rotated bounding box"
     },
     {
       "file": "sprite+vs+group.js",
       "title": "sprite vs group"
     },
     {
-      "file": "sprite+vs+sprite+custom.js",
-      "title": "sprite vs sprite custom"
-    },
-    {
       "file": "sprite+vs+sprite.js",
       "title": "sprite vs sprite"
     },
     {
-      "file": "transform.js",
-      "title": "transform"
-    },
-    {
       "file": "vertical+collision.js",
       "title": "vertical collision"
+    }
+  ],
+  "debug": [
+    {
+      "file": "debug+camera.js",
+      "title": "debug camera"
+    },
+    {
+      "file": "debug+display.js",
+      "title": "debug display"
+    },
+    {
+      "file": "debug+draw.js",
+      "title": "debug draw"
+    },
+    {
+      "file": "debug+input.js",
+      "title": "debug input"
+    },
+    {
+      "file": "debug+physics.js",
+      "title": "debug physics"
+    },
+    {
+      "file": "debug+sprite.js",
+      "title": "debug sprite"
     }
   ],
   "display": [
@@ -159,6 +213,10 @@
     {
       "file": "graphics.js",
       "title": "graphics"
+    },
+    {
+      "file": "pixi+render+texture.js",
+      "title": "pixi render texture"
     },
     {
       "file": "render+crisp.js",
@@ -217,6 +275,14 @@
       "title": "invaders"
     },
     {
+      "file": "matching+pairs.js",
+      "title": "matching pairs"
+    },
+    {
+      "file": "simon.js",
+      "title": "simon"
+    },
+    {
       "file": "starstruck.js",
       "title": "starstruck"
     },
@@ -229,6 +295,10 @@
     {
       "file": "circle.js",
       "title": "circle"
+    },
+    {
+      "file": "line+intersection.js",
+      "title": "line intersection"
     },
     {
       "file": "line.js",
@@ -253,12 +323,12 @@
       "title": "add a sprite to group"
     },
     {
-      "file": "bring+a+child+to+top.js",
-      "title": "bring a child to top"
-    },
-    {
       "file": "bring+a+group+to+top.js",
       "title": "bring a group to top"
+    },
+    {
+      "file": "call+all+animations.js",
+      "title": "call all animations"
     },
     {
       "file": "call+all.js",
@@ -309,6 +379,10 @@
       "title": "group transform"
     },
     {
+      "file": "nested+groups.js",
+      "title": "nested groups"
+    },
+    {
       "file": "recyling.js",
       "title": "recyling"
     },
@@ -335,6 +409,10 @@
   ],
   "input": [
     {
+      "file": "bring+a+child+to+top.js",
+      "title": "bring a child to top"
+    },
+    {
       "file": "cursor+key+movement.js",
       "title": "cursor key movement"
     },
@@ -357,6 +435,30 @@
     {
       "file": "game+scale.js",
       "title": "game scale"
+    },
+    {
+      "file": "gamepad+analog+button.js",
+      "title": "gamepad analog button"
+    },
+    {
+      "file": "gamepad+debug.js",
+      "title": "gamepad debug"
+    },
+    {
+      "file": "gamepad+hotkeys.js",
+      "title": "gamepad hotkeys"
+    },
+    {
+      "file": "gamepad+multiple+pads.js",
+      "title": "gamepad multiple pads"
+    },
+    {
+      "file": "gamepad+tanks.js",
+      "title": "gamepad tanks"
+    },
+    {
+      "file": "gamepad.js",
+      "title": "gamepad"
     },
     {
       "file": "key.js",
@@ -485,8 +587,16 @@
       "title": "no rotation"
     },
     {
+      "file": "rain.js",
+      "title": "rain"
+    },
+    {
       "file": "random+sprite.js",
       "title": "random sprite"
+    },
+    {
+      "file": "snow.js",
+      "title": "snow"
     },
     {
       "file": "when+particles+collide.js",
@@ -519,6 +629,42 @@
       "title": "angular velocity"
     },
     {
+      "file": "bounce+accelerator.js",
+      "title": "bounce accelerator"
+    },
+    {
+      "file": "bounce+knock.js",
+      "title": "bounce knock"
+    },
+    {
+      "file": "bounce+with+gravity.js",
+      "title": "bounce with gravity"
+    },
+    {
+      "file": "bounce.js",
+      "title": "bounce"
+    },
+    {
+      "file": "framerate+independence.js",
+      "title": "framerate independence"
+    },
+    {
+      "file": "gravity.js",
+      "title": "gravity"
+    },
+    {
+      "file": "launcher+follow+world.js",
+      "title": "launcher follow world"
+    },
+    {
+      "file": "launcher+follow.js",
+      "title": "launcher follow"
+    },
+    {
+      "file": "launcher.js",
+      "title": "launcher"
+    },
+    {
       "file": "mass+velocity+test.js",
       "title": "mass velocity test"
     },
@@ -539,8 +685,16 @@
       "title": "quadtree - ids"
     },
     {
+      "file": "ship+trail.js",
+      "title": "ship trail"
+    },
+    {
       "file": "shoot+the+pointer.js",
       "title": "shoot the pointer"
+    },
+    {
+      "file": "snake.js",
+      "title": "snake"
     },
     {
       "file": "sprite+bounds.js",
@@ -641,11 +795,19 @@
       "title": "animated tiling sprite"
     },
     {
+      "file": "colliding+with+tiling+sprite.js",
+      "title": "colliding with tiling sprite"
+    },
+    {
       "file": "tiling+sprite.js",
       "title": "tiling sprite"
     }
   ],
   "tilemaps": [
+    {
+      "file": "create+from+objects.js",
+      "title": "create from objects"
+    },
     {
       "file": "fill+tiles.js",
       "title": "fill tiles"
@@ -675,8 +837,38 @@
       "title": "sci fly"
     },
     {
+      "file": "shuffle+tiles.js",
+      "title": "shuffle tiles"
+    },
+    {
       "file": "swap+tiles.js",
       "title": "swap tiles"
+    },
+    {
+      "file": "tile+callbacks.js",
+      "title": "tile callbacks"
+    }
+  ],
+  "time": [
+    {
+      "file": "basic+looped+event.js",
+      "title": "basic looped event"
+    },
+    {
+      "file": "basic+repeat+event.js",
+      "title": "basic repeat event"
+    },
+    {
+      "file": "basic+timed+event.js",
+      "title": "basic timed event"
+    },
+    {
+      "file": "remove+event.js",
+      "title": "remove event"
+    },
+    {
+      "file": "timed+slideshow.js",
+      "title": "timed slideshow"
     }
   ],
   "tweens": [
@@ -711,6 +903,14 @@
     {
       "file": "pause+tween.js",
       "title": "pause tween"
+    },
+    {
+      "file": "tween+loop+event.js",
+      "title": "tween loop event"
+    },
+    {
+      "file": "tween+relative.js",
+      "title": "tween relative"
     },
     {
       "file": "tween+several+properties.js",

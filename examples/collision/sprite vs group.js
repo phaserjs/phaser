@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
 
 function preload() {
 
@@ -10,12 +10,13 @@ function preload() {
 
 var sprite;
 var group;
+var cursors;
 
 function create() {
 
     game.stage.backgroundColor = '#2d2d2d';
 
-    //  This will check Sprite vs. Group collision
+    //  This example will check Sprite vs. Group collision
 
     sprite = game.add.sprite(32, 200, 'phaser');
     sprite.name = 'phaser-dude';
@@ -24,7 +25,7 @@ function create() {
 
     for (var i = 0; i < 50; i++)
     {
-        var c = group.create(100 + Math.random() * 700, game.world.randomY, 'veggies', game.rnd.integerInRange(0, 36));
+        var c = group.create(game.rnd.integerInRange(100, 770), game.rnd.integerInRange(0, 570), 'veggies', game.rnd.integerInRange(0, 36));
         c.name = 'veg' + i;
         c.body.immovable = true;
     }
@@ -32,58 +33,52 @@ function create() {
     for (var i = 0; i < 20; i++)
     {
         //  Here we'll create some chillis which the player can pick-up. They are still part of the same Group.
-        var c = group.create(100 + Math.random() * 700, game.world.randomY, 'veggies', 17);
+        var c = group.create(game.rnd.integerInRange(100, 770), game.rnd.integerInRange(0, 570), 'veggies', 17);
         c.name = 'chilli' + i;
         c.body.immovable = true;
     }
 
-    game.input.keyboard.addKeyCapture([ Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.UP, Phaser.Keyboard.DOWN ]);
+    cursors = game.input.keyboard.createCursorKeys();
 
 }
 
 function update() {
 
+    game.physics.collide(sprite, group, collisionHandler, null, this);
+    game.physics.collide(group, group);
+
     sprite.body.velocity.x = 0;
     sprite.body.velocity.y = 0;
 
-    if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+    if (cursors.left.isDown)
     {
         sprite.body.velocity.x = -200;
     }
-    else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+    else if (cursors.right.isDown)
     {
         sprite.body.velocity.x = 200;
     }
 
-    if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
+    if (cursors.up.isDown)
     {
         sprite.body.velocity.y = -200;
     }
-    else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
+    else if (cursors.down.isDown)
     {
         sprite.body.velocity.y = 200;
     }
 
-    game.physics.collide(sprite, group, collisionHandler, null, this);
-
 }
 
-function collisionHandler (obj1, obj2) {
+function collisionHandler (player, veg) {
 
     //  If the player collides with the chillis then they get eaten :)
     //  The chilli frame ID is 17
 
-    console.log('Hit', obj2.name);
-
-    if (obj2.frame == 17)
+    if (veg.frame == 17)
     {
-        obj2.kill();
+        veg.kill();
     }
 
 }
 
-function render () {
-
-    game.debug.renderQuadTree(game.physics.quadTree);
-
-}

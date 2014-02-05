@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -346,25 +346,25 @@ Phaser.Sound.prototype = {
                 {
                     if (this.loop)
                     {
-                        //console.log('loop1');
+                        // console.log('loop1');
                         //  won't work with markers, needs to reset the position
                         this.onLoop.dispatch(this);
 
                         if (this.currentMarker === '')
                         {
-                            //console.log('loop2');
+                            // console.log('loop2');
                             this.currentTime = 0;
                             this.startTime = this.game.time.now;
                         }
                         else
                         {
-                            //console.log('loop3');
+                            // console.log('loop3');
                             this.play(this.currentMarker, 0, this.volume, true, true);
                         }
                     }
                     else
                     {
-                        //console.log('stopping, no loop for marker');
+                        // console.log('stopping, no loop for marker');
                         this.stop();
                     }
                 }
@@ -552,7 +552,7 @@ Phaser.Sound.prototype = {
             else
             {
                 // console.log('sound not locked, state?', this._sound.readyState);
-                if (this._sound && this._sound.readyState == 4)
+                if (this._sound && (this.game.device.cocoonJS || this._sound.readyState === 4))
                 {
                     this._sound.play();
                     //  This doesn't become available until you call play(), wonderful ...
@@ -642,7 +642,20 @@ Phaser.Sound.prototype = {
 
                 this._sound = this.context.createBufferSource();
                 this._sound.buffer = this._buffer;
-                this._sound.connect(this.gainNode);
+
+                if (this.externalNode)
+                {
+                    this._sound.connect(this.externalNode.input);
+                }
+                else
+                {
+                    this._sound.connect(this.gainNode);
+                }
+
+                if (this.loop)
+                {
+                    this._sound.loop = true;
+                }
 
                 if (typeof this._sound.start === 'undefined')
                 {
@@ -702,6 +715,8 @@ Phaser.Sound.prototype = {
     }
 
 };
+
+Phaser.Sound.prototype.constructor = Phaser.Sound;
 
 /**
 * @name Phaser.Sound#isDecoding

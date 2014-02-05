@@ -91,6 +91,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.DOMSprite.html">DOMSprite</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -163,6 +167,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -184,6 +196,10 @@
 						
 						<li>
 							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Line.html">Line</a>
 						</li>
 						
 						<li>
@@ -279,6 +295,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Sound.html">Sound</a>
 						</li>
 						
@@ -343,6 +363,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
 						</li>
 						
@@ -368,36 +392,6 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
-						</li>
-						
-						<li>
-							<a href="global.html#render">render</a>
-						</li>
-						
-						<li>
-							<a href="global.html#renderXY">renderXY</a>
-						</li>
-						
-						<li>
-							<a href="global.html#right">right</a>
 						</li>
 						
 
@@ -438,7 +432,7 @@
     
         
 <dt>
-    <h4 class="name" id="TilemapLayer"><span class="type-signature"></span>new TilemapLayer<span class="signature">(game, x, y, renderWidth, renderHeight, tileset, tilemap, layer)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="TilemapLayer"><span class="type-signature"></span>new TilemapLayer<span class="signature">(game, tilemap, index, width, height)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -503,124 +497,6 @@
 
         <tr>
             
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The x coordinate of this layer.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y coordinate of this layer.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>renderWidth</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Width of the layer.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>renderHeight</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Height of the layer.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>tileset</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Tileset.html">Phaser.Tileset</a></span>
-|
-
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The tile set used for rendering.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
                 <td class="name"><code>tilemap</code></td>
             
 
@@ -644,7 +520,7 @@
 
         <tr>
             
-                <td class="name"><code>layer</code></td>
+                <td class="name"><code>index</code></td>
             
 
             <td class="type">
@@ -660,7 +536,53 @@
 
             
 
-            <td class="description last"><p>The layer index within the map.</p></td>
+            <td class="description last"><p>The layer index within the map that this TilemapLayer represents.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Width of the renderable area of the layer.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Height of the renderable area of the layer.</p></td>
         </tr>
 
 	
@@ -692,7 +614,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-21">line 21</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-18">line 18</a>
     </li></ul></dd>
     
 
@@ -820,7 +742,109 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-41">line 41</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-53">line 53</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="cameraOffset"><span class="type-signature"></span>cameraOffset<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>cameraOffset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If this object is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-88">line 88</a>
     </li></ul></dd>
     
 
@@ -893,7 +917,7 @@
 
             
 
-            <td class="description last"><p>The canvas to which this BitmapData draws.</p></td>
+            <td class="description last"><p>The canvas to which this TilemapLayer draws.</p></td>
         </tr>
 
 	
@@ -922,7 +946,211 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-31">line 31</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-43">line 43</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="collisionHeight"><span class="type-signature"></span>collisionHeight<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>collisionHeight</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The height of the collision tiles.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-862">line 862</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="collisionWidth"><span class="type-signature"></span>collisionWidth<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>collisionWidth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The width of the collision tiles.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-842">line 842</a>
     </li></ul></dd>
     
 
@@ -1024,7 +1252,637 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-36">line 36</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-48">line 48</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="debug"><span class="type-signature"></span>debug<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>debug</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If set to true the collideable tile edges path will be rendered. Only works when game is running in Phaser.CANVAS mode.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-100">line 100</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="debugAlpha"><span class="type-signature"></span>debugAlpha<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>debugAlpha</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If debug is true then the tileset is rendered with this alpha level, to make the tile edges clearer.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0.5</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-106">line 106</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="debugCallbackColor"><span class="type-signature"></span>debugCallbackColor<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>debugCallbackColor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If debug is true this is the color used to outline the edges of tiles that have collision callbacks. Provide in hex or rgb/rgba string format.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>"rgba(255, 0, 0, 1)"</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-130">line 130</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="debugColor"><span class="type-signature"></span>debugColor<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>debugColor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If debug is true this is the color used to outline the edges of collidable tiles. Provide in hex or rgb/rgba string format.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>"rgba(0, 255, 0, 1)"</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-112">line 112</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="debugFill"><span class="type-signature"></span>debugFill<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>debugFill</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If true the debug tiles are filled with debugFillColor AND stroked around.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-118">line 118</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="debugFillColor"><span class="type-signature"></span>debugFillColor<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>debugFillColor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If debugFill is true this is the color used to fill the tiles. Provide in hex or rgb/rgba string format.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>"rgba(0, 255, 0, 0.2)"</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-124">line 124</a>
     </li></ul></dd>
     
 
@@ -1126,7 +1984,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-263">line 263</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-151">line 151</a>
     </li></ul></dd>
     
 
@@ -1151,7 +2009,7 @@
 <dd>
     
     <div class="description">
-        <p>A layer that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.</p>
+        <p>An object that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.</p>
     </div>
     
     
@@ -1203,7 +2061,7 @@
 
             
 
-            <td class="description last"><p>Fixes this layer to the Camera.</p></td>
+            <td class="description last"><p>Fixes this object to the Camera.</p></td>
         </tr>
 
 	
@@ -1235,7 +2093,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-66">line 66</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-83">line 83</a>
     </li></ul></dd>
     
 
@@ -1337,109 +2195,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-26">line 26</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="heightInPixels"><span class="type-signature">&lt;readonly> </span>heightInPixels<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>heightInPixels</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Do NOT recommend changing after the map is loaded!</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-103">line 103</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-23">line 23</a>
     </li></ul></dd>
     
 
@@ -1512,7 +2268,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The index of this layer within the Tilemap.</p></td>
         </tr>
 
 	
@@ -1541,7 +2297,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-258">line 258</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-33">line 33</a>
     </li></ul></dd>
     
 
@@ -1604,7 +2360,7 @@
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">object</span>
 
 
             
@@ -1614,7 +2370,7 @@
 
             
 
-            <td class="description last"><p>Tilemap layer index.</p></td>
+            <td class="description last"><p>The layer object within the Tilemap that this layer represents.</p></td>
         </tr>
 
 	
@@ -1643,7 +2399,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-253">line 253</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-38">line 38</a>
     </li></ul></dd>
     
 
@@ -1661,7 +2417,7 @@
         
             
 <dt>
-    <h4 class="name" id="renderHeight"><span class="type-signature"></span>renderHeight<span class="type-signature"></span></h4>
+    <h4 class="name" id="map"><span class="type-signature"></span>map<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1700,13 +2456,13 @@
 
         <tr>
             
-                <td class="name"><code>renderHeight</code></td>
+                <td class="name"><code>map</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type"><a href="Phaser.Tilemap.html">Phaser.Tilemap</a></span>
 
 
             
@@ -1716,7 +2472,7 @@
 
             
 
-            <td class="description last"><p>The height of the area being rendered.</p></td>
+            <td class="description last"><p>The Tilemap to which this layer is bound.</p></td>
         </tr>
 
 	
@@ -1745,7 +2501,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-113">line 113</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-28">line 28</a>
     </li></ul></dd>
     
 
@@ -1763,7 +2519,7 @@
         
             
 <dt>
-    <h4 class="name" id="renderWidth"><span class="type-signature"></span>renderWidth<span class="type-signature"></span></h4>
+    <h4 class="name" id="name"><span class="type-signature"></span>name<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1802,13 +2558,13 @@
 
         <tr>
             
-                <td class="name"><code>renderWidth</code></td>
+                <td class="name"><code>name</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">string</span>
 
 
             
@@ -1818,7 +2574,7 @@
 
             
 
-            <td class="description last"><p>The width of the area being rendered.</p></td>
+            <td class="description last"><p>The name of the layer.</p></td>
         </tr>
 
 	
@@ -1847,7 +2603,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-108">line 108</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-70">line 70</a>
     </li></ul></dd>
     
 
@@ -1954,7 +2710,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-235">line 235</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-138">line 138</a>
     </li></ul></dd>
     
 
@@ -2061,7 +2817,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-243">line 243</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-146">line 146</a>
     </li></ul></dd>
     
 
@@ -2163,7 +2919,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-744">line 744</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-760">line 760</a>
     </li></ul></dd>
     
 
@@ -2265,7 +3021,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-784">line 784</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-801">line 801</a>
     </li></ul></dd>
     
 
@@ -2367,7 +3123,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-46">line 46</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-58">line 58</a>
     </li></ul></dd>
     
 
@@ -2469,7 +3225,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-51">line 51</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-63">line 63</a>
     </li></ul></dd>
     
 
@@ -2487,7 +3243,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
         
             
 <dt>
-    <h4 class="name" id="tileHeight"><span class="type-signature"></span>tileHeight<span class="type-signature"></span></h4>
+    <h4 class="name" id="tileColor"><span class="type-signature"></span>tileColor<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2526,13 +3282,13 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
 
         <tr>
             
-                <td class="name"><code>tileHeight</code></td>
+                <td class="name"><code>tileColor</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">string</span>
 
 
             
@@ -2542,7 +3298,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
 
             
 
-            <td class="description last"><p>The height of a single tile in pixels.</p></td>
+            <td class="description last"><p>If no tileset is given the tiles will be rendered as rectangles in this color. Provide in hex or rgb/rgba string format.</p></td>
         </tr>
 
 	
@@ -2567,521 +3323,14 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
     
 
     
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-81">line 81</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="tilemap"><span class="type-signature"></span>tilemap<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>tilemap</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Tilemap.html">Phaser.Tilemap</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The Tilemap to which this layer is bound.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>"rgb(255, 255, 255)"</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-248">line 248</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="tileMargin"><span class="type-signature"></span>tileMargin<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>tileMargin</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The margin around the tiles.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-86">line 86</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="tileset"><span class="type-signature"></span>tileset<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>tileset</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Tileset.html">Phaser.Tileset</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The tile set used for rendering.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-71">line 71</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="tileSpacing"><span class="type-signature"></span>tileSpacing<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>tileSpacing</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The spacing around the tiles.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-91">line 91</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="tileWidth"><span class="type-signature"></span>tileWidth<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>tileWidth</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The width of a single tile in pixels.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-76">line 76</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-94">line 94</a>
     </li></ul></dd>
     
 
@@ -3183,109 +3432,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-59">line 59</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="widthInPixels"><span class="type-signature">&lt;readonly> </span>widthInPixels<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>widthInPixels</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Do NOT recommend changing after the map is loaded!</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-97">line 97</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-76">line 76</a>
     </li></ul></dd>
     
 
@@ -3309,7 +3456,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
         <dl>
             
 <dt>
-    <h4 class="name" id="deltaAbsX"><span class="type-signature"></span>deltaAbsX<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="getTiles"><span class="type-signature"></span>getTiles<span class="signature">(x, y, width, height, <span class="optional">collides</span>)</span><span class="type-signature"> &rarr; {array}</span></h4>
     
     
 </dt>
@@ -3317,375 +3464,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
     
     
     <div class="description">
-        <p>Returns the absolute delta x value.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-704">line 704</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>Absolute delta X value</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">number</span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="deltaAbsY"><span class="type-signature"></span>deltaAbsY<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Returns the absolute delta y value.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-714">line 714</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>Absolute delta Y value</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">number</span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="deltaX"><span class="type-signature"></span>deltaX<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Returns the delta x value.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-724">line 724</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>Delta X value</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">number</span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="deltaY"><span class="type-signature"></span>deltaY<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Returns the delta y value.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-734">line 734</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>Delta Y value</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">number</span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="getTiles"><span class="type-signature"></span>getTiles<span class="signature">(x, y, width, height, collides)</span><span class="type-signature"> &rarr; {array}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Get the tiles within the given area.</p>
+        <p>Get all tiles that exist within the given area, defined by the top-left corner, width and height. Values given are in pixels, not tiles.</p>
     </div>
     
 
@@ -3707,7 +3486,11 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -3732,10 +3515,22 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>X position of the top left of the area to copy (given in tiles, not pixels)</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>X position of the top left corner.</p></td>
         </tr>
 
 	
@@ -3755,10 +3550,22 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Y position of the top left of the area to copy (given in tiles, not pixels)</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Y position of the top left corner.</p></td>
         </tr>
 
 	
@@ -3778,10 +3585,22 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The width of the area to copy (given in tiles, not pixels)</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Width of the area to get.</p></td>
         </tr>
 
 	
@@ -3801,10 +3620,22 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The height of the area to copy (given in tiles, not pixels)</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Height of the area to get.</p></td>
         </tr>
 
 	
@@ -3824,7 +3655,23 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
             
 
             <td class="description last"><p>If true only return tiles that collide on one or more faces.</p></td>
@@ -3859,7 +3706,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-500">line 500</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-455">line 455</a>
     </li></ul></dd>
     
 
@@ -4000,7 +3847,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-453">line 453</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-407">line 407</a>
     </li></ul></dd>
     
 
@@ -4051,7 +3898,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
         
             
 <dt>
-    <h4 class="name" id="getTileXY"><span class="type-signature"></span>getTileXY<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tile.html">Phaser.Tile</a>}</span></h4>
+    <h4 class="name" id="getTileXY"><span class="type-signature"></span>getTileXY<span class="signature">(x, y, point)</span><span class="type-signature"> &rarr; {<a href="Phaser.Point.html">Phaser.Point</a>|object}</span></h4>
     
     
 </dt>
@@ -4136,6 +3983,32 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>point</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
+|
+
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Point object to set the x and y values on.</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 
@@ -4164,7 +4037,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-483">line 483</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-437">line 437</a>
     </li></ul></dd>
     
 
@@ -4189,7 +4062,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
     
             
 <div class="param-desc">
-    <p>The tile with specific properties.</p>
+    <p>A Point object with its x and y properties set.</p>
 </div>
 
 
@@ -4200,7 +4073,10 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="Phaser.Tile.html">Phaser.Tile</a></span>
+<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
+|
+
+<span class="param-type">object</span>
 
 
 	</dd>
@@ -4305,7 +4181,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-468">line 468</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-422">line 422</a>
     </li></ul></dd>
     
 
@@ -4356,6 +4232,75 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
         
             
 <dt>
+    <h4 class="name" id="postUpdate"><span class="type-signature"></span>postUpdate<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Automatically called by World.postUpdate. Handles cache updates.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-287">line 287</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="render"><span class="type-signature"></span>render<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
@@ -4397,7 +4342,76 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-627">line 627</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-550">line 550</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="renderDebug"><span class="type-signature"></span>renderDebug<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Renders a collision debug overlay on-top of the canvas. Called automatically by render when debug = true.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-682">line 682</a>
     </li></ul></dd>
     
 
@@ -4466,217 +4480,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-296">line 296</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="update"><span class="type-signature"></span>update<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Automatically called by World.preUpdate. Handles cache updates.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-281">line 281</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="updateMapData"><span class="type-signature"></span>updateMapData<span class="signature">(tilemap, layer)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Updates the Tilemap data.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>tilemap</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Tilemap.html">Phaser.Tilemap</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The tilemap to which this layer belongs.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>layer</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The layer index within the map.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-339">line 339</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-305">line 305</a>
     </li></ul></dd>
     
 
@@ -4745,128 +4549,7 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-597">line 597</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="updateTileset"><span class="type-signature"></span>updateTileset<span class="signature">(tileset)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Updates the Tileset data.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>tileset</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Tileset.html">Phaser.Tileset</a></span>
-|
-
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The tileset to use for this layer.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-308">line 308</a>
+        <a href="TilemapLayer.js.html">tilemap/TilemapLayer.js</a>, <a href="TilemapLayer.js.html#sunlight-1-line-523">line 523</a>
     </li></ul></dd>
     
 
@@ -4911,13 +4594,13 @@ half as quickly as the 'normal' camera-locked layers do)</p></td>
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		Phaser Copyright © 2012-2014 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 28 2013 15:56:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 05 2014 06:28:35 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

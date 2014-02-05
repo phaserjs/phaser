@@ -91,6 +91,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.DOMSprite.html">DOMSprite</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -163,6 +167,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -184,6 +196,10 @@
 						
 						<li>
 							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Line.html">Line</a>
 						</li>
 						
 						<li>
@@ -279,6 +295,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Sound.html">Sound</a>
 						</li>
 						
@@ -343,6 +363,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
 						</li>
 						
@@ -368,36 +392,6 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
-						</li>
-						
-						<li>
-							<a href="global.html#render">render</a>
-						</li>
-						
-						<li>
-							<a href="global.html#renderXY">renderXY</a>
-						</li>
-						
-						<li>
-							<a href="global.html#right">right</a>
 						</li>
 						
 
@@ -659,7 +653,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="AnimationParser.js.html">animation/AnimationParser.js</a>, <a href="AnimationParser.js.html#sunlight-1-line-95">line 95</a>
+        <a href="AnimationParser.js.html">animation/AnimationParser.js</a>, <a href="AnimationParser.js.html#sunlight-1-line-97">line 97</a>
     </li></ul></dd>
     
 
@@ -846,7 +840,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="AnimationParser.js.html">animation/AnimationParser.js</a>, <a href="AnimationParser.js.html#sunlight-1-line-166">line 166</a>
+        <a href="AnimationParser.js.html">animation/AnimationParser.js</a>, <a href="AnimationParser.js.html#sunlight-1-line-168">line 168</a>
     </li></ul></dd>
     
 
@@ -897,7 +891,7 @@
         
             
 <dt>
-    <h4 class="name" id="spriteSheet"><span class="type-signature">&lt;static> </span>spriteSheet<span class="signature">(game, key, frameWidth, frameHeight, <span class="optional">frameMax</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.FrameData.html">Phaser.FrameData</a>}</span></h4>
+    <h4 class="name" id="spriteSheet"><span class="type-signature">&lt;static> </span>spriteSheet<span class="signature">(game, key, frameWidth, frameHeight, <span class="optional">frameMax</span>, <span class="optional">margin</span>, <span class="optional">spacing</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.FrameData.html">Phaser.FrameData</a>}</span></h4>
     
     
 </dt>
@@ -1119,6 +1113,84 @@
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>margin</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>If the frames have been drawn with a margin, specify the amount here.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>spacing</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>If the frames have been drawn with spacing between them, specify the amount here.</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 
@@ -1334,7 +1406,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="AnimationParser.js.html">animation/AnimationParser.js</a>, <a href="AnimationParser.js.html#sunlight-1-line-240">line 240</a>
+        <a href="AnimationParser.js.html">animation/AnimationParser.js</a>, <a href="AnimationParser.js.html#sunlight-1-line-242">line 242</a>
     </li></ul></dd>
     
 
@@ -1402,13 +1474,13 @@
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		Phaser Copyright © 2012-2014 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 28 2013 15:56:26 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 05 2014 06:28:25 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

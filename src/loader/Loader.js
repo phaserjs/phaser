@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -34,7 +34,7 @@ Phaser.Loader = function (game) {
     this._fileIndex = 0;
 
     /**
-    * @property {number} _progressChunk - Indicates assets loading progress. (from 0 to 100)
+    * @property {number} _progressChunk - Indicates the size of 1 file in terms of a percentage out of 100.
     * @private
     * @default
     */
@@ -59,10 +59,16 @@ Phaser.Loader = function (game) {
     this.hasLoaded = false;
 
     /**
-    * @property {number} progress - The Load progress percentage value (from 0 to 100)
+    * @property {number} progress - The rounded load progress percentage value (from 0 to 100)
     * @default
     */
     this.progress = 0;
+
+    /**
+    * @property {number} progressFloat - The non-rounded load progress value (from 0.0 to 100.0)
+    * @default
+    */
+    this.progressFloat = 0;
 
     /**
     * You can optionally link a sprite to the preloader.
@@ -364,6 +370,29 @@ Phaser.Loader.prototype = {
     },
 
     /**
+    * Add a binary file to the Loader. It will be loaded via xhr with a responseType of "arraybuffer". You can specify an optional callback to process the file after load.
+    * When the callback is called it will be passed 2 parameters: the key of the file and the file data.
+    * WARNING: If you specify a callback, the file data will be set to whatever your callback returns. So always return the data object, even if you didn't modify it.
+    *
+    * @method Phaser.Loader#binary
+    * @param {string} key - Unique asset key of the binary file.
+    * @param {string} url - URL of the binary file.
+    * @param {function} [callback] - Optional callback that will be passed the file after loading, so you can perform additional processing on it.
+    * @param {function} [callbackContext] - The context under which the callback will be applied. If not specified it will use the callback itself as the context.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    binary: function (key, url, callback, callbackContext) {
+
+        if (typeof callback === 'undefined') { callback = false; }
+        if (callback !== false && typeof callbackContext === 'undefined') { callbackContext = callback; }
+
+        this.addToFileList('binary', key, url, { callback: callback, callbackContext: callbackContext });
+
+        return this;
+
+    },
+
+    /**
     * Add a new sprite sheet to the loader.
     *
     * @method Phaser.Loader#spritesheet
@@ -372,38 +401,17 @@ Phaser.Loader.prototype = {
     * @param {number} frameWidth - Width of each single frame.
     * @param {number} frameHeight - Height of each single frame.
     * @param {number} [frameMax=-1] - How many frames in this sprite sheet. If not specified it will divide the whole image into frames.
+    * @param {number} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
+    * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
     * @return {Phaser.Loader} This Loader instance.
     */
-    spritesheet: function (key, url, frameWidth, frameHeight, frameMax) {
+    spritesheet: function (key, url, frameWidth, frameHeight, frameMax, margin, spacing) {
 
         if (typeof frameMax === "undefined") { frameMax = -1; }
+        if (typeof margin === "undefined") { margin = 0; }
+        if (typeof spacing === "undefined") { spacing = 0; }
 
-        this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax });
-
-        return this;
-
-    },
-
-    /**
-    * Add a new tile set to the loader. These are used in the rendering of tile maps.
-    *
-    * @method Phaser.Loader#tileset
-    * @param {string} key - Unique asset key of the tileset file.
-    * @param {string} url - URL of the tileset.
-    * @param {number} tileWidth - Width of each single tile in pixels.
-    * @param {number} tileHeight - Height of each single tile in pixels.
-    * @param {number} [tileMax=-1] - How many tiles in this tileset. If not specified it will divide the whole image into tiles.
-    * @param {number} [tileMargin=0] - If the tiles have been drawn with a margin, specify the amount here.
-    * @param {number} [tileSpacing=0] - If the tiles have been drawn with spacing between them, specify the amount here.
-    * @return {Phaser.Loader} This Loader instance.
-    */
-    tileset: function (key, url, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing) {
-
-        if (typeof tileMax === "undefined") { tileMax = -1; }
-        if (typeof tileMargin === "undefined") { tileMargin = 0; }
-        if (typeof tileSpacing === "undefined") { tileSpacing = 0; }
-
-        this.addToFileList('tileset', key, url, { tileWidth: tileWidth, tileHeight: tileHeight, tileMax: tileMax, tileMargin: tileMargin, tileSpacing: tileSpacing });
+        this.addToFileList('spritesheet', key, url, { frameWidth: frameWidth, frameHeight: frameHeight, frameMax: frameMax, margin: margin, spacing: spacing });
 
         return this;
 
@@ -711,6 +719,7 @@ Phaser.Loader.prototype = {
         }
 
         this.progress = 0;
+        this.progressFloat = 0;
         this.hasLoaded = false;
         this.isLoading = true;
 
@@ -725,6 +734,7 @@ Phaser.Loader.prototype = {
         else
         {
             this.progress = 100;
+            this.progressFloat = 100;
             this.hasLoaded = true;
             this.onLoadComplete.dispatch();
         }
@@ -755,7 +765,6 @@ Phaser.Loader.prototype = {
             case 'spritesheet':
             case 'textureatlas':
             case 'bitmapfont':
-            case 'tileset':
                 file.data = new Image();
                 file.data.name = file.key;
                 file.data.onload = function () {
@@ -846,6 +855,7 @@ Phaser.Loader.prototype = {
                 break;
 
             case 'text':
+            case 'script':
                 this._xhr.open("GET", this.baseURL + file.url, true);
                 this._xhr.responseType = "text";
                 this._xhr.onload = function () {
@@ -857,10 +867,9 @@ Phaser.Loader.prototype = {
                 this._xhr.send();
                 break;
 
-            case 'script':
-
+            case 'binary':
                 this._xhr.open("GET", this.baseURL + file.url, true);
-                this._xhr.responseType = "text";
+                this._xhr.responseType = "arraybuffer";
                 this._xhr.onload = function () {
                     return _this.fileComplete(_this._fileIndex);
                 };
@@ -933,7 +942,6 @@ Phaser.Loader.prototype = {
             console.warn('Phaser.Loader fileComplete invalid index ' + index);
             return;
         }
-        
 
         var file = this._fileList[index];
         file.loaded = true;
@@ -950,12 +958,7 @@ Phaser.Loader.prototype = {
 
             case 'spritesheet':
 
-                this.game.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax);
-                break;
-
-            case 'tileset':
-
-                this.game.cache.addTileset(file.key, file.url, file.data, file.tileWidth, file.tileHeight, file.tileMax, file.tileMargin, file.tileSpacing);
+                this.game.cache.addSpriteSheet(file.key, file.url, file.data, file.frameWidth, file.frameHeight, file.frameMax, file.margin, file.spacing);
                 break;
 
             case 'textureatlas':
@@ -1038,6 +1041,7 @@ Phaser.Loader.prototype = {
                             if (buffer)
                             {
                                 that.game.cache.decodedSound(key, buffer);
+                                that.game.sound.onSoundDecode.dispatch(key, that.game.cache.getSound(key));
                             }
                         });
                     }
@@ -1061,6 +1065,20 @@ Phaser.Loader.prototype = {
                 file.data.defer = false;
                 file.data.text = this._xhr.responseText;
                 document.head.appendChild(file.data);
+                break;
+
+            case 'binary':
+                if (file.callback)
+                {
+                    file.data = file.callback.call(file.callbackContext, file.key, this._xhr.response);
+                }
+                else
+                {
+                    file.data = this._xhr.response;
+                }
+
+                this.game.cache.addBinary(file.key, file.data);
+
                 break;
         }
 
@@ -1207,7 +1225,8 @@ Phaser.Loader.prototype = {
     */
     nextFile: function (previousIndex, success) {
 
-        this.progress = Math.round(this.progress + this._progressChunk);
+        this.progressFloat += this._progressChunk;
+        this.progress = Math.round(this.progressFloat);
 
         if (this.progress > 100)
         {
@@ -1290,3 +1309,5 @@ Phaser.Loader.prototype = {
     }
 
 };
+
+Phaser.Loader.prototype.constructor = Phaser.Loader;

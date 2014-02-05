@@ -91,6 +91,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.DOMSprite.html">DOMSprite</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -163,6 +167,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -184,6 +196,10 @@
 						
 						<li>
 							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Line.html">Line</a>
 						</li>
 						
 						<li>
@@ -279,6 +295,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Sound.html">Sound</a>
 						</li>
 						
@@ -343,6 +363,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
 						</li>
 						
@@ -368,36 +392,6 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
-						</li>
-						
-						<li>
-							<a href="global.html#render">render</a>
-						</li>
-						
-						<li>
-							<a href="global.html#renderXY">renderXY</a>
-						</li>
-						
-						<li>
-							<a href="global.html#right">right</a>
 						</li>
 						
 
@@ -446,7 +440,7 @@
     
     
     <div class="description">
-        <p>Create a new &lt;code&gt;Text&lt;/code&gt;.</p>
+        <p>Create a new <code>Text</code> object.</p>
     </div>
     
 
@@ -968,7 +962,109 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-184">line 184</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-202">line 202</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="cameraOffset"><span class="type-signature"></span>cameraOffset<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>cameraOffset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If this object is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-103">line 103</a>
     </li></ul></dd>
     
 
@@ -1074,7 +1170,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-237">line 237</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-255">line 255</a>
     </li></ul></dd>
     
 
@@ -1197,6 +1293,115 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
         
             
 <dt>
+    <h4 class="name" id="fixedToCamera"><span class="type-signature"></span>fixedToCamera<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>An object that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>fixedToCamera</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Fixes this object to the Camera.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-98">line 98</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="font"><span class="type-signature"></span>font<span class="type-signature"></span></h4>
     
     
@@ -1285,7 +1490,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-261">line 261</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-279">line 279</a>
     </li></ul></dd>
     
 
@@ -1693,7 +1898,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-126">line 126</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-138">line 138</a>
     </li></ul></dd>
     
 
@@ -2003,7 +2208,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-203">line 203</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-221">line 221</a>
     </li></ul></dd>
     
 
@@ -2109,7 +2314,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-220">line 220</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-238">line 238</a>
     </li></ul></dd>
     
 
@@ -2170,7 +2375,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-161">line 161</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-156">line 156</a>
     </li></ul></dd>
     
 
@@ -2235,7 +2440,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-158">line 158</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-176">line 176</a>
     </li></ul></dd>
     
 
@@ -2304,7 +2509,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-133">line 133</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-145">line 145</a>
     </li></ul></dd>
     
 
@@ -2349,13 +2554,13 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		Phaser Copyright © 2012-2014 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 28 2013 15:56:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 05 2014 06:28:35 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

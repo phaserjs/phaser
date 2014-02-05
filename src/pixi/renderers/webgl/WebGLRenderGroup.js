@@ -194,9 +194,6 @@ PIXI.WebGLRenderGroup.prototype.renderSpecific = function(displayObject, project
 		endBatch = lastRenderable;
 	}
 	
-	//console.log(endBatch);
-	// TODO - need to fold this up a bit!
-	
 	if(startBatch == endBatch)
 	{
 		if(startBatch instanceof PIXI.WebGLBatch)
@@ -775,7 +772,7 @@ PIXI.WebGLRenderGroup.prototype.removeObject = function(displayObject)
 		
 		// ok so.. check to see if you adjacent batchs should be joined.
 		// TODO may optimise?
-		if(index === 0 || index == this.batchs.length-1)
+		if(index == 0 || index == this.batchs.length-1)
 		{
 			// wha - eva! just get of the empty batch!
 			this.batchs.splice(index, 1);
@@ -848,7 +845,7 @@ PIXI.WebGLRenderGroup.prototype.initTilingSprite = function(sprite)
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, sprite._indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sprite.indices, gl.STATIC_DRAW);
     
-//    return ( (x > 0) && ((x & (x - 1)) === 0) );
+//    return ( (x > 0) && ((x & (x - 1)) == 0) );
 
 	if(sprite.texture.baseTexture._glTexture)
 	{

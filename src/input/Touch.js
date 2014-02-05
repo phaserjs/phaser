@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -67,7 +67,8 @@ Phaser.Touch = function (game) {
     this.preventDefault = true;
 
     /**
-    * @property {TouchEvent} event - The browser touch event.
+    * @property {TouchEvent} event - The browser touch DOM event. Will be set to null if no touch event has ever been received.
+    * @default
     */
     this.event = null;
 
@@ -268,13 +269,6 @@ Phaser.Touch.prototype = {
             event.preventDefault();
         }
 
-        /*
-        for (var i = 0; i < event.changedTouches.length; i++)
-        {
-            //console.log('touch enter');
-        }
-       */
-
     },
 
     /**
@@ -296,13 +290,6 @@ Phaser.Touch.prototype = {
         {
             event.preventDefault();
         }
-
-        /*
-        for (var i = 0; i < event.changedTouches.length; i++)
-        {
-            //console.log('touch leave');
-        }
-       */
 
     },
 
@@ -380,3 +367,5 @@ Phaser.Touch.prototype = {
     }
 
 };
+
+Phaser.Touch.prototype.constructor = Phaser.Touch;

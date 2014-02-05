@@ -2,7 +2,7 @@
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -197,52 +197,13 @@ Phaser.Utils = {
 
 };
 
-//  Global functions that PIXI needs
-
-(function() {
-    var consoleDisabled = false;
-    if (consoleDisabled) {
-        window.console = undefined;
-    }
-    if (window.console === undefined) {
-        window.console = {
-            debug: function() {
-                return true;
-            },
-            info: function() {
-                return false;
-            },
-            warn: function() {
-                return false;
-            },
-            log: function() {
-                return false;
-            }
-        }
-    }
-    debug = (function(args) {
-        window.console.debug(args);
-    });
-    info = (function(args) {
-        window.console.info(args);
-    });
-    warn = (function(args) {
-        window.console.warn(args);
-    });
-    log = (function(args) {
-        window.console.log(args);
-    });
-})();
-
-/**
-* Converts a hex color number to an [R, G, B] array
-*
-* @param {number} hex 
-* @return {array}
-*/
 function HEXtoRGB(hex) {
     return [(hex >> 16 & 0xFF) / 255, ( hex >> 8 & 0xFF) / 255, (hex & 0xFF)/ 255];
 }
+
+PIXI.hex2rgb = function hex2rgb(hex) {
+    return [(hex >> 16 & 0xFF) / 255, ( hex >> 8 & 0xFF) / 255, (hex & 0xFF)/ 255];
+};
 
 /**
 * A polyfill for Function.prototype.bind
@@ -280,3 +241,13 @@ if (typeof Function.prototype.bind != 'function') {
         };
     })();
 }
+
+/**
+* A polyfill for Array.isArray
+*/
+if (!Array.isArray) {
+  Array.isArray = function (arg) {
+    return Object.prototype.toString.call(arg) == '[object Array]';
+  };
+}
+

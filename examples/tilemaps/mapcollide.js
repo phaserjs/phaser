@@ -3,8 +3,8 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-    game.load.tilemap('mario', 'assets/maps/mario1.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.tileset('marioTiles', 'assets/maps/mario1.png',16,16);
+    game.load.tilemap('mario', 'assets/tilemaps/maps/super_mario.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.image('tiles', 'assets/tilemaps/tiles/super_mario.png');
     game.load.image('player', 'assets/sprites/phaser-dude.png');
 
 }
@@ -21,29 +21,30 @@ function create() {
 
     map = game.add.tilemap('mario');
 
-    tileset = game.add.tileset('marioTiles');
+    map.addTilesetImage('SuperMarioBros-World1-1', 'tiles');
 
-    //  floor
-    tileset.setCollisionRange(80, 97, true, true, true, true);
+    //  14 = ? block
+    // map.setCollisionBetween(14, 15);
 
-    //  one-ways
-    tileset.setCollisionRange(15, 17, true, true, false, true);
-
-    layer = game.add.tilemapLayer(0, 0, map.layers[0].width*tileset.tileWidth, 600, tileset, map, 0);
-
-    layer.fixedToCamera=false;
- 
-    layer.resizeWorld();
-
+    map.setCollisionBetween(15, 16);
+    map.setCollisionBetween(20, 25);
+    map.setCollisionBetween(27, 29);
+    map.setCollision(40);
     
+    layer = map.createLayer('World1');
+
+    //  Un-comment this on to see the collision tiles
+    // layer.debug = true;
+
+    layer.resizeWorld();
 
     p = game.add.sprite(32, 32, 'player');
 
-    p.body.gravity.y = 10;
-    p.body.bounce.y = 0.4;
+    game.physics.gravity.y = 250;
+
+    p.body.bounce.y = 0.2;
+    p.body.linearDamping = 1;
     p.body.collideWorldBounds = true;
-
-
 
     game.camera.follow(p);
 
@@ -53,20 +54,16 @@ function create() {
 
 function update() {
 
-    game.physics.collide(p,layer);
+    game.physics.collide(p, layer);
 
     p.body.velocity.x = 0;
 
     if (cursors.up.isDown)
     {
-        if (p.body.touching.down)
+        if (p.body.onFloor())
         {
-            p.body.velocity.y = -400;
+            p.body.velocity.y = -200;
         }
-    }
-    else if (cursors.down.isDown)
-    {
-        // game.camera.y += 4;
     }
 
     if (cursors.left.isDown)
@@ -82,8 +79,7 @@ function update() {
 
 function render() {
 
-    game.debug.renderCameraInfo(game.camera, 32, 32);
-    // game.debug.renderSpriteCorners(p);
-    game.debug.renderSpriteCollision(p, 32, 320);
+    game.debug.renderCameraInfo(game.camera, 420, 320);
+    game.debug.renderPhysicsBody(p.body);
 
 }

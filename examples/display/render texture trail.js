@@ -27,8 +27,12 @@ function create() {
 
 function update() {
 
-	//	Here we draw the mushroom sprite to the renderTexture at the pointer coordinates.
-	//	The 'false' parameter at the end tells it not to clear itself, causing the trail effect you see.
-	texture.render(mushroom, game.input.activePointer.position, false);
+	if (!game.input.activePointer.position.isZero())
+	{
+		//	Here we draw the mushroom sprite to the renderTexture at the pointer coordinates.
+		//	The 'false' parameter 2nd from the end tells it not to clear itself, causing the trail effect you see.
+		//	The final 'true' parameter tells it to render sprites even with visible false set.
+		texture.render(mushroom, game.input.activePointer.position, false, true);
+	}
 
 }

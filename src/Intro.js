@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -20,7 +20,7 @@
 *
 * Follow Phaser development progress at http://www.photonstorm.com
 *
-* Many thanks to Adam Saltsman (@ADAMATOMIC) for releasing Flixel, from both which Phaser
+* Many thanks to Adam Saltsman (@ADAMATOMIC) for releasing Flixel, from which both Phaser
 * and my love of game development originate.
 *
 * "If you want your children to be intelligent,  read them fairy tales."

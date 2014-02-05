@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -120,11 +120,6 @@ Phaser.BitmapText = function (game, x, y, text, style) {
     this._cache.x = this.x;
     this._cache.y = this.y;
 
-    /**
-    * @property {boolean} renderable - A renderable object will be rendered to the context each frame.
-    */
-    this.renderable = true;
-
 };
 
 Phaser.BitmapText.prototype = Object.create(PIXI.BitmapText.prototype);
@@ -153,8 +148,8 @@ Phaser.BitmapText.prototype.update = function() {
         this._cache.dirty = true;
     }
 
-    this.pivot.x = this.anchor.x*this.width;
-    this.pivot.y = this.anchor.y*this.height;
+    this.pivot.x = this.anchor.x * this.width;
+    this.pivot.y = this.anchor.y * this.height;
 
 }
 

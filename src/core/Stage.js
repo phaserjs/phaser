@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -24,7 +24,6 @@ Phaser.Stage = function (game, width, height) {
     /**
     * @property {string} game - Background color of the stage (defaults to black). Set via the public backgroundColor property.
     * @private
-    * @default 'rgb(0,0,0)'
     */
     this._backgroundColor = 'rgb(0,0,0)';
 
@@ -34,10 +33,9 @@ Phaser.Stage = function (game, width, height) {
     this.offset = new Phaser.Point();
     
     /**
-    * @property {HTMLCanvasElement} canvas - Reference to the newly created &lt;canvas&gt; element.
+    * @property {HTMLCanvasElement} canvas - Reference to the newly created `canvas` element.
     */
-    this.canvas = Phaser.Canvas.create(width, height);
-    this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
+    this.canvas = null;
     
     /**
     * @property {PIXI.Stage} _stage - The Pixi Stage which is hooked to the renderer.
@@ -48,9 +46,19 @@ Phaser.Stage = function (game, width, height) {
     this._stage.interactive = false;
 
     /**
+    * @property {PIXI.Stage} display - The Pixi Stage which is hooked to the renderer.
+    */
+    this.display = this._stage;
+
+    /**
     * @property {number} scaleMode - The current scaleMode.
     */
     this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
+
+    /*
+    * @property {number} fullScreenScaleMode - Scale mode to be used in fullScreen
+     */
+    this.fullScreenScaleMode = Phaser.StageScaleMode.NO_SCALE;
 
     /**
     * @property {Phaser.StageScaleMode} scale - The scale of the current running game.
@@ -61,6 +69,12 @@ Phaser.Stage = function (game, width, height) {
     * @property {number} aspectRatio - Aspect ratio.
     */
     this.aspectRatio = width / height;
+
+    /**
+    * @property {boolean} disableVisibilityChange - By default if the browser tab loses focus the game will pause. You can stop that behaviour by setting this property to true.
+    * @default
+    */
+    this.disableVisibilityChange = false;
 
     /**
     * @property {number} _nextOffsetCheck - The time to run the next offset check.
@@ -74,9 +88,72 @@ Phaser.Stage = function (game, width, height) {
     */
     this.checkOffsetInterval = 2500;
 
+    if (game.config)
+    {
+        this.parseConfig(game.config);
+    }
+    else
+    {
+        this.canvas = Phaser.Canvas.create(width, height);
+        this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
+    }
+
 };
 
 Phaser.Stage.prototype = {
+
+    /**
+    * Parses a Game configuration object.
+    *
+    * @method Phaser.Stage#parseConfig
+    * @protected
+    */
+    parseConfig: function (config) {
+
+        if (config['canvasID'])
+        {
+            this.canvas = Phaser.Canvas.create(this.game.width, this.game.height, config['canvasID']);
+        }
+        else
+        {
+            this.canvas = Phaser.Canvas.create(this.game.width, this.game.height);
+        }
+
+        if (config['canvasStyle'])
+        {
+            this.canvas.stlye = config['canvasStyle'];
+        }
+        else
+        {
+            this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
+        }
+
+        if (config['checkOffsetInterval'])
+        {
+            this.checkOffsetInterval = config['checkOffsetInterval'];
+        }
+
+        if (config['disableVisibilityChange'])
+        {
+            this.disableVisibilityChange = config['disableVisibilityChange'];
+        }
+
+        if (config['fullScreenScaleMode'])
+        {
+            this.fullScreenScaleMode = config['fullScreenScaleMode'];
+        }
+
+        if (config['scaleMode'])
+        {
+            this.scaleMode = config['scaleMode'];
+        }
+
+        if (config['backgroundColor'])
+        {
+            this.backgroundColor = config['backgroundColor'];
+        }
+
+    },
 
     /**
     * Initialises the stage and adds the event listeners.
@@ -140,7 +217,7 @@ Phaser.Stage.prototype = {
             return;
         }
 
-        if (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] === true || document['webkitHidden'] === true)
+        if (this.game.paused === false && (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] === true || document['webkitHidden'] === true))
         {
             this.game.paused = true;
         }
@@ -152,6 +229,8 @@ Phaser.Stage.prototype = {
     }
 
 };
+
+Phaser.Stage.prototype.constructor = Phaser.Stage;
 
 /**
 * @name Phaser.Stage#backgroundColor

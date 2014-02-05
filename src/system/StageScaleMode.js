@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -260,7 +260,8 @@ Phaser.StageScaleMode.prototype = {
         this._width = this.width;
         this._height = this.height;
 
-        console.log('startFullScreen', this._width, this._height);
+        //  This needs updating to match the final spec:
+        //  http://generatedcontent.org/post/70347573294/is-your-fullscreen-api-code-up-to-date-find-out-how-to
 
         if (element['requestFullScreen'])
         {
@@ -268,7 +269,7 @@ Phaser.StageScaleMode.prototype = {
         }
         else if (element['mozRequestFullScreen'])
         {
-            element['mozRequestFullScreen']();
+            element.parentNode['mozRequestFullScreen']();
         }
         else if (element['webkitRequestFullScreen'])
         {
@@ -310,16 +311,24 @@ Phaser.StageScaleMode.prototype = {
 
         if (this.isFullScreen)
         {
-            this.game.stage.canvas.style['width'] = '100%';
-            this.game.stage.canvas.style['height'] = '100%';
+            if (this.game.stage.fullScreenScaleMode === Phaser.StageScaleMode.EXACT_FIT)
+            {
+                this.game.stage.canvas.style['width'] = '100%';
+                this.game.stage.canvas.style['height'] = '100%';
 
-            this.setMaximum();
+                this.setMaximum();
 
-            this.game.input.scale.setTo(this.game.width / this.width, this.game.height / this.height);
+                this.game.input.scale.setTo(this.game.width / this.width, this.game.height / this.height);
 
-            this.aspectRatio = this.width / this.height;
-            this.scaleFactor.x = this.game.width / this.width;
-            this.scaleFactor.y = this.game.height / this.height;
+                this.aspectRatio = this.width / this.height;
+                this.scaleFactor.x = this.game.width / this.width;
+                this.scaleFactor.y = this.game.height / this.height;
+            }
+            else if (this.game.stage.fullScreenScaleMode === Phaser.StageScaleMode.SHOW_ALL)
+            {
+                this.game.stage.scale.setShowAll();
+                this.game.stage.scale.refresh();
+            }
         }
         else
         {
@@ -560,13 +569,27 @@ Phaser.StageScaleMode.prototype = {
             {
                 this.setMaximum();
             }
-            else if (this.game.stage.scaleMode == Phaser.StageScaleMode.EXACT_FIT)
+            else if (!this.isFullScreen)
             {
-                this.setExactFit();
+                if (this.game.stage.scaleMode == Phaser.StageScaleMode.EXACT_FIT)
+                {
+                    this.setExactFit();
+                }
+                else if (this.game.stage.scaleMode == Phaser.StageScaleMode.SHOW_ALL)
+                {
+                    this.setShowAll();
+                }
             }
-            else if (this.game.stage.scaleMode == Phaser.StageScaleMode.SHOW_ALL)
+            else
             {
-                this.setShowAll();
+                if (this.game.stage.fullScreenScaleMode == Phaser.StageScaleMode.EXACT_FIT)
+                {
+                    this.setExactFit();
+                }
+                else if (this.game.stage.fullScreenScaleMode == Phaser.StageScaleMode.SHOW_ALL)
+                {
+                    this.setShowAll();
+                }
             }
 
             this.setSize();
@@ -687,8 +710,6 @@ Phaser.StageScaleMode.prototype = {
         var availableWidth = window.innerWidth;
         var availableHeight = window.innerHeight;
 
-        // console.log('available', availableWidth, availableHeight);
-
         if (this.maxWidth && availableWidth > this.maxWidth)
         {
             this.width = this.maxWidth;
@@ -710,6 +731,8 @@ Phaser.StageScaleMode.prototype = {
     }
 
 };
+
+Phaser.StageScaleMode.prototype.constructor = Phaser.StageScaleMode;
 
 /**
 * @name Phaser.StageScaleMode#isFullScreen

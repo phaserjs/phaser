@@ -1,12 +1,12 @@
 <?php
-	//	All JS files in build order.
-	//	Much easier for debugging re: line numbers
-	if (!isset($path))
-	{
-		$path = '..';
-	}
+    //  All JS files in build order.
+    //  Much easier for debugging re: line numbers
+    if (!isset($path))
+    {
+        $path = '..';
+    }
 
-	echo <<<EOL
+    echo <<<EOL
 
     <script src="$path/src/Intro.js"></script>
     <script src="$path/src/pixi/Pixi.js"></script>
@@ -55,91 +55,97 @@
     <script src="$path/src/pixi/utils/EventTarget.js"></script>
     <script src="$path/src/pixi/utils/Polyk.js"></script>
 
-	<script src="$path/src/core/Camera.js"></script>
-	<script src="$path/src/core/State.js"></script>
-	<script src="$path/src/core/StateManager.js"></script>
-	<script src="$path/src/core/LinkedList.js"></script>
-	<script src="$path/src/core/Signal.js"></script>
-	<script src="$path/src/core/SignalBinding.js"></script>
-	<script src="$path/src/core/Filter.js"></script>
-	<script src="$path/src/core/Plugin.js"></script>
-	<script src="$path/src/core/PluginManager.js"></script>
-	<script src="$path/src/core/Stage.js"></script>
-	<script src="$path/src/core/Group.js"></script>
-	<script src="$path/src/core/World.js"></script>
-	<script src="$path/src/core/Game.js"></script>
+    <script src="$path/src/core/Camera.js"></script>
+    <script src="$path/src/core/State.js"></script>
+    <script src="$path/src/core/StateManager.js"></script>
+    <script src="$path/src/core/LinkedList.js"></script>
+    <script src="$path/src/core/Signal.js"></script>
+    <script src="$path/src/core/SignalBinding.js"></script>
+    <script src="$path/src/core/Filter.js"></script>
+    <script src="$path/src/core/Plugin.js"></script>
+    <script src="$path/src/core/PluginManager.js"></script>
+    <script src="$path/src/core/Stage.js"></script>
+    <script src="$path/src/core/Group.js"></script>
+    <script src="$path/src/core/World.js"></script>
+    <script src="$path/src/core/Game.js"></script>
 
-	<script src="$path/src/input/Input.js"></script>
-	<script src="$path/src/input/Key.js"></script>
-	<script src="$path/src/input/Keyboard.js"></script>
-	<script src="$path/src/input/Mouse.js"></script>
-	<script src="$path/src/input/MSPointer.js"></script>
-	<script src="$path/src/input/Pointer.js"></script>
-	<script src="$path/src/input/Touch.js"></script>
-	<script src="$path/src/input/InputHandler.js"></script>
+    <script src="$path/src/input/Input.js"></script>
+    <script src="$path/src/input/Key.js"></script>
+    <script src="$path/src/input/Keyboard.js"></script>
+    <script src="$path/src/input/Mouse.js"></script>
+    <script src="$path/src/input/MSPointer.js"></script>
+    <script src="$path/src/input/Pointer.js"></script>
+    <script src="$path/src/input/Touch.js"></script>
+    <script src="$path/src/input/Gamepad.js"></script>
+    <script src="$path/src/input/SinglePad.js"></script>
+    <script src="$path/src/input/GamepadButton.js"></script>
+    <script src="$path/src/input/InputHandler.js"></script>
 
-	<script src="$path/src/gameobjects/Events.js"></script>
-	<script src="$path/src/gameobjects/GameObjectFactory.js"></script>
-	<script src="$path/src/gameobjects/BitmapData.js"></script>
-	<script src="$path/src/gameobjects/Sprite.js"></script>
-	<script src="$path/src/gameobjects/TileSprite.js"></script>
-	<script src="$path/src/gameobjects/Text.js"></script>
-	<script src="$path/src/gameobjects/BitmapText.js"></script>
-	<script src="$path/src/gameobjects/Button.js"></script>
-	<script src="$path/src/gameobjects/Graphics.js"></script>
-	<script src="$path/src/gameobjects/RenderTexture.js"></script>
+    <script src="$path/src/gameobjects/Events.js"></script>
+    <script src="$path/src/gameobjects/GameObjectFactory.js"></script>
+    <script src="$path/src/gameobjects/BitmapData.js"></script>
+    <script src="$path/src/gameobjects/Sprite.js"></script>
+    <script src="$path/src/gameobjects/TileSprite.js"></script>
+    <script src="$path/src/gameobjects/Text.js"></script>
+    <script src="$path/src/gameobjects/BitmapText.js"></script>
+    <script src="$path/src/gameobjects/Button.js"></script>
+    <script src="$path/src/gameobjects/Graphics.js"></script>
+    <script src="$path/src/gameobjects/RenderTexture.js"></script>
 
-	<script src="$path/src/system/Canvas.js"></script>
-	<script src="$path/src/system/StageScaleMode.js"></script>
-	<script src="$path/src/system/Device.js"></script>
-	<script src="$path/src/system/RequestAnimationFrame.js"></script>
+    <script src="$path/src/system/Canvas.js"></script>
+    <script src="$path/src/system/StageScaleMode.js"></script>
+    <script src="$path/src/system/Device.js"></script>
+    <script src="$path/src/system/RequestAnimationFrame.js"></script>
 
-	<script src="$path/src/math/RandomDataGenerator.js"></script>
-	<script src="$path/src/math/Math.js"></script>
-	<script src="$path/src/math/QuadTree.js"></script>
+    <script src="$path/src/math/RandomDataGenerator.js"></script>
+    <script src="$path/src/math/Math.js"></script>
+    <script src="$path/src/math/QuadTree.js"></script>
 
-	<script src="$path/src/geom/Circle.js"></script>
-	<script src="$path/src/geom/Point.js"></script>
-	<script src="$path/src/geom/Rectangle.js"></script>
+    <script src="$path/src/geom/Circle.js"></script>
+    <script src="$path/src/geom/Point.js"></script>
+    <script src="$path/src/geom/Rectangle.js"></script>
+    <script src="$path/src/geom/Line.js"></script>
 
-	<script src="$path/src/net/Net.js"></script>
+    <script src="$path/src/net/Net.js"></script>
 
-	<script src="$path/src/tween/TweenManager.js"></script>
-	<script src="$path/src/tween/Tween.js"></script>
-	<script src="$path/src/tween/Easing.js"></script>
+    <script src="$path/src/tween/TweenManager.js"></script>
+    <script src="$path/src/tween/Tween.js"></script>
+    <script src="$path/src/tween/Easing.js"></script>
 
-	<script src="$path/src/time/Time.js"></script>
-	<script src="$path/src/time/Timer.js"></script>
+    <script src="$path/src/time/Time.js"></script>
+    <script src="$path/src/time/Timer.js"></script>
+    <script src="$path/src/time/TimerEvent.js"></script>
 
-	<script src="$path/src/animation/AnimationManager.js"></script>
-	<script src="$path/src/animation/Animation.js"></script>
-	<script src="$path/src/animation/Frame.js"></script>
-	<script src="$path/src/animation/FrameData.js"></script>
-	<script src="$path/src/animation/AnimationParser.js"></script>
+    <script src="$path/src/animation/AnimationManager.js"></script>
+    <script src="$path/src/animation/Animation.js"></script>
+    <script src="$path/src/animation/Frame.js"></script>
+    <script src="$path/src/animation/FrameData.js"></script>
+    <script src="$path/src/animation/AnimationParser.js"></script>
 
-	<script src="$path/src/loader/Cache.js"></script>
-	<script src="$path/src/loader/Loader.js"></script>
-	<script src="$path/src/loader/LoaderParser.js"></script>
+    <script src="$path/src/loader/Cache.js"></script>
+    <script src="$path/src/loader/Loader.js"></script>
+    <script src="$path/src/loader/LoaderParser.js"></script>
 
-	<script src="$path/src/sound/Sound.js"></script>
-	<script src="$path/src/sound/SoundManager.js"></script>
+    <script src="$path/src/sound/Sound.js"></script>
+    <script src="$path/src/sound/SoundManager.js"></script>
 
-	<script src="$path/src/utils/Debug.js"></script>
-	<script src="$path/src/utils/Color.js"></script>
+    <script src="$path/src/utils/Debug.js"></script>
+    <script src="$path/src/utils/Color.js"></script>
 
-	<script src="$path/src/physics/arcade/ArcadePhysics.js"></script>
-	<script src="$path/src/physics/arcade/Body.js"></script>
+    <script src="$path/src/physics/arcade/SAT.js"></script>
+    <script src="$path/src/physics/arcade/ArcadePhysics.js"></script>
+    <script src="$path/src/physics/arcade/Body.js"></script>
 
-	<script src="$path/src/particles/Particles.js"></script>
-	<script src="$path/src/particles/arcade/ArcadeParticles.js"></script>
-	<script src="$path/src/particles/arcade/Emitter.js"></script>
+    <script src="$path/src/particles/Particles.js"></script>
+    <script src="$path/src/particles/arcade/ArcadeParticles.js"></script>
+    <script src="$path/src/particles/arcade/Emitter.js"></script>
 
-	<script src="$path/src/tilemap/Tile.js"></script>
-	<script src="$path/src/tilemap/Tilemap.js"></script>
-	<script src="$path/src/tilemap/TilemapLayer.js"></script>
-	<script src="$path/src/tilemap/TilemapParser.js"></script>
-	<script src="$path/src/tilemap/Tileset.js"></script>
-	
-	<script src="$path/src/PixiPatch.js"></script>
+    <script src="$path/src/tilemap/Tile.js"></script>
+    <script src="$path/src/tilemap/Tilemap.js"></script>
+    <script src="$path/src/tilemap/TilemapLayer.js"></script>
+    <script src="$path/src/tilemap/TilemapParser.js"></script>
+    <script src="$path/src/tilemap/Tileset.js"></script>
+
+    <script src="$path/src/PixiPatch.js"></script>
 EOL;
 ?>

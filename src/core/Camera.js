@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -39,7 +39,7 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     * Camera view. 
     * The view into the world we wish to render (by default the game dimensions).
     * The x/y values are in world coordinates, not screen coordinates, the width/height is how many pixels to render.
-    * Objects outside of this view are not rendered (unless set to ignore the Camera, i.e. UI?).
+    * Objects outside of this view are not rendered if set to camera cull.
     * @property {Phaser.Rectangle} view
     */
     this.view = new Phaser.Rectangle(x, y, width, height);
@@ -86,6 +86,9 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     */
     this._edge = 0;
 
+    /**
+    * @property {PIXI.DisplayObject} displayObject - The display object to which all game objects are added. Set by World.boot
+    */
     this.displayObject = null;
     
 };
@@ -203,6 +206,11 @@ Phaser.Camera.prototype = {
 
     },
 
+    /**
+    * Internal method
+    * @method Phaser.Camera#updateTarget
+    * @private
+    */
     updateTarget: function () {
 
         if (this.deadzone)
@@ -242,9 +250,13 @@ Phaser.Camera.prototype = {
 
     },
 
+    /**
+    * Update the Camera bounds to match the game world.
+    * @method Phaser.Camera#setBoundsToWorld
+    */
     setBoundsToWorld: function () {
 
-        this.bounds.setTo(this.game.world.x, this.game.world.y, this.game.world.width, this.game.world.height);
+        this.bounds.setTo(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height);
 
     },
 
@@ -264,10 +276,10 @@ Phaser.Camera.prototype = {
             this.view.x = this.bounds.x;
         }
 
-        if (this.view.x > this.bounds.right - this.width)
+        if (this.view.right > this.bounds.right)
         {
             this.atLimit.x = true;
-            this.view.x = (this.bounds.right - this.width) + 1;
+            this.view.x = this.bounds.right - this.width;
         }
 
         if (this.view.y < this.bounds.top)
@@ -276,10 +288,10 @@ Phaser.Camera.prototype = {
             this.view.y = this.bounds.top;
         }
 
-        if (this.view.y > this.bounds.bottom - this.height)
+        if (this.view.bottom > this.bounds.bottom)
         {
             this.atLimit.y = true;
-            this.view.y = (this.bounds.bottom - this.height) + 1;
+            this.view.y = this.bounds.bottom - this.height;
         }
 
         this.view.floor();
@@ -321,6 +333,8 @@ Phaser.Camera.prototype = {
     }
 
 };
+
+Phaser.Camera.prototype.constructor = Phaser.Camera;
 
 /**
 * The Cameras x coordinate. This value is automatically clamped if it falls outside of the World bounds.

@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -47,15 +47,19 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} y - Y position of the new sprite.
     * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
     * @param {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @returns {Phaser.Sprite} the newly created sprite object.
     */
-    sprite: function (x, y, key, frame) {
+    sprite: function (x, y, key, frame, group) {
 
-        return this.world.create(x, y, key, frame);
+        if (typeof group === 'undefined') { group = this.world; }
+
+        return group.create(x, y, key, frame);
 
     },
 
     /**
+    * DEPRECATED - will be removed in Phaser 1.2
     * Create a new Sprite with specific position and sprite sheet key that will automatically be added as a child of the given parent.
     *
     * @method Phaser.GameObjectFactory#child
@@ -89,8 +93,8 @@ Phaser.GameObjectFactory.prototype = {
     * A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
     *
     * @method Phaser.GameObjectFactory#group
-    * @param {*} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
-    * @param {string} [name=group] - A name for this Group. Not used internally but useful for debugging.
+    * @param {any} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
+    * @param {string} [name='group'] - A name for this Group. Not used internally but useful for debugging.
     * @return {Phaser.Group} The newly created group.
     */
     group: function (parent, name) {
@@ -100,7 +104,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Creates a new instance of the Sound class.
+    * Creates a new Sound object.
     *
     * @method Phaser.GameObjectFactory#audio
     * @param {string} key - The Game.cache key of the sound that this object will use.
@@ -116,7 +120,23 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Creates a new <code>TileSprite</code>.
+    * Creates a new Sound object.
+    *
+    * @method Phaser.GameObjectFactory#sound
+    * @param {string} key - The Game.cache key of the sound that this object will use.
+    * @param {number} [volume=1] - The volume at which the sound will be played.
+    * @param {boolean} [loop=false] - Whether or not the sound will loop.
+    * @param {boolean} [connect=true] - Controls if the created Sound object will connect to the master gainNode of the SoundManager when running under WebAudio.
+    * @return {Phaser.Sound} The newly created text object.
+    */
+    sound: function (key, volume, loop, connect) {
+
+        return this.game.sound.add(key, volume, loop, connect);
+        
+    },
+
+    /**
+    * Creates a new TileSprite object.
     *
     * @method Phaser.GameObjectFactory#tileSprite
     * @param {number} x - X position of the new tileSprite.
@@ -124,33 +144,38 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} width - the width of the tilesprite.
     * @param {number} height - the height of the tilesprite.
     * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
-    * @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.TileSprite} The newly created tileSprite object.
     */
-    tileSprite: function (x, y, width, height, key, frame) {
+    tileSprite: function (x, y, width, height, key, group) {
 
-        return this.world.add(new Phaser.TileSprite(this.game, x, y, width, height, key, frame));
+        if (typeof group === 'undefined') { group = this.world; }
+
+        return group.add(new Phaser.TileSprite(this.game, x, y, width, height, key));
 
     },
 
     /**
-    * Creates a new <code>Text</code>.
+    * Creates a new Text object.
     *
     * @method Phaser.GameObjectFactory#text
     * @param {number} x - X position of the new text object.
     * @param {number} y - Y position of the new text object.
     * @param {string} text - The actual text that will be written.
     * @param {object} style - The style object containing style attributes like font, font size , etc.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.Text} The newly created text object.
     */
-    text: function (x, y, text, style) {
+    text: function (x, y, text, style, group) {
 
-        return this.world.add(new Phaser.Text(this.game, x, y, text, style));
+        if (typeof group === 'undefined') { group = this.world; }
+
+        return group.add(new Phaser.Text(this.game, x, y, text, style));
 
     },
 
     /**
-    * Creates a new <code>Button</code> object.
+    * Creates a new Button object.
     *
     * @method Phaser.GameObjectFactory#button
     * @param {number} [x] X position of the new button object.
@@ -161,25 +186,32 @@ Phaser.GameObjectFactory.prototype = {
     * @param {string|number} [overFrame] This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.
     * @param {string|number} [outFrame] This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.
     * @param {string|number} [downFrame] This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.
+    * @param {string|number} [upFrame] This is the frame or frameName that will be set when this button is in an up state. Give either a number to use a frame ID or a string for a frame name.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.Button} The newly created button object.
     */
-    button: function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame) {
+    button: function (x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame, group) {
 
-        return this.world.add(new Phaser.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame));
+        if (typeof group === 'undefined') { group = this.world; }
+
+        return group.add(new Phaser.Button(this.game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame));
 
     },
 
     /**
-    * Creates a new <code>Graphics</code> object.
+    * Creates a new Graphics object.
     *
     * @method Phaser.GameObjectFactory#graphics
     * @param {number} x - X position of the new graphics object.
     * @param {number} y - Y position of the new graphics object.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.Graphics} The newly created graphics object.
     */
-    graphics: function (x, y) {
+    graphics: function (x, y, group) {
 
-        return this.world.add(new Phaser.Graphics(this.game, x, y));
+        if (typeof group === 'undefined') { group = this.world; }
+
+        return group.add(new Phaser.Graphics(this.game, x, y));
 
     },
 
@@ -201,16 +233,19 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * * Create a new <code>BitmapText</code>.
+    * * Create a new BitmapText object.
     *
     * @method Phaser.GameObjectFactory#bitmapText
     * @param {number} x - X position of the new bitmapText object.
     * @param {number} y - Y position of the new bitmapText object.
     * @param {string} text - The actual text that will be written.
     * @param {object} style - The style object containing style attributes like font, font size , etc.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.BitmapText} The newly created bitmapText object.
     */
-    bitmapText: function (x, y, text, style) {
+    bitmapText: function (x, y, text, style, group) {
+
+        if (typeof group === 'undefined') { group = this.world; }
 
         return this.world.add(new Phaser.BitmapText(this.game, x, y, text, style));
 
@@ -220,41 +255,13 @@ Phaser.GameObjectFactory.prototype = {
     * Creates a new Tilemap object.
     *
     * @method Phaser.GameObjectFactory#tilemap
-    * @param {string} key - Asset key for the JSON file.
+    * @param {string} key - Asset key for the JSON or CSV map data in the cache.
+    * @param {object|string} tilesets - An object mapping Cache.tileset keys with the tileset names in the JSON file. If a string is provided that will be used.
     * @return {Phaser.Tilemap} The newly created tilemap object.
     */
-    tilemap: function (key) {
+    tilemap: function (key, tilesets) {
 
-        return new Phaser.Tilemap(this.game, key);
-
-    },
-
-    /**
-    * Creates a new Tileset object.
-    *
-    * @method Phaser.GameObjectFactory#tileset
-    * @param {string} key - The image key as defined in the Game.Cache to use as the tileset.
-    * @return {Phaser.Tileset} The newly created tileset object.
-    */
-    tileset: function (key) {
-
-        return this.game.cache.getTileset(key);
-
-    },
-
-    /**
-    * Creates a new Tilemap Layer object.
-    *
-    * @method Phaser.GameObjectFactory#tilemapLayer
-    * @param {number} x - X position of the new tilemapLayer.
-    * @param {number} y - Y position of the new tilemapLayer.
-    * @param {number} width - the width of the tilemapLayer.
-    * @param {number} height - the height of the tilemapLayer.
-    * @return {Phaser.TilemapLayer} The newly created tilemaplayer object.
-    */
-    tilemapLayer: function (x, y, width, height, tileset, tilemap, layer) {
-
-        return this.world.add(new Phaser.TilemapLayer(this.game, x, y, width, height, tileset, tilemap, layer));
+        return new Phaser.Tilemap(this.game, key, tilesets);
 
     },
 
@@ -278,7 +285,7 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
+    * Experimental: A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
     *
     * @method Phaser.GameObjectFactory#bitmapData
     * @param {number} [width=256] - The width of the BitmapData in pixels.
@@ -312,3 +319,5 @@ Phaser.GameObjectFactory.prototype = {
     }
 
 };
+
+Phaser.GameObjectFactory.prototype.constructor = Phaser.GameObjectFactory;

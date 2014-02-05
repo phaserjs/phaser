@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -10,31 +10,31 @@
 * @classdesc A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {*} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
+* @param {*} parent - The parent Group or DisplayObjectContainer that will hold this group, if any. If undefined it will use game.world.
 * @param {string} [name=group] - A name for this Group. Not used internally but useful for debugging.
 * @param {boolean} [useStage=false] - Should the DisplayObjectContainer this Group creates be added to the World (default, false) or direct to the Stage (true).
 */
 Phaser.Group = function (game, parent, name, useStage) {
 
-    if (typeof parent === 'undefined' || typeof parent === null)
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
+    this.game = game;
+
+    if (typeof parent === 'undefined')
     {
         parent = game.world;
     }
+
+    /**
+    * @property {string} name - A name for this Group. Not used internally but useful for debugging.
+    */
+    this.name = name || 'group';
 
     if (typeof useStage === 'undefined')
     {
         useStage = false;
     }
-
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    */
-    this.game = game;
-    
-    /**
-    * @property {string} name - A name for this Group. Not used internally but useful for debugging.
-    */
-    this.name = name || 'group';
 
     if (useStage)
     {
@@ -50,7 +50,6 @@ Phaser.Group = function (game, parent, name, useStage) {
             if (parent instanceof Phaser.Group)
             {
                 parent._container.addChild(this._container);
-                parent._container.updateTransform();
             }
             else
             {
@@ -72,15 +71,34 @@ Phaser.Group = function (game, parent, name, useStage) {
     this.type = Phaser.GROUP;
 
     /**
+    * @property {boolean} alive - The alive property is useful for Groups that are children of other Groups and need to be included/excluded in checks like forEachAlive.
+    * @default
+    */
+    this.alive = true;
+
+    /**
     * @property {boolean} exists - If exists is true the the Group is updated, otherwise it is skipped.
     * @default
     */
     this.exists = true;
 
     /**
-    * @property {Phaser.Point} scale - Replaces the PIXI.Point with a slightly more flexible one.
+    * @property {Phaser.Group} group - The parent Group of this Group, if a child of another.
     */
-    this.scale = new Phaser.Point(1, 1);
+    this.group = null;
+
+    //  Replaces the PIXI.Point with a slightly more flexible one.
+    this._container.scale = new Phaser.Point(1, 1);
+
+    /**
+    * @property {Phaser.Point} scale - The scane of the Group container.
+    */
+    this.scale = this._container.scale;
+
+    /**
+    * @property {Phaser.Point} pivot - The pivot point of the Group container.
+    */
+    this.pivot = this._container.pivot;
 
     /**
     * The cursor is a simple way to iterate through the objects in a Group using the Group.next and Group.previous functions.
@@ -138,16 +156,27 @@ Phaser.Group.prototype = {
 
         if (child.group !== this)
         {
-            child.group = this;
-
-            if (child.events)
+            if (child.type && child.type === Phaser.GROUP)
             {
-                child.events.onAddedToGroup.dispatch(child, this);
+                child.group = this;
+
+                this._container.addChild(child._container);
+
+                child._container.updateTransform();
             }
+            else
+            {
+                child.group = this;
 
-            this._container.addChild(child);
+                this._container.addChild(child);
 
-            child.updateTransform();
+                child.updateTransform();
+
+                if (child.events)
+                {
+                    child.events.onAddedToGroup.dispatch(child, this);
+                }
+            }
 
             if (this.cursor === null)
             {
@@ -172,16 +201,27 @@ Phaser.Group.prototype = {
 
         if (child.group !== this)
         {
-            child.group = this;
-
-            if (child.events)
+            if (child.type && child.type === Phaser.GROUP)
             {
-                child.events.onAddedToGroup.dispatch(child, this);
+                child.group = this;
+
+                this._container.addChildAt(child._container, index);
+
+                child._container.updateTransform();
             }
+            else
+            {
+                child.group = this;
 
-            this._container.addChildAt(child, index);
+                this._container.addChildAt(child, index);
 
-            child.updateTransform();
+                child.updateTransform();
+
+                if (child.events)
+                {
+                    child.events.onAddedToGroup.dispatch(child, this);
+                }
+            }
 
             if (this.cursor === null)
             {
@@ -220,7 +260,7 @@ Phaser.Group.prototype = {
     */
     create: function (x, y, key, frame, exists) {
 
-        if (typeof exists == 'undefined') { exists = true; }
+        if (typeof exists === 'undefined') { exists = true; }
 
         var child = new Phaser.Sprite(this.game, x, y, key, frame);
 
@@ -229,14 +269,14 @@ Phaser.Group.prototype = {
         child.visible = exists;
         child.alive = exists;
 
+        this._container.addChild(child);
+            
+        child.updateTransform();
+
         if (child.events)
         {
             child.events.onAddedToGroup.dispatch(child, this);
         }
-
-        this._container.addChild(child);
-            
-        child.updateTransform();
 
         if (this.cursor === null)
         {
@@ -260,7 +300,7 @@ Phaser.Group.prototype = {
     */
     createMultiple: function (quantity, key, frame, exists) {
 
-        if (typeof exists == 'undefined') { exists = false; }
+        if (typeof exists === 'undefined') { exists = false; }
 
         for (var i = 0; i < quantity; i++)
         {
@@ -271,13 +311,14 @@ Phaser.Group.prototype = {
             child.visible = exists;
             child.alive = exists;
 
+            this._container.addChild(child);
+
+            child.updateTransform();
+
             if (child.events)
             {
                 child.events.onAddedToGroup.dispatch(child, this);
             }
-
-            this._container.addChild(child);
-            child.updateTransform();
 
             if (this.cursor === null)
             {
@@ -332,6 +373,11 @@ Phaser.Group.prototype = {
 
     },
 
+    /**
+    * Internal test.
+    *
+    * @method Phaser.Group#childTest
+    */
     childTest: function (prefix, child) {
 
         var s = prefix + ' next: ';
@@ -360,12 +406,15 @@ Phaser.Group.prototype = {
 
     },
 
+    /**
+    * Internal test.
+    *
+    * @method Phaser.Group#swapIndex
+    */
     swapIndex: function (index1, index2) {
 
         var child1 = this.getAt(index1);
         var child2 = this.getAt(index2);
-
-        console.log('swapIndex ', index1, ' with ', index2);
 
         this.swap(child1, child2);
 
@@ -632,6 +681,32 @@ Phaser.Group.prototype = {
     },
 
     /**
+    * This function allows you to quickly set a property on a single child of this Group to a new value.
+    * The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
+    *
+    * @method Phaser.Group#set
+    * @param {Phaser.Sprite} child - The child to set the property on.
+    * @param {string} key - The property, as a string, to be set. For example: 'body.velocity.x'
+    * @param {*} value - The value that will be set.
+    * @param {boolean} [checkAlive=false] - If set then the child will only be updated if alive=true.
+    * @param {boolean} [checkVisible=false] - If set then the child will only be updated if visible=true.
+    * @param {number} [operation=0] - Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.
+    */
+    set: function (child, key, value, checkAlive, checkVisible, operation) {
+
+        key = key.split('.');
+
+        if (typeof checkAlive === 'undefined') { checkAlive = false; }
+        if (typeof checkVisible === 'undefined') { checkVisible = false; }
+
+        if ((checkAlive === false || (checkAlive && child.alive)) && (checkVisible === false || (checkVisible && child.visible)))
+        {
+            this.setProperty(child, key, value, operation);
+        }
+
+    },
+
+    /**
     * This function allows you to quickly set the same property across all children of this Group to a new value.
     * The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.
     *
@@ -766,7 +841,7 @@ Phaser.Group.prototype = {
     },
 
     /**
-    * Calls a function on all of the children that have exists=true in this Group.
+    * Returns a reference to a function that exists on a child of the Group based on the given callback array.
     * 
     * @method Phaser.Group#callbackFromArray
     * @param {object} child - The object to inspect.
@@ -824,7 +899,7 @@ Phaser.Group.prototype = {
     * 
     * @method Phaser.Group#callAll
     * @param {string} method - A string containing the name of the function that will be called. The function must exist on the child.
-    * @param {string} [context=''] - A string containing the context under which the method will be executed. Leave to '' to default to the child.
+    * @param {string} [context=null] - A string containing the context under which the method will be executed. Set to null to default to the child.
     * @param {...*} parameter - Additional parameters that will be passed to the method.
     */
     callAll: function (method, context) {
@@ -891,6 +966,7 @@ Phaser.Group.prototype = {
     * Allows you to call your own function on each member of this Group. You must pass the callback and context in which it will run.
     * After the checkExists parameter you can add as many parameters as you like, which will all be passed to the callback along with the child.
     * For example: Group.forEach(awardBonusGold, this, true, 100, 500)
+    * Note: Currently this will skip any children which are Groups themselves.
     * 
     * @method Phaser.Group#forEach
     * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
@@ -1041,12 +1117,13 @@ Phaser.Group.prototype = {
     * @param {number} returnType - How to return the data from this method. Either Phaser.Group.RETURN_NONE, Phaser.Group.RETURN_TOTAL or Phaser.Group.RETURN_CHILD.
     * @param {function} [callback=null] - Optional function that will be called on each matching child. Each child of the Group will be passed to it as its first parameter.
     * @param {Object} [callbackContext] - The context in which the function should be called (usually 'this').
+    * @return {any} Returns either a numeric total (if RETURN_TOTAL was specified) or the child object.
     */
     iterate: function (key, value, returnType, callback, callbackContext, args) {
 
-        if (returnType == Phaser.Group.RETURN_TOTAL && this._container.children.length === 0)
+        if (returnType === Phaser.Group.RETURN_TOTAL && this._container.children.length === 0)
         {
-            return -1;
+            return 0;
         }
 
         if (typeof callback === 'undefined')
@@ -1072,7 +1149,7 @@ Phaser.Group.prototype = {
                         callback.apply(callbackContext, args);
                     }
 
-                    if (returnType == Phaser.Group.RETURN_CHILD)
+                    if (returnType === Phaser.Group.RETURN_CHILD)
                     {
                         return currentNode;
                     }
@@ -1083,11 +1160,11 @@ Phaser.Group.prototype = {
             while (currentNode != this._container.last._iNext);
         }
 
-        if (returnType == Phaser.Group.RETURN_TOTAL)
+        if (returnType === Phaser.Group.RETURN_TOTAL)
         {
             return total;
         }
-        else if (returnType == Phaser.Group.RETURN_CHILD)
+        else if (returnType === Phaser.Group.RETURN_CHILD)
         {
             return null;
         }
@@ -1142,7 +1219,7 @@ Phaser.Group.prototype = {
     * Call this function to find out how many members of the group are alive.
     *
     * @method Phaser.Group#countLiving
-    * @return {number} The number of children flagged as alive. Returns -1 if Group is empty.
+    * @return {number} The number of children flagged as alive.
     */
     countLiving: function () {
 
@@ -1154,7 +1231,7 @@ Phaser.Group.prototype = {
     * Call this function to find out how many members of the group are dead.
     *
     * @method Phaser.Group#countDead
-    * @return {number} The number of children flagged as dead. Returns -1 if Group is empty.
+    * @return {number} The number of children flagged as dead.
     */
     countDead: function () {
 
@@ -1298,11 +1375,31 @@ Phaser.Group.prototype = {
     * Destroys this Group. Removes all children, then removes the container from the display list and nulls references.
     *
     * @method Phaser.Group#destroy
+    * @param {boolean} [destroyChildren=false] - Should every child of this Group have its destroy method called?
     */
-    destroy: function () {
+    destroy: function (destroyChildren) {
 
-        this.removeAll();
+        if (typeof destroyChildren === 'undefined') { destroyChildren = false; }
 
+        if (destroyChildren)
+        {
+            if (this._container.children.length > 0)
+            {
+                do
+                {
+                    if (this._container.children[0].group)
+                    {
+                        this._container.children[0].destroy();
+                    }
+                }
+                while (this._container.children.length > 0);
+            }
+        }
+        else
+        {
+            this.removeAll();
+        }
+    
         this._container.parent.removeChild(this._container);
 
         this._container = null;
@@ -1355,130 +1452,52 @@ Phaser.Group.prototype = {
 
         return true;
 
-    },
-
-    /**
-    * Dumps out a list of Group children and their index positions to the browser console. Useful for group debugging.
-    *
-    * @method Phaser.Group#dump
-    * @param {boolean} [full=false] - If full the dump will include the entire display list, start from the Stage. Otherwise it will only include this container.
-    */
-    dump: function (full) {
-
-        if (typeof full == 'undefined')
-        {
-            full = false;
-        }
-
-        var spacing = 20;
-        var output = "\n" + Phaser.Utils.pad('Node', spacing) + "|" + Phaser.Utils.pad('Next', spacing) + "|" + Phaser.Utils.pad('Previous', spacing) + "|" + Phaser.Utils.pad('First', spacing) + "|" + Phaser.Utils.pad('Last', spacing);
-
-        console.log(output);
-
-        var output = Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing);
-        console.log(output);
-
-        if (full)
-        {
-            var testObject = this.game.stage._stage.last._iNext;
-            var displayObject = this.game.stage._stage;
-        }
-        else
-        {
-            var testObject = this._container.last._iNext;
-            var displayObject = this._container;
-        }
-        
-        do
-        {
-            var name = displayObject.name || '*';
-
-            if (this.cursor == displayObject)
-            {
-                var name = '> ' + name;
-            }
-
-            var nameNext = '-';
-            var namePrev = '-';
-            var nameFirst = '-';
-            var nameLast = '-';
-
-            if (displayObject._iNext)
-            {
-                nameNext = displayObject._iNext.name;
-            }
-
-            if (displayObject._iPrev)
-            {
-                namePrev = displayObject._iPrev.name;
-            }
-
-            if (displayObject.first)
-            {
-                nameFirst = displayObject.first.name;
-            }
-
-            if (displayObject.last)
-            {
-                nameLast = displayObject.last.name;
-            }
-
-            if (typeof nameNext === 'undefined')
-            {
-                nameNext = '-';
-            }
-
-            if (typeof namePrev === 'undefined')
-            {
-                namePrev = '-';
-            }
-
-            if (typeof nameFirst === 'undefined')
-            {
-                nameFirst = '-';
-            }
-
-            if (typeof nameLast === 'undefined')
-            {
-                nameLast = '-';
-            }
-
-            var output = Phaser.Utils.pad(name, spacing) + "|" + Phaser.Utils.pad(nameNext, spacing) + "|" + Phaser.Utils.pad(namePrev, spacing) + "|" + Phaser.Utils.pad(nameFirst, spacing) + "|" + Phaser.Utils.pad(nameLast, spacing);
-            console.log(output);
-
-            displayObject = displayObject._iNext;
-
-        }
-        while(displayObject != testObject)
-
     }
 
 };
 
+Phaser.Group.prototype.constructor = Phaser.Group;
+
 /**
 * @name Phaser.Group#total
-* @property {number} total - The total number of children in this Group, regardless of their alive state.
+* @property {number} total - The total number of children in this Group who have a state of exists = true.
 * @readonly
 */
 Object.defineProperty(Phaser.Group.prototype, "total", {
 
     get: function () {
-        return this.iterate('exists', true, Phaser.Group.RETURN_TOTAL);
-        // return this._container.children.length;
+
+        if (this._container)
+        {
+            return this.iterate('exists', true, Phaser.Group.RETURN_TOTAL);
+        }
+        else
+        {
+            return 0;
+        }
+
     }
 
 });
 
 /**
 * @name Phaser.Group#length
-* @property {number} length - The number of children in this Group.
+* @property {number} length - The total number of children in this Group, regardless of their exists/alive status.
 * @readonly
 */
 Object.defineProperty(Phaser.Group.prototype, "length", {
 
     get: function () {
-        return this.iterate('exists', true, Phaser.Group.RETURN_TOTAL);
-        // return this._container.children.length;
+
+        if (this._container)
+        {
+            return this._container.children.length;
+        }
+        else
+        {
+            return 0;
+        }
+
     }
 
 });

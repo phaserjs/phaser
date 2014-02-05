@@ -91,6 +91,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.DOMSprite.html">DOMSprite</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -163,6 +167,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -184,6 +196,10 @@
 						
 						<li>
 							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Line.html">Line</a>
 						</li>
 						
 						<li>
@@ -279,6 +295,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Sound.html">Sound</a>
 						</li>
 						
@@ -343,6 +363,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
 						</li>
 						
@@ -374,36 +398,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
-						</li>
-						
-						<li>
-							<a href="global.html#render">render</a>
-						</li>
-						
-						<li>
-							<a href="global.html#renderXY">renderXY</a>
-						</li>
-						
-						<li>
-							<a href="global.html#right">right</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -423,7 +417,7 @@
         <article>
             <pre class="sunlight-highlight-javascript linenums">/**
 * @author       Richard Davey &lt;rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -683,7 +677,8 @@ Phaser.StageScaleMode.prototype = {
         this._width = this.width;
         this._height = this.height;
 
-        console.log('startFullScreen', this._width, this._height);
+        //  This needs updating to match the final spec:
+        //  http://generatedcontent.org/post/70347573294/is-your-fullscreen-api-code-up-to-date-find-out-how-to
 
         if (element['requestFullScreen'])
         {
@@ -691,7 +686,7 @@ Phaser.StageScaleMode.prototype = {
         }
         else if (element['mozRequestFullScreen'])
         {
-            element['mozRequestFullScreen']();
+            element.parentNode['mozRequestFullScreen']();
         }
         else if (element['webkitRequestFullScreen'])
         {
@@ -733,16 +728,24 @@ Phaser.StageScaleMode.prototype = {
 
         if (this.isFullScreen)
         {
-            this.game.stage.canvas.style['width'] = '100%';
-            this.game.stage.canvas.style['height'] = '100%';
+            if (this.game.stage.fullScreenScaleMode === Phaser.StageScaleMode.EXACT_FIT)
+            {
+                this.game.stage.canvas.style['width'] = '100%';
+                this.game.stage.canvas.style['height'] = '100%';
 
-            this.setMaximum();
+                this.setMaximum();
 
-            this.game.input.scale.setTo(this.game.width / this.width, this.game.height / this.height);
+                this.game.input.scale.setTo(this.game.width / this.width, this.game.height / this.height);
 
-            this.aspectRatio = this.width / this.height;
-            this.scaleFactor.x = this.game.width / this.width;
-            this.scaleFactor.y = this.game.height / this.height;
+                this.aspectRatio = this.width / this.height;
+                this.scaleFactor.x = this.game.width / this.width;
+                this.scaleFactor.y = this.game.height / this.height;
+            }
+            else if (this.game.stage.fullScreenScaleMode === Phaser.StageScaleMode.SHOW_ALL)
+            {
+                this.game.stage.scale.setShowAll();
+                this.game.stage.scale.refresh();
+            }
         }
         else
         {
@@ -983,13 +986,27 @@ Phaser.StageScaleMode.prototype = {
             {
                 this.setMaximum();
             }
-            else if (this.game.stage.scaleMode == Phaser.StageScaleMode.EXACT_FIT)
+            else if (!this.isFullScreen)
             {
-                this.setExactFit();
+                if (this.game.stage.scaleMode == Phaser.StageScaleMode.EXACT_FIT)
+                {
+                    this.setExactFit();
+                }
+                else if (this.game.stage.scaleMode == Phaser.StageScaleMode.SHOW_ALL)
+                {
+                    this.setShowAll();
+                }
             }
-            else if (this.game.stage.scaleMode == Phaser.StageScaleMode.SHOW_ALL)
+            else
             {
-                this.setShowAll();
+                if (this.game.stage.fullScreenScaleMode == Phaser.StageScaleMode.EXACT_FIT)
+                {
+                    this.setExactFit();
+                }
+                else if (this.game.stage.fullScreenScaleMode == Phaser.StageScaleMode.SHOW_ALL)
+                {
+                    this.setShowAll();
+                }
             }
 
             this.setSize();
@@ -1110,8 +1127,6 @@ Phaser.StageScaleMode.prototype = {
         var availableWidth = window.innerWidth;
         var availableHeight = window.innerHeight;
 
-        // console.log('available', availableWidth, availableHeight);
-
         if (this.maxWidth && availableWidth > this.maxWidth)
         {
             this.width = this.maxWidth;
@@ -1133,6 +1148,8 @@ Phaser.StageScaleMode.prototype = {
     }
 
 };
+
+Phaser.StageScaleMode.prototype.constructor = Phaser.StageScaleMode;
 
 /**
 * @name Phaser.StageScaleMode#isFullScreen
@@ -1189,13 +1206,13 @@ Object.defineProperty(Phaser.StageScaleMode.prototype, "isLandscape", {
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		Phaser Copyright © 2012-2014 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 28 2013 15:56:25 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 05 2014 06:28:24 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

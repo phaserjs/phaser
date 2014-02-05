@@ -5,39 +5,44 @@ function preload() {
     game.load.image('disk', 'assets/sprites/p2.jpeg');
 }
 
-var s;
+var tilesprite;
+var cursors;
 var count = 0;
 
 function create() {
-    s = game.add.tileSprite(0, 0, 512, 512, 'disk');
+
+    tilesprite = game.add.tileSprite(0, 0, 512, 512, 'disk');
+
+    cursors = game.input.keyboard.createCursorKeys();
+
 }
 
 function update() {
 
     count += 0.005
 
-    s.tileScale.x = 2 + Math.sin(count);
-    s.tileScale.y = 2 + Math.cos(count);
+    tilesprite.tileScale.x = 2 + Math.sin(count);
+    tilesprite.tileScale.y = 2 + Math.cos(count);
     
-    s.tilePosition.x += 1;
-    s.tilePosition.y += 1;
+    tilesprite.tilePosition.x += 1;
+    tilesprite.tilePosition.y += 1;
 
-    if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+    if (cursors.left.isDown)
     {
-        s.x -= 4;
+        tilesprite.x -= 4;
     }
-    else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+    else if (cursors.right.isDown)
     {
-        s.x += 4;
+        tilesprite.x += 4;
     }
 
-    if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
+    if (cursors.up.isDown)
     {
-        s.y -= 4;
+        tilesprite.y -= 4;
     }
-    else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
+    else if (cursors.down.isDown)
     {
-        s.y += 4;
+        tilesprite.y += 4;
     }
 
 }

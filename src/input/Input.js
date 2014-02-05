@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -30,6 +30,16 @@ Phaser.Input = function (game) {
     * @default
     */
     this.hitContext = null;
+
+    /**
+    * @property {function} moveCallback - An optional callback that will be fired every time the activePointer receives a move event from the DOM. Set to null to disable.
+    */
+    this.moveCallback = null;
+
+    /**
+    * @property {object} moveCallbackContext - The context in which the moveCallback will be sent. Defaults to Phaser.Input but can be set to any valid JS object.
+    */
+    this.moveCallbackContext = this;
     
 };
 
@@ -307,6 +317,13 @@ Phaser.Input.prototype = {
     mspointer: null,
 
     /**
+     * The Gamepad Input manager.
+     * @property {Phaser.Gamepad} gamepad - The Gamepad Input manager.
+     * @default
+     */
+    gamepad: null,
+
+    /**
     * A Signal that is dispatched each time a pointer is pressed down.
     * @property {Phaser.Signal} onDown
     * @default
@@ -355,6 +372,7 @@ Phaser.Input.prototype = {
         this.keyboard = new Phaser.Keyboard(this.game);
         this.touch = new Phaser.Touch(this.game);
         this.mspointer = new Phaser.MSPointer(this.game);
+        this.gamepad = new Phaser.Gamepad(this.game);
 
         this.onDown = new Phaser.Signal();
         this.onUp = new Phaser.Signal();
@@ -394,6 +412,24 @@ Phaser.Input.prototype = {
         this.keyboard.stop();
         this.touch.stop();
         this.mspointer.stop();
+        this.gamepad.stop();
+
+        this.moveCallback = null;
+
+    },
+
+    /**
+    * Sets a callback that is fired every time the activePointer receives a DOM move event such as a mousemove or touchmove.
+    * It will be called every time the activePointer moves, which in a multi-touch game can be a lot of times, so this is best
+    * to only use if you've limited input to a single pointer (i.e. mouse or touch)
+    * @method Phaser.Input#setMoveCallback
+    * @param {function} callback - The callback that will be called each time the activePointer receives a DOM move event.
+    * @param {object} callbackContext - The context in which the callback will be called.
+    */
+    setMoveCallback: function (callback, callbackContext) {
+
+        this.moveCallback = callback;
+        this.moveCallbackContext = callbackContext;
 
     },
 
@@ -447,6 +483,8 @@ Phaser.Input.prototype = {
         this._oldPosition.copyFrom(this.position);
         this.mousePointer.update();
 
+        if (this.gamepad.active) { this.gamepad.update(); }
+
         this.pointer1.update();
         this.pointer2.update();
 
@@ -478,6 +516,7 @@ Phaser.Input.prototype = {
 
         this.keyboard.reset();
         this.mousePointer.reset();
+        this.gamepad.reset();
 
         for (var i = 1; i <= 10; i++)
         {
@@ -488,7 +527,11 @@ Phaser.Input.prototype = {
         }
 
         this.currentPointers = 0;
-        this.game.stage.canvas.style.cursor = "default";
+
+        if (this.game.canvas.style.cursor !== 'none')
+        {
+            this.game.canvas.style.cursor = 'default';
+        }
 
         if (hard === true)
         {
@@ -684,6 +727,8 @@ Phaser.Input.prototype = {
     }
 
 };
+
+Phaser.Input.prototype.constructor = Phaser.Input;
 
 /**
 * The X coordinate of the most recently active pointer. This value takes game scaling into account automatically. See Pointer.screenX/clientX for source values.

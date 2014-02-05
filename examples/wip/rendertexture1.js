@@ -1,38 +1,87 @@
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
+var config = {
+
+	width: "100%",
+	height: "100%",
+	renderer: Phaser.WEBGL,
+	parent: 'phaser-example',
+	state: { preload: preload, create: create, update: update },
+	backgroundColor: '#ff0000'
+
+};
+
+var game = new Phaser.Game(config);
 
 function preload() {
 
-    game.load.spritesheet('veggies', 'assets/sprites/fruitnveg32wh37.png', 32, 32);
+    game.load.image('spin1', 'assets/sprites/spinObj_01.png');
+    game.load.image('spin2', 'assets/sprites/spinObj_02.png');
+    game.load.image('spin3', 'assets/sprites/spinObj_03.png');
+    game.load.image('spin4', 'assets/sprites/spinObj_04.png');
+    game.load.image('spin5', 'assets/sprites/spinObj_05.png');
+    game.load.image('spin6', 'assets/sprites/spinObj_06.png');
+    game.load.image('spin7', 'assets/sprites/spinObj_07.png');
+    game.load.image('spin8', 'assets/sprites/spinObj_08.png');
 
 }
 
-var group;
-var texture;
+var renderTexture;
+var renderTexture2;
+var currentTexture;
+var outputSprite;
+var stuffContainer;
+var count = 0;
 
 function create() {
 
-	group = game.add.group();
-	group.create(0, 0, 'veggies', 0);
-	group.create(32, 0, 'veggies', 1);
-	group.create(0, 32, 'veggies', 2);
-	group.create(32, 32, 'veggies', 3);
-	group.visible = false;
+	// create two render textures.. these dynamic textures will be used to draw the scene into itself
+	renderTexture = game.add.renderTexture('texture1', game.width, game.height);
+	renderTexture2 = game.add.renderTexture('textur2e', game.width, game.height);
+	currentTexture = renderTexture;
 
-	texture = game.add.renderTexture('texture', 800, 600);
-	
-	game.add.sprite(0, 0, texture);
+	// create a new sprite that uses the render texture we created above
+	outputSprite = game.add.sprite(game.width/2, game.height/2, currentTexture);
+
+	// align the sprite
+	outputSprite.anchor.x = 0.5;
+	outputSprite.anchor.y = 0.5;
+
+	stuffContainer = game.add.group();
+	stuffContainer.x = game.width/2;
+	stuffContainer.y = game.height/2;
+
+	// now create some items and randomly position them in the stuff container
+	for (var i = 0; i < 20; i++)
+	{
+		var item = stuffContainer.create(Math.random() * 400 - 200, Math.random() * 400 - 200, game.rnd.pick(game.cache.getImageKeys()));
+		item.anchor.setTo(0.5, 0.5);
+	}
+
+	// used for spinning!
+	count = 0;
 
 }
 
 function update() {
 
-	var clear = false;
+	stuffContainer.addAll('rotation', 0.1);
 
-	for (var i = 0; i < 60; i++)
-	{
-		clear = (i == 0);
-		texture.renderXY(group, game.world.randomX, game.world.randomY, clear);
-	}
+	count += 0.01;
+
+	// swap the buffers..
+	var temp = renderTexture;
+	renderTexture = renderTexture2;
+	renderTexture2 = temp;
+
+	// set the new texture
+	outputSprite.setTexture(renderTexture);
+
+	// twist this up!
+	stuffContainer.rotation -= 0.01
+	outputSprite.scale.x = outputSprite.scale.y  = 1 + Math.sin(count) * 0.2;
+
+	// render the stage to the texture
+	// the true clears the texture before content is rendered
+	renderTexture2.renderXY(game.stage.display, 0, 0, true);
 
 }

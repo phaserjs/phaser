@@ -91,6 +91,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.DOMSprite.html">DOMSprite</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -163,6 +167,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -184,6 +196,10 @@
 						
 						<li>
 							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Line.html">Line</a>
 						</li>
 						
 						<li>
@@ -279,6 +295,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Sound.html">Sound</a>
 						</li>
 						
@@ -343,6 +363,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
 						</li>
 						
@@ -374,36 +398,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
-						</li>
-						
-						<li>
-							<a href="global.html#render">render</a>
-						</li>
-						
-						<li>
-							<a href="global.html#renderXY">renderXY</a>
-						</li>
-						
-						<li>
-							<a href="global.html#right">right</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -423,7 +417,7 @@
         <article>
             <pre class="sunlight-highlight-javascript linenums">/**
 * @author       Richard Davey &lt;rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -451,13 +445,13 @@ Phaser.TweenManager = function (game) {
     this.game = game;
     
     /**
-    * @property {array} _tweens - Description.
+    * @property {array&lt;Phaser.Tween>} _tweens - All of the currently running tweens.
     * @private
     */
     this._tweens = [];
     
     /**
-    * @property {array} _add - Description.
+    * @property {array&lt;Phaser.Tween>} _add - All of the tweens queued to be added in the next update.
     * @private
     */
     this._add = [];
@@ -468,13 +462,6 @@ Phaser.TweenManager = function (game) {
 };
 
 Phaser.TweenManager.prototype = {
-
-    /**
-    * Version number of this library.
-    * @property {string} REVISION
-    * @default 
-    */
-    REVISION: '11dev',
 
     /**
     * Get all the tween objects in an array.
@@ -488,12 +475,17 @@ Phaser.TweenManager.prototype = {
     },
 
     /**
-    * Remove all tween objects.
+    * Remove all tweens running and in the queue. Doesn't call any of the tween onComplete events.
     * @method Phaser.TweenManager#removeAll
     */
     removeAll: function () {
 
-        this._tweens = [];
+        for (var i = 0; i &lt; this._tweens.length; i++)
+        {
+            this._tweens[i].pendingDelete = true;
+        }
+
+        this._add = [];
 
     },
 
@@ -504,9 +496,9 @@ Phaser.TweenManager.prototype = {
     * @param {Phaser.Tween} tween - The tween object you want to add.
     * @returns {Phaser.Tween} The tween object you added to the manager.
     */
-    add: function ( tween ) {
+    add: function (tween) {
 
-        this._add.push( tween );
+        this._add.push(tween);
 
     },
 
@@ -529,14 +521,13 @@ Phaser.TweenManager.prototype = {
     * @method Phaser.TweenManager#remove
     * @param {Phaser.Tween} tween - The tween object you want to remove.
     */
-    remove: function ( tween ) {
+    remove: function (tween) {
 
-        var i = this._tweens.indexOf( tween );
+        var i = this._tweens.indexOf(tween);
 
-        if ( i !== -1 ) {
-
+        if (i !== -1)
+        {
             this._tweens[i].pendingDelete = true;
-
         }
 
     },
@@ -549,7 +540,7 @@ Phaser.TweenManager.prototype = {
     */
     update: function () {
 
-        if ( this._tweens.length === 0 && this._add.length === 0 )
+        if (this._tweens.length === 0 && this._add.length === 0)
         {
             return false;
         }
@@ -557,20 +548,18 @@ Phaser.TweenManager.prototype = {
         var i = 0;
         var numTweens = this._tweens.length;
 
-        while ( i &lt; numTweens ) {
-
-            if ( this._tweens[ i ].update( this.game.time.now ) ) {
-
+        while (i &lt; numTweens)
+        {
+            if (this._tweens[i].update(this.game.time.now))
+            {
                 i++;
-
-            } else {
-
-                this._tweens.splice( i, 1 );
+            }
+            else
+            {
+                this._tweens.splice(i, 1);
 
                 numTweens--;
-
             }
-
         }
 
         //  If there are any new tweens to be added, do so now - otherwise they can be spliced out of the array before ever running
@@ -606,7 +595,8 @@ Phaser.TweenManager.prototype = {
     */
     pauseAll: function () {
 
-        for (var i = this._tweens.length - 1; i >= 0; i--) {
+        for (var i = this._tweens.length - 1; i >= 0; i--)
+        {
             this._tweens[i].pause();
         }
 
@@ -619,13 +609,17 @@ Phaser.TweenManager.prototype = {
     */
     resumeAll: function () {
 
-        for (var i = this._tweens.length - 1; i >= 0; i--) {
+        for (var i = this._tweens.length - 1; i >= 0; i--)
+        {
             this._tweens[i].resume();
         }
 
     }
 
-};</pre>
+};
+
+Phaser.TweenManager.prototype.constructor = Phaser.TweenManager;
+</pre>
         </article>
     </section>
 
@@ -640,13 +634,13 @@ Phaser.TweenManager.prototype = {
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		Phaser Copyright © 2012-2014 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 28 2013 15:56:25 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 05 2014 06:28:24 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

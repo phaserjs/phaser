@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -128,8 +128,8 @@ Phaser.Net.prototype = {
         var output = {};
         var keyValues = location.search.substring(1).split('&');
 
-        for (var i in keyValues) {
-
+        for (var i in keyValues)
+        {
             var key = keyValues[i].split('=');
 
             if (key.length > 1)
@@ -162,3 +162,5 @@ Phaser.Net.prototype = {
     }
 
 };
+
+Phaser.Net.prototype.constructor = Phaser.Net;

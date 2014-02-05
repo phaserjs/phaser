@@ -2,12 +2,6 @@
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 var robot;
-var eye;
-var body;
-var leftArm;
-var rightArm;
-var leftLeg;
-var rightLeg;
 
 function preload() {
 
@@ -26,20 +20,25 @@ function create() {
     // Robot itself, you can subclass group class in a real game.
     robot = game.add.group();
 
+    robot.x = 300;
+    robot.y = 200;
+
+    robot.pivot.x = 300;
+    robot.pivot.y = 300;
+
     // Robot components.
-    leftArm = robot.create(90, 175, 'arm-l');
-    rightArm = robot.create(549, 175, 'arm-r');
-    leftLeg = robot.create(270, 325, 'leg-l');
-    rightLeg = robot.create(410, 325, 'leg-r');
-    body = robot.create(219, 32, 'body');
-    eye = robot.create(335, 173,'eye');
+    robot.create(90, 175, 'arm-l');
+    robot.create(549, 175, 'arm-r');
+    robot.create(270, 325, 'leg-l');
+    robot.create(410, 325, 'leg-r');
+    robot.create(219, 32, 'body');
+    robot.create(335, 173,'eye');
 
 }
 
 function update() {
 
-    // Change parent's rotation to change all the childs.
-    robot.angle += 2;
+    robot.rotation += 0.02;
 
 }
 

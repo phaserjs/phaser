@@ -91,6 +91,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.DOMSprite.html">DOMSprite</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -163,6 +167,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -184,6 +196,10 @@
 						
 						<li>
 							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Line.html">Line</a>
 						</li>
 						
 						<li>
@@ -279,6 +295,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Sound.html">Sound</a>
 						</li>
 						
@@ -343,6 +363,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
 						</li>
 						
@@ -368,36 +392,6 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
-						</li>
-						
-						<li>
-							<a href="global.html#render">render</a>
-						</li>
-						
-						<li>
-							<a href="global.html#renderXY">renderXY</a>
-						</li>
-						
-						<li>
-							<a href="global.html#right">right</a>
 						</li>
 						
 
@@ -438,7 +432,7 @@
     
         
 <dt>
-    <h4 class="name" id="Tileset"><span class="type-signature"></span>new Tileset<span class="signature">(image, key, tileWidth, tileHeight, <span class="optional">tileMargin</span>, <span class="optional">tileSpacing</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Tileset"><span class="type-signature"></span>new Tileset<span class="signature">(name, firstgid, width, height, margin, spacing, properties)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -446,7 +440,8 @@
     
     
     <div class="description">
-        <p>A Tile set is a combination of an image containing the tiles and collision data per tile.</p>
+        <p>A Tile set is a combination of an image containing the tiles and collision data per tile.
+You should not normally instantiate this class directly.</p>
     </div>
     
 
@@ -468,8 +463,6 @@
 		<th>Type</th>
 
 		
-		<th>Argument</th>
-		
 
 		
 
@@ -482,38 +475,7 @@
 
         <tr>
             
-                <td class="name"><code>image</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Image</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>The Image object from the Cache.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>key</code></td>
+                <td class="name"><code>name</code></td>
             
 
             <td class="type">
@@ -526,25 +488,17 @@
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"><p>The key of the tileset in the cache.</p></td>
+            <td class="description last"><p>The name of the tileset in the map data.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>tileWidth</code></td>
+                <td class="name"><code>firstgid</code></td>
             
 
             <td class="type">
@@ -557,25 +511,17 @@
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"><p>The width of the tile in pixels.</p></td>
+            <td class="description last"><p>The Tiled firstgid value.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>tileHeight</code></td>
+                <td class="name"><code>width</code></td>
             
 
             <td class="type">
@@ -588,25 +534,17 @@
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"><p>The height of the tile in pixels.</p></td>
+            <td class="description last"><p>Width of each tile in pixels.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>tileMargin</code></td>
+                <td class="name"><code>height</code></td>
             
 
             <td class="type">
@@ -619,27 +557,17 @@
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"><p>The margin around the tiles in the sheet.</p></td>
+            <td class="description last"><p>Height of each tile in pixels.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>tileSpacing</code></td>
+                <td class="name"><code>margin</code></td>
             
 
             <td class="type">
@@ -652,20 +580,56 @@
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
 
-                
+            
 
+            <td class="description last"><p>The amount of margin around the tilesheet.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>spacing</code></td>
+            
+
+            <td class="type">
+            
                 
-                </td>
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
             
 
             
 
-            <td class="description last"><p>The spacing between the tiles in the sheet.</p></td>
+            <td class="description last"><p>The amount of spacing between each tile in the sheet.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>properties</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Tileset properties.</p></td>
         </tr>
 
 	
@@ -697,7 +661,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-19">line 19</a>
+        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-21">line 21</a>
     </li></ul></dd>
     
 
@@ -739,6 +703,213 @@
         <h3 class="subsection-title">Members</h3>
 
         <dl>
+            
+<dt>
+    <h4 class="name" id="columns"><span class="type-signature"></span>columns<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>columns</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The number of columns in the tile sheet.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-77">line 77</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="firstgid"><span class="type-signature"></span>firstgid<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>firstgid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Tiled firstgid value.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>firstgid</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-32">line 32</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
             
 <dt>
     <h4 class="name" id="image"><span class="type-signature"></span>image<span class="type-signature"></span></h4>
@@ -796,7 +967,7 @@
 
             
 
-            <td class="description last"><p>The image used for rendering.</p></td>
+            <td class="description last"><p>The image used for rendering. This is a reference to the image stored in Phaser.Cache.</p></td>
         </tr>
 
 	
@@ -825,7 +996,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-32">line 32</a>
+        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-67">line 67</a>
     </li></ul></dd>
     
 
@@ -843,7 +1014,7 @@
         
             
 <dt>
-    <h4 class="name" id="key"><span class="type-signature"></span>key<span class="type-signature"></span></h4>
+    <h4 class="name" id="name"><span class="type-signature"></span>name<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -882,7 +1053,7 @@
 
         <tr>
             
-                <td class="name"><code>key</code></td>
+                <td class="name"><code>name</code></td>
             
 
             <td class="type">
@@ -898,7 +1069,7 @@
 
             
 
-            <td class="description last"><p>The cache ID.</p></td>
+            <td class="description last"><p>The name of the Tileset.</p></td>
         </tr>
 
 	
@@ -927,7 +1098,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-27">line 27</a>
+        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-26">line 26</a>
     </li></ul></dd>
     
 
@@ -945,7 +1116,7 @@
         
             
 <dt>
-    <h4 class="name" id="margin"><span class="type-signature"></span>margin<span class="type-signature"></span></h4>
+    <h4 class="name" id="properties"><span class="type-signature"></span>properties<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -984,13 +1155,13 @@
 
         <tr>
             
-                <td class="name"><code>tileMargin</code></td>
+                <td class="name"><code>properties</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">object</span>
 
 
             
@@ -1000,7 +1171,7 @@
 
             
 
-            <td class="description last"><p>The margin around the tiles in the sheet.</p></td>
+            <td class="description last"><p>Tileset specific properties (typically defined in the Tiled editor).</p></td>
         </tr>
 
 	
@@ -1029,7 +1200,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-47">line 47</a>
+        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-57">line 57</a>
     </li></ul></dd>
     
 
@@ -1047,7 +1218,7 @@
         
             
 <dt>
-    <h4 class="name" id="spacing"><span class="type-signature"></span>spacing<span class="type-signature"></span></h4>
+    <h4 class="name" id="rows"><span class="type-signature"></span>rows<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1086,7 +1257,7 @@
 
         <tr>
             
-                <td class="name"><code>tileSpacing</code></td>
+                <td class="name"><code>rows</code></td>
             
 
             <td class="type">
@@ -1102,7 +1273,7 @@
 
             
 
-            <td class="description last"><p>The margin around the tiles in the sheet.</p></td>
+            <td class="description last"><p>The number of rows in the tile sheet.</p></td>
         </tr>
 
 	
@@ -1131,7 +1302,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-52">line 52</a>
+        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-72">line 72</a>
     </li></ul></dd>
     
 
@@ -1251,7 +1422,7 @@
         
             
 <dt>
-    <h4 class="name" id="tiles"><span class="type-signature"></span>tiles<span class="type-signature"></span></h4>
+    <h4 class="name" id="tileMargin"><span class="type-signature"></span>tileMargin<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1290,13 +1461,13 @@
 
         <tr>
             
-                <td class="name"><code>tiles</code></td>
+                <td class="name"><code>tileMargin</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">array</span>
+<span class="param-type">number</span>
 
 
             
@@ -1306,7 +1477,7 @@
 
             
 
-            <td class="description last"><p>An array of the tile collision data.</p></td>
+            <td class="description last"><p>The margin around the tiles in the sheet.</p></td>
         </tr>
 
 	
@@ -1335,7 +1506,109 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-57">line 57</a>
+        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-47">line 47</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="tileSpacing"><span class="type-signature"></span>tileSpacing<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>tileSpacing</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The margin around the tiles in the sheet.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-52">line 52</a>
     </li></ul></dd>
     
 
@@ -1455,7 +1728,7 @@
         
             
 <dt>
-    <h4 class="name" id="total"><span class="type-signature">&lt;readonly> </span>total<span class="type-signature"></span></h4>
+    <h4 class="name" id="total"><span class="type-signature"></span>total<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1510,7 +1783,7 @@
 
             
 
-            <td class="description last"><p>The total number of tiles in this Tileset.</p></td>
+            <td class="description last"><p>The total number of tiles in the tilesheet.</p></td>
         </tr>
 
 	
@@ -1539,7 +1812,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-184">line 184</a>
+        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-82">line 82</a>
     </li></ul></dd>
     
 
@@ -1563,7 +1836,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="addTile"><span class="type-signature"></span>addTile<span class="signature">(tile)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="calculateFaces"><span class="type-signature">&lt;protected> </span>calculateFaces<span class="signature">(layer)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1571,7 +1844,7 @@
     
     
     <div class="description">
-        <p>Adds a Tile into this set.</p>
+        <p>Internal function.</p>
     </div>
     
 
@@ -1605,125 +1878,7 @@
 
         <tr>
             
-                <td class="name"><code>tile</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Tile.html">Phaser.Tile</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The tile to add to this set.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-63">line 63</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="canCollide"><span class="type-signature"></span>canCollide<span class="signature">(index)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Checks if the tile at the given index can collide.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>index</code></td>
+                <td class="name"><code>layer</code></td>
             
 
             <td class="type">
@@ -1739,7 +1894,7 @@
 
             
 
-            <td class="description last"><p>The index of the tile within the set.</p></td>
+            <td class="description last"><p>The index of the TilemapLayer to operate on.</p></td>
         </tr>
 
 	
@@ -1771,7 +1926,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-109">line 109</a>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-592">line 592</a>
     </li></ul></dd>
     
 
@@ -1792,29 +1947,6 @@
     
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>True or false depending on the tile collision or null if no tile was found at the given index.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">boolean</span>
-
-
-	</dd>
-</dl>
-
-
-        
     
     
 </dd>
@@ -1912,7 +2044,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-127">line 127</a>
+        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-141">line 141</a>
     </li></ul></dd>
     
 
@@ -1937,7 +2069,11 @@
     
             
 <div class="param-desc">
-    <p>True if a tile exists at the given index otherwise false.</p>
+    <p>True if a tile exists at the given index otherwise false.
+    checkTileIndex: function (index) {</p>
+<pre><code>    return (this.tiles[index]);
+
+}</code></pre>
 </div>
 
 
@@ -1963,7 +2099,1356 @@
         
             
 <dt>
-    <h4 class="name" id="getTile"><span class="type-signature"></span>getTile<span class="signature">(index)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tile.html">Phaser.Tile</a>}</span></h4>
+    <h4 class="name" id="createFromObjects"><span class="type-signature"></span>createFromObjects<span class="signature">(name, gid, key, <span class="optional">frame</span>, <span class="optional">exists</span>, <span class="optional">autoCull</span>, <span class="optional">group</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Creates a Sprite for every object matching the given gid in the map data. You can optionally specify the group that the Sprite will be created in. If none is
+given it will be created in the World. All properties from the map data objectgroup are copied across to the Sprite, so you can use this as an easy way to
+configure Sprite properties from within the map editor. For example giving an object a property if alpha: 0.5 in the map editor will duplicate that when the
+Sprite is created. You could also give it a value like: body.velocity.x: 100 to set it moving automatically.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The name of the Object Group to create Sprites from.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>gid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The layer array index value, or if a string is given the layer name, within the map data that this TilemapLayer represents.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The Game.cache key of the image that this Sprite will use.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>frame</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>If the Sprite image contains multiple frames you can specify which one to use here.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>exists</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>The default exists state of the Sprite.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>autoCull</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>The default autoCull state of the Sprite. Sprites that are autoCulled are culled from the camera if out of its range.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Optional Group to add the Sprite to. If not specified it will be added to the World group.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-201">line 201</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="createLayer"><span class="type-signature"></span>createLayer<span class="signature">(layer, <span class="optional">width</span>, <span class="optional">height</span>, <span class="optional">group</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.TilemapLayer.html">Phaser.TilemapLayer</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Creates a new TilemapLayer object. By default TilemapLayers are fixed to the camera.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>layer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The layer array index value, or if a string is given the layer name, within the map data that this TilemapLayer represents.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The rendered width of the layer, should never be wider than Game.width. If not given it will be set to Game.width.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The rendered height of the layer, should never be wider than Game.height. If not given it will be set to Game.height.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional Group to add the object to. If not specified it will be added to the World group.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-250">line 250</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The TilemapLayer object. This is an extension of Phaser.Sprite and can be moved around the display list accordingly.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.TilemapLayer.html">Phaser.TilemapLayer</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getImageIndex"><span class="type-signature"></span>getImageIndex<span class="signature">(name)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Gets the image index based on its name.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The name of the image to get.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-334">line 334</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The index of the image in this tilemap, or null if not found.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getIndex"><span class="type-signature">&lt;protected> </span>getIndex<span class="signature">(location, name)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Gets the layer index based on the layers name.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>location</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The local array to search.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The name of the array element to get.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-285">line 285</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The index of the element in the array, or null if not found.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getLayer"><span class="type-signature">&lt;protected> </span>getLayer<span class="signature">(layer)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Gets the TilemapLayer index as used in the setCollision calls.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>layer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">string</span>
+|
+
+<span class="param-type"><a href="Phaser.TilemapLayer.html">Phaser.TilemapLayer</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The layer to operate on. If not given will default to this.currentLayer.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-561">line 561</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The TilemapLayer index.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getLayerIndex"><span class="type-signature"></span>getLayerIndex<span class="signature">(name)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Gets the layer index based on its name.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The name of the layer to get.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-308">line 308</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The index of the layer in this tilemap, or null if not found.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getObjectIndex"><span class="type-signature"></span>getObjectIndex<span class="signature">(name)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Gets the object index based on its name.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The name of the object to get.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-347">line 347</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The index of the object in this tilemap, or null if not found.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getTile"><span class="type-signature"></span>getTile<span class="signature">(index)</span><span class="type-signature"> &rarr; {object}</span></h4>
     
     
 </dt>
@@ -2053,7 +3538,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-77">line 77</a>
+        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-88">line 88</a>
     </li></ul></dd>
     
 
@@ -2078,7 +3563,11 @@
     
             
 <div class="param-desc">
-    <p>The tile.</p>
+    <p>The tile object.
+    getTile: function (index) {</p>
+<pre><code>    return this.tiles[index];
+
+},</code></pre>
 </div>
 
 
@@ -2089,7 +3578,7 @@
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="Phaser.Tile.html">Phaser.Tile</a></span>
+<span class="param-type">object</span>
 
 
 	</dd>
@@ -2104,7 +3593,7 @@
         
             
 <dt>
-    <h4 class="name" id="setCollision"><span class="type-signature"></span>setCollision<span class="signature">(index, left, right, up, down)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="getTileAbove"><span class="type-signature"></span>getTileAbove<span class="signature">(layer, x, y)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2112,7 +3601,808 @@
     
     
     <div class="description">
-        <p>Sets collision values on a tile in the set.</p>
+        <p>Gets the tile above the tile coordinates given.
+Mostly used as an internal function by calculateFaces.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>layer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The local layer index to get the tile from. Can be determined by Tilemap.getLayer().</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The x coordinate to get the tile from. In tiles, not pixels.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The y coordinate to get the tile from. In tiles, not pixels.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-648">line 648</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getTileBelow"><span class="type-signature"></span>getTileBelow<span class="signature">(layer, x, y)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Gets the tile below the tile coordinates given.
+Mostly used as an internal function by calculateFaces.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>layer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The local layer index to get the tile from. Can be determined by Tilemap.getLayer().</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The x coordinate to get the tile from. In tiles, not pixels.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The y coordinate to get the tile from. In tiles, not pixels.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-668">line 668</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getTileLeft"><span class="type-signature"></span>getTileLeft<span class="signature">(layer, x, y)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Gets the tile to the left of the tile coordinates given.
+Mostly used as an internal function by calculateFaces.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>layer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The local layer index to get the tile from. Can be determined by Tilemap.getLayer().</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The x coordinate to get the tile from. In tiles, not pixels.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The y coordinate to get the tile from. In tiles, not pixels.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-688">line 688</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getTileRight"><span class="type-signature"></span>getTileRight<span class="signature">(layer, x, y)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Gets the tile to the right of the tile coordinates given.
+Mostly used as an internal function by calculateFaces.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>layer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The local layer index to get the tile from. Can be determined by Tilemap.getLayer().</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The x coordinate to get the tile from. In tiles, not pixels.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The y coordinate to get the tile from. In tiles, not pixels.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-708">line 708</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getTilesetIndex"><span class="type-signature"></span>getTilesetIndex<span class="signature">(name)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Gets the tileset index based on its name.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The name of the tileset to get.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-321">line 321</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The index of the tileset in this tilemap, or null if not found.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getTileX"><span class="type-signature"></span>getTileX<span class="signature">(index)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Gets a Tile from this set.</p>
     </div>
     
 
@@ -2166,98 +4456,6 @@
         </tr>
 
 	
-
-        <tr>
-            
-                <td class="name"><code>left</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Should the tile collide on the left?</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>right</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Should the tile collide on the right?</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>up</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Should the tile collide on the top?</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>down</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Should the tile collide on the bottom?</p></td>
-        </tr>
-
-	
 	</tbody>
 </table>
 
@@ -2286,7 +4484,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-163">line 163</a>
+        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-90">line 90</a>
     </li></ul></dd>
     
 
@@ -2307,6 +4505,33 @@
     
     
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The tile object.
+    getTileX: function (index) {</p>
+<pre><code>    return this.tiles[index][0];
+
+},</code></pre>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">object</span>
+
+
+	</dd>
+</dl>
+
+
+        
     
     
 </dd>
@@ -2314,7 +4539,7 @@
         
             
 <dt>
-    <h4 class="name" id="setCollisionRange"><span class="type-signature"></span>setCollisionRange<span class="signature">(start, stop, left, right, up, down)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="getTileY"><span class="type-signature"></span>getTileY<span class="signature">(index)</span><span class="type-signature"> &rarr; {object}</span></h4>
     
     
 </dt>
@@ -2322,7 +4547,7 @@
     
     
     <div class="description">
-        <p>Sets collision values on a range of tiles in the set.</p>
+        <p>Gets a Tile from this set.</p>
     </div>
     
 
@@ -2356,7 +4581,7 @@
 
         <tr>
             
-                <td class="name"><code>start</code></td>
+                <td class="name"><code>index</code></td>
             
 
             <td class="type">
@@ -2372,122 +4597,7 @@
 
             
 
-            <td class="description last"><p>The index to start setting the collision data on.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>stop</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The index to stop setting the collision data on.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>left</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Should the tile collide on the left?</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>right</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Should the tile collide on the right?</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>up</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Should the tile collide on the top?</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>down</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Should the tile collide on the bottom?</p></td>
+            <td class="description last"><p>The index of the tile within the set.</p></td>
         </tr>
 
 	
@@ -2519,7 +4629,974 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-140">line 140</a>
+        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-92">line 92</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The tile object.
+    getTileY: function (index) {</p>
+<pre><code>    return this.tiles[index][1];
+
+},</code></pre>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">object</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setCollision"><span class="type-signature"></span>setCollision<span class="signature">(indexes, <span class="optional">collides</span>, <span class="optional">layer</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Sets collision the given tile or tiles. You can pass in either a single numeric index or an array of indexes: [ 2, 3, 15, 20].
+The <code>collides</code> parameter controls if collision will be enabled (true) or disabled (false).</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>indexes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Either a single tile index, or an array of tile IDs to be checked for collision.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>collides</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>If true it will enable collision. If false it will clear collision.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>layer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">string</span>
+|
+
+<span class="param-type"><a href="Phaser.TilemapLayer.html">Phaser.TilemapLayer</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The layer to operate on. If not given will default to this.currentLayer.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-423">line 423</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setCollisionBetween"><span class="type-signature"></span>setCollisionBetween<span class="signature">(start, stop, <span class="optional">collides</span>, <span class="optional">layer</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Sets collision on a range of tiles where the tile IDs increment sequentially.
+Calling this with a start value of 10 and a stop value of 14 would set collision for tiles 10, 11, 12, 13 and 14.
+The <code>collides</code> parameter controls if collision will be enabled (true) or disabled (false).</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>start</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The first index of the tile to be set for collision.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>stop</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The last index of the tile to be set for collision.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>collides</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>If true it will enable collision. If false it will clear collision.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>layer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">string</span>
+|
+
+<span class="param-type"><a href="Phaser.TilemapLayer.html">Phaser.TilemapLayer</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The layer to operate on. If not given will default to this.currentLayer.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-456">line 456</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setCollisionByExclusion"><span class="type-signature"></span>setCollisionByExclusion<span class="signature">(indexes, <span class="optional">collides</span>, <span class="optional">layer</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Sets collision on all tiles in the given layer, except for the IDs of those in the given array.
+The <code>collides</code> parameter controls if collision will be enabled (true) or disabled (false).</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>indexes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>An array of the tile IDs to not be counted for collision.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>collides</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>If true it will enable collision. If false it will clear collision.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>layer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">string</span>
+|
+
+<span class="param-type"><a href="Phaser.TilemapLayer.html">Phaser.TilemapLayer</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The layer to operate on. If not given will default to this.currentLayer.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-488">line 488</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setCollisionByIndex"><span class="type-signature">&lt;protected> </span>setCollisionByIndex<span class="signature">(index, <span class="optional">collides</span>, <span class="optional">layer</span>, <span class="optional">recalculate</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Sets collision values on a tile in the set.
+You shouldn't usually call this method directly, instead use setCollision, setCollisionBetween or setCollisionByExclusion.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The index of the tile on the layer.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>collides</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>If true it will enable collision on the tile. If false it will clear collision values from the tile.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>layer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The layer to operate on. If not given will default to this.currentLayer.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>recalculate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>Recalculates the tile faces after the update.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-517">line 517</a>
     </li></ul></dd>
     
 
@@ -2682,7 +5759,565 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-95">line 95</a>
+        <a href="Tileset.js.html">tilemap/Tileset.js</a>, <a href="Tileset.js.html#sunlight-1-line-94">line 94</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setTileIndexCallback"><span class="type-signature"></span>setTileIndexCallback<span class="signature">(indexes, callback, callbackContext, <span class="optional">layer</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Sets a global collision callback for the given tile index within the layer. This will affect all tiles on this layer that have the same index.
+If a callback is already set for the tile index it will be replaced. Set the callback to null to remove it.
+If you want to set a callback for a tile at a specific location on the map then see setTileLocationCallback.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>indexes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Either a single tile index, or an array of tile indexes to have a collision callback set for.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The callback that will be invoked when the tile is collided with.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>callbackContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The context under which the callback is called.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>layer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">string</span>
+|
+
+<span class="param-type"><a href="Phaser.TilemapLayer.html">Phaser.TilemapLayer</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The layer to operate on. If not given will default to this.currentLayer.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-360">line 360</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setTileLocationCallback"><span class="type-signature"></span>setTileLocationCallback<span class="signature">(x, y, width, height, callback, callbackContext, <span class="optional">layer</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Sets a global collision callback for the given tile index within the layer. This will affect all tiles on this layer that have the same index.
+If a callback is already set for the tile index it will be replaced. Set the callback to null to remove it.
+If you want to set a callback for a tile at a specific location on the map then see setTileLocationCallback.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>X position of the top left of the area to copy (given in tiles, not pixels)</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Y position of the top left of the area to copy (given in tiles, not pixels)</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The width of the area to copy (given in tiles, not pixels)</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The height of the area to copy (given in tiles, not pixels)</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The callback that will be invoked when the tile is collided with.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>callbackContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The context under which the callback is called.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>layer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">string</span>
+|
+
+<span class="param-type"><a href="Phaser.TilemapLayer.html">Phaser.TilemapLayer</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The layer to operate on. If not given will default to this.currentLayer.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tilemap.js.html">tilemap/Tilemap.js</a>, <a href="Tilemap.js.html#sunlight-1-line-391">line 391</a>
     </li></ul></dd>
     
 
@@ -2727,13 +6362,13 @@
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		Phaser Copyright © 2012-2014 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 28 2013 15:56:35 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 05 2014 06:28:35 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

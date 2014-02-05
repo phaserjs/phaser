@@ -25,8 +25,8 @@ var s;
 
 function create() {
 
-    //  We do this so the ball can still rebound with the world bounds, but it will look like it has gone off the bottom of the screen
-    game.world.height = 620;
+    //  This tells the world to include walls on the left, right and top, but not the bottom - so the ball can 'fall' away.
+    game.physics.setBoundsToWorld(true, true, true, false);
 
     s = game.add.tileSprite(0, 0, 800, 600, 'starfield');
 
@@ -54,6 +54,7 @@ function create() {
     ball.body.collideWorldBounds = true;
     ball.body.bounce.setTo(1, 1);
     ball.animations.add('spin', [ 'ball_1.png', 'ball_2.png', 'ball_3.png', 'ball_4.png', 'ball_5.png' ], 50, true, false);
+    ball.events.onOutOfBounds.add(ballLost, this);
 
     scoreText = game.add.text(32, 550, 'score: 0', { font: "20px Arial", fill: "#ffffff", align: "left" });
     livesText = game.add.text(680, 550, 'lives: 3', { font: "20px Arial", fill: "#ffffff", align: "left" });
@@ -90,12 +91,6 @@ function update () {
         game.physics.collide(ball, bricks, ballHitBrick, null, this);
     }
 
-    //  Out?
-    if (ball.y > 600 && ballOnPaddle == false)
-    {
-        ballLost();
-    }
-
 }
 
 function releaseBall () {
@@ -115,7 +110,7 @@ function ballLost () {
 
     lives--;
 
-    if (lives == 0)
+    if (lives === 0)
     {
         gameOver();
     }
@@ -123,9 +118,9 @@ function ballLost () {
     {
         livesText.content = 'lives: ' + lives;
         ballOnPaddle = true;
-        ball.body.velocity.setTo(0, 0);
         ball.x = paddle.x + 16;
         ball.y = paddle.y - 16;
+        ball.body.reset();
         ball.animations.stop();
     }
 
@@ -135,7 +130,7 @@ function gameOver () {
 
     ball.body.velocity.setTo(0, 0);
     
-    introText.content = "Game Over!";
+    introText.content = 'Game Over!';
     introText.visible = true;
 
 }
@@ -154,7 +149,7 @@ function ballHitBrick (_ball, _brick) {
         //  New level starts
         score += 1000;
         scoreText.content = 'score: ' + score;
-        introText = '- Next Level -';
+        introText.content = '- Next Level -';
 
         //  Let's move the ball back to the paddle
         ballOnPaddle = true;

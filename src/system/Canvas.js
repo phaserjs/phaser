@@ -1,11 +1,11 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
 /**
-* The Canvas class handles everything related to the &lt;canvas&gt; tag as a DOM Element, like styles, offset, aspect ratio
+* The Canvas class handles everything related to creating the `canvas` DOM tag that Phaser will use, including styles, offset and aspect ratio.
 *
 * @class Phaser.Canvas
 * @static
@@ -13,21 +13,29 @@
 Phaser.Canvas = {
 
     /**
-    * Creates the &lt;canvas&gt; tag
+    * Creates a `canvas` DOM element. The element is not automatically added to the document.
     *
     * @method Phaser.Canvas.create
-    * @param {number} width - The desired width.
-    * @param {number} height - The desired height.
-    * @return {HTMLCanvasElement} The newly created &lt;canvas&gt; tag.
+    * @param {number} [width=256] - The width of the canvas element.
+    * @param {number} [height=256] - The height of the canvas element..
+    * @param {string} [id=''] - If given this will be set as the ID of the canvas element, otherwise no ID will be set.
+    * @return {HTMLCanvasElement} The newly created canvas element.
     */
-    create: function (width, height) {
+    create: function (width, height, id) {
 
         width = width || 256;
         height = height || 256;
 
         var canvas = document.createElement('canvas');
+
+        if (typeof id === 'string')
+        {
+            canvas.id = id;
+        }
+
         canvas.width = width;
         canvas.height = height;
+
         canvas.style.display = 'block';
 
         return canvas;
@@ -48,8 +56,22 @@ Phaser.Canvas = {
         var box = element.getBoundingClientRect();
         var clientTop = element.clientTop || document.body.clientTop || 0;
         var clientLeft = element.clientLeft || document.body.clientLeft || 0;
-        var scrollTop = window.pageYOffset || element.scrollTop || document.body.scrollTop;
-        var scrollLeft = window.pageXOffset || element.scrollLeft || document.body.scrollLeft;
+
+        //  Without this check Chrome is now throwing console warnings about strict vs. quirks :(
+
+        var scrollTop = 0;
+        var scrollLeft = 0;
+
+        if (document.compatMode === 'CSS1Compat')
+        {
+            scrollTop = window.pageYOffset || document.documentElement.scrollTop || element.scrollTop || 0;
+            scrollLeft = window.pageXOffset || document.documentElement.scrollLeft || element.scrollLeft || 0;
+        }
+        else
+        {
+            scrollTop = window.pageYOffset || document.body.scrollTop || element.scrollTop || 0;
+            scrollLeft = window.pageXOffset || document.body.scrollLeft || element.scrollLeft || 0;
+        }
 
         point.x = box.left + scrollLeft - clientLeft;
         point.y = box.top + scrollTop - clientTop;
@@ -137,8 +159,8 @@ Phaser.Canvas = {
     *
     * @method Phaser.Canvas.addToDOM
     * @param {HTMLCanvasElement} canvas - The canvas to set the touch action on.
-    * @param {string|HTMLElement} parent - The DOM element to add the canvas to. Defaults to ''.
-    * @param {boolean} overflowHidden - If set to true it will add the overflow='hidden' style to the parent DOM element.
+    * @param {string|HTMLElement} parent - The DOM element to add the canvas to.
+    * @param {boolean} [overflowHidden=true] - If set to true it will add the overflow='hidden' style to the parent DOM element.
     * @return {HTMLCanvasElement} Returns the source canvas.
     */
     addToDOM: function (canvas, parent, overflowHidden) {
@@ -149,27 +171,27 @@ Phaser.Canvas = {
 
         if (parent)
         {
-            // hopefully an element ID
             if (typeof parent === 'string')
             {
+                // hopefully an element ID
                 target = document.getElementById(parent);
             }
-            // quick test for a HTMLelement
             else if (typeof parent === 'object' && parent.nodeType === 1)
             {
+                // quick test for a HTMLelement
                 target = parent;
-            }
-
-            if (overflowHidden)
-            {
-                target.style.overflow = 'hidden';
             }
         }
 
-        // fallback, covers an invalid ID and a none HTMLelement object
-        if(!target)
+        // Fallback, covers an invalid ID and a non HTMLelement object
+        if (!target)
         {
             target = document.body;
+        }
+
+        if (overflowHidden && target.style)
+        {
+            target.style.overflow = 'hidden';
         }
 
         target.appendChild(canvas);
@@ -233,9 +255,11 @@ Phaser.Canvas = {
     */
     setImageRenderingCrisp: function (canvas) {
 
+        canvas.style['image-rendering'] = 'optimizeSpeed';
         canvas.style['image-rendering'] = 'crisp-edges';
         canvas.style['image-rendering'] = '-moz-crisp-edges';
         canvas.style['image-rendering'] = '-webkit-optimize-contrast';
+        canvas.style['image-rendering'] = 'optimize-contrast';
         canvas.style.msInterpolationMode = 'nearest-neighbor';
 
         return canvas;

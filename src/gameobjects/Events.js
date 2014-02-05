@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -24,6 +24,7 @@
 Phaser.Events = function (sprite) {
     
     this.parent = sprite;
+
     this.onAddedToGroup = new Phaser.Signal();
     this.onRemovedFromGroup = new Phaser.Signal();
     this.onKilled = new Phaser.Signal();
@@ -40,6 +41,9 @@ Phaser.Events = function (sprite) {
     this.onAnimationStart = null;
     this.onAnimationComplete = null;
     this.onAnimationLoop = null;
+
+    this.onBeginContact = null;
+    this.onEndContact = null;
 
 };
 
@@ -74,3 +78,5 @@ Phaser.Events.prototype = {
     }
 
 };
+
+Phaser.Events.prototype.constructor = Phaser.Events;

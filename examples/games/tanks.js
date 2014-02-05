@@ -21,7 +21,7 @@ EnemyTank = function (index, game, player, bullets) {
     this.turret.anchor.setTo(0.3, 0.5);
 
     this.tank.name = index.toString();
-    this.tank.body.immovable = true;
+    this.tank.body.immovable = false;
     this.tank.body.collideWorldBounds = true;
     this.tank.body.bounce.setTo(1, 1);
 
@@ -77,7 +77,6 @@ EnemyTank.prototype.update = function() {
 };
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
-// var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload () {
 
@@ -122,10 +121,9 @@ function create () {
     tank = game.add.sprite(0, 0, 'tank', 'tank1');
     tank.anchor.setTo(0.5, 0.5);
     tank.animations.add('move', ['tank1', 'tank2', 'tank3', 'tank4', 'tank5', 'tank6'], 20, true);
-    // tank.play('move');
 
     //  This will force it to decelerate and limit its speed
-    tank.body.drag.setTo(200, 200);
+    tank.body.linearDamping = 0.2;
     tank.body.maxVelocity.setTo(400, 400);
     tank.body.collideWorldBounds = true;
 
@@ -194,15 +192,15 @@ function removeLogo () {
 
 function update () {
 
-    game.physics.collide(enemyBullets, tank, bulletHitPlayer, null, this);
+    game.physics.overlap(enemyBullets, tank, bulletHitPlayer, null, this);
 
     for (var i = 0; i < enemies.length; i++)
     {
         if (enemies[i].alive)
         {
-            enemies[i].update();
             game.physics.collide(tank, enemies[i].tank);
-            game.physics.collide(bullets, enemies[i].tank, bulletHitEnemy, null, this);
+            game.physics.overlap(bullets, enemies[i].tank, bulletHitEnemy, null, this);
+            enemies[i].update();
         }
     }
 

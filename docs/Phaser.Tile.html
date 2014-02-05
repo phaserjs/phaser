@@ -91,6 +91,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.DOMSprite.html">DOMSprite</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -163,6 +167,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -184,6 +196,10 @@
 						
 						<li>
 							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Line.html">Line</a>
 						</li>
 						
 						<li>
@@ -279,6 +295,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Sound.html">Sound</a>
 						</li>
 						
@@ -343,6 +363,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
 						</li>
 						
@@ -374,36 +398,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
-						</li>
-						
-						<li>
-							<a href="global.html#render">render</a>
-						</li>
-						
-						<li>
-							<a href="global.html#renderXY">renderXY</a>
-						</li>
-						
-						<li>
-							<a href="global.html#right">right</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -427,7 +421,7 @@
     Tile
     </h2>
     
-        <div class="class-description"><p>A Tile is a single representation of a tile within a Tilemap.</p></div>
+        <div class="class-description"><p>A Tile is a representation of a single tile within the Tilemap.</p></div>
     
 </header>
 
@@ -438,7 +432,7 @@
     
         
 <dt>
-    <h4 class="name" id="Tile"><span class="type-signature"></span>new Tile<span class="signature">(tileset, index, x, y, width, height)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Tile"><span class="type-signature"></span>new Tile<span class="signature">(layer, index, x, y, width, height)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -446,7 +440,7 @@
     
     
     <div class="description">
-        <p>Create a new <code>Tile</code> object. Tiles live inside of Tilesets and are rendered via TilemapLayers.</p>
+        <p>Create a new <code>Tile</code> object.</p>
     </div>
     
 
@@ -480,13 +474,13 @@
 
         <tr>
             
-                <td class="name"><code>tileset</code></td>
+                <td class="name"><code>layer</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Tileset.html">Phaser.Tileset</a></span>
+<span class="param-type">object</span>
 
 
             
@@ -496,7 +490,7 @@
 
             
 
-            <td class="description last"><p>The tileset this tile belongs to.</p></td>
+            <td class="description last"><p>The layer in the Tilemap data that this tile belongs to.</p></td>
         </tr>
 
 	
@@ -687,6 +681,108 @@
         <dl>
             
 <dt>
+    <h4 class="name" id="alpha"><span class="type-signature"></span>alpha<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>alpha</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The alpha value at which this tile is drawn to the canvas.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-55">line 55</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="bottom"><span class="type-signature">&lt;readonly> </span>bottom<span class="type-signature"></span></h4>
     
     
@@ -771,7 +867,316 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-184">line 184</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-282">line 282</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="callback"><span class="type-signature"></span>callback<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Tile collision callback.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-126">line 126</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="callbackContext"><span class="type-signature"></span>callbackContext<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>callbackContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The context in which the collision callback will be called.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-132">line 132</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="canCollide"><span class="type-signature">&lt;readonly> </span>canCollide<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>canCollide</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>True if this tile can collide or has a collision callback.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-230">line 230</a>
     </li></ul></dd>
     
 
@@ -876,7 +1281,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-88">line 88</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-120">line 120</a>
     </li></ul></dd>
     
 
@@ -981,7 +1386,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-70">line 70</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-102">line 102</a>
     </li></ul></dd>
     
 
@@ -1086,7 +1491,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-64">line 64</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-96">line 96</a>
     </li></ul></dd>
     
 
@@ -1191,7 +1596,109 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-76">line 76</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-108">line 108</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="collides"><span class="type-signature"></span>collides<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>collides</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Does this tile collide at all?</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-90">line 90</a>
     </li></ul></dd>
     
 
@@ -1296,7 +1803,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-82">line 82</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-114">line 114</a>
     </li></ul></dd>
     
 
@@ -1314,7 +1821,7 @@
         
             
 <dt>
-    <h4 class="name" id="collisionCallback"><span class="type-signature"></span>collisionCallback<span class="type-signature"></span></h4>
+    <h4 class="name" id="faceBottom"><span class="type-signature"></span>faceBottom<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1353,7 +1860,7 @@
 
         <tr>
             
-                <td class="name"><code>collisionCallback</code></td>
+                <td class="name"><code>faceBottom</code></td>
             
 
             <td class="type">
@@ -1369,7 +1876,7 @@
 
             
 
-            <td class="description last"><p>Tilemap collision callback.</p></td>
+            <td class="description last"><p>Is the bottom of this tile an interesting edge?</p></td>
         </tr>
 
 	
@@ -1394,14 +1901,11 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-106">line 106</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-75">line 75</a>
     </li></ul></dd>
     
 
@@ -1419,7 +1923,7 @@
         
             
 <dt>
-    <h4 class="name" id="collisionCallbackContext"><span class="type-signature"></span>collisionCallbackContext<span class="type-signature"></span></h4>
+    <h4 class="name" id="faceLeft"><span class="type-signature"></span>faceLeft<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1458,7 +1962,7 @@
 
         <tr>
             
-                <td class="name"><code>collisionCallback</code></td>
+                <td class="name"><code>faceLeft</code></td>
             
 
             <td class="type">
@@ -1474,7 +1978,7 @@
 
             
 
-            <td class="description last"><p>Tilemap collision callback.</p></td>
+            <td class="description last"><p>Is the left of this tile an interesting edge?</p></td>
         </tr>
 
 	
@@ -1503,7 +2007,211 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-112">line 112</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-80">line 80</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="faceRight"><span class="type-signature"></span>faceRight<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>faceRight</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Is the right of this tile an interesting edge?</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-85">line 85</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="faceTop"><span class="type-signature"></span>faceTop<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>faceTop</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Is the top of this tile an interesting edge?</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-70">line 70</a>
     </li></ul></dd>
     
 
@@ -1605,7 +2313,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-40">line 40</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-50">line 50</a>
     </li></ul></dd>
     
 
@@ -1678,7 +2386,7 @@
 
             
 
-            <td class="description last"><p>The index of this tile within the tileset.</p></td>
+            <td class="description last"><p>The index of this tile within the map data corresponding to the tileset.</p></td>
         </tr>
 
 	
@@ -1725,7 +2433,7 @@
         
             
 <dt>
-    <h4 class="name" id="mass"><span class="type-signature"></span>mass<span class="type-signature"></span></h4>
+    <h4 class="name" id="layer"><span class="type-signature"></span>layer<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1764,13 +2472,13 @@
 
         <tr>
             
-                <td class="name"><code>mass</code></td>
+                <td class="name"><code>layer</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">object</span>
 
 
             
@@ -1780,7 +2488,7 @@
 
             
 
-            <td class="description last"><p>The virtual mass of the tile.</p></td>
+            <td class="description last"><p>The layer in the Tilemap data that this tile belongs to.</p></td>
         </tr>
 
 	
@@ -1805,14 +2513,215 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>1.0</li></ul></dd>
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-25">line 25</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="left"><span class="type-signature">&lt;readonly> </span>left<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>left</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The x value.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-58">line 58</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-243">line 243</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="properties"><span class="type-signature"></span>properties<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>properties</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Tile specific properties.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-60">line 60</a>
     </li></ul></dd>
     
 
@@ -1914,7 +2823,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-197">line 197</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-256">line 256</a>
     </li></ul></dd>
     
 
@@ -1932,7 +2841,7 @@
         
             
 <dt>
-    <h4 class="name" id="separateX"><span class="type-signature"></span>separateX<span class="type-signature"></span></h4>
+    <h4 class="name" id="scanned"><span class="type-signature"></span>scanned<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1971,7 +2880,7 @@
 
         <tr>
             
-                <td class="name"><code>separateX</code></td>
+                <td class="name"><code>scanned</code></td>
             
 
             <td class="type">
@@ -1987,7 +2896,7 @@
 
             
 
-            <td class="description last"><p>Enable separation at x-axis.</p></td>
+            <td class="description last"><p>Has this tile been walked / turned into a poly?</p></td>
         </tr>
 
 	
@@ -2012,14 +2921,11 @@
     
 
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>true</li></ul></dd>
-    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-94">line 94</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-65">line 65</a>
     </li></ul></dd>
     
 
@@ -2037,7 +2943,7 @@
         
             
 <dt>
-    <h4 class="name" id="separateY"><span class="type-signature"></span>separateY<span class="type-signature"></span></h4>
+    <h4 class="name" id="top"><span class="type-signature">&lt;readonly> </span>top<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2076,13 +2982,13 @@
 
         <tr>
             
-                <td class="name"><code>separateY</code></td>
+                <td class="name"><code>top</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">number</span>
 
 
             
@@ -2092,112 +2998,7 @@
 
             
 
-            <td class="description last"><p>Enable separation at y-axis.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>true</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-100">line 100</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="tileset"><span class="type-signature"></span>tileset<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>tileset</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Tileset.html">Phaser.Tileset</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The tileset this tile belongs to.</p></td>
+            <td class="description last"><p>The y value.</p></td>
         </tr>
 
 	
@@ -2226,7 +3027,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-25">line 25</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-269">line 269</a>
     </li></ul></dd>
     
 
@@ -2328,7 +3129,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-35">line 35</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-45">line 45</a>
     </li></ul></dd>
     
 
@@ -2401,7 +3202,7 @@
 
             
 
-            <td class="description last"><p>The top-left corner of the tile within the tileset.</p></td>
+            <td class="description last"><p>The x map coordinate of this tile.</p></td>
         </tr>
 
 	
@@ -2430,7 +3231,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-45">line 45</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-35">line 35</a>
     </li></ul></dd>
     
 
@@ -2503,7 +3304,7 @@
 
             
 
-            <td class="description last"><p>The top-left corner of the tile within the tileset.</p></td>
+            <td class="description last"><p>The y map coordinate of this tile.</p></td>
         </tr>
 
 	
@@ -2532,7 +3333,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-50">line 50</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-40">line 40</a>
     </li></ul></dd>
     
 
@@ -2554,6 +3355,124 @@
         <h3 class="subsection-title">Methods</h3>
 
         <dl>
+            
+<dt>
+    <h4 class="name" id="copy"><span class="type-signature"></span>copy<span class="signature">(tile)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Copies the tile data and properties from the given tile to this tile.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>tile</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Tile.html">Phaser.Tile</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The tile to copy from.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-205">line 205</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
             
 <dt>
     <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
@@ -2597,7 +3516,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-132">line 132</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-153">line 153</a>
     </li></ul></dd>
     
 
@@ -2666,7 +3585,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-168">line 168</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-191">line 191</a>
     </li></ul></dd>
     
 
@@ -2853,7 +3772,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-142">line 142</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-165">line 165</a>
     </li></ul></dd>
     
 
@@ -2889,7 +3808,8 @@
     
     
     <div class="description">
-        <p>Set callback to be called when this tilemap collides.</p>
+        <p>Set a callback to be called when this tile is hit by an object.
+The callback must true true for collision processing to take place.</p>
     </div>
     
 
@@ -2994,7 +3914,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-118">line 118</a>
+        <a href="Tile.js.html">tilemap/Tile.js</a>, <a href="Tile.js.html#sunlight-1-line-138">line 138</a>
     </li></ul></dd>
     
 
@@ -3039,13 +3959,13 @@
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		Phaser Copyright © 2012-2014 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 28 2013 15:56:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 05 2014 06:28:35 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

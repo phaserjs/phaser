@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -207,7 +207,7 @@ Phaser.Pointer.prototype = {
         }
 
         //  Fix to stop rogue browser plugins from blocking the visibility state event
-        if (this.game.paused === true && this.game.stage.scale.incorrectOrientation === false)
+        if (this.game.stage.disableVisibilityChange === false && this.game.paused && this.game.stage.scale.incorrectOrientation === false)
         {
             this.game.paused = false;
             return this;
@@ -257,7 +257,7 @@ Phaser.Pointer.prototype = {
     },
 
     /**
-    * Called internall by the Input Manager.
+    * Called by the Input Manager.
     * @method Phaser.Pointer#update
     */
     update: function () {
@@ -336,10 +336,15 @@ Phaser.Pointer.prototype = {
             this.game.input.circle.y = this.game.input.y;
         }
 
-        //  If the game is paused we don't process any target objects
+        //  If the game is paused we don't process any target objects or callbacks
         if (this.game.paused)
         {
             return this;
+        }
+
+        if (this.game.input.moveCallback)
+        {
+            this.game.input.moveCallback.call(this.game.input.moveCallbackContext, this, this.x, this.y);
         }
 
         //  Easy out if we're dragging something and it still exists
@@ -582,6 +587,8 @@ Phaser.Pointer.prototype = {
     }
 
 };
+
+Phaser.Pointer.prototype.constructor = Phaser.Pointer;
 
 /**
 * How long the Pointer has been depressed on the touchscreen. If not currently down it returns -1.

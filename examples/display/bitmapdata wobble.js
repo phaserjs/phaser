@@ -17,7 +17,7 @@ var waveDataCounter;
 function create() {
 
 	//	Create our BitmapData object at a size of 32x64
-	bmd = game.add.bitmapData('ball', 32, 64);
+	bmd = game.add.bitmapData(32, 64);
 
     //  And apply it to 100 randomly positioned sprites
     for (var i = 0; i < 100; i++)
@@ -62,7 +62,7 @@ function updateWobblyBall()
 
 	//	Now all the pixel data has been redrawn we render it to the BitmapData object.
 	//	In CANVAS mode this doesn't do anything, but on WebGL it pushes the new texture to the GPU.
-	//	If your game is exclusively running under Canvas you ca safely ignore this step.
+	//	If your game is exclusively running under Canvas you can safely ignore this step.
 	bmd.render();
 
 	//	Cycle through the wave data - this is what causes the image to "undulate"

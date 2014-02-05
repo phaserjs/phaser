@@ -3,25 +3,26 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-    game.load.tilemap('desert', 'assets/maps/desert.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.tileset('tiles', 'assets/tiles/tmw_desert_spacing.png', 32, 32, -1, 1, 1);
+    game.load.tilemap('desert', 'assets/tilemaps/maps/desert.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.image('tiles', 'assets/tilemaps/tiles/tmw_desert_spacing.png');
 
 }
 
 var map;
-var tileset;
 var layer;
 
 var marker;
-var currentTile = 0;
+var currentTile;
 
 function create() {
 
     map = game.add.tilemap('desert');
 
-    tileset = game.add.tileset('tiles');
-    
-    layer = game.add.tilemapLayer(0, 0, 800, 600, tileset, map, 0);
+    map.addTilesetImage('Desert', 'tiles');
+
+    currentTile = map.getTile(2, 3);
+
+    layer = map.createLayer('Ground');
 
     layer.resizeWorld();
 

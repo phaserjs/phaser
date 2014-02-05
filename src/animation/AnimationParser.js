@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -20,9 +20,11 @@ Phaser.AnimationParser = {
     * @param {number} frameWidth - The fixed width of each frame of the animation.
     * @param {number} frameHeight - The fixed height of each frame of the animation.
     * @param {number} [frameMax=-1] - The total number of animation frames to extact from the Sprite Sheet. The default value of -1 means "extract all frames".
+    * @param {number} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
+    * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
     * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
     */
-    spriteSheet: function (game, key, frameWidth, frameHeight, frameMax) {
+    spriteSheet: function (game, key, frameWidth, frameHeight, frameMax, margin, spacing) {
 
         //  How big is our image?
         var img = game.cache.getImage(key);
@@ -63,8 +65,8 @@ Phaser.AnimationParser = {
 
         //  Let's create some frames then
         var data = new Phaser.FrameData();
-        var x = 0;
-        var y = 0;
+        var x = margin;
+        var y = margin;
 
         for (var i = 0; i < total; i++)
         {
@@ -79,12 +81,12 @@ Phaser.AnimationParser = {
                 height: frameHeight
             });
 
-            x += frameWidth;
+            x += frameWidth + spacing;
 
             if (x === width)
             {
-                x = 0;
-                y += frameHeight;
+                x = margin;
+                y += frameHeight + spacing;
             }
         }
 

@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -68,7 +68,8 @@ Phaser.Mouse = function (game) {
     this.pointerLock = new Phaser.Signal();
 
     /**
-    * @property {MouseEvent} event - The browser mouse event.
+    * @property {MouseEvent} event - The browser mouse DOM event. Will be set to null if no mouse event has ever been received.
+    * @default
     */
     this.event = null;
 
@@ -326,3 +327,5 @@ Phaser.Mouse.prototype = {
     }
 
 };
+
+Phaser.Mouse.prototype.constructor = Phaser.Mouse;

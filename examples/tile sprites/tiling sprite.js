@@ -1,34 +1,41 @@
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
 
-var s;
+var tilesprite;
+var cursors;
 
 function preload() {
+
     game.load.image('starfield', 'assets/misc/starfield.jpg');
+
 }
 
 function create() {
-    s = game.add.tileSprite(0, 0, 800, 600, 'starfield');
+
+    tilesprite = game.add.tileSprite(0, 0, 800, 600, 'starfield');
+
+    cursors = game.input.keyboard.createCursorKeys();
+
 }
 
 function update() {
 
-    if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+    if (cursors.left.isDown)
     {
-        s.tilePosition.x += 8;
+        tilesprite.tilePosition.x += 8;
     }
-    else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+    else if (cursors.right.isDown)
     {
-        s.tilePosition.x -= 8;
+        tilesprite.tilePosition.x -= 8;
     }
 
-    if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
+    if (cursors.up.isDown)
     {
-        s.tilePosition.y += 8;
+        tilesprite.tilePosition.y += 8;
     }
-    else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
+    else if (cursors.down.isDown)
     {
-        s.tilePosition.y -= 8;
+        tilesprite.tilePosition.y -= 8;
     }
 
 }

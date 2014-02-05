@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -39,6 +39,12 @@ Phaser.Device = function () {
     * @default
     */
     this.cocoonJS = false;
+
+    /**
+     * @property {boolean} ejecta - Is the game running under Ejecta?
+     * @default
+     */
+    this.ejecta = false;
 
     /**
     * @property {boolean} android - Is running on android?
@@ -138,6 +144,18 @@ Phaser.Device = function () {
     */
     this.typedArray = false;
 
+    /**
+    * @property {boolean} vibration - Does the device support the Vibration API?
+    * @default
+    */
+    this.vibration = false;
+
+    /**
+    * @property {boolean} quirksMode - Is the browser running in strict mode (false) or quirks mode? (true)
+    * @default
+    */
+    this.quirksMode = false;
+
     //  Browser
 
     /**
@@ -177,6 +195,18 @@ Phaser.Device = function () {
     this.ieVersion = 0;
 
     /**
+    * @property {boolean} trident - Set to true if running a Trident version of Internet Explorer (IE11+)
+    * @default
+    */
+    this.trident = false;
+
+    /**
+    * @property {number} tridentVersion - If running in Internet Explorer 11 this will contain the major version number. See http://msdn.microsoft.com/en-us/library/ie/ms537503(v=vs.85).aspx
+    * @default
+    */
+    this.tridentVersion = 0;
+
+    /**
     * @property {boolean} mobileSafari - Set to true if running in Mobile Safari.
     * @default
     */
@@ -205,6 +235,12 @@ Phaser.Device = function () {
     * @default
     */
     this.webApp = false;
+
+    /**
+    * @property {boolean} silk - Set to true if running in the Silk browser (as used on the Amazon Kindle)
+    * @default
+    */
+    this.silk = false;
 
     //  Audio
 
@@ -310,21 +346,33 @@ Phaser.Device.prototype = {
 
         var ua = navigator.userAgent;
 
-        if (/Android/.test(ua)) {
+        if (/Android/.test(ua))
+        {
             this.android = true;
-        } else if (/CrOS/.test(ua)) {
+        }
+        else if (/CrOS/.test(ua))
+        {
             this.chromeOS = true;
-        } else if (/iP[ao]d|iPhone/i.test(ua)) {
+        }
+        else if (/iP[ao]d|iPhone/i.test(ua))
+        {
             this.iOS = true;
-        } else if (/Linux/.test(ua)) {
+        }
+        else if (/Linux/.test(ua))
+        {
             this.linux = true;
-        } else if (/Mac OS/.test(ua)) {
+        }
+        else if (/Mac OS/.test(ua))
+        {
             this.macOS = true;
-        } else if (/Windows/.test(ua)) {
+        }
+        else if (/Windows/.test(ua))
+        {
             this.windows = true;
         }
 
-        if (this.windows || this.macOS || this.linux) {
+        if (this.windows || this.macOS || (this.linux && this.silk === false))
+        {
             this.desktop = true;
         }
 
@@ -360,15 +408,19 @@ Phaser.Device.prototype = {
 
         this.worker = !!window['Worker'];
         
-        if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1)) {
+        if ('ontouchstart' in document.documentElement || (window.navigator.maxTouchPoints && window.navigator.maxTouchPoints > 1))
+        {
             this.touch = true;
         }
 
-        if (window.navigator.msPointerEnabled || window.navigator.pointerEnabled) {
+        if (window.navigator.msPointerEnabled || window.navigator.pointerEnabled)
+        {
             this.mspointer = true;
         }
         
         this.pointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+
+        this.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
 
     },
 
@@ -381,34 +433,68 @@ Phaser.Device.prototype = {
 
         var ua = navigator.userAgent;
 
-        if (/Arora/.test(ua)) {
+        if (/Arora/.test(ua))
+        {
             this.arora = true;
-        } else if (/Chrome/.test(ua)) {
+        }
+        else if (/Chrome/.test(ua))
+        {
             this.chrome = true;
-        } else if (/Epiphany/.test(ua)) {
+        }
+        else if (/Epiphany/.test(ua))
+        {
             this.epiphany = true;
-        } else if (/Firefox/.test(ua)) {
+        }
+        else if (/Firefox/.test(ua))
+        {
             this.firefox = true;
-        } else if (/Mobile Safari/.test(ua)) {
+        }
+        else if (/Mobile Safari/.test(ua))
+        {
             this.mobileSafari = true;
-        } else if (/MSIE (\d+\.\d+);/.test(ua)) {
+        }
+        else if (/MSIE (\d+\.\d+);/.test(ua))
+        {
             this.ie = true;
             this.ieVersion = parseInt(RegExp.$1, 10);
-        } else if (/Midori/.test(ua)) {
+        }
+        else if (/Midori/.test(ua))
+        {
             this.midori = true;
-        } else if (/Opera/.test(ua)) {
+        }
+        else if (/Opera/.test(ua))
+        {
             this.opera = true;
-        } else if (/Safari/.test(ua)) {
+        }
+        else if (/Safari/.test(ua))
+        {
             this.safari = true;
+        }
+        else if (/Silk/.test(ua))
+        {
+            this.silk = true;
+        }
+        else if (/Trident\/(\d+\.\d+);/.test(ua))
+        {
+            this.ie = true;
+            this.trident = true;
+            this.tridentVersion = parseInt(RegExp.$1, 10);
         }
 
         // WebApp mode in iOS
-        if (navigator['standalone']) {
+        if (navigator['standalone'])
+        {
             this.webApp = true;
         }
 
-        if (navigator['isCocoonJS']) {
+        if (navigator['isCocoonJS'])
+        {
             this.cocoonJS = true;
+        }
+
+        if (typeof window.ejecta !== "undefined")
+        {
+            this.ejecta = true;
         }
 
     },
@@ -483,6 +569,13 @@ Phaser.Device.prototype = {
             this.typedArray = false;
         }
 
+        navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+         
+        if (navigator.vibrate)
+        {
+            this.vibration = true;
+        }
+
     },
 
     /**
@@ -505,8 +598,10 @@ Phaser.Device.prototype = {
         // Add it to the body to get the computed style.
         document.body.insertBefore(el, null);
 
-        for (var t in transforms) {
-            if (el.style[t] !== undefined) {
+        for (var t in transforms)
+        {
+            if (el.style[t] !== undefined)
+            {
                 el.style[t] = "translate3d(1px,1px,1px)";
                 has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
             }
@@ -580,3 +675,5 @@ Phaser.Device.prototype = {
     }
 
 };
+
+Phaser.Device.prototype.constructor = Phaser.Device;

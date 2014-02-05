@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -60,7 +60,7 @@ Phaser.RequestAnimationFrame = function(game) {
 Phaser.RequestAnimationFrame.prototype = {
 
     /**
-    * Starts the requestAnimatioFrame running or setTimeout if unavailable in browser
+    * Starts the requestAnimationFrame running or setTimeout if unavailable in browser
     * @method Phaser.RequestAnimationFrame#start
     */
     start: function () {
@@ -155,3 +155,5 @@ Phaser.RequestAnimationFrame.prototype = {
     }
 
 };
+
+Phaser.RequestAnimationFrame.prototype.constructor = Phaser.RequestAnimationFrame;

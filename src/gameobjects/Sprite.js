@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -209,6 +209,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */
     this._cache = {
 
+        fresh: true,
         dirty: false,
 
         //  Transform cache
@@ -354,7 +355,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     /**
     * @property {Phaser.Point} cameraOffset - If this Sprite is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.
     */
-    this.cameraOffset = new Phaser.Point();
+    this.cameraOffset = new Phaser.Point(x, y);
 
     /**
     * You can crop the Sprites texture by modifying the crop properties. For example crop.width = 50 would set the Sprite to only render 50px wide.
@@ -370,8 +371,18 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */
     this.cropEnabled = false;
 
+    /**
+    * @property {boolean} debug - Handy flag to use with Game.enableStep
+    * @default
+    */
+    this.debug = false;
+
     this.updateCache();
     this.updateBounds();
+
+    /**
+    * @property {PIXI.Point} pivot - The pivot point of the displayObject that it rotates around.
+    */
 
 };
 
@@ -386,6 +397,24 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 * @memberof Phaser.Sprite
 */
 Phaser.Sprite.prototype.preUpdate = function() {
+
+    if (this._cache.fresh)
+    {
+        this.world.setTo(this.parent.position.x + this.x, this.parent.position.y + this.y);
+        this.worldTransform[2] = this.world.x;
+        this.worldTransform[5] = this.world.y;
+        this._cache.fresh = false;
+
+        if (this.body)
+        {
+            this.body.x = (this.world.x - (this.anchor.x * this.width)) + this.body.offset.x;
+            this.body.y = (this.world.y - (this.anchor.y * this.height)) + this.body.offset.y;
+            this.body.preX = this.body.x;
+            this.body.preY = this.body.y;
+        }
+
+        return;
+    }
 
     if (!this.exists || (this.group && !this.group.exists))
     {
@@ -502,7 +531,6 @@ Phaser.Sprite.prototype.updateAnimation = function() {
         this._cache.halfHeight = Math.floor(this._cache.height / 2);
 
         this._cache.dirty = true;
-
     }
 
 };
@@ -597,12 +625,6 @@ Phaser.Sprite.prototype.updateBounds = function() {
         this.renderable = this._cache.cameraVisible;
     }
 
-    //  Update our physics bounds
-    if (this.body)
-    {
-        this.body.updateBounds(this.center.x, this.center.y, this._cache.scaleX, this._cache.scaleY);
-    }
-
 };
 
 /**
@@ -613,9 +635,7 @@ Phaser.Sprite.prototype.updateBounds = function() {
 * @memberof Phaser.Sprite
 * @param {Phaser.Point} p - The Point object to store the results in.
 * @param {number} x - x coordinate within the Sprite to translate.
-* @param {number} y - x coordinate within the Sprite to translate.
-* @param {number} sx - Scale factor to be applied.
-* @param {number} sy - Scale factor to be applied.
+* @param {number} y - y coordinate within the Sprite to translate.
 * @return {Phaser.Point} The translated point.
 */
 Phaser.Sprite.prototype.getLocalPosition = function(p, x, y) {
@@ -634,8 +654,8 @@ Phaser.Sprite.prototype.getLocalPosition = function(p, x, y) {
 * @method Phaser.Sprite#getLocalUnmodifiedPosition
 * @memberof Phaser.Sprite
 * @param {Phaser.Point} p - The Point object to store the results in.
-* @param {number} x - x coordinate within the Sprite to translate.
-* @param {number} y - x coordinate within the Sprite to translate.
+* @param {number} gx - x coordinate within the Sprite to translate.
+* @param {number} gy - y coordinate within the Sprite to translate.
 * @return {Phaser.Point} The translated point.
 */
 Phaser.Sprite.prototype.getLocalUnmodifiedPosition = function(p, gx, gy) {
@@ -676,7 +696,6 @@ Phaser.Sprite.prototype.postUpdate = function() {
 
     if (this.exists)
     {
-        //  The sprite is positioned in this call, after taking into consideration motion updates and collision
         if (this.body)
         {
             this.body.postUpdate();
@@ -692,8 +711,6 @@ Phaser.Sprite.prototype.postUpdate = function() {
             this._cache.x = this.x;
             this._cache.y = this.y;
         }
-
-        this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
 
         this.position.x = this._cache.x;
         this.position.y = this._cache.y;
@@ -772,8 +789,17 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
 */
 Phaser.Sprite.prototype.centerOn = function(x, y) {
 
-    this.x = x + (this.x - this.center.x);
-    this.y = y + (this.y - this.center.y);
+    if (this.fixedToCamera)
+    {
+        this.cameraOffset.x = x + (this.cameraOffset.x - this.center.x);
+        this.cameraOffset.y = y + (this.cameraOffset.y - this.center.y);
+    }
+    else
+    {
+        this.x = x + (this.x - this.center.x);
+        this.y = y + (this.y - this.center.y);
+    }
+
     return this;
 
 };
@@ -840,6 +866,11 @@ Phaser.Sprite.prototype.kill = function() {
 */
 Phaser.Sprite.prototype.destroy = function() {
 
+    if (this.filters)
+    {
+        this.filters = null;
+    }
+
     if (this.group)
     {
         this.group.remove(this);
@@ -858,6 +889,11 @@ Phaser.Sprite.prototype.destroy = function() {
     if (this.animations)
     {
         this.animations.destroy();
+    }
+
+    if (this.body)
+    {
+        this.body.destroy();
     }
 
     this.alive = false;
@@ -911,6 +947,7 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
 
     this.x = x;
     this.y = y;
+    this.world.setTo(x, y);
     this.position.x = this.x;
     this.position.y = this.y;
     this.alive = true;
@@ -923,7 +960,7 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
 
     if (this.body)
     {
-        this.body.reset();
+        this.body.reset(false);
     }
 
     return this;
@@ -973,6 +1010,34 @@ Phaser.Sprite.prototype.play = function (name, frameRate, loop, killOnComplete) 
     }
 
 };
+
+/**
+* Returns the delta x value. The difference between Sprite.x now and in the previous step.
+* @name Phaser.Sprite#deltaX
+* @property {number} deltaX - The delta value. Positive if the motion was to the right, negative if to the left.
+* @readonly
+*/
+Object.defineProperty(Phaser.Sprite.prototype, 'deltaX', {
+
+    get: function() {
+        return this.world.x - this._cache.prevX;
+    }
+
+});
+
+/**
+* Returns the delta x value. The difference between Sprite.y now and in the previous step.
+* @name Phaser.Sprite#deltaY
+* @property {number} deltaY - The delta value. Positive if the motion was downwards, negative if upwards.
+* @readonly
+*/
+Object.defineProperty(Phaser.Sprite.prototype, 'deltaY', {
+
+    get: function() {
+        return this.world.y - this._cache.prevY;
+    }
+
+});
 
 /**
 * Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
@@ -1039,6 +1104,32 @@ Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
 });
 
 /**
+* @name Phaser.Sprite#worldCenterX
+* @property {number} worldCenterX - The center of the Sprite in world coordinates.
+* @readonly
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "worldCenterX", {
+    
+    get: function () {
+        return this.game.camera.x + this.center.x;
+    }
+
+});
+
+/**
+* @name Phaser.Sprite#worldCenterY
+* @property {number} worldCenterY - The center of the Sprite in world coordinates.
+* @readonly
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "worldCenterY", {
+    
+    get: function () {
+        return this.game.camera.y + this.center.y;
+    }
+
+});
+
+/**
 * The width of the sprite in pixels, setting this will actually modify the scale to acheive the value desired.
 * If you wish to crop the Sprite instead see the Sprite.crop value.
 *
@@ -1100,8 +1191,6 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
     },
 
     set: function (value) {
-
-        console.log('inputEnabled', value, this.input);
 
         if (value)
         {

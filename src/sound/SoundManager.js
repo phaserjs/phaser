@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -288,7 +288,7 @@ Phaser.SoundManager.prototype = {
                     that.game.cache.decodedSound(key, buffer);
                     if (sound)
                     {
-                        that.onSoundDecode.dispatch(sound);
+                        that.onSoundDecode.dispatch(key, sound);
                     }
                 });
             }
@@ -368,6 +368,8 @@ Phaser.SoundManager.prototype = {
     }
 
 };
+
+Phaser.SoundManager.prototype.constructor = Phaser.SoundManager;
 
 /**
 * @name Phaser.SoundManager#mute

@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -266,7 +266,7 @@ Phaser.AnimationManager.prototype = {
     *
     * @method Phaser.AnimationManager#getAnimation
     * @param {string} name - The name of the animation to be returned, e.g. "fire".
-    * @return {Phaser.Animation|boolean} The Animation instance, if found, otherwise false.
+    * @return {Phaser.Animation} The Animation instance, if found, otherwise null.
     */
     getAnimation: function (name) {
 
@@ -278,7 +278,7 @@ Phaser.AnimationManager.prototype = {
             }
         }
 
-        return false;
+        return null;
 
     },
 
@@ -310,6 +310,8 @@ Phaser.AnimationManager.prototype = {
     }
 
 };
+
+Phaser.AnimationManager.prototype.constructor = Phaser.AnimationManager;
 
 /**
 * @name Phaser.AnimationManager#frameData

@@ -91,6 +91,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.DOMSprite.html">DOMSprite</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -163,6 +167,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -184,6 +196,10 @@
 						
 						<li>
 							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Line.html">Line</a>
 						</li>
 						
 						<li>
@@ -279,6 +295,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Sound.html">Sound</a>
 						</li>
 						
@@ -343,6 +363,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
 						</li>
 						
@@ -374,36 +398,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
-						</li>
-						
-						<li>
-							<a href="global.html#render">render</a>
-						</li>
-						
-						<li>
-							<a href="global.html#renderXY">renderXY</a>
-						</li>
-						
-						<li>
-							<a href="global.html#right">right</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -427,8 +421,7 @@
     Cache
     </h2>
     
-        <div class="class-description"><p>A game only has one instance of a Cache and it is used to store all externally loaded assets such
-as images, sounds and data files as a result of Loader calls. Cache items use string based keys for look-up.</p></div>
+        <div class="class-description"><p>A game only has one instance of a Cache and it is used to store all externally loaded assets such as images, sounds and data files as a result of Loader calls. Cached items use string based keys for look-up.</p></div>
     
 </header>
 
@@ -529,7 +522,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-16">line 16</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-15">line 15</a>
     </li></ul></dd>
     
 
@@ -657,7 +650,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-21">line 21</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-20">line 20</a>
     </li></ul></dd>
     
 
@@ -759,7 +752,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-77">line 77</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-76">line 76</a>
     </li></ul></dd>
     
 
@@ -781,6 +774,147 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
         <h3 class="subsection-title">Methods</h3>
 
         <dl>
+            
+<dt>
+    <h4 class="name" id="addBinary"><span class="type-signature"></span>addBinary<span class="signature">(key, binaryData)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Add a binary object in to the cache.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Asset key for this binary data.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>binaryData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The binary object to be addded to the cache.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-95">line 95</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
             
 <dt>
     <h4 class="name" id="addBitmapData"><span class="type-signature"></span>addBitmapData<span class="signature">(key, bitmapData)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
@@ -896,7 +1030,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-96">line 96</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-107">line 107</a>
     </li></ul></dd>
     
 
@@ -1106,7 +1240,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-221">line 221</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-208">line 208</a>
     </li></ul></dd>
     
 
@@ -1270,7 +1404,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-83">line 83</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-82">line 82</a>
     </li></ul></dd>
     
 
@@ -1339,7 +1473,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-242">line 242</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-229">line 229</a>
     </li></ul></dd>
     
 
@@ -1503,7 +1637,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-295">line 295</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-282">line 282</a>
     </li></ul></dd>
     
 
@@ -1572,7 +1706,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-260">line 260</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-247">line 247</a>
     </li></ul></dd>
     
 
@@ -1713,7 +1847,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-111">line 111</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-122">line 122</a>
     </li></ul></dd>
     
 
@@ -1923,7 +2057,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-314">line 314</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-301">line 301</a>
     </li></ul></dd>
     
 
@@ -1951,7 +2085,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
         
             
 <dt>
-    <h4 class="name" id="addSpriteSheet"><span class="type-signature"></span>addSpriteSheet<span class="signature">(key, url, data, frameWidth, frameHeight, frameMax)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="addSpriteSheet"><span class="type-signature"></span>addSpriteSheet<span class="signature">(key, url, data, frameWidth, frameHeight, <span class="optional">frameMax</span>, <span class="optional">margin</span>, <span class="optional">spacing</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1981,7 +2115,11 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -2006,7 +2144,19 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The unique key by which you will reference this object.</p></td>
@@ -2029,7 +2179,19 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>URL of this sprite sheet file.</p></td>
@@ -2052,7 +2214,19 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>Extra sprite sheet data.</p></td>
@@ -2075,7 +2249,19 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>Width of the sprite sheet.</p></td>
@@ -2098,7 +2284,19 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>Height of the sprite sheet.</p></td>
@@ -2121,10 +2319,104 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>How many frames stored in the sprite sheet.</p></td>
+            
+                <td class="default">
+                
+                    -1
+                
+                </td>
+            
+
+            <td class="description last"><p>How many frames stored in the sprite sheet. If -1 then it divides the whole sheet evenly.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>margin</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>If the frames have been drawn with a margin, specify the amount here.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>spacing</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>If the frames have been drawn with spacing between them, specify the amount here.</p></td>
         </tr>
 
 	
@@ -2156,7 +2448,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-126">line 126</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-137">line 137</a>
     </li></ul></dd>
     
 
@@ -2320,7 +2612,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-278">line 278</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-265">line 265</a>
     </li></ul></dd>
     
 
@@ -2530,7 +2822,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-189">line 189</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-176">line 176</a>
     </li></ul></dd>
     
 
@@ -2662,7 +2954,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
 
             
 
-            <td class="description last"><p>The tilemap data object.</p></td>
+            <td class="description last"><p>The tilemap data object (either a CSV or JSON file).</p></td>
         </tr>
 
 	
@@ -2717,394 +3009,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-172">line 172</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="addTileset"><span class="type-signature"></span>addTileset<span class="signature">(key, url, data, tileWidth, tileHeight, tileMax, <span class="optional">tileMargin</span>, <span class="optional">tileSpacing</span>)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Add a new tile set in to the cache.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>key</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The unique key by which you will reference this object.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>url</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>URL of this tile set file.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>Extra tile set data.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>tileWidth</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>Width of the sprite sheet.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>tileHeight</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>Height of the sprite sheet.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>tileMax</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>How many tiles stored in the sprite sheet.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>tileMargin</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    0
-                
-                </td>
-            
-
-            <td class="description last"><p>If the tiles have been drawn with a margin, specify the amount here.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>tileSpacing</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    0
-                
-                </td>
-            
-
-            <td class="description last"><p>If the tiles have been drawn with spacing between them, specify the amount here.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-148">line 148</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-161">line 161</a>
     </li></ul></dd>
     
 
@@ -3190,7 +3095,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
 
             
 
-            <td class="description last"><p>Asset key of the image you want.</p></td>
+            <td class="description last"><p>Asset key of the image to check is in the Cache.</p></td>
         </tr>
 
 	
@@ -3222,7 +3127,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-441">line 441</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-435">line 435</a>
     </li></ul></dd>
     
 
@@ -3386,7 +3291,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-390">line 390</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-380">line 380</a>
     </li></ul></dd>
     
 
@@ -3455,7 +3360,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-828">line 828</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-819">line 819</a>
     </li></ul></dd>
     
 
@@ -3476,6 +3381,147 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     
     
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getBinary"><span class="type-signature"></span>getBinary<span class="signature">(key)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Get binary data by key.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Asset key of the binary data object to retrieve from the Cache.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-705">line 705</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The binary data object.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">object</span>
+
+
+	</dd>
+</dl>
+
+
+        
     
     
 </dd>
@@ -3541,7 +3587,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
 
             
 
-            <td class="description last"><p>Asset key of the BitmapData object you want.</p></td>
+            <td class="description last"><p>Asset key of the BitmapData object to retrieve from the Cache.</p></td>
         </tr>
 
 	
@@ -3573,7 +3619,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-423">line 423</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-415">line 415</a>
     </li></ul></dd>
     
 
@@ -3682,7 +3728,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
 
             
 
-            <td class="description last"><p>Asset key of the canvas you want.</p></td>
+            <td class="description last"><p>Asset key of the canvas to retrieve from the Cache.</p></td>
         </tr>
 
 	
@@ -3714,7 +3760,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-405">line 405</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-395">line 395</a>
     </li></ul></dd>
     
 
@@ -3739,7 +3785,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
             
 <div class="param-desc">
-    <p>The canvas you want.</p>
+    <p>The canvas object.</p>
 </div>
 
 
@@ -3823,7 +3869,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
 
             
 
-            <td class="description last"><p>Asset key of the frame data you want.</p></td>
+            <td class="description last"><p>Asset key of the frame data to retrieve from the Cache.</p></td>
         </tr>
 
 	
@@ -3855,7 +3901,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-581">line 581</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-544">line 544</a>
     </li></ul></dd>
     
 
@@ -3880,7 +3926,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
             
 <div class="param-desc">
-    <p>The frame data you want.</p>
+    <p>The frame data.</p>
 </div>
 
 
@@ -3964,7 +4010,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
 
             
 
-            <td class="description last"><p>Asset key of the frame data you want.</p></td>
+            <td class="description last"><p>Asset key of the frame data to retrieve from the Cache.</p></td>
         </tr>
 
 	
@@ -3996,7 +4042,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-547">line 547</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-510">line 510</a>
     </li></ul></dd>
     
 
@@ -4021,7 +4067,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
             
 <div class="param-desc">
-    <p>The frame data you want.</p>
+    <p>The frame object.</p>
 </div>
 
 
@@ -4105,7 +4151,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
 
             
 
-            <td class="description last"><p>Asset key of the frame data you want.</p></td>
+            <td class="description last"><p>Asset key of the frame data to retrieve from the Cache.</p></td>
         </tr>
 
 	
@@ -4137,7 +4183,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-564">line 564</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-527">line 527</a>
     </li></ul></dd>
     
 
@@ -4162,7 +4208,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
             
 <div class="param-desc">
-    <p>The frame data you want.</p>
+    <p>The frame object.</p>
 </div>
 
 
@@ -4246,7 +4292,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
 
             
 
-            <td class="description last"><p>Asset key of the frame data you want.</p></td>
+            <td class="description last"><p>Asset key of the frame data to retrieve from the Cache.</p></td>
         </tr>
 
 	
@@ -4278,7 +4324,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-530">line 530</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-493">line 493</a>
     </li></ul></dd>
     
 
@@ -4303,7 +4349,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
             
 <div class="param-desc">
-    <p>The frame data you want.</p>
+    <p>The frame data.</p>
 </div>
 
 
@@ -4387,7 +4433,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
 
             
 
-            <td class="description last"><p>Asset key of the image you want.</p></td>
+            <td class="description last"><p>Asset key of the image to retrieve from the Cache.</p></td>
         </tr>
 
 	
@@ -4419,7 +4465,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-459">line 459</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-453">line 453</a>
     </li></ul></dd>
     
 
@@ -4444,7 +4490,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
             
 <div class="param-desc">
-    <p>The image data you want.</p>
+    <p>The image data.</p>
 </div>
 
 
@@ -4470,7 +4516,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
         
             
 <dt>
-    <h4 class="name" id="getImageKeys"><span class="type-signature"></span>getImageKeys<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id="getImageKeys"><span class="type-signature"></span>getImageKeys<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Array.html">Array</a>}</span></h4>
     
     
 </dt>
@@ -4511,7 +4557,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-758">line 758</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-749">line 749</a>
     </li></ul></dd>
     
 
@@ -4547,7 +4593,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
 	</dt>
 	<dd>
 		
-<span class="param-type">Array</span>
+<span class="param-type"><a href="Array.html">Array</a></span>
 
 
 	</dd>
@@ -4562,7 +4608,7 @@ as images, sounds and data files as a result of Loader calls. Cache items use st
         
             
 <dt>
-    <h4 class="name" id="getKeys"><span class="type-signature"></span>getKeys<span class="signature">(array)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id="getKeys"><span class="type-signature"></span>getKeys<span class="signature">(array)</span><span class="type-signature"> &rarr; {<a href="Array.html">Array</a>}</span></h4>
     
     
 </dt>
@@ -4611,7 +4657,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type"><a href="Array.html">Array</a></span>
 
 
             
@@ -4653,7 +4699,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-734">line 734</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-725">line 725</a>
     </li></ul></dd>
     
 
@@ -4689,7 +4735,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
 	</dt>
 	<dd>
 		
-<span class="param-type">Array</span>
+<span class="param-type"><a href="Array.html">Array</a></span>
 
 
 	</dd>
@@ -4762,7 +4808,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
 
             
 
-            <td class="description last"><p>Asset key of the sound you want.</p></td>
+            <td class="description last"><p>Asset key of the sound to retrieve from the Cache.</p></td>
         </tr>
 
 	
@@ -4794,7 +4840,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-633">line 633</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-598">line 598</a>
     </li></ul></dd>
     
 
@@ -4819,7 +4865,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
             
 <div class="param-desc">
-    <p>The sound you want.</p>
+    <p>The sound object.</p>
 </div>
 
 
@@ -4903,7 +4949,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
 
             
 
-            <td class="description last"><p>Asset key of the sound you want.</p></td>
+            <td class="description last"><p>Asset key of the sound to retrieve from the Cache.</p></td>
         </tr>
 
 	
@@ -4935,7 +4981,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-651">line 651</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-618">line 618</a>
     </li></ul></dd>
     
 
@@ -4960,7 +5006,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
             
 <div class="param-desc">
-    <p>The sound data you want.</p>
+    <p>The sound data.</p>
 </div>
 
 
@@ -4986,7 +5032,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
         
             
 <dt>
-    <h4 class="name" id="getSoundKeys"><span class="type-signature"></span>getSoundKeys<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id="getSoundKeys"><span class="type-signature"></span>getSoundKeys<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Array.html">Array</a>}</span></h4>
     
     
 </dt>
@@ -5027,7 +5073,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-768">line 768</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-759">line 759</a>
     </li></ul></dd>
     
 
@@ -5063,7 +5109,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
 	</dt>
 	<dd>
 		
-<span class="param-type">Array</span>
+<span class="param-type"><a href="Array.html">Array</a></span>
 
 
 	</dd>
@@ -5136,7 +5182,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
 
             
 
-            <td class="description last"><p>Asset key of the text data you want.</p></td>
+            <td class="description last"><p>Asset key of the text data to retrieve from the Cache.</p></td>
         </tr>
 
 	
@@ -5168,7 +5214,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-716">line 716</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-685">line 685</a>
     </li></ul></dd>
     
 
@@ -5193,7 +5239,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
             
 <div class="param-desc">
-    <p>The text data you want.</p>
+    <p>The text data.</p>
 </div>
 
 
@@ -5219,7 +5265,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
         
             
 <dt>
-    <h4 class="name" id="getTextKeys"><span class="type-signature"></span>getTextKeys<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    <h4 class="name" id="getTextKeys"><span class="type-signature"></span>getTextKeys<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Array.html">Array</a>}</span></h4>
     
     
 </dt>
@@ -5260,7 +5306,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-778">line 778</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-769">line 769</a>
     </li></ul></dd>
     
 
@@ -5296,7 +5342,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
 	</dt>
 	<dd>
 		
-<span class="param-type">Array</span>
+<span class="param-type"><a href="Array.html">Array</a></span>
 
 
 	</dd>
@@ -5369,7 +5415,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
 
             
 
-            <td class="description last"><p>Asset key of the RenderTexture you want.</p></td>
+            <td class="description last"><p>Asset key of the RenderTexture to retrieve from the Cache.</p></td>
         </tr>
 
 	
@@ -5401,7 +5447,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-615">line 615</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-578">line 578</a>
     </li></ul></dd>
     
 
@@ -5426,7 +5472,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
             
 <div class="param-desc">
-    <p>The RenderTexture you want.</p>
+    <p>The RenderTexture object.</p>
 </div>
 
 
@@ -5460,7 +5506,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     
     <div class="description">
-        <p>Get a single frame by key. You'd only do this to get the default Frame created for a non-atlas/spritesheet image.</p>
+        <p>Get a single texture frame by key. You'd only do this to get the default Frame created for a non-atlas/spritesheet image.</p>
     </div>
     
 
@@ -5510,7 +5556,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
 
             
 
-            <td class="description last"><p>Asset key of the frame data you want.</p></td>
+            <td class="description last"><p>Asset key of the frame to retrieve from the Cache.</p></td>
         </tr>
 
 	
@@ -5542,7 +5588,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-598">line 598</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-561">line 561</a>
     </li></ul></dd>
     
 
@@ -5567,7 +5613,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
             
 <div class="param-desc">
-    <p>The frame data you want.</p>
+    <p>The frame data.</p>
 </div>
 
 
@@ -5651,7 +5697,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
 
             
 
-            <td class="description last"><p>Asset key of the tilemap you want.</p></td>
+            <td class="description last"><p>Asset key of the tilemap data to retrieve from the Cache.</p></td>
         </tr>
 
 	
@@ -5683,7 +5729,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-513">line 513</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-473">line 473</a>
     </li></ul></dd>
     
 
@@ -5708,7 +5754,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
             
 <div class="param-desc">
-    <p>The tilemap data. The tileset image is in the data property, the map data in mapData.</p>
+    <p>The raw tilemap data in CSV or JSON format.</p>
 </div>
 
 
@@ -5720,288 +5766,6 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
 	<dd>
 		
 <span class="param-type">Object</span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="getTileset"><span class="type-signature"></span>getTileset<span class="signature">(key)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tileset.html">Phaser.Tileset</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Get tile set image data by key.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>key</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Asset key of the image you want.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-495">line 495</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The tileset data. The tileset image is in the data property, the tile data in tileData.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.Tileset.html">Phaser.Tileset</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="getTileSetImage"><span class="type-signature"></span>getTileSetImage<span class="signature">(key)</span><span class="type-signature"> &rarr; {object}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Get tile set image data by key.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>key</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Asset key of the image you want.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-477">line 477</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The image data you want.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">object</span>
 
 
 	</dd>
@@ -6074,7 +5838,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
 
             
 
-            <td class="description last"><p>Asset key of the sound you want.</p></td>
+            <td class="description last"><p>Asset key of the sound in the Cache.</p></td>
         </tr>
 
 	
@@ -6106,7 +5870,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-669">line 669</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-638">line 638</a>
     </li></ul></dd>
     
 
@@ -6215,7 +5979,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
 
             
 
-            <td class="description last"><p>Asset key of the sound you want.</p></td>
+            <td class="description last"><p>Asset key of the sound in the Cache.</p></td>
         </tr>
 
 	
@@ -6247,7 +6011,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-685">line 685</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-654">line 654</a>
     </li></ul></dd>
     
 
@@ -6388,7 +6152,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-698">line 698</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-667">line 667</a>
     </li></ul></dd>
     
 
@@ -6529,7 +6293,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-340">line 340</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-327">line 327</a>
     </li></ul></dd>
     
 
@@ -6565,7 +6329,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Fires the onSoundUnlock event when the sound has completed reloading.</p>
     </div>
     
 
@@ -6647,7 +6411,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-361">line 361</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-349">line 349</a>
     </li></ul></dd>
     
 
@@ -6765,7 +6529,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-788">line 788</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-779">line 779</a>
     </li></ul></dd>
     
 
@@ -6883,7 +6647,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-798">line 798</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-789">line 789</a>
     </li></ul></dd>
     
 
@@ -7001,7 +6765,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-808">line 808</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-799">line 799</a>
     </li></ul></dd>
     
 
@@ -7119,7 +6883,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-818">line 818</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-809">line 809</a>
     </li></ul></dd>
     
 
@@ -7155,7 +6919,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     
     <div class="description">
-        <p>Description.</p>
+        <p>Updates the sound object in the cache.</p>
     </div>
     
 
@@ -7237,7 +7001,7 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-376">line 376</a>
+        <a href="Cache.js.html">loader/Cache.js</a>, <a href="Cache.js.html#sunlight-1-line-365">line 365</a>
     </li></ul></dd>
     
 
@@ -7282,13 +7046,13 @@ Normally you don't call this directly but instead use getImageKeys, getSoundKeys
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		Phaser Copyright © 2012-2014 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 28 2013 15:56:27 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 05 2014 06:28:26 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

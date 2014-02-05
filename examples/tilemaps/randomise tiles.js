@@ -3,28 +3,32 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-    game.load.tilemap('desert', 'assets/maps/desert.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.tileset('tiles', 'assets/tiles/tmw_desert_spacing.png', 32, 32, -1, 1, 1);
+    game.load.tilemap('desert', 'assets/tilemaps/maps/desert.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.image('tiles', 'assets/tilemaps/tiles/tmw_desert_spacing.png');
     game.load.image('car', 'assets/sprites/car90.png');
 
 }
 
 var map;
-var tileset;
 var layer;
 
 var cursors;
 var sprite;
+var marker;
 
 function create() {
 
     map = game.add.tilemap('desert');
 
-    tileset = game.add.tileset('tiles');
-    
-    layer = game.add.tilemapLayer(0, 0, 800, 600, tileset, map, 0);
+    map.addTilesetImage('Desert', 'tiles');
+
+    layer = map.createLayer('Ground');
 
     layer.resizeWorld();
+
+    marker = game.add.graphics();
+    marker.lineStyle(2, 0x00bff3, 1);
+    marker.drawRect(0, 0, 32 * 6, 32 * 6);
 
     sprite = game.add.sprite(450, 80, 'car');
     sprite.anchor.setTo(0.5, 0.5);
@@ -33,24 +37,21 @@ function create() {
 
     cursors = game.input.keyboard.createCursorKeys();
 
+
     game.input.onDown.add(randomiseTiles, this);
 
 }
 
 function randomiseTiles() {
 
-    //  This will replace every instance of tile 31 (cactus plant) with tile 46 (the sign post).
-    //  It does this across the whole layer of the map unless a region is specified.
-
-    //  You can also pass in x, y, width, height values to control the area in which the replace happens
-
-    map.shuffle(layer.getTileX(sprite.x), layer.getTileY(sprite.y), 6, 6);
+    map.random(layer.getTileX(sprite.x), layer.getTileY(sprite.y), 6, 6);
 
 }
 
 function update() {
 
-    game.physics.collide(sprite, layer);
+    marker.x = layer.getTileX(sprite.x) * 32;
+    marker.y = layer.getTileY(sprite.y) * 32;
 
     sprite.body.velocity.x = 0;
     sprite.body.velocity.y = 0;

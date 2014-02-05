@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -100,7 +100,7 @@ Phaser.Keyboard.prototype = {
     * The Key object can then be polled, have events attached to it, etc.
     *
     * @method Phaser.Keyboard#addKey
-    * @param {number} keycode - The keycode of the key, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACE_BAR
+    * @param {number} keycode - The keycode of the key, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
     * @return {Phaser.Key} The Key object which you can store locally and reference directly.
     */
     addKey: function (keycode) {
@@ -117,7 +117,7 @@ Phaser.Keyboard.prototype = {
     * Removes a Key object from the Keyboard manager.
     *
     * @method Phaser.Keyboard#removeKey
-    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACE_BAR
+    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
     */
     removeKey: function (keycode) {
 
@@ -339,7 +339,7 @@ Phaser.Keyboard.prototype = {
     /**
     * Returns the "just pressed" state of the key. Just pressed is considered true if the key was pressed down within the duration given (default 250ms)
     * @method Phaser.Keyboard#justPressed
-    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACE_BAR
+    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
     * @param {number} [duration=250] - The duration below which the key is considered as being just pressed.
     * @return {boolean} True if the key is just pressed otherwise false.
     */
@@ -358,8 +358,8 @@ Phaser.Keyboard.prototype = {
 
     /**
     * Returns the "just released" state of the Key. Just released is considered as being true if the key was released within the duration given (default 250ms)
-    * @method Phaser.Keyboard#justPressed
-    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACE_BAR
+    * @method Phaser.Keyboard#justReleased
+    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
     * @param {number} [duration=250] - The duration below which the key is considered as being just released.
     * @return {boolean} True if the key is just released otherwise false.
     */
@@ -379,7 +379,7 @@ Phaser.Keyboard.prototype = {
     /**
     * Returns true of the key is currently pressed down. Note that it can only detect key presses on the web browser.
     * @method Phaser.Keyboard#isDown
-    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACE_BAR
+    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
     * @return {boolean} True if the key is currently down.
     */
     isDown: function (keycode) {
@@ -394,6 +394,8 @@ Phaser.Keyboard.prototype = {
     }
 
 };
+
+Phaser.Keyboard.prototype.constructor = Phaser.Keyboard;
 
 Phaser.Keyboard.A = "A".charCodeAt(0);
 Phaser.Keyboard.B = "B".charCodeAt(0);

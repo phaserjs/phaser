@@ -20,7 +20,8 @@ function create() {
     card = items.create(240, 80, 'card');
     items.create(280, 100, 'atari2');
 
-    game.input.onTap.addOnce(removeCard, this);// obviously the event can be fired only once
+    //  This event will be fired only once
+    game.input.onTap.addOnce(removeCard, this);
 
 }
 
@@ -35,9 +36,9 @@ function removeCard() {
 
 function replaceCard() {
 
-    //  And bring it back to life again - I assume it will render in the same place as before?
-    var bob = items.getFirstDead();
+    //  And bring it back to life again. It will render in the same place as before?
+    var deadCard = items.getFirstDead();
 
-    bob.revive();
+    deadCard.revive();
 
 }

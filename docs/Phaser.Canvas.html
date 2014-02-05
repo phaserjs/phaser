@@ -91,6 +91,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.DOMSprite.html">DOMSprite</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -163,6 +167,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -184,6 +196,10 @@
 						
 						<li>
 							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Line.html">Line</a>
 						</li>
 						
 						<li>
@@ -279,6 +295,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Sound.html">Sound</a>
 						</li>
 						
@@ -343,6 +363,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
 						</li>
 						
@@ -368,36 +392,6 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
-						</li>
-						
-						<li>
-							<a href="global.html#render">render</a>
-						</li>
-						
-						<li>
-							<a href="global.html#renderXY">renderXY</a>
-						</li>
-						
-						<li>
-							<a href="global.html#right">right</a>
 						</li>
 						
 
@@ -444,7 +438,7 @@
     
     
     <div class="description">
-        <p>The Canvas class handles everything related to the &lt;canvas&gt; tag as a DOM Element, like styles, offset, aspect ratio</p>
+        <p>The Canvas class handles everything related to creating the <code>canvas</code> DOM tag that Phaser will use, including styles, offset and aspect ratio.</p>
     </div>
     
 
@@ -523,7 +517,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="addToDOM"><span class="type-signature">&lt;static> </span>addToDOM<span class="signature">(canvas, parent, overflowHidden)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
+    <h4 class="name" id="addToDOM"><span class="type-signature">&lt;static> </span>addToDOM<span class="signature">(canvas, parent, <span class="optional">overflowHidden</span>)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
     
     
 </dt>
@@ -554,7 +548,11 @@ If no parent is given it will be added as a child of the document.body.</p>
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -579,7 +577,19 @@ If no parent is given it will be added as a child of the document.body.</p>
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The canvas to set the touch action on.</p></td>
@@ -605,10 +615,22 @@ If no parent is given it will be added as a child of the document.body.</p>
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The DOM element to add the canvas to. Defaults to ''.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The DOM element to add the canvas to.</p></td>
         </tr>
 
 	
@@ -628,7 +650,23 @@ If no parent is given it will be added as a child of the document.body.</p>
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
             
 
             <td class="description last"><p>If set to true it will add the overflow='hidden' style to the parent DOM element.</p></td>
@@ -663,7 +701,7 @@ If no parent is given it will be added as a child of the document.body.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-134">line 134</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-156">line 156</a>
     </li></ul></dd>
     
 
@@ -714,7 +752,7 @@ If no parent is given it will be added as a child of the document.body.</p>
         
             
 <dt>
-    <h4 class="name" id="create"><span class="type-signature">&lt;static> </span>create<span class="signature">(width, height)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
+    <h4 class="name" id="create"><span class="type-signature">&lt;static> </span>create<span class="signature">(<span class="optional">width</span>, <span class="optional">height</span>, <span class="optional">id</span>)</span><span class="type-signature"> &rarr; {HTMLCanvasElement}</span></h4>
     
     
 </dt>
@@ -722,7 +760,7 @@ If no parent is given it will be added as a child of the document.body.</p>
     
     
     <div class="description">
-        <p>Creates the &lt;canvas&gt; tag</p>
+        <p>Creates a <code>canvas</code> DOM element. The element is not automatically added to the document.</p>
     </div>
     
 
@@ -744,7 +782,11 @@ If no parent is given it will be added as a child of the document.body.</p>
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -769,10 +811,26 @@ If no parent is given it will be added as a child of the document.body.</p>
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The desired width.</p></td>
+            
+                <td class="default">
+                
+                    256
+                
+                </td>
+            
+
+            <td class="description last"><p>The width of the canvas element.</p></td>
         </tr>
 
 	
@@ -792,10 +850,65 @@ If no parent is given it will be added as a child of the document.body.</p>
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The desired height.</p></td>
+            
+                <td class="default">
+                
+                    256
+                
+                </td>
+            
+
+            <td class="description last"><p>The height of the canvas element..</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    ''
+                
+                </td>
+            
+
+            <td class="description last"><p>If given this will be set as the ID of the canvas element, otherwise no ID will be set.</p></td>
         </tr>
 
 	
@@ -852,7 +965,7 @@ If no parent is given it will be added as a child of the document.body.</p>
     
             
 <div class="param-desc">
-    <p>The newly created &lt;canvas&gt; tag.</p>
+    <p>The newly created canvas element.</p>
 </div>
 
 
@@ -968,7 +1081,7 @@ If no parent is given it will be added as a child of the document.body.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-61">line 61</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-83">line 83</a>
     </li></ul></dd>
     
 
@@ -1152,7 +1265,7 @@ If no parent is given it will be added as a child of the document.body.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-37">line 37</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-45">line 45</a>
     </li></ul></dd>
     
 
@@ -1338,7 +1451,7 @@ If no parent is given it will be added as a child of the document.body.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-72">line 72</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-94">line 94</a>
     </li></ul></dd>
     
 
@@ -1480,7 +1593,7 @@ Note that if this doesn't given the desired result then see the CanvasUtils.setS
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-245">line 245</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-269">line 269</a>
     </li></ul></dd>
     
 
@@ -1622,7 +1735,7 @@ Note that if this doesn't given the desired result then see the setSmoothingEnab
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-226">line 226</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-248">line 248</a>
     </li></ul></dd>
     
 
@@ -1790,7 +1903,7 @@ patchy on earlier browsers, especially on mobile.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-202">line 202</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-224">line 224</a>
     </li></ul></dd>
     
 
@@ -1974,7 +2087,7 @@ patchy on earlier browsers, especially on mobile.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-90">line 90</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-112">line 112</a>
     </li></ul></dd>
     
 
@@ -2253,7 +2366,7 @@ patchy on earlier browsers, especially on mobile.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-181">line 181</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-203">line 203</a>
     </li></ul></dd>
     
 
@@ -2437,7 +2550,7 @@ patchy on earlier browsers, especially on mobile.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-110">line 110</a>
+        <a href="Canvas.js.html">system/Canvas.js</a>, <a href="Canvas.js.html#sunlight-1-line-132">line 132</a>
     </li></ul></dd>
     
 
@@ -2505,13 +2618,13 @@ patchy on earlier browsers, especially on mobile.</p>
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		Phaser Copyright © 2012-2014 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 28 2013 15:56:27 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 05 2014 06:28:26 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

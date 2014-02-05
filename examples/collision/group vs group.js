@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update });
 
 function preload() {
 
@@ -12,8 +12,9 @@ function preload() {
 var sprite;
 var bullets;
 var veggies;
-var bulletTime = 0;
+var cursors;
 
+var bulletTime = 0;
 var bullet;
 
 function create() {
@@ -44,31 +45,32 @@ function create() {
 
     sprite = game.add.sprite(400, 550, 'phaser');
 
-    //  Stop the following keys from propagating up to the browser
-    game.input.keyboard.addKeyCapture([ Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.SPACEBAR ]);
+    cursors = game.input.keyboard.createCursorKeys();
+    game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
 
 }
 
 function update() {
 
+    //  As we don't need to exchange any velocities or motion we can the 'overlap' check instead of 'collide'
+    game.physics.overlap(bullets, veggies, collisionHandler, null, this);
+
     sprite.body.velocity.x = 0;
     sprite.body.velocity.y = 0;
 
-    if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+    if (cursors.left.isDown)
     {
-        sprite.body.velocity.x = -200;
+        sprite.body.velocity.x = -300;
     }
-    else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+    else if (cursors.right.isDown)
     {
-        sprite.body.velocity.x = 200;
+        sprite.body.velocity.x = 300;
     }
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
     {
         fireBullet();
     }
-
-    game.physics.collide(bullets, veggies, collisionHandler, null, this);
 
 }
 
@@ -82,7 +84,7 @@ function fireBullet () {
         {
             bullet.reset(sprite.x + 6, sprite.y - 8);
             bullet.body.velocity.y = -300;
-            bulletTime = game.time.now + 250;
+            bulletTime = game.time.now + 150;
         }
     }
 
@@ -90,9 +92,12 @@ function fireBullet () {
 
 //  Called if the bullet goes out of the screen
 function resetBullet (bullet) {
+
     bullet.kill();
+
 }
 
+//  Called if the bullet hits one of the veg sprites
 function collisionHandler (bullet, veg) {
 
     bullet.kill();
