@@ -919,11 +919,11 @@ Phaser.Physics.Arcade.Body.prototype = {
         if (response.overlapN.x)
         {
             //  Which is smaller? Left or Right?
-            if (this._distances[0] < this._distances[1] && (body.checkCollision.right || this.checkCollision.left))
+            if (this._distances[0] < this._distances[1])
             {
                 hasSeparated = this.hitLeft(body, response);
             }
-            else if (this._distances[1] < this._distances[0] && (body.checkCollision.left || this.checkCollision.right))
+            else if (this._distances[1] < this._distances[0])
             {
                 hasSeparated = this.hitRight(body, response);
             }
@@ -931,11 +931,11 @@ Phaser.Physics.Arcade.Body.prototype = {
         else if (response.overlapN.y)
         {
             //  Which is smaller? Top or Bottom?
-            if (this._distances[2] < this._distances[3] && (body.checkCollision.down || this.checkCollision.up))
+            if (this._distances[2] < this._distances[3])
             {
                 hasSeparated = this.hitTop(body, response);
             }
-            else if (this._distances[3] < this._distances[2] && (body.checkCollision.up || this.checkCollision.down))
+            else if (this._distances[3] < this._distances[2])
             {
                 hasSeparated = this.hitBottom(body, response);
             }
@@ -949,10 +949,10 @@ Phaser.Physics.Arcade.Body.prototype = {
         else
         {
             //  They can only contact like this if at least one of their sides is open, otherwise it's a separation
-            if (!this.checkCollision.up || !this.checkCollision.down || !this.checkCollision.left || !this.checkCollision.right || !body.checkCollision.up || !body.checkCollision.down || !body.checkCollision.left || !body.checkCollision.right)
-            {
+            // if (!this.checkCollision.up || !this.checkCollision.down || !this.checkCollision.left || !this.checkCollision.right || !body.checkCollision.up || !body.checkCollision.down || !body.checkCollision.left || !body.checkCollision.right)
+            // {
                 this.addContact(body);
-            }
+            // }
         }
 
         return hasSeparated;
@@ -972,6 +972,11 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @param {SAT.Response} response - The SAT Response object containing the collision data.
     */
     hitLeft: function (body, response) {
+
+        if (!this.checkCollision.left || !body.checkCollision.right)
+        {
+            return false;
+        }
 
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.LEFT, this, body, response))
         {
@@ -1015,6 +1020,11 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     hitRight: function (body, response) {
 
+        if (!this.checkCollision.right || !body.checkCollision.left)
+        {
+            return false;
+        }
+
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.RIGHT, this, body))
         {
             return;
@@ -1056,6 +1066,11 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @param {SAT.Response} response - The SAT Response object containing the collision data.
     */
     hitTop: function (body, response) {
+
+        if (!this.checkCollision.up || !body.checkCollision.down)
+        {
+            return false;
+        }
 
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.UP, this, body))
         {
@@ -1100,6 +1115,11 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @param {SAT.Response} response - The SAT Response object containing the collision data.
     */
     hitBottom: function (body, response) {
+
+        if (!this.checkCollision.down || !body.checkCollision.up)
+        {
+            return false;
+        }
 
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.DOWN, this, body))
         {
@@ -1188,9 +1208,9 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.moves)
         {
-            this.reboundCheck(true, true, true);
-
             this.game.physics.checkBounds(this);
+
+            this.reboundCheck(true, true, true);
 
             this._dx = this.deltaX();
             this._dy = this.deltaY();
@@ -1228,7 +1248,6 @@ Phaser.Physics.Arcade.Body.prototype = {
             {
                 this.updateScale();
             }
-
         }
 
     },

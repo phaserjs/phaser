@@ -1,4 +1,7 @@
 <?php
+	//	NOTE: This script is deprecated. The build process is managed by grunt now.
+	//	Keeping this file here for those that I know use it, but if you're trying to build fresh, use grunt.
+
 	date_default_timezone_set('Europe/London');
 
 	//	Get the version number

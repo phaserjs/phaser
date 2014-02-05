@@ -35,6 +35,7 @@ function create() {
         //  Here we'll create some chillis which the player can pick-up. They are still part of the same Group.
         var c = group.create(game.rnd.integerInRange(100, 770), game.rnd.integerInRange(0, 570), 'veggies', 17);
         c.name = 'chilli' + i;
+        c.body.immovable = true;
     }
 
     cursors = game.input.keyboard.createCursorKeys();

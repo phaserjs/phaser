@@ -26,7 +26,7 @@ var wabbitCount = 0;
 function create() {
 
 	// set global gravity
-	game.physics.gravity.setTo(0, 4);
+	game.physics.gravity.y = 200;
 
 	game.stage.backgroundColor = '#0072bc';
 	
@@ -72,7 +72,8 @@ function create() {
 	ball.inputEnabled = true;
    	ball.body.collideWorldBounds = true;
 	ball.body.bounce.setTo(0.9, 0.9);
-	ball.body..friction = 0.2;
+	ball.body.linearDamping = 0.2;
+	ball.body.immovable = true;
 	
 	// Enable input.
 	ball.input.start(0, true);
@@ -143,13 +144,13 @@ function update() {
 
 	wabbitCount = 5 - wabs;
 
-	console.log(ball.body.y, ball.body.motionVelocity.y);
+	// console.log(ball.body.y, ball.body.motionVelocity.y);
 
 }
 
 function render() {
 
-	game.debug.renderSpriteCollision(ball, 32, 32);
+	// game.debug.renderSpriteCollision(ball, 32, 32);
 
 	// var graphics = game.add.graphics(0, 0);
 	// game.context.fillStyle = 'rgba(0,0,255,0.5)';

@@ -3,32 +3,33 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-    game.load.tilemap('map', 'assets/tilemaps/maps/tile_collision_test.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.tilemap('map', 'assets/tilemaps/maps/features_test.json', null, Phaser.Tilemap.TILED_JSON);
 
     game.load.image('ground_1x1', 'assets/tilemaps/tiles/ground_1x1.png');
+    game.load.image('walls_1x2', 'assets/tilemaps/tiles/walls_1x2.png');
+    game.load.image('tiles2', 'assets/tilemaps/tiles/tiles2.png');
+
     game.load.image('phaser', 'assets/sprites/arrow.png');
     game.load.spritesheet('coin', 'assets/sprites/coin.png', 32, 32);
 
 }
 
-var map;
-var layer;
-
-var sprite;
 var cursors;
+var map;
+var coins;
+
+var layer;
+var sprite;
 
 function create() {
 
     map = game.add.tilemap('map');
 
     map.addTilesetImage('ground_1x1');
-    map.addTilesetImage('coin');
+    map.addTilesetImage('walls_1x2');
+    map.addTilesetImage('tiles2');
 
     map.setCollisionBetween(1, 12);
-
-    map.setTileIndexCallback(26, hitCoin, this);
-
-    map.setTileLocationCallback(2, 0, 1, 1, hitCoin, this);
 
     layer = map.createLayer('Tile Layer 1');
 
@@ -36,12 +37,21 @@ function create() {
 
     layer.resizeWorld();
 
-    game.physics.gravity.y = 100;
+    //  Here we create our coins group
+    coins = game.add.group();
+
+    //  And now we convert all of the Tiled objects with an ID of 34 into sprites within the coins group
+    map.createFromObjects('Object Layer 1', 34, 'coin', 0, true, false, coins);
+
+    //  Add animations to all of the coin sprites
+    coins.callAll('animations.add', 'animations', 'spin', [0, 1, 2, 3, 4, 5], 10, true);
+    coins.callAll('animations.play', 'animations', 'spin');
 
     sprite = game.add.sprite(260, 100, 'phaser');
     sprite.anchor.setTo(0.5, 0.5);
 
-    sprite.body.setRectangle(16, 16, 8, 8);
+    //  This adjusts the collision body size.
+    sprite.body.setRectangle(16, 16, 25, 15);
 
     //  We'll set a lower max angular velocity here to keep it from going totally nuts
     sprite.body.maxAngular = 500;
@@ -49,30 +59,16 @@ function create() {
     //  Apply a drag otherwise the sprite will just spin and never slow down
     sprite.body.angularDrag = 50;
 
-    // sprite.body.bounce.x = 0.8;
-    // sprite.body.bounce.y = 0.8;
-
-    debugSprite = sprite;
-
     game.camera.follow(sprite);
 
     cursors = game.input.keyboard.createCursorKeys();
 
 }
 
-function hitCoin(sprite, tile) {
-
-    tile.tile.alpha = 0.2;
-
-    layer.dirty = true;
-
-    return false;
-
-}
-
 function update() {
 
     game.physics.collide(sprite, layer);
+    game.physics.overlap(sprite, coins, collectCoin, null, this);
 
     sprite.body.velocity.x = 0;
     sprite.body.velocity.y = 0;
@@ -92,11 +88,17 @@ function update() {
         game.physics.velocityFromAngle(sprite.angle, 300, sprite.body.velocity);
     }
 
+
+}
+
+function collectCoin(player, coin) {
+
+    coin.kill();
+
 }
 
 function render() {
 
-    // game.debug.renderBodyInfo(sprite, 16, 24);
-    // game.debug.renderPhysicsBody(sprite.body);
+    game.debug.renderPhysicsBody(sprite.body);
 
 }

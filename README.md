@@ -147,7 +147,6 @@ New Examples:
 * Input - Touch Joystick example showing how to use the clay.io virtual game controller (thanks gabehollombe)
 * Games - Matching Pairs by Patrick OReilly.
 * Games - Simon Says by Patrick OReilly.
-* Games - Wabbits by Patrick OReilly.
 * Tweens - Example showing how to use the tween events, onStart, onLoop and onComplete.
 * Display - Pixi Render Texture. A Phaser conversion of the Pixi.js Render Texture example.
 * Input - 5 new examples showing how to use the Gamepad API (thanks Karl Macklin)

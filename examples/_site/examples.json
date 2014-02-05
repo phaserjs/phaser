@@ -41,6 +41,10 @@
     {
       "file": "play+music.js",
       "title": "play music"
+    },
+    {
+      "file": "protracker.js",
+      "title": "protracker"
     }
   ],
   "basics": [
@@ -141,6 +145,10 @@
     {
       "file": "offset+bounding+box.js",
       "title": "offset bounding box"
+    },
+    {
+      "file": "one+way+collision.js",
+      "title": "one way collision"
     },
     {
       "file": "polygon+body.js",
@@ -281,10 +289,6 @@
     {
       "file": "tanks.js",
       "title": "tanks"
-    },
-    {
-      "file": "wabbits.js",
-      "title": "wabbits"
     }
   ],
   "geometry": [
@@ -321,6 +325,10 @@
     {
       "file": "bring+a+group+to+top.js",
       "title": "bring a group to top"
+    },
+    {
+      "file": "call+all+animations.js",
+      "title": "call all animations"
     },
     {
       "file": "call+all.js",
@@ -677,6 +685,10 @@
       "title": "quadtree - ids"
     },
     {
+      "file": "ship+trail.js",
+      "title": "ship trail"
+    },
+    {
       "file": "shoot+the+pointer.js",
       "title": "shoot the pointer"
     },
@@ -792,6 +804,10 @@
     }
   ],
   "tilemaps": [
+    {
+      "file": "create+from+objects.js",
+      "title": "create from objects"
+    },
     {
       "file": "fill+tiles.js",
       "title": "fill tiles"

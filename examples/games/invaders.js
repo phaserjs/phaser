@@ -155,8 +155,8 @@ function update() {
     }
 
     //  Run collision
-    game.physics.collide(bullets, aliens, collisionHandler, null, this);
-    game.physics.collide(enemyBullets, player, enemyHitsPlayer, null, this);
+    game.physics.overlap(bullets, aliens, collisionHandler, null, this);
+    game.physics.overlap(enemyBullets, player, enemyHitsPlayer, null, this);
 
 }
 

@@ -26,13 +26,13 @@ function create() {
 	sprite2.name = 'yellow';
 	sprite2.body.rebound = false;
 
-	sprite2.body.velocity.x = -200;
-
 	game.add.tween(sprite.scale).to( { x: 3, y: 3 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
 
 }
 
 function update() {
+
+	sprite2.body.velocity.x = -200;
 
 	game.physics.collide(sprite, sprite2);
 

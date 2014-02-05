@@ -266,7 +266,7 @@ Phaser.AnimationManager.prototype = {
     *
     * @method Phaser.AnimationManager#getAnimation
     * @param {string} name - The name of the animation to be returned, e.g. "fire".
-    * @return {Phaser.Animation|boolean} The Animation instance, if found, otherwise false.
+    * @return {Phaser.Animation} The Animation instance, if found, otherwise null.
     */
     getAnimation: function (name) {
 
@@ -278,7 +278,7 @@ Phaser.AnimationManager.prototype = {
             }
         }
 
-        return false;
+        return null;
 
     },
 

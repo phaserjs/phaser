@@ -1056,6 +1056,8 @@ Phaser.Physics.Arcade.prototype = {
             body.blocked.down = true;
         }
 
+        body.reboundCheck(body.overlapX, body.overlapY, true);
+
         return true;
 
     },

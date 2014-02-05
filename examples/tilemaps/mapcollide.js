@@ -60,7 +60,7 @@ function update() {
 
     if (cursors.up.isDown)
     {
-        if (p.body.touching.down)
+        if (p.body.onFloor())
         {
             p.body.velocity.y = -200;
         }
@@ -80,6 +80,6 @@ function update() {
 function render() {
 
     game.debug.renderCameraInfo(game.camera, 420, 320);
-    game.debug.renderSpriteCollision(p, 32, 320);
+    game.debug.renderPhysicsBody(p.body);
 
 }

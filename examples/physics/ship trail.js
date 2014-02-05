@@ -13,6 +13,8 @@ var bmd;
 
 function create() {
 
+	//	Click on the left or right of the game to shoot the space ship in that direction
+
 	game.stage.backgroundColor = '#124184';
 
 	bmd = game.add.bitmapData(800, 600);
