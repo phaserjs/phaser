@@ -28,13 +28,13 @@ Phaser.TweenManager = function (game) {
     this.game = game;
     
     /**
-    * @property {array} _tweens - Description.
+    * @property {array<Phaser.Tween>} _tweens - All of the currently running tweens.
     * @private
     */
     this._tweens = [];
     
     /**
-    * @property {array} _add - Description.
+    * @property {array<Phaser.Tween>} _add - All of the tweens queued to be added in the next update.
     * @private
     */
     this._add = [];
@@ -45,13 +45,6 @@ Phaser.TweenManager = function (game) {
 };
 
 Phaser.TweenManager.prototype = {
-
-    /**
-    * Version number of this library.
-    * @property {string} REVISION
-    * @default 
-    */
-    REVISION: '11dev',
 
     /**
     * Get all the tween objects in an array.
@@ -65,12 +58,17 @@ Phaser.TweenManager.prototype = {
     },
 
     /**
-    * Remove all tween objects.
+    * Remove all tweens running and in the queue. Doesn't call any of the tween onComplete events.
     * @method Phaser.TweenManager#removeAll
     */
     removeAll: function () {
 
-        this._tweens = [];
+        for (var i = 0; i < this._tweens.length; i++)
+        {
+            this._tweens[i].pendingDelete = true;
+        }
+
+        this._add = [];
 
     },
 

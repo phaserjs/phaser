@@ -60,11 +60,10 @@ Significant API changes:
 * The World level quadtree is no longer created, they are now built and ripped down each time you collide a Group, this helps collision accuracy.
 * A SAT system has been integrated for Body collision and separation.
 * Bodies are no longer added to a world quadtree, so have had all of their quadtree properties removed such as skipQuadtree, quadTreeIndex, etc.
-* Body.drag has been removed. Please use the new Body.friction value instead (which is a number value, not a Point object)
+* Body.drag has been removed. Please use the new Body.linearDamping value instead (which is a number value, not a Point object)
 * Body.embedded and Body.wasTouching have been removed as they are no longer required.
 * Body.customSeparateX/Y have been removed as you should now use Body.customSeparateCallback.
 * Body.maxVelocity defaults have been removed from 10,000 to 2000.
-* Body.friction is new and has a default value of 0.1 - you may need to set this to zero depending on the type of game you're making.
 * Body.customSeparateCallback allows you to set your own callback when two Bodies need to separate rather than using the built-in method.
 * Body.collideCallback allows you to set a callback that is fired whenever the Body is hit on any of its active faces.
 * Body.allowCollision has been renamed to Body.checkCollision.
@@ -102,13 +101,13 @@ New features:
 * Added a new Project Template "Full Screen Mobile" which you can find in the resources folder. Contains html / css / layout needed for a deployed Phaser game.
 * Body.speed - the current speed of the body.
 * Body.angle - the current angle the Body is facing based on its velocity. This is not the same as the Sprite angle that may own the body.
-* Body.friction - This now replaces Body.drag and provides for a much smoother friction experience.
+* Body.linearDamping - This now replaces Body.drag and provides for a much smoother damping (friction) experience.
 * Body.minBounceVelocity - If a Body has bounce set, this threshold controls if it should rebound or not. Use it to stop 'jittering' on bounds/tiles with super-low velocities.
 * QuadTree.populate - you can pass it a Group and it'll automatically insert all of the children ready for inspection.
 * Input.setMoveCallback allows you to set a callback that will be fired each time the activePointer receives a DOM move event.
 * Math.distancePow(x1,y1,x2,y2,power) returns the distance between two coordinates at the given power.
-* Physics.collideArray(obj, array) for when you want to collide an object against a number of sprites that aren't all in the same Group.
-* Physics.overlapArray(obj, array) for when you want to overlap test an object against a number of sprites that aren't all in the same Group.
+* Physics.collide now supports the 2nd parameter as an array, for when you want to collide an object against a number of sprites that aren't all in the same Group.
+* Physics.overlap now supports the 2nd parameter as an array, for when you want to overlap test an object against a number of sprites that aren't all in the same Group.
 * Math.reverseAngle - reverses an angle (in radians).
 * Math.normalizeAngle - normalises an angle, now in radians only.
 * Math.normalizeLatitude - Normalizes a latitude to the [-90,90] range.
@@ -122,6 +121,7 @@ New features:
 * Game.disableStep turns core update loop stepping off.
 * Debug.renderPhysicsBody(body, color) is extremely useful for debugging the new physics bodies. Will draw the outline + points in the color given.
 * Debug.renderBodyInfo(sprite, x, y, color) will display lots of Sprite body data.
+* Sprite.events.onBeginContact will be fired when a Body makes contact with another Body. Once contact is over an onEndContact event will be dispatched.
 
 
 New Examples:
@@ -169,7 +169,7 @@ Updates:
 * Tweens fire an onLoop event if they are set to repeat. onComplete is now only fired for the final repeat (or never if the repeat is infinite)
 * Pointer used to un-pause a paused game every time it was clicked/touched (this avoided some rogue browser plugins). Now only happens if Stage.disableVisibilityChange is true.
 * Input doesn't set the cursor to default if it's already set to none.
-* You can now collide a group against itself, to have all children collide, and bodies won't check against themselves (thanks cocoademon)
+* You can now collide a group against itself. This will check all children against each other, but not themselves (thanks cocoademon)
 * RenderTexture.render / renderXY has a new parameter: renderHidden, a boolean which will allow you to render Sprites even if their visible is set to false.
 * Added in prototype.constructor definitions to every class (thanks darkoverlordofdata)
 * Group.destroy has a new parameter: destroyChildren (boolean) which will optionally call the destroy method of all Group children.
@@ -190,6 +190,9 @@ Updates:
 * Phaser.Math.minProperty and maxProperty added. Like Math.min/max but can be given a property an an array or list of objects to inspect.
 * Added 'full' paramter to Body.reset, allowing you to control if motion or all data is reset or not.
 * Exposed Group.pivot and Sprite.pivot to allow you to directly set the pivot points for rotation.
+* Swapped to using the native and faster Array.isArray check.
+* Added callback context parameter to Tween.onUpdateCallback(callback, context) to avoid having to bind or create anonymous functions.
+* Updated TweenManager.removeAll so it flags all tweens as pendingDelete rather than nuking the array, to avoid tween callback array size errors (thanks DarkDev)
 
 
 Bug Fixes:

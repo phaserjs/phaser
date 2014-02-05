@@ -4,17 +4,121 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 function preload() {
 
 	game.load.spritesheet('gameboy', 'assets/sprites/gameboy_seize_color_40x60.png', 40, 60);
+	game.load.image('atari', 'assets/sprites/atari130xe.png');
 
 }
 
 var sprite;
 var sprite2;
+var sprite3;
+var reverse = false;
+
+function onBeginContact(a, b) {
+	console.log('Begin Contact between', a.name, 'and', b.name);
+}
+
+function onEndContact(a, b) {
+	console.log('End Contact between', a.name, 'and', b.name);
+}
 
 function create() {
 
 	game.stage.backgroundColor = '#124184';
 
-	test5();
+	test8();
+
+}
+
+function test8() {
+
+	//	A up into B
+
+	sprite = game.add.sprite(300, 200, 'atari');
+	sprite.name = 'atari';
+	sprite.body.collideWorldBounds = true;
+	sprite.body.bounce.setTo(1, 1);
+	sprite.body.checkCollision.up = false;
+	sprite.body.checkCollision.down = false;
+
+	sprite2 = game.add.sprite(350, 400, 'gameboy', 2);
+	sprite2.name = 'gameboy';
+	sprite2.body.collideWorldBounds = true;
+	sprite2.body.bounce.setTo(1, 1);
+
+	sprite2.events.onBeginContact.add(onBeginContact, this);
+	sprite2.events.onEndContact.add(onEndContact, this);
+
+	reverse = true;
+
+	game.input.onDown.add(launch8, this);
+
+}
+
+function launch8() {
+
+	sprite2.body.velocity.x = -100;
+	sprite2.body.velocity.y = -200;
+
+}
+
+function test7() {
+
+	//	A down into B
+
+	sprite = game.add.sprite(300, 400, 'atari');
+	sprite.name = 'atari';
+	sprite.body.collideWorldBounds = true;
+	sprite.body.bounce.setTo(1, 1);
+	sprite.body.checkCollision.up = false;
+
+	sprite2 = game.add.sprite(350, 100, 'gameboy', 2);
+	sprite2.name = 'gameboy';
+	sprite2.body.collideWorldBounds = true;
+	sprite2.body.bounce.setTo(1, 1);
+
+	// reverse = true;
+
+	game.input.onDown.add(launch7, this);
+
+}
+
+function launch7() {
+
+	sprite2.body.velocity.y = 100;
+
+}
+
+function test6() {
+
+	//	Offset Down Collision false
+
+	sprite = game.add.sprite(100, 300, 'atari');
+	sprite.name = 'atari';
+	sprite.body.collideWorldBounds = true;
+	sprite.body.bounce.setTo(1, 1);
+	sprite.body.checkCollision.left = false;
+	sprite.body.checkCollision.right = false;
+
+	sprite2 = game.add.sprite(500, 330, 'gameboy', 2);
+	// sprite2 = game.add.sprite(500, 530, 'gameboy', 2);
+	sprite2.name = 'gameboy';
+	sprite2.body.collideWorldBounds = true;
+	sprite2.body.bounce.setTo(1, 1);
+
+	sprite3 = game.add.sprite(400, 100, 'gameboy', 0);
+	sprite3.name = 'gameboy2';
+	sprite3.body.collideWorldBounds = true;
+	sprite3.body.bounce.setTo(1, 1);
+
+	game.input.onDown.add(launch6, this);
+
+}
+
+function launch6() {
+
+	sprite.body.velocity.x = 100;
+	sprite2.body.velocity.x = -100;
+	sprite3.body.velocity.y = 100;
 
 }
 
@@ -22,10 +126,10 @@ function test5() {
 
 	//	Offset Down Collision false
 
-	sprite = game.add.sprite(438, 400, 'gameboy', 0);
+	sprite = game.add.sprite(360, 400, 'gameboy', 0);
 	sprite.name = 'red';
 	sprite.body.collideWorldBounds = true;
-	sprite.body.bounce.setTo(0.9, 0.9);
+	// sprite.body.bounce.setTo(0.9, 0.9);
 	sprite.body.checkCollision.up = false;
 
 	sprite2 = game.add.sprite(400, 200, 'gameboy', 2);
@@ -33,7 +137,7 @@ function test5() {
 	sprite2.body.collideWorldBounds = true;
 	// sprite2.body.checkCollision.down = false;
 	// sprite2.body.mass = 1;
-	// sprite2.body.bounce.setTo(1, 1);
+	sprite2.body.bounce.setTo(1, 1);
 	// sprite2.body.friction = 0;
 
 	game.input.onDown.add(launch5, this);
@@ -180,7 +284,19 @@ function launch1() {
 
 function update() {
 
-	game.physics.collide(sprite, sprite2);
+	if (reverse)
+	{
+		game.physics.collide(sprite2, sprite);
+	}
+	else
+	{
+		game.physics.collide(sprite, sprite2);
+	}
+
+	if (sprite3)
+	{
+		game.physics.collide(sprite, sprite3);
+	}
 
 }
 
@@ -199,6 +315,11 @@ function render() {
 	if (sprite2)
 	{
 		game.debug.renderPhysicsBody(sprite2.body);
+	}
+
+	if (sprite3)
+	{
+		game.debug.renderPhysicsBody(sprite3.body);
 	}
 
 }

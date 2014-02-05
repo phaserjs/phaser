@@ -24,6 +24,7 @@
 Phaser.Events = function (sprite) {
     
     this.parent = sprite;
+
     this.onAddedToGroup = new Phaser.Signal();
     this.onRemovedFromGroup = new Phaser.Signal();
     this.onKilled = new Phaser.Signal();
@@ -40,6 +41,9 @@ Phaser.Events = function (sprite) {
     this.onAnimationStart = null;
     this.onAnimationComplete = null;
     this.onAnimationLoop = null;
+
+    this.onBeginContact = null;
+    this.onEndContact = null;
 
 };
 

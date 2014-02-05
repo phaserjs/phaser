@@ -272,6 +272,24 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.height = 0;
 
     /**
+    * @property {array<Phaser.Physics.Arcade.Body>} contacts - Used to store references to bodies this Body is in contact with.
+    * @protected
+    */
+    this.contacts = [];
+
+    /**
+    * @property {number} overlapX - Mostly used internally to store the overlap values from Tile seperation.
+    * @protected
+    */
+    this.overlapX = 0;
+
+    /**
+    * @property {number} overlapY - Mostly used internally to store the overlap values from Tile seperation.
+    * @protected
+    */
+    this.overlapY = 0;
+
+    /**
     * @property {Phaser.Point} _temp - Internal cache var.
     * @private
     */
@@ -307,129 +325,34 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this._distances = [0, 0, 0, 0];
 
-    this.overlapX = 0;
-    this.overlapY = 0;
-
-    //  Velocity cache
+    /**
+    * @property {number} _vx - Internal cache var.
+    * @private
+    */
     this._vx = 0;
+
+    /**
+    * @property {number} _vy - Internal cache var.
+    * @private
+    */
     this._vy = 0;
 
     //  Set-up the default shape
     this.setRectangle(sprite.width, sprite.height, 0, 0);
+
+    //  Set-up contact events
+    this.sprite.events.onBeginContact = new Phaser.Signal();
+    this.sprite.events.onEndContact = new Phaser.Signal();
 
 };
 
 Phaser.Physics.Arcade.Body.prototype = {
 
     /**
-    * Sets this Body to use a circle of the given radius for all collision.
-    * The Circle will be centered on the center of the Sprite by default, but can be adjusted via the Body.offset property and the setCircle x/y parameters.
-    *
-    * @method Phaser.Physics.Arcade#setCircle
-    * @param {number} radius - The radius of this circle (in pixels)
-    * @param {number} [offsetX=0] - The x amount the circle will be offset from the Sprites center.
-    * @param {number} [offsetY=0] - The y amount the circle will be offset from the Sprites center.
-    */
-    setCircle: function (radius, offsetX, offsetY) {
-
-        if (typeof offsetX === 'undefined') { offsetX = this.sprite._cache.halfWidth; }
-        if (typeof offsetY === 'undefined') { offsetY = this.sprite._cache.halfHeight; }
-
-        this.type = Phaser.Physics.Arcade.CIRCLE;
-        this.shape = new SAT.Circle(new SAT.Vector(this.sprite.x, this.sprite.y), radius);
-        this.polygon = null;
-
-        this.offset.setTo(offsetX, offsetY);
-
-    },
-
-    /**
-    * Sets this Body to use a rectangle for all collision.
-    * If you don't specify any parameters it will be sized to match the parent Sprites current width and height (including scale factor) and centered on the sprite.
-    *
-    * @method Phaser.Physics.Arcade#setRectangle
-    * @param {number} [width] - The width of the rectangle. If not specified it will default to the width of the parent Sprite.
-    * @param {number} [height] - The height of the rectangle. If not specified it will default to the height of the parent Sprite.
-    * @param {number} [translateX] - The x amount the rectangle will be translated from the Sprites center.
-    * @param {number} [translateY] - The y amount the rectangle will be translated from the Sprites center.
-    */
-    setRectangle: function (width, height, translateX, translateY) {
-
-        if (typeof width === 'undefined') { width = this.sprite.width; }
-        if (typeof height === 'undefined') { height = this.sprite.height; }
-        if (typeof translateX === 'undefined') { translateX = -this.sprite._cache.halfWidth; }
-        if (typeof translateY === 'undefined') { translateY = -this.sprite._cache.halfHeight; }
-
-        this.type = Phaser.Physics.Arcade.RECT;
-        this.shape = new SAT.Box(new SAT.Vector(this.sprite.world.x, this.sprite.world.y), width, height);
-        this.polygon = this.shape.toPolygon();
-        this.polygon.translate(translateX, translateY);
-
-        this.offset.setTo(0, 0);
-
-    },
-
-    /**
-    * Sets this Body to use a convex polygon for collision.
-    * The points are specified in a counter-clockwise direction and must create a convex polygon.
-    * Use Body.translate and/or Body.offset to re-position the polygon from the Sprite origin.
-    *
-    * @method Phaser.Physics.Arcade#setPolygon
-    * @param {array<SAT.Vector>|Array<Number>|SAT.Vector...|Number...} points - This can be an array of Vectors that form the polygon,
-    *      a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
-    *      all the points of the polygon e.g. `setPolygon(new SAT.Vector(), new SAT.Vector(), ...)`, or the
-    *      arguments passed can be flat x,y values e.g. `setPolygon(x,y, x,y, x,y, ...)` where `x` and `y` are Numbers.
-    */
-    setPolygon: function (points) {
-
-        this.type = Phaser.Physics.Arcade.POLYGON;
-        this.shape = null;
-
-        if (!(points instanceof Array))
-        {
-            points = Array.prototype.slice.call(arguments);
-        }
-
-        if (typeof points[0] === 'number')
-        {
-            var p = [];
-
-            for (var i = 0, len = points.length; i < len; i += 2)
-            {
-                p.push(new SAT.Vector(points[i], points[i + 1]));
-            }
-
-            points = p;
-        }
-
-        this.polygon = new SAT.Polygon(new SAT.Vector(this.sprite.center.x, this.sprite.center.y), points);
-
-        this.offset.setTo(0, 0);
-
-    },
-
-    /**
-    * Used for translating rectangle and polygon bodies from the Sprite parent. Doesn't apply to Circles.
-    * See also the Body.offset property.
-    *
-    * @method Phaser.Physics.Arcade#translate
-    * @param {number} x - The x amount the polygon or rectangle will be translated by from the Sprite.
-    * @param {number} y - The y amount the polygon or rectangle will be translated by from the Sprite.
-    */
-    translate: function (x, y) {
-
-        if (this.polygon)
-        {
-            this.polygon.translate(x, y);
-        }
-
-    },
-
-    /**
-    * Internal method.
+    * Internal method that updates the Body scale in relation to the parent Sprite.
     *
     * @method Phaser.Physics.Arcade#updateScale
-    * @private
+    * @protected
     */
     updateScale: function () {
 
@@ -448,7 +371,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     },
 
     /**
-    * Internal method.
+    * Internal method that updates the Body position in relation to the parent Sprite.
     *
     * @method Phaser.Physics.Arcade#preUpdate
     * @protected
@@ -530,7 +453,7 @@ if (this.sprite.debug)
     },
 
     /**
-    * Internal method that checks and potentially resets the blocke status.
+    * Internal method that checks and potentially resets the blocked status flags.
     *
     * @method Phaser.Physics.Arcade#checkBlocked
     * @protected
@@ -753,7 +676,7 @@ if (this.sprite.debug)
     },
 
     /**
-    * Adds the given Vector from this Body.
+    * Adds the given Vector to this Body.
     *
     * @method Phaser.Physics.Arcade#add
     * @protected
@@ -905,40 +828,110 @@ if (this.sprite.debug)
     */
     overlap: function (body, response) {
 
+        var result = false;
+
         if ((this.type === Phaser.Physics.Arcade.RECT || this.type === Phaser.Physics.Arcade.POLYGON) && (body.type === Phaser.Physics.Arcade.RECT || body.type === Phaser.Physics.Arcade.POLYGON))
         {
-            return SAT.testPolygonPolygon(this.polygon, body.polygon, response);
+            result = SAT.testPolygonPolygon(this.polygon, body.polygon, response);
         }
         else if (this.type === Phaser.Physics.Arcade.CIRCLE && body.type === Phaser.Physics.Arcade.CIRCLE)
         {
-            return SAT.testCircleCircle(this.shape, body.shape, response);
+            result = SAT.testCircleCircle(this.shape, body.shape, response);
         }
         else if ((this.type === Phaser.Physics.Arcade.RECT || this.type === Phaser.Physics.Arcade.POLYGON) && body.type === Phaser.Physics.Arcade.CIRCLE)
         {
-            return SAT.testPolygonCircle(this.polygon, body.shape, response);
+            result = SAT.testPolygonCircle(this.polygon, body.shape, response);
         }
         else if (this.type === Phaser.Physics.Arcade.CIRCLE && (body.type === Phaser.Physics.Arcade.RECT || body.type === Phaser.Physics.Arcade.POLYGON))
         {
-            return SAT.testCirclePolygon(this.shape, body.polygon, response);
+            result = SAT.testCirclePolygon(this.shape, body.polygon, response);
         }
+
+        if (!result)
+        {
+            this.removeContact(body);
+        }
+
+        return result;
+
+    },
+
+    /**
+    * Checks if this Body is already in contact with the given Body.
+    *
+    * @method Phaser.Physics.Arcade#inContact
+    * @param {Phaser.Physics.Arcade.Body} body - The Body to be checked.
+    * @return {boolean} True if the given Body is already in contact with this Body.
+    */
+    inContact: function (body) {
+
+        return (this.contacts.indexOf(body) != -1);
+
+    },
+
+    /**
+    * Adds the given Body to the contact list of this Body. Also adds this Body to the contact list of the given Body.
+    *
+    * @method Phaser.Physics.Arcade#addContact
+    * @param {Phaser.Physics.Arcade.Body} body - The Body to be added.
+    * @return {boolean} True if the given Body was added to this contact list, false if already on it.
+    */
+    addContact: function (body) {
+
+        if (this.inContact(body))
+        {
+            return false;
+        }
+
+        this.contacts.push(body);
+
+        this.sprite.events.onBeginContact.dispatch(this.sprite, body.sprite, this, body);
+
+        body.addContact(this);
+
+        return true;
+
+    },
+
+    /**
+    * Removes the given Body from the contact list of this Body. Also removes this Body from the contact list of the given Body.
+    *
+    * @method Phaser.Physics.Arcade#removeContact
+    * @param {Phaser.Physics.Arcade.Body} body - The Body to be removed.
+    * @return {boolean} True if the given Body was removed from this contact list, false if wasn't on it.
+    */
+    removeContact: function (body) {
+
+        if (!this.inContact(body))
+        {
+            return false;
+        }
+
+        this.contacts.splice(this.contacts.indexOf(body), 1);
+
+        this.sprite.events.onEndContact.dispatch(this.sprite, body.sprite, this, body);
+
+        body.removeContact(this);
+
+        return true;
 
     },
 
     /**
     * This separates this Body from the given Body unless a customSeparateCallback is set.
-    * It assumes they have already been overlap checked and the resulting overlap is stored in overlapX and overlapY.
+    * It assumes they have already been overlap checked and the resulting overlap is stored in the SAT response.
     *
     * @method Phaser.Physics.Arcade#separate
     * @protected
     * @param {Phaser.Physics.Arcade.Body} body - The Body to be separated from this one.
     * @param {SAT.Response} response - SAT Response handler.
-    * @return {boolean}
+    * @return {boolean} True if the bodies were separated, false if not (for example checkCollide allows them to pass through)
     */
     separate: function (body, response) {
 
-        if (this.customSeparateCallback)
+        if (this.inContact(body))
         {
-            return this.customSeparateCallback.call(this.customSeparateContext, this, response);
+            return false;
         }
 
         this._distances[0] = body.right - this.x;   // Distance of B to face on left side of A
@@ -946,42 +939,65 @@ if (this.sprite.debug)
         this._distances[2] = body.bottom - this.y;  // Distance of B to face on bottom side of A
         this._distances[3] = this.bottom - body.y;  // Distance of B to face on top side of A
 
-        console.log(this.sprite.name, 'collided with', body.sprite.name, response.overlapN, this._distances);
+        //  If we've zero distance then check for side-slicing
+        if (response.overlapN.x && (this._distances[0] === 0 || this._distances[1] === 0))
+        {
+            response.overlapN.x = false;
+            response.overlapN.y = true;
+        }
+        else if (response.overlapN.y && (this._distances[2] === 0 || this._distances[3] === 0))
+        {
+            response.overlapN.x = true;
+            response.overlapN.y = false;
+        }
 
+        if (this.customSeparateCallback)
+        {
+            return this.customSeparateCallback.call(this.customSeparateContext, this, response, this._distances);
+        }
+
+        var hasSeparated = false;
 
         if (response.overlapN.x)
         {
             //  Which is smaller? Left or Right?
-            if (this._distances[0] < this._distances[1])
+            if (this._distances[0] < this._distances[1] && (body.checkCollision.right || this.checkCollision.left))
             {
-                console.log(this.sprite.name, 'collided on the LEFT with', body.sprite.name, response);
-                this.hitLeft(body, response);
+                // console.log(this.sprite.name, 'collided on the LEFT with', body.sprite.name, response);
+                hasSeparated = this.hitLeft(body, response);
             }
-            else if (this._distances[1] < this._distances[0])
+            else if (this._distances[1] < this._distances[0] && (body.checkCollision.left || this.checkCollision.right))
             {
-                console.log(this.sprite.name, 'collided on the RIGHT with', body.sprite.name, response);
-                this.hitRight(body, response);
+                // console.log(this.sprite.name, 'collided on the RIGHT with', body.sprite.name, response);
+                hasSeparated = this.hitRight(body, response);
             }
         }
         else if (response.overlapN.y)
         {
             //  Which is smaller? Top or Bottom?
-            if (this._distances[2] < this._distances[3])
+            if (this._distances[2] < this._distances[3] && (body.checkCollision.down || this.checkCollision.up))
             {
-                console.log(this.sprite.name, 'collided on the TOP with', body.sprite.name, response);
-                this.hitTop(body, response);
+                // console.log(this.sprite.name, 'collided on the TOP with', body.sprite.name, response);
+                hasSeparated = this.hitTop(body, response);
             }
-            else if (this._distances[3] < this._distances[2])
+            else if (this._distances[3] < this._distances[2] && (body.checkCollision.up || this.checkCollision.down))
             {
-                console.log(this.sprite.name, 'collided on the BOTTOM with', body.sprite.name, response);
-                this.hitBottom(body, response);
+                // console.log(this.sprite.name, 'collided on the BOTTOM with', body.sprite.name, response);
+                hasSeparated = this.hitBottom(body, response);
             }
         }
 
-        this.game.physics.checkBounds(this);
-        this.game.physics.checkBounds(body);
+        if (hasSeparated)
+        {
+            this.game.physics.checkBounds(this);
+            this.game.physics.checkBounds(body);
+        }
+        else
+        {
+            this.addContact(body);
+        }
 
-        return true;
+        return hasSeparated;
 
     },
 
@@ -998,17 +1014,6 @@ if (this.sprite.debug)
     * @param {SAT.Response} response - The SAT Response object containing the collision data.
     */
     hitLeft: function (body, response) {
-
-        //  We know that Body is overlapping with This on the left hand side (deltaX < 0 = moving left, > 0 = moving right)
-        if (body.speed > 0 && (body.deltaX() <= 0 || (body.deltaX() > 0 && !this.checkCollision.left)))
-        {
-            return;
-        }
-
-        if (this.speed > 0 && (this.deltaX() >= 0 || (this.deltaX() < 0 && !body.checkCollision.right)))
-        {
-            return;
-        }
 
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.LEFT, this, body, response))
         {
@@ -1052,17 +1057,6 @@ if (this.sprite.debug)
     */
     hitRight: function (body, response) {
 
-        //  We know that Body is overlapping with This on the right hand side (deltaX < 0 = moving left, > 0 = moving right)
-        if (body.speed > 0 && (body.deltaX() >= 0 || (body.deltaX() < 0 && !this.checkCollision.right)))
-        {
-            return;
-        }
-
-        if (this.speed > 0 && (this.deltaX() <= 0 || (this.deltaX() > 0 && !body.checkCollision.left)))
-        {
-            return;
-        }
-
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.RIGHT, this, body))
         {
             return;
@@ -1105,20 +1099,9 @@ if (this.sprite.debug)
     */
     hitTop: function (body, response) {
 
-        //  We know that Body is overlapping with This on the bottom side (deltaY < 0 = moving up, > 0 = moving down)
-        if (body.speed > 0 && (body.deltaY() <= 0 || (body.deltaY() > 0 && !this.checkCollision.up)))
-        {
-            return;
-        }
-
-        if (this.speed > 0 && (this.deltaY() >= 0 || (this.deltaY() < 0 && !body.checkCollision.down)))
-        {
-            return;
-        }
-
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.UP, this, body))
         {
-            return;
+            return false;
         }
 
         if (!this.moves || this.immovable || this.blocked.down || this.touching.down)
@@ -1142,6 +1125,8 @@ if (this.sprite.debug)
         this.touching.up = true;
         body.touching.down = true;
 
+        return true;
+
     },
 
     /**
@@ -1158,20 +1143,9 @@ if (this.sprite.debug)
     */
     hitBottom: function (body, response) {
 
-        //  We know that Body is overlapping with This on the bottom side (deltaY < 0 = moving up, > 0 = moving down)
-        if (body.speed > 0 && (body.deltaY() >= 0 || (body.deltaY() < 0 && !this.checkCollision.down)))
-        {
-            return;
-        }
-
-        if (this.speed > 0 && (this.deltaY() <= 0 || (this.deltaY() > 0 && !body.checkCollision.up)))
-        {
-            return;
-        }
-
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.DOWN, this, body))
         {
-            return;
+            return false;
         }
 
         if (!this.moves || this.immovable || this.blocked.up || this.touching.up)
@@ -1194,6 +1168,8 @@ if (this.sprite.debug)
 
         this.touching.down = true;
         body.touching.up = true;
+
+        return true;
 
     },
 
@@ -1360,6 +1336,131 @@ if (this.sprite.debug)
         this.preX = this.x;
         this.preY = this.y;
         this.updateBounds();
+
+        this.contacts.length = 0;
+
+    },
+
+    /**
+    * Destroys this Body and all references it holds to other objects.
+    *
+    * @method Phaser.Physics.Arcade#destroy
+    */
+    destroy: function () {
+
+        this.sprite = null;
+
+        this.collideCallback = null;
+        this.collideCallbackContext = null;
+
+        this.customSeparateCallback = null;
+        this.customSeparateContext = null;
+
+        this.contacts.length = 0;
+
+    },
+
+    /**
+    * Sets this Body to use a circle of the given radius for all collision.
+    * The Circle will be centered on the center of the Sprite by default, but can be adjusted via the Body.offset property and the setCircle x/y parameters.
+    *
+    * @method Phaser.Physics.Arcade#setCircle
+    * @param {number} radius - The radius of this circle (in pixels)
+    * @param {number} [offsetX=0] - The x amount the circle will be offset from the Sprites center.
+    * @param {number} [offsetY=0] - The y amount the circle will be offset from the Sprites center.
+    */
+    setCircle: function (radius, offsetX, offsetY) {
+
+        if (typeof offsetX === 'undefined') { offsetX = this.sprite._cache.halfWidth; }
+        if (typeof offsetY === 'undefined') { offsetY = this.sprite._cache.halfHeight; }
+
+        this.type = Phaser.Physics.Arcade.CIRCLE;
+        this.shape = new SAT.Circle(new SAT.Vector(this.sprite.x, this.sprite.y), radius);
+        this.polygon = null;
+
+        this.offset.setTo(offsetX, offsetY);
+
+    },
+
+    /**
+    * Sets this Body to use a rectangle for all collision.
+    * If you don't specify any parameters it will be sized to match the parent Sprites current width and height (including scale factor) and centered on the sprite.
+    *
+    * @method Phaser.Physics.Arcade#setRectangle
+    * @param {number} [width] - The width of the rectangle. If not specified it will default to the width of the parent Sprite.
+    * @param {number} [height] - The height of the rectangle. If not specified it will default to the height of the parent Sprite.
+    * @param {number} [translateX] - The x amount the rectangle will be translated from the Sprites center.
+    * @param {number} [translateY] - The y amount the rectangle will be translated from the Sprites center.
+    */
+    setRectangle: function (width, height, translateX, translateY) {
+
+        if (typeof width === 'undefined') { width = this.sprite.width; }
+        if (typeof height === 'undefined') { height = this.sprite.height; }
+        if (typeof translateX === 'undefined') { translateX = -this.sprite._cache.halfWidth; }
+        if (typeof translateY === 'undefined') { translateY = -this.sprite._cache.halfHeight; }
+
+        this.type = Phaser.Physics.Arcade.RECT;
+        this.shape = new SAT.Box(new SAT.Vector(this.sprite.world.x, this.sprite.world.y), width, height);
+        this.polygon = this.shape.toPolygon();
+        this.polygon.translate(translateX, translateY);
+
+        this.offset.setTo(0, 0);
+
+    },
+
+    /**
+    * Sets this Body to use a convex polygon for collision.
+    * The points are specified in a counter-clockwise direction and must create a convex polygon.
+    * Use Body.translate and/or Body.offset to re-position the polygon from the Sprite origin.
+    *
+    * @method Phaser.Physics.Arcade#setPolygon
+    * @param {array<SAT.Vector>|Array<Number>|SAT.Vector...|Number...} points - This can be an array of Vectors that form the polygon,
+    *      a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
+    *      all the points of the polygon e.g. `setPolygon(new SAT.Vector(), new SAT.Vector(), ...)`, or the
+    *      arguments passed can be flat x,y values e.g. `setPolygon(x,y, x,y, x,y, ...)` where `x` and `y` are Numbers.
+    */
+    setPolygon: function (points) {
+
+        this.type = Phaser.Physics.Arcade.POLYGON;
+        this.shape = null;
+
+        if (!Array.isArray(points))
+        {
+            points = Array.prototype.slice.call(arguments);
+        }
+
+        if (typeof points[0] === 'number')
+        {
+            var p = [];
+
+            for (var i = 0, len = points.length; i < len; i += 2)
+            {
+                p.push(new SAT.Vector(points[i], points[i + 1]));
+            }
+
+            points = p;
+        }
+
+        this.polygon = new SAT.Polygon(new SAT.Vector(this.sprite.center.x, this.sprite.center.y), points);
+
+        this.offset.setTo(0, 0);
+
+    },
+
+    /**
+    * Used for translating rectangle and polygon bodies from the Sprite parent. Doesn't apply to Circles.
+    * See also the Body.offset property.
+    *
+    * @method Phaser.Physics.Arcade#translate
+    * @param {number} x - The x amount the polygon or rectangle will be translated by from the Sprite.
+    * @param {number} y - The y amount the polygon or rectangle will be translated by from the Sprite.
+    */
+    translate: function (x, y) {
+
+        if (this.polygon)
+        {
+            this.polygon.translate(x, y);
+        }
 
     },
 

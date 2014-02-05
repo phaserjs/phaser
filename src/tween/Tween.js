@@ -126,6 +126,13 @@ Phaser.Tween = function (object, game) {
     this._onUpdateCallback = null;
    
     /**
+    * @property {object} _onUpdateCallbackContext - The context in which to call the onUpdate callback.
+    * @private
+    * @default null
+    */
+    this._onUpdateCallbackContext = null;
+
+    /**
     * @property {number} _pausedTime - Private pause timer.
     * @private
     * @default
@@ -293,6 +300,8 @@ Phaser.Tween.prototype = {
 
         this.isRunning = false;
 
+        this._onUpdateCallback = null;
+
         this._manager.remove(this);
 
         return this;
@@ -411,9 +420,11 @@ Phaser.Tween.prototype = {
     * @param {function} callback - The callback to invoke each time this tween is updated.
     * @return {Phaser.Tween} Itself.
     */
-    onUpdateCallback: function (callback) {
+    onUpdateCallback: function (callback, callbackContext) {
 
         this._onUpdateCallback = callback;
+        this._onUpdateCallbackContext = callbackContext;
+
         return this;
 
     },
@@ -506,7 +517,7 @@ Phaser.Tween.prototype = {
 
         if (this._onUpdateCallback !== null)
         {
-            this._onUpdateCallback.call(this._object, value);
+            this._onUpdateCallback.call(this._onUpdateCallbackContext, this, value);
         }
 
         if (elapsed == 1)

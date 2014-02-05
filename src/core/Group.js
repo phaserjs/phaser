@@ -49,8 +49,7 @@ Phaser.Group = function (game, parent, name, useStage) {
         {
             if (parent instanceof Phaser.Group)
             {
-                parent._container.addChild(this._container);
-                parent._container.updateTransform();
+                parent.add(this);
             }
             else
             {

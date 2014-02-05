@@ -397,12 +397,6 @@ Phaser.Physics.Arcade.prototype = {
         // pos = pos + dt*(vel + temp/2)
         // vel = vel + temp
 
-        if (body.sprite.debug)
-        {
-            console.log('updateMotion: acx', body.acceleration.x, 'acy', body.acceleration.y, 'gravx', this._gravityX, 'gravy', this._gravityY, 'elapsed', this.game.time.physicsElapsed);
-            // console.log('updateMotion: rotation', body.rotation, 'vd', this._velocityDelta, 'drag', this._drag, 'acceleration', body.angularAcceleration);
-        }
-
         this._p.setTo((body.acceleration.x + this._gravityX) * this.game.time.physicsElapsed, (body.acceleration.y + this._gravityY) * this.game.time.physicsElapsed);
 
         return this._p;
@@ -413,10 +407,11 @@ Phaser.Physics.Arcade.prototype = {
     * Checks for overlaps between two game objects. The objects can be Sprites, Groups or Emitters.
     * You can perform Sprite vs. Sprite, Sprite vs. Group and Group vs. Group overlap checks.
     * Unlike collide the objects are NOT automatically separated or have any physics applied, they merely test for overlap results.
+    * The second parameter can be an array of objects, of differing types.
     *
     * @method Phaser.Physics.Arcade#overlap
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group or Phaser.Particles.Emitter.
-    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter} object2 - The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group or Phaser.Particles.Emitter.
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|array} object2 - The second object or array of objects to check. Can be Phaser.Sprite, Phaser.Group or Phaser.Particles.Emitter.
     * @param {function} [overlapCallback=null] - An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you specified them.
     * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then overlapCallback will only be called if processCallback returns true.
     * @param {object} [callbackContext] - The context in which to run the callbacks.
@@ -431,39 +426,16 @@ Phaser.Physics.Arcade.prototype = {
         this._result = false;
         this._total = 0;
 
-        this.collideHandler(object1, object2, overlapCallback, processCallback, callbackContext, true);
-
-        return (this._total > 0);
-
-    },
-
-    /**
-    * Checks for overlaps between a game object and a array of game objects. You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap Layer or Group vs. Tilemap Layer checks.
-    * Unlike collide the objects are NOT automatically separated or have any physics applied, they merely test for overlap results.
-    * An optional processCallback can be provided. If given this function will be called when two sprites are found to be overlapping,
-    * giving you the chance to perform additional checks. If the function returns true then the overlap takes place. If it returns false it is skipped.
-    * The collideCallback is an optional function that is only called if two sprites collide. If a processCallback has been set then it needs to return true for overlapCallback to be called.
-    *
-    * @method Phaser.Physics.Arcade#overlapArray
-    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap.
-    * @param {<Phaser.Sprite>array|<Phaser.Group>array|<Phaser.Particles.Emitter>array|<Phaser.Tilemap>array} objectArray - An array of objects to check. Can contain instances of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap.
-    * @param {function} [overlapCallback=null] - An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you specified them.
-    * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
-    * @param {object} [callbackContext] - The context in which to run the callbacks.
-    * @returns {boolean} True if a collision occured otherwise false.
-    */
-    overlapArray: function (object1, objectArray, overlapCallback, processCallback, callbackContext) {
-
-        overlapCallback = overlapCallback || null;
-        processCallback = processCallback || null;
-        callbackContext = callbackContext || overlapCallback;
-
-        this._result = false;
-        this._total = 0;
-
-        for (var i = 0,  len = objectArray.length; i < len; i++)
+        if (Array.isArray(object2))
         {
-            this.collideHandler(object1, objectArray[i], overlapCallback, processCallback, callbackContext, true);
+            for (var i = 0,  len = object2.length; i < len; i++)
+            {
+                this.collideHandler(object1, object2[i], overlapCallback, processCallback, callbackContext, true);
+            }
+        }
+        else
+        {
+            this.collideHandler(object1, object2, overlapCallback, processCallback, callbackContext, true);
         }
 
         return (this._total > 0);
@@ -472,7 +444,7 @@ Phaser.Physics.Arcade.prototype = {
 
     /**
     * Checks for collision between two game objects. You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap Layer or Group vs. Tilemap Layer collisions.
-    * If you'd like to collide an array of objects see Phaser.Physics.Arcade#collideArray.
+    * The second parameter can be an array of objects, of differing types.
     * The objects are also automatically separated. If you don't require separation then use ArcadePhysics.overlap instead.
     * An optional processCallback can be provided. If given this function will be called when two sprites are found to be colliding. It is called before any separation takes place,
     * giving you the chance to perform additional checks. If the function returns true then the collision and separation is carried out. If it returns false it is skipped.
@@ -480,7 +452,7 @@ Phaser.Physics.Arcade.prototype = {
     *
     * @method Phaser.Physics.Arcade#collide
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap.
-    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object2 - The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap.
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap|array} object2 - The second object or array of objects to check. Can be Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap.
     * @param {function} [collideCallback=null] - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
     * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
     * @param {object} [callbackContext] - The context in which to run the callbacks.
@@ -495,39 +467,16 @@ Phaser.Physics.Arcade.prototype = {
         this._result = false;
         this._total = 0;
 
-        this.collideHandler(object1, object2, collideCallback, processCallback, callbackContext, false);
-
-        return (this._total > 0);
-
-    },
-
-    /**
-    * Checks for collision between a game object and an array of game objects. You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap Layer or Group vs. Tilemap Layer collisions.
-    * The objects are also automatically separated. If you don't require separation then use ArcadePhysics.overlap instead.
-    * An optional processCallback can be provided. If given this function will be called when two sprites are found to be colliding. It is called before any separation takes place,
-    * giving you the chance to perform additional checks. If the function returns true then the collision and separation is carried out. If it returns false it is skipped.
-    * The collideCallback is an optional function that is only called if two sprites collide. If a processCallback has been set then it needs to return true for collideCallback to be called.
-    *
-    * @method Phaser.Physics.Arcade#collideArray
-    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap.
-    * @param {<Phaser.Sprite>array|<Phaser.Group>array|<Phaser.Particles.Emitter>array|<Phaser.Tilemap>array} objectArray - An array of objects to check. Can contain instances of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap.
-    * @param {function} [collideCallback=null] - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
-    * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
-    * @param {object} [callbackContext] - The context in which to run the callbacks.
-    * @returns {boolean} True if a collision occured otherwise false.
-    */
-    collideArray: function (object1, objectArray, collideCallback, processCallback, callbackContext) {
-
-        collideCallback = collideCallback || null;
-        processCallback = processCallback || null;
-        callbackContext = callbackContext || collideCallback;
-
-        this._result = false;
-        this._total = 0;
-
-        for (var i = 0,  len = objectArray.length; i < len; i++)
+        if (Array.isArray(object2))
         {
-            this.collideHandler(object1, objectArray[i], collideCallback, processCallback, callbackContext, false);
+            for (var i = 0,  len = object2.length; i < len; i++)
+            {
+                this.collideHandler(object1, object2[i], collideCallback, processCallback, callbackContext, false);
+            }
+        }
+        else
+        {
+            this.collideHandler(object1, object2, collideCallback, processCallback, callbackContext, false);
         }
 
         return (this._total > 0);
@@ -745,8 +694,6 @@ Phaser.Physics.Arcade.prototype = {
     */
     collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext) {
 
-        // console.log('collideSpriteVsTilemapLayer x:', sprite.body.x, 'y:', sprite.body.y, 'body left:', sprite.body.left, 'right:', sprite.body.right);
-
         this._mapData = tilemapLayer.getTiles(sprite.body.left, sprite.body.top, sprite.body.width, sprite.body.height, true);
 
         if (this._mapData.length === 0)
@@ -871,12 +818,19 @@ Phaser.Physics.Arcade.prototype = {
     */
     intersects: function (a, b) {
 
+        var result = false;
+
         if (a.width <= 0 || a.height <= 0 || b.width <= 0 || b.height <= 0)
         {
-            return false;
+            result = false;
         }
 
-        return !(a.right < b.left || a.bottom < b.top || a.left > b.right || a.top > b.bottom);
+        result = !(a.right < b.left || a.bottom < b.top || a.left > b.right || a.top > b.bottom);
+
+        if (!result && a.inContact(b))
+        {
+            a.removeContact(b);
+        }
 
     },
 

@@ -934,6 +934,11 @@ Phaser.Sprite.prototype.destroy = function() {
         this.animations.destroy();
     }
 
+    if (this.body)
+    {
+        this.body.destroy();
+    }
+
     this.alive = false;
     this.exists = false;
     this.visible = false;
