@@ -36,6 +36,12 @@ function test8() {
         game.step();
     });
 
+    $('#start').click(function(){
+        console.log('---- START DEBUGGING -------------------------------');
+        game.enableStep();
+        sprite2.debug = true;
+    });
+
 	game.physics.gravity.y = 200;
 
 	sprite = game.add.sprite(300, 300, 'atari');
@@ -48,7 +54,7 @@ function test8() {
 	sprite2.name = 'gameboy';
 	sprite2.body.collideWorldBounds = true;
 	sprite2.body.bounce.setTo(0.8, 0.8);
-	// sprite2.body.minVelocity.setTo(30, 30);
+	sprite2.body.minVelocity.setTo(10, 10);
 	// sprite.debug = true;
 
 	// game.enableStep();

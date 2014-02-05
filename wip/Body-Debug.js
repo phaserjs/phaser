@@ -393,6 +393,20 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.updateScale();
         }
 
+if (this.sprite.debug)
+{
+    console.log('Body preUpdate x:', this.x, 'y:', this.y);
+    // console.log('Body preUpdate Sprite x:', this.sprite.x, 'y:', this.sprite.y);
+    // console.log('Body preUpdate Sprite world:', this.sprite.world.x, 'y:', this.sprite.world.y);
+    // console.log('Body preUpdate Sprite position:', this.sprite.position.x, 'y:', this.sprite.position.y);
+    // console.log('Body preUpdate Sprite localTransform:', this.sprite.localTransform[2], 'y:', this.sprite.localTransform[5]);
+    // console.log('Body preUpdate Sprite worldTransform:', this.sprite.worldTransform[2], 'y:', this.sprite.worldTransform[5]);
+    // console.log('Body preUpdate x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right, 'WAS', this.preX, this.preY);
+    console.log('Body preUpdate blocked:', this.blocked, this.blockFlags);
+    console.log('Body preUpdate velocity:', this.velocity.x, this.velocity.y);
+    // console.log('Body preUpdate rotation:', this.rotation, this.preRotation);
+}
+
         this.checkBlocked();
 
         this.touching.none = true;
@@ -430,6 +444,12 @@ Phaser.Physics.Arcade.Body.prototype = {
             this.updateBounds();
         }
 
+if (this.sprite.debug)
+{
+    console.log('Body preUpdate AFTER integration x:', this.x, 'y:', this.y, 'left:', this.left, 'right:', this.right);
+    console.log('Body preUpdate velocity:', this.velocity.x, this.velocity.y);
+}
+
     },
 
     /**
@@ -442,12 +462,14 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if ((this.blocked.left || this.blocked.right) && (Math.floor(this.x) !== this.blocked.x || Math.floor(this.y) !== this.blocked.y))
         {
+            // console.log('resetBlocked unlocked left + right', Math.floor(this.x), this.blocked.x);
             this.blocked.left = false;
             this.blocked.right = false;
         }
 
         if ((this.blocked.up || this.blocked.down) && (Math.floor(this.x) !== this.blocked.x || Math.floor(this.y) !== this.blocked.y))
         {
+            // console.log('resetBlocked unlocked up + down', Math.floor(this.y), this.blocked.y, 'x', Math.floor(this.x), this.blocked.x);
             this.blocked.up = false;
             this.blocked.down = false;
         }
@@ -525,6 +547,12 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     reboundCheck: function (x, y, rebound) {
 
+        if (this.sprite.debug)
+        {
+            console.log('reboundCheck start', this.velocity.x, this.velocity.y);
+            console.log('reBound blocked state', this.blocked);
+        }
+
         if (x)
         {
             if (rebound && this.bounce.x !== 0 && (this.blocked.left || this.blocked.right || this.touching.left || this.touching.right))
@@ -534,6 +562,11 @@ Phaser.Physics.Arcade.Body.prototype = {
                 {
                     this.velocity.x *= -this.bounce.x;
                     this.angle = Math.atan2(this.velocity.y, this.velocity.x);
+
+                    if (this.sprite.debug)
+                    {
+                        console.log('X rebound applied', this._vx, 'to', this.velocity.x);
+                    }
                 }
             }
 
@@ -544,6 +577,16 @@ Phaser.Physics.Arcade.Body.prototype = {
                 if (((this.blocked.left || this.touching.left) && (gx < 0 || this.velocity.x < 0)) || ((this.blocked.right || this.touching.right) && (gx > 0 || this.velocity.x > 0)))
                 {
                     this.velocity.x = 0;
+
+                    if (this.sprite.debug)
+                    {
+                        console.log('reboundCheck X zeroed');
+                    }
+                }
+
+                if (this.sprite.debug)
+                {
+                    console.log('reboundCheck X', this.velocity.x, 'gravity', gx);
                 }
             }
         }
@@ -557,6 +600,13 @@ Phaser.Physics.Arcade.Body.prototype = {
                 {
                     this.velocity.y *= -this.bounce.y;
                     this.angle = Math.atan2(this.velocity.y, this.velocity.x);
+
+                    if (this.sprite.debug)
+                    {
+                        console.log('Y rebound applied', this._vy, 'to', this.velocity.y);
+                        console.log('Y rebound check 1', !(this._vy <= 0 && this.velocity.y > 0));
+                        console.log('Y rebound check 2', !(this._vy >= 0 && this.velocity.y < 0));
+                    }
                 }
             }
 
@@ -567,6 +617,16 @@ Phaser.Physics.Arcade.Body.prototype = {
                 if (((this.blocked.up || this.touching.up) && (gy < 0 || this.velocity.y < 0)) || ((this.blocked.down || this.touching.down) && (gy > 0 || this.velocity.y > 0)))
                 {
                     this.velocity.y = 0;
+
+                    if (this.sprite.debug)
+                    {
+                        console.log('reboundCheck Y zeroed');
+                    }
+                }
+
+                if (this.sprite.debug)
+                {
+                    console.log('reboundCheck Y', this.velocity.y, 'gravity', gy);
                 }
             }
         }
@@ -921,10 +981,12 @@ Phaser.Physics.Arcade.Body.prototype = {
             //  Which is smaller? Left or Right?
             if (this._distances[0] < this._distances[1] && (body.checkCollision.right || this.checkCollision.left))
             {
+                // console.log(this.sprite.name, 'collided on the LEFT with', body.sprite.name, response);
                 hasSeparated = this.hitLeft(body, response);
             }
             else if (this._distances[1] < this._distances[0] && (body.checkCollision.left || this.checkCollision.right))
             {
+                // console.log(this.sprite.name, 'collided on the RIGHT with', body.sprite.name, response);
                 hasSeparated = this.hitRight(body, response);
             }
         }
@@ -933,16 +995,19 @@ Phaser.Physics.Arcade.Body.prototype = {
             //  Which is smaller? Top or Bottom?
             if (this._distances[2] < this._distances[3] && (body.checkCollision.down || this.checkCollision.up))
             {
+                // console.log(this.sprite.name, 'collided on the TOP with', body.sprite.name, response);
                 hasSeparated = this.hitTop(body, response);
             }
             else if (this._distances[3] < this._distances[2] && (body.checkCollision.up || this.checkCollision.down))
             {
+                // console.log(this.sprite.name, 'collided on the BOTTOM with', body.sprite.name, response);
                 hasSeparated = this.hitBottom(body, response);
             }
         }
 
         if (hasSeparated)
         {
+            console.log('Body hasSeparated');
             this.game.physics.checkBounds(this);
             this.game.physics.checkBounds(body);
         }
@@ -1143,6 +1208,11 @@ Phaser.Physics.Arcade.Body.prototype = {
         this._dx = this.game.time.physicsElapsed * (this.velocity.x + this._temp.x / 2);
         this._dy = this.game.time.physicsElapsed * (this.velocity.y + this._temp.y / 2);
 
+        if (this.sprite.debug)
+        {
+            // console.log('integrateVelocity TEMP:', this._temp.x, this._temp.y);
+        }
+
         //  positive = RIGHT / DOWN
         //  negative = LEFT / UP
 
@@ -1150,12 +1220,34 @@ Phaser.Physics.Arcade.Body.prototype = {
         {
             this.x += this._dx;
             this.velocity.x += this._temp.x;
+            if (this.sprite.debug)
+            {
+                // console.log('integrateVelocity x added', this._dx, this.x);
+            }
+        }
+        else
+        {
+            if (this.sprite.debug)
+            {
+                // console.log('integrateVelocity x failed or zero, blocked left/right', this._dx);
+            }
         }
 
         if ((this._dy < 0 && !this.blocked.up && !this.touching.up) || (this._dy > 0 && !this.blocked.down && !this.touching.down))
         {
             this.y += this._dy;
             this.velocity.y += this._temp.y;
+            if (this.sprite.debug)
+            {
+                // console.log('integrateVelocity y added', this._dy, this.y);
+            }
+        }
+        else
+        {
+            if (this.sprite.debug)
+            {
+                // console.log('integrateVelocity y failed or zero, blocked up/down', this._dy);
+            }
         }
 
         if (this.velocity.x > this.maxVelocity.x)
