@@ -48,7 +48,7 @@ function create() {
     balls.setAll('body.bounce.x', 0.8);
     balls.setAll('body.bounce.y', 0.9);
     balls.setAll('body.minBounceVelocity', 0.9);
-    balls.setAll('body.friction', 0.5);
+    balls.setAll('body.linearDamping', 0.5);
 */
 
     sprite2 = game.add.sprite(340, 250, 'gameboy', 2);
@@ -61,7 +61,7 @@ function create() {
     sprite.body.collideWorldBounds = true;
     sprite.body.minBounceVelocity = 0.9;
     sprite.body.bounce.setTo(0.5, 0.9);
-    sprite.body.friction = 0.5;
+    sprite.body.linearDamping = 0.5;
 
 
     game.input.onDown.add(launch, this);

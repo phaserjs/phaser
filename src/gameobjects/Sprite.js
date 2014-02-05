@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -389,18 +389,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
 //  Needed to keep the PIXI.Sprite constructor in the prototype chain (as the core pixi renderer uses an instanceof check sadly)
 Phaser.Sprite.prototype = Object.create(PIXI.Sprite.prototype);
 Phaser.Sprite.prototype.constructor = Phaser.Sprite;
-
-
-/*
-Phaser.Sprite.prototype.initGroup = function() {
-
-    // this.world.setTo(this.parent.position.x + this.x, this.parent.position.y + this.y);
-
-    // console.log('Sprite initGroup', this.world);
-    console.log('Sprite initGroup', this.group.x, this.group.y);
-
-}
-*/
 
 /**
 * Automatically called by World.preUpdate. Handles cache updates, lifespan checks, animation updates and physics updates.

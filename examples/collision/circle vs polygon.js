@@ -41,7 +41,6 @@ function create() {
     sprite4 = game.add.sprite(380, 100, 'wizball');
     sprite4.body.setCircle(46);
     sprite4.body.collideWorldBounds = true;
-    sprite4.body.friction = 0;
     sprite4.body.bounce.setTo(0.9, 0.9);
     sprite4.body.velocity.setTo(100, 100);
 
@@ -49,7 +48,7 @@ function create() {
 
 function update() {
 
-    game.physics.collideArray(sprite4, [ sprite1, sprite2, sprite3 ]);
+    game.physics.collide(sprite4, [ sprite1, sprite2, sprite3 ]);
 
 }
 

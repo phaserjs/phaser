@@ -23,7 +23,7 @@ function create() {
         s.name = 'alien' + s;
         s.body.collideWorldBounds = true;
         s.body.bounce.setTo(0.8, 0.8);
-        s.body.friction = 0;
+        s.body.linearDamping = 0;
         s.body.minVelocity.setTo(0, 0);
         s.body.velocity.setTo(10 + Math.random() * 40, 10 + Math.random() * 40);
     }

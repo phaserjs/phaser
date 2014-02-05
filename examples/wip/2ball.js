@@ -176,7 +176,7 @@ function test7() {
 
 	// sprite.body.gravity.y = 200;
 
-	// sprite.body.friction = 0.2;
+	// sprite.body.linearDamping = 0.2;
 
 	game.input.onDown.add(launch7, this);
 
@@ -375,7 +375,7 @@ function update() {
 
 	if (sprite3)
 	{
-		game.physics.collideArray(sprite, [sprite2, sprite3]);
+		game.physics.collide(sprite, [sprite2, sprite3]);
 		game.physics.collide(sprite2, sprite3);
 	}
 	else

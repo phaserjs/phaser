@@ -42,7 +42,7 @@ function create() {
 		wab.name = 'wab' + i;
 		wab.body.collideWorldBounds = true;
 		wab.body.mass = 0.1;
-		wab.body.friction = 0.2;
+		wab.body.linearDamping = 0.2;
 	}
 	
 	hill = game.add.sprite(450, 400, 'hill');
@@ -53,7 +53,7 @@ function create() {
 	block = game.add.sprite(575, 300, 'block');
 	block.body.collideWorldBounds = true;
 	block.body.mass = 5;
-	block.body..friction = 0.4;
+	block.body.linearDamping = 0.4;
 	
 	analog = game.add.sprite(200, 450, 'analog');
 	analog.body.allowGravity = false;

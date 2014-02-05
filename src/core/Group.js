@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -49,7 +49,7 @@ Phaser.Group = function (game, parent, name, useStage) {
         {
             if (parent instanceof Phaser.Group)
             {
-                parent.add(this);
+                parent._container.addChild(this._container);
             }
             else
             {
@@ -415,8 +415,6 @@ Phaser.Group.prototype = {
 
         var child1 = this.getAt(index1);
         var child2 = this.getAt(index2);
-
-        console.log('swapIndex ', index1, ' with ', index2);
 
         this.swap(child1, child2);
 
@@ -1453,102 +1451,6 @@ Phaser.Group.prototype = {
         while(displayObject != testObject)
 
         return true;
-
-    },
-
-    /**
-    * Dumps out a list of Group children and their index positions to the browser console. Useful for group debugging.
-    *
-    * @method Phaser.Group#dump
-    * @param {boolean} [full=false] - If full the dump will include the entire display list, start from the Stage. Otherwise it will only include this container.
-    */
-    dump: function (full) {
-
-        if (typeof full == 'undefined')
-        {
-            full = false;
-        }
-
-        var spacing = 20;
-        var output = "\n" + Phaser.Utils.pad('Node', spacing) + "|" + Phaser.Utils.pad('Next', spacing) + "|" + Phaser.Utils.pad('Previous', spacing) + "|" + Phaser.Utils.pad('First', spacing) + "|" + Phaser.Utils.pad('Last', spacing);
-
-        console.log(output);
-
-        var output = Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing) + "|" + Phaser.Utils.pad('----------', spacing);
-        console.log(output);
-
-        if (full)
-        {
-            var testObject = this.game.stage._stage.last._iNext;
-            var displayObject = this.game.stage._stage;
-        }
-        else
-        {
-            var testObject = this._container.last._iNext;
-            var displayObject = this._container;
-        }
-        
-        do
-        {
-            var name = displayObject.name || '*';
-
-            if (this.cursor == displayObject)
-            {
-                var name = '> ' + name;
-            }
-
-            var nameNext = '-';
-            var namePrev = '-';
-            var nameFirst = '-';
-            var nameLast = '-';
-
-            if (displayObject._iNext)
-            {
-                nameNext = displayObject._iNext.name;
-            }
-
-            if (displayObject._iPrev)
-            {
-                namePrev = displayObject._iPrev.name;
-            }
-
-            if (displayObject.first)
-            {
-                nameFirst = displayObject.first.name;
-            }
-
-            if (displayObject.last)
-            {
-                nameLast = displayObject.last.name;
-            }
-
-            if (typeof nameNext === 'undefined')
-            {
-                nameNext = '-';
-            }
-
-            if (typeof namePrev === 'undefined')
-            {
-                namePrev = '-';
-            }
-
-            if (typeof nameFirst === 'undefined')
-            {
-                nameFirst = '-';
-            }
-
-            if (typeof nameLast === 'undefined')
-            {
-                nameLast = '-';
-            }
-
-            var output = Phaser.Utils.pad(name, spacing) + "|" + Phaser.Utils.pad(nameNext, spacing) + "|" + Phaser.Utils.pad(namePrev, spacing) + "|" + Phaser.Utils.pad(nameFirst, spacing) + "|" + Phaser.Utils.pad(nameLast, spacing);
-            console.log(output);
-
-            displayObject = displayObject._iNext;
-
-        }
-        while(displayObject != testObject)
 
     }
 

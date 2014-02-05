@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -9,7 +9,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v1.1.4-dev - Released November 28th 2013.
+* v1.1.4 - Released February 5th 2014.
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *

@@ -52,9 +52,6 @@ PIXI.WebGLFilterManager.prototype.pushFilter = function(filterBlock)
 
     this.getBounds(filterBlock.target);
 
-    // addpadding?
-    //displayObject.filterArea.x
-
     var filterArea = filterBlock.target.filterArea;
 
     var padidng = filter.padding;
@@ -72,7 +69,6 @@ PIXI.WebGLFilterManager.prototype.pushFilter = function(filterBlock)
     //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  filterArea.width, filterArea.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
     gl.bindFramebuffer(gl.FRAMEBUFFER, texture.frameBuffer);
 
-    //console.log(filterArea)
     // set view port
     gl.viewport(0, 0, filterArea.width, filterArea.height);
 
@@ -82,7 +78,6 @@ PIXI.WebGLFilterManager.prototype.pushFilter = function(filterBlock)
     PIXI.offset.x = -filterArea.x;
     PIXI.offset.y = -filterArea.y;
 
-    //console.log(PIXI.defaultShader.projectionVector)
     // update projection
     gl.uniform2f(PIXI.defaultShader.projectionVector, filterArea.width/2, -filterArea.height/2);
     gl.uniform2f(PIXI.defaultShader.offsetVector, -filterArea.x, -filterArea.y);
@@ -92,10 +87,7 @@ PIXI.WebGLFilterManager.prototype.pushFilter = function(filterBlock)
     gl.clearColor(0,0,0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    //filter.texture = texture;
     filterBlock._glFilterTexture = texture;
-
-    //console.log("PUSH")
 };
 
 
@@ -292,12 +284,10 @@ PIXI.WebGLFilterManager.prototype.applyFilterPass = function(filter, filterArea,
 
     if(filter.uniforms.dimensions)
     {
-        //console.log(filter.uniforms.dimensions)
         filter.uniforms.dimensions.value[0] = this.width;//width;
         filter.uniforms.dimensions.value[1] = this.height;//height;
         filter.uniforms.dimensions.value[2] = this.vertexArray[0];
         filter.uniforms.dimensions.value[3] = this.vertexArray[5];//filterArea.height;
-    //  console.log(this.vertexArray[5])
     }
 
     shader.syncUniforms();
@@ -463,14 +453,9 @@ PIXI.WebGLFilterManager.prototype.getBounds = function(displayObject)
     }
     while(tempObject !== testObject);
 
-    // maximum bounds is the size of the screen..
-    //minX = minX > 0 ? minX : 0;
-    //minY = minY > 0 ? minY : 0;
-
     displayObject.filterArea.x = minX;
     displayObject.filterArea.y = minY;
 
-//  console.log(maxX+ " : " + minX)
     displayObject.filterArea.width = maxX - minX;
     displayObject.filterArea.height = maxY - minY;
 };

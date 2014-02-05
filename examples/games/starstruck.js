@@ -25,17 +25,6 @@ var bg;
 
 function create() {
 
-    $('#step').click(function(){
-        console.log('---- STEP', game.stepCount, '-------------------------------');
-        game.step();
-    });
-
-    $('#start').click(function(){
-        console.log('---- START DEBUGGING -------------------------------');
-        game.enableStep();
-        player.debug = true;
-    });
-
     game.stage.backgroundColor = '#000000';
 
     bg = game.add.tileSprite(0, 0, 800, 600, 'background');
@@ -62,6 +51,9 @@ function create() {
     player.body.minVelocity.y = 5;
     player.body.collideWorldBounds = true;
     player.body.setRectangle(16, 32, 8, 16);
+
+    //  Un-comment this on to see the body collision areas / data
+    // player.debug = true;
 
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('turn', [4], 20, true);
@@ -119,10 +111,8 @@ function update() {
         }
     }
     
-    // if (jumpButton.isDown && player.body.touching.down && game.time.now > jumpTimer)
     if (jumpButton.isDown && player.body.onFloor() && game.time.now > jumpTimer)
     {
-        console.log('jump');
         player.body.velocity.y = -250;
         jumpTimer = game.time.now + 750;
     }
@@ -131,7 +121,10 @@ function update() {
 
 function render () {
 
-    game.debug.renderPhysicsBody(player.body);
-    game.debug.renderBodyInfo(player, 16, 24);
+    if (player.debug)
+    {
+        game.debug.renderPhysicsBody(player.body);
+        game.debug.renderBodyInfo(player, 16, 24);
+    }
 
 }

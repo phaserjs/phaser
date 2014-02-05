@@ -16,11 +16,12 @@ function create() {
 
     ball = game.add.sprite(400, 0, 'ball');
 
-    ball.body.gravity.y = 6;
+    ball.body.gravity.y = 200;
     ball.body.bounce.y = 1;
 
     tilesprite = game.add.tileSprite(300, 450, 200, 100, 'starfield');
     tilesprite.body.immovable = true;
+    tilesprite.body.setRectangle(200, 100, 0, 0);
 
     cursors = game.input.keyboard.createCursorKeys();
 
@@ -32,13 +33,13 @@ function update() {
 
     if (cursors.left.isDown)
     {
-        tilesprite.x += 8;
-        tilesprite.tilePosition.x += 8;
+        tilesprite.x -= 8;
+        tilesprite.tilePosition.x -= 8;
     }
     else if (cursors.right.isDown)
     {
-        tilesprite.x -= 8;
-        tilesprite.tilePosition.x -= 8;
+        tilesprite.x += 8;
+        tilesprite.tilePosition.x += 8;
     }
 
     if (cursors.up.isDown)
@@ -54,6 +55,6 @@ function update() {
 
 function render() {
 
-    game.debug.renderSpriteBounds(tilesprite);
+    game.debug.renderPhysicsBody(tilesprite.body);
 
 }

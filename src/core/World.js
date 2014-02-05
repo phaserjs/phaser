@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -205,6 +205,8 @@ Phaser.World.prototype.setBounds = function (x, y, width, height) {
         //  The Camera can never be smaller than the game size
         this.camera.bounds.setTo(x, y, width, height);
     }
+
+    this.game.physics.setBoundsToWorld();
 
 }
 

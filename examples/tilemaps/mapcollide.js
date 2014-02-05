@@ -43,7 +43,7 @@ function create() {
     game.physics.gravity.y = 250;
 
     p.body.bounce.y = 0.2;
-    p.body.friction = 1;
+    p.body.linearDamping = 1;
     p.body.collideWorldBounds = true;
 
     game.camera.follow(p);

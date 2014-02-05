@@ -59,13 +59,13 @@ function test8() {
 	sprite.body.bounce.setTo(0.8, 0.8);
 	sprite.body.minBounceVelocity = 1.2;
 	sprite.body.velocity.x = -400;
-	sprite.body.friction = 1.2;
+	sprite.body.linearDamping = 1.2;
 
 	sprite2 = game.add.sprite(500, 100, 'ball');
 	sprite2.body.collideWorldBounds = true;
 	sprite2.body.bounce.setTo(0.5, 0.5);
 	sprite2.body.minBounceVelocity = 0.8;
-	sprite2.body.friction = 0.5;
+	sprite2.body.linearDamping = 0.5;
 
 	game.input.onDown.add(launch8, this);
 

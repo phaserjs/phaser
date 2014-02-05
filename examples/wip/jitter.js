@@ -152,7 +152,7 @@ function test5() {
 	// sprite2.body.checkCollision.down = false;
 	// sprite2.body.mass = 1;
 	sprite2.body.bounce.setTo(1, 1);
-	// sprite2.body.friction = 0;
+	// sprite2.body.linearDamping = 0;
 
 	game.input.onDown.add(launch5, this);
 
@@ -182,7 +182,7 @@ function test4() {
 	sprite2.body.checkCollision.down = false;
 	// sprite2.body.mass = 1;
 	// sprite2.body.bounce.setTo(1, 1);
-	// sprite2.body.friction = 0;
+	// sprite2.body.linearDamping = 0;
 
 	game.input.onDown.add(launch4, this);
 
@@ -213,7 +213,7 @@ function test3() {
 	sprite2.body.bounce.setTo(0.9, 0.9);
 	// sprite2.body.mass = 1;
 	// sprite2.body.bounce.setTo(1, 1);
-	// sprite2.body.friction = 0;
+	// sprite2.body.linearDamping = 0;
 
 	game.input.onDown.add(launch3, this);
 
@@ -237,7 +237,7 @@ function test2() {
 	sprite.body.collideWorldBounds = true;
 	// sprite.body.checkCollision.right = false;
 	sprite.body.bounce.setTo(0.9, 0.9);
-	// sprite.body.friction = 0;
+	// sprite.body.linearDamping = 0;
 	// sprite.scale.setTo(2, 2);
 	// sprite.body.mass = 2;
 
@@ -248,7 +248,7 @@ function test2() {
 	// sprite2.body.bounce.setTo(0.9, 0.9);
 	// sprite2.body.mass = 1;
 	// sprite2.body.bounce.setTo(1, 1);
-	// sprite2.body.friction = 0;
+	// sprite2.body.linearDamping = 0;
 
 	game.input.onDown.add(launch2, this);
 
@@ -274,7 +274,7 @@ function test1() {
 	sprite.body.checkCollision.right = false;
 	// sprite.body.bounce.setTo(0.9, 0.9);
 	// sprite.body.bounce.setTo(1, 1);
-	// sprite.body.friction = 0;
+	// sprite.body.linearDamping = 0;
 	// sprite.scale.setTo(2, 2);
 	// sprite.body.mass = 2;
 
@@ -284,7 +284,7 @@ function test1() {
 	sprite2.body.bounce.setTo(0.9, 0.9);
 	// sprite2.body.mass = 1;
 	// sprite2.body.bounce.setTo(1, 1);
-	// sprite2.body.friction = 0;
+	// sprite2.body.linearDamping = 0;
 
 	game.input.onDown.add(launch1, this);
 

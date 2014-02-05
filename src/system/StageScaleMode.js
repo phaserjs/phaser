@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -709,8 +709,6 @@ Phaser.StageScaleMode.prototype = {
 
         var availableWidth = window.innerWidth;
         var availableHeight = window.innerHeight;
-
-        // console.log('available', availableWidth, availableHeight);
 
         if (this.maxWidth && availableWidth > this.maxWidth)
         {
