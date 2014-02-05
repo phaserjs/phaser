@@ -1,1 +1,0 @@
-jsdoc -c conf_dev.json

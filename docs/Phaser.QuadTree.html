@@ -91,6 +91,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.DOMSprite.html">DOMSprite</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -163,6 +167,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -184,6 +196,10 @@
 						
 						<li>
 							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Line.html">Line</a>
 						</li>
 						
 						<li>
@@ -279,6 +295,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Sound.html">Sound</a>
 						</li>
 						
@@ -343,6 +363,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
 						</li>
 						
@@ -374,36 +398,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
-						</li>
-						
-						<li>
-							<a href="global.html#render">render</a>
-						</li>
-						
-						<li>
-							<a href="global.html#renderXY">renderXY</a>
-						</li>
-						
-						<li>
-							<a href="global.html#right">right</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -427,8 +421,9 @@
     QuadTree
     </h2>
     
-        <div class="class-description"><p>A QuadTree implementation. The original code was a conversion of the Java code posted to GameDevTuts. However I've tweaked
-it massively to add node indexing, removed lots of temp. var creation and significantly increased performance as a result. Original version at <a href="https://github.com/timohausmann/quadtree-js/">https://github.com/timohausmann/quadtree-js/</a></p></div>
+        <div class="class-description"><p>A QuadTree implementation. The original code was a conversion of the Java code posted to GameDevTuts. 
+However I've tweaked it massively to add node indexing, removed lots of temp. var creation and significantly increased performance as a result. 
+Original version at <a href="https://github.com/timohausmann/quadtree-js/">https://github.com/timohausmann/quadtree-js/</a></p></div>
     
 </header>
 
@@ -439,7 +434,7 @@ it massively to add node indexing, removed lots of temp. var creation and signif
     
         
 <dt>
-    <h4 class="name" id="QuadTree"><span class="type-signature"></span>new QuadTree<span class="signature">(physicsManager, x, y, width, height, maxObjects, maxLevels, level)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="QuadTree"><span class="type-signature"></span>new QuadTree<span class="signature">(x, y, width, height, <span class="optional">maxObjects</span>, <span class="optional">maxLevels</span>, <span class="optional">level</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -469,7 +464,11 @@ it massively to add node indexing, removed lots of temp. var creation and signif
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -481,46 +480,35 @@ it massively to add node indexing, removed lots of temp. var creation and signif
 
         <tr>
             
-                <td class="name"><code>physicsManager</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Description</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Description.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
                 <td class="name"><code>x</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">number</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The top left coordinate of the quadtree.</p></td>
         </tr>
 
 	
@@ -533,17 +521,29 @@ it massively to add node indexing, removed lots of temp. var creation and signif
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">number</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The top left coordinate of the quadtree.</p></td>
         </tr>
 
 	
@@ -563,10 +563,22 @@ it massively to add node indexing, removed lots of temp. var creation and signif
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The width of your game in game pixels.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The width of the quadtree in pixels.</p></td>
         </tr>
 
 	
@@ -586,10 +598,22 @@ it massively to add node indexing, removed lots of temp. var creation and signif
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The height of your game in game pixels.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The height of the quadtree in pixels.</p></td>
         </tr>
 
 	
@@ -609,10 +633,26 @@ it massively to add node indexing, removed lots of temp. var creation and signif
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                    10
+                
+                </td>
+            
+
+            <td class="description last"><p>The maximum number of objects per node.</p></td>
         </tr>
 
 	
@@ -632,10 +672,26 @@ it massively to add node indexing, removed lots of temp. var creation and signif
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                    4
+                
+                </td>
+            
+
+            <td class="description last"><p>The maximum number of levels to iterate to.</p></td>
         </tr>
 
 	
@@ -655,10 +711,26 @@ it massively to add node indexing, removed lots of temp. var creation and signif
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>Which level is this?</p></td>
         </tr>
 
 	
@@ -778,7 +850,7 @@ Clear the quadtree.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QuadTree.js.html">math/QuadTree.js</a>, <a href="QuadTree.js.html#sunlight-1-line-246">line 246</a>
+        <a href="QuadTree.js.html">math/QuadTree.js</a>, <a href="QuadTree.js.html#sunlight-1-line-267">line 267</a>
     </li></ul></dd>
     
 
@@ -855,6 +927,9 @@ Determine which node the object belongs to.</p>
             <td class="type">
             
                 
+<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
+|
+
 <span class="param-type">object</span>
 
 
@@ -865,7 +940,7 @@ Determine which node the object belongs to.</p>
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The bounds in which to check.</p></td>
         </tr>
 
 	
@@ -897,7 +972,7 @@ Determine which node the object belongs to.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QuadTree.js.html">math/QuadTree.js</a>, <a href="QuadTree.js.html#sunlight-1-line-165">line 165</a>
+        <a href="QuadTree.js.html">math/QuadTree.js</a>, <a href="QuadTree.js.html#sunlight-1-line-186">line 186</a>
     </li></ul></dd>
     
 
@@ -957,9 +1032,7 @@ Determine which node the object belongs to.</p>
     
     <div class="description">
         <p>/*
-Insert the object into the node. If the node
-exceeds the capacity, it will split and add all
-objects to their corresponding subnodes.</p>
+Insert the object into the node. If the node exceeds the capacity, it will split and add all objects to their corresponding subnodes.</p>
     </div>
     
 
@@ -999,6 +1072,9 @@ objects to their corresponding subnodes.</p>
             <td class="type">
             
                 
+<span class="param-type"><a href="Phaser.Physics.Arcade.Body.html">Phaser.Physics.Arcade.Body</a></span>
+|
+
 <span class="param-type">object</span>
 
 
@@ -1009,7 +1085,7 @@ objects to their corresponding subnodes.</p>
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The Body object to insert into the quadtree.</p></td>
         </tr>
 
 	
@@ -1041,7 +1117,7 @@ objects to their corresponding subnodes.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QuadTree.js.html">math/QuadTree.js</a>, <a href="QuadTree.js.html#sunlight-1-line-111">line 111</a>
+        <a href="QuadTree.js.html">math/QuadTree.js</a>, <a href="QuadTree.js.html#sunlight-1-line-134">line 134</a>
     </li></ul></dd>
     
 
@@ -1069,7 +1145,7 @@ objects to their corresponding subnodes.</p>
         
             
 <dt>
-    <h4 class="name" id="retrieve"><span class="type-signature"></span>retrieve<span class="signature">(rect)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    <h4 class="name" id="populate"><span class="type-signature"></span>populate<span class="signature">(group)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1078,7 +1154,7 @@ objects to their corresponding subnodes.</p>
     
     <div class="description">
         <p>/*
-Return all objects that could collide with the given object.</p>
+Populates this quadtree with the members of the given Group.</p>
     </div>
     
 
@@ -1112,13 +1188,13 @@ Return all objects that could collide with the given object.</p>
 
         <tr>
             
-                <td class="name"><code>rect</code></td>
+                <td class="name"><code>group</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
 
 
             
@@ -1128,7 +1204,7 @@ Return all objects that could collide with the given object.</p>
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>The Group to add to the quadtree.</p></td>
         </tr>
 
 	
@@ -1160,7 +1236,245 @@ Return all objects that could collide with the given object.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QuadTree.js.html">math/QuadTree.js</a>, <a href="QuadTree.js.html#sunlight-1-line-209">line 209</a>
+        <a href="QuadTree.js.html">math/QuadTree.js</a>, <a href="QuadTree.js.html#sunlight-1-line-84">line 84</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="populateHandler"><span class="type-signature"></span>populateHandler<span class="signature">(sprite)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>/*
+Handler for the populate method.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>sprite</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Sprite.html">Phaser.Sprite</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Sprite to check.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="QuadTree.js.html">math/QuadTree.js</a>, <a href="QuadTree.js.html#sunlight-1-line-96">line 96</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="retrieve"><span class="type-signature"></span>retrieve<span class="signature">(sprite)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>/*
+Return all objects that could collide with the given Sprite.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>sprite</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Sprite.html">Phaser.Sprite</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The sprite to check against.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="QuadTree.js.html">math/QuadTree.js</a>, <a href="QuadTree.js.html#sunlight-1-line-230">line 230</a>
     </li></ul></dd>
     
 
@@ -1255,7 +1569,7 @@ Split the node into 4 subnodes</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QuadTree.js.html">math/QuadTree.js</a>, <a href="QuadTree.js.html#sunlight-1-line-88">line 88</a>
+        <a href="QuadTree.js.html">math/QuadTree.js</a>, <a href="QuadTree.js.html#sunlight-1-line-111">line 111</a>
     </li></ul></dd>
     
 
@@ -1300,13 +1614,13 @@ Split the node into 4 subnodes</p>
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		Phaser Copyright © 2012-2014 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 28 2013 15:56:32 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 05 2014 06:28:33 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

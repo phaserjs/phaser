@@ -91,6 +91,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.DOMSprite.html">DOMSprite</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -163,6 +167,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -184,6 +196,10 @@
 						
 						<li>
 							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Line.html">Line</a>
 						</li>
 						
 						<li>
@@ -279,6 +295,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Sound.html">Sound</a>
 						</li>
 						
@@ -343,6 +363,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
 						</li>
 						
@@ -368,36 +392,6 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
-						</li>
-						
-						<li>
-							<a href="global.html#render">render</a>
-						</li>
-						
-						<li>
-							<a href="global.html#renderXY">renderXY</a>
-						</li>
-						
-						<li>
-							<a href="global.html#right">right</a>
 						</li>
 						
 
@@ -446,8 +440,9 @@
     
     
     <div class="description">
-        <p>The Physics Body is linked to a single Sprite. All physics operations should be performed against the body rather than
-the Sprite itself. For example you can set the velocity, acceleration, bounce values etc all on the Body.</p>
+        <p>The Physics Body is linked to a single Sprite and defines properties that determine how the physics body is simulated.
+These properties affect how the body reacts to forces, what forces it generates on itself (to simulate friction), and how it reacts to collisions in the scene. In most cases, the properties are used to simulate physical effects.
+Each body also has its own property values that determine exactly how it reacts to forces and collisions in the scene.</p>
     </div>
     
 
@@ -529,7 +524,7 @@ the Sprite itself. For example you can set the velocity, acceleration, bounce va
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-16">line 16</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-17">line 17</a>
     </li></ul></dd>
     
 
@@ -628,7 +623,7 @@ the Sprite itself. For example you can set the velocity, acceleration, bounce va
 
             
 
-            <td class="description last"><p>The velocity in pixels per second sq. of the Body.</p></td>
+            <td class="description last"><p>The acceleration in pixels per second sq. of the Body.</p></td>
         </tr>
 
 	
@@ -657,114 +652,7 @@ the Sprite itself. For example you can set the velocity, acceleration, bounce va
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-132">line 132</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="allowCollision"><span class="type-signature"></span>allowCollision<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Set the allowCollision properties to control which directions collision is processed for this Body.
-For example allowCollision.up = false means it won't collide when the collision happened while moving up.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>allowCollision</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>An object containing allowed collision.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-210">line 210</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-60">line 60</a>
     </li></ul></dd>
     
 
@@ -837,7 +725,7 @@ For example allowCollision.up = false means it won't collide when the collision 
 
             
 
-            <td class="description last"><p>Allow this Body to be influenced by the global Gravity?</p></td>
+            <td class="description last"><p>Allow this Body to be influenced by the global Gravity value? Note: It will always be influenced by the local gravity if set.</p></td>
         </tr>
 
 	
@@ -869,7 +757,7 @@ For example allowCollision.up = false means it won't collide when the collision 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-259">line 259</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-191">line 191</a>
     </li></ul></dd>
     
 
@@ -942,7 +830,7 @@ For example allowCollision.up = false means it won't collide when the collision 
 
             
 
-            <td class="description last"><p>Allow this Body to be rotated? (via angularVelocity, etc)</p></td>
+            <td class="description last"><p>Allow angular rotation? This will cause the Sprite to be rotated via angularVelocity, etc.</p></td>
         </tr>
 
 	
@@ -974,7 +862,109 @@ For example allowCollision.up = false means it won't collide when the collision 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-253">line 253</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-185">line 185</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="angle"><span class="type-signature"></span>angle<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>angle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The angle of the Body based on its velocity in radians.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-70">line 70</a>
     </li></ul></dd>
     
 
@@ -1047,7 +1037,7 @@ For example allowCollision.up = false means it won't collide when the collision 
 
             
 
-            <td class="description last"><p>The angular acceleration in pixels per second sq. of the Body.</p></td>
+            <td class="description last"><p>The angular acceleration of the Body.</p></td>
         </tr>
 
 	
@@ -1079,7 +1069,7 @@ For example allowCollision.up = false means it won't collide when the collision 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-165">line 165</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-104">line 104</a>
     </li></ul></dd>
     
 
@@ -1152,7 +1142,7 @@ For example allowCollision.up = false means it won't collide when the collision 
 
             
 
-            <td class="description last"><p>The angular drag applied to the rotation of the Body.</p></td>
+            <td class="description last"><p>angularDrag is used to calculate friction on the body as it rotates.</p></td>
         </tr>
 
 	
@@ -1184,7 +1174,7 @@ For example allowCollision.up = false means it won't collide when the collision 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-171">line 171</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-110">line 110</a>
     </li></ul></dd>
     
 
@@ -1257,7 +1247,7 @@ For example allowCollision.up = false means it won't collide when the collision 
 
             
 
-            <td class="description last"><p>The angular velocity in pixels per second sq. of the Body.</p></td>
+            <td class="description last"><p>The angular velocity of the Body.</p></td>
         </tr>
 
 	
@@ -1289,7 +1279,7 @@ For example allowCollision.up = false means it won't collide when the collision 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-159">line 159</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-98">line 98</a>
     </li></ul></dd>
     
 
@@ -1307,7 +1297,114 @@ For example allowCollision.up = false means it won't collide when the collision 
         
             
 <dt>
-    <h4 class="name" id="bottom"><span class="type-signature"></span>bottom<span class="type-signature"></span></h4>
+    <h4 class="name" id="blocked"><span class="type-signature"></span>blocked<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>This object is populated with boolean values when the Body collides with the World bounds or a Tile.
+For example if blocked.up is true then the Body cannot move up.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>blocked</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>An object containing on which faces this Body is blocked from moving, if any.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-149">line 149</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="bottom"><span class="type-signature">&lt;readonly> </span>bottom<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1362,7 +1459,7 @@ For example allowCollision.up = false means it won't collide when the collision 
 
             
 
-            <td class="description last"><p>The bottom value of this Body (same as Body.y + Body.height)</p></td>
+            <td class="description last"><p>The bottom-most point of this Body.</p></td>
         </tr>
 
 	
@@ -1391,7 +1488,7 @@ For example allowCollision.up = false means it won't collide when the collision 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-575">line 575</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-260">line 260</a>
     </li></ul></dd>
     
 
@@ -1464,7 +1561,7 @@ For example allowCollision.up = false means it won't collide when the collision 
 
             
 
-            <td class="description last"><p>The elasticitiy of the Body when colliding. bounce.x/y = 1 means full rebound, bounce.x/y = 0.5 means 50% rebound velocity.</p></td>
+            <td class="description last"><p>The elasticitiy of the Body when colliding. This property determines how much energy a body maintains during a collision, i.e. its bounciness.</p></td>
         </tr>
 
 	
@@ -1493,7 +1590,7 @@ For example allowCollision.up = false means it won't collide when the collision 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-147">line 147</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-80">line 80</a>
     </li></ul></dd>
     
 
@@ -1511,7 +1608,114 @@ For example allowCollision.up = false means it won't collide when the collision 
         
             
 <dt>
-    <h4 class="name" id="center"><span class="type-signature"></span>center<span class="type-signature"></span></h4>
+    <h4 class="name" id="checkCollision"><span class="type-signature"></span>checkCollision<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Set the checkCollision properties to control which directions collision is processed for this Body.
+For example checkCollision.up = false means it won't collide when the collision happened while moving up.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>checkCollision</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>An object containing allowed collision.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-135">line 135</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="collideCallback"><span class="type-signature"></span>collideCallback<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1550,13 +1754,13 @@ For example allowCollision.up = false means it won't collide when the collision 
 
         <tr>
             
-                <td class="name"><code>center</code></td>
+                <td class="name"><code>collideCallback</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
+<span class="param-type">function</span>
 
 
             
@@ -1566,7 +1770,7 @@ For example allowCollision.up = false means it won't collide when the collision 
 
             
 
-            <td class="description last"><p>The center coordinate of the Physics Body.</p></td>
+            <td class="description last"><p>If set this callback will be fired whenever this Body is hit (on any face). It will send three parameters, the face it hit on, this Body and the Body that hit it.</p></td>
         </tr>
 
 	
@@ -1591,11 +1795,119 @@ For example allowCollision.up = false means it won't collide when the collision 
     
 
     
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-110">line 110</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-209">line 209</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="collideCallbackContext"><span class="type-signature"></span>collideCallbackContext<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>collideCallbackContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The context in which the collideCallback is called.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-215">line 215</a>
     </li></ul></dd>
     
 
@@ -1701,7 +2013,7 @@ For example allowCollision.up = false means it won't collide when the collision 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-309">line 309</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-221">line 221</a>
     </li></ul></dd>
     
 
@@ -1719,16 +2031,11 @@ For example allowCollision.up = false means it won't collide when the collision 
         
             
 <dt>
-    <h4 class="name" id="customSeparateX"><span class="type-signature"></span>customSeparateX<span class="type-signature"></span></h4>
+    <h4 class="name" id="contacts"><span class="type-signature">&lt;protected> </span>contacts<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>This flag allows you to disable the custom x separation that takes place by Physics.Arcade.separate.
-Used in combination with your own collision processHandler you can create whatever type of collision response you need.</p>
-    </div>
     
     
     
@@ -1763,13 +2070,13 @@ Used in combination with your own collision processHandler you can create whatev
 
         <tr>
             
-                <td class="name"><code>customSeparateX</code></td>
+                <td class="name"><code>contacts</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">array.&lt;<a href="Phaser.Physics.Arcade.Body.html">Phaser.Physics.Arcade.Body</a>></span>
 
 
             
@@ -1779,7 +2086,109 @@ Used in combination with your own collision processHandler you can create whatev
 
             
 
-            <td class="description last"><p>Use a custom separation system or the built-in one?</p></td>
+            <td class="description last"><p>Used to store references to bodies this Body is in contact with.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-278">line 278</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="customSeparateCallback"><span class="type-signature"></span>customSeparateCallback<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>customSeparateCallback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If set this callback will be used for Body separation instead of the built-in one. Callback should return true if separated, otherwise false.</p></td>
         </tr>
 
 	
@@ -1805,13 +2214,13 @@ Used in combination with your own collision processHandler you can create whatev
 
     
     <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-267">line 267</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-197">line 197</a>
     </li></ul></dd>
     
 
@@ -1829,16 +2238,11 @@ Used in combination with your own collision processHandler you can create whatev
         
             
 <dt>
-    <h4 class="name" id="customSeparateY"><span class="type-signature"></span>customSeparateY<span class="type-signature"></span></h4>
+    <h4 class="name" id="customSeparateContext"><span class="type-signature"></span>customSeparateContext<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>This flag allows you to disable the custom y separation that takes place by Physics.Arcade.separate.
-Used in combination with your own collision processHandler you can create whatever type of collision response you need.</p>
-    </div>
     
     
     
@@ -1873,13 +2277,13 @@ Used in combination with your own collision processHandler you can create whatev
 
         <tr>
             
-                <td class="name"><code>customSeparateY</code></td>
+                <td class="name"><code>customSeparateContext</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">object</span>
 
 
             
@@ -1889,7 +2293,7 @@ Used in combination with your own collision processHandler you can create whatev
 
             
 
-            <td class="description last"><p>Use a custom separation system or the built-in one?</p></td>
+            <td class="description last"><p>The context in which the customSeparateCallback is called.</p></td>
         </tr>
 
 	
@@ -1915,221 +2319,13 @@ Used in combination with your own collision processHandler you can create whatev
 
     
     <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
+    <dd class="tag-default"><ul class="dummy"><li>null</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-275">line 275</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="drag"><span class="type-signature"></span>drag<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>drag</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The drag applied to the motion of the Body.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-137">line 137</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="embedded"><span class="type-signature"></span>embedded<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>If a body is overlapping with another body, but neither of them are moving (maybe they spawned on-top of each other?) this is set to true.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>embedded</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Body embed value.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-303">line 303</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-203">line 203</a>
     </li></ul></dd>
     
 
@@ -2231,7 +2427,7 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-229">line 229</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-155">line 155</a>
     </li></ul></dd>
     
 
@@ -2333,7 +2529,7 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-26">line 26</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-27">line 27</a>
     </li></ul></dd>
     
 
@@ -2406,7 +2602,7 @@ Used in combination with your own collision processHandler you can create whatev
 
             
 
-            <td class="description last"><p>A private Gravity setting for the Body.</p></td>
+            <td class="description last"><p>The gravity applied to the motion of the Body. This works in addition to any gravity set on the world.</p></td>
         </tr>
 
 	
@@ -2435,7 +2631,7 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-142">line 142</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-75">line 75</a>
     </li></ul></dd>
     
 
@@ -2453,7 +2649,7 @@ Used in combination with your own collision processHandler you can create whatev
         
             
 <dt>
-    <h4 class="name" id="halfHeight"><span class="type-signature"></span>halfHeight<span class="type-signature"></span></h4>
+    <h4 class="name" id="height"><span class="type-signature">&lt;readonly> </span>height<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2492,7 +2688,7 @@ Used in combination with your own collision processHandler you can create whatev
 
         <tr>
             
-                <td class="name"><code>halfHeight</code></td>
+                <td class="name"><code>height</code></td>
             
 
             <td class="type">
@@ -2508,7 +2704,7 @@ Used in combination with your own collision processHandler you can create whatev
 
             
 
-            <td class="description last"><p>The calculated height / 2 of the physics body.</p></td>
+            <td class="description last"><p>The current height of the Body, taking into account the point rotation.</p></td>
         </tr>
 
 	
@@ -2537,410 +2733,7 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-105">line 105</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="halfWidth"><span class="type-signature"></span>halfWidth<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>halfWidth</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The calculated width / 2 of the physics body.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-100">line 100</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="height"><span class="type-signature"></span>height<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>.numInternal</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>ID cache</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-95">line 95</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="hullX"><span class="type-signature"></span>hullX<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>hullX</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The dynamically calculated hull used during collision.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-292">line 292</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="hullY"><span class="type-signature"></span>hullY<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>hullY</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The dynamically calculated hull used during collision.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-297">line 297</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-272">line 272</a>
     </li></ul></dd>
     
 
@@ -3013,7 +2806,7 @@ Used in combination with your own collision processHandler you can create whatev
 
             
 
-            <td class="description last"><p>An immovable Body will not receive any impacts from other bodies.</p></td>
+            <td class="description last"><p>An immovable Body will not receive any impacts or exchanges of velocity from other bodies.</p></td>
         </tr>
 
 	
@@ -3045,7 +2838,214 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-235">line 235</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-167">line 167</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="left"><span class="type-signature">&lt;readonly> </span>left<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>left</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The left-most point of this Body.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-242">line 242</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="linearDamping"><span class="type-signature"></span>linearDamping<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>linearDamping</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>linearDamping is used to calculate friction on the body as it moves through the world. For example, this might be used to simulate air or water friction.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0.0</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-128">line 128</a>
     </li></ul></dd>
     
 
@@ -3118,7 +3118,7 @@ Used in combination with your own collision processHandler you can create whatev
 
             
 
-            <td class="description last"><p>The mass of the Body.</p></td>
+            <td class="description last"><p>The mass property determines how forces affect the body, as well as how much momentum the body has when it is involved in a collision.</p></td>
         </tr>
 
 	
@@ -3150,7 +3150,7 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-183">line 183</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-122">line 122</a>
     </li></ul></dd>
     
 
@@ -3223,7 +3223,7 @@ Used in combination with your own collision processHandler you can create whatev
 
             
 
-            <td class="description last"><p>The maximum angular velocity in pixels per second sq. that the Body can reach.</p></td>
+            <td class="description last"><p>The maximum angular velocity that the Body can reach.</p></td>
         </tr>
 
 	
@@ -3255,7 +3255,7 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-177">line 177</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-116">line 116</a>
     </li></ul></dd>
     
 
@@ -3328,7 +3328,7 @@ Used in combination with your own collision processHandler you can create whatev
 
             
 
-            <td class="description last"><p>The maximum velocity in pixels per second sq. that the Body can reach.</p></td>
+            <td class="description last"><p>The maximum velocity that the Body can reach.</p></td>
         </tr>
 
 	
@@ -3357,7 +3357,109 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-153">line 153</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-92">line 92</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="minVelocity"><span class="type-signature"></span>minVelocity<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>minVelocity</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>When a body rebounds off another body or a wall the minVelocity is checked. If the new velocity is lower than minVelocity the body is stopped.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-86">line 86</a>
     </li></ul></dd>
     
 
@@ -3430,7 +3532,7 @@ Used in combination with your own collision processHandler you can create whatev
 
             
 
-            <td class="description last"><p>Set to true to allow the Physics system to move this Body, other false to move it manually.</p></td>
+            <td class="description last"><p>Set to true to allow the Physics system (such as velocity) to move this Body, or false to move it manually.</p></td>
         </tr>
 
 	
@@ -3462,7 +3564,7 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-241">line 241</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-173">line 173</a>
     </li></ul></dd>
     
 
@@ -3564,7 +3666,7 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-31">line 31</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-32">line 32</a>
     </li></ul></dd>
     
 
@@ -3582,15 +3684,11 @@ Used in combination with your own collision processHandler you can create whatev
         
             
 <dt>
-    <h4 class="name" id="overlapX"><span class="type-signature"></span>overlapX<span class="type-signature"></span></h4>
+    <h4 class="name" id="overlapX"><span class="type-signature">&lt;protected> </span>overlapX<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>When this body collides with another, the amount of overlap is stored here.</p>
-    </div>
     
     
     
@@ -3641,7 +3739,7 @@ Used in combination with your own collision processHandler you can create whatev
 
             
 
-            <td class="description last"><p>The amount of horizontal overlap during the collision.</p></td>
+            <td class="description last"><p>Mostly used internally to store the overlap values from Tile seperation.</p></td>
         </tr>
 
 	
@@ -3670,7 +3768,7 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-281">line 281</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-284">line 284</a>
     </li></ul></dd>
     
 
@@ -3688,15 +3786,11 @@ Used in combination with your own collision processHandler you can create whatev
         
             
 <dt>
-    <h4 class="name" id="overlapY"><span class="type-signature"></span>overlapY<span class="type-signature"></span></h4>
+    <h4 class="name" id="overlapY"><span class="type-signature">&lt;protected> </span>overlapY<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>When this body collides with another, the amount of overlap is stored here.</p>
-    </div>
     
     
     
@@ -3747,7 +3841,7 @@ Used in combination with your own collision processHandler you can create whatev
 
             
 
-            <td class="description last"><p>The amount of vertical overlap during the collision.</p></td>
+            <td class="description last"><p>Mostly used internally to store the overlap values from Tile seperation.</p></td>
         </tr>
 
 	
@@ -3776,7 +3870,109 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-287">line 287</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-290">line 290</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="polygon"><span class="type-signature"></span>polygon<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>polygon</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">SAT.Polygon</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The SAT Polygons, as derived from the Shape.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-236">line 236</a>
     </li></ul></dd>
     
 
@@ -3878,7 +4074,7 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-61">line 61</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-50">line 50</a>
     </li></ul></dd>
     
 
@@ -3980,7 +4176,7 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-49">line 49</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-38">line 38</a>
     </li></ul></dd>
     
 
@@ -4082,7 +4278,7 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-55">line 55</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-44">line 44</a>
     </li></ul></dd>
     
 
@@ -4100,7 +4296,7 @@ Used in combination with your own collision processHandler you can create whatev
         
             
 <dt>
-    <h4 class="name" id="quadTreeIDs"><span class="type-signature">&lt;protected> </span>quadTreeIDs<span class="type-signature"></span></h4>
+    <h4 class="name" id="rebound"><span class="type-signature"></span>rebound<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -4139,13 +4335,13 @@ Used in combination with your own collision processHandler you can create whatev
 
         <tr>
             
-                <td class="name"><code>quadTreeIDs</code></td>
+                <td class="name"><code>rebound</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type">boolean</span>
 
 
             
@@ -4155,7 +4351,7 @@ Used in combination with your own collision processHandler you can create whatev
 
             
 
-            <td class="description last"><p>Internal ID cache.</p></td>
+            <td class="description last"><p>A Body set to rebound will exchange velocity with another Body during collision. Set to false to allow this body to be 'pushed' rather than exchange velocity.</p></td>
         </tr>
 
 	
@@ -4180,11 +4376,14 @@ Used in combination with your own collision processHandler you can create whatev
     
 
     
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>true</li></ul></dd>
+    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-195">line 195</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-161">line 161</a>
     </li></ul></dd>
     
 
@@ -4202,109 +4401,7 @@ Used in combination with your own collision processHandler you can create whatev
         
             
 <dt>
-    <h4 class="name" id="quadTreeIndex"><span class="type-signature">&lt;protected> </span>quadTreeIndex<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>quadTreeIndex</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Internal ID cache.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-201">line 201</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="right"><span class="type-signature"></span>right<span class="type-signature"></span></h4>
+    <h4 class="name" id="right"><span class="type-signature">&lt;readonly> </span>right<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -4359,7 +4456,7 @@ Used in combination with your own collision processHandler you can create whatev
 
             
 
-            <td class="description last"><p>The right value of this Body (same as Body.x + Body.width)</p></td>
+            <td class="description last"><p>The right-most point of this Body.</p></td>
         </tr>
 
 	
@@ -4388,7 +4485,7 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-610">line 610</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-248">line 248</a>
     </li></ul></dd>
     
 
@@ -4461,7 +4558,7 @@ Used in combination with your own collision processHandler you can create whatev
 
             
 
-            <td class="description last"><p>The amount the Body is rotated.</p></td>
+            <td class="description last"><p>The amount the parent Sprite is rotated.</p></td>
         </tr>
 
 	
@@ -4493,7 +4590,7 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-247">line 247</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-179">line 179</a>
     </li></ul></dd>
     
 
@@ -4511,7 +4608,7 @@ Used in combination with your own collision processHandler you can create whatev
         
             
 <dt>
-    <h4 class="name" id="screenX"><span class="type-signature">&lt;readonly> </span>screenX<span class="type-signature"></span></h4>
+    <h4 class="name" id="shape"><span class="type-signature"></span>shape<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -4550,7 +4647,115 @@ Used in combination with your own collision processHandler you can create whatev
 
         <tr>
             
-                <td class="name"><code>screenX</code></td>
+                <td class="name"><code>shape</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">SAT.Box</span>
+|
+
+<span class="param-type">SAT.Circle</span>
+|
+
+<span class="param-type">SAT.Polygon</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The SAT Collision shape.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-231">line 231</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="speed"><span class="type-signature"></span>speed<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>speed</code></td>
             
 
             <td class="type">
@@ -4566,7 +4771,7 @@ Used in combination with your own collision processHandler you can create whatev
 
             
 
-            <td class="description last"><p>The x position of the physics body translated to screen space.</p></td>
+            <td class="description last"><p>The speed in pixels per second sq. of the Body.</p></td>
         </tr>
 
 	
@@ -4595,418 +4800,7 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-67">line 67</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="screenY"><span class="type-signature">&lt;readonly> </span>screenY<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>screenY</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y position of the physics body translated to screen space.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-73">line 73</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="skipQuadTree"><span class="type-signature"></span>skipQuadTree<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>skipQuadTree</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>If the Body is an irregular shape you can set this to true to avoid it being added to the World quad tree.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-189">line 189</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="sourceHeight"><span class="type-signature">&lt;readonly> </span>sourceHeight<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>sourceHeight</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The un-scaled original size.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-85">line 85</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="sourceWidth"><span class="type-signature">&lt;readonly> </span>sourceWidth<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>sourceWidth</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The un-scaled original size.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-79">line 79</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-65">line 65</a>
     </li></ul></dd>
     
 
@@ -5108,7 +4902,109 @@ Used in combination with your own collision processHandler you can create whatev
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-21">line 21</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-22">line 22</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="top"><span class="type-signature">&lt;readonly> </span>top<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>top</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The top-most point of this Body.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-254">line 254</a>
     </li></ul></dd>
     
 
@@ -5215,7 +5111,112 @@ touching.up = true means the collision happened to the top of this Body for exam
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-217">line 217</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-142">line 142</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="type"><span class="type-signature"></span>type<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.Arcade.html#RECT">Phaser.Physics.Arcade.RECT</a></span>
+|
+
+<span class="param-type"><a href="Phaser.Physics.Arcade.html#CIRCLE">Phaser.Physics.Arcade.CIRCLE</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The type of SAT Shape.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-226">line 226</a>
     </li></ul></dd>
     
 
@@ -5288,7 +5289,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
             
 
-            <td class="description last"><p>The velocity in pixels per second sq. of the Body.</p></td>
+            <td class="description last"><p>The velocity of the Body.</p></td>
         </tr>
 
 	
@@ -5317,7 +5318,7 @@ touching.up = true means the collision happened to the top of this Body for exam
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-127">line 127</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-55">line 55</a>
     </li></ul></dd>
     
 
@@ -5335,113 +5336,7 @@ touching.up = true means the collision happened to the top of this Body for exam
         
             
 <dt>
-    <h4 class="name" id="wasTouching"><span class="type-signature"></span>wasTouching<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>This object is populated with previous touching values from the bodies previous collision.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>wasTouching</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>An object containing previous touching results.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-223">line 223</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="width"><span class="type-signature"></span>width<span class="type-signature"></span></h4>
+    <h4 class="name" id="width"><span class="type-signature">&lt;readonly> </span>width<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -5496,7 +5391,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
             
 
-            <td class="description last"><p>The calculated width of the physics body.</p></td>
+            <td class="description last"><p>The current width of the Body, taking into account the point rotation.</p></td>
         </tr>
 
 	
@@ -5525,7 +5420,7 @@ touching.up = true means the collision happened to the top of this Body for exam
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-90">line 90</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-266">line 266</a>
     </li></ul></dd>
     
 
@@ -5543,7 +5438,7 @@ touching.up = true means the collision happened to the top of this Body for exam
         
             
 <dt>
-    <h4 class="name" id="x"><span class="type-signature">&lt;readonly> </span>x<span class="type-signature"></span></h4>
+    <h4 class="name" id="x"><span class="type-signature"></span>x<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -5598,7 +5493,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
             
 
-            <td class="description last"><p>The x position of the physics body.</p></td>
+            <td class="description last"><p>The x coordinate of this Body.</p></td>
         </tr>
 
 	
@@ -5627,7 +5522,7 @@ touching.up = true means the collision happened to the top of this Body for exam
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-37">line 37</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1452">line 1452</a>
     </li></ul></dd>
     
 
@@ -5645,7 +5540,7 @@ touching.up = true means the collision happened to the top of this Body for exam
         
             
 <dt>
-    <h4 class="name" id="y"><span class="type-signature">&lt;readonly> </span>y<span class="type-signature"></span></h4>
+    <h4 class="name" id="y"><span class="type-signature"></span>y<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -5700,7 +5595,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 
             
 
-            <td class="description last"><p>The y position of the physics body.</p></td>
+            <td class="description last"><p>The y coordinate of this Body.</p></td>
         </tr>
 
 	
@@ -5729,7 +5624,7 @@ touching.up = true means the collision happened to the top of this Body for exam
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-43">line 43</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1486">line 1486</a>
     </li></ul></dd>
     
 
@@ -5753,7 +5648,7 @@ touching.up = true means the collision happened to the top of this Body for exam
         <dl>
             
 <dt>
-    <h4 class="name" id="deltaAbsX"><span class="type-signature"></span>deltaAbsX<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="add"><span class="type-signature">&lt;protected> </span>add<span class="signature">(v)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -5761,7 +5656,7 @@ touching.up = true means the collision happened to the top of this Body for exam
     
     
     <div class="description">
-        <p>Returns the absolute delta x value.</p>
+        <p>Adds the given Vector to this Body.</p>
     </div>
     
 
@@ -5769,6 +5664,55 @@ touching.up = true means the collision happened to the top of this Body for exam
     
     
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>v</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">SAT.Vector</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The vector to add to this Body.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
     
     
     
@@ -5794,7 +5738,125 @@ touching.up = true means the collision happened to the top of this Body for exam
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-529">line 529</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-628">line 628</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="addContact"><span class="type-signature"></span>addContact<span class="signature">(body)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Adds the given Body to the contact list of this Body. Also adds this Body to the contact list of the given Body.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.Arcade.Body.html">Phaser.Physics.Arcade.Body</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Body to be added.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-830">line 830</a>
     </li></ul></dd>
     
 
@@ -5819,7 +5881,7 @@ touching.up = true means the collision happened to the top of this Body for exam
     
             
 <div class="param-desc">
-    <p>The absolute delta value.</p>
+    <p>True if the given Body was added to this contact list, false if already on it.</p>
 </div>
 
 
@@ -5830,7 +5892,7 @@ touching.up = true means the collision happened to the top of this Body for exam
 	</dt>
 	<dd>
 		
-<span class="param-type">number</span>
+<span class="param-type">boolean</span>
 
 
 	</dd>
@@ -5845,7 +5907,7 @@ touching.up = true means the collision happened to the top of this Body for exam
         
             
 <dt>
-    <h4 class="name" id="deltaAbsY"><span class="type-signature"></span>deltaAbsY<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="applyDamping"><span class="type-signature">&lt;protected> </span>applyDamping<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -5853,7 +5915,7 @@ touching.up = true means the collision happened to the top of this Body for exam
     
     
     <div class="description">
-        <p>Returns the absolute delta y value.</p>
+        <p>Internal method that checks the acceleration and applies damping if not set.</p>
     </div>
     
 
@@ -5886,7 +5948,7 @@ touching.up = true means the collision happened to the top of this Body for exam
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-539">line 539</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-485">line 485</a>
     </li></ul></dd>
     
 
@@ -5907,29 +5969,75 @@ touching.up = true means the collision happened to the top of this Body for exam
     
     
     
-    <h5>Returns:</h5>
     
-            
-<div class="param-desc">
-    <p>The absolute delta value.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">number</span>
-
-
-	</dd>
-</dl>
-
+    
+</dd>
 
         
+            
+<dt>
+    <h4 class="name" id="checkBlocked"><span class="type-signature">&lt;protected> </span>checkBlocked<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Internal method that checks and potentially resets the blocked status flags.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-435">line 435</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
     
     
 </dd>
@@ -5945,7 +6053,7 @@ touching.up = true means the collision happened to the top of this Body for exam
     
     
     <div class="description">
-        <p>Returns the delta x value. The difference between Body.x now and in the previous step.</p>
+        <p>Returns the delta x value. The amount the Body has moved horizontally in the current step.</p>
     </div>
     
 
@@ -5978,7 +6086,7 @@ touching.up = true means the collision happened to the top of this Body for exam
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-549">line 549</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1418">line 1418</a>
     </li></ul></dd>
     
 
@@ -6003,7 +6111,7 @@ touching.up = true means the collision happened to the top of this Body for exam
     
             
 <div class="param-desc">
-    <p>The delta value.</p>
+    <p>The delta value. Positive if the motion was to the right, negative if to the left.</p>
 </div>
 
 
@@ -6037,7 +6145,7 @@ touching.up = true means the collision happened to the top of this Body for exam
     
     
     <div class="description">
-        <p>Returns the delta y value. The difference between Body.y now and in the previous step.</p>
+        <p>Returns the delta y value. The amount the Body has moved vertically in the current step.</p>
     </div>
     
 
@@ -6070,7 +6178,99 @@ touching.up = true means the collision happened to the top of this Body for exam
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-559">line 559</a>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1428">line 1428</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The delta value. Positive if the motion was downwards, negative if upwards.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="deltaZ"><span class="type-signature"></span>deltaZ<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Returns the delta z value. The amount the Body has rotated in the current step.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1438">line 1438</a>
     </li></ul></dd>
     
 
@@ -6118,6 +6318,3776 @@ touching.up = true means the collision happened to the top of this Body for exam
     
 </dd>
 
+        
+            
+<dt>
+    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Destroys this Body and all references it holds to other objects.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1275">line 1275</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="exchange"><span class="type-signature">&lt;protected> </span>exchange<span class="signature">(body)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Exchange velocity with the given Body.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.Arcade.Body.html">Phaser.Physics.Arcade.Body</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Body that collided.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-707">line 707</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getDownwardForce"><span class="type-signature"></span>getDownwardForce<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Gets the total force being applied on the X axis, including gravity and velocity.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-595">line 595</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The total force being applied on the Y axis.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getUpwardForce"><span class="type-signature"></span>getUpwardForce<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Gets the total force being applied on the X axis, including gravity and velocity.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-576">line 576</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The total force being applied on the X axis.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">number</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="give"><span class="type-signature">&lt;protected> </span>give<span class="signature">(body, response)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Separation response handler.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.Arcade.Body.html">Phaser.Physics.Arcade.Body</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Body that collided.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>response</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">SAT.Response</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The SAT Response object containing the collision data.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-642">line 642</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="hitBottom"><span class="type-signature">&lt;protected> </span>hitBottom<span class="signature">(body, response)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Process a collision with the bottom face of this Body.
+Collision and separation can be further checked by setting a collideCallback.
+This callback will be sent 4 parameters: The face of collision, this Body, the colliding Body and the SAT Response.
+If the callback returns true then separation, rebounds and the touching flags will all be set.
+If it returns false this will be skipped and must be handled manually.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.Arcade.Body.html">Phaser.Physics.Arcade.Body</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Body that collided.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>response</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">SAT.Response</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The SAT Response object containing the collision data.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1090">line 1090</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="hitLeft"><span class="type-signature">&lt;protected> </span>hitLeft<span class="signature">(body, response)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Process a collision with the left face of this Body.
+Collision and separation can be further checked by setting a collideCallback.
+This callback will be sent 4 parameters: The face of collision, this Body, the colliding Body and the SAT Response.
+If the callback returns true then separation, rebounds and the touching flags will all be set.
+If it returns false this will be skipped and must be handled manually.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.Arcade.Body.html">Phaser.Physics.Arcade.Body</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Body that collided.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>response</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">SAT.Response</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The SAT Response object containing the collision data.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-962">line 962</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="hitRight"><span class="type-signature">&lt;protected> </span>hitRight<span class="signature">(body, response)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Process a collision with the right face of this Body.
+Collision and separation can be further checked by setting a collideCallback.
+This callback will be sent 4 parameters: The face of collision, this Body, the colliding Body and the SAT Response.
+If the callback returns true then separation, rebounds and the touching flags will all be set.
+If it returns false this will be skipped and must be handled manually.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.Arcade.Body.html">Phaser.Physics.Arcade.Body</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Body that collided.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>response</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">SAT.Response</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The SAT Response object containing the collision data.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1004">line 1004</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="hitTop"><span class="type-signature">&lt;protected> </span>hitTop<span class="signature">(body, response)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Process a collision with the top face of this Body.
+Collision and separation can be further checked by setting a collideCallback.
+This callback will be sent 4 parameters: The face of collision, this Body, the colliding Body and the SAT Response.
+If the callback returns true then separation, rebounds and the touching flags will all be set.
+If it returns false this will be skipped and must be handled manually.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.Arcade.Body.html">Phaser.Physics.Arcade.Body</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Body that collided.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>response</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">SAT.Response</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The SAT Response object containing the collision data.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1046">line 1046</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="inContact"><span class="type-signature"></span>inContact<span class="signature">(body)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Checks if this Body is already in contact with the given Body.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.Arcade.Body.html">Phaser.Physics.Arcade.Body</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Body to be checked.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-817">line 817</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>True if the given Body is already in contact with this Body.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">boolean</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="integrateVelocity"><span class="type-signature">&lt;protected> </span>integrateVelocity<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Internal method. Integrates velocity, global gravity and the delta timer.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1134">line 1134</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onFloor"><span class="type-signature"></span>onFloor<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Determines if this Body is 'on the floor', which means in contact with a Tile or World bounds, or other object that has set 'down' as blocked.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1398">line 1398</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>True if this Body is 'on the floor', which means in contact with a Tile or World bounds, or object that has set 'down' as blocked.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">boolean</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onWall"><span class="type-signature"></span>onWall<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Determins if this Body is 'on a wall', which means horizontally in contact with a Tile or World bounds, or other object but not the ground.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1408">line 1408</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>True if this Body is 'on a wall', which means horizontally in contact with a Tile or World bounds, or other object but not the ground.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">boolean</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="overlap"><span class="type-signature"></span>overlap<span class="signature">(body, response)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Checks for an overlap between this Body and the given Body.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.Arcade.Body.html">Phaser.Physics.Arcade.Body</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Body that is being checked against this Body.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>response</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">SAT.Response</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>SAT Response handler.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-779">line 779</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>True if the two bodies overlap, otherwise false.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">boolean</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="postUpdate"><span class="type-signature">&lt;protected> </span>postUpdate<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Internal method. This is called directly before the sprites are sent to the renderer and after the update function has finished.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1181">line 1181</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="preUpdate"><span class="type-signature">&lt;protected> </span>preUpdate<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Internal method that updates the Body position in relation to the parent Sprite.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-373">line 373</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="processRebound"><span class="type-signature">&lt;protected> </span>processRebound<span class="signature">(body)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Rebound the velocity of this Body.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.Arcade.Body.html">Phaser.Physics.Arcade.Body</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Body that collided.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-753">line 753</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="reboundCheck"><span class="type-signature">&lt;protected> </span>reboundCheck<span class="signature">(x, y, rebound)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Check if we're below minVelocity and gravity isn't trying to drag us in the opposite direction.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Check the X axis?</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Check the Y axis?</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>rebound</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If true it will reverse the velocity on the given axis</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-517">line 517</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="removeContact"><span class="type-signature"></span>removeContact<span class="signature">(body)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Removes the given Body from the contact list of this Body. Also removes this Body from the contact list of the given Body.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.Arcade.Body.html">Phaser.Physics.Arcade.Body</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Body to be removed.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-854">line 854</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>True if the given Body was removed from this contact list, false if wasn't on it.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">boolean</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="reset"><span class="type-signature"></span>reset<span class="signature">(<span class="optional">full</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Resets the Body motion values: velocity, acceleration, angularVelocity and angularAcceleration.
+Also resets the forces to defaults: gravity, bounce, minVelocity,maxVelocity, angularDrag, maxAngular, mass, friction and checkCollision if 'full' specified.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>full</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>A full reset clears down settings you may have set, such as gravity, bounce and drag. A non-full reset just clears motion values.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1236">line 1236</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="separate"><span class="type-signature">&lt;protected> </span>separate<span class="signature">(body, response)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>This separates this Body from the given Body unless a customSeparateCallback is set.
+It assumes they have already been overlap checked and the resulting overlap is stored in the SAT response.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.Arcade.Body.html">Phaser.Physics.Arcade.Body</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Body to be separated from this one.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>response</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">SAT.Response</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>SAT Response handler.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-878">line 878</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>True if the bodies were separated, false if not (for example checkCollide allows them to pass through)</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">boolean</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setCircle"><span class="type-signature"></span>setCircle<span class="signature">(radius, <span class="optional">offsetX</span>, <span class="optional">offsetY</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Sets this Body to use a circle of the given radius for all collision.
+The Circle will be centered on the center of the Sprite by default, but can be adjusted via the Body.offset property and the setCircle x/y parameters.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>radius</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The radius of this circle (in pixels)</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>offsetX</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>The x amount the circle will be offset from the Sprites center.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>offsetY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>The y amount the circle will be offset from the Sprites center.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1294">line 1294</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setPolygon"><span class="type-signature"></span>setPolygon<span class="signature">(points)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Sets this Body to use a convex polygon for collision.
+The points are specified in a counter-clockwise direction and must create a convex polygon.
+Use Body.translate and/or Body.offset to re-position the polygon from the Sprite origin.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>points</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Array.html">Array</a>.&lt;SAT.Vector></span>
+|
+
+<span class="param-type"><a href="Array.html">Array</a>.&lt;number></span>
+|
+
+<span class="param-type">SAT.Vector</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>This can be an array of Vectors that form the polygon,
+     a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
+     all the points of the polygon e.g. <code>setPolygon(new SAT.Vector(), new SAT.Vector(), ...)</code>, or the
+     arguments passed can be flat x,y values e.g. <code>setPolygon(x,y, x,y, x,y, ...)</code> where <code>x</code> and <code>y</code> are Numbers.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1342">line 1342</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setRectangle"><span class="type-signature"></span>setRectangle<span class="signature">(<span class="optional">width</span>, <span class="optional">height</span>, <span class="optional">translateX</span>, <span class="optional">translateY</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Sets this Body to use a rectangle for all collision.
+If you don't specify any parameters it will be sized to match the parent Sprites current width and height (including scale factor) and centered on the sprite.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The width of the rectangle. If not specified it will default to the width of the parent Sprite.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The height of the rectangle. If not specified it will default to the height of the parent Sprite.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>translateX</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The x amount the rectangle will be translated from the Sprites center.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>translateY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The y amount the rectangle will be translated from the Sprites center.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1316">line 1316</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="split"><span class="type-signature">&lt;protected> </span>split<span class="signature">(body, response)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Split the collision response evenly between the two bodies.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.Arcade.Body.html">Phaser.Physics.Arcade.Body</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Body that collided.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>response</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">SAT.Response</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The SAT Response object containing the collision data.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-684">line 684</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="sub"><span class="type-signature">&lt;protected> </span>sub<span class="signature">(v)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Subtracts the given Vector from this Body.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>v</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">SAT.Vector</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The vector to substract from this Body.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-614">line 614</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="take"><span class="type-signature">&lt;protected> </span>take<span class="signature">(body, response)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Separation response handler.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Physics.Arcade.Body.html">Phaser.Physics.Arcade.Body</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Body that collided.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>response</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">SAT.Response</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The SAT Response object containing the collision data.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-663">line 663</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="translate"><span class="type-signature"></span>translate<span class="signature">(x, y)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Used for translating rectangle and polygon bodies from the Sprite parent. Doesn't apply to Circles.
+See also the Body.offset property.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The x amount the polygon or rectangle will be translated by from the Sprite.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The y amount the polygon or rectangle will be translated by from the Sprite.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-1381">line 1381</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="updateBounds"><span class="type-signature">&lt;protected> </span>updateBounds<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Internal method that updates the left, right, top, bottom, width and height properties.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-457">line 457</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="updateScale"><span class="type-signature">&lt;protected> </span>updateScale<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Internal method that updates the Body scale in relation to the parent Sprite.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Body.js.html">physics/arcade/Body.js</a>, <a href="Body.js.html#sunlight-1-line-351">line 351</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
         </dl>
     
 
@@ -6138,13 +10108,13 @@ touching.up = true means the collision happened to the top of this Body for exam
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		Phaser Copyright © 2012-2014 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 28 2013 15:56:32 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 05 2014 06:28:32 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

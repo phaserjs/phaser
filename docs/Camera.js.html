@@ -91,6 +91,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.DOMSprite.html">DOMSprite</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -163,6 +167,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -184,6 +196,10 @@
 						
 						<li>
 							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Line.html">Line</a>
 						</li>
 						
 						<li>
@@ -279,6 +295,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Sound.html">Sound</a>
 						</li>
 						
@@ -343,6 +363,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
 						</li>
 						
@@ -374,36 +398,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
-						</li>
-						
-						<li>
-							<a href="global.html#render">render</a>
-						</li>
-						
-						<li>
-							<a href="global.html#renderXY">renderXY</a>
-						</li>
-						
-						<li>
-							<a href="global.html#right">right</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -423,7 +417,7 @@
         <article>
             <pre class="sunlight-highlight-javascript linenums">/**
 * @author       Richard Davey &lt;rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -462,7 +456,7 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     * Camera view. 
     * The view into the world we wish to render (by default the game dimensions).
     * The x/y values are in world coordinates, not screen coordinates, the width/height is how many pixels to render.
-    * Objects outside of this view are not rendered (unless set to ignore the Camera, i.e. UI?).
+    * Objects outside of this view are not rendered if set to camera cull.
     * @property {Phaser.Rectangle} view
     */
     this.view = new Phaser.Rectangle(x, y, width, height);
@@ -509,6 +503,9 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     */
     this._edge = 0;
 
+    /**
+    * @property {PIXI.DisplayObject} displayObject - The display object to which all game objects are added. Set by World.boot
+    */
     this.displayObject = null;
     
 };
@@ -626,6 +623,11 @@ Phaser.Camera.prototype = {
 
     },
 
+    /**
+    * Internal method
+    * @method Phaser.Camera#updateTarget
+    * @private
+    */
     updateTarget: function () {
 
         if (this.deadzone)
@@ -665,9 +667,13 @@ Phaser.Camera.prototype = {
 
     },
 
+    /**
+    * Update the Camera bounds to match the game world.
+    * @method Phaser.Camera#setBoundsToWorld
+    */
     setBoundsToWorld: function () {
 
-        this.bounds.setTo(this.game.world.x, this.game.world.y, this.game.world.width, this.game.world.height);
+        this.bounds.setTo(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height);
 
     },
 
@@ -687,10 +693,10 @@ Phaser.Camera.prototype = {
             this.view.x = this.bounds.x;
         }
 
-        if (this.view.x > this.bounds.right - this.width)
+        if (this.view.right > this.bounds.right)
         {
             this.atLimit.x = true;
-            this.view.x = (this.bounds.right - this.width) + 1;
+            this.view.x = this.bounds.right - this.width;
         }
 
         if (this.view.y &lt; this.bounds.top)
@@ -699,10 +705,10 @@ Phaser.Camera.prototype = {
             this.view.y = this.bounds.top;
         }
 
-        if (this.view.y > this.bounds.bottom - this.height)
+        if (this.view.bottom > this.bounds.bottom)
         {
             this.atLimit.y = true;
-            this.view.y = (this.bounds.bottom - this.height) + 1;
+            this.view.y = this.bounds.bottom - this.height;
         }
 
         this.view.floor();
@@ -744,6 +750,8 @@ Phaser.Camera.prototype = {
     }
 
 };
+
+Phaser.Camera.prototype.constructor = Phaser.Camera;
 
 /**
 * The Cameras x coordinate. This value is automatically clamped if it falls outside of the World bounds.
@@ -839,13 +847,13 @@ Object.defineProperty(Phaser.Camera.prototype, "height", {
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		Phaser Copyright © 2012-2014 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 28 2013 15:56:25 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 05 2014 06:28:24 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

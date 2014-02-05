@@ -91,6 +91,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.DOMSprite.html">DOMSprite</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -163,6 +167,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -184,6 +196,10 @@
 						
 						<li>
 							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Line.html">Line</a>
 						</li>
 						
 						<li>
@@ -279,6 +295,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Sound.html">Sound</a>
 						</li>
 						
@@ -343,6 +363,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
 						</li>
 						
@@ -368,36 +392,6 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
-						</li>
-						
-						<li>
-							<a href="global.html#render">render</a>
-						</li>
-						
-						<li>
-							<a href="global.html#renderXY">renderXY</a>
-						</li>
-						
-						<li>
-							<a href="global.html#right">right</a>
 						</li>
 						
 
@@ -523,7 +517,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="parse"><span class="type-signature">&lt;static> </span>parse<span class="signature">(game, data, format)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tileset.html">Phaser.Tileset</a>}</span></h4>
+    <h4 class="name" id="parse"><span class="type-signature">&lt;static> </span>parse<span class="signature">(game, key)</span><span class="type-signature"> &rarr; {object}</span></h4>
     
     
 </dt>
@@ -588,30 +582,7 @@
 
         <tr>
             
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>format</code></td>
+                <td class="name"><code>key</code></td>
             
 
             <td class="type">
@@ -627,7 +598,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The key of the tilemap in the Cache.</p></td>
         </tr>
 
 	
@@ -659,7 +630,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapParser.js.html">tilemap/TilemapParser.js</a>, <a href="TilemapParser.js.html#sunlight-1-line-89">line 89</a>
+        <a href="TilemapParser.js.html">tilemap/TilemapParser.js</a>, <a href="TilemapParser.js.html#sunlight-1-line-68">line 68</a>
     </li></ul></dd>
     
 
@@ -684,7 +655,7 @@
     
             
 <div class="param-desc">
-    <p>Generated Tileset object.</p>
+    <p>The parsed map object.</p>
 </div>
 
 
@@ -695,7 +666,7 @@
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="Phaser.Tileset.html">Phaser.Tileset</a></span>
+<span class="param-type">object</span>
 
 
 	</dd>
@@ -800,7 +771,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapParser.js.html">tilemap/TilemapParser.js</a>, <a href="TilemapParser.js.html#sunlight-1-line-110">line 110</a>
+        <a href="TilemapParser.js.html">tilemap/TilemapParser.js</a>, <a href="TilemapParser.js.html#sunlight-1-line-97">line 97</a>
     </li></ul></dd>
     
 
@@ -851,7 +822,7 @@
         
             
 <dt>
-    <h4 class="name" id="parseJSON"><span class="type-signature">&lt;static> </span>parseJSON<span class="signature">(json-)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    <h4 class="name" id="parseJSON"><span class="type-signature">&lt;static> </span>parseJSON<span class="signature">(json)</span><span class="type-signature"> &rarr; {object}</span></h4>
     
     
 </dt>
@@ -893,7 +864,7 @@
 
         <tr>
             
-                <td class="name"><code>json-</code></td>
+                <td class="name"><code>json</code></td>
             
 
             <td class="type">
@@ -909,7 +880,7 @@
 
             
 
-            <td class="description last"><p>The Tiled JSON data.</p></td>
+            <td class="description last"><p>The JSON map data.</p></td>
         </tr>
 
 	
@@ -941,7 +912,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="TilemapParser.js.html">tilemap/TilemapParser.js</a>, <a href="TilemapParser.js.html#sunlight-1-line-147">line 147</a>
+        <a href="TilemapParser.js.html">tilemap/TilemapParser.js</a>, <a href="TilemapParser.js.html#sunlight-1-line-136">line 136</a>
     </li></ul></dd>
     
 
@@ -966,7 +937,7 @@
     
             
 <div class="param-desc">
-    <p>Generated map data.</p>
+    <p>Generated and parsed map data.</p>
 </div>
 
 
@@ -992,7 +963,7 @@
         
             
 <dt>
-    <h4 class="name" id="tileset"><span class="type-signature">&lt;static> </span>tileset<span class="signature">(game, key, tileWidth, tileHeight, tileMax, tileMargin, tileSpacing)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tileset.html">Phaser.Tileset</a>}</span></h4>
+    <h4 class="name" id="tileset"><span class="type-signature">&lt;static> </span>tileset<span class="signature">(game, key, tileWidth, tileHeight, <span class="optional">tileMargin</span>, <span class="optional">tileSpacing</span>, <span class="optional">rows</span>, <span class="optional">columns</span>, <span class="optional">total</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Tileset.html">Phaser.Tileset</a>}</span></h4>
     
     
 </dt>
@@ -1022,7 +993,11 @@
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -1047,7 +1022,19 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>Game reference to the currently running game.</p></td>
@@ -1070,10 +1057,22 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The Cache key of this tileset.</p></td>
         </tr>
 
 	
@@ -1093,10 +1092,22 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Width of each single tile in pixels.</p></td>
         </tr>
 
 	
@@ -1116,33 +1127,22 @@
             </td>
 
             
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>tileMax</code></td>
-            
-
-            <td class="type">
-            
+                <td class="attributes">
                 
-<span class="param-type">number</span>
 
+                
 
-            
-            </td>
-
-            
-
+                
+                </td>
             
 
-            <td class="description last"></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Height of each single tile in pixels.</p></td>
         </tr>
 
 	
@@ -1162,10 +1162,26 @@
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"></td>
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>If the tiles have been drawn with a margin, specify the amount here.</p></td>
         </tr>
 
 	
@@ -1185,10 +1201,143 @@
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"></td>
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>If the tiles have been drawn with spacing between them, specify the amount here.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>rows</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    -1
+                
+                </td>
+            
+
+            <td class="description last"><p>How many tiles are placed horizontally in each row? If -1 it will calculate rows by dividing the image width by tileWidth.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>columns</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    -1
+                
+                </td>
+            
+
+            <td class="description last"><p>How many tiles are placed vertically in each column? If -1 it will calculate columns by dividing the image height by tileHeight.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>total</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    -1
+                
+                </td>
+            
+
+            <td class="description last"><p>The maximum number of tiles to extract from the image. If -1 it will extract <code>rows * columns</code> worth. You can also set a value lower than the actual number of tiles.</p></td>
         </tr>
 
 	
@@ -1288,13 +1437,13 @@
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		Phaser Copyright © 2012-2014 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 28 2013 15:56:35 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 05 2014 06:28:35 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

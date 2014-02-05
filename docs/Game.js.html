@@ -91,6 +91,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.DOMSprite.html">DOMSprite</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -163,6 +167,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -184,6 +196,10 @@
 						
 						<li>
 							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Line.html">Line</a>
 						</li>
 						
 						<li>
@@ -279,6 +295,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Sound.html">Sound</a>
 						</li>
 						
@@ -343,6 +363,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
 						</li>
 						
@@ -374,36 +398,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
-						</li>
-						
-						<li>
-							<a href="global.html#render">render</a>
-						</li>
-						
-						<li>
-							<a href="global.html#renderXY">renderXY</a>
-						</li>
-						
-						<li>
-							<a href="global.html#right">right</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -423,7 +417,7 @@
         <article>
             <pre class="sunlight-highlight-javascript linenums">/**
 * @author       Richard Davey &lt;rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -440,21 +434,12 @@
 * @param {number} [width=800] - The width of your game in game pixels.
 * @param {number} [height=600] - The height of your game in game pixels.
 * @param {number} [renderer=Phaser.AUTO] - Which renderer to use: Phaser.AUTO will auto-detect, Phaser.WEBGL, Phaser.CANVAS or Phaser.HEADLESS (no rendering at all).
-* @param {HTMLElement} [parent=''] - The Games DOM parent.
-* @param {any} [state=null] - Description.
+* @param {string|HTMLElement} [parent=''] - The DOM element into which this games canvas will be injected. Either a DOM ID (string) or the element itself.
+* @param {object} [state=null] - The default state object. A object consisting of Phaser.State functions (preload, create, update, render) or null.
 * @param {boolean} [transparent=false] - Use a transparent canvas background or not.
 * @param  {boolean} [antialias=true] - Anti-alias graphics.
 */
 Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias) {
-
-    width = width || 800;
-    height = height || 600;
-    renderer = renderer || Phaser.AUTO;
-    parent = parent || '';
-    state = state || null;
-
-    if (typeof transparent == 'undefined') { transparent = false; }
-    if (typeof antialias == 'undefined') { antialias = true; }
 
     /**
     * @property {number} id - Phaser Game ID (for when Pixi supports multiple instances).
@@ -462,42 +447,55 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.id = Phaser.GAMES.push(this) - 1;
 
     /**
-    * @property {HTMLElement} parent - The Games DOM parent.
+    * @property {object} config - The Phaser.Game configuration object.
     */
-    this.parent = parent;
+    this.config = null;
 
-    //  Do some more intelligent size parsing here, so they can set "100%" for example, maybe pass the scale mode in here too?
+    /**
+    * @property {HTMLElement} parent - The Games DOM parent.
+    * @default
+    */
+    this.parent = '';
 
     /**
     * @property {number} width - The Game width (in pixels).
+    * @default
     */
-    this.width = width;
+    this.width = 800;
 
     /**
     * @property {number} height - The Game height (in pixels).
+    * @default
     */
-    this.height = height;
+    this.height = 600;
 
     /**
     * @property {boolean} transparent - Use a transparent canvas background or not.
+    * @default
     */
-    this.transparent = transparent;
+    this.transparent = false;
 
     /**
     * @property {boolean} antialias - Anti-alias graphics (in WebGL this helps with edges, in Canvas2D it retains pixel-art quality).
+    * @default
     */
-    this.antialias = antialias;
+    this.antialias = true;
 
     /**
     * @property {number} renderer - The Pixi Renderer
     * @default
     */
-    this.renderer = null;
+    this.renderer = Phaser.AUTO;
+
+    /**
+    * @property {number} renderType - The Renderer this Phaser.Game will use. Either Phaser.RENDERER_AUTO, Phaser.RENDERER_CANVAS or Phaser.RENDERER_WEBGL.
+    */
+    this.renderType = Phaser.AUTO;
 
     /**
     * @property {number} state - The StateManager.
     */
-    this.state = new Phaser.StateManager(this, state);
+    this.state = null;
 
     /**
     * @property {boolean} _paused - Is game paused?
@@ -505,11 +503,6 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @default
     */
     this._paused = false;
-
-    /**
-    * @property {number} renderType - The Renderer this Phaser.Game will use. Either Phaser.RENDERER_AUTO, Phaser.RENDERER_CANVAS or Phaser.RENDERER_WEBGL.
-    */
-    this.renderType = renderer;
 
     /**
     * @property {boolean} _loadComplete - Whether load complete loading or not.
@@ -650,6 +643,68 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     */
     this.particles = null;
 
+    /**
+    * @property {boolean} stepping - Enable core loop stepping with Game.enableStep().
+    * @default
+    * @readonly
+    */
+    this.stepping = false;
+
+    /**
+    * @property {boolean} stepping - An internal property used by enableStep, but also useful to query from your own game objects.
+    * @default
+    * @readonly
+    */
+    this.pendingStep = false;
+
+    /**
+    * @property {number} stepCount - When stepping is enabled this contains the current step cycle.
+    * @default
+    * @readonly
+    */
+    this.stepCount = 0;
+
+    //  Parse the configuration object (if any)
+    if (arguments.length === 1 && typeof arguments[0] === 'object')
+    {
+        this.parseConfig(arguments[0]);
+    }
+    else
+    {
+        if (typeof width !== 'undefined')
+        {
+            this.width = width;
+        }
+
+        if (typeof height !== 'undefined')
+        {
+            this.height = height;
+        }
+
+        if (typeof renderer !== 'undefined')
+        {
+            this.renderer = renderer;
+            this.renderType = renderer;
+        }
+
+        if (typeof parent !== 'undefined')
+        {
+            this.parent = parent;
+        }
+
+        if (typeof transparent !== 'undefined')
+        {
+            this.transparent = transparent;
+        }
+
+        if (typeof antialias !== 'undefined')
+        {
+            this.antialias = antialias;
+        }
+
+        this.state = new Phaser.StateManager(this, state);
+    }
+
     var _this = this;
 
     this._onBoot = function () {
@@ -671,6 +726,99 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 };
 
 Phaser.Game.prototype = {
+
+    /**
+    * Parses a Game configuration object.
+    *
+    * @method Phaser.Game#parseConfig
+    * @protected
+    */
+    parseConfig: function (config) {
+
+        this.config = config;
+
+        if (config['width'])
+        {
+            this.width = this.parseDimension(config['width'], 0);
+        }
+
+        if (config['height'])
+        {
+            this.height = this.parseDimension(config['height'], 1);
+        }
+
+        if (config['renderer'])
+        {
+            this.renderer = config['renderer'];
+            this.renderType = config['renderer'];
+        }
+
+        if (config['parent'])
+        {
+            this.parent = config['parent'];
+        }
+
+        if (config['transparent'])
+        {
+            this.transparent = config['transparent'];
+        }
+
+        if (config['antialias'])
+        {
+            this.antialias = config['antialias'];
+        }
+
+        var state = null;
+
+        if (config['state'])
+        {
+            state = config['state'];
+        }
+
+        this.state = new Phaser.StateManager(this, state);
+
+    },
+
+    /**
+    * Get dimension.
+    *
+    * @method Phaser.Game#parseDimension
+    * @protected
+    */
+    parseDimension: function (size, dimension) {
+
+        var f = 0;
+        var px = 0;
+
+        if (typeof size === 'string')
+        {
+            //  %?
+            if (size.substr(-1) === '%')
+            {
+                f = parseInt(size, 10) / 100;
+
+                if (dimension === 0)
+                {
+                    px = window.innerWidth * f;
+                }
+                else
+                {
+                    px = window.innerHeight * f;
+                }
+            }
+            else
+            {
+                px = parseInt(size, 10);
+            }
+        }
+        else
+        {
+            px = size;
+        }
+
+        return px;
+
+    },
 
     /**
     * Initialize engine sub modules and start the game.
@@ -721,6 +869,7 @@ Phaser.Game.prototype = {
             this.net = new Phaser.Net(this);
             this.debug = new Phaser.Utils.Debug(this);
 
+            this.time.boot();
             this.stage.boot();
             this.world.boot();
             this.input.boot();
@@ -795,6 +944,14 @@ Phaser.Game.prototype = {
     */
     setUpRenderer: function () {
 
+        /*
+        if (this.device.trident)
+        {
+            //  Pixi WebGL renderer on IE11 doesn't work correctly with masks, if you need them you may want to comment this block out
+            this.renderType = Phaser.CANVAS;
+        }
+        */
+
         if (this.renderType === Phaser.HEADLESS || this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && this.device.webGL === false))
         {
             if (this.device.canvas)
@@ -861,20 +1018,28 @@ Phaser.Game.prototype = {
         }
         else
         {
-            this.plugins.preUpdate();
-            this.physics.preUpdate();
+            if (!this.pendingStep)
+            {
+                if (this.stepping)
+                {
+                    this.pendingStep = true;
+                }
 
-            this.stage.update();
-            this.input.update();
-            this.tweens.update();
-            this.sound.update();
-            this.world.update();
-            this.particles.update();
-            this.state.update();
-            this.plugins.update();
+                this.plugins.preUpdate();
+                this.world.preUpdate();
 
-            this.world.postUpdate();
-            this.plugins.postUpdate();
+                this.stage.update();
+                this.tweens.update();
+                this.sound.update();
+                this.input.update();
+                this.state.update();
+                this.world.update();
+                this.particles.update();            
+                this.plugins.update();
+
+                this.world.postUpdate();
+                this.plugins.postUpdate();
+            }
 
             if (this.renderType !== Phaser.HEADLESS)
             {
@@ -884,8 +1049,46 @@ Phaser.Game.prototype = {
 
                 this.plugins.postRender();
             }
-
         }
+
+    },
+
+    /**
+    * Enable core game loop stepping. When enabled you must call game.step() directly (perhaps via a DOM button?)
+    * Calling step will advance the game loop by one frame. This is extremely useful to hard to track down errors!
+    *
+    * @method Phaser.Game#enableStep
+    */
+    enableStep: function () {
+
+        this.stepping = true;
+        this.pendingStep = false;
+        this.stepCount = 0;
+
+    },
+
+    /**
+    * Disables core game loop stepping.
+    *
+    * @method Phaser.Game#disableStep
+    */
+    disableStep: function () {
+
+        this.stepping = false;
+        this.pendingStep = false;
+
+    },
+
+    /**
+    * When stepping is enabled you must call this function directly (perhaps via a DOM button?) to advance the game loop by one frame.
+    * This is extremely useful to hard to track down errors! Use the internal stepCount property to monitor progress.
+    *
+    * @method Phaser.Game#step
+    */
+    step: function () {
+
+        this.pendingStep = false;
+        this.stepCount++;
 
     },
 
@@ -915,6 +1118,8 @@ Phaser.Game.prototype = {
     }
 
 };
+
+Phaser.Game.prototype.constructor = Phaser.Game;
 
 /**
 * The paused state of the Game. A paused game doesn't update any of its subsystems.
@@ -969,13 +1174,13 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		Phaser Copyright © 2012-2014 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 28 2013 15:56:25 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 05 2014 06:28:24 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

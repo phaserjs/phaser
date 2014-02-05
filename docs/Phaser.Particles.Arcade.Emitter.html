@@ -91,6 +91,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.DOMSprite.html">DOMSprite</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -163,6 +167,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -184,6 +196,10 @@
 						
 						<li>
 							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Line.html">Line</a>
 						</li>
 						
 						<li>
@@ -279,6 +295,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Sound.html">Sound</a>
 						</li>
 						
@@ -343,6 +363,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
 						</li>
 						
@@ -368,36 +392,6 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
-						</li>
-						
-						<li>
-							<a href="global.html#render">render</a>
-						</li>
-						
-						<li>
-							<a href="global.html#renderXY">renderXY</a>
-						</li>
-						
-						<li>
-							<a href="global.html#right">right</a>
 						</li>
 						
 
@@ -711,6 +705,116 @@ at set intervals, and fixes their positions and velocities accorindgly.</p></div
         <dl>
             
 <dt>
+    <h4 class="name" id="alive"><span class="type-signature"></span>alive<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>alive</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The alive property is useful for Groups that are children of other Groups and need to be included/excluded in checks like forEachAlive.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Group.html#alive">Phaser.Group#alive</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>true</li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-77">line 77</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="alpha"><span class="type-signature"></span>alpha<span class="type-signature"></span></h4>
     
     
@@ -799,7 +903,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p></div
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-559">line 559</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-518">line 518</a>
     </li></ul></dd>
     
 
@@ -911,7 +1015,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1522">line 1522</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1541">line 1541</a>
     </li></ul></dd>
     
 
@@ -934,10 +1038,6 @@ This will have no impact on the rotation value of its children, but it will upda
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The angular drag component of particles launched from the emitter if they are rotating.</p>
-    </div>
     
     
     
@@ -988,7 +1088,7 @@ This will have no impact on the rotation value of its children, but it will upda
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The angular drag component of particles launched from the emitter if they are rotating.</p></td>
         </tr>
 
 	
@@ -1020,7 +1120,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-136">line 136</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-125">line 125</a>
     </li></ul></dd>
     
 
@@ -1122,7 +1222,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-664">line 664</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-623">line 623</a>
     </li></ul></dd>
     
 
@@ -1145,10 +1245,6 @@ This will have no impact on the rotation value of its children, but it will upda
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>How much each particle should bounce on each axis.  1 = full bounce, 0 = no bounce.</p>
-    </div>
     
     
     
@@ -1199,7 +1295,7 @@ This will have no impact on the rotation value of its children, but it will upda
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>How much each particle should bounce on each axis.  1 = full bounce, 0 = no bounce.</p></td>
         </tr>
 
 	
@@ -1228,7 +1324,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-157">line 157</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-142">line 142</a>
     </li></ul></dd>
     
 
@@ -1340,7 +1436,7 @@ The cursor is set to the first child added to the Group and doesn't change unles
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-90">line 90</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-108">line 108</a>
     </li></ul></dd>
     
 
@@ -1448,7 +1544,7 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-212">line 212</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-186">line 186</a>
     </li></ul></dd>
     
 
@@ -1556,7 +1652,7 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-220">line 220</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-194">line 194</a>
     </li></ul></dd>
     
 
@@ -1579,10 +1675,6 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>Determines whether the emitter is being updated by the core game loop.</p>
-    </div>
     
     
     
@@ -1633,7 +1725,7 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Determines whether the emitter is being updated by the core game loop.</p></td>
         </tr>
 
 	
@@ -1665,7 +1757,7 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-204">line 204</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-178">line 178</a>
     </li></ul></dd>
     
 
@@ -1688,10 +1780,6 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>How often a particle is emitted in ms (if emitter is started with Explode === false).</p>
-    </div>
     
     
     
@@ -1742,7 +1830,7 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>How often a particle is emitted in ms (if emitter is started with Explode === false).</p></td>
         </tr>
 
 	
@@ -1774,7 +1862,7 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-143">line 143</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-131">line 131</a>
     </li></ul></dd>
     
 
@@ -1881,7 +1969,7 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-32">line 32</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-22">line 22</a>
     </li></ul></dd>
     
 
@@ -1904,10 +1992,6 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>Sets the &lt;code&gt;gravity.y&lt;/code&gt; of each particle to this value on launch.</p>
-    </div>
     
     
     
@@ -1958,7 +2042,7 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Sets the <code>body.gravity.y</code> of each particle sprite to this value on launch.</p></td>
         </tr>
 
 	
@@ -1984,13 +2068,120 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
 
     
     <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>2</li></ul></dd>
+    <dd class="tag-default"><ul class="dummy"><li>100</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-116">line 116</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-107">line 107</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="group"><span class="type-signature"></span>group<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The parent Group of this Group, if a child of another.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Group.html#group">Phaser.Group#group</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-88">line 88</a>
     </li></ul></dd>
     
 
@@ -2197,7 +2388,7 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-625">line 625</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-584">line 584</a>
     </li></ul></dd>
     
 
@@ -2270,7 +2461,7 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
 
             
 
-            <td class="description last"><p>The number of children in this Group.</p></td>
+            <td class="description last"><p>The total number of children in this Group, regardless of their exists/alive status.</p></td>
         </tr>
 
 	
@@ -2304,7 +2495,7 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1472">line 1472</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1483">line 1483</a>
     </li></ul></dd>
     
 
@@ -2327,11 +2518,6 @@ Emitter.emitX and Emitter.emitY control the emission location relative to the x/
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>How long each particle lives once it is emitted in ms. Default is 2 seconds.
-Set lifespan to 'zero' for particles to live forever.</p>
-    </div>
     
     
     
@@ -2382,7 +2568,7 @@ Set lifespan to 'zero' for particles to live forever.</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>How long each particle lives once it is emitted in ms. Default is 2 seconds. Set lifespan to 'zero' for particles to live forever.</p></td>
         </tr>
 
 	
@@ -2414,7 +2600,7 @@ Set lifespan to 'zero' for particles to live forever.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-151">line 151</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-137">line 137</a>
     </li></ul></dd>
     
 
@@ -2437,10 +2623,6 @@ Set lifespan to 'zero' for particles to live forever.</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The total number of particles in this emitter.</p>
-    </div>
     
     
     
@@ -2520,7 +2702,7 @@ Set lifespan to 'zero' for particles to live forever.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-29">line 29</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-28">line 28</a>
     </li></ul></dd>
     
 
@@ -2543,11 +2725,6 @@ Set lifespan to 'zero' for particles to live forever.</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The maximum possible scale of a particle.
-The default value is 1.</p>
-    </div>
     
     
     
@@ -2598,7 +2775,7 @@ The default value is 1.</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The maximum possible scale of a particle.</p></td>
         </tr>
 
 	
@@ -2630,7 +2807,7 @@ The default value is 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-95">line 95</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-89">line 89</a>
     </li></ul></dd>
     
 
@@ -2653,11 +2830,6 @@ The default value is 1.</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The maximum possible velocity of a particle.
-The default value is (100,100).</p>
-    </div>
     
     
     
@@ -2708,7 +2880,7 @@ The default value is (100,100).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The maximum possible velocity of a particle.</p></td>
         </tr>
 
 	
@@ -2737,7 +2909,7 @@ The default value is (100,100).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-79">line 79</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-77">line 77</a>
     </li></ul></dd>
     
 
@@ -2760,10 +2932,6 @@ The default value is (100,100).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The maximum possible angular velocity of a particle.  The default value is 360.</p>
-    </div>
     
     
     
@@ -2814,7 +2982,7 @@ The default value is (100,100).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The maximum possible angular velocity of a particle.</p></td>
         </tr>
 
 	
@@ -2846,7 +3014,7 @@ The default value is (100,100).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-109">line 109</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-101">line 101</a>
     </li></ul></dd>
     
 
@@ -2869,11 +3037,6 @@ The default value is (100,100).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The minimum possible scale of a particle.
-The default value is 1.</p>
-    </div>
     
     
     
@@ -2924,7 +3087,7 @@ The default value is 1.</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The minimum possible scale of a particle.</p></td>
         </tr>
 
 	
@@ -2956,7 +3119,7 @@ The default value is 1.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-87">line 87</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-83">line 83</a>
     </li></ul></dd>
     
 
@@ -2979,11 +3142,6 @@ The default value is 1.</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The minimum possible velocity of a particle.
-The default value is (-100,-100).</p>
-    </div>
     
     
     
@@ -3034,7 +3192,7 @@ The default value is (-100,-100).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The minimum possible velocity of a particle.</p></td>
         </tr>
 
 	
@@ -3063,7 +3221,7 @@ The default value is (-100,-100).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-72">line 72</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-71">line 71</a>
     </li></ul></dd>
     
 
@@ -3086,10 +3244,6 @@ The default value is (-100,-100).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The minimum possible angular velocity of a particle.  The default value is -360.</p>
-    </div>
     
     
     
@@ -3140,7 +3294,7 @@ The default value is (-100,-100).</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The minimum possible angular velocity of a particle.</p></td>
         </tr>
 
 	
@@ -3169,7 +3323,7 @@ The default value is (-100,-100).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-102">line 102</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-95">line 95</a>
     </li></ul></dd>
     
 
@@ -3271,7 +3425,7 @@ The default value is (-100,-100).</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-36">line 36</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-35">line 35</a>
     </li></ul></dd>
     
 
@@ -3294,11 +3448,6 @@ The default value is (-100,-100).</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>Determines whether the emitter is currently emitting particles.
-It is totally safe to directly toggle this.</p>
-    </div>
     
     
     
@@ -3349,7 +3498,7 @@ It is totally safe to directly toggle this.</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Determines whether the emitter is currently emitting particles. It is totally safe to directly toggle this.</p></td>
         </tr>
 
 	
@@ -3381,7 +3530,7 @@ It is totally safe to directly toggle this.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-197">line 197</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-172">line 172</a>
     </li></ul></dd>
     
 
@@ -3404,10 +3553,6 @@ It is totally safe to directly toggle this.</p>
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>Set your own particle class type here.</p>
-    </div>
     
     
     
@@ -3448,7 +3593,7 @@ It is totally safe to directly toggle this.</p>
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">any</span>
 
 
             
@@ -3458,7 +3603,7 @@ It is totally safe to directly toggle this.</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>For emitting your own particle class types.</p></td>
         </tr>
 
 	
@@ -3490,7 +3635,7 @@ It is totally safe to directly toggle this.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-123">line 123</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-113">line 113</a>
     </li></ul></dd>
     
 
@@ -3508,15 +3653,11 @@ It is totally safe to directly toggle this.</p>
         
             
 <dt>
-    <h4 class="name" id="particleDrag"><span class="type-signature"></span>particleDrag<span class="type-signature"></span></h4>
+    <h4 class="name" id="particleFriction"><span class="type-signature"></span>particleFriction<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The X and Y drag component of particles launched from the emitter.</p>
-    </div>
     
     
     
@@ -3551,13 +3692,13 @@ It is totally safe to directly toggle this.</p>
 
         <tr>
             
-                <td class="name"><code>particleDrag</code></td>
+                <td class="name"><code>particleFriction</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
+<span class="param-type">number</span>
 
 
             
@@ -3567,7 +3708,7 @@ It is totally safe to directly toggle this.</p>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The friction component of particles launched from the emitter.</p></td>
         </tr>
 
 	
@@ -3592,11 +3733,121 @@ It is totally safe to directly toggle this.</p>
     
 
     
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy"><li>0</li></ul></dd>
+    
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-129">line 129</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-119">line 119</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="pivot"><span class="type-signature"></span>pivot<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>pivot</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The pivot point of the Group container.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Group.html#pivot">Phaser.Group#pivot</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-101">line 101</a>
     </li></ul></dd>
     
 
@@ -3698,7 +3949,7 @@ It is totally safe to directly toggle this.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-638">line 638</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-597">line 597</a>
     </li></ul></dd>
     
 
@@ -3810,7 +4061,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1540">line 1540</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1559">line 1559</a>
     </li></ul></dd>
     
 
@@ -3883,7 +4134,7 @@ This will have no impact on the rotation value of its children, but it will upda
 
             
 
-            <td class="description last"><p>Replaces the PIXI.Point with a slightly more flexible one.</p></td>
+            <td class="description last"><p>The scane of the Group container.</p></td>
         </tr>
 
 	
@@ -3917,7 +4168,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-83">line 83</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-96">line 96</a>
     </li></ul></dd>
     
 
@@ -4019,7 +4270,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-651">line 651</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-610">line 610</a>
     </li></ul></dd>
     
 
@@ -4092,7 +4343,7 @@ This will have no impact on the rotation value of its children, but it will upda
 
             
 
-            <td class="description last"><p>The total number of children in this Group, regardless of their alive state.</p></td>
+            <td class="description last"><p>The total number of children in this Group who have a state of exists = true.</p></td>
         </tr>
 
 	
@@ -4126,7 +4377,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1458">line 1458</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1461">line 1461</a>
     </li></ul></dd>
     
 
@@ -4144,7 +4395,7 @@ This will have no impact on the rotation value of its children, but it will upda
         
             
 <dt>
-    <h4 class="name" id="type"><span class="type-signature"></span>type<span class="type-signature"></span></h4>
+    <h4 class="name" id="type"><span class="type-signature">&lt;protected> </span>type<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -4189,7 +4440,7 @@ This will have no impact on the rotation value of its children, but it will upda
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">number</span>
 
 
             
@@ -4199,7 +4450,7 @@ This will have no impact on the rotation value of its children, but it will upda
 
             
 
-            <td class="description last"><p>Description.</p></td>
+            <td class="description last"><p>Internal Phaser Type value.</p></td>
         </tr>
 
 	
@@ -4334,7 +4585,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-576">line 576</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-535">line 535</a>
     </li></ul></dd>
     
 
@@ -4541,7 +4792,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-593">line 593</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-552">line 552</a>
     </li></ul></dd>
     
 
@@ -4748,7 +4999,7 @@ This will have no impact on the rotation value of its children, but it will upda
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-609">line 609</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-568">line 568</a>
     </li></ul></dd>
     
 
@@ -4974,7 +5225,7 @@ that then see the addAt method.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-126">line 126</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-144">line 144</a>
     </li></ul></dd>
     
 
@@ -5199,7 +5450,7 @@ Group.addAll('x', 10) will add 10 to the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-672">line 672</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-747">line 747</a>
     </li></ul></dd>
     
 
@@ -5346,7 +5597,7 @@ The child is added to the Group at the location specified by the index value, th
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-162">line 162</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-191">line 191</a>
     </li></ul></dd>
     
 
@@ -5405,7 +5656,7 @@ The child is added to the Group at the location specified by the index value, th
     
     
     <div class="description">
-        <p>Change the emitter's midpoint to match the midpoint of a &lt;code&gt;Object&lt;/code&gt;.</p>
+        <p>Change the emitters center to match the center of any object with a <code>center</code> property, such as a Sprite.</p>
     </div>
     
 
@@ -5446,6 +5697,9 @@ The child is added to the Group at the location specified by the index value, th
             
                 
 <span class="param-type">object</span>
+|
+
+<span class="param-type"><a href="Phaser.Sprite.html">Phaser.Sprite</a></span>
 
 
             
@@ -5455,7 +5709,7 @@ The child is added to the Group at the location specified by the index value, th
 
             
 
-            <td class="description last"><p>The &lt;code&gt;Object&lt;/code&gt; that you want to sync up with.</p></td>
+            <td class="description last"><p>The object that you wish to match the center with.</p></td>
         </tr>
 
 	
@@ -5487,7 +5741,7 @@ The child is added to the Group at the location specified by the index value, th
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-547">line 547</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-503">line 503</a>
     </li></ul></dd>
     
 
@@ -5610,7 +5864,7 @@ The child is added to the Group at the location specified by the index value, th
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-502">line 502</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-551">line 551</a>
     </li></ul></dd>
     
 
@@ -5770,12 +6024,12 @@ After the method parameter and context you can add as many extra parameters as y
             
                 <td class="default">
                 
-                    ''
+                    null
                 
                 </td>
             
 
-            <td class="description last"><p>A string containing the context under which the method will be executed. Leave to '' to default to the child.</p></td>
+            <td class="description last"><p>A string containing the context under which the method will be executed. Set to null to default to the child.</p></td>
         </tr>
 
 	
@@ -5849,7 +6103,7 @@ After the method parameter and context you can add as many extra parameters as y
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-821">line 821</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-896">line 896</a>
     </li></ul></dd>
     
 
@@ -6047,7 +6301,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-736">line 736</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-811">line 811</a>
     </li></ul></dd>
     
 
@@ -6083,7 +6337,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
     
     
     <div class="description">
-        <p>Calls a function on all of the children that have exists=true in this Group.</p>
+        <p>Returns a reference to a function that exists on a child of the Group based on the given callback array.</p>
     </div>
     
 
@@ -6216,7 +6470,81 @@ After the existsValue parameter you can add as many parameters as you like, whic
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-768">line 768</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-843">line 843</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="childTest"><span class="type-signature"></span>childTest<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Internal test.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Group.html#childTest">Phaser.Group#childTest</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-376">line 376</a>
     </li></ul></dd>
     
 
@@ -6290,7 +6618,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1153">line 1153</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1230">line 1230</a>
     </li></ul></dd>
     
 
@@ -6315,7 +6643,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
     
             
 <div class="param-desc">
-    <p>The number of children flagged as dead. Returns -1 if Group is empty.</p>
+    <p>The number of children flagged as dead.</p>
 </div>
 
 
@@ -6387,7 +6715,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1141">line 1141</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1218">line 1218</a>
     </li></ul></dd>
     
 
@@ -6412,7 +6740,7 @@ After the existsValue parameter you can add as many parameters as you like, whic
     
             
 <div class="param-desc">
-    <p>The number of children flagged as alive. Returns -1 if Group is empty.</p>
+    <p>The number of children flagged as alive.</p>
 </div>
 
 
@@ -6699,7 +7027,7 @@ Useful if you don't need to create the Sprite instances before-hand.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-209">line 209</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-249">line 249</a>
     </li></ul></dd>
     
 
@@ -6977,7 +7305,7 @@ and will be positioned at 0, 0 (relative to the Group.x/y)</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-250">line 250</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-290">line 290</a>
     </li></ul></dd>
     
 
@@ -7005,7 +7333,7 @@ and will be positioned at 0, 0 (relative to the Group.x/y)</p>
         
             
 <dt>
-    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="signature">(<span class="optional">destroyChildren</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -7021,6 +7349,75 @@ and will be positioned at 0, 0 (relative to the Group.x/y)</p>
     
     
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>destroyChildren</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Should every child of this Group have its destroy method called?</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
     
     
     
@@ -7051,7 +7448,7 @@ and will be positioned at 0, 0 (relative to the Group.x/y)</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1297">line 1297</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1374">line 1374</a>
     </li></ul></dd>
     
 
@@ -7244,150 +7641,7 @@ Group.divideAll('x', 2) will half the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-720">line 720</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="dump"><span class="type-signature"></span>dump<span class="signature">(<span class="optional">full</span>)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Dumps out a list of Group children and their index positions to the browser console. Useful for group debugging.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>full</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last"><p>If full the dump will include the entire display list, start from the Stage. Otherwise it will only include this container.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Phaser.Group.html#dump">Phaser.Group#dump</a>
-    </li></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1360">line 1360</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-795">line 795</a>
     </li></ul></dd>
     
 
@@ -7456,7 +7710,7 @@ Group.divideAll('x', 2) will half the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-419">line 419</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-376">line 376</a>
     </li></ul></dd>
     
 
@@ -7494,7 +7748,8 @@ Group.divideAll('x', 2) will half the child.x value.</p>
     <div class="description">
         <p>Allows you to call your own function on each member of this Group. You must pass the callback and context in which it will run.
 After the checkExists parameter you can add as many parameters as you like, which will all be passed to the callback along with the child.
-For example: Group.forEach(awardBonusGold, this, true, 100, 500)</p>
+For example: Group.forEach(awardBonusGold, this, true, 100, 500)
+Note: Currently this will skip any children which are Groups themselves.</p>
     </div>
     
 
@@ -7627,7 +7882,7 @@ For example: Group.forEach(awardBonusGold, this, true, 100, 500)</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-890">line 890</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-965">line 965</a>
     </li></ul></dd>
     
 
@@ -7775,7 +8030,7 @@ For example: Group.forEachAlive(causeDamage, this, 500)</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-930">line 930</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1006">line 1006</a>
     </li></ul></dd>
     
 
@@ -7923,7 +8178,7 @@ For example: Group.forEachAlive(causeDamage, this, 500)</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-948">line 948</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1024">line 1024</a>
     </li></ul></dd>
     
 
@@ -8071,7 +8326,7 @@ For example: Group.forEachDead(bringToLife, this)</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-966">line 966</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1042">line 1042</a>
     </li></ul></dd>
     
 
@@ -8194,7 +8449,7 @@ For example: Group.forEachDead(bringToLife, this)</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-196">line 196</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-236">line 236</a>
     </li></ul></dd>
     
 
@@ -8292,7 +8547,7 @@ This is handy for checking if everything has been wiped out, or choosing a squad
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1115">line 1115</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1192">line 1192</a>
     </li></ul></dd>
     
 
@@ -8390,7 +8645,7 @@ This is handy for checking if everything has been wiped out, or choosing a squad
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1128">line 1128</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1205">line 1205</a>
     </li></ul></dd>
     
 
@@ -8536,7 +8791,7 @@ This is handy for checking if everything has been wiped out, or choosing a squad
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1097">line 1097</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1174">line 1174</a>
     </li></ul></dd>
     
 
@@ -8682,7 +8937,7 @@ This is handy for checking if everything has been wiped out, or choosing a squad
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-521">line 521</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-570">line 570</a>
     </li></ul></dd>
     
 
@@ -8851,7 +9106,7 @@ This is handy for checking if everything has been wiped out, or choosing a squad
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1165">line 1165</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1242">line 1242</a>
     </li></ul></dd>
     
 
@@ -8902,7 +9157,7 @@ This is handy for checking if everything has been wiped out, or choosing a squad
         
             
 <dt>
-    <h4 class="name" id="iterate"><span class="type-signature"></span>iterate<span class="signature">(key, value, returnType, <span class="optional">callback</span>, <span class="optional">callbackContext</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="iterate"><span class="type-signature"></span>iterate<span class="signature">(key, value, returnType, <span class="optional">callback</span>, <span class="optional">callbackContext</span>)</span><span class="type-signature"> &rarr; {any}</span></h4>
     
     
 </dt>
@@ -9161,7 +9416,7 @@ You can add as many callback parameters as you like, which will all be passed to
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1033">line 1033</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1109">line 1109</a>
     </li></ul></dd>
     
 
@@ -9182,6 +9437,29 @@ You can add as many callback parameters as you like, which will all be passed to
     
     
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Returns either a numeric total (if RETURN_TOTAL was specified) or the child object.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">any</span>
+
+
+	</dd>
+</dl>
+
+
+        
     
     
 </dd>
@@ -9230,7 +9508,7 @@ You can add as many callback parameters as you like, which will all be passed to
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-349">line 349</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-315">line 315</a>
     </li></ul></dd>
     
 
@@ -9258,7 +9536,7 @@ You can add as many callback parameters as you like, which will all be passed to
         
             
 <dt>
-    <h4 class="name" id="makeParticles"><span class="type-signature"></span>makeParticles<span class="signature">(keys, frames, quantity, collide, collideWorldBounds)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="makeParticles"><span class="type-signature"></span>makeParticles<span class="signature">(keys, frames, quantity, <span class="optional">collide</span>, <span class="optional">collideWorldBounds</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Particles.Arcade.Emitter.html">Phaser.Particles.Arcade.Emitter</a>}</span></h4>
     
     
 </dt>
@@ -9288,7 +9566,11 @@ You can add as many callback parameters as you like, which will all be passed to
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -9306,17 +9588,32 @@ You can add as many callback parameters as you like, which will all be passed to
             <td class="type">
             
                 
-<span class="param-type">Description</span>
+<span class="param-type">array</span>
+|
+
+<span class="param-type">string</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>A string or an array of strings that the particle sprites will use as their texture. If an array one is picked at random.</p></td>
         </tr>
 
 	
@@ -9329,6 +9626,9 @@ You can add as many callback parameters as you like, which will all be passed to
             <td class="type">
             
                 
+<span class="param-type">array</span>
+|
+
 <span class="param-type">number</span>
 
 
@@ -9336,10 +9636,22 @@ You can add as many callback parameters as you like, which will all be passed to
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>A frame number, or array of frames that the sprite will use. If an array one is picked at random.</p></td>
         </tr>
 
 	
@@ -9359,10 +9671,22 @@ You can add as many callback parameters as you like, which will all be passed to
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The number of particles to generate when using the &quot;create from image&quot; option.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The number of particles to generate.</p></td>
         </tr>
 
 	
@@ -9375,17 +9699,33 @@ You can add as many callback parameters as you like, which will all be passed to
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">boolean</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Sets the checkCollision.none flag on the particle sprites body.</p></td>
         </tr>
 
 	
@@ -9405,10 +9745,26 @@ You can add as many callback parameters as you like, which will all be passed to
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>Description.</p></td>
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>A particle can be set to collide against the World bounds automatically and rebound back into the World if this is set to true. Otherwise it will leave the World.</p></td>
         </tr>
 
 	
@@ -9440,7 +9796,7 @@ You can add as many callback parameters as you like, which will all be passed to
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-271">line 271</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-245">line 245</a>
     </li></ul></dd>
     
 
@@ -9465,10 +9821,22 @@ You can add as many callback parameters as you like, which will all be passed to
     
             
 <div class="param-desc">
-    <p>This Emitter instance (nice for chaining stuff together, if you're into that).</p>
+    <p>This Emitter instance.</p>
 </div>
 
 
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Particles.Arcade.Emitter.html">Phaser.Particles.Arcade.Emitter</a></span>
+
+
+	</dd>
+</dl>
 
 
         
@@ -9644,7 +10012,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-704">line 704</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-779">line 779</a>
     </li></ul></dd>
     
 
@@ -9718,7 +10086,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-291">line 291</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-332">line 332</a>
     </li></ul></dd>
     
 
@@ -9792,7 +10160,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-313">line 313</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-354">line 354</a>
     </li></ul></dd>
     
 
@@ -9915,7 +10283,7 @@ Group.multiplyAll('x', 2) will x2 the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1187">line 1187</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1264">line 1264</a>
     </li></ul></dd>
     
 
@@ -10013,7 +10381,7 @@ The Group container remains on the display list.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1230">line 1230</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1307">line 1307</a>
     </li></ul></dd>
     
 
@@ -10159,7 +10527,7 @@ The Group container remains on the display list.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1257">line 1257</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1334">line 1334</a>
     </li></ul></dd>
     
 
@@ -10305,7 +10673,7 @@ The Group container remains on the display list.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-534">line 534</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-583">line 583</a>
     </li></ul></dd>
     
 
@@ -10341,8 +10709,7 @@ The Group container remains on the display list.</p>
     
     
     <div class="description">
-        <p>Handy for bringing game objects &quot;back to life&quot;. Just sets alive and exists back to true.
-In practice, this is most often called by &lt;code&gt;Object.reset()&lt;/code&gt;.</p>
+        <p>Handy for bringing game objects &quot;back to life&quot;. Just sets alive and exists back to true.</p>
     </div>
     
 
@@ -10375,7 +10742,334 @@ In practice, this is most often called by &lt;code&gt;Object.reset()&lt;/code&gt
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-361">line 361</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-327">line 327</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="set"><span class="type-signature"></span>set<span class="signature">(child, key, value, <span class="optional">checkAlive</span>, <span class="optional">checkVisible</span>, <span class="optional">operation</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>This function allows you to quickly set a property on a single child of this Group to a new value.
+The operation parameter controls how the new value is assigned to the property, from simple replacement to addition and multiplication.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>child</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Sprite.html">Phaser.Sprite</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The child to set the property on.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The property, as a string, to be set. For example: 'body.velocity.x'</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The value that will be set.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>checkAlive</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>If set then the child will only be updated if alive=true.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>checkVisible</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>If set then the child will only be updated if visible=true.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>operation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>Controls how the value is assigned. A value of 0 replaces the value with the new one. A value of 1 adds it, 2 subtracts it, 3 multiplies it and 4 divides it.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Group.html#set">Phaser.Group#set</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-683">line 683</a>
     </li></ul></dd>
     
 
@@ -10667,7 +11361,7 @@ The operation parameter controls how the new value is assigned to the property, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-634">line 634</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-709">line 709</a>
     </li></ul></dd>
     
 
@@ -10915,7 +11609,7 @@ The operation parameter controls how the new value is assigned to the property, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-572">line 572</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-621">line 621</a>
     </li></ul></dd>
     
 
@@ -10943,7 +11637,7 @@ The operation parameter controls how the new value is assigned to the property, 
         
             
 <dt>
-    <h4 class="name" id="setRotation"><span class="type-signature"></span>setRotation<span class="signature">(min, max)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setRotation"><span class="type-signature"></span>setRotation<span class="signature">(<span class="optional">min</span>, <span class="optional">max</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -10973,7 +11667,11 @@ The operation parameter controls how the new value is assigned to the property, 
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -10998,7 +11696,23 @@ The operation parameter controls how the new value is assigned to the property, 
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last"><p>The minimum value for this range.</p></td>
@@ -11021,7 +11735,23 @@ The operation parameter controls how the new value is assigned to the property, 
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last"><p>The maximum value for this range.</p></td>
@@ -11056,7 +11786,7 @@ The operation parameter controls how the new value is assigned to the property, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-531">line 531</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-487">line 487</a>
     </li></ul></dd>
     
 
@@ -11197,7 +11927,7 @@ The operation parameter controls how the new value is assigned to the property, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-486">line 486</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-442">line 442</a>
     </li></ul></dd>
     
 
@@ -11225,7 +11955,7 @@ The operation parameter controls how the new value is assigned to the property, 
         
             
 <dt>
-    <h4 class="name" id="setXSpeed"><span class="type-signature"></span>setXSpeed<span class="signature">(min, max)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setXSpeed"><span class="type-signature"></span>setXSpeed<span class="signature">(<span class="optional">min</span>, <span class="optional">max</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -11255,7 +11985,11 @@ The operation parameter controls how the new value is assigned to the property, 
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -11280,7 +12014,23 @@ The operation parameter controls how the new value is assigned to the property, 
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last"><p>The minimum value for this range.</p></td>
@@ -11303,7 +12053,23 @@ The operation parameter controls how the new value is assigned to the property, 
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last"><p>The maximum value for this range.</p></td>
@@ -11338,7 +12104,7 @@ The operation parameter controls how the new value is assigned to the property, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-499">line 499</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-455">line 455</a>
     </li></ul></dd>
     
 
@@ -11366,7 +12132,7 @@ The operation parameter controls how the new value is assigned to the property, 
         
             
 <dt>
-    <h4 class="name" id="setYSpeed"><span class="type-signature"></span>setYSpeed<span class="signature">(min, max)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setYSpeed"><span class="type-signature"></span>setYSpeed<span class="signature">(<span class="optional">min</span>, <span class="optional">max</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -11396,7 +12162,11 @@ The operation parameter controls how the new value is assigned to the property, 
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -11421,7 +12191,23 @@ The operation parameter controls how the new value is assigned to the property, 
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last"><p>The minimum value for this range.</p></td>
@@ -11444,7 +12230,23 @@ The operation parameter controls how the new value is assigned to the property, 
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last"><p>The maximum value for this range.</p></td>
@@ -11479,7 +12281,7 @@ The operation parameter controls how the new value is assigned to the property, 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-515">line 515</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-471">line 471</a>
     </li></ul></dd>
     
 
@@ -11662,7 +12464,7 @@ For example to depth sort Sprites for Zelda-style game you might call <code>grou
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-984">line 984</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-1060">line 1060</a>
     </li></ul></dd>
     
 
@@ -11690,7 +12492,7 @@ For example to depth sort Sprites for Zelda-style game you might call <code>grou
         
             
 <dt>
-    <h4 class="name" id="start"><span class="type-signature"></span>start<span class="signature">(explode, lifespan, frequency, quantity)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="start"><span class="type-signature"></span>start<span class="signature">(<span class="optional">explode</span>, <span class="optional">lifespan</span>, <span class="optional">frequency</span>, <span class="optional">quantity</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -11720,7 +12522,11 @@ For example to depth sort Sprites for Zelda-style game you might call <code>grou
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -11745,7 +12551,23 @@ For example to depth sort Sprites for Zelda-style game you might call <code>grou
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
             
 
             <td class="description last"><p>Whether the particles should all burst out at once.</p></td>
@@ -11768,7 +12590,23 @@ For example to depth sort Sprites for Zelda-style game you might call <code>grou
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last"><p>How long each particle lives once emitted. 0 = forever.</p></td>
@@ -11791,7 +12629,23 @@ For example to depth sort Sprites for Zelda-style game you might call <code>grou
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    250
+                
+                </td>
             
 
             <td class="description last"><p>Ignored if Explode is set to true. Frequency is how often to emit a particle in ms.</p></td>
@@ -11814,7 +12668,23 @@ For example to depth sort Sprites for Zelda-style game you might call <code>grou
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last"><p>How many particles to launch. 0 = &quot;all of the particles&quot;.</p></td>
@@ -11849,7 +12719,7 @@ For example to depth sort Sprites for Zelda-style game you might call <code>grou
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-373">line 373</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-338">line 338</a>
     </li></ul></dd>
     
 
@@ -12042,7 +12912,7 @@ Group.subAll('x', 10) will minus 10 from the child.x value.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-688">line 688</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-763">line 763</a>
     </li></ul></dd>
     
 
@@ -12189,7 +13059,7 @@ You cannot swap a child with itself, or swap un-parented children, doing so will
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-374">line 374</a>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-423">line 423</a>
     </li></ul></dd>
     
 
@@ -12240,6 +13110,80 @@ You cannot swap a child with itself, or swap un-parented children, doing so will
         
             
 <dt>
+    <h4 class="name" id="swapIndex"><span class="type-signature"></span>swapIndex<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Internal test.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="Phaser.Group.html#swapIndex">Phaser.Group#swapIndex</a>
+    </li></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Group.js.html">core/Group.js</a>, <a href="Group.js.html#sunlight-1-line-409">line 409</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="update"><span class="type-signature"></span>update<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
@@ -12281,7 +13225,7 @@ You cannot swap a child with itself, or swap un-parented children, doing so will
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-227">line 227</a>
+        <a href="Emitter.js.html">particles/arcade/Emitter.js</a>, <a href="Emitter.js.html#sunlight-1-line-201">line 201</a>
     </li></ul></dd>
     
 
@@ -12326,13 +13270,13 @@ You cannot swap a child with itself, or swap un-parented children, doing so will
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		Phaser Copyright © 2012-2014 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 28 2013 15:56:31 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 05 2014 06:28:31 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

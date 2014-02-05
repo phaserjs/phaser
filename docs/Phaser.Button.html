@@ -91,6 +91,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.DOMSprite.html">DOMSprite</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -163,6 +167,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -184,6 +196,10 @@
 						
 						<li>
 							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Line.html">Line</a>
 						</li>
 						
 						<li>
@@ -279,6 +295,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Sound.html">Sound</a>
 						</li>
 						
@@ -343,6 +363,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
 						</li>
 						
@@ -368,36 +392,6 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
-						</li>
-						
-						<li>
-							<a href="global.html#render">render</a>
-						</li>
-						
-						<li>
-							<a href="global.html#renderXY">renderXY</a>
-						</li>
-						
-						<li>
-							<a href="global.html#right">right</a>
 						</li>
 						
 
@@ -445,7 +439,7 @@
     
         
 <dt>
-    <h4 class="name" id="Button"><span class="type-signature"></span>new Button<span class="signature">(game, <span class="optional">x</span>, <span class="optional">y</span>, <span class="optional">key</span>, <span class="optional">callback</span>, <span class="optional">callbackContext</span>, <span class="optional">overFrame</span>, <span class="optional">outFrame</span>, <span class="optional">downFrame</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Button"><span class="type-signature"></span>new Button<span class="signature">(game, <span class="optional">x</span>, <span class="optional">y</span>, <span class="optional">key</span>, <span class="optional">callback</span>, <span class="optional">callbackContext</span>, <span class="optional">overFrame</span>, <span class="optional">outFrame</span>, <span class="optional">downFrame</span>, <span class="optional">upFrame</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -474,6 +468,8 @@
 		<th>Argument</th>
 		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -508,6 +504,10 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>Current game instance.</p></td>
         </tr>
@@ -540,6 +540,12 @@
                 </td>
             
 
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
             
 
             <td class="description last"><p>X position of the Button.</p></td>
@@ -574,6 +580,12 @@
             
 
             
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
 
             <td class="description last"><p>Y position of the Button.</p></td>
         </tr>
@@ -606,6 +618,10 @@
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The image key as defined in the Game.Cache to use as the texture for this Button.</p></td>
@@ -640,6 +656,10 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>The function to call when this Button is pressed.</p></td>
         </tr>
@@ -672,6 +692,10 @@
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>The context in which the callback will be called (usually 'this').</p></td>
@@ -709,6 +733,10 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>This is the frame or frameName that will be set when this button is in an over state. Give either a number to use a frame ID or a string for a frame name.</p></td>
         </tr>
@@ -744,6 +772,10 @@
                 </td>
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>This is the frame or frameName that will be set when this button is in an out state. Give either a number to use a frame ID or a string for a frame name.</p></td>
@@ -781,8 +813,52 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>This is the frame or frameName that will be set when this button is in a down state. Give either a number to use a frame ID or a string for a frame name.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>upFrame</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>This is the frame or frameName that will be set when this button is in an up state. Give either a number to use a frame ID or a string for a frame name.</p></td>
         </tr>
 
 	
@@ -814,7 +890,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-31">line 31</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-32">line 32</a>
     </li></ul></dd>
     
 
@@ -865,7 +941,7 @@
 <dd>
     
     <div class="description">
-        <p>When the Button is clicked you can optionally force the state to &quot;out&quot;.</p>
+        <p>When the Button is touched / clicked and then released you can force it to enter a state of &quot;out&quot; instead of &quot;up&quot;.</p>
     </div>
     
     
@@ -943,13 +1019,13 @@
 
     
     <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>true</li></ul></dd>
+    <dd class="tag-default"><ul class="dummy"><li>false</li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-180">line 180</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-181">line 181</a>
     </li></ul></dd>
     
 
@@ -1051,7 +1127,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-173">line 173</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-174">line 174</a>
     </li></ul></dd>
     
 
@@ -1156,7 +1232,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-118">line 118</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-119">line 119</a>
     </li></ul></dd>
     
 
@@ -1258,7 +1334,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-142">line 142</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-143">line 143</a>
     </li></ul></dd>
     
 
@@ -1360,7 +1436,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-163">line 163</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-164">line 164</a>
     </li></ul></dd>
     
 
@@ -1462,7 +1538,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-158">line 158</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-159">line 159</a>
     </li></ul></dd>
     
 
@@ -1564,7 +1640,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-153">line 153</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-154">line 154</a>
     </li></ul></dd>
     
 
@@ -1666,7 +1742,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-168">line 168</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-169">line 169</a>
     </li></ul></dd>
     
 
@@ -1771,7 +1847,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-112">line 112</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-113">line 113</a>
     </li></ul></dd>
     
 
@@ -1873,7 +1949,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-136">line 136</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-137">line 137</a>
     </li></ul></dd>
     
 
@@ -1978,7 +2054,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-106">line 106</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-107">line 107</a>
     </li></ul></dd>
     
 
@@ -2080,7 +2156,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-130">line 130</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-131">line 131</a>
     </li></ul></dd>
     
 
@@ -2185,7 +2261,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-124">line 124</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-125">line 125</a>
     </li></ul></dd>
     
 
@@ -2287,7 +2363,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-148">line 148</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-149">line 149</a>
     </li></ul></dd>
     
 
@@ -2389,7 +2465,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-44">line 44</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-45">line 45</a>
     </li></ul></dd>
     
 
@@ -2413,7 +2489,76 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="onInputOverHandler"><span class="type-signature">&lt;protected> </span>onInputOverHandler<span class="signature">(pointer)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="clearFrames"><span class="type-signature"></span>clearFrames<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Clears all of the frames set on this Button.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-204">line 204</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onInputOverHandler"><span class="type-signature">&lt;protected> </span>onInputOverHandler<span class="signature">(sprite, pointer)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2451,6 +2596,29 @@
 	</thead>
 
 	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>sprite</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Button.html">Phaser.Button</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Button that the event occured on.</p></td>
+        </tr>
+
 	
 
         <tr>
@@ -2503,7 +2671,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-404">line 404</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-448">line 448</a>
     </li></ul></dd>
     
 
@@ -2531,7 +2699,7 @@
         
             
 <dt>
-    <h4 class="name" id="onInputOverHandler"><span class="type-signature">&lt;protected> </span>onInputOverHandler<span class="signature">(pointer)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="onInputOverHandler"><span class="type-signature">&lt;protected> </span>onInputOverHandler<span class="signature">(sprite, pointer)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2569,6 +2737,29 @@
 	</thead>
 
 	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>sprite</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Button.html">Phaser.Button</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Button that the event occured on.</p></td>
+        </tr>
+
 	
 
         <tr>
@@ -2621,7 +2812,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-436">line 436</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-474">line 474</a>
     </li></ul></dd>
     
 
@@ -2649,7 +2840,7 @@
         
             
 <dt>
-    <h4 class="name" id="onInputOverHandler"><span class="type-signature">&lt;protected> </span>onInputOverHandler<span class="signature">(pointer)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="onInputOverHandler"><span class="type-signature">&lt;protected> </span>onInputOverHandler<span class="signature">(sprite, pointer)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2691,13 +2882,13 @@
 
         <tr>
             
-                <td class="name"><code>pointer</code></td>
+                <td class="name"><code>sprite</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
+<span class="param-type"><a href="Phaser.Button.html">Phaser.Button</a></span>
 
 
             
@@ -2707,104 +2898,9 @@
 
             
 
-            <td class="description last"><p>The Pointer that activated the Button.</p></td>
+            <td class="description last"><p>The Button that the event occured on.</p></td>
         </tr>
 
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-468">line 468</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="onInputOverHandler"><span class="type-signature">&lt;protected> </span>onInputOverHandler<span class="signature">(pointer)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Internal function that handles input events.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
 	
 
         <tr>
@@ -2885,6 +2981,147 @@
         
             
 <dt>
+    <h4 class="name" id="onInputOverHandler"><span class="type-signature">&lt;protected> </span>onInputOverHandler<span class="signature">(sprite, pointer)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Internal function that handles input events.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>sprite</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Button.html">Phaser.Button</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Button that the event occured on.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>pointer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Pointer that activated the Button.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-526">line 526</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="setDownSound"><span class="type-signature"></span>setDownSound<span class="signature">(sound, <span class="optional">marker</span>)</span><span class="type-signature"></span></h4>
     
     
@@ -2893,7 +3130,7 @@
     
     
     <div class="description">
-        <p>The Sound to be played when a Pointer clicks on this Button.</p>
+        <p>The Sound to be played when a Pointer presses down on this Button.</p>
     </div>
     
 
@@ -3018,7 +3255,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-380">line 380</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-400">line 400</a>
     </li></ul></dd>
     
 
@@ -3046,7 +3283,7 @@
         
             
 <dt>
-    <h4 class="name" id="setFrames"><span class="type-signature"></span>setFrames<span class="signature">(<span class="optional">overFrame</span>, <span class="optional">outFrame</span>, <span class="optional">downFrame</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setFrames"><span class="type-signature"></span>setFrames<span class="signature">(<span class="optional">overFrame</span>, <span class="optional">outFrame</span>, <span class="optional">downFrame</span>, <span class="optional">upFrame</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -3054,8 +3291,7 @@
     
     
     <div class="description">
-        <p>Used to manually set the frames that will be used for the different states of the button
-exactly like setting them in the constructor.</p>
+        <p>Used to manually set the frames that will be used for the different states of the Button.</p>
     </div>
     
 
@@ -3196,6 +3432,42 @@ exactly like setting them in the constructor.</p>
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>upFrame</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>This is the frame or frameName that will be set when this button is in an up state. Give either a number to use a frame ID or a string for a frame name.</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 
@@ -3224,7 +3496,7 @@ exactly like setting them in the constructor.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-203">line 203</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-225">line 225</a>
     </li></ul></dd>
     
 
@@ -3385,7 +3657,7 @@ exactly like setting them in the constructor.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-332">line 332</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-376">line 376</a>
     </li></ul></dd>
     
 
@@ -3546,7 +3818,7 @@ exactly like setting them in the constructor.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-308">line 308</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-352">line 352</a>
     </li></ul></dd>
     
 
@@ -3909,7 +4181,125 @@ Call this function with no parameters at all to reset all sounds on this Button.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-284">line 284</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-328">line 328</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setState"><span class="type-signature">&lt;protected> </span>setState<span class="signature">(newState)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Internal function that handles Button state changes.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>newState</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The new State of the Button.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-577">line 577</a>
     </li></ul></dd>
     
 
@@ -3945,7 +4335,7 @@ Call this function with no parameters at all to reset all sounds on this Button.
     
     
     <div class="description">
-        <p>The Sound to be played when a Pointer clicks on this Button.</p>
+        <p>The Sound to be played when a Pointer has pressed down and is released from this Button.</p>
     </div>
     
 
@@ -4070,7 +4460,7 @@ Call this function with no parameters at all to reset all sounds on this Button.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-356">line 356</a>
+        <a href="Button.js.html">gameobjects/Button.js</a>, <a href="Button.js.html#sunlight-1-line-424">line 424</a>
     </li></ul></dd>
     
 
@@ -4115,13 +4505,13 @@ Call this function with no parameters at all to reset all sounds on this Button.
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		Phaser Copyright © 2012-2014 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 28 2013 15:56:27 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 05 2014 06:28:26 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

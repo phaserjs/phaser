@@ -866,7 +866,7 @@ Phaser.Physics.Arcade.prototype = {
     * The core separation function to separate a physics body and an array of tiles.
     * @method Phaser.Physics.Arcade#separateTiles
     * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
-    * @param {<Phaser.Tile>array} tiles - The array of tiles to collide against.
+    * @param {array<Phaser.Tile>} tiles - The array of tiles to collide against.
     * @returns {boolean} Returns true if the body was separated, otherwise false.
     */
     separateTiles: function (body, tiles) {

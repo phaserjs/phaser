@@ -91,6 +91,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.DOMSprite.html">DOMSprite</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Easing.html">Easing</a>
 						</li>
 						
@@ -163,6 +167,14 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Gamepad.html">Gamepad</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.GamepadButton.html">GamepadButton</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Graphics.html">Graphics</a>
 						</li>
 						
@@ -184,6 +196,10 @@
 						
 						<li>
 							<a href="Phaser.Keyboard.html">Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Line.html">Line</a>
 						</li>
 						
 						<li>
@@ -279,6 +295,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.SinglePad.html">SinglePad</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Sound.html">Sound</a>
 						</li>
 						
@@ -343,6 +363,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.TimerEvent.html">TimerEvent</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Touch.html">Touch</a>
 						</li>
 						
@@ -368,36 +392,6 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
-				<li class="dropdown">
-					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="global.html#bottom">bottom</a>
-						</li>
-						
-						<li>
-							<a href="global.html#HEXtoRGB">HEXtoRGB</a>
-						</li>
-						
-						<li>
-							<a href="global.html#render">render</a>
-						</li>
-						
-						<li>
-							<a href="global.html#renderXY">renderXY</a>
-						</li>
-						
-						<li>
-							<a href="global.html#right">right</a>
 						</li>
 						
 
@@ -440,102 +434,333 @@
 
 
 
+    <section>
+        <article><p><img src="http://www.photonstorm.com/wp-content/uploads/2013/09/phaser_10_release.jpg" alt="Phaser Logo"></p>
+<h1>Phaser 1.1.4</h1>
+<p>Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses <a href="https://github.com/GoodBoyDigital/pixi.js/">Pixi.js</a> internally for fast 2D Canvas and WebGL rendering.</p>
+<p>Version: 1.1.4 &quot;Kandor&quot; - Released: February 5th 2014</p>
+<p>By Richard Davey, <a href="http://www.photonstorm.com">Photon Storm</a></p>
+<ul>
+<li>View the <a href="http://phaser.io">Official Website</a></li>
+<li>Follow on <a href="https://twitter.com/photonstorm">Twitter</a></li>
+<li>Join the <a href="http://www.html5gamedevs.com/forum/14-phaser/">Forum</a></li>
+<li>Try out 220+ <a href="http://examples.phaser.io">Phaser Examples</a></li>
+<li>Read the <a href="http://docs.phaser.io">documentation online</a></li>
+</ul>
+<p><a href="https://confirmsubscription.com/h/r/369DE48E3E86AF1E">Subscribe to our new Phaser Newsletter</a>. We'll email you when new versions are released as well as send you our regular Phaser game making magazine.</p>
+<p><a href="https://bitdeli.com/free" title="Bitdeli Badge"><img src="https://d2weczhvl823v0.cloudfront.net/photonstorm/phaser/trend.png" alt="Bitdeli Badge"></a></p>
+<h2>Welcome to Phaser</h2>
+<p>As you may know we had planned to release 1.1.4 at the end of 2013. For various reasons this didn't quite happen, but we're happy to announce it's finally out! There have been some dramatic changes internally, and if you make use of either the physics systems or tilemaps then you are going to need to update your code. Hopefully only a little bit, but there have been a number of core API changes which we detail below. There are also a host of new features, the headliners being:</p>
+<ul>
+<li>New Physics system. Uses SAT.js internally so physics bodies can now be rectangles, circles or polygons and support rotation.</li>
+<li>New Tilemap system. Brand new collision system for tiles, much more advanced layer handling, tile properties, multiple tilesets of layer and more.</li>
+<li>New Timer. This handy new class lets you create timed events easily.</li>
+<li>Your Game can now be configured from an external configuration object.</li>
+<li>Over 150 new features and updates and over 30 reported bug fixes.</li>
+</ul>
+<p>This release also brings the TypeScript definitions file as bang up to date as possible. There are still a few areas that need looking at, but with your help hopefully we can iron those final few bits out and have a 100% accruate defs file on offer.</p>
+<p>There is a new Contributors Guide which we'd urge you to follow if you wish to help with Phaser development, and we've updated the doc files and added lots more details into key areas. The Examples have grown too! Now over 220 of them including several great ones from the community.</p>
+<p>We're going to settle on this build for a short while as we do some quick iteration bug fixing, so expect to see some small point releases very soon that do nothing but address any issues you may find. But in parallel to this we are also now rebuilding our core to bring it in-line with the latest version of Pixi.js, which has had some dramatic changes under the hood, changes will impact a lot of what Phaser does internally. But the changes are all for the better and once we upgrade Pixi you'll have a significantly faster renderer and a smaller codebase too, as we do away with stacks of linked list code :)</p>
+<p>As always we offer a heart-felt &quot;Thank you!&quot; to everyone who has encouraged us along the way. To those of you who worked with Phaser during its various incarnations. The number of games being released that were made with Phaser is staggering and we really love to see how you use it! You are our heroes. It's your kind words and enthusiasm that has keeps us going.</p>
+<p>Phaser is everything we ever wanted from an HTML5 game framework. It powers all of our client work in build today and remains our single most important product, and we've still only just scratched the surface of what we have planned for it.</p>
+<p><img src="http://www.photonstorm.com/wp-content/uploads/2013/10/phaser-cybernoid-640x480.png" alt="MiniCybernoid"></p>
+<h2>Getting Started Guides</h2>
+<p>We have a new <a href="http://phaser.io/getting-started-js.php">Getting Started Guide</a> which covers all you need to begin developing games with Phaser. From setting up a web server to picking an IDE. If you're new to HTML5 game development, or are coming from another language like AS3, then we recommend starting there.</p>
+<p>There is a comprehensive <a href="http://gamedevelopment.tutsplus.com/articles/how-to-learn-the-phaser-html5-game-engine--gamedev-13643">How to Learn Phaser</a> guide on the GameDevTuts+ site which is a great place to learn where to find tutorials, examples and support.</p>
+<p>There is also an <a href="http://www.antonoffplus.com/coding-an-html5-game-for-30-minutes-or-an-introduction-to-the-phaser-framework">un-official Getting Started Guide</a>.</p>
+<h2>Change Log</h2>
+<p>Version 1.1.4 - &quot;Kandor&quot; - February 5th 2014</p>
+<p>Significant API changes:</p>
+<ul>
+<li>Loader.tileset has been removed as it's no longer required, this was as part of the Tilemap system overhaul.</li>
+<li>TilemapLayers are now created via the Tilemap object itself: map.createLayer(x, y, width, height, tileset, layer, group) and no longer via the GameObjectFactory.</li>
+<li>Tilemap.createFromObjects can now turn a bunch of Tiled objects into Sprites in one single call, and copies across all properties as well.</li>
+<li>Tween.onStartCallback and onCompleteCallback have been removed to avoid confusion. You should use the onStart, onLoop and onComplete events instead.</li>
+<li>Button.forceOut default value has changed from true to false, so Buttons will revert to an Up state (if set) when pressed and released.</li>
+<li>The way the collision process callback works has changed significantly and now works as originally intended.</li>
+<li>The World level quadtree is no longer created, they are now built and ripped down each time you collide a Group, this helps collision accuracy.</li>
+<li>A SAT system has been integrated for Body collision and separation.</li>
+<li>Bodies are no longer added to a world quadtree, so have had all of their quadtree properties removed such as skipQuadtree, quadTreeIndex, etc.</li>
+<li>Body.drag has been removed. Please use the new Body.linearDamping value instead (which is a number value, not a Point object)</li>
+<li>Body.embedded and Body.wasTouching have been removed as they are no longer required.</li>
+<li>Body.customSeparateX/Y have been removed as you should now use Body.customSeparateCallback.</li>
+<li>Body.maxVelocity defaults have been removed from 10,000 to 2000.</li>
+<li>Body.customSeparateCallback allows you to set your own callback when two Bodies need to separate rather than using the built-in method.</li>
+<li>Body.collideCallback allows you to set a callback that is fired whenever the Body is hit on any of its active faces.</li>
+<li>Body.allowCollision has been renamed to Body.checkCollision.</li>
+<li>Body.rebound is a boolean that controls if a body will exchange velocity on collision. Set to false to allow it to be 'pushed' (see new examples).</li>
+<li>Removed Body.deltaAbsX and deltaAbsY as they are no longer used internally.</li>
+<li>Body.screenX and screenY moved to getters, no longer calculated every frame.</li>
+<li>ArcadePhysics now has setBounds and setBoundsToWorld, and you can specify which walls are created or not (left, right, up, down)</li>
+<li>Removed: Debug.renderSpriteTouching, Debug.renderLocalTransformInfo, Debug.renderWorldTransformInfo, Debug.renderSpriteCollision and Debug.dumpLinkedList.</li>
+<li>Body.setSize has been removed. Please use Body.setCircle, setRectangle or setPolygon instead.</li>
+</ul>
+<p>New features:</p>
+<ul>
+<li>Phaser.Timer is now feature complete and fully documented. You can create Phaser.TimerEvents on a Timer and lots of new examples have been provided.</li>
+<li>Gamepad API support has been added with lots of new examples (thanks Karl Macklin)</li>
+<li>Phaser.Game constructor can now be passed a single object containing all of your game settings + Stage settings. Useful for advanced configurations.</li>
+<li>The width/height given to Phaser.Game can now be percentages, i.e. &quot;100%&quot; will set the width to the maximum window innerWidth.</li>
+<li>Added a stage.fullScreenScaleMode property to determine scaling when fullscreen (thanks oysterCrusher)</li>
+<li>Added support for margin and spacing around a frame in Loader.spritesheet.</li>
+<li>Added Device.vibration to check if the Vibration API is available or not.</li>
+<li>Added Device.trident and Device.tridentVersion for testing IE11.</li>
+<li>Added Device.silk for detecting a Kindle Fire and updated desktop OS check to exclude Kindles (thanks LuckieLordie)</li>
+<li>TilemapLayers now have debug and debugAlpha values, this turns on the drawing of the collision edges (very handy for debugging, as the name implies!)</li>
+<li>Tweens have a new event: onLoop.</li>
+<li>You can now load any binary file via the Loader: game.load.binary(key, url, callback) - the optional callback allows for post-load processing before entering the Cache.</li>
+<li>Group.set will let you deep set a new propery on a single child of the Group.</li>
+<li>Stage.display property added. A direct reference to the root Pixi Stage object (very useful for RenderTexture manipulation)</li>
+<li>Added Ejecta detection to Device (thanks endel)</li>
+<li>Tweens can now work with relative + and - values. You can do: <code>tween(sprite).to( { x: '+400' })</code> and it will add 400 to the current sprite.x value.</li>
+<li>Buttons now properly use their upFrame if set.</li>
+<li>InputHandler now has snapOffsetX and snapOffsetY properties so your snap grid doesn't have to be 0,0 aligned (thanks srmeier)</li>
+<li>Loader.progressFloat contains the actual non-rounded progress value, where-as Loader.progress contains a rounded value. Use progressFloat if you've &gt; 100 files to load.</li>
+<li>Groups can now be added to other Groups as children via group.add() and group.addAt()</li>
+<li>Groups now have an 'alive' property, which can be useful when iterating through child groups with functions like forEachAlive.</li>
+<li>Added a new Project Template &quot;Full Screen Mobile&quot; which you can find in the resources folder. Contains html / css / layout needed for a deployed Phaser game.</li>
+<li>Body.speed - the current speed of the body.</li>
+<li>Body.angle - the current angle the Body is facing based on its velocity. This is not the same as the Sprite angle that may own the body.</li>
+<li>Body.linearDamping - This now replaces Body.drag and provides for a much smoother damping (friction) experience.</li>
+<li>Body.minBounceVelocity - If a Body has bounce set, this threshold controls if it should rebound or not. Use it to stop 'jittering' on bounds/tiles with super-low velocities.</li>
+<li>QuadTree.populate - you can pass it a Group and it'll automatically insert all of the children ready for inspection.</li>
+<li>Input.setMoveCallback allows you to set a callback that will be fired each time the activePointer receives a DOM move event.</li>
+<li>Math.distancePow(x1,y1,x2,y2,power) returns the distance between two coordinates at the given power.</li>
+<li>Physics.collide now supports the 2nd parameter as an array, for when you want to collide an object against a number of sprites that aren't all in the same Group.</li>
+<li>Physics.overlap now supports the 2nd parameter as an array, for when you want to overlap test an object against a number of sprites that aren't all in the same Group.</li>
+<li>Math.reverseAngle - reverses an angle (in radians).</li>
+<li>Math.normalizeAngle - normalises an angle, now in radians only.</li>
+<li>Math.normalizeLatitude - Normalizes a latitude to the [-90,90] range.</li>
+<li>Math.normalizeLongitude - Normalizes a longitude to the [-180,180] range.</li>
+<li>Phaser.Line added to the geometry classes, with full point on line/segment and intersection tests (see new examples)</li>
+<li>Phaser.CANVAS_PX_ROUND is a boolean. If 'true' the Canvas renderer will Math.floor() all coordinates before drawImage, stopping pixel interpolation. Defaults to false.</li>
+<li>Phaser.CANVAS_CLEAR_RECT is a boolean. If 'true' (the default) it will context.clearRect() every frame. If false this is skipped (useful if you know you don't need it)</li>
+<li>Collision now works between Sprites positioned via sprite.x/y, sprite.body.x/y or sprite.body.velocity.</li>
+<li>If you are tweening a sprite and still want physics collision, set <code>sprite.body.moves = false</code> otherwise it will fight against the tween motion.</li>
+<li>Game.enableStep will enable core game loop stepping. When enabled you must call game.step() directly (perhaps via a DOM button?), very useful for debugging!</li>
+<li>Game.disableStep turns core update loop stepping off.</li>
+<li>Debug.renderPhysicsBody(body, color) is extremely useful for debugging the new physics bodies. Will draw the outline + points in the color given.</li>
+<li>Debug.renderBodyInfo(sprite, x, y, color) will display lots of Sprite body data.</li>
+<li>Sprite.events.onBeginContact will be fired when a Body makes contact with another Body. Once contact is over an onEndContact event will be dispatched.</li>
+</ul>
+<p>New Examples:</p>
+<ul>
+<li>Physics - Bounce by Patrick OReilly.</li>
+<li>Physics - Bounce with gravity by Patrick OReilly.</li>
+<li>Physics - Bounce accelerator (use the keyboard) by Patrick OReilly.</li>
+<li>Physics - Bounce knock (use the keyboard) by Patrick OReilly.</li>
+<li>Physics - Snake (use the keyboard to control the snake like creature) by Patrick OReilly and Richard Davey.</li>
+<li>Physics - Launcher - Angry Birds style ball launcher demo by Patrick OReilly.</li>
+<li>Physics - Launcher Follow - throw the sprite anywhere in the world by Patrick OReilly.</li>
+<li>Physics - Launcher Follow World - an advanced version of the Launcher Follow example by Patrick OReilly.</li>
+<li>Input - Touch Joystick example showing how to use the clay.io virtual game controller (thanks gabehollombe)</li>
+<li>Games - Matching Pairs by Patrick OReilly.</li>
+<li>Games - Simon Says by Patrick OReilly.</li>
+<li>Games - Wabbits by Patrick OReilly.</li>
+<li>Tweens - Example showing how to use the tween events, onStart, onLoop and onComplete.</li>
+<li>Display - Pixi Render Texture. A Phaser conversion of the Pixi.js Render Texture example.</li>
+<li>Input - 5 new examples showing how to use the Gamepad API (thanks Karl Macklin)</li>
+<li>Animation - Group Creation, showing how to create animations across all Group children in one call.</li>
+<li>Particles - Rain by Jens Anders Bakke.</li>
+<li>Particles - Snow by Jens Anders Bakke.</li>
+<li>Groups - Nested Groups - showing how to embed one Group into another Group.</li>
+<li>Time - Lots of new examples showing how to use the updated Phaser.Timer class.</li>
+</ul>
+<p>Updates:</p>
+<ul>
+<li>Updated to latest Pixi.js dev branch build (pre 1.4 release)</li>
+<li>When a Sprite is destroyed any active filters are removed at the same time.</li>
+<li>Updated Pixi.js so that removing filters now works correctly without breaking the display list.</li>
+<li>Phaser.Canvas.create updated so it can be given an ID as the 3rd parameter (can also be set via new Game configuration object).</li>
+<li>Updated display/fullscreen example to reflect new full screen change.</li>
+<li>Loads of updates to the TypeScript definitions files - games fully compile now and lots of missing classes added :) (thanks Niondir)</li>
+<li>Removed 'null parent' check from Group constructor. Will parent to game.world only if parent value is undefined.</li>
+<li>The tutorials have now been translated into Spanish - thanks feiss :)</li>
+<li>separateY updated to re-implement the 'riding platforms' special condition (thanks cocoademon)</li>
+<li>SoundManager.onSoundDecode now dispatches the key followed by the sound object, also now dispatched by the Cache when doing an auto-decode on load.</li>
+<li>Switch method of using trimmed sprites to support scaling and rotation (thanks cocoademon)</li>
+<li>Most of the GameObjectFactory functions now have a group parameter, so you can do: game.add.sprite(x, y, frame, frameName, group) rather than defaulting to the World group.</li>
+<li>Group.countLiving and countDead used to return -1 if the Group was empty, but now return 0.</li>
+<li>Text can now be fixedToCamera, updated world/fixed to camera example to show this.</li>
+<li>ArcadePhysics.overlap and collide now recognise TileSprites in the collision checks.</li>
+<li>Lots of documentation fixes in the Tween class.</li>
+<li>Tweens fire an onLoop event if they are set to repeat. onComplete is now only fired for the final repeat (or never if the repeat is infinite)</li>
+<li>Pointer used to un-pause a paused game every time it was clicked/touched (this avoided some rogue browser plugins). Now only happens if Stage.disableVisibilityChange is true.</li>
+<li>Input doesn't set the cursor to default if it's already set to none.</li>
+<li>You can now collide a group against itself. This will check all children against each other, but not themselves (thanks cocoademon)</li>
+<li>RenderTexture.render / renderXY has a new parameter: renderHidden, a boolean which will allow you to render Sprites even if their visible is set to false.</li>
+<li>Added in prototype.constructor definitions to every class (thanks darkoverlordofdata)</li>
+<li>Group.destroy has a new parameter: destroyChildren (boolean) which will optionally call the destroy method of all Group children.</li>
+<li>Button.clearFrames method has been added.</li>
+<li>Device.quirksMode is a boolean that informs you if the page is in strict (false) or quirks (true) mode.</li>
+<li>Canvas.getOffset now runs a strict/quirks check and uses document.documentElement when calculating scrollTop and scrollLeft to avoid Chrome console warnings.</li>
+<li>The Time class now has its own Phaser.Timer which you can access through game.time.events. See the new Timer examples to show how to use them.</li>
+<li>Added StateManager.getCurrentState to return the currently running State object (thanks Niondir)</li>
+<li>Removed the console.log redirect from Utils as it was messing with Firefox.</li>
+<li>Body.acceleration is now much smoother and less eratic at high speeds.</li>
+<li>Removed ArcadePhysics binding to the QuadTree, so it can now be used independantly of the physics system.</li>
+<li>Removed ArcadePhysics.preUpdate and postUpdate as neither are needed any more.</li>
+<li>Body.bottom and Body.right are no longer rounded, so will give accurate sub-pixel values.</li>
+<li>Fixed lots of documentation in the Emitter class.</li>
+<li>The delta timer value used for physics calculations has had its cap limit modified from 1.0 to 0.05 in line with the core updates.</li>
+<li>Phaser.Math.min enhanced so you can now pass in either an array of numbers or lots of numbers as parameters to get the lowest.</li>
+<li>Phaser.Math.max added as the opposite of Math.min.</li>
+<li>Phaser.Math.minProperty and maxProperty added. Like Math.min/max but can be given a property an an array or list of objects to inspect.</li>
+<li>Added 'full' paramter to Body.reset, allowing you to control if motion or all data is reset or not.</li>
+<li>Exposed Group.pivot and Sprite.pivot to allow you to directly set the pivot points for rotation.</li>
+<li>Swapped to using the native and faster Array.isArray check.</li>
+<li>Added callback context parameter to Tween.onUpdateCallback(callback, context) to avoid having to bind or create anonymous functions.</li>
+<li>Updated TweenManager.removeAll so it flags all tweens as pendingDelete rather than nuking the array, to avoid tween callback array size errors (thanks DarkDev)</li>
+</ul>
+<p>Bug Fixes:</p>
+<ul>
+<li>Cache.getImageKeys returned __missing in the array, now excluded.</li>
+<li>Fixed Group.scale so you can now scale a Group directly.</li>
+<li>Removed World.scale as it was preventing Group.scale from working - you can still scale the world, but you'll need to factor in Input changes yourself.</li>
+<li>Moved 'dirty' flag for Tilemap to a per-layer flag. Fixes #242</li>
+<li>Group.length now returns the number of children in the Group regardless of their exists/alive state, or 0 if the Group has no children.</li>
+<li>Switch Camera.setBoundsToWorld to match world.bounds instead of world (thanks cocoademon)</li>
+<li>Fixed an issue where passing null as the Group parent wouldn't set it to game.world as it should have (thanks tito100)</li>
+<li>Fixed Pixi bug (#425) incorrect width property for multi-line BitmapText (thanks jcd-as)</li>
+<li>Tween.onStart is now called when the tween starts AFTER the delay value, if given (thanks stevenbouma)</li>
+<li>Sprites that are fixedToCamera can now be input dragged regardless of world position (thanks RafaelOliveira)</li>
+<li>RenderTexture now displays correctly in Canvas games.</li>
+<li>Canvas.addToDOM is now more robust when applying the overflowHidden style.</li>
+<li>Fixed Pixi.StripShader which should stop the weird TileSprite GPU issues some were reporting (thanks GoodboyDigital)</li>
+<li>Patched desyrel.xml so it doesn't contain any zero width/height characters, as they broke Firefox 25.</li>
+<li>Cache.addSound now implements a locked attribute (thanks haden)</li>
+<li>Sound now checks for CocoonJS during playback to avoid readyState clash (thanks haden)</li>
+<li>Buttons now clear previously set frames correctly if you call setFrames.</li>
+<li>Sounds will now loop correctly if they are paused and resumed (thanks haden)</li>
+<li>InputHandler.checkBoundsRect and checkBoundsSprite now take into account if the Sprite is fixedToCamera or not.</li>
+<li>Removed the frame property from TileSprites as it cannot use them, it tiles the whole image only, not just a section of it.</li>
+<li>Fixed WebGLRenderer updateGraphics bug (thanks theadam)</li>
+<li>Removed duplicate Timer.create line (thanks hstolte)</li>
+<li>Fixed issue with the camera being slightly out of sync with 'fixedToCamera' sprites.</li>
+<li>1px camera jitter issue fixed where map is same size, or smaller than the game size.</li>
+</ul>
+<p>You can view the Change Log for all previous versions at <a href="https://github.com/photonstorm/phaser/changelog.md">https://github.com/photonstorm/phaser/changelog.md</a></p>
+<h2>How to Build</h2>
+<p>We provide a fully compiled version of Phaser in the <code>build</code> directory, in both plain and minified formats.</p>
+<p>We also provide a Grunt script that will build Phaser from source along with all the examples.</p>
+<p>Run <code>grunt</code> in the phaser folder for a list of command-line options.</p>
+<h2>Koding</h2>
+<p>You can <a href="http://learn.koding.com/btn/clone_d.png">![clone the Phaser repo in Koding</a>]<a href="https://koding.com/Teamwork?import=https://github.com/photonstorm/phaser/archive/master.zip&amp;c=git1">koding</a> and then start editing and previewing code right away using their web based VM development system.</p>
+<h2>Bower</h2>
+<p>If you use bowser you can install phaser with:</p>
+<p><code>bower install phaser</code></p>
+<p>Nice and easy :)</p>
+<p><img src="http://www.photonstorm.com/wp-content/uploads/2013/10/phaser_tanks-640x480.png" alt="Tanks"></p>
+<h2>CDNJS</h2>
+<p>Thanks to a community member Phaser is now available on <a href="http://cdnjs.com">CDNJS</a>. You can include the following in your html:</p>
+<p><code>http://cdnjs.cloudflare.com/ajax/libs/phaser/1.1.3/phaser.min.js</code></p>
+<p>Or if you prefer you can leave the protocol off, so it works via http and https:</p>
+<p><code>//cdnjs.cloudflare.com/ajax/libs/phaser/1.1.3/phaser.min.js</code></p>
+<h2>Requirements</h2>
+<p>Games created with Phaser require a modern web browser that supports the canvas tag. This includes Internet Explorer 9+, Firefox, Chrome, Safari and Opera. It also works on mobile web browsers including stock Android 2.x browser and above and iOS5 Mobile Safari and above.</p>
+<p>For developing with Phaser you can use either a plain-vanilla JavaScript approach or <a href="https://typescript.codeplex.com/">TypeScript</a> using the provided TypeScript definitions file. We made no assumptions about how you like to code your games, and were careful not to impose any form of class/inheritance/structure upon you.</p>
+<p>Phaser is 321 KB minified and 72 KB gzipped.</p>
+<h2>Learn By Example</h2>
+<p>Phaser comes with an ever growing suite of Examples. Personally I feel that we learn better by looking at small refined code examples, so we created over 200 of them and create new ones to test every new feature added. Inside the <code>examples</code> folder you'll find the current set. If you write a particularly good example then please send it to us.</p>
+<p>The examples need to be run through a local web server (in order to avoid file access permission errors from your browser). You can use your own web server, or start the included web server using grunt.</p>
+<p>Using a locally installed web server browse to the examples folder:</p>
+<pre><code>examples/index.html</code></pre>
+<p>Alternatively in order to start the included web server, after you've cloned the repo, run <code>npm install</code> to install all dependencies, then <code>grunt connect</code> to start a local server. After running this command you should be able to access your local webserver at <code>http://127.0.0.1:8000</code>. Then browse to the examples folder: <code>http://127.0.0.1:8000/examples/index.html</code></p>
+<p>There is a new 'Side View' example viewer as well. This loads all the examples into a left-hand frame for faster navigation.</p>
+<p>You can also browse all <a href="http://gametest.mobi/phaser/">Phaser Examples</a> online.</p>
+<h2>Features</h2>
+<p><strong>WebGL &amp; Canvas</strong></p>
+<p>Phaser uses both a Canvas and WebGL renderer internally and can automatically swap between them based on browser support. This allows for lightning fast rendering across Desktop and Mobile. When running under WebGL Phaser now supports shaders, allowing for some incredible in-game effects. Phaser uses and contributes towards the excellent Pixi.js library for rendering.</p>
+<p><strong>Preloader</strong></p>
+<p>We've made the loading of assets as simple as one line of code. Images, Sounds, Sprite Sheets, Tilemaps, JSON data, XML and JavaScrtip files - all parsed and handled automatically, ready for use in game and stored in a global Cache for Sprites to share.</p>
+<p><strong>Physics</strong></p>
+<p>Phaser ships with our Arcade Physics system. A SAT based collision and physics library perfect for low-powered devices and fast collision response. Control velocity, acceleration, bounce, damping and full collision and separation control. As of version 1.1.4 we now support rectangles, circles and polygon collision with full rotation.</p>
+<p><strong>Sprites</strong></p>
+<p>Sprites are the life-blood of your game. Position them, tween them, rotate them, scale them, animate them, collide them, paint them onto custom textures and so much more!
+Sprites also have full Input support: click them, touch them, drag them around, snap them - even pixel perfect click detection if needed.</p>
+<p><strong>Groups</strong></p>
+<p>Group bundles of Sprites together for easy pooling and recycling, avoiding constant object creation. Groups can also be collided: for example a &quot;Bullets&quot; group checking for collision against the &quot;Aliens&quot; group, with a custom collision callback to handle the outcome.</p>
+<p><strong>Animation</strong></p>
+<p>Phaser supports classic Sprite Sheets with a fixed frame size, Texture Packer and Flash CS6/CC JSON files (both Hash and Array formats) and Starling XML files. All of these can be used to easily create animation for Sprites.</p>
+<p><strong>Particles</strong></p>
+<p>An Arcade Particle system is built-in, which allows you to create fun particle effects easily. Create explosions or constant streams for effects like rain or fire. Or attach the Emitter to a Sprite for a jet trail.</p>
+<p><strong>Camera</strong></p>
+<p>Phaser has a built-in Game World. Objects can be placed anywhere within the world and you've got access to a powerful Camera to look into that world. Pan around and follow Sprites with ease.</p>
+<p><strong>Input</strong></p>
+<p>Talk to a Phaser.Pointer and it doesn't matter if the input came from a touch-screen or mouse, it can even change mid-game without dropping a beat. Multi-touch, Mouse, Keyboard and lots of useful functions allow you to code custom gesture recognition.</p>
+<p><strong>Sound</strong></p>
+<p>Phaser supports both Web Audio and legacy HTML Audio. It automatically handles mobile device locking, easy Audio Sprite creation, looping, streaming and volume. We know how much of a pain dealing with audio on mobile is, so we did our best to resolve that!</p>
+<p><strong>Tilemaps</strong></p>
+<p>Phaser can load, render and collide with a tilemap with just a couple of lines of code. We support CSV and Tiled map data formats with multiple tile layers. There are lots of powerful tile manipulation functions: swap tiles, replace them, delete them, add them and update the map in realtime.</p>
+<p><strong>Device Scaling</strong></p>
+<p>Phaser has a built-in Scale Manager which allows you to scale your game to fit any size screen. Control aspect ratios, minimum and maximum scales and full-screen support.</p>
+<p><strong>Plugin system</strong></p>
+<p>We are trying hard to keep the core of Phaser limited to only essential classes, so we built a smart Plugin system to handle everything else. Create your own plugins easily and share them with the community.</p>
+<p><strong>Mobile Browser</strong></p>
+<p>Phaser was built specifically for Mobile web browsers. Of course it works blazingly fast on Desktop too, but unlike lots of frameworks mobile was our main focus. If it doesn't perform well on mobile then we don't add it into the Core.</p>
+<p><strong>Developer Support</strong></p>
+<p>We use Phaser every day on our many client projects. As a result it's constantly evolving and improving and we jump on bugs and pull requests quickly. This is a living, breathing framework maintained by a commercial company with custom feature development and support packages available. We live and breathe HTML5 games.</p>
+<p><strong>Battle Tested</strong></p>
+<p>Although Phaser 1.0 is a brand new release it is born from years of experience building some of the biggest mobile HTML5 games out there. We're not saying it is 100% bug free, but we use it for our client work every day, so issues get resolved &lt;em&gt;fast&lt;/em&gt; and we stay on-top of the changing browser landscape.</p>
+<p><img src="http://www.photonstorm.com/wp-content/uploads/2013/10/phaser_fruit_particles-640x480.png" alt="FruitParty"></p>
+<h2>Road Map</h2>
+<p>Here is what's on our road map for the coming months:</p>
+<p>Version 1.1.5 (&quot;Saldaea&quot;)</p>
+<ul>
+<li>A fast turn-around point release that will focus on addressing any bugs that occured as a result of the large changes that took place in 1.1.4.</li>
+</ul>
+<p>Version 1.2 (&quot;Shienar&quot;)</p>
+<ul>
+<li>Update to Pixi 1.4 - this newly released build has lots of internal changes and new features we want to take advantage of.</li>
+</ul>
+<p>Version 1.3 (&quot;Tarabon&quot;)</p>
+<ul>
+<li>Enhance the State Management, so you can perform non-destructive State swaps and persistence.</li>
+<li>Dedicated CocoonJS packaging features (screencanvas, etc)</li>
+<li>A more advanced Particle system, one that can render to a single canvas (rather than spawn hundreds of Sprites), more advanced effects, etc.</li>
+<li>Ability to control DOM elements from the core game and layer them into the game.</li>
+<li>Touch Gestures.</li>
+<li>Support for parallel asset loading.</li>
+<li>Fixed width bitmap font support, plus enhanced Bitmap font rendering.</li>
+</ul>
+<p>Version 2.0 (&quot;Aes Sedai&quot;)</p>
+<ul>
+<li>Integrate p2.js physics system completely.</li>
+<li>Comprehensive testing across Firefox OS devices, CocoonJS and Ejecta.</li>
+<li>Integration with third party services like Google Play Game Services and Amazon JS SDK.</li>
+<li>Flash CC HTML5 export integration.</li>
+<li>Massively enhance the audio side of Phaser. Although it does what it does well, it could do with taking more advantage of Web Audio - echo effects, positional sound, etc.</li>
+</ul>
+<p>Beyond version 2.0</p>
+<ul>
+<li>Test out packaging with Node-webkit.</li>
+<li>Game parameters stored in Google Docs.</li>
+<li>Look at HiDPI Canvas settings.</li>
+<li>Multiple Camera support.</li>
+</ul>
+<h2>Contributing</h2>
+<p>We now have a full <a href="https://github.com/photonstorm/phaser/blob/master/CONTRIBUTING.md">Contributors Guide</a> which goes into the process in more detail, but here are the headlines:</p>
+<ul>
+<li><p>If you find a bug then please report it on <a href="https://github.com/photonstorm/phaser/issues">GitHub Issues</a> or our <a href="http://www.html5gamedevs.com/forum/14-phaser/">Support Forum</a>.</p>
+</li>
+<li><p>If you have a feature request, or have written a game or demo that shows Phaser in use, then please get in touch. We'd love to hear from you! Either post to our <a href="http://www.html5gamedevs.com/forum/14-phaser/">forum</a> or email: rich@photonstorm.com</p>
+</li>
+<li><p>If you issue a Pull Request for Phaser, please only do so againt the <code>dev</code> branch and <em>not</em> against the <code>master</code> branch.</p>
+</li>
+<li><p>Before submitting a Pull Request please run your code through <a href="http://www.jshint.com/">JSHint</a> to check for stylistic or formatting errors. To use JSHint, first install it by running <code>npm install jshint</code>, then test your code by running <code>jshint src</code>. This isn't a strict requirement and we are happy to receive Pull Requests that haven't been JSHinted, so don't let it put you off contributing, but do know that we'll reformat your source before going live with it.</p>
+</li>
+</ul>
+<h2>Bugs?</h2>
+<p>Please add them to the <a href="https://github.com/photonstorm/phaser/issues">Issue Tracker</a> with as much info as possible, especially source code demonstrating the issue.</p>
+<p><img src="http://www.photonstorm.com/wp-content/uploads/2013/04/phaser_tilemap_collision.png" alt="Phaser Tilemap"></p>
+<p>&quot;Being negative is not how we make progress&quot; - Larry Page, Google</p>
+<h2>License</h2>
+<p>Phaser is released under the <a href="http://opensource.org/licenses/MIT">MIT License</a>.</p>
+<p><a href="https://github.com/igrigorik/ga-beacon"><img src="https://ga-beacon.appspot.com/UA-44006568-2/phaser/index" alt="Analytics"></a></p></article>
+    </section>
 
 
 
-
-
-
-
-	<h1 class="page-title">Index</h1>
-<section>
-
-<header>
-    <h2>
-    D:\wamp\www\phaser\src/IntroDocs.js
-    </h2>
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-
-    
-        
-            <div class="description"><p>Phaser - <a href="http://www.phaser.io">http://www.phaser.io</a></p>
-<p>v1.1.3 - Released November 28th 2013.</p>
-<p>By Richard Davey <a href="http://www.photonstorm.com">http://www.photonstorm.com</a> @photonstorm</p>
-<p>A feature-packed 2D HTML5 game framework born from the smouldering pits of Flixel and
-constructed via plenty of blood, sweat, tears and coffee by Richard Davey (@photonstorm).</p>
-<p>Phaser uses Pixi.js for rendering, created by Mat Groves <a href="http://matgroves.com/">http://matgroves.com/</a> @Doormat23.</p>
-<p>Follow Phaser development progress at <a href="http://www.photonstorm.com">http://www.photonstorm.com</a></p>
-<p>Many thanks to Adam Saltsman (@ADAMATOMIC) for releasing Flixel, from both which Phaser
-and my love of game development originate.</p>
-<p>&quot;If you want your children to be intelligent,  read them fairy tales.&quot;
-&quot;If you want them to be more intelligent, read them more fairy tales.&quot;
-                                                    -- Albert Einstein</p></div>
-        
-
-        
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="IntroDocs.js.html">IntroDocs.js</a>, <a href="IntroDocs.js.html#sunlight-1-line-3">line 3</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
 
 
 
@@ -547,13 +772,13 @@ and my love of game development originate.</p>
 					
 					
 		<span class="copyright">
-		Phaser Copyright © 2012-2013 Photon Storm Ltd.
+		Phaser Copyright © 2012-2014 Photon Storm Ltd.
 		</span>
 					<br />
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Thu Nov 28 2013 15:56:26 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 05 2014 06:28:24 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

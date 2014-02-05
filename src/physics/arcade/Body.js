@@ -351,7 +351,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Internal method that updates the Body scale in relation to the parent Sprite.
     *
-    * @method Phaser.Physics.Arcade#updateScale
+    * @method Phaser.Physics.Arcade.Body#updateScale
     * @protected
     */
     updateScale: function () {
@@ -373,7 +373,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Internal method that updates the Body position in relation to the parent Sprite.
     *
-    * @method Phaser.Physics.Arcade#preUpdate
+    * @method Phaser.Physics.Arcade.Body#preUpdate
     * @protected
     */
     preUpdate: function () {
@@ -435,7 +435,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Internal method that checks and potentially resets the blocked status flags.
     *
-    * @method Phaser.Physics.Arcade#checkBlocked
+    * @method Phaser.Physics.Arcade.Body#checkBlocked
     * @protected
     */
     checkBlocked: function () {
@@ -457,7 +457,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Internal method that updates the left, right, top, bottom, width and height properties.
     *
-    * @method Phaser.Physics.Arcade#updateBounds
+    * @method Phaser.Physics.Arcade.Body#updateBounds
     * @protected
     */
     updateBounds: function () {
@@ -485,7 +485,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Internal method that checks the acceleration and applies damping if not set.
     *
-    * @method Phaser.Physics.Arcade#applyDamping
+    * @method Phaser.Physics.Arcade.Body#applyDamping
     * @protected
     */
     applyDamping: function () {
@@ -517,7 +517,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Check if we're below minVelocity and gravity isn't trying to drag us in the opposite direction.
     *
-    * @method Phaser.Physics.Arcade#reboundCheck
+    * @method Phaser.Physics.Arcade.Body#reboundCheck
     * @protected
     * @param {boolean} x - Check the X axis?
     * @param {boolean} y - Check the Y axis?
@@ -576,7 +576,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Gets the total force being applied on the X axis, including gravity and velocity.
     *
-    * @method Phaser.Physics.Arcade#getUpwardForce
+    * @method Phaser.Physics.Arcade.Body#getUpwardForce
     * @return {number} The total force being applied on the X axis.
     */
     getUpwardForce: function () {
@@ -595,7 +595,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Gets the total force being applied on the X axis, including gravity and velocity.
     *
-    * @method Phaser.Physics.Arcade#getDownwardForce
+    * @method Phaser.Physics.Arcade.Body#getDownwardForce
     * @return {number} The total force being applied on the Y axis.
     */
     getDownwardForce: function () {
@@ -614,7 +614,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Subtracts the given Vector from this Body.
     *
-    * @method Phaser.Physics.Arcade#sub
+    * @method Phaser.Physics.Arcade.Body#sub
     * @protected
     * @param {SAT.Vector} v - The vector to substract from this Body.
     */
@@ -628,7 +628,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Adds the given Vector to this Body.
     *
-    * @method Phaser.Physics.Arcade#add
+    * @method Phaser.Physics.Arcade.Body#add
     * @protected
     * @param {SAT.Vector} v - The vector to add to this Body.
     */
@@ -642,7 +642,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Separation response handler.
     *
-    * @method Phaser.Physics.Arcade#give
+    * @method Phaser.Physics.Arcade.Body#give
     * @protected
     * @param {Phaser.Physics.Arcade.Body} body - The Body that collided.
     * @param {SAT.Response} response - The SAT Response object containing the collision data.
@@ -663,7 +663,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Separation response handler.
     *
-    * @method Phaser.Physics.Arcade#take
+    * @method Phaser.Physics.Arcade.Body#take
     * @protected
     * @param {Phaser.Physics.Arcade.Body} body - The Body that collided.
     * @param {SAT.Response} response - The SAT Response object containing the collision data.
@@ -684,7 +684,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Split the collision response evenly between the two bodies.
     *
-    * @method Phaser.Physics.Arcade#split
+    * @method Phaser.Physics.Arcade.Body#split
     * @protected
     * @param {Phaser.Physics.Arcade.Body} body - The Body that collided.
     * @param {SAT.Response} response - The SAT Response object containing the collision data.
@@ -707,7 +707,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Exchange velocity with the given Body.
     *
-    * @method Phaser.Physics.Arcade#exchange
+    * @method Phaser.Physics.Arcade.Body#exchange
     * @protected
     * @param {Phaser.Physics.Arcade.Body} body - The Body that collided.
     */
@@ -753,7 +753,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Rebound the velocity of this Body.
     *
-    * @method Phaser.Physics.Arcade#processRebound
+    * @method Phaser.Physics.Arcade.Body#processRebound
     * @protected
     * @param {Phaser.Physics.Arcade.Body} body - The Body that collided.
     */
@@ -779,7 +779,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Checks for an overlap between this Body and the given Body.
     *
-    * @method Phaser.Physics.Arcade#overlap
+    * @method Phaser.Physics.Arcade.Body#overlap
     * @param {Phaser.Physics.Arcade.Body} body - The Body that is being checked against this Body.
     * @param {SAT.Response} response - SAT Response handler.
     * @return {boolean} True if the two bodies overlap, otherwise false.
@@ -817,7 +817,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Checks if this Body is already in contact with the given Body.
     *
-    * @method Phaser.Physics.Arcade#inContact
+    * @method Phaser.Physics.Arcade.Body#inContact
     * @param {Phaser.Physics.Arcade.Body} body - The Body to be checked.
     * @return {boolean} True if the given Body is already in contact with this Body.
     */
@@ -830,7 +830,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Adds the given Body to the contact list of this Body. Also adds this Body to the contact list of the given Body.
     *
-    * @method Phaser.Physics.Arcade#addContact
+    * @method Phaser.Physics.Arcade.Body#addContact
     * @param {Phaser.Physics.Arcade.Body} body - The Body to be added.
     * @return {boolean} True if the given Body was added to this contact list, false if already on it.
     */
@@ -854,7 +854,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Removes the given Body from the contact list of this Body. Also removes this Body from the contact list of the given Body.
     *
-    * @method Phaser.Physics.Arcade#removeContact
+    * @method Phaser.Physics.Arcade.Body#removeContact
     * @param {Phaser.Physics.Arcade.Body} body - The Body to be removed.
     * @return {boolean} True if the given Body was removed from this contact list, false if wasn't on it.
     */
@@ -879,7 +879,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     * This separates this Body from the given Body unless a customSeparateCallback is set.
     * It assumes they have already been overlap checked and the resulting overlap is stored in the SAT response.
     *
-    * @method Phaser.Physics.Arcade#separate
+    * @method Phaser.Physics.Arcade.Body#separate
     * @protected
     * @param {Phaser.Physics.Arcade.Body} body - The Body to be separated from this one.
     * @param {SAT.Response} response - SAT Response handler.
@@ -966,7 +966,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     * If the callback returns true then separation, rebounds and the touching flags will all be set.
     * If it returns false this will be skipped and must be handled manually.
     *
-    * @method Phaser.Physics.Arcade#hitLeft
+    * @method Phaser.Physics.Arcade.Body#hitLeft
     * @protected
     * @param {Phaser.Physics.Arcade.Body} body - The Body that collided.
     * @param {SAT.Response} response - The SAT Response object containing the collision data.
@@ -1008,7 +1008,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     * If the callback returns true then separation, rebounds and the touching flags will all be set.
     * If it returns false this will be skipped and must be handled manually.
     *
-    * @method Phaser.Physics.Arcade#hitRight
+    * @method Phaser.Physics.Arcade.Body#hitRight
     * @protected
     * @param {Phaser.Physics.Arcade.Body} body - The Body that collided.
     * @param {SAT.Response} response - The SAT Response object containing the collision data.
@@ -1050,7 +1050,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     * If the callback returns true then separation, rebounds and the touching flags will all be set.
     * If it returns false this will be skipped and must be handled manually.
     *
-    * @method Phaser.Physics.Arcade#hitTop
+    * @method Phaser.Physics.Arcade.Body#hitTop
     * @protected
     * @param {Phaser.Physics.Arcade.Body} body - The Body that collided.
     * @param {SAT.Response} response - The SAT Response object containing the collision data.
@@ -1094,7 +1094,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     * If the callback returns true then separation, rebounds and the touching flags will all be set.
     * If it returns false this will be skipped and must be handled manually.
     *
-    * @method Phaser.Physics.Arcade#hitBottom
+    * @method Phaser.Physics.Arcade.Body#hitBottom
     * @protected
     * @param {Phaser.Physics.Arcade.Body} body - The Body that collided.
     * @param {SAT.Response} response - The SAT Response object containing the collision data.
@@ -1134,7 +1134,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Internal method. Integrates velocity, global gravity and the delta timer.
     *
-    * @method Phaser.Physics.Arcade#integrateVelocity
+    * @method Phaser.Physics.Arcade.Body#integrateVelocity
     * @protected
     */
     integrateVelocity: function () {
@@ -1181,7 +1181,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Internal method. This is called directly before the sprites are sent to the renderer and after the update function has finished.
     *
-    * @method Phaser.Physics.Arcade#postUpdate
+    * @method Phaser.Physics.Arcade.Body#postUpdate
     * @protected
     */
     postUpdate: function () {
@@ -1237,7 +1237,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     * Resets the Body motion values: velocity, acceleration, angularVelocity and angularAcceleration.
     * Also resets the forces to defaults: gravity, bounce, minVelocity,maxVelocity, angularDrag, maxAngular, mass, friction and checkCollision if 'full' specified.
     *
-    * @method Phaser.Physics.Arcade#reset
+    * @method Phaser.Physics.Arcade.Body#reset
     * @param {boolean} [full=false] - A full reset clears down settings you may have set, such as gravity, bounce and drag. A non-full reset just clears motion values.
     */
     reset: function (full) {
@@ -1275,7 +1275,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     /**
     * Destroys this Body and all references it holds to other objects.
     *
-    * @method Phaser.Physics.Arcade#destroy
+    * @method Phaser.Physics.Arcade.Body#destroy
     */
     destroy: function () {
 
@@ -1295,7 +1295,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     * Sets this Body to use a circle of the given radius for all collision.
     * The Circle will be centered on the center of the Sprite by default, but can be adjusted via the Body.offset property and the setCircle x/y parameters.
     *
-    * @method Phaser.Physics.Arcade#setCircle
+    * @method Phaser.Physics.Arcade.Body#setCircle
     * @param {number} radius - The radius of this circle (in pixels)
     * @param {number} [offsetX=0] - The x amount the circle will be offset from the Sprites center.
     * @param {number} [offsetY=0] - The y amount the circle will be offset from the Sprites center.
@@ -1317,7 +1317,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     * Sets this Body to use a rectangle for all collision.
     * If you don't specify any parameters it will be sized to match the parent Sprites current width and height (including scale factor) and centered on the sprite.
     *
-    * @method Phaser.Physics.Arcade#setRectangle
+    * @method Phaser.Physics.Arcade.Body#setRectangle
     * @param {number} [width] - The width of the rectangle. If not specified it will default to the width of the parent Sprite.
     * @param {number} [height] - The height of the rectangle. If not specified it will default to the height of the parent Sprite.
     * @param {number} [translateX] - The x amount the rectangle will be translated from the Sprites center.
@@ -1344,8 +1344,8 @@ Phaser.Physics.Arcade.Body.prototype = {
     * The points are specified in a counter-clockwise direction and must create a convex polygon.
     * Use Body.translate and/or Body.offset to re-position the polygon from the Sprite origin.
     *
-    * @method Phaser.Physics.Arcade#setPolygon
-    * @param {array<SAT.Vector>|Array<Number>|SAT.Vector...|Number...} points - This can be an array of Vectors that form the polygon,
+    * @method Phaser.Physics.Arcade.Body#setPolygon
+    * @param {(SAT.Vector[]|number[]|...SAT.Vector|...number)} points - This can be an array of Vectors that form the polygon,
     *      a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
     *      all the points of the polygon e.g. `setPolygon(new SAT.Vector(), new SAT.Vector(), ...)`, or the
     *      arguments passed can be flat x,y values e.g. `setPolygon(x,y, x,y, x,y, ...)` where `x` and `y` are Numbers.
@@ -1382,7 +1382,7 @@ Phaser.Physics.Arcade.Body.prototype = {
     * Used for translating rectangle and polygon bodies from the Sprite parent. Doesn't apply to Circles.
     * See also the Body.offset property.
     *
-    * @method Phaser.Physics.Arcade#translate
+    * @method Phaser.Physics.Arcade.Body#translate
     * @param {number} x - The x amount the polygon or rectangle will be translated by from the Sprite.
     * @param {number} y - The y amount the polygon or rectangle will be translated by from the Sprite.
     */
@@ -1451,14 +1451,10 @@ Phaser.Physics.Arcade.Body.prototype.constructor = Phaser.Physics.Arcade.Body;
 
 /**
 * @name Phaser.Physics.Arcade.Body#x
-* @property {number} x
+* @property {number} x - The x coordinate of this Body.
 */
 Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "x", {
     
-    /**
-    * @method x
-    * @return {number}
-    */
     get: function () {
         
         if (this.type === Phaser.Physics.Arcade.CIRCLE)
@@ -1472,10 +1468,6 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "x", {
 
     },
 
-    /**
-    * @method x
-    * @param {number} value
-    */
     set: function (value) {
 
         if (this.type === Phaser.Physics.Arcade.CIRCLE)
@@ -1493,14 +1485,10 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "x", {
 
 /**
 * @name Phaser.Physics.Arcade.Body#y
-* @property {number} y
+* @property {number} y - The y coordinate of this Body.
 */
 Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "y", {
     
-    /**
-    * @method y
-    * @return {number}
-    */
     get: function () {
         
         if (this.type === Phaser.Physics.Arcade.CIRCLE)
@@ -1514,10 +1502,6 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "y", {
 
     },
 
-    /**
-    * @method y
-    * @param {number} value
-    */
     set: function (value) {
 
         if (this.type === Phaser.Physics.Arcade.CIRCLE)

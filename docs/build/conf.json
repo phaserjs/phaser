@@ -5,7 +5,6 @@
     "source": {
         "include": [ 
             "../../src/Phaser.js", 
-            "../../src/IntroDocs.js", 
             "../../src/animation/", 
             "../../src/core/", 
             "../../src/gameobjects/", 
@@ -36,7 +35,7 @@
         },
         "systemName"      : "Phaser",
         "footer"          : "",
-        "copyright"       : "Phaser Copyright © 2012-2013 Photon Storm Ltd.",
+        "copyright"       : "Phaser Copyright © 2012-2014 Photon Storm Ltd.",
         "navType"         : "vertical",
         "theme"           : "cerulean",
         "linenums"        : true,

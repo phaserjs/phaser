@@ -1,1 +1,1 @@
-jsdoc -c conf.json
+jsdoc -c conf.json ../../README.md
