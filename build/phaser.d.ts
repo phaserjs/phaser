@@ -824,6 +824,20 @@ declare module Phaser {
     }
 
     class BitmapText extends Phaser.Text {
+        constructor(game: Phaser.Game, x?: number, y?: number, text?: string, style?: Object);
+	    alive: boolean;
+	    anchor: Phaser.Point;
+	    angle: number;
+	    exist: boolean;
+	    game: Phaser.Game;
+	    group: Phaser.Group;
+	    name: string;
+	    renderable: boolean;
+	    scale: Phaser.Point;
+	    type: number; // readonly
+		x: number;
+	    y: number;
+	    update(): void;
     }
 
     class Button {
