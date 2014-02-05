@@ -1400,6 +1400,7 @@ declare module Phaser {
         frameName: string;
         loadFrameData(frameData: Phaser.FrameData): void;
         add(name: string, frames?: Array<any>, frameRate?: number, loop?: boolean, useNumericIndex?: boolean): Phaser.Animation;
+        getAnimation(name: string): Phaser.Animation;
         validateFrames(frames: Array<any>, useNumericIndex?: boolean): boolean;
         play(name: string, frameRate?: number, loop?: boolean): Phaser.Animation;
         stop(name?: string, resetFrame?: boolean): void;
