@@ -32,7 +32,7 @@
 
     function dirToArray($dir) { 
 
-        $ignore = array('.', '..', '_site', 'assets', 'states', 'book', 'filters');
+        $ignore = array('.', '..', '_site', 'assets', 'states', 'book', 'filters', 'misc');
         $result = array(); 
         $root = scandir($dir); 
         $dirs = array_diff($root, $ignore);

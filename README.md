@@ -62,6 +62,8 @@ Version 1.2 - "Shienar" - -in development-
 Significant API changes:
 
 * Upgraded to Pixi.js 1.4.4
+* Group now extends PIXI.DisplayObjectContainer, rather than owning a _container property, which makes life a whole lot easier re: nesting.
+
 
 New features:
 

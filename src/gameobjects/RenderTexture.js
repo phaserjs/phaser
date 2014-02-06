@@ -85,11 +85,6 @@ Phaser.RenderTexture.prototype.render = function(displayObject, position, clear,
     if (typeof clear === 'undefined') { clear = false; }
     if (typeof renderHidden === 'undefined') { renderHidden = false; }
 
-    if (displayObject instanceof Phaser.Group)
-    {
-        displayObject = displayObject._container;
-    }
-
     if (PIXI.gl)
     {
         this.renderWebGL(displayObject, position, clear, renderHidden);
