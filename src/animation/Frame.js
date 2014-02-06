@@ -155,6 +155,28 @@ Phaser.Frame.prototype = {
             this.spriteSourceSizeH = destHeight;
         }
 
+    },
+
+    /**
+    * Returns a Rectangle set to the dimensions of this Frame.
+    *
+    * @method Phaser.Frame#getRect
+    * @param {Phaser.Rectangle} [out] - A rectangle to copy the frame dimensions to.
+    * @return {Phaser.Rectangle} A rectangle.
+    */
+    getRect: function (out) {
+
+        if (typeof out === 'undefined')
+        {
+            out = new Phaser.Rectangle(this.x, this.y, this.width, this.height);
+        }
+        else
+        {
+            out.setTo(this.x, this.y, this.width, this.height);
+        }
+
+        return out;
+
     }
 
 };

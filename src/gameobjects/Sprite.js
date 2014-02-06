@@ -946,8 +946,8 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
 
     if (typeof health === 'undefined') { health = 1; }
 
-    this.x = x;
-    this.y = y;
+    // this.x = x;
+    // this.y = y;
     this.world.setTo(x, y);
     this.position.x = this.x;
     this.position.y = this.y;
@@ -978,9 +978,9 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
 */
 Phaser.Sprite.prototype.bringToTop = function() {
 
-    if (this.group)
+    if (this.parent)
     {
-        this.group.bringToTop(this);
+        this.parent.bringToTop(this);
     }
     else
     {
@@ -1014,31 +1014,29 @@ Phaser.Sprite.prototype.play = function (name, frameRate, loop, killOnComplete) 
 
 /**
 * Returns the delta x value. The difference between Sprite.x now and in the previous step.
-* @name Phaser.Sprite#deltaX
-* @property {number} deltaX - The delta value. Positive if the motion was to the right, negative if to the left.
-* @readonly
+*
+* @method Phaser.Sprite#deltaX
+* @memberof Phaser.Sprite
+* @return {number} The delta value. Positive if the motion was to the right, negative if to the left.
 */
-Object.defineProperty(Phaser.Sprite.prototype, 'deltaX', {
+Phaser.Sprite.prototype.deltaX = function () {
 
-    get: function() {
-        return this.world.x - this._cache.prevX;
-    }
+    return this.world.x - this._cache.prevX;
 
-});
+};
 
 /**
 * Returns the delta x value. The difference between Sprite.y now and in the previous step.
-* @name Phaser.Sprite#deltaY
-* @property {number} deltaY - The delta value. Positive if the motion was downwards, negative if upwards.
-* @readonly
+*
+* @method Phaser.Sprite#deltaY
+* @memberof Phaser.Sprite
+* @return {number} The delta value. Positive if the motion was downwards, negative if upwards.
 */
-Object.defineProperty(Phaser.Sprite.prototype, 'deltaY', {
+Phaser.Sprite.prototype.deltaY = function () {
 
-    get: function() {
-        return this.world.y - this._cache.prevY;
-    }
+    return this.world.y - this._cache.prevY;
 
-});
+};
 
 /**
 * Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
@@ -1137,21 +1135,21 @@ Object.defineProperty(Phaser.Sprite.prototype, "worldCenterY", {
 * @name Phaser.Sprite#width
 * @property {number} width - The width of the Sprite in pixels.
 */
-Object.defineProperty(Phaser.Sprite.prototype, 'width', {
+// Object.defineProperty(Phaser.Sprite.prototype, 'width', {
 
-    get: function() {
-        return this.scale.x * this.currentFrame.width;
-    },
+//     get: function() {
+//         return this.scale.x * this.currentFrame.width;
+//     },
 
-    set: function(value) {
+//     set: function(value) {
 
-        this.scale.x = value / this.currentFrame.width;
-        this._cache.scaleX = value / this.currentFrame.width;
-        this._width = value;
+//         this.scale.x = value / this.currentFrame.width;
+//         this._cache.scaleX = value / this.currentFrame.width;
+//         this._width = value;
 
-    }
+//     }
 
-});
+// });
 
 /**
 * The height of the sprite in pixels, setting this will actually modify the scale to acheive the value desired.
@@ -1160,21 +1158,21 @@ Object.defineProperty(Phaser.Sprite.prototype, 'width', {
 * @name Phaser.Sprite#height
 * @property {number} height - The height of the Sprite in pixels.
 */
-Object.defineProperty(Phaser.Sprite.prototype, 'height', {
+// Object.defineProperty(Phaser.Sprite.prototype, 'height', {
 
-    get: function() {
-        return this.scale.y * this.currentFrame.height;
-    },
+//     get: function() {
+//         return this.scale.y * this.currentFrame.height;
+//     },
 
-    set: function(value) {
+//     set: function(value) {
 
-        this.scale.y = value / this.currentFrame.height;
-        this._cache.scaleY = value / this.currentFrame.height;
-        this._height = value;
+//         this.scale.y = value / this.currentFrame.height;
+//         this._cache.scaleY = value / this.currentFrame.height;
+//         this._height = value;
 
-    }
+//     }
 
-});
+// });
 
 /**
 * By default a Sprite won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is

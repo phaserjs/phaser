@@ -67,6 +67,7 @@ Significant API changes:
 * PIXI.Point is now aliased to Phaser.Point - saves on code duplication and works exactly the same.
 * PIXI.Rectangle is now aliased to Phaser.Rectangle - saves on code duplication and works exactly the same.
 * PIXI.Circle is now aliased to Phaser.Circle - saves on code duplication and works exactly the same.
+* Sprite.deltaX and deltaY swapped to functions: Sprite.deltaX() and Sprite.deltaY()
 
 
 New features:

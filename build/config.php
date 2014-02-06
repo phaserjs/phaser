@@ -129,6 +129,7 @@
     <script src="$path/src/gameobjects/GameObjectFactory.js"></script>
     <script src="$path/src/gameobjects/BitmapData.js"></script>
     <script src="$path/src/gameobjects/Sprite.js"></script>
+    <script src="$path/src/gameobjects/Image.js"></script>
     <script src="$path/src/gameobjects/TileSprite.js"></script>
     <script src="$path/src/gameobjects/Text.js"></script>
     <script src="$path/src/gameobjects/BitmapText.js"></script>
