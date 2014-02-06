@@ -10,6 +10,7 @@ function preload() {
 	game.load.image('bg', 'assets/skies/sky2.png');
 	game.load.image('vulkaiser', 'assets/pics/vulkaiser_red.png');
 
+	game.load.binary('shampoo', 'assets/audio/protracker/shampoo.mod', modLoaded, this);
 	game.load.binary('macrocosm', 'assets/audio/protracker/macrocosm.mod', modLoaded, this);
 	game.load.binary('impulse', 'assets/audio/protracker/act_of_impulse.mod', modLoaded, this);
 	game.load.binary('enigma', 'assets/audio/protracker/enigma.mod', modLoaded, this);
@@ -66,7 +67,7 @@ function create() {
 	vu4.width = 0;
 
 	module = new Protracker();
- 	module.buffer = game.cache.getBinary('macrocosm');
+ 	module.buffer = game.cache.getBinary('shampoo');
     module.parse();
     module.play();
 

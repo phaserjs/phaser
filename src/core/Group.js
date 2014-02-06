@@ -10,9 +10,9 @@
 * @classdesc A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {*} parent - The parent Group, DisplayObject or DisplayObjectContainer that will hold this group. If undefined it will use game.world.
+* @param {*} parent - The parent Group, DisplayObject or DisplayObjectContainer that this Group will be added to. If undefined or null it will use game.world.
 * @param {string} [name=group] - A name for this Group. Not used internally but useful for debugging.
-* @param {boolean} [useStage=false] - Should the DisplayObjectContainer this Group creates be added to the World (default, false) or direct to the Stage (true).
+* @param {boolean} [useStage=false] - Should this Group be added to the World (default, false) or direct to the Stage (true).
 */
 Phaser.Group = function (game, parent, name, useStage) {
 
@@ -21,7 +21,7 @@ Phaser.Group = function (game, parent, name, useStage) {
     */
     this.game = game;
 
-    if (typeof parent === 'undefined')
+    if (typeof parent === 'undefined' || parent === null)
     {
         parent = game.world;
     }
@@ -35,32 +35,18 @@ Phaser.Group = function (game, parent, name, useStage) {
 
     if (typeof useStage === 'undefined')
     {
-        useStage = false;
-    }
-
-    if (useStage)
-    {
-        // this._container = this.game.stage._stage;
-    }
-    else
-    {
         if (parent)
         {
-            // if (parent instanceof Phaser.Group)
-            // {
-            //     parent.addChild(this);
-            // }
-            // else
-            // {
-                parent.addChild(this);
-                // parent.updateTransform();
-            // }
+            parent.addChild(this);
         }
         else
         {
             this.game.stage._stage.addChild(this);
-            // this.game.stage._stage.updateTransform();
         }
+    }
+    else
+    {
+        this.game.stage._stage.addChild(this);
     }
 
     /**
@@ -86,18 +72,14 @@ Phaser.Group = function (game, parent, name, useStage) {
     */
     this.group = null;
 
-    //  Replaces the PIXI.Point with a slightly more flexible one.
-    // this._container.scale = new Phaser.Point(1, 1);
-
     /**
-    * @property {Phaser.Point} scale - The scane of the Group container.
+    * @property {Phaser.Point} scale - The scale of the Group container.
     */
-    // this.scale = this._container.scale;
+    this.scale = new Phaser.Point(1, 1);
 
     /**
     * @property {Phaser.Point} pivot - The pivot point of the Group container.
     */
-    // this.pivot = this._container.pivot;
 
     /**
     * The cursor is a simple way to iterate through the objects in a Group using the Group.next and Group.previous functions.
@@ -164,8 +146,6 @@ Phaser.Group.prototype.add = function (child) {
 
         this.addChild(child);
 
-        // child.updateTransform();
-
         if (child.events)
         {
             child.events.onAddedToGroup.dispatch(child, this);
@@ -197,8 +177,6 @@ Phaser.Group.prototype.addAt = function (child, index) {
         child.group = this;
 
         this.addChildAt(child, index);
-
-        // child.updateTransform();
 
         if (child.events)
         {
@@ -253,8 +231,6 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
 
     this.addChild(child);
         
-    // child.updateTransform();
-
     if (child.events)
     {
         child.events.onAddedToGroup.dispatch(child, this);
@@ -294,8 +270,6 @@ Phaser.Group.prototype.createMultiple = function (quantity, key, frame, exists) 
         child.alive = exists;
 
         this.addChild(child);
-
-        // child.updateTransform();
 
         if (child.events)
         {
@@ -433,7 +407,6 @@ Phaser.Group.prototype.replace = function (oldChild, newChild) {
         this.addChildAt(newChild, index);
 
         newChild.events.onAddedToGroup.dispatch(newChild, this);
-        // newChild.updateTransform();
 
         if (this.cursor === oldChild)
         {
@@ -860,41 +833,10 @@ Phaser.Group.prototype.sort = function (index, order) {
     if (typeof index === 'undefined') { index = 'y'; }
     if (typeof order === 'undefined') { order = Phaser.Group.SORT_ASCENDING; }
 
-    /*
-    var swapped;
-    var temp;
 
-    do {
+}
 
-        swapped = false;
-
-        for (var i = 0, len = this._container.children.length - 1; i < len; i++)
-        {
-            if (order == Phaser.Group.SORT_ASCENDING)
-            {
-                if (this._container.children[i][index] > this._container.children[i + 1][index])
-                {
-                    this.swap(this.getAt(i), this.getAt(i + 1));
-                    temp = this._container.children[i];
-                    this._container.children[i] = this._container.children[i + 1];
-                    this._container.children[i + 1] = temp;
-                    swapped = true;
-                }
-            }
-            else
-            {
-                if (this._container.children[i][index] < this._container.children[i + 1][index])
-                {
-                    this.swap(this.getAt(i), this.getAt(i + 1));
-                    temp = this._container.children[i];
-                    this._container.children[i] = this._container.children[i + 1];
-                    this._container.children[i + 1] = temp;
-                    swapped = true;
-                }
-            }
-        }
-    } while (swapped);
-    */
+Phaser.Group.prototype.sortHandler = function (a, b) {
 
 }
 

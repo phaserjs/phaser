@@ -61,6 +61,12 @@ function create() {
     //  You can click and drag any sprite but Sonic sprites should always appear above the Atari sprites
     //  and both types of sprite should only ever appear above the background and behind the 
 
+    game.input.onDown.add(wibble, this);
+
+}
+
+function wibble(p) {
+    console.log(p);
 }
 
 function update() {

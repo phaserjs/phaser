@@ -26,6 +26,8 @@ function create() {
 
 	game.input.onDown.add(tint, this);
 
+	game.add.tween(sprite).to({y: 500}, 3000, Phaser.Easing.Linear.None, true);
+
 }
 
 function tint() {
