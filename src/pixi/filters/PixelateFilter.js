@@ -4,7 +4,7 @@
 
 /**
  *
- * This filter applies a pixlate effect making display objects appear 'blocky'
+ * This filter applies a pixelate effect making display objects appear 'blocky'
  * @class PixelateFilter
  * @contructor
  */
@@ -24,7 +24,7 @@ PIXI.PixelateFilter = function()
     this.fragmentSrc = [
         'precision mediump float;',
         'varying vec2 vTextureCoord;',
-        'varying float vColor;',
+        'varying vec4 vColor;',
         'uniform vec2 testDim;',
         'uniform vec4 dimensions;',
         'uniform vec2 pixelSize;',

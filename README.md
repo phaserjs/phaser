@@ -1,11 +1,11 @@
 ![Phaser Logo](http://www.photonstorm.com/wp-content/uploads/2013/09/phaser_10_release.jpg)
 
-Phaser 1.1.5-dev
-================
+Phaser 1.2-dev
+==============
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 1.1.5 "Saldaea" - Released: -in development-
+Version: 1.2 "Shienar" - Released: -in development-
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -57,10 +57,11 @@ There is also an [un-official Getting Started Guide](http://www.antonoffplus.com
 Change Log
 ----------
 
-Version 1.1.5 - "Saldaea" - -in development-
+Version 1.2 - "Shienar" - -in development-
 
 Significant API changes:
 
+* Upgraded to Pixi.js 1.4.4
 
 New features:
 
@@ -223,10 +224,6 @@ Road Map
 --------
 
 Here is what's on our road map for the coming months:
-
-Version 1.2 ("Shienar")
-
-* Update to Pixi 1.4 - this newly released build has lots of internal changes and new features we want to take advantage of.
 
 Version 1.3 ("Tarabon")
 

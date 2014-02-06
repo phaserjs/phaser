@@ -7,8 +7,14 @@
 * @class PIXI.PixiShader
 * @constructor
 */
-PIXI.PixiShader = function()
+PIXI.PixiShader = function(gl)
 {
+    /**
+     * @property gl
+     * @type WebGLContext
+     */
+    this.gl = gl;
+
     /**
     * @property {any} program - The WebGL program.
     */
@@ -20,28 +26,36 @@ PIXI.PixiShader = function()
     this.fragmentSrc = [
         'precision lowp float;',
         'varying vec2 vTextureCoord;',
-        'varying float vColor;',
+        'varying vec4 vColor;',
         'uniform sampler2D uSampler;',
         'void main(void) {',
-        '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor;',
+        '   gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;',
         '}'
     ];
+
 
     /**
     * @property {number} textureCount - A local texture counter for multi-texture shaders.
     */
     this.textureCount = 0;
+
+    this.attributes = [];
+
+    this.init();
 };
 
 /**
-* @method PIXI.PixiShader#init
+* Initialises the shader
+* @method init
+*
 */
 PIXI.PixiShader.prototype.init = function()
 {
-    var program = PIXI.compileProgram(this.vertexSrc || PIXI.PixiShader.defaultVertexSrc, this.fragmentSrc);
 
-    var gl = PIXI.gl;
+    var gl = this.gl;
 
+    var program = PIXI.compileProgram(gl, this.vertexSrc || PIXI.PixiShader.defaultVertexSrc, this.fragmentSrc);
+    
     gl.useProgram(program);
 
     // get and store the uniforms for the shader
@@ -52,8 +66,24 @@ PIXI.PixiShader.prototype.init = function()
 
     // get and store the attributes
     this.aVertexPosition = gl.getAttribLocation(program, 'aVertexPosition');
-    this.colorAttribute = gl.getAttribLocation(program, 'aColor');
     this.aTextureCoord = gl.getAttribLocation(program, 'aTextureCoord');
+    this.colorAttribute = gl.getAttribLocation(program, 'aColor');
+
+
+    // Begin worst hack eva //
+
+    // WHY??? ONLY on my chrome pixel the line above returns -1 when using filters?
+    // maybe its something to do with the current state of the gl context.
+    // Im convinced this is a bug in the chrome browser as there is NO reason why this should be returning -1 especially as it only manifests on my chrome pixel
+    // If theres any webGL people that know why could happen please help :)
+    if(this.colorAttribute === -1)
+    {
+        this.colorAttribute = 2;
+    }
+
+    this.attributes = [this.aVertexPosition, this.aTextureCoord, this.colorAttribute];
+
+    // End worst hack eva //
 
     // add those custom shaders!
     for (var key in this.uniforms)
@@ -72,12 +102,12 @@ PIXI.PixiShader.prototype.init = function()
 * Uniforms are specified in the GLSL_ES Specification: http://www.khronos.org/registry/webgl/specs/latest/1.0/
 * http://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf
 *
-* @method PIXI.PixiShader#initUniforms
+* @method initUniforms
 */
 PIXI.PixiShader.prototype.initUniforms = function()
 {
     this.textureCount = 1;
-
+    var gl = this.gl;
     var uniform;
 
     for (var key in this.uniforms)
@@ -103,21 +133,21 @@ PIXI.PixiShader.prototype.initUniforms = function()
 
             if (type === 'mat2')
             {
-                uniform.glFunc = PIXI.gl.uniformMatrix2fv;
+                uniform.glFunc = gl.uniformMatrix2fv;
             }
             else if (type === 'mat3')
             {
-                uniform.glFunc = PIXI.gl.uniformMatrix3fv;
+                uniform.glFunc = gl.uniformMatrix3fv;
             }
             else if (type === 'mat4')
             {
-                uniform.glFunc = PIXI.gl.uniformMatrix4fv;
+                uniform.glFunc = gl.uniformMatrix4fv;
             }
         }
         else
         {
             //  GL function reference
-            uniform.glFunc = PIXI.gl['uniform' + type];
+            uniform.glFunc = gl['uniform' + type];
 
             if (type === '2f' || type === '2i')
             {
@@ -141,9 +171,9 @@ PIXI.PixiShader.prototype.initUniforms = function()
 };
 
 /**
-* Initialises a Sampler2D uniform (which may only be available later on after initUniforms once the texture is has loaded)
+* Initialises a Sampler2D uniform (which may only be available later on after initUniforms once the texture has loaded)
 *
-* @method PIXI.PixiShader#initSampler2D
+* @method initSampler2D
 */
 PIXI.PixiShader.prototype.initSampler2D = function(uniform)
 {
@@ -152,8 +182,10 @@ PIXI.PixiShader.prototype.initSampler2D = function(uniform)
         return;
     }
 
-    PIXI.gl.activeTexture(PIXI.gl['TEXTURE' + this.textureCount]);
-    PIXI.gl.bindTexture(PIXI.gl.TEXTURE_2D, uniform.value.baseTexture._glTexture);
+    var gl = this.gl;
+
+    gl.activeTexture(gl['TEXTURE' + this.textureCount]);
+    gl.bindTexture(gl.TEXTURE_2D, uniform.value.baseTexture._glTexture);
 
     //  Extended texture data
     if (uniform.textureData)
@@ -170,19 +202,19 @@ PIXI.PixiShader.prototype.initSampler2D = function(uniform)
         //  magFilter can be: gl.LINEAR, gl.LINEAR_MIPMAP_LINEAR or gl.NEAREST
         //  wrapS/T can be: gl.CLAMP_TO_EDGE or gl.REPEAT
 
-        var magFilter = (data.magFilter) ? data.magFilter : PIXI.gl.LINEAR;
-        var minFilter = (data.minFilter) ? data.minFilter : PIXI.gl.LINEAR;
-        var wrapS = (data.wrapS) ? data.wrapS : PIXI.gl.CLAMP_TO_EDGE;
-        var wrapT = (data.wrapT) ? data.wrapT : PIXI.gl.CLAMP_TO_EDGE;
-        var format = (data.luminance) ? PIXI.gl.LUMINANCE : PIXI.gl.RGBA;
+        var magFilter = (data.magFilter) ? data.magFilter : gl.LINEAR;
+        var minFilter = (data.minFilter) ? data.minFilter : gl.LINEAR;
+        var wrapS = (data.wrapS) ? data.wrapS : gl.CLAMP_TO_EDGE;
+        var wrapT = (data.wrapT) ? data.wrapT : gl.CLAMP_TO_EDGE;
+        var format = (data.luminance) ? gl.LUMINANCE : gl.RGBA;
 
         if (data.repeat)
         {
-            wrapS = PIXI.gl.REPEAT;
-            wrapT = PIXI.gl.REPEAT;
+            wrapS = gl.REPEAT;
+            wrapT = gl.REPEAT;
         }
 
-        PIXI.gl.pixelStorei(PIXI.gl.UNPACK_FLIP_Y_WEBGL, false);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, !!data.flipY);
 
         if (data.width)
         {
@@ -191,21 +223,21 @@ PIXI.PixiShader.prototype.initSampler2D = function(uniform)
             var border = (data.border) ? data.border : 0;
 
             // void texImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, ArrayBufferView? pixels);
-            PIXI.gl.texImage2D(PIXI.gl.TEXTURE_2D, 0, format, width, height, border, format, PIXI.gl.UNSIGNED_BYTE, null);
+            gl.texImage2D(gl.TEXTURE_2D, 0, format, width, height, border, format, gl.UNSIGNED_BYTE, null);
         }
         else
         {
             //  void texImage2D(GLenum target, GLint level, GLenum internalformat, GLenum format, GLenum type, ImageData? pixels);
-            PIXI.gl.texImage2D(PIXI.gl.TEXTURE_2D, 0, format, PIXI.gl.RGBA, PIXI.gl.UNSIGNED_BYTE, uniform.value.baseTexture.source);
+            gl.texImage2D(gl.TEXTURE_2D, 0, format, gl.RGBA, gl.UNSIGNED_BYTE, uniform.value.baseTexture.source);
         }
 
-        PIXI.gl.texParameteri(PIXI.gl.TEXTURE_2D, PIXI.gl.TEXTURE_MAG_FILTER, magFilter);
-        PIXI.gl.texParameteri(PIXI.gl.TEXTURE_2D, PIXI.gl.TEXTURE_MIN_FILTER, minFilter);
-        PIXI.gl.texParameteri(PIXI.gl.TEXTURE_2D, PIXI.gl.TEXTURE_WRAP_S, wrapS);
-        PIXI.gl.texParameteri(PIXI.gl.TEXTURE_2D, PIXI.gl.TEXTURE_WRAP_T, wrapT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, magFilter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
     }
 
-    PIXI.gl.uniform1i(uniform.uniformLocation, this.textureCount);
+    gl.uniform1i(uniform.uniformLocation, this.textureCount);
 
     uniform._init = true;
 
@@ -216,12 +248,13 @@ PIXI.PixiShader.prototype.initSampler2D = function(uniform)
 /**
 * Updates the shader uniform values.
 *
-* @method PIXI.PixiShader#syncUniforms
+* @method syncUniforms
 */
 PIXI.PixiShader.prototype.syncUniforms = function()
 {
     this.textureCount = 1;
     var uniform;
+    var gl = this.gl;
 
     //  This would probably be faster in an array and it would guarantee key order
     for (var key in this.uniforms)
@@ -233,32 +266,32 @@ PIXI.PixiShader.prototype.syncUniforms = function()
         {
             if (uniform.glMatrix === true)
             {
-                uniform.glFunc.call(PIXI.gl, uniform.uniformLocation, uniform.transpose, uniform.value);
+                uniform.glFunc.call(gl, uniform.uniformLocation, uniform.transpose, uniform.value);
             }
             else
             {
-                uniform.glFunc.call(PIXI.gl, uniform.uniformLocation, uniform.value);
+                uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value);
             }
         }
         else if (uniform.glValueLength === 2)
         {
-            uniform.glFunc.call(PIXI.gl, uniform.uniformLocation, uniform.value.x, uniform.value.y);
+            uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y);
         }
         else if (uniform.glValueLength === 3)
         {
-            uniform.glFunc.call(PIXI.gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z);
+            uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z);
         }
         else if (uniform.glValueLength === 4)
         {
-            uniform.glFunc.call(PIXI.gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z, uniform.value.w);
+            uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z, uniform.value.w);
         }
         else if (uniform.type === 'sampler2D')
         {
             if (uniform._init)
             {
-                PIXI.gl.activeTexture(PIXI.gl['TEXTURE' + this.textureCount]);
-                PIXI.gl.bindTexture(PIXI.gl.TEXTURE_2D, uniform.value.baseTexture._glTexture);
-                PIXI.gl.uniform1i(uniform.uniformLocation, this.textureCount);
+                gl.activeTexture(gl['TEXTURE' + this.textureCount]);
+                gl.bindTexture(gl.TEXTURE_2D, uniform.value.baseTexture._glTextures[gl.id] || PIXI.createWebGLTexture( uniform.value.baseTexture, gl));
+                gl.uniform1i(uniform.uniformLocation, this.textureCount);
                 this.textureCount++;
             }
             else
@@ -270,22 +303,46 @@ PIXI.PixiShader.prototype.syncUniforms = function()
 
 };
 
+/**
+* Destroys the shader
+* @method destroy
+*
+*/
+PIXI.PixiShader.prototype.destroy = function()
+{
+    this.gl.deleteProgram( this.program );
+    this.uniforms = null;
+    this.gl = null;
+
+    this.attributes = null;
+};
+
+/**
+*
+* @property defaultVertexSrc
+* @type String
+*/
 PIXI.PixiShader.defaultVertexSrc = [
     'attribute vec2 aVertexPosition;',
     'attribute vec2 aTextureCoord;',
-    'attribute float aColor;',
+    'attribute vec2 aColor;',
 
     'uniform vec2 projectionVector;',
     'uniform vec2 offsetVector;',
-    'varying vec2 vTextureCoord;',
 
-    'varying float vColor;',
+    'varying vec2 vTextureCoord;',
+    'varying vec4 vColor;',
 
     'const vec2 center = vec2(-1.0, 1.0);',
 
     'void main(void) {',
     '   gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center , 0.0, 1.0);',
     '   vTextureCoord = aTextureCoord;',
-    '   vColor = aColor;',
+    '   vec3 color = mod(vec3(aColor.y/65536.0, aColor.y/256.0, aColor.y), 256.0) / 256.0;',
+    '   vColor = vec4(color * aColor.x, aColor.x);',
     '}'
 ];
+
+
+
+

@@ -5,6 +5,8 @@
 PIXI.TextureCache = {};
 PIXI.FrameCache = {};
 
+PIXI.TextureCacheIdGenerator = 0;
+
 /**
  * A texture stores the information that represents an image or part of an image. It cannot be added
  * to the display list directly. To do this use PIXI.Sprite. If no frame is provided then the whole image is used
@@ -57,8 +59,7 @@ PIXI.Texture = function(baseTexture, frame)
     if(baseTexture.hasLoaded)
     {
         if(this.noFrame)frame = new PIXI.Rectangle(0,0, baseTexture.width, baseTexture.height);
-        //console.log(frame)
-
+      
         this.setFrame(frame);
     }
     else
@@ -83,9 +84,8 @@ PIXI.Texture.prototype.onBaseTextureLoaded = function()
     baseTexture.removeEventListener( 'loaded', this.onLoaded );
 
     if(this.noFrame)this.frame = new PIXI.Rectangle(0,0, baseTexture.width, baseTexture.height);
-    this.noFrame = false;
-    this.width = this.frame.width;
-    this.height = this.frame.height;
+    
+    this.setFrame(this.frame);
 
     this.scope.dispatchEvent( { type: 'update', content: this } );
 };
@@ -121,7 +121,30 @@ PIXI.Texture.prototype.setFrame = function(frame)
     this.updateFrame = true;
 
     PIXI.Texture.frameUpdates.push(this);
+
+
     //this.dispatchEvent( { type: 'update', content: this } );
+};
+
+PIXI.Texture.prototype._updateWebGLuvs = function()
+{
+    if(!this._uvs)this._uvs = new PIXI.TextureUvs();
+
+    var frame = this.frame;
+    var tw = this.baseTexture.width;
+    var th = this.baseTexture.height;
+
+    this._uvs.x0 = frame.x / tw;
+    this._uvs.y0 = frame.y / th;
+
+    this._uvs.x1 = (frame.x + frame.width) / tw;
+    this._uvs.y1 = frame.y / th;
+
+    this._uvs.x2 = (frame.x + frame.width) / tw;
+    this._uvs.y2 = (frame.y + frame.height) / th;
+
+    this._uvs.x3 = frame.x / tw;
+    this._uvs.y3 = (frame.y + frame.height) / th;
 };
 
 /**
@@ -159,7 +182,7 @@ PIXI.Texture.fromImage = function(imageUrl, crossorigin, scaleMode)
 PIXI.Texture.fromFrame = function(frameId)
 {
     var texture = PIXI.TextureCache[frameId];
-    if(!texture) throw new Error('The frameId "' + frameId + '" does not exist in the texture cache ' + this);
+    if(!texture) throw new Error('The frameId "' + frameId + '" does not exist in the texture cache ');
     return texture;
 };
 
@@ -174,8 +197,10 @@ PIXI.Texture.fromFrame = function(frameId)
  */
 PIXI.Texture.fromCanvas = function(canvas, scaleMode)
 {
-    var baseTexture = new PIXI.BaseTexture(canvas, scaleMode);
-    return new PIXI.Texture(baseTexture);
+    var baseTexture = PIXI.BaseTexture.fromCanvas(canvas, scaleMode);
+
+    return new PIXI.Texture( baseTexture );
+
 };
 
 
@@ -210,4 +235,24 @@ PIXI.Texture.removeTextureFromCache = function(id)
 // this is more for webGL.. it contains updated frames..
 PIXI.Texture.frameUpdates = [];
 
-PIXI.Texture.SCALE_MODE = PIXI.BaseTexture.SCALE_MODE;
+PIXI.TextureUvs = function()
+{
+    this.x0 = 0;
+    this.y0 = 0;
+
+    this.x1 = 0;
+    this.y1 = 0;
+
+    this.x2 = 0;
+    this.y2 = 0;
+
+    this.x3 = 0;
+    this.y4 = 0;
+
+
+};
+
+
+
+
+
