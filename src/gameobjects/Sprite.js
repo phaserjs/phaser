@@ -45,9 +45,9 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.alive = true;
 
     /**
-    * @property {Phaser.Group} group - The parent Group of this Sprite. This is usually set after Sprite instantiation by the parent.
+    * @property {Phaser.Group|Phaser.Sprite} parent - The parent of this Sprite.
     */
-    this.group = null;
+    // this.group = null;
 
     /**
     * @property {string} name - The user defined name given to this Sprite.
@@ -169,7 +169,10 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     *
     * @property {Phaser.Point} anchor - The anchor around which rotation and scaling takes place.
     */
-    this.anchor = new Phaser.Point();
+    // this.anchor = new Phaser.Point();
+
+    // this.position.x = x;
+    // this.position.y = y;
 
     /**
     * @property {number} x - The x coordinate in world space of this Sprite.
@@ -181,8 +184,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     */
     this.y = y;
 
-    this.position.x = x;
-    this.position.y = y;
 
     /**
     * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
@@ -201,7 +202,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     /**
     * @property {Phaser.Point} scale - The scale of the Sprite when rendered. By default it's set to 1 (no scale). You can modify it via scale.x or scale.y or scale.setTo(x, y). A value of 1 means no change to the scale, 0.5 means "half the size", 2 means "twice the size", etc.
     */
-    this.scale = new Phaser.Point(1, 1);
+    // this.scale = new Phaser.Point(1, 1);
 
     /**
     * @property {object} _cache - A mini cache for storing all of the calculated values.
@@ -381,7 +382,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.updateBounds();
 
     /**
-    * @property {PIXI.Point} pivot - The pivot point of the displayObject that it rotates around.
+    * @property {Phaser.Point} pivot - The pivot point of the displayObject that it rotates around.
     */
 
 };
@@ -400,7 +401,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     if (this._cache.fresh)
     {
-        this.world.setTo(this.parent.position.x + this.x, this.parent.position.y + this.y);
+        this.world.setTo(this.parent.position.x + this.position.x, this.parent.position.y + this.position.y);
         this.worldTransform[2] = this.world.x;
         this.worldTransform[5] = this.world.y;
         this._cache.fresh = false;
@@ -871,9 +872,9 @@ Phaser.Sprite.prototype.destroy = function() {
         this.filters = null;
     }
 
-    if (this.group)
+    if (this.parent)
     {
-        this.group.remove(this);
+        this.parent.remove(this);
     }
 
     if (this.input)

@@ -63,6 +63,10 @@ Significant API changes:
 
 * Upgraded to Pixi.js 1.4.4
 * Group now extends PIXI.DisplayObjectContainer, rather than owning a _container property, which makes life a whole lot easier re: nesting.
+* Removed Sprite.group property. You can use Sprite.parent for all similar needs now.
+* PIXI.Point is now aliased to Phaser.Point - saves on code duplication and works exactly the same.
+* PIXI.Rectangle is now aliased to Phaser.Rectangle - saves on code duplication and works exactly the same.
+* PIXI.Circle is now aliased to Phaser.Circle - saves on code duplication and works exactly the same.
 
 
 New features:

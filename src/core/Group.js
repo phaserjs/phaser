@@ -68,9 +68,9 @@ Phaser.Group = function (game, parent, name, useStage) {
     this.exists = true;
 
     /**
-    * @property {Phaser.Group} group - The parent Group of this Group, if a child of another.
+    * @property {Phaser.Group|Phaser.Sprite} parent - The parent of this Group.
     */
-    this.group = null;
+    // this.group = null;
 
     /**
     * @property {Phaser.Point} scale - The scale of the Group container.
@@ -140,10 +140,8 @@ Phaser.Group.SORT_DESCENDING = 1;
 */
 Phaser.Group.prototype.add = function (child) {
 
-    if (child.group !== this)
+    if (child.parent !== this)
     {
-        child.group = this;
-
         this.addChild(child);
 
         if (child.events)
@@ -172,10 +170,8 @@ Phaser.Group.prototype.add = function (child) {
 */
 Phaser.Group.prototype.addAt = function (child, index) {
 
-    if (child.group !== this)
+    if (child.parent !== this)
     {
-        child.group = this;
-
         this.addChildAt(child, index);
 
         if (child.events)
@@ -224,7 +220,6 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
 
     var child = new Phaser.Sprite(this.game, x, y, key, frame);
 
-    child.group = this;
     child.exists = exists;
     child.visible = exists;
     child.alive = exists;
@@ -262,25 +257,7 @@ Phaser.Group.prototype.createMultiple = function (quantity, key, frame, exists) 
 
     for (var i = 0; i < quantity; i++)
     {
-        var child = new Phaser.Sprite(this.game, 0, 0, key, frame);
-
-        child.group = this;
-        child.exists = exists;
-        child.visible = exists;
-        child.alive = exists;
-
-        this.addChild(child);
-
-        if (child.events)
-        {
-            child.events.onAddedToGroup.dispatch(child, this);
-        }
-
-        if (this.cursor === null)
-        {
-            this.cursor = child;
-        }
-
+        this.create(0, 0, key, frame, exists);
     }
 
 }
@@ -343,12 +320,7 @@ Phaser.Group.prototype.previous = function () {
 */
 Phaser.Group.prototype.swap = function (child1, child2) {
 
-    if (child1 === child2 || !child1.parent || !child2.parent || child1.group !== this || child2.group !== this)
-    {
-        return false;
-    }
-
-    this.swapChildren(child1, child2);
+    return this.swapChildren(child1, child2);
     
 }
 
@@ -361,7 +333,7 @@ Phaser.Group.prototype.swap = function (child1, child2) {
 */
 Phaser.Group.prototype.bringToTop = function (child) {
 
-    if (child.group === this)
+    if (child.parent === this)
     {
         this.remove(child);
         this.add(child);
@@ -473,8 +445,6 @@ Phaser.Group.prototype.setProperty = function (child, key, value, operation) {
         else if (operation == 3) { child[key[0]][key[1]][key[2]][key[3]] *= value; }
         else if (operation == 4) { child[key[0]][key[1]][key[2]][key[3]] /= value; }
     }
-    
-    //  TODO - Deep property scane
 
 }
 
@@ -996,9 +966,9 @@ Phaser.Group.prototype.getRandom = function (startIndex, length) {
 */
 Phaser.Group.prototype.remove = function (child) {
 
-    if (child.group !== this)
+    if (this.children.length === 0)
     {
-        return false;
+        return;
     }
 
     if (child.events)
@@ -1006,18 +976,12 @@ Phaser.Group.prototype.remove = function (child) {
         child.events.onRemovedFromGroup.dispatch(child, this);
     }
 
-    //  Check it's actually in the container
-    if (child.parent === this)
-    {
-        this.removeChild(child);
-    }
+    this.removeChild(child);
 
     if (this.cursor === child)
     {
         this.next();
     }
-
-    child.group = null;
 
     return true;
 
@@ -1042,6 +1006,7 @@ Phaser.Group.prototype.removeAll = function () {
         {
             this.children[0].events.onRemovedFromGroup.dispatch(this.children[0], this);
         }
+
         this.removeChild(this.children[0]);
     }
     while (this.children.length > 0);
@@ -1071,9 +1036,12 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
 
     for (var i = startIndex; i < endIndex; i++)
     {
-        var child = this.children[i];
-        child.events.onRemovedFromGroup.dispatch(child, this);
-        this.removeChild(child);
+        if (this.children[i].events)
+        {
+            this.children[i].events.onRemovedFromGroup.dispatch(this.children[i], this);
+        }
+
+        this.removeChild(this.children[i]);
 
         if (this.cursor === child)
         {

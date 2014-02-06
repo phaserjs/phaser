@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
@@ -16,9 +16,9 @@ function create() {
 
 	sprite = game.add.sprite(0, 0, 'pic');
 
-	g = game.add.group();
+	g = game.add.group(null, 'billy');
 
-	g.create(0, 0, 'pic');
+	sprite2 = g.create(0, 0, 'pic');
 
 	g.y = 200;
 	g.rotation = 0.1;
@@ -46,5 +46,7 @@ function update() {
 }
 
 function render() {
+
+	game.debug.renderText(sprite.position.y, 32, 32);
 
 }

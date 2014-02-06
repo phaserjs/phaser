@@ -196,6 +196,9 @@ PIXI.DisplayObject = function()
      */
     this._mask = null;
 
+    this.x = this.position.x;
+    this.y = this.position.y;
+
     /*
      * MOUSE Callbacks
      */
