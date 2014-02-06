@@ -90,6 +90,8 @@ Phaser.Image = function (game, x, y, key, frame) {
     */
     this.fixedToCamera = false;
 
+
+
 };
 
 Phaser.Image.prototype = Object.create(PIXI.Sprite.prototype);
@@ -243,13 +245,44 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
 *
 * @method Phaser.Image#crop
 * @memberof Phaser.Image
-* @param {number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+* @param {Phaser.Rectangle} rect - The Rectangle to crop the Image to. Pass as null to clear any previously set crop.
 */
-Phaser.Image.prototype.crop = function(x, y, width, height) {
+Phaser.Image.prototype.crop = function(rect) {
 
-    // this.crop = new Phaser.Rectangle(0, 0, this._cache.width, this._cache.height);
-    // this.texture.setFrame(this.crop);
-    // this.cropEnabled = false;
+    if (typeof rect === 'undefined' || rect === null)
+    {
+        //  Clear any crop that may be set
+        if (this.texture.hasOwnProperty('sourceWidth'))
+        {
+            this.texture.setFrame(new Phaser.Rectangle(0, 0, this.texture.sourceWidth, this.texture.sourceHeight));
+        }
+    }
+    else
+    {
+        //  Do we need to clone the PIXI.Texture object?
+        if (this.texture instanceof PIXI.Texture)
+        {
+            //  Yup, let's rock it ...
+            var local = {};
+
+            Phaser.Utils.extend(true, local, this.texture);
+
+            local.sourceWidth = local.width;
+            local.sourceHeight = local.height;
+            local.frame = rect;
+            local.width = rect.width;
+            local.height = rect.height;
+
+            this.texture = local;
+
+            this.texture.updateFrame = true;
+            PIXI.Texture.frameUpdates.push(this.texture);
+        }
+        else
+        {
+            this.texture.setFrame(rect);
+        }
+    }
 
 };
 

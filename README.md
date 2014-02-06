@@ -68,10 +68,12 @@ Significant API changes:
 * PIXI.Rectangle is now aliased to Phaser.Rectangle - saves on code duplication and works exactly the same.
 * PIXI.Circle is now aliased to Phaser.Circle - saves on code duplication and works exactly the same.
 * Sprite.deltaX and deltaY swapped to functions: Sprite.deltaX() and Sprite.deltaY()
+* Sprite.crop() now takes a Phaser.Rectangle instead of explicit parameters.
 
 
 New features:
 
+* Phaser.Image is a brand new display object perfect for logos, backgrounds, etc. You can scale, rotate, tint and blend and Image, but it has no animation, physics body or input events.
 
 New Examples:
 
@@ -84,6 +86,7 @@ Bug Fixes:
 * Explicitly paused Timer continues if you un-focus and focus the browser window (thanks georgiee)
 * Added TimerEvent.pendingDelete and checks in Timer.update, so that removing an event in a callback no longer throws an exception (thanks georgiee)
 * Fixed TypeScript defs on lines 1741-1748 (thanks wombatbuddy)
+* Previously if you used Sprite.crop() it would crop all Sprites using the same base image. It now takes a local copy of the texture data and crops just that.
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
