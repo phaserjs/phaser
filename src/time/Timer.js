@@ -327,7 +327,7 @@ Phaser.Timer.prototype = {
         {
             this._i = 0;
 
-            while (this._i < this._len)
+            while (this._i < this._len && this.running)
             {
                 if (this._now >= this.events[this._i].tick)
                 {
