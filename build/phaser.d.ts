@@ -1748,7 +1748,7 @@ declare module Phaser {
             separate(body: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body, processCallback: Function, callbackContext: any, overlapOnly: boolean): boolean;
             intersects(a: Phaser.Physics.Arcade.Body, b: Phaser.Physics.Arcade.Body): boolean;
             tileIntersects(body: Phaser.Physics.Arcade.Body, tile: Phaser.Tile): boolean;
-            separateTiles(body: Phaser.Physics.Arcade.Body, tile: <Phaser.Tile>Array): boolean;
+            separateTiles(body: Phaser.Physics.Arcade.Body, tile: Array<Phaser.Tile>): boolean;
             separateTile(body: Phaser.Physics.Arcade.Body, tile: Phaser.Tile): boolean;
             processTileSeparation(body: Phaser.Physics.Arcade.Body): boolean;
             moveToObject(displayObject: Phaser.Sprite, destination: Phaser.Sprite, speed?: number, maxTime?: number): number;

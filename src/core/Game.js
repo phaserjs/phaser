@@ -457,7 +457,6 @@ Phaser.Game.prototype = {
             this.world.boot();
             this.input.boot();
             this.sound.boot();
-            this.state.boot();
 
             this.load.onLoadComplete.add(this.loadComplete, this);
 
@@ -469,6 +468,7 @@ Phaser.Game.prototype = {
             this.raf = new Phaser.RequestAnimationFrame(this);
             this.raf.start();
 
+            this.state.boot();
         }
 
     },

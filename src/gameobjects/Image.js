@@ -60,68 +60,9 @@ Phaser.Image = function (game, x, y, key, frame) {
 
     this.currentFrame = new Phaser.Rectangle();
 
-    if (key instanceof Phaser.RenderTexture)
-    {
-        PIXI.Sprite.call(this, key);
+    PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
 
-        this.currentFrame = this.game.cache.getTextureFrame(key.name);
-    }
-    else if (key instanceof Phaser.BitmapData)
-    {
-        PIXI.Sprite.call(this, key.texture, key.textureFrame);
-
-        this.currentFrame = key.textureFrame;
-    }
-    else if (key instanceof PIXI.Texture)
-    {
-        PIXI.Sprite.call(this, key);
-
-        this.currentFrame = frame;
-    }
-    else
-    {
-        if (key === null || typeof key === 'undefined')
-        {
-            key = '__default';
-            this.key = key;
-        }
-        else if (typeof key === 'string' && this.game.cache.checkImageKey(key) === false)
-        {
-            key = '__missing';
-            this.key = key;
-        }
-
-        PIXI.Sprite.call(this, PIXI.TextureCache[key]);
-
-        if (this.game.cache.isSpriteSheet(key))
-        {
-            this.animations.loadFrameData(this.game.cache.getFrameData(key));
-
-            if (frame !== null)
-            {
-                if (typeof frame === 'string')
-                {
-                    this.frameName = frame;
-                }
-                else
-                {
-                    this.frame = frame;
-                }
-            }
-        }
-        else
-        {
-            this.currentFrame = this.game.cache.getFrame(key);
-        }
-    }
-
-    // this.loadTexture(key, frame);
-
-    /**
-    * The rectangular area from the texture that will be rendered.
-    * @property {Phaser.Rectangle} textureRegion
-    */
-    // this.textureRegion = new Phaser.Rectangle(this.texture.frame.x, this.texture.frame.y, this.texture.frame.width, this.texture.frame.height);
+    this.loadTexture(key, frame);
 
     this.position.x = x;
     this.position.y = y;
@@ -142,16 +83,12 @@ Phaser.Image = function (game, x, y, key, frame) {
     this.autoCull = false;
 
     /**
-    * A Sprite that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.
+    * A Sprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera.
+    * Note that if this Image is a child of a display object that has changed its position then the offset will be calculated from that.
     * @property {boolean} fixedToCamera - Fixes this Sprite to the Camera.
     * @default
     */
     this.fixedToCamera = false;
-
-    /**
-    * @property {Phaser.Point} cameraOffset - If this Sprite is fixed to the camera then use this Point to specify how far away from the Camera x/y it's rendered.
-    */
-    // this.cameraOffset = new Phaser.Point(x, y);
 
 };
 
@@ -182,33 +119,6 @@ Phaser.Image.prototype.preUpdate = function() {
 };
 
 /**
-* Checks if the Image bounds are within the game world, otherwise false if fully outside of it.
-*
-* @method Phaser.Image#inWorld
-* @memberof Phaser.Image
-* @return {boolean} True if the Image bounds is within the game world, otherwise false if fully outside of it.
-*/
-Phaser.Image.prototype.inWorld = function() {
-
-    return this.game.world.bounds.intersects(this.getBounds());
-
-};
-
-/**
-* Resets the Sprite.crop value back to the frame dimensions.
-*
-* @method Phaser.Image#resetCrop
-* @memberof Phaser.Image
-Phaser.Image.prototype.resetCrop = function() {
-
-    this.crop = new Phaser.Rectangle(0, 0, this._cache.width, this._cache.height);
-    this.texture.setFrame(this.crop);
-    this.cropEnabled = false;
-
-};
-*/
-
-/**
 * Internal function called by the World postUpdate cycle.
 *
 * @method Phaser.Image#postUpdate
@@ -221,20 +131,37 @@ Phaser.Image.prototype.postUpdate = function() {
         this.key.render();
     }
 
-    if (this.exists)
+    if (this.fixedToCamera)
     {
-        // if (this.body)
-        // {
-        //     this.body.postUpdate();
-        // }
-
-        if (this.fixedToCamera)
-        {
-            this.position.x = this.game.camera.view.x + this.cameraOffset.x;
-            this.position.y = this.game.camera.view.y + this.cameraOffset.y;
-        }
-
+        this.position.x = this.game.camera.view.x + this.x;
+        this.position.y = this.game.camera.view.y + this.y;
     }
+
+};
+
+/**
+* Checks if the Image bounds are within the game world, otherwise false if fully outside of it.
+*
+* @method Phaser.Image#inWorld
+* @memberof Phaser.Image
+* @return {boolean} True if the Image bounds is within the game world, even if only partially. Otherwise false if fully outside of it.
+*/
+Phaser.Image.prototype.inWorld = function() {
+
+    return this.game.world.bounds.intersects(this.getBounds());
+
+};
+
+/**
+* Checks if the Image bounds are within the game camera, otherwise false if fully outside of it.
+*
+* @method Phaser.Image#inCamera
+* @memberof Phaser.Image
+* @return {boolean} True if the Image bounds is within the game camera, even if only partially. Otherwise false if fully outside of it.
+*/
+Phaser.Image.prototype.inCamera = function() {
+
+    return this.game.world.camera.screenView.intersects(this.getBounds());
 
 };
 
@@ -270,9 +197,14 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
     }
     else
     {
-        if (typeof key === 'undefined' || this.game.cache.checkImageKey(key) === false)
+        if (key === null || typeof key === 'undefined')
         {
             key = '__default';
+            this.key = key;
+        }
+        else if (typeof key === 'string' && this.game.cache.checkImageKey(key) === false)
+        {
+            key = '__missing';
             this.key = key;
         }
 
@@ -307,31 +239,19 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
 };
 
 /**
-* Moves the sprite so its center is located on the given x and y coordinates.
-* Doesn't change the anchor point of the sprite.
-* 
-* @method Phaser.Image#centerOn
+* Crop allows you to crop the texture used to display this Image. Cropping takes place from the top-left of the Image and can be modified in real-time.
+*
+* @method Phaser.Image#crop
 * @memberof Phaser.Image
-* @param {number} x - The x coordinate (in world space) to position the Sprite at.
-* @param {number} y - The y coordinate (in world space) to position the Sprite at.
-* @return (Phaser.Image) This instance.
-Phaser.Image.prototype.centerOn = function(x, y) {
+* @param {number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+*/
+Phaser.Image.prototype.crop = function(x, y, width, height) {
 
-    if (this.fixedToCamera)
-    {
-        this.cameraOffset.x = x + (this.cameraOffset.x - this.center.x);
-        this.cameraOffset.y = y + (this.cameraOffset.y - this.center.y);
-    }
-    else
-    {
-        this.x = x + (this.x - this.center.x);
-        this.y = y + (this.y - this.center.y);
-    }
-
-    return this;
+    // this.crop = new Phaser.Rectangle(0, 0, this._cache.width, this._cache.height);
+    // this.texture.setFrame(this.crop);
+    // this.cropEnabled = false;
 
 };
-*/
 
 /**
 * Brings a 'dead' Sprite back to life, optionally giving it the health value specified.
@@ -340,7 +260,7 @@ Phaser.Image.prototype.centerOn = function(x, y) {
 * 
 * @method Phaser.Image#revive
 * @memberof Phaser.Image
-* @return (Phaser.Image) This instance.
+* @return {Phaser.Image} This instance.
 */
 Phaser.Image.prototype.revive = function() {
 
@@ -365,7 +285,7 @@ Phaser.Image.prototype.revive = function() {
 * 
 * @method Phaser.Image#kill
 * @memberof Phaser.Image
-* @return (Phaser.Image) This instance.
+* @return {Phaser.Image} This instance.
 */
 Phaser.Image.prototype.kill = function() {
 
@@ -423,7 +343,7 @@ Phaser.Image.prototype.destroy = function() {
 * @memberof Phaser.Image
 * @param {number} x - The x coordinate (in world space) to position the Sprite at.
 * @param {number} y - The y coordinate (in world space) to position the Sprite at.
-* @return (Phaser.Image) This instance.
+* @return {Phaser.Image} This instance.
 */
 Phaser.Image.prototype.reset = function(x, y) {
 
@@ -446,7 +366,7 @@ Phaser.Image.prototype.reset = function(x, y) {
 * 
 * @method Phaser.Image#bringToTop
 * @memberof Phaser.Image
-* @return (Phaser.Image) This instance.
+* @return {Phaser.Image} This instance.
 */
 Phaser.Image.prototype.bringToTop = function(child) {
 
@@ -469,32 +389,24 @@ Phaser.Image.prototype.bringToTop = function(child) {
 /**
 * Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
-* If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
-* @name Phaser.Image#angle
-* @property {number} angle - Gets or sets the Sprites angle of rotation in degrees.
+* If you wish to work in radians instead of degrees use the property Sprite.rotation instead. Working in radians is also computationally faster.
+* 
+* @method Phaser.Image#angle
+* @memberof Phaser.Image
+* @param {number} [value] - If given it will set the Images angle to this value. Value should be given in degrees.
+* @return {number} The angle of this Image in degrees.
 */
-Object.defineProperty(Phaser.Image.prototype, 'angle', {
+Phaser.Image.prototype.angle = function(value) {
 
-    get: function() {
+    if (typeof value === 'undefined')
+    {
         return Phaser.Math.wrapAngle(Phaser.Math.radToDeg(this.rotation));
-    },
-
-    set: function(value) {
+    }
+    else
+    {
         this.rotation = Phaser.Math.degToRad(Phaser.Math.wrapAngle(value));
+
+        return Phaser.Math.radToDeg(this.rotation);
     }
 
-});
-
-/**
-* @name Phaser.Image#inCamera
-* @property {boolean} inCamera - Is this sprite visible to the camera or not?
-* @readonly
-*/
-Object.defineProperty(Phaser.Image.prototype, "inCamera", {
-    
-    get: function () {
-        return this._cache.cameraVisible;
-    }
-
-});
-
+};
