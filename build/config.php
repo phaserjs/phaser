@@ -38,6 +38,12 @@
     <script src="$path/src/pixi/extras/Spine.js"></script>
 
     <script src="$path/src/pixi/utils/Utils.js"></script>
+
+    <script src="$path/src/pixi/core/Point.js"></script>
+    <script src="$path/src/pixi/core/Rectangle.js"></script>
+    <script src="$path/src/pixi/core/Circle.js"></script>
+
+    <script src="$path/src/pixi/utils/Detector.js"></script>
     
 */
 
@@ -48,11 +54,13 @@
     <script src="$path/src/Phaser.js"></script>
     <script src="$path/src/utils/Utils.js"></script>
 
+    <script src="$path/src/geom/Circle.js"></script>
+    <script src="$path/src/geom/Point.js"></script>
+    <script src="$path/src/geom/Rectangle.js"></script>
+    <script src="$path/src/geom/Line.js"></script>
+
     <script src="$path/src/pixi/Pixi.js"></script>
-    <script src="$path/src/pixi/core/Point.js"></script>
-    <script src="$path/src/pixi/core/Rectangle.js"></script>
     <script src="$path/src/pixi/core/Polygon.js"></script>
-    <script src="$path/src/pixi/core/Circle.js"></script>
     <script src="$path/src/pixi/core/Ellipse.js"></script>
     <script src="$path/src/pixi/core/Matrix.js"></script>
     <script src="$path/src/pixi/display/DisplayObject.js"></script>
@@ -65,7 +73,6 @@
     <script src="$path/src/pixi/text/BitmapText.js"></script>
     <script src="$path/src/pixi/display/Stage.js"></script>
     <script src="$path/src/pixi/utils/EventTarget.js"></script>
-    <script src="$path/src/pixi/utils/Detector.js"></script>
     <script src="$path/src/pixi/utils/Polyk.js"></script>
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLShaderUtils.js"></script>
     <script src="$path/src/pixi/renderers/webgl/shaders/PixiShader.js"></script>
@@ -138,10 +145,6 @@
     <script src="$path/src/math/Math.js"></script>
     <script src="$path/src/math/QuadTree.js"></script>
 
-    <script src="$path/src/geom/Circle.js"></script>
-    <script src="$path/src/geom/Point.js"></script>
-    <script src="$path/src/geom/Rectangle.js"></script>
-    <script src="$path/src/geom/Line.js"></script>
 
     <script src="$path/src/net/Net.js"></script>
 

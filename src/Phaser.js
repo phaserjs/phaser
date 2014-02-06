@@ -44,7 +44,7 @@ var Phaser = Phaser || {
 	CANVAS_PX_ROUND: false,
 	CANVAS_CLEAR_RECT: true
 
- };
+};
 
 PIXI.InteractionManager = function (dummy) {
 	//	We don't need this in Pixi, so we've removed it to save space
