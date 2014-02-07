@@ -7,16 +7,15 @@
 /**
 * @class Phaser.Image
 *
-* @classdesc Create a new `Image` object.
-*
-* At its most basic a Sprite consists of a set of coordinates and a texture that is rendered to the canvas.
+* @classdesc Create a new `Image` object. An Image is a light-weight object you can use to display anything that doesn't need physics, animation or input events.
+* It can still rotate, scale and crop. This makes it perfect for logos, backgrounds and other non-Sprite graphics.
 *
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {number} x - The x coordinate (in world space) to position the Sprite at.
-* @param {number} y - The y coordinate (in world space) to position the Sprite at.
-* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
-* @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+* @param {number} x - The x coordinate of the Imaget. The coordinate is relative to any parent container this Image may be in.
+* @param {number} y - The y coordinate of the Image. The coordinate is relative to any parent container this Image may be in.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - The texture used by the Image during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
+* @param {string|number} frame - If this Image is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
 Phaser.Image = function (game, x, y, key, frame) {
 
@@ -58,7 +57,8 @@ Phaser.Image = function (game, x, y, key, frame) {
     */
     this.key = key;
 
-    this.currentFrame = new Phaser.Rectangle();
+    this._frame = 0;
+    this._frameName = '';
 
     PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
 
@@ -161,52 +161,58 @@ Phaser.Image.prototype.postUpdate = function() {
 */
 Phaser.Image.prototype.loadTexture = function (key, frame) {
 
-    this.key = key;
     frame = frame || 0;
 
     if (key instanceof Phaser.RenderTexture)
     {
-        this.key = key.name;
+        this.key = key.key;
         this.setTexture(key);
     }
     else if (key instanceof Phaser.BitmapData)
     {
+        this.key = key.key;
         this.setTexture(key.texture);
     }
     else if (key instanceof PIXI.Texture)
     {
+        this.key = key;
         this.setTexture(key);
     }
     else
     {
         if (key === null || typeof key === 'undefined')
         {
-            key = '__default';
-            this.key = key;
-            this.setTexture(PIXI.TextureCache[key]);
+            this.key = '__default';
+            this.setTexture(PIXI.TextureCache[this.key]);
         }
-        else if (typeof key === 'string' && this.game.cache.checkImageKey(key) === false)
+        else if (typeof key === 'string' && !this.game.cache.checkImageKey(key))
         {
-            key = '__missing';
-            this.key = key;
-            this.setTexture(PIXI.TextureCache[key]);
+            this.key = '__missing';
+            this.setTexture(PIXI.TextureCache[this.key]);
         }
 
         if (this.game.cache.isSpriteSheet(key))
         {
+            this.key = key;
+
             var frameData = this.game.cache.getFrameData(key);
 
             if (typeof frame === 'string')
             {
+                this._frame = 0;
+                this._frameName = frame;
                 this.setTexture(PIXI.TextureCache[frameData.getFrameByName(frame).uuid]);
             }
             else
             {
+                this._frame = frame;
+                this._frameName = '';
                 this.setTexture(PIXI.TextureCache[frameData.getFrame(frame).uuid]);
             }
         }
         else
         {
+            this.key = key;
             this.setTexture(PIXI.TextureCache[key]);
         }
     }
@@ -219,7 +225,7 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
 *
 * @method Phaser.Image#crop
 * @memberof Phaser.Image
-* @param {Phaser.Rectangle} rect - The Rectangle to crop the Image to. Pass as null to clear any previously set crop.
+* @param {Phaser.Rectangle} rect - The Rectangle to crop the Image to. Pass null or no parameters to clear a previously set crop rectangle.
 */
 Phaser.Image.prototype.crop = function(rect) {
 
@@ -501,3 +507,66 @@ Object.defineProperty(Phaser.Image.prototype, "inCamera", {
     }
 
 });
+
+/**
+* .
+*
+* @name Phaser.Image#frame
+* @property {boolean} frame - .
+*/
+Object.defineProperty(Phaser.Image.prototype, "frame", {
+
+    get: function() {
+    
+        return this._frame;
+
+    },
+
+    set: function(value) {
+
+        if (value !== this.frame && this.game.cache.isSpriteSheet(this.key))
+        {
+            var frameData = this.game.cache.getFrameData(this.key);
+
+            if (frameData && value < frameData.total && frameData.getFrame(value))
+            {
+                this.setTexture(PIXI.TextureCache[frameData.getFrame(value).uuid]);
+                this._frame = value;
+            }
+        }
+
+    }
+
+});
+
+/**
+* .
+*
+* @name Phaser.Image#frameName
+* @property {boolean} frameName - .
+*/
+Object.defineProperty(Phaser.Image.prototype, "frameName", {
+
+    get: function() {
+    
+        return this._frameName;
+
+    },
+
+    set: function(value) {
+
+        if (value !== this.frameName && this.game.cache.isSpriteSheet(this.key))
+        {
+            var frameData = this.game.cache.getFrameData(this.key);
+
+            if (frameData && frameData.getFrameByName(value))
+            {
+                this.setTexture(PIXI.TextureCache[frameData.getFrameByName(value).uuid]);
+                this._frameName = value;
+            }
+        }
+
+    }
+
+});
+
