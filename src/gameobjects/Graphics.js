@@ -42,9 +42,9 @@ Phaser.Graphics.prototype.destroy = function() {
 
     this.clear();
 
-    if (this.group)
+    if (this.parent)
     {
-        this.group.remove(this);
+        this.parent.remove(this);
     }
 
     this.game = null;
@@ -53,6 +53,8 @@ Phaser.Graphics.prototype.destroy = function() {
 
 /*
 * Draws a {Phaser.Polygon} or a {PIXI.Polygon} filled
+* 
+* @method Phaser.Sprite.prototype.drawPolygon
 */
 Phaser.Graphics.prototype.drawPolygon = function (poly) {
 
@@ -67,38 +69,11 @@ Phaser.Graphics.prototype.drawPolygon = function (poly) {
     
 }
 
-Object.defineProperty(Phaser.Graphics.prototype, 'angle', {
-
-    get: function() {
-        return Phaser.Math.wrapAngle(Phaser.Math.radToDeg(this.rotation));
-    },
-
-    set: function(value) {
-        this.rotation = Phaser.Math.degToRad(Phaser.Math.wrapAngle(value));
-    }
-
-});
-
-Object.defineProperty(Phaser.Graphics.prototype, 'x', {
-
-    get: function() {
-        return this.position.x;
-    },
-
-    set: function(value) {
-        this.position.x = value;
-    }
-
-});
-
-Object.defineProperty(Phaser.Graphics.prototype, 'y', {
-
-    get: function() {
-        return this.position.y;
-    },
-
-    set: function(value) {
-        this.position.y = value;
-    }
-
-});
+/**
+* Indicates the rotation of the Button in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+* Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
+* If you wish to work in radians instead of degrees use the rotation property instead. Working in radians is also a little faster as it doesn't have to convert the angle.
+* 
+* @name Phaser.Button#angle
+* @property {number} angle - The angle of this Button in degrees.
+*/

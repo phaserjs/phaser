@@ -381,6 +381,8 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.x = (this.sprite.world.x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
         this.y = (this.sprite.world.y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;
 
+        console.log('body pre', this.preX, this.preY, 'now', this.x, this.y);
+
         //  This covers any motion that happens during this frame, not since the last frame
         this.preX = this.x;
         this.preY = this.y;
@@ -889,7 +891,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.inContact(body))
         {
-            return false;
+            // return false;
         }
 
         this._distances[0] = body.right - this.x;   // Distance of B to face on left side of A
@@ -949,10 +951,10 @@ Phaser.Physics.Arcade.Body.prototype = {
         else
         {
             //  They can only contact like this if at least one of their sides is open, otherwise it's a separation
-            // if (!this.checkCollision.up || !this.checkCollision.down || !this.checkCollision.left || !this.checkCollision.right || !body.checkCollision.up || !body.checkCollision.down || !body.checkCollision.left || !body.checkCollision.right)
-            // {
+            if (!this.checkCollision.up || !this.checkCollision.down || !this.checkCollision.left || !this.checkCollision.right || !body.checkCollision.up || !body.checkCollision.down || !body.checkCollision.left || !body.checkCollision.right)
+            {
                 this.addContact(body);
-            // }
+            }
         }
 
         return hasSeparated;

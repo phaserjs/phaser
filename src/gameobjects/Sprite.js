@@ -48,7 +48,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * @property {number} type - The const type of this object.
     * @readonly
     */
-    this.type = Phaser.IMAGE;
+    this.type = Phaser.SPRITE;
 
     /**
     * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
@@ -151,26 +151,30 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * @property {array} _cache - A small cache for previous step values. 0 = x, 1 = y, 2 = rotation, 3 = renderID, 4 = fresh? (0 = no, 1 = yes)
     * @private
     */
-    this._cache = [0, 0, 0, 0];
+    this._cache = [0, 0, 0, 0, 1];
 
 };
 
 Phaser.Sprite.prototype = Object.create(PIXI.Sprite.prototype);
-Phaser.Sprite.prototype.constructor = Phaser.Image;
+Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 
 /**
 * Automatically called by World.preUpdate.
 *
-* @method Phaser.Image#preUpdate
-* @memberof Phaser.Image
+* @method Phaser.Sprite#preUpdate
+* @memberof Phaser.Sprite
 */
 Phaser.Sprite.prototype.preUpdate = function() {
 
-    if (this._cache[4])
+    if (this._cache[4] === 1)
     {
+        console.log('sprite cache fresh');
         this.world.setTo(this.parent.position.x + this.position.x, this.parent.position.y + this.position.y);
         this.worldTransform[2] = this.world.x;
         this.worldTransform[5] = this.world.y;
+        // this._cache[0] = this.world.x;
+        // this._cache[1] = this.world.y;
+        // this._cache[2] = this.rotation;
         this._cache[4] = 0;
 
         if (this.body)
@@ -262,8 +266,8 @@ Phaser.Sprite.prototype.preUpdate = function() {
 /**
 * Internal function called by the World postUpdate cycle.
 *
-* @method Phaser.Image#postUpdate
-* @memberof Phaser.Image
+* @method Phaser.Sprite#postUpdate
+* @memberof Phaser.Sprite
 */
 Phaser.Sprite.prototype.postUpdate = function() {
 
@@ -281,8 +285,8 @@ Phaser.Sprite.prototype.postUpdate = function() {
 
         if (this.fixedToCamera)
         {
-            this.position.x = this.game.camera.view.x + this.x;
-            this.position.y = this.game.camera.view.y + this.y;
+            // this.position.x = this.game.camera.view.x + this.x;
+            // this.position.y = this.game.camera.view.y + this.y;
         }
     }
 
@@ -292,8 +296,8 @@ Phaser.Sprite.prototype.postUpdate = function() {
 * Changes the Texture the Sprite is using entirely. The old texture is removed and the new one is referenced or fetched from the Cache.
 * This causes a WebGL texture update, so use sparingly or in low-intensity portions of your game.
 *
-* @method Phaser.Image#loadTexture
-* @memberof Phaser.Image
+* @method Phaser.Sprite#loadTexture
+* @memberof Phaser.Sprite
 * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
 * @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
@@ -358,8 +362,8 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
 * Crop allows you to crop the texture used to display this Image.
 * Cropping takes place from the top-left of the Image and can be modified in real-time by providing an updated rectangle object.
 *
-* @method Phaser.Image#crop
-* @memberof Phaser.Image
+* @method Phaser.Sprite#crop
+* @memberof Phaser.Sprite
 * @param {Phaser.Rectangle} rect - The Rectangle to crop the Image to. Pass null or no parameters to clear a previously set crop rectangle.
 */
 Phaser.Sprite.prototype.crop = function(rect) {
@@ -614,7 +618,7 @@ Phaser.Sprite.prototype.play = function (name, frameRate, loop, killOnComplete) 
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
 * If you wish to work in radians instead of degrees use the property Sprite.rotation instead. Working in radians is also a little faster as it doesn't have to convert the angle.
 * 
-* @name Phaser.Image#angle
+* @name Phaser.Sprite#angle
 * @property {number} angle - The angle of this Image in degrees.
 */
 Object.defineProperty(Phaser.Sprite.prototype, "angle", {
@@ -636,7 +640,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "angle", {
 /**
 * Returns the delta x value. The difference between world.x now and in the previous step.
 *
-* @name Phaser.Image#deltaX
+* @name Phaser.Sprite#deltaX
 * @property {number} deltaX - The delta value. Positive if the motion was to the right, negative if to the left.
 * @readonly
 */
@@ -653,7 +657,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "deltaX", {
 /**
 * Returns the delta y value. The difference between world.y now and in the previous step.
 *
-* @name Phaser.Image#deltaY
+* @name Phaser.Sprite#deltaY
 * @property {number} deltaY - The delta value. Positive if the motion was downwards, negative if upwards.
 * @readonly
 */
@@ -670,7 +674,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "deltaY", {
 /**
 * Returns the delta z value. The difference between rotation now and in the previous step.
 *
-* @name Phaser.Image#deltaZ
+* @name Phaser.Sprite#deltaZ
 * @property {number} deltaZ - The delta value.
 * @readonly
 */
@@ -687,7 +691,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "deltaZ", {
 /**
 * Checks if the Image bounds are within the game world, otherwise false if fully outside of it.
 *
-* @name Phaser.Image#inWorld
+* @name Phaser.Sprite#inWorld
 * @property {boolean} inWorld - True if the Image bounds is within the game world, even if only partially. Otherwise false if fully outside of it.
 * @readonly
 */
@@ -704,7 +708,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "inWorld", {
 /**
 * Checks if the Image bounds are within the game camera, otherwise false if fully outside of it.
 *
-* @name Phaser.Image#inCamera
+* @name Phaser.Sprite#inCamera
 * @property {boolean} inCamera - True if the Image bounds is within the game camera, even if only partially. Otherwise false if fully outside of it.
 * @readonly
 */
@@ -751,7 +755,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "frameName", {
 });
 
 /**
-* @name Phaser.Image#renderOrderID
+* @name Phaser.Sprite#renderOrderID
 * @property {number} renderOrderID - The render order ID, reset every frame.
 * @readonly
 */
@@ -769,7 +773,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "renderOrderID", {
 * By default an Image won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
 * activated for this object and it will then start to process click/touch events and more.
 *
-* @name Phaser.Image#inputEnabled
+* @name Phaser.Sprite#inputEnabled
 * @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
 */
 Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
