@@ -13,7 +13,7 @@
 * @param {number} [width=100] - The width of the render texture.
 * @param {number} [height=100] - The height of the render texture.
 */
-Phaser.RenderTexture = function (game, key, width, height) {
+Phaser.RenderTexture = function (game, width, height, key) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game. 
@@ -30,7 +30,7 @@ Phaser.RenderTexture = function (game, key, width, height) {
     */
     this.type = Phaser.RENDERTEXTURE;
 
-    PIXI.RenderTexture.call(this, width, height, renderer);
+    PIXI.RenderTexture.call(this, width, height);
     
 };
 

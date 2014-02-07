@@ -402,7 +402,7 @@ Phaser.Image.prototype.bringToTop = function(child) {
 /**
 * Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
-* If you wish to work in radians instead of degrees use the property Sprite.rotation instead. Working in radians is also faster on mobile devices where Object.defineProperty is expensive to call.
+* If you wish to work in radians instead of degrees use the property Sprite.rotation instead. Working in radians is also a little faster as it doesn't have to convert the angle.
 * 
 * @name Phaser.Image#angle
 * @property {number} angle - The angle of this Image in degrees.
@@ -509,10 +509,8 @@ Object.defineProperty(Phaser.Image.prototype, "inCamera", {
 });
 
 /**
-* .
-*
 * @name Phaser.Image#frame
-* @property {boolean} frame - .
+* @property {number} frame - Gets or sets the current frame index and updates the Texture for display.
 */
 Object.defineProperty(Phaser.Image.prototype, "frame", {
 
@@ -540,10 +538,8 @@ Object.defineProperty(Phaser.Image.prototype, "frame", {
 });
 
 /**
-* .
-*
 * @name Phaser.Image#frameName
-* @property {boolean} frameName - .
+* @property {string} frameName - Gets or sets the current frame by name and updates the Texture for display.
 */
 Object.defineProperty(Phaser.Image.prototype, "frameName", {
 

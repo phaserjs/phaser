@@ -78,24 +78,6 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * DEPRECATED - will be removed in Phaser 1.2
-    * Create a new Sprite with specific position and sprite sheet key that will automatically be added as a child of the given parent.
-    *
-    * @method Phaser.GameObjectFactory#child
-    * @param {Phaser.Group} group - The Group to add this child to.
-    * @param {number} x - X position of the new sprite.
-    * @param {number} y - Y position of the new sprite.
-    * @param {string|RenderTexture} [key] - The image key as defined in the Game.Cache to use as the texture for this sprite OR a RenderTexture.
-    * @param  {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-    * @returns {Phaser.Sprite} the newly created sprite object.
-    */
-    child: function (group, x, y, key, frame) {
-
-        return group.create(x, y, key, frame);
-
-    },
-
-    /**
     * Create a tween object for a specific object. The object can be any JavaScript object or Phaser object such as Sprite.
     *
     * @method Phaser.GameObjectFactory#tween
@@ -299,7 +281,7 @@ Phaser.GameObjectFactory.prototype = {
         if (typeof addToCache === 'undefined') { addToCache = false; }
         if (typeof key === 'undefined' || key === '') { key = this.game.rnd.uuid(); }
 
-        var texture = new Phaser.RenderTexture(this.game, key, width, height);
+        var texture = new Phaser.RenderTexture(this.game, width, height, key);
 
         if (addToCache)
         {
