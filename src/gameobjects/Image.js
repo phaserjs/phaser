@@ -7,8 +7,8 @@
 /**
 * @class Phaser.Image
 *
-* @classdesc Create a new `Image` object. An Image is a light-weight object you can use to display anything that doesn't need physics, animation or input events.
-* It can still rotate, scale and crop. This makes it perfect for logos, backgrounds and other non-Sprite graphics.
+* @classdesc Create a new `Image` object. An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
+* It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
 *
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
@@ -90,10 +90,15 @@ Phaser.Image = function (game, x, y, key, frame) {
     this.fixedToCamera = false;
 
     /**
-    * @property {array} _cache - A small cache for previous step values.
+    * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
+    */
+    this.input = null;
+
+    /**
+    * @property {array} _cache - A small cache for previous step values. 0 = x, 1 = y, 2 = rotation, 3 = renderID
     * @private
     */
-    this._cache = [0, 0, 0];
+    this._cache = [0, 0, 0, 0];
 
 };
 
@@ -124,6 +129,11 @@ Phaser.Image.prototype.preUpdate = function() {
     }
 
     this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
+
+    if (this.visible)
+    {
+        this._cache[3] = this.game.world.currentRenderOrderID++;
+    }
 
     return true;
 
@@ -337,6 +347,11 @@ Phaser.Image.prototype.destroy = function() {
     if (this.events)
     {
         this.events.destroy();
+    }
+
+    if (this.input)
+    {
+        this.input.destroy();
     }
 
     this.alive = false;
@@ -566,3 +581,53 @@ Object.defineProperty(Phaser.Image.prototype, "frameName", {
 
 });
 
+/**
+* @name Phaser.Image#renderOrderID
+* @property {number} renderOrderID - The render order ID, reset every frame.
+* @readonly
+*/
+Object.defineProperty(Phaser.Image.prototype, "renderOrderID", {
+
+    get: function() {
+
+        return this._cache[3];
+
+    }
+
+});
+
+/**
+* By default an Image won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
+* activated for this object and it will then start to process click/touch events and more.
+*
+* @name Phaser.Image#inputEnabled
+* @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
+*/
+Object.defineProperty(Phaser.Image.prototype, "inputEnabled", {
+    
+    get: function () {
+
+        return (this.input && this.input.enabled);
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            if (this.input === null)
+            {
+                this.input = new Phaser.InputHandler(this);
+                this.input.start();
+            }
+        }
+        else
+        {
+            if (this.input && this.input.enabled)
+            {
+                this.input.stop();
+            }
+        }
+    }
+
+});

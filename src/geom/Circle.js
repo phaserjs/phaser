@@ -384,21 +384,18 @@ Object.defineProperty(Phaser.Circle.prototype, "empty", {
 */
 Phaser.Circle.contains = function (a, x, y) {
 
-    if (a.radius <= 0)
-    {
-        return false;
-    }
-
     //  Check if x/y are within the bounds first
-    if (x >= a.left && x <= a.right && y >= a.top && y <= a.bottom)
+    if (a.radius > 0 && x >= a.left && x <= a.right && y >= a.top && y <= a.bottom)
     {
         var dx = (a.x - x) * (a.x - x);
         var dy = (a.y - y) * (a.y - y);
 
         return (dx + dy) <= (a.radius * a.radius);
     }
-
-    return false;
+    else
+    {
+        return false;
+    }
 
 };
 

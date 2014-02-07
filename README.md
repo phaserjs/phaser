@@ -75,6 +75,8 @@ Significant API changes:
 New features:
 
 * Phaser.Image is a brand new display object perfect for logos, backgrounds, etc. You can scale, rotate, tint and blend and Image, but it has no animation, physics body or input events.
+* You can now use the hitArea property on Sprites and Image objects. hitArea can be a geometry object (Rectangle, Circle, Polygon, Ellipse) and is used in pointerOver checks.
+
 
 New Examples:
 
@@ -85,6 +87,7 @@ Updates:
 * Phaser.AnimationParser now sets the trimmed data directly for Pixi Texture frames. Tested across JSON Hash, JSON Data, Sprite Sheet and XML.
 * Game.add.renderTexture now has the addToCache parameter. If set the texture will be stored in Game.Cache and can be retrieved with Cache.getTexture(key).
 * Game.add.bitmapData now has the addToCache parameter. If set the texture will be stored in Game.Cache and can be retrieved with Cache.getBitmapData(key).
+* The InputManager now sets the canvas style cursor to 'inherit' instead of 'default'.
 
 
 Bug Fixes:

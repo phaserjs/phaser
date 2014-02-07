@@ -530,7 +530,7 @@ Phaser.Input.prototype = {
 
         if (this.game.canvas.style.cursor !== 'none')
         {
-            this.game.canvas.style.cursor = 'default';
+            this.game.canvas.style.cursor = 'inherit';
         }
 
         if (hard === true)
@@ -724,6 +724,107 @@ Phaser.Input.prototype = {
 
         return null;
 
+    },
+
+    /**
+     * This will return the local coordinates of the specified displayObject for this InteractionData
+     *
+     * @method getLocalPosition
+     * @param displayObject {DisplayObject} The DisplayObject that you would like the local coords off
+     * @return {Point} A point containing the coordinates of the InteractionData position relative to the DisplayObject
+     */
+    getLocalPosition: function (displayObject) {
+
+        var worldTransform = displayObject.worldTransform;
+        var global = new Phaser.Point(this.x, this.y);
+
+        // do a cheeky transform to get the mouse coords;
+        var a00 = worldTransform.a, a01 = worldTransform.b, a02 = worldTransform.tx,
+            a10 = worldTransform.c, a11 = worldTransform.d, a12 = worldTransform.ty,
+            id = 1 / (a00 * a11 + a01 * -a10);
+        // set the mouse coords...
+        return new Phaser.Point(a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id,
+                                   a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id);
+    },
+
+    /**
+     * Tests if the current mouse coordinates hit a sprite
+     *
+     * @method hitTest
+     * @param item {DisplayObject} The displayObject to test for a hit
+     * @param interactionData {InteractionData} The interactionData object to update in the case there is a hit
+     * @private
+     */
+    // hitTest: function (item, interactionData) {
+    hitTest: function (item, pointer) {
+
+        // var global = interactionData.global;
+        var global = new Phaser.Point(pointer.x, pointer.y);
+
+        if( !item.worldVisible )return false;
+
+        // temp fix for if the element is in a non visible
+       
+        var isSprite = (item instanceof PIXI.Sprite),
+            worldTransform = item.worldTransform,
+            a00 = worldTransform.a, a01 = worldTransform.b, a02 = worldTransform.tx,
+            a10 = worldTransform.c, a11 = worldTransform.d, a12 = worldTransform.ty,
+            id = 1 / (a00 * a11 + a01 * -a10),
+            x = a11 * id * global.x + -a01 * id * global.y + (a12 * a01 - a02 * a11) * id,
+            y = a00 * id * global.y + -a10 * id * global.x + (-a12 * a00 + a02 * a10) * id;
+
+        // interactionData.target = item;
+
+        //a sprite or display object with a hit area defined
+        if(item.hitArea && item.hitArea.contains) {
+            if(item.hitArea.contains(x, y)) {
+                    console.log('AREA HIT!', x, y);
+                //if(isSprite)
+                // interactionData.target = item;
+
+                return true;
+            }
+
+            return false;
+        }
+        // a sprite with no hitarea defined
+        else if(isSprite)
+        {
+            var width = item.texture.frame.width,
+                height = item.texture.frame.height,
+                x1 = -width * item.anchor.x,
+                y1;
+
+            if(x > x1 && x < x1 + width)
+            {
+                y1 = -height * item.anchor.y;
+
+                if(y > y1 && y < y1 + height)
+                {
+                    // set the target property if a hit is true!
+                    // interactionData.target = item;
+                    console.log('HIT!', x, y, x1, y1);
+                    return true;
+                }
+            }
+        }
+
+        var length = item.children.length;
+
+        for (var i = 0; i < length; i++)
+        {
+            var tempItem = item.children[i];
+            // var hit = this.hitTest(tempItem, interactionData);
+            var hit = this.hitTest(tempItem);
+            if(hit)
+            {
+                // hmm.. TODO SET CORRECT TARGET?
+                // interactionData.target = item;
+                return true;
+            }
+        }
+
+        return false;
     }
 
 };

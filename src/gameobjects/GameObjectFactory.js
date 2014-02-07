@@ -40,7 +40,8 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Create a new Image at the given coordinates, using the cache key and frame if set.
+    * Create a new `Image` object. An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
+    * It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
     *
     * @method Phaser.GameObjectFactory#image
     * @param {number} x - X position of the image.

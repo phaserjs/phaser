@@ -70,6 +70,8 @@ Phaser.World.prototype.boot = function () {
 */
 Phaser.World.prototype.preUpdate = function () {
     
+    this.currentRenderOrderID = 0;
+
     for (var i = 0, len = this.children.length; i < len; i++)
     {
         if (this.children[i]['preUpdate'])
