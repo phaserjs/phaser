@@ -96,7 +96,7 @@ Phaser.Image.prototype = Object.create(PIXI.Sprite.prototype);
 Phaser.Image.prototype.constructor = Phaser.Image;
 
 /**
-* Automatically called by World.preUpdate. Handles cache updates, lifespan checks, animation updates and physics updates.
+* Automatically called by World.preUpdate.
 *
 * @method Phaser.Image#preUpdate
 * @memberof Phaser.Image
@@ -113,6 +113,8 @@ Phaser.Image.prototype.preUpdate = function() {
         //  Won't get rendered but will still get its transform updated
         this.renderable = this.game.world.camera.screenView.intersects(this.getBounds());
     }
+
+    this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
 
     return true;
 
@@ -176,19 +178,16 @@ Phaser.Image.prototype.inCamera = function() {
 */
 Phaser.Image.prototype.loadTexture = function (key, frame) {
 
-    console.log('loadTexture');
-
     this.key = key;
 
     if (key instanceof Phaser.RenderTexture)
     {
-        this.game.cache.getTextureFrame(key.name).clone(this.currentFrame);
+        // this.game.cache.getTextureFrame(key.name).clone(this.currentFrame);
         //  WOKWOKSK
     }
     else if (key instanceof Phaser.BitmapData)
     {
         this.setTexture(key.texture);
-        this.currentFrame = key.textureFrame;
     }
     else if (key instanceof PIXI.Texture)
     {
