@@ -99,8 +99,6 @@
     <script src="$path/src/pixi/textures/Texture.js"></script>
     <script src="$path/src/pixi/textures/RenderTexture.js"></script>
 
-    <script src="$path/src/math/Math.js"></script>
-
     <script src="$path/src/core/Camera.js"></script>
     <script src="$path/src/core/State.js"></script>
     <script src="$path/src/core/StateManager.js"></script>
@@ -144,9 +142,9 @@
     <script src="$path/src/system/Device.js"></script>
     <script src="$path/src/system/RequestAnimationFrame.js"></script>
 
+    <script src="$path/src/math/Math.js"></script>
     <script src="$path/src/math/RandomDataGenerator.js"></script>
     <script src="$path/src/math/QuadTree.js"></script>
-
 
     <script src="$path/src/net/Net.js"></script>
 

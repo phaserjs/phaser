@@ -9,9 +9,9 @@
 * @class Phaser.RenderTexture
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
-* @param {string} key - Asset key for the render texture.
-* @param {number} width - the width of the render texture.
-* @param {number} height - the height of the render texture.
+* @param {string} key - Internal Phaser reference key for the render texture.
+* @param {number} [width=100] - The width of the render texture.
+* @param {number} [height=100] - The height of the render texture.
 */
 Phaser.RenderTexture = function (game, key, width, height) {
 
@@ -21,43 +21,18 @@ Phaser.RenderTexture = function (game, key, width, height) {
     this.game = game;
 
     /**
-    * @property {string} name - the name of the object. 
+    * @property {string} key - The key of the RenderTexture in the Cache, if stored there.
     */
-    this.name = key;
-
-    /**
-    * @property {number} width - the width. 
-    */
-    this.width = width || 100;
-    
-    /**
-    * @property {number} height - the height. 
-    */
-    this.height = height || 100;
-
-    /**
-    * @property {PIXI.Rectangle} frame - The frame for this texture. 
-    */
-    this.frame = new PIXI.Rectangle(0, 0, this.width, this.height);
+    this.key = key;
 
     /**
     * @property {number} type - Base Phaser object type. 
     */
     this.type = Phaser.RENDERTEXTURE;
 
-    // this._tempPoint = { x: 0, y: 0 };
-
-    // if (PIXI.gl)
-    // {
-    //     this.initWebGL();
-    // }
-    // else
-    // {
-    //     this.initCanvas();
-    // }
+    PIXI.RenderTexture.call(this, width, height, renderer);
     
 };
 
 Phaser.RenderTexture.prototype = Object.create(PIXI.RenderTexture.prototype);
 Phaser.RenderTexture.prototype.constructor = Phaser.RenderTexture;
-

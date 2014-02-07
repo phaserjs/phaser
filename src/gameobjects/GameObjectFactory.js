@@ -288,32 +288,51 @@ Phaser.GameObjectFactory.prototype = {
     * A dynamic initially blank canvas to which images can be drawn.
     *
     * @method Phaser.GameObjectFactory#renderTexture
-    * @param {string} key - Asset key for the render texture.
-    * @param {number} width - the width of the render texture.
-    * @param {number} height - the height of the render texture.
-    * @return {Phaser.RenderTexture} The newly created renderTexture object.
+    * @param {number} [width=100] - the width of the RenderTexture.
+    * @param {number} [height=100] - the height of the RenderTexture.
+    * @param {string} [key=''] - Asset key for the RenderTexture when stored in the Cache (see addToCache parameter).
+    * @param {boolean} [addToCache=false] - Should this RenderTexture be added to the Game.Cache? If so you can retrieve it with Cache.getTexture(key)
+    * @return {Phaser.RenderTexture} The newly created RenderTexture object.
     */
-    renderTexture: function (key, width, height) {
+    renderTexture: function (width, height, key, addToCache) {
+
+        if (typeof addToCache === 'undefined') { addToCache = false; }
+        if (typeof key === 'undefined' || key === '') { key = this.game.rnd.uuid(); }
 
         var texture = new Phaser.RenderTexture(this.game, key, width, height);
 
-        this.game.cache.addRenderTexture(key, texture);
+        if (addToCache)
+        {
+            this.game.cache.addRenderTexture(key, texture);
+        }
 
         return texture;
 
     },
 
     /**
-    * Experimental: A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
+    * A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
     *
     * @method Phaser.GameObjectFactory#bitmapData
-    * @param {number} [width=256] - The width of the BitmapData in pixels.
-    * @param {number} [height=256] - The height of the BitmapData in pixels.
+    * @param {number} [width=100] - The width of the BitmapData in pixels.
+    * @param {number} [height=100] - The height of the BitmapData in pixels.
+    * @param {string} [key=''] - Asset key for the BitmapData when stored in the Cache (see addToCache parameter).
+    * @param {boolean} [addToCache=false] - Should this BitmapData be added to the Game.Cache? If so you can retrieve it with Cache.getBitmapData(key)
     * @return {Phaser.BitmapData} The newly created BitmapData object.
     */
-    bitmapData: function (width, height) {
+    bitmapData: function (width, height, addToCache) {
 
-        return new Phaser.BitmapData(this.game, width, height);
+        if (typeof addToCache === 'undefined') { addToCache = false; }
+        if (typeof key === 'undefined' || key === '') { key = this.game.rnd.uuid(); }
+
+        var texture = new Phaser.BitmapData(this.game, key, width, height);
+
+        if (addToCache)
+        {
+            this.game.cache.addBitmapData(key, texture);
+        }
+
+        return texture;
 
     },
 

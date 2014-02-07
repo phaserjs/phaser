@@ -64,8 +64,7 @@ Phaser.Image = function (game, x, y, key, frame) {
 
     this.loadTexture(key, frame);
 
-    this.position.x = x;
-    this.position.y = y;
+    this.position.set(x, y);
 
     /**
     * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
@@ -90,6 +89,12 @@ Phaser.Image = function (game, x, y, key, frame) {
     */
     this.fixedToCamera = false;
 
+    /**
+    * @property {array} _cache - A small cache for previous step values.
+    * @private
+    */
+    this._cache = [0, 0, 0];
+
 };
 
 Phaser.Image.prototype = Object.create(PIXI.Sprite.prototype);
@@ -102,6 +107,10 @@ Phaser.Image.prototype.constructor = Phaser.Image;
 * @memberof Phaser.Image
 */
 Phaser.Image.prototype.preUpdate = function() {
+
+    this._cache[0] = this.world.x;
+    this._cache[1] = this.world.y;
+    this._cache[2] = this.rotation;
 
     if (!this.exists || !this.parent.exists)
     {
@@ -142,32 +151,6 @@ Phaser.Image.prototype.postUpdate = function() {
 };
 
 /**
-* Checks if the Image bounds are within the game world, otherwise false if fully outside of it.
-*
-* @method Phaser.Image#inWorld
-* @memberof Phaser.Image
-* @return {boolean} True if the Image bounds is within the game world, even if only partially. Otherwise false if fully outside of it.
-*/
-Phaser.Image.prototype.inWorld = function() {
-
-    return this.game.world.bounds.intersects(this.getBounds());
-
-};
-
-/**
-* Checks if the Image bounds are within the game camera, otherwise false if fully outside of it.
-*
-* @method Phaser.Image#inCamera
-* @memberof Phaser.Image
-* @return {boolean} True if the Image bounds is within the game camera, even if only partially. Otherwise false if fully outside of it.
-*/
-Phaser.Image.prototype.inCamera = function() {
-
-    return this.game.world.camera.screenView.intersects(this.getBounds());
-
-};
-
-/**
 * Changes the Texture the Sprite is using entirely. The old texture is removed and the new one is referenced or fetched from the Cache.
 * This causes a WebGL texture update, so use sparingly or in low-intensity portions of your game.
 *
@@ -183,8 +166,8 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
 
     if (key instanceof Phaser.RenderTexture)
     {
-        // this.game.cache.getTextureFrame(key.name).clone(this.currentFrame);
-        //  WOKWOKSK
+        this.key = key.name;
+        this.setTexture(key);
     }
     else if (key instanceof Phaser.BitmapData)
     {
@@ -192,9 +175,7 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
     }
     else if (key instanceof PIXI.Texture)
     {
-        // this.currentFrame = frame;
-        frame.clone(this.currentFrame);
-        console.log('loadTexture 2');
+        this.setTexture(key);
     }
     else
     {
@@ -202,20 +183,18 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
         {
             key = '__default';
             this.key = key;
+            this.setTexture(PIXI.TextureCache[key]);
         }
         else if (typeof key === 'string' && this.game.cache.checkImageKey(key) === false)
         {
             key = '__missing';
             this.key = key;
+            this.setTexture(PIXI.TextureCache[key]);
         }
 
         if (this.game.cache.isSpriteSheet(key))
         {
             var frameData = this.game.cache.getFrameData(key);
-
-            // console.log(frameData);
-            // console.log(frameData.getFrame(0));
-            // console.log(frameData.getFrame(1));
 
             if (typeof frame === 'string')
             {
@@ -425,11 +404,100 @@ Phaser.Image.prototype.bringToTop = function(child) {
 Object.defineProperty(Phaser.Image.prototype, "angle", {
 
     get: function() {
+
         return Phaser.Math.wrapAngle(Phaser.Math.radToDeg(this.rotation));
+
     },
 
     set: function(value) {
+
         this.rotation = Phaser.Math.degToRad(Phaser.Math.wrapAngle(value));
+
+    }
+
+});
+
+/**
+* Returns the delta x value. The difference between world.x now and in the previous step.
+*
+* @name Phaser.Image#deltaX
+* @property {number} deltaX - The delta value. Positive if the motion was to the right, negative if to the left.
+* @readonly
+*/
+Object.defineProperty(Phaser.Image.prototype, "deltaX", {
+
+    get: function() {
+
+        return this.world.x - this._cache[0];
+
+    }
+
+});
+
+/**
+* Returns the delta y value. The difference between world.y now and in the previous step.
+*
+* @name Phaser.Image#deltaY
+* @property {number} deltaY - The delta value. Positive if the motion was downwards, negative if upwards.
+* @readonly
+*/
+Object.defineProperty(Phaser.Image.prototype, "deltaY", {
+
+    get: function() {
+    
+        return this.world.y - this._cache[1];
+
+    }
+
+});
+
+/**
+* Returns the delta z value. The difference between rotation now and in the previous step.
+*
+* @name Phaser.Image#deltaZ
+* @property {number} deltaZ - The delta value.
+* @readonly
+*/
+Object.defineProperty(Phaser.Image.prototype, "deltaZ", {
+
+    get: function() {
+    
+        return this.rotation - this._cache[2];
+
+    }
+
+});
+
+/**
+* Checks if the Image bounds are within the game world, otherwise false if fully outside of it.
+*
+* @name Phaser.Image#inWorld
+* @property {boolean} inWorld - True if the Image bounds is within the game world, even if only partially. Otherwise false if fully outside of it.
+* @readonly
+*/
+Object.defineProperty(Phaser.Image.prototype, "inWorld", {
+
+    get: function() {
+
+        return this.game.world.bounds.intersects(this.getBounds());
+
+    }
+
+});
+
+/**
+* Checks if the Image bounds are within the game camera, otherwise false if fully outside of it.
+*
+* @name Phaser.Image#inCamera
+* @property {boolean} inCamera - True if the Image bounds is within the game camera, even if only partially. Otherwise false if fully outside of it.
+* @readonly
+*/
+Object.defineProperty(Phaser.Image.prototype, "inCamera", {
+
+    get: function() {
+    
+        return this.game.world.camera.screenView.intersects(this.getBounds());
+
     }
 
 });
