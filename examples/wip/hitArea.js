@@ -71,11 +71,11 @@ function update() {
 function render() {
 
     // var p = game.input.getLocalPosition(image);
-    var p = game.input.getLocalPosition(image2);
+    // var p = game.input.getLocalPosition(image2);
 
 
-    game.debug.renderPointInfo(p, 32, 32);
-    game.debug.renderPoint(p);
+    // game.debug.renderPointInfo(p, 32, 32);
+    // game.debug.renderPoint(p);
     game.debug.renderCircle(image2.hitArea);
 
 }

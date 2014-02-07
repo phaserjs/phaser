@@ -498,7 +498,7 @@ Phaser.InputHandler.prototype = {
         }
 
         //  Need to pass it a temp point, in case we need it again for the pixel check
-        if (this.game.input.hitTest(this.sprite, pointer))
+        if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))
         {
             return true;
         }

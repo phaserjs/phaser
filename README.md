@@ -76,6 +76,8 @@ New features:
 
 * Phaser.Image is a brand new display object perfect for logos, backgrounds, etc. You can scale, rotate, tint and blend and Image, but it has no animation, physics body or input events.
 * You can now use the hitArea property on Sprites and Image objects. hitArea can be a geometry object (Rectangle, Circle, Polygon, Ellipse) and is used in pointerOver checks.
+* InputManager.getLocalPosition(displayObject, pointer, output) will return the local coordinates of the specified displayObject and pointer.
+* InputManager.hitTest will test for pointer hits against a Sprite/Image, its hitArea (if set) or any of its children.
 
 
 New Examples:
