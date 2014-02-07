@@ -69,6 +69,7 @@ Significant API changes:
 * PIXI.Circle is now aliased to Phaser.Circle - saves on code duplication and works exactly the same.
 * Sprite.deltaX and deltaY swapped to functions: Sprite.deltaX() and Sprite.deltaY()
 * Sprite.crop() now takes a Phaser.Rectangle instead of explicit parameters.
+* PixiPatch no longer needed, all features that it patched are now native in Pixi :)
 
 
 New features:
@@ -79,6 +80,9 @@ New Examples:
 
 
 Updates:
+
+* Debug.renderRectangle has a new parameter: filled. If true it renders as with fillRect, if false strokeRect.
+* Phaser.AnimationParser now sets the trimmed data directly for Pixi Texture frames. Tested across JSON Hash, JSON Data, Sprite Sheet and XML.
 
 
 Bug Fixes:
@@ -260,6 +264,12 @@ Beyond version 2.0
 * Game parameters stored in Google Docs.
 * Look at HiDPI Canvas settings.
 * Multiple Camera support.
+
+
+Nadion
+------
+
+[Nadion](https://github.com/jcd-as/nadion) is a set of powerful enhancements for Phaser that makes level building even easier. It includes features such as Trigger, Area, Alarms and Emitters, debug panels, state machines, parallax layer scrolling, 'developer mode' short-cuts and more.
 
 
 Contributing

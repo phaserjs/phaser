@@ -90,8 +90,6 @@ Phaser.Image = function (game, x, y, key, frame) {
     */
     this.fixedToCamera = false;
 
-
-
 };
 
 Phaser.Image.prototype = Object.create(PIXI.Sprite.prototype);
@@ -185,6 +183,7 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
     if (key instanceof Phaser.RenderTexture)
     {
         this.game.cache.getTextureFrame(key.name).clone(this.currentFrame);
+        //  WOKWOKSK
     }
     else if (key instanceof Phaser.BitmapData)
     {
@@ -241,7 +240,8 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
 };
 
 /**
-* Crop allows you to crop the texture used to display this Image. Cropping takes place from the top-left of the Image and can be modified in real-time.
+* Crop allows you to crop the texture used to display this Image.
+* Cropping takes place from the top-left of the Image and can be modified in real-time by providing an updated rectangle object.
 *
 * @method Phaser.Image#crop
 * @memberof Phaser.Image

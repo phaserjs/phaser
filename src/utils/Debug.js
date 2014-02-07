@@ -745,19 +745,32 @@ Phaser.Utils.Debug.prototype = {
     * @method Phaser.Utils.Debug#renderRectangle
     * @param {Phaser.Rectangle} rect - The Rectangle to render.
     * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
+    * @param {boolean} [filled=true] - Render the rectangle as a fillRect (default, true) or a strokeRect (false)
     */
-    renderRectangle: function (rect, color) {
+    renderRectangle: function (rect, color, filled) {
 
         if (this.context == null)
         {
             return;
         }
 
+        if (typeof filled === 'undefined') { filled = true; }
+
         color = color || 'rgba(0,255,0,0.3)';
 
         this.start();
-        this.context.fillStyle = color;
-        this.context.fillRect(rect.x, rect.y, rect.width, rect.height);
+
+        if (filled)
+        {
+            this.context.fillStyle = color;
+            this.context.fillRect(rect.x, rect.y, rect.width, rect.height);
+        }
+        else
+        {
+            this.context.strokeStyle = color;
+            this.context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+        }
+
         this.stop();
         
     },

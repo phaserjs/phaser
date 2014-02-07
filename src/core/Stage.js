@@ -248,21 +248,12 @@ Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 
         if (this.game.transparent === false)
         {
-            if (this.game.renderType == Phaser.CANVAS)
+            if (typeof color === 'string')
             {
-                //  Set it directly, this allows us to use rgb alpha values in Canvas mode.
-                this.game.canvas.style.backgroundColor = color;
-            }
-            else
-            {
-                if (typeof color === 'string')
-                {
-                    color = Phaser.Color.hexToRGB(color);
-                }
-
-                this._stage.setBackgroundColor(color);
+                color = Phaser.Color.hexToRGB(color);
             }
 
+            this._stage.setBackgroundColor(color);
         }
 
     }
