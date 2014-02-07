@@ -70,6 +70,8 @@ Significant API changes:
 * Sprite.deltaX and deltaY swapped to functions: Sprite.deltaX() and Sprite.deltaY()
 * Sprite.crop() now takes a Phaser.Rectangle instead of explicit parameters.
 * PixiPatch no longer needed, all features that it patched are now native in Pixi :)
+* Removed: Sprite.offset, center, topLeft, topRight, bottomRight, bottomLeft and bounds as no longer needed internally. Use Sprite.getBounds() to derive them.
+* Button now extends Phaser.Image not Phaser.Sprite, all the same functionality as before remains, just no animations or physics body.
 
 
 New features:
