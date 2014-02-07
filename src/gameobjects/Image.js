@@ -179,6 +179,7 @@ Phaser.Image.prototype.inCamera = function() {
 Phaser.Image.prototype.loadTexture = function (key, frame) {
 
     this.key = key;
+    frame = frame || 0;
 
     if (key instanceof Phaser.RenderTexture)
     {
@@ -210,28 +211,23 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
 
         if (this.game.cache.isSpriteSheet(key))
         {
-            // this.animations.loadFrameData(this.game.cache.getFrameData(key));
+            var frameData = this.game.cache.getFrameData(key);
 
-            // if (typeof frame !== 'undefined')
-            // {
-            //     if (typeof frame === 'string')
-            //     {
-            //         this.frameName = frame;
-            //     }
-            //     else
-            //     {
-            //         this.frame = frame;
-            //     }
-            // }
+            // console.log(frameData);
+            // console.log(frameData.getFrame(0));
+            // console.log(frameData.getFrame(1));
+
+            if (typeof frame === 'string')
+            {
+                this.setTexture(PIXI.TextureCache[frameData.getFrameByName(frame).uuid]);
+            }
+            else
+            {
+                this.setTexture(PIXI.TextureCache[frameData.getFrame(frame).uuid]);
+            }
         }
         else
         {
-            console.log('loadTexture 1', this.game.cache.getFrame(key));
-
-            this.game.cache.getFrame(key).getRect(this.currentFrame);
-
-            console.log('loadTexture 1', this.currentFrame);
-
             this.setTexture(PIXI.TextureCache[key]);
         }
     }
@@ -421,24 +417,19 @@ Phaser.Image.prototype.bringToTop = function(child) {
 /**
 * Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
-* If you wish to work in radians instead of degrees use the property Sprite.rotation instead. Working in radians is also computationally faster.
+* If you wish to work in radians instead of degrees use the property Sprite.rotation instead. Working in radians is also faster on mobile devices where Object.defineProperty is expensive to call.
 * 
-* @method Phaser.Image#angle
-* @memberof Phaser.Image
-* @param {number} [value] - If given it will set the Images angle to this value. Value should be given in degrees.
-* @return {number} The angle of this Image in degrees.
+* @name Phaser.Image#angle
+* @property {number} angle - The angle of this Image in degrees.
 */
-Phaser.Image.prototype.angle = function(value) {
+Object.defineProperty(Phaser.Image.prototype, "angle", {
 
-    if (typeof value === 'undefined')
-    {
+    get: function() {
         return Phaser.Math.wrapAngle(Phaser.Math.radToDeg(this.rotation));
-    }
-    else
-    {
+    },
+
+    set: function(value) {
         this.rotation = Phaser.Math.degToRad(Phaser.Math.wrapAngle(value));
-
-        return Phaser.Math.radToDeg(this.rotation);
     }
 
-};
+});
