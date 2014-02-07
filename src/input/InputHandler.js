@@ -500,14 +500,6 @@ Phaser.InputHandler.prototype = {
         //  Need to pass it a temp point, in case we need it again for the pixel check
         if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))
         {
-            return true;
-        }
-
-        /*
-        this.sprite.getLocalUnmodifiedPosition(this._tempPoint, pointer.x, pointer.y);
-
-        if (this._tempPoint.x >= 0 && this._tempPoint.x <= this.sprite.currentFrame.width && this._tempPoint.y >= 0 && this._tempPoint.y <= this.sprite.currentFrame.height)
-        {
             if (this.pixelPerfect)
             {
                 return this.checkPixel(this._tempPoint.x, this._tempPoint.y);
@@ -517,7 +509,6 @@ Phaser.InputHandler.prototype = {
                 return true;
             }
         }
-        */
 
         return false;
 

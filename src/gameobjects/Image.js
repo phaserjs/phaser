@@ -119,6 +119,7 @@ Phaser.Image.prototype.preUpdate = function() {
 
     if (!this.exists || !this.parent.exists)
     {
+        this.renderOrderID = -1;
         return false;
     }
 
@@ -363,9 +364,7 @@ Phaser.Image.prototype.destroy = function() {
 };
 
 /**
-* Resets the Sprite. This places the Sprite at the given x/y world coordinates and then
-* sets alive, exists, visible and renderable all to true. Also resets the outOfBounds state and health values.
-* If the Sprite has a physics body that too is reset.
+* Resets the Sprite. This places the Sprite at the given x/y world coordinates and then sets alive, exists, visible and renderable all to true.
 * 
 * @method Phaser.Image#reset
 * @memberof Phaser.Image
@@ -382,7 +381,6 @@ Phaser.Image.prototype.reset = function(x, y) {
     this.exists = true;
     this.visible = true;
     this.renderable = true;
-    this._outOfBoundsFired = false;
 
     return this;
     
