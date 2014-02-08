@@ -92,6 +92,7 @@ Updates:
 * Game.add.renderTexture now has the addToCache parameter. If set the texture will be stored in Game.Cache and can be retrieved with Cache.getTexture(key).
 * Game.add.bitmapData now has the addToCache parameter. If set the texture will be stored in Game.Cache and can be retrieved with Cache.getBitmapData(key).
 * The InputManager now sets the canvas style cursor to 'inherit' instead of 'default'.
+* World.reset now calls Camera.reset which sends the camera back to 0,0 and un-follows any object it may have been tracking.
 
 
 Bug Fixes:
@@ -101,6 +102,7 @@ Bug Fixes:
 * Fixed TypeScript defs on lines 1741-1748 (thanks wombatbuddy)
 * Previously if you used Sprite.crop() it would crop all Sprites using the same base image. It now takes a local copy of the texture data and crops just that.
 * Tilemap had the wrong @method signatures so most were missing from the docs.
+* Fixed bug where changing State would cause the camera to not reset if it was following an object.
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md

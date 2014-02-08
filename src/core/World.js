@@ -178,8 +178,7 @@ Phaser.World.prototype.setBounds = function (x, y, width, height) {
 */
 Phaser.World.prototype.destroy = function () {
 
-    this.camera.x = 0;
-    this.camera.y = 0;
+    this.camera.reset();
 
     this.game.input.reset(true);
 
