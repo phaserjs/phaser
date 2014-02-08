@@ -245,7 +245,7 @@ Phaser.Timer.prototype = {
         {
             if (this.events[i] === event)
             {
-                this.events.splice(i, 1);
+                this.events[i].pendingDelete = true;
                 return true;
             }
         }
@@ -308,11 +308,26 @@ Phaser.Timer.prototype = {
 
         this._len = this.events.length;
 
+        this._i = 0;
+
+        while (this._i < this._len)
+        {
+            if (this.events[this._i].pendingDelete)
+            {
+                this.events.splice(this._i, 1);
+                this._len--;
+            }
+
+            this._i++;
+        }
+
+        this._len = this.events.length;
+
         if (this.running && this._now >= this.nextTick && this._len > 0)
         {
             this._i = 0;
 
-            while (this._i < this._len)
+            while (this._i < this._len && this.running)
             {
                 if (this._now >= this.events[this._i].tick)
                 {
@@ -371,9 +386,12 @@ Phaser.Timer.prototype = {
     */
     pause: function () {
         
-        this._pauseStarted = this.game.time.now;
+        if (this.running && !this.expired)
+        {
+            this._pauseStarted = this.game.time.now;
 
-        this.paused = true;
+            this.paused = true;
+        }
 
     },
 
@@ -383,16 +401,19 @@ Phaser.Timer.prototype = {
     */
     resume: function () {
 
-        var pauseDuration = this.game.time.now - this._pauseStarted;
-
-        for (var i = 0; i < this.events.length; i++)
+        if (this.running && !this.expired)
         {
-            this.events[i].tick += pauseDuration;
+            var pauseDuration = this.game.time.now - this._pauseStarted;
+
+            for (var i = 0; i < this.events.length; i++)
+            {
+                this.events[i].tick += pauseDuration;
+            }
+
+            this.nextTick += pauseDuration;
+
+            this.paused = false;
         }
-
-        this.nextTick += pauseDuration;
-
-        this.paused = false;
 
     },
 
@@ -405,6 +426,7 @@ Phaser.Timer.prototype = {
         this.onComplete.removeAll();
         this.running = false;
         this.events = [];
+        this._i = this._len;
 
     }
 

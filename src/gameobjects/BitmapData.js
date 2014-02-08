@@ -17,13 +17,14 @@
 *
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {number} [width=256] - The width of the BitmapData in pixels.
-* @param {number} [height=256] - The height of the BitmapData in pixels.
+* @param {string} key - Internal Phaser reference key for the render texture.
+* @param {number} [width=100] - The width of the BitmapData in pixels.
+* @param {number} [height=100] - The height of the BitmapData in pixels.
 */
-Phaser.BitmapData = function (game, width, height) {
+Phaser.BitmapData = function (game, key, width, height) {
 
-    if (typeof width === 'undefined') { width = 256; }
-    if (typeof height === 'undefined') { height = 256; }
+    if (typeof width === 'undefined') { width = 100; }
+    if (typeof height === 'undefined') { height = 100; }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game. 
@@ -31,9 +32,9 @@ Phaser.BitmapData = function (game, width, height) {
     this.game = game;
 
     /**
-    * @property {string} name - The name of the BitmapData.
+    * @property {string} key - The key of the BitmapData in the Cache, if stored there.
     */
-    this.name = '';
+    this.key = key;
 
     /**
     * @property {number} width - The width of the BitmapData in pixels.

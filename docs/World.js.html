@@ -183,6 +183,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Image.html">Image</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Input.html">Input</a>
 						</li>
 						
@@ -398,6 +402,36 @@
 					</ul>
 				</li>
 				
+				<li class="dropdown">
+					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
+						</li>
+						
+						<li>
+							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
+						</li>
+						
+						<li>
+							<a href="global.html#hex2rgb">hex2rgb</a>
+						</li>
+						
+						<li>
+							<a href="global.html#hitTest">hitTest</a>
+						</li>
+						
+						<li>
+							<a href="global.html#rgb2hex">rgb2hex</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
 			</ul>
 		</div>
 	</div>
@@ -471,9 +505,11 @@ Phaser.World.prototype.boot = function () {
 
     this.camera = new Phaser.Camera(this.game, 0, 0, 0, this.game.width, this.game.height);
 
-    this.camera.displayObject = this._container;
+    this.camera.displayObject = this;
 
     this.game.camera = this.camera;
+
+    this.game.stage._stage.addChild(this);
 
 }
 
@@ -481,28 +517,18 @@ Phaser.World.prototype.boot = function () {
 * This is called automatically after the plugins preUpdate and before the State.update.
 * Most objects have preUpdate methods and it's where initial movement, drawing and calculations are done.
 * 
-* @method Phaser.World#update
+* @method Phaser.World#preUpdate
 */
 Phaser.World.prototype.preUpdate = function () {
     
-    if (this.game.stage._stage.first._iNext)
+    this.currentRenderOrderID = 0;
+
+    for (var i = 0, len = this.children.length; i &lt; len; i++)
     {
-        var currentNode = this.game.stage._stage.first._iNext;
-        
-        do
+        if (this.children[i]['preUpdate'])
         {
-            // If preUpdate exists, and it returns false, skip PIXI child objects
-            if (currentNode['preUpdate'] && !currentNode.preUpdate())
-            {
-                currentNode = currentNode.last._iNext;
-            }
-            else
-            {
-                currentNode = currentNode._iNext;
-            }
-            
+            this.children[i].preUpdate();
         }
-        while (currentNode != this.game.stage._stage.last._iNext)
     }
 
 }
@@ -515,26 +541,12 @@ Phaser.World.prototype.preUpdate = function () {
 */
 Phaser.World.prototype.update = function () {
 
-    this.currentRenderOrderID = 0;
-    
-    if (this.game.stage._stage.first._iNext)
+    for (var i = 0, len = this.children.length; i &lt; len; i++)
     {
-        var currentNode = this.game.stage._stage.first._iNext;
-        
-        do
+        if (this.children[i]['update'])
         {
-            // If update exists, and it returns false, skip PIXI child objects
-            if (currentNode['update'] && !currentNode.update())
-            {
-                currentNode = currentNode.last._iNext;
-            }
-            else
-            {
-                currentNode = currentNode._iNext;
-            }
-            
+            this.children[i].update();
         }
-        while (currentNode != this.game.stage._stage.last._iNext)
     }
 
 }
@@ -555,40 +567,24 @@ Phaser.World.prototype.postUpdate = function () {
 
         this.camera.update();
 
-        if (this.game.stage._stage.first._iNext)
+        for (var i = 0, len = this.children.length; i &lt; len; i++)
         {
-            var currentNode = this.game.stage._stage.first._iNext;
-            
-            do
+            if (this.children[i]['postUpdate'])
             {
-                if (currentNode['postUpdate'] && currentNode !== this.camera.target)
-                {
-                    currentNode.postUpdate();
-                }
-                
-                currentNode = currentNode._iNext;
+                this.children[i].postUpdate();
             }
-            while (currentNode != this.game.stage._stage.last._iNext)
         }
     }
     else
     {
         this.camera.update();
 
-        if (this.game.stage._stage.first._iNext)
+        for (var i = 0, len = this.children.length; i &lt; len; i++)
         {
-            var currentNode = this.game.stage._stage.first._iNext;
-            
-            do
+            if (this.children[i]['postUpdate'])
             {
-                if (currentNode['postUpdate'])
-                {
-                    currentNode.postUpdate();
-                }
-                
-                currentNode = currentNode._iNext;
+                this.children[i].postUpdate();
             }
-            while (currentNode != this.game.stage._stage.last._iNext)
         }
     }
 
@@ -744,21 +740,6 @@ Object.defineProperty(Phaser.World.prototype, "randomY", {
 
 });
 
-/**
-* @name Phaser.World#visible
-* @property {boolean} visible - Gets or sets the visible state of the World.
-*/
-Object.defineProperty(Phaser.World.prototype, "visible", {
-
-    get: function () {
-        return this._container.visible;
-    },
-
-    set: function (value) {
-        this._container.visible = value;
-    }
-
-});
 </pre>
         </article>
     </section>
@@ -780,7 +761,7 @@ Object.defineProperty(Phaser.World.prototype, "visible", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Wed Feb 05 2014 06:28:24 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Sat Feb 08 2014 07:19:40 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

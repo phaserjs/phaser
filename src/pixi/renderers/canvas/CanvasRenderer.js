@@ -8,14 +8,72 @@
  *
  * @class CanvasRenderer
  * @constructor
- * @param width=0 {Number} the width of the canvas view
- * @param height=0 {Number} the height of the canvas view
- * @param view {Canvas} the canvas to use as a view, optional
- * @param transparent=false {Boolean} the transparency of the render view, default false
+ * @param width=800 {Number} the width of the canvas view
+ * @param height=600 {Number} the height of the canvas view
+ * @param [view] {HTMLCanvasElement} the canvas to use as a view, optional
+ * @param [transparent=false] {Boolean} the transparency of the render view, default false
  */
 PIXI.CanvasRenderer = function(width, height, view, transparent)
 {
-    this.transparent = transparent;
+    PIXI.defaultRenderer = PIXI.defaultRenderer || this;
+
+    this.type = PIXI.CANVAS_RENDERER;
+
+
+    /**
+     * Whether the render view is transparent
+     *
+     * @property transparent
+     * @type Boolean
+     */
+    this.transparent = !!transparent;
+
+    if(!PIXI.blendModesCanvas)
+    {
+        PIXI.blendModesCanvas = [];
+        
+        if(PIXI.canUseNewCanvasBlendModes())
+        {
+            PIXI.blendModesCanvas[PIXI.blendModes.NORMAL]   = "source-over";
+            PIXI.blendModesCanvas[PIXI.blendModes.ADD]      = "lighter"; //IS THIS OK???
+            PIXI.blendModesCanvas[PIXI.blendModes.MULTIPLY] = "multiply";
+            PIXI.blendModesCanvas[PIXI.blendModes.SCREEN]   = "screen";
+            PIXI.blendModesCanvas[PIXI.blendModes.OVERLAY]  = "overlay";
+            PIXI.blendModesCanvas[PIXI.blendModes.DARKEN]   = "darken";
+            PIXI.blendModesCanvas[PIXI.blendModes.LIGHTEN]  = "lighten";
+            PIXI.blendModesCanvas[PIXI.blendModes.COLOR_DODGE] = "color-dodge";
+            PIXI.blendModesCanvas[PIXI.blendModes.COLOR_BURN] = "color-burn";
+            PIXI.blendModesCanvas[PIXI.blendModes.HARD_LIGHT] = "hard-light";
+            PIXI.blendModesCanvas[PIXI.blendModes.SOFT_LIGHT] = "soft-light";
+            PIXI.blendModesCanvas[PIXI.blendModes.DIFFERENCE] = "difference";
+            PIXI.blendModesCanvas[PIXI.blendModes.EXCLUSION] = "exclusion";
+            PIXI.blendModesCanvas[PIXI.blendModes.HUE]       = "hue";
+            PIXI.blendModesCanvas[PIXI.blendModes.SATURATION] = "saturation";
+            PIXI.blendModesCanvas[PIXI.blendModes.COLOR]      = "color";
+            PIXI.blendModesCanvas[PIXI.blendModes.LUMINOSITY] = "luminosity";
+        }
+        else
+        {
+            // this means that the browser does not support the cool new blend modes in canvas "cough" ie "cough"
+            PIXI.blendModesCanvas[PIXI.blendModes.NORMAL]   = "source-over";
+            PIXI.blendModesCanvas[PIXI.blendModes.ADD]      = "lighter"; //IS THIS OK???
+            PIXI.blendModesCanvas[PIXI.blendModes.MULTIPLY] = "source-over";
+            PIXI.blendModesCanvas[PIXI.blendModes.SCREEN]   = "source-over";
+            PIXI.blendModesCanvas[PIXI.blendModes.OVERLAY]  = "source-over";
+            PIXI.blendModesCanvas[PIXI.blendModes.DARKEN]   = "source-over";
+            PIXI.blendModesCanvas[PIXI.blendModes.LIGHTEN]  = "source-over";
+            PIXI.blendModesCanvas[PIXI.blendModes.COLOR_DODGE] = "source-over";
+            PIXI.blendModesCanvas[PIXI.blendModes.COLOR_BURN] = "source-over";
+            PIXI.blendModesCanvas[PIXI.blendModes.HARD_LIGHT] = "source-over";
+            PIXI.blendModesCanvas[PIXI.blendModes.SOFT_LIGHT] = "source-over";
+            PIXI.blendModesCanvas[PIXI.blendModes.DIFFERENCE] = "source-over";
+            PIXI.blendModesCanvas[PIXI.blendModes.EXCLUSION] = "source-over";
+            PIXI.blendModesCanvas[PIXI.blendModes.HUE]       = "source-over";
+            PIXI.blendModesCanvas[PIXI.blendModes.SATURATION] = "source-over";
+            PIXI.blendModesCanvas[PIXI.blendModes.COLOR]      = "source-over";
+            PIXI.blendModesCanvas[PIXI.blendModes.LUMINOSITY] = "source-over";
+        }
+    }
 
     /**
      * The width of the canvas view
@@ -36,33 +94,19 @@ PIXI.CanvasRenderer = function(width, height, view, transparent)
     this.height = height || 600;
 
     /**
-     * The canvas element that the everything is drawn to
+     * The canvas element that everything is drawn to
      *
      * @property view
-     * @type Canvas
+     * @type HTMLCanvasElement
      */
-    this.view = view || document.createElement( 'canvas' );
+    this.view = view || document.createElement( "canvas" );
 
     /**
-     * The canvas context that the everything is drawn to
+     * The canvas 2d context that everything is drawn with
      * @property context
-     * @type Canvas 2d Context
+     * @type HTMLCanvasElement 2d Context
      */
-    this.context = this.view.getContext( '2d' );
-
-    //some filter variables
-    this.smoothProperty = null;
-
-    if('imageSmoothingEnabled' in this.context)
-        this.smoothProperty = 'imageSmoothingEnabled';
-    else if('webkitImageSmoothingEnabled' in this.context)
-        this.smoothProperty = 'webkitImageSmoothingEnabled';
-    else if('mozImageSmoothingEnabled' in this.context)
-        this.smoothProperty = 'mozImageSmoothingEnabled';
-    else if('oImageSmoothingEnabled' in this.context)
-        this.smoothProperty = 'oImageSmoothingEnabled';
-
-    this.scaleMode = null;
+    this.context = this.view.getContext( "2d", { alpha: this.transparent } );
 
     this.refresh = true;
     // hack to enable some hardware acceleration!
@@ -71,6 +115,34 @@ PIXI.CanvasRenderer = function(width, height, view, transparent)
     this.view.width = this.width;
     this.view.height = this.height;
     this.count = 0;
+
+    /**
+     * Instance of a PIXI.CanvasMaskManager, handles masking when using the canvas renderer
+     * @property CanvasMaskManager
+     * @type CanvasMaskManager
+     */
+    this.maskManager = new PIXI.CanvasMaskManager();
+
+    /**
+     * RenderSession TODO-Alvin
+     * @property renderSession
+     * @type Object
+     */
+    this.renderSession = {
+        context: this.context,
+        maskManager: this.maskManager,
+        scaleMode: null,
+        smoothProperty: null
+    };
+
+    if("imageSmoothingEnabled" in this.context)
+        this.renderSession.smoothProperty = "imageSmoothingEnabled";
+    else if("webkitImageSmoothingEnabled" in this.context)
+        this.renderSession.smoothProperty = "webkitImageSmoothingEnabled";
+    else if("mozImageSmoothingEnabled" in this.context)
+        this.renderSession.smoothProperty = "mozImageSmoothingEnabled";
+    else if("oImageSmoothingEnabled" in this.context)
+        this.renderSession.smoothProperty = "oImageSmoothingEnabled";
 };
 
 // constructor
@@ -84,24 +156,37 @@ PIXI.CanvasRenderer.prototype.constructor = PIXI.CanvasRenderer;
  */
 PIXI.CanvasRenderer.prototype.render = function(stage)
 {
-    //stage.__childrenAdded = [];
-    //stage.__childrenRemoved = [];
-
     // update textures if need be
-    PIXI.texturesToUpdate = [];
-    PIXI.texturesToDestroy = [];
+    PIXI.texturesToUpdate.length = 0;
+    PIXI.texturesToDestroy.length = 0;
 
-    PIXI.visibleCount++;
     stage.updateTransform();
 
-    // update the background color
-    if(this.view.style.backgroundColor !== stage.backgroundColorString && !this.transparent)
-        this.view.style.backgroundColor = stage.backgroundColorString;
-
     this.context.setTransform(1,0,0,1,0,0);
-    this.context.clearRect(0, 0, this.width, this.height);
+    this.context.globalAlpha = 1;
+
+    //  Update the background color / cls
+    if (!this.transparent)
+    {
+        if (PIXI.canvas.FILL_RECT)
+        {
+            this.context.fillStyle = stage.backgroundColorString;
+            this.context.fillRect(0, 0, this.width, this.height);
+        }
+        else if (stage.resetBackgroundColor)
+        {
+            this.view.style.backgroundColor = stage.backgroundColorString;
+            stage.resetBackgroundColor = false;
+            console.log('bgcolor reset', this.view.style.backgroundColor);
+        }
+    }
+    
+    if (PIXI.canvas.CLEAR_RECT && !PIXI.canvas.FILL_RECT)
+    {
+        this.context.clearRect(0, 0, this.width, this.height);
+    }
+   
     this.renderDisplayObject(stage);
-    //as
 
     // run interaction!
     if(stage.interactive)
@@ -117,12 +202,12 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
     // remove frame updates..
     if(PIXI.Texture.frameUpdates.length > 0)
     {
-        PIXI.Texture.frameUpdates = [];
+        PIXI.Texture.frameUpdates.length = 0;
     }
 };
 
 /**
- * resizes the canvas view to the specified width and height
+ * Resizes the canvas view to the specified width and height
  *
  * @method resize
  * @param width {Number} the new width of the canvas view
@@ -142,119 +227,17 @@ PIXI.CanvasRenderer.prototype.resize = function(width, height)
  *
  * @method renderDisplayObject
  * @param displayObject {DisplayObject} The displayObject to render
+ * @param context {Context2D} the context 2d method of the canvas
  * @private
  */
-PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject)
+PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject, context)
 {
-    // no loger recurrsive!
-    var transform;
-    var context = this.context;
+    // no longer recursive!
+    //var transform;
+    //var context = this.context;
 
-    context.globalCompositeOperation = 'source-over';
-
-    // one the display object hits this. we can break the loop
-    var testObject = displayObject.last._iNext;
-    displayObject = displayObject.first;
-
-    do
-    {
-        transform = displayObject.worldTransform;
-
-        if(!displayObject.visible)
-        {
-            displayObject = displayObject.last._iNext;
-            continue;
-        }
-
-        if(!displayObject.renderable)
-        {
-            displayObject = displayObject._iNext;
-            continue;
-        }
-
-        if(displayObject instanceof PIXI.Sprite)
-        {
-
-            var frame = displayObject.texture.frame;
-
-            //ignore null sources
-            if(frame && frame.width && frame.height && displayObject.texture.baseTexture.source)
-            {
-                context.globalAlpha = displayObject.worldAlpha;
-
-                context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5]);
-
-                //if smoothingEnabled is supported and we need to change the smoothing property for this texture
-                if(this.smoothProperty && this.scaleMode !== displayObject.texture.baseTexture.scaleMode) {
-                    this.scaleMode = displayObject.texture.baseTexture.scaleMode;
-                    context[this.smoothProperty] = (this.scaleMode === PIXI.BaseTexture.SCALE_MODE.LINEAR);
-                }
-
-                context.drawImage(displayObject.texture.baseTexture.source,
-                                   frame.x,
-                                   frame.y,
-                                   frame.width,
-                                   frame.height,
-                                   (displayObject.anchor.x) * -frame.width,
-                                   (displayObject.anchor.y) * -frame.height,
-                                   frame.width,
-                                   frame.height);
-            }
-        }
-        else if(displayObject instanceof PIXI.Strip)
-        {
-            context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5]);
-            this.renderStrip(displayObject);
-        }
-        else if(displayObject instanceof PIXI.TilingSprite)
-        {
-            context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5]);
-            this.renderTilingSprite(displayObject);
-        }
-        else if(displayObject instanceof PIXI.CustomRenderable)
-        {
-            context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5]);
-            displayObject.renderCanvas(this);
-        }
-        else if(displayObject instanceof PIXI.Graphics)
-        {
-            context.setTransform(transform[0], transform[3], transform[1], transform[4], transform[2], transform[5]);
-            PIXI.CanvasGraphics.renderGraphics(displayObject, context);
-        }
-        else if(displayObject instanceof PIXI.FilterBlock)
-        {
-            if(displayObject.data instanceof PIXI.Graphics)
-            {
-                var mask = displayObject.data;
-
-                if(displayObject.open)
-                {
-                    context.save();
-
-                    var cacheAlpha = mask.alpha;
-                    var maskTransform = mask.worldTransform;
-
-                    context.setTransform(maskTransform[0], maskTransform[3], maskTransform[1], maskTransform[4], maskTransform[2], maskTransform[5]);
-
-                    mask.worldAlpha = 0.5;
-
-                    context.worldAlpha = 0;
-
-                    PIXI.CanvasGraphics.renderGraphicsMask(mask, context);
-                    context.clip();
-
-                    mask.worldAlpha = cacheAlpha;
-                }
-                else
-                {
-                    context.restore();
-                }
-            }
-        }
-        //count++
-        displayObject = displayObject._iNext;
-    }
-    while(displayObject !== testObject);
+    this.renderSession.context = context || this.context;
+    displayObject._renderCanvas(this.renderSession);
 };
 
 /**
@@ -286,42 +269,8 @@ PIXI.CanvasRenderer.prototype.renderStripFlat = function(strip)
         context.lineTo(x2, y2);
     }
 
-    context.fillStyle = '#FF0000';
+    context.fillStyle = "#FF0000";
     context.fill();
-    context.closePath();
-};
-
-/**
- * Renders a tiling sprite
- *
- * @method renderTilingSprite
- * @param sprite {TilingSprite} The tilingsprite to render
- * @private
- */
-PIXI.CanvasRenderer.prototype.renderTilingSprite = function(sprite)
-{
-    var context = this.context;
-
-    context.globalAlpha = sprite.worldAlpha;
-
-    if(!sprite.__tilePattern)
-        sprite.__tilePattern = context.createPattern(sprite.texture.baseTexture.source, 'repeat');
-
-    context.beginPath();
-
-    var tilePosition = sprite.tilePosition;
-    var tileScale = sprite.tileScale;
-
-    // offset
-    context.scale(tileScale.x,tileScale.y);
-    context.translate(tilePosition.x, tilePosition.y);
-
-    context.fillStyle = sprite.__tilePattern;
-    context.fillRect(-tilePosition.x,-tilePosition.y,sprite.width / tileScale.x, sprite.height / tileScale.y);
-
-    context.scale(1/tileScale.x, 1/tileScale.y);
-    context.translate(-tilePosition.x, -tilePosition.y);
-
     context.closePath();
 };
 
@@ -380,3 +329,51 @@ PIXI.CanvasRenderer.prototype.renderStrip = function(strip)
         context.restore();
     }
 };
+
+/**
+ * Creates a Canvas element of the given size
+ *
+ * @method CanvasBuffer
+ * @param width {Number} the width for the newly created canvas
+ * @param height {Number} the height for the newly created canvas
+ * @static
+ * @private
+ */
+PIXI.CanvasBuffer = function(width, height)
+{
+    this.width = width;
+    this.height = height;
+
+    this.canvas = document.createElement( "canvas" );
+    this.context = this.canvas.getContext( "2d" );
+
+    this.canvas.width = width;
+    this.canvas.height = height;
+};
+
+/**
+ * Clears the canvas that was created by the CanvasBuffer class
+ *
+ * @method clear
+ * @private
+ */
+PIXI.CanvasBuffer.prototype.clear = function()
+{
+    this.context.clearRect(0,0, this.width, this.height);
+};
+
+/**
+ * Resizes the canvas that was created by the CanvasBuffer class to the specified width and height
+ *
+ * @method resize
+ * @param width {Number} the new width of the canvas
+ * @param height {Number} the new height of the canvas
+ * @private
+ */
+
+PIXI.CanvasBuffer.prototype.resize = function(width, height)
+{
+    this.width = this.canvas.width = width;
+    this.height = this.canvas.height = height;
+};
+

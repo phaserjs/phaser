@@ -31,7 +31,7 @@ function create() {
     //  Now let's create some random sprites and enable them all for drag and 'bring to top'
     for (var i = 0; i < 10; i++)
     {
-        var tempSprite = game.add.sprite(game.stage.randomX, game.stage.randomY, 'atari1');
+        var tempSprite = game.add.sprite(game.world.randomX, game.world.randomY, 'atari1');
 
         tempSprite.name = 'atari' + i;
         tempSprite.input.start(i, true);
@@ -41,7 +41,7 @@ function create() {
 
         //  Sonics
 
-        var tempSprite=game.add.sprite(game.stage.randomX, game.stage.randomY, 'sonic');
+        var tempSprite=game.add.sprite(game.world.randomX, game.world.randomY, 'sonic');
 
         tempSprite.name = 'sonic' + i;
         tempSprite.input.start(10 + i, true);

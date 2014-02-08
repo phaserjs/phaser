@@ -40,6 +40,257 @@ Phaser.Input = function (game) {
     * @property {object} moveCallbackContext - The context in which the moveCallback will be sent. Defaults to Phaser.Input but can be set to any valid JS object.
     */
     this.moveCallbackContext = this;
+
+    /**
+    * @property {number} pollRate - How often should the input pointers be checked for updates? A value of 0 means every single frame (60fps); a value of 1 means every other frame (30fps) and so on.
+    * @default
+    */
+    this.pollRate = 0;
+    
+    /**
+    * @property {number} _pollCounter - Internal var holding the current poll counter.
+    * @private
+    */
+    this._pollCounter = 0;
+
+    /**
+    * @property {Phaser.Point} _oldPosition - A point object representing the previous position of the Pointer.
+    * @private
+    */
+    this._oldPosition = null;
+
+    /**
+    * @property {number} _x - x coordinate of the most recent Pointer event
+    * @private
+    */
+    this._x = 0;
+
+    /**
+    * @property {number} _y - Y coordinate of the most recent Pointer event
+    * @private
+    */
+    this._y = 0;
+
+    /**
+    * You can disable all Input by setting Input.disabled = true. While set all new input related events will be ignored.
+    * If you need to disable just one type of input; for example mouse; use Input.mouse.disabled = true instead
+    * @property {boolean} disabled
+    * @default
+    */
+    this.disabled = false;
+
+    /**
+    * @property {number} multiInputOverride - Controls the expected behaviour when using a mouse and touch together on a multi-input device.
+    * @default 
+    */
+    this.multiInputOverride = Phaser.Input.MOUSE_TOUCH_COMBINE;
+
+    /**
+    * @property {Phaser.Point} position - A point object representing the current position of the Pointer.
+    * @default 
+    */
+    this.position = null;
+
+    /**
+    * @property {Phaser.Point} speed - A point object representing the speed of the Pointer. Only really useful in single Pointer games; otherwise see the Pointer objects directly.
+    */
+    this.speed = null;
+
+    /**
+    * A Circle object centered on the x/y screen coordinates of the Input.
+    * Default size of 44px (Apples recommended "finger tip" size) but can be changed to anything.
+    * @property {Phaser.Circle} circle
+    */
+    this.circle = null;
+
+    /**
+    * @property {Phaser.Point} scale - The scale by which all input coordinates are multiplied; calculated by the StageScaleMode. In an un-scaled game the values will be x = 1 and y = 1.
+    */
+    this.scale = null;
+
+    /**
+    * @property {number} maxPointers - The maximum number of Pointers allowed to be active at any one time. For lots of games it's useful to set this to 1.
+    * @default
+    */
+    this.maxPointers = 10;
+
+    /**
+    * @property {number} currentPointers - The current number of active Pointers.
+    * @default
+    */
+    this.currentPointers = 0;
+
+    /**
+    * @property {number} tapRate - The number of milliseconds that the Pointer has to be pressed down and then released to be considered a tap or click.
+    * @default
+    */
+    this.tapRate = 200;
+
+    /**
+    * @property {number} doubleTapRate - The number of milliseconds between taps of the same Pointer for it to be considered a double tap / click.
+    * @default
+    */
+    this.doubleTapRate = 300;
+
+    /**
+    * @property {number} holdRate - The number of milliseconds that the Pointer has to be pressed down for it to fire a onHold event.
+    * @default
+    */
+    this.holdRate = 2000;
+
+    /**
+    * @property {number} justPressedRate - The number of milliseconds below which the Pointer is considered justPressed.
+    * @default
+    */
+    this.justPressedRate = 200;
+
+    /**
+    * @property {number} justReleasedRate - The number of milliseconds below which the Pointer is considered justReleased .
+    * @default
+    */
+    this.justReleasedRate = 200;
+
+    /**
+    * Sets if the Pointer objects should record a history of x/y coordinates they have passed through.
+    * The history is cleared each time the Pointer is pressed down.
+    * The history is updated at the rate specified in Input.pollRate
+    * @property {boolean} recordPointerHistory
+    * @default
+    */
+    this.recordPointerHistory = false;
+
+    /**
+    * @property {number} recordRate - The rate in milliseconds at which the Pointer objects should update their tracking history.
+    * @default
+    */
+    this.recordRate = 100;
+
+    /**
+    * The total number of entries that can be recorded into the Pointer objects tracking history.
+    * If the Pointer is tracking one event every 100ms; then a trackLimit of 100 would store the last 10 seconds worth of history.
+    * @property {number} recordLimit
+    * @default
+    */
+    this.recordLimit = 100;
+
+    /**
+    * @property {Phaser.Pointer} pointer1 - A Pointer object.
+    */
+    this.pointer1 = null;
+
+    /**
+    * @property {Phaser.Pointer} pointer2 - A Pointer object.
+    */
+    this.pointer2 = null;
+
+    /**
+    * @property {Phaser.Pointer} pointer3 - A Pointer object.
+    */
+    this.pointer3 = null;
+
+    /**
+    * @property {Phaser.Pointer} pointer4 - A Pointer object.
+    */
+    this.pointer4 = null;
+
+    /**
+    * @property {Phaser.Pointer} pointer5 - A Pointer object.
+    */
+    this.pointer5 = null;
+
+    /**
+    * @property {Phaser.Pointer} pointer6 - A Pointer object.
+    */
+    this.pointer6 = null;
+
+    /**
+    * @property {Phaser.Pointer} pointer7 - A Pointer object.
+    */
+    this.pointer7 = null;
+
+    /**
+    * @property {Phaser.Pointer} pointer8 - A Pointer object.
+    */
+    this.pointer8 = null;
+
+    /**
+    * @property {Phaser.Pointer} pointer9 - A Pointer object.
+    */
+    this.pointer9 = null;
+
+    /**
+    * @property {Phaser.Pointer} pointer10 - A Pointer object.
+    */
+    this.pointer10 = null;
+
+    /**
+    * The most recently active Pointer object.
+    * When you've limited max pointers to 1 this will accurately be either the first finger touched or mouse.
+    * @property {Phaser.Pointer} activePointer
+    */
+    this.activePointer = null;
+
+    /**
+    * @property {Pointer} mousePointer - The mouse has its own unique Phaser.Pointer object which you can use if making a desktop specific game.
+    */
+    this.mousePointer = null;
+    
+    /**
+    * @property {Phaser.Mouse} mouse - The Mouse Input manager.
+    */
+    this.mouse = null;
+    
+    /**
+    * @property {Phaser.Keyboard} keyboard - The Keyboard Input manager.
+    */
+    this.keyboard = null;
+    
+    /**
+    * @property {Phaser.Touch} touch - the Touch Input manager.
+    */
+    this.touch = null;
+    
+    /**
+    * @property {Phaser.MSPointer} mspointer - The MSPointer Input manager.
+    */
+    this.mspointer = null;
+
+    /**
+    * @property {Phaser.Gamepad} gamepad - The Gamepad Input manager.
+    */
+    this.gamepad = null;
+
+    /**
+    * @property {Phaser.Signal} onDown - A Signal that is dispatched each time a pointer is pressed down.
+    */
+    this.onDown = null;
+    
+    /**
+    * @property {Phaser.Signal} onUp - A Signal that is dispatched each time a pointer is released.
+    */
+    this.onUp = null;
+    
+    /**
+    * @property {Phaser.Signal} onTap - A Signal that is dispatched each time a pointer is tapped.
+    */
+    this.onTap = null;
+    
+    /**
+    * @property {Phaser.Signal} onHold - A Signal that is dispatched each time a pointer is held down.
+    */
+    this.onHold = null;
+
+    /**
+    * A linked list of interactive objects; the InputHandler components (belonging to Sprites) register themselves with this.
+    * @property {Phaser.LinkedList} interactiveItems
+    */
+    this.interactiveItems = new Phaser.LinkedList();
+
+    /**
+    * @property {Phaser.Point} _localPoint - Internal cache var.
+    * @private
+    */
+    this._localPoint = new Phaser.Point();
     
 };
 
@@ -62,300 +313,6 @@ Phaser.Input.TOUCH_OVERRIDES_MOUSE = 1;
 Phaser.Input.MOUSE_TOUCH_COMBINE = 2;
 
 Phaser.Input.prototype = {
-
-    /**
-    * How often should the input pointers be checked for updates?
-    * A value of 0 means every single frame (60fps), a value of 1 means every other frame (30fps) and so on.
-    * @property {number} pollRate 
-    * @default
-    */
-    pollRate: 0,
-    
-    /**
-    * @property {number} _pollCounter - Internal var holding the current poll counter.
-    * @private
-    * @default
-    */
-    _pollCounter: 0,
-
-    /**
-    * @property {Phaser.Point} _oldPosition - A point object representing the previous position of the Pointer.
-    * @private
-    * @default 
-    */
-    _oldPosition: null,
-
-    /**
-    * @property {number} _x - x coordinate of the most recent Pointer event
-    * @private
-    * @default
-    */
-    _x: 0,
-
-    /**
-    * @property {number} _y - Y coordinate of the most recent Pointer event
-    * @private
-    * @default
-    */
-    _y: 0,
-
-    /**
-    * You can disable all Input by setting Input.disabled: true. While set all new input related events will be ignored.
-    * If you need to disable just one type of input, for example mouse, use Input.mouse.disabled: true instead
-    * @property {boolean} disabled
-    * @default
-    */
-    disabled: false,
-
-    /**
-    * Controls the expected behaviour when using a mouse and touch together on a multi-input device.
-    * @property {Description} multiInputOverride
-    */
-    multiInputOverride: Phaser.Input.MOUSE_TOUCH_COMBINE,
-
-    /**
-    * @property {Phaser.Point} position - A point object representing the current position of the Pointer.
-    * @default 
-    */
-    position: null,
-
-    /**
-    * A point object representing the speed of the Pointer. Only really useful in single Pointer games, otherwise see the Pointer objects directly.
-    * @property {Phaser.Point} speed
-    */
-    speed: null,
-
-    /**
-    * A Circle object centered on the x/y screen coordinates of the Input.
-    * Default size of 44px (Apples recommended "finger tip" size) but can be changed to anything.
-    * @property {Phaser.Circle} circle
-    */
-    circle: null,
-
-    /**
-    * The scale by which all input coordinates are multiplied, calculated by the StageScaleMode.
-    * In an un-scaled game the values will be x: 1 and y: 1.
-    * @property {Phaser.Point} scale
-    */
-    scale: null,
-
-    /**
-    * The maximum number of Pointers allowed to be active at any one time.
-    * For lots of games it's useful to set this to 1.
-    * @property {number} maxPointers
-    * @default
-    */
-    maxPointers: 10,
-
-    /**
-    * The current number of active Pointers.
-    * @property {number} currentPointers
-    * @default
-    */
-    currentPointers: 0,
-
-    /**
-    * The number of milliseconds that the Pointer has to be pressed down and then released to be considered a tap or clicke
-    * @property {number} tapRate
-    * @default
-    */
-    tapRate: 200,
-
-    /**
-    * The number of milliseconds between taps of the same Pointer for it to be considered a double tap / click
-    * @property {number} doubleTapRate
-    * @default
-    */
-    doubleTapRate: 300,
-
-    /**
-    * The number of milliseconds that the Pointer has to be pressed down for it to fire a onHold event
-    * @property {number} holdRate
-    * @default
-    */
-    holdRate: 2000,
-
-    /**
-    * The number of milliseconds below which the Pointer is considered justPressed
-    * @property {number} justPressedRate
-    * @default
-    */
-    justPressedRate: 200,
-
-    /**
-    * The number of milliseconds below which the Pointer is considered justReleased 
-    * @property {number} justReleasedRate
-    * @default
-    */
-    justReleasedRate: 200,
-
-    /**
-    * Sets if the Pointer objects should record a history of x/y coordinates they have passed through.
-    * The history is cleared each time the Pointer is pressed down.
-    * The history is updated at the rate specified in Input.pollRate
-    * @property {boolean} recordPointerHistory
-    * @default
-    */
-    recordPointerHistory: false,
-
-    /**
-    * The rate in milliseconds at which the Pointer objects should update their tracking history
-    * @property {number} recordRate
-    * @default
-    */
-    recordRate: 100,
-
-    /**
-    * The total number of entries that can be recorded into the Pointer objects tracking history.
-    * If the Pointer is tracking one event every 100ms, then a trackLimit of 100 would store the last 10 seconds worth of history.
-    * @property {number} recordLimit
-    * @default
-    */
-    recordLimit: 100,
-
-    /**
-    * A Pointer object
-    * @property {Phaser.Pointer} pointer1
-    */
-    pointer1: null,
-
-    /**
-    * A Pointer object
-    * @property {Phaser.Pointer} pointer2
-    */
-    pointer2: null,
-
-    /**
-    * A Pointer object  
-    * @property {Phaser.Pointer} pointer3
-    */
-    pointer3: null,
-
-    /**
-    * A Pointer object
-    * @property {Phaser.Pointer} pointer4
-    */
-    pointer4: null,
-
-    /**
-    * A Pointer object
-    * @property {Phaser.Pointer} pointer5
-    */
-    pointer5: null,
-
-    /**
-    * A Pointer object
-    * @property {Phaser.Pointer} pointer6
-    */
-    pointer6: null,
-
-    /**
-    * A Pointer object  
-    * @property {Phaser.Pointer} pointer7
-    */
-    pointer7: null,
-
-    /**
-    * A Pointer object
-    * @property {Phaser.Pointer} pointer8
-    */
-    pointer8: null,
-
-    /**
-    * A Pointer object
-    * @property {Phaser.Pointer} pointer9
-    */
-    pointer9: null,
-
-    /**
-    * A Pointer object.
-    * @property {Phaser.Pointer} pointer10
-    */
-    pointer10: null,
-
-    /**
-    * The most recently active Pointer object.
-    * When you've limited max pointers to 1 this will accurately be either the first finger touched or mouse.
-    * @property {Phaser.Pointer} activePointer
-    * @default
-    */
-    activePointer: null,
-
-    /**
-    * The mouse has its own unique Phaser.Pointer object which you can use if making a desktop specific game.
-    * @property {Pointer} mousePointer
-    * @default
-    */
-    mousePointer: null,
-    
-    /**
-    * The Mouse Input manager.
-    * @property {Phaser.Mouse} mouse - The Mouse Input manager.
-    * @default
-    */
-    mouse: null,
-    
-    /**
-    * The Keyboard Input manager.
-    * @property {Phaser.Keyboard} keyboard - The Keyboard Input manager.
-    * @default
-    */
-    keyboard: null,
-    
-    /**
-    * The Touch Input manager.
-    * @property {Phaser.Touch} touch - the Touch Input manager.
-    * @default
-    */
-    touch: null,
-    
-    /**
-    * The MSPointer Input manager.
-    * @property {Phaser.MSPointer} mspointer - The MSPointer Input manager.
-    * @default
-    */
-    mspointer: null,
-
-    /**
-     * The Gamepad Input manager.
-     * @property {Phaser.Gamepad} gamepad - The Gamepad Input manager.
-     * @default
-     */
-    gamepad: null,
-
-    /**
-    * A Signal that is dispatched each time a pointer is pressed down.
-    * @property {Phaser.Signal} onDown
-    * @default
-    */
-    onDown: null,
-    
-    /**
-    * A Signal that is dispatched each time a pointer is released.
-    * @property {Phaser.Signal} onUp
-    * @default
-    */
-    onUp: null,
-    
-    /**
-    * A Signal that is dispatched each time a pointer is tapped.
-    * @property {Phaser.Signal} onTap
-    * @default
-    */
-    onTap: null,
-    
-    /**
-    * A Signal that is dispatched each time a pointer is held down.
-    * @property {Phaser.Signal} onHold
-    * @default
-    */
-    onHold: null,
-
-    /**
-    * A linked list of interactive objects, the InputHandler components (belonging to Sprites) register themselves with this.
-    * @property {Phaser.LinkedList} interactiveItems
-    */
-    interactiveItems: new Phaser.LinkedList(),
 
     /**
     * Starts the Input Manager running.
@@ -530,7 +487,7 @@ Phaser.Input.prototype = {
 
         if (this.game.canvas.style.cursor !== 'none')
         {
-            this.game.canvas.style.cursor = 'default';
+            this.game.canvas.style.cursor = 'inherit';
         }
 
         if (hard === true)
@@ -724,6 +681,81 @@ Phaser.Input.prototype = {
 
         return null;
 
+    },
+
+    /**
+    * This will return the local coordinates of the specified displayObject based on the given Pointer.
+    * @method Phaser.Input#getLocalPosition
+    * @param {Phaser.Sprite|Phaser.Image} displayObject - The DisplayObject to get the local coordinates for.
+    * @param {Phaser.Pointer} pointer - The Pointer to use in the check against the displayObject.
+    * @return {Phaser.Point} A point containing the coordinates of the Pointer position relative to the DisplayObject.
+    */
+    getLocalPosition: function (displayObject, pointer, output) {
+
+        if (typeof output === 'undefined') { output = new Phaser.Point(); }
+
+        var wt = displayObject.worldTransform;
+        var id = 1 / (wt.a * wt.d + wt.b * -wt.c);
+
+        return output.setTo(
+            wt.d * id * pointer.x + -wt.b * id * pointer.y + (wt.ty * wt.b - wt.tx * wt.d) * id,
+            wt.a * id * pointer.y + -wt.c * id * pointer.x + (-wt.ty * wt.a + wt.tx * wt.c) * id
+        );
+        
+    },
+
+    /**
+     * Tests if the current mouse coordinates hit a sprite
+     *
+     * @method hitTest
+     * @param displayObject {DisplayObject} The displayObject to test for a hit
+     */
+    hitTest: function (displayObject, pointer, localPoint) {
+
+        if (!displayObject.worldVisible)
+        {
+            return false;
+        }
+
+        this.getLocalPosition(displayObject, pointer, this._localPoint);
+
+        localPoint.copyFrom(this._localPoint);
+
+        if (displayObject.hitArea && displayObject.hitArea.contains)
+        {
+            if (displayObject.hitArea.contains(this._localPoint.x, this._localPoint.y))
+            {
+                return true;
+            }
+
+            return false;
+        }
+        else if (displayObject instanceof PIXI.Sprite)
+        {
+            var width = displayObject.texture.frame.width;
+            var height = displayObject.texture.frame.height;
+            var x1 = -width * displayObject.anchor.x;
+
+            if (this._localPoint.x > x1 && this._localPoint.x < x1 + width)
+            {
+                var y1 = -height * displayObject.anchor.y;
+
+                if (this._localPoint.y > y1 && this._localPoint.y < y1 + height)
+                {
+                    return true;
+                }
+            }
+        }
+
+        for (var i = 0, len = displayObject.children.length; i < len; i++)
+        {
+            if (this.hitTest(displayObject.children[i], pointer, localPoint))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 };

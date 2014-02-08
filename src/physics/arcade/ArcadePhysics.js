@@ -636,15 +636,15 @@ Phaser.Physics.Arcade.prototype = {
             return;
         }
 
-        var len = group._container.children.length;
+        var len = group.children.length;
 
         for (var i = 0; i < len; i++)
         {
             for (var j = i + 1; j <= len; j++)
             {
-                if (group._container.children[i] && group._container.children[j] && group._container.children[i].exists && group._container.children[j].exists)
+                if (group.children[i] && group.children[j] && group.children[i].exists && group.children[j].exists)
                 {
-                    this.collideSpriteVsSprite(group._container.children[i], group._container.children[j], collideCallback, processCallback, callbackContext, overlapOnly);
+                    this.collideSpriteVsSprite(group.children[i], group.children[j], collideCallback, processCallback, callbackContext, overlapOnly);
                 }
             }
         }
@@ -664,19 +664,12 @@ Phaser.Physics.Arcade.prototype = {
             return;
         }
 
-        if (group1._container.first._iNext)
+        for (var i = 0, len = group1.children.length; i < len; i++)
         {
-            var currentNode = group1._container.first._iNext;
-                
-            do
+            if (group1.children[i].exists)
             {
-                if (currentNode.exists)
-                {
-                    this.collideSpriteVsGroup(currentNode, group2, collideCallback, processCallback, callbackContext, overlapOnly);
-                }
-                currentNode = currentNode._iNext;
+                this.collideSpriteVsGroup(group1.children[i], group2, collideCallback, processCallback, callbackContext, overlapOnly);
             }
-            while (currentNode != group1._container.last._iNext);
         }
 
     },
@@ -746,19 +739,12 @@ Phaser.Physics.Arcade.prototype = {
             return;
         }
 
-        if (group._container.first._iNext)
+        for (var i = 0, len = group.children.length; i < len; i++)
         {
-            var currentNode = group._container.first._iNext;
-                
-            do
+            if (group.children[i].exists)
             {
-                if (currentNode.exists)
-                {
-                    this.collideSpriteVsTilemapLayer(currentNode, tilemapLayer, collideCallback, processCallback, callbackContext);
-                }
-                currentNode = currentNode._iNext;
+                this.collideSpriteVsTilemapLayer(group.children[i], tilemapLayer, collideCallback, processCallback, callbackContext);
             }
-            while (currentNode != group._container.last._iNext);
         }
 
     },

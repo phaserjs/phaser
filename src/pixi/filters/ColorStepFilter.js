@@ -4,7 +4,7 @@
 
 /**
  *
- * This turns your displayObjects to black and white.
+ * This lowers the color depth of your image by the given amount, producing an image with a smaller palette.
  * @class ColorStepFilter
  * @contructor
  */
@@ -22,14 +22,14 @@ PIXI.ColorStepFilter = function()
     this.fragmentSrc = [
         'precision mediump float;',
         'varying vec2 vTextureCoord;',
-        'varying float vColor;',
+        'varying vec4 vColor;',
         'uniform sampler2D uSampler;',
         'uniform float step;',
 
         'void main(void) {',
         '   vec4 color = texture2D(uSampler, vTextureCoord);',
         '   color = floor(color * step) / step;',
-        '   gl_FragColor = color * vColor;',
+        '   gl_FragColor = color;',
         '}'
     ];
 };

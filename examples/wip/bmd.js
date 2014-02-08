@@ -1,82 +1,44 @@
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
-    game.load.image('atari1', 'assets/sprites/atari130xe.png');
-    game.load.image('coke', 'assets/sprites/cokecan.png');
-    game.load.image('mushroom', 'assets/sprites/mushroom2.png');
-    game.load.image('ball', 'assets/sprites/shinyball.png');
+	game.load.image('pic', 'assets/pics/backscroll.png');
 
 }
 
+var image;
 var bmd;
 
 function create() {
 
-	bmd = game.add.bitmapData(32, 64);
+	bmd = game.add.bitmapData(800, 600);
+	bmd.fillStyle('rgba(255,0,0,0.2)');
+	// bmd.fillRect(0, 0, 300, 100);
+	// bmd.fillRect(0, 200, 300, 100);
 
-	console.log(bmd);
+	image = game.add.image(0, 0, bmd);
+	// image.anchor.set(0.5);
 
-    //  And apply it to 100 randomly positioned sprites
-    for (var i = 0; i < 100; i++)
-    {
-        game.add.sprite(game.world.randomX - 32, game.world.randomY - 64, bmd);
-    }
+	game.input.onDown.add(tint, this);
 
-    //  Populate the wave with some data
-	waveData = game.math.sinCosGenerator(32, 8, 8, 2);
+}
+
+function tint() {
+
+	image.tint = Math.random() * 0xFFFFFF;
 
 }
 
 function update() {
 
-	bmd.clear();
-
-	updateWobblyBall();
+	bmd.fillStyle('rgba(255,0,0,0.2)');
+	bmd.fillRect(game.input.x, game.input.y, 6, 6);
 
 }
-
-//  This creates a simple sine-wave effect running through our DynamicTexture.
-//  This is then duplicated across all sprites using it, meaning we only have to calculate it once.
-
-var waveSize = 8;
-var wavePixelChunk = 2;
-var waveData;
-var waveDataCounter;
-
-function updateWobblyBall()
-{
-	var s = 0;
-	var copyRect = { x: 0, y: 0, w: wavePixelChunk, h: 32 };
-	var copyPoint = { x: 0, y: 0 };
-
-	for (var x = 0; x < 32; x += wavePixelChunk)
-	{
-		copyPoint.x = x;
-		copyPoint.y = waveSize + (waveSize / 2) + waveData.sin[s];
-
-		bmd.context.drawImage(game.cache.getImage('ball'), copyRect.x, copyRect.y, copyRect.w, copyRect.h, copyPoint.x, copyPoint.y, copyRect.w, copyRect.h);
-			
-		copyRect.x += wavePixelChunk;
-			
-		s++;
-	}
-
-	//	Cycle through the wave data - this is what causes the image to "undulate"
-	game.math.shift(waveData.sin);
-	
-	waveDataCounter++;
-	
-	if (waveDataCounter == waveData.length)
-	{
-		waveDataCounter = 0;
-	}
-}
-
 
 function render() {
 
-	bmd.render();
+	game.debug.renderText(game.input.x, 32, 32);
 
 }

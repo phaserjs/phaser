@@ -10,7 +10,7 @@
 var Phaser = Phaser || {
 
 	VERSION: '<%= version %>',
-	DEV_VERSION: '1.1.4',
+	DEV_VERSION: '1.2',
 	GAMES: [],
 
 	AUTO: 0,
@@ -44,7 +44,7 @@ var Phaser = Phaser || {
 	CANVAS_PX_ROUND: false,
 	CANVAS_CLEAR_RECT: true
 
- };
+};
 
 PIXI.InteractionManager = function (dummy) {
 	//	We don't need this in Pixi, so we've removed it to save space

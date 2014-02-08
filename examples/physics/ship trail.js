@@ -22,6 +22,8 @@ function create() {
 	var bg = game.add.sprite(0, 0, bmd);
 	bg.body.moves = false;
 
+	game.enableStep();
+
 	game.physics.gravity.y = 100;
 
 	sprite = game.add.sprite(32, 450, 'arrow');
@@ -61,5 +63,6 @@ function update() {
 function render() {
 
 	game.debug.renderBodyInfo(sprite, 16, 24);
+	game.debug.renderPhysicsBody(sprite.body);
 
 }

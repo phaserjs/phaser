@@ -519,7 +519,6 @@ Phaser.Particles.Arcade.Emitter.prototype.at = function (object) {
 * The emitters alpha value.
 * @name Phaser.Particles.Arcade.Emitter#alpha
 * @property {number} alpha - Gets or sets the alpha value of the Emitter.
-*/
 Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "alpha", {
     
     get: function () {
@@ -531,12 +530,12 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "alpha", {
     }
 
 });
+*/
 
 /**
 * The emitter visible state.
 * @name Phaser.Particles.Arcade.Emitter#visible
 * @property {boolean} visible - Gets or sets the Emitter visible state.
-*/
 Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "visible", {
     
     get: function () {
@@ -548,6 +547,7 @@ Object.defineProperty(Phaser.Particles.Arcade.Emitter.prototype, "visible", {
     }
 
 });
+*/
 
 /**
 * @name Phaser.Particles.Arcade.Emitter#x

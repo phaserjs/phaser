@@ -59,8 +59,25 @@ Phaser.Point.prototype = {
     */
     setTo: function (x, y) {
 
-        this.x = x;
-        this.y = y;
+        this.x = x || 0;
+        this.y = y || ( (y !== 0) ? this.x : 0 );
+
+        return this;
+        
+    },
+
+    /**
+    * Sets the x and y values of this Point object to the given coordinates.
+    * @method Phaser.Point#set
+    * @param {number} x - The horizontal position of this point.
+    * @param {number} y - The vertical position of this point.
+    * @return {Point} This Point object. Useful for chaining method calls.
+    */
+    set: function (x, y) {
+
+        this.x = x || 0;
+        this.y = y || ( (y !== 0) ? this.x : 0 );
+
         return this;
         
     },
@@ -176,9 +193,16 @@ Phaser.Point.prototype = {
     */
     clone: function (output) {
 
-        if (typeof output === "undefined") { output = new Phaser.Point(); }
+        if (typeof output === "undefined")
+        {
+            output = new Phaser.Point(this.x, this.y);
+        }
+        else
+        {
+            output.setTo(this.x, this.y);
+        }
 
-        return output.setTo(this.x, this.y);
+        return output;
 
     },
 
@@ -430,3 +454,6 @@ Phaser.Point.rotate = function (a, x, y, angle, asDegrees, distance) {
     return a.setTo(x + distance * Math.cos(angle), y + distance * Math.sin(angle));
 
 };
+
+//   Because PIXI uses its own Point, we'll replace it with ours to avoid duplicating code or confusion.
+PIXI.Point = Phaser.Point;

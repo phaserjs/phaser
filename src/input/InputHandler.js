@@ -215,7 +215,7 @@ Phaser.InputHandler.prototype = {
             this.enabled = true;
 
             //  Create the signals the Input component will emit
-            if (this.sprite.events && this.sprite.events.onInputOver == null)
+            if (this.sprite.events && this.sprite.events.onInputOver === null)
             {
                 this.sprite.events.onInputOver = new Phaser.Signal();
                 this.sprite.events.onInputOut = new Phaser.Signal();
@@ -492,14 +492,13 @@ Phaser.InputHandler.prototype = {
     */
     checkPointerOver: function (pointer) {
 
-        if (this.enabled === false || this.sprite.visible === false || (this.sprite.group && this.sprite.group.visible === false))
+        if (this.enabled === false || this.sprite.visible === false || this.sprite.parent.visible === false)
         {
             return false;
         }
 
-        this.sprite.getLocalUnmodifiedPosition(this._tempPoint, pointer.x, pointer.y);
-
-        if (this._tempPoint.x >= 0 && this._tempPoint.x <= this.sprite.currentFrame.width && this._tempPoint.y >= 0 && this._tempPoint.y <= this.sprite.currentFrame.height)
+        //  Need to pass it a temp point, in case we need it again for the pixel check
+        if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))
         {
             if (this.pixelPerfect)
             {
@@ -510,6 +509,8 @@ Phaser.InputHandler.prototype = {
                 return true;
             }
         }
+
+        return false;
 
     },
 

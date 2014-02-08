@@ -153,10 +153,14 @@ Phaser.AnimationParser = {
                     frames[i].spriteSourceSize.h
                 );
 
-                //  We had to hack Pixi to get this to work :(
                 PIXI.TextureCache[uuid].trimmed = true;
-                PIXI.TextureCache[uuid].trim.x = frames[i].spriteSourceSize.x;
-                PIXI.TextureCache[uuid].trim.y = frames[i].spriteSourceSize.y;
+
+                PIXI.TextureCache[uuid].trim = {
+                    x: frames[i].spriteSourceSize.x,
+                    y: frames[i].spriteSourceSize.y,
+                    realWidth: frames[i].sourceSize.w,
+                    realHeight: frames[i].sourceSize.h
+                }
 
             }
         }
@@ -225,10 +229,14 @@ Phaser.AnimationParser = {
                     frames[key].spriteSourceSize.h
                 );
 
-                //  We had to hack Pixi to get this to work :(
                 PIXI.TextureCache[uuid].trimmed = true;
-                PIXI.TextureCache[uuid].trim.x = frames[key].spriteSourceSize.x;
-                PIXI.TextureCache[uuid].trim.y = frames[key].spriteSourceSize.y;
+
+                PIXI.TextureCache[uuid].trim = {
+                    x: frames[i].spriteSourceSize.x,
+                    y: frames[i].spriteSourceSize.y,
+                    realWidth: frames[i].sourceSize.w,
+                    realHeight: frames[i].sourceSize.h
+                }
 
             }
 
@@ -313,10 +321,14 @@ Phaser.AnimationParser = {
 
                 PIXI.TextureCache[uuid].realSize = { x: frameX, y: frameY, w: frameWidth, h: frameHeight };
 
-                //  We had to hack Pixi to get this to work :(
                 PIXI.TextureCache[uuid].trimmed = true;
-                PIXI.TextureCache[uuid].trim.x = frameX;
-                PIXI.TextureCache[uuid].trim.y = frameY;
+
+                PIXI.TextureCache[uuid].trim = {
+                    x: frameX,
+                    y: frameY,
+                    realWidth: width,
+                    realHeight: height
+                }
             }
         }
 

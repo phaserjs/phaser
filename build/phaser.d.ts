@@ -1,3 +1,76 @@
+declare class SAT {
+
+    flattenPointsOn(points: Array<SAT.Vector>, normal: SAT.Vector, result: Array<number>): Array<number>;
+    isSeparatingAxis(aPos: SAT.Vector, bPos: SAT.Vector, aPoints: Array<SAT.Vector>, bPoints: Array<SAT.Vector>, axis: SAT.Vector, response: SAT.Response): boolean;
+    vornoiRegion(line: SAT.Vector, point: SAT.Vector): number;
+    testCircleCircle(a: SAT.Circle, b: SAT.Circle, response: SAT.Response): boolean;
+    testPolygonCircle(a: SAT.Polygon, b: SAT.Circle, response: SAT.Response): boolean;
+    testCirclePolygon(a: SAT.Circle, b: SAT.Polygon, response: SAT.Response): boolean;
+    testPolygonPolygon(a: SAT.Polygon, b: SAT.Polygon, response: SAT.Response): boolean;
+
+}
+
+declare module SAT {
+
+    class Vector {
+        constructor(x: number, y: number);
+        x: number;
+        y: number;
+        copy(other: SAT.Vector): SAT.Vector;
+        perp(): SAT.Vector;
+        rotate(angle: number): SAT.Vector;
+        rotatePrecalc(sin: number, cos: number): SAT.Vector;
+        reverse(): SAT.Vector;
+        normalize(): SAT.Vector;
+        add(other: SAT.Vector): SAT.Vector;
+        sub(other: SAT.Vector): SAT.Vector;
+        scale(x: number, y: number): SAT.Vector;
+        project(other: SAT.Vector): SAT.Vector;
+        projectN(other: SAT.Vector): SAT.Vector;
+        reflect(axis: SAT.Vector): SAT.Vector;
+        reflectN(axis: SAT.Vector): SAT.Vector;
+        dot(other: SAT.Vector): SAT.Vector;
+        len2(): SAT.Vector;
+        len(): SAT.Vector;
+    }
+
+    class Circle {
+        constructor(pos: SAT.Vector, radius: number);
+        pos: SAT.Vector;
+        r: number;
+    }
+
+    class Polygon {
+        constructor(pos: SAT.Vector, points: Array<SAT.Vector>);
+        pos: SAT.Vector;
+        points: Array<SAT.Vector>;
+        recalc(): SAT.Polygon;
+        rotate(angle: number): SAT.Polygon;
+        scale(x: number, y: number): SAT.Polygon;
+        translate(x: number, y: number): SAT.Polygon;
+    }
+
+    class Box {
+        constructor(pos: SAT.Vector, w: number, h: number);
+        pos: SAT.Vector;
+        w: number;
+        h: number;
+        toPolygon(): SAT.Polygon;
+    }
+
+    class Response {
+        constructor();
+        a: any;
+        b: any;
+        overlapN: SAT.Vector;
+        overlapV: SAT.Vector;
+        clear(): SAT.Response;
+        aInB: boolean;
+        bInA: boolean;
+        overlap: number;
+    }
+}
+
 declare class Phaser {
     static VERSION: string;
     static DEV_VERSION: string;
@@ -1738,17 +1811,17 @@ declare module Phaser {
             updateMotion(body: Phaser.Physics.Arcade.Body): Phaser.Point;
             overlap(object1: any, object2: any, overlapCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
             collide(object1: any, object2: any, collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
-            collideHandler(object1: any, object2: any, collideCallback?: Function, processCallback?: Function, callbackContext?: any, overlapOnly: boolean): boolean;
-            collideSpriteVsSprite(sprite1: Phaser.Sprite, sprite2: Phaser.Sprite,  collideCallback?: Function, processCallback?: Function, callbackContext?: any, overlapOnly: boolean): boolean;
-            collideSpriteVsGroup(sprite1: Phaser.Sprite, group: Phaser.Group,  collideCallback?: Function, processCallback?: Function, callbackContext?: any, overlapOnly: boolean): boolean;
-            collideGroupVsSelf(group: Phaser.Group,  collideCallback?: Function, processCallback?: Function, callbackContext?: any, overlapOnly: boolean): boolean;
-            collideGroupVsGroup(group: Phaser.Group, group2: Phaser.Group,  collideCallback?: Function, processCallback?: Function, callbackContext?: any, overlapOnly: boolean): boolean;
-            collideSpriteVsTilemapLayer(sprite: Phaser.Sprite, tilemapLayer: Phaser.TilemapLayer,  collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
-            collideGroupVsTilemapLayer(group: Phaser.Group, tilemapLayer: Phaser.TilemapLayer,  collideCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
-            separate(body: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body, processCallback?: Function, callbackContext?: any, overlapOnly: boolean): boolean;
+            collideHandler(object1: any, object2: any, collideCallback: Function, processCallback: Function, callbackContext: any, overlapOnly: boolean): boolean;
+            collideSpriteVsSprite(sprite1: Phaser.Sprite, sprite2: Phaser.Sprite,  collideCallback: Function, processCallback: Function, callbackContext: any, overlapOnly: boolean): boolean;
+            collideSpriteVsGroup(sprite1: Phaser.Sprite, group: Phaser.Group,  collideCallback: Function, processCallback: Function, callbackContext: any, overlapOnly: boolean): boolean;
+            collideGroupVsSelf(group: Phaser.Group,  collideCallback: Function, processCallback: Function, callbackContext: any, overlapOnly: boolean): boolean;
+            collideGroupVsGroup(group: Phaser.Group, group2: Phaser.Group,  collideCallback: Function, processCallback: Function, callbackContext: any, overlapOnly: boolean): boolean;
+            collideSpriteVsTilemapLayer(sprite: Phaser.Sprite, tilemapLayer: Phaser.TilemapLayer,  collideCallback: Function, processCallback: Function, callbackContext: any): boolean;
+            collideGroupVsTilemapLayer(group: Phaser.Group, tilemapLayer: Phaser.TilemapLayer,  collideCallback: Function, processCallback: Function, callbackContext: any): boolean;
+            separate(body: Phaser.Physics.Arcade.Body, body2: Phaser.Physics.Arcade.Body, processCallback: Function, callbackContext: any, overlapOnly: boolean): boolean;
             intersects(a: Phaser.Physics.Arcade.Body, b: Phaser.Physics.Arcade.Body): boolean;
             tileIntersects(body: Phaser.Physics.Arcade.Body, tile: Phaser.Tile): boolean;
-            separateTiles(body: Phaser.Physics.Arcade.Body, tile: <Phaser.Tile>Array): boolean;
+            separateTiles(body: Phaser.Physics.Arcade.Body, tile: Array<Phaser.Tile>): boolean;
             separateTile(body: Phaser.Physics.Arcade.Body, tile: Phaser.Tile): boolean;
             processTileSeparation(body: Phaser.Physics.Arcade.Body): boolean;
             moveToObject(displayObject: Phaser.Sprite, destination: Phaser.Sprite, speed?: number, maxTime?: number): number;

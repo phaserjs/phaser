@@ -40,6 +40,26 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
+    * Create a new `Image` object. An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
+    * It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
+    *
+    * @method Phaser.GameObjectFactory#image
+    * @param {number} x - X position of the image.
+    * @param {number} y - Y position of the image.
+    * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+    * @param {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
+    * @returns {Phaser.Sprite} the newly created sprite object.
+    */
+    image: function (x, y, key, frame, group) {
+
+        if (typeof group === 'undefined') { group = this.world; }
+
+        return group.add(new Phaser.Image(this.game, x, y, key, frame));
+
+    },
+
+    /**
     * Create a new Sprite with specific position and sprite sheet key.
     *
     * @method Phaser.GameObjectFactory#sprite
@@ -53,24 +73,6 @@ Phaser.GameObjectFactory.prototype = {
     sprite: function (x, y, key, frame, group) {
 
         if (typeof group === 'undefined') { group = this.world; }
-
-        return group.create(x, y, key, frame);
-
-    },
-
-    /**
-    * DEPRECATED - will be removed in Phaser 1.2
-    * Create a new Sprite with specific position and sprite sheet key that will automatically be added as a child of the given parent.
-    *
-    * @method Phaser.GameObjectFactory#child
-    * @param {Phaser.Group} group - The Group to add this child to.
-    * @param {number} x - X position of the new sprite.
-    * @param {number} y - Y position of the new sprite.
-    * @param {string|RenderTexture} [key] - The image key as defined in the Game.Cache to use as the texture for this sprite OR a RenderTexture.
-    * @param  {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
-    * @returns {Phaser.Sprite} the newly created sprite object.
-    */
-    child: function (group, x, y, key, frame) {
 
         return group.create(x, y, key, frame);
 
@@ -269,32 +271,51 @@ Phaser.GameObjectFactory.prototype = {
     * A dynamic initially blank canvas to which images can be drawn.
     *
     * @method Phaser.GameObjectFactory#renderTexture
-    * @param {string} key - Asset key for the render texture.
-    * @param {number} width - the width of the render texture.
-    * @param {number} height - the height of the render texture.
-    * @return {Phaser.RenderTexture} The newly created renderTexture object.
+    * @param {number} [width=100] - the width of the RenderTexture.
+    * @param {number} [height=100] - the height of the RenderTexture.
+    * @param {string} [key=''] - Asset key for the RenderTexture when stored in the Cache (see addToCache parameter).
+    * @param {boolean} [addToCache=false] - Should this RenderTexture be added to the Game.Cache? If so you can retrieve it with Cache.getTexture(key)
+    * @return {Phaser.RenderTexture} The newly created RenderTexture object.
     */
-    renderTexture: function (key, width, height) {
+    renderTexture: function (width, height, key, addToCache) {
 
-        var texture = new Phaser.RenderTexture(this.game, key, width, height);
+        if (typeof addToCache === 'undefined') { addToCache = false; }
+        if (typeof key === 'undefined' || key === '') { key = this.game.rnd.uuid(); }
 
-        this.game.cache.addRenderTexture(key, texture);
+        var texture = new Phaser.RenderTexture(this.game, width, height, key);
+
+        if (addToCache)
+        {
+            this.game.cache.addRenderTexture(key, texture);
+        }
 
         return texture;
 
     },
 
     /**
-    * Experimental: A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
+    * A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.
     *
     * @method Phaser.GameObjectFactory#bitmapData
-    * @param {number} [width=256] - The width of the BitmapData in pixels.
-    * @param {number} [height=256] - The height of the BitmapData in pixels.
+    * @param {number} [width=100] - The width of the BitmapData in pixels.
+    * @param {number} [height=100] - The height of the BitmapData in pixels.
+    * @param {string} [key=''] - Asset key for the BitmapData when stored in the Cache (see addToCache parameter).
+    * @param {boolean} [addToCache=false] - Should this BitmapData be added to the Game.Cache? If so you can retrieve it with Cache.getBitmapData(key)
     * @return {Phaser.BitmapData} The newly created BitmapData object.
     */
-    bitmapData: function (width, height) {
+    bitmapData: function (width, height, addToCache) {
 
-        return new Phaser.BitmapData(this.game, width, height);
+        if (typeof addToCache === 'undefined') { addToCache = false; }
+        if (typeof key === 'undefined' || key === '') { key = this.game.rnd.uuid(); }
+
+        var texture = new Phaser.BitmapData(this.game, key, width, height);
+
+        if (addToCache)
+        {
+            this.game.cache.addBitmapData(key, texture);
+        }
+
+        return texture;
 
     },
 

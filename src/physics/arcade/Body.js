@@ -70,6 +70,12 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.angle = 0;
 
     /**
+    * @property {number} deltaCap - The maximum a delta is allowed to reach before its capped.
+    * @default
+    */
+    this.deltaCap = 2;
+
+    /**
     * @property {Phaser.Point} gravity - The gravity applied to the motion of the Body. This works in addition to any gravity set on the world.
     */
     this.gravity = new Phaser.Point();
@@ -380,6 +386,8 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.x = (this.sprite.world.x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
         this.y = (this.sprite.world.y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;
+
+        // console.log('body pre', this.preX, this.preY, 'now', this.x, this.y);
 
         //  This covers any motion that happens during this frame, not since the last frame
         this.preX = this.x;
@@ -889,7 +897,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.inContact(body))
         {
-            return false;
+            // return false;
         }
 
         this._distances[0] = body.right - this.x;   // Distance of B to face on left side of A
@@ -949,10 +957,10 @@ Phaser.Physics.Arcade.Body.prototype = {
         else
         {
             //  They can only contact like this if at least one of their sides is open, otherwise it's a separation
-            // if (!this.checkCollision.up || !this.checkCollision.down || !this.checkCollision.left || !this.checkCollision.right || !body.checkCollision.up || !body.checkCollision.down || !body.checkCollision.left || !body.checkCollision.right)
-            // {
+            if (!this.checkCollision.up || !this.checkCollision.down || !this.checkCollision.left || !this.checkCollision.right || !body.checkCollision.up || !body.checkCollision.down || !body.checkCollision.left || !body.checkCollision.right)
+            {
                 this.addContact(body);
-            // }
+            }
         }
 
         return hasSeparated;
@@ -1436,32 +1444,74 @@ Phaser.Physics.Arcade.Body.prototype = {
 
     /**
     * Returns the delta x value. The amount the Body has moved horizontally in the current step.
+    * This value is capped by Body.deltaCap.
     *
     * @method Phaser.Physics.Arcade.Body#deltaX
     * @return {number} The delta value. Positive if the motion was to the right, negative if to the left.
     */
     deltaX: function () {
-        return this.x - this.preX;
+
+        var d = this.x - this.preX;
+
+        if (d < -this.deltaCap)
+        {
+            d = -this.deltaCap;
+        }
+        else if (d > this.deltaCap)
+        {
+            d = this.deltaCap;
+        }
+
+        return d;
+
     },
 
     /**
     * Returns the delta y value. The amount the Body has moved vertically in the current step.
+    * This value is capped by Body.deltaCap.
     *
     * @method Phaser.Physics.Arcade.Body#deltaY
     * @return {number} The delta value. Positive if the motion was downwards, negative if upwards.
     */
     deltaY: function () {
-        return this.y - this.preY;
+
+        var d = this.y - this.preY;
+
+        if (d < -this.deltaCap)
+        {
+            d = -this.deltaCap;
+        }
+        else if (d > this.deltaCap)
+        {
+            d = this.deltaCap;
+        }
+
+        return d;
+
     },
 
     /**
     * Returns the delta z value. The amount the Body has rotated in the current step.
+    * This value is capped by Body.deltaCap.
     *
     * @method Phaser.Physics.Arcade.Body#deltaZ
     * @return {number} The delta value.
     */
     deltaZ: function () {
-        return this.rotation - this.preRotation;
+
+        var d = this.rotation - this.preRotation;
+
+        if (d < -this.deltaCap)
+        {
+            d = -this.deltaCap;
+        }
+        else if (d > this.deltaCap)
+        {
+            d = this.deltaCap;
+        }
+
+        return d;
+
     }
 
 };

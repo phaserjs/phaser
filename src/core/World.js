@@ -54,9 +54,11 @@ Phaser.World.prototype.boot = function () {
 
     this.camera = new Phaser.Camera(this.game, 0, 0, 0, this.game.width, this.game.height);
 
-    this.camera.displayObject = this._container;
+    this.camera.displayObject = this;
 
     this.game.camera = this.camera;
+
+    this.game.stage._stage.addChild(this);
 
 }
 
@@ -64,28 +66,18 @@ Phaser.World.prototype.boot = function () {
 * This is called automatically after the plugins preUpdate and before the State.update.
 * Most objects have preUpdate methods and it's where initial movement, drawing and calculations are done.
 * 
-* @method Phaser.World#update
+* @method Phaser.World#preUpdate
 */
 Phaser.World.prototype.preUpdate = function () {
     
-    if (this.game.stage._stage.first._iNext)
+    this.currentRenderOrderID = 0;
+
+    for (var i = 0, len = this.children.length; i < len; i++)
     {
-        var currentNode = this.game.stage._stage.first._iNext;
-        
-        do
+        if (this.children[i]['preUpdate'])
         {
-            // If preUpdate exists, and it returns false, skip PIXI child objects
-            if (currentNode['preUpdate'] && !currentNode.preUpdate())
-            {
-                currentNode = currentNode.last._iNext;
-            }
-            else
-            {
-                currentNode = currentNode._iNext;
-            }
-            
+            this.children[i].preUpdate();
         }
-        while (currentNode != this.game.stage._stage.last._iNext)
     }
 
 }
@@ -98,26 +90,12 @@ Phaser.World.prototype.preUpdate = function () {
 */
 Phaser.World.prototype.update = function () {
 
-    this.currentRenderOrderID = 0;
-    
-    if (this.game.stage._stage.first._iNext)
+    for (var i = 0, len = this.children.length; i < len; i++)
     {
-        var currentNode = this.game.stage._stage.first._iNext;
-        
-        do
+        if (this.children[i]['update'])
         {
-            // If update exists, and it returns false, skip PIXI child objects
-            if (currentNode['update'] && !currentNode.update())
-            {
-                currentNode = currentNode.last._iNext;
-            }
-            else
-            {
-                currentNode = currentNode._iNext;
-            }
-            
+            this.children[i].update();
         }
-        while (currentNode != this.game.stage._stage.last._iNext)
     }
 
 }
@@ -138,40 +116,24 @@ Phaser.World.prototype.postUpdate = function () {
 
         this.camera.update();
 
-        if (this.game.stage._stage.first._iNext)
+        for (var i = 0, len = this.children.length; i < len; i++)
         {
-            var currentNode = this.game.stage._stage.first._iNext;
-            
-            do
+            if (this.children[i]['postUpdate'])
             {
-                if (currentNode['postUpdate'] && currentNode !== this.camera.target)
-                {
-                    currentNode.postUpdate();
-                }
-                
-                currentNode = currentNode._iNext;
+                this.children[i].postUpdate();
             }
-            while (currentNode != this.game.stage._stage.last._iNext)
         }
     }
     else
     {
         this.camera.update();
 
-        if (this.game.stage._stage.first._iNext)
+        for (var i = 0, len = this.children.length; i < len; i++)
         {
-            var currentNode = this.game.stage._stage.first._iNext;
-            
-            do
+            if (this.children[i]['postUpdate'])
             {
-                if (currentNode['postUpdate'])
-                {
-                    currentNode.postUpdate();
-                }
-                
-                currentNode = currentNode._iNext;
+                this.children[i].postUpdate();
             }
-            while (currentNode != this.game.stage._stage.last._iNext)
         }
     }
 
@@ -327,18 +289,3 @@ Object.defineProperty(Phaser.World.prototype, "randomY", {
 
 });
 
-/**
-* @name Phaser.World#visible
-* @property {boolean} visible - Gets or sets the visible state of the World.
-*/
-Object.defineProperty(Phaser.World.prototype, "visible", {
-
-    get: function () {
-        return this._container.visible;
-    },
-
-    set: function (value) {
-        this._container.visible = value;
-    }
-
-});

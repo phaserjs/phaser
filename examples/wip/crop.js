@@ -1,24 +1,47 @@
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update });
+// var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
-    game.load.image('atari1', 'assets/sprites/atari130xe.png');
+	game.load.image('pic', 'assets/pics/backscroll.png');
 
 }
 
-var atari;
+var image;
+var image2;
+var r;
 
 function create() {
 
-	atari = game.add.sprite(300, 300, 'atari1');
+	image = game.add.image(32, 50, 'pic');
+	image2 = game.add.image(32, 250, 'pic');
 
-	// atari.crop = new Phaser.Rectangle(0, 0, 10, atari.height);
+	r = new Phaser.Rectangle(0, 0, 0, 176);
+
+	image2.crop(r);
 
 }
 
 function update() {
 
-	atari.crop.width -= 1;
+	if (r !== null)
+	{
+		r.width += 1;
+
+		image2.crop(r);
+
+		if (r.width == 720)
+		{
+			image2.crop();
+			r = null;
+		}
+	}
+
+}
+
+function render() {
+
+	game.debug.renderText(image2.width, 32, 32);
 
 }
