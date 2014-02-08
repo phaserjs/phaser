@@ -166,6 +166,7 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 */
 Phaser.Sprite.prototype.preUpdate = function() {
 
+    /*
     if (this._cache[4] === 1)
     {
         console.log('sprite cache fresh');
@@ -187,6 +188,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
         return;
     }
+    */
 
     this._cache[0] = this.world.x;
     this._cache[1] = this.world.y;

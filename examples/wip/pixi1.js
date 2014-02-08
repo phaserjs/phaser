@@ -14,6 +14,10 @@ var p;
 
 function create() {
 
+	// game.stage.backgroundColor = '#ff5500';
+
+	game.stage._stage.setBackgroundColor(0xff5500);
+
 	sprite = game.add.sprite(0, 0, 'pic');
 
 	g = game.add.group(null, 'billy');

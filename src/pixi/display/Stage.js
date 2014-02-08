@@ -63,6 +63,8 @@ PIXI.Stage = function(backgroundColor)
     //optimize hit detection a bit
     this.stage.hitArea = new PIXI.Rectangle(0,0,100000, 100000);
 
+    this.resetBackgroundColor = false;
+
     this.setBackgroundColor(backgroundColor);
 };
 
@@ -121,6 +123,7 @@ PIXI.Stage.prototype.setBackgroundColor = function(backgroundColor)
     var hex = this.backgroundColor.toString(16);
     hex = '000000'.substr(0, 6 - hex.length) + hex;
     this.backgroundColorString = '#' + hex;
+    this.resetBackgroundColor = true;
 };
 
 /**
