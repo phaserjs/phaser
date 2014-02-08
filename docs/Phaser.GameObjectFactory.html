@@ -183,6 +183,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Image.html">Image</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Input.html">Input</a>
 						</li>
 						
@@ -392,6 +396,36 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
+						</li>
+						
+						<li>
+							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
+						</li>
+						
+						<li>
+							<a href="global.html#hex2rgb">hex2rgb</a>
+						</li>
+						
+						<li>
+							<a href="global.html#hitTest">hitTest</a>
+						</li>
+						
+						<li>
+							<a href="global.html#rgb2hex">rgb2hex</a>
 						</li>
 						
 
@@ -999,7 +1033,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-106">line 106</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-108">line 108</a>
     </li></ul></dd>
     
 
@@ -1050,7 +1084,7 @@
         
             
 <dt>
-    <h4 class="name" id="bitmapData"><span class="type-signature"></span>bitmapData<span class="signature">(<span class="optional">width</span>, <span class="optional">height</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
+    <h4 class="name" id="bitmapData"><span class="type-signature"></span>bitmapData<span class="signature">(<span class="optional">width</span>, <span class="optional">height</span>, <span class="optional">key</span>, <span class="optional">addToCache</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapData.html">Phaser.BitmapData</a>}</span></h4>
     
     
 </dt>
@@ -1058,7 +1092,7 @@
     
     
     <div class="description">
-        <p>Experimental: A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.</p>
+        <p>A BitmapData object which can be manipulated and drawn to like a traditional Canvas object and used to texture Sprites.</p>
     </div>
     
 
@@ -1123,7 +1157,7 @@
             
                 <td class="default">
                 
-                    256
+                    100
                 
                 </td>
             
@@ -1162,12 +1196,90 @@
             
                 <td class="default">
                 
-                    256
+                    100
                 
                 </td>
             
 
             <td class="description last"><p>The height of the BitmapData in pixels.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    ''
+                
+                </td>
+            
+
+            <td class="description last"><p>Asset key for the BitmapData when stored in the Cache (see addToCache parameter).</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>addToCache</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Should this BitmapData be added to the Game.Cache? If so you can retrieve it with Cache.getBitmapData(key)</p></td>
         </tr>
 
 	
@@ -1199,7 +1311,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-287">line 287</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-296">line 296</a>
     </li></ul></dd>
     
 
@@ -1478,7 +1590,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-235">line 235</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-237">line 237</a>
     </li></ul></dd>
     
 
@@ -1940,7 +2052,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-177">line 177</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-179">line 179</a>
     </li></ul></dd>
     
 
@@ -1977,292 +2089,6 @@
 	<dd>
 		
 <span class="param-type"><a href="Phaser.Button.html">Phaser.Button</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="child"><span class="type-signature"></span>child<span class="signature">(group, x, y, <span class="optional">key</span>, <span class="optional">frame</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Sprite.html">Phaser.Sprite</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>DEPRECATED - will be removed in Phaser 1.2
-Create a new Sprite with specific position and sprite sheet key that will automatically be added as a child of the given parent.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>group</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>The Group to add this child to.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>X position of the new sprite.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Y position of the new sprite.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>key</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">RenderTexture</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>The image key as defined in the Game.Cache to use as the texture for this sprite OR a RenderTexture.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>frame</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-61">line 61</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>the newly created sprite object.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="Phaser.Sprite.html">Phaser.Sprite</a></span>
 
 
 	</dd>
@@ -2467,7 +2293,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-218">line 218</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-220">line 220</a>
     </li></ul></dd>
     
 
@@ -2772,7 +2598,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-301">line 301</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-322">line 322</a>
     </li></ul></dd>
     
 
@@ -2987,7 +2813,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-201">line 201</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-203">line 203</a>
     </li></ul></dd>
     
 
@@ -3183,7 +3009,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-92">line 92</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-94">line 94</a>
     </li></ul></dd>
     
 
@@ -3234,7 +3060,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
         
             
 <dt>
-    <h4 class="name" id="renderTexture"><span class="type-signature"></span>renderTexture<span class="signature">(key, width, height)</span><span class="type-signature"> &rarr; {<a href="Phaser.RenderTexture.html">Phaser.RenderTexture</a>}</span></h4>
+    <h4 class="name" id="image"><span class="type-signature"></span>image<span class="signature">(x, y, key, <span class="optional">frame</span>, <span class="optional">group</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Sprite.html">Phaser.Sprite</a>}</span></h4>
     
     
 </dt>
@@ -3242,7 +3068,8 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     
     <div class="description">
-        <p>A dynamic initially blank canvas to which images can be drawn.</p>
+        <p>Create a new <code>Image</code> object. An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
+It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.</p>
     </div>
     
 
@@ -3264,6 +3091,8 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
 		
 
@@ -3276,6 +3105,68 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 
         <tr>
             
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>X position of the image.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Y position of the image.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
                 <td class="name"><code>key</code></td>
             
 
@@ -3283,28 +3174,45 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             
                 
 <span class="param-type">string</span>
+|
+
+<span class="param-type"><a href="Phaser.RenderTexture.html">Phaser.RenderTexture</a></span>
+|
+
+<span class="param-type">PIXI.Texture</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>Asset key for the render texture.</p></td>
+            <td class="description last"><p>This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>width</code></td>
+                <td class="name"><code>frame</code></td>
             
 
             <td class="type">
             
                 
+<span class="param-type">string</span>
+|
+
 <span class="param-type">number</span>
 
 
@@ -3312,33 +3220,53 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>the width of the render texture.</p></td>
+            <td class="description last"><p>If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>height</code></td>
+                <td class="name"><code>group</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>the height of the render texture.</p></td>
+            <td class="description last"><p>Optional Group to add the object to. If not specified it will be added to the World group.</p></td>
         </tr>
 
 	
@@ -3370,7 +3298,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-268">line 268</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-42">line 42</a>
     </li></ul></dd>
     
 
@@ -3395,7 +3323,285 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
             
 <div class="param-desc">
-    <p>The newly created renderTexture object.</p>
+    <p>the newly created sprite object.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Sprite.html">Phaser.Sprite</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="renderTexture"><span class="type-signature"></span>renderTexture<span class="signature">(<span class="optional">width</span>, <span class="optional">height</span>, <span class="optional">key</span>, <span class="optional">addToCache</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.RenderTexture.html">Phaser.RenderTexture</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>A dynamic initially blank canvas to which images can be drawn.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    100
+                
+                </td>
+            
+
+            <td class="description last"><p>the width of the RenderTexture.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    100
+                
+                </td>
+            
+
+            <td class="description last"><p>the height of the RenderTexture.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    ''
+                
+                </td>
+            
+
+            <td class="description last"><p>Asset key for the RenderTexture when stored in the Cache (see addToCache parameter).</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>addToCache</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Should this RenderTexture be added to the Game.Cache? If so you can retrieve it with Cache.getTexture(key)</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-270">line 270</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The newly created RenderTexture object.</p>
 </div>
 
 
@@ -3644,7 +3850,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-122">line 122</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-124">line 124</a>
     </li></ul></dd>
     
 
@@ -3932,7 +4138,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-42">line 42</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-62">line 62</a>
     </li></ul></dd>
     
 
@@ -4209,7 +4415,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-158">line 158</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-160">line 160</a>
     </li></ul></dd>
     
 
@@ -4376,7 +4582,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-254">line 254</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-256">line 256</a>
     </li></ul></dd>
     
 
@@ -4690,7 +4896,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-138">line 138</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-140">line 140</a>
     </li></ul></dd>
     
 
@@ -4831,7 +5037,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-79">line 79</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-81">line 81</a>
     </li></ul></dd>
     
 
@@ -4905,7 +5111,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Wed Feb 05 2014 06:28:29 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Sat Feb 08 2014 07:19:45 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

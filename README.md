@@ -100,6 +100,7 @@ Bug Fixes:
 * Added TimerEvent.pendingDelete and checks in Timer.update, so that removing an event in a callback no longer throws an exception (thanks georgiee)
 * Fixed TypeScript defs on lines 1741-1748 (thanks wombatbuddy)
 * Previously if you used Sprite.crop() it would crop all Sprites using the same base image. It now takes a local copy of the texture data and crops just that.
+* Tilemap had the wrong @method signatures so most were missing from the docs.
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md

@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Source: gameobjects/Sprite.js</title>
+	<title>Phaser Source: gameobjects/Image.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -445,7 +445,7 @@
 					
 
 
-		<h1 class="page-title">Source: gameobjects/Sprite.js</h1>
+		<h1 class="page-title">Source: gameobjects/Image.js</h1>
     
     <section>
         <article>
@@ -456,22 +456,19 @@
 */
 
 /**
-* @class Phaser.Sprite
+* @class Phaser.Image
 *
-* @classdesc Create a new `Sprite` object. Sprites are the lifeblood of your game, used for nearly everything visual.
-*
-* At its most basic a Sprite consists of a set of coordinates and a texture that is rendered to the canvas.
-* They also contain additional properties allowing for physics motion (via Sprite.body), input handling (via Sprite.input),
-* events (via Sprite.events), animation (via Sprite.animations), camera culling and more. Please see the Examples for use cases.
+* @classdesc Create a new `Image` object. An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
+* It can still rotate, scale, crop and receive input events. This makes it perfect for logos, backgrounds, simple buttons and other non-Sprite graphics.
 *
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {number} x - The x coordinate (in world space) to position the Sprite at.
-* @param {number} y - The y coordinate (in world space) to position the Sprite at.
-* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
-* @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+* @param {number} x - The x coordinate of the Imaget. The coordinate is relative to any parent container this Image may be in.
+* @param {number} y - The y coordinate of the Image. The coordinate is relative to any parent container this Image may be in.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - The texture used by the Image during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
+* @param {string|number} frame - If this Image is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
-Phaser.Sprite = function (game, x, y, key, frame) {
+Phaser.Image = function (game, x, y, key, frame) {
 
     x = x || 0;
     y = y || 0;
@@ -499,7 +496,7 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * @property {number} type - The const type of this object.
     * @readonly
     */
-    this.type = Phaser.SPRITE;
+    this.type = Phaser.IMAGE;
 
     /**
     * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
@@ -507,25 +504,11 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.events = new Phaser.Events(this);
 
     /**
-    * @property {Phaser.AnimationManager} animations - This manages animations of the sprite. You can modify animations through it (see Phaser.AnimationManager)
-    */
-    this.animations = new Phaser.AnimationManager(this);
-
-    /**
     *  @property {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
     */
     this.key = key;
 
-    /**
-    * @property {number} _frame - Internal cache var.
-    * @private
-    */
     this._frame = 0;
-
-    /**
-    * @property {string} _frameName - Internal cache var.
-    * @private
-    */
     this._frameName = '';
 
     PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
@@ -563,81 +546,23 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.input = null;
 
     /**
-    * @property {Phaser.Physics.Arcade.Body} body - By default Sprites have a Phaser.Physics Body attached to them. You can operate physics actions via this property, or null it to skip all physics updates.
-    */
-    this.body = new Phaser.Physics.Arcade.Body(this);
-
-    /**
-    * @property {number} health - Health value. Used in combination with damage() to allow for quick killing of Sprites.
-    */
-    this.health = 1;
-
-    /**
-    * If you would like the Sprite to have a lifespan once 'born' you can set this to a positive value. Handy for particles, bullets, etc.
-    * The lifespan is decremented by game.time.elapsed each update, once it reaches zero the kill() function is called.
-    * @property {number} lifespan - The lifespan of the Sprite (in ms) before it will be killed.
-    * @default
-    */
-    this.lifespan = 0;
-
-    /**
-    * @property {boolean} outOfBoundsKill - If true the Sprite is killed as soon as Sprite.inWorld is false.
-    * @default
-    */
-    this.outOfBoundsKill = false;
-    
-    /**
-    * @property {boolean} debug - Handy flag to use with Game.enableStep
-    * @default
-    */
-    this.debug = false;
-
-    /**
-    * @property {boolean} _outOfBoundsFired - Internal flag.
+    * @property {array} _cache - A small cache for previous step values. 0 = x, 1 = y, 2 = rotation, 3 = renderID
     * @private
     */
-    this._outOfBoundsFired = false;
-
-    /**
-    * @property {array} _cache - A small cache for previous step values. 0 = x, 1 = y, 2 = rotation, 3 = renderID, 4 = fresh? (0 = no, 1 = yes)
-    * @private
-    */
-    this._cache = [0, 0, 0, 0, 1];
+    this._cache = [0, 0, 0, 0];
 
 };
 
-Phaser.Sprite.prototype = Object.create(PIXI.Sprite.prototype);
-Phaser.Sprite.prototype.constructor = Phaser.Sprite;
+Phaser.Image.prototype = Object.create(PIXI.Sprite.prototype);
+Phaser.Image.prototype.constructor = Phaser.Image;
 
 /**
 * Automatically called by World.preUpdate.
 *
-* @method Phaser.Sprite#preUpdate
-* @memberof Phaser.Sprite
+* @method Phaser.Image#preUpdate
+* @memberof Phaser.Image
 */
-Phaser.Sprite.prototype.preUpdate = function() {
-
-    if (this._cache[4] === 1)
-    {
-        console.log('sprite cache fresh');
-        this.world.setTo(this.parent.position.x + this.position.x, this.parent.position.y + this.position.y);
-        this.worldTransform[2] = this.world.x;
-        this.worldTransform[5] = this.world.y;
-        // this._cache[0] = this.world.x;
-        // this._cache[1] = this.world.y;
-        // this._cache[2] = this.rotation;
-        this._cache[4] = 0;
-
-        if (this.body)
-        {
-            this.body.x = (this.world.x - (this.anchor.x * this.width)) + this.body.offset.x;
-            this.body.y = (this.world.y - (this.anchor.y * this.height)) + this.body.offset.y;
-            this.body.preX = this.body.x;
-            this.body.preY = this.body.y;
-        }
-
-        return;
-    }
+Phaser.Image.prototype.preUpdate = function() {
 
     this._cache[0] = this.world.x;
     this._cache[1] = this.world.y;
@@ -647,17 +572,6 @@ Phaser.Sprite.prototype.preUpdate = function() {
     {
         this.renderOrderID = -1;
         return false;
-    }
-
-    if (this.lifespan > 0)
-    {
-        this.lifespan -= this.game.time.elapsed;
-
-        if (this.lifespan &lt;= 0)
-        {
-            this.kill();
-            return false;
-        }
     }
 
     if (this.autoCull)
@@ -673,43 +587,6 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache[3] = this.game.world.currentRenderOrderID++;
     }
 
-    this.animations.update();
-
-    if (!this.inWorld && Phaser.Rectangle.intersects(this.getBounds(), this.game.world.bounds, this.inWorldThreshold))
-    {
-        //  It's back again, reset the OOB check
-        this._outOfBoundsFired = false;
-    }
-    else
-    {
-        //   Sprite WAS in the screen, has it now left?
-        this.inWorld = Phaser.Rectangle.intersects(this.getBounds(), this.game.world.bounds, this.inWorldThreshold);
-
-        if (this.inWorld === false)
-        {
-            this.events.onOutOfBounds.dispatch(this);
-            this._outOfBoundsFired = true;
-
-            if (this.outOfBoundsKill)
-            {
-                this.kill();
-            }
-        }
-    }
-
-    this._cache.cameraVisible = Phaser.Rectangle.intersects(this.game.world.camera.screenView, this.getBounds(), 0);
-
-    if (this.autoCull)
-    {
-        //  Won't get rendered but will still get its transform updated
-        this.renderable = this._cache.cameraVisible;
-    }
-
-    if (this.body)
-    {
-        this.body.preUpdate();
-    }
-
     return true;
 
 };
@@ -717,28 +594,20 @@ Phaser.Sprite.prototype.preUpdate = function() {
 /**
 * Internal function called by the World postUpdate cycle.
 *
-* @method Phaser.Sprite#postUpdate
-* @memberof Phaser.Sprite
+* @method Phaser.Image#postUpdate
+* @memberof Phaser.Image
 */
-Phaser.Sprite.prototype.postUpdate = function() {
+Phaser.Image.prototype.postUpdate = function() {
 
     if (this.key instanceof Phaser.BitmapData && this.key._dirty)
     {
         this.key.render();
     }
 
-    if (this.exists)
+    if (this.fixedToCamera)
     {
-        if (this.body)
-        {
-            this.body.postUpdate();
-        }
-
-        if (this.fixedToCamera)
-        {
-            // this.position.x = this.game.camera.view.x + this.x;
-            // this.position.y = this.game.camera.view.y + this.y;
-        }
+        this.position.x = this.game.camera.view.x + this.x;
+        this.position.y = this.game.camera.view.y + this.y;
     }
 
 };
@@ -747,12 +616,12 @@ Phaser.Sprite.prototype.postUpdate = function() {
 * Changes the Texture the Sprite is using entirely. The old texture is removed and the new one is referenced or fetched from the Cache.
 * This causes a WebGL texture update, so use sparingly or in low-intensity portions of your game.
 *
-* @method Phaser.Sprite#loadTexture
-* @memberof Phaser.Sprite
+* @method Phaser.Image#loadTexture
+* @memberof Phaser.Image
 * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
 * @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
-Phaser.Sprite.prototype.loadTexture = function (key, frame) {
+Phaser.Image.prototype.loadTexture = function (key, frame) {
 
     frame = frame || 0;
 
@@ -788,16 +657,19 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         {
             this.key = key;
 
-            // var frameData = this.game.cache.getFrameData(key);
-            this.animations.loadFrameData(this.game.cache.getFrameData(key));
+            var frameData = this.game.cache.getFrameData(key);
 
             if (typeof frame === 'string')
             {
-                this.frameName = frame;
+                this._frame = 0;
+                this._frameName = frame;
+                this.setTexture(PIXI.TextureCache[frameData.getFrameByName(frame).uuid]);
             }
             else
             {
-                this.frame = frame;
+                this._frame = frame;
+                this._frameName = '';
+                this.setTexture(PIXI.TextureCache[frameData.getFrame(frame).uuid]);
             }
         }
         else
@@ -813,11 +685,11 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
 * Crop allows you to crop the texture used to display this Image.
 * Cropping takes place from the top-left of the Image and can be modified in real-time by providing an updated rectangle object.
 *
-* @method Phaser.Sprite#crop
-* @memberof Phaser.Sprite
+* @method Phaser.Image#crop
+* @memberof Phaser.Image
 * @param {Phaser.Rectangle} rect - The Rectangle to crop the Image to. Pass null or no parameters to clear a previously set crop rectangle.
 */
-Phaser.Sprite.prototype.crop = function(rect) {
+Phaser.Image.prototype.crop = function(rect) {
 
     if (typeof rect === 'undefined' || rect === null)
     {
@@ -861,19 +733,15 @@ Phaser.Sprite.prototype.crop = function(rect) {
 * A resurrected Sprite has its alive, exists and visible properties all set to true.
 * It will dispatch the onRevived event, you can listen to Sprite.events.onRevived for the signal.
 * 
-* @method Phaser.Sprite#revive
-* @memberof Phaser.Sprite
-* @param {number} [health=1] - The health to give the Sprite.
-* @return (Phaser.Sprite) This instance.
+* @method Phaser.Image#revive
+* @memberof Phaser.Image
+* @return {Phaser.Image} This instance.
 */
-Phaser.Sprite.prototype.revive = function(health) {
-
-    if (typeof health === 'undefined') { health = 1; }
+Phaser.Image.prototype.revive = function() {
 
     this.alive = true;
     this.exists = true;
     this.visible = true;
-    this.health = health;
 
     if (this.events)
     {
@@ -890,11 +758,11 @@ Phaser.Sprite.prototype.revive = function(health) {
 * Note that killing a Sprite is a way for you to quickly recycle it in a Sprite pool, it doesn't free it up from memory.
 * If you don't need this Sprite any more you should call Sprite.destroy instead.
 * 
-* @method Phaser.Sprite#kill
-* @memberof Phaser.Sprite
-* @return (Phaser.Sprite) This instance.
+* @method Phaser.Image#kill
+* @memberof Phaser.Image
+* @return {Phaser.Image} This instance.
 */
-Phaser.Sprite.prototype.kill = function() {
+Phaser.Image.prototype.kill = function() {
 
     this.alive = false;
     this.exists = false;
@@ -913,10 +781,10 @@ Phaser.Sprite.prototype.kill = function() {
 * Destroys the Sprite. This removes it from its parent group, destroys the input, event and animation handlers if present
 * and nulls its reference to game, freeing it up for garbage collection.
 * 
-* @method Phaser.Sprite#destroy
-* @memberof Phaser.Sprite
+* @method Phaser.Image#destroy
+* @memberof Phaser.Image
 */
-Phaser.Sprite.prototype.destroy = function() {
+Phaser.Image.prototype.destroy = function() {
 
     if (this.filters)
     {
@@ -938,16 +806,6 @@ Phaser.Sprite.prototype.destroy = function() {
         this.input.destroy();
     }
 
-    if (this.animations)
-    {
-        this.animations.destroy();
-    }
-
-    if (this.body)
-    {
-        this.body.destroy();
-    }
-
     this.alive = false;
     this.exists = false;
     this.visible = false;
@@ -957,45 +815,15 @@ Phaser.Sprite.prototype.destroy = function() {
 };
 
 /**
-* Damages the Sprite, this removes the given amount from the Sprites health property.
-* If health is then taken below zero Sprite.kill is called.
+* Resets the Sprite. This places the Sprite at the given x/y world coordinates and then sets alive, exists, visible and renderable all to true.
 * 
-* @method Phaser.Sprite#damage
-* @memberof Phaser.Sprite
-* @param {number} amount - The amount to subtract from the Sprite.health value.
-* @return (Phaser.Sprite) This instance.
-*/
-Phaser.Sprite.prototype.damage = function(amount) {
-
-    if (this.alive)
-    {
-        this.health -= amount;
-
-        if (this.health &lt; 0)
-        {
-            this.kill();
-        }
-    }
-
-    return this;
-
-};
-
-/**
-* Resets the Sprite. This places the Sprite at the given x/y world coordinates and then
-* sets alive, exists, visible and renderable all to true. Also resets the outOfBounds state and health values.
-* If the Sprite has a physics body that too is reset.
-* 
-* @method Phaser.Sprite#reset
-* @memberof Phaser.Sprite
+* @method Phaser.Image#reset
+* @memberof Phaser.Image
 * @param {number} x - The x coordinate (in world space) to position the Sprite at.
 * @param {number} y - The y coordinate (in world space) to position the Sprite at.
-* @param {number} [health=1] - The health to give the Sprite.
-* @return (Phaser.Sprite) This instance.
+* @return {Phaser.Image} This instance.
 */
-Phaser.Sprite.prototype.reset = function(x, y, health) {
-
-    if (typeof health === 'undefined') { health = 1; }
+Phaser.Image.prototype.reset = function(x, y) {
 
     this.world.setTo(x, y);
     this.position.x = x;
@@ -1004,14 +832,6 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
     this.exists = true;
     this.visible = true;
     this.renderable = true;
-    this._outOfBoundsFired = false;
-
-    this.health = health;
-
-    if (this.body)
-    {
-        this.body.reset(false);
-    }
 
     return this;
     
@@ -1021,11 +841,11 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
 * Brings the Sprite to the top of the display list it is a child of. Sprites that are members of a Phaser.Group are only
 * bought to the top of that Group, not the entire display list.
 * 
-* @method Phaser.Sprite#bringToTop
-* @memberof Phaser.Sprite
-* @return (Phaser.Sprite) This instance.
+* @method Phaser.Image#bringToTop
+* @memberof Phaser.Image
+* @return {Phaser.Image} This instance.
 */
-Phaser.Sprite.prototype.bringToTop = function(child) {
+Phaser.Image.prototype.bringToTop = function(child) {
 
     if (typeof child === 'undefined')
     {
@@ -1044,35 +864,14 @@ Phaser.Sprite.prototype.bringToTop = function(child) {
 };
 
 /**
-* Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()
-* If the requested animation is already playing this request will be ignored. If you need to reset an already running animation do so directly on the Animation object itself.
-* 
-* @method Phaser.Sprite#play
-* @memberof Phaser.Sprite
-* @param {string} name - The name of the animation to be played, e.g. "fire", "walk", "jump".
-* @param {number} [frameRate=null] - The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
-* @param {boolean} [loop=false] - Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
-* @param {boolean} [killOnComplete=false] - If set to true when the animation completes (only happens if loop=false) the parent Sprite will be killed.
-* @return {Phaser.Animation} A reference to playing Animation instance.
-*/
-Phaser.Sprite.prototype.play = function (name, frameRate, loop, killOnComplete) {
-
-    if (this.animations)
-    {
-        return this.animations.play(name, frameRate, loop, killOnComplete);
-    }
-
-};
-
-/**
 * Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
 * If you wish to work in radians instead of degrees use the property Sprite.rotation instead. Working in radians is also a little faster as it doesn't have to convert the angle.
 * 
-* @name Phaser.Sprite#angle
+* @name Phaser.Image#angle
 * @property {number} angle - The angle of this Image in degrees.
 */
-Object.defineProperty(Phaser.Sprite.prototype, "angle", {
+Object.defineProperty(Phaser.Image.prototype, "angle", {
 
     get: function() {
 
@@ -1091,11 +890,11 @@ Object.defineProperty(Phaser.Sprite.prototype, "angle", {
 /**
 * Returns the delta x value. The difference between world.x now and in the previous step.
 *
-* @name Phaser.Sprite#deltaX
+* @name Phaser.Image#deltaX
 * @property {number} deltaX - The delta value. Positive if the motion was to the right, negative if to the left.
 * @readonly
 */
-Object.defineProperty(Phaser.Sprite.prototype, "deltaX", {
+Object.defineProperty(Phaser.Image.prototype, "deltaX", {
 
     get: function() {
 
@@ -1108,11 +907,11 @@ Object.defineProperty(Phaser.Sprite.prototype, "deltaX", {
 /**
 * Returns the delta y value. The difference between world.y now and in the previous step.
 *
-* @name Phaser.Sprite#deltaY
+* @name Phaser.Image#deltaY
 * @property {number} deltaY - The delta value. Positive if the motion was downwards, negative if upwards.
 * @readonly
 */
-Object.defineProperty(Phaser.Sprite.prototype, "deltaY", {
+Object.defineProperty(Phaser.Image.prototype, "deltaY", {
 
     get: function() {
     
@@ -1125,11 +924,11 @@ Object.defineProperty(Phaser.Sprite.prototype, "deltaY", {
 /**
 * Returns the delta z value. The difference between rotation now and in the previous step.
 *
-* @name Phaser.Sprite#deltaZ
+* @name Phaser.Image#deltaZ
 * @property {number} deltaZ - The delta value.
 * @readonly
 */
-Object.defineProperty(Phaser.Sprite.prototype, "deltaZ", {
+Object.defineProperty(Phaser.Image.prototype, "deltaZ", {
 
     get: function() {
     
@@ -1142,11 +941,11 @@ Object.defineProperty(Phaser.Sprite.prototype, "deltaZ", {
 /**
 * Checks if the Image bounds are within the game world, otherwise false if fully outside of it.
 *
-* @name Phaser.Sprite#inWorld
+* @name Phaser.Image#inWorld
 * @property {boolean} inWorld - True if the Image bounds is within the game world, even if only partially. Otherwise false if fully outside of it.
 * @readonly
 */
-Object.defineProperty(Phaser.Sprite.prototype, "inWorld", {
+Object.defineProperty(Phaser.Image.prototype, "inWorld", {
 
     get: function() {
 
@@ -1159,11 +958,11 @@ Object.defineProperty(Phaser.Sprite.prototype, "inWorld", {
 /**
 * Checks if the Image bounds are within the game camera, otherwise false if fully outside of it.
 *
-* @name Phaser.Sprite#inCamera
+* @name Phaser.Image#inCamera
 * @property {boolean} inCamera - True if the Image bounds is within the game camera, even if only partially. Otherwise false if fully outside of it.
 * @readonly
 */
-Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
+Object.defineProperty(Phaser.Image.prototype, "inCamera", {
 
     get: function() {
     
@@ -1174,43 +973,69 @@ Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
 });
 
 /**
-* @name Phaser.Sprite#frame
-* @property {number} frame - Gets or sets the current frame index and updates the Texture Cache for display.
+* @name Phaser.Image#frame
+* @property {number} frame - Gets or sets the current frame index and updates the Texture for display.
 */
-Object.defineProperty(Phaser.Sprite.prototype, "frame", {
+Object.defineProperty(Phaser.Image.prototype, "frame", {
 
-    get: function () {
-        return this.animations.frame;
+    get: function() {
+    
+        return this._frame;
+
     },
 
-    set: function (value) {
-        this.animations.frame = value;
+    set: function(value) {
+
+        if (value !== this.frame && this.game.cache.isSpriteSheet(this.key))
+        {
+            var frameData = this.game.cache.getFrameData(this.key);
+
+            if (frameData && value &lt; frameData.total && frameData.getFrame(value))
+            {
+                this.setTexture(PIXI.TextureCache[frameData.getFrame(value).uuid]);
+                this._frame = value;
+            }
+        }
+
     }
 
 });
 
 /**
-* @name Phaser.Sprite#frameName
-* @property {string} frameName - Gets or sets the current frame name and updates the Texture Cache for display.
+* @name Phaser.Image#frameName
+* @property {string} frameName - Gets or sets the current frame by name and updates the Texture for display.
 */
-Object.defineProperty(Phaser.Sprite.prototype, "frameName", {
+Object.defineProperty(Phaser.Image.prototype, "frameName", {
 
-    get: function () {
-        return this.animations.frameName;
+    get: function() {
+    
+        return this._frameName;
+
     },
 
-    set: function (value) {
-        this.animations.frameName = value;
+    set: function(value) {
+
+        if (value !== this.frameName && this.game.cache.isSpriteSheet(this.key))
+        {
+            var frameData = this.game.cache.getFrameData(this.key);
+
+            if (frameData && frameData.getFrameByName(value))
+            {
+                this.setTexture(PIXI.TextureCache[frameData.getFrameByName(value).uuid]);
+                this._frameName = value;
+            }
+        }
+
     }
 
 });
 
 /**
-* @name Phaser.Sprite#renderOrderID
+* @name Phaser.Image#renderOrderID
 * @property {number} renderOrderID - The render order ID, reset every frame.
 * @readonly
 */
-Object.defineProperty(Phaser.Sprite.prototype, "renderOrderID", {
+Object.defineProperty(Phaser.Image.prototype, "renderOrderID", {
 
     get: function() {
 
@@ -1224,10 +1049,10 @@ Object.defineProperty(Phaser.Sprite.prototype, "renderOrderID", {
 * By default an Image won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
 * activated for this object and it will then start to process click/touch events and more.
 *
-* @name Phaser.Sprite#inputEnabled
+* @name Phaser.Image#inputEnabled
 * @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
 */
-Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
+Object.defineProperty(Phaser.Image.prototype, "inputEnabled", {
     
     get: function () {
 

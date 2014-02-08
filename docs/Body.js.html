@@ -183,6 +183,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Image.html">Image</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Input.html">Input</a>
 						</li>
 						
@@ -392,6 +396,36 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
+						</li>
+						
+						<li>
+							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
+						</li>
+						
+						<li>
+							<a href="global.html#hex2rgb">hex2rgb</a>
+						</li>
+						
+						<li>
+							<a href="global.html#hitTest">hitTest</a>
+						</li>
+						
+						<li>
+							<a href="global.html#rgb2hex">rgb2hex</a>
 						</li>
 						
 
@@ -797,6 +831,8 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.x = (this.sprite.world.x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
         this.y = (this.sprite.world.y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;
+
+        console.log('body pre', this.preX, this.preY, 'now', this.x, this.y);
 
         //  This covers any motion that happens during this frame, not since the last frame
         this.preX = this.x;
@@ -1306,7 +1342,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.inContact(body))
         {
-            return false;
+            // return false;
         }
 
         this._distances[0] = body.right - this.x;   // Distance of B to face on left side of A
@@ -1336,11 +1372,11 @@ Phaser.Physics.Arcade.Body.prototype = {
         if (response.overlapN.x)
         {
             //  Which is smaller? Left or Right?
-            if (this._distances[0] &lt; this._distances[1] && (body.checkCollision.right || this.checkCollision.left))
+            if (this._distances[0] &lt; this._distances[1])
             {
                 hasSeparated = this.hitLeft(body, response);
             }
-            else if (this._distances[1] &lt; this._distances[0] && (body.checkCollision.left || this.checkCollision.right))
+            else if (this._distances[1] &lt; this._distances[0])
             {
                 hasSeparated = this.hitRight(body, response);
             }
@@ -1348,11 +1384,11 @@ Phaser.Physics.Arcade.Body.prototype = {
         else if (response.overlapN.y)
         {
             //  Which is smaller? Top or Bottom?
-            if (this._distances[2] &lt; this._distances[3] && (body.checkCollision.down || this.checkCollision.up))
+            if (this._distances[2] &lt; this._distances[3])
             {
                 hasSeparated = this.hitTop(body, response);
             }
-            else if (this._distances[3] &lt; this._distances[2] && (body.checkCollision.up || this.checkCollision.down))
+            else if (this._distances[3] &lt; this._distances[2])
             {
                 hasSeparated = this.hitBottom(body, response);
             }
@@ -1389,6 +1425,11 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @param {SAT.Response} response - The SAT Response object containing the collision data.
     */
     hitLeft: function (body, response) {
+
+        if (!this.checkCollision.left || !body.checkCollision.right)
+        {
+            return false;
+        }
 
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.LEFT, this, body, response))
         {
@@ -1432,6 +1473,11 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     hitRight: function (body, response) {
 
+        if (!this.checkCollision.right || !body.checkCollision.left)
+        {
+            return false;
+        }
+
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.RIGHT, this, body))
         {
             return;
@@ -1473,6 +1519,11 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @param {SAT.Response} response - The SAT Response object containing the collision data.
     */
     hitTop: function (body, response) {
+
+        if (!this.checkCollision.up || !body.checkCollision.down)
+        {
+            return false;
+        }
 
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.UP, this, body))
         {
@@ -1517,6 +1568,11 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @param {SAT.Response} response - The SAT Response object containing the collision data.
     */
     hitBottom: function (body, response) {
+
+        if (!this.checkCollision.down || !body.checkCollision.up)
+        {
+            return false;
+        }
 
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.DOWN, this, body))
         {
@@ -1605,9 +1661,9 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.moves)
         {
-            this.reboundCheck(true, true, true);
-
             this.game.physics.checkBounds(this);
+
+            this.reboundCheck(true, true, true);
 
             this._dx = this.deltaX();
             this._dy = this.deltaY();
@@ -1645,7 +1701,6 @@ Phaser.Physics.Arcade.Body.prototype = {
             {
                 this.updateScale();
             }
-
         }
 
     },
@@ -1954,7 +2009,7 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "y", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Wed Feb 05 2014 06:28:24 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Sat Feb 08 2014 07:19:40 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

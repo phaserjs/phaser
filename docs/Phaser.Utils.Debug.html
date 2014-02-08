@@ -183,6 +183,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.Image.html">Image</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.Input.html">Input</a>
 						</li>
 						
@@ -392,6 +396,36 @@
 						
 						<li>
 							<a href="SignalBinding.html">SignalBinding</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
+						</li>
+						
+						<li>
+							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
+						</li>
+						
+						<li>
+							<a href="global.html#hex2rgb">hex2rgb</a>
+						</li>
+						
+						<li>
+							<a href="global.html#hitTest">hitTest</a>
+						</li>
+						
+						<li>
+							<a href="global.html#rgb2hex">rgb2hex</a>
 						</li>
 						
 
@@ -2316,7 +2350,7 @@ your game set to use Phaser.AUTO then swap it for Phaser.CANVAS to ensure WebGL 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Debug.js.html">utils/Debug.js</a>, <a href="Debug.js.html#sunlight-1-line-765">line 765</a>
+        <a href="Debug.js.html">utils/Debug.js</a>, <a href="Debug.js.html#sunlight-1-line-778">line 778</a>
     </li></ul></dd>
     
 
@@ -3109,7 +3143,7 @@ your game set to use Phaser.AUTO then swap it for Phaser.CANVAS to ensure WebGL 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Debug.js.html">utils/Debug.js</a>, <a href="Debug.js.html#sunlight-1-line-817">line 817</a>
+        <a href="Debug.js.html">utils/Debug.js</a>, <a href="Debug.js.html#sunlight-1-line-830">line 830</a>
     </li></ul></dd>
     
 
@@ -4164,7 +4198,7 @@ your game set to use Phaser.AUTO then swap it for Phaser.CANVAS to ensure WebGL 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Debug.js.html">utils/Debug.js</a>, <a href="Debug.js.html#sunlight-1-line-883">line 883</a>
+        <a href="Debug.js.html">utils/Debug.js</a>, <a href="Debug.js.html#sunlight-1-line-896">line 896</a>
     </li></ul></dd>
     
 
@@ -4333,7 +4367,7 @@ your game set to use Phaser.AUTO then swap it for Phaser.CANVAS to ensure WebGL 
         
             
 <dt>
-    <h4 class="name" id="renderRectangle"><span class="type-signature"></span>renderRectangle<span class="signature">(rect, <span class="optional">color</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="renderRectangle"><span class="type-signature"></span>renderRectangle<span class="signature">(rect, <span class="optional">color</span>, <span class="optional">filled</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -4366,6 +4400,8 @@ your game set to use Phaser.AUTO then swap it for Phaser.CANVAS to ensure WebGL 
 		<th>Argument</th>
 		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -4400,6 +4436,10 @@ your game set to use Phaser.AUTO then swap it for Phaser.CANVAS to ensure WebGL 
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>The Rectangle to render.</p></td>
         </tr>
@@ -4433,8 +4473,51 @@ your game set to use Phaser.AUTO then swap it for Phaser.CANVAS to ensure WebGL 
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>Color of the debug info to be rendered (format is css color string).</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>filled</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>Render the rectangle as a fillRect (default, true) or a strokeRect (false)</p></td>
         </tr>
 
 	
@@ -6363,7 +6446,7 @@ your game set to use Phaser.AUTO then swap it for Phaser.CANVAS to ensure WebGL 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Debug.js.html">utils/Debug.js</a>, <a href="Debug.js.html#sunlight-1-line-790">line 790</a>
+        <a href="Debug.js.html">utils/Debug.js</a>, <a href="Debug.js.html#sunlight-1-line-803">line 803</a>
     </li></ul></dd>
     
 
@@ -6856,7 +6939,7 @@ your game set to use Phaser.AUTO then swap it for Phaser.CANVAS to ensure WebGL 
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Wed Feb 05 2014 06:28:36 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Sat Feb 08 2014 07:19:53 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
