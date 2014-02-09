@@ -175,7 +175,7 @@ Phaser.Stage.prototype = {
         Phaser.Canvas.setUserSelect(this.canvas, 'none');
         Phaser.Canvas.setTouchAction(this.canvas, 'none');
 
-        this.backgroundColor = '#000';
+        this.backgroundColor = '#000000';
 
         document.addEventListener('visibilitychange', this._onChange, false);
         document.addEventListener('webkitvisibilitychange', this._onChange, false);

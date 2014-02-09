@@ -165,27 +165,16 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
     this.context.setTransform(1,0,0,1,0,0);
     this.context.globalAlpha = 1;
 
-    //  Update the background color / cls
-    if (!this.transparent)
+    if (!this.transparent && PIXI.canvas.FILL_RECT)
     {
-        if (PIXI.canvas.FILL_RECT)
-        {
-            this.context.fillStyle = stage.backgroundColorString;
-            this.context.fillRect(0, 0, this.width, this.height);
-        }
-        else if (stage.resetBackgroundColor)
-        {
-            this.view.style.backgroundColor = stage.backgroundColorString;
-            stage.resetBackgroundColor = false;
-            console.log('bgcolor reset', this.view.style.backgroundColor);
-        }
+        this.context.fillStyle = stage.backgroundColorString;
+        this.context.fillRect(0, 0, this.width, this.height);
     }
-    
-    if (PIXI.canvas.CLEAR_RECT && !PIXI.canvas.FILL_RECT)
+    else if (this.transparent && PIXI.canvas.CLEAR_RECT)
     {
         this.context.clearRect(0, 0, this.width, this.height);
     }
-   
+
     this.renderDisplayObject(stage);
 
     // run interaction!

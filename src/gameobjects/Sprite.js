@@ -130,11 +130,20 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.lifespan = 0;
 
     /**
-    * @property {boolean} outOfBoundsKill - If true the Sprite is killed as soon as Sprite.inWorld is false.
+    * If true the Sprite checks if it is still within the world each frame, when it leaves the world it dispatches Sprite.events.onOutOfBounds
+    * and optionally kills the sprite (if Sprite.outOfBoundsKill is true). By default this is disabled because the Sprite has to calculate its
+    * bounds every frame to support it, and not all games need it. Enable it by setting the value to true.
+    * @property {boolean} checkWorldBounds
+    * @default
+    */
+    this.checkWorldBounds = false;
+
+    /**
+    * @property {boolean} outOfBoundsKill - If true Sprite.kill is called as soon as Sprite.inWorld returns false, as long as Sprite.checkWorldBounds is true.
     * @default
     */
     this.outOfBoundsKill = false;
-    
+
     /**
     * @property {boolean} debug - Handy flag to use with Game.enableStep
     * @default
@@ -142,16 +151,23 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.debug = false;
 
     /**
-    * @property {boolean} _outOfBoundsFired - Internal flag.
+    * A small internal cache:
+    * 0 = previous position.x
+    * 1 = previous position.y
+    * 2 = previous rotation
+    * 3 = renderID
+    * 4 = fresh? (0 = no, 1 = yes)
+    * 5 = outOfBoundsFired (0 = no, 1 = yes)
+    * @property {array} _cache
     * @private
     */
-    this._outOfBoundsFired = false;
+    this._cache = [0, 0, 0, 0, 1, 0];
 
     /**
-    * @property {array} _cache - A small cache for previous step values. 0 = x, 1 = y, 2 = rotation, 3 = renderID, 4 = fresh? (0 = no, 1 = yes)
+    * @property {Phaser.Rectangle} _bounds - Internal cache var.
     * @private
     */
-    this._cache = [0, 0, 0, 0, 1];
+    this._bounds = new Phaser.Rectangle();
 
 };
 
@@ -163,19 +179,18 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 *
 * @method Phaser.Sprite#preUpdate
 * @memberof Phaser.Sprite
+* @return {boolean} True if the Sprite was rendered, otherwise false.
 */
 Phaser.Sprite.prototype.preUpdate = function() {
 
-    /*
     if (this._cache[4] === 1)
     {
-        console.log('sprite cache fresh');
         this.world.setTo(this.parent.position.x + this.position.x, this.parent.position.y + this.position.y);
-        this.worldTransform[2] = this.world.x;
-        this.worldTransform[5] = this.world.y;
-        // this._cache[0] = this.world.x;
-        // this._cache[1] = this.world.y;
-        // this._cache[2] = this.rotation;
+        this.worldTransform.tx = this.world.x;
+        this.worldTransform.ty = this.world.y;
+        this._cache[0] = this.world.x;
+        this._cache[1] = this.world.y;
+        this._cache[2] = this.rotation;
         this._cache[4] = 0;
 
         if (this.body)
@@ -186,9 +201,8 @@ Phaser.Sprite.prototype.preUpdate = function() {
             this.body.preY = this.body.y;
         }
 
-        return;
+        return false;
     }
-    */
 
     this._cache[0] = this.world.x;
     this._cache[1] = this.world.y;
@@ -196,7 +210,8 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     if (!this.exists || !this.parent.exists)
     {
-        this.renderOrderID = -1;
+        //  Reset the renderOrderID
+        this._cache[3] = -1;
         return false;
     }
 
@@ -211,13 +226,40 @@ Phaser.Sprite.prototype.preUpdate = function() {
         }
     }
 
+    //  Cache the bounds if we need it
+    if (this.autoCull || this.checkWorldBounds)
+    {
+        this._bounds.copyFrom(this.getBounds());
+    }
+
     if (this.autoCull)
     {
         //  Won't get rendered but will still get its transform updated
-        this.renderable = this.game.world.camera.screenView.intersects(this.getBounds());
+        this.renderable = this.game.world.camera.screenView.intersects(this._bounds);
     }
 
-    this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
+    if (this.checkWorldBounds)
+    {
+        //  The Sprite is already out of the world bounds, so let's check to see if it has come back again
+        if (this._cache[5] === 1 && this.game.world.bounds.intersects(this._bounds))
+        {
+            this._cache[5] = 0;
+        }
+        else if (this._cache[5] === 0 && !this.game.world.bounds.intersects(this._bounds))
+        {
+            //  The Sprite WAS in the screen, but has now left.
+            this._cache[5] = 1;
+            this.events.onOutOfBounds.dispatch(this);
+
+            if (this.outOfBoundsKill)
+            {
+                this.kill();
+                return false;
+            }
+        }
+    }
+
+    this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
 
     if (this.visible)
     {
@@ -225,36 +267,6 @@ Phaser.Sprite.prototype.preUpdate = function() {
     }
 
     this.animations.update();
-
-    if (!this.inWorld && Phaser.Rectangle.intersects(this.getBounds(), this.game.world.bounds, this.inWorldThreshold))
-    {
-        //  It's back again, reset the OOB check
-        this._outOfBoundsFired = false;
-    }
-    else
-    {
-        //   Sprite WAS in the screen, has it now left?
-        this.inWorld = Phaser.Rectangle.intersects(this.getBounds(), this.game.world.bounds, this.inWorldThreshold);
-
-        if (this.inWorld === false)
-        {
-            this.events.onOutOfBounds.dispatch(this);
-            this._outOfBoundsFired = true;
-
-            if (this.outOfBoundsKill)
-            {
-                this.kill();
-            }
-        }
-    }
-
-    this._cache.cameraVisible = Phaser.Rectangle.intersects(this.game.world.camera.screenView, this.getBounds(), 0);
-
-    if (this.autoCull)
-    {
-        //  Won't get rendered but will still get its transform updated
-        this.renderable = this._cache.cameraVisible;
-    }
 
     if (this.body)
     {

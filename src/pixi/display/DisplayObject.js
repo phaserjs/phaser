@@ -196,8 +196,6 @@ PIXI.DisplayObject = function()
      */
     this._mask = null;
 
-    this.x = this.position.x;
-    this.y = this.position.y;
 
     /*
      * MOUSE Callbacks
@@ -395,8 +393,6 @@ PIXI.DisplayObject.prototype.updateTransform = function()
     // TODO OPTIMIZE THIS!! with dirty
     if(this.rotation !== this.rotationCache)
     {
-        if(isNaN(parseFloat(this.rotation)))
-            throw new Error('DisplayObject rotation values must be numeric.');
 
         this.rotationCache = this.rotation;
         this._sr =  Math.sin(this.rotation);

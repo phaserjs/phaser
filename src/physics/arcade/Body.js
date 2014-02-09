@@ -73,7 +73,7 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     * @property {number} deltaCap - The maximum a delta is allowed to reach before its capped.
     * @default
     */
-    this.deltaCap = 2;
+    this.deltaCap = 10;
 
     /**
     * @property {Phaser.Point} gravity - The gravity applied to the motion of the Body. This works in addition to any gravity set on the world.
@@ -386,8 +386,6 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.x = (this.sprite.world.x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
         this.y = (this.sprite.world.y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;
-
-        // console.log('body pre', this.preX, this.preY, 'now', this.x, this.y);
 
         //  This covers any motion that happens during this frame, not since the last frame
         this.preX = this.x;

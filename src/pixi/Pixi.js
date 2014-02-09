@@ -44,15 +44,15 @@ PIXI.scaleModes = {
 //  Canvas specific controls
 PIXI.canvas = {
 
-    //  If the Stage is transparent Pixi will use a canvas sized fillRect operation every frame to set the canvas background color.
-    //  Setting this to false forces Pixi to update the view.style.backgroundColor instead.
+    //  If the Stage is NOT transparent Pixi will use a canvas sized fillRect operation every frame to set the canvas background color.
+    //  Disable this by setting this to false. For example if your game has a canvas filling background image you often don't need this set.
     FILL_RECT: true,
 
-    //  If the Stage is transparent Pixi will use clearRect to clear the canvas unless you set this to false.
-    //  You often don't need clearRect if you've got a large background image fully covering your canvas.
+    //  If the Stage is transparent Pixi will use clearRect to clear the canvas every frame.
+    //  Disable this by setting this to false. For example if your game has a canvas filling background image you often don't need this set.
     CLEAR_RECT: true,
 
-    //  If true Pixi will round all x/y values for rendering only, stopping pixel interpolation. Handy for crisp pixel art.
+    //  If true Pixi will Math.floor() x/y values when rendering, stopping pixel interpolation. Handy for crisp pixel art and speed on legacy devices.
     PX_ROUND: false
 }
 

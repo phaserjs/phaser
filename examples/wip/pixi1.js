@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render }, false);
 
 function preload() {
 
@@ -16,22 +16,20 @@ function create() {
 
 	// game.stage.backgroundColor = '#ff5500';
 
-	game.stage._stage.setBackgroundColor(0xff5500);
+	sprite = game.add.sprite(0.5, 0, 'pic');
 
-	sprite = game.add.sprite(0, 0, 'pic');
+	// g = game.add.group(null, 'billy');
 
-	g = game.add.group(null, 'billy');
+	// sprite2 = g.create(0, 0, 'pic');
 
-	sprite2 = g.create(0, 0, 'pic');
+	// g.y = 200;
+	// g.rotation = 0.1;
 
-	g.y = 200;
-	g.rotation = 0.1;
+	sprite2 = game.add.sprite(0, 300, 'pic');
 
-	// sprite2 = game.add.sprite(0, 300, 'pic');
+	// game.input.onDown.add(tint, this);
 
-	game.input.onDown.add(tint, this);
-
-	game.add.tween(sprite).to({y: 500}, 3000, Phaser.Easing.Linear.None, true);
+	// game.add.tween(sprite).to({y: 500}, 3000, Phaser.Easing.Linear.None, true);
 
 	p = new PIXI.Point(43, 45);
 
@@ -39,7 +37,7 @@ function create() {
 
 function tint() {
 
-	sprite.tint = Math.random() * 0xFFFFFF;
+	// sprite.tint = Math.random() * 0xFFFFFF;
 	// sprite2.tint = Math.random() * 0xFFFFFF;
 
 }
@@ -51,6 +49,6 @@ function update() {
 
 function render() {
 
-	game.debug.renderText(sprite.position.y, 32, 32);
+	// game.debug.renderText(sprite.position.y, 32, 32);
 
 }

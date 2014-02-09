@@ -22,7 +22,7 @@ function create() {
 	var bg = game.add.sprite(0, 0, bmd);
 	bg.body.moves = false;
 
-	game.enableStep();
+	// game.enableStep();
 
 	game.physics.gravity.y = 100;
 

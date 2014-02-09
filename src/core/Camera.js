@@ -340,8 +340,8 @@ Phaser.Camera.prototype = {
     reset: function () {
 
         this.target = null;
-        this.camera.x = 0;
-        this.camera.y = 0;
+        this.view.x = 0;
+        this.view.y = 0;
 
     }
 
