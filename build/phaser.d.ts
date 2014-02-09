@@ -845,6 +845,7 @@ declare module Phaser {
         visible: boolean;
         renderable: boolean;
         width: number;
+        height: number;
         health: number;
         damage(amount: number): Phaser.Sprite;
     }
