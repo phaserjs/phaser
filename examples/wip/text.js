@@ -12,7 +12,7 @@ var text;
 
 function create() {
 
-	game.stage.backgroundColor = '#c48844';
+	game.stage.backgroundColor = '#2d2d2d';
 
     text = game.add.text(game.world.centerX, game.world.centerY, "- phaser -\nwith a sprinkle of\npixi dust");
 
@@ -20,25 +20,44 @@ function create() {
 
     text.font = 'Art of Fighting 2';
     // text.font = 'Arial';
-    text.fontSize = 40;
+    text.fontSize = 30;
     // text.fontWeight = 'bold italic';
 
     //	x0, y0 - x1, y1
-	var grd = text.context.createLinearGradient(0, 0, 0, text.canvas.height);
+	// var grd = text.context.createLinearGradient(0, 0, 0, text.canvas.height);
+	// grd.addColorStop(0, '#8ED6FF');   
+	// grd.addColorStop(1, '#004CB3');
+    // text.fill = grd;
 
-	grd.addColorStop(0, '#8ED6FF');   
-	grd.addColorStop(1, '#004CB3');
-
-    // text.fill = '#ff0044';
-    // text.lineSpacing = 16;
-    text.fill = grd;
+    text.fill = '#ff0044';
+    text.lineSpacing = 16;
     text.align = 'center';
-    text.stroke = '#ff00ff';
+    text.stroke = '#000000';
     text.strokeThickness = 2;
 
-    text.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+    // text.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+    // text.wordWrap = true;
+    // test.wordWrapWidth = 50;
 
-    game.input.onDown.add(change, this);
+    // game.input.onDown.add(change, this);
+
+    text.inputEnabled = true;
+    text.input.enableDrag();
+
+    text.events.onInputOver.add(over, this);
+    text.events.onInputOut.add(out, this);
+
+}
+
+function out() {
+
+    text.fill = '#ff0044';
+
+}
+
+function over() {
+
+    text.fill = '#ff00ff';
 
 }
 

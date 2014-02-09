@@ -85,6 +85,7 @@ New features:
 * Text now works happily with font names with spaces in them.
 * Text.setShadow applies a drop shadow to the Text being rendered. Control the x, y, color and blur.
 * Text.lineSpacing allows you to control the spacing between each line that is rendered.
+* Text.inputEnabled allows you to enable all input events over Text objects: dragging, clicking, etc - anything that works on a Sprite works on Text now too.
 
 
 New Examples:

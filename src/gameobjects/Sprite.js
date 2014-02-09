@@ -784,7 +784,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "renderOrderID", {
 });
 
 /**
-* By default an Image won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
+* By default a Sprite won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
 * activated for this object and it will then start to process click/touch events and more.
 *
 * @name Phaser.Sprite#inputEnabled

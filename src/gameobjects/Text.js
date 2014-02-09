@@ -86,6 +86,16 @@ Phaser.Text = function (game, x, y, text, style) {
     */
     this._lineSpacing = 0;
 
+    /**
+    * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
+    */
+    this.events = new Phaser.Events(this);
+
+    /**
+    * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
+    */
+    this.input = null;
+
     PIXI.Text.call(this, text, style);
 
     this.position.set(x, y);
@@ -686,6 +696,42 @@ Object.defineProperty(Phaser.Text.prototype, 'shadowBlur', {
             this.dirty = true;
         }
 
+    }
+
+});
+
+/**
+* By default a Text object won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
+* activated for this object and it will then start to process click/touch events and more.
+*
+* @name Phaser.Text#inputEnabled
+* @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
+*/
+Object.defineProperty(Phaser.Text.prototype, "inputEnabled", {
+    
+    get: function () {
+
+        return (this.input && this.input.enabled);
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            if (this.input === null)
+            {
+                this.input = new Phaser.InputHandler(this);
+                this.input.start();
+            }
+        }
+        else
+        {
+            if (this.input && this.input.enabled)
+            {
+                this.input.stop();
+            }
+        }
     }
 
 });
