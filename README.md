@@ -72,6 +72,7 @@ Significant API changes:
 * PixiPatch no longer needed, all features that it patched are now native in Pixi :)
 * Removed: Sprite.offset, center, topLeft, topRight, bottomRight, bottomLeft and bounds as no longer needed internally. Use Sprite.getBounds() to derive them.
 * Button now extends Phaser.Image not Phaser.Sprite, all the same functionality as before remains, just no animations or physics body.
+* Text.content has been replaced with Text.text.
 
 
 New features:
@@ -80,6 +81,10 @@ New features:
 * You can now use the hitArea property on Sprites and Image objects. hitArea can be a geometry object (Rectangle, Circle, Polygon, Ellipse) and is used in pointerOver checks.
 * InputManager.getLocalPosition(displayObject, pointer, output) will return the local coordinates of the specified displayObject and pointer.
 * InputManager.hitTest will test for pointer hits against a Sprite/Image, its hitArea (if set) or any of its children.
+* Text has lots of new methods to help style it: Text.fill, Text.align, Text.stroke, etc.
+* Text now works happily with font names with spaces in them.
+* Text.setShadow applies a drop shadow to the Text being rendered. Control the x, y, color and blur.
+* Text.lineSpacing allows you to control the spacing between each line that is rendered.
 
 
 New Examples:

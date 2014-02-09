@@ -64,7 +64,7 @@ Phaser.World.prototype.boot = function () {
 
 /**
 * This is called automatically after the plugins preUpdate and before the State.update.
-* Most objects have preUpdate methods and it's where initial movement, drawing and calculations are done.
+* Most objects have preUpdate methods and it's where initial movement and positioning is done.
 * 
 * @method Phaser.World#preUpdate
 */

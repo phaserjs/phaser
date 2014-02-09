@@ -19,26 +19,19 @@ function create() {
 	game.renderer.useFillRect = false;
 
 	sprite = game.add.sprite(0.5, 0, 'pic');
-
-	// g = game.add.group(null, 'billy');
-
-	// sprite2 = g.create(0, 0, 'pic');
-
-	// g.y = 200;
-	// g.rotation = 0.1;
-
 	sprite2 = game.add.sprite(0, 300, 'pic');
 
-	// game.input.onDown.add(tint, this);
+	game.input.onDown.add(tint, this);
 
-	game.add.tween(sprite).to({y: 500}, 3000, Phaser.Easing.Linear.None, true);
+	// game.add.tween(sprite).to({y: 500}, 3000, Phaser.Easing.Linear.None, true);
 
-	p = new PIXI.Point(43, 45);
+	// p = new PIXI.Point(43, 45);
 
 }
 
 function tint() {
 
+	sprite.destroy();
 	// sprite.tint = Math.random() * 0xFFFFFF;
 	// sprite2.tint = Math.random() * 0xFFFFFF;
 
