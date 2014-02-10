@@ -16,9 +16,7 @@ function create() {
 
 	game.stage.backgroundColor = '#ff5500';
 
-	game.renderer.useFillRect = false;
-
-	sprite = game.add.sprite(0.5, 0, 'pic');
+	sprite = game.add.sprite(0, -200, 'pic');
 
 	// g = game.add.group(null, 'billy');
 

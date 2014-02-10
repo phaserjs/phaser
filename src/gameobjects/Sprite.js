@@ -112,9 +112,9 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.input = null;
 
     /**
-    * @property {Phaser.Physics.Arcade.Body} body - By default Sprites have a Phaser.Physics Body attached to them. You can operate physics actions via this property, or null it to skip all physics updates.
+    * @property {Phaser.Physics.Body|null} body - The Sprites physics Body. Will be null unless physics has been enabled via `Sprite.physicsEnabled = true`.
     */
-    this.body = new Phaser.Physics.Arcade.Body(this);
+    this.body = null;
 
     /**
     * @property {number} health - Health value. Used in combination with damage() to allow for quick killing of Sprites.
@@ -193,13 +193,13 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache[2] = this.rotation;
         this._cache[4] = 0;
 
-        if (this.body)
-        {
-            this.body.x = (this.world.x - (this.anchor.x * this.width)) + this.body.offset.x;
-            this.body.y = (this.world.y - (this.anchor.y * this.height)) + this.body.offset.y;
-            this.body.preX = this.body.x;
-            this.body.preY = this.body.y;
-        }
+        // if (this.body)
+        // {
+        //     this.body.x = (this.world.x - (this.anchor.x * this.width)) + this.body.offset.x;
+        //     this.body.y = (this.world.y - (this.anchor.y * this.height)) + this.body.offset.y;
+        //     this.body.preX = this.body.x;
+        //     this.body.preY = this.body.y;
+        // }
 
         return false;
     }
@@ -633,7 +633,7 @@ Phaser.Sprite.prototype.play = function (name, frameRate, loop, killOnComplete) 
 * If you wish to work in radians instead of degrees use the property Sprite.rotation instead. Working in radians is also a little faster as it doesn't have to convert the angle.
 * 
 * @name Phaser.Sprite#angle
-* @property {number} angle - The angle of this Image in degrees.
+* @property {number} angle - The angle of this Sprite in degrees.
 */
 Object.defineProperty(Phaser.Sprite.prototype, "angle", {
 
@@ -813,6 +813,41 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
             if (this.input && this.input.enabled)
             {
                 this.input.stop();
+            }
+        }
+    }
+
+});
+
+/**
+* By default Sprites won't add themselves to the physics world. By setting physicsEnabled to true a Physics Body is
+* attached to this Sprite and it will then start to process physics world updates. Access all of its properties via Sprite.body.
+*
+* @name Phaser.Sprite#physicsEnabled
+* @property {boolean} physicsEnabled - Set to true to add this Sprite to the physics world. Set to false to destroy the body and remove it from the physics world.
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "physicsEnabled", {
+    
+    get: function () {
+
+        return (this.body !== null);
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            if (this.body === null)
+            {
+                this.body = new Phaser.Physics.Body(this);
+            }
+        }
+        else
+        {
+            if (this.body)
+            {
+                this.body.destroy();
             }
         }
     }

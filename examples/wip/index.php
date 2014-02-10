@@ -75,6 +75,7 @@
 <html>
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0 minimal-ui" />
         <title>phaser</title>
         <base href="../"></base>
         <script src="_site/js/jquery-2.0.3.min.js" type="text/javascript"></script>

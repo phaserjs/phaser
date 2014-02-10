@@ -42,6 +42,10 @@ var Phaser = Phaser || {
 	UP: 3,
 	DOWN: 4,
 
+	DYNAMIC: 1,
+	STATIC: 2,
+	KINEMATIC: 4,
+
 	CANVAS_PX_ROUND: false,
 	CANVAS_CLEAR_RECT: true
 

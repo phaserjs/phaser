@@ -48,11 +48,16 @@
     <script src="$path/src/pixi/core/Circle.js"></script>
 
     <script src="$path/src/pixi/utils/Detector.js"></script>
+
+    <script src="$path/src/physics/arcade/SAT.js"></script>
+    <script src="$path/src/physics/arcade/ArcadePhysics.js"></script>
+    <script src="$path/src/physics/arcade/Body.js"></script>
     
 */
 
     echo <<<EOL
 
+    <script src="$path/build/p2.js"></script>
     <script src="$path/src/Intro.js"></script>
     <script src="$path/src/pixi/Pixi.js"></script>
     <script src="$path/src/Phaser.js"></script>
@@ -173,9 +178,8 @@
     <script src="$path/src/utils/Debug.js"></script>
     <script src="$path/src/utils/Color.js"></script>
 
-    <script src="$path/src/physics/arcade/SAT.js"></script>
-    <script src="$path/src/physics/arcade/ArcadePhysics.js"></script>
-    <script src="$path/src/physics/arcade/Body.js"></script>
+    <script src="$path/src/physics/World.js"></script>
+    <script src="$path/src/physics/Body.js"></script>
 
     <script src="$path/src/particles/Particles.js"></script>
     <script src="$path/src/particles/arcade/ArcadeParticles.js"></script>

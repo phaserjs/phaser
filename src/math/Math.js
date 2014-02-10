@@ -1281,6 +1281,28 @@ Phaser.Math = {
     },
 
     /**
+    * Convert p2 physics value to pixel scale.
+    * 
+    * @method Phaser.Math#p2px
+    * @param {number} v - The value to convert.
+    * @return {number} The scaled value.
+    */
+    p2px: function (v) {
+        return v *= -20;
+    },
+
+    /**
+    * Convert pixel value to p2 physics scale.
+    * 
+    * @method Phaser.Math#px2p
+    * @param {number} v - The value to convert.
+    * @return {number} The scaled value.
+    */
+    px2p: function (v) {
+        return v * -0.05;
+    },
+
+    /**
     * Convert degrees to radians.
     * 
     * @method Phaser.Math#degToRad
