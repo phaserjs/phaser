@@ -2112,9 +2112,18 @@ declare module Phaser {
         toString(): string;
     }
 
-    class TilemapRenderer {
-        constructor(game: Phaser.Game);
-        game: Phaser.Game;
-        render(tilemap: Tilemap): void;
+    class Tileset {
+        constructor(name: string, firstgid: number, width: number, height: number, margin: number, spacing: number, properties: any);
+        name: string;
+        firstgid: number;
+        tileWidth: number;
+        tileHeight: number;
+        tileMargin: number;
+        tileSpacing: number;
+        properties: any;
+        image: any;
+        rows: number;
+        setSpacing(margin: number, spacing: number);
     }
+
 }
