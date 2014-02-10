@@ -23,6 +23,8 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 Welcome to Phaser
 -----------------
 
+Update: 10th February 2014 - Due to an issue with our TypeScript defintions file we have updated the `master` branch of Phaser. If you are having problems compiling with Visual Studio then please re-pull 1.1.4.
+
 As you may know we had planned to release 1.1.4 at the end of 2013. For various reasons this didn't quite happen, but we're happy to announce it's finally out! There have been some dramatic changes internally, and if you make use of either the physics systems or tilemaps then you are going to need to update your code. Hopefully only a little bit, but there have been a number of core API changes which we detail below. There are also a host of new features, the headliners being:
 
 * New Physics system. Uses SAT.js internally so physics bodies can now be rectangles, circles or polygons and support rotation.
@@ -268,11 +270,11 @@ CDNJS
 
 Thanks to a community member Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
 
-`http://cdnjs.cloudflare.com/ajax/libs/phaser/1.1.3/phaser.min.js`
+`http://cdnjs.cloudflare.com/ajax/libs/phaser/1.1.4/phaser.min.js`
 
 Or if you prefer you can leave the protocol off, so it works via http and https:
 
-`//cdnjs.cloudflare.com/ajax/libs/phaser/1.1.3/phaser.min.js`
+`//cdnjs.cloudflare.com/ajax/libs/phaser/1.1.4/phaser.min.js`
 
 
 Requirements
