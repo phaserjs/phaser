@@ -62,7 +62,7 @@ Version 1.2 - "Shienar" - -in development-
 Significant API changes:
 
 * Upgraded to Pixi.js 1.5
-* Group now extends PIXI.DisplayObjectContainer, rather than owning a _container property, which makes life a whole lot easier re: nesting.
+* Group now extends PIXI.DisplayObjectContainer, rather than owning a _container property, which makes life a whole lot easier re: nesting and child iteration.
 * Removed Sprite.group property. You can use Sprite.parent for all similar needs now.
 * PIXI.Point is now aliased to Phaser.Point - saves on code duplication and works exactly the same.
 * PIXI.Rectangle is now aliased to Phaser.Rectangle - saves on code duplication and works exactly the same.
@@ -70,21 +70,21 @@ Significant API changes:
 * Sprite.deltaX and deltaY swapped to functions: Sprite.deltaX() and Sprite.deltaY()
 * Sprite.crop() now takes a Phaser.Rectangle instead of explicit parameters.
 * PixiPatch no longer needed, all features that it patched are now native in Pixi :)
-* Removed: Sprite.offset, center, topLeft, topRight, bottomRight, bottomLeft and bounds as no longer needed internally. Use Sprite.getBounds() to derive them.
+* Removed: Sprite.offset, center, topLeft, topRight, bottomRight, bottomLeft and bounds, as no longer needed internally. Use Sprite.getBounds() to derive them.
 * Button now extends Phaser.Image not Phaser.Sprite, all the same functionality as before remains, just no animations or physics body.
-* Text.content has been replaced with Text.text.
+* Text.content has been replaced with Text.text. The Text class has a lot of new methods, check the docs!
 
 
 New features:
 
-* Phaser.Image is a brand new display object perfect for logos, backgrounds, etc. You can scale, rotate, tint and blend and Image, but it has no animation, physics body or input events.
+* Phaser.Image is a brand new display object perfect for logos, backgrounds, etc. You can scale, rotate, tint, blend an get input events from an Image, but it has no animation, physics body.
 * You can now use the hitArea property on Sprites and Image objects. hitArea can be a geometry object (Rectangle, Circle, Polygon, Ellipse) and is used in pointerOver checks.
 * InputManager.getLocalPosition(displayObject, pointer, output) will return the local coordinates of the specified displayObject and pointer.
 * InputManager.hitTest will test for pointer hits against a Sprite/Image, its hitArea (if set) or any of its children.
 * Text has lots of new methods to help style it: Text.fill, Text.align, Text.stroke, etc.
 * Text now works happily with font names with spaces in them.
 * Text.setShadow applies a drop shadow to the Text being rendered. Control the x, y, color and blur.
-* Text.lineSpacing allows you to control the spacing between each line that is rendered.
+* Text.lineSpacing allows you to set additional spacing between each line that is rendered.
 * Text.inputEnabled allows you to enable all input events over Text objects: dragging, clicking, etc - anything that works on a Sprite works on Text now too.
 * Phaser.Ellipse added. A fully compatible port of the PIXI.Ellipse class, can be used in Sprite/Image hitArea tests.
 * Phaser.Polygon added. A fully compatible port of the PIXI.Polygon class, can be used in Sprite/Image hitArea tests.
@@ -108,11 +108,11 @@ Bug Fixes:
 * Explicitly paused Timer continues if you un-focus and focus the browser window (thanks georgiee)
 * Added TimerEvent.pendingDelete and checks in Timer.update, so that removing an event in a callback no longer throws an exception (thanks georgiee)
 * Fixed TypeScript defs on lines 1741-1748 (thanks wombatbuddy)
-* Previously if you used Sprite.crop() it would crop all Sprites using the same base image. It now takes a local copy of the texture data and crops just that.
+* Previously if you used Sprite.crop() it would crop all Sprites that shared the same base image. It now takes a local copy of the texture data and crops just that.
 * Tilemap had the wrong @method signatures so most were missing from the docs.
 * Fixed bug where changing State would cause the camera to not reset if it was following an object.
 * Tile had 2 properties (callback and callbackContext) that were never assigned, updated to use the proper names (thanks ratkingsimon)
-* Issue 382: Error when using InputHandler#onInputUp & sprite destroys itself during the event.
+* Fixed an error that would occur if you used InputHandler.onInputUp and the Sprite destroys itself during the event.
 * IE11 didn't populate the Device.ieVersion value. Now extracted from Trident revision, but still use Device.trident instead for IE11+ checks.
 
 
