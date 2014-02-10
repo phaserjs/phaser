@@ -145,11 +145,15 @@ Phaser.InputHandler = function (sprite) {
     this.consumePointerEvent = false;
 
     /**
-    * @property {Phaser.Point} _tempPoint - Description.
+    * @property {Phaser.Point} _tempPoint - Internal cache var.
     * @private
     */
     this._tempPoint = new Phaser.Point();
 
+    /**
+    * @property {array} _pointerData - Internal cache var.
+    * @private
+    */
     this._pointerData = [];
 
     this._pointerData.push({
@@ -290,10 +294,12 @@ Phaser.InputHandler.prototype = {
 
             this.game.input.interactiveItems.remove(this);
 
-            this.stop();
-
+            this._pointerData.length = 0;
+            this.boundsRect = null;
+            this.boundsSprite = null;
             this.sprite = null;
         }
+
     },
 
     /**
@@ -549,9 +555,16 @@ Phaser.InputHandler.prototype = {
     /**
     * Update.
     * @method Phaser.InputHandler#update
+    * @protected
     * @param {Phaser.Pointer} pointer
     */
     update: function (pointer) {
+
+        if (this.sprite === null)
+        {
+            //  Abort. We've been destroyed.
+            return;
+        }
 
         if (this.enabled === false || this.sprite.visible === false || (this.sprite.group && this.sprite.group.visible === false))
         {
@@ -587,6 +600,12 @@ Phaser.InputHandler.prototype = {
     */
     _pointerOverHandler: function (pointer) {
 
+        if (this.sprite === null)
+        {
+            //  Abort. We've been destroyed.
+            return;
+        }
+
         if (this._pointerData[pointer.id].isOver === false)
         {
             this._pointerData[pointer.id].isOver = true;
@@ -602,6 +621,7 @@ Phaser.InputHandler.prototype = {
 
             this.sprite.events.onInputOver.dispatch(this.sprite, pointer);
         }
+
     },
 
     /**
@@ -611,6 +631,12 @@ Phaser.InputHandler.prototype = {
     * @param {Phaser.Pointer} pointer
     */
     _pointerOutHandler: function (pointer) {
+
+        if (this.sprite === null)
+        {
+            //  Abort. We've been destroyed.
+            return;
+        }
 
         this._pointerData[pointer.id].isOver = false;
         this._pointerData[pointer.id].isOut = true;
@@ -635,6 +661,12 @@ Phaser.InputHandler.prototype = {
     * @param {Phaser.Pointer} pointer
     */
     _touchedHandler: function (pointer) {
+
+        if (this.sprite === null)
+        {
+            //  Abort. We've been destroyed.
+            return;
+        }
 
         if (this._pointerData[pointer.id].isDown === false && this._pointerData[pointer.id].isOver === true)
         {
@@ -667,6 +699,12 @@ Phaser.InputHandler.prototype = {
     * @param {Phaser.Pointer} pointer
     */
     _releasedHandler: function (pointer) {
+
+        if (this.sprite === null)
+        {
+            //  Abort. We've been destroyed.
+            return;
+        }
 
         //  If was previously touched by this Pointer, check if still is AND still over this item
         if (this._pointerData[pointer.id].isDown && pointer.isUp)

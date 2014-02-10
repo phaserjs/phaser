@@ -491,11 +491,6 @@ Phaser.Sprite.prototype.destroy = function() {
         this.parent.remove(this);
     }
 
-    if (this.events)
-    {
-        this.events.destroy();
-    }
-
     if (this.input)
     {
         this.input.destroy();
@@ -509,6 +504,11 @@ Phaser.Sprite.prototype.destroy = function() {
     if (this.body)
     {
         this.body.destroy();
+    }
+
+    if (this.events)
+    {
+        this.events.destroy();
     }
 
     this.alive = false;

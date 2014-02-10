@@ -386,7 +386,7 @@ Phaser.Pointer.prototype = {
             while (currentNode != null)
         }
 
-        if (this._highestRenderObject == null)
+        if (this._highestRenderObject === null)
         {
             //  The pointer isn't currently over anything, check if we've got a lingering previous target
             if (this.targetObject)
@@ -398,7 +398,7 @@ Phaser.Pointer.prototype = {
         }
         else
         {
-            if (this.targetObject == null)
+            if (this.targetObject === null)
             {
                 //  And now set the new one
                 // console.log('And now set the new one');
@@ -409,7 +409,7 @@ Phaser.Pointer.prototype = {
             {
                 //  We've got a target from the last update
                 // console.log("We've got a target from the last update");
-                if (this.targetObject == this._highestRenderObject)
+                if (this.targetObject === this._highestRenderObject)
                 {
                     //  Same target as before, so update it
                     // console.log("Same target as before, so update it");

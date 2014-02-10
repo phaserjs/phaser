@@ -14,14 +14,16 @@ var p;
 
 function create() {
 
-	game.stage.backgroundColor = '#ff5500';
+	// game.stage.backgroundColor = '#ff5500';
 
-	game.renderer.useFillRect = false;
+	// game.renderer.useFillRect = false;
 
 	sprite = game.add.sprite(0.5, 0, 'pic');
-	sprite2 = game.add.sprite(0, 300, 'pic');
+	// sprite2 = game.add.sprite(0, 300, 'pic');
 
-	game.input.onDown.add(tint, this);
+	sprite.inputEnabled = true;
+	sprite.events.onInputDown.add(tint, this);
+	sprite.events.onInputUp.add(wibble, this);
 
 	// game.add.tween(sprite).to({y: 500}, 3000, Phaser.Easing.Linear.None, true);
 
@@ -34,6 +36,12 @@ function tint() {
 	sprite.destroy();
 	// sprite.tint = Math.random() * 0xFFFFFF;
 	// sprite2.tint = Math.random() * 0xFFFFFF;
+
+}
+
+function wibble() {
+
+	console.log(sprite);
 
 }
 
