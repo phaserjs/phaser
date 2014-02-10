@@ -59,7 +59,6 @@
 
     <script src="$path/build/p2.js"></script>
     <script src="$path/src/Intro.js"></script>
-    <script src="$path/src/pixi/Pixi.js"></script>
     <script src="$path/src/Phaser.js"></script>
     <script src="$path/src/utils/Utils.js"></script>
 
