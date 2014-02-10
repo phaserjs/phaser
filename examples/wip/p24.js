@@ -21,26 +21,36 @@ function px2p(v) {
 
 function create() {
 
-	box = game.add.sprite(200, 0, 'box');
+	box = game.add.sprite(200, 200, 'box');
+	box.anchor.set(0.5);
+	box.physicsEnabled = true;
 
-	box2 = game.add.sprite(400, 0, 'box');
+	box2 = game.add.sprite(400, 100, 'box');
+	box2.anchor.set(0.5);
 	box2.physicsEnabled = true;
 
 	box2.body.setZeroDamping();
+	box2.body.fixedRotation = true;
 
     cursors = game.input.keyboard.createCursorKeys();
 
+    game.physics.defaultRestitution = 0.8;
 
-	// box2.body.mass = 2;
+    var top = new p2.Body({ mass: 0, position:[0, 0], angle: game.math.degToRad(-180) });
+    top.addShape(new p2.Plane());
+    game.physics.addBody(top);
 
-	/*
-    // Add a plane
-    planeShape = new p2.Plane();
-    planeBody = new p2.Body({ mass: 0, position:[0, px2p(550)] });
-    // planeBody = new p2.Body();
-    planeBody.addShape(planeShape);
-    world.addBody(planeBody);
-    */
+    var bottom = new p2.Body({ mass: 0, position:[0, px2p(600)] });
+    bottom.addShape(new p2.Plane());
+    game.physics.addBody(bottom);
+
+    var left = new p2.Body({ mass: 0, position:[0, 0], angle: game.math.degToRad(90) });
+    left.addShape(new p2.Plane());
+    game.physics.addBody(left);
+
+    var right = new p2.Body({ mass: 0, position:[px2p(800), 0], angle: game.math.degToRad(-90) });
+    right.addShape(new p2.Plane());
+    game.physics.addBody(right);
 
 }
 
@@ -50,20 +60,20 @@ function update() {
 
     if (cursors.left.isDown)
     {
-    	box2.body.moveLeft(200);
+    	box2.body.moveLeft(400);
     }
     else if (cursors.right.isDown)
     {
-    	box2.body.moveRight(200);
+    	box2.body.moveRight(400);
     }
 
     if (cursors.up.isDown)
     {
-    	box2.body.moveUp(200);
+    	box2.body.moveUp(400);
     }
     else if (cursors.down.isDown)
     {
-    	box2.body.moveDown(200);
+    	box2.body.moveDown(400);
     }
 
 }
@@ -83,8 +93,9 @@ function render() {
 
 function drawbox() {
 
-	var ctx = game.context;
+	// var ctx = game.context;
 
+/*
     ctx.save();
     ctx.translate(game.width/2, game.height/2);  // Translate to the center
     ctx.scale(50, -50);       // Zoom in and flip y axis
@@ -103,10 +114,11 @@ function drawbox() {
 	ctx.stroke();
 	ctx.closePath();
 	// ctx.restore();
+*/
 
  //    ctx.save();
  //    ctx.translate(game.width/2, game.height/2);  // Translate to the center
- //    ctx.scale(50, -50);       // Zoom in and flip y axis
+ //    ctx.scale(20, -20);       // Zoom in and flip y axis
 
 	// ctx.lineWidth = 0.05;
 	// ctx.strokeStyle = 'rgb(255,255,255)';
@@ -119,6 +131,6 @@ function drawbox() {
  //        ctx.stroke();
 
 	// ctx.closePath();
-	ctx.restore();
+	// ctx.restore();
 }
 

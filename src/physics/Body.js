@@ -31,10 +31,16 @@ Phaser.Physics.Body = function (sprite) {
     */
     this.offset = new Phaser.Point();
 
+//  force
+
     this.shape = null;
 
-    // this.data = new p2.Body({ mass: 0, position:[this.px2p(sprite.x), this.px2p(sprite.y)], angularVelocity: 1 });
-    this.data = new p2.Body({ position:[this.px2p(sprite.x), this.px2p(sprite.y)] });
+    this.data = new p2.Body({ position:[this.px2p(sprite.x), this.px2p(sprite.y)], mass: 1 });
+
+    /**
+    * @property {Phaser.PointProxy} velocity - The velocity of the body. Set velocity.x to a negative value to move to the left, position to the right. velocity.y negative values move up, positive move down.
+    */
+    this.velocity = new Phaser.Physics.PointProxy(this.data.velocity);
 
     /**
     * @property {number} _sx - Internal cache var.
@@ -117,6 +123,82 @@ Phaser.Physics.Body.prototype = {
 
     //  toLocalFrame
     //  toWorldFrame
+
+    /**
+    * If this Body is dynamic then this will zero its velocity on both axis.
+    *
+    * @method Phaser.Physics.Body#setZeroVelocity
+    */
+    setZeroVelocity: function () {
+
+        this.data.velocity[0] = 0;
+        this.data.velocity[1] = 0;
+
+    },
+
+    /**
+    * Sets the Body damping and angularDamping to zero.
+    *
+    * @method Phaser.Physics.Body#setZeroDamping
+    */
+    setZeroDamping: function () {
+
+        this.data.damping = 0;
+        this.data.angularDamping = 0;
+
+    },
+
+    /**
+    * If this Body is dynamic then this will move it to the left by setting its x velocity to the given speed.
+    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
+    *
+    * @method Phaser.Physics.Body#moveLeft
+    * @param {number} speed - The speed at which it should move to the left, in pixels per second.
+    */
+    moveLeft: function (speed) {
+
+        this.data.velocity[0] = this.px2p(-speed);
+
+    },
+
+    /**
+    * If this Body is dynamic then this will move it to the right by setting its x velocity to the given speed.
+    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
+    *
+    * @method Phaser.Physics.Body#moveRight
+    * @param {number} speed - The speed at which it should move to the right, in pixels per second.
+    */
+    moveRight: function (speed) {
+
+        this.data.velocity[0] = this.px2p(speed);
+
+    },
+
+    /**
+    * If this Body is dynamic then this will move it up by setting its y velocity to the given speed.
+    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
+    *
+    * @method Phaser.Physics.Body#moveUp
+    * @param {number} speed - The speed at which it should move up, in pixels per second.
+    */
+    moveUp: function (speed) {
+
+        this.data.velocity[1] = this.px2p(-speed);
+
+    },
+
+    /**
+    * If this Body is dynamic then this will move it down by setting its y velocity to the given speed.
+    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
+    *
+    * @method Phaser.Physics.Body#moveDown
+    * @param {number} speed - The speed at which it should move down, in pixels per second.
+    */
+    moveDown: function (speed) {
+
+        this.data.velocity[1] = this.px2p(speed);
+
+    },
 
     /**
     * Internal method that updates the Body scale in relation to the parent Sprite.
@@ -402,6 +484,87 @@ Phaser.Physics.Body.prototype = {
 Phaser.Physics.Body.prototype.constructor = Phaser.Physics.Body;
 
 /**
+* @name Phaser.Physics.Body#static
+* @property {boolean} static - Returns true if the Body is static. Setting Body.static to 'false' will make it dynamic.
+*/
+Object.defineProperty(Phaser.Physics.Body.prototype, "static", {
+    
+    get: function () {
+
+        return (this.data.motionState === Phaser.STATIC);
+
+    },
+
+    set: function (value) {
+
+        if (value && this.data.motionState !== Phaser.STATIC)
+        {
+            this.data.motionState = Phaser.STATIC;
+        }
+        else if (!value && this.data.motionState === Phaser.STATIC)
+        {
+            this.data.motionState = Phaser.DYNAMIC;
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Body#dynamic
+* @property {boolean} dynamic - Returns true if the Body is dynamic. Setting Body.dynamic to 'false' will make it static.
+*/
+Object.defineProperty(Phaser.Physics.Body.prototype, "dynamic", {
+    
+    get: function () {
+
+        return (this.data.motionState === Phaser.DYNAMIC);
+
+    },
+
+    set: function (value) {
+
+        if (value && this.data.motionState !== Phaser.DYNAMIC)
+        {
+            this.data.motionState = Phaser.DYNAMIC;
+        }
+        else if (!value && this.data.motionState === Phaser.DYNAMIC)
+        {
+            this.data.motionState = Phaser.STATIC;
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Body#kinematic
+* @property {boolean} kinematic - Returns true if the Body is kinematic. Setting Body.kinematic to 'false' will make it static.
+*/
+Object.defineProperty(Phaser.Physics.Body.prototype, "kinematic", {
+    
+    get: function () {
+
+        return (this.data.motionState === Phaser.KINEMATIC);
+
+    },
+
+    set: function (value) {
+
+        if (value && this.data.motionState !== Phaser.KINEMATIC)
+        {
+            this.data.motionState = Phaser.KINEMATIC;
+        }
+        else if (!value && this.data.motionState === Phaser.KINEMATIC)
+        {
+            this.data.motionState = Phaser.STATIC;
+        }
+
+    }
+
+});
+
+/**
 * @name Phaser.Physics.Body#allowSleep
 * @property {boolean} allowSleep - 
 */
@@ -554,8 +717,6 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "fixedRotation", {
 
 });
 
-//  force
-
 /**
 * @name Phaser.Physics.Body#inertia
 * @property {number} inertia - The inertia of the body around the Z axis..
@@ -667,8 +828,6 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "sleepSpeedLimit", {
 
 });
 
-//  velocity
-
 /**
 * @name Phaser.Physics.Body#x
 * @property {number} x - The x coordinate of this Body.
@@ -704,42 +863,6 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "y", {
     set: function (value) {
 
         this.data.position[1] = this.px2p(value);
-
-    }
-
-});
-
-Object.defineProperties(Phaser.Physics.Body.prototype, {
-
-    "bob": {
-
-        get: function () {
-
-            return { x: 1, y: 2 };
-
-        },
-
-        set: function (value) {
-
-            console.log(arguments);
-
-        }
-
-    },
-
-    "ben": {
-
-        get: function () {
-
-            return { x: 4, y: 5 };
-
-        },
-
-        set: function (value) {
-
-            console.log(arguments);
-
-        }
 
     }
 

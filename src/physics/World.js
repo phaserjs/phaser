@@ -22,7 +22,7 @@ Phaser.Physics.World = function (game) {
     */
     this.game = game;
 
-    p2.World.call(this);
+    p2.World.call(this, { gravity: [0, 0] });
 
 };
 
