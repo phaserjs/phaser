@@ -151,7 +151,7 @@ module.exports = function (grunt) {
     uglify: {
       phaser: {
         options: {
-          banner: '/*! Phaser v<%= pkg.version %> | (c) 2013 Photon Storm Ltd. */\n'
+          banner: '/*! Phaser v<%= pkg.version %> | (c) 2014 Photon Storm Ltd. */\n'
         },
         src: ['<%= umd.phaser.dest %>'],
         dest: '<%= compile_dir %>/phaser.min.js'

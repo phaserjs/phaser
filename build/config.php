@@ -36,6 +36,10 @@
     <script src="$path/src/pixi/filters/RGBSplitFilter.js"></script>
 
     <script src="$path/src/pixi/extras/Spine.js"></script>
+    <script src="$path/src/pixi/extras/Strip.js"></script>
+    <script src="$path/src/pixi/extras/Rope.js"></script>
+
+    <script src="$path/src/pixi/display/MovieClip.js"></script>
 
     <script src="$path/src/pixi/utils/Utils.js"></script>
 
@@ -58,16 +62,15 @@
     <script src="$path/src/geom/Point.js"></script>
     <script src="$path/src/geom/Rectangle.js"></script>
     <script src="$path/src/geom/Line.js"></script>
+    <script src="$path/src/geom/Ellipse.js"></script>
 
     <script src="$path/src/pixi/Pixi.js"></script>
     <script src="$path/src/pixi/core/Polygon.js"></script>
-    <script src="$path/src/pixi/core/Ellipse.js"></script>
     <script src="$path/src/pixi/core/Matrix.js"></script>
     <script src="$path/src/pixi/display/DisplayObject.js"></script>
     <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
     <script src="$path/src/pixi/display/Sprite.js"></script>
     <script src="$path/src/pixi/display/SpriteBatch.js"></script>
-    <script src="$path/src/pixi/display/MovieClip.js"></script>
     <script src="$path/src/pixi/filters/FilterBlock.js"></script>
     <script src="$path/src/pixi/text/Text.js"></script>
     <script src="$path/src/pixi/text/BitmapText.js"></script>
@@ -92,8 +95,6 @@
     <script src="$path/src/pixi/renderers/canvas/CanvasRenderer.js"></script>
     <script src="$path/src/pixi/renderers/canvas/CanvasGraphics.js"></script>
     <script src="$path/src/pixi/primitives/Graphics.js"></script>
-    <script src="$path/src/pixi/extras/Strip.js"></script>
-    <script src="$path/src/pixi/extras/Rope.js"></script>
     <script src="$path/src/pixi/extras/TilingSprite.js"></script>
     <script src="$path/src/pixi/textures/BaseTexture.js"></script>
     <script src="$path/src/pixi/textures/Texture.js"></script>
