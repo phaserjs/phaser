@@ -36,22 +36,6 @@ function create() {
 
     game.physics.defaultRestitution = 0.8;
 
-    var top = new p2.Body({ mass: 0, position:[0, 0], angle: game.math.degToRad(-180) });
-    top.addShape(new p2.Plane());
-    game.physics.addBody(top);
-
-    var bottom = new p2.Body({ mass: 0, position:[0, px2p(600)] });
-    bottom.addShape(new p2.Plane());
-    game.physics.addBody(bottom);
-
-    var left = new p2.Body({ mass: 0, position:[0, 0], angle: game.math.degToRad(90) });
-    left.addShape(new p2.Plane());
-    game.physics.addBody(left);
-
-    var right = new p2.Body({ mass: 0, position:[px2p(800), 0], angle: game.math.degToRad(-90) });
-    right.addShape(new p2.Plane());
-    game.physics.addBody(right);
-
 }
 
 function update() {
