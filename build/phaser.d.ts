@@ -280,6 +280,7 @@ declare module Phaser {
         length: number;
         x: number;
         y: number;
+        scale: Phaser.Point;
         angle: number;
         rotation: number;
         visible: boolean;
