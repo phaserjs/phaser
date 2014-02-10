@@ -1034,7 +1034,7 @@ Phaser.BitmapData.prototype.lf = Phaser.BitmapData.prototype.beginLinearGradient
 * Shortcut to beginRadialGradientFill.
 * @method Phaser.BitmapData.prototype.rf
 */
-Phaser.BitmapData.prototype.rf = Phaser.BitmapData.prototype.beginRadialGradientFill;
+// Phaser.BitmapData.prototype.rf = Phaser.BitmapData.prototype.beginRadialGradientFill;
     
 /**
 * Shortcut to beginBitmapFill.
@@ -1046,7 +1046,7 @@ Phaser.BitmapData.prototype.rf = Phaser.BitmapData.prototype.beginRadialGradient
 * Shortcut to endFill.
 * @method Phaser.BitmapData.prototype.ef
 */
-Phaser.BitmapData.prototype.ef = Phaser.BitmapData.prototype.endFill;
+// Phaser.BitmapData.prototype.ef = Phaser.BitmapData.prototype.endFill;
 
 /**
 * Shortcut to setStrokeStyle.

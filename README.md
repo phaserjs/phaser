@@ -61,7 +61,7 @@ Version 1.2 - "Shienar" - -in development-
 
 Significant API changes:
 
-* Upgraded to Pixi.js 1.4.4
+* Upgraded to Pixi.js 1.5
 * Group now extends PIXI.DisplayObjectContainer, rather than owning a _container property, which makes life a whole lot easier re: nesting.
 * Removed Sprite.group property. You can use Sprite.parent for all similar needs now.
 * PIXI.Point is now aliased to Phaser.Point - saves on code duplication and works exactly the same.
@@ -111,6 +111,8 @@ Bug Fixes:
 * Previously if you used Sprite.crop() it would crop all Sprites using the same base image. It now takes a local copy of the texture data and crops just that.
 * Tilemap had the wrong @method signatures so most were missing from the docs.
 * Fixed bug where changing State would cause the camera to not reset if it was following an object.
+* Tile had 2 properties (callback and callbackContext) that were never assigned, updated to use the proper names (thanks ratkingsimon)
+
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md

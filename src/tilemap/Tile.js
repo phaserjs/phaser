@@ -120,16 +120,16 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     this.collideDown = false;
 
     /**
-    * @property {function} callback - Tile collision callback.
+    * @property {function} collisionCallback - Tile collision callback.
     * @default
     */
-    this.callback = null;
+    this.collisionCallback = null;
 
     /**
-    * @property {object} callbackContext - The context in which the collision callback will be called.
+    * @property {object} collisionCallbackContext - The context in which the collision callback will be called.
     * @default
     */
-    this.callbackContext = this;
+    this.collisionCallbackContext = this;
 
 };
 
@@ -141,12 +141,12 @@ Phaser.Tile.prototype = {
     * 
     * @method Phaser.Tile#setCollisionCallback
     * @param {function} callback - Callback function.
-    * @param {object} context - Callback will be called with this context.
+    * @param {object} context - Callback will be called within this context.
     */
     setCollisionCallback: function (callback, context) {
 
-        this.collisionCallbackContext = context;
         this.collisionCallback = callback;
+        this.collisionCallbackContext = context;
 
     },
 
