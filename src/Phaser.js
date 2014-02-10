@@ -20,7 +20,7 @@ var Phaser = Phaser || {
 
 	SPRITE: 0,
 	BUTTON: 1,
-	BULLET: 2,
+	IMAGE: 2,
 	GRAPHICS: 3,
 	TEXT: 4,
 	TILESPRITE: 5,
@@ -34,6 +34,7 @@ var Phaser = Phaser || {
 	BITMAPDATA: 13,
 	CANVAS_FILTER: 14,
 	WEBGL_FILTER: 15,
+	ELLIPSE: 16,
 
 	NONE: 0,
 	LEFT: 1,

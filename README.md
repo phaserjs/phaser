@@ -86,6 +86,8 @@ New features:
 * Text.setShadow applies a drop shadow to the Text being rendered. Control the x, y, color and blur.
 * Text.lineSpacing allows you to control the spacing between each line that is rendered.
 * Text.inputEnabled allows you to enable all input events over Text objects: dragging, clicking, etc - anything that works on a Sprite works on Text now too.
+* Phaser.Ellipse added. A fully compatible port of the PIXI.Ellipse class, can be used in Sprite/Image hitArea tests.
+* Phaser.Polygon added. A fully compatible port of the PIXI.Polygon class, can be used in Sprite/Image hitArea tests.
 
 
 New Examples:

@@ -71,11 +71,14 @@ Phaser.Circle.prototype = {
     * @return {Circle} This circle object.
     */
     setTo: function (x, y, diameter) {
+
         this.x = x;
         this.y = y;
         this._diameter = diameter;
         this._radius = diameter * 0.5;
+
         return this;
+
     },
 
     /**
@@ -85,7 +88,9 @@ Phaser.Circle.prototype = {
     * @return {Circle} This Circle object.
     */
     copyFrom: function (source) {
+
         return this.setTo(source.x, source.y, source.diameter);
+
     },
 
     /**
@@ -94,11 +99,14 @@ Phaser.Circle.prototype = {
     * @param {any} dest - The object to copy to.
     * @return {Object} This dest object.
     */
-    copyTo: function(dest) {
+    copyTo: function (dest) {
+
         dest.x = this.x;
         dest.y = this.y;
         dest.diameter = this._diameter;
+
         return dest;
+
     },
 
     /**
@@ -130,7 +138,7 @@ Phaser.Circle.prototype = {
     * @param {Phaser.Circle} out - Optional Circle object. If given the values will be set into the object, otherwise a brand new Circle object will be created and returned.
     * @return {Phaser.Circle} The cloned Circle object.
     */
-    clone: function(out) {
+    clone: function (out) {
 
         if (typeof out === "undefined")
         {
@@ -153,7 +161,9 @@ Phaser.Circle.prototype = {
     * @return {boolean} True if the coordinates are within this circle, otherwise false.
     */
     contains: function (x, y) {
+
         return Phaser.Circle.contains(this, x, y);
+
     },
 
     /**
@@ -165,7 +175,9 @@ Phaser.Circle.prototype = {
     * @return {Phaser.Point} The Point object holding the result.
     */
     circumferencePoint: function (angle, asDegrees, out) {
+
         return Phaser.Circle.circumferencePoint(this, angle, asDegrees, out);
+
     },
 
     /**
@@ -176,9 +188,12 @@ Phaser.Circle.prototype = {
     * @return {Circle} This Circle object.
     */
     offset: function (dx, dy) {
+
         this.x += dx;
         this.y += dy;
+
         return this;
+
     },
 
     /**
@@ -216,7 +231,9 @@ Object.defineProperty(Phaser.Circle.prototype, "diameter", {
     },
 
     set: function (value) {
-        if (value > 0) {
+
+        if (value > 0)
+        {
             this._diameter = value;
             this._radius = value * 0.5;
         }
@@ -236,10 +253,13 @@ Object.defineProperty(Phaser.Circle.prototype, "radius", {
     },
 
     set: function (value) {
-        if (value > 0) {
+
+        if (value > 0)
+        {
             this._radius = value;
             this._diameter = value * 2;
         }
+
     }
 
 });
@@ -256,12 +276,17 @@ Object.defineProperty(Phaser.Circle.prototype, "left", {
     },
 
     set: function (value) {
-        if (value > this.x) {
+
+        if (value > this.x)
+        {
             this._radius = 0;
             this._diameter = 0;
-        } else {
+        }
+        else
+        {
             this.radius = this.x - value;
         }
+
     }
 
 });
@@ -278,12 +303,17 @@ Object.defineProperty(Phaser.Circle.prototype, "right", {
     },
 
     set: function (value) {
-        if (value < this.x) {
+
+        if (value < this.x)
+        {
             this._radius = 0;
             this._diameter = 0;
-        } else {
+        }
+        else
+        {
             this.radius = value - this.x;
         }
+
     }
 
 });
@@ -300,12 +330,17 @@ Object.defineProperty(Phaser.Circle.prototype, "top", {
     },
     
     set: function (value) {
-        if (value > this.y) {
+
+        if (value > this.y)
+        {
             this._radius = 0;
             this._diameter = 0;
-        } else {
+        }
+        else
+        {
             this.radius = this.y - value;
         }
+
     }
 
 });
@@ -323,12 +358,16 @@ Object.defineProperty(Phaser.Circle.prototype, "bottom", {
 
     set: function (value) {
 
-        if (value < this.y) {
+        if (value < this.y)
+        {
             this._radius = 0;
             this._diameter = 0;
-        } else {
+        }
+        else
+        {
             this.radius = value - this.y;
         }
+
     }
 
 });
@@ -342,11 +381,16 @@ Object.defineProperty(Phaser.Circle.prototype, "bottom", {
 Object.defineProperty(Phaser.Circle.prototype, "area", {
 
     get: function () {
-        if (this._radius > 0) {
+
+        if (this._radius > 0)
+        {
             return Math.PI * this._radius * this._radius;
-        } else {
+        }
+        else
+        {
             return 0;
         }
+
     }
 
 });
@@ -436,7 +480,8 @@ Phaser.Circle.circumferencePoint = function (a, angle, asDegrees, out) {
     if (typeof asDegrees === "undefined") { asDegrees = false; }
     if (typeof out === "undefined") { out = new Phaser.Point(); }
 
-    if (asDegrees === true) {
+    if (asDegrees === true)
+    {
         angle = Phaser.Math.radToDeg(angle);
     }
 
@@ -459,18 +504,21 @@ Phaser.Circle.intersectsRectangle = function (c, r) {
     var cx = Math.abs(c.x - r.x - r.halfWidth);
     var xDist = r.halfWidth + c.radius;
 
-    if (cx > xDist) {
+    if (cx > xDist)
+    {
         return false;
     }
 
     var cy = Math.abs(c.y - r.y - r.halfHeight);
     var yDist = r.halfHeight + c.radius;
 
-    if (cy > yDist) {
+    if (cy > yDist)
+    {
         return false;
     }
 
-    if (cx <= r.halfWidth || cy <= r.halfHeight) {
+    if (cx <= r.halfWidth || cy <= r.halfHeight)
+    {
         return true;
     }
 

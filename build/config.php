@@ -63,9 +63,9 @@
     <script src="$path/src/geom/Rectangle.js"></script>
     <script src="$path/src/geom/Line.js"></script>
     <script src="$path/src/geom/Ellipse.js"></script>
+    <script src="$path/src/geom/Polygon.js"></script>
 
     <script src="$path/src/pixi/Pixi.js"></script>
-    <script src="$path/src/pixi/core/Polygon.js"></script>
     <script src="$path/src/pixi/core/Matrix.js"></script>
     <script src="$path/src/pixi/display/DisplayObject.js"></script>
     <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
