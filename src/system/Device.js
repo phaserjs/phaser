@@ -189,7 +189,7 @@ Phaser.Device = function () {
     this.ie = false;
 
     /**
-    * @property {number} ieVersion - If running in Internet Explorer this will contain the major version number.
+    * @property {number} ieVersion - If running in Internet Explorer this will contain the major version number. Beyond IE10 you should use Device.trident and Device.tridentVersion.
     * @default
     */
     this.ieVersion = 0;
@@ -474,11 +474,12 @@ Phaser.Device.prototype = {
         {
             this.silk = true;
         }
-        else if (/Trident\/(\d+\.\d+);/.test(ua))
+        else if (/Trident\/(\d+\.\d+); rv:(\d+\.\d+)/.test(ua))
         {
             this.ie = true;
             this.trident = true;
             this.tridentVersion = parseInt(RegExp.$1, 10);
+            this.ieVersion = parseInt(RegExp.$2, 10);
         }
 
         // WebApp mode in iOS

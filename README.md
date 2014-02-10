@@ -113,6 +113,7 @@ Bug Fixes:
 * Fixed bug where changing State would cause the camera to not reset if it was following an object.
 * Tile had 2 properties (callback and callbackContext) that were never assigned, updated to use the proper names (thanks ratkingsimon)
 * Issue 382: Error when using InputHandler#onInputUp & sprite destroys itself during the event.
+* IE11 didn't populate the Device.ieVersion value. Now extracted from Trident revision, but still use Device.trident instead for IE11+ checks.
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
