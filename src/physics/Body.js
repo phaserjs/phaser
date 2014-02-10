@@ -457,7 +457,7 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "angularDamping", {
     
     get: function () {
 
-        this.data.angularDamping;
+        return this.data.angularDamping;
 
     },
 
@@ -477,7 +477,7 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "angularForce", {
     
     get: function () {
 
-        this.data.angularForce;
+        return this.data.angularForce;
 
     },
 
@@ -497,7 +497,7 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "angularVelocity", {
     
     get: function () {
 
-        this.data.angularVelocity;
+        return this.data.angularVelocity;
 
     },
 
@@ -518,7 +518,7 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "damping", {
     
     get: function () {
 
-        this.data.damping;
+        return this.data.damping;
 
     },
 
@@ -564,7 +564,7 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "inertia", {
     
     get: function () {
 
-        this.data.inertia;
+        return this.data.inertia;
 
     },
 
@@ -655,7 +655,7 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "sleepSpeedLimit", {
     
     get: function () {
 
-        this.data.sleepSpeedLimit;
+        return this.data.sleepSpeedLimit;
 
     },
 
@@ -677,7 +677,7 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "x", {
     
     get: function () {
 
-        this.p2px(this.data.position[0]);
+        return this.p2px(this.data.position[0]);
 
     },
 
@@ -697,13 +697,49 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "y", {
     
     get: function () {
 
-        this.p2px(this.data.position[1]);
+        return this.p2px(this.data.position[1]);
 
     },
 
     set: function (value) {
 
         this.data.position[1] = this.px2p(value);
+
+    }
+
+});
+
+Object.defineProperties(Phaser.Physics.Body.prototype, {
+
+    "bob": {
+
+        get: function () {
+
+            return { x: 1, y: 2 };
+
+        },
+
+        set: function (value) {
+
+            console.log(arguments);
+
+        }
+
+    },
+
+    "ben": {
+
+        get: function () {
+
+            return { x: 4, y: 5 };
+
+        },
+
+        set: function (value) {
+
+            console.log(arguments);
+
+        }
 
     }
 
