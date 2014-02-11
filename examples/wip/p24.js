@@ -3,6 +3,7 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
+    game.load.image('backdrop', 'assets/pics/remember-me.jpg');
 	game.load.image('box', 'assets/sprites/block.png');
 
 }
@@ -21,16 +22,22 @@ function px2p(v) {
 
 function create() {
 
+    game.world.setBounds(0, 0, 1920, 1200);
+    game.add.sprite(0, 0, 'backdrop');
+
 	box = game.add.sprite(200, 200, 'box');
 	box.anchor.set(0.5);
 	box.physicsEnabled = true;
 
-	box2 = game.add.sprite(400, 100, 'box');
-	box2.anchor.set(0.5);
+	box2 = game.add.sprite(400, 200, 'box');
+	box2.anchor.set(0.5); // if using physics you nearly always need to anchor from the center like this unless you don't need rotation
+	// box2.scale.set(2); // if you need to scale, do it BEFORE enabling physics. You can't do it at run-time.
 	box2.physicsEnabled = true;
 
 	box2.body.setZeroDamping();
 	box2.body.fixedRotation = true;
+
+	game.camera.follow(box2);
 
     cursors = game.input.keyboard.createCursorKeys();
 

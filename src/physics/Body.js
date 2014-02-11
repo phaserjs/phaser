@@ -31,8 +31,6 @@ Phaser.Physics.Body = function (sprite) {
     */
     this.offset = new Phaser.Point();
 
-//  force
-
     this.shape = null;
 
     this.data = new p2.Body({ position:[this.px2p(sprite.x), this.px2p(sprite.y)], mass: 1 });
@@ -43,16 +41,9 @@ Phaser.Physics.Body = function (sprite) {
     this.velocity = new Phaser.Physics.PointProxy(this.data.velocity);
 
     /**
-    * @property {number} _sx - Internal cache var.
-    * @private
+    * @property {Phaser.PointProxy} force - The force applied to the body.
     */
-    this._sx = sprite.scale.x;
-
-    /**
-    * @property {number} _sy - Internal cache var.
-    * @private
-    */
-    this._sy = sprite.scale.y;
+    this.force = new Phaser.Physics.PointProxy(this.data.force);
 
     //  Set-up the default shape
     this.setRectangle(sprite.width, sprite.height, 0, 0);
@@ -127,6 +118,17 @@ Phaser.Physics.Body.prototype = {
     /**
     * If this Body is dynamic then this will zero its velocity on both axis.
     *
+    * @method Phaser.Physics.Body#setZeroRotation
+    */
+    setZeroRotation: function () {
+
+        ship.body.angularVelocity = 0;
+
+    },
+
+    /**
+    * If this Body is dynamic then this will zero its velocity on both axis.
+    *
     * @method Phaser.Physics.Body#setZeroVelocity
     */
     setZeroVelocity: function () {
@@ -145,6 +147,47 @@ Phaser.Physics.Body.prototype = {
 
         this.data.damping = 0;
         this.data.angularDamping = 0;
+
+    },
+
+    /**
+    * This will rotate the Body by the given speed to the left (counter-clockwise).
+    *
+    * @method Phaser.Physics.Body#rotateLeft
+    * @param {number} speed - The speed at which it should rotate.
+    */
+    rotateLeft: function (speed) {
+
+        this.data.angularVelocity = this.px2p(speed);
+
+    },
+
+    /**
+    * This will rotate the Body by the given speed to the left (clockwise).
+    *
+    * @method Phaser.Physics.Body#rotateRight
+    * @param {number} speed - The speed at which it should rotate.
+    */
+    rotateRight: function (speed) {
+
+        this.data.angularVelocity = this.px2p(-speed);
+
+    },
+
+    /**
+    * Applies a force to the Body that causes it to 'thrust' forwards, based on its current angle and the given speed.
+    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
+    *
+    * @method Phaser.Physics.Body#thrust
+    * @param {number} speed - The speed at which it should thrust.
+    */
+    thrust: function (speed) {
+
+        var magnitude = this.px2p(-speed);
+        var angle = this.data.angle + Math.PI / 2;
+
+        this.data.force[0] += magnitude * Math.cos(angle);
+        this.data.force[1] += magnitude * Math.sin(angle);
 
     },
 
@@ -201,28 +244,6 @@ Phaser.Physics.Body.prototype = {
     },
 
     /**
-    * Internal method that updates the Body scale in relation to the parent Sprite.
-    *
-    * @method Phaser.Physics.Body#updateScale
-    * @protected
-    */
-    updateScale: function () {
-
-        // if (this.polygon)
-        // {
-        //     this.polygon.scale(this.sprite.scale.x / this._sx, this.sprite.scale.y / this._sy);
-        // }
-        // else
-        // {
-        //     this.shape.r *= Math.max(this.sprite.scale.x, this.sprite.scale.y);
-        // }
-
-        this._sx = this.sprite.scale.x;
-        this._sy = this.sprite.scale.y;
-
-    },
-
-    /**
     * Internal method that updates the Body position in relation to the parent Sprite.
     *
     * @method Phaser.Physics.Body#preUpdate
@@ -232,18 +253,6 @@ Phaser.Physics.Body.prototype = {
 
         // this.x = (this.sprite.world.x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
         // this.y = (this.sprite.world.y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;
-
-        //  This covers any motion that happens during this frame, not since the last frame
-        // this.preX = this.x;
-        // this.preY = this.y;
-        // this.preRotation = this.sprite.angle;
-
-        // this.rotation = this.preRotation;
-
-        if (this.sprite.scale.x !== this._sx || this.sprite.scale.y !== this._sy)
-        {
-            this.updateScale();
-        }
 
     },
 
@@ -255,55 +264,13 @@ Phaser.Physics.Body.prototype = {
     */
     postUpdate: function () {
 
-        /*
-        if (this.moves)
-        {
-            this.game.physics.checkBounds(this);
-
-            this.reboundCheck(true, true, true);
-
-            this._dx = this.deltaX();
-            this._dy = this.deltaY();
-
-            if (this._dx < 0)
-            {
-                this.facing = Phaser.LEFT;
-            }
-            else if (this._dx > 0)
-            {
-                this.facing = Phaser.RIGHT;
-            }
-
-            if (this._dy < 0)
-            {
-                this.facing = Phaser.UP;
-            }
-            else if (this._dy > 0)
-            {
-                this.facing = Phaser.DOWN;
-            }
-
-            if (this._dx !== 0 || this._dy !== 0)
-            {
-                this.sprite.x += this._dx;
-                this.sprite.y += this._dy;
-            }
-
-            if (this.allowRotation && this.deltaZ() !== 0)
-            {
-                this.sprite.angle += this.deltaZ();
-            }
-
-            if (this.sprite.scale.x !== this._sx || this.sprite.scale.y !== this._sy)
-            {
-                this.updateScale();
-            }
-        }
-        */
-
         this.sprite.x = this.p2px(this.data.position[0]);
         this.sprite.y = this.p2px(this.data.position[1]);
-        this.sprite.rotation = this.data.angle;
+
+        if (!this.fixedRotation)
+        {
+            this.sprite.rotation = this.data.angle;
+        }
 
     },
 
@@ -465,7 +432,9 @@ Phaser.Physics.Body.prototype = {
     * @return {number} The scaled value.
     */
     p2px: function (v) {
+
         return v *= -20;
+
     },
 
     /**
@@ -476,7 +445,9 @@ Phaser.Physics.Body.prototype = {
     * @return {number} The scaled value.
     */
     px2p: function (v) {
+
         return v * -0.05;
+
     }
 
 };
