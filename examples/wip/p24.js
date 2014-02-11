@@ -3,6 +3,7 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
+    game.load.image('backdrop', 'assets/pics/remember-me.jpg');
 	game.load.image('box', 'assets/sprites/block.png');
 
 }
@@ -21,26 +22,26 @@ function px2p(v) {
 
 function create() {
 
-	box = game.add.sprite(200, 0, 'box');
+    game.world.setBounds(0, 0, 1920, 1200);
+    game.add.sprite(0, 0, 'backdrop');
 
-	box2 = game.add.sprite(400, 0, 'box');
+	box = game.add.sprite(200, 200, 'box');
+	box.anchor.set(0.5);
+	box.physicsEnabled = true;
+
+	box2 = game.add.sprite(400, 200, 'box');
+	box2.anchor.set(0.5); // if using physics you nearly always need to anchor from the center like this unless you don't need rotation
+	// box2.scale.set(2); // if you need to scale, do it BEFORE enabling physics. You can't do it at run-time.
 	box2.physicsEnabled = true;
 
 	box2.body.setZeroDamping();
+	box2.body.fixedRotation = true;
+
+	game.camera.follow(box2);
 
     cursors = game.input.keyboard.createCursorKeys();
 
-
-	// box2.body.mass = 2;
-
-	/*
-    // Add a plane
-    planeShape = new p2.Plane();
-    planeBody = new p2.Body({ mass: 0, position:[0, px2p(550)] });
-    // planeBody = new p2.Body();
-    planeBody.addShape(planeShape);
-    world.addBody(planeBody);
-    */
+    game.physics.defaultRestitution = 0.8;
 
 }
 
@@ -50,20 +51,20 @@ function update() {
 
     if (cursors.left.isDown)
     {
-    	box2.body.moveLeft(200);
+    	box2.body.moveLeft(400);
     }
     else if (cursors.right.isDown)
     {
-    	box2.body.moveRight(200);
+    	box2.body.moveRight(400);
     }
 
     if (cursors.up.isDown)
     {
-    	box2.body.moveUp(200);
+    	box2.body.moveUp(400);
     }
     else if (cursors.down.isDown)
     {
-    	box2.body.moveDown(200);
+    	box2.body.moveDown(400);
     }
 
 }
@@ -83,8 +84,9 @@ function render() {
 
 function drawbox() {
 
-	var ctx = game.context;
+	// var ctx = game.context;
 
+/*
     ctx.save();
     ctx.translate(game.width/2, game.height/2);  // Translate to the center
     ctx.scale(50, -50);       // Zoom in and flip y axis
@@ -103,10 +105,11 @@ function drawbox() {
 	ctx.stroke();
 	ctx.closePath();
 	// ctx.restore();
+*/
 
  //    ctx.save();
  //    ctx.translate(game.width/2, game.height/2);  // Translate to the center
- //    ctx.scale(50, -50);       // Zoom in and flip y axis
+ //    ctx.scale(20, -20);       // Zoom in and flip y axis
 
 	// ctx.lineWidth = 0.05;
 	// ctx.strokeStyle = 'rgb(255,255,255)';
@@ -119,6 +122,6 @@ function drawbox() {
  //        ctx.stroke();
 
 	// ctx.closePath();
-	ctx.restore();
+	// ctx.restore();
 }
 
