@@ -5,7 +5,7 @@
 /**
  * 
  * This turns your displayObjects to black and white.
- * @class GrayFilter
+ * @class Gray
  * @contructor
  */
 Phaser.Filter.Gray = function (game) {
