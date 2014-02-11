@@ -271,48 +271,64 @@ declare module Phaser {
 
     // Wraps a PIXI.DisplayObjectContainer
     class Group {
-        constructor(game: Phaser.Game, parent?: any, name?: string, useStage?: boolean);
+    	constructor(game: Phaser.Game, parent?: any, name?: string, useStage?: boolean);
+  	static RETURN_CHILD: number;
+  	static RETURN_NONE: number;
+  	static RETURN_TOTAL: number;
+  	static SORT_ASCENDING: number;
+  	static SORT_DESCENDING: number;
         game: Phaser.Game;
-        name: string;
-        type: number;
+  	alive: boolean;
+  	alpha: number;
+        angle: number;
+        cursor: any;
         exists: boolean;
-        sortIndex: string;
+        group: Phaser.Group;
         length: number;
+        name: string;
+        pivot: Phaser.Point;
+        rotation: number;
+        scale: Phaser.Point;
+        total: number;
+        type: number;
+        visible: boolean;
         x: number;
         y: number;
-        scale: Phaser.Point;
-        angle: number;
-        rotation: number;
-        visible: boolean;
         add(child: any): any;
+        addAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void
         addAt(child: any, index: number): any;
-        getAt(index: number): any;
-        create(x: number, y: number, key: string, frame?: any, exists?: boolean): Phaser.Sprite;
-        swap(child1: any, child2: any): boolean;
         bringToTop(child: any): any;
-        getIndex(child: any): number;
-        replace(oldChild: any, newChild: any): void;
-        setProperty(child: any, key: string[], value: string, operation: number): void;
-        setAll(key: string, value: number, checkAlive: boolean, checkVisible: boolean, operation: number): void;
-        subAll(key: string, value: number, checkAlive: boolean, checkVisible: boolean, operation: number): void;
-        multiplyAll(key: string, value: number, checkAlive: boolean, checkVisible: boolean, operation: number): void;
-        divideAll(key: string, value: number, checkAlive: boolean, checkVisible: boolean, operation: number): void;
-        callAllExists(callback: Function, callbackContext: Object, existsValue: boolean): void;
         callAll(callback: string, callbackContext?: Object): void;
+        callAllExists(callback: Function, callbackContext: Object, existsValue: boolean): void;
+        countDead(): number;
+        countLiving(): number;
+        create(x: number, y: number, key: string, frame?: any, exists?: boolean): Phaser.Sprite;
+        createMultiple(quantity: number, key: string, frame?: any, exists?: boolean): Phaser.Sprite;
+        destroy(destroyChildren?: boolean): void;
+        divideAll(property: string, amount: number, checkAlive?: boolean, checkVisible?: boolean): void;
         forEach(callback: Function, callbackContext: Object, checkExists: boolean): void;
         forEachAlive(callback: Function, callbackContext: Object): void;
         forEachDead(callback: Function, callbackContext: Object): void;
-        getFirstExists(state: boolean): any;
+        getAt(index: number): any;
         getFirstAlive(): any;
         getFirstDead(): any;
-        countLiving(): number;
-        countDead(): number;
+        getFirstExists(state: boolean): any;
+        getIndex(child: any): number;
         getRandom(startIndex: number, length: number): any;
+        iterate(key: string, value: any, returnType: number, callback?: Function, callbackContext?: Object): any;
+        multiplyAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
+        next(): void;
+        previous(): void;
         remove(child: any): void;
         removeAll(): void;
         removeBetween(startIndex: number, endIndex: number): void;
-        destroy(): void;
-        dump(full: boolean): void;
+        replace(oldChild: any, newChild: any): void;
+        set(child: Phaser.Sprite, key: string, value: any, checkAlive?: boolean, checkVisible?: boolean, operation?: number)
+        setAll(key: string, value: number, checkAlive?: boolean, checkVisible?: boolean, operation?: number): void;
+        setProperty(child: any, key: string[], value: any, operation?: number): void;
+        sort(index?: string, order?: number): void;
+        subAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
+        swap(child1: any, child2: any): boolean;
     }
 
     class World extends Phaser.Group {
