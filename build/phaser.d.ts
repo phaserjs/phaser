@@ -931,7 +931,7 @@ declare module Phaser {
 	    update(): void;
     }
 
-    class Button {
+    class Button extends Phaser.Sprite {
         constructor(game: Phaser.Game, x?: number, y?: number, key?: string, callback?: Function, callbackContext?: Object, overFrame?: any, outFrame?: any, downFrame?: any, upFrame?: any);
         forceOut: boolean;
         freezeFrames: boolean;
