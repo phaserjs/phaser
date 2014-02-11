@@ -72,16 +72,17 @@ Phaser.Loader = function (game) {
 
     /**
     * You can optionally link a sprite to the preloader.
-    * If you do so the Sprite's width or height will be cropped based on the percentage loaded.
-    * @property {Phaser.Sprite} preloadSprite
+    * If you do so the Sprites width or height will be cropped based on the percentage loaded.
+    * @property {Phaser.Sprite|Phaser.Image} preloadSprite
     * @default
     */
     this.preloadSprite = null;
 
     /**
-    * @property {string} crossOrigin - The crossOrigin value applied to loaded images
+    * @property {boolean|string} crossOrigin - The crossOrigin value applied to loaded images.
+    * @default
     */
-    this.crossOrigin = '';
+    this.crossOrigin = false;
 
     /**
     * If you want to append a URL before the path of any asset you can set this here.
@@ -160,8 +161,7 @@ Phaser.Loader.prototype = {
             this.preloadSprite.crop = new Phaser.Rectangle(0, 0, sprite.width, 1);
         }
 
-        sprite.crop = this.preloadSprite.crop;
-        sprite.cropEnabled = true;
+        sprite.crop(this.preloadSprite.crop);
 
     },
 
@@ -773,7 +773,10 @@ Phaser.Loader.prototype = {
                 file.data.onerror = function () {
                     return _this.fileError(_this._fileIndex);
                 };
-                file.data.crossOrigin = this.crossOrigin;
+                if (this.crossOrigin)
+                {
+                    file.data.crossOrigin = this.crossOrigin;
+                }
                 file.data.src = this.baseURL + file.url;
                 break;
 
@@ -1244,7 +1247,7 @@ Phaser.Loader.prototype = {
                 this.preloadSprite.crop.height = Math.floor((this.preloadSprite.height / 100) * this.progress);
             }
 
-            this.preloadSprite.sprite.crop = this.preloadSprite.crop;
+            // this.preloadSprite.sprite.crop = this.preloadSprite.crop;
         }
 
         this.onFileComplete.dispatch(this.progress, this._fileList[previousIndex].key, success, this.totalLoadedFiles(), this._fileList.length);

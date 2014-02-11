@@ -73,6 +73,8 @@ Significant API changes:
 * Removed: Sprite.offset, center, topLeft, topRight, bottomRight, bottomLeft and bounds, as no longer needed internally. Use Sprite.getBounds() to derive them.
 * Button now extends Phaser.Image not Phaser.Sprite, all the same functionality as before remains, just no animations or physics body.
 * Text.content has been replaced with Text.text. The Text class has a lot of new methods, check the docs!
+* Loader won't set crossOrigin on  Images unless it's set to something. The default is false, it used to be '' and can be any valid string.
+* Sprite.input.pixelPerfect has been split into two: Sprite.input.pixelPerfectClick and Sprite.input.pixelPerfectOver (see new features)
 
 
 New features:
@@ -88,6 +90,8 @@ New features:
 * Text.inputEnabled allows you to enable all input events over Text objects: dragging, clicking, etc - anything that works on a Sprite works on Text now too.
 * Phaser.Ellipse added. A fully compatible port of the PIXI.Ellipse class, can be used in Sprite/Image hitArea tests.
 * Phaser.Polygon added. A fully compatible port of the PIXI.Polygon class, can be used in Sprite/Image hitArea tests.
+* InputHandler.pixelPerfectOver - performs a pixel perfect check to see if any pointer is over the current object (warning: very expensive!)
+* InputHandler.pixelPerfectClick - performs a pixel perfect check but only when the pointer touches/clicks on the current object.
 
 
 New Examples:
@@ -114,6 +118,14 @@ Bug Fixes:
 * Tile had 2 properties (callback and callbackContext) that were never assigned, updated to use the proper names (thanks ratkingsimon)
 * Fixed an error that would occur if you used InputHandler.onInputUp and the Sprite destroys itself during the event.
 * IE11 didn't populate the Device.ieVersion value. Now extracted from Trident revision, but still use Device.trident instead for IE11+ checks.
+* Fixed bug in Math.angleBetween where it was using the coordinates in the wrong order.
+* Previously using a Pixel Perfect check didn't work if the Sprite was rotated or had a non-zero anchor point, now works under all conditions + atlas frames.
+
+
+TO DO:
+
+* If you change the frame name of a pixel precise input Sprite, it will fail all clicks on it after the frame change.
+
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md

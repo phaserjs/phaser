@@ -70,7 +70,6 @@
     <script src="$path/src/geom/Ellipse.js"></script>
     <script src="$path/src/geom/Polygon.js"></script>
 
-    <script src="$path/src/pixi/Pixi.js"></script>
     <script src="$path/src/pixi/core/Matrix.js"></script>
     <script src="$path/src/pixi/display/DisplayObject.js"></script>
     <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>

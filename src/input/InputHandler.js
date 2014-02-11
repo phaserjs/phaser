@@ -107,10 +107,22 @@ Phaser.InputHandler = function (sprite) {
     this.snapOffsetY = 0;
 
     /**
-    * @property {number} pixelPerfect - Should we use pixel perfect hit detection? Warning: expensive. Only enable if you really need it!
+    * Set to true to use pixel perfect hit detection when checking if the pointer is over this Sprite.
+    * The x/y coordinates of the pointer are tested against the image in combination with the InputHandler.pixelPerfectAlpha value.
+    * Warning: This is expensive, especially on mobile (where it's not even needed!) so only enable if required. Also see the less-expensive InputHandler.pixelPerfectClick.
+    * @property {number} pixelPerfectOver - Use a pixel perfect check when testing for pointer over.
     * @default
     */
-    this.pixelPerfect = false;
+    this.pixelPerfectOver = false;
+
+    /**
+    * Set to true to use pixel perfect hit detection when checking if the pointer is over this Sprite when it's clicked or touched.
+    * The x/y coordinates of the pointer are tested against the image in combination with the InputHandler.pixelPerfectAlpha value.
+    * Warning: This is expensive so only enable if you really need it.
+    * @property {number} pixelPerfectClick - Use a pixel perfect check when testing for clicks or touches on the Sprite.
+    * @default
+    */
+    this.pixelPerfectClick = false;
 
     /**
     * @property {number} pixelPerfectAlpha - The alpha tolerance threshold. If the alpha value of the pixel matches or is above this value, it's considered a hit.
@@ -506,7 +518,7 @@ Phaser.InputHandler.prototype = {
         //  Need to pass it a temp point, in case we need it again for the pixel check
         if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))
         {
-            if (this.pixelPerfect)
+            if (this.pixelPerfectOver)
             {
                 return this.checkPixel(this._tempPoint.x, this._tempPoint.y);
             }
@@ -526,14 +538,34 @@ Phaser.InputHandler.prototype = {
     * @method Phaser.InputHandler#checkPixel
     * @param {number} x - The x coordinate to check.
     * @param {number} y - The y coordinate to check.
+    * @param {Phaser.Pointer} [pointer] - The pointer to get the x/y coordinate from if not passed as the first two parameters.
     * @return {boolean} true if there is the alpha of the pixel is >= InputHandler.pixelPerfectAlpha
     */
-    checkPixel: function (x, y) {
+    checkPixel: function (x, y, pointer) {
 
         //  Grab a pixel from our image into the hitCanvas and then test it
         if (this.sprite.texture.baseTexture.source)
         {
             this.game.input.hitContext.clearRect(0, 0, 1, 1);
+
+            if (x === null && y === null)
+            {
+                //  Use the pointer parameter
+                this.game.input.getLocalPosition(this.sprite, pointer, this._tempPoint);
+
+                var x = this._tempPoint.x;
+                var y = this._tempPoint.y;
+            }
+
+            if (this.sprite.anchor.x !== 0)
+            {
+                x -= -this.sprite.texture.frame.width * this.sprite.anchor.x;
+            }
+
+            if (this.sprite.anchor.y !== 0)
+            {
+                y -= -this.sprite.texture.frame.height * this.sprite.anchor.y;
+            }
 
             x += this.sprite.texture.frame.x;
             y += this.sprite.texture.frame.y;
@@ -670,6 +702,11 @@ Phaser.InputHandler.prototype = {
 
         if (this._pointerData[pointer.id].isDown === false && this._pointerData[pointer.id].isOver === true)
         {
+            if (this.pixelPerfectClick && !this.checkPixel(null, null, pointer))
+            {
+                return;
+            }
+
             this._pointerData[pointer.id].isDown = true;
             this._pointerData[pointer.id].isUp = false;
             this._pointerData[pointer.id].timeDown = this.game.time.now;
@@ -849,7 +886,7 @@ Phaser.InputHandler.prototype = {
     },
 
     /**
-    * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
+    * Returns true if the pointer has touched or clicked on the Sprite within the specified delay time (defaults to 500ms, half a second)
     * @method Phaser.InputHandler#justPressed
     * @param {Phaser.Pointer} pointer
     * @param {number} delay - The time below which the pointer is considered as just over.
@@ -865,7 +902,7 @@ Phaser.InputHandler.prototype = {
     },
 
     /**
-    * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
+    * Returns true if the pointer was touching this Sprite, but has been released within the specified delay time (defaults to 500ms, half a second)
     * @method Phaser.InputHandler#justReleased
     * @param {Phaser.Pointer} pointer
     * @param {number} delay - The time below which the pointer is considered as just out.
