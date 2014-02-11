@@ -932,18 +932,28 @@ declare module Phaser {
     }
 
     class Button {
-        constructor(game: Phaser.Game, x: number, y: number, key: string, callback: Function, overFrame: number, outFrame: number, downFrame: number);
-        input: Phaser.InputHandler;
-        onInputUp: Phaser.Signal;
+        constructor(game: Phaser.Game, x?: number, y?: number, key?: string, callback?: Function, callbackContext?: Object, overFrame?: any, outFrame?: any, downFrame?: any, upFrame?: any);
+        forceOut: boolean;
+        freezeFrames: boolean;
+        onDownSound: Phaser.Sound;
+        onDownSoundMarker: string;
         onInputDown: Phaser.Signal;
         onInputOut: Phaser.Signal;
         onInputOver: Phaser.Signal;
-        events: Phaser.Event[];
-        setFrames(overFrame?: number, outFrame?: number, downFrame?: number): void;
-        onInputOverHandler(pointer: Phaser.Pointer): void;
-        onInputUpHandler(pointer: Phaser.Pointer): void;
-        onInputDownHandler(pointer: Phaser.Pointer): void;
-        onInputOutHandler(pointer: Phaser.Pointer): void;
+        onInputUp: Phaser.Signal;
+        onOutSound: Phaser.Sound;
+        onOutSoundMarker: string;
+        onOverSound: Phaser.Sound;
+        onOverSoundMarker: string;
+        onUpSound: Phaser.Sound;
+        onUpSoundMaker: string;
+        type: number;
+        clearFrames(): void;
+        setDownSound(sound: Phaser.Sound, marker?: string): void;
+        setFrames(overFrame?: any, outFrame?: any, downFrame?: any, upFrame?: any): void;
+        setOutSound(sound: Phaser.Sound, marker?: string): void;
+        setOverSound(sound: Phaser.Sound, marker?: string): void;
+        setSounds(overSound?: Phaser.Sound, overMarker?: string, downSound?: Phaser.Sound, downMarker?: string, outSound?: Phaser.Sound, outMarker?: string, upSound?: Phaser.Sound, upMarker?: string): void;
     }
 
 
