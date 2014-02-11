@@ -13,6 +13,7 @@ module.exports = function (grunt) {
       phaser: [
         'src/Intro.js',
 
+        'src/pixi/Pixi.js',
         'src/Phaser.js',
         'src/utils/Utils.js',
 
@@ -23,7 +24,6 @@ module.exports = function (grunt) {
         'src/geom/Ellipse.js',
         'src/geom/Polygon.js',
 
-        'src/pixi/Pixi.js',
         'src/pixi/core/Matrix.js',
         'src/pixi/display/DisplayObject.js',
         'src/pixi/display/DisplayObjectContainer.js',
@@ -36,10 +36,10 @@ module.exports = function (grunt) {
         'src/pixi/utils/EventTarget.js',
         'src/pixi/utils/Polyk.js',
         'src/pixi/renderers/webgl/utils/WebGLShaderUtils.js',
-        'src/pixi/renderers/webgl/PixiShader.js',
-        'src/pixi/renderers/webgl/PixiFastShader.js',
-        'src/pixi/renderers/webgl/StripShader.js',
-        'src/pixi/renderers/webgl/PrimitiveShader.js',
+        'src/pixi/renderers/webgl/shaders/PixiShader.js',
+        'src/pixi/renderers/webgl/shaders/PixiFastShader.js',
+        'src/pixi/renderers/webgl/shaders/StripShader.js',
+        'src/pixi/renderers/webgl/shaders/PrimitiveShader.js',
         'src/pixi/renderers/webgl/utils/WebGLGraphics.js',
         'src/pixi/renderers/webgl/WebGLRenderer.js',
         'src/pixi/renderers/webgl/utils/WebGLMaskManager.js',

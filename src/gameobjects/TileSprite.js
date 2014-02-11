@@ -49,8 +49,8 @@ Phaser.TileSprite = function (game, x, y, width, height, key) {
     */
     this.tilePosition = new Phaser.Point(0, 0);
 
-    this.body.width = width;
-    this.body.height = height;
+    //this.body.width = width;
+    //this.body.height = height;
 
 };
 
@@ -81,7 +81,7 @@ Object.defineProperty(Phaser.TileSprite.prototype, 'angle', {
 * @property {number} frame - Gets or sets the current frame index and updates the Texture Cache for display.
 */
 Object.defineProperty(Phaser.TileSprite.prototype, "frame", {
-    
+
     get: function () {
         return this.animations.frame;
     },
@@ -97,7 +97,7 @@ Object.defineProperty(Phaser.TileSprite.prototype, "frame", {
 * @property {string} frameName - Gets or sets the current frame name and updates the Texture Cache for display.
 */
 Object.defineProperty(Phaser.TileSprite.prototype, "frameName", {
-    
+
     get: function () {
         return this.animations.frameName;
     },
@@ -114,7 +114,7 @@ Object.defineProperty(Phaser.TileSprite.prototype, "frameName", {
 * @readonly
 */
 Object.defineProperty(Phaser.TileSprite.prototype, "inCamera", {
-    
+
     get: function () {
         return this._cache.cameraVisible;
     }
@@ -129,7 +129,7 @@ Object.defineProperty(Phaser.TileSprite.prototype, "inCamera", {
 * @property {boolean} inputEnabled - Set to true to allow this Sprite to receive input events, otherwise false.
 */
 Object.defineProperty(Phaser.TileSprite.prototype, "inputEnabled", {
-    
+
     get: function () {
 
         return (this.input.enabled);
