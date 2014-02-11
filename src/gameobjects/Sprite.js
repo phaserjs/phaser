@@ -323,16 +323,19 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
     {
         this.key = key.key;
         this.setTexture(key);
+        return;
     }
     else if (key instanceof Phaser.BitmapData)
     {
         this.key = key.key;
         this.setTexture(key.texture);
+        return;
     }
     else if (key instanceof PIXI.Texture)
     {
         this.key = key;
         this.setTexture(key);
+        return;
     }
     else
     {
@@ -340,11 +343,13 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         {
             this.key = '__default';
             this.setTexture(PIXI.TextureCache[this.key]);
+            return;
         }
         else if (typeof key === 'string' && !this.game.cache.checkImageKey(key))
         {
             this.key = '__missing';
             this.setTexture(PIXI.TextureCache[this.key]);
+            return;
         }
 
         if (this.game.cache.isSpriteSheet(key))
@@ -367,6 +372,7 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         {
             this.key = key;
             this.setTexture(PIXI.TextureCache[key]);
+            return;
         }
     }
 
