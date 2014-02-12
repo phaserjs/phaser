@@ -1,45 +1,53 @@
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, render: render });
 
 function preload() {
 
-    game.load.image('mushroom', 'assets/sprites/mushroom2.png');
-    game.load.image('sonic', 'assets/sprites/pangball.png');
+    game.load.image('ball', 'assets/sprites/pangball.png');
 
 }
 
-var timer;
+var t;
 
 function create() {
 
-    game.stage.backgroundColor = '#007236';
+    game.stage.backgroundColor = '#6688ee';
 
+    t = game.time.create(false);
 
+    t.repeat(Phaser.Timer.SECOND * 2, 10, createBall, this);
+    t.repeat(Phaser.Timer.SECOND * 3, 10, createBall, this);
 
-    //  Every second we will call the addSprite function. This will happen 10 times and then stop.
-    //  The final parameter is the one that will be sent to the addSprite function and in this case is the sprite key.
-    game.time.repeatEvent(Phaser.Timer.SECOND, 10, addSprite, this, 'mushroom');
+    t.start();
 
-    //  Every 1.5 seconds we will call the addSprite function. This will happen 5 times and then stop.
-    game.time.repeatEvent(1500, 10, addSprite, this, 'sonic');
-
-}
-
-function addSprite(key) {
-
-console.log(arguments);
-
-    game.add.sprite(game.world.randomX, game.world.randomY, key);
+    game.input.onDown.add(killThem, this);
 
 }
 
-function update() {
+function createBall() {
+
+    //  A bouncey ball sprite just to visually see what's going on.
+    var ball = game.add.sprite(game.world.randomX, 0, 'ball');
+
+    ball.body.gravity.y = 200;
+    ball.body.bounce.y = 0.5;
+    ball.body.collideWorldBounds = true;
+
+console.log('nuked');
+    game.time.removeAll();
+    // t.removeAll();
+
+
+}
+
+function killThem() {
+
 
 }
 
 function render() {
 
-    game.debug.renderText(game.time._timer.ms, 32, 32);
-    // game.debug.renderCameraInfo(game.camera, 32, 32);
+    game.debug.renderText("Time until event: " + t.duration.toFixed(0), 32, 32);
+    game.debug.renderText("Next tick: " + t.next.toFixed(0), 32, 64);
 
 }

@@ -62,6 +62,12 @@ Phaser.TimerEvent = function (timer, delay, tick, repeatCount, loop, callback, c
     */
 	this.args = args;
 
+    /**
+    * @property {boolean} pendingDelete - A flag that controls if the TimerEvent is pending deletion.
+    * @protected
+    */
+    this.pendingDelete = false;
+
 };
 
 Phaser.TimerEvent.prototype.constructor = Phaser.TimerEvent;
