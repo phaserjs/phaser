@@ -75,6 +75,7 @@ Significant API changes:
 * Text.content has been replaced with Text.text. The Text class has a lot of new methods, check the docs!
 * Loader won't set crossOrigin on  Images unless it's set to something. The default is false, it used to be '' and can be any valid string.
 * Sprite.input.pixelPerfect has been split into two: Sprite.input.pixelPerfectClick and Sprite.input.pixelPerfectOver (see new features)
+* Phaser.Stage now extends PIXI.Stage, rather than containing a _stage object.
 
 
 New features:

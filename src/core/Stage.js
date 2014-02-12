@@ -51,12 +51,6 @@ Phaser.Stage = function (game, width, height) {
     this.name = '_stage_root';
     this.interactive = false;
 
-
-    /**
-    * @property {PIXI.Stage} display - The Pixi Stage which is hooked to the renderer.
-    */
-    // this.display = this._stage;
-
     /**
     * @property {number} scaleMode - The current scaleMode.
     */
