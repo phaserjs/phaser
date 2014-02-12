@@ -4,7 +4,7 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: p
 function preload() {
 
     game.load.spritesheet('shadow', 'assets/tests/tween/shadow.png', 138, 15);
-    game.load.spritesheet('phaser', 'assets/tests/tween/phaser.png', 70, 90);
+    game.load.spritesheet('phaser', 'assets/tests/tween/PHASER.png', 70, 90);
     
 }
 

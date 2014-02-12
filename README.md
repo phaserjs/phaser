@@ -1,11 +1,11 @@
 ![Phaser Logo](http://www.photonstorm.com/wp-content/uploads/2013/09/phaser_10_release.jpg)
 
-Phaser 1.1.5-dev
-================
+Phaser 1.1.5
+============
 
 Phaser is a fast, free and fun open source game framework for making desktop and mobile browser HTML5 games. It uses [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) internally for fast 2D Canvas and WebGL rendering.
 
-Version: 1.1.5 "Saldaea" - Released: -in development-
+Version: 1.1.5 "Saldaea" - Released: 12th February 2014
 
 By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
@@ -22,6 +22,8 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 
 Welcome to Phaser
 -----------------
+
+This 1.1.5 release is released to address issues in 1.1.4 that we didn't want you to have to wait too long for.
 
 As you may know we had planned to release 1.1.4 at the end of 2013. For various reasons this didn't quite happen, but we're happy to announce it's finally out! There have been some dramatic changes internally, and if you make use of either the physics systems or tilemaps then you are going to need to update your code. Hopefully only a little bit, but there have been a number of core API changes which we detail below. There are also a host of new features, the headliners being:
 
@@ -44,6 +46,12 @@ Phaser is everything we ever wanted from an HTML5 game framework. It powers all 
 ![MiniCybernoid](http://www.photonstorm.com/wp-content/uploads/2013/10/phaser-cybernoid-640x480.png)
 
 
+Help Test 1.2
+-------------
+
+You'll notice a new [1.2 branch](https://github.com/photonstorm/phaser/tree/1.2) on github. Please help test out 1.2 as much as you can. It features the brand new Pixi 1.5 internally as well as nearly complete integration with p2.js for all physics (dropping ArcadePhysics entirely). New versions are being pushed several times a day, so be sure to update and pull often. Don't expect to just run old games right under it yet, but please do check out the new tests, experiment and poke it around as much as you can - thank you!
+
+
 Getting Started Guides
 ----------------------
 
@@ -57,26 +65,22 @@ There is also an [un-official Getting Started Guide](http://www.antonoffplus.com
 Change Log
 ----------
 
-Version 1.1.5 - "Saldaea" - -in development-
-
-Significant API changes:
-
-
-New features:
-
-
-New Examples:
-
-
-Updates:
-
+Version 1.1.5 - "Saldaea" - 12th February 2014
 
 Bug Fixes:
 
 * Explicitly paused Timer continues if you un-focus and focus the browser window (thanks georgiee)
 * Added TimerEvent.pendingDelete and checks in Timer.update, so that removing an event in a callback no longer throws an exception (thanks georgiee)
 * Fixed TypeScript defs on lines 1741-1748 (thanks wombatbuddy)
+* Added SAT.js to TypeScript definition. Now compiles properly.
+* Added missing Line.js to the Grunt file.
+* Tilemap#paste diffX and diffY equations changed, fixed issue #393 (thanks brejep)
+* Added missing return value in Body.hitLeft and hitRight, fixes issue #398 (thanks ram64).
+* Fixed easing tween example case. Issue #379 (thanks wesleywerner)
+* Removed SAT.js UMD wrapped, fixes issue #361 (thanks luizbills)
 
+
+See the full Change Log for all the 1.1.4 updates and API changes (as there were a lot of them!)
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md
 
@@ -114,11 +118,11 @@ CDNJS
 
 Thanks to a community member Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
 
-`http://cdnjs.cloudflare.com/ajax/libs/phaser/1.1.3/phaser.min.js`
+`http://cdnjs.cloudflare.com/ajax/libs/phaser/1.1.4/phaser.min.js`
 
 Or if you prefer you can leave the protocol off, so it works via http and https:
 
-`//cdnjs.cloudflare.com/ajax/libs/phaser/1.1.3/phaser.min.js`
+`//cdnjs.cloudflare.com/ajax/libs/phaser/1.1.4/phaser.min.js`
 
 
 Requirements
@@ -227,7 +231,7 @@ Here is what's on our road map for the coming months:
 
 Version 1.2 ("Shienar")
 
-* Update to Pixi 1.4 - this newly released build has lots of internal changes and new features we want to take advantage of.
+* Update to Pixi 1.5 - this newly released build has lots of internal changes and new features we want to take advantage of.
 
 Version 1.3 ("Tarabon")
 

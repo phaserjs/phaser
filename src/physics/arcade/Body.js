@@ -980,7 +980,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.LEFT, this, body, response))
         {
-            return;
+            return false;
         }
 
         if (!this.moves || this.immovable || this.blocked.right || this.touching.right)
@@ -1003,6 +1003,8 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.touching.left = true;
         body.touching.right = true;
+
+        return true;
 
     },
 
@@ -1027,7 +1029,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.collideCallback && !this.collideCallback.call(this.collideCallbackContext, Phaser.RIGHT, this, body))
         {
-            return;
+            return false;
         }
 
         if (!this.moves || this.immovable || this.blocked.left || this.touching.left)
@@ -1050,6 +1052,8 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.touching.right = true;
         body.touching.left = true;
+
+        return true;
 
     },
 
