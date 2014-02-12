@@ -93,6 +93,7 @@ module.exports = function (grunt) {
         'src/geom/Point.js',
         'src/geom/Rectangle.js',
         'src/geom/Polygon.js',
+        'src/geom/Line.js',
         'src/net/Net.js',
         'src/tween/TweenManager.js',
         'src/tween/Tween.js',
