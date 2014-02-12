@@ -49,7 +49,7 @@ Phaser.Physics.Body = function (sprite) {
     this.force = new Phaser.Physics.PointProxy(this.data.force);
 
     //  Set-up the default shape
-    this.setRectangle(sprite.width, sprite.height, 0, 0);
+    this.setRectangleFromSprite(sprite);
 
     this.game.physics.addBody(this.data);
 
@@ -108,9 +108,6 @@ Phaser.Physics.Body.prototype = {
         this.data.setZeroForce();
 
     },
-
-    //  toLocalFrame
-    //  toWorldFrame
 
     /**
     * If this Body is dynamic then this will zero its angular velocity.
@@ -354,7 +351,7 @@ Phaser.Physics.Body.prototype = {
     },
 
     /**
-    * Add a shape to the body. You can pass a local transform when adding a shape, so that the shape gets an offset and angle relative to the body center of mass.
+    * Add a shape to the body. You can pass a local transform when adding a shape, so that the shape gets an offset and an angle relative to the body center of mass.
     * Will automatically update the mass properties and bounding radius.
     *
     * @method Phaser.Physics.Body#addShape
@@ -366,9 +363,179 @@ Phaser.Physics.Body.prototype = {
     */
     addShape: function (shape, offsetX, offsetY, rotation) {
 
+        if (typeof offsetX === 'undefined') { offsetX = 0; }
+        if (typeof offsetY === 'undefined') { offsetY = 0; }
+        if (typeof rotation === 'undefined') { rotation = 0; }
+
         this.data.addShape(shape, [this.px2p(offsetX), this.px2p(offsetY)], rotation);
 
         return shape;
+
+    },
+
+    /**
+    * Adds a Circle shape to this Body. You can control the offset from the center of the body and the rotation.
+    *
+    * @method Phaser.Physics.Body#addCircle
+    * @param {number} radius - The radius of this circle (in pixels)
+    * @param {number} [offsetX=0] - Local horizontal offset of the shape relative to the body center of mass.
+    * @param {number} [offsetY=0] - Local vertical offset of the shape relative to the body center of mass.
+    * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
+    * @return {p2.Circle} The Circle shape that was added to the Body.
+    */
+    addCircle: function (radius, offsetX, offsetY, rotation) {
+
+        var shape = new p2.Circle(this.px2p(radius));
+
+        return this.addShape(shape, offsetX, offsetY, rotation);
+
+    },
+
+    /**
+    * Adds a Rectangle shape to this Body. You can control the offset from the center of the body and the rotation.
+    *
+    * @method Phaser.Physics.Body#addRectangle
+    * @param {number} width - The width of the rectangle in pixels.
+    * @param {number} height - The height of the rectangle in pixels.
+    * @param {number} [offsetX=0] - Local horizontal offset of the shape relative to the body center of mass.
+    * @param {number} [offsetY=0] - Local vertical offset of the shape relative to the body center of mass.
+    * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
+    * @return {p2.Rectangle} The Rectangle shape that was added to the Body.
+    */
+    addRectangle: function (width, height, offsetX, offsetY, rotation) {
+
+        var shape = new p2.Rectangle(this.px2p(width), this.px2p(height));
+
+        return this.addShape(shape, offsetX, offsetY, rotation);
+
+    },
+
+    /**
+    * Adds a Plane shape to this Body. The plane is facing in the Y direction. You can control the offset from the center of the body and the rotation.
+    *
+    * @method Phaser.Physics.Body#addPlane
+    * @param {number} [offsetX=0] - Local horizontal offset of the shape relative to the body center of mass.
+    * @param {number} [offsetY=0] - Local vertical offset of the shape relative to the body center of mass.
+    * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
+    * @return {p2.Plane} The Plane shape that was added to the Body.
+    */
+    addPlane: function (width, height, offsetX, offsetY, rotation) {
+
+        var shape = new p2.Plane();
+
+        return this.addShape(shape, offsetX, offsetY, rotation);
+
+    },
+
+    /**
+    * Adds a Particle shape to this Body. You can control the offset from the center of the body and the rotation.
+    *
+    * @method Phaser.Physics.Body#addParticle
+    * @param {number} [offsetX=0] - Local horizontal offset of the shape relative to the body center of mass.
+    * @param {number} [offsetY=0] - Local vertical offset of the shape relative to the body center of mass.
+    * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
+    * @return {p2.Particle} The Particle shape that was added to the Body.
+    */
+    addParticle: function (width, height, offsetX, offsetY, rotation) {
+
+        var shape = new p2.Particle();
+
+        return this.addShape(shape, offsetX, offsetY, rotation);
+
+    },
+
+    /**
+    * Adds a Line shape to this Body.
+    * The line shape is along the x direction, and stretches from [-length/2, 0] to [length/2,0].
+    * You can control the offset from the center of the body and the rotation.
+    *
+    * @method Phaser.Physics.Body#addLine
+    * @param {number} length - The length of this line (in pixels)
+    * @param {number} [offsetX=0] - Local horizontal offset of the shape relative to the body center of mass.
+    * @param {number} [offsetY=0] - Local vertical offset of the shape relative to the body center of mass.
+    * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
+    * @return {p2.Line} The Line shape that was added to the Body.
+    */
+    addLine: function (length, offsetX, offsetY, rotation) {
+
+        var shape = new p2.Line(this.px2p(length));
+
+        return this.addShape(shape, offsetX, offsetY, rotation);
+
+    },
+
+    /**
+    * Adds a Capsule shape to this Body.
+    * You can control the offset from the center of the body and the rotation.
+    *
+    * @method Phaser.Physics.Body#addCapsule
+    * @param {number} length - The distance between the end points in pixels.
+    * @param {number} radius - Radius of the capsule in radians.
+    * @param {number} [offsetX=0] - Local horizontal offset of the shape relative to the body center of mass.
+    * @param {number} [offsetY=0] - Local vertical offset of the shape relative to the body center of mass.
+    * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
+    * @return {p2.Capsule} The Capsule shape that was added to the Body.
+    */
+    addCapsule: function (length, radius, offsetX, offsetY, rotation) {
+
+        var shape = new p2.Capsule(this.px2p(length), radius);
+
+        return this.addShape(shape, offsetX, offsetY, rotation);
+
+    },
+
+    /**
+    * Reads a polygon shape path, and assembles convex shapes from that and puts them at proper offset points. The shape must be simple and without holes.
+    * This function expects the x.y values to be given in pixels. If you want to provide them at p2 world scales then call Body.data.fromPolygon directly.
+    *
+    * @method Phaser.Physics.Body#addPolygon
+    * @param {object} options - An object containing the build options: 
+    * @param {boolean} [options.optimalDecomp=false] - Set to true if you need optimal decomposition. Warning: very slow for polygons with more than 10 vertices.
+    * @param {boolean} [options.skipSimpleCheck=false] - Set to true if you already know that the path is not intersecting itself.
+    * @param {boolean|number} [options.removeCollinearPoints=false] - Set to a number (angle threshold value) to remove collinear points, or false to keep all points.
+    * @param {(number[]|...number)} points - An array of 2d vectors that form the convex or concave polygon. 
+    *                                       Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...], 
+    *                                       or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
+    * @return {boolean} True on success, else false.
+    */
+    addPolygon: function (options, points) {
+
+        options = options || {};
+
+        points = Array.prototype.slice.call(arguments, 1);
+
+        var path;
+
+        //  Did they pass in a single array of points?
+        if (points.length === 1)
+        {
+            path = points[0];
+        }
+        else if (Array.isArray(points[0]))
+        {
+            path = points;
+        }
+        else if (typeof points[0] === 'number')
+        {
+            var temp = [];
+
+            //  We've a list of numbers
+            for (var i = 0, len = points.length; i < len; i += 2)
+            {
+                temp.push([points[i], points[i + 1]]);
+            }
+
+            path = temp;
+        }
+
+        //  Now process them into p2 values
+        for (var p = 0; p < path.length; p++)
+        {
+            path[p][0] = this.px2p(path[p][0]);
+            path[p][1] = this.px2p(path[p][1]);
+        }
+
+        return this.data.fromPolygon(path, options);
 
     },
 
@@ -386,7 +553,7 @@ Phaser.Physics.Body.prototype = {
     },
 
     /**
-    * Clears any previously set shapes and sets this Body to use a Circle for all collision.
+    * Clears any previously set shapes. Then creates a new Circle shape and adds it to this Body.
     *
     * @method Phaser.Physics.Body#setCircle
     * @param {number} radius - The radius of this circle (in pixels)
@@ -396,59 +563,54 @@ Phaser.Physics.Body.prototype = {
     */
     setCircle: function (radius, offsetX, offsetY, rotation) {
 
-        if (typeof offsetX === 'undefined') { offsetX = 0; }
-        if (typeof offsetY === 'undefined') { offsetY = 0; }
-        if (typeof rotation === 'undefined') { rotation = 0; }
-
         this.clearShapes();
 
-        this.data.addShape(new p2.Circle(this.px2p(radius)), [offsetX, offsetY], rotation);
+        this.addCircle(radius, offsetX, offsetY, rotation);
 
     },
 
     /**
-    * Clears any previously set shapes and sets this Body to use a Rectangle for all collision.
-    * If you don't specify any parameters it will be sized to match the parent Sprites current width and height (including scale factor).
+    * Clears any previously set shapes. The creates a new Rectangle shape at the given size and offset, and adds it to this Body.
+    * If you wish to create a Rectangle to match the size of a Sprite or Image see Body.setRectangleFromSprite.
     *
     * @method Phaser.Physics.Body#setRectangle
-    * @param {number} [width] - The width of the rectangle. If not specified it will default to the width of the parent Sprite.
-    * @param {number} [height] - The height of the rectangle. If not specified it will default to the height of the parent Sprite.
+    * @param {number} [width=16] - The width of the rectangle in pixels.
+    * @param {number} [height=16] - The height of the rectangle in pixels.
     * @param {number} [offsetX=0] - Local horizontal offset of the shape relative to the body center of mass.
     * @param {number} [offsetY=0] - Local vertical offset of the shape relative to the body center of mass.
     * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
+    * @return {p2.Rectangle} The Rectangle shape that was added to the Body.
     */
     setRectangle: function (width, height, offsetX, offsetY, rotation) {
 
-        if (typeof width === 'undefined') { width = this.sprite.width; }
-        if (typeof height === 'undefined') { height = this.sprite.height; }
-        if (typeof offsetX === 'undefined') { offsetX = 0; }
-        if (typeof offsetY === 'undefined') { offsetY = 0; }
-        if (typeof rotation === 'undefined') { rotation = 0; }
+        if (typeof width === 'undefined') { width = 16; }
+        if (typeof height === 'undefined') { height = 16; }
 
-        // var px = 0;
-        // var py = 0;
+        this.clearShapes();
 
-        // if (sprite.anchor.x !== 0)
-        // {
-        //     px = (sprite.width / 2) + (-sprite.width * sprite.anchor.x);
-        // }
-        // else
-        // {
-        //     px = sprite.width / 2;
-        // }
+        return this.addRectangle(width, height, offsetX, offsetY, rotation);
 
-        // if (sprite.anchor.y !== 0)
-        // {
-        //     py = (sprite.height / 2) + (-sprite.height * sprite.anchor.y);
-        // }
-        // else
-        // {
-        //     py = sprite.height / 2;
-        // }
+    },
+
+    /**
+    * Clears any previously set shapes.
+    * Then creates a Rectangle shape sized to match the dimensions and orientation of the Sprite given.
+    * If no Sprite is given it defaults to using the parent of this Body.
+    *
+    * @method Phaser.Physics.Body#setRectangleFromSprite
+    * @param {Phaser.Sprite|Phaser.Image} [sprite] - The Sprite on which the Rectangle will get its dimensions.
+    * @return {p2.Rectangle} The Rectangle shape that was added to the Body.
+    */
+    setRectangleFromSprite: function (sprite) {
+
+        if (typeof sprite === 'undefined') { sprite = this.sprite; }
+
+        var px = (sprite.width / 2) + (-sprite.width * sprite.anchor.x);
+        var py = (sprite.height / 2) + (-sprite.height * sprite.anchor.y);
     
         this.clearShapes();
 
-        this.data.addShape(new p2.Rectangle(this.px2p(width), this.px2p(height)), [this.px2p(offsetX), this.px2p(offsetY)], rotation);
+        return this.addRectangle(sprite.width, sprite.height, px, py, sprite.rotation);
 
     },
 
@@ -465,7 +627,6 @@ Phaser.Physics.Body.prototype = {
     *                                       Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...], 
     *                                       or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
     * @return {boolean} True on success, else false.
-    */
     setPolygon: function (options, points) {
 
         options = options || {};
@@ -516,6 +677,7 @@ Phaser.Physics.Body.prototype = {
         return this.data.fromPolygon(path, options);
 
     },
+    */
 
     /**
     * Convert p2 physics value to pixel scale.
