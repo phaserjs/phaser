@@ -388,7 +388,7 @@ Phaser.StageScaleMode.prototype = {
                 this.game.world.visible = true;
             }
 
-            this.game.stage._stage.addChild(this.orientationSprite);
+            this.game.stage.addChild(this.orientationSprite);
         }
 
     },

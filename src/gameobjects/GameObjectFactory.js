@@ -97,11 +97,15 @@ Phaser.GameObjectFactory.prototype = {
     * @method Phaser.GameObjectFactory#group
     * @param {any} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
     * @param {string} [name='group'] - A name for this Group. Not used internally but useful for debugging.
+    * @param {boolean} [addToStage=false] - If set to true this Group will be added directly to the Game.Stage instead of Game.World.
     * @return {Phaser.Group} The newly created group.
     */
-    group: function (parent, name) {
+    group: function (parent, name, addToStage) {
 
-        return new Phaser.Group(this.game, parent, name);
+        if (typeof name === 'undefined') { name = 'group'; }
+        if (typeof addToStage === 'undefined') { addToStage = false; }
+
+        return new Phaser.Group(this.game, parent, name, addToStage);
 
     },
 

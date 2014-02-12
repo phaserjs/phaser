@@ -9,6 +9,9 @@
 */
 Phaser.Physics = {};
 
+//  Add an extra property to p2.Body
+p2.Body.prototype.parent = null;
+
 /**
 * @class Phaser.Physics.World
 * @classdesc Physics World Constructor
@@ -22,9 +25,17 @@ Phaser.Physics.World = function (game) {
     */
     this.game = game;
 
+    this.onBodyAdded = new Phaser.Signal();
+    this.onBodyRemoved = new Phaser.Signal();
+
     this.bounds = null;
 
     p2.World.call(this, { gravity: [0, 0] });
+
+    this.on("addBody", this.addBodyHandler);
+    this.on("removeBody", this.removeBodyHandler);
+    this.on("postStep", this.postStepHandler);
+    this.on("postBroadphase", this.postBroadphaseHandler);
 
     this.setBoundsToWorld(true, true, true, true);
 
@@ -32,6 +43,84 @@ Phaser.Physics.World = function (game) {
 
 Phaser.Physics.World.prototype = Object.create(p2.World.prototype);
 Phaser.Physics.World.prototype.constructor = Phaser.Physics.World;
+
+/**
+* Handles a p2 addBody event.
+*
+* @method Phaser.Physics.Arcade#addBodyHandler
+* @private
+* @param {object} event - The event data.
+*/
+Phaser.Physics.World.prototype.addBodyHandler = function (event) {
+
+    if (event.body.parent)
+    {
+        this.onBodyAdded.dispatch(event.body.parent, event.target);
+    }
+
+};
+
+/**
+* Handles a p2 removeBody event.
+*
+* @method Phaser.Physics.Arcade#removeBodyHandler
+* @private
+* @param {object} event - The event data.
+*/
+Phaser.Physics.World.prototype.removeBodyHandler = function (event) {
+
+    if (event.body.parent)
+    {
+        this.onBodyRemoved.dispatch(event.body.parent, event.target);
+    }
+
+};
+
+/**
+* Handles a p2 postStep event.
+*
+* @method Phaser.Physics.Arcade#postStepHandler
+* @private
+* @param {object} event - The event data.
+*/
+Phaser.Physics.World.prototype.postStepHandler = function (event) {
+
+    // console.log(event);
+
+    // if (event.body.parent)
+    // {
+    //     this.onBodyRemoved.dispatch(event.body.parent, event.target);
+    // }
+
+};
+
+/**
+* Handles a p2 postBroadphase event.
+*
+* @method Phaser.Physics.Arcade#postBroadphaseHandler
+* @private
+* @param {object} event - The event data.
+*/
+Phaser.Physics.World.prototype.postBroadphaseHandler = function (event) {
+
+    //  Body.id 1 is always the World bounds object
+
+    for (var i = 0; i < event.pairs.length; i++)
+    {
+        // console.log(i, event.pairs[i]);
+
+        if (event.pairs[i].parent)
+        {
+            // console.log(event.pairs[i].parent.sprite.name);
+        }
+    }
+
+    // if (event.body.parent)
+    // {
+    //     this.onBodyRemoved.dispatch(event.body.parent, event.target);
+    // }
+
+};
 
 /**
 * Sets the bounds of the Physics world to match the Game.World dimensions.
@@ -70,17 +159,25 @@ Phaser.Physics.World.prototype.setBounds = function (x, y, width, height, left, 
     if (typeof top === 'undefined') { top = true; }
     if (typeof bottom === 'undefined') { bottom = true; }
 
-    if (this.bounds !== null)
-    {
-    	this.removeBody(this.bounds);
-    }
-
     var hw = (width / 2);
     var hh = (height / 2);
     var cx = hw + x;
     var cy = hh + y;
 
-	this.bounds = new p2.Body({ mass: 0, position:[this.game.math.px2p(cx), this.game.math.px2p(cy)] });
+    if (this.bounds !== null)
+    {
+    	this.removeBody(this.bounds);
+
+        for (var i = this.bounds.shapes.length - 1; i >= 0; i--)
+        {
+            var shape = this.bounds.shapes[i];
+            this.bounds.removeShape(shape);
+        }
+    }
+    else
+    {
+        this.bounds = new p2.Body({ mass: 0, position:[this.game.math.px2p(cx), this.game.math.px2p(cy)] });
+    }
 
     if (left)
     {

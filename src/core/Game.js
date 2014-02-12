@@ -595,7 +595,7 @@ Phaser.Game.prototype = {
 
         if (this._paused)
         {
-            this.renderer.render(this.stage._stage);
+            this.renderer.render(this.stage);
             this.plugins.render();
             this.state.render();
         }
@@ -627,7 +627,7 @@ Phaser.Game.prototype = {
 
             if (this.renderType !== Phaser.HEADLESS)
             {
-                this.renderer.render(this.stage._stage);
+                this.renderer.render(this.stage);
                 this.plugins.render();
                 this.state.render();
 

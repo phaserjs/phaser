@@ -109,7 +109,7 @@ Phaser.Text.prototype.constructor = Phaser.Text;
 * Automatically called by World.preUpdate.
 * @method Phaser.Text.prototype.preUpdate
 */
-Phaser.Text.prototype.preUpdate = function() {
+Phaser.Text.prototype.preUpdate = function () {
 
     if (!this.exists || !this.parent.exists)
     {
@@ -125,7 +125,7 @@ Phaser.Text.prototype.preUpdate = function() {
 * Automatically called by World.postUpdate.
 * @method Phaser.Text.prototype.postUpdate
 */
-Phaser.Text.prototype.postUpdate = function() {
+Phaser.Text.prototype.postUpdate = function () {
 
     if (this.exists)
     {
@@ -140,7 +140,7 @@ Phaser.Text.prototype.postUpdate = function() {
 /**
 * @method Phaser.Text.prototype.destroy
 */
-Phaser.Text.prototype.destroy = function() {
+Phaser.Text.prototype.destroy = function () {
 
     if (this.filters)
     {
@@ -178,7 +178,7 @@ Phaser.Text.prototype.destroy = function() {
 * @param {string} [color='rgba(0,0,0,0)'] - The color of the shadow, as given in CSS rgba format. Set the alpha component to 0 to disable the shadow.
 * @param {number} [blur=0] - The shadowBlur value. Make the shadow softer by applying a Gaussian blur to it. A number from 0 (no blur) up to approx. 10 (depending on scene).
 */
-Phaser.Text.prototype.setShadow = function(x, y, color, blur) {
+Phaser.Text.prototype.setShadow = function (x, y, color, blur) {
 
     this.style.shadowOffsetX = x || 0;
     this.style.shadowOffsetY = y || 0;
@@ -201,7 +201,7 @@ Phaser.Text.prototype.setShadow = function(x, y, color, blur) {
 * @param [style.wordWrap=false] {Boolean} Indicates if word wrap should be used
 * @param [style.wordWrapWidth=100] {Number} The width at which text will wrap
 */
-Phaser.Text.prototype.setStyle = function(style) {
+Phaser.Text.prototype.setStyle = function (style) {
 
     style = style || {};
     style.font = style.font || 'bold 20pt Arial';
@@ -227,7 +227,7 @@ Phaser.Text.prototype.setStyle = function(style) {
 * @method Phaser.Text.prototype.updateText
 * @private
 */
-Phaser.Text.prototype.updateText = function() {
+Phaser.Text.prototype.updateText = function () {
 
     this.context.font = this.style.font;
 
@@ -307,7 +307,7 @@ Phaser.Text.prototype.updateText = function() {
 * @method Phaser.Text.prototype.runWordWrap
 * @private
 */
-Phaser.Text.prototype.runWordWrap = function(text) {
+Phaser.Text.prototype.runWordWrap = function (text) {
 
     var result = '';
     var lines = text.split('\n');

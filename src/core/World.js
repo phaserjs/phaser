@@ -58,7 +58,7 @@ Phaser.World.prototype.boot = function () {
 
     this.game.camera = this.camera;
 
-    this.game.stage._stage.addChild(this);
+    this.game.stage.addChild(this);
 
 }
 

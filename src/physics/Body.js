@@ -37,6 +37,7 @@ Phaser.Physics.Body = function (sprite) {
     * @protected
     */
     this.data = new p2.Body({ position:[this.px2p(sprite.position.x), this.px2p(sprite.position.y)], mass: 1 });
+    this.data.parent = this;
 
     /**
     * @property {Phaser.PointProxy} velocity - The velocity of the body. Set velocity.x to a negative value to move to the left, position to the right. velocity.y negative values move up, positive move down.
@@ -48,14 +49,13 @@ Phaser.Physics.Body = function (sprite) {
     */
     this.force = new Phaser.Physics.PointProxy(this.data.force);
 
+    // this.onAdded = new Phaser.Signal();
+    // this.onRemoved = new Phaser.Signal();
+
     //  Set-up the default shape
     this.setRectangleFromSprite(sprite);
 
     this.game.physics.addBody(this.data);
-
-    //  Set-up contact events
-    // this.sprite.events.onBeginContact = new Phaser.Signal();
-    // this.sprite.events.onEndContact = new Phaser.Signal();
 
 };
 
