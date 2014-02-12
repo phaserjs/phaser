@@ -270,7 +270,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     if (this.body)
     {
-        this.body.preUpdate();
+        // this.body.preUpdate();
     }
 
     return true;

@@ -6,8 +6,9 @@
 
 /**
 * The Physics Body is linked to a single Sprite and defines properties that determine how the physics body is simulated.
-* These properties affect how the body reacts to forces, what forces it generates on itself (to simulate friction), and how it reacts to collisions in the scene. In most cases, the properties are used to simulate physical effects.
-* Each body also has its own property values that determine exactly how it reacts to forces and collisions in the scene.
+* These properties affect how the body reacts to forces, what forces it generates on itself (to simulate friction), and how it reacts to collisions in the scene.
+* In most cases, the properties are used to simulate physical effects. Each body also has its own property values that determine exactly how it reacts to forces and collisions in the scene.
+* By default a single Rectangle shape is added to the Body that matches the dimensions of the parent Sprite. See addShape, removeShape, clearShapes to add extra shapes around the Body.
 *
 * @class Phaser.Physics.Body
 * @classdesc Physics Body Constructor
@@ -31,8 +32,10 @@ Phaser.Physics.Body = function (sprite) {
     */
     this.offset = new Phaser.Point();
 
-    this.shape = null;
-
+    /**
+    * @property {p2.Body} data - The p2 Body data.
+    * @protected
+    */
     this.data = new p2.Body({ position:[this.px2p(sprite.x), this.px2p(sprite.y)], mass: 1 });
 
     /**
@@ -58,23 +61,6 @@ Phaser.Physics.Body = function (sprite) {
 
 Phaser.Physics.Body.prototype = {
 
-    /*
-    * Add a shape to the body. You can pass a local transform when adding a shape, 
-    * so that the shape gets an offset and angle relative to the body center of mass. 
-    * Will automatically update the mass properties and bounding radius.
-    *
-    * @method Phaser.Physics.Body#addShape
-    */
-    addShape: function (shape, offsetX, offsetY, angle) {
-
-        if (typeof offsetX === 'undefined') { offsetX = 0; }
-        if (typeof offsetY === 'undefined') { offsetY = 0; }
-        if (typeof angle === 'undefined') { angle = 0; }
-
-        return this.data.addShape(shape, [ this.px2p(offsetX), this.px2p(offsetY) ], angle);
-
-    },
-
     /**
     * Moves the shape offsets so their center of mass becomes the body center of mass.
     *
@@ -86,18 +72,29 @@ Phaser.Physics.Body.prototype = {
 
     },
 
-    //  applyDamping
-    //  applyForce
-    //  fromPolygon
+    /**
+    * Apply damping, see http://code.google.com/p/bullet/issues/detail?id=74 for details.
+    *
+    * @method Phaser.Physics.Body#applyDamping
+    * @param {number} dt - Current time step.
+    */
+    applyDamping: function (dt) {
+
+        this.data.applyDamping(dt);
+
+    },
 
     /**
-    * Remove a shape from the Body.
+    * Apply force to a world point. This could for example be a point on the RigidBody surface. Applying force this way will add to Body.force and Body.angularForce.
     *
-    * @method Phaser.Physics.Body#removeShape
+    * @method Phaser.Physics.Body#applyForce
+    * @param {number} force - The force to add.
+    * @param {number} worldX - The world x point to apply the force on.
+    * @param {number} worldY - The world y point to apply the force on.
     */
-    removeShape: function (shape) {
+    applyForce: function (force, worldX, worldY) {
 
-        return this.data.removeShape(shape);
+        this.data.applyForce(force, [this.px2p(worldX), this.px2p(worldY)]);
 
     },
 
@@ -116,13 +113,13 @@ Phaser.Physics.Body.prototype = {
     //  toWorldFrame
 
     /**
-    * If this Body is dynamic then this will zero its velocity on both axis.
+    * If this Body is dynamic then this will zero its angular velocity.
     *
     * @method Phaser.Physics.Body#setZeroRotation
     */
     setZeroRotation: function () {
 
-        ship.body.angularVelocity = 0;
+        this.data.angularVelocity = 0;
 
     },
 
@@ -147,6 +144,32 @@ Phaser.Physics.Body.prototype = {
 
         this.data.damping = 0;
         this.data.angularDamping = 0;
+
+    },
+
+    /**
+    * Transform a world point to local body frame.
+    *
+    * @method Phaser.Physics.Body#toLocalFrame
+    * @param {Float32Array|Array} out - The vector to store the result in.
+    * @param {Float32Array|Array} worldPoint - The input world vector.
+    */
+    toLocalFrame: function (out, worldPoint) {
+
+        return this.data.toLocalFrame(out, worldPoint);
+
+    },
+
+    /**
+    * Transform a local point to world frame.
+    *
+    * @method Phaser.Physics.Body#toWorldFrame
+    * @param {Array} out - The vector to store the result in.
+    * @param {Array} localPoint - The input local vector.
+    */
+    toWorldFrame: function (out, localPoint) {
+
+        return this.data.toWorldFrame(out, localPoint);
 
     },
 
@@ -244,19 +267,6 @@ Phaser.Physics.Body.prototype = {
     },
 
     /**
-    * Internal method that updates the Body position in relation to the parent Sprite.
-    *
-    * @method Phaser.Physics.Body#preUpdate
-    * @protected
-    */
-    preUpdate: function () {
-
-        // this.x = (this.sprite.world.x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
-        // this.y = (this.sprite.world.y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;
-
-    },
-
-    /**
     * Internal method. This is called directly before the sprites are sent to the renderer and after the update function has finished.
     *
     * @method Phaser.Physics.Body#postUpdate
@@ -275,43 +285,30 @@ Phaser.Physics.Body.prototype = {
     },
 
     /**
-    * Resets the Body motion values: velocity, acceleration, angularVelocity and angularAcceleration.
-    * Also resets the forces to defaults: gravity, bounce, minVelocity,maxVelocity, angularDrag, maxAngular, mass, friction and checkCollision if 'full' specified.
+    * Resets the Body force, velocity (linear and angular) and rotation. Optionally resets damping and mass.
     *
     * @method Phaser.Physics.Body#reset
-    * @param {boolean} [full=false] - A full reset clears down settings you may have set, such as gravity, bounce and drag. A non-full reset just clears motion values.
+    * @param {boolean} [resetDamping=false] - Resets the linear and angular damping.
+    * @param {boolean} [resetMass=false] - Sets the Body mass back to 1.
     */
-    reset: function (full) {
+    reset: function (resetDamping, resetMass) {
 
-        /*
-        if (typeof full === 'undefined') { full = false; }
+        if (typeof resetDamping === 'undefined') { resetDamping = false; }
+        if (typeof resetMass === 'undefined') { resetMass = false; }
 
-        if (full)
+        this.setZeroForce();
+        this.setZeroVelocity();
+        this.setZeroRotation();
+
+        if (resetDamping)
         {
-            this.gravity.setTo(0, 0);
-            this.bounce.setTo(0, 0);
-            this.minVelocity.setTo(5, 5);
-            this.maxVelocity.setTo(1000, 1000);
-            this.angularDrag = 0;
-            this.maxAngular = 1000;
-            this.mass = 1;
-            this.friction = 0.0;
-            this.checkCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
+            this.setZeroDamping();
         }
 
-        this.velocity.setTo(0, 0);
-        this.acceleration.setTo(0, 0);
-        this.angularVelocity = 0;
-        this.angularAcceleration = 0;
-        this.blocked = { x: 0, y: 0, up: false, down: false, left: false, right: false };
-        this.x = (this.sprite.world.x - (this.sprite.anchor.x * this.sprite.width)) + this.offset.x;
-        this.y = (this.sprite.world.y - (this.sprite.anchor.y * this.sprite.height)) + this.offset.y;
-        this.preX = this.x;
-        this.preY = this.y;
-        this.updateBounds();
-
-        this.contacts.length = 0;
-        */
+        if (resetMass)
+        {
+            this.mass = 1;
+        }
 
     },
 
@@ -324,103 +321,178 @@ Phaser.Physics.Body.prototype = {
 
         this.sprite = null;
 
+        if (this.data.world === this.game.physics)
+        {
+            this.game.physics.removeBody(this.data);
+        }
+
+        this.clearShapes();
+
         /*
         this.collideCallback = null;
         this.collideCallbackContext = null;
 
         this.customSeparateCallback = null;
         this.customSeparateContext = null;
-
-        this.contacts.length = 0;
         */
 
     },
 
     /**
-    * Sets this Body to use a circle of the given radius for all collision.
-    * The Circle will be centered on the center of the Sprite by default, but can be adjusted via the Body.offset property and the setCircle x/y parameters.
+    * Removes all Shapes from this Body.
     *
-    * @method Phaser.Physics.Body#setCircle
-    * @param {number} radius - The radius of this circle (in pixels)
-    * @param {number} [offsetX=0] - The x amount the circle will be offset from the Sprites center.
-    * @param {number} [offsetY=0] - The y amount the circle will be offset from the Sprites center.
+    * @method Phaser.Physics.Body#clearShapes
     */
-    setCircle: function (radius, offsetX, offsetY) {
+    clearShapes: function () {
 
-        // if (typeof offsetX === 'undefined') { offsetX = this.sprite._cache.halfWidth; }
-        // if (typeof offsetY === 'undefined') { offsetY = this.sprite._cache.halfHeight; }
-
-        // this.type = Phaser.Physics.Arcade.CIRCLE;
-        // this.shape = new SAT.Circle(new SAT.Vector(this.sprite.x, this.sprite.y), radius);
-        // this.polygon = null;
-
-        // this.offset.setTo(offsetX, offsetY);
+        for (var i = this.data.shapes.length - 1; i >= 0; i--)
+        {
+            var shape = this.data.shapes[i];
+            this.data.removeShape(shape);
+        }
 
     },
 
     /**
-    * Sets this Body to use a rectangle for all collision.
-    * If you don't specify any parameters it will be sized to match the parent Sprites current width and height (including scale factor) and centered on the sprite.
+    * Add a shape to the body. You can pass a local transform when adding a shape, so that the shape gets an offset and angle relative to the body center of mass.
+    * Will automatically update the mass properties and bounding radius.
+    *
+    * @method Phaser.Physics.Body#addShape
+    * @param {*} shape - The shape to add to the body.
+    * @param {number} [offsetX=0] - Local horizontal offset of the shape relative to the body center of mass.
+    * @param {number} [offsetY=0] - Local vertical offset of the shape relative to the body center of mass.
+    * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
+    * @return {p2.Circle|p2.Rectangle|p2.Plane|p2.Line|p2.Particle} The shape that was added to the body.
+    */
+    addShape: function (shape, offsetX, offsetY, rotation) {
+
+        this.data.addShape(shape, [this.px2p(offsetX), this.px2p(offsetY)], rotation);
+
+        return shape;
+
+    },
+
+    /**
+    * Remove a shape from the body. Will automatically update the mass properties and bounding radius.
+    *
+    * @method Phaser.Physics.Body#removeShape
+    * @param {p2.Circle|p2.Rectangle|p2.Plane|p2.Line|p2.Particle} shape - The shape to remove from the body.
+    * @return {boolean} True if the shape was found and removed, else false.
+    */
+    removeShape: function (shape) {
+
+        return this.data.removeShape(shape);
+
+    },
+
+    /**
+    * Clears any previously set shapes and sets this Body to use a Circle for all collision.
+    *
+    * @method Phaser.Physics.Body#setCircle
+    * @param {number} radius - The radius of this circle (in pixels)
+    * @param {number} [offsetX=0] - Local horizontal offset of the shape relative to the body center of mass.
+    * @param {number} [offsetY=0] - Local vertical offset of the shape relative to the body center of mass.
+    * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
+    */
+    setCircle: function (radius, offsetX, offsetY, rotation) {
+
+        if (typeof offsetX === 'undefined') { offsetX = 0; }
+        if (typeof offsetY === 'undefined') { offsetY = 0; }
+        if (typeof rotation === 'undefined') { rotation = 0; }
+
+        this.clearShapes();
+
+        this.data.addShape(new p2.Circle(this.px2p(radius)), [offsetX, offsetY], rotation);
+
+    },
+
+    /**
+    * Clears any previously set shapes and sets this Body to use a Rectangle for all collision.
+    * If you don't specify any parameters it will be sized to match the parent Sprites current width and height (including scale factor).
     *
     * @method Phaser.Physics.Body#setRectangle
     * @param {number} [width] - The width of the rectangle. If not specified it will default to the width of the parent Sprite.
     * @param {number} [height] - The height of the rectangle. If not specified it will default to the height of the parent Sprite.
-    * @param {number} [translateX] - The x amount the rectangle will be translated from the Sprites center.
-    * @param {number} [translateY] - The y amount the rectangle will be translated from the Sprites center.
+    * @param {number} [offsetX=0] - Local horizontal offset of the shape relative to the body center of mass.
+    * @param {number} [offsetY=0] - Local vertical offset of the shape relative to the body center of mass.
+    * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
     */
-    setRectangle: function (width, height, offsetX, offsetY) {
+    setRectangle: function (width, height, offsetX, offsetY, rotation) {
 
         if (typeof width === 'undefined') { width = this.sprite.width; }
         if (typeof height === 'undefined') { height = this.sprite.height; }
-        // if (typeof translateX === 'undefined') { translateX = this.sprite.width / 2; }
-        // if (typeof translateY === 'undefined') { translateY = this.sprite.height / 2; }
+        if (typeof offsetX === 'undefined') { offsetX = 0; }
+        if (typeof offsetY === 'undefined') { offsetY = 0; }
+        if (typeof rotation === 'undefined') { rotation = 0; }
 
-        //  This means 1 shape per body, need to move this to an array or similar
-        this.shape = new p2.Rectangle(this.px2p(width), this.px2p(height));
-        this.data.addShape(this.shape);
+        this.clearShapes();
 
-        this.offset.setTo(0, 0);
+        this.data.addShape(new p2.Rectangle(this.px2p(width), this.px2p(height)), [this.px2p(offsetX), this.px2p(offsetY)], rotation);
 
     },
 
     /**
-    * Sets this Body to use a convex polygon for collision.
-    * The points are specified in a counter-clockwise direction and must create a convex polygon.
-    * Use Body.translate and/or Body.offset to re-position the polygon from the Sprite origin.
+    * Reads a polygon shape path, and assembles convex shapes from that and puts them at proper offset points. The shape must be simple and without holes.
+    * This function expects the x.y values to be given in pixels. If you want to provide them 
     *
     * @method Phaser.Physics.Body#setPolygon
-    * @param {(SAT.Vector[]|number[]|...SAT.Vector|...number)} points - This can be an array of Vectors that form the polygon,
-    *      a flat array of numbers that will be interpreted as [x,y, x,y, ...], or the arguments passed can be
-    *      all the points of the polygon e.g. `setPolygon(new SAT.Vector(), new SAT.Vector(), ...)`, or the
-    *      arguments passed can be flat x,y values e.g. `setPolygon(x,y, x,y, x,y, ...)` where `x` and `y` are Numbers.
+    * @param {object} options - An object containing the build options: 
+    * @param {boolean} [options.optimalDecomp=false] - Set to true if you need optimal decomposition. Warning: very slow for polygons with more than 10 vertices.
+    * @param {boolean} [options.skipSimpleCheck=false] - Set to true if you already know that the path is not intersecting itself.
+    * @param {boolean|number} [options.removeCollinearPoints=false] - Set to a number (angle threshold value) to remove collinear points, or false to keep all points.
+    * @param {(number[]|...number)} points - An array of 2d vectors that form the convex or concave polygon. 
+    *                                       Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...], 
+    *                                       or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
+    * @return {boolean} True on success, else false.
     */
-    setPolygon: function (points) {
+    setPolygon: function (options, points) {
 
-        /*
-        this.type = Phaser.Physics.Arcade.POLYGON;
-        this.shape = null;
+        options = options || {};
 
-        if (!Array.isArray(points))
+        points = Array.prototype.slice.call(arguments, 1);
+
+        var path;
+
+        //  Did they pass in a single array of points?
+        if (points.length === 1)
         {
-            points = Array.prototype.slice.call(arguments);
+            // console.log('part 1', points.length);
+            path = points[0];
         }
-
-        if (typeof points[0] === 'number')
+        else if (Array.isArray(points[0]))
         {
-            var p = [];
+            // console.log('part 2', points.length);
+            path = points;
+        }
+        else if (typeof points[0] === 'number')
+        {
+            //  A list of numbers?
+            // console.log('part 3');
 
+            var temp = [];
+
+            //  We've a list of numbers
             for (var i = 0, len = points.length; i < len; i += 2)
             {
-                p.push(new SAT.Vector(points[i], points[i + 1]));
+                temp.push([points[i], points[i + 1]]);
             }
 
-            points = p;
+            path = temp;
         }
 
-        this.polygon = new SAT.Polygon(new SAT.Vector(this.sprite.center.x, this.sprite.center.y), points);
+        //  Now process them into p2 values
+        for (var p = 0; p < path.length; p++)
+        {
+            // path[p][0] = this.px2p(path[p][0]);
+            // path[p][1] = this.px2p(path[p][1]);
+        }
 
-        this.offset.setTo(0, 0);
-        */
+        // console.log('points');
+        // console.table(points);
+        // console.log('PATH');
+        // console.log(path);
+
+        return this.data.fromPolygon(path, options);
 
     },
 
