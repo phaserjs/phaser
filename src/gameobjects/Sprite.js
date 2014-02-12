@@ -826,8 +826,12 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
 });
 
 /**
-* By default Sprites won't add themselves to the physics world. By setting physicsEnabled to true a Physics Body is
-* attached to this Sprite and it will then start to process physics world updates. Access all of its properties via Sprite.body.
+* By default Sprites won't add themselves to the physics world. By setting physicsEnabled to true a Rectangle physics body is
+* attached to this Sprite matching its placement and dimensions, and will then start to process physics world updates.
+* You can access all physics related properties via Sprite.body.
+*
+* Important: Enabling a Sprite for physics will automatically set `Sprite.anchor` to 0.5 s0 the physics body is centered on the Sprite.
+* If you need a different result then adjust or re-create the Body shape offsets manually, and/or reset the anchor after enabling physics.
 *
 * @name Phaser.Sprite#physicsEnabled
 * @property {boolean} physicsEnabled - Set to true to add this Sprite to the physics world. Set to false to destroy the body and remove it from the physics world.
@@ -847,6 +851,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "physicsEnabled", {
             if (this.body === null)
             {
                 this.body = new Phaser.Physics.Body(this);
+                this.anchor.set(0.5);
             }
         }
         else

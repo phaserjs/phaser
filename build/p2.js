@@ -6740,7 +6740,7 @@ Body.prototype.updateAABB = function() {
             angle = shapeAngles[i] + this.angle;
 
         // Get shape world offset
-        vec2.rotate(offset,shapeOffsets[i],angle);
+        vec2.rotate(offset,shapeOffsets[i],this.angle);
         vec2.add(offset,offset,this.position);
 
         // Get shape AABB
@@ -9102,6 +9102,18 @@ function World(options){
     };
 
     /**
+     * Fired after the Broadphase has collected collision pairs in the world.
+     * Inside the event handler, you can modify the pairs array as you like, to
+     * prevent collisions between objects that you don't want.
+     * @event postBroadphase
+     * @param {Array} pairs An array of collision pairs. If this array is [body1,body2,body3,body4], then the body pairs 1,2 and 3,4 would advance to narrowphase.
+     */
+    this.postBroadphaseEvent = {
+        type:"postBroadphase",
+        pairs:null,
+    };
+
+    /**
      * Enable / disable automatic body sleeping
      * @property allowSleep
      * @type {Boolean}
@@ -9294,6 +9306,10 @@ World.prototype.internalStep = function(dt){
 
     // Broadphase
     var result = broadphase.getCollisionPairs(this);
+
+    // postBroadphase event
+    this.postBroadphaseEvent.pairs = result;
+    this.emit(this.postBroadphaseEvent);
 
     // Narrowphase
     np.reset(this);

@@ -894,6 +894,46 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
+    * @method Phaser.Utils.Debug#renderVertices
+    * @param {array} vertices
+    * @param {string} [color='rgb(255,255,255)'] - The color the polygon is stroked in.
+    */
+    renderShape: function (body, id, color, context) {
+
+        if (this.context === null && context === null)
+        {
+            return;
+        }
+
+        color = color || 'rgb(255,255,255)';
+
+        this.start(0, 0, color);
+
+        var x = body.sprite.x;
+        var y = body.sprite.y;
+
+        var points = body.data.shapes[id].vertices;
+
+        var ox = x + this.game.math.p2px(body.data.shapeOffsets[id][0]);
+        var oy = y + this.game.math.p2px(body.data.shapeOffsets[id][1]);
+
+        this.context.beginPath();
+        this.context.moveTo(ox + this.game.math.p2px(points[0][0]), oy + this.game.math.p2px(points[0][1]));
+
+        for (var i = 1; i < points.length; i++)
+        {
+            this.context.lineTo(ox + this.game.math.p2px(points[i][0]), oy + this.game.math.p2px(points[i][1]));
+        }
+
+        this.context.closePath();
+        this.context.strokeStyle = color;
+        this.context.stroke();
+
+        this.stop();
+
+    },
+
+    /**
     * @method Phaser.Utils.Debug#renderPolygon
     * @param {array} polygon
     * @param {string} [color='rgb(255,255,255)'] - The color the polygon is stroked in.

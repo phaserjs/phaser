@@ -36,7 +36,7 @@ Phaser.Physics.Body = function (sprite) {
     * @property {p2.Body} data - The p2 Body data.
     * @protected
     */
-    this.data = new p2.Body({ position:[this.px2p(sprite.x), this.px2p(sprite.y)], mass: 1 });
+    this.data = new p2.Body({ position:[this.px2p(sprite.position.x), this.px2p(sprite.position.y)], mass: 1 });
 
     /**
     * @property {Phaser.PointProxy} velocity - The velocity of the body. Set velocity.x to a negative value to move to the left, position to the right. velocity.y negative values move up, positive move down.
@@ -425,6 +425,27 @@ Phaser.Physics.Body.prototype = {
         if (typeof offsetY === 'undefined') { offsetY = 0; }
         if (typeof rotation === 'undefined') { rotation = 0; }
 
+        // var px = 0;
+        // var py = 0;
+
+        // if (sprite.anchor.x !== 0)
+        // {
+        //     px = (sprite.width / 2) + (-sprite.width * sprite.anchor.x);
+        // }
+        // else
+        // {
+        //     px = sprite.width / 2;
+        // }
+
+        // if (sprite.anchor.y !== 0)
+        // {
+        //     py = (sprite.height / 2) + (-sprite.height * sprite.anchor.y);
+        // }
+        // else
+        // {
+        //     py = sprite.height / 2;
+        // }
+    
         this.clearShapes();
 
         this.data.addShape(new p2.Rectangle(this.px2p(width), this.px2p(height)), [this.px2p(offsetX), this.px2p(offsetY)], rotation);
@@ -433,7 +454,7 @@ Phaser.Physics.Body.prototype = {
 
     /**
     * Reads a polygon shape path, and assembles convex shapes from that and puts them at proper offset points. The shape must be simple and without holes.
-    * This function expects the x.y values to be given in pixels. If you want to provide them 
+    * This function expects the x.y values to be given in pixels. If you want to provide them at p2 world scales then call Body.data.fromPolygon directly.
     *
     * @method Phaser.Physics.Body#setPolygon
     * @param {object} options - An object containing the build options: 
@@ -483,8 +504,8 @@ Phaser.Physics.Body.prototype = {
         //  Now process them into p2 values
         for (var p = 0; p < path.length; p++)
         {
-            // path[p][0] = this.px2p(path[p][0]);
-            // path[p][1] = this.px2p(path[p][1]);
+            path[p][0] = this.px2p(path[p][0]);
+            path[p][1] = this.px2p(path[p][1]);
         }
 
         // console.log('points');
