@@ -7,6 +7,11 @@
  */
 var PIXI = PIXI || {};
 
+/* 
+* 
+* This file contains a lot of pixi consts which are used across the rendering engine
+* @class Consts
+*/
 PIXI.WEBGL_RENDERER = 0;
 PIXI.CANVAS_RENDERER = 1;
 
@@ -44,3 +49,6 @@ PIXI.scaleModes = {
 // interaction frequency 
 PIXI.INTERACTION_FREQUENCY = 30;
 PIXI.AUTO_PREVENT_DEFAULT = true;
+
+PIXI.RAD_TO_DEG = 180 / Math.PI;
+PIXI.DEG_TO_RAD = Math.PI / 180;

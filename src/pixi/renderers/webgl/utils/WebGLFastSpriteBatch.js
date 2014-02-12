@@ -16,7 +16,6 @@ PIXI.WebGLFastSpriteBatch = function(gl)
     this.maxSize = 6000;//Math.pow(2, 16) /  this.vertSize;
     this.size = this.maxSize;
 
- //   console.log(this.size);
     //the total number of floats in our batch
     var numVerts = this.size * 4 *  this.vertSize;
     //the total number of indices in our batch
@@ -85,7 +84,6 @@ PIXI.WebGLFastSpriteBatch.prototype.begin = function(spriteBatch, renderSession)
 
     this.matrix = spriteBatch.worldTransform.toArray(true);
 
-   // console.log(this.tempMatrix)
     this.start();
 };
 
@@ -128,9 +126,9 @@ PIXI.WebGLFastSpriteBatch.prototype.renderSprite = function(sprite)
     // TODO trim??
     if(sprite.texture.baseTexture !== this.currentBaseTexture)
     {
-        this.currentBaseTexture = sprite.texture.baseTexture;
         this.flush();
-
+        this.currentBaseTexture = sprite.texture.baseTexture;
+        
         if(!sprite.texture._uvs)return;
     }
 
@@ -142,15 +140,15 @@ PIXI.WebGLFastSpriteBatch.prototype.renderSprite = function(sprite)
     width = sprite.texture.frame.width;
     height = sprite.texture.frame.height;
 
-    if (sprite.texture.trimmed)
+    if (sprite.texture.trim)
     {
         // if the sprite is trimmed then we need to add the extra space before transforming the sprite coords..
         var trim = sprite.texture.trim;
 
-        w1 = trim.x - sprite.anchor.x * trim.realWidth;
+        w1 = trim.x - sprite.anchor.x * trim.width;
         w0 = w1 + sprite.texture.frame.width;
 
-        h1 = trim.y - sprite.anchor.y * trim.realHeight;
+        h1 = trim.y - sprite.anchor.y * trim.height;
         h0 = h1 + sprite.texture.frame.height;
     }
     else

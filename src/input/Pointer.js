@@ -225,12 +225,12 @@ Phaser.Pointer.prototype = {
         this._holdSent = false;
 
         //  This sets the x/y and other local values
-        this.move(event);
+        this.move(event, true);
 
         // x and y are the old values here?
         this.positionDown.setTo(this.x, this.y);
 
-        if (this.game.input.multiInputOverride == Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride == Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride == Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers === 0))
+        if (this.game.input.multiInputOverride === Phaser.Input.MOUSE_OVERRIDES_TOUCH || this.game.input.multiInputOverride === Phaser.Input.MOUSE_TOUCH_COMBINE || (this.game.input.multiInputOverride === Phaser.Input.TOUCH_OVERRIDES_MOUSE && this.game.input.currentPointers === 0))
         {
             this.game.input.x = this.x;
             this.game.input.y = this.y;
@@ -242,7 +242,7 @@ Phaser.Pointer.prototype = {
         this._stateReset = false;
         this.totalTouches++;
 
-        if (this.isMouse === false)
+        if (!this.isMouse)
         {
             this.game.input.currentPointers++;
         }
@@ -297,13 +297,16 @@ Phaser.Pointer.prototype = {
     * Called when the Pointer is moved.
     * @method Phaser.Pointer#move
     * @param {MouseEvent|PointerEvent|TouchEvent} event - The event passed up from the input handler.
+    * @param {boolean} [fromClick=false] - Was this called from the click event?
     */
-    move: function (event) {
+    move: function (event, fromClick) {
 
         if (this.game.input.pollLocked)
         {
             return;
         }
+
+        if (typeof fromClick === 'undefined') { fromClick = false; }
 
         if (typeof event.button !== 'undefined')
         {
@@ -371,11 +374,14 @@ Phaser.Pointer.prototype = {
             do
             {
                 //  If the object is using pixelPerfect checks, or has a higher InputManager.PriorityID OR if the priority ID is the same as the current highest AND it has a higher renderOrderID, then set it to the top
-                if (currentNode.pixelPerfect || currentNode.priorityID > this._highestInputPriorityID || (currentNode.priorityID == this._highestInputPriorityID && currentNode.sprite.renderOrderID > this._highestRenderOrderID))
+                if (currentNode.pixelPerfectClick || currentNode.pixelPerfectOver || currentNode.priorityID > this._highestInputPriorityID || (currentNode.priorityID === this._highestInputPriorityID && currentNode.sprite.renderOrderID > this._highestRenderOrderID))
                 {
-                    if (currentNode.checkPointerOver(this))
+                    if ((!fromClick && currentNode.checkPointerOver(this)) || (fromClick && currentNode.checkPointerDown(this)))
                     {
-                        // console.log('HRO set', currentNode.sprite.name);
+                        if (fromClick)
+                        {
+                            console.log('HRO set', currentNode.sprite.name, currentNode.priorityID, 'current highest', this._highestRenderOrderID, 'highest p', this._highestInputPriorityID);
+                        }
                         this._highestRenderOrderID = currentNode.sprite.renderOrderID;
                         this._highestInputPriorityID = currentNode.priorityID;
                         this._highestRenderObject = currentNode;
@@ -443,7 +449,7 @@ Phaser.Pointer.prototype = {
     leave: function (event) {
 
         this.withinGame = false;
-        this.move(event);
+        this.move(event, false);
 
     },
 

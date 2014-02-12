@@ -165,12 +165,13 @@ PIXI.Sprite.prototype.onTextureUpdate = function()
 };
 
 /**
- * Retrieves the bounds of the sprite as a rectangle object
- *
- * @method getBounds
- * @return {Rectangle} the rectangular bounding area
- */
-PIXI.Sprite.prototype.getBounds = function()
+* Returns the framing rectangle of the sprite as a PIXI.Rectangle object
+*
+* @method getBounds
+* @param matrix {Matrix} the transformation matrix of the sprite
+* @return {Rectangle} the framing rectangle
+*/
+PIXI.Sprite.prototype.getBounds = function(matrix)
 {
 
     var width = this.texture.frame.width;
@@ -182,7 +183,7 @@ PIXI.Sprite.prototype.getBounds = function()
     var h0 = height * (1-this.anchor.y);
     var h1 = height * -this.anchor.y;
 
-    var worldTransform = this.worldTransform;
+    var worldTransform = matrix || this.worldTransform ;
 
     var a = worldTransform.a;
     var b = worldTransform.c;
@@ -347,7 +348,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
        
         if (renderSession.roundPixels)
         {
-            context.setTransform(transform.a, transform.c, transform.b, transform.d, Math.floor(transform.tx), Math.floor(transform.ty));
+            context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx || 0, transform.ty || 0);
         }
         else
         {
@@ -391,7 +392,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
 
            
 
-            if(texture.trimmed)
+            if(texture.trim)
             {
                 var trim =  texture.trim;
 
@@ -400,8 +401,8 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
                                frame.y,
                                frame.width,
                                frame.height,
-                               trim.x - this.anchor.x * trim.realWidth,
-                               trim.y - this.anchor.y * trim.realHeight,
+                               trim.x - this.anchor.x * trim.width,
+                               trim.y - this.anchor.y * trim.height,
                                frame.width,
                                frame.height);
             }
@@ -434,6 +435,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
         renderSession.maskManager.popMask(renderSession.context);
     }
 };
+
 
 // some helper functions..
 

@@ -10,8 +10,6 @@
  */
 PIXI.DisplayObject = function()
 {
-    this.last = this;
-    this.first = this;
     /**
      * The coordinate of the object relative to the local coordinates of the parent.
      *
@@ -195,7 +193,6 @@ PIXI.DisplayObject = function()
      * @private
      */
     this._mask = null;
-
 
     /*
      * MOUSE Callbacks
@@ -402,7 +399,6 @@ PIXI.DisplayObject.prototype.updateTransform = function()
    // var localTransform = this.localTransform//.toArray();
     var parentTransform = this.parent.worldTransform;//.toArray();
     var worldTransform = this.worldTransform;//.toArray();
-    //console.log(localTransform)
     var px = this.pivot.x;
     var py = this.pivot.y;
 
@@ -412,16 +408,16 @@ PIXI.DisplayObject.prototype.updateTransform = function()
         a11 = this._cr * this.scale.y,
         a02 = this.position.x + a00 * px - py * a01,
         a12 = this.position.y + a11 * py - px * a10,
-        b00 = parentTransform.a, b01 = parentTransform.b, b02 = parentTransform.tx,
-        b10 = parentTransform.c, b11 = parentTransform.d, b12 = parentTransform.ty;
+        b00 = parentTransform.a, b01 = parentTransform.b,
+        b10 = parentTransform.c, b11 = parentTransform.d;
 
     worldTransform.a = b00 * a00 + b01 * a10;
     worldTransform.b = b00 * a01 + b01 * a11;
-    worldTransform.tx = b00 * a02 + b01 * a12 + b02;
+    worldTransform.tx = b00 * a02 + b01 * a12 + parentTransform.tx;
 
     worldTransform.c = b10 * a00 + b11 * a10;
     worldTransform.d = b10 * a01 + b11 * a11;
-    worldTransform.ty = b10 * a02 + b11 * a12 + b12;
+    worldTransform.ty = b10 * a02 + b11 * a12 + parentTransform.ty;
 
     this.worldAlpha = this.alpha * this.parent.worldAlpha;
 };
@@ -432,8 +428,9 @@ PIXI.DisplayObject.prototype.updateTransform = function()
  * @method getBounds
  * @return {Rectangle} the rectangular bounding area
  */
-PIXI.DisplayObject.prototype.getBounds = function()
+PIXI.DisplayObject.prototype.getBounds = function( matrix )
 {
+    matrix = matrix;//just to get passed js hinting (and preserve inheritance)
     return PIXI.EmptyRectangle;
 };
 
@@ -445,17 +442,9 @@ PIXI.DisplayObject.prototype.getBounds = function()
  */
 PIXI.DisplayObject.prototype.getLocalBounds = function()
 {
-    var matrixCache = this.worldTransform;
+    //var matrixCache = this.worldTransform;
 
-    this.worldTransform = PIXI.identityMatrix;
-
-    this.updateTransform();
-
-    var bounds = this.getBounds();
-
-    this.worldTransform = matrixCache;
-
-    return bounds;
+    return this.getBounds(PIXI.identityMatrix);///PIXI.EmptyRectangle();
 };
 
 /**

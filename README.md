@@ -120,6 +120,7 @@ Bug Fixes:
 * IE11 didn't populate the Device.ieVersion value. Now extracted from Trident revision, but still use Device.trident instead for IE11+ checks.
 * Fixed bug in Math.angleBetween where it was using the coordinates in the wrong order.
 * Previously using a Pixel Perfect check didn't work if the Sprite was rotated or had a non-zero anchor point, now works under all conditions + atlas frames.
+* If pixelPerfect Input Sprites overlapped each other the pixel check wasn't taken into consieration in the Pointer move method.
 
 
 TO DO:

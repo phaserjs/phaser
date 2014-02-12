@@ -10,13 +10,12 @@
  * @static
  * @param width=800 {Number} the width of the renderers view
  * @param height=600 {Number} the height of the renderers view
- * @param [view] {Canvas} the canvas to use as a view, optional
- * @param [transparent=false] {Boolean} the transparency of the render view, default false
+ * @param [view] {Canvas} the canvas to use as a view, optional 
  * @param [antialias=false] {Boolean} sets antialias (only applicable in webGL chrome at the moment)
+ * @param [transparent=false] {Boolean} the transparency of the render view, default false
  *
- * antialias
  */
-PIXI.autoDetectRenderer = function(width, height, view, transparent, antialias)
+PIXI.autoDetectRenderer = function(width, height, view,antialias,transparent)
 {
     if(!width)width = 800;
     if(!height)height = 600;
@@ -29,14 +28,6 @@ PIXI.autoDetectRenderer = function(width, height, view, transparent, antialias)
                                     return false;
                                 }
                             } )();
-
-    // used to detect ie 11 - no longer required
-    /*  if(webgl)
-    {
-        var ie =  (navigator.userAgent.toLowerCase().indexOf('trident') !== -1);
-        webgl = !ie;
-    }
-    */
 
 
     if( webgl )

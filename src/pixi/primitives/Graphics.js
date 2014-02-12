@@ -80,7 +80,7 @@ PIXI.Graphics = function()
     this.currentPath = {points:[]};
 
     /**
-     * WebGL lines ? TODO-Alvin
+     * Array containing some WebGL-related properties used by the WebGL renderer
      *
      * @property _webGL
      * @type Array
@@ -89,7 +89,7 @@ PIXI.Graphics = function()
     this._webGL = [];
 
     /**
-     * Whether this shape is used as a mask
+     * Whether this shape is being used as a mask
      *
      * @property isMask
      * @type isMask
@@ -105,7 +105,7 @@ PIXI.Graphics = function()
     this.bounds = null;
 
     /**
-     * the bound padding TODO-Alvin
+     * the bounds' padding used for bounds calculation
      *
      * @property bounds
      * @type Number
@@ -438,7 +438,7 @@ PIXI.Graphics.prototype._renderCanvas = function(renderSession)
  * @method getBounds
  * @return {Rectangle} the rectangular bounding area
  */
-PIXI.Graphics.prototype.getBounds = function()
+PIXI.Graphics.prototype.getBounds = function( matrix )
 {
     if(!this.bounds)this.updateBounds();
 
@@ -448,7 +448,7 @@ PIXI.Graphics.prototype.getBounds = function()
     var h0 = this.bounds.y;
     var h1 = this.bounds.height + this.bounds.y;
 
-    var worldTransform = this.worldTransform;
+    var worldTransform = matrix || this.worldTransform;
 
     var a = worldTransform.a;
     var b = worldTransform.c;
@@ -578,14 +578,14 @@ PIXI.Graphics.prototype.updateBounds = function()
 
 
 /**
- * Generates the cached sprite that was made using the generate TODO-Alvin
+ * Generates the cached sprite when the sprite has cacheAsBitmap = true
  *
  * @method _generateCachedSprite
  * @private
  */
 PIXI.Graphics.prototype._generateCachedSprite = function()
 {
-    var bounds = this.getBounds();
+    var bounds = this.getLocalBounds();
 
     if(!this._cachedSprite)
     {

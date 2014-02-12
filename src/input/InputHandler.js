@@ -503,6 +503,36 @@ Phaser.InputHandler.prototype = {
     },
 
     /**
+    * Checks if the given pointer is over this Sprite and can click it.
+    * @method Phaser.InputHandler#checkPointerDown
+    * @param {Phaser.Pointer} pointer
+    * @return {boolean}
+    */
+    checkPointerDown: function (pointer) {
+
+        if (this.enabled === false || this.sprite.visible === false || this.sprite.parent.visible === false)
+        {
+            return false;
+        }
+
+        //  Need to pass it a temp point, in case we need it again for the pixel check
+        if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))
+        {
+            if (this.pixelPerfectClick)
+            {
+                return this.checkPixel(this._tempPoint.x, this._tempPoint.y);
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        return false;
+
+    },
+
+    /**
     * Checks if the given pointer is over this Sprite.
     * @method Phaser.InputHandler#checkPointerOver
     * @param {Phaser.Pointer} pointer

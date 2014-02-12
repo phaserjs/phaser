@@ -31,7 +31,7 @@ PIXI.Texture = function(baseTexture, frame)
         baseTexture = baseTexture.baseTexture;
 
     /**
-     * The base texture of this texture
+     * The base texture of that this texture uses
      *
      * @property baseTexture
      * @type BaseTexture
@@ -50,10 +50,10 @@ PIXI.Texture = function(baseTexture, frame)
      * The trim point
      *
      * @property trim
-     * @type Point
+     * @type Rectangle
      */
-    this.trim = new PIXI.Point();
-
+    this.trim = null;
+  
     this.scope = this;
 
     if(baseTexture.hasLoaded)
@@ -251,8 +251,4 @@ PIXI.TextureUvs = function()
 
 
 };
-
-
-
-
 
