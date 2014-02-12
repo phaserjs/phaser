@@ -887,10 +887,10 @@ Phaser.Physics.Arcade.Body.prototype = {
     */
     separate: function (body, response) {
 
-        if (this.inContact(body))
-        {
-            return false;
-        }
+        // if (this.inContact(body))
+        // {
+            // return false;
+        // }
 
         this._distances[0] = body.right - this.x;   // Distance of B to face on left side of A
         this._distances[1] = this.right - body.x;   // Distance of B to face on right side of A
@@ -949,10 +949,10 @@ Phaser.Physics.Arcade.Body.prototype = {
         else
         {
             //  They can only contact like this if at least one of their sides is open, otherwise it's a separation
-            // if (!this.checkCollision.up || !this.checkCollision.down || !this.checkCollision.left || !this.checkCollision.right || !body.checkCollision.up || !body.checkCollision.down || !body.checkCollision.left || !body.checkCollision.right)
-            // {
+            if (!this.checkCollision.up || !this.checkCollision.down || !this.checkCollision.left || !this.checkCollision.right || !body.checkCollision.up || !body.checkCollision.down || !body.checkCollision.left || !body.checkCollision.right)
+            {
                 this.addContact(body);
-            // }
+            }
         }
 
         return hasSeparated;

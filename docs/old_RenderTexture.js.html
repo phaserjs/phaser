@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Phaser Source: gameobjects/BitmapText.js</title>
+	<title>Phaser Source: gameobjects/old_RenderTexture.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -180,6 +180,10 @@
 						
 						<li>
 							<a href="Phaser.Group.html">Group</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Image.html">Image</a>
 						</li>
 						
 						<li>
@@ -405,7 +409,23 @@
 					<ul class="dropdown-menu ">
 						
 						<li>
-							<a href="global.html#SAT">SAT</a>
+							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
+						</li>
+						
+						<li>
+							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
+						</li>
+						
+						<li>
+							<a href="global.html#hex2rgb">hex2rgb</a>
+						</li>
+						
+						<li>
+							<a href="global.html#hitTest">hitTest</a>
+						</li>
+						
+						<li>
+							<a href="global.html#rgb2hex">rgb2hex</a>
 						</li>
 						
 
@@ -425,7 +445,7 @@
 					
 
 
-		<h1 class="page-title">Source: gameobjects/BitmapText.js</h1>
+		<h1 class="page-title">Source: gameobjects/old_RenderTexture.js</h1>
     
     <section>
         <article>
@@ -436,232 +456,326 @@
 */
 
 /**
-* Creates a new BitmapText object.
-*
-* @class Phaser.BitmapText
-*
-* @classdesc BitmapText objects work by taking a texture file and an XML file that describes the font layout.
-*
-* On Windows you can use the free app BMFont: http://www.angelcode.com/products/bmfont/
-*
-* On OS X we recommend Glyph Designer: http://www.71squared.com/en/glyphdesigner
-*
+* A RenderTexture is a special texture that allows any displayObject to be rendered to it.
+* @class Phaser.RenderTexture
 * @constructor
-* @param {Phaser.Game} game - A reference to the currently running game.
-* @param {number} x - X position of the new bitmapText object.
-* @param {number} y - Y position of the new bitmapText object.
-* @param {string} text - The actual text that will be written.
-* @param {object} style - The style object containing style attributes like font, font size , etc.
+* @param {Phaser.Game} game - Current game instance.
+* @param {string} key - Asset key for the render texture.
+* @param {number} width - the width of the render texture.
+* @param {number} height - the height of the render texture.
 */
-Phaser.BitmapText = function (game, x, y, text, style) {
-
-    x = x || 0;
-    y = y || 0;
-    text = text || '';
-    style = style || '';
+Phaser.RenderTexture = function (game, key, width, height) {
 
     /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
+    * @property {Phaser.Game} game - A reference to the currently running game. 
     */
     this.game = game;
 
-    /** 
-    * @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
-    * @default
+    /**
+    * @property {string} name - the name of the object. 
     */
-    this.exists = true;
+    this.name = key;
+
+    PIXI.EventTarget.call(this);
 
     /**
-    * @property {boolean} alive - This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering.
-    * @default
+    * @property {number} width - the width. 
     */
-    this.alive = true;
-
-    /**
-    * @property {Phaser.Group} group - The parent Group of this BitmapText.
-    */
-    this.group = null;
-
-    /**
-    * @property {string} name - The user defined name given to this BitmapText.
-    * @default
-    */
-    this.name = '';
-
-    /**
-    * @property {number} type - The const type of this object.
-    * @readonly
-    */
-    this.type = Phaser.BITMAPTEXT;
-
-    PIXI.BitmapText.call(this, text, style);
-
-    /**
-    * @property {number} position.x - The x position of this object.
-    */
-    this.position.x = x;
+    this.width = width || 100;
     
     /**
-    * @property {number} position.y - The y position of this object.
+    * @property {number} height - the height. 
     */
-    this.position.y = y;
+    this.height = height || 100;
 
     /**
-    * The anchor sets the origin point of the texture.
-    * The default is 0,0 this means the textures origin is the top left 
-    * Setting than anchor to 0.5,0.5 means the textures origin is centered
-    * Setting the anchor to 1,1 would mean the textures origin points will be the bottom right
-    *
-    * @property {Phaser.Point} anchor - The anchor around which rotation and scaling takes place.
+    * @property {PIXI.mat3} indetityMatrix - Matrix object. 
     */
-    this.anchor = new Phaser.Point();
-    
-    /**
-    * @property {Phaser.Point} scale - The scale of the object when rendered. By default it's set to 1 (no scale). You can modify it via scale.x or scale.y or scale.setTo(x, y). A value of 1 means no change to the scale, 0.5 means "half the size", 2 means "twice the size", etc.
-    */
-    this.scale = new Phaser.Point(1, 1);
+    this.indetityMatrix = PIXI.mat3.create();
 
     /**
-    * @property {object} _cache - A mini cache for storing all of the calculated values.
-    * @private
+    * @property {PIXI.Rectangle} frame - The frame for this texture. 
     */
-    this._cache = {
+    this.frame = new PIXI.Rectangle(0, 0, this.width, this.height);
 
-        dirty: false,
+    /**
+    * @property {number} type - Base Phaser object type. 
+    */
+    this.type = Phaser.RENDERTEXTURE;
 
-        //  Transform cache
-        a00: 1,
-        a01: 0,
-        a02: x,
-        a10: 0,
-        a11: 1,
-        a12: y,
-        id: 1,
+    this._tempPoint = { x: 0, y: 0 };
 
-        //  The previous calculated position
-        x: -1,
-        y: -1,
-
-        //  The actual scale values based on the worldTransform
-        scaleX: 1,
-        scaleY: 1
-
-    };
-
-    this._cache.x = this.x;
-    this._cache.y = this.y;
-
-};
-
-Phaser.BitmapText.prototype = Object.create(PIXI.BitmapText.prototype);
-Phaser.BitmapText.prototype.constructor = Phaser.BitmapText;
-
-/**
-* Automatically called by World.update
-* @method Phaser.BitmapText.prototype.update
-*/
-Phaser.BitmapText.prototype.update = function() {
-
-    if (!this.exists)
+    if (PIXI.gl)
     {
-        return;
-    }
-
-    this._cache.dirty = false;
-
-    this._cache.x = this.x;
-    this._cache.y = this.y;
-
-    if (this.position.x != this._cache.x || this.position.y != this._cache.y)
-    {
-        this.position.x = this._cache.x;
-        this.position.y = this._cache.y;
-        this._cache.dirty = true;
-    }
-
-    this.pivot.x = this.anchor.x * this.width;
-    this.pivot.y = this.anchor.y * this.height;
-
-}
-
-/**
-* @method Phaser.Text.prototype.destroy
-*/
-Phaser.BitmapText.prototype.destroy = function() {
-
-    if (this.group)
-    {
-        this.group.remove(this);
-    }
-
-    if (this.canvas && this.canvas.parentNode)
-    {
-        this.canvas.parentNode.removeChild(this.canvas);
+        this.initWebGL();
     }
     else
     {
-        this.canvas = null;
-        this.context = null;
+        this.initCanvas();
     }
+    
+};
 
-    this.exists = false;
+Phaser.RenderTexture.prototype = Object.create(PIXI.Texture.prototype);
+Phaser.RenderTexture.prototype.constructor = PIXI.RenderTexture;
 
-    this.group = null;
+/**
+* This function will draw the display object to the texture. If the display object is a Group or has children it will
+* draw all children as well.
+* 
+* @method Phaser.RenderTexture#render
+* @memberof Phaser.RenderTexture
+* @param {DisplayObject} displayObject - The display object to render this texture on.
+* @param {Phaser.Point} [position] - Where to draw the display object.
+* @param {boolean} [clear=false] - If true the texture will be cleared before the displayObject is drawn.
+* @param {boolean} [renderHidden=false] - If true displayObjects that have their visible property set to false will still be rendered.
+*/
+Phaser.RenderTexture.prototype.render = function(displayObject, position, clear, renderHidden) {
+
+    if (typeof position === 'undefined') { position = false; }
+    if (typeof clear === 'undefined') { clear = false; }
+    if (typeof renderHidden === 'undefined') { renderHidden = false; }
+
+    if (PIXI.gl)
+    {
+        this.renderWebGL(displayObject, position, clear, renderHidden);
+    }
+    else
+    {
+        this.renderCanvas(displayObject, position, clear, renderHidden);
+    }
 
 }
 
 /**
-* Indicates the rotation of the BitmapText, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
-* Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
-* If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
-* @name Phaser.BitmapText#angle
-* @property {number} angle - Gets or sets the angle of rotation in degrees.
+* This function will draw the display object to the texture at the given x/y coordinates.
+* If the display object is a Group or has children it will draw all children as well.
+*
+* @method Phaser.RenderTexture#renderXY
+* @memberof Phaser.RenderTexture
+* @param {DisplayObject} displayObject - The display object to render this texture on.
+* @param {number} x - The x coordinate to draw the display object at.
+* @param {number} y - The y coordinate to draw the display object at.
+* @param {boolean} [clear=false] - If true the texture will be cleared before the displayObject is drawn.
+* @param {boolean} [renderHidden=false] - If true displayObjects that have their visible property set to false will still be rendered.
 */
-Object.defineProperty(Phaser.BitmapText.prototype, 'angle', {
+Phaser.RenderTexture.prototype.renderXY = function(displayObject, x, y, clear, renderHidden) {
 
-    get: function() {
-        return Phaser.Math.radToDeg(this.rotation);
-    },
+    this._tempPoint.x = x;
+    this._tempPoint.y = y;
 
-    set: function(value) {
-        this.rotation = Phaser.Math.degToRad(value);
-    }
+    this.render(displayObject, this._tempPoint, clear, renderHidden);
 
-});
+}
 
 /**
-* The x coordinate of this object in world space.
-* @name Phaser.BitmapText#x
-* @property {number} x - The x coordinate of this object in world space.
+* Initializes the webgl data for this texture
+*
+* @method Phaser.RenderTexture#initWebGL
+* @memberof Phaser.RenderTexture
+* @private
 */
-Object.defineProperty(Phaser.BitmapText.prototype, 'x', {
+Phaser.RenderTexture.prototype.initWebGL = function() {
 
-    get: function() {
-        return this.position.x;
-    },
+    var gl = PIXI.gl;
+    this.glFramebuffer = gl.createFramebuffer();
 
-    set: function(value) {
-        this.position.x = value;
-    }
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.glFramebuffer );
 
-});
+    this.glFramebuffer.width = this.width;
+    this.glFramebuffer.height = this.height;
+
+    this.baseTexture = new PIXI.BaseTexture();
+
+    this.baseTexture.width = this.width;
+    this.baseTexture.height = this.height;
+
+    this.baseTexture._glTexture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, this.baseTexture._glTexture);
+
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  this.width,  this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+    this.baseTexture.isRender = true;
+
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.glFramebuffer );
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.baseTexture._glTexture, 0);
+
+    // create a projection matrix..
+    this.projection = new PIXI.Point(this.width/2 , -this.height/2);
+
+    // set the correct render function..
+    // this.render = this.renderWebGL;
+}
 
 /**
-* The y coordinate of this object in world space.
-* @name Phaser.BitmapText#y
-* @property {number} y - The y coordinate of this object in world space.
+* Resizes the RenderTexture.
+*
+* @method Phaser.RenderTexture#resize
+* @memberof Phaser.RenderTexture
 */
-Object.defineProperty(Phaser.BitmapText.prototype, 'y', {
+Phaser.RenderTexture.prototype.resize = function(width, height)
+{
 
-    get: function() {
-        return this.position.y;
-    },
+    this.width = width;
+    this.height = height;
+    
+    if(PIXI.gl)
+    {
+        this.projection.x = this.width/2
+        this.projection.y = -this.height/2;
+    
+        var gl = PIXI.gl;
+        gl.bindTexture(gl.TEXTURE_2D, this.baseTexture._glTexture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  this.width,  this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    }
+    else
+    {
+        
+        this.frame.width = this.width
+        this.frame.height = this.height;
+        this.renderer.resize(this.width, this.height);
+    }
+}
 
-    set: function(value) {
-        this.position.y = value;
+/**
+* Initializes the canvas data for this texture
+*
+* @method Phaser.RenderTexture#initCanvas
+* @memberof Phaser.RenderTexture
+* @private
+*/
+Phaser.RenderTexture.prototype.initCanvas = function()
+{
+    this.renderer = new PIXI.CanvasRenderer(this.width, this.height, null, 0);
+
+    this.baseTexture = new PIXI.BaseTexture(this.renderer.view);
+    this.frame = new PIXI.Rectangle(0, 0, this.width, this.height);
+
+    // this.render = this.renderCanvas;
+}
+
+/**
+* This function will draw the display object to the texture.
+*
+* @method Phaser.RenderTexture#renderWebGL
+* @memberof Phaser.RenderTexture
+* @private
+* @param {DisplayObject} displayObject - The display object to render this texture on.
+* @param {Phaser.Point} [position] - Where to draw the display object.
+* @param {boolean} [clear=false] - If true the texture will be cleared before the displayObject is drawn.
+* @param {boolean} [renderHidden=false] - If true displayObjects that have their visible property set to false will still be rendered.
+*/
+Phaser.RenderTexture.prototype.renderWebGL = function(displayObject, position, clear, renderHidden)
+{
+    var gl = PIXI.gl;
+
+    // enable the alpha color mask..
+    gl.colorMask(true, true, true, true);
+
+    gl.viewport(0, 0, this.width, this.height);
+
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.glFramebuffer );
+
+    if (clear)
+    {
+        gl.clearColor(0,0,0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
     }
 
-});
+    // THIS WILL MESS WITH HIT TESTING!
+    var children = displayObject.children;
+
+    //TODO -? create a new one??? dont think so!
+    var originalWorldTransform = displayObject.worldTransform;
+    displayObject.worldTransform = PIXI.mat3.create();//sthis.indetityMatrix;
+    // modify to flip...
+    displayObject.worldTransform[4] = -1;
+    displayObject.worldTransform[5] = this.projection.y * -2;
+
+    if (position)
+    {
+        displayObject.worldTransform[2] = position.x;
+        displayObject.worldTransform[5] -= position.y;
+    }
+    
+    PIXI.visibleCount++;
+    displayObject.vcount = PIXI.visibleCount;
+    
+    for (var i = 0, j = children.length; i &lt; j; i++)
+    {
+        children[i].updateTransform();
+    }
+
+    var renderGroup = displayObject.__renderGroup;
+
+    if (renderGroup)
+    {
+        if (displayObject == renderGroup.root)
+        {
+            renderGroup.render(this.projection, this.glFramebuffer);
+        }
+        else
+        {
+            renderGroup.renderSpecific(displayObject, this.projection, this.glFramebuffer);
+        }
+    }
+    else
+    {
+        if (!this.renderGroup)
+        {
+            this.renderGroup = new PIXI.WebGLRenderGroup(gl);
+        }
+
+        this.renderGroup.setRenderable(displayObject);
+        this.renderGroup.render(this.projection, this.glFramebuffer);
+    }
+    
+    displayObject.worldTransform = originalWorldTransform;
+}
+
+/**
+ * This function will draw the display object to the texture.
+ *
+* @method Phaser.RenderTexture#renderCanvas
+* @memberof Phaser.RenderTexture
+* @private
+* @param {DisplayObject} displayObject - The display object to render this texture on.
+* @param {Phaser.Point} [position] - Where to draw the display object.
+* @param {boolean} [clear=false] - If true the texture will be cleared before the displayObject is drawn.
+* @param {boolean} [renderHidden=false] - If true displayObjects that have their visible property set to false will still be rendered.
+*/
+Phaser.RenderTexture.prototype.renderCanvas = function(displayObject, position, clear, renderHidden)
+{
+    var children = displayObject.children;
+
+    displayObject.worldTransform = PIXI.mat3.create();
+    
+    if (position)
+    {
+        displayObject.worldTransform[2] = position.x;
+        displayObject.worldTransform[5] = position.y;
+    }
+
+    for (var i = 0, j = children.length; i &lt; j; i++)
+    {
+        children[i].updateTransform();
+    }
+
+    if (clear)
+    {
+        this.renderer.context.clearRect(0, 0, this.width, this.height);
+    }
+
+    this.renderer.renderDisplayObject(displayObject, renderHidden);
+    
+    this.renderer.context.setTransform(1, 0, 0, 1, 0, 0);
+
+}
 </pre>
         </article>
     </section>
@@ -683,7 +797,7 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'y', {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Wed Feb 12 2014 15:23:36 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Sat Feb 08 2014 07:19:40 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

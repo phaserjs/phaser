@@ -58,7 +58,7 @@ $(document).ready(function(){
 
 	.done(function(data) {
 
-		if (data.version !== '1.1.4')
+		if (data.version !== '1.1.5')
 		{
 			$("#upgrade").append(data.version);
 			$("#upgrade").css('display', 'inline-block');
