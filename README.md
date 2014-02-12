@@ -79,6 +79,7 @@ Bug Fixes:
 * Fixed easing tween example case. Issue #379 (thanks wesleywerner)
 * Removed SAT.js UMD wrapped, fixes issue #361 (thanks luizbills)
 * Removed inContact check from Body.separate.
+* Fixed Tilemap docs (wrongly pointed to Tileset methods)
 
 
 See the full Change Log for all the 1.1.4 updates and API changes (as there were a lot of them!)
