@@ -378,10 +378,6 @@ Phaser.Pointer.prototype = {
                 {
                     if ((!fromClick && currentNode.checkPointerOver(this)) || (fromClick && currentNode.checkPointerDown(this)))
                     {
-                        if (fromClick)
-                        {
-                            console.log('HRO set', currentNode.sprite.name, currentNode.priorityID, 'current highest', this._highestRenderOrderID, 'highest p', this._highestInputPriorityID);
-                        }
                         this._highestRenderOrderID = currentNode.sprite.renderOrderID;
                         this._highestInputPriorityID = currentNode.priorityID;
                         this._highestRenderObject = currentNode;
