@@ -62,8 +62,8 @@ Phaser.Stage = function (game, width, height) {
     }
     else
     {
-        this.canvas = Phaser.Canvas.create(width, height);
-        this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
+        this.game.canvas = Phaser.Canvas.create(width, height);
+        this.game.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
     }
 
 };

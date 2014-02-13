@@ -82,7 +82,7 @@ Significant API changes:
 * Stage.aspectRatio has been moved to StageScaleMode.sourceAspectRatio (so now game.scale.sourceAspectRatio)
 * Stage.scaleMode has been moved to StageScaleMode.scaleMode (so now game.scale.scaleMode)
 * Stage.fullScreenScaleMode has been moved to StageScaleMode.fullScreenScaleMode (so now game.scale.fullScreenScaleMode)
-* Stage.canvas has been removed. It was only ever an alias for Game.canvas anyway, so access it via that instead.
+* Stage.canvas has been moved to Game.canvas (which used to be a reference to Stage.canvas, but is now the actual object).
 
 
 New features:

@@ -320,8 +320,8 @@ Phaser.StageScaleMode.prototype = {
         {
             if (this.fullScreenScaleMode === Phaser.StageScaleMode.EXACT_FIT)
             {
-                this.game.stage.canvas.style['width'] = '100%';
-                this.game.stage.canvas.style['height'] = '100%';
+                this.game.canvas.style['width'] = '100%';
+                this.game.canvas.style['height'] = '100%';
 
                 this.setMaximum();
 
@@ -339,8 +339,8 @@ Phaser.StageScaleMode.prototype = {
         }
         else
         {
-            this.game.stage.canvas.style['width'] = this.game.width + 'px';
-            this.game.stage.canvas.style['height'] = this.game.height + 'px';
+            this.game.canvas.style['width'] = this.game.width + 'px';
+            this.game.canvas.style['height'] = this.game.height + 'px';
 
             this.width = this._width;
             this.height = this._height;

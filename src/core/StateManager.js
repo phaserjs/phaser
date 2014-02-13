@@ -334,6 +334,7 @@ Phaser.StateManager.prototype = {
         this.states[key].load = this.game.load;
         this.states[key].math = this.game.math;
         this.states[key].sound = this.game.sound;
+        this.states[key].scale = this.game.scale;
         this.states[key].stage = this.game.stage;
         this.states[key].time = this.game.time;
         this.states[key].tweens = this.game.tweens;

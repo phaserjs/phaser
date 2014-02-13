@@ -255,7 +255,7 @@ Phaser.Mouse.prototype = {
 
         if (this.game.device.pointerLock)
         {
-            var element = this.game.stage.canvas;
+            var element = this.game.canvas;
 
             element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
 
@@ -281,7 +281,7 @@ Phaser.Mouse.prototype = {
     */
     pointerLockChange: function (event) {
 
-        var element = this.game.stage.canvas;
+        var element = this.game.canvas;
 
         if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element)
         {
