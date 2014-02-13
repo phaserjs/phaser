@@ -23,19 +23,18 @@ Phaser.Stage = function (game, width, height) {
     this.game = game;
 
     /**
-    * @property {string} game - Background color of the stage (defaults to black). Set via the public backgroundColor property.
-    * @private
-    */
-    this._backgroundColor = 'rgb(0,0,0)';
-
-    /**
-    * @property {Phaser.Point} offset - Get the offset values (for input and other things).
+    * @property {Phaser.Point} offset - Holds the offset coordinates of the Game.canvas from the top-left of the browser window (used by Input and other classes)
     */
     this.offset = new Phaser.Point();
     
     PIXI.Stage.call(this, 0x000000, false);
 
+    /**
+    * @property {string} name - The name of this object.
+    * @default
+    */
     this.name = '_stage_root';
+
     this.interactive = false;
 
     /**
@@ -45,16 +44,16 @@ Phaser.Stage = function (game, width, height) {
     this.disableVisibilityChange = false;
 
     /**
-    * @property {number} _nextOffsetCheck - The time to run the next offset check.
-    * @private
-    */
-    this._nextOffsetCheck = 0;
-
-    /**
     * @property {number|false} checkOffsetInterval - The time (in ms) between which the stage should check to see if it has moved.
     * @default
     */
     this.checkOffsetInterval = 2500;
+
+    /**
+    * @property {number} _nextOffsetCheck - The time to run the next offset check.
+    * @private
+    */
+    this._nextOffsetCheck = 0;
 
     if (game.config)
     {

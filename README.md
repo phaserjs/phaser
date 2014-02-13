@@ -83,6 +83,8 @@ Significant API changes:
 * Stage.scaleMode has been moved to StageScaleMode.scaleMode (so now game.scale.scaleMode)
 * Stage.fullScreenScaleMode has been moved to StageScaleMode.fullScreenScaleMode (so now game.scale.fullScreenScaleMode)
 * Stage.canvas has been moved to Game.canvas (which used to be a reference to Stage.canvas, but is now the actual object).
+* BitmapData.addTo removed and enhanced BitmapData.add so it can accept either a single Sprite/Image or an Array of them.
+* BitmapData has had all of the EaselJS functions removed. It was just taking up space and you can do it all via BitmapData.context directly.
 
 
 New features:

@@ -22,7 +22,7 @@ function px2p(v) {
 
 function create() {
 
-    // game.world.setBounds(0, 0, 1920, 1200);
+    game.world.setBounds(0, 0, 1920, 1200);
     game.add.sprite(0, 0, 'backdrop');
 
     game.physics.onBodyAdded.add(addedToWorld, this);
