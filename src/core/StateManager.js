@@ -203,11 +203,12 @@ Phaser.StateManager.prototype = {
     },
 
     /**
-    * Start the given state
+    * Start the given State. If a State is already running then State.shutDown will be called (if it exists) before switching to the new State.
+    *
     * @method Phaser.StateManager#start
     * @param {string} key - The key of the state you want to start.
-    * @param {boolean} [clearWorld] - clear everything in the world? (Default to true)
-    * @param {boolean} [clearCache] - clear asset cache? (Default to false and ONLY available when clearWorld=true)
+    * @param {boolean} [clearWorld=true] - Clear everything in the world? This clears the World display list fully (but not the Stage, so if you've added your own objects to the Stage they will need managing directly)
+    * @param {boolean} [clearCache=false] - Clear the Game.Cache? This purges out all loaded assets. The default is false and you must have clearWorld=true if you want to clearCache as well.
     */
     start: function (key, clearWorld, clearCache) {
 
@@ -280,7 +281,7 @@ Phaser.StateManager.prototype = {
     },
 
     /**
-    * Checks i a given phaser state is valid.
+    * Checks if a given phaser state is valid.
     * State must exist and have at least one callback function registered..
     * @method Phaser.StateManager#checkState
     * @param {string} key - The key of the state you want to check.

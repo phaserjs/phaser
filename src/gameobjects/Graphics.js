@@ -68,12 +68,3 @@ Phaser.Graphics.prototype.drawPolygon = function (poly) {
     this.lineTo(poly.points[0].x, poly.points[0].y);
     
 }
-
-/**
-* Indicates the rotation of the Button in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
-* Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
-* If you wish to work in radians instead of degrees use the rotation property instead. Working in radians is also a little faster as it doesn't have to convert the angle.
-* 
-* @name Phaser.Button#angle
-* @property {number} angle - The angle of this Button in degrees.
-*/
