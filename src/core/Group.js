@@ -33,7 +33,7 @@ Phaser.Group = function (game, parent, name, addToStage) {
 
     PIXI.DisplayObjectContainer.call(this);
 
-    if (typeof addToStage === 'undefined')
+    if (typeof addToStage === 'undefined' || addToStage === false)
     {
         if (parent)
         {
@@ -70,7 +70,6 @@ Phaser.Group = function (game, parent, name, addToStage) {
     /**
     * @property {Phaser.Group|Phaser.Sprite} parent - The parent of this Group.
     */
-    // this.group = null;
 
     /**
     * @property {Phaser.Point} scale - The scale of the Group container.
@@ -124,8 +123,6 @@ Phaser.Group.SORT_ASCENDING = -1;
 * @type {number}
 */
 Phaser.Group.SORT_DESCENDING = 1;
-
-// PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
 
 /**
 * Adds an existing object to this Group. The object can be an instance of Phaser.Sprite, Phaser.Button or any other display object.
@@ -699,6 +696,57 @@ Phaser.Group.prototype.callAll = function (method, context) {
         else if (callback)
         {
             callback.apply(this.children[i], args);
+        }
+    }
+
+}
+
+/**
+* The core preUpdate - as called by World.
+* @method Phaser.Group#preUpdate
+* @protected
+*/
+Phaser.Group.prototype.preUpdate = function () {
+
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        if (this.children[i]['preUpdate'])
+        {
+            this.children[i].preUpdate();
+        }
+    }
+
+}
+
+/**
+* The core update - as called by World.
+* @method Phaser.Group#update
+* @protected
+*/
+Phaser.Group.prototype.update = function () {
+
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        if (this.children[i]['update'])
+        {
+            this.children[i].update();
+        }
+    }
+
+}
+
+/**
+* The core postUpdate - as called by World.
+* @method Phaser.Group#postUpdate
+* @protected
+*/
+Phaser.Group.prototype.postUpdate = function () {
+
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        if (this.children[i]['postUpdate'])
+        {
+            this.children[i].postUpdate();
         }
     }
 

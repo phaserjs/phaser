@@ -574,7 +574,7 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
 
     if (this.body)
     {
-        this.body.reset(false);
+        this.body.reset(x, y, false, false);
     }
 
     return this;
@@ -861,8 +861,12 @@ Object.defineProperty(Phaser.Sprite.prototype, "physicsEnabled", {
 });
 
 /**
+* Sprite.exists controls if the core game loop and physics update this Sprite or not.
+* When you set Sprite.exists to false it will remove its Body from the physics world (if it has one) and also set Sprite.visible to false.
+* Setting Sprite.exists to true will re-add the Body to the physics world (if it has a body) and set Sprite.visible to true.
+*
 * @name Phaser.Sprite#exists
-* @property {boolean} exists - Sprite.exists controls if the core game loop and physics update this Sprite or not. Set to false to remove from the update and physics world.
+* @property {boolean} exists - If the Sprite is processed by the core game update and physics.
 */
 Object.defineProperty(Phaser.Sprite.prototype, "exists", {
     
@@ -884,6 +888,8 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
             {
                 this.body.addToWorld();
             }
+
+            this.visible = true;
         }
         else
         {
@@ -894,6 +900,9 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
             {
                 this.body.removeFromWorld();
             }
+
+            this.visible = false;
+
         }
     }
 

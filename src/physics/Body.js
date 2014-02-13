@@ -285,10 +285,12 @@ Phaser.Physics.Body.prototype = {
     * Resets the Body force, velocity (linear and angular) and rotation. Optionally resets damping and mass.
     *
     * @method Phaser.Physics.Body#reset
+    * @param {number} x - The new x position of the Body.
+    * @param {number} y - The new x position of the Body.
     * @param {boolean} [resetDamping=false] - Resets the linear and angular damping.
     * @param {boolean} [resetMass=false] - Sets the Body mass back to 1.
     */
-    reset: function (resetDamping, resetMass) {
+    reset: function (x, y, resetDamping, resetMass) {
 
         if (typeof resetDamping === 'undefined') { resetDamping = false; }
         if (typeof resetMass === 'undefined') { resetMass = false; }
@@ -306,6 +308,9 @@ Phaser.Physics.Body.prototype = {
         {
             this.mass = 1;
         }
+
+        this.x = x;
+        this.y = y;
 
     },
 
@@ -344,21 +349,15 @@ Phaser.Physics.Body.prototype = {
     */
     destroy: function () {
 
-        this.sprite = null;
-
-        if (this.data.world === this.game.physics)
-        {
-            this.game.physics.removeBody(this.data);
-        }
+        this.removeFromWorld();
 
         this.clearShapes();
+
+        this.sprite = null;
 
         /*
         this.collideCallback = null;
         this.collideCallbackContext = null;
-
-        this.customSeparateCallback = null;
-        this.customSeparateContext = null;
         */
 
     },
