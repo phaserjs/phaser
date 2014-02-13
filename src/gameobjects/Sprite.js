@@ -872,8 +872,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
     
     get: function () {
 
-        //  hmm, type co-ercing? safe?
-        return this._cache[6];
+        return !!this._cache[6];
 
     },
 
