@@ -145,19 +145,20 @@ Phaser.GameObjectFactory.prototype = {
     * Creates a new TileSprite object.
     *
     * @method Phaser.GameObjectFactory#tileSprite
-    * @param {number} x - X position of the new tileSprite.
-    * @param {number} y - Y position of the new tileSprite.
-    * @param {number} width - the width of the tilesprite.
-    * @param {number} height - the height of the tilesprite.
-    * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+    * @param {number} x - The x coordinate (in world space) to position the TileSprite at.
+    * @param {number} y - The y coordinate (in world space) to position the TileSprite at.
+    * @param {number} width - The width of the TileSprite.
+    * @param {number} height - The height of the TileSprite.
+    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the TileSprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+    * @param {string|number} frame - If this TileSprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.TileSprite} The newly created tileSprite object.
     */
-    tileSprite: function (x, y, width, height, key, group) {
+    tileSprite: function (x, y, width, height, key, frame, group) {
 
         if (typeof group === 'undefined') { group = this.world; }
 
-        return group.add(new Phaser.TileSprite(this.game, x, y, width, height, key));
+        return group.add(new Phaser.TileSprite(this.game, x, y, width, height, key, frame));
 
     },
 

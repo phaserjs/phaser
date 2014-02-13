@@ -1,7 +1,8 @@
 <?php
     //  Global
-    $files = dirToArray(dirname(__FILE__));
+    $files = dirToArray(dirname(__FILE__) . '/code');
     $total = 0;
+    $demo = '';
 
     foreach ($files as $key => $value)
     {
@@ -32,7 +33,7 @@
 
     function dirToArray($dir) { 
 
-        $ignore = array('.', '..', '_site', 'assets', 'gfx', 'states', 'book', 'filters', 'misc');
+        $ignore = array('.', '..', 'js', 'src', 'css', 'fonts', 'build', 'examples', 'assets');
         $result = array(); 
         $root = scandir($dir); 
         $dirs = array_diff($root, $ignore);
@@ -55,7 +56,7 @@
         return $result; 
     } 
 
-    function printJSLinks($dir, $files) {
+    function printJSLinks($files) {
 
         $output = "";
 
@@ -64,51 +65,17 @@
             $value2 = substr($value, 0, -3);
             $file = urlencode($value);
 
-            $output .= "<a href=\"wip/index.php?f=$file\">$value2</a><br />";
+            if ($_SERVER['SERVER_NAME'] == '192.168.0.100')
+            {
+                $output .= "<a href=\"../labs/view.php?f=$file\"><span data-hover=\"$value2\">$value2</span></a>";
+            }
+            else
+            {
+                $output .= "<a href=\"view.php?f=$file\"><span data-hover=\"$value2\">$value2</span></a>";
+            }
         }
 
         return $output;
 
     }
 ?>
-<!doctype html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0 minimal-ui" />
-        <title>phaser</title>
-        <base href="../"></base>
-        <script src="_site/js/jquery-2.0.3.min.js" type="text/javascript"></script>
-        <?php
-            require('../../build/config.php');
-
-            if (isset($_GET['f']))
-            {
-                $f = $_GET['f'];
-        ?>
-        <script src="wip/<?php echo $f?>" type="text/javascript"></script>
-        <?php
-            }
-        ?>
-        <style>
-            body {
-                font-family: Arial;
-                font-size: 14px;
-            }
-        </style>
-    </head>
-    <body>
-
-        <div id="phaser-example"></div>
-
-        <input type="button" id="step" value="step" />
-        <input type="button" id="start" value="start" style="margin-left: 32px" />
-
-        <h2>work in progress examples</h2>
-
-        <?php
-            echo printJSLinks('wip', $files);
-        ?>
-
-    </body>
-</html>

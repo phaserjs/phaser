@@ -57,7 +57,16 @@ Phaser.Image = function (game, x, y, key, frame) {
     */
     this.key = key;
 
+    /**
+    * @property {number} _frame - Internal cache var.
+    * @private
+    */
     this._frame = 0;
+
+    /**
+    * @property {string} _frameName - Internal cache var.
+    * @private
+    */
     this._frameName = '';
 
     PIXI.Sprite.call(this, PIXI.TextureCache['__default']);

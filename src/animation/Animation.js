@@ -162,6 +162,12 @@ Phaser.Animation.prototype = {
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
         this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
 
+        if (this._parent.__tilePattern)
+        {
+            this._parent.__tilePattern = false;
+            this._parent.tilingTexture = false;
+        }
+
         if (this._parent.events)
         {
             this._parent.events.onAnimationStart.dispatch(this._parent, this);
@@ -259,6 +265,12 @@ Phaser.Animation.prototype = {
                     if (this.currentFrame)
                     {
                         this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+                        if (this._parent.__tilePattern)
+                        {
+                            this._parent.__tilePattern = false;
+                            this._parent.tilingTexture = false;
+                        }
                     }
                     
                     this._parent.events.onAnimationLoop.dispatch(this._parent, this);
@@ -275,6 +287,12 @@ Phaser.Animation.prototype = {
                 if (this.currentFrame)
                 {
                     this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+                    if (this._parent.__tilePattern)
+                    {
+                        this._parent.__tilePattern = false;
+                        this._parent.tilingTexture = false;
+                    }
                 }
             }
 

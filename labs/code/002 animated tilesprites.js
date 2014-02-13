@@ -3,6 +3,7 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 var tilesprite;
 var cursors;
+var count = 0;
 
 function preload() {
 
@@ -17,14 +18,16 @@ var sprite;
 function create() {
 
     // sprite = game.add.tileSprite(0, 0, 800, 600, 'starfield');
-
     // sprite = game.add.tileSprite(100, 100, 400, 300, 'starfield');
 
-    sprite = game.add.tileSprite(100, 100, 400, 300, 'mummy');
-
+    sprite = game.add.tileSprite(0, 0, 800, 600, 'mummy');
     sprite.animations.add('walk');
-
     sprite.animations.play('walk', 20, true);
+
+    // sprite = game.add.tileSprite(0, 0, 800, 600, 'seacreatures');
+    // sprite.animations.add('swim', Phaser.Animation.generateFrameNames('octopus', 0, 24, '', 4), 30, true);
+    // sprite.animations.play('swim');
+
 
     cursors = game.input.keyboard.createCursorKeys();
 
@@ -32,30 +35,36 @@ function create() {
 
 function update() {
 
+    count += 0.005
+
+    sprite.tileScale.x = 2 + Math.sin(count);
+    sprite.tileScale.y = 2 + Math.cos(count);
+    
+    sprite.tilePosition.x += 1;
+    sprite.tilePosition.y += 1;
+
     if (cursors.left.isDown)
     {
-        sprite.tilePosition.x += 8;
-        sprite.x -= 4;
+        sprite.tilePosition.x += 4;
     }
     else if (cursors.right.isDown)
     {
-        sprite.tilePosition.x -= 8;
-        sprite.x += 4;
+        sprite.tilePosition.x -= 4;
     }
 
     if (cursors.up.isDown)
     {
-        sprite.tilePosition.y += 8;
+        sprite.tilePosition.y += 4;
     }
     else if (cursors.down.isDown)
     {
-        sprite.tilePosition.y -= 8;
+        sprite.tilePosition.y -= 4;
     }
 
 }
 
 function render() {
 
-    game.debug.renderText(sprite.frame, 32, 32);
+    // game.debug.renderText(sprite.frame, 32, 32);
 
 }
