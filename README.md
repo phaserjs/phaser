@@ -76,6 +76,8 @@ Significant API changes:
 * Loader won't set crossOrigin on  Images unless it's set to something. The default is false, it used to be '' and can be any valid string.
 * Sprite.input.pixelPerfect has been split into two: Sprite.input.pixelPerfectClick and Sprite.input.pixelPerfectOver (see new features)
 * Phaser.Stage now extends PIXI.Stage, rather than containing a _stage object.
+* If you set Sprite.exists to false it will also set Sprite.visible to false and remove its body from the physics world (if it has one).
+* If you set Sprite.exists to true it will also set Sprite.visible to true and add its body back into the physics world (if it has one).
 
 
 New features:
