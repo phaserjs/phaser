@@ -61,7 +61,7 @@ Version 1.2 - "Shienar" - -in development-
 
 Significant API changes:
 
-* Upgraded to Pixi.js 1.5
+* Upgraded to Pixi.js 1.5.2
 * Group now extends PIXI.DisplayObjectContainer, rather than owning a _container property, which makes life a whole lot easier re: nesting and child iteration.
 * Removed Sprite.group property. You can use Sprite.parent for all similar needs now.
 * PIXI.Point is now aliased to Phaser.Point - saves on code duplication and works exactly the same.
@@ -102,6 +102,9 @@ New features:
 * Phaser.Polygon added. A fully compatible port of the PIXI.Polygon class, can be used in Sprite/Image hitArea tests.
 * InputHandler.pixelPerfectOver - performs a pixel perfect check to see if any pointer is over the current object (warning: very expensive!)
 * InputHandler.pixelPerfectClick - performs a pixel perfect check but only when the pointer touches/clicks on the current object.
+* TileSprite can now use a frame from a texture atlas or a sprite sheet.
+* TileSprites can now be animated. See new example :)
+* TileSprites have a new method: autoScroll(x, y) which sets an automatic scroll running (until stopped with TileSprite.stopScroll).
 
 
 New Examples:
