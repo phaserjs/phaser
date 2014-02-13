@@ -534,7 +534,7 @@ Phaser.Game.prototype = {
 
                 this.renderer = new PIXI.CanvasRenderer(this.width, this.height, this.canvas, this.transparent);
                 Phaser.Canvas.setSmoothingEnabled(this.renderer.context, this.antialias);
-                this.canvas = this.renderer.view;
+                // this.canvas = this.renderer.view;
                 this.context = this.renderer.context;
             }
             else
@@ -547,12 +547,15 @@ Phaser.Game.prototype = {
             //  They requested WebGL, and their browser supports it
             this.renderType = Phaser.WEBGL;
             this.renderer = new PIXI.WebGLRenderer(this.width, this.height, this.canvas, this.transparent, this.antialias);
-            this.canvas = this.renderer.view;
+            // this.canvas = this.renderer.view;
             this.context = null;
         }
 
-        Phaser.Canvas.addToDOM(this.renderer.view, this.parent, true);
-        Phaser.Canvas.setTouchAction(this.renderer.view);
+        // Phaser.Canvas.addToDOM(this.renderer.view, this.parent, true);
+        // Phaser.Canvas.setTouchAction(this.renderer.view);
+
+        Phaser.Canvas.addToDOM(this.canvas, this.parent, true);
+        Phaser.Canvas.setTouchAction(this.canvas);
 
     },
 

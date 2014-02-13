@@ -81,20 +81,20 @@ Phaser.Stage.prototype.parseConfig = function (config) {
 
     if (config['canvasID'])
     {
-        this.canvas = Phaser.Canvas.create(this.game.width, this.game.height, config['canvasID']);
+        this.game.canvas = Phaser.Canvas.create(this.game.width, this.game.height, config['canvasID']);
     }
     else
     {
-        this.canvas = Phaser.Canvas.create(this.game.width, this.game.height);
+        this.game.canvas = Phaser.Canvas.create(this.game.width, this.game.height);
     }
 
     if (config['canvasStyle'])
     {
-        this.canvas.stlye = config['canvasStyle'];
+        this.game.canvas.stlye = config['canvasStyle'];
     }
     else
     {
-        this.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
+        this.game.canvas.style['-webkit-full-screen'] = 'width: 100%; height: 100%';
     }
 
     if (config['checkOffsetInterval'])
@@ -131,7 +131,7 @@ Phaser.Stage.prototype.parseConfig = function (config) {
 */
 Phaser.Stage.prototype.boot = function () {
 
-    Phaser.Canvas.getOffset(this.canvas, this.offset);
+    Phaser.Canvas.getOffset(this.game.canvas, this.offset);
 
     this.bounds = new Phaser.Rectangle(this.offset.x, this.offset.y, this.game.width, this.game.height);
 
@@ -141,10 +141,8 @@ Phaser.Stage.prototype.boot = function () {
         return _this.visibilityChange(event);
     }
 
-    Phaser.Canvas.setUserSelect(this.canvas, 'none');
-    Phaser.Canvas.setTouchAction(this.canvas, 'none');
-
-    // this.backgroundColor = '#000000';
+    Phaser.Canvas.setUserSelect(this.game.canvas, 'none');
+    Phaser.Canvas.setTouchAction(this.game.canvas, 'none');
 
     document.addEventListener('visibilitychange', this._onChange, false);
     document.addEventListener('webkitvisibilitychange', this._onChange, false);
@@ -166,7 +164,7 @@ Phaser.Stage.prototype.update = function () {
     {
         if (this.game.time.now > this._nextOffsetCheck)
         {
-            Phaser.Canvas.getOffset(this.canvas, this.offset);
+            Phaser.Canvas.getOffset(this.game.canvas, this.offset);
             this._nextOffsetCheck = this.game.time.now + this.checkOffsetInterval;
         }
 
