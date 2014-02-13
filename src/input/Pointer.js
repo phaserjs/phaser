@@ -207,7 +207,7 @@ Phaser.Pointer.prototype = {
         }
 
         //  Fix to stop rogue browser plugins from blocking the visibility state event
-        if (this.game.stage.disableVisibilityChange === false && this.game.paused && this.game.stage.scale.incorrectOrientation === false)
+        if (this.game.stage.disableVisibilityChange === false && this.game.paused && this.game.scale.incorrectOrientation === false)
         {
             this.game.paused = false;
             return this;

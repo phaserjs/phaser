@@ -108,13 +108,11 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
     /**
     * @property {Phaser.RequestAnimationFrame} raf - Automatically handles the core game loop via requestAnimationFrame or setTimeout
-    * @default
     */
     this.raf = null;
 
     /**
     * @property {Phaser.GameObjectFactory} add - Reference to the GameObject Factory.
-    * @default
     */
     this.add = null;
 
@@ -138,92 +136,81 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
     /**
     * @property {Phaser.Math} math - Reference to the math helper.
-    * @default
     */
     this.math = null;
 
     /**
     * @property {Phaser.Net} net - Reference to the network class.
-    * @default
     */
     this.net = null;
 
     /**
+    * @property {Phaser.StageScaleMode} scale - The game scale manager.
+    */
+    this.scale = null;
+
+    /**
     * @property {Phaser.SoundManager} sound - Reference to the sound manager.
-    * @default
     */
     this.sound = null;
 
     /**
     * @property {Phaser.Stage} stage - Reference to the stage.
-    * @default
     */
     this.stage = null;
 
     /**
     * @property {Phaser.TimeManager} time - Reference to game clock.
-    * @default
     */
     this.time = null;
 
     /**
     * @property {Phaser.TweenManager} tweens - Reference to the tween manager.
-    * @default
     */
     this.tweens = null;
 
     /**
     * @property {Phaser.World} world - Reference to the world.
-    * @default
     */
     this.world = null;
 
     /**
-    * // {Phaser.Physics.Arcade.ArcadePhysics} physics - Reference to the physics manager.
     * @property {Phaser.Physics.World} physics - Reference to the physics world.
-    * @default
     */
     this.physics = null;
 
     /**
     * @property {Phaser.RandomDataGenerator} rnd - Instance of repeatable random data generator helper.
-    * @default
     */
     this.rnd = null;
 
     /**
     * @property {Phaser.Device} device - Contains device information and capabilities.
-    * @default
     */
     this.device = null;
 
     /**
     * @property {Phaser.Physics.PhysicsManager} camera - A handy reference to world.camera.
-    * @default
     */
     this.camera = null;
 
-       /**
-    * @property {HTMLCanvasElement} canvas - A handy reference to renderer.view.
-    * @default
+    /**
+    * @property {HTMLCanvasElement} canvas - A handy reference to renderer.view, the canvas that the game is being rendered in to.
     */
     this.canvas = null;
 
     /**
-    * @property {Context} context - A handy reference to renderer.context (only set for CANVAS games)
-    * @default
+    * @property {Context} context - A handy reference to renderer.context (only set for CANVAS games, not WebGL)
     */
     this.context = null;
 
     /**
     * @property {Phaser.Utils.Debug} debug - A set of useful debug utilitie.
-    * @default
     */
     this.debug = null;
 
     /**
     * @property {Phaser.Particles} particles - The Particle Manager.
-    * @default
     */
     this.particles = null;
 
@@ -436,6 +423,7 @@ Phaser.Game.prototype = {
             this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
 
             this.stage = new Phaser.Stage(this, this.width, this.height);
+            this.scale = new Phaser.StageScaleMode(this, this.width, this.height);
 
             this.setUpRenderer();
 

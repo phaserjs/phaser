@@ -78,6 +78,11 @@ Significant API changes:
 * Phaser.Stage now extends PIXI.Stage, rather than containing a _stage object.
 * If you set Sprite.exists to false it will also set Sprite.visible to false and remove its body from the physics world (if it has one).
 * If you set Sprite.exists to true it will also set Sprite.visible to true and add its body back into the physics world (if it has one).
+* Stage.scale has been moved to Game.scale. The same game scaling properties exist as before, but now accessed via Game.scale instead.
+* Stage.aspectRatio has been moved to StageScaleMode.sourceAspectRatio (so now game.scale.sourceAspectRatio)
+* Stage.scaleMode has been moved to StageScaleMode.scaleMode (so now game.scale.scaleMode)
+* Stage.fullScreenScaleMode has been moved to StageScaleMode.fullScreenScaleMode (so now game.scale.fullScreenScaleMode)
+* Stage.canvas has been removed. It was only ever an alias for Game.canvas anyway, so access it via that instead.
 
 
 New features:

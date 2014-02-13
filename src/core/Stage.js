@@ -33,43 +33,10 @@ Phaser.Stage = function (game, width, height) {
     */
     this.offset = new Phaser.Point();
     
-    /**
-    * @property {HTMLCanvasElement} canvas - Reference to the newly created `canvas` element.
-    */
-    this.canvas = null;
-
-    /**
-    * @property {PIXI.Stage} _stage - The Pixi Stage which is hooked to the renderer.
-    * @private
-    */
-    // this._stage = new PIXI.Stage(0x000000, false);
-    // this._stage.name = '_stage_root';
-    // this._stage.interactive = false;
-
     PIXI.Stage.call(this, 0x000000, false);
 
     this.name = '_stage_root';
     this.interactive = false;
-
-    /**
-    * @property {number} scaleMode - The current scaleMode.
-    */
-    this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
-
-    /*
-    * @property {number} fullScreenScaleMode - Scale mode to be used in fullScreen
-     */
-    this.fullScreenScaleMode = Phaser.StageScaleMode.NO_SCALE;
-
-    /**
-    * @property {Phaser.StageScaleMode} scale - The scale of the current running game.
-    */
-    // this.scale = new Phaser.StageScaleMode(this.game, width, height);
-
-    /**
-    * @property {number} aspectRatio - Aspect ratio.
-    */
-    this.aspectRatio = width / height;
 
     /**
     * @property {boolean} disableVisibilityChange - By default if the browser tab loses focus the game will pause. You can stop that behaviour by setting this property to true.
