@@ -914,14 +914,13 @@ declare module Phaser {
 	    update(): void;
     }
 
-    class Button {
+    class Button extends Sprite {
         constructor(game: Phaser.Game, x: number, y: number, key: string, callback: Function, overFrame: number, outFrame: number, downFrame: number);
         input: Phaser.InputHandler;
         onInputUp: Phaser.Signal;
         onInputDown: Phaser.Signal;
         onInputOut: Phaser.Signal;
         onInputOver: Phaser.Signal;
-        events: Phaser.Event[];
         setFrames(overFrame?: number, outFrame?: number, downFrame?: number): void;
         onInputOverHandler(pointer: Phaser.Pointer): void;
         onInputUpHandler(pointer: Phaser.Pointer): void;
