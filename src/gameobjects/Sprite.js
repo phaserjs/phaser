@@ -31,12 +31,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
     this.game = game;
- 
-    /**
-    * @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
-    * @default
-    */
-    this.exists = true;
 
     /**
     * @property {string} name - The user defined name given to this Sprite.
@@ -158,10 +152,11 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * 3 = renderID
     * 4 = fresh? (0 = no, 1 = yes)
     * 5 = outOfBoundsFired (0 = no, 1 = yes)
+    * 6 = exists (0 = no, 1 = yes)
     * @property {array} _cache
     * @private
     */
-    this._cache = [0, 0, 0, 0, 1, 0];
+    this._cache = [0, 0, 0, 0, 1, 0, 1];
 
     /**
     * @property {Phaser.Rectangle} _bounds - Internal cache var.
@@ -859,6 +854,45 @@ Object.defineProperty(Phaser.Sprite.prototype, "physicsEnabled", {
             if (this.body)
             {
                 this.body.destroy();
+            }
+        }
+    }
+
+});
+
+/**
+* @name Phaser.Sprite#exists
+* @property {boolean} exists - Sprite.exists controls if the core game loop and physics update this Sprite or not. Set to false to remove from the update and physics world.
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "exists", {
+    
+    get: function () {
+
+        //  hmm, type co-ercing? safe?
+        return this._cache[6];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            //  exists = true
+            this._cache[6] = 1;
+
+            if (this.body)
+            {
+                this.body.addToWorld();
+            }
+        }
+        else
+        {
+            //  exists = false
+            this._cache[6] = 0;
+
+            if (this.body)
+            {
+                this.body.removeFromWorld();
             }
         }
     }

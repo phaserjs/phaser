@@ -310,6 +310,34 @@ Phaser.Physics.Body.prototype = {
     },
 
     /**
+    * Adds this physics body to the world.
+    *
+    * @method Phaser.Physics.Body#addToWorld
+    */
+    addToWorld: function () {
+
+        if (this.data.world !== this.game.physics)
+        {
+            this.game.physics.addBody(this.data);
+        }
+
+    },
+
+    /**
+    * Removes this physics body from the world.
+    *
+    * @method Phaser.Physics.Body#removeFromWorld
+    */
+    removeFromWorld: function () {
+
+        if (this.data.world === this.game.physics)
+        {
+            this.game.physics.removeBody(this.data);
+        }
+
+    },
+
+    /**
     * Destroys this Body and all references it holds to other objects.
     *
     * @method Phaser.Physics.Body#destroy
