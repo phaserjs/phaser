@@ -112,6 +112,7 @@ New Examples:
 
 Updates:
 
+* Massive thanks to clark-stevenson for doing an amazing job update the TypeScript definitions file.
 * Debug.renderRectangle has a new parameter: filled. If true it renders as with fillRect, if false strokeRect.
 * Phaser.AnimationParser now sets the trimmed data directly for Pixi Texture frames. Tested across JSON Hash, JSON Data, Sprite Sheet and XML.
 * Game.add.renderTexture now has the addToCache parameter. If set the texture will be stored in Game.Cache and can be retrieved with Cache.getTexture(key).
