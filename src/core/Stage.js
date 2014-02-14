@@ -71,6 +71,78 @@ Phaser.Stage.prototype = Object.create(PIXI.Stage.prototype);
 Phaser.Stage.prototype.constructor = Phaser.Stage;
 
 /**
+* This is called automatically after the plugins preUpdate and before the State.update.
+* Most objects have preUpdate methods and it's where initial movement and positioning is done.
+* 
+* @method Phaser.Stage#preUpdate
+*/
+Phaser.Stage.prototype.preUpdate = function () {
+    
+    this.currentRenderOrderID = 0;
+
+    var i = this.children.length;
+
+    while(i--)
+    {
+        this.children[i].preUpdate();
+    }
+
+}
+
+/**
+* This is called automatically after the State.update, but before particles or plugins update.
+* 
+* @method Phaser.Stage#update
+*/
+Phaser.Stage.prototype.update = function () {
+
+    var i = this.children.length;
+
+    while(i--)
+    {
+        this.children[i].update();
+    }
+
+}
+
+/**
+* This is called automatically before the renderer runs and after the plugins have updated.
+* In postUpdate this is where all the final physics calculatations and object positioning happens.
+* The objects are processed in the order of the display list.
+* The only exception to this is if the camera is following an object, in which case that is updated first.
+* 
+* @method Phaser.Stage#postUpdate
+*/
+Phaser.Stage.prototype.postUpdate = function () {
+
+    if (this.game.world.camera.target)
+    {
+        this.game.world.camera.target.postUpdate();
+
+        this.game.world.camera.update();
+
+        var i = this.children.length;
+
+        while(i-- && this.children[i] !== this.game.world.camera.target)
+        {
+            this.children[i].postUpdate();
+        }
+    }
+    else
+    {
+        this.game.world.camera.update();
+
+        var i = this.children.length;
+
+        while(i--)
+        {
+            this.children[i].postUpdate();
+        }
+    }
+
+}
+
+/**
 * Parses a Game configuration object.
 *
 * @method Phaser.Stage#parseConfig

@@ -86,6 +86,7 @@ Significant API changes:
 * BitmapData.addTo removed and enhanced BitmapData.add so it can accept either a single Sprite/Image or an Array of them.
 * BitmapData has had all of the EaselJS functions removed. It was just taking up space and you can do it all via BitmapData.context directly.
 * BitmapText has had a bit of an overhaul - the signature for adding a BitmapText has changed to: x, y, font, text, size. See the docs and examples for details.
+* World preUpdate, update and postUpdate have all been moved to Stage. So all children are updated regardless where on the display list they live.
 
 
 New features:

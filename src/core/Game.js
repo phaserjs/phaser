@@ -600,7 +600,7 @@ Phaser.Game.prototype = {
                 }
 
                 this.plugins.preUpdate();
-                this.world.preUpdate();
+                this.stage.preUpdate();
 
                 this.stage.update();
                 this.tweens.update();
@@ -610,9 +610,8 @@ Phaser.Game.prototype = {
                 this.physics.update();
                 this.particles.update();            
                 this.plugins.update();
-                this.world.update();
 
-                this.world.postUpdate();
+                this.stage.postUpdate();
                 this.plugins.postUpdate();
             }
 
