@@ -24,7 +24,6 @@ function create() {
 function change() {
 
 	text.align = 'center';
-
     text2.tint = Math.random() * 0xFFFFFF;
 
 }

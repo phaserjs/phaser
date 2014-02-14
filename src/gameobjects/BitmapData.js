@@ -144,6 +144,27 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Resizes the BitmapData.
+    * @method Phaser.BitmapData#resize
+    */
+    resize: function (width, height) {
+
+        if (width !== this.width || height !== this.height)
+        {
+            this.width = width;
+            this.height = height;
+            this.canvas.width = width;
+            this.canvas.height = height;
+            this.textureFrame.width = width;
+            this.textureFrame.height = height;
+            this.imageData = this.context.getImageData(0, 0, width, height);
+        }
+    
+        this._dirty = true;
+
+    },
+
     refreshBuffer: function () {
 
         this.imageData = this.context.getImageData(0, 0, this.width, this.height);
@@ -243,6 +264,12 @@ Phaser.BitmapData.prototype = {
     getPixels: function (rect) {
 
         return this.context.getImageData(rect.x, rect.y, rect.width, rect.height);
+
+    },
+
+    copyPixels: function (source, area, destX, destY) {
+
+        this.context.drawImage(source, area.x, area.y, area.width, area.height, destX, destY, area.width, area.height);
 
     },
 

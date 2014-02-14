@@ -142,6 +142,7 @@
     <script src="$path/src/gameobjects/Graphics.js"></script>
     <script src="$path/src/gameobjects/RenderTexture.js"></script>
     <script src="$path/src/gameobjects/SpriteBatch.js"></script>
+    <script src="$path/src/gameobjects/BitmapFont.js"></script>
 
     <script src="$path/src/system/Canvas.js"></script>
     <script src="$path/src/system/StageScaleMode.js"></script>

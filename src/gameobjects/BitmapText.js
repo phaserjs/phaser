@@ -116,13 +116,9 @@ Phaser.BitmapText.prototype = Object.create(PIXI.BitmapText.prototype);
 Phaser.BitmapText.prototype.constructor = Phaser.BitmapText;
 
 /**
- * Set the style of the text
- * style.font {String} The size (optional) and bitmap font id (required) eq 'Arial' or '20px Arial' (must have loaded previously)
- * [style.align='left'] {String} Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text
- *
- * @method setStyle
- * @param style {Object} The style parameters, contained as properties of an object
- */
+* @method setStyle
+* @private
+*/
 Phaser.BitmapText.prototype.setStyle = function() {
 
     this.style = { align: this._align };
@@ -220,7 +216,7 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'align', {
         if (value !== this._align)
         {
             this._align = value;
-            this.dirty = true;
+            this.setStyle();
         }
 
     }
