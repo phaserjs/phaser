@@ -2375,7 +2375,6 @@ declare module Phaser {
         images: any[];
         key: string;
         layers: Phaser.TilemapLayer[];
-//review
         objects: any[];
         orientation: string;
         properties: Object;
@@ -2395,7 +2394,6 @@ declare module Phaser {
         visible: boolean;
         position: Phaser.Point;
         type: number;
-        renderer: Phaser.TilemapRenderer;
         mapFormat: string;
         //methods
         addTilesetImage(tileset: string, key?: string): void;
@@ -2501,16 +2499,6 @@ declare module Phaser {
         static parseCSV(data: string): Phaser.Tilemap;
         static parseJSON(json: Object): Phaser.Tilemap;
         static tileset(game: Phaser.Game, key: string, tileWidth: number, tileHeight: number, tileMargin?: number, tileSpacing?: number, rows?: number, colums?: number, total?: number): Phaser.Tileset;
-    }
-
-    //may be unused
-    class TilemapRenderer {
-        //constructor
-        constructor(game: Phaser.Game);
-        //members
-        game: Phaser.Game;
-        //methods
-        render(tilemap: Tilemap): void;
     }
 
     class Tileset {
