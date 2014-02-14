@@ -3,7 +3,8 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-	game.load.image('box', 'assets/sprites/block.png');
+	// game.load.image('box', 'assets/sprites/block.png');
+	game.load.image('box', 'assets/sprites/diamond.png');
 
 }
 
@@ -31,14 +32,16 @@ function create() {
 	// box.body.setRectangle(64, 64, 95/2,95/2);
 
 	//	Works
-	box.body.clearShapes();
+	// box.body.clearShapes();
 	// box.body.addPolygon({}, [	[-1, 1], [-1, 0], [1, 0], [1, 1], [0.5, 0.5]	]);
 
 	//	Works
 	// box.body.setPolygon({}, [-1, 1], [-1, 0], [1, 0], [1, 1], [0.5, 0.5]);
 
 	//	Works
-	box.body.addPolygon({}, -100, 100, -100, 0, 100, 0, 100, 100, 50, 50);
+	// box.body.addPolygon({}, -100, 100, -100, 0, 100, 0, 100, 100, 50, 50);
+
+	box.body.addPolygon({},    32, 13  ,  17, 28  ,  15, 28  ,  0, 13  ,  0, 7  ,  7, 0  ,  25, 0  ,  32, 7  );
 
 	//	Works
 	// box.body.setPolygon({}, -1, 1, -1, 0, 1, 0, 1, 1, 0.5, 0.5);
@@ -79,7 +82,7 @@ function update() {
 
 function render() {
 
-	game.debug.renderShape(box.body, 0);
+	game.debug.renderPhysicsBody(box.body, 0);
 
 	// game.debug.renderText(box.body., 32, 32);
 	// game.debug.renderText('y: ' + box.body.velocity.y, 32, 64);
