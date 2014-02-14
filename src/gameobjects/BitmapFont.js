@@ -18,7 +18,7 @@
 * @param {number} [xOffset=0] - If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
 * @param {number} [yOffset=0] - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
 */
-Phaser.BitmapFont = function (game, key, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset) {
+Phaser.BitmapFont = function (game, x, y, key, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset) {
 
     /**
     * @property {number} characterWidth - The width of each character in the font set.
@@ -137,7 +137,7 @@ Phaser.BitmapFont = function (game, key, characterWidth, characterHeight, chars,
     */
     this.bmd = new Phaser.BitmapData(game, this.characterWidth, this.characterHeight);
 
-    Phaser.Image.call(this, game, 0, 0, this.bmd);
+    Phaser.Image.call(this, game, x, y, this.bmd);
 
     /**
     * @property {number} type - Base Phaser object type. 
@@ -277,7 +277,7 @@ Phaser.BitmapFont.prototype.setFixedWidth = function (width, lineAlignment) {
 * @param {string} [lineAlignment='left'] - Align each line of multi-line text. Set to BitmapFont.ALIGN_LEFT, BitmapFont.ALIGN_RIGHT or BitmapFont.ALIGN_CENTER.
 * @param {boolean} [allowLowerCase=false] - Lots of bitmap font sets only include upper-case characters, if yours needs to support lower case then set this to true.
 */
-Phaser.BitmapFont.prototype.setFixedWidth = function (content, multiLine, characterSpacing, lineSpacing, lineAlignment, allowLowerCase) {
+Phaser.BitmapFont.prototype.setText = function (content, multiLine, characterSpacing, lineSpacing, lineAlignment, allowLowerCase) {
 
     this.multiLine = multiLine || false;
     this.customSpacingX = characterSpacing || 0;

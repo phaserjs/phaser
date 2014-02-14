@@ -258,12 +258,37 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * * Create a new BitmapText object.
+    * Create a new BitmapFont object.
+    *
+    * @param {number} x - X position of the new bitmapText object.
+    * @param {number} y - Y position of the new bitmapText object.
+    * @param {string} font - The key of the BitmapFont as stored in Game.Cache.
+    * @param {number} characterWidth - The width of each character in the font set.
+    * @param {number} characterHeight - The height of each character in the font set.
+    * @param {string} chars - The characters used in the font set, in display order. You can use the TEXT_SET consts for common font set arrangements.
+    * @param {number} charsPerRow - The number of characters per row in the font set.
+    * @param {number} [xSpacing=0] - If the characters in the font set have horizontal spacing between them set the required amount here.
+    * @param {number} [ySpacing=0] - If the characters in the font set have vertical spacing between them set the required amount here.
+    * @param {number} [xOffset=0] - If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
+    * @param {number} [yOffset=0] - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
+    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
+    * @return {Phaser.BitmapFont} The newly created BitmapFont object.
+    */
+    bitmapFont: function (x, y, font, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset, group) {
+
+        if (typeof group === 'undefined') { group = this.world; }
+
+        return group.add(new Phaser.BitmapFont(this.game, x, y, font, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset));
+
+    },
+
+    /**
+    * Create a new BitmapText object.
     *
     * @method Phaser.GameObjectFactory#bitmapText
     * @param {number} x - X position of the new bitmapText object.
     * @param {number} y - Y position of the new bitmapText object.
-    * @param {string} font - The key of the BitmapFont as stored in Game.Cache.
+    * @param {string} font - The key of the BitmapText font as stored in Game.Cache.
     * @param {string} [text] - The actual text that will be rendered. Can be set later via BitmapText.text.
     * @param {number} [size] - The size the font will be rendered in, in pixels.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
@@ -273,7 +298,7 @@ Phaser.GameObjectFactory.prototype = {
 
         if (typeof group === 'undefined') { group = this.world; }
 
-        return this.world.add(new Phaser.BitmapText(this.game, x, y, font, text, size));
+        return group.add(new Phaser.BitmapText(this.game, x, y, font, text, size));
 
     },
 
