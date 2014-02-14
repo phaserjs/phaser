@@ -3,8 +3,8 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-	// game.load.image('box', 'assets/sprites/block.png');
 	game.load.image('box', 'assets/sprites/diamond.png');
+	game.load.physics('physobjects', 'assets/physics/diamond.json');
 
 }
 
@@ -24,7 +24,13 @@ function create() {
 
 	box.physicsEnabled = true;
 
+	box.body.clearShapes();
+
+	box.body.loadPolygon('physobjects', 'diamond');
+
 	box.body.rotateLeft(20);
+
+	// console.log(game.cache.getPhysicsData('physobjects', 'diamond'));
 
 	//	95x95
 	// box.body.setRectangle(64, 64);
@@ -41,7 +47,9 @@ function create() {
 	//	Works
 	// box.body.addPolygon({}, -100, 100, -100, 0, 100, 0, 100, 100, 50, 50);
 
-	box.body.addPolygon({},    32, 13  ,  17, 28  ,  15, 28  ,  0, 13  ,  0, 7  ,  7, 0  ,  25, 0  ,  32, 7  );
+	// box.body.addPolygon({}, -100, 100, -100, 0, 100, 0, 100, 100, 50, 50 );
+
+	// box.body.addPolygon({},    32, 13  ,  17, 28  ,  15, 28  ,  0, 13  ,  0, 7  ,  7, 0  ,  25, 0  ,  32, 7  );
 
 	//	Works
 	// box.body.setPolygon({}, -1, 1, -1, 0, 1, 0, 1, 1, 0.5, 0.5);

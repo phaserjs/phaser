@@ -9,6 +9,11 @@
 */
 Phaser.Physics = {};
 
+/**
+* @const
+*/
+Phaser.Physics.LIME_CORONA_JSON = 0;
+
 //  Add an extra property to p2.Body
 p2.Body.prototype.parent = null;
 

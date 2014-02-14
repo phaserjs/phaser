@@ -133,6 +133,12 @@ Phaser.Loader.TEXTURE_ATLAS_JSON_HASH = 1;
 */
 Phaser.Loader.TEXTURE_ATLAS_XML_STARLING = 2;
 
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Loader.PHYSICS_LIME_CORONA = 3;
+
 Phaser.Loader.prototype = {
 
     /**
@@ -483,6 +489,49 @@ Phaser.Loader.prototype = {
         else
         {
             this.addToFileList('tilemap', key, mapDataURL, { format: format });
+        }
+
+        return this;
+
+    },
+
+    /**
+    * Add a new physics data object loading request.
+    * The data must be in Lime + Corona JSON format. Physics Editor by code'n'web exports in this format natively.
+    *
+    * @method Phaser.Loader#physics
+    * @param {string} key - Unique asset key of the physics json data.
+    * @param {string} [dataURL] - The url of the map data file (csv/json)
+    * @param {object} [jsonData] - An optional JSON data object. If given then the dataURL is ignored and this JSON object is used for physics data instead.
+    * @param {string} [format=Phaser.Physics.LIME_CORONA_JSON] - The format of the physics data.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    physics: function (key, dataURL, jsonData, format) {
+
+        if (typeof dataURL === "undefined") { dataURL = null; }
+        if (typeof jsonData === "undefined") { jsonData = null; }
+        if (typeof format === "undefined") { format = Phaser.Physics.LIME_CORONA_JSON; }
+
+        if (dataURL == null && jsonData == null)
+        {
+            console.warn('Phaser.Loader.physics - Both dataURL and jsonData are null. One must be set.');
+
+            return this;
+        }
+
+        //  A map data object has been given
+        if (jsonData)
+        {
+            if (typeof jsonData === 'string')
+            {
+                jsonData = JSON.parse(jsonData);
+            }
+
+            this.game.cache.addPhysicsData(key, null, jsonData, format);
+        }
+        else
+        {
+            this.addToFileList('physics', key, dataURL, { format: format });
         }
 
         return this;
@@ -863,6 +912,7 @@ Phaser.Loader.prototype = {
 
             case 'text':
             case 'script':
+            case 'physics':
                 this._xhr.open("GET", this.baseURL + file.url, true);
                 this._xhr.responseType = "text";
                 this._xhr.onload = function () {
@@ -1063,6 +1113,11 @@ Phaser.Loader.prototype = {
             case 'text':
                 file.data = this._xhr.responseText;
                 this.game.cache.addText(file.key, file.url, file.data);
+                break;
+
+            case 'physics':
+                var data = JSON.parse(this._xhr.responseText);
+                this.game.cache.addPhysicsData(file.key, file.url, data, file.format);
                 break;
 
             case 'script':

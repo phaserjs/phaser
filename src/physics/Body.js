@@ -534,7 +534,7 @@ Phaser.Physics.Body.prototype = {
         var path;
 
         //  Did they pass in a single array of points?
-        if (points.length === 1)
+        if (points.length === 1 && Array.isArray(points[0]))
         {
             path = points[0];
         }
@@ -643,69 +643,37 @@ Phaser.Physics.Body.prototype = {
     },
 
     /**
-    * Reads a polygon shape path, and assembles convex shapes from that and puts them at proper offset points. The shape must be simple and without holes.
-    * This function expects the x.y values to be given in pixels. If you want to provide them at p2 world scales then call Body.data.fromPolygon directly.
+    * Reads the shape data from a physics data file stored in the Game.Cache and adds it as a polygon to this Body.
     *
-    * @method Phaser.Physics.Body#setPolygon
+    * @method Phaser.Physics.Body#loadPolygon
+    * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
+    * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
     * @param {object} options - An object containing the build options: 
     * @param {boolean} [options.optimalDecomp=false] - Set to true if you need optimal decomposition. Warning: very slow for polygons with more than 10 vertices.
     * @param {boolean} [options.skipSimpleCheck=false] - Set to true if you already know that the path is not intersecting itself.
     * @param {boolean|number} [options.removeCollinearPoints=false] - Set to a number (angle threshold value) to remove collinear points, or false to keep all points.
-    * @param {(number[]|...number)} points - An array of 2d vectors that form the convex or concave polygon. 
-    *                                       Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...], 
-    *                                       or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
     * @return {boolean} True on success, else false.
-    setPolygon: function (options, points) {
+    */
+    loadPolygon: function (key, object, options) {
 
-        options = options || {};
+        var data = game.cache.getPhysicsData(key, object);
 
-        points = Array.prototype.slice.call(arguments, 1);
-
-        var path;
-
-        //  Did they pass in a single array of points?
-        if (points.length === 1)
+        if (data && data.shape)
         {
-            // console.log('part 1', points.length);
-            path = points[0];
-        }
-        else if (Array.isArray(points[0]))
-        {
-            // console.log('part 2', points.length);
-            path = points;
-        }
-        else if (typeof points[0] === 'number')
-        {
-            //  A list of numbers?
-            // console.log('part 3');
-
             var temp = [];
 
             //  We've a list of numbers
-            for (var i = 0, len = points.length; i < len; i += 2)
+            for (var i = 0, len = data.shape.length; i < len; i += 2)
             {
-                temp.push([points[i], points[i + 1]]);
+                temp.push([data.shape[i], data.shape[i + 1]]);
             }
 
-            path = temp;
+            return this.addPolygon(options, temp);
         }
 
-        //  Now process them into p2 values
-        for (var p = 0; p < path.length; p++)
-        {
-            path[p][0] = this.px2p(path[p][0]);
-            path[p][1] = this.px2p(path[p][1]);
-        }
-
-        // console.log('points');
-        // console.table(points);
-        // console.log('PATH');
-        // console.log(path);
-
-        return this.data.fromPolygon(path, options);
+        return false;
 
     },
-    */
 
     /**
     * Convert p2 physics value to pixel scale.
