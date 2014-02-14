@@ -173,6 +173,10 @@ Phaser.Physics.World.prototype.setBounds = function (x, y, width, height, left, 
             var shape = this.bounds.shapes[i];
             this.bounds.removeShape(shape);
         }
+
+        // Reset bounds position without making a new body
+        this.bounds.position[0] = this.game.math.px2p(cx);
+        this.bounds.position[1] = this.game.math.px2p(cy);
     }
     else
     {
