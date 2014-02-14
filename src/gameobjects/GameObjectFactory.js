@@ -263,16 +263,17 @@ Phaser.GameObjectFactory.prototype = {
     * @method Phaser.GameObjectFactory#bitmapText
     * @param {number} x - X position of the new bitmapText object.
     * @param {number} y - Y position of the new bitmapText object.
-    * @param {string} text - The actual text that will be written.
-    * @param {object} style - The style object containing style attributes like font, font size , etc.
+    * @param {string} font - The key of the BitmapFont as stored in Game.Cache.
+    * @param {string} [text] - The actual text that will be rendered. Can be set later via BitmapText.text.
+    * @param {number} [size] - The size the font will be rendered in, in pixels.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.BitmapText} The newly created bitmapText object.
     */
-    bitmapText: function (x, y, text, style, group) {
+    bitmapText: function (x, y, font, text, size, group) {
 
         if (typeof group === 'undefined') { group = this.world; }
 
-        return this.world.add(new Phaser.BitmapText(this.game, x, y, text, style));
+        return this.world.add(new Phaser.BitmapText(this.game, x, y, font, text, size));
 
     },
 
