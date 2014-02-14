@@ -10,15 +10,15 @@
 * @class Phaser.LoaderParser
 */
 Phaser.LoaderParser = {
-    
+
     /**
-    * Parse frame data from an XML file.
+    * Parse a Bitmap Font from an XML file.
     * @method Phaser.LoaderParser.bitmapFont
     * @param {Phaser.Game} game - A reference to the current game.
     * @param {object} xml - XML data you want to parse.
     * @param {string} cacheKey - The key of the texture this font uses in the cache.
     */
-    bitmapFont: function (game, xml, cacheKey) {
+    bitmapFont: function (game, xml, cacheKey, xSpacing, ySpacing) {
 
         if (!xml || /MSIE 9/i.test(navigator.userAgent) || navigator.isCocoonJS)
         {
@@ -41,7 +41,7 @@ Phaser.LoaderParser = {
 
         data.font = info.getAttribute('face');
         data.size = parseInt(info.getAttribute('size'), 10);
-        data.lineHeight = parseInt(common.getAttribute('lineHeight'), 10);
+        data.lineHeight = parseInt(common.getAttribute('lineHeight'), 10) + ySpacing;
         data.chars = {};
 
         var letters = xml.getElementsByTagName('char');
@@ -61,7 +61,7 @@ Phaser.LoaderParser = {
             data.chars[charCode] = {
                 xOffset: parseInt(letters[i].getAttribute('xoffset'), 10),
                 yOffset: parseInt(letters[i].getAttribute('yoffset'), 10),
-                xAdvance: parseInt(letters[i].getAttribute('xadvance'), 10),
+                xAdvance: parseInt(letters[i].getAttribute('xadvance'), 10) + xSpacing,
                 kerning: {},
                 texture: PIXI.TextureCache[cacheKey] = new PIXI.Texture(texture, textureRect)
             };

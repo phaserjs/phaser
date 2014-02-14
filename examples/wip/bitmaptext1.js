@@ -3,8 +3,8 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: p
 
 function preload() {
 
-    game.load.bitmapFont('desyrel', 'assets/fonts/desyrel.png', 'assets/fonts/desyrel.xml');
-    game.load.bitmapFont('carrier', 'assets/fonts/carrier_command.png', 'assets/fonts/carrier_command.xml');
+    game.load.bitmapFont('desyrel', 'assets/fonts/desyrel.png', 'assets/fonts/desyrel.xml', null, 0, -32);
+    game.load.bitmapFont('carrier', 'assets/fonts/carrier_command.png', 'assets/fonts/carrier_command.xml', null, 0, 24);
 
 }
 
@@ -13,17 +13,19 @@ var text2;
 
 function create() {
 
-    text = game.add.bitmapText(200, 100, 'carrier', 'Phaser & Pixi\nrocking!', 32);
-    text2 = game.add.bitmapText(200, 300, 'desyrel', 'Phaser & Pixi\nrocking!', 32);
+    text = game.add.bitmapText(100, 100, 'carrier', 'Phaser and Pixi\nrocking!', 32);
 
-    // text.tint = Math.random() * 0xFFFFFF;
+    text2 = game.add.bitmapText(100, 300, 'desyrel', 'Phaser & Pixi\nrocking!', 64);
+
     game.input.onDown.add(change, this);
 
 }
 
 function change() {
 
-	text.fontSize++;
+	text.align = 'center';
+
+    text2.tint = Math.random() * 0xFFFFFF;
 
 }
 

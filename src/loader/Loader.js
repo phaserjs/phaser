@@ -497,17 +497,21 @@ Phaser.Loader.prototype = {
     * @param {string} textureURL - The url of the font image file.
     * @param {string} [xmlURL] - The url of the font data file (xml/fnt)
     * @param {object} [xmlData] - An optional XML data object.
+    * @param {number} [xSpacing=0] - If you'd like to add additional horizontal spacing between the characters then set the pixel value here.
+    * @param {number} [ySpacing=0] - If you'd like to add additional vertical spacing between the lines then set the pixel value here.
     * @return {Phaser.Loader} This Loader instance.
     */
-    bitmapFont: function (key, textureURL, xmlURL, xmlData) {
+    bitmapFont: function (key, textureURL, xmlURL, xmlData, xSpacing, ySpacing) {
 
         if (typeof xmlURL === "undefined") { xmlURL = null; }
         if (typeof xmlData === "undefined") { xmlData = null; }
+        if (typeof xSpacing === "undefined") { xSpacing = 0; }
+        if (typeof ySpacing === "undefined") { ySpacing = 0; }
 
         //  A URL to a json/xml file has been given
         if (xmlURL)
         {
-            this.addToFileList('bitmapfont', key, textureURL, { xmlURL: xmlURL });
+            this.addToFileList('bitmapfont', key, textureURL, { xmlURL: xmlURL, xSpacing: xSpacing, ySpacing: ySpacing });
         }
         else
         {
@@ -540,7 +544,7 @@ Phaser.Loader.prototype = {
                 }
                 else
                 {
-                    this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml });
+                    this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml, xSpacing: xSpacing, ySpacing: ySpacing });
                 }
             }
         }
@@ -1005,7 +1009,7 @@ Phaser.Loader.prototype = {
 
                 if (file.xmlURL == null)
                 {
-                    this.game.cache.addBitmapFont(file.key, file.url, file.data, file.xmlData);
+                    this.game.cache.addBitmapFont(file.key, file.url, file.data, file.xmlData, file.xSpacing, file.ySpacing);
                 }
                 else
                 {
@@ -1208,7 +1212,7 @@ Phaser.Loader.prototype = {
 
         if (file.type == 'bitmapfont')
         {
-            this.game.cache.addBitmapFont(file.key, file.url, file.data, xml);
+            this.game.cache.addBitmapFont(file.key, file.url, file.data, xml, file.xSpacing, file.ySpacing);
         }
         else if (file.type == 'textureatlas')
         {

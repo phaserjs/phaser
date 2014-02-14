@@ -20,8 +20,8 @@
 * @param {number} x - X position of the new bitmapText object.
 * @param {number} y - Y position of the new bitmapText object.
 * @param {string} font - The key of the BitmapFont as stored in Game.Cache.
-* @param {string} [text] - The actual text that will be rendered. Can be set later via BitmapText.text.
-* @param {number} [size] - The size the font will be rendered in, in pixels.
+* @param {string} [text=''] - The actual text that will be rendered. Can be set later via BitmapText.text.
+* @param {number} [size=32] - The size the font will be rendered in, in pixels.
 */
 Phaser.BitmapText = function (game, x, y, font, text, size) {
 
@@ -85,10 +85,16 @@ Phaser.BitmapText = function (game, x, y, font, text, size) {
     this._fontSize = size;
 
     /**
-    * @property {number} lineSpacing - Additional spacing (in pixels) between each line of text if multi-line.
+    * @property {string} _align - Internal cache var.
     * @private
     */
-    this._lineSpacing = 0;
+    this._align = 'left';
+
+    /**
+    * @property {number} _tint - Internal cache var.
+    * @private
+    */
+    this._tint = 0xFFFFFF;
 
     /**
     * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
@@ -119,19 +125,10 @@ Phaser.BitmapText.prototype.constructor = Phaser.BitmapText;
  */
 Phaser.BitmapText.prototype.setStyle = function() {
 
-    // style = style || {};
-    // style.align = style.align || 'left';
-    this.style = { align: 'left' };
-
+    this.style = { align: this._align };
     this.fontName = this._font;
     this.fontSize = this._fontSize;
-
-    // var font = style.font.split(' ');
-    // this.fontName = font[font.length - 1];
-    // this.fontSize = font.length >= 2 ? parseInt(font[font.length - 2], 10) : PIXI.BitmapText.fonts[this.fontName].size;
-
     this.dirty = true;
-    // this.tint = style.tint;
 
 };
 
@@ -182,16 +179,6 @@ Phaser.BitmapText.prototype.postUpdate = function () {
 */
 Phaser.BitmapText.prototype.destroy = function() {
 
-    if (this.canvas && this.canvas.parentNode)
-    {
-        this.canvas.parentNode.removeChild(this.canvas);
-    }
-    else
-    {
-        this.canvas = null;
-        this.context = null;
-    }
-
     if (this.filters)
     {
         this.filters = null;
@@ -202,22 +189,19 @@ Phaser.BitmapText.prototype.destroy = function() {
         this.parent.remove(this);
     }
 
-    this.texture.destroy();
-
-    if (this.canvas.parentNode)
-    {
-        this.canvas.parentNode.removeChild(this.canvas);
-    }
-    else
-    {
-        this.canvas = null;
-        this.context = null;
-    }
-
     this.exists = false;
     this.visible = false;
 
     this.game = null;
+
+    if (this.children.length > 0)
+    {
+        do
+        {
+            this.removeChild(this.children[0]);
+        }
+        while (this.children.length > 0);
+    }
 
 }
 
@@ -228,14 +212,14 @@ Phaser.BitmapText.prototype.destroy = function() {
 Object.defineProperty(Phaser.BitmapText.prototype, 'align', {
 
     get: function() {
-        return this.style.align;
+        return this._align;
     },
 
     set: function(value) {
 
-        if (value !== this.style.align)
+        if (value !== this._align)
         {
-            this.style.align = value;
+            this._align = value;
             this.dirty = true;
         }
 
@@ -243,6 +227,27 @@ Object.defineProperty(Phaser.BitmapText.prototype, 'align', {
 
 });
 
+/**
+* @name Phaser.BitmapText#tint
+* @property {number} tint - The tint applied to the BitmapText. This is a hex value. Set to white to disable (0xFFFFFF)
+*/
+Object.defineProperty(Phaser.BitmapText.prototype, 'tint', {
+
+    get: function() {
+        return this._tint;
+    },
+
+    set: function(value) {
+
+        if (value !== this._tint)
+        {
+            this._tint = value;
+            this.dirty = true;
+        }
+
+    }
+
+});
 
 /**
 * Indicates the rotation of the Text, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.

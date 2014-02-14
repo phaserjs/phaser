@@ -85,6 +85,7 @@ Significant API changes:
 * Stage.canvas has been moved to Game.canvas (which used to be a reference to Stage.canvas, but is now the actual object).
 * BitmapData.addTo removed and enhanced BitmapData.add so it can accept either a single Sprite/Image or an Array of them.
 * BitmapData has had all of the EaselJS functions removed. It was just taking up space and you can do it all via BitmapData.context directly.
+* BitmapText has had a bit of an overhaul - the signature for adding a BitmapText has changed to: x, y, font, text, size. See the docs and examples for details.
 
 
 New features:
@@ -105,9 +106,9 @@ New features:
 * TileSprite can now use a frame from a texture atlas or a sprite sheet.
 * TileSprites can now be animated. See new example :)
 * TileSprites have a new method: autoScroll(x, y) which sets an automatic scroll running (until stopped with TileSprite.stopScroll).
-
-
-New Examples:
+* BitmapText now uses the new XML parser which should work under CocoonJS without clashes.
+* BitmapText signature changed so you can support fonts with spaces in their names.
+* Loader.bitmapFont now has 2 extra parameters: xSpacing and ySpacing. These allow you to add extra spacing to each letter or line of the font.
 
 
 Updates:

@@ -212,17 +212,18 @@ Phaser.Cache.prototype = {
     * @param {string} key - The unique key by which you will reference this object.
     * @param {string} url - URL of this font xml file.
     * @param {object} data - Extra font data.
-    * @param xmlData {object} Texture atlas frames data.
+    * @param {object} xmlData - Texture atlas frames data.
+    * @param {number} [xSpacing=0] - If you'd like to add additional horizontal spacing between the characters then set the pixel value here.
+    * @param {number} [ySpacing=0] - If you'd like to add additional vertical spacing between the lines then set the pixel value here.
     */
-    addBitmapFont: function (key, url, data, xmlData) {
+    addBitmapFont: function (key, url, data, xmlData, xSpacing, ySpacing) {
 
         this._images[key] = { url: url, data: data, spriteSheet: true };
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
 
-        Phaser.LoaderParser.bitmapFont(this.game, xmlData, key);
-        // this._images[key].frameData = Phaser.AnimationParser.XMLData(this.game, xmlData, key);
+        Phaser.LoaderParser.bitmapFont(this.game, xmlData, key, xSpacing, ySpacing);
 
     },
 
