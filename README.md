@@ -109,7 +109,8 @@ New features:
 * BitmapText now uses the new XML parser which should work under CocoonJS without clashes.
 * BitmapText signature changed so you can support fonts with spaces in their names.
 * Loader.bitmapFont now has 2 extra parameters: xSpacing and ySpacing. These allow you to add extra spacing to each letter or line of the font.
-* Added the new BitmapFont class. This is for rendering retro style fixed-width bitmap fonts into an Image object.
+* Added the new BitmapFont class. This is for rendering retro style fixed-width bitmap fonts into an Image object. It's a texture you can apply to a Sprite/Image.
+* Added Cache.updateFrameData which is really useful for swapping FrameData blocks in the cache.
 
 
 Updates:

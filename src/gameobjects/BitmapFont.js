@@ -462,12 +462,11 @@ Phaser.BitmapFont.prototype.pasteLine = function (line, x, y, customSpacingX) {
         else
         {
             //  If the character doesn't exist in the font then we don't want a blank space, we just want to skip it
-            if (this.grabData[line.charCodeAt(c)])
+            if (this.grabData[line.charCodeAt(c)] >= 0)
             {
                 this.stamp.frame = this.grabData[line.charCodeAt(c)];
                 p.set(x, y);
                 this.render(this.stamp, p, false);
-                // this.bmd.copyPixels(this.fontSet, this.grabData[line.charCodeAt(c)], x, y);
                 
                 x += this.characterWidth + this.customSpacingX;
                 
@@ -522,9 +521,12 @@ Phaser.BitmapFont.prototype.removeUnsupportedCharacters = function (stripCR) {
     
     for (var c = 0; c < this._text.length; c++)
     {
-        if (this.grabData[this._text.charCodeAt(c)] || this._text.charCodeAt(c) == 32 || (!stripCR && this._text.charAt(c) === "\n"))
+        var char = this._text[c];
+        var code = char.charCodeAt(0);
+
+        if (this.grabData[code] >= 0 || (!stripCR && char === "\n"))
         {
-            newString = newString.concat(this._text.charAt(c));
+            newString = newString.concat(char);
         }
     }
     

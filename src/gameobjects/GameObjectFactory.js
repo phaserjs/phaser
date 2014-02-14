@@ -258,9 +258,12 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Create a new BitmapFont object.
+    * Create a new BitmapFont object to be used as a texture for an Image or Sprite and optionally add it to the Cache.
+    * The texture can be asssigned or one or multiple images/sprites, but note that the text the BitmapFont uses will be shared across them all, 
+    * i.e. if you need each Image to have different text in it, then you need to create multiple BitmapFont objects.
     *
-    * @param {string} font - The key of the BitmapFont as stored in Game.Cache.
+    * @method Phaser.GameObjectFactory#bitmapFont
+    * @param {string} font - The key of the image in the Game.Cache that the BitmapFont will use.
     * @param {number} characterWidth - The width of each character in the font set.
     * @param {number} characterHeight - The height of each character in the font set.
     * @param {string} chars - The characters used in the font set, in display order. You can use the TEXT_SET consts for common font set arrangements.

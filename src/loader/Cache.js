@@ -67,6 +67,12 @@ Phaser.Cache = function (game) {
     */
     this._bitmapDatas = {};
 
+    /**
+    * @property {object} _bitmapFont - BitmapFont key-value container.
+    * @private
+    */
+    this._bitmapFont = {};
+
     this.addDefaultImage();
     this.addMissingImage();
 
@@ -131,6 +137,19 @@ Phaser.Cache.prototype = {
         var frame = new Phaser.Frame(0, 0, 0, texture.width, texture.height, '', '');
 
         this._textures[key] = { texture: texture, frame: frame };
+
+    },
+
+    /**
+    * Add a Phaser.BitmapFont in to the cache.
+    *
+    * @method Phaser.Cache#addBitmapFont
+    * @param {string} key - The unique key by which you will reference this object.
+    * @param {Phaser.BitmapFont} texture - The BitmapFont object to be stored. This can be applied to any Image/Sprite as a texture.
+    */
+    addBitmapFont: function (key, texture) {
+
+        this._bitmapFont[key] = texture;
 
     },
 
@@ -446,6 +465,26 @@ Phaser.Cache.prototype = {
         else
         {
             console.warn('Phaser.Cache.getBitmapData: Invalid key: "' + key + '"');
+        }
+
+    },
+
+    /**
+    * Get a BitmapFont object from the cache by its key.
+    *
+    * @method Phaser.Cache#getBitmapFont
+    * @param {string} key - Asset key of the BitmapFont object to retrieve from the Cache.
+    * @return {Phaser.BitmapFont} The requested BitmapFont object if found, or null if not.
+    */
+    getBitmapFont: function (key) {
+
+        if (this._bitmapFont[key])
+        {
+            return this._bitmapFont[key];
+        }
+        else
+        {
+            console.warn('Phaser.Cache.getBitmapFont: Invalid key: "' + key + '"');
         }
 
     },
