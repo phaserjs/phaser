@@ -62,8 +62,8 @@ function update() {
 
 function render() {
 
-	// game.debug.renderText('x: ' + box2.body.velocity.x, 32, 32);
-	// game.debug.renderText('y: ' + box2.body.velocity.y, 32, 64);
+	game.debug.renderText('x: ' + ship.body.x, 32, 32);
+	game.debug.renderText('y: ' + ship.body.y, 32, 64);
 
 }
 

@@ -168,11 +168,16 @@ Phaser.Physics.World.prototype.setBounds = function (x, y, width, height, left, 
     {
     	this.removeBody(this.bounds);
 
-        for (var i = this.bounds.shapes.length - 1; i >= 0; i--)
+        var i = this.bounds.shapes.length;
+
+        while (i--)
         {
             var shape = this.bounds.shapes[i];
             this.bounds.removeShape(shape);
         }
+
+        this.bounds.position[0] = this.game.math.px2p(cx);
+        this.bounds.position[1] = this.game.math.px2p(cy);
     }
     else
     {
