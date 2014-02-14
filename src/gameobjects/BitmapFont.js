@@ -6,6 +6,7 @@
 
 /**
 * @class Phaser.BitmapFont
+* @extends Phaser.RenderTexture
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
 * @param {string} key - The font set graphic set as stored in the Game.Cache.
@@ -18,7 +19,7 @@
 * @param {number} [xOffset=0] - If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
 * @param {number} [yOffset=0] - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
 */
-Phaser.BitmapFont = function (game, x, y, key, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset) {
+Phaser.BitmapFont = function (game, key, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset) {
 
     /**
     * @property {number} characterWidth - The width of each character in the font set.
@@ -112,11 +113,22 @@ Phaser.BitmapFont = function (game, x, y, key, characterWidth, characterHeight, 
     var currentX = this.offsetX;
     var currentY = this.offsetY;
     var r = 0;
+    var data = new Phaser.FrameData();
     
     for (var c = 0; c < chars.length; c++)
     {
-        //  The rect is hooked to the ASCII value of the character
-        this.grabData[chars.charCodeAt(c)] = new Phaser.Rectangle(currentX, currentY, this.characterWidth, this.characterHeight);
+        var uuid = game.rnd.uuid();
+
+        var frame = data.addFrame(new Phaser.Frame(c, currentX, currentY, this.characterWidth, this.characterHeight, '', uuid));
+
+        this.grabData[chars.charCodeAt(c)] = frame.index;
+
+        PIXI.TextureCache[uuid] = new PIXI.Texture(PIXI.BaseTextureCache[key], {
+            x: currentX,
+            y: currentY,
+            width: this.characterWidth,
+            height: this.characterHeight
+        });
         
         r++;
         
@@ -132,13 +144,11 @@ Phaser.BitmapFont = function (game, x, y, key, characterWidth, characterHeight, 
         }
     }
 
-    /**
-    * @property {Phaser.BitmapData} bmd - The internal BitmapData to which the font is rendered.
-    */
-    // this.bmd = new Phaser.BitmapData(game, this.characterWidth, this.characterHeight);
-    this.bmd = new Phaser.BitmapData(game, 800, 600);
+    game.cache.updateFrameData(key, data);
 
-    Phaser.Image.call(this, game, x, y, this.bmd);
+    this.stamp = new Phaser.Image(game, 0, 0, key, 0);
+
+    Phaser.RenderTexture.call(this, game);
 
     /**
     * @property {number} type - Base Phaser object type. 
@@ -147,7 +157,7 @@ Phaser.BitmapFont = function (game, x, y, key, characterWidth, characterHeight, 
     
 };
 
-Phaser.BitmapFont.prototype = Object.create(Phaser.Image.prototype);
+Phaser.BitmapFont.prototype = Object.create(Phaser.RenderTexture.prototype);
 Phaser.BitmapFont.prototype.constructor = Phaser.BitmapFont;
 
 /**
@@ -302,6 +312,41 @@ Phaser.BitmapFont.prototype.setText = function (content, multiLine, characterSpa
 }
 
 /**
+* Over rides the default PIXI.RenderTexture resize event as we need our baseTexture resized as well.
+* 
+* @method Phaser.BitmapFont#resize
+* @memberof Phaser.BitmapFont
+*/
+Phaser.BitmapFont.prototype.resize = function (width, height) {
+
+    this.width = width;
+    this.height = height;
+
+    this.frame.width = this.width;
+    this.frame.height = this.height;
+
+    this.baseTexture.width = this.width;
+    this.baseTexture.height = this.height;
+
+    if (this.renderer.type === PIXI.WEBGL_RENDERER)
+    {
+        this.projection.x = this.width / 2;
+        this.projection.y = -this.height / 2;
+
+        var gl = this.renderer.gl;
+        gl.bindTexture(gl.TEXTURE_2D, this.baseTexture._glTextures[gl.id]);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  this.width,  this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    }
+    else
+    {
+        this.textureBuffer.resize(this.width, this.height);
+    }
+
+    PIXI.Texture.frameUpdates.push(this);
+
+}
+
+/**
 * Updates the BitmapData of the Sprite with the text
 * 
 * @method Phaser.BitmapFont#buildBitmapFontText
@@ -311,19 +356,21 @@ Phaser.BitmapFont.prototype.buildBitmapFontText = function () {
 
     var cx = 0;
     var cy = 0;
-    
+
     if (this.multiLine)
     {
         var lines = this._text.split("\n");
     
         if (this.fixedWidth > 0)
         {
-            this.bmd.resize(fixedWidth, (lines.length * (this.characterHeight + this.customSpacingY)) - this.customSpacingY);
+            this.resize(fixedWidth, (lines.length * (this.characterHeight + this.customSpacingY)) - this.customSpacingY);
         }
         else
         {
-            this.bmd.resize(this.getLongestLine() * (this.characterWidth + this.customSpacingX), (lines.length * (this.characterHeight + this.customSpacingY)) - this.customSpacingY);
+            this.resize(this.getLongestLine() * (this.characterWidth + this.customSpacingX), (lines.length * (this.characterHeight + this.customSpacingY)) - this.customSpacingY);
         }
+
+        this.textureBuffer.clear();
         
         //  Loop through each line of text
         for (var i = 0; i < lines.length; i++)
@@ -336,11 +383,11 @@ Phaser.BitmapFont.prototype.buildBitmapFontText = function () {
                     break;
                     
                 case Phaser.BitmapFont.ALIGN_RIGHT:
-                    cx = this.bmd.width - (lines[i].length * (this.characterWidth + this.customSpacingX));
+                    cx = this.width - (lines[i].length * (this.characterWidth + this.customSpacingX));
                     break;
                     
                 case Phaser.BitmapFont.ALIGN_CENTER:
-                    cx = (this.bmd.width / 2) - ((lines[i].length * (this.characterWidth + this.customSpacingX)) / 2);
+                    cx = (this.width / 2) - ((lines[i].length * (this.characterWidth + this.customSpacingX)) / 2);
                     cx += this.customSpacingX / 2;
                     break;
             }
@@ -360,12 +407,14 @@ Phaser.BitmapFont.prototype.buildBitmapFontText = function () {
     {
         if (this.fixedWidth > 0)
         {
-            this.bmd.resize(fixedWidth, this.characterHeight);
+            this.resize(fixedWidth, this.characterHeight);
         }
         else
         {
-            this.bmd.resize(this._text.length * (this.characterWidth + this.customSpacingX), this.characterHeight);
+            this.resize(this._text.length * (this.characterWidth + this.customSpacingX), this.characterHeight);
         }
+
+        this.textureBuffer.clear();
         
         switch (this.align)
         {
@@ -374,27 +423,17 @@ Phaser.BitmapFont.prototype.buildBitmapFontText = function () {
                 break;
                 
             case Phaser.BitmapFont.ALIGN_RIGHT:
-                cx = this.bmd.width - (this._text.length * (this.characterWidth + this.customSpacingX));
+                cx = this.width - (this._text.length * (this.characterWidth + this.customSpacingX));
                 break;
                 
             case Phaser.BitmapFont.ALIGN_CENTER:
-                cx = (this.bmd.width / 2) - ((this._text.length * (this.characterWidth + this.customSpacingX)) / 2);
+                cx = (this.width / 2) - ((this._text.length * (this.characterWidth + this.customSpacingX)) / 2);
                 cx += this.customSpacingX / 2;
                 break;
         }
     
         this.pasteLine(this._text, cx, 0, this.customSpacingX);
     }
-
-    this.bmd.render();
-    this.texture.frame.width = this.bmd.width;
-    this.texture.frame.height = this.bmd.height;
-    this.updateFrame = true;
-    this.dirty = true;
-    this.textureChange = true;
-    // this.setTexture(this.bmd.texture);
-    // this.width = this.bmd.width;
-    // this.height = this.bmd.height;
 
 }
 
@@ -411,6 +450,8 @@ Phaser.BitmapFont.prototype.buildBitmapFontText = function () {
 */
 Phaser.BitmapFont.prototype.pasteLine = function (line, x, y, customSpacingX) { 
 
+    var p = new Phaser.Point();
+
     for (var c = 0; c < line.length; c++)
     {
         //  If it's a space then there is no point copying, so leave a blank space
@@ -423,11 +464,14 @@ Phaser.BitmapFont.prototype.pasteLine = function (line, x, y, customSpacingX) {
             //  If the character doesn't exist in the font then we don't want a blank space, we just want to skip it
             if (this.grabData[line.charCodeAt(c)])
             {
-                this.bmd.copyPixels(this.fontSet, this.grabData[line.charCodeAt(c)], x, y);
+                this.stamp.frame = this.grabData[line.charCodeAt(c)];
+                p.set(x, y);
+                this.render(this.stamp, p, false);
+                // this.bmd.copyPixels(this.fontSet, this.grabData[line.charCodeAt(c)], x, y);
                 
                 x += this.characterWidth + this.customSpacingX;
                 
-                if (x > this.bmd.width)
+                if (x > this.width)
                 {
                     break;
                 }

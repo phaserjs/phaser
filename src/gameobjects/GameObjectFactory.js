@@ -260,8 +260,6 @@ Phaser.GameObjectFactory.prototype = {
     /**
     * Create a new BitmapFont object.
     *
-    * @param {number} x - X position of the new bitmapText object.
-    * @param {number} y - Y position of the new bitmapText object.
     * @param {string} font - The key of the BitmapFont as stored in Game.Cache.
     * @param {number} characterWidth - The width of each character in the font set.
     * @param {number} characterHeight - The height of each character in the font set.
@@ -271,14 +269,11 @@ Phaser.GameObjectFactory.prototype = {
     * @param {number} [ySpacing=0] - If the characters in the font set have vertical spacing between them set the required amount here.
     * @param {number} [xOffset=0] - If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
     * @param {number} [yOffset=0] - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
-    * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
-    * @return {Phaser.BitmapFont} The newly created BitmapFont object.
+    * @return {Phaser.BitmapFont} The newly created BitmapFont texture which can be applied to an Image or Sprite.
     */
-    bitmapFont: function (x, y, font, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset, group) {
+    bitmapFont: function (font, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset) {
 
-        if (typeof group === 'undefined') { group = this.world; }
-
-        return group.add(new Phaser.BitmapFont(this.game, x, y, font, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset));
+        return new Phaser.BitmapFont(this.game, font, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset);
 
     },
 
@@ -328,8 +323,8 @@ Phaser.GameObjectFactory.prototype = {
     */
     renderTexture: function (width, height, key, addToCache) {
 
-        if (typeof addToCache === 'undefined') { addToCache = false; }
         if (typeof key === 'undefined' || key === '') { key = this.game.rnd.uuid(); }
+        if (typeof addToCache === 'undefined') { addToCache = false; }
 
         var texture = new Phaser.RenderTexture(this.game, width, height, key);
 

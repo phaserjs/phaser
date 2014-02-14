@@ -300,6 +300,23 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    * Replaces a set of frameData with a new Phaser.FrameData object.
+    *
+    * @method Phaser.Cache#updateFrameData
+    * @param {string} key - The unique key by which you will reference this object.
+    * @param {number} frameData - The new FrameData.
+    */
+    updateFrameData: function (key, frameData) {
+
+        if (this._images[key])
+        {
+            this._images[key].spriteSheet = true;
+            this._images[key].frameData = frameData;
+        }
+
+    },
+
+    /**
     * Add a new sound.
     *
     * @method Phaser.Cache#addSound
