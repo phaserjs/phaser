@@ -23,7 +23,7 @@ function create() {
 
 	box.physicsEnabled = true;
 
-	// box.body.rotateLeft(10);
+	box.body.rotateLeft(20);
 
 	//	95x95
 	// box.body.setRectangle(64, 64);
@@ -31,20 +31,21 @@ function create() {
 	// box.body.setRectangle(64, 64, 95/2,95/2);
 
 	//	Works
-	// box.body.setPolygon({}, [	[-1, 1], [-1, 0], [1, 0], [1, 1], [0.5, 0.5]	]);
+	box.body.clearShapes();
+	// box.body.addPolygon({}, [	[-1, 1], [-1, 0], [1, 0], [1, 1], [0.5, 0.5]	]);
 
 	//	Works
 	// box.body.setPolygon({}, [-1, 1], [-1, 0], [1, 0], [1, 1], [0.5, 0.5]);
 
 	//	Works
-	// box.body.setPolygon({}, -100, 100, -100, 0, 100, 0, 100, 100, 50, 50);
+	box.body.addPolygon({}, -100, 100, -100, 0, 100, 0, 100, 100, 50, 50);
 
 	//	Works
 	// box.body.setPolygon({}, -1, 1, -1, 0, 1, 0, 1, 1, 0.5, 0.5);
 
-	box.body.setZeroDamping();
+	// box.body.setZeroDamping();
 
-	game.input.onDown.addOnce(startTiming, this);
+	// game.input.onDown.addOnce(startTiming, this);
 
 }
 
@@ -71,7 +72,7 @@ function update() {
 	}
 	else
 	{
-		box.body.setZeroVelocity();
+		// box.body.setZeroVelocity();
 	}
 
 }
@@ -80,7 +81,7 @@ function render() {
 
 	game.debug.renderShape(box.body, 0);
 
-	// game.debug.renderText('x: ' + box.body.velocity.x, 32, 32);
+	// game.debug.renderText(box.body., 32, 32);
 	// game.debug.renderText('y: ' + box.body.velocity.y, 32, 64);
 
 }

@@ -894,8 +894,8 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-    * @method Phaser.Utils.Debug#renderVertices
-    * @param {array} vertices
+    * @method Phaser.Utils.Debug#renderShape
+    * @param {array} body
     * @param {string} [color='rgb(255,255,255)'] - The color the polygon is stroked in.
     */
     renderShape: function (body, id, color, context) {
@@ -912,22 +912,44 @@ Phaser.Utils.Debug.prototype = {
         var x = body.sprite.x;
         var y = body.sprite.y;
 
+        var shape = body.data.shapes[id];
+        var w = this.game.math.p2px(shape.width);
+        var h = this.game.math.p2px(shape.height);
         var points = body.data.shapes[id].vertices;
 
         var ox = x + this.game.math.p2px(body.data.shapeOffsets[id][0]);
         var oy = y + this.game.math.p2px(body.data.shapeOffsets[id][1]);
 
+      // function drawbox(){
+      //   ctx.beginPath();
+      //   var x = boxBody.position[0],
+      //       y = boxBody.position[1];
+      //   ctx.save();
+      //   ctx.translate(x, y);        // Translate to the center of the box
+      //   ctx.rotate(boxBody.angle);  // Rotate to the box body frame
+      //   ctx.rect(-boxShape.width/2, -boxShape.height/2, boxShape.width, boxShape.height);
+      //   ctx.stroke();
+      //   ctx.restore();
+      // }
+
         this.context.beginPath();
-        this.context.moveTo(ox + this.game.math.p2px(points[0][0]), oy + this.game.math.p2px(points[0][1]));
+        this.context.save();
+        this.context.translate(this.game.math.p2px(body.data.position[0]), this.game.math.p2px(body.data.position[1]));
+        this.context.rotate(body.data.angle);
+
+        // this.context.strokeStyle = color;
+        // this.context.strokeRect(-w / 2, -h / 2, w, h);
+
+        this.context.moveTo(this.game.math.p2px(points[0][0]), this.game.math.p2px(points[0][1]));
 
         for (var i = 1; i < points.length; i++)
         {
-            this.context.lineTo(ox + this.game.math.p2px(points[i][0]), oy + this.game.math.p2px(points[i][1]));
+            this.context.lineTo(this.game.math.p2px(points[i][0]), this.game.math.p2px(points[i][1]));
         }
 
         this.context.closePath();
-        this.context.strokeStyle = color;
         this.context.stroke();
+        this.context.restore();
 
         this.stop();
 
