@@ -135,7 +135,8 @@ Phaser.BitmapFont = function (game, x, y, key, characterWidth, characterHeight, 
     /**
     * @property {Phaser.BitmapData} bmd - The internal BitmapData to which the font is rendered.
     */
-    this.bmd = new Phaser.BitmapData(game, this.characterWidth, this.characterHeight);
+    // this.bmd = new Phaser.BitmapData(game, this.characterWidth, this.characterHeight);
+    this.bmd = new Phaser.BitmapData(game, 800, 600);
 
     Phaser.Image.call(this, game, x, y, this.bmd);
 
@@ -386,9 +387,14 @@ Phaser.BitmapFont.prototype.buildBitmapFontText = function () {
     }
 
     this.bmd.render();
-
-    this.width = this.bmd.width;
-    this.height = this.bmd.height;
+    this.texture.frame.width = this.bmd.width;
+    this.texture.frame.height = this.bmd.height;
+    this.updateFrame = true;
+    this.dirty = true;
+    this.textureChange = true;
+    // this.setTexture(this.bmd.texture);
+    // this.width = this.bmd.width;
+    // this.height = this.bmd.height;
 
 }
 

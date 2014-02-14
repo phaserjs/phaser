@@ -152,6 +152,7 @@ Phaser.BitmapData.prototype = {
 
         if (width !== this.width || height !== this.height)
         {
+            console.log('bmd resize', width, height);
             this.width = width;
             this.height = height;
             this.canvas.width = width;
@@ -165,6 +166,9 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * @method Phaser.BitmapData#refreshBuffer
+    */
     refreshBuffer: function () {
 
         this.imageData = this.context.getImageData(0, 0, this.width, this.height);
