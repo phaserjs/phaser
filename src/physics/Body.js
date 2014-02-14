@@ -632,12 +632,13 @@ Phaser.Physics.Body.prototype = {
 
         if (typeof sprite === 'undefined') { sprite = this.sprite; }
 
-        var px = (sprite.width / 2) + (-sprite.width * sprite.anchor.x);
-        var py = (sprite.height / 2) + (-sprite.height * sprite.anchor.y);
-    
+        //  because Sprite.phyicsEnabled = true now sets anchor to 0.5
+        // var px = (sprite.width / 2) + (-sprite.width * sprite.anchor.x);
+        // var py = (sprite.height / 2) + (-sprite.height * sprite.anchor.y);
+
         this.clearShapes();
 
-        return this.addRectangle(sprite.width, sprite.height, px, py, sprite.rotation);
+        return this.addRectangle(sprite.width, sprite.height, 0, 0, sprite.rotation);
 
     },
 

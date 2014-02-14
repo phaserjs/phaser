@@ -123,9 +123,12 @@ Phaser.Stage.prototype.postUpdate = function () {
 
         var i = this.children.length;
 
-        while(i-- && this.children[i] !== this.game.world.camera.target)
+        while(i--)
         {
-            this.children[i].postUpdate();
+            if (this.children[i] !== this.game.world.camera.target)
+            {
+                this.children[i].postUpdate();
+            }
         }
     }
     else
