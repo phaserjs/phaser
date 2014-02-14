@@ -122,6 +122,16 @@ Phaser.Text.prototype.preUpdate = function () {
 }
 
 /**
+* Override and use this function in your own custom objects to handle any update requirements you may have.
+*
+* @method Phaser.Text#update
+* @memberof Phaser.Text
+*/
+Phaser.Text.prototype.update = function() {
+
+}
+
+/**
 * Automatically called by World.postUpdate.
 * @method Phaser.Text.prototype.postUpdate
 */
@@ -219,7 +229,7 @@ Phaser.Text.prototype.setStyle = function (style) {
     this.style = style;
     this.dirty = true;
 
-};
+}
 
 /**
 * Renders text. This replaces the Pixi.Text.updateText function as we need a few extra bits in here.
@@ -299,7 +309,7 @@ Phaser.Text.prototype.updateText = function () {
     }
 
     this.updateTexture();
-};
+}
 
 /**
 * Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal bounds.
@@ -347,7 +357,7 @@ Phaser.Text.prototype.runWordWrap = function (text) {
 
     return result;
 
-};
+}
 
 /**
 * Indicates the rotation of the Text, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.

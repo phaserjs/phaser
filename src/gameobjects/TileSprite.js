@@ -120,6 +120,16 @@ Phaser.TileSprite.prototype.preUpdate = function() {
 }
 
 /**
+* Override and use this function in your own custom objects to handle any update requirements you may have.
+*
+* @method Phaser.TileSprite#update
+* @memberof Phaser.TileSprite
+*/
+Phaser.TileSprite.prototype.update = function() {
+
+}
+
+/**
 * Internal function called by the World postUpdate cycle.
 *
 * @method Phaser.TileSprite#postUpdate
@@ -232,7 +242,7 @@ Phaser.TileSprite.prototype.loadTexture = function (key, frame) {
         }
     }
 
-};
+}
 
 /**
 * Destroys the TileSprite. This removes it from its parent group, destroys the event and animation handlers if present
@@ -262,7 +272,7 @@ Phaser.TileSprite.prototype.destroy = function() {
 
     this.game = null;
 
-};
+}
 
 /**
 * Play an animation based on the given key. The animation should previously have been added via sprite.animations.add()
@@ -280,7 +290,7 @@ Phaser.TileSprite.prototype.play = function (name, frameRate, loop, killOnComple
 
     return this.animations.play(name, frameRate, loop, killOnComplete);
 
-};
+}
 
 /**
 * Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.

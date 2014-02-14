@@ -147,7 +147,17 @@ Phaser.Image.prototype.preUpdate = function() {
 
     return true;
 
-};
+}
+
+/**
+* Override and use this function in your own custom objects to handle any update requirements you may have.
+*
+* @method Phaser.Image#update
+* @memberof Phaser.Image
+*/
+Phaser.Image.prototype.update = function() {
+
+}
 
 /**
 * Internal function called by the World postUpdate cycle.
@@ -168,7 +178,7 @@ Phaser.Image.prototype.postUpdate = function() {
         this.position.y = this.game.camera.view.y + this.y;
     }
 
-};
+}
 
 /**
 * Changes the Texture the Sprite is using entirely. The old texture is removed and the new one is referenced or fetched from the Cache.
@@ -245,7 +255,7 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
         }
     }
 
-};
+}
 
 /**
 * Crop allows you to crop the texture used to display this Image.
@@ -292,7 +302,7 @@ Phaser.Image.prototype.crop = function(rect) {
         }
     }
 
-};
+}
 
 /**
 * Brings a 'dead' Sprite back to life, optionally giving it the health value specified.
@@ -316,7 +326,7 @@ Phaser.Image.prototype.revive = function() {
 
     return this;
 
-};
+}
 
 /**
 * Kills a Sprite. A killed Sprite has its alive, exists and visible properties all set to false.
@@ -341,7 +351,7 @@ Phaser.Image.prototype.kill = function() {
 
     return this;
 
-};
+}
 
 /**
 * Destroys the Sprite. This removes it from its parent group, destroys the input, event and animation handlers if present
@@ -378,7 +388,7 @@ Phaser.Image.prototype.destroy = function() {
 
     this.game = null;
 
-};
+}
 
 /**
 * Resets the Sprite. This places the Sprite at the given x/y world coordinates and then sets alive, exists, visible and renderable all to true.
@@ -401,7 +411,7 @@ Phaser.Image.prototype.reset = function(x, y) {
 
     return this;
     
-};
+}
 
 /**
 * Brings the Sprite to the top of the display list it is a child of. Sprites that are members of a Phaser.Group are only
@@ -427,7 +437,7 @@ Phaser.Image.prototype.bringToTop = function(child) {
 
     return this;
 
-};
+}
 
 /**
 * Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.

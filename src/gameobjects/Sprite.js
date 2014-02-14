@@ -153,10 +153,10 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * 4 = fresh? (0 = no, 1 = yes)
     * 5 = outOfBoundsFired (0 = no, 1 = yes)
     * 6 = exists (0 = no, 1 = yes)
-    * @property {array} _cache
+    * @property {Int16Array} _cache
     * @private
     */
-    this._cache = [0, 0, 0, 0, 1, 0, 1];
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1]);
 
     /**
     * @property {Phaser.Rectangle} _bounds - Internal cache var.
@@ -269,6 +269,16 @@ Phaser.Sprite.prototype.preUpdate = function() {
     }
 
     return true;
+
+};
+
+/**
+* Override and use this function in your own custom objects to handle any update requirements you may have.
+*
+* @method Phaser.Sprite#update
+* @memberof Phaser.Sprite
+*/
+Phaser.Sprite.prototype.update = function() {
 
 };
 

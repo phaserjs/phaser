@@ -39,7 +39,7 @@ Phaser.World = function (game) {
     */
     this.currentRenderOrderID = 0;
     
-};
+}
 
 Phaser.World.prototype = Object.create(Phaser.Group.prototype);
 Phaser.World.prototype.constructor = Phaser.World;
@@ -72,12 +72,9 @@ Phaser.World.prototype.preUpdate = function () {
     
     this.currentRenderOrderID = 0;
 
-    for (var i = 0, len = this.children.length; i < len; i++)
+    for (var i = this.children.length - 1; i >= 0; i--)
     {
-        if (this.children[i]['preUpdate'])
-        {
-            this.children[i].preUpdate();
-        }
+        this.children[i].preUpdate();
     }
 
 }
@@ -90,12 +87,9 @@ Phaser.World.prototype.preUpdate = function () {
 */
 Phaser.World.prototype.update = function () {
 
-    for (var i = 0, len = this.children.length; i < len; i++)
+    for (var i = this.children.length - 1; i >= 0; i--)
     {
-        if (this.children[i]['update'])
-        {
-            this.children[i].update();
-        }
+        this.children[i].update();
     }
 
 }
@@ -116,24 +110,18 @@ Phaser.World.prototype.postUpdate = function () {
 
         this.camera.update();
 
-        for (var i = 0, len = this.children.length; i < len; i++)
+        for (var i = this.children.length - 1; i >= 0; i--)
         {
-            if (this.children[i]['postUpdate'])
-            {
-                this.children[i].postUpdate();
-            }
+            this.children[i].postUpdate();
         }
     }
     else
     {
         this.camera.update();
 
-        for (var i = 0, len = this.children.length; i < len; i++)
+        for (var i = this.children.length - 1; i >= 0; i--)
         {
-            if (this.children[i]['postUpdate'])
-            {
-                this.children[i].postUpdate();
-            }
+            this.children[i].postUpdate();
         }
     }
 
