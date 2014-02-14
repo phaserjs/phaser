@@ -49,7 +49,7 @@ Phaser is everything we ever wanted from an HTML5 game framework. It powers all 
 Help Test 1.2
 -------------
 
-You'll notice a new [1.2 branch](https://github.com/photonstorm/phaser/tree/1.2) on github. Please help test out 1.2 as much as you can. It features the brand new Pixi 1.5 internally as well as nearly complete integration with p2.js for all physics (dropping ArcadePhysics entirely). New versions are being pushed several times a day, so be sure to update and pull often. Don't expect to just run old games right under it yet, but please do check out the new tests, experiment and poke it around as much as you can - thank you!
+You'll notice a new [1.2 branch](https://github.com/photonstorm/phaser/tree/1.2) on github. Please help test out 1.2 as much as you can. It features the brand new Pixi 1.5 internally as well as nearly complete integration with p2.js for all physics (dropping ArcadePhysics entirely). New versions are being pushed several times a day, so be sure to update and pull often. Don't expect to just run old games right under it yet, but please do check out the new tests, experiment and poke it around as much as you can - thank you! There is a new Phaser 1.2 section of our forum set-up for talking, and our new [Phaser Labs](http://labs.phaser.io) site as well.
 
 
 Getting Started Guides
@@ -152,7 +152,7 @@ Alternatively in order to start the included web server, after you've cloned the
 
 There is a new 'Side View' example viewer as well. This loads all the examples into a left-hand frame for faster navigation.
 
-You can also browse all [Phaser Examples](http://gametest.mobi/phaser/) online.
+You can also browse all [Phaser Examples](http://examples.phaser.io) online.
 
 
 Features
