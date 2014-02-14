@@ -95,6 +95,7 @@ module.exports = function (grunt) {
         'src/gameobjects/Button.js',
         'src/gameobjects/Graphics.js',
         'src/gameobjects/RenderTexture.js',
+        'src/gameobjects/SpriteBatch.js',
 
         'src/system/Canvas.js',
         'src/system/StageScaleMode.js',

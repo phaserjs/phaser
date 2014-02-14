@@ -35,6 +35,7 @@ var Phaser = Phaser || {
 	CANVAS_FILTER: 14,
 	WEBGL_FILTER: 15,
 	ELLIPSE: 16,
+	SPRITEBATCH: 16,
 
 	NONE: 0,
 	LEFT: 1,
