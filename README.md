@@ -152,7 +152,7 @@ Alternatively in order to start the included web server, after you've cloned the
 
 There is a new 'Side View' example viewer as well. This loads all the examples into a left-hand frame for faster navigation.
 
-You can also browse all [Phaser Examples](http://gametest.mobi/phaser/) online.
+You can also browse all [Phaser Examples](http://gametest.mobi/phaser/examples/) online.
 
 
 Features
