@@ -204,7 +204,7 @@ Phaser.Physics.Body.prototype = {
     thrust: function (speed) {
 
         var magnitude = this.px2p(-speed);
-        var angle = this.data.angle + Math.PI / 2;
+        var angle = this.data.angle + Phaser.Math.PIO2;
 
         this.data.force[0] += magnitude * Math.cos(angle);
         this.data.force[1] += magnitude * Math.sin(angle);

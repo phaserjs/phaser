@@ -636,7 +636,7 @@ Phaser.Utils.Debug.prototype = {
         this.start();
         this.context.beginPath();
         this.context.fillStyle = color;
-        this.context.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2, false);
+        this.context.arc(circle.x, circle.y, circle.radius, 0, Phaser.Math.PI2, false);
         this.context.fill();
         this.context.closePath();
         this.stop();
