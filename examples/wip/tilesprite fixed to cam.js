@@ -21,6 +21,7 @@ function create() {
     sprite = game.add.tileSprite(100, 100, 200, 200, 'starfield');
     sprite.autoScroll(0, 100);
     sprite.fixedToCamera = true;
+    console.log(sprite.parent);
 
     mushroom = game.add.sprite(400, 400, 'mushroom');
 

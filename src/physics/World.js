@@ -221,3 +221,14 @@ Phaser.Physics.World.prototype.update = function () {
 	this.step(1 / 60);
 
 };
+
+/**
+* @method Phaser.Physics.World.prototype.destroy
+*/
+Phaser.Physics.World.prototype.destroy = function () {
+
+    this.clear();
+
+    this.game = null;
+
+};

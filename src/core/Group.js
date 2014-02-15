@@ -734,7 +734,9 @@ Phaser.Group.prototype.preUpdate = function () {
         return false;
     }
 
-    for (var i = this.children.length - 1; i >= 0; i--)
+   var i = this.children.length;
+
+    while (i--)
     {
         this.children[i].preUpdate();
     }
@@ -750,7 +752,9 @@ Phaser.Group.prototype.preUpdate = function () {
 */
 Phaser.Group.prototype.update = function () {
 
-    for (var i = this.children.length - 1; i >= 0; i--)
+    var i = this.children.length;
+
+    while (i--)
     {
         this.children[i].update();
     }
@@ -771,7 +775,9 @@ Phaser.Group.prototype.postUpdate = function () {
         this.y = this.game.camera.view.y + this.cameraOffset.y;
     }
 
-    for (var i = this.children.length - 1; i >= 0; i--)
+    var i = this.children.length;
+
+    while (i--)
     {
         this.children[i].postUpdate();
     }

@@ -50,6 +50,12 @@ Phaser.Stage = function (game, width, height) {
     this.checkOffsetInterval = 2500;
 
     /**
+    * @property {boolean} exists - If exists is true the Stage and all children are updated, otherwise it is skipped.
+    * @default
+    */
+    this.exists = true;
+
+    /**
     * @property {number} _nextOffsetCheck - The time to run the next offset check.
     * @private
     */

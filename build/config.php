@@ -182,6 +182,7 @@
     <script src="$path/src/physics/World.js"></script>
     <script src="$path/src/physics/PointProxy.js"></script>
     <script src="$path/src/physics/Body.js"></script>
+    <script src="$path/src/physics/Spring.js"></script>
 
     <script src="$path/src/particles/Particles.js"></script>
     <script src="$path/src/particles/arcade/ArcadeParticles.js"></script>
