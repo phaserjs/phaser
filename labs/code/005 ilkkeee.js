@@ -24,7 +24,7 @@ function create() {
 
 		dude.anchor.set(0.5);
 		dude.scale.set(0.8 + Math.random() * 0.3);
-		dude.direction = Math.random() * Math.PI * 2;
+		dude.direction = Math.random() * game.math.PI2;
 		dude.turningSpeed = Math.random() - 0.8;
 		dude.speed = (2 + Math.random() * 2) * 0.2;	
 		dude.offset = Math.random() * 100;

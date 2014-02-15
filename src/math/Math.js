@@ -19,6 +19,37 @@ Phaser.Math = {
 
     /**
     * Two number are fuzzyEqual if their difference is less than &epsilon;. 
+    * = 1/2 &pi;
+    * @method Phaser.Math#PIO2
+    */
+    PIO2: Math.PI / 2,
+
+    /**
+    * = 4 &pi;
+    * @method Phaser.Math#PI4
+    */
+    PI4: Math.PI * 4,
+
+    /**
+    * = 1/4 &pi;
+    * @method Phaser.Math#PIO4
+    */
+    PIO4: Math.PI / 4,
+
+    /**
+    * = 180 &pi;
+    * @method Phaser.Math#PIO180
+    */
+    PIO180: Math.PI * 180,
+
+    /**
+    * = 180 / &pi;
+    * @method Phaser.Math#PIU180
+    */
+    PIU180: 180 / Math.PI,
+
+
+    /**
     * @method Phaser.Math#fuzzyEqual
     * @param {number} a
     * @param {number} b
@@ -1321,7 +1352,7 @@ Phaser.Math = {
     */
     degToRad: function() {
 
-        var degreeToRadiansFactor = Math.PI / 180;
+        var degreeToRadiansFactor = Phaser.Math.PIO180;
 
         return function ( degrees ) {
 
@@ -1339,7 +1370,7 @@ Phaser.Math = {
     */
     radToDeg: function() {
 
-        var radianToDegreesFactor = 180 / Math.PI;
+        var radianToDegreesFactor = Phaser.Math.PIU180;
 
         return function ( radians ) {
 
