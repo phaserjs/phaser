@@ -10047,7 +10047,7 @@ World.prototype.hitTest = function(worldPoint,bodies,precision){
 *
 * Phaser - http://www.phaser.io
 *
-* v1.1.5 - Built at: Fri Feb 14 2014 18:06:50
+* v1.1.5 - Built at: Sat Feb 15 2014 01:35:50
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -24089,7 +24089,7 @@ Phaser.Stage.prototype.preUpdate = function () {
 
     var i = this.children.length;
 
-    while(i--)
+    while (i--)
     {
         this.children[i].preUpdate();
     }
@@ -24105,7 +24105,7 @@ Phaser.Stage.prototype.update = function () {
 
     var i = this.children.length;
 
-    while(i--)
+    while (i--)
     {
         this.children[i].update();
     }
@@ -24130,7 +24130,7 @@ Phaser.Stage.prototype.postUpdate = function () {
 
         var i = this.children.length;
 
-        while(i--)
+        while (i--)
         {
             if (this.children[i] !== this.game.world.camera.target)
             {
@@ -24144,7 +24144,7 @@ Phaser.Stage.prototype.postUpdate = function () {
 
         var i = this.children.length;
 
-        while(i--)
+        while (i--)
         {
             this.children[i].postUpdate();
         }
@@ -24394,6 +24394,26 @@ Phaser.Group = function (game, parent, name, addToStage) {
     this.cursor = null;
 
     this._cursorIndex = 0;
+
+    /**
+    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    */
+    this.cameraOffset = new Phaser.Point();
+
+    /**
+    * A small internal cache:
+    * 0 = previous position.x
+    * 1 = previous position.y
+    * 2 = previous rotation
+    * 3 = renderID
+    * 4 = fresh? (0 = no, 1 = yes)
+    * 5 = outOfBoundsFired (0 = no, 1 = yes)
+    * 6 = exists (0 = no, 1 = yes)
+    * 7 = fixed to camera (0 = no, 1 = yes)
+    * @property {Int16Array} _cache
+    * @private
+    */
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
 
 };
 
@@ -25014,10 +25034,18 @@ Phaser.Group.prototype.callAll = function (method, context) {
 */
 Phaser.Group.prototype.preUpdate = function () {
 
+    if (!this.exists || !this.parent.exists)
+    {
+        this.renderOrderID = -1;
+        return false;
+    }
+
     for (var i = this.children.length - 1; i >= 0; i--)
     {
         this.children[i].preUpdate();
     }
+
+    return true;
 
 }
 
@@ -25041,6 +25069,13 @@ Phaser.Group.prototype.update = function () {
 * @protected
 */
 Phaser.Group.prototype.postUpdate = function () {
+
+    //  Fixed to Camera?
+    if (this._cache[7] === 1)
+    {
+        this.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
 
     for (var i = this.children.length - 1; i >= 0; i--)
     {
@@ -25483,6 +25518,37 @@ Object.defineProperty(Phaser.Group.prototype, "angle", {
 
 });
 
+/**
+* A Group that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Group.cameraOffset.
+* Note that the cameraOffset values are in addition to any parent in the display list.
+* So if this Group was in a Group that has x: 200, then this will be added to the cameraOffset.x
+*
+* @name Phaser.Group#fixedToCamera
+* @property {boolean} fixedToCamera - Set to true to fix this Group to the Camera at its current world coordinates.
+*/
+Object.defineProperty(Phaser.Group.prototype, "fixedToCamera", {
+    
+    get: function () {
+
+        return !!this._cache[7];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            this._cache[7] = 1;
+            this.cameraOffset.set(this.x, this.y);
+        }
+        else
+        {
+            this._cache[7] = 0;
+        }
+    }
+
+});
+
 //  Documentation stubs
 
 /**
@@ -25610,6 +25676,81 @@ Phaser.World.prototype.setBounds = function (x, y, width, height) {
     }
 
     this.game.physics.setBoundsToWorld();
+
+}
+
+/**
+* This is called automatically after the plugins preUpdate and before the State.update.
+* Most objects have preUpdate methods and it's where initial movement and positioning is done.
+* 
+* @method Phaser.World#preUpdate
+*/
+Phaser.World.prototype.preUpdate = function () {
+    
+    this.currentRenderOrderID = 0;
+
+    var i = this.children.length;
+
+    while (i--)
+    {
+        this.children[i].preUpdate();
+    }
+
+}
+
+/**
+* This is called automatically after the State.update, but before particles or plugins update.
+* 
+* @method Phaser.World#update
+*/
+Phaser.World.prototype.update = function () {
+
+    var i = this.children.length;
+
+    while (i--)
+    {
+        this.children[i].update();
+    }
+
+}
+
+/**
+* This is called automatically before the renderer runs and after the plugins have updated.
+* In postUpdate this is where all the final physics calculatations and object positioning happens.
+* The objects are processed in the order of the display list.
+* The only exception to this is if the camera is following an object, in which case that is updated first.
+* 
+* @method Phaser.World#postUpdate
+*/
+Phaser.World.prototype.postUpdate = function () {
+
+    if (this.game.world.camera.target)
+    {
+        this.game.world.camera.target.postUpdate();
+
+        this.game.world.camera.update();
+
+        var i = this.children.length;
+
+        while (i--)
+        {
+            if (this.children[i] !== this.game.world.camera.target)
+            {
+                this.children[i].postUpdate();
+            }
+        }
+    }
+    else
+    {
+        this.game.world.camera.update();
+
+        var i = this.children.length;
+
+        while (i--)
+        {
+            this.children[i].postUpdate();
+        }
+    }
 
 }
 
@@ -33017,14 +33158,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.autoCull = false;
 
     /**
-    * A Sprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera.
-    * Note that if this Image is a child of a display object that has changed its position then the offset will be calculated from that.
-    * @property {boolean} fixedToCamera - Fixes this Sprite to the Camera.
-    * @default
-    */
-    this.fixedToCamera = false;
-
-    /**
     * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
     */
     this.input = null;
@@ -33069,6 +33202,11 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.debug = false;
 
     /**
+    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    */
+    this.cameraOffset = new Phaser.Point();
+
+    /**
     * A small internal cache:
     * 0 = previous position.x
     * 1 = previous position.y
@@ -33077,10 +33215,11 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * 4 = fresh? (0 = no, 1 = yes)
     * 5 = outOfBoundsFired (0 = no, 1 = yes)
     * 6 = exists (0 = no, 1 = yes)
+    * 7 = fixed to camera (0 = no, 1 = yes)
     * @property {Int16Array} _cache
     * @private
     */
-    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1]);
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
 
     /**
     * @property {Phaser.Rectangle} _bounds - Internal cache var.
@@ -33225,12 +33364,13 @@ Phaser.Sprite.prototype.postUpdate = function() {
         {
             this.body.postUpdate();
         }
+    }
 
-        if (this.fixedToCamera)
-        {
-            // this.position.x = this.game.camera.view.x + this.x;
-            // this.position.y = this.game.camera.view.y + this.y;
-        }
+    //  Fixed to Camera?
+    if (this._cache[7] === 1)
+    {
+        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
     }
 
 };
@@ -33308,12 +33448,12 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
 };
 
 /**
-* Crop allows you to crop the texture used to display this Image.
-* Cropping takes place from the top-left of the Image and can be modified in real-time by providing an updated rectangle object.
+* Crop allows you to crop the texture used to display this Sprite.
+* Cropping takes place from the top-left of the Sprite and can be modified in real-time by providing an updated rectangle object.
 *
 * @method Phaser.Sprite#crop
 * @memberof Phaser.Sprite
-* @param {Phaser.Rectangle} rect - The Rectangle to crop the Image to. Pass null or no parameters to clear a previously set crop rectangle.
+* @param {Phaser.Rectangle} rect - The Rectangle to crop the Sprite to. Pass null or no parameters to clear a previously set crop rectangle.
 */
 Phaser.Sprite.prototype.crop = function(rect) {
 
@@ -33638,10 +33778,10 @@ Object.defineProperty(Phaser.Sprite.prototype, "deltaZ", {
 });
 
 /**
-* Checks if the Image bounds are within the game world, otherwise false if fully outside of it.
+* Checks if the Sprite bounds are within the game world, otherwise false if fully outside of it.
 *
 * @name Phaser.Sprite#inWorld
-* @property {boolean} inWorld - True if the Image bounds is within the game world, even if only partially. Otherwise false if fully outside of it.
+* @property {boolean} inWorld - True if the Sprite bounds is within the game world, even if only partially. Otherwise false if fully outside of it.
 * @readonly
 */
 Object.defineProperty(Phaser.Sprite.prototype, "inWorld", {
@@ -33655,10 +33795,10 @@ Object.defineProperty(Phaser.Sprite.prototype, "inWorld", {
 });
 
 /**
-* Checks if the Image bounds are within the game camera, otherwise false if fully outside of it.
+* Checks if the Sprite bounds are within the game camera, otherwise false if fully outside of it.
 *
 * @name Phaser.Sprite#inCamera
-* @property {boolean} inCamera - True if the Image bounds is within the game camera, even if only partially. Otherwise false if fully outside of it.
+* @property {boolean} inCamera - True if the Sprite bounds is within the game camera, even if only partially. Otherwise false if fully outside of it.
 * @readonly
 */
 Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
@@ -33841,6 +33981,38 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
 
 });
 
+
+/**
+* An Sprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Sprite.cameraOffset.
+* Note that the cameraOffset values are in addition to any parent in the display list.
+* So if this Sprite was in a Group that has x: 200, then this will be added to the cameraOffset.x
+*
+* @name Phaser.Sprite#fixedToCamera
+* @property {boolean} fixedToCamera - Set to true to fix this Sprite to the Camera at its current world coordinates.
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "fixedToCamera", {
+    
+    get: function () {
+
+        return !!this._cache[7];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            this._cache[7] = 1;
+            this.cameraOffset.set(this.x, this.y);
+        }
+        else
+        {
+            this._cache[7] = 0;
+        }
+    }
+
+});
+
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
@@ -33873,13 +34045,13 @@ Phaser.Image = function (game, x, y, key, frame) {
     this.game = game;
  
     /**
-    * @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
+    * @property {boolean} exists - If exists = false then the Image isn't updated by the core game loop.
     * @default
     */
     this.exists = true;
 
     /**
-    * @property {string} name - The user defined name given to this Sprite.
+    * @property {string} name - The user defined name given to this Image.
     * @default
     */
     this.name = '';
@@ -33891,12 +34063,12 @@ Phaser.Image = function (game, x, y, key, frame) {
     this.type = Phaser.IMAGE;
 
     /**
-    * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
+    * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Image or its components.
     */
     this.events = new Phaser.Events(this);
 
     /**
-    *  @property {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
+    *  @property {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Image during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
     */
     this.key = key;
 
@@ -33919,27 +34091,19 @@ Phaser.Image = function (game, x, y, key, frame) {
     this.position.set(x, y);
 
     /**
-    * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
+    * @property {Phaser.Point} world - The world coordinates of this Image. This differs from the x/y coordinates which are relative to the Images container.
     */
     this.world = new Phaser.Point(x, y);
 
     /**
-    * Should this Sprite be automatically culled if out of range of the camera?
+    * Should this Image be automatically culled if out of range of the camera?
     * A culled sprite has its renderable property set to 'false'.
     * Be advised this is quite an expensive operation, as it has to calculate the bounds of the object every frame, so only enable it if you really need it.
     *
-    * @property {boolean} autoCull - A flag indicating if the Sprite should be automatically camera culled or not.
+    * @property {boolean} autoCull - A flag indicating if the Image should be automatically camera culled or not.
     * @default
     */
     this.autoCull = false;
-
-    /**
-    * A Sprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera.
-    * Note that if this Image is a child of a display object that has changed its position then the offset will be calculated from that.
-    * @property {boolean} fixedToCamera - Fixes this Sprite to the Camera.
-    * @default
-    */
-    this.fixedToCamera = false;
 
     /**
     * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
@@ -33947,10 +34111,24 @@ Phaser.Image = function (game, x, y, key, frame) {
     this.input = null;
 
     /**
-    * @property {array} _cache - A small cache for previous step values. 0 = x, 1 = y, 2 = rotation, 3 = renderID
+    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    */
+    this.cameraOffset = new Phaser.Point();
+
+    /**
+    * A small internal cache:
+    * 0 = previous position.x
+    * 1 = previous position.y
+    * 2 = previous rotation
+    * 3 = renderID
+    * 4 = fresh? (0 = no, 1 = yes)
+    * 5 = outOfBoundsFired (0 = no, 1 = yes)
+    * 6 = exists (0 = no, 1 = yes)
+    * 7 = fixed to camera (0 = no, 1 = yes)
+    * @property {Int16Array} _cache
     * @private
     */
-    this._cache = [0, 0, 0, 0];
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
 
 };
 
@@ -34015,22 +34193,23 @@ Phaser.Image.prototype.postUpdate = function() {
         this.key.render();
     }
 
-    if (this.fixedToCamera)
+    //  Fixed to Camera?
+    if (this._cache[7] === 1)
     {
-        this.position.x = this.game.camera.view.x + this.x;
-        this.position.y = this.game.camera.view.y + this.y;
+        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
     }
 
 }
 
 /**
-* Changes the Texture the Sprite is using entirely. The old texture is removed and the new one is referenced or fetched from the Cache.
+* Changes the Texture the Image is using entirely. The old texture is removed and the new one is referenced or fetched from the Cache.
 * This causes a WebGL texture update, so use sparingly or in low-intensity portions of your game.
 *
 * @method Phaser.Image#loadTexture
 * @memberof Phaser.Image
-* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
-* @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Image during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
+* @param {string|number} frame - If this Image is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
 Phaser.Image.prototype.loadTexture = function (key, frame) {
 
@@ -34148,9 +34327,9 @@ Phaser.Image.prototype.crop = function(rect) {
 }
 
 /**
-* Brings a 'dead' Sprite back to life, optionally giving it the health value specified.
-* A resurrected Sprite has its alive, exists and visible properties all set to true.
-* It will dispatch the onRevived event, you can listen to Sprite.events.onRevived for the signal.
+* Brings a 'dead' Image back to life, optionally giving it the health value specified.
+* A resurrected Image has its alive, exists and visible properties all set to true.
+* It will dispatch the onRevived event, you can listen to Image.events.onRevived for the signal.
 * 
 * @method Phaser.Image#revive
 * @memberof Phaser.Image
@@ -34172,10 +34351,10 @@ Phaser.Image.prototype.revive = function() {
 }
 
 /**
-* Kills a Sprite. A killed Sprite has its alive, exists and visible properties all set to false.
-* It will dispatch the onKilled event, you can listen to Sprite.events.onKilled for the signal.
-* Note that killing a Sprite is a way for you to quickly recycle it in a Sprite pool, it doesn't free it up from memory.
-* If you don't need this Sprite any more you should call Sprite.destroy instead.
+* Kills a Image. A killed Image has its alive, exists and visible properties all set to false.
+* It will dispatch the onKilled event, you can listen to Image.events.onKilled for the signal.
+* Note that killing a Image is a way for you to quickly recycle it in a Image pool, it doesn't free it up from memory.
+* If you don't need this Image any more you should call Image.destroy instead.
 * 
 * @method Phaser.Image#kill
 * @memberof Phaser.Image
@@ -34197,7 +34376,7 @@ Phaser.Image.prototype.kill = function() {
 }
 
 /**
-* Destroys the Sprite. This removes it from its parent group, destroys the input, event and animation handlers if present
+* Destroys the Image. This removes it from its parent group, destroys the input, event and animation handlers if present
 * and nulls its reference to game, freeing it up for garbage collection.
 * 
 * @method Phaser.Image#destroy
@@ -34234,12 +34413,12 @@ Phaser.Image.prototype.destroy = function() {
 }
 
 /**
-* Resets the Sprite. This places the Sprite at the given x/y world coordinates and then sets alive, exists, visible and renderable all to true.
+* Resets the Image. This places the Image at the given x/y world coordinates and then sets alive, exists, visible and renderable all to true.
 * 
 * @method Phaser.Image#reset
 * @memberof Phaser.Image
-* @param {number} x - The x coordinate (in world space) to position the Sprite at.
-* @param {number} y - The y coordinate (in world space) to position the Sprite at.
+* @param {number} x - The x coordinate (in world space) to position the Image at.
+* @param {number} y - The y coordinate (in world space) to position the Image at.
 * @return {Phaser.Image} This instance.
 */
 Phaser.Image.prototype.reset = function(x, y) {
@@ -34257,7 +34436,7 @@ Phaser.Image.prototype.reset = function(x, y) {
 }
 
 /**
-* Brings the Sprite to the top of the display list it is a child of. Sprites that are members of a Phaser.Group are only
+* Brings the Image to the top of the display list it is a child of. Images that are members of a Phaser.Group are only
 * bought to the top of that Group, not the entire display list.
 * 
 * @method Phaser.Image#bringToTop
@@ -34283,9 +34462,9 @@ Phaser.Image.prototype.bringToTop = function(child) {
 }
 
 /**
-* Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+* Indicates the rotation of the Image, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
-* If you wish to work in radians instead of degrees use the property Sprite.rotation instead. Working in radians is also a little faster as it doesn't have to convert the angle.
+* If you wish to work in radians instead of degrees use the property Image.rotation instead. Working in radians is also a little faster as it doesn't have to convert the angle.
 * 
 * @name Phaser.Image#angle
 * @property {number} angle - The angle of this Image in degrees.
@@ -34501,6 +34680,37 @@ Object.defineProperty(Phaser.Image.prototype, "inputEnabled", {
 });
 
 /**
+* An Image that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Image.cameraOffset.
+* Note that the cameraOffset values are in addition to any parent in the display list.
+* So if this Image was in a Group that has x: 200, then this will be added to the cameraOffset.x
+*
+* @name Phaser.Image#fixedToCamera
+* @property {boolean} fixedToCamera - Set to true to fix this Image to the Camera at its current world coordinates.
+*/
+Object.defineProperty(Phaser.Image.prototype, "fixedToCamera", {
+    
+    get: function () {
+
+        return !!this._cache[7];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            this._cache[7] = 1;
+            this.cameraOffset.set(this.x, this.y);
+        }
+        else
+        {
+            this._cache[7] = 0;
+        }
+    }
+
+});
+
+/**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
@@ -34590,6 +34800,26 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
     */
     this.world = new Phaser.Point(x, y);
 
+    /**
+    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    */
+    this.cameraOffset = new Phaser.Point();
+
+    /**
+    * A small internal cache:
+    * 0 = previous position.x
+    * 1 = previous position.y
+    * 2 = previous rotation
+    * 3 = renderID
+    * 4 = fresh? (0 = no, 1 = yes)
+    * 5 = outOfBoundsFired (0 = no, 1 = yes)
+    * 6 = exists (0 = no, 1 = yes)
+    * 7 = fixed to camera (0 = no, 1 = yes)
+    * @property {Int16Array} _cache
+    * @private
+    */
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
+
 };
 
 Phaser.TileSprite.prototype = Object.create(PIXI.TilingSprite.prototype);
@@ -34609,12 +34839,12 @@ Phaser.TileSprite.prototype.preUpdate = function() {
 
     if (this._scroll.x !== 0)
     {
-        this.tilePosition.x += Math.floor(this._scroll.x * this.game.time.physicsElapsed);
+        this.tilePosition.x += this._scroll.x * this.game.time.physicsElapsed;
     }
 
     if (this._scroll.y !== 0)
     {
-        this.tilePosition.y += Math.floor(this._scroll.y * this.game.time.physicsElapsed);
+        this.tilePosition.y += this._scroll.y * this.game.time.physicsElapsed;
     }
 
     return true;
@@ -34639,10 +34869,11 @@ Phaser.TileSprite.prototype.update = function() {
 */
 Phaser.TileSprite.prototype.postUpdate = function() {
 
-    if (this.fixedToCamera)
+    //  Fixed to Camera?
+    if (this._cache[7] === 1)
     {
-        this.position.x = this.game.camera.view.x + this.x;
-        this.position.y = this.game.camera.view.y + this.y;
+        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
     }
 
 }
@@ -34861,6 +35092,37 @@ Object.defineProperty(Phaser.TileSprite.prototype, "frameName", {
 });
 
 /**
+* An TileSprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in TileSprite.cameraOffset.
+* Note that the cameraOffset values are in addition to any parent in the display list.
+* So if this TileSprite was in a Group that has x: 200, then this will be added to the cameraOffset.x
+*
+* @name Phaser.TileSprite#fixedToCamera
+* @property {boolean} fixedToCamera - Set to true to fix this TileSprite to the Camera at its current world coordinates.
+*/
+Object.defineProperty(Phaser.TileSprite.prototype, "fixedToCamera", {
+    
+    get: function () {
+
+        return !!this._cache[7];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            this._cache[7] = 1;
+            this.cameraOffset.set(this.x, this.y);
+        }
+        else
+        {
+            this._cache[7] = 0;
+        }
+    }
+
+});
+
+/**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
@@ -34912,13 +35174,6 @@ Phaser.Text = function (game, x, y, text, style) {
     this.world = new Phaser.Point(x, y);
 
     /**
-    * An object that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.
-    * @property {boolean} fixedToCamera - Fixes this object to the Camera.
-    * @default
-    */
-    this.fixedToCamera = false;
-
-    /**
     * @property {string} _text - Internal cache var.
     * @private
     */
@@ -34958,9 +35213,29 @@ Phaser.Text = function (game, x, y, text, style) {
     */
     this.input = null;
 
+    /**
+    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    */
+    this.cameraOffset = new Phaser.Point();
+
     PIXI.Text.call(this, text, style);
 
     this.position.set(x, y);
+
+    /**
+    * A small internal cache:
+    * 0 = previous position.x
+    * 1 = previous position.y
+    * 2 = previous rotation
+    * 3 = renderID
+    * 4 = fresh? (0 = no, 1 = yes)
+    * 5 = outOfBoundsFired (0 = no, 1 = yes)
+    * 6 = exists (0 = no, 1 = yes)
+    * 7 = fixed to camera (0 = no, 1 = yes)
+    * @property {Int16Array} _cache
+    * @private
+    */
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
 
 };
 
@@ -34973,13 +35248,30 @@ Phaser.Text.prototype.constructor = Phaser.Text;
 */
 Phaser.Text.prototype.preUpdate = function () {
 
+    this._cache[0] = this.world.x;
+    this._cache[1] = this.world.y;
+    this._cache[2] = this.rotation;
+
     if (!this.exists || !this.parent.exists)
     {
-        //  Reset the renderOrderID
+        this.renderOrderID = -1;
         return false;
     }
 
-    this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
+    if (this.autoCull)
+    {
+        //  Won't get rendered but will still get its transform updated
+        this.renderable = this.game.world.camera.screenView.intersects(this.getBounds());
+    }
+
+    this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
+
+    if (this.visible)
+    {
+        this._cache[3] = this.game.world.currentRenderOrderID++;
+    }
+
+    return true;
 
 }
 
@@ -34999,14 +35291,13 @@ Phaser.Text.prototype.update = function() {
 */
 Phaser.Text.prototype.postUpdate = function () {
 
-    if (this.exists)
+    //  Fixed to Camera?
+    if (this._cache[7] === 1)
     {
-        if (this.fixedToCamera)
-        {
-            // this.position.x = this.game.camera.view.x + this.x;
-            // this.position.y = this.game.camera.view.y + this.y;
-        }
+        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
     }
+
 }
 
 /**
@@ -35613,6 +35904,37 @@ Object.defineProperty(Phaser.Text.prototype, "inputEnabled", {
 });
 
 /**
+* An Text that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Text.cameraOffset.
+* Note that the cameraOffset values are in addition to any parent in the display list.
+* So if this Text was in a Group that has x: 200, then this will be added to the cameraOffset.x
+*
+* @name Phaser.Text#fixedToCamera
+* @property {boolean} fixedToCamera - Set to true to fix this Text to the Camera at its current world coordinates.
+*/
+Object.defineProperty(Phaser.Text.prototype, "fixedToCamera", {
+    
+    get: function () {
+
+        return !!this._cache[7];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            this._cache[7] = 1;
+            this.cameraOffset.set(this.x, this.y);
+        }
+        else
+        {
+            this._cache[7] = 0;
+        }
+    }
+
+});
+
+/**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
@@ -35674,13 +35996,6 @@ Phaser.BitmapText = function (game, x, y, font, text, size) {
     this.world = new Phaser.Point(x, y);
 
     /**
-    * An object that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.
-    * @property {boolean} fixedToCamera - Fixes this object to the Camera.
-    * @default
-    */
-    this.fixedToCamera = false;
-
-    /**
     * @property {string} _text - Internal cache var.
     * @private
     */
@@ -35720,9 +36035,29 @@ Phaser.BitmapText = function (game, x, y, font, text, size) {
     */
     this.input = null;
 
+    /**
+    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    */
+    this.cameraOffset = new Phaser.Point();
+
     PIXI.BitmapText.call(this, text);
 
     this.position.set(x, y);
+
+    /**
+    * A small internal cache:
+    * 0 = previous position.x
+    * 1 = previous position.y
+    * 2 = previous rotation
+    * 3 = renderID
+    * 4 = fresh? (0 = no, 1 = yes)
+    * 5 = outOfBoundsFired (0 = no, 1 = yes)
+    * 6 = exists (0 = no, 1 = yes)
+    * 7 = fixed to camera (0 = no, 1 = yes)
+    * @property {Int16Array} _cache
+    * @private
+    */
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
 
 };
 
@@ -35748,13 +36083,30 @@ Phaser.BitmapText.prototype.setStyle = function() {
 */
 Phaser.BitmapText.prototype.preUpdate = function () {
 
+    this._cache[0] = this.world.x;
+    this._cache[1] = this.world.y;
+    this._cache[2] = this.rotation;
+
     if (!this.exists || !this.parent.exists)
     {
-        //  Reset the renderOrderID
+        this.renderOrderID = -1;
         return false;
     }
 
-    this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
+    if (this.autoCull)
+    {
+        //  Won't get rendered but will still get its transform updated
+        this.renderable = this.game.world.camera.screenView.intersects(this.getBounds());
+    }
+
+    this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
+
+    if (this.visible)
+    {
+        this._cache[3] = this.game.world.currentRenderOrderID++;
+    }
+
+    return true;
 
 }
 
@@ -35774,14 +36126,13 @@ Phaser.BitmapText.prototype.update = function() {
 */
 Phaser.BitmapText.prototype.postUpdate = function () {
 
-    if (this.exists)
+    //  Fixed to Camera?
+    if (this._cache[7] === 1)
     {
-        if (this.fixedToCamera)
-        {
-            // this.position.x = this.game.camera.view.x + this.x;
-            // this.position.y = this.game.camera.view.y + this.y;
-        }
+        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
     }
+
 }
 
 /**
@@ -35980,6 +36331,37 @@ Object.defineProperty(Phaser.BitmapText.prototype, "inputEnabled", {
             {
                 this.input.stop();
             }
+        }
+    }
+
+});
+
+/**
+* An BitmapText that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in BitmapText.cameraOffset.
+* Note that the cameraOffset values are in addition to any parent in the display list.
+* So if this BitmapText was in a Group that has x: 200, then this will be added to the cameraOffset.x
+*
+* @name Phaser.BitmapText#fixedToCamera
+* @property {boolean} fixedToCamera - Set to true to fix this BitmapText to the Camera at its current world coordinates.
+*/
+Object.defineProperty(Phaser.BitmapText.prototype, "fixedToCamera", {
+    
+    get: function () {
+
+        return !!this._cache[7];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            this._cache[7] = 1;
+            this.cameraOffset.set(this.x, this.y);
+        }
+        else
+        {
+            this._cache[7] = 0;
         }
     }
 
@@ -45327,6 +45709,12 @@ Phaser.Cache = function (game) {
     this._text = {};
 
     /**
+    * @property {object} _physics - Physics data key-value container.
+    * @private
+    */
+    this._physics = {};
+
+    /**
     * @property {object} _tilemaps - Tilemap key-value container.
     * @private
     */
@@ -45360,10 +45748,71 @@ Phaser.Cache = function (game) {
 
 };
 
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Cache.CANVAS = 1;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Cache.IMAGE = 2;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Cache.TEXTURE = 3;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Cache.SOUND = 4;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Cache.TEXT = 5;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Cache.PHYSICS = 6;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Cache.TILEMAP = 7;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Cache.BINARY = 8;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Cache.BITMAPDATA = 9;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Cache.BITMAPFONT = 10;
+
 Phaser.Cache.prototype = {
 
     /**
     * Add a new canvas object in to the cache.
+    *
     * @method Phaser.Cache#addCanvas
     * @param {string} key - Asset key for this canvas.
     * @param {HTMLCanvasElement} canvas - Canvas DOM element.
@@ -45377,6 +45826,7 @@ Phaser.Cache.prototype = {
 
     /**
     * Add a binary object in to the cache.
+    *
     * @method Phaser.Cache#addBinary
     * @param {string} key - Asset key for this binary data.
     * @param {object} binaryData - The binary object to be addded to the cache.
@@ -45389,6 +45839,7 @@ Phaser.Cache.prototype = {
 
     /**
     * Add a BitmapData object in to the cache.
+    *
     * @method Phaser.Cache#addBitmapData
     * @param {string} key - Asset key for this BitmapData.
     * @param {Phaser.BitmapData} bitmapData - The BitmapData object to be addded to the cache.
@@ -45455,7 +45906,7 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Add a new tilemap.
+    * Add a new tilemap to the Cache.
     *
     * @method Phaser.Cache#addTilemap
     * @param {string} key - The unique key by which you will reference this object.
@@ -45470,7 +45921,7 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Add a new texture atlas.
+    * Add a new texture atlas to the Cache.
     *
     * @method Phaser.Cache#addTextureAtlas
     * @param {string} key - The unique key by which you will reference this object.
@@ -45502,7 +45953,7 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Add a new Bitmap Font.
+    * Add a new Bitmap Font to the Cache.
     *
     * @method Phaser.Cache#addBitmapFont
     * @param {string} key - The unique key by which you will reference this object.
@@ -45524,9 +45975,25 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    * Add a new physics data object to the Cache.
+    *
+    * @method Phaser.Cache#addTilemap
+    * @param {string} key - The unique key by which you will reference this object.
+    * @param {string} url - URL of the physics json data.
+    * @param {object} JSONData - The physics data object (a JSON file).
+    * @param {number} format - The format of the physics data.
+    */
+    addPhysicsData: function (key, url, JSONData, format) {
+
+        this._physics[key] = { url: url, data: JSONData, format: format };
+
+    },
+
+    /**
     * Adds a default image to be used in special cases such as WebGL Filters. Is mapped to the key __default.
     *
     * @method Phaser.Cache#addDefaultImage
+    * @protected
     */
     addDefaultImage: function () {
 
@@ -45545,6 +46012,7 @@ Phaser.Cache.prototype = {
     * Adds an image to be used when a key is wrong / missing. Is mapped to the key __missing.
     *
     * @method Phaser.Cache#addMissingImage
+    * @protected
     */
     addMissingImage: function () {
 
@@ -45569,10 +46037,7 @@ Phaser.Cache.prototype = {
     */
     addText: function (key, url, data) {
 
-        this._text[key] = {
-            url: url,
-            data: data
-        };
+        this._text[key] = { url: url, data: data };
 
     },
 
@@ -45592,23 +46057,6 @@ Phaser.Cache.prototype = {
 
         PIXI.BaseTextureCache[key] = new PIXI.BaseTexture(data);
         PIXI.TextureCache[key] = new PIXI.Texture(PIXI.BaseTextureCache[key]);
-
-    },
-
-    /**
-    * Replaces a set of frameData with a new Phaser.FrameData object.
-    *
-    * @method Phaser.Cache#updateFrameData
-    * @param {string} key - The unique key by which you will reference this object.
-    * @param {number} frameData - The new FrameData.
-    */
-    updateFrameData: function (key, frameData) {
-
-        if (this._images[key])
-        {
-            this._images[key].spriteSheet = true;
-            this._images[key].frameData = frameData;
-        }
 
     },
 
@@ -45767,6 +46215,44 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    * Get a physics data object from the cache by its key. You can get either the entire data set or just a single object from it.
+    *
+    * @method Phaser.Cache#getPhysicsData
+    * @param {string} key - Asset key of the physics data object to retrieve from the Cache.
+    * @param {string} [object=null] - If specified it will return just the physics object that is part of the given key, if null it will return them all.
+    * @return {object} The requested physics object data if found.
+    */
+    getPhysicsData: function (key, object) {
+
+        if (typeof object === 'undefined' || object === null)
+        {
+            //  Get 'em all
+            if (this._physics[key])
+            {
+                return this._physics[key].data;
+            }
+            else
+            {
+                console.warn('Phaser.Cache.getPhysicsData: Invalid key: "' + key + '"');
+            }
+        }
+        else
+        {
+            if (this._physics[key] && this._physics[key].data[object])
+            {
+                return this._physics[key].data[object][0];
+            }
+            else
+            {
+                console.warn('Phaser.Cache.getPhysicsData: Invalid key/object: "' + key + ' / ' + object + '"');
+            }
+        }
+        
+        return null;
+
+    },
+
+    /**
     * Checks if an image key exists.
     *
     * @method Phaser.Cache#checkImageKey
@@ -45839,6 +46325,23 @@ Phaser.Cache.prototype = {
         }
 
         return null;
+    },
+
+    /**
+    * Replaces a set of frameData with a new Phaser.FrameData object.
+    *
+    * @method Phaser.Cache#updateFrameData
+    * @param {string} key - The unique key by which you will reference this object.
+    * @param {number} frameData - The new FrameData.
+    */
+    updateFrameData: function (key, frameData) {
+
+        if (this._images[key])
+        {
+            this._images[key].spriteSheet = true;
+            this._images[key].frameData = frameData;
+        }
+
     },
 
     /**
@@ -46057,14 +46560,63 @@ Phaser.Cache.prototype = {
     },
 
     /**
-    * Get the cache keys from a given array of objects.
-    * Normally you don't call this directly but instead use getImageKeys, getSoundKeys, etc.
+    * Gets all keys used by the Cache for the given data type.
     *
     * @method Phaser.Cache#getKeys
-    * @param {Array} array - An array of items to return the keys for.
+    * @param {number} [type=Phaser.Cache.IMAGE] - The type of Cache keys you wish to get. Can be Cache.CANVAS, Cache.IMAGE, Cache.SOUND, etc.
     * @return {Array} The array of item keys.
     */
-    getKeys: function (array) {
+    getKeys: function (type) {
+
+        var array = null;
+
+        switch (type)
+        {
+            case Phaser.Cache.CANVAS:
+                array = this._canvases;
+                break;
+
+            case Phaser.Cache.IMAGE:
+                array = this._images;
+                break;
+
+            case Phaser.Cache.TEXTURE:
+                array = this._textures;
+                break;
+
+            case Phaser.Cache.SOUND:
+                array = this._sounds;
+                break;
+
+            case Phaser.Cache.TEXT:
+                array = this._text;
+                break;
+
+            case Phaser.Cache.PHYSICS:
+                array = this._physics;
+                break;
+
+            case Phaser.Cache.TILEMAP:
+                array = this._tilemaps;
+                break;
+
+            case Phaser.Cache.BINARY:
+                array = this._binary;
+                break;
+
+            case Phaser.Cache.BITMAPDATA:
+                array = this._bitmapDatas;
+                break;
+
+            case Phaser.Cache.BITMAPFONT:
+                array = this._bitmapFont;
+                break;
+        }
+
+        if (!array)
+        {
+            return;
+        }
 
         var output = [];
 
@@ -46078,36 +46630,6 @@ Phaser.Cache.prototype = {
 
         return output;
 
-    },
-
-    /**
-    * Returns an array containing all of the keys of Images in the Cache.
-    *
-    * @method Phaser.Cache#getImageKeys
-    * @return {Array} The string based keys in the Cache.
-    */
-    getImageKeys: function () {
-        return this.getKeys(this._images);
-    },
-
-    /**
-    * Returns an array containing all of the keys of Sounds in the Cache.
-    *
-    * @method Phaser.Cache#getSoundKeys
-    * @return {Array} The string based keys in the Cache.
-    */
-    getSoundKeys: function () {
-        return this.getKeys(this._sounds);
-    },
-
-    /**
-    * Returns an array containing all of the keys of Text Files in the Cache.
-    *
-    * @method Phaser.Cache#getTextKeys
-    * @return {Array} The string based keys in the Cache.
-    */
-    getTextKeys: function () {
-        return this.getKeys(this._text);
     },
 
     /**
@@ -46151,6 +46673,56 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    * Removes a physics data file from the cache.
+    *
+    * @method Phaser.Cache#removePhysics
+    * @param {string} key - Key of the asset you want to remove.
+    */
+    removePhysics: function (key) {
+        delete this._text[key];
+    },
+
+    /**
+    * Removes a tilemap from the cache.
+    *
+    * @method Phaser.Cache#removeTilemap
+    * @param {string} key - Key of the asset you want to remove.
+    */
+    removeTilemap: function (key) {
+        delete this._text[key];
+    },
+
+    /**
+    * Removes a binary file from the cache.
+    *
+    * @method Phaser.Cache#removeBinary
+    * @param {string} key - Key of the asset you want to remove.
+    */
+    removeBinary: function (key) {
+        delete this._text[key];
+    },
+
+    /**
+    * Removes a bitmap data from the cache.
+    *
+    * @method Phaser.Cache#removeBitmapData
+    * @param {string} key - Key of the asset you want to remove.
+    */
+    removeBitmapData: function (key) {
+        delete this._text[key];
+    },
+
+    /**
+    * Removes a bitmap font from the cache.
+    *
+    * @method Phaser.Cache#removeBitmapFont
+    * @param {string} key - Key of the asset you want to remove.
+    */
+    removeBitmapFont: function (key) {
+        delete this._text[key];
+    },
+
+    /**
     * Clears the cache. Removes every local cache object reference.
     *
     * @method Phaser.Cache#destroy
@@ -46176,6 +46748,37 @@ Phaser.Cache.prototype = {
         {
             delete this._text[item['key']];
         }
+
+        for (var item in this._textures)
+        {
+            delete this._textures[item['key']];
+        }
+
+        for (var item in this._physics)
+        {
+            delete this._physics[item['key']];
+        }
+
+        for (var item in this._tilemaps)
+        {
+            delete this._tilemaps[item['key']];
+        }
+
+        for (var item in this._binary)
+        {
+            delete this._binary[item['key']];
+        }
+
+        for (var item in this._bitmapDatas)
+        {
+            delete this._bitmapDatas[item['key']];
+        }
+
+        for (var item in this._bitmapFont)
+        {
+            delete this._bitmapFont[item['key']];
+        }
+
     }
 
 };
@@ -46316,6 +46919,12 @@ Phaser.Loader.TEXTURE_ATLAS_JSON_HASH = 1;
 * @type {number}
 */
 Phaser.Loader.TEXTURE_ATLAS_XML_STARLING = 2;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Loader.PHYSICS_LIME_CORONA = 3;
 
 Phaser.Loader.prototype = {
 
@@ -46667,6 +47276,49 @@ Phaser.Loader.prototype = {
         else
         {
             this.addToFileList('tilemap', key, mapDataURL, { format: format });
+        }
+
+        return this;
+
+    },
+
+    /**
+    * Add a new physics data object loading request.
+    * The data must be in Lime + Corona JSON format. Physics Editor by code'n'web exports in this format natively.
+    *
+    * @method Phaser.Loader#physics
+    * @param {string} key - Unique asset key of the physics json data.
+    * @param {string} [dataURL] - The url of the map data file (csv/json)
+    * @param {object} [jsonData] - An optional JSON data object. If given then the dataURL is ignored and this JSON object is used for physics data instead.
+    * @param {string} [format=Phaser.Physics.LIME_CORONA_JSON] - The format of the physics data.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    physics: function (key, dataURL, jsonData, format) {
+
+        if (typeof dataURL === "undefined") { dataURL = null; }
+        if (typeof jsonData === "undefined") { jsonData = null; }
+        if (typeof format === "undefined") { format = Phaser.Physics.LIME_CORONA_JSON; }
+
+        if (dataURL == null && jsonData == null)
+        {
+            console.warn('Phaser.Loader.physics - Both dataURL and jsonData are null. One must be set.');
+
+            return this;
+        }
+
+        //  A map data object has been given
+        if (jsonData)
+        {
+            if (typeof jsonData === 'string')
+            {
+                jsonData = JSON.parse(jsonData);
+            }
+
+            this.game.cache.addPhysicsData(key, null, jsonData, format);
+        }
+        else
+        {
+            this.addToFileList('physics', key, dataURL, { format: format });
         }
 
         return this;
@@ -47047,6 +47699,7 @@ Phaser.Loader.prototype = {
 
             case 'text':
             case 'script':
+            case 'physics':
                 this._xhr.open("GET", this.baseURL + file.url, true);
                 this._xhr.responseType = "text";
                 this._xhr.onload = function () {
@@ -47247,6 +47900,11 @@ Phaser.Loader.prototype = {
             case 'text':
                 file.data = this._xhr.responseText;
                 this.game.cache.addText(file.key, file.url, file.data);
+                break;
+
+            case 'physics':
+                var data = JSON.parse(this._xhr.responseText);
+                this.game.cache.addPhysicsData(file.key, file.url, data, file.format);
                 break;
 
             case 'script':
@@ -49114,65 +49772,6 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-    * Renders the corners and point information of the given Sprite.
-    * @method Phaser.Utils.Debug#renderSpriteCorners
-    * @param {Phaser.Sprite} sprite - The sprite to be rendered.
-    * @param {boolean} [showText=false] - If true the x/y coordinates of each point will be rendered.
-    * @param {boolean} [showBounds=false] - If true the bounds will be rendered over the top of the sprite.
-    * @param {string} [color='rgb(255,0,255)'] - The color the text is rendered in.
-    */
-    renderSpriteCorners: function (sprite, showText, showBounds, color) {
-
-        if (this.context == null)
-        {
-            return;
-        }
-
-        showText = showText || false;
-        showBounds = showBounds || false;
-        color = color || 'rgb(255,255,255)';
-
-        this.start(0, 0, color);
-
-        if (showBounds)
-        {
-            this.context.beginPath();
-            this.context.strokeStyle = 'rgba(0, 255, 0, 0.7)';
-            this.context.strokeRect(sprite.bounds.x, sprite.bounds.y, sprite.bounds.width, sprite.bounds.height);
-            this.context.closePath();
-            this.context.stroke();
-        }
-
-        this.context.beginPath();
-        this.context.moveTo(sprite.topLeft.x, sprite.topLeft.y);
-        this.context.lineTo(sprite.topRight.x, sprite.topRight.y);
-        this.context.lineTo(sprite.bottomRight.x, sprite.bottomRight.y);
-        this.context.lineTo(sprite.bottomLeft.x, sprite.bottomLeft.y);
-        this.context.closePath();
-        this.context.strokeStyle = 'rgba(255, 0, 255, 0.7)';
-        this.context.stroke();
-
-        this.renderPoint(sprite.offset);
-        this.renderPoint(sprite.center);
-        this.renderPoint(sprite.topLeft);
-        this.renderPoint(sprite.topRight);
-        this.renderPoint(sprite.bottomLeft);
-        this.renderPoint(sprite.bottomRight);
-
-        if (showText)
-        {
-            this.currentColor = color;
-            this.line('x: ' + Math.floor(sprite.topLeft.x) + ' y: ' + Math.floor(sprite.topLeft.y), sprite.topLeft.x, sprite.topLeft.y);
-            this.line('x: ' + Math.floor(sprite.topRight.x) + ' y: ' + Math.floor(sprite.topRight.y), sprite.topRight.x, sprite.topRight.y);
-            this.line('x: ' + Math.floor(sprite.bottomLeft.x) + ' y: ' + Math.floor(sprite.bottomLeft.y), sprite.bottomLeft.x, sprite.bottomLeft.y);
-            this.line('x: ' + Math.floor(sprite.bottomRight.x) + ' y: ' + Math.floor(sprite.bottomRight.y), sprite.bottomRight.x, sprite.bottomRight.y);
-        }
-
-        this.stop();
-
-    },
-
-    /**
     * Render Sound information, including decoded state, duration, volume and more.
     * @method Phaser.Utils.Debug#renderSoundInfo
     * @param {Phaser.Sound} sound - The sound object to debug.
@@ -49313,32 +49912,6 @@ Phaser.Utils.Debug.prototype = {
         this.line('over: ' + sprite.input.pointerOver() + ' duration: ' + sprite.input.overDuration().toFixed(0));
         this.line('down: ' + sprite.input.pointerDown() + ' duration: ' + sprite.input.downDuration().toFixed(0));
         this.line('just over: ' + sprite.input.justOver() + ' just out: ' + sprite.input.justOut());
-        this.stop();
-
-    },
-
-    /**
-    * Render Sprite Body Physics Data as text.
-    * @method Phaser.Utils.Debug#renderBodyInfo
-    * @param {Phaser.Sprite} sprite - The sprite to be rendered.
-    * @param {number} x - X position of the debug info to be rendered.
-    * @param {number} y - Y position of the debug info to be rendered.
-    * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
-    */
-    renderBodyInfo: function (sprite, x, y, color) {
-
-        color = color || 'rgb(255,255,255)';
-
-        this.start(x, y, color, 210);
-
-        this.splitline('x: ' + sprite.body.x.toFixed(2), 'y: ' + sprite.body.y.toFixed(2), 'width: ' + sprite.width, 'height: ' + sprite.height);
-        this.splitline('speed: ' + sprite.body.speed.toFixed(2), 'angle: ' + sprite.body.angle.toFixed(2), 'linear damping: ' + sprite.body.linearDamping);
-        this.splitline('blocked left: ' + sprite.body.blocked.left, 'right: ' + sprite.body.blocked.right, 'up: ' + sprite.body.blocked.up, 'down: ' + sprite.body.blocked.down);
-        this.splitline('touching left: ' + sprite.body.touching.left, 'right: ' + sprite.body.touching.right, 'up: ' + sprite.body.touching.up, 'down: ' + sprite.body.touching.down);
-        this.splitline('gravity x: ' + sprite.body.gravity.x, 'y: ' + sprite.body.gravity.y, 'world gravity x: ' + this.game.physics.gravity.x, 'y: ' + this.game.physics.gravity.y);
-        this.splitline('acceleration x: ' + sprite.body.acceleration.x.toFixed(2), 'y: ' + sprite.body.acceleration.y.toFixed(2));
-        this.splitline('velocity x: ' + sprite.body.velocity.x.toFixed(2), 'y: ' + sprite.body.velocity.y.toFixed(2), 'deltaX: ' + sprite.body.deltaX().toFixed(2), 'deltaY: ' + sprite.body.deltaY().toFixed(2));
-        this.splitline('bounce x: ' + sprite.body.bounce.x.toFixed(2), 'y: ' + sprite.body.bounce.y.toFixed(2));
         this.stop();
 
     },
@@ -49523,78 +50096,6 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-    * Renders just the full Sprite bounds.
-    * @method Phaser.Utils.Debug#renderSpriteBounds
-    * @param {Phaser.Sprite} sprite - Description.
-    * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
-    * @param {boolean} [fill=false] - If false the bounds outline is rendered, if true the whole rectangle is rendered.
-    */
-    renderSpriteBody: function (sprite, color, fill) {
-
-        if (this.context == null)
-        {
-            return;
-        }
-
-        color = color || 'rgb(255,0,255)';
-
-        if (typeof fill === 'undefined') { fill = false; }
-
-        this.start(0, 0, color);
-
-        if (fill)
-        {
-            this.context.fillStyle = color;
-            this.context.fillRect(sprite.body.left, sprite.body.top, sprite.body.width, sprite.body.height);
-        }
-        else
-        {
-            this.context.strokeStyle = color;
-            this.context.strokeRect(sprite.body.left, sprite.body.top, sprite.body.width, sprite.body.height);
-            this.context.stroke();
-        }
-
-        this.stop();
-
-    },
-
-    /**
-    * Renders just the full Sprite bounds.
-    * @method Phaser.Utils.Debug#renderSpriteBounds
-    * @param {Phaser.Sprite} sprite - Description.
-    * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
-    * @param {boolean} [fill=false] - If false the bounds outline is rendered, if true the whole rectangle is rendered.
-    */
-    renderSpriteBounds: function (sprite, color, fill) {
-
-        if (this.context == null)
-        {
-            return;
-        }
-
-        color = color || 'rgb(255,0,255)';
-
-        if (typeof fill === 'undefined') { fill = false; }
-
-        this.start(0, 0, color);
-
-        if (fill)
-        {
-            this.context.fillStyle = color;
-            this.context.fillRect(sprite.bounds.x, sprite.bounds.y, sprite.bounds.width, sprite.bounds.height);
-        }
-        else
-        {
-            this.context.strokeStyle = color;
-            this.context.strokeRect(sprite.bounds.x, sprite.bounds.y, sprite.bounds.width, sprite.bounds.height);
-            this.context.stroke();
-        }
-
-        this.stop();
-
-    },
-
-    /**
     * Renders a single pixel.
     * @method Phaser.Utils.Debug#renderPixel
     * @param {number} x - X position of the debug info to be rendered.
@@ -49727,8 +50228,34 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
+    * Render Sprite Body Physics Data as text.
+    * @method Phaser.Utils.Debug#renderBodyInfo
+    * @param {Phaser.Sprite} sprite - The sprite to be rendered.
+    * @param {number} x - X position of the debug info to be rendered.
+    * @param {number} y - Y position of the debug info to be rendered.
+    * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
+    */
+    renderBodyInfo: function (sprite, x, y, color) {
+
+        color = color || 'rgb(255,255,255)';
+
+        this.start(x, y, color, 210);
+
+        this.splitline('x: ' + sprite.body.x.toFixed(2), 'y: ' + sprite.body.y.toFixed(2), 'width: ' + sprite.width, 'height: ' + sprite.height);
+        // this.splitline('speed: ' + sprite.body.speed.toFixed(2), 'angle: ' + sprite.body.angle.toFixed(2), 'linear damping: ' + sprite.body.linearDamping);
+        // this.splitline('blocked left: ' + sprite.body.blocked.left, 'right: ' + sprite.body.blocked.right, 'up: ' + sprite.body.blocked.up, 'down: ' + sprite.body.blocked.down);
+        // this.splitline('touching left: ' + sprite.body.touching.left, 'right: ' + sprite.body.touching.right, 'up: ' + sprite.body.touching.up, 'down: ' + sprite.body.touching.down);
+        // this.splitline('gravity x: ' + sprite.body.gravity.x, 'y: ' + sprite.body.gravity.y, 'world gravity x: ' + this.game.physics.gravity.x, 'y: ' + this.game.physics.gravity.y);
+        // this.splitline('acceleration x: ' + sprite.body.acceleration.x.toFixed(2), 'y: ' + sprite.body.acceleration.y.toFixed(2));
+        // this.splitline('velocity x: ' + sprite.body.velocity.x.toFixed(2), 'y: ' + sprite.body.velocity.y.toFixed(2), 'deltaX: ' + sprite.body.deltaX().toFixed(2), 'deltaY: ' + sprite.body.deltaY().toFixed(2));
+        // this.splitline('bounce x: ' + sprite.body.bounce.x.toFixed(2), 'y: ' + sprite.body.bounce.y.toFixed(2));
+        this.stop();
+
+    },
+
+    /**
     * @method Phaser.Utils.Debug#renderPhysicsBody
-    * @param {array} body
+    * @param {Phaser.Body} body - The Phaser.Body instance to render all shapes from.
     * @param {string} [color='rgb(255,255,255)'] - The color the polygon is stroked in.
     */
     renderPhysicsBody: function (body, color, context) {
@@ -49740,131 +50267,51 @@ Phaser.Utils.Debug.prototype = {
 
         color = color || 'rgb(255,255,255)';
 
-        var x = body.x - this.game.camera.x;
-        var y = body.y - this.game.camera.y;
-
-        if (body.type === Phaser.Physics.Arcade.CIRCLE)
-        {
-            this.start(0, 0, color);
-            this.context.beginPath();
-            this.context.strokeStyle = color;
-            this.context.arc(x, y, body.shape.r, 0, Math.PI * 2, false);
-            this.context.stroke();
-            this.context.closePath();
-
-            // this.context.strokeStyle = 'rgb(0,0,255)';
-            // this.context.strokeRect(body.left, body.top, body.width, body.height);
-
-            this.stop();
-        }
-        else
-        {
-            var points = body.polygon.points;
-
-            this.start(0, 0, color);
-
-            this.context.beginPath();
-            this.context.moveTo(x + points[0].x, y + points[0].y);
-
-            for (var i = 1; i < points.length; i++)
-            {
-                this.context.lineTo(x + points[i].x, y + points[i].y);
-            }
-
-            this.context.closePath();
-            this.context.strokeStyle = color;
-            this.context.stroke();
-
-            this.context.fillStyle = 'rgb(255,0,0)';
-            this.context.fillRect(x + points[0].x - 2, y + points[0].y - 2, 5, 5);
-
-            for (var i = 1; i < points.length; i++)
-            {
-                this.context.fillStyle = 'rgb(255,' + (i * 40) + ',0)';
-                this.context.fillRect(x + points[i].x - 2, y + points[i].y - 2, 5, 5);
-            }
-
-            // this.context.strokeStyle = 'rgb(0,255,255)';
-            // this.context.strokeRect(body.left, body.top, body.width, body.height);
-
-            this.stop();
-        }
-
-    },
-
-    /**
-    * @method Phaser.Utils.Debug#renderVertices
-    * @param {array} vertices
-    * @param {string} [color='rgb(255,255,255)'] - The color the polygon is stroked in.
-    */
-    renderShape: function (body, id, color, context) {
-
-        if (this.context === null && context === null)
-        {
-            return;
-        }
-
-        color = color || 'rgb(255,255,255)';
-
         this.start(0, 0, color);
 
-        var x = body.sprite.x;
-        var y = body.sprite.y;
+        var i = body.data.shapes.length;
+        var x = this.game.math.p2px(body.data.position[0]);
+        var y = this.game.math.p2px(body.data.position[1]);
+        var angle = body.data.angle;
 
-        var points = body.data.shapes[id].vertices;
-
-        var ox = x + this.game.math.p2px(body.data.shapeOffsets[id][0]);
-        var oy = y + this.game.math.p2px(body.data.shapeOffsets[id][1]);
-
-        this.context.beginPath();
-        this.context.moveTo(ox + this.game.math.p2px(points[0][0]), oy + this.game.math.p2px(points[0][1]));
-
-        for (var i = 1; i < points.length; i++)
+        while (i--)
         {
-            this.context.lineTo(ox + this.game.math.p2px(points[i][0]), oy + this.game.math.p2px(points[i][1]));
+            this.renderShape(body.data.shapes[i], x, y, angle);
         }
-
-        this.context.closePath();
-        this.context.strokeStyle = color;
-        this.context.stroke();
 
         this.stop();
 
     },
 
     /**
-    * @method Phaser.Utils.Debug#renderPolygon
-    * @param {array} polygon
-    * @param {string} [color='rgb(255,255,255)'] - The color the polygon is stroked in.
+    * @method Phaser.Utils.Debug#renderShape
+    * @param {p2.Shape} shape - The shape to render.
+    * @param {number} x - The x coordinate of the Body to translate to.
+    * @param {number} y - The y coordinate of the Body to translate to.
+    * @param {number} angle - The angle of the Body to rotate to.
     */
-    renderPolygon: function (polygon, color, context) {
-
-        if (this.context === null && context === null)
-        {
-            return;
-        }
-
-        color = color || 'rgb(255,255,255)';
-
-        var points = polygon.points;
-        var x = polygon.pos.x;
-        var y = polygon.pos.y;
-
-        this.start(0, 0, color);
+    renderShape: function (shape, x, y, angle) {
+        
+        var w = this.game.math.p2px(shape.width);
+        var h = this.game.math.p2px(shape.height);
+        var points = shape.vertices;
 
         this.context.beginPath();
-        this.context.moveTo(x + points[0].x, y + points[0].y);
+        this.context.save();
+        this.context.translate(x, y);
+        this.context.rotate(angle);
+        this.context.lineWidth = 0.5;
+
+        this.context.moveTo(this.game.math.p2px(points[0][0]), this.game.math.p2px(points[0][1]));
 
         for (var i = 1; i < points.length; i++)
         {
-            this.context.lineTo(x + points[i].x, y + points[i].y);
+            this.context.lineTo(this.game.math.p2px(points[i][0]), this.game.math.p2px(points[i][1]));
         }
 
         this.context.closePath();
-        this.context.strokeStyle = color;
         this.context.stroke();
-
-        this.stop();
+        this.context.restore();
 
     }
 
@@ -50234,6 +50681,11 @@ Phaser.Color = {
 * @class Phaser.Physics
 */
 Phaser.Physics = {};
+
+/**
+* @const
+*/
+Phaser.Physics.LIME_CORONA_JSON = 0;
 
 //  Add an extra property to p2.Body
 p2.Body.prototype.parent = null;
@@ -51041,7 +51493,7 @@ Phaser.Physics.Body.prototype = {
         var path;
 
         //  Did they pass in a single array of points?
-        if (points.length === 1)
+        if (points.length === 1 && Array.isArray(points[0]))
         {
             path = points[0];
         }
@@ -51150,69 +51602,63 @@ Phaser.Physics.Body.prototype = {
     },
 
     /**
-    * Reads a polygon shape path, and assembles convex shapes from that and puts them at proper offset points. The shape must be simple and without holes.
-    * This function expects the x.y values to be given in pixels. If you want to provide them at p2 world scales then call Body.data.fromPolygon directly.
+    * Reads the shape data from a physics data file stored in the Game.Cache and adds it as a polygon to this Body.
     *
-    * @method Phaser.Physics.Body#setPolygon
+    * @method Phaser.Physics.Body#loadPolygon
+    * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
+    * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
     * @param {object} options - An object containing the build options: 
     * @param {boolean} [options.optimalDecomp=false] - Set to true if you need optimal decomposition. Warning: very slow for polygons with more than 10 vertices.
     * @param {boolean} [options.skipSimpleCheck=false] - Set to true if you already know that the path is not intersecting itself.
     * @param {boolean|number} [options.removeCollinearPoints=false] - Set to a number (angle threshold value) to remove collinear points, or false to keep all points.
-    * @param {(number[]|...number)} points - An array of 2d vectors that form the convex or concave polygon. 
-    *                                       Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...], 
-    *                                       or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
     * @return {boolean} True on success, else false.
-    setPolygon: function (options, points) {
+    */
+    loadPolygon: function (key, object, options) {
 
-        options = options || {};
+        var data = game.cache.getPhysicsData(key, object);
 
-        points = Array.prototype.slice.call(arguments, 1);
-
-        var path;
-
-        //  Did they pass in a single array of points?
-        if (points.length === 1)
+        if (data && data.shape)
         {
-            // console.log('part 1', points.length);
-            path = points[0];
-        }
-        else if (Array.isArray(points[0]))
-        {
-            // console.log('part 2', points.length);
-            path = points;
-        }
-        else if (typeof points[0] === 'number')
-        {
-            //  A list of numbers?
-            // console.log('part 3');
-
             var temp = [];
 
             //  We've a list of numbers
-            for (var i = 0, len = points.length; i < len; i += 2)
+            for (var i = 0, len = data.shape.length; i < len; i += 2)
             {
-                temp.push([points[i], points[i + 1]]);
+                temp.push([data.shape[i], data.shape[i + 1]]);
             }
 
-            path = temp;
+            return this.addPolygon(options, temp);
         }
 
-        //  Now process them into p2 values
-        for (var p = 0; p < path.length; p++)
-        {
-            path[p][0] = this.px2p(path[p][0]);
-            path[p][1] = this.px2p(path[p][1]);
-        }
-
-        // console.log('points');
-        // console.table(points);
-        // console.log('PATH');
-        // console.log(path);
-
-        return this.data.fromPolygon(path, options);
+        return false;
 
     },
+
+    /**
+    * Reads the physics data from a physics data file stored in the Game.Cache.
+    * It will add the shape data to this Body, as well as set the density (mass), friction and bounce (restitution) values.
+    *
+    * @method Phaser.Physics.Body#loadPolygon
+    * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
+    * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
+    * @param {object} options - An object containing the build options: 
+    * @param {boolean} [options.optimalDecomp=false] - Set to true if you need optimal decomposition. Warning: very slow for polygons with more than 10 vertices.
+    * @param {boolean} [options.skipSimpleCheck=false] - Set to true if you already know that the path is not intersecting itself.
+    * @param {boolean|number} [options.removeCollinearPoints=false] - Set to a number (angle threshold value) to remove collinear points, or false to keep all points.
+    * @return {boolean} True on success, else false.
     */
+    loadData: function (key, object, options) {
+
+        var data = game.cache.getPhysicsData(key, object);
+
+        if (data && data.shape)
+        {
+            this.mass = data.density;
+            //  set friction + bounce here
+            this.loadPolygon(key, object);
+        }
+
+    },
 
     /**
     * Convert p2 physics value to pixel scale.
