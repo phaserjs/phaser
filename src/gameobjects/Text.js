@@ -50,13 +50,6 @@ Phaser.Text = function (game, x, y, text, style) {
     this.world = new Phaser.Point(x, y);
 
     /**
-    * An object that is fixed to the camera ignores the position of any ancestors in the display list and uses its x/y coordinates as offsets from the top left of the camera.
-    * @property {boolean} fixedToCamera - Fixes this object to the Camera.
-    * @default
-    */
-    this.fixedToCamera = false;
-
-    /**
     * @property {string} _text - Internal cache var.
     * @private
     */
@@ -96,9 +89,29 @@ Phaser.Text = function (game, x, y, text, style) {
     */
     this.input = null;
 
+    /**
+    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    */
+    this.cameraOffset = new Phaser.Point();
+
     PIXI.Text.call(this, text, style);
 
     this.position.set(x, y);
+
+    /**
+    * A small internal cache:
+    * 0 = previous position.x
+    * 1 = previous position.y
+    * 2 = previous rotation
+    * 3 = renderID
+    * 4 = fresh? (0 = no, 1 = yes)
+    * 5 = outOfBoundsFired (0 = no, 1 = yes)
+    * 6 = exists (0 = no, 1 = yes)
+    * 7 = fixed to camera (0 = no, 1 = yes)
+    * @property {Int16Array} _cache
+    * @private
+    */
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
 
 };
 
@@ -111,13 +124,30 @@ Phaser.Text.prototype.constructor = Phaser.Text;
 */
 Phaser.Text.prototype.preUpdate = function () {
 
+    this._cache[0] = this.world.x;
+    this._cache[1] = this.world.y;
+    this._cache[2] = this.rotation;
+
     if (!this.exists || !this.parent.exists)
     {
-        //  Reset the renderOrderID
+        this.renderOrderID = -1;
         return false;
     }
 
-    this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
+    if (this.autoCull)
+    {
+        //  Won't get rendered but will still get its transform updated
+        this.renderable = this.game.world.camera.screenView.intersects(this.getBounds());
+    }
+
+    this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
+
+    if (this.visible)
+    {
+        this._cache[3] = this.game.world.currentRenderOrderID++;
+    }
+
+    return true;
 
 }
 
@@ -137,14 +167,13 @@ Phaser.Text.prototype.update = function() {
 */
 Phaser.Text.prototype.postUpdate = function () {
 
-    if (this.exists)
+    //  Fixed to Camera?
+    if (this._cache[7] === 1)
     {
-        if (this.fixedToCamera)
-        {
-            // this.position.x = this.game.camera.view.x + this.x;
-            // this.position.y = this.game.camera.view.y + this.y;
-        }
+        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
     }
+
 }
 
 /**
@@ -745,6 +774,37 @@ Object.defineProperty(Phaser.Text.prototype, "inputEnabled", {
             {
                 this.input.stop();
             }
+        }
+    }
+
+});
+
+/**
+* An Text that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Text.cameraOffset.
+* Note that the cameraOffset values are in addition to any parent in the display list.
+* So if this Text was in a Group that has x: 200, then this will be added to the cameraOffset.x
+*
+* @name Phaser.Text#fixedToCamera
+* @property {boolean} fixedToCamera - Set to true to fix this Text to the Camera at its current world coordinates.
+*/
+Object.defineProperty(Phaser.Text.prototype, "fixedToCamera", {
+    
+    get: function () {
+
+        return !!this._cache[7];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            this._cache[7] = 1;
+            this.cameraOffset.set(this.x, this.y);
+        }
+        else
+        {
+            this._cache[7] = 0;
         }
     }
 

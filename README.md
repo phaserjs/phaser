@@ -115,6 +115,8 @@ New features:
 * Added Cache.updateFrameData which is really useful for swapping FrameData blocks in the cache.
 * Loader.physics now lets you load Lime + Corona JSON Physics data, which can be used with Body.loadPolygon and Body.loadData.
 * Cache.addPhysicsData and Cache.getPhysicsData allow you to store parsed JSON physics data in the cache, for sharing between Bodies.
+* fixedToCamera now works across all display objects. When enabled it will fix at its current x/y coordinate, but can be changed via cameraOffset.
+* fixedToCamrea now works for Groups as well :) You can fix a Group to the camera and it will influence its children.
 
 
 Updates:

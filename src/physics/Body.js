@@ -676,6 +676,32 @@ Phaser.Physics.Body.prototype = {
     },
 
     /**
+    * Reads the physics data from a physics data file stored in the Game.Cache.
+    * It will add the shape data to this Body, as well as set the density (mass), friction and bounce (restitution) values.
+    *
+    * @method Phaser.Physics.Body#loadPolygon
+    * @param {string} key - The key of the Physics Data file as stored in Game.Cache.
+    * @param {string} object - The key of the object within the Physics data file that you wish to load the shape data from.
+    * @param {object} options - An object containing the build options: 
+    * @param {boolean} [options.optimalDecomp=false] - Set to true if you need optimal decomposition. Warning: very slow for polygons with more than 10 vertices.
+    * @param {boolean} [options.skipSimpleCheck=false] - Set to true if you already know that the path is not intersecting itself.
+    * @param {boolean|number} [options.removeCollinearPoints=false] - Set to a number (angle threshold value) to remove collinear points, or false to keep all points.
+    * @return {boolean} True on success, else false.
+    */
+    loadData: function (key, object, options) {
+
+        var data = game.cache.getPhysicsData(key, object);
+
+        if (data && data.shape)
+        {
+            this.mass = data.density;
+            //  set friction + bounce here
+            this.loadPolygon(key, object);
+        }
+
+    },
+
+    /**
     * Convert p2 physics value to pixel scale.
     * 
     * @method Phaser.Math#p2px

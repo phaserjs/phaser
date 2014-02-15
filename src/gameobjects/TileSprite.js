@@ -88,6 +88,26 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
     */
     this.world = new Phaser.Point(x, y);
 
+    /**
+    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    */
+    this.cameraOffset = new Phaser.Point();
+
+    /**
+    * A small internal cache:
+    * 0 = previous position.x
+    * 1 = previous position.y
+    * 2 = previous rotation
+    * 3 = renderID
+    * 4 = fresh? (0 = no, 1 = yes)
+    * 5 = outOfBoundsFired (0 = no, 1 = yes)
+    * 6 = exists (0 = no, 1 = yes)
+    * 7 = fixed to camera (0 = no, 1 = yes)
+    * @property {Int16Array} _cache
+    * @private
+    */
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
+
 };
 
 Phaser.TileSprite.prototype = Object.create(PIXI.TilingSprite.prototype);
@@ -107,12 +127,12 @@ Phaser.TileSprite.prototype.preUpdate = function() {
 
     if (this._scroll.x !== 0)
     {
-        this.tilePosition.x += Math.floor(this._scroll.x * this.game.time.physicsElapsed);
+        this.tilePosition.x += this._scroll.x * this.game.time.physicsElapsed;
     }
 
     if (this._scroll.y !== 0)
     {
-        this.tilePosition.y += Math.floor(this._scroll.y * this.game.time.physicsElapsed);
+        this.tilePosition.y += this._scroll.y * this.game.time.physicsElapsed;
     }
 
     return true;
@@ -137,10 +157,11 @@ Phaser.TileSprite.prototype.update = function() {
 */
 Phaser.TileSprite.prototype.postUpdate = function() {
 
-    if (this.fixedToCamera)
+    //  Fixed to Camera?
+    if (this._cache[7] === 1)
     {
-        this.position.x = this.game.camera.view.x + this.x;
-        this.position.y = this.game.camera.view.y + this.y;
+        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
     }
 
 }
@@ -354,6 +375,37 @@ Object.defineProperty(Phaser.TileSprite.prototype, "frameName", {
             this.animations.frameName = value;
         }
 
+    }
+
+});
+
+/**
+* An TileSprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in TileSprite.cameraOffset.
+* Note that the cameraOffset values are in addition to any parent in the display list.
+* So if this TileSprite was in a Group that has x: 200, then this will be added to the cameraOffset.x
+*
+* @name Phaser.TileSprite#fixedToCamera
+* @property {boolean} fixedToCamera - Set to true to fix this TileSprite to the Camera at its current world coordinates.
+*/
+Object.defineProperty(Phaser.TileSprite.prototype, "fixedToCamera", {
+    
+    get: function () {
+
+        return !!this._cache[7];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            this._cache[7] = 1;
+            this.cameraOffset.set(this.x, this.y);
+        }
+        else
+        {
+            this._cache[7] = 0;
+        }
     }
 
 });

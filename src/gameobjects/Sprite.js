@@ -93,14 +93,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.autoCull = false;
 
     /**
-    * A Sprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera.
-    * Note that if this Image is a child of a display object that has changed its position then the offset will be calculated from that.
-    * @property {boolean} fixedToCamera - Fixes this Sprite to the Camera.
-    * @default
-    */
-    this.fixedToCamera = false;
-
-    /**
     * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
     */
     this.input = null;
@@ -145,6 +137,11 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.debug = false;
 
     /**
+    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    */
+    this.cameraOffset = new Phaser.Point();
+
+    /**
     * A small internal cache:
     * 0 = previous position.x
     * 1 = previous position.y
@@ -153,10 +150,11 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * 4 = fresh? (0 = no, 1 = yes)
     * 5 = outOfBoundsFired (0 = no, 1 = yes)
     * 6 = exists (0 = no, 1 = yes)
+    * 7 = fixed to camera (0 = no, 1 = yes)
     * @property {Int16Array} _cache
     * @private
     */
-    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1]);
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
 
     /**
     * @property {Phaser.Rectangle} _bounds - Internal cache var.
@@ -301,12 +299,13 @@ Phaser.Sprite.prototype.postUpdate = function() {
         {
             this.body.postUpdate();
         }
+    }
 
-        if (this.fixedToCamera)
-        {
-            // this.position.x = this.game.camera.view.x + this.x;
-            // this.position.y = this.game.camera.view.y + this.y;
-        }
+    //  Fixed to Camera?
+    if (this._cache[7] === 1)
+    {
+        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
     }
 
 };
@@ -384,12 +383,12 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
 };
 
 /**
-* Crop allows you to crop the texture used to display this Image.
-* Cropping takes place from the top-left of the Image and can be modified in real-time by providing an updated rectangle object.
+* Crop allows you to crop the texture used to display this Sprite.
+* Cropping takes place from the top-left of the Sprite and can be modified in real-time by providing an updated rectangle object.
 *
 * @method Phaser.Sprite#crop
 * @memberof Phaser.Sprite
-* @param {Phaser.Rectangle} rect - The Rectangle to crop the Image to. Pass null or no parameters to clear a previously set crop rectangle.
+* @param {Phaser.Rectangle} rect - The Rectangle to crop the Sprite to. Pass null or no parameters to clear a previously set crop rectangle.
 */
 Phaser.Sprite.prototype.crop = function(rect) {
 
@@ -714,10 +713,10 @@ Object.defineProperty(Phaser.Sprite.prototype, "deltaZ", {
 });
 
 /**
-* Checks if the Image bounds are within the game world, otherwise false if fully outside of it.
+* Checks if the Sprite bounds are within the game world, otherwise false if fully outside of it.
 *
 * @name Phaser.Sprite#inWorld
-* @property {boolean} inWorld - True if the Image bounds is within the game world, even if only partially. Otherwise false if fully outside of it.
+* @property {boolean} inWorld - True if the Sprite bounds is within the game world, even if only partially. Otherwise false if fully outside of it.
 * @readonly
 */
 Object.defineProperty(Phaser.Sprite.prototype, "inWorld", {
@@ -731,10 +730,10 @@ Object.defineProperty(Phaser.Sprite.prototype, "inWorld", {
 });
 
 /**
-* Checks if the Image bounds are within the game camera, otherwise false if fully outside of it.
+* Checks if the Sprite bounds are within the game camera, otherwise false if fully outside of it.
 *
 * @name Phaser.Sprite#inCamera
-* @property {boolean} inCamera - True if the Image bounds is within the game camera, even if only partially. Otherwise false if fully outside of it.
+* @property {boolean} inCamera - True if the Sprite bounds is within the game camera, even if only partially. Otherwise false if fully outside of it.
 * @readonly
 */
 Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
@@ -912,6 +911,38 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
 
             this.visible = false;
 
+        }
+    }
+
+});
+
+
+/**
+* An Sprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Sprite.cameraOffset.
+* Note that the cameraOffset values are in addition to any parent in the display list.
+* So if this Sprite was in a Group that has x: 200, then this will be added to the cameraOffset.x
+*
+* @name Phaser.Sprite#fixedToCamera
+* @property {boolean} fixedToCamera - Set to true to fix this Sprite to the Camera at its current world coordinates.
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "fixedToCamera", {
+    
+    get: function () {
+
+        return !!this._cache[7];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            this._cache[7] = 1;
+            this.cameraOffset.set(this.x, this.y);
+        }
+        else
+        {
+            this._cache[7] = 0;
         }
     }
 

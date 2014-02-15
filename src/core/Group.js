@@ -89,6 +89,26 @@ Phaser.Group = function (game, parent, name, addToStage) {
 
     this._cursorIndex = 0;
 
+    /**
+    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    */
+    this.cameraOffset = new Phaser.Point();
+
+    /**
+    * A small internal cache:
+    * 0 = previous position.x
+    * 1 = previous position.y
+    * 2 = previous rotation
+    * 3 = renderID
+    * 4 = fresh? (0 = no, 1 = yes)
+    * 5 = outOfBoundsFired (0 = no, 1 = yes)
+    * 6 = exists (0 = no, 1 = yes)
+    * 7 = fixed to camera (0 = no, 1 = yes)
+    * @property {Int16Array} _cache
+    * @private
+    */
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
+
 };
 
 Phaser.Group.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
@@ -708,10 +728,18 @@ Phaser.Group.prototype.callAll = function (method, context) {
 */
 Phaser.Group.prototype.preUpdate = function () {
 
+    if (!this.exists || !this.parent.exists)
+    {
+        this.renderOrderID = -1;
+        return false;
+    }
+
     for (var i = this.children.length - 1; i >= 0; i--)
     {
         this.children[i].preUpdate();
     }
+
+    return true;
 
 }
 
@@ -735,6 +763,13 @@ Phaser.Group.prototype.update = function () {
 * @protected
 */
 Phaser.Group.prototype.postUpdate = function () {
+
+    //  Fixed to Camera?
+    if (this._cache[7] === 1)
+    {
+        this.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
 
     for (var i = this.children.length - 1; i >= 0; i--)
     {
@@ -1173,6 +1208,37 @@ Object.defineProperty(Phaser.Group.prototype, "angle", {
 
     set: function(value) {
         this.rotation = Phaser.Math.degToRad(value);
+    }
+
+});
+
+/**
+* A Group that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Group.cameraOffset.
+* Note that the cameraOffset values are in addition to any parent in the display list.
+* So if this Group was in a Group that has x: 200, then this will be added to the cameraOffset.x
+*
+* @name Phaser.Group#fixedToCamera
+* @property {boolean} fixedToCamera - Set to true to fix this Group to the Camera at its current world coordinates.
+*/
+Object.defineProperty(Phaser.Group.prototype, "fixedToCamera", {
+    
+    get: function () {
+
+        return !!this._cache[7];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            this._cache[7] = 1;
+            this.cameraOffset.set(this.x, this.y);
+        }
+        else
+        {
+            this._cache[7] = 0;
+        }
     }
 
 });
