@@ -16,6 +16,8 @@ var filter;
 
 function create() {
 
+    game.world.setBounds(0, 0, 2000, 600);
+
     background = game.add.sprite(0, 0);
     background.width = 800;
     background.height = 600;
@@ -35,11 +37,12 @@ function create() {
 
 function update() {
 
+    // game.camera.view.x++;
+
     filter.update();
 
     //  Uncomment for coolness :)
     // filter.blueShift -= 0.001;
-
 
 	// font.text = "phaser x: " + game.input.x + " y: " + game.input.y;
 

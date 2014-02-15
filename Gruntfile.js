@@ -193,7 +193,8 @@ module.exports = function (grunt) {
     connect: {
       root: {
         options: {
-          keepalive: true
+          keepalive: true,
+          hostname: '*'
         }
       }
     }
