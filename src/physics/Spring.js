@@ -38,22 +38,22 @@ Phaser.Physics.Spring = function (game, bodyA, bodyB, restLength, stiffness, dam
         damping: damping
     };
 
-    if (typeof worldA !== 'undefined')
+    if (typeof worldA !== 'undefined' && worldA !== null)
     {
         options.worldAnchorA = [ game.math.px2p(worldA[0]), game.math.px2p(worldA[1]) ];
     }
 
-    if (typeof worldB !== 'undefined')
+    if (typeof worldB !== 'undefined' && worldB !== null)
     {
         options.worldAnchorB = [ game.math.px2p(worldB[0]), game.math.px2p(worldB[1]) ];
     }
 
-    if (typeof localA !== 'undefined')
+    if (typeof localA !== 'undefined' && localA !== null)
     {
         options.localAnchorA = [ game.math.px2p(localA[0]), game.math.px2p(localA[1]) ];
     }
 
-    if (typeof localB !== 'undefined')
+    if (typeof localB !== 'undefined' && localB !== null)
     {
         options.localAnchorB = [ game.math.px2p(localB[0]), game.math.px2p(localB[1]) ];
     }
