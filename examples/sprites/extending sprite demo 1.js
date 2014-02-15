@@ -1,11 +1,11 @@
-
 //  Here is a custom game object
 MonsterBunny = function (game, x, y, rotateSpeed) {
 
     Phaser.Sprite.call(this, game, x, y, 'bunny');
 
     this.rotateSpeed = rotateSpeed;
-
+    
+    game.add.existing(this);
 };
 
 MonsterBunny.prototype = Object.create(Phaser.Sprite.prototype);
