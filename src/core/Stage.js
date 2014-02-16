@@ -61,6 +61,12 @@ Phaser.Stage = function (game, width, height) {
     */
     this._nextOffsetCheck = 0;
 
+    /**
+    * @property {number} _backgroundColor - Stage background color.
+    * @private
+    */
+    this._backgroundColor;
+
     if (game.config)
     {
         this.parseConfig(game.config);
@@ -276,10 +282,25 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
 }
 
 /**
+* Sets the background color for the stage.
+*
+* @name Phaser.Stage#setBackgroundColor
+* @param {number} backgroundColor - The color of the background, easiest way to pass this in is in hex format like: 0xFFFFFF for white.
+*/
+Phaser.Stage.prototype.setBackgroundColor = function(backgroundColor)
+{
+    this._backgroundColor = backgroundColor || 0x000000;
+    this.backgroundColorSplit = PIXI.hex2rgb(this.backgroundColor);
+    var hex = this._backgroundColor.toString(16);
+    hex = '000000'.substr(0, 6 - hex.length) + hex;
+    this.backgroundColorString = '#' + hex;
+}
+
+/**
 * @name Phaser.Stage#backgroundColor
 * @property {number|string} backgroundColor - Gets and sets the background color of the stage. The color can be given as a number: 0xff0000 or a hex string: '#ff0000'
 */
-Object.defineProperty(Phaser.Stage.prototype, "NEWbackgroundColor", {
+Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 
     get: function () {
         return this._backgroundColor;

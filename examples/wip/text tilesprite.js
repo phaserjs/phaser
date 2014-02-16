@@ -1,6 +1,6 @@
 
-// var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update });
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update });
+// var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
 
 function preload() {
 
@@ -13,6 +13,7 @@ var font;
 var i;
 var background;
 var filter;
+var count = 0;
 
 function create() {
 
@@ -27,15 +28,24 @@ function create() {
     background.filters = [filter];
 
     font = game.add.bitmapFont('knightHawks', 31, 25, Phaser.BitmapFont.TEXT_SET6, 10, 1, 1);
-    font.text = 'phaser was here';
+    font.text = 'phaser ';
 
-    i = game.add.image(0, 0, font);
+    // i = game.add.image(0, 0, font);
 
-    // sprite = game.add.tileSprite(0, 0, 800, 600, font);
+    sprite = game.add.tileSprite(0, 0, 800, 600, font);
 
 }
 
 function update() {
+
+    count += 0.005
+
+    sprite.tileScale.x = 2 + Math.sin(count);
+    sprite.tileScale.y = 2 + Math.cos(count);
+    
+    sprite.tilePosition.x += 1;
+    sprite.tilePosition.y += 1;
+
 
     // game.camera.view.x++;
 
@@ -44,6 +54,7 @@ function update() {
     //  Uncomment for coolness :)
     // filter.blueShift -= 0.001;
 
-	// font.text = "phaser x: " + game.input.x + " y: " + game.input.y;
+	font.text = "  phaser x: " + game.input.x + " y: " + game.input.y;
+    sprite.refreshTexture = true;
 
 }
