@@ -31,9 +31,13 @@ body {
 
 #atombender {
     background: url(../../examples/_site/labs/bg.png) repeat-x;
-    height: 579px;
     overflow: hidden;
     text-align: center;
+}
+
+#atombender img {
+	max-width: 100%;
+	vertical-align: bottom;
 }
 
 #photonstorm {
