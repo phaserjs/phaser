@@ -1511,6 +1511,7 @@ AABB.prototype.extend = function(aabb){
 
 /**
  * Returns true if the given AABB overlaps this AABB.
+ * @method overlaps
  * @param  {AABB} aabb
  * @return {Boolean}
  */
@@ -1968,6 +1969,7 @@ function clearObject(obj){
 /**
  * Throws away the old equations and gets ready to create new
  * @method reset
+ * @param {World} world
  */
 Narrowphase.prototype.reset = function(world){
 
@@ -2105,6 +2107,7 @@ Narrowphase.prototype.createFrictionFromContact = function(c){
 Narrowphase.prototype[Shape.LINE | Shape.CONVEX] =
 Narrowphase.prototype.convexLine = function(bi,si,xi,ai, bj,sj,xj,aj){
     // TODO
+    return 0;
 };
 
 /**
@@ -2123,6 +2126,7 @@ Narrowphase.prototype.convexLine = function(bi,si,xi,ai, bj,sj,xj,aj){
 Narrowphase.prototype[Shape.LINE | Shape.RECTANGLE] =
 Narrowphase.prototype.lineRectangle = function(bi,si,xi,ai, bj,sj,xj,aj){
     // TODO
+    return 0;
 };
 
 /**
@@ -2141,6 +2145,7 @@ Narrowphase.prototype.lineRectangle = function(bi,si,xi,ai, bj,sj,xj,aj){
 Narrowphase.prototype[Shape.CAPSULE | Shape.RECTANGLE] =
 Narrowphase.prototype.rectangleCapsule = function(bi,si,xi,ai, bj,sj,xj,aj){
     // TODO
+    return 0;
 };
 
 /**
@@ -2159,6 +2164,7 @@ Narrowphase.prototype.rectangleCapsule = function(bi,si,xi,ai, bj,sj,xj,aj){
 Narrowphase.prototype[Shape.CAPSULE | Shape.CONVEX] =
 Narrowphase.prototype.convexCapsule = function(bi,si,xi,ai, bj,sj,xj,aj){
     // TODO
+    return 0;
 };
 
 /**
@@ -2177,6 +2183,7 @@ Narrowphase.prototype.convexCapsule = function(bi,si,xi,ai, bj,sj,xj,aj){
 Narrowphase.prototype[Shape.CAPSULE | Shape.LINE] =
 Narrowphase.prototype.lineCapsule = function(bi,si,xi,ai, bj,sj,xj,aj){
     // TODO
+    return 0;
 };
 
 /**
@@ -2195,6 +2202,7 @@ Narrowphase.prototype.lineCapsule = function(bi,si,xi,ai, bj,sj,xj,aj){
 Narrowphase.prototype[Shape.CAPSULE | Shape.CAPSULE] =
 Narrowphase.prototype.capsuleCapsule = function(bi,si,xi,ai, bj,sj,xj,aj){
     // TODO
+    return 0;
 };
 
 /**
@@ -2213,6 +2221,7 @@ Narrowphase.prototype.capsuleCapsule = function(bi,si,xi,ai, bj,sj,xj,aj){
 Narrowphase.prototype[Shape.LINE | Shape.LINE] =
 Narrowphase.prototype.lineLine = function(bi,si,xi,ai, bj,sj,xj,aj){
     // TODO
+    return 0;
 };
 
 /**
@@ -2239,7 +2248,8 @@ Narrowphase.prototype.planeLine = function(planeBody, planeShape, planeOffset, p
         dist = tmp7,
         worldNormal = tmp8,
         worldTangent = tmp9,
-        verts = tmpArray;
+        verts = tmpArray
+        numContacts = 0;
 
     // Get start and end points
     vec2.set(worldVertex0, -lineShape.length/2, 0);
@@ -2277,6 +2287,7 @@ Narrowphase.prototype.planeLine = function(planeBody, planeShape, planeOffset, p
         if(d < 0){
 
             var c = this.createContactEquation(planeBody,lineBody,planeShape,lineShape);
+            numContacts++;
 
             vec2.copy(c.ni, worldNormal);
             vec2.normalize(c.ni,c.ni);
@@ -2301,6 +2312,8 @@ Narrowphase.prototype.planeLine = function(planeBody, planeShape, planeOffset, p
             }
         }
     }
+
+    return numContacts;
 };
 
 Narrowphase.prototype[Shape.PARTICLE | Shape.CAPSULE] =
@@ -2401,7 +2414,7 @@ Narrowphase.prototype.circleLine = function(bi,si,xi,ai, bj,sj,xj,aj, justTest, 
         if(pos > pos0 && pos < pos1){
             // We got contact!
 
-            if(justTest) return true;
+            if(justTest) return 1;
 
             var c = this.createContactEquation(circleBody,lineBody,si,sj);
 
@@ -2422,7 +2435,7 @@ Narrowphase.prototype.circleLine = function(bi,si,xi,ai, bj,sj,xj,aj, justTest, 
                 this.frictionEquations.push(this.createFrictionFromContact(c));
             }
 
-            return true;
+            return 1;
         }
     }
 
@@ -2438,7 +2451,7 @@ Narrowphase.prototype.circleLine = function(bi,si,xi,ai, bj,sj,xj,aj, justTest, 
 
         if(vec2.squaredLength(dist) < (circleRadius+lineRadius)*(circleRadius+lineRadius)){
 
-            if(justTest) return true;
+            if(justTest) return 1;
 
             var c = this.createContactEquation(circleBody,lineBody,si,sj);
 
@@ -2462,11 +2475,11 @@ Narrowphase.prototype.circleLine = function(bi,si,xi,ai, bj,sj,xj,aj, justTest, 
                 this.frictionEquations.push(this.createFrictionFromContact(c));
             }
 
-            return true;
+            return 1;
         }
     }
 
-    return false;
+    return 0;
 };
 
 /**
@@ -2630,7 +2643,7 @@ Narrowphase.prototype.circleConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, justTe
         if(this.enableFriction)
             this.frictionEquations.push( this.createFrictionFromContact(c) );
 
-        return true;
+        return 1;
     }
 
     /*
@@ -2667,7 +2680,7 @@ Narrowphase.prototype.circleConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, justTe
             sub(dist, worldVertex, circleOffset);
             if(vec2.squaredLength(dist) < circleRadius*circleRadius){
 
-                if(justTest) return true;
+                if(justTest) return 1;
 
                 var c = this.createContactEquation(circleBody,convexBody,si,sj);
 
@@ -2689,12 +2702,12 @@ Narrowphase.prototype.circleConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, justTe
                     this.frictionEquations.push(this.createFrictionFromContact(c));
                 }
 
-                return true;
+                return 1;
             }
         }
     }
 
-    return false;
+    return 0;
 };
 
 // Check if a point is in a polygon
@@ -2786,7 +2799,7 @@ Narrowphase.prototype.particleConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, just
 
     // Check if the particle is in the polygon at all
     if(!pointInConvex(particleOffset,convexShape,convexOffset,convexAngle))
-        return false;
+        return 0;
 
     // Check edges first
     var lastCross = null;
@@ -2874,11 +2887,11 @@ Narrowphase.prototype.particleConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, just
         if(this.enableFriction)
             this.frictionEquations.push( this.createFrictionFromContact(c) );
 
-        return true;
+        return 1;
     }
 
 
-    return false;
+    return 0;
 };
 
 /**
@@ -2906,10 +2919,10 @@ Narrowphase.prototype.circleCircle = function(  bi,si,xi,ai, bj,sj,xj,aj, justTe
     sub(dist,xi,xj);
     var r = si.radius + sj.radius;
     if(vec2.squaredLength(dist) > r*r){
-        return false;
+        return 0;
     }
 
-    if(justTest) return true;
+    if(justTest) return 1;
 
     var c = this.createContactEquation(bodyA,bodyB,si,sj);
     sub(c.ni, offsetB, offsetA);
@@ -2929,7 +2942,7 @@ Narrowphase.prototype.circleCircle = function(  bi,si,xi,ai, bj,sj,xj,aj, justTe
     if(this.enableFriction){
         this.frictionEquations.push(this.createFrictionFromContact(c));
     }
-    return true;
+    return 1;
 };
 
 /**
@@ -3003,7 +3016,8 @@ Narrowphase.prototype.planeConvex = function( bi,si,xi,ai, bj,sj,xj,aj ){
                 break;
         }
     }
-    return numReported > 0;
+
+    return numReported;
 };
 
 /**
@@ -3047,8 +3061,8 @@ Narrowphase.prototype.particlePlane = function( bi,si,xi,ai, bj,sj,xj,aj, justTe
 
     var d = dot(dist, worldNormal);
 
-    if(d > 0) return false;
-    if(justTest) return true;
+    if(d > 0) return 0;
+    if(justTest) return 1;
 
     var c = this.createContactEquation(planeBody,particleBody,sj,si);
 
@@ -3068,7 +3082,7 @@ Narrowphase.prototype.particlePlane = function( bi,si,xi,ai, bj,sj,xj,aj, justTe
     if(this.enableFriction){
         this.frictionEquations.push(this.createFrictionFromContact(c));
     }
-    return true;
+    return 1;
 };
 
 /**
@@ -3094,8 +3108,8 @@ Narrowphase.prototype.circleParticle = function(   bi,si,xi,ai, bj,sj,xj,aj, jus
         dist = tmp1;
 
     sub(dist, particleOffset, circleOffset);
-    if(vec2.squaredLength(dist) > circleShape.radius*circleShape.radius) return false;
-    if(justTest) return true;
+    if(vec2.squaredLength(dist) > circleShape.radius*circleShape.radius) return 0;
+    if(justTest) return 1;
 
     var c = this.createContactEquation(circleBody,particleBody,si,sj);
     vec2.copy(c.ni, dist);
@@ -3115,7 +3129,7 @@ Narrowphase.prototype.circleParticle = function(   bi,si,xi,ai, bj,sj,xj,aj, jus
         this.frictionEquations.push(this.createFrictionFromContact(c));
     }
 
-    return true;
+    return 1;
 };
 
 var capsulePlane_tmpCircle = new Circle(1),
@@ -3142,8 +3156,10 @@ Narrowphase.prototype.planeCapsule = function( bi,si,xi,ai, bj,sj,xj,aj ){
     circle.radius = sj.radius;
 
     // Do Narrowphase as two circles
-    this.circlePlane(bj,circle,end1,0, bi,si,xi,ai);
-    this.circlePlane(bj,circle,end2,0, bi,si,xi,ai);
+    var numContacts1 = this.circlePlane(bj,circle,end1,0, bi,si,xi,ai),
+        numContacts2 = this.circlePlane(bj,circle,end2,0, bi,si,xi,ai);
+
+    return numContacts1 + numContacts2;
 };
 
 /**
@@ -3191,7 +3207,7 @@ Narrowphase.prototype.circlePlane = function(   bi,si,xi,ai, bj,sj,xj,aj ){
     // Normal direction distance
     var d = dot(worldNormal, planeToCircle);
 
-    if(d > circleShape.radius) return false; // No overlap. Abort.
+    if(d > circleShape.radius) return 0; // No overlap. Abort.
 
     // Create contact
     var contact = this.createContactEquation(planeBody,circleBody,sj,si);
@@ -3216,7 +3232,7 @@ Narrowphase.prototype.circlePlane = function(   bi,si,xi,ai, bj,sj,xj,aj ){
         this.frictionEquations.push( this.createFrictionFromContact(contact) );
     }
 
-    return true;
+    return 1;
 };
 
 
@@ -3243,10 +3259,11 @@ Narrowphase.prototype.convexConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, precis
         penetrationVec = tmp7,
         dist = tmp8,
         worldNormal = tmp9,
+        numContacts = 0,
         precision = precision || 1e-10;
 
     var found = Narrowphase.findSeparatingAxis(si,xi,ai,sj,xj,aj,sepAxis);
-    if(!found) return false;
+    if(!found) return 0;
 
     // Make sure the separating axis is directed from shape i to shape j
     sub(dist,xj,xi);
@@ -3258,7 +3275,7 @@ Narrowphase.prototype.convexConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, precis
     var closestEdge1 = Narrowphase.getClosestEdge(si,ai,sepAxis,true), // Flipped axis
         closestEdge2 = Narrowphase.getClosestEdge(sj,aj,sepAxis);
 
-    if(closestEdge1==-1 || closestEdge2==-1) return false;
+    if(closestEdge1==-1 || closestEdge2==-1) return 0;
 
     // Loop over the shapes
     for(var k=0; k<2; k++){
@@ -3323,6 +3340,7 @@ Narrowphase.prototype.convexConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, precis
 
                 // Create contact
                 var c = this.createContactEquation(bodyA,bodyB,shapeA,shapeB);
+                numContacts++;
 
                 // Get center edge from body A
                 var v0 = shapeA.vertices[(closestEdgeA)   % shapeA.vertices.length],
@@ -3343,7 +3361,6 @@ Narrowphase.prototype.convexConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, precis
                 var d = dot(c.ni,dist);             // Penetration
                 vec2.scale(penetrationVec, c.ni, d);     // Vector penetration
 
-
                 sub(c.ri, worldPoint, offsetA);
                 sub(c.ri, c.ri, penetrationVec);
                 add(c.ri, c.ri, offsetA);
@@ -3361,6 +3378,8 @@ Narrowphase.prototype.convexConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, precis
             }
         }
     }
+
+    return numContacts;
 };
 
 // .projectConvex is called by other functions, need local tmp vectors
@@ -7592,9 +7611,14 @@ function Convex(vertices){
      * @type {Number}
      */
     this.boundingRadius = 0;
-    this.updateBoundingRadius();
+
 
     Shape.call(this,Shape.CONVEX);
+
+    this.updateBoundingRadius();
+    this.updateArea();
+    if(this.area < 0)
+        throw new Error("Convex vertices must be given in conter-clockwise winding.");
 };
 Convex.prototype = new Shape();
 
@@ -7668,7 +7692,7 @@ Convex.prototype.updateCenterOfMass = function(){
 
         // Get mass for the triangle (density=1 in this case)
         // http://math.stackexchange.com/questions/80198/area-of-triangle-via-vectors
-        var m = decomp.Point.area(a,b,c)
+        var m = Convex.triangleArea(a,b,c)
         totalArea += m;
 
         // Add to center of mass
@@ -7681,76 +7705,24 @@ Convex.prototype.updateCenterOfMass = function(){
 
 /**
  * Compute the mass moment of inertia of the Convex.
- * @method conputeMomentOfInertia
+ * @method computeMomentOfInertia
  * @param  {Number} mass
  * @return {Number}
- * @todo  should use .triangles
+ * @see http://www.gamedev.net/topic/342822-moment-of-inertia-of-a-polygon-2d/
  */
 Convex.prototype.computeMomentOfInertia = function(mass){
-
-    // In short: Triangulate the Convex, compute centroid and inertia of
-    // each sub-triangle. Add up to total using parallel axis theorem.
-
-    var I = 0;
-
-    // Rewrite on polyk notation, array of numbers
-    var polykVerts = [];
-    for(var i=0; i<this.vertices.length; i++){
-        var v = this.vertices[i];
-        polykVerts.push(v[0],v[1]);
+    var denom = 0.0,
+        numer = 0.0,
+        N = this.vertices.length;
+    for(var j = N-1, i = 0; i < N; j = i, i ++){
+        var p0 = this.vertices[j];
+        var p1 = this.vertices[i];
+        var a = Math.abs(vec2.crossLength(p0,p1));
+        var b = vec2.dot(p1,p1) + vec2.dot(p1,p0) + vec2.dot(p0,p0);
+        denom += a * b;
+        numer += a;
     }
-
-    // Triangulate
-    var triangles = polyk.Triangulate(polykVerts);
-
-    // Get total convex area and density
-    var area = polyk.GetArea(polykVerts);
-    this.updateArea();
-    var density = mass / this.area;
-
-    // Temp vectors
-    var a = vec2.create(),
-        b = vec2.create(),
-        c = vec2.create(),
-        centroid = vec2.create(),
-        n = vec2.create(),
-        ac = vec2.create(),
-        ca = vec2.create(),
-        cb = vec2.create(),
-        centroid_times_mass = vec2.create();
-
-    // Loop over all triangles, add their inertia contributions to I
-    for(var i=0; i<triangles.length; i+=3){
-        var id1 = triangles[i],
-            id2 = triangles[i+1],
-            id3 = triangles[i+2];
-
-        // a,b,c are triangle corners
-        vec2.set(a, polykVerts[2*id1], polykVerts[2*id1+1]);
-        vec2.set(b, polykVerts[2*id2], polykVerts[2*id2+1]);
-        vec2.set(c, polykVerts[2*id3], polykVerts[2*id3+1]);
-
-        vec2.centroid(centroid, a, b, c);
-
-        vec2.sub(ca, c, a);
-        vec2.sub(cb, c, b);
-
-        var area_triangle = decomp.Point.area(a,b,c)
-        var base = vec2.length(ca);
-        var height = 2*area_triangle / base; // a=b*h/2 => h=2*a/b
-
-        // Get mass for the triangle
-        var m = area_triangle * density;
-
-        // Get inertia for this triangle: http://answers.yahoo.com/question/index?qid=20080721030038AA3oE1m
-        var I_triangle = m*(base * (Math.pow(height,3))) / 36;
-
-        // Add to total inertia using parallel axis theorem
-        var r2 = vec2.squaredLength(centroid);
-        I += I_triangle + m*r2;
-    }
-
-    return I;
+    return (mass / 6.0) * (denom / numer);
 };
 
 /**
@@ -7770,6 +7742,19 @@ Convex.prototype.updateBoundingRadius = function(){
 };
 
 /**
+ * Get the area of the triangle spanned by the three points a, b, c. The area is positive if the points are given in counter-clockwise order, otherwise negative.
+ * @static
+ * @method triangleArea
+ * @param {Array} a
+ * @param {Array} b
+ * @param {Array} c
+ * @return {Number}
+ */
+Convex.triangleArea = function(a,b,c){
+    return (((b[0] - a[0])*(c[1] - a[1]))-((c[0] - a[0])*(b[1] - a[1]))) * 0.5;
+}
+
+/**
  * Update the .area
  * @method updateArea
  */
@@ -7786,8 +7771,7 @@ Convex.prototype.updateArea = function(){
             c = verts[t[2]];
 
         // Get mass for the triangle (density=1 in this case)
-        // http://math.stackexchange.com/questions/80198/area-of-triangle-via-vectors
-        var m = decomp.Point.area(a,b,c)
+        var m = Convex.triangleArea(a,b,c);
         this.area += m;
     }
 };
@@ -9119,6 +9103,25 @@ function World(options){
      * @type {Boolean}
      */
     this.enableBodySleeping = false;
+
+    this.beginContactEvent = {
+        type:"beginContact",
+        shapeA : null,
+        shapeB : null,
+        bodyA : null,
+        bodyB : null,
+    };
+
+    this.endContactEvent = {
+        type:"endContact",
+        shapeA : null,
+        shapeB : null,
+    };
+
+    // For keeping track of overlapping shapes
+    this.overlappingShapesLastState = { keys:[] };
+    this.overlappingShapesCurrentState = { keys:[] };
+    this.overlappingShapeLookup = { keys:[] };
 };
 World.prototype = new Object(EventEmitter.prototype);
 
@@ -9340,10 +9343,42 @@ World.prototype.internalStep = function(dt){
                     }
                 }
 
-                World.runNarrowphase(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution);
+                this.runNarrowphase(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution);
             }
         }
     }
+
+    // Emit shape end overlap events
+    var last = this.overlappingShapesLastState;
+    for(var i=0; i<last.keys.length; i++){
+        var key = last.keys[i];
+        if(key.indexOf("shape")!=-1)
+            break;
+
+        if(!this.overlappingShapesCurrentState[key]){
+            // Not overlapping any more! Emit event.
+            var e = this.endContactEvent;
+            // TODO: add shapes to the event object
+            e.shapeA = last[key+"_shapeA"];
+            e.shapeB = last[key+"_shapeB"];
+            e.bodyA = last[key+"_bodyA"];
+            e.bodyB = last[key+"_bodyB"];
+            this.emit(e);
+        }
+
+        // Clear old data
+        delete last[key];
+        delete last[key+"_shapeA"];
+        delete last[key+"_shapeB"];
+        delete last[key+"_bodyA"];
+        delete last[key+"_bodyB"];
+    }
+    this.overlappingShapesLastState.keys.length = 0;
+    // Swap state objects & make sure to reuse them
+    var tmp = this.overlappingShapesLastState;
+    this.overlappingShapesLastState = this.overlappingShapesCurrentState;
+    this.overlappingShapesCurrentState = tmp;
+
 
     // Add contact equations to solver
     solver.addEquations(np.contactEquations);
@@ -9440,7 +9475,6 @@ World.integrateBody = function(body,dt){
 
 /**
  * Runs narrowphase for the shape pair i and j.
- * @static
  * @method runNarrowphase
  * @param  {Narrowphase} np
  * @param  {Body} bi
@@ -9453,7 +9487,7 @@ World.integrateBody = function(body,dt){
  * @param  {Number} aj
  * @param  {Number} mu
  */
-World.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution){
+World.prototype.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution){
 
     if(!((si.collisionGroup & sj.collisionMask) !== 0 && (sj.collisionGroup & si.collisionMask) !== 0))
         return;
@@ -9475,14 +9509,44 @@ World.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution){
     np.frictionCoefficient = mu;
     np.restitution = restitution;
 
-    var resolver = np[si.type | sj.type];
+    var resolver = np[si.type | sj.type],
+        numContacts = 0;
     if (resolver) {
         if (si.type < sj.type) {
-            resolver.call(np, bi,si,xiw,aiw, bj,sj,xjw,ajw);
+            numContacts = resolver.call(np, bi,si,xiw,aiw, bj,sj,xjw,ajw);
         } else {
-            resolver.call(np, bj,sj,xjw,ajw, bi,si,xiw,aiw);
+            numContacts = resolver.call(np, bj,sj,xjw,ajw, bi,si,xiw,aiw);
+        }
+
+        if(numContacts > 0){
+            var key = si.id < sj.id ? si.id+" "+ sj.id : sj.id+" "+ si.id;
+            if(!this.overlappingShapesLastState[key]){
+                // Report new shape overlap
+                var e = this.beginContactEvent;
+                e.shapeA = si;
+                e.shapeB = sj;
+                e.bodyA = bi;
+                e.bodyB = bj;
+                this.emit(e);
+                var current = this.overlappingShapesCurrentState;
+                if(!current[key]){
+                    current[key] = true;
+                    current.keys.push(key);
+
+                    // Also store shape & body data
+                    current[key+"_shapeA"] = si;
+                    current.keys.push(key+"_shapeA");
+                    current[key+"_shapeB"] = sj;
+                    current.keys.push(key+"_shapeB");
+                    current[key+"_bodyA"] = bi;
+                    current.keys.push(key+"_bodyA");
+                    current[key+"_bodyB"] = bj;
+                    current.keys.push(key+"_bodyB");
+                }
+            }
         }
     }
+
 };
 
 /**
