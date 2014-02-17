@@ -684,7 +684,7 @@ Phaser.Physics.Body.prototype = {
     */
     p2px: function (v) {
 
-        return v *= -20;
+        return this.game.math.p2px(v);
 
     },
 
@@ -697,7 +697,7 @@ Phaser.Physics.Body.prototype = {
     */
     px2p: function (v) {
 
-        return v * -0.05;
+        return this.game.math.px2p(v);
 
     }
 
