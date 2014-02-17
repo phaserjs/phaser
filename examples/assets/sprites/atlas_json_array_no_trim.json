@@ -2,15 +2,15 @@
 
 {
 	"filename": "cactuar",
-	"frame": {"x":2,"y":205,"w":213,"h":159},
+	"frame": {"x":2,"y":246,"w":231,"h":175},
 	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":0,"y":0,"w":213,"h":159},
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":231,"h":175},
 	"sourceSize": {"w":231,"h":175}
 },
 {
 	"filename": "carrot",
-	"frame": {"x":217,"y":247,"w":22,"h":21},
+	"frame": {"x":543,"y":418,"w":22,"h":21},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":22,"h":21},
@@ -18,7 +18,7 @@
 },
 {
 	"filename": "contra1",
-	"frame": {"x":160,"y":366,"w":83,"h":169},
+	"frame": {"x":335,"y":337,"w":83,"h":169},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":83,"h":169},
@@ -26,7 +26,7 @@
 },
 {
 	"filename": "contra3",
-	"frame": {"x":2,"y":2,"w":246,"h":201},
+	"frame": {"x":243,"y":2,"w":246,"h":201},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":246,"h":201},
@@ -34,7 +34,7 @@
 },
 {
 	"filename": "darkwing_crazy",
-	"frame": {"x":431,"y":364,"w":53,"h":49},
+	"frame": {"x":649,"y":2,"w":53,"h":49},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":53,"h":49},
@@ -42,7 +42,7 @@
 },
 {
 	"filename": "diamond",
-	"frame": {"x":194,"y":571,"w":32,"h":28},
+	"frame": {"x":2,"y":477,"w":32,"h":28},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":28},
@@ -50,7 +50,7 @@
 },
 {
 	"filename": "eggplant",
-	"frame": {"x":491,"y":72,"w":16,"h":21},
+	"frame": {"x":649,"y":113,"w":16,"h":21},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":21},
@@ -58,7 +58,7 @@
 },
 {
 	"filename": "firstaid",
-	"frame": {"x":160,"y":547,"w":32,"h":32},
+	"frame": {"x":52,"y":423,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -66,7 +66,7 @@
 },
 {
 	"filename": "ladycop",
-	"frame": {"x":2,"y":736,"w":87,"h":231},
+	"frame": {"x":620,"y":228,"w":87,"h":231},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":87,"h":231},
@@ -74,7 +74,7 @@
 },
 {
 	"filename": "melon",
-	"frame": {"x":217,"y":344,"w":20,"h":20},
+	"frame": {"x":567,"y":418,"w":20,"h":20},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":20,"h":20},
@@ -82,7 +82,7 @@
 },
 {
 	"filename": "mushroom",
-	"frame": {"x":217,"y":300,"w":21,"h":21},
+	"frame": {"x":86,"y":423,"w":21,"h":21},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":21,"h":21},
@@ -90,7 +90,7 @@
 },
 {
 	"filename": "nanoha_taiken_blue",
-	"frame": {"x":2,"y":366,"w":156,"h":224},
+	"frame": {"x":491,"y":2,"w":156,"h":224},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":156,"h":224},
@@ -98,7 +98,7 @@
 },
 {
 	"filename": "onion",
-	"frame": {"x":217,"y":323,"w":21,"h":19},
+	"frame": {"x":109,"y":423,"w":21,"h":19},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":21,"h":19},
@@ -106,7 +106,7 @@
 },
 {
 	"filename": "oz_pov_melting_disk",
-	"frame": {"x":431,"y":246,"w":62,"h":116},
+	"frame": {"x":421,"y":205,"w":62,"h":116},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":62,"h":116},
@@ -114,7 +114,7 @@
 },
 {
 	"filename": "pangball",
-	"frame": {"x":195,"y":537,"w":32,"h":32},
+	"frame": {"x":649,"y":53,"w":32,"h":32},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
@@ -122,7 +122,7 @@
 },
 {
 	"filename": "pepper",
-	"frame": {"x":491,"y":2,"w":19,"h":24},
+	"frame": {"x":649,"y":87,"w":19,"h":24},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":19,"h":24},
@@ -130,7 +130,7 @@
 },
 {
 	"filename": "phaser-dude",
-	"frame": {"x":217,"y":205,"w":27,"h":40},
+	"frame": {"x":514,"y":418,"w":27,"h":40},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":27,"h":40},
@@ -138,7 +138,7 @@
 },
 {
 	"filename": "phaser_tiny",
-	"frame": {"x":160,"y":537,"w":33,"h":8},
+	"frame": {"x":421,"y":323,"w":33,"h":8},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":33,"h":8},
@@ -146,7 +146,7 @@
 },
 {
 	"filename": "pineapple",
-	"frame": {"x":491,"y":47,"w":16,"h":23},
+	"frame": {"x":683,"y":53,"w":16,"h":23},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":23},
@@ -154,15 +154,15 @@
 },
 {
 	"filename": "shocktroopers_lulu2",
-	"frame": {"x":229,"y":546,"w":131,"h":188},
+	"frame": {"x":485,"y":228,"w":133,"h":188},
 	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":1,"y":0,"w":131,"h":188},
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":133,"h":188},
 	"sourceSize": {"w":133,"h":188}
 },
 {
 	"filename": "slime",
-	"frame": {"x":431,"y":415,"w":48,"h":52},
+	"frame": {"x":2,"y":423,"w":48,"h":52},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":52},
@@ -170,7 +170,7 @@
 },
 {
 	"filename": "sonic_havok_sanity",
-	"frame": {"x":403,"y":469,"w":98,"h":167},
+	"frame": {"x":235,"y":337,"w":98,"h":167},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":98,"h":167},
@@ -178,15 +178,15 @@
 },
 {
 	"filename": "spyro",
-	"frame": {"x":245,"y":430,"w":156,"h":114},
+	"frame": {"x":243,"y":205,"w":176,"h":130},
 	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":0,"y":0,"w":156,"h":114},
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":176,"h":130},
 	"sourceSize": {"w":176,"h":130}
 },
 {
 	"filename": "thrust_ship",
-	"frame": {"x":217,"y":270,"w":21,"h":28},
+	"frame": {"x":514,"y":460,"w":21,"h":28},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":21,"h":28},
@@ -194,7 +194,7 @@
 },
 {
 	"filename": "titan_mech",
-	"frame": {"x":250,"y":2,"w":239,"h":242},
+	"frame": {"x":2,"y":2,"w":239,"h":242},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":239,"h":242},
@@ -202,7 +202,7 @@
 },
 {
 	"filename": "tomato",
-	"frame": {"x":491,"y":28,"w":18,"h":17},
+	"frame": {"x":52,"y":457,"w":18,"h":17},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":18,"h":17},
@@ -210,19 +210,19 @@
 },
 {
 	"filename": "wizball",
-	"frame": {"x":246,"y":246,"w":183,"h":182},
+	"frame": {"x":420,"y":418,"w":92,"h":90},
 	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":4,"y":2,"w":183,"h":182},
-	"sourceSize": {"w":195,"h":188}
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":92,"h":90},
+	"sourceSize": {"w":92,"h":90}
 }],
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker ",
 	"version": "1.0",
-	"image": "atlas_json_array_trimmed.png",
+	"image": "atlas_array_no_trim.png",
 	"format": "RGBA8888",
-	"size": {"w":512,"h":1024},
+	"size": {"w":709,"h":510},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:c3013af70e8e46c48c1f140e4eb1a651:1/1$"
+	"smartupdate": "$TexturePacker:SmartUpdate:85a06f70f3a4b0203f2a8e85af574dd8:1e240ffed241fc58aca26b0e5d350d80:39425ed36a102a084be538f400103b94$"
 }
 }
