@@ -817,7 +817,7 @@ Phaser.Physics.Arcade.prototype = {
 
         if (a.width <= 0 || a.height <= 0 || b.width <= 0 || b.height <= 0)
         {
-            result = false;
+            return false;
         }
 
         result = !(a.right < b.left || a.bottom < b.top || a.left > b.right || a.top > b.bottom);
@@ -827,6 +827,7 @@ Phaser.Physics.Arcade.prototype = {
             a.removeContact(b);
         }
 
+        return result;
     },
 
     /**
