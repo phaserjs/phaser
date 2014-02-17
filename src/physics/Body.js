@@ -531,28 +531,24 @@ Phaser.Physics.Body.prototype = {
 
         points = Array.prototype.slice.call(arguments, 1);
 
-        var path;
+        var path = [];
 
         //  Did they pass in a single array of points?
         if (points.length === 1 && Array.isArray(points[0]))
         {
-            path = points[0];
+            path = path.concat(points[0]);
         }
         else if (Array.isArray(points[0]))
         {
-            path = points;
+            path = path.concat(points);
         }
         else if (typeof points[0] === 'number')
         {
-            var temp = [];
-
             //  We've a list of numbers
             for (var i = 0, len = points.length; i < len; i += 2)
             {
-                temp.push([points[i], points[i + 1]]);
+                path.push([points[i], points[i + 1]]);
             }
-
-            path = temp;
         }
 
         //  Now process them into p2 values

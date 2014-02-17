@@ -1520,6 +1520,7 @@ AABB.prototype.extend = function(aabb){
 
 /**
  * Returns true if the given AABB overlaps this AABB.
+ * @method overlaps
  * @param  {AABB} aabb
  * @return {Boolean}
  */
@@ -1977,6 +1978,7 @@ function clearObject(obj){
 /**
  * Throws away the old equations and gets ready to create new
  * @method reset
+ * @param {World} world
  */
 Narrowphase.prototype.reset = function(world){
 
@@ -2114,6 +2116,7 @@ Narrowphase.prototype.createFrictionFromContact = function(c){
 Narrowphase.prototype[Shape.LINE | Shape.CONVEX] =
 Narrowphase.prototype.convexLine = function(bi,si,xi,ai, bj,sj,xj,aj){
     // TODO
+    return 0;
 };
 
 /**
@@ -2132,6 +2135,7 @@ Narrowphase.prototype.convexLine = function(bi,si,xi,ai, bj,sj,xj,aj){
 Narrowphase.prototype[Shape.LINE | Shape.RECTANGLE] =
 Narrowphase.prototype.lineRectangle = function(bi,si,xi,ai, bj,sj,xj,aj){
     // TODO
+    return 0;
 };
 
 /**
@@ -2150,6 +2154,7 @@ Narrowphase.prototype.lineRectangle = function(bi,si,xi,ai, bj,sj,xj,aj){
 Narrowphase.prototype[Shape.CAPSULE | Shape.RECTANGLE] =
 Narrowphase.prototype.rectangleCapsule = function(bi,si,xi,ai, bj,sj,xj,aj){
     // TODO
+    return 0;
 };
 
 /**
@@ -2168,6 +2173,7 @@ Narrowphase.prototype.rectangleCapsule = function(bi,si,xi,ai, bj,sj,xj,aj){
 Narrowphase.prototype[Shape.CAPSULE | Shape.CONVEX] =
 Narrowphase.prototype.convexCapsule = function(bi,si,xi,ai, bj,sj,xj,aj){
     // TODO
+    return 0;
 };
 
 /**
@@ -2186,6 +2192,7 @@ Narrowphase.prototype.convexCapsule = function(bi,si,xi,ai, bj,sj,xj,aj){
 Narrowphase.prototype[Shape.CAPSULE | Shape.LINE] =
 Narrowphase.prototype.lineCapsule = function(bi,si,xi,ai, bj,sj,xj,aj){
     // TODO
+    return 0;
 };
 
 /**
@@ -2204,6 +2211,7 @@ Narrowphase.prototype.lineCapsule = function(bi,si,xi,ai, bj,sj,xj,aj){
 Narrowphase.prototype[Shape.CAPSULE | Shape.CAPSULE] =
 Narrowphase.prototype.capsuleCapsule = function(bi,si,xi,ai, bj,sj,xj,aj){
     // TODO
+    return 0;
 };
 
 /**
@@ -2222,6 +2230,7 @@ Narrowphase.prototype.capsuleCapsule = function(bi,si,xi,ai, bj,sj,xj,aj){
 Narrowphase.prototype[Shape.LINE | Shape.LINE] =
 Narrowphase.prototype.lineLine = function(bi,si,xi,ai, bj,sj,xj,aj){
     // TODO
+    return 0;
 };
 
 /**
@@ -2248,7 +2257,8 @@ Narrowphase.prototype.planeLine = function(planeBody, planeShape, planeOffset, p
         dist = tmp7,
         worldNormal = tmp8,
         worldTangent = tmp9,
-        verts = tmpArray;
+        verts = tmpArray
+        numContacts = 0;
 
     // Get start and end points
     vec2.set(worldVertex0, -lineShape.length/2, 0);
@@ -2286,6 +2296,7 @@ Narrowphase.prototype.planeLine = function(planeBody, planeShape, planeOffset, p
         if(d < 0){
 
             var c = this.createContactEquation(planeBody,lineBody,planeShape,lineShape);
+            numContacts++;
 
             vec2.copy(c.ni, worldNormal);
             vec2.normalize(c.ni,c.ni);
@@ -2310,6 +2321,8 @@ Narrowphase.prototype.planeLine = function(planeBody, planeShape, planeOffset, p
             }
         }
     }
+
+    return numContacts;
 };
 
 Narrowphase.prototype[Shape.PARTICLE | Shape.CAPSULE] =
@@ -2410,7 +2423,7 @@ Narrowphase.prototype.circleLine = function(bi,si,xi,ai, bj,sj,xj,aj, justTest, 
         if(pos > pos0 && pos < pos1){
             // We got contact!
 
-            if(justTest) return true;
+            if(justTest) return 1;
 
             var c = this.createContactEquation(circleBody,lineBody,si,sj);
 
@@ -2431,7 +2444,7 @@ Narrowphase.prototype.circleLine = function(bi,si,xi,ai, bj,sj,xj,aj, justTest, 
                 this.frictionEquations.push(this.createFrictionFromContact(c));
             }
 
-            return true;
+            return 1;
         }
     }
 
@@ -2447,7 +2460,7 @@ Narrowphase.prototype.circleLine = function(bi,si,xi,ai, bj,sj,xj,aj, justTest, 
 
         if(vec2.squaredLength(dist) < (circleRadius+lineRadius)*(circleRadius+lineRadius)){
 
-            if(justTest) return true;
+            if(justTest) return 1;
 
             var c = this.createContactEquation(circleBody,lineBody,si,sj);
 
@@ -2471,11 +2484,11 @@ Narrowphase.prototype.circleLine = function(bi,si,xi,ai, bj,sj,xj,aj, justTest, 
                 this.frictionEquations.push(this.createFrictionFromContact(c));
             }
 
-            return true;
+            return 1;
         }
     }
 
-    return false;
+    return 0;
 };
 
 /**
@@ -2639,7 +2652,7 @@ Narrowphase.prototype.circleConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, justTe
         if(this.enableFriction)
             this.frictionEquations.push( this.createFrictionFromContact(c) );
 
-        return true;
+        return 1;
     }
 
     /*
@@ -2676,7 +2689,7 @@ Narrowphase.prototype.circleConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, justTe
             sub(dist, worldVertex, circleOffset);
             if(vec2.squaredLength(dist) < circleRadius*circleRadius){
 
-                if(justTest) return true;
+                if(justTest) return 1;
 
                 var c = this.createContactEquation(circleBody,convexBody,si,sj);
 
@@ -2698,12 +2711,12 @@ Narrowphase.prototype.circleConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, justTe
                     this.frictionEquations.push(this.createFrictionFromContact(c));
                 }
 
-                return true;
+                return 1;
             }
         }
     }
 
-    return false;
+    return 0;
 };
 
 // Check if a point is in a polygon
@@ -2795,7 +2808,7 @@ Narrowphase.prototype.particleConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, just
 
     // Check if the particle is in the polygon at all
     if(!pointInConvex(particleOffset,convexShape,convexOffset,convexAngle))
-        return false;
+        return 0;
 
     // Check edges first
     var lastCross = null;
@@ -2883,11 +2896,11 @@ Narrowphase.prototype.particleConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, just
         if(this.enableFriction)
             this.frictionEquations.push( this.createFrictionFromContact(c) );
 
-        return true;
+        return 1;
     }
 
 
-    return false;
+    return 0;
 };
 
 /**
@@ -2915,10 +2928,10 @@ Narrowphase.prototype.circleCircle = function(  bi,si,xi,ai, bj,sj,xj,aj, justTe
     sub(dist,xi,xj);
     var r = si.radius + sj.radius;
     if(vec2.squaredLength(dist) > r*r){
-        return false;
+        return 0;
     }
 
-    if(justTest) return true;
+    if(justTest) return 1;
 
     var c = this.createContactEquation(bodyA,bodyB,si,sj);
     sub(c.ni, offsetB, offsetA);
@@ -2938,7 +2951,7 @@ Narrowphase.prototype.circleCircle = function(  bi,si,xi,ai, bj,sj,xj,aj, justTe
     if(this.enableFriction){
         this.frictionEquations.push(this.createFrictionFromContact(c));
     }
-    return true;
+    return 1;
 };
 
 /**
@@ -3012,7 +3025,8 @@ Narrowphase.prototype.planeConvex = function( bi,si,xi,ai, bj,sj,xj,aj ){
                 break;
         }
     }
-    return numReported > 0;
+
+    return numReported;
 };
 
 /**
@@ -3056,8 +3070,8 @@ Narrowphase.prototype.particlePlane = function( bi,si,xi,ai, bj,sj,xj,aj, justTe
 
     var d = dot(dist, worldNormal);
 
-    if(d > 0) return false;
-    if(justTest) return true;
+    if(d > 0) return 0;
+    if(justTest) return 1;
 
     var c = this.createContactEquation(planeBody,particleBody,sj,si);
 
@@ -3077,7 +3091,7 @@ Narrowphase.prototype.particlePlane = function( bi,si,xi,ai, bj,sj,xj,aj, justTe
     if(this.enableFriction){
         this.frictionEquations.push(this.createFrictionFromContact(c));
     }
-    return true;
+    return 1;
 };
 
 /**
@@ -3103,8 +3117,8 @@ Narrowphase.prototype.circleParticle = function(   bi,si,xi,ai, bj,sj,xj,aj, jus
         dist = tmp1;
 
     sub(dist, particleOffset, circleOffset);
-    if(vec2.squaredLength(dist) > circleShape.radius*circleShape.radius) return false;
-    if(justTest) return true;
+    if(vec2.squaredLength(dist) > circleShape.radius*circleShape.radius) return 0;
+    if(justTest) return 1;
 
     var c = this.createContactEquation(circleBody,particleBody,si,sj);
     vec2.copy(c.ni, dist);
@@ -3124,7 +3138,7 @@ Narrowphase.prototype.circleParticle = function(   bi,si,xi,ai, bj,sj,xj,aj, jus
         this.frictionEquations.push(this.createFrictionFromContact(c));
     }
 
-    return true;
+    return 1;
 };
 
 var capsulePlane_tmpCircle = new Circle(1),
@@ -3151,8 +3165,10 @@ Narrowphase.prototype.planeCapsule = function( bi,si,xi,ai, bj,sj,xj,aj ){
     circle.radius = sj.radius;
 
     // Do Narrowphase as two circles
-    this.circlePlane(bj,circle,end1,0, bi,si,xi,ai);
-    this.circlePlane(bj,circle,end2,0, bi,si,xi,ai);
+    var numContacts1 = this.circlePlane(bj,circle,end1,0, bi,si,xi,ai),
+        numContacts2 = this.circlePlane(bj,circle,end2,0, bi,si,xi,ai);
+
+    return numContacts1 + numContacts2;
 };
 
 /**
@@ -3200,7 +3216,7 @@ Narrowphase.prototype.circlePlane = function(   bi,si,xi,ai, bj,sj,xj,aj ){
     // Normal direction distance
     var d = dot(worldNormal, planeToCircle);
 
-    if(d > circleShape.radius) return false; // No overlap. Abort.
+    if(d > circleShape.radius) return 0; // No overlap. Abort.
 
     // Create contact
     var contact = this.createContactEquation(planeBody,circleBody,sj,si);
@@ -3225,7 +3241,7 @@ Narrowphase.prototype.circlePlane = function(   bi,si,xi,ai, bj,sj,xj,aj ){
         this.frictionEquations.push( this.createFrictionFromContact(contact) );
     }
 
-    return true;
+    return 1;
 };
 
 
@@ -3252,10 +3268,11 @@ Narrowphase.prototype.convexConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, precis
         penetrationVec = tmp7,
         dist = tmp8,
         worldNormal = tmp9,
+        numContacts = 0,
         precision = precision || 1e-10;
 
     var found = Narrowphase.findSeparatingAxis(si,xi,ai,sj,xj,aj,sepAxis);
-    if(!found) return false;
+    if(!found) return 0;
 
     // Make sure the separating axis is directed from shape i to shape j
     sub(dist,xj,xi);
@@ -3267,7 +3284,7 @@ Narrowphase.prototype.convexConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, precis
     var closestEdge1 = Narrowphase.getClosestEdge(si,ai,sepAxis,true), // Flipped axis
         closestEdge2 = Narrowphase.getClosestEdge(sj,aj,sepAxis);
 
-    if(closestEdge1==-1 || closestEdge2==-1) return false;
+    if(closestEdge1==-1 || closestEdge2==-1) return 0;
 
     // Loop over the shapes
     for(var k=0; k<2; k++){
@@ -3332,6 +3349,7 @@ Narrowphase.prototype.convexConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, precis
 
                 // Create contact
                 var c = this.createContactEquation(bodyA,bodyB,shapeA,shapeB);
+                numContacts++;
 
                 // Get center edge from body A
                 var v0 = shapeA.vertices[(closestEdgeA)   % shapeA.vertices.length],
@@ -3352,7 +3370,6 @@ Narrowphase.prototype.convexConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, precis
                 var d = dot(c.ni,dist);             // Penetration
                 vec2.scale(penetrationVec, c.ni, d);     // Vector penetration
 
-
                 sub(c.ri, worldPoint, offsetA);
                 sub(c.ri, c.ri, penetrationVec);
                 add(c.ri, c.ri, offsetA);
@@ -3370,6 +3387,8 @@ Narrowphase.prototype.convexConvex = function(  bi,si,xi,ai, bj,sj,xj,aj, precis
             }
         }
     }
+
+    return numContacts;
 };
 
 // .projectConvex is called by other functions, need local tmp vectors
@@ -7601,9 +7620,14 @@ function Convex(vertices){
      * @type {Number}
      */
     this.boundingRadius = 0;
-    this.updateBoundingRadius();
+
 
     Shape.call(this,Shape.CONVEX);
+
+    this.updateBoundingRadius();
+    this.updateArea();
+    if(this.area < 0)
+        throw new Error("Convex vertices must be given in conter-clockwise winding.");
 };
 Convex.prototype = new Shape();
 
@@ -7677,7 +7701,7 @@ Convex.prototype.updateCenterOfMass = function(){
 
         // Get mass for the triangle (density=1 in this case)
         // http://math.stackexchange.com/questions/80198/area-of-triangle-via-vectors
-        var m = decomp.Point.area(a,b,c)
+        var m = Convex.triangleArea(a,b,c)
         totalArea += m;
 
         // Add to center of mass
@@ -7690,76 +7714,24 @@ Convex.prototype.updateCenterOfMass = function(){
 
 /**
  * Compute the mass moment of inertia of the Convex.
- * @method conputeMomentOfInertia
+ * @method computeMomentOfInertia
  * @param  {Number} mass
  * @return {Number}
- * @todo  should use .triangles
+ * @see http://www.gamedev.net/topic/342822-moment-of-inertia-of-a-polygon-2d/
  */
 Convex.prototype.computeMomentOfInertia = function(mass){
-
-    // In short: Triangulate the Convex, compute centroid and inertia of
-    // each sub-triangle. Add up to total using parallel axis theorem.
-
-    var I = 0;
-
-    // Rewrite on polyk notation, array of numbers
-    var polykVerts = [];
-    for(var i=0; i<this.vertices.length; i++){
-        var v = this.vertices[i];
-        polykVerts.push(v[0],v[1]);
+    var denom = 0.0,
+        numer = 0.0,
+        N = this.vertices.length;
+    for(var j = N-1, i = 0; i < N; j = i, i ++){
+        var p0 = this.vertices[j];
+        var p1 = this.vertices[i];
+        var a = Math.abs(vec2.crossLength(p0,p1));
+        var b = vec2.dot(p1,p1) + vec2.dot(p1,p0) + vec2.dot(p0,p0);
+        denom += a * b;
+        numer += a;
     }
-
-    // Triangulate
-    var triangles = polyk.Triangulate(polykVerts);
-
-    // Get total convex area and density
-    var area = polyk.GetArea(polykVerts);
-    this.updateArea();
-    var density = mass / this.area;
-
-    // Temp vectors
-    var a = vec2.create(),
-        b = vec2.create(),
-        c = vec2.create(),
-        centroid = vec2.create(),
-        n = vec2.create(),
-        ac = vec2.create(),
-        ca = vec2.create(),
-        cb = vec2.create(),
-        centroid_times_mass = vec2.create();
-
-    // Loop over all triangles, add their inertia contributions to I
-    for(var i=0; i<triangles.length; i+=3){
-        var id1 = triangles[i],
-            id2 = triangles[i+1],
-            id3 = triangles[i+2];
-
-        // a,b,c are triangle corners
-        vec2.set(a, polykVerts[2*id1], polykVerts[2*id1+1]);
-        vec2.set(b, polykVerts[2*id2], polykVerts[2*id2+1]);
-        vec2.set(c, polykVerts[2*id3], polykVerts[2*id3+1]);
-
-        vec2.centroid(centroid, a, b, c);
-
-        vec2.sub(ca, c, a);
-        vec2.sub(cb, c, b);
-
-        var area_triangle = decomp.Point.area(a,b,c)
-        var base = vec2.length(ca);
-        var height = 2*area_triangle / base; // a=b*h/2 => h=2*a/b
-
-        // Get mass for the triangle
-        var m = area_triangle * density;
-
-        // Get inertia for this triangle: http://answers.yahoo.com/question/index?qid=20080721030038AA3oE1m
-        var I_triangle = m*(base * (Math.pow(height,3))) / 36;
-
-        // Add to total inertia using parallel axis theorem
-        var r2 = vec2.squaredLength(centroid);
-        I += I_triangle + m*r2;
-    }
-
-    return I;
+    return (mass / 6.0) * (denom / numer);
 };
 
 /**
@@ -7779,6 +7751,19 @@ Convex.prototype.updateBoundingRadius = function(){
 };
 
 /**
+ * Get the area of the triangle spanned by the three points a, b, c. The area is positive if the points are given in counter-clockwise order, otherwise negative.
+ * @static
+ * @method triangleArea
+ * @param {Array} a
+ * @param {Array} b
+ * @param {Array} c
+ * @return {Number}
+ */
+Convex.triangleArea = function(a,b,c){
+    return (((b[0] - a[0])*(c[1] - a[1]))-((c[0] - a[0])*(b[1] - a[1]))) * 0.5;
+}
+
+/**
  * Update the .area
  * @method updateArea
  */
@@ -7795,8 +7780,7 @@ Convex.prototype.updateArea = function(){
             c = verts[t[2]];
 
         // Get mass for the triangle (density=1 in this case)
-        // http://math.stackexchange.com/questions/80198/area-of-triangle-via-vectors
-        var m = decomp.Point.area(a,b,c)
+        var m = Convex.triangleArea(a,b,c);
         this.area += m;
     }
 };
@@ -9128,6 +9112,25 @@ function World(options){
      * @type {Boolean}
      */
     this.enableBodySleeping = false;
+
+    this.beginContactEvent = {
+        type:"beginContact",
+        shapeA : null,
+        shapeB : null,
+        bodyA : null,
+        bodyB : null,
+    };
+
+    this.endContactEvent = {
+        type:"endContact",
+        shapeA : null,
+        shapeB : null,
+    };
+
+    // For keeping track of overlapping shapes
+    this.overlappingShapesLastState = { keys:[] };
+    this.overlappingShapesCurrentState = { keys:[] };
+    this.overlappingShapeLookup = { keys:[] };
 };
 World.prototype = new Object(EventEmitter.prototype);
 
@@ -9349,10 +9352,42 @@ World.prototype.internalStep = function(dt){
                     }
                 }
 
-                World.runNarrowphase(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution);
+                this.runNarrowphase(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution);
             }
         }
     }
+
+    // Emit shape end overlap events
+    var last = this.overlappingShapesLastState;
+    for(var i=0; i<last.keys.length; i++){
+        var key = last.keys[i];
+        if(key.indexOf("shape")!=-1)
+            break;
+
+        if(!this.overlappingShapesCurrentState[key]){
+            // Not overlapping any more! Emit event.
+            var e = this.endContactEvent;
+            // TODO: add shapes to the event object
+            e.shapeA = last[key+"_shapeA"];
+            e.shapeB = last[key+"_shapeB"];
+            e.bodyA = last[key+"_bodyA"];
+            e.bodyB = last[key+"_bodyB"];
+            this.emit(e);
+        }
+
+        // Clear old data
+        delete last[key];
+        delete last[key+"_shapeA"];
+        delete last[key+"_shapeB"];
+        delete last[key+"_bodyA"];
+        delete last[key+"_bodyB"];
+    }
+    this.overlappingShapesLastState.keys.length = 0;
+    // Swap state objects & make sure to reuse them
+    var tmp = this.overlappingShapesLastState;
+    this.overlappingShapesLastState = this.overlappingShapesCurrentState;
+    this.overlappingShapesCurrentState = tmp;
+
 
     // Add contact equations to solver
     solver.addEquations(np.contactEquations);
@@ -9449,7 +9484,6 @@ World.integrateBody = function(body,dt){
 
 /**
  * Runs narrowphase for the shape pair i and j.
- * @static
  * @method runNarrowphase
  * @param  {Narrowphase} np
  * @param  {Body} bi
@@ -9462,7 +9496,7 @@ World.integrateBody = function(body,dt){
  * @param  {Number} aj
  * @param  {Number} mu
  */
-World.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution){
+World.prototype.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution){
 
     if(!((si.collisionGroup & sj.collisionMask) !== 0 && (sj.collisionGroup & si.collisionMask) !== 0))
         return;
@@ -9484,14 +9518,44 @@ World.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution){
     np.frictionCoefficient = mu;
     np.restitution = restitution;
 
-    var resolver = np[si.type | sj.type];
+    var resolver = np[si.type | sj.type],
+        numContacts = 0;
     if (resolver) {
         if (si.type < sj.type) {
-            resolver.call(np, bi,si,xiw,aiw, bj,sj,xjw,ajw);
+            numContacts = resolver.call(np, bi,si,xiw,aiw, bj,sj,xjw,ajw);
         } else {
-            resolver.call(np, bj,sj,xjw,ajw, bi,si,xiw,aiw);
+            numContacts = resolver.call(np, bj,sj,xjw,ajw, bi,si,xiw,aiw);
+        }
+
+        if(numContacts > 0){
+            var key = si.id < sj.id ? si.id+" "+ sj.id : sj.id+" "+ si.id;
+            if(!this.overlappingShapesLastState[key]){
+                // Report new shape overlap
+                var e = this.beginContactEvent;
+                e.shapeA = si;
+                e.shapeB = sj;
+                e.bodyA = bi;
+                e.bodyB = bj;
+                this.emit(e);
+                var current = this.overlappingShapesCurrentState;
+                if(!current[key]){
+                    current[key] = true;
+                    current.keys.push(key);
+
+                    // Also store shape & body data
+                    current[key+"_shapeA"] = si;
+                    current.keys.push(key+"_shapeA");
+                    current[key+"_shapeB"] = sj;
+                    current.keys.push(key+"_shapeB");
+                    current[key+"_bodyA"] = bi;
+                    current.keys.push(key+"_bodyA");
+                    current[key+"_bodyB"] = bj;
+                    current.keys.push(key+"_bodyB");
+                }
+            }
         }
     }
+
 };
 
 /**
@@ -10047,7 +10111,7 @@ World.prototype.hitTest = function(worldPoint,bodies,precision){
 *
 * Phaser - http://www.phaser.io
 *
-* v1.1.5 - Built at: Sat Feb 15 2014 01:35:50
+* v1.1.5 - Built at: Mon Feb 17 2014 11:26:56
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -14532,20 +14596,12 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
     var context = renderSession.context;
     context.globalAlpha = this.worldAlpha;
 
-    var transform = this.worldTransform;
+    PIXI.DisplayObject.prototype.updateTransform.call(this);
 
+    var transform = this.worldTransform;
     // alow for trimming
        
-    if (renderSession.roundPixels)
-    {
-        context.setTransform(transform.a, transform.c, transform.b, transform.d, Math.floor(transform.tx), Math.floor(transform.ty));
-    }
-    else
-    {
-        context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
-    }
-
-    context.save();
+    var isRotated = true;
 
     for (var i = 0; i < this.children.length; i++) {
        
@@ -14557,8 +14613,13 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
 
         if(child.rotation % (Math.PI * 2) === 0)
         {
-          
-          // this is the fastest  way to optimise! - if rotation is 0 then we can avoid any kind of setTransform call
+            if(isRotated)
+            {
+                context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
+                isRotated = false;
+            }
+
+            // this is the fastest  way to optimise! - if rotation is 0 then we can avoid any kind of setTransform call
             context.drawImage(texture.baseTexture.source,
                                  frame.x,
                                  frame.y,
@@ -14571,24 +14632,23 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
         }
         else
         {
+            if(!isRotated)isRotated = true;
+    
             PIXI.DisplayObject.prototype.updateTransform.call(child);
            
-            transform = child.localTransform;
+            var childTransform = child.worldTransform;
 
-            if(this.rotation !== this.rotationCache)
+            // allow for trimming
+           
+            if (renderSession.roundPixels)
             {
-                this.rotationCache = this.rotation;
-                this._sr =  Math.sin(this.rotation);
-                this._cr =  Math.cos(this.rotation);
+                context.setTransform(childTransform.a, childTransform.c, childTransform.b, childTransform.d, childTransform.tx || 0, childTransform.ty || 0);
+            }
+            else
+            {
+                context.setTransform(childTransform.a, childTransform.c, childTransform.b, childTransform.d, childTransform.tx, childTransform.ty);
             }
 
-            var a = child._cr * child.scale.x,
-                b = -child._sr * child.scale.y,
-                c = child._sr * child.scale.x,
-                d = child._cr * child.scale.y;
-                
-            context.setTransform(a, c, b, d, child.position.x, child.position.y);
-            
             context.drawImage(texture.baseTexture.source,
                                  frame.x,
                                  frame.y,
@@ -14598,11 +14658,14 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
                                  ((child.anchor.y) * (-frame.height) + 0.5) | 0,
                                  frame.width,
                                  frame.height);
+           
 
         }
+
+       // context.restore();
     }
 
-    context.restore();
+//    context.restore();
 };
 
 
@@ -17918,11 +17981,11 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
 
     var uvs = tilingSprite._uvs;
 
-    tilingSprite.tilePosition.x %= texture.baseTexture.width;
-    tilingSprite.tilePosition.y %= texture.baseTexture.height;
+    tilingSprite.tilePosition.x %= texture.baseTexture.width * tilingSprite.tileScaleOffset.x;
+    tilingSprite.tilePosition.y %= texture.baseTexture.height * tilingSprite.tileScaleOffset.y;
 
-    var offsetX =  tilingSprite.tilePosition.x/texture.baseTexture.width;
-    var offsetY =  tilingSprite.tilePosition.y/texture.baseTexture.height;
+    var offsetX =  tilingSprite.tilePosition.x/(texture.baseTexture.width*tilingSprite.tileScaleOffset.x);
+    var offsetY =  tilingSprite.tilePosition.y/(texture.baseTexture.height*tilingSprite.tileScaleOffset.y);
 
     var scaleX =  (tilingSprite.width / texture.baseTexture.width)  / (tilingSprite.tileScale.x * tilingSprite.tileScaleOffset.x);
     var scaleY =  (tilingSprite.height / texture.baseTexture.height) / (tilingSprite.tileScale.y * tilingSprite.tileScaleOffset.y);
@@ -20720,6 +20783,36 @@ PIXI.TilingSprite.prototype.onTextureUpdate = function()
     this.updateFrame = true;
 };
 
+PIXI.TilingSprite.prototype.setTexture = function(texture)
+{
+    if(this.texture === texture)return;
+
+    this.texture = texture;
+
+    this.refreshTexture = true;
+    /*
+    if(this.tilingTexture)
+    {
+        this.generateTilingTexture(true);
+    }
+*/
+
+    /*
+    // stop current texture;
+    if(this.texture.baseTexture !== texture.baseTexture)
+    {
+        this.textureChange = true;
+        this.texture = texture;
+    }
+    else
+    {
+        this.texture = texture;
+    }
+
+    this.updateFrame = true;*/
+    this.cachedTint = 0xFFFFFF;
+};
+
 /**
 * Renders the object using the WebGL renderer
 *
@@ -20749,7 +20842,7 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
             renderSession.filterManager.pushFilter(this._filterBlock);
         }
 
-        if(!this.tilingTexture)this.generateTilingTexture(true);
+        if(!this.tilingTexture || this.refreshTexture)this.generateTilingTexture(true);
         else renderSession.spriteBatch.renderTilingSprite(this);
 
         // simple render children!
@@ -20767,7 +20860,17 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
     }
     else
     {
-        if(!this.tilingTexture)this.generateTilingTexture(true);
+        if(!this.tilingTexture || this.refreshTexture)
+        {
+            this.generateTilingTexture(true);
+            if(this.tilingTexture.needsUpdate)
+            {
+                //TODO - tweaking
+                PIXI.updateWebGLTexture(this.tilingTexture.baseTexture, renderSession.gl);
+                this.tilingTexture.needsUpdate = false;
+               // this.tilingTexture._uvs = null;
+            }
+        }
         else renderSession.spriteBatch.renderTilingSprite(this);
         
         // simple render children!
@@ -20806,10 +20909,10 @@ PIXI.TilingSprite.prototype._renderCanvas = function(renderSession)
     context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
 
 
-    if(!this.__tilePattern)
+    if(!this.__tilePattern ||  this.refreshTexture)
     {
         this.generateTilingTexture(false);
-        
+    
         if(this.tilingTexture)
         {
             this.__tilePattern = context.createPattern(this.tilingTexture.baseTexture.source, 'repeat');
@@ -20948,10 +21051,7 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
     var targetWidth, targetHeight;
 
     // check that the frame is the same size as the base texture.
-    
     var isFrame = frame.width !== baseTexture.width || frame.height !== baseTexture.height;
-
-    this.tilingTexture = texture;
 
     var newTextureRequired = false;
 
@@ -20968,40 +21068,70 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
             {
                 targetWidth = frame.width;
                 targetHeight = frame.height;
-            }
-            
+            }           
+
             newTextureRequired = true;
+            
         }
     }
     else
     {
-        targetWidth = PIXI.getNextPowerOfTwo(texture.frame.width);
-        targetHeight = PIXI.getNextPowerOfTwo(texture.frame.height);
-
+        targetWidth = PIXI.getNextPowerOfTwo(frame.width);
+        targetHeight = PIXI.getNextPowerOfTwo(frame.height);
         if(frame.width !== targetWidth && frame.height !== targetHeight)newTextureRequired = true;
     }
 
     if(newTextureRequired)
     {
-        var canvasBuffer = new PIXI.CanvasBuffer(targetWidth, targetHeight);
-        
-        canvasBuffer.context.drawImage(texture.baseTexture.source,
-                                       frame.x,
-                                       frame.y,
-                                       frame.width,
-                                       frame.height,
-                                       0,
-                                       0,
-                                       targetWidth,
-                                       targetHeight);
+        var canvasBuffer;
 
-        this.tilingTexture = PIXI.Texture.fromCanvas(canvasBuffer.canvas);
+        if(this.tilingTexture && this.tilingTexture.isTiling)
+        {
+            canvasBuffer = this.tilingTexture.canvasBuffer;
+            canvasBuffer.resize(targetWidth, targetHeight);
+            this.tilingTexture.baseTexture.width = targetWidth;
+            this.tilingTexture.baseTexture.height = targetHeight;
+            this.tilingTexture.needsUpdate = true;
+        }
+        else
+        {
+            canvasBuffer = new PIXI.CanvasBuffer(targetWidth, targetHeight);
+
+            this.tilingTexture = PIXI.Texture.fromCanvas(canvasBuffer.canvas);
+            this.tilingTexture.canvasBuffer = canvasBuffer;
+            this.tilingTexture.isTiling = true;
+
+        }
+
+        canvasBuffer.context.drawImage(texture.baseTexture.source,
+                                           frame.x,
+                                           frame.y,
+                                           frame.width,
+                                           frame.height,
+                                           0,
+                                           0,
+                                           targetWidth,
+                                           targetHeight);
 
         this.tileScaleOffset.x = frame.width / targetWidth;
         this.tileScaleOffset.y = frame.height / targetHeight;
-    }
 
-   
+    }
+    else
+    {
+        //TODO - switching?
+        if(this.tilingTexture && this.tilingTexture.isTiling)
+        {
+            // destroy the tiling texture!
+            // TODO could store this somewhere?
+            this.tilingTexture.destroy(true);
+        }
+
+        this.tileScaleOffset.x = 1;
+        this.tileScaleOffset.y = 1;
+        this.tilingTexture = texture;
+    }
+    this.refreshTexture = false;
     this.tilingTexture.baseTexture._powerOf2 = true;
 };
 /**
@@ -21251,6 +21381,8 @@ PIXI.Texture = function(baseTexture, frame)
   
     this.scope = this;
 
+    this._uvs = null;
+    
     if(baseTexture.hasLoaded)
     {
         if(this.noFrame)frame = new PIXI.Rectangle(0,0, baseTexture.width, baseTexture.height);
@@ -23459,6 +23591,13 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
     this.passes = [this];
     
     /**
+    * @property shaders
+    * @type Array an array of shaders
+    * @private
+    */
+    this.shaders = [];
+
+    /**
     * @property {boolean} dirty - Internal PIXI var.
     * @default
     */
@@ -24057,10 +24196,22 @@ Phaser.Stage = function (game, width, height) {
     this.checkOffsetInterval = 2500;
 
     /**
+    * @property {boolean} exists - If exists is true the Stage and all children are updated, otherwise it is skipped.
+    * @default
+    */
+    this.exists = true;
+
+    /**
     * @property {number} _nextOffsetCheck - The time to run the next offset check.
     * @private
     */
     this._nextOffsetCheck = 0;
+
+    /**
+    * @property {number} _backgroundColor - Stage background color.
+    * @private
+    */
+    this._backgroundColor;
 
     if (game.config)
     {
@@ -24277,10 +24428,25 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
 }
 
 /**
+* Sets the background color for the stage.
+*
+* @name Phaser.Stage#setBackgroundColor
+* @param {number} backgroundColor - The color of the background, easiest way to pass this in is in hex format like: 0xFFFFFF for white.
+*/
+Phaser.Stage.prototype.setBackgroundColor = function(backgroundColor)
+{
+    this._backgroundColor = backgroundColor || 0x000000;
+    this.backgroundColorSplit = PIXI.hex2rgb(this.backgroundColor);
+    var hex = this._backgroundColor.toString(16);
+    hex = '000000'.substr(0, 6 - hex.length) + hex;
+    this.backgroundColorString = '#' + hex;
+}
+
+/**
 * @name Phaser.Stage#backgroundColor
 * @property {number|string} backgroundColor - Gets and sets the background color of the stage. The color can be given as a number: 0xff0000 or a hex string: '#ff0000'
 */
-Object.defineProperty(Phaser.Stage.prototype, "NEWbackgroundColor", {
+Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
 
     get: function () {
         return this._backgroundColor;
@@ -25040,7 +25206,9 @@ Phaser.Group.prototype.preUpdate = function () {
         return false;
     }
 
-    for (var i = this.children.length - 1; i >= 0; i--)
+   var i = this.children.length;
+
+    while (i--)
     {
         this.children[i].preUpdate();
     }
@@ -25056,7 +25224,9 @@ Phaser.Group.prototype.preUpdate = function () {
 */
 Phaser.Group.prototype.update = function () {
 
-    for (var i = this.children.length - 1; i >= 0; i--)
+    var i = this.children.length;
+
+    while (i--)
     {
         this.children[i].update();
     }
@@ -25077,7 +25247,9 @@ Phaser.Group.prototype.postUpdate = function () {
         this.y = this.game.camera.view.y + this.cameraOffset.y;
     }
 
-    for (var i = this.children.length - 1; i >= 0; i--)
+    var i = this.children.length;
+
+    while (i--)
     {
         this.children[i].postUpdate();
     }
@@ -25676,81 +25848,6 @@ Phaser.World.prototype.setBounds = function (x, y, width, height) {
     }
 
     this.game.physics.setBoundsToWorld();
-
-}
-
-/**
-* This is called automatically after the plugins preUpdate and before the State.update.
-* Most objects have preUpdate methods and it's where initial movement and positioning is done.
-* 
-* @method Phaser.World#preUpdate
-*/
-Phaser.World.prototype.preUpdate = function () {
-    
-    this.currentRenderOrderID = 0;
-
-    var i = this.children.length;
-
-    while (i--)
-    {
-        this.children[i].preUpdate();
-    }
-
-}
-
-/**
-* This is called automatically after the State.update, but before particles or plugins update.
-* 
-* @method Phaser.World#update
-*/
-Phaser.World.prototype.update = function () {
-
-    var i = this.children.length;
-
-    while (i--)
-    {
-        this.children[i].update();
-    }
-
-}
-
-/**
-* This is called automatically before the renderer runs and after the plugins have updated.
-* In postUpdate this is where all the final physics calculatations and object positioning happens.
-* The objects are processed in the order of the display list.
-* The only exception to this is if the camera is following an object, in which case that is updated first.
-* 
-* @method Phaser.World#postUpdate
-*/
-Phaser.World.prototype.postUpdate = function () {
-
-    if (this.game.world.camera.target)
-    {
-        this.game.world.camera.target.postUpdate();
-
-        this.game.world.camera.update();
-
-        var i = this.children.length;
-
-        while (i--)
-        {
-            if (this.children[i] !== this.game.world.camera.target)
-            {
-                this.children[i].postUpdate();
-            }
-        }
-    }
-    else
-    {
-        this.game.world.camera.update();
-
-        var i = this.children.length;
-
-        while (i--)
-        {
-            this.children[i].postUpdate();
-        }
-    }
 
 }
 
@@ -37023,22 +37120,133 @@ Phaser.Button.prototype.setState = function (newState) {
 */
 Phaser.Graphics = function (game, x, y) {
 
+    x = x || 0;
+    y = y || 0;
+
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
     this.game = game;
+ 
+    /**
+    * @property {boolean} exists - If exists = false then the Text isn't updated by the core game loop.
+    * @default
+    */
+    this.exists = true;
+
+    /**
+    * @property {string} name - The user defined name given to this object.
+    * @default
+    */
+    this.name = '';
+
+    /**
+    * @property {number} type - The const type of this object.
+    * @default
+    */
+    this.type = Phaser.GRAPHICS;
+
+    /**
+    * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
+    */
+    this.world = new Phaser.Point(x, y);
+
+    /**
+    * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
+    */
+    this.events = new Phaser.Events(this);
+
+    /**
+    * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
+    */
+    this.input = null;
+
+    /**
+    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    */
+    this.cameraOffset = new Phaser.Point();
 
     PIXI.Graphics.call(this);
 
-    /**
-    * @property {number} type - The Phaser Object Type.
-	*/
-    this.type = Phaser.GRAPHICS;
+    this.position.set(x, y);
 
-    this.position.x = x;
-    this.position.y = y;
+    /**
+    * A small internal cache:
+    * 0 = previous position.x
+    * 1 = previous position.y
+    * 2 = previous rotation
+    * 3 = renderID
+    * 4 = fresh? (0 = no, 1 = yes)
+    * 5 = outOfBoundsFired (0 = no, 1 = yes)
+    * 6 = exists (0 = no, 1 = yes)
+    * 7 = fixed to camera (0 = no, 1 = yes)
+    * @property {Int16Array} _cache
+    * @private
+    */
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
 
 };
 
 Phaser.Graphics.prototype = Object.create(PIXI.Graphics.prototype);
 Phaser.Graphics.prototype.constructor = Phaser.Graphics;
+
+/**
+* Automatically called by World.preUpdate.
+* @method Phaser.Graphics.prototype.preUpdate
+*/
+Phaser.Graphics.prototype.preUpdate = function () {
+
+    this._cache[0] = this.world.x;
+    this._cache[1] = this.world.y;
+    this._cache[2] = this.rotation;
+
+    if (!this.exists || !this.parent.exists)
+    {
+        this.renderOrderID = -1;
+        return false;
+    }
+
+    if (this.autoCull)
+    {
+        //  Won't get rendered but will still get its transform updated
+        this.renderable = this.game.world.camera.screenView.intersects(this.getBounds());
+    }
+
+    this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
+
+    if (this.visible)
+    {
+        this._cache[3] = this.game.world.currentRenderOrderID++;
+    }
+
+    return true;
+
+}
+
+/**
+* Override and use this function in your own custom objects to handle any update requirements you may have.
+*
+* @method Phaser.Graphics#update
+* @memberof Phaser.Graphics
+*/
+Phaser.Graphics.prototype.update = function() {
+
+}
+
+/**
+* Automatically called by World.postUpdate.
+* @method Phaser.Graphics.prototype.postUpdate
+*/
+Phaser.Graphics.prototype.postUpdate = function () {
+
+    //  Fixed to Camera?
+    if (this._cache[7] === 1)
+    {
+        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
+
+}
 
 /**
 * Destroy this Graphics instance.
@@ -37053,6 +37261,9 @@ Phaser.Graphics.prototype.destroy = function() {
     {
         this.parent.remove(this);
     }
+
+    this.exists = false;
+    this.visible = false;
 
     this.game = null;
 
@@ -37075,6 +37286,92 @@ Phaser.Graphics.prototype.drawPolygon = function (poly) {
     this.lineTo(poly.points[0].x, poly.points[0].y);
     
 }
+
+/**
+* Indicates the rotation of the Graphics, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+* Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
+* If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
+* @name Phaser.Graphics#angle
+* @property {number} angle - Gets or sets the angle of rotation in degrees.
+*/
+Object.defineProperty(Phaser.Graphics.prototype, 'angle', {
+
+    get: function() {
+        return Phaser.Math.radToDeg(this.rotation);
+    },
+
+    set: function(value) {
+        this.rotation = Phaser.Math.degToRad(value);
+    }
+
+});
+
+/**
+* By default a Graphics object won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
+* activated for this object and it will then start to process click/touch events and more.
+*
+* @name Phaser.Graphics#inputEnabled
+* @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
+*/
+Object.defineProperty(Phaser.Graphics.prototype, "inputEnabled", {
+    
+    get: function () {
+
+        return (this.input && this.input.enabled);
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            if (this.input === null)
+            {
+                this.input = new Phaser.InputHandler(this);
+                this.input.start();
+            }
+        }
+        else
+        {
+            if (this.input && this.input.enabled)
+            {
+                this.input.stop();
+            }
+        }
+    }
+
+});
+
+/**
+* An Graphics that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Graphics.cameraOffset.
+* Note that the cameraOffset values are in addition to any parent in the display list.
+* So if this Graphics was in a Group that has x: 200, then this will be added to the cameraOffset.x
+*
+* @name Phaser.Graphics#fixedToCamera
+* @property {boolean} fixedToCamera - Set to true to fix this Graphics to the Camera at its current world coordinates.
+*/
+Object.defineProperty(Phaser.Graphics.prototype, "fixedToCamera", {
+    
+    get: function () {
+
+        return !!this._cache[7];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            this._cache[7] = 1;
+            this.cameraOffset.set(this.x, this.y);
+        }
+        else
+        {
+            this._cache[7] = 0;
+        }
+    }
+
+});
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
@@ -50896,6 +51193,17 @@ Phaser.Physics.World.prototype.update = function () {
 };
 
 /**
+* @method Phaser.Physics.World.prototype.destroy
+*/
+Phaser.Physics.World.prototype.destroy = function () {
+
+    this.clear();
+
+    this.game = null;
+
+};
+
+/**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
@@ -51490,28 +51798,24 @@ Phaser.Physics.Body.prototype = {
 
         points = Array.prototype.slice.call(arguments, 1);
 
-        var path;
+        var path = [];
 
         //  Did they pass in a single array of points?
         if (points.length === 1 && Array.isArray(points[0]))
         {
-            path = points[0];
+            path = path.concat(points[0]);
         }
         else if (Array.isArray(points[0]))
         {
-            path = points;
+            path = path.concat(points);
         }
         else if (typeof points[0] === 'number')
         {
-            var temp = [];
-
             //  We've a list of numbers
             for (var i = 0, len = points.length; i < len; i += 2)
             {
-                temp.push([points[i], points[i + 1]]);
+                path.push([points[i], points[i + 1]]);
             }
-
-            path = temp;
         }
 
         //  Now process them into p2 values
@@ -52074,6 +52378,73 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "y", {
     }
 
 });
+
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2014 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* Creates a spring, connecting two bodies.
+*
+* @class Phaser.Physics.Spring
+* @classdesc Physics Spring Constructor
+* @constructor
+* @param {Phaser.Game} game - A reference to the current game.
+* @param {p2.Body} bodyA - First connected body.
+* @param {p2.Body} bodyB - Second connected body.
+* @param {number} [restLength=1] - Rest length of the spring. A number > 0.
+* @param {number} [stiffness=100] - Stiffness of the spring. A number >= 0.
+* @param {number} [damping=1] - Damping of the spring. A number >= 0.
+* @param {Array} [worldA] - Where to hook the spring to body A, in world coordinates, i.e. [32, 32].
+* @param {Array} [worldB] - Where to hook the spring to body B, in world coordinates, i.e. [32, 32].
+* @param {Array} [localA] - Where to hook the spring to body A, in local body coordinates.
+* @param {Array} [localB] - Where to hook the spring to body B, in local body coordinates.
+*/
+Phaser.Physics.Spring = function (game, bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB) {
+
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
+    this.game = game;
+
+    if (typeof restLength === 'undefined') { restLength = 1; }
+    if (typeof stiffness === 'undefined') { stiffness = 100; }
+    if (typeof damping === 'undefined') { damping = 1; }
+
+    var options = {
+        restLength: restLength,
+        stiffness: stiffness,
+        damping: damping
+    };
+
+    if (typeof worldA !== 'undefined' && worldA !== null)
+    {
+        options.worldAnchorA = [ game.math.px2p(worldA[0]), game.math.px2p(worldA[1]) ];
+    }
+
+    if (typeof worldB !== 'undefined' && worldB !== null)
+    {
+        options.worldAnchorB = [ game.math.px2p(worldB[0]), game.math.px2p(worldB[1]) ];
+    }
+
+    if (typeof localA !== 'undefined' && localA !== null)
+    {
+        options.localAnchorA = [ game.math.px2p(localA[0]), game.math.px2p(localA[1]) ];
+    }
+
+    if (typeof localB !== 'undefined' && localB !== null)
+    {
+        options.localAnchorB = [ game.math.px2p(localB[0]), game.math.px2p(localB[1]) ];
+    }
+
+    p2.Spring.call(this, bodyA, bodyB, options);
+
+}
+
+Phaser.Physics.Spring.prototype = Object.create(p2.Spring.prototype);
+Phaser.Physics.Spring.prototype.constructor = Phaser.Physics.Spring;
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>

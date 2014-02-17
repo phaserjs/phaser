@@ -16,22 +16,133 @@
 */
 Phaser.Graphics = function (game, x, y) {
 
+    x = x || 0;
+    y = y || 0;
+
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running Game.
+    */
     this.game = game;
+ 
+    /**
+    * @property {boolean} exists - If exists = false then the Text isn't updated by the core game loop.
+    * @default
+    */
+    this.exists = true;
+
+    /**
+    * @property {string} name - The user defined name given to this object.
+    * @default
+    */
+    this.name = '';
+
+    /**
+    * @property {number} type - The const type of this object.
+    * @default
+    */
+    this.type = Phaser.GRAPHICS;
+
+    /**
+    * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
+    */
+    this.world = new Phaser.Point(x, y);
+
+    /**
+    * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
+    */
+    this.events = new Phaser.Events(this);
+
+    /**
+    * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
+    */
+    this.input = null;
+
+    /**
+    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    */
+    this.cameraOffset = new Phaser.Point();
 
     PIXI.Graphics.call(this);
 
-    /**
-    * @property {number} type - The Phaser Object Type.
-	*/
-    this.type = Phaser.GRAPHICS;
+    this.position.set(x, y);
 
-    this.position.x = x;
-    this.position.y = y;
+    /**
+    * A small internal cache:
+    * 0 = previous position.x
+    * 1 = previous position.y
+    * 2 = previous rotation
+    * 3 = renderID
+    * 4 = fresh? (0 = no, 1 = yes)
+    * 5 = outOfBoundsFired (0 = no, 1 = yes)
+    * 6 = exists (0 = no, 1 = yes)
+    * 7 = fixed to camera (0 = no, 1 = yes)
+    * @property {Int16Array} _cache
+    * @private
+    */
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
 
 };
 
 Phaser.Graphics.prototype = Object.create(PIXI.Graphics.prototype);
 Phaser.Graphics.prototype.constructor = Phaser.Graphics;
+
+/**
+* Automatically called by World.preUpdate.
+* @method Phaser.Graphics.prototype.preUpdate
+*/
+Phaser.Graphics.prototype.preUpdate = function () {
+
+    this._cache[0] = this.world.x;
+    this._cache[1] = this.world.y;
+    this._cache[2] = this.rotation;
+
+    if (!this.exists || !this.parent.exists)
+    {
+        this.renderOrderID = -1;
+        return false;
+    }
+
+    if (this.autoCull)
+    {
+        //  Won't get rendered but will still get its transform updated
+        this.renderable = this.game.world.camera.screenView.intersects(this.getBounds());
+    }
+
+    this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
+
+    if (this.visible)
+    {
+        this._cache[3] = this.game.world.currentRenderOrderID++;
+    }
+
+    return true;
+
+}
+
+/**
+* Override and use this function in your own custom objects to handle any update requirements you may have.
+*
+* @method Phaser.Graphics#update
+* @memberof Phaser.Graphics
+*/
+Phaser.Graphics.prototype.update = function() {
+
+}
+
+/**
+* Automatically called by World.postUpdate.
+* @method Phaser.Graphics.prototype.postUpdate
+*/
+Phaser.Graphics.prototype.postUpdate = function () {
+
+    //  Fixed to Camera?
+    if (this._cache[7] === 1)
+    {
+        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
+
+}
 
 /**
 * Destroy this Graphics instance.
@@ -46,6 +157,9 @@ Phaser.Graphics.prototype.destroy = function() {
     {
         this.parent.remove(this);
     }
+
+    this.exists = false;
+    this.visible = false;
 
     this.game = null;
 
@@ -68,3 +182,89 @@ Phaser.Graphics.prototype.drawPolygon = function (poly) {
     this.lineTo(poly.points[0].x, poly.points[0].y);
     
 }
+
+/**
+* Indicates the rotation of the Graphics, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+* Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
+* If you wish to work in radians instead of degrees use the property Sprite.rotation instead.
+* @name Phaser.Graphics#angle
+* @property {number} angle - Gets or sets the angle of rotation in degrees.
+*/
+Object.defineProperty(Phaser.Graphics.prototype, 'angle', {
+
+    get: function() {
+        return Phaser.Math.radToDeg(this.rotation);
+    },
+
+    set: function(value) {
+        this.rotation = Phaser.Math.degToRad(value);
+    }
+
+});
+
+/**
+* By default a Graphics object won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
+* activated for this object and it will then start to process click/touch events and more.
+*
+* @name Phaser.Graphics#inputEnabled
+* @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
+*/
+Object.defineProperty(Phaser.Graphics.prototype, "inputEnabled", {
+    
+    get: function () {
+
+        return (this.input && this.input.enabled);
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            if (this.input === null)
+            {
+                this.input = new Phaser.InputHandler(this);
+                this.input.start();
+            }
+        }
+        else
+        {
+            if (this.input && this.input.enabled)
+            {
+                this.input.stop();
+            }
+        }
+    }
+
+});
+
+/**
+* An Graphics that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Graphics.cameraOffset.
+* Note that the cameraOffset values are in addition to any parent in the display list.
+* So if this Graphics was in a Group that has x: 200, then this will be added to the cameraOffset.x
+*
+* @name Phaser.Graphics#fixedToCamera
+* @property {boolean} fixedToCamera - Set to true to fix this Graphics to the Camera at its current world coordinates.
+*/
+Object.defineProperty(Phaser.Graphics.prototype, "fixedToCamera", {
+    
+    get: function () {
+
+        return !!this._cache[7];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            this._cache[7] = 1;
+            this.cameraOffset.set(this.x, this.y);
+        }
+        else
+        {
+            this._cache[7] = 0;
+        }
+    }
+
+});
