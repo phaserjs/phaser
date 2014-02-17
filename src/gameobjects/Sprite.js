@@ -854,7 +854,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "physicsEnabled", {
         {
             if (this.body === null)
             {
-                this.body = new Phaser.Physics.Body(this);
+                this.body = new Phaser.Physics.Body(this.game, this, this.x, this.y, 1);
                 this.anchor.set(0.5);
             }
         }

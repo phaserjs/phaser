@@ -712,14 +712,29 @@ Phaser.Utils.Debug.prototype = {
 
         this.start(0, 0, color);
 
-        var i = body.data.shapes.length;
+        var shapes = body.data.shapes;
+        var shapeOffsets = body.data.shapeOffsets;
+        var shapeAngles = body.data.shapeAngles;
+
+        var i = shapes.length;
         var x = this.game.math.p2px(body.data.position[0]);
         var y = this.game.math.p2px(body.data.position[1]);
         var angle = body.data.angle;
 
         while (i--)
         {
-            this.renderShape(body.data.shapes[i], x, y, angle);
+            if (shapes[i] instanceof p2.Rectangle)
+            {
+                this.renderShapeRectangle(shapes[i], x, y, angle);
+            }
+            else if (shapes[i] instanceof p2.Line)
+            {
+                this.renderShapeLine(x, y, shapes[i], shapeOffsets[i], shapeAngles[i]);
+            }
+            else if (shapes[i] instanceof p2.Convex)
+            {
+                this.renderShapeConvex(x, y, shapes[i], shapeOffsets[i], shapeAngles[i]);
+            }
         }
 
         this.stop();
@@ -733,7 +748,7 @@ Phaser.Utils.Debug.prototype = {
     * @param {number} y - The y coordinate of the Body to translate to.
     * @param {number} angle - The angle of the Body to rotate to.
     */
-    renderShape: function (shape, x, y, angle) {
+    renderShapeRectangle: function (shape, x, y, angle) {
         
         var w = this.game.math.p2px(shape.width);
         var h = this.game.math.p2px(shape.height);
@@ -742,6 +757,64 @@ Phaser.Utils.Debug.prototype = {
         this.context.beginPath();
         this.context.save();
         this.context.translate(x, y);
+        this.context.rotate(angle);
+        this.context.lineWidth = 0.5;
+
+        this.context.moveTo(this.game.math.p2px(points[0][0]), this.game.math.p2px(points[0][1]));
+
+        for (var i = 1; i < points.length; i++)
+        {
+            this.context.lineTo(this.game.math.p2px(points[i][0]), this.game.math.p2px(points[i][1]));
+        }
+
+        this.context.closePath();
+        this.context.stroke();
+        this.context.restore();
+
+    },
+
+    /**
+    * @method Phaser.Utils.Debug#renderShape
+    * @param {number} x - The x coordinate of the Body to translate to.
+    * @param {number} y - The y coordinate of the Body to translate to.
+    * @param {p2.Shape} shape - The shape to render.
+    * @param {number} offset - 
+    * @param {number} angle - 
+    */
+    renderShapeLine: function (x, y, shape, offset, angle) {
+        
+        // var w = this.game.math.p2px(shape.width);
+        // var h = this.game.math.p2px(shape.height);
+        // var points = shape.vertices;
+
+        this.context.beginPath();
+        this.context.save();
+        this.context.translate(x, y);
+        this.context.rotate(angle);
+        this.context.lineWidth = 0.5;
+        // this.context.moveTo(this.game.math.p2px(points[0][0]), this.game.math.p2px(points[0][1]));
+        this.context.moveTo(0, 0);
+        this.context.lineTo(this.game.math.p2px(shape.length), 0);
+        this.context.closePath();
+        this.context.stroke();
+        this.context.restore();
+
+    },
+
+    /**
+    * @method Phaser.Utils.Debug#renderShape
+    * @param {p2.Shape} shape - The shape to render.
+    * @param {number} x - The x coordinate of the Body to translate to.
+    * @param {number} y - The y coordinate of the Body to translate to.
+    * @param {number} angle - The angle of the Body to rotate to.
+    */
+    renderShapeConvex: function (x, y, shape, offset, angle) {
+
+        var points = shape.vertices;
+
+        this.context.beginPath();
+        this.context.save();
+        this.context.translate(x + this.game.math.p2px(offset[0]), y + this.game.math.p2px(offset[1]));
         this.context.rotate(angle);
         this.context.lineWidth = 0.5;
 

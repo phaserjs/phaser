@@ -48,16 +48,6 @@ Phaser.Graphics = function (game, x, y) {
     this.world = new Phaser.Point(x, y);
 
     /**
-    * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
-    */
-    this.events = new Phaser.Events(this);
-
-    /**
-    * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
-    */
-    this.input = null;
-
-    /**
     * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
     */
     this.cameraOffset = new Phaser.Point();
@@ -198,42 +188,6 @@ Object.defineProperty(Phaser.Graphics.prototype, 'angle', {
 
     set: function(value) {
         this.rotation = Phaser.Math.degToRad(value);
-    }
-
-});
-
-/**
-* By default a Graphics object won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
-* activated for this object and it will then start to process click/touch events and more.
-*
-* @name Phaser.Graphics#inputEnabled
-* @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
-*/
-Object.defineProperty(Phaser.Graphics.prototype, "inputEnabled", {
-    
-    get: function () {
-
-        return (this.input && this.input.enabled);
-
-    },
-
-    set: function (value) {
-
-        if (value)
-        {
-            if (this.input === null)
-            {
-                this.input = new Phaser.InputHandler(this);
-                this.input.start();
-            }
-        }
-        else
-        {
-            if (this.input && this.input.enabled)
-            {
-                this.input.stop();
-            }
-        }
     }
 
 });

@@ -1068,6 +1068,7 @@ Polygon.prototype.getCutEdges = function() {
  */
 Polygon.prototype.decomp = function(){
     var edges = this.getCutEdges();
+    console.log('decomp', edges);
     if(edges.length > 0)
         return this.slice(edges);
     else

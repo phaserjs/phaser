@@ -5,7 +5,7 @@
 */
 
 /**
-* The Physics Body is linked to a single Sprite and defines properties that determine how the physics body is simulated.
+* The Physics Body is typically linked to a single Sprite and defines properties that determine how the physics body is simulated.
 * These properties affect how the body reacts to forces, what forces it generates on itself (to simulate friction), and how it reacts to collisions in the scene.
 * In most cases, the properties are used to simulate physical effects. Each body also has its own property values that determine exactly how it reacts to forces and collisions in the scene.
 * By default a single Rectangle shape is added to the Body that matches the dimensions of the parent Sprite. See addShape, removeShape, clearShapes to add extra shapes around the Body.
@@ -13,19 +13,28 @@
 * @class Phaser.Physics.Body
 * @classdesc Physics Body Constructor
 * @constructor
-* @param {Phaser.Sprite} sprite - The Sprite object this physics body belongs to.
+* @param {Phaser.Game} game - Game reference to the currently running game.
+* @param {Phaser.Sprite} [sprite] - The Sprite object this physics body belongs to.
+* @param {number} [x=0] - The x coordinate of this Body.
+* @param {number} [y=0] - The y coordinate of this Body.
+* @param {number} [mass=1] - The default mass of this Body (0 = static).
 */
-Phaser.Physics.Body = function (sprite) {
+Phaser.Physics.Body = function (game, sprite, x, y, mass) {
+
+    sprite = sprite || null;
+    x = x || 0;
+    y = y || 0;
+    if (typeof mass === 'undefined') { mass = 1; }
+
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
+    this.game = game;
 
     /**
     * @property {Phaser.Sprite} sprite - Reference to the parent Sprite.
     */
     this.sprite = sprite;
-
-    /**
-    * @property {Phaser.Game} game - Local reference to game.
-    */
-    this.game = sprite.game;
 
     /**
     * @property {Phaser.Point} offset - The offset of the Physics Body from the Sprite x/y position.
@@ -36,7 +45,7 @@ Phaser.Physics.Body = function (sprite) {
     * @property {p2.Body} data - The p2 Body data.
     * @protected
     */
-    this.data = new p2.Body({ position:[this.px2p(sprite.position.x), this.px2p(sprite.position.y)], mass: 1 });
+    this.data = new p2.Body({ position:[this.px2p(x), this.px2p(y)], mass: mass });
     this.data.parent = this;
 
     /**
@@ -53,9 +62,11 @@ Phaser.Physics.Body = function (sprite) {
     // this.onRemoved = new Phaser.Signal();
 
     //  Set-up the default shape
-    this.setRectangleFromSprite(sprite);
-
-    this.game.physics.addBody(this.data);
+    if (sprite)
+    {
+        this.setRectangleFromSprite(sprite);
+        this.game.physics.addBody(this.data);
+    }
 
 };
 
@@ -220,7 +231,8 @@ Phaser.Physics.Body.prototype = {
     */
     moveLeft: function (speed) {
 
-        this.data.velocity[0] = this.px2p(-speed);
+        // this.data.velocity[0] = this.px2p(-speed);
+        this.data.force[0] += this.px2p(-speed);
 
     },
 
@@ -233,7 +245,8 @@ Phaser.Physics.Body.prototype = {
     */
     moveRight: function (speed) {
 
-        this.data.velocity[0] = this.px2p(speed);
+        // this.data.velocity[0] = this.px2p(speed);
+        this.data.force[0] += this.px2p(speed);
 
     },
 
@@ -246,7 +259,8 @@ Phaser.Physics.Body.prototype = {
     */
     moveUp: function (speed) {
 
-        this.data.velocity[1] = this.px2p(-speed);
+        // this.data.velocity[1] = this.px2p(-speed);
+        this.data.force[1] += this.px2p(-speed);
 
     },
 
@@ -259,7 +273,8 @@ Phaser.Physics.Body.prototype = {
     */
     moveDown: function (speed) {
 
-        this.data.velocity[1] = this.px2p(speed);
+        // this.data.velocity[1] = this.px2p(speed);
+        this.data.force[1] += this.px2p(speed);
 
     },
 
@@ -744,10 +759,16 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "static", {
         if (value && this.data.motionState !== Phaser.STATIC)
         {
             this.data.motionState = Phaser.STATIC;
+            this.mass = 0;
         }
         else if (!value && this.data.motionState === Phaser.STATIC)
         {
             this.data.motionState = Phaser.DYNAMIC;
+
+            if (this.mass === 0)
+            {
+                this.mass = 1;
+            }
         }
 
     }
@@ -771,10 +792,16 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "dynamic", {
         if (value && this.data.motionState !== Phaser.DYNAMIC)
         {
             this.data.motionState = Phaser.DYNAMIC;
+
+            if (this.mass === 0)
+            {
+                this.mass = 1;
+            }
         }
         else if (!value && this.data.motionState === Phaser.DYNAMIC)
         {
             this.data.motionState = Phaser.STATIC;
+            this.mass = 0;
         }
 
     }
@@ -802,6 +829,7 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "kinematic", {
         else if (!value && this.data.motionState === Phaser.KINEMATIC)
         {
             this.data.motionState = Phaser.STATIC;
+            this.mass = 0;
         }
 
     }
@@ -999,6 +1027,11 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "mass", {
         {
             this.data.mass = value;
             this.data.updateMassProperties();
+
+            if (value === 0)
+            {
+                // this.static = true;
+            }
         }
 
     }

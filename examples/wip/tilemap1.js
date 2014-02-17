@@ -9,19 +9,23 @@ function preload() {
     game.load.image('walls_1x2', 'assets/tilemaps/tiles/walls_1x2.png');
     game.load.image('tiles2', 'assets/tilemaps/tiles/tiles2.png');
     game.load.image('player', 'assets/sprites/phaser-dude.png');
+    game.load.image('box', 'assets/sprites/ufo.png');
+    game.load.image('ship', 'assets/sprites/thrust_ship2.png');
 
 }
 
+var ship;
 var map;
 var tileset;
 var layer;
 var p;
 var b;
 var cursors;
+var box2;
 
 function create() {
 
-    // game.stage.backgroundColor = '#787878';
+    game.stage.backgroundColor = '#787878';
 
     map = game.add.tilemap('map');
 
@@ -29,39 +33,59 @@ function create() {
     map.addTilesetImage('walls_1x2');
     map.addTilesetImage('tiles2');
     
-    // layer = map.createLayer('Tile Layer 1');
+    layer = map.createLayer('Tile Layer 1');
+    layer.resizeWorld();
 
-    // layer.resizeWorld();
 
-    p = game.add.sprite(32, 32, 'player');
 
-    b = game.add.sprite(600, 400, 'player');
-    b.physicsEnabled = true;
+
+
+
+    ship = game.add.sprite(200, 200, 'ship');
+    // ship.physicsEnabled = true;
+
+
+
+    // p = game.add.sprite(32, 32, 'player');
+
+    // b = game.add.sprite(300, 300, 'player');
+    // b.physicsEnabled = true;
+    // b.body.static = true;
+    // b.body.mass = 1;
+    // b.body.data.motionState = 2;
+
+    // b.body.kinematic = true;
     // b.body.clearShapes();
-    b.body.addLine(32, 0, 0, 0.2);
+    // b.body.addLine(64, 0, 0, 0);
+    // b.body.fixedRotation = true;
+    // b.body.static = true;
 
-    var ox = 192;
-    var oy = 352;
-    var data = [0,0 ,  0, -32 , 32, -64 , 64, -64 , 64,-96, 128,-96, 160,-128, 192,-128, 192,-96, 160,-64, 96,-64, 96,-32, 32,-32, 32,0, 0,0];
-    var output = [];
+    var data = [[0,0] ,  [0, -32] , [32, -64] , [64, -64] , [64,-96], [128,-96], [160,-128], [192,-128], [192,-96], [160,-64], [96,-64], [96,-32], [32,-32], [32,0]];
 
-    for (var i = 0; i < data.length; i += 2)
-    {
-        output.push(ox + data[i]);
-        output.push(oy + data[i+1]);
-    }
+                 // "x":192,
+                 // "y":352
 
-    console.log(output);
+    b = game.physics.createBody(192, 352, 0, true, {}, data);
 
-    // var re = b.body.addPolygon({}, output);
+    // console.log(output);
 
-    console.log(data.length);
+    // var re = b.body.addPolygon({removeCollinearPoints:true}, data);
+    // var re = b.body.addPolygon({removeCollinearPoints:true}, data);
+
+    // console.log(data.length);
     // console.log(re);
-    console.log(output);
-    console.log(b.body.data.shapes[0].vertices);
+    // console.log(output);
+    // console.log(b.body.data.shapes[0].vertices);
 
+    box2 = game.add.sprite(200, 200, 'box');
+    box2.name = 'bob';
+    box2.anchor.set(0.5);
+    box2.physicsEnabled = true;
+    // box2.body.mass = 1;
+    // box2.body.data.motionState = 1;
+    box2.body.fixedRotation = true;
 
-    game.camera.follow(p);
+    // game.camera.follow(p);
 
     cursors = game.input.keyboard.createCursorKeys();
 
@@ -69,20 +93,71 @@ function create() {
 
 function update() {
 
+    // if (cursors.left.isDown)
+    // {
+    //     p.x -= 4;
+    // }
+    // else if (cursors.right.isDown)
+    // {
+    //     p.x += 4;
+    // }
+
     if (cursors.left.isDown)
     {
-        p.x -= 4;
+        box2.body.moveLeft(400);
     }
     else if (cursors.right.isDown)
     {
-        p.x += 4;
+        box2.body.moveRight(400);
     }
+    else if (!cursors.left.isDown && !cursors.right.isDown)
+    {
+        box2.body.data.force[0] = 0;
+    }
+
+    if (cursors.up.isDown)
+    {
+        box2.body.moveUp(400);
+    }
+    else if (cursors.down.isDown)
+    {
+        box2.body.moveDown(400);
+    }
+
+/*    if (cursors.left.isDown)
+    {
+        ship.body.rotateLeft(100);
+    }
+    else if (cursors.right.isDown)
+    {
+        ship.body.rotateRight(100);
+    }
+    else
+    {
+        ship.body.setZeroRotation();
+    }
+
+    if (cursors.up.isDown)
+    {
+        ship.body.thrust(400);
+    }
+*/
+
 
 }
 
 function render() {
 
     // game.debug.renderCameraInfo(game.camera, 420, 320);
-    game.debug.renderPhysicsBody(b.body);
+
+    game.debug.renderText(box2.body.velocity.x, 32, 32);
+    game.debug.renderText(box2.body.velocity.y, 32, 64);
+
+    // game.debug.renderText(b.body.velocity.x, 32, 32);
+    // game.debug.renderText(b.body.velocity.y, 32, 64);
+
+    game.debug.renderPhysicsBody(b);
+    // game.debug.renderPhysicsBody(ship.body);
+
 
 }
