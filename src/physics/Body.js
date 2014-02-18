@@ -58,6 +58,11 @@ Phaser.Physics.Body = function (game, sprite, x, y, mass) {
     */
     this.force = new Phaser.Physics.PointProxy(this.data.force);
 
+    /**
+    * @property {Phaser.Point} gravity - A locally applied gravity force to the Body. Applied directly before the world step. NOTE: Not currently implemented.
+    */
+    this.gravity = new Phaser.Point();
+
     // this.onAdded = new Phaser.Signal();
     // this.onRemoved = new Phaser.Signal();
 
@@ -328,6 +333,15 @@ Phaser.Physics.Body.prototype = {
     /**
     * Internal method. This is called directly before the sprites are sent to the renderer and after the update function has finished.
     *
+    * @method Phaser.Physics.Body#preUpdate
+    * @protected
+    */
+    preUpdate: function () {
+    },
+
+    /**
+    * Internal method. This is called directly before the sprites are sent to the renderer and after the update function has finished.
+    *
     * @method Phaser.Physics.Body#postUpdate
     * @protected
     */
@@ -508,7 +522,7 @@ Phaser.Physics.Body.prototype = {
     * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
     * @return {p2.Plane} The Plane shape that was added to the Body.
     */
-    addPlane: function (width, height, offsetX, offsetY, rotation) {
+    addPlane: function (offsetX, offsetY, rotation) {
 
         var shape = new p2.Plane();
 
@@ -525,7 +539,7 @@ Phaser.Physics.Body.prototype = {
     * @param {number} [rotation=0] - Local rotation of the shape relative to the body center of mass, specified in radians.
     * @return {p2.Particle} The Particle shape that was added to the Body.
     */
-    addParticle: function (width, height, offsetX, offsetY, rotation) {
+    addParticle: function (offsetX, offsetY, rotation) {
 
         var shape = new p2.Particle();
 
