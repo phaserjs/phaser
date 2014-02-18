@@ -70,7 +70,7 @@ Phaser.Physics.Body = function (game, sprite, x, y, mass) {
     if (sprite)
     {
         this.setRectangleFromSprite(sprite);
-        this.game.physics.addBody(this.data);
+        this.game.physics.addBody(this);
     }
 
 };
@@ -399,7 +399,7 @@ Phaser.Physics.Body.prototype = {
 
         if (this.data.world !== this.game.physics)
         {
-            this.game.physics.addBody(this.data);
+            this.game.physics.addBody(this);
         }
 
     },
