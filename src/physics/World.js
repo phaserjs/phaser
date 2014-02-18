@@ -55,6 +55,12 @@ Phaser.Physics.World = function (game) {
     this.bounds = null;
 
     /**
+    * @property {array} _wallShapes - The wall bounds shapes.
+    * @private
+    */
+    this._wallShapes = [ null, null, null, null ];
+
+    /**
     * @property {Phaser.Signal} onBodyAdded - Dispatched when a new Body is added to the World.
     */
     this.onBodyAdded = new Phaser.Signal();
@@ -217,6 +223,45 @@ Phaser.Physics.World.prototype = {
     },
 
     /**
+    * Sets the given material against the 4 bounds of this World.
+    *
+    * @method Phaser.Physics#setWorldMaterial
+    * @param {Phaser.Physics.Material} material - The material to set.
+    * @param {boolean} [left=true] - If true will set the material on the left bounds wall.
+    * @param {boolean} [right=true] - If true will set the material on the right bounds wall.
+    * @param {boolean} [top=true] - If true will set the material on the top bounds wall.
+    * @param {boolean} [bottom=true] - If true will set the material on the bottom bounds wall.
+    */
+    setWorldMaterial: function (material, left, right, top, bottom) {
+
+        if (typeof left === 'undefined') { left = true; }
+        if (typeof right === 'undefined') { right = true; }
+        if (typeof top === 'undefined') { top = true; }
+        if (typeof bottom === 'undefined') { bottom = true; }
+
+        if (left && this._wallShapes[0])
+        {
+            this._wallShapes[0].material = material;
+        }
+
+        if (right && this._wallShapes[1])
+        {
+            this._wallShapes[1].material = material;
+        }
+
+        if (top && this._wallShapes[2])
+        {
+            this._wallShapes[2].material = material;
+        }
+
+        if (bottom && this._wallShapes[3])
+        {
+            this._wallShapes[3].material = material;
+        }
+
+    },
+
+    /**
     * Sets the bounds of the Physics world to match the given world pixel dimensions.
     * You can optionally set which 'walls' to create: left, right, top or bottom.
     *
@@ -264,22 +309,26 @@ Phaser.Physics.World.prototype = {
 
         if (left)
         {
-            this.bounds.addShape(new p2.Plane(), [this.game.math.px2p(-hw), 0], 1.5707963267948966 );
+            this._wallShapes[0] = new p2.Plane();
+            this.bounds.addShape(this._wallShapes[0], [this.game.math.px2p(-hw), 0], 1.5707963267948966 );
         }
 
         if (right)
         {
-            this.bounds.addShape(new p2.Plane(), [this.game.math.px2p(hw), 0], -1.5707963267948966 );
+            this._wallShapes[1] = new p2.Plane();
+            this.bounds.addShape(this._wallShapes[1], [this.game.math.px2p(hw), 0], -1.5707963267948966 );
         }
 
         if (top)
         {
-            this.bounds.addShape(new p2.Plane(), [0, this.game.math.px2p(-hh)], -3.141592653589793 );
+            this._wallShapes[2] = new p2.Plane();
+            this.bounds.addShape(this._wallShapes[2], [0, this.game.math.px2p(-hh)], -3.141592653589793 );
         }
 
         if (bottom)
         {
-            this.bounds.addShape(new p2.Plane(), [0, this.game.math.px2p(hh)] );
+            this._wallShapes[3] = new p2.Plane();
+            this.bounds.addShape(this._wallShapes[3], [0, this.game.math.px2p(hh)] );
         }
 
         this.world.addBody(this.bounds);
@@ -514,9 +563,10 @@ Phaser.Physics.World.prototype = {
     * @method Phaser.Physics.World#createContactMaterial
     * @param {Phaser.Physics.Material} [materialA] - The first Material to create the ContactMaterial from. If undefined it will create a new Material object first.
     * @param {Phaser.Physics.Material} [materialB] - The second Material to create the ContactMaterial from. If undefined it will create a new Material object first.
+    * @param {object} [options] - Material options object.
     * @return {Phaser.Physics.ContactMaterial} The Contact Material that was created.
     */
-    createContactMaterial: function (materialA, materialB) {
+    createContactMaterial: function (materialA, materialB, options) {
 
         if (typeof materialA === 'undefined') { materialA = this.createMaterial(); }
         if (typeof materialB === 'undefined') { materialB = this.createMaterial(); }

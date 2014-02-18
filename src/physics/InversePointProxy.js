@@ -34,7 +34,7 @@ Object.defineProperty(Phaser.Physics.InversePointProxy.prototype, "x", {
 
     set: function (value) {
 
-        this.destination[0] *= -value;
+        this.destination[0] = -value;
 
     }
 
@@ -54,7 +54,7 @@ Object.defineProperty(Phaser.Physics.InversePointProxy.prototype, "y", {
 
     set: function (value) {
 
-        this.destination[1] *= -value;
+        this.destination[1] = -value;
 
     }
 
