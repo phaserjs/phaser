@@ -185,6 +185,7 @@
     <script src="$path/src/physics/Body.js"></script>
     <script src="$path/src/physics/Spring.js"></script>
     <script src="$path/src/physics/Material.js"></script>
+    <script src="$path/src/physics/ContactMaterial.js"></script>
 
     <script src="$path/src/particles/Particles.js"></script>
     <script src="$path/src/particles/arcade/ArcadeParticles.js"></script>

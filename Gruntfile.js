@@ -139,6 +139,7 @@ module.exports = function (grunt) {
         'src/physics/Body.js',
         'src/physics/Spring.js',
         'src/physics/Material.js',
+        'src/physics/ContactMaterial.js',
 
         'src/particles/Particles.js',
         'src/particles/arcade/ArcadeParticles.js',
