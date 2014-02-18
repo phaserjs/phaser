@@ -134,27 +134,32 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject, rend
         }
         else if (displayObject instanceof PIXI.FilterBlock)
         {
-            if (displayObject.open)
+            if(displayObject.data instanceof PIXI.Graphics)
             {
-                this.context.save();
-                
-                var cacheAlpha = displayObject.mask.alpha;
-                var maskTransform = displayObject.mask.worldTransform;
-                
-                this.context.setTransform(maskTransform[0], maskTransform[3], maskTransform[1], maskTransform[4], maskTransform[2], maskTransform[5])
-                
-                displayObject.mask.worldAlpha = 0.5;
-                
-                this.context.worldAlpha = 0;
-                
-                PIXI.CanvasGraphics.renderGraphicsMask(displayObject.mask, this.context);
-                this.context.clip();
-                
-                displayObject.mask.worldAlpha = cacheAlpha;
-            }
-            else
-            {
-                this.context.restore();
+                var mask = displayObject.data;
+
+                if(displayObject.open)
+                {
+                    this.context.save();
+
+                    var cacheAlpha = mask.alpha;
+                    var maskTransform = mask.worldTransform;
+
+                    this.context.setTransform(maskTransform[0], maskTransform[3], maskTransform[1], maskTransform[4], maskTransform[2], maskTransform[5]);
+
+                    mask.worldAlpha = 0.5;
+
+                    this.context.worldAlpha = 0;
+
+                    PIXI.CanvasGraphics.renderGraphicsMask(mask, this.context);
+                    this.context.clip();
+
+                    mask.worldAlpha = cacheAlpha;
+                }
+                else
+                {
+                    this.context.restore();
+                }
             }
         }
         //  count++
