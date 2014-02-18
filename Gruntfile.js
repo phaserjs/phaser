@@ -11,7 +11,7 @@ module.exports = function (grunt) {
     compile_dir: 'dist',
     src: {
       phaser: [
-       'build/p2.js',
+        'build/p2.js',
         'src/Intro.js',
         'src/pixi/Pixi.js',
         'src/Phaser.js',

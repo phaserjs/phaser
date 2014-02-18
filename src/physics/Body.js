@@ -223,6 +223,23 @@ Phaser.Physics.Body.prototype = {
     },
 
     /**
+    * Applies a force to the Body that causes it to 'thrust' backwards (in reverse), based on its current angle and the given speed.
+    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
+    *
+    * @method Phaser.Physics.Body#rever
+    * @param {number} speed - The speed at which it should reverse.
+    */
+    reverse: function (speed) {
+
+        var magnitude = this.px2p(-speed);
+        var angle = this.data.angle + Math.PI / 2;
+
+        this.data.force[0] -= magnitude * Math.cos(angle);
+        this.data.force[1] -= magnitude * Math.sin(angle);
+
+    },
+
+    /**
     * If this Body is dynamic then this will move it to the left by setting its x velocity to the given speed.
     * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
     *
@@ -231,8 +248,7 @@ Phaser.Physics.Body.prototype = {
     */
     moveLeft: function (speed) {
 
-        // this.data.velocity[0] = this.px2p(-speed);
-        this.data.force[0] += this.px2p(-speed);
+        this.data.velocity[0] = this.px2p(-speed);
 
     },
 
@@ -245,8 +261,7 @@ Phaser.Physics.Body.prototype = {
     */
     moveRight: function (speed) {
 
-        // this.data.velocity[0] = this.px2p(speed);
-        this.data.force[0] += this.px2p(speed);
+        this.data.velocity[0] = this.px2p(speed);
 
     },
 
@@ -259,8 +274,7 @@ Phaser.Physics.Body.prototype = {
     */
     moveUp: function (speed) {
 
-        // this.data.velocity[1] = this.px2p(-speed);
-        this.data.force[1] += this.px2p(-speed);
+        this.data.velocity[1] = this.px2p(-speed);
 
     },
 
@@ -273,8 +287,7 @@ Phaser.Physics.Body.prototype = {
     */
     moveDown: function (speed) {
 
-        // this.data.velocity[1] = this.px2p(speed);
-        this.data.force[1] += this.px2p(speed);
+        this.data.velocity[1] = this.px2p(speed);
 
     },
 
@@ -551,19 +564,36 @@ Phaser.Physics.Body.prototype = {
         //  Did they pass in a single array of points?
         if (points.length === 1 && Array.isArray(points[0]))
         {
-            path = path.concat(points[0]);
+            path = points[0].slice(0);
         }
         else if (Array.isArray(points[0]))
         {
-            path = path.concat(points);
+            path = points[0].slice(0);
+            // for (var i = 0, len = points[0].length; i < len; i += 2)
+            // {
+            //     path.push([points[0][i], points[0][i + 1]]);
+            // }
         }
         else if (typeof points[0] === 'number')
         {
+            // console.log('addPolygon --- We\'ve a list of numbers');
             //  We've a list of numbers
             for (var i = 0, len = points.length; i < len; i += 2)
             {
                 path.push([points[i], points[i + 1]]);
             }
+        }
+
+        // console.log('addPolygon PATH pre');
+        // console.log(path[1]);
+        // console.table(path);
+
+        //  top and tail
+        var idx = path.length - 1;
+
+        if ( path[idx][0] === path[0][0] && path[idx][1] === path[0][1] )
+        {
+            path.pop();
         }
 
         //  Now process them into p2 values
@@ -572,6 +602,10 @@ Phaser.Physics.Body.prototype = {
             path[p][0] = this.px2p(path[p][0]);
             path[p][1] = this.px2p(path[p][1]);
         }
+
+        // console.log('addPolygon PATH POST');
+        // console.log(path[1]);
+        // console.table(path);
 
         return this.data.fromPolygon(path, options);
 

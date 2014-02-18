@@ -22,6 +22,7 @@ var p;
 var b;
 var cursors;
 var box2;
+var dump;
 
 function create() {
 
@@ -34,14 +35,22 @@ function create() {
     map.addTilesetImage('tiles2');
     
     layer = map.createLayer('Tile Layer 1');
+
     layer.resizeWorld();
 
+    map.setCollisionBetween(1, 12);
+
+    // layer.debug = true;
+
+    dump = map.generateCollisionData(layer);
+
+    // dump = map.createCollisionObjects('collision');
+
+    // console.log(dump);
+    // console.log(dump[7]);
 
 
-
-
-
-    ship = game.add.sprite(200, 200, 'ship');
+    // ship = game.add.sprite(200, 200, 'ship');
     // ship.physicsEnabled = true;
 
 
@@ -60,14 +69,13 @@ function create() {
     // b.body.fixedRotation = true;
     // b.body.static = true;
 
-    var data = [[0,0] ,  [0, -32] , [32, -64] , [64, -64] , [64,-96], [128,-96], [160,-128], [192,-128], [192,-96], [160,-64], [96,-64], [96,-32], [32,-32], [32,0]];
+    // var data = [[0,0] ,  [0, -32] , [32, -64] , [64, -64] , [64,-96], [128,-96], [160,-128], [192,-128], [192,-96], [160,-64], [96,-64], [96,-32], [32,-32], [32,0], [0,0]];
+    // b = game.physics.createBody(192, 352, 0, true, { removeCollinearPoints: true }, data);
+    // b = game.physics.createBody(32, 32, 0, true, { removeCollinearPoints: true }, data);
+    // b = game.physics.createBody(256, 480, 0, true, { removeCollinearPoints: true }, data);
 
-                 // "x":192,
-                 // "y":352
-
-    b = game.physics.createBody(192, 352, 0, true, {}, data);
-
-    // console.log(output);
+    // console.log('DATA');
+    // console.log(data);
 
     // var re = b.body.addPolygon({removeCollinearPoints:true}, data);
     // var re = b.body.addPolygon({removeCollinearPoints:true}, data);
@@ -78,14 +86,12 @@ function create() {
     // console.log(b.body.data.shapes[0].vertices);
 
     box2 = game.add.sprite(200, 200, 'box');
-    box2.name = 'bob';
-    box2.anchor.set(0.5);
+    // box2.name = 'bob';
+    // box2.anchor.set(0.5);
     box2.physicsEnabled = true;
-    // box2.body.mass = 1;
-    // box2.body.data.motionState = 1;
     box2.body.fixedRotation = true;
 
-    // game.camera.follow(p);
+    game.camera.follow(box2);
 
     cursors = game.input.keyboard.createCursorKeys();
 
@@ -150,13 +156,20 @@ function render() {
 
     // game.debug.renderCameraInfo(game.camera, 420, 320);
 
-    game.debug.renderText(box2.body.velocity.x, 32, 32);
-    game.debug.renderText(box2.body.velocity.y, 32, 64);
+    // game.debug.renderText(box2.body.velocity.x, 32, 32);
+    // game.debug.renderText(box2.body.velocity.y, 32, 64);
 
     // game.debug.renderText(b.body.velocity.x, 32, 32);
     // game.debug.renderText(b.body.velocity.y, 32, 64);
 
-    game.debug.renderPhysicsBody(b);
+    for (var i = 0, len = dump.length; i < len; i++)
+    {
+        game.debug.renderPhysicsBody(dump[i]);
+    }
+
+        // game.debug.renderPhysicsBody(dump[0]);
+        // game.debug.renderPhysicsBody(b);
+
     // game.debug.renderPhysicsBody(ship.body);
 
 

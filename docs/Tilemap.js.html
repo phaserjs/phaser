@@ -59,6 +59,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.BitmapFont.html">BitmapFont</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -88,10 +92,6 @@
 						
 						<li>
 							<a href="Phaser.Device.html">Device</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.DOMSprite.html">DOMSprite</a>
 						</li>
 						
 						<li>
@@ -140,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
 						
 						<li>
@@ -251,10 +255,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.Plugin.html">Plugin</a>
 						</li>
 						
@@ -312,6 +312,10 @@
 						
 						<li>
 							<a href="Phaser.Sprite.html">Sprite</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
 						</li>
 						
 						<li>
@@ -410,6 +414,10 @@
 						
 						<li>
 							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
+						</li>
+						
+						<li>
+							<a href="global.html#getBounds">getBounds</a>
 						</li>
 						
 						<li>
@@ -547,6 +555,11 @@ Phaser.Tilemap = function (game, key) {
     * @property {array} objects - An array of Tiled Object Layers.
     */
     this.objects = data.objects;
+
+    /**
+    * @property {array} collision - An array of collision data (polylines, etc).
+    */
+    this.collision = data.collision;
 
     /**
     * @property {array} images - An array of Tiled Image Layers.
@@ -731,6 +744,141 @@ Phaser.Tilemap.prototype = {
                 }
             }
         }
+
+    },
+
+    /**
+    * Clears all physics bodies from the world for the given layer.
+    *
+    * @method Phaser.Tilemap#clearPhysicsBodies
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to this.currentLayer.
+    */
+    clearPhysicsBodies: function (layer) {
+
+        layer = this.getLayer(layer);
+
+        var i = this.layers[layer].bodies.length;
+
+        while (i--)
+        {
+            this.layers[layer].bodies[i].destroy();
+        }
+
+    },
+
+    /**
+    * Goes through all tiles in the given layer and converts those set to collide into physics bodies in the world.
+    * Only call this *after* you have specified all of the tiles you wish to collide with calls like Tilemap.setCollisionBetween, etc.
+    * Every time you call this method it will destroy any previously created bodies and remove them from the world.
+    * Therefore understand it's an expensive operation and not to be done in a core game update loop.
+    *
+    * @method Phaser.Tilemap#generateCollisionData
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to this.currentLayer.
+    * @param {boolean} [addToWorld=true] - If true it will automatically add each body to the world, otherwise it's up to you to do so.
+    * @return {array} An array of the Phaser.Physics.Body objects that have been created.
+    */
+    generateCollisionData: function (layer, addToWorld) {
+
+        layer = this.getLayer(layer);
+
+        if (typeof addToWorld === 'undefined') { addToWorld = true; }
+
+        //  If the bodies array is already populated we need to nuke it
+        if (this.layers[layer].bodies.length > 0)
+        {
+            this.clearPhysicsBodies(layer);
+        }
+
+        this.layers[layer].bodies.length = [];
+
+        var width = 0;
+        var sx = 0;
+        var sy = 0;
+
+        for (var y = 0, h = this.layers[layer].height; y &lt; h; y++)
+        {
+            width = 0;
+
+            for (var x = 0, w = this.layers[layer].width; x &lt; w; x++)
+            {
+                var tile = this.layers[layer].data[y][x];
+
+                if (tile)
+                {
+                    right = this.getTileRight(layer, x, y);
+
+                    if (width === 0)
+                    {
+                        sx = tile.x * tile.width;
+                        sy = tile.y * tile.height;
+                        width = tile.width;
+                    }
+
+                    if (right && right.collides)
+                    {
+                        width += tile.width;
+                    }
+                    else
+                    {
+                        var body = this.game.physics.createBody(sx, sy, 0, false);
+
+                        body.addRectangle(width, tile.height, width / 2, tile.height / 2, 0);
+
+                        if (addToWorld)
+                        {
+                            this.game.physics.addBody(body.data);
+                        }
+
+                        this.layers[layer].bodies.push(body);
+
+                        width = 0;
+                    }
+                }
+            }
+        }
+
+        return this.layers[layer].bodies;
+
+    },
+
+    /**
+    * Converts all of the polylines inside a Tiled ObjectGroup into physics bodies that are added to the world.
+    * Note that the polylines must be created in such a way that they can withstand polygon decomposition.
+    *
+    * @method Phaser.Tilemap#createCollisionObjects
+    * @param {string} [layer] - The Tiled layer to operate on that contains the collision data.
+    * @param {boolean} [addToWorld=true] - If true it will automatically add each body to the world.
+    * @return {array} An array of the Phaser.Physics.Body objects that have been created.
+    */
+    createCollisionObjects: function (layer, addToWorld) {
+
+        if (typeof addToWorld === 'undefined') { addToWorld = true; }
+
+        var output = [];
+
+        for (var i = 0, len = this.collision[layer].length; i &lt; len; i++)
+        {
+            // name: json.layers[i].objects[v].name,
+            // x: json.layers[i].objects[v].x,
+            // y: json.layers[i].objects[v].y,
+            // width: json.layers[i].objects[v].width,
+            // height: json.layers[i].objects[v].height,
+            // visible: json.layers[i].objects[v].visible,
+            // properties: json.layers[i].objects[v].properties,
+            // polyline: json.layers[i].objects[v].polyline
+
+            var object = this.collision[layer][i];
+
+            var body = this.game.physics.createBody(object.x, object.y, 0, addToWorld, {}, object.polyline);
+
+            if (body)
+            {
+                output.push(body);
+            }
+
+        }
+
+        return output;
 
     },
 
@@ -1745,7 +1893,7 @@ Phaser.Tilemap.prototype.constructor = Phaser.Tilemap;
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Sat Feb 08 2014 07:19:40 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Feb 18 2014 03:01:17 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

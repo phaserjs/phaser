@@ -89,7 +89,7 @@ Phaser.TilemapParser = {
         }
         else
         {
-            return { layers: [], objects: [], images: [], tilesets: [] };
+            return this.getEmptyData();
         }
 
     },
@@ -130,6 +130,58 @@ Phaser.TilemapParser = {
         //  Build collision map
 
         return [{ name: 'csv', width: width, height: height, alpha: 1, visible: true, indexes: [], tileMargin: 0, tileSpacing: 0, data: output }];
+
+    },
+
+    /**
+    * Returns an empty map data object.
+    * @method Phaser.TilemapParser.getEmptyData
+    * @return {object} Generated map data.
+    */
+    getEmptyData: function () {
+
+        var map = {};
+
+        map.width = 0;
+        map.height = 0;
+        map.tileWidth = 0;
+        map.tileHeight = 0;
+        map.orientation = 'orthogonal';
+        map.version = '1';
+        map.properties = {};
+        map.widthInPixels = 0;
+        map.heightInPixels = 0;
+
+        var layers = [];
+
+        var layer = {
+
+            name: 'layer',
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+            widthInPixels: 0,
+            heightInPixels: 0,
+            alpha: 1,
+            visible: true,
+            properties: {},
+            indexes: [],
+            callbacks: [],
+            data: []
+
+        };
+
+        layers.push(layer);
+
+        map.layers = layers;
+        map.images = [];
+        map.objects = {};
+        map.collision = {};
+        map.tilesets = [];
+        map.tiles = [];
+
+        return map;
 
     },
 
@@ -183,7 +235,8 @@ Phaser.TilemapParser = {
                 visible: json.layers[i].visible,
                 properties: {},
                 indexes: [],
-                callbacks: []
+                callbacks: [],
+                bodies: []
 
             };
 
@@ -265,8 +318,9 @@ Phaser.TilemapParser = {
 
         map.images = images;
 
-        //  Objects
+        //  Objects & Collision Data (polylines, etc)
         var objects = {};
+        var collision = {};
 
         for (var i = 0; i < json.layers.length; i++)
         {
@@ -276,10 +330,11 @@ Phaser.TilemapParser = {
             }
 
             objects[json.layers[i].name] = [];
+            collision[json.layers[i].name] = [];
 
             for (var v = 0, len = json.layers[i].objects.length; v < len; v++)
             {
-                //  For now we'll just support object tiles
+                //  Object Tiles
                 if (json.layers[i].objects[v].gid)
                 {
                     var object = {
@@ -295,11 +350,37 @@ Phaser.TilemapParser = {
         
                     objects[json.layers[i].name].push(object);
                 }
+                else if (json.layers[i].objects[v].polyline)
+                {
+                    var object = {
+
+                        name: json.layers[i].objects[v].name,
+                        x: json.layers[i].objects[v].x,
+                        y: json.layers[i].objects[v].y,
+                        width: json.layers[i].objects[v].width,
+                        height: json.layers[i].objects[v].height,
+                        visible: json.layers[i].objects[v].visible,
+                        properties: json.layers[i].objects[v].properties
+
+                    };
+
+                    object.polyline = [];
+
+                    //  Parse the polyline into an array
+                    for (var p = 0; p < json.layers[i].objects[v].polyline.length; p++)
+                    {
+                        object.polyline.push([ json.layers[i].objects[v].polyline[p].x, json.layers[i].objects[v].polyline[p].y ]);
+                    }
+
+                    collision[json.layers[i].name].push(object);
+
+                }
 
             }
         }
 
         map.objects = objects;
+        map.collision = collision;
 
         //  Tilesets
         var tilesets = [];

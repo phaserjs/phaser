@@ -59,6 +59,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.BitmapFont.html">BitmapFont</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -88,10 +92,6 @@
 						
 						<li>
 							<a href="Phaser.Device.html">Device</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.DOMSprite.html">DOMSprite</a>
 						</li>
 						
 						<li>
@@ -140,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
 						
 						<li>
@@ -251,10 +255,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.Plugin.html">Plugin</a>
 						</li>
 						
@@ -312,6 +312,10 @@
 						
 						<li>
 							<a href="Phaser.Sprite.html">Sprite</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
 						</li>
 						
 						<li>
@@ -413,6 +417,10 @@
 						</li>
 						
 						<li>
+							<a href="global.html#getBounds">getBounds</a>
+						</li>
+						
+						<li>
 							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
 						</li>
 						
@@ -506,8 +514,8 @@
 <p>Version 1.2 - &quot;Shienar&quot; - -in development-</p>
 <p>Significant API changes:</p>
 <ul>
-<li>Upgraded to Pixi.js 1.4.4</li>
-<li>Group now extends PIXI.DisplayObjectContainer, rather than owning a _container property, which makes life a whole lot easier re: nesting.</li>
+<li>Upgraded to Pixi.js 1.5.2</li>
+<li>Group now extends PIXI.DisplayObjectContainer, rather than owning a _container property, which makes life a whole lot easier re: nesting and child iteration.</li>
 <li>Removed Sprite.group property. You can use Sprite.parent for all similar needs now.</li>
 <li>PIXI.Point is now aliased to Phaser.Point - saves on code duplication and works exactly the same.</li>
 <li>PIXI.Rectangle is now aliased to Phaser.Rectangle - saves on code duplication and works exactly the same.</li>
@@ -515,32 +523,84 @@
 <li>Sprite.deltaX and deltaY swapped to functions: Sprite.deltaX() and Sprite.deltaY()</li>
 <li>Sprite.crop() now takes a Phaser.Rectangle instead of explicit parameters.</li>
 <li>PixiPatch no longer needed, all features that it patched are now native in Pixi :)</li>
-<li>Removed: Sprite.offset, center, topLeft, topRight, bottomRight, bottomLeft and bounds as no longer needed internally. Use Sprite.getBounds() to derive them.</li>
+<li>Removed: Sprite.offset, center, topLeft, topRight, bottomRight, bottomLeft and bounds, as no longer needed internally. Use Sprite.getBounds() to derive them.</li>
 <li>Button now extends Phaser.Image not Phaser.Sprite, all the same functionality as before remains, just no animations or physics body.</li>
+<li>Text.content has been replaced with Text.text. The Text class has a lot of new methods, check the docs!</li>
+<li>Loader won't set crossOrigin on  Images unless it's set to something. The default is false, it used to be '' and can be any valid string.</li>
+<li>Sprite.input.pixelPerfect has been split into two: Sprite.input.pixelPerfectClick and Sprite.input.pixelPerfectOver (see new features)</li>
+<li>Phaser.Stage now extends PIXI.Stage, rather than containing a _stage object.</li>
+<li>If you set Sprite.exists to false it will also set Sprite.visible to false and remove its body from the physics world (if it has one).</li>
+<li>If you set Sprite.exists to true it will also set Sprite.visible to true and add its body back into the physics world (if it has one).</li>
+<li>Stage.scale has been moved to Game.scale. The same game scaling properties exist as before, but now accessed via Game.scale instead.</li>
+<li>Stage.aspectRatio has been moved to StageScaleMode.sourceAspectRatio (so now game.scale.sourceAspectRatio)</li>
+<li>Stage.scaleMode has been moved to StageScaleMode.scaleMode (so now game.scale.scaleMode)</li>
+<li>Stage.fullScreenScaleMode has been moved to StageScaleMode.fullScreenScaleMode (so now game.scale.fullScreenScaleMode)</li>
+<li>Stage.canvas has been moved to Game.canvas (which used to be a reference to Stage.canvas, but is now the actual object).</li>
+<li>BitmapData.addTo removed and enhanced BitmapData.add so it can accept either a single Sprite/Image or an Array of them.</li>
+<li>BitmapData has had all of the EaselJS functions removed. It was just taking up space and you can do it all via BitmapData.context directly.</li>
+<li>BitmapText has had a bit of an overhaul - the signature for adding a BitmapText has changed to: x, y, font, text, size. See the docs and examples for details.</li>
+<li>World preUpdate, update and postUpdate have all been moved to Stage. So all children are updated regardless where on the display list they live.</li>
+<li>Cache.getImageKeys and similar has been removed, please use Cache.getKeys(Phaser.Cache.IMAGE) instead, this now supports all 10 Cache data types.</li>
+<li>After defining tiles that collide on a Tilemap, you need to call Tilemap.generateCollisionData(layer) to populate the physics world with the data required.</li>
 </ul>
 <p>New features:</p>
 <ul>
-<li>Phaser.Image is a brand new display object perfect for logos, backgrounds, etc. You can scale, rotate, tint and blend and Image, but it has no animation, physics body or input events.</li>
+<li>Phaser.Image is a brand new display object perfect for logos, backgrounds, etc. You can scale, rotate, tint, blend an get input events from an Image, but it has no animation, physics body.</li>
 <li>You can now use the hitArea property on Sprites and Image objects. hitArea can be a geometry object (Rectangle, Circle, Polygon, Ellipse) and is used in pointerOver checks.</li>
 <li>InputManager.getLocalPosition(displayObject, pointer, output) will return the local coordinates of the specified displayObject and pointer.</li>
 <li>InputManager.hitTest will test for pointer hits against a Sprite/Image, its hitArea (if set) or any of its children.</li>
+<li>Text has lots of new methods to help style it: Text.fill, Text.align, Text.stroke, etc.</li>
+<li>Text now works happily with font names with spaces in them.</li>
+<li>Text.setShadow applies a drop shadow to the Text being rendered. Control the x, y, color and blur.</li>
+<li>Text.lineSpacing allows you to set additional spacing between each line that is rendered.</li>
+<li>Text.inputEnabled allows you to enable all input events over Text objects: dragging, clicking, etc - anything that works on a Sprite works on Text now too.</li>
+<li>Phaser.Ellipse added. A fully compatible port of the PIXI.Ellipse class, can be used in Sprite/Image hitArea tests.</li>
+<li>Phaser.Polygon added. A fully compatible port of the PIXI.Polygon class, can be used in Sprite/Image hitArea tests.</li>
+<li>InputHandler.pixelPerfectOver - performs a pixel perfect check to see if any pointer is over the current object (warning: very expensive!)</li>
+<li>InputHandler.pixelPerfectClick - performs a pixel perfect check but only when the pointer touches/clicks on the current object.</li>
+<li>TileSprite can now use a frame from a texture atlas or a sprite sheet.</li>
+<li>TileSprites can now be animated. See new example :)</li>
+<li>TileSprites have a new method: autoScroll(x, y) which sets an automatic scroll running (until stopped with TileSprite.stopScroll).</li>
+<li>BitmapText now uses the new XML parser which should work under CocoonJS without clashes.</li>
+<li>BitmapText signature changed so you can support fonts with spaces in their names.</li>
+<li>Loader.bitmapFont now has 2 extra parameters: xSpacing and ySpacing. These allow you to add extra spacing to each letter or line of the font.</li>
+<li>Added the new BitmapFont class. This is for rendering retro style fixed-width bitmap fonts into an Image object. It's a texture you can apply to a Sprite/Image.</li>
+<li>Added Cache.updateFrameData which is really useful for swapping FrameData blocks in the cache.</li>
+<li>Loader.physics now lets you load Lime + Corona JSON Physics data, which can be used with Body.loadPolygon and Body.loadData.</li>
+<li>Cache.addPhysicsData and Cache.getPhysicsData allow you to store parsed JSON physics data in the cache, for sharing between Bodies.</li>
+<li>fixedToCamera now works across all display objects. When enabled it will fix at its current x/y coordinate, but can be changed via cameraOffset.</li>
+<li>fixedToCamrea now works for Groups as well :) You can fix a Group to the camera and it will influence its children.</li>
+<li>Tilemap.createCollisionObjects will parse Tiled data for objectgroups and convert polyline instances into physics objects you can collide with in the world.</li>
 </ul>
-<p>New Examples:</p>
 <p>Updates:</p>
 <ul>
+<li>Massive thanks to clark-stevenson for doing an amazing job update the TypeScript definitions file.</li>
 <li>Debug.renderRectangle has a new parameter: filled. If true it renders as with fillRect, if false strokeRect.</li>
 <li>Phaser.AnimationParser now sets the trimmed data directly for Pixi Texture frames. Tested across JSON Hash, JSON Data, Sprite Sheet and XML.</li>
 <li>Game.add.renderTexture now has the addToCache parameter. If set the texture will be stored in Game.Cache and can be retrieved with Cache.getTexture(key).</li>
 <li>Game.add.bitmapData now has the addToCache parameter. If set the texture will be stored in Game.Cache and can be retrieved with Cache.getBitmapData(key).</li>
 <li>The InputManager now sets the canvas style cursor to 'inherit' instead of 'default'.</li>
+<li>World.reset now calls Camera.reset which sends the camera back to 0,0 and un-follows any object it may have been tracking.</li>
+<li>Added hostname: '*' to the grunt-connect in Gruntfile.js (fixes #426)</li>
 </ul>
 <p>Bug Fixes:</p>
 <ul>
 <li>Explicitly paused Timer continues if you un-focus and focus the browser window (thanks georgiee)</li>
 <li>Added TimerEvent.pendingDelete and checks in Timer.update, so that removing an event in a callback no longer throws an exception (thanks georgiee)</li>
 <li>Fixed TypeScript defs on lines 1741-1748 (thanks wombatbuddy)</li>
-<li>Previously if you used Sprite.crop() it would crop all Sprites using the same base image. It now takes a local copy of the texture data and crops just that.</li>
+<li>Previously if you used Sprite.crop() it would crop all Sprites that shared the same base image. It now takes a local copy of the texture data and crops just that.</li>
 <li>Tilemap had the wrong @method signatures so most were missing from the docs.</li>
+<li>Fixed bug where changing State would cause the camera to not reset if it was following an object.</li>
+<li>Tile had 2 properties (callback and callbackContext) that were never assigned, updated to use the proper names (thanks ratkingsimon)</li>
+<li>Fixed an error that would occur if you used InputHandler.onInputUp and the Sprite destroys itself during the event.</li>
+<li>IE11 didn't populate the Device.ieVersion value. Now extracted from Trident revision, but still use Device.trident instead for IE11+ checks.</li>
+<li>Fixed bug in Math.angleBetween where it was using the coordinates in the wrong order.</li>
+<li>Previously using a Pixel Perfect check didn't work if the Sprite was rotated or had a non-zero anchor point, now works under all conditions + atlas frames.</li>
+<li>If pixelPerfect Input Sprites overlapped each other the pixel check wasn't taken into consieration in the Pointer move method.</li>
+</ul>
+<p>TO DO:</p>
+<ul>
+<li>If you change the frame name of a pixel precise input Sprite, it will fail all clicks on it after the frame change.</li>
 </ul>
 <p>You can view the Change Log for all previous versions at <a href="https://github.com/photonstorm/phaser/changelog.md">https://github.com/photonstorm/phaser/changelog.md</a></p>
 <h2>How to Build</h2>
@@ -675,7 +735,7 @@ Sprites also have full Input support: click them, touch them, drag them around, 
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Sat Feb 08 2014 07:19:41 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Feb 18 2014 03:01:17 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

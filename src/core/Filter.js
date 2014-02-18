@@ -36,8 +36,7 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
     this.passes = [this];
     
     /**
-    * @property shaders
-    * @type Array an array of shaders
+    * @property {array} shaders - Array an array of shaders.
     * @private
     */
     this.shaders = [];

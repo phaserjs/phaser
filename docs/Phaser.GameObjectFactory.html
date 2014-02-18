@@ -59,6 +59,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.BitmapFont.html">BitmapFont</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -88,10 +92,6 @@
 						
 						<li>
 							<a href="Phaser.Device.html">Device</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.DOMSprite.html">DOMSprite</a>
 						</li>
 						
 						<li>
@@ -140,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
 						
 						<li>
@@ -251,10 +255,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.Plugin.html">Plugin</a>
 						</li>
 						
@@ -312,6 +312,10 @@
 						
 						<li>
 							<a href="Phaser.Sprite.html">Sprite</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
 						</li>
 						
 						<li>
@@ -410,6 +414,10 @@
 						
 						<li>
 							<a href="global.html#canUseNewCanvasBlendModes">canUseNewCanvasBlendModes</a>
+						</li>
+						
+						<li>
+							<a href="global.html#getBounds">getBounds</a>
 						</li>
 						
 						<li>
@@ -1033,7 +1041,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-108">line 108</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-130">line 130</a>
     </li></ul></dd>
     
 
@@ -1311,7 +1319,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-296">line 296</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-343">line 343</a>
     </li></ul></dd>
     
 
@@ -1362,7 +1370,7 @@
         
             
 <dt>
-    <h4 class="name" id="bitmapText"><span class="type-signature"></span>bitmapText<span class="signature">(x, y, text, style, <span class="optional">group</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapText.html">Phaser.BitmapText</a>}</span></h4>
+    <h4 class="name" id="bitmapFont"><span class="type-signature"></span>bitmapFont<span class="signature">(font, characterWidth, characterHeight, chars, charsPerRow, <span class="optional">xSpacing</span>, <span class="optional">ySpacing</span>, <span class="optional">xOffset</span>, <span class="optional">yOffset</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapFont.html">Phaser.BitmapFont</a>}</span></h4>
     
     
 </dt>
@@ -1370,9 +1378,462 @@
     
     
     <div class="description">
-        <ul>
-<li>Create a new BitmapText object.</li>
-</ul>
+        <p>Create a new BitmapFont object to be used as a texture for an Image or Sprite and optionally add it to the Cache.
+The texture can be asssigned or one or multiple images/sprites, but note that the text the BitmapFont uses will be shared across them all, 
+i.e. if you need each Image to have different text in it, then you need to create multiple BitmapFont objects.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>font</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The key of the image in the Game.Cache that the BitmapFont will use.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>characterWidth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The width of each character in the font set.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>characterHeight</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The height of each character in the font set.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>chars</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The characters used in the font set, in display order. You can use the TEXT_SET consts for common font set arrangements.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>charsPerRow</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The number of characters per row in the font set.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>xSpacing</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>If the characters in the font set have horizontal spacing between them set the required amount here.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>ySpacing</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>If the characters in the font set have vertical spacing between them set the required amount here.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>xOffset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>yOffset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-260">line 260</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The newly created BitmapFont texture which can be applied to an Image or Sprite.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.BitmapFont.html">Phaser.BitmapFont</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="bitmapText"><span class="type-signature"></span>bitmapText<span class="signature">(x, y, font, <span class="optional">text</span>, <span class="optional">size</span>, <span class="optional">group</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.BitmapText.html">Phaser.BitmapText</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Create a new BitmapText object.</p>
     </div>
     
 
@@ -1470,7 +1931,7 @@
 
         <tr>
             
-                <td class="name"><code>text</code></td>
+                <td class="name"><code>font</code></td>
             
 
             <td class="type">
@@ -1494,20 +1955,20 @@
 
             
 
-            <td class="description last"><p>The actual text that will be written.</p></td>
+            <td class="description last"><p>The key of the BitmapText font as stored in Game.Cache.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>style</code></td>
+                <td class="name"><code>text</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">string</span>
 
 
             
@@ -1515,6 +1976,8 @@
 
             
                 <td class="attributes">
+                
+                    &lt;optional><br>
                 
 
                 
@@ -1525,7 +1988,40 @@
 
             
 
-            <td class="description last"><p>The style object containing style attributes like font, font size , etc.</p></td>
+            <td class="description last"><p>The actual text that will be rendered. Can be set later via BitmapText.text.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>size</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The size the font will be rendered in, in pixels.</p></td>
         </tr>
 
 	
@@ -1590,7 +2086,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-237">line 237</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-283">line 283</a>
     </li></ul></dd>
     
 
@@ -2052,7 +2548,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-179">line 179</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-202">line 202</a>
     </li></ul></dd>
     
 
@@ -2293,7 +2789,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-220">line 220</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-243">line 243</a>
     </li></ul></dd>
     
 
@@ -2598,7 +3094,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-322">line 322</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-369">line 369</a>
     </li></ul></dd>
     
 
@@ -2813,7 +3309,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-203">line 203</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-226">line 226</a>
     </li></ul></dd>
     
 
@@ -2864,7 +3360,7 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
         
             
 <dt>
-    <h4 class="name" id="group"><span class="type-signature"></span>group<span class="signature">(parent, <span class="optional">name</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Group.html">Phaser.Group</a>}</span></h4>
+    <h4 class="name" id="group"><span class="type-signature"></span>group<span class="signature">(parent, <span class="optional">name</span>, <span class="optional">addToStage</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Group.html">Phaser.Group</a>}</span></h4>
     
     
 </dt>
@@ -2978,6 +3474,45 @@ at set intervals, and fixes their positions and velocities accorindgly.</p>
             
 
             <td class="description last"><p>A name for this Group. Not used internally but useful for debugging.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>addToStage</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>If set to true this Group will be added directly to the Game.Stage instead of Game.World.</p></td>
         </tr>
 
 	
@@ -3576,7 +4111,7 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-270">line 270</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-317">line 317</a>
     </li></ul></dd>
     
 
@@ -3850,7 +4385,7 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-124">line 124</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-146">line 146</a>
     </li></ul></dd>
     
 
@@ -4189,6 +4724,241 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
         
             
 <dt>
+    <h4 class="name" id="spriteBatch"><span class="type-signature"></span>spriteBatch<span class="signature">(parent, <span class="optional">name</span>, <span class="optional">addToStage</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Group.html">Phaser.Group</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>A Group is a container for display objects that allows for fast pooling, recycling and collision checks.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>parent</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The parent Group or DisplayObjectContainer that will hold this group, if any.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    'group'
+                
+                </td>
+            
+
+            <td class="description last"><p>A name for this Group. Not used internally but useful for debugging.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>addToStage</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>If set to true this Group will be added directly to the Game.Stage instead of Game.World.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-112">line 112</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The newly created group.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="text"><span class="type-signature"></span>text<span class="signature">(x, y, text, style, <span class="optional">group</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.Text.html">Phaser.Text</a>}</span></h4>
     
     
@@ -4415,7 +5185,7 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-160">line 160</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-183">line 183</a>
     </li></ul></dd>
     
 
@@ -4582,7 +5352,7 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-256">line 256</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-303">line 303</a>
     </li></ul></dd>
     
 
@@ -4633,7 +5403,7 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
         
             
 <dt>
-    <h4 class="name" id="tileSprite"><span class="type-signature"></span>tileSprite<span class="signature">(x, y, width, height, key, <span class="optional">group</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.TileSprite.html">Phaser.TileSprite</a>}</span></h4>
+    <h4 class="name" id="tileSprite"><span class="type-signature"></span>tileSprite<span class="signature">(x, y, width, height, key, frame, <span class="optional">group</span>)</span><span class="type-signature"> &rarr; {<a href="Phaser.TileSprite.html">Phaser.TileSprite</a>}</span></h4>
     
     
 </dt>
@@ -4701,7 +5471,7 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
 
             
 
-            <td class="description last"><p>X position of the new tileSprite.</p></td>
+            <td class="description last"><p>The x coordinate (in world space) to position the TileSprite at.</p></td>
         </tr>
 
 	
@@ -4732,7 +5502,7 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
 
             
 
-            <td class="description last"><p>Y position of the new tileSprite.</p></td>
+            <td class="description last"><p>The y coordinate (in world space) to position the TileSprite at.</p></td>
         </tr>
 
 	
@@ -4763,7 +5533,7 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
 
             
 
-            <td class="description last"><p>the width of the tilesprite.</p></td>
+            <td class="description last"><p>The width of the TileSprite.</p></td>
         </tr>
 
 	
@@ -4794,7 +5564,7 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
 
             
 
-            <td class="description last"><p>the height of the tilesprite.</p></td>
+            <td class="description last"><p>The height of the TileSprite.</p></td>
         </tr>
 
 	
@@ -4811,6 +5581,9 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
 |
 
 <span class="param-type"><a href="Phaser.RenderTexture.html">Phaser.RenderTexture</a></span>
+|
+
+<span class="param-type"><a href="Phaser.BitmapData.html">Phaser.BitmapData</a></span>
 |
 
 <span class="param-type">PIXI.Texture</span>
@@ -4831,7 +5604,41 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
 
             
 
-            <td class="description last"><p>This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.</p></td>
+            <td class="description last"><p>This is the image or texture used by the TileSprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>frame</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>If this TileSprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.</p></td>
         </tr>
 
 	
@@ -4896,7 +5703,7 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-140">line 140</a>
+        <a href="GameObjectFactory.js.html">gameobjects/GameObjectFactory.js</a>, <a href="GameObjectFactory.js.html#sunlight-1-line-162">line 162</a>
     </li></ul></dd>
     
 
@@ -5111,7 +5918,7 @@ It can still rotate, scale, crop and receive input events. This makes it perfect
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Sat Feb 08 2014 07:19:45 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Tue Feb 18 2014 03:01:21 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -1929,6 +1929,12 @@ function Narrowphase(){
      */
     this.frictionCoefficient = 0.3;
 
+    /**
+     * Will be the .relativeVelocity in each produced FrictionEquation.
+     * @property {Number} surfaceVelocity
+     */
+    this.surfaceVelocity = 0;
+
     this.reuseObjects = true;
     this.reusableContactEquations = [];
     this.reusableFrictionEquations = [];
@@ -1981,36 +1987,6 @@ function clearObject(obj){
  * @param {World} world
  */
 Narrowphase.prototype.reset = function(world){
-
-    // Emit world separation event
-    if(world && world.emitSeparationEvent){
-        for(var i=0; i<this.collidingBodiesLastStep.keys.length; i++){
-            var key = this.collidingBodiesLastStep.keys[i],
-                id1 = parseInt(key),
-                idx = key.indexOf(" "),
-                id2 = parseInt(key.substr(idx+1)),
-                found = false;
-
-            // Find the corresponding contactEquation
-            for(var j=0; j!==this.contactEquations.length; j++){
-                var eq = this.contactEquations[j],
-                    idA = eq.bi.id,
-                    idB = eq.bj.id;
-                if( (id1 == idA && id2 == idB) ||
-                    (id1 == idB && id2 == idA)){
-                    // Found! Bodies are still in contact.
-                    found = true;
-                    break;
-                }
-            }
-
-            if(!found){
-                world.separationEvent.bodyA = world.getBodyById(id1);
-                world.separationEvent.bodyB = world.getBodyById(id2);
-                world.emit(world.separationEvent);
-            }
-        }
-    }
 
     // Save the colliding bodies data
     clearObject(this.collidingBodiesLastStep);
@@ -2082,6 +2058,7 @@ Narrowphase.prototype.createFrictionEquation = function(bodyA,bodyB,shapeA,shape
     c.shapeB = shapeB;
     c.setSlipForce(this.slipForce);
     c.frictionCoefficient = this.frictionCoefficient;
+    c.relativeVelocity = this.surfaceVelocity;
     return c;
 };
 
@@ -3949,24 +3926,31 @@ var Circle = require('../shapes/Circle')
 ,   Broadphase = require('../collision/Broadphase')
 ,   vec2 = require('../math/vec2')
 
-module.exports = SAP1DBroadphase;
+module.exports = SAPBroadphase;
 
 /**
  * Sweep and prune broadphase along one axis.
  *
- * @class SAP1DBroadphase
+ * @class SAPBroadphase
  * @constructor
  * @extends Broadphase
  */
-function SAP1DBroadphase(){
+function SAPBroadphase(){
     Broadphase.apply(this);
 
     /**
      * List of bodies currently in the broadphase.
-     * @property axisList
+     * @property axisListX
      * @type {Array}
      */
-    this.axisList = [];
+    this.axisListX = [];
+
+    /**
+     * List of bodies currently in the broadphase.
+     * @property axisListY
+     * @type {Array}
+     */
+    this.axisListY = [];
 
     /**
      * The world to search in.
@@ -3975,49 +3959,38 @@ function SAP1DBroadphase(){
      */
     this.world = null;
 
-    /**
-     * Axis to sort the bodies along. Set to 0 for x axis, and 1 for y axis. For best performance, choose an axis that the bodies are spread out more on.
-     * @property axisIndex
-     * @type {Number}
-     */
-    this.axisIndex = 0;
-
-    var axisList = this.axisList;
+    var axisListX = this.axisListX,
+        axisListY = this.axisListY;
 
     this._addBodyHandler = function(e){
-        axisList.push(e.body);
+        axisListX.push(e.body);
+        axisListY.push(e.body);
     };
 
     this._removeBodyHandler = function(e){
-        var idx = axisList.indexOf(e.body);
-        if(idx !== -1)
-            axisList.splice(idx,1);
-    }
+        // Remove from X list
+        var idx = axisListX.indexOf(e.body);
+        if(idx !== -1) axisListX.splice(idx,1);
 
-    /*
-    // Add listeners to update the list of bodies.
-    world.on("addBody",function(e){
-        axisList.push(e.body);
-    }).on("removeBody",function(e){
-        var idx = axisList.indexOf(e.body);
-        if(idx !== -1)
-            axisList.splice(idx,1);
-    });
-    */
+        // Remove from Y list
+        idx = axisListY.indexOf(e.body);
+        if(idx !== -1) axisListY.splice(idx,1);
+    }
 };
-SAP1DBroadphase.prototype = new Broadphase();
+SAPBroadphase.prototype = new Broadphase();
 
 /**
  * Change the world
  * @method setWorld
  * @param  {World} world
  */
-SAP1DBroadphase.prototype.setWorld = function(world){
+SAPBroadphase.prototype.setWorld = function(world){
     // Clear the old axis array
-    this.axisList.length = 0;
+    this.axisListX.length = this.axisListY.length = 0;
 
     // Add all bodies from the new world
-    Utils.appendArray(this.axisList,world.bodies);
+    Utils.appendArray(this.axisListX,world.bodies);
+    Utils.appendArray(this.axisListY,world.bodies);
 
     // Remove old handlers, if any
     world
@@ -4031,26 +4004,44 @@ SAP1DBroadphase.prototype.setWorld = function(world){
 };
 
 /**
- * Function for sorting bodies along the X axis. To be passed to array.sort()
+ * Sorts bodies along the X axis.
  * @method sortAxisListX
- * @param  {Body} bodyA
- * @param  {Body} bodyB
- * @return {Number}
+ * @param {Array} a
+ * @return {Array}
  */
-SAP1DBroadphase.sortAxisListX = function(bodyA,bodyB){
-    return (bodyA.position[0]-bodyA.boundingRadius) - (bodyB.position[0]-bodyB.boundingRadius);
+SAPBroadphase.sortAxisListX = function(a){
+    for(var i=1,l=a.length;i<l;i++) {
+        var v = a[i];
+        for(var j=i - 1;j>=0;j--) {
+            if(a[j].aabb.lowerBound[0] <= v.aabb.lowerBound[0])
+                break;
+            a[j+1] = a[j];
+        }
+        a[j+1] = v;
+    }
+    return a;
 };
 
 /**
- * Function for sorting bodies along the Y axis. To be passed to array.sort()
+ * Sorts bodies along the Y axis.
  * @method sortAxisListY
- * @param  {Body} bodyA
- * @param  {Body} bodyB
- * @return {Number}
+ * @param {Array} a
+ * @return {Array}
  */
-SAP1DBroadphase.sortAxisListY = function(bodyA,bodyB){
-    return (bodyA.position[1]-bodyA.boundingRadius) - (bodyB.position[1]-bodyB.boundingRadius);
+SAPBroadphase.sortAxisListY = function(a){
+    for(var i=1,l=a.length;i<l;i++) {
+        var v = a[i];
+        for(var j=i - 1;j>=0;j--) {
+            if(a[j].aabb.lowerBound[1] <= v.aabb.lowerBound[1])
+                break;
+            a[j+1] = a[j];
+        }
+        a[j+1] = v;
+    }
+    return a;
 };
+
+var preliminaryList = { keys:[] };
 
 /**
  * Get the colliding pairs
@@ -4058,32 +4049,66 @@ SAP1DBroadphase.sortAxisListY = function(bodyA,bodyB){
  * @param  {World} world
  * @return {Array}
  */
-SAP1DBroadphase.prototype.getCollisionPairs = function(world){
-    var bodies = this.axisList,
+SAPBroadphase.prototype.getCollisionPairs = function(world){
+    var bodiesX = this.axisListX,
+        bodiesY = this.axisListY,
         result = this.result,
         axisIndex = this.axisIndex,
         i,j;
 
     result.length = 0;
 
-    // Sort the list
-    bodies.sort(axisIndex === 0 ? SAP1DBroadphase.sortAxisListX : SAP1DBroadphase.sortAxisListY );
+    // Update all AABBs if needed
+    for(i=0; i!==bodiesX.length; i++){
+        var b = bodiesX[i];
+        if(b.aabbNeedsUpdate) b.updateAABB();
+    }
 
-    // Look through the list
-    for(i=0, N=bodies.length; i!==N; i++){
-        var bi = bodies[i];
+    // Sort the lists
+    SAPBroadphase.sortAxisListX(bodiesX);
+    SAPBroadphase.sortAxisListY(bodiesY);
+
+    // Look through the X list
+    for(i=0, N=bodiesX.length; i!==N; i++){
+        var bi = bodiesX[i];
 
         for(j=i+1; j<N; j++){
-            var bj = bodies[j];
+            var bj = bodiesX[j];
 
-            if(!SAP1DBroadphase.checkBounds(bi,bj,axisIndex))
+            // Bounds overlap?
+            if(!SAPBroadphase.checkBounds(bi,bj,0))
                 break;
 
-            // If we got overlap, add pair
-            if(Broadphase.boundingRadiusCheck(bi,bj))
+            // add pair to preliminary list
+            var key = bi.id < bj.id ? bi.id+' '+bj.id : bj.id+' '+bi.id;
+            preliminaryList[key] = true;
+            preliminaryList.keys.push(key);
+        }
+    }
+
+    // Look through the Y list
+    for(i=0, N=bodiesY.length; i!==N; i++){
+        var bi = bodiesY[i];
+
+        for(j=i+1; j<N; j++){
+            var bj = bodiesY[j];
+
+            if(!SAPBroadphase.checkBounds(bi,bj,1))
+                break;
+
+            // If in preliminary list, add to final result
+            var key = bi.id < bj.id ? bi.id+' '+bj.id : bj.id+' '+bi.id;
+            if(preliminaryList[key] && Broadphase.boundingRadiusCheck(bi,bj))
                 result.push(bi,bj);
         }
     }
+
+    // Empty prel list
+    var keys = preliminaryList.keys;
+    for(i=0, N=keys.length; i!==N; i++){
+        delete preliminaryList[keys[i]];
+    }
+    keys.length = 0;
 
     return result;
 };
@@ -4097,7 +4122,8 @@ SAP1DBroadphase.prototype.getCollisionPairs = function(world){
  * @param  {Number} axisIndex
  * @return {Boolean}
  */
-SAP1DBroadphase.checkBounds = function(bi,bj,axisIndex){
+SAPBroadphase.checkBounds = function(bi,bj,axisIndex){
+    /*
     var biPos = bi.position[axisIndex],
         ri = bi.boundingRadius,
         bjPos = bj.position[axisIndex],
@@ -4108,6 +4134,8 @@ SAP1DBroadphase.checkBounds = function(bi,bj,axisIndex){
         boundB2 = bjPos+rj;
 
     return boundB1 < boundA2;
+    */
+    return bj.aabb.lowerBound[axisIndex] < bi.aabb.upperBound[axisIndex];
 };
 
 },{"../collision/Broadphase":10,"../math/vec2":33,"../shapes/Circle":38,"../shapes/Particle":41,"../shapes/Plane":42,"../shapes/Shape":44,"../utils/Utils":49}],16:[function(require,module,exports){
@@ -5217,6 +5245,12 @@ function Equation(bi,bj,minForce,maxForce){
      * @type {Number}
      */
     this.multiplier = 0;
+
+    /**
+     * Relative velocity.
+     * @property {Number} relativeVelocity
+     */
+    this.relativeVelocity = 0;
 };
 Equation.prototype.constructor = Equation;
 
@@ -5314,7 +5348,7 @@ Equation.prototype.computeGW = function(){
         vj = bj.velocity,
         wi = bi.angularVelocity,
         wj = bj.angularVelocity;
-    return this.transformedGmult(G,vi,wi,vj,wj);
+    return this.transformedGmult(G,vi,wi,vj,wj) + this.relativeVelocity;
 };
 
 /**
@@ -5567,8 +5601,8 @@ FrictionEquation.prototype.computeB = function(a,b,h){
     G[4] = t[1];
     G[5] = vec2.crossLength(rj,t);
 
-    var GW = this.computeGW();
-    var GiMf = this.computeGiMf();
+    var GW = this.computeGW(),
+        GiMf = this.computeGiMf();
 
     var B = /* - g * a  */ - GW * b - h*GiMf;
 
@@ -5642,7 +5676,7 @@ RotationalVelocityEquation.prototype.computeB = function(a,b,h){
     G[5] = this.ratio;
 
     var GiMf = this.computeGiMf();
-    var GW = this.computeGW() + this.relativeVelocity;
+    var GW = this.computeGW();
     var B = - GW * b - h*GiMf;
 
     return B;
@@ -5668,7 +5702,8 @@ EventEmitter.prototype = {
      * @param  {Function} listener
      * @return {EventEmitter} The self object, for chainability.
      */
-    on: function ( type, listener ) {
+    on: function ( type, listener, context ) {
+        listener.context = context || this;
         if ( this._listeners === undefined ) this._listeners = {};
         var listeners = this._listeners;
         if ( listeners[ type ] === undefined ) {
@@ -5727,7 +5762,8 @@ EventEmitter.prototype = {
         if ( listenerArray !== undefined ) {
             event.target = this;
             for ( var i = 0, l = listenerArray.length; i < l; i ++ ) {
-                listenerArray[ i ].call( this, event );
+                var listener = listenerArray[ i ];
+                listener.call( listener.context, event );
             }
         }
         return this;
@@ -5815,6 +5851,12 @@ function ContactMaterial(materialA, materialB, options){
      * @type {Number}
      */
     this.frictionRelaxation =   typeof(options.frictionRelaxation)  !== "undefined" ?   Number(options.frictionRelaxation)  : 3;
+
+    /**
+     * Will add surface velocity to this material. If bodyA rests on top if bodyB, and the surface velocity is positive, bodyA will slide to the right.
+     * @property {Number} surfaceVelocity
+     */
+    this.surfaceVelocity = typeof(options.surfaceVelocity)    !== "undefined" ?   Number(options.surfaceVelocity)    : 0
 };
 
 },{}],30:[function(require,module,exports){
@@ -6961,7 +7003,6 @@ Body.prototype.fromPolygon = function(path,options){
 
     var p = new decomp.Polygon();
     p.vertices = path;
-
     // Make it counter-clockwise
     p.makeCCW();
 
@@ -7428,7 +7469,7 @@ module.exports = {
     PrismaticConstraint :           require('./constraints/PrismaticConstraint'),
     Rectangle :                     require('./shapes/Rectangle'),
     RotationalVelocityEquation :    require('./equations/RotationalVelocityEquation'),
-    SAP1DBroadphase :               require('./collision/SAP1DBroadphase'),
+    SAPBroadphase :                 require('./collision/SAPBroadphase'),
     Shape :                         require('./shapes/Shape'),
     Solver :                        require('./solver/Solver'),
     Spring :                        require('./objects/Spring'),
@@ -7439,7 +7480,7 @@ module.exports = {
     version :                       require('../package.json').version,
 };
 
-},{"../package.json":8,"./collision/AABB":9,"./collision/Broadphase":10,"./collision/GridBroadphase":11,"./collision/NaiveBroadphase":12,"./collision/QuadTree":14,"./collision/SAP1DBroadphase":15,"./constraints/Constraint":16,"./constraints/DistanceConstraint":17,"./constraints/GearConstraint":18,"./constraints/LockConstraint":19,"./constraints/PrismaticConstraint":20,"./constraints/RevoluteConstraint":21,"./equations/AngleLockEquation":22,"./equations/ContactEquation":23,"./equations/Equation":24,"./equations/FrictionEquation":25,"./equations/RotationalVelocityEquation":27,"./events/EventEmitter":28,"./material/ContactMaterial":29,"./material/Material":30,"./math/vec2":33,"./objects/Body":34,"./objects/Spring":35,"./shapes/Capsule":37,"./shapes/Circle":38,"./shapes/Convex":39,"./shapes/Line":40,"./shapes/Particle":41,"./shapes/Plane":42,"./shapes/Rectangle":43,"./shapes/Shape":44,"./solver/GSSolver":45,"./solver/IslandSolver":47,"./solver/Solver":48,"./utils/Utils":49,"./world/World":50}],37:[function(require,module,exports){
+},{"../package.json":8,"./collision/AABB":9,"./collision/Broadphase":10,"./collision/GridBroadphase":11,"./collision/NaiveBroadphase":12,"./collision/QuadTree":14,"./collision/SAPBroadphase":15,"./constraints/Constraint":16,"./constraints/DistanceConstraint":17,"./constraints/GearConstraint":18,"./constraints/LockConstraint":19,"./constraints/PrismaticConstraint":20,"./constraints/RevoluteConstraint":21,"./equations/AngleLockEquation":22,"./equations/ContactEquation":23,"./equations/Equation":24,"./equations/FrictionEquation":25,"./equations/RotationalVelocityEquation":27,"./events/EventEmitter":28,"./material/ContactMaterial":29,"./material/Material":30,"./math/vec2":33,"./objects/Body":34,"./objects/Spring":35,"./shapes/Capsule":37,"./shapes/Circle":38,"./shapes/Convex":39,"./shapes/Line":40,"./shapes/Particle":41,"./shapes/Plane":42,"./shapes/Rectangle":43,"./shapes/Shape":44,"./solver/GSSolver":45,"./solver/IslandSolver":47,"./solver/Solver":48,"./utils/Utils":49,"./world/World":50}],37:[function(require,module,exports){
 var Shape = require('./Shape')
 ,   vec2 = require('../math/vec2')
 
@@ -9020,13 +9061,6 @@ function World(options){
      */
     this.emitImpactEvent = true;
 
-    /**
-     * Set to true if you want to the world to emit the "separation" event. Turning this off could improve performance.
-     * @property emitSeparationEvent
-     * @type {Boolean}
-     */
-    this.emitSeparationEvent = true;
-
     // Id counters
     this._constraintIdCounter = 0;
     this._bodyIdCounter = 0;
@@ -9083,18 +9117,6 @@ function World(options){
     };
 
     /**
-     * Fired when two bodies stop touching. This event is fired during the narrowphase.
-     * @event impact
-     * @param {Body} bodyA
-     * @param {Body} bodyB
-     */
-    this.separationEvent = {
-        type: "separation",
-        bodyA : null,
-        bodyB : null,
-    };
-
-    /**
      * Fired after the Broadphase has collected collision pairs in the world.
      * Inside the event handler, you can modify the pairs array as you like, to
      * prevent collisions between objects that you don't want.
@@ -9119,6 +9141,7 @@ function World(options){
         shapeB : null,
         bodyA : null,
         bodyB : null,
+        contactEquations : [],
     };
 
     this.endContactEvent = {
@@ -9342,17 +9365,19 @@ World.prototype.internalStep = function(dt){
                     aj = bj.shapeAngles[l];
 
                 var mu = this.defaultFriction,
-                    restitution = this.defaultRestitution;
+                    restitution = this.defaultRestitution,
+                    surfaceVelocity = 0;
 
                 if(si.material && sj.material){
                     var cm = this.getContactMaterial(si.material,sj.material);
                     if(cm){
                         mu = cm.friction;
                         restitution = cm.restitution;
+                        surfaceVelocity = cm.surfaceVelocity;
                     }
                 }
 
-                this.runNarrowphase(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution);
+                this.runNarrowphase(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution,surfaceVelocity);
             }
         }
     }
@@ -9361,13 +9386,14 @@ World.prototype.internalStep = function(dt){
     var last = this.overlappingShapesLastState;
     for(var i=0; i<last.keys.length; i++){
         var key = last.keys[i];
-        if(key.indexOf("shape")!=-1)
+        if(key.indexOf("shape")!=-1 || key.indexOf("body")!=-1)
             break;
 
         if(!this.overlappingShapesCurrentState[key]){
             // Not overlapping any more! Emit event.
             var e = this.endContactEvent;
-            // TODO: add shapes to the event object
+
+            // Add shapes to the event object
             e.shapeA = last[key+"_shapeA"];
             e.shapeB = last[key+"_shapeB"];
             e.bodyA = last[key+"_bodyA"];
@@ -9383,7 +9409,7 @@ World.prototype.internalStep = function(dt){
         delete last[key+"_bodyB"];
     }
     this.overlappingShapesLastState.keys.length = 0;
-    // Swap state objects & make sure to reuse them
+    // Swap state objects
     var tmp = this.overlappingShapesLastState;
     this.overlappingShapesLastState = this.overlappingShapesCurrentState;
     this.overlappingShapesCurrentState = tmp;
@@ -9496,7 +9522,7 @@ World.integrateBody = function(body,dt){
  * @param  {Number} aj
  * @param  {Number} mu
  */
-World.prototype.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution){
+World.prototype.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution,surfaceVelocity){
 
     if(!((si.collisionGroup & sj.collisionMask) !== 0 && (sj.collisionGroup & si.collisionMask) !== 0))
         return;
@@ -9517,6 +9543,7 @@ World.prototype.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitut
     np.enableFriction = mu > 0;
     np.frictionCoefficient = mu;
     np.restitution = restitution;
+    np.surfaceVelocity = surfaceVelocity;
 
     var resolver = np[si.type | sj.type],
         numContacts = 0;
@@ -9527,31 +9554,43 @@ World.prototype.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitut
             numContacts = resolver.call(np, bj,sj,xjw,ajw, bi,si,xiw,aiw);
         }
 
-        if(numContacts > 0){
+        if(numContacts){
             var key = si.id < sj.id ? si.id+" "+ sj.id : sj.id+" "+ si.id;
             if(!this.overlappingShapesLastState[key]){
+
                 // Report new shape overlap
                 var e = this.beginContactEvent;
                 e.shapeA = si;
                 e.shapeB = sj;
                 e.bodyA = bi;
                 e.bodyB = bj;
-                this.emit(e);
-                var current = this.overlappingShapesCurrentState;
-                if(!current[key]){
-                    current[key] = true;
-                    current.keys.push(key);
 
-                    // Also store shape & body data
-                    current[key+"_shapeA"] = si;
-                    current.keys.push(key+"_shapeA");
-                    current[key+"_shapeB"] = sj;
-                    current.keys.push(key+"_shapeB");
-                    current[key+"_bodyA"] = bi;
-                    current.keys.push(key+"_bodyA");
-                    current[key+"_bodyB"] = bj;
-                    current.keys.push(key+"_bodyB");
+                if(typeof(numContacts)=="number"){
+                    // Add contacts to the event object
+                    e.contactEquations.length = 0;
+                    for(var i=np.contactEquations.length-numContacts; i<np.contactEquations.length; i++)
+                        e.contactEquations.push(np.contactEquations[i]);
                 }
+
+                this.emit(e);
+            }
+
+            // Store current contact state
+            var current = this.overlappingShapesCurrentState;
+            if(!current[key]){
+
+                current[key] = true;
+                current.keys.push(key);
+
+                // Also store shape & body data
+                current[key+"_shapeA"] = si;
+                current.keys.push(key+"_shapeA");
+                current[key+"_shapeB"] = sj;
+                current.keys.push(key+"_shapeB");
+                current[key+"_bodyA"] = bi;
+                current.keys.push(key+"_bodyA");
+                current[key+"_bodyB"] = bj;
+                current.keys.push(key+"_bodyB");
             }
         }
     }
@@ -10111,7 +10150,7 @@ World.prototype.hitTest = function(worldPoint,bodies,precision){
 *
 * Phaser - http://www.phaser.io
 *
-* v1.1.5 - Built at: Mon Feb 17 2014 11:26:56
+* v1.2 - Built at: Tue Feb 18 2014 02:58:29
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -10195,7 +10234,7 @@ PIXI.DEG_TO_RAD = Math.PI / 180;
 */
 var Phaser = Phaser || {
 
-	VERSION: '1.1.5',
+	VERSION: '1.2',
 	DEV_VERSION: '1.2',
 	GAMES: [],
 
@@ -13285,6 +13324,10 @@ PIXI.DisplayObject = function()
      */
     this._mask = null;
 
+    this._cacheAsBitmap = false;
+    this._cacheIsDirty = false;
+
+
     /*
      * MOUSE Callbacks
      */
@@ -13470,6 +13513,28 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'filters', {
     }
 });
 
+Object.defineProperty(PIXI.DisplayObject.prototype, 'cacheAsBitmap', {
+    get: function() {
+        return  this._cacheAsBitmap;
+    },
+    set: function(value) {
+
+        if(this._cacheAsBitmap === value)return;
+
+        if(value)
+        {
+            //this._cacheIsDirty = true;
+            this._generateCachedSprite();
+        }
+        else
+        {
+            this._destroyCachedSprite();
+        }
+
+        this._cacheAsBitmap = value;
+    }
+});
+
 /*
  * Updates the object transform for rendering
  *
@@ -13490,6 +13555,7 @@ PIXI.DisplayObject.prototype.updateTransform = function()
    // var localTransform = this.localTransform//.toArray();
     var parentTransform = this.parent.worldTransform;//.toArray();
     var worldTransform = this.worldTransform;//.toArray();
+
     var px = this.pivot.x;
     var py = this.pivot.y;
 
@@ -13533,10 +13599,9 @@ PIXI.DisplayObject.prototype.getBounds = function( matrix )
  */
 PIXI.DisplayObject.prototype.getLocalBounds = function()
 {
-    //var matrixCache = this.worldTransform;
-
     return this.getBounds(PIXI.identityMatrix);///PIXI.EmptyRectangle();
 };
+
 
 /**
  * Sets the object's stage reference, the stage this object is connected to
@@ -13550,6 +13615,62 @@ PIXI.DisplayObject.prototype.setStageReference = function(stage)
     if(this._interactive)this.stage.dirty = true;
 };
 
+PIXI.DisplayObject.prototype.generateTexture = function(renderer)
+{
+    var bounds = this.getLocalBounds();
+
+    var renderTexture = new PIXI.RenderTexture(bounds.width | 0, bounds.height | 0, renderer);
+    renderTexture.render(this);
+
+    return renderTexture;
+};
+
+PIXI.DisplayObject.prototype.updateCache = function()
+{
+    this._generateCachedSprite();
+};
+
+PIXI.DisplayObject.prototype._renderCachedSprite = function(renderSession)
+{
+    if(renderSession.gl)
+    {
+        PIXI.Sprite.prototype._renderWebGL.call(this._cachedSprite, renderSession);
+    }
+    else
+    {
+        PIXI.Sprite.prototype._renderCanvas.call(this._cachedSprite, renderSession);
+    }
+};
+
+PIXI.DisplayObject.prototype._generateCachedSprite = function()//renderSession)
+{
+    this._cacheAsBitmap = false;
+    var bounds = this.getLocalBounds();
+   
+    if(!this._cachedSprite)
+    {
+        var renderTexture = new PIXI.RenderTexture(bounds.width | 0, bounds.height | 0);//, renderSession.renderer);
+        
+        this._cachedSprite = new PIXI.Sprite(renderTexture);
+        this._cachedSprite.worldTransform = this.worldTransform;
+    }
+    else
+    {
+        this._cachedSprite.texture.resize(bounds.width | 0, bounds.height | 0);
+    }
+
+    //REMOVE filter!
+    var tempFilters = this._filters;
+    this._filters = null;
+
+    this._cachedSprite.filters = tempFilters;
+    this._cachedSprite.texture.render(this);
+
+    this._filters = tempFilters;
+
+    this._cacheAsBitmap = true;
+};
+
 /**
 * Renders the object using the WebGL renderer
 *
@@ -13557,6 +13678,18 @@ PIXI.DisplayObject.prototype.setStageReference = function(stage)
 * @param renderSession {RenderSession} 
 * @private
 */
+PIXI.DisplayObject.prototype._destroyCachedSprite = function()
+{
+    if(!this._cachedSprite)return;
+
+    this._cachedSprite.texture.destroy(true);
+  //  console.log("DESTROY")
+    // let the gc collect the unused sprite
+    // TODO could be object pooled!
+    this._cachedSprite = null;
+};
+
+
 PIXI.DisplayObject.prototype._renderWebGL = function(renderSession)
 {
     // OVERWRITE;
@@ -13815,6 +13948,8 @@ PIXI.DisplayObjectContainer.prototype.updateTransform = function()
 
     PIXI.DisplayObject.prototype.updateTransform.call( this );
 
+    if(this._cacheAsBitmap)return;
+
     for(var i=0,j=this.children.length; i<j; i++)
     {
         this.children[i].updateTransform();
@@ -13954,6 +14089,12 @@ PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
 {
     if(!this.visible || this.alpha <= 0)return;
     
+    if(this._cacheAsBitmap)
+    {
+        this._renderCachedSprite(renderSession);
+        return;
+    }
+    
     var i,j;
 
     if(this._mask || this._filters)
@@ -14005,6 +14146,13 @@ PIXI.DisplayObjectContainer.prototype._renderCanvas = function(renderSession)
 {
     if(this.visible === false || this.alpha === 0)return;
 
+    if(this._cacheAsBitmap)
+    {
+
+        this._renderCachedSprite(renderSession);
+        return;
+    }
+
     if(this._mask)
     {
         renderSession.maskManager.pushMask(this._mask, renderSession.context);
@@ -14021,6 +14169,7 @@ PIXI.DisplayObjectContainer.prototype._renderCanvas = function(renderSession)
         renderSession.maskManager.popMask(renderSession.context);
     }
 };
+
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -14368,7 +14517,6 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
         var transform = this.worldTransform;
 
         // allow for trimming
-       
         if (renderSession.roundPixels)
         {
             context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx || 0, transform.ty || 0);
@@ -14377,7 +14525,6 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
         {
             context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
         }
-
 
         //if smoothingEnabled is supported and we need to change the smoothing property for this texture
         if(renderSession.smoothProperty && renderSession.scaleMode !== this.texture.baseTexture.scaleMode) {
@@ -17033,7 +17180,7 @@ PIXI.WebGLRenderer = function(width, height, view, transparent, antialias)
     this.renderSession.maskManager = this.maskManager;
     this.renderSession.filterManager = this.filterManager;
     this.renderSession.spriteBatch = this.spriteBatch;
-
+    this.renderSession.renderer = this;
 
     gl.useProgram(this.shaderManager.defaultShader.program);
 
@@ -17074,6 +17221,18 @@ PIXI.WebGLRenderer.prototype.render = function(stage)
     // update the scene graph
     stage.updateTransform();
 
+
+    // interaction
+    if(stage._interactive)
+    {
+        //need to add some events!
+        if(!stage._interactiveEventsAdded)
+        {
+            stage._interactiveEventsAdded = true;
+            stage.interactionManager.setTarget(this);
+        }
+    }
+    
     var gl = this.gl;
 
     // -- Does this need to be set every frame? -- //
@@ -17841,11 +18000,13 @@ PIXI.WebGLSpriteBatch.prototype.end = function()
 */
 PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
 {
+    var texture = sprite.texture;
+
     // check texture..
-    if(sprite.texture.baseTexture !== this.currentBaseTexture || this.currentBatchSize >= this.size)
+    if(texture.baseTexture !== this.currentBaseTexture || this.currentBatchSize >= this.size)
     {
         this.flush();
-        this.currentBaseTexture = sprite.texture.baseTexture;
+        this.currentBaseTexture = texture.baseTexture;
     }
 
 
@@ -17866,8 +18027,6 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
 
     var verticies = this.vertices;
 
-    var width = sprite.texture.frame.width;
-    var height = sprite.texture.frame.height;
 
     // TODO trim??
     var aX = sprite.anchor.x;
@@ -17881,18 +18040,19 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
         var trim = sprite.texture.trim;
 
         w1 = trim.x - aX * trim.width;
-        w0 = w1 + width;
+        w0 = w1 + texture.frame.width;
 
         h1 = trim.y - aY * trim.height;
-        h0 = h1 + height;
+        h0 = h1 + texture.frame.height;
+
     }
     else
     {
-        w0 = (width ) * (1-aX);
-        w1 = (width ) * -aX;
+        w0 = (texture.frame.width ) * (1-aX);
+        w1 = (texture.frame.width ) * -aX;
 
-        h0 = height * (1-aY);
-        h1 = height * -aY;
+        h0 = texture.frame.height * (1-aY);
+        h1 = texture.frame.height * -aY;
     }
 
     var index = this.currentBatchSize * 4 * this.vertSize;
@@ -18595,7 +18755,7 @@ PIXI.WebGLFilterManager.prototype.begin = function(renderSession, buffer)
     this.defaultShader = renderSession.shaderManager.defaultShader;
 
     var projection = this.renderSession.projection;
-
+   // console.log(this.width)
     this.width = projection.x * 2;
     this.height = -projection.y * 2;
     this.buffer = buffer;
@@ -18721,6 +18881,7 @@ PIXI.WebGLFilterManager.prototype.popFilter = function()
         var inputTexture = texture;
         var outputTexture = this.texturePool.pop();
         if(!outputTexture)outputTexture = new PIXI.FilterTexture(this.gl, this.width, this.height);
+        outputTexture.resize(this.width, this.height);
 
         // need to clear this FBO as it may have some left over elements from a previous filter.
         gl.bindFramebuffer(gl.FRAMEBUFFER, outputTexture.frameBuffer );
@@ -18771,7 +18932,7 @@ PIXI.WebGLFilterManager.prototype.popFilter = function()
     // time to render the filters texture to the previous scene
     if(this.filterStack.length === 0)
     {
-        gl.colorMask(true, true, true, this.transparent);
+        gl.colorMask(true, true, true, true);//this.transparent);
     }
     else
     {
@@ -18828,7 +18989,12 @@ PIXI.WebGLFilterManager.prototype.popFilter = function()
 
     gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.uvArray);
 
+   //console.log(this.vertexArray)
+   //console.log(this.uvArray)
+    //console.log(sizeX + " : " + sizeY)
+
     gl.viewport(0, 0, sizeX, sizeY);
+
     // bind the buffer
     gl.bindFramebuffer(gl.FRAMEBUFFER, buffer );
 
@@ -18892,6 +19058,7 @@ PIXI.WebGLFilterManager.prototype.applyFilterPass = function(filter, filterArea,
         filter.uniforms.dimensions.value[3] = this.vertexArray[5];//filterArea.height;
     }
 
+  //  console.log(this.uvArray )
     shader.syncUniforms();
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
@@ -18997,6 +19164,7 @@ PIXI.WebGLFilterManager.prototype.destroy = function()
     gl.deleteBuffer(this.colorBuffer);
     gl.deleteBuffer(this.indexBuffer);
 };
+
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
  */
@@ -21200,6 +21368,12 @@ PIXI.BaseTexture = function(source, scaleMode)
      */
     this.source = source;
 
+    //TODO will be used for futer pixi 1.5...
+    this.id = PIXI.BaseTextureCacheIdGenerator++;
+
+    // used for webGL
+    this._glTextures = [];
+    
     if(!source)return;
 
     if(this.source.complete || this.source.getContext)
@@ -21229,11 +21403,7 @@ PIXI.BaseTexture = function(source, scaleMode)
     this.imageUrl = null;
     this._powerOf2 = false;
 
-    //TODO will be used for futer pixi 1.5...
-    this.id = PIXI.BaseTextureCacheIdGenerator++;
-
-    // used for webGL
-    this._glTextures = [];
+    
 
 };
 
@@ -21555,7 +21725,8 @@ PIXI.Texture.addTextureToCache = function(texture, id)
 PIXI.Texture.removeTextureFromCache = function(id)
 {
     var texture = PIXI.TextureCache[id];
-    PIXI.TextureCache[id] = null;
+    delete PIXI.TextureCache[id];
+    delete PIXI.BaseTextureCache[id];
     return texture;
 };
 
@@ -21769,6 +21940,8 @@ PIXI.RenderTexture.prototype.renderCanvas = function(displayObject, position, cl
 {
     var children = displayObject.children;
 
+    var originalWorldTransform = displayObject.worldTransform;
+
     displayObject.worldTransform = PIXI.RenderTexture.tempMatrix;
 
     if(position)
@@ -21789,9 +21962,13 @@ PIXI.RenderTexture.prototype.renderCanvas = function(displayObject, position, cl
     this.renderer.renderDisplayObject(displayObject, context);
 
     context.setTransform(1,0,0,1,0,0);
+
+    displayObject.worldTransform = originalWorldTransform;
 };
 
 PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
+
+
 /**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
@@ -34016,7 +34193,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "physicsEnabled", {
         {
             if (this.body === null)
             {
-                this.body = new Phaser.Physics.Body(this);
+                this.body = new Phaser.Physics.Body(this.game, this, this.x, this.y, 1);
                 this.anchor.set(0.5);
             }
         }
@@ -36045,8 +36222,8 @@ Object.defineProperty(Phaser.Text.prototype, "fixedToCamera", {
 * @classdesc BitmapText objects work by taking a texture file and an XML file that describes the font layout.
 *
 * On Windows you can use the free app BMFont: http://www.angelcode.com/products/bmfont/
-*
 * On OS X we recommend Glyph Designer: http://www.71squared.com/en/glyphdesigner
+* For Web there is the great Littera: http://kvazars.com/littera/
 *
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
@@ -37152,16 +37329,6 @@ Phaser.Graphics = function (game, x, y) {
     this.world = new Phaser.Point(x, y);
 
     /**
-    * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
-    */
-    this.events = new Phaser.Events(this);
-
-    /**
-    * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
-    */
-    this.input = null;
-
-    /**
     * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
     */
     this.cameraOffset = new Phaser.Point();
@@ -37302,42 +37469,6 @@ Object.defineProperty(Phaser.Graphics.prototype, 'angle', {
 
     set: function(value) {
         this.rotation = Phaser.Math.degToRad(value);
-    }
-
-});
-
-/**
-* By default a Graphics object won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
-* activated for this object and it will then start to process click/touch events and more.
-*
-* @name Phaser.Graphics#inputEnabled
-* @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
-*/
-Object.defineProperty(Phaser.Graphics.prototype, "inputEnabled", {
-    
-    get: function () {
-
-        return (this.input && this.input.enabled);
-
-    },
-
-    set: function (value) {
-
-        if (value)
-        {
-            if (this.input === null)
-            {
-                this.input = new Phaser.InputHandler(this);
-                this.input.start();
-            }
-        }
-        else
-        {
-            if (this.input && this.input.enabled)
-            {
-                this.input.stop();
-            }
-        }
     }
 
 });
@@ -45796,6 +45927,7 @@ Phaser.AnimationParser = {
 
                 PIXI.TextureCache[uuid].trim = new Phaser.Rectangle(frames[i].spriteSourceSize.x, frames[i].spriteSourceSize.y, frames[i].sourceSize.w, frames[i].sourceSize.h);
             }
+
         }
 
         return data;
@@ -45862,7 +45994,7 @@ Phaser.AnimationParser = {
                     frames[key].spriteSourceSize.h
                 );
 
-                PIXI.TextureCache[uuid].trim = new Phaser.Rectangle(frames[i].spriteSourceSize.x, frames[i].spriteSourceSize.y, frames[i].sourceSize.w, frames[i].sourceSize.h);
+                PIXI.TextureCache[uuid].trim = new Phaser.Rectangle(frames[key].spriteSourceSize.x, frames[key].spriteSourceSize.y, frames[key].sourceSize.w, frames[key].sourceSize.h);
             }
 
             i++;
@@ -50566,14 +50698,30 @@ Phaser.Utils.Debug.prototype = {
 
         this.start(0, 0, color);
 
-        var i = body.data.shapes.length;
-        var x = this.game.math.p2px(body.data.position[0]);
-        var y = this.game.math.p2px(body.data.position[1]);
+        var shapes = body.data.shapes;
+        var shapeOffsets = body.data.shapeOffsets;
+        var shapeAngles = body.data.shapeAngles;
+
+        var i = shapes.length;
+        var x = this.game.math.p2px(body.data.position[0]) - this.game.camera.view.x;
+        var y = this.game.math.p2px(body.data.position[1]) - this.game.camera.view.y;
         var angle = body.data.angle;
 
         while (i--)
         {
-            this.renderShape(body.data.shapes[i], x, y, angle);
+            if (shapes[i] instanceof p2.Rectangle)
+            {
+                this.renderShapeRectangle(x, y, angle, shapes[i], shapeOffsets[i], shapeAngles[i]);
+            }
+            else if (shapes[i] instanceof p2.Line)
+            {
+                this.renderShapeLine(x, y, angle, shapes[i], shapeOffsets[i], shapeAngles[i]);
+            }
+            // else if (shapes[i] instanceof p2.Convex)
+            else
+            {
+                this.renderShapeConvex(x, y, angle, shapes[i], shapeOffsets[i], shapeAngles[i]);
+            }
         }
 
         this.stop();
@@ -50587,7 +50735,7 @@ Phaser.Utils.Debug.prototype = {
     * @param {number} y - The y coordinate of the Body to translate to.
     * @param {number} angle - The angle of the Body to rotate to.
     */
-    renderShape: function (shape, x, y, angle) {
+    renderShapeRectangle: function (x, y, bodyAngle, shape, offset, angle) {
         
         var w = this.game.math.p2px(shape.width);
         var h = this.game.math.p2px(shape.height);
@@ -50595,9 +50743,60 @@ Phaser.Utils.Debug.prototype = {
 
         this.context.beginPath();
         this.context.save();
+        this.context.translate(x + this.game.math.p2px(offset[0]), y + this.game.math.p2px(offset[1]));
+        this.context.rotate(bodyAngle + angle);
+
+        this.context.moveTo(this.game.math.p2px(points[0][0]), this.game.math.p2px(points[0][1]));
+
+        for (var i = 1; i < points.length; i++)
+        {
+            this.context.lineTo(this.game.math.p2px(points[i][0]), this.game.math.p2px(points[i][1]));
+        }
+
+        this.context.closePath();
+        this.context.stroke();
+        this.context.restore();
+
+    },
+
+    /**
+    * @method Phaser.Utils.Debug#renderShape
+    * @param {number} x - The x coordinate of the Body to translate to.
+    * @param {number} y - The y coordinate of the Body to translate to.
+    * @param {p2.Shape} shape - The shape to render.
+    * @param {number} offset - 
+    * @param {number} angle - 
+    */
+    renderShapeLine: function (x, y, bodyAngle, shape, offset, angle) {
+        
+        this.context.beginPath();
+        this.context.save();
         this.context.translate(x, y);
-        this.context.rotate(angle);
+        this.context.rotate(bodyAngle + angle);
         this.context.lineWidth = 0.5;
+        this.context.moveTo(0, 0);
+        this.context.lineTo(this.game.math.p2px(shape.length), 0);
+        this.context.closePath();
+        this.context.stroke();
+        this.context.restore();
+
+    },
+
+    /**
+    * @method Phaser.Utils.Debug#renderShape
+    * @param {p2.Shape} shape - The shape to render.
+    * @param {number} x - The x coordinate of the Body to translate to.
+    * @param {number} y - The y coordinate of the Body to translate to.
+    * @param {number} angle - The angle of the Body to rotate to.
+    */
+    renderShapeConvex: function (x, y, bodyAngle, shape, offset, angle) {
+
+        var points = shape.vertices;
+
+        this.context.beginPath();
+        this.context.save();
+        this.context.translate(x + this.game.math.p2px(offset[0]), y + this.game.math.p2px(offset[1]));
+        this.context.rotate(bodyAngle + angle);
 
         this.context.moveTo(this.game.math.p2px(points[0][0]), this.game.math.p2px(points[0][1]));
 
@@ -51204,6 +51403,45 @@ Phaser.Physics.World.prototype.destroy = function () {
 };
 
 /**
+* @method Phaser.Physics.World.prototype.createBody
+* @param {number} x - The x coordinate of Body.
+* @param {number} y - The y coordinate of Body.
+* @param {number} mass - The mass of the Body. A mass of 0 means a 'static' Body is created.
+* @param {boolean} [addToWorld=false] - Automatically add this Body to the world? (usually false as it won't have any shapes on construction).
+* @param {object} options - An object containing the build options: 
+* @param {boolean} [options.optimalDecomp=false] - Set to true if you need optimal decomposition. Warning: very slow for polygons with more than 10 vertices.
+* @param {boolean} [options.skipSimpleCheck=false] - Set to true if you already know that the path is not intersecting itself.
+* @param {boolean|number} [options.removeCollinearPoints=false] - Set to a number (angle threshold value) to remove collinear points, or false to keep all points.
+* @param {(number[]|...number)} points - An array of 2d vectors that form the convex or concave polygon. 
+*                                       Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...], 
+*                                       or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
+*/
+Phaser.Physics.World.prototype.createBody = function (x, y, mass, addToWorld, options, data) {
+
+    if (typeof addToWorld === 'undefined') { addToWorld = false; }
+
+    var body = new Phaser.Physics.Body(this.game, null, x, y, mass);
+
+    if (data)
+    {
+        var result = body.addPolygon(options, data);
+
+        if (!result)
+        {
+            return false;
+        }
+    }
+
+    if (addToWorld)
+    {
+        this.addBody(body.data);
+    }
+
+    return body;
+
+};
+
+/**
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
@@ -51272,7 +51510,7 @@ Object.defineProperty(Phaser.Physics.PointProxy.prototype, "y", {
 */
 
 /**
-* The Physics Body is linked to a single Sprite and defines properties that determine how the physics body is simulated.
+* The Physics Body is typically linked to a single Sprite and defines properties that determine how the physics body is simulated.
 * These properties affect how the body reacts to forces, what forces it generates on itself (to simulate friction), and how it reacts to collisions in the scene.
 * In most cases, the properties are used to simulate physical effects. Each body also has its own property values that determine exactly how it reacts to forces and collisions in the scene.
 * By default a single Rectangle shape is added to the Body that matches the dimensions of the parent Sprite. See addShape, removeShape, clearShapes to add extra shapes around the Body.
@@ -51280,19 +51518,28 @@ Object.defineProperty(Phaser.Physics.PointProxy.prototype, "y", {
 * @class Phaser.Physics.Body
 * @classdesc Physics Body Constructor
 * @constructor
-* @param {Phaser.Sprite} sprite - The Sprite object this physics body belongs to.
+* @param {Phaser.Game} game - Game reference to the currently running game.
+* @param {Phaser.Sprite} [sprite] - The Sprite object this physics body belongs to.
+* @param {number} [x=0] - The x coordinate of this Body.
+* @param {number} [y=0] - The y coordinate of this Body.
+* @param {number} [mass=1] - The default mass of this Body (0 = static).
 */
-Phaser.Physics.Body = function (sprite) {
+Phaser.Physics.Body = function (game, sprite, x, y, mass) {
+
+    sprite = sprite || null;
+    x = x || 0;
+    y = y || 0;
+    if (typeof mass === 'undefined') { mass = 1; }
+
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
+    this.game = game;
 
     /**
     * @property {Phaser.Sprite} sprite - Reference to the parent Sprite.
     */
     this.sprite = sprite;
-
-    /**
-    * @property {Phaser.Game} game - Local reference to game.
-    */
-    this.game = sprite.game;
 
     /**
     * @property {Phaser.Point} offset - The offset of the Physics Body from the Sprite x/y position.
@@ -51303,7 +51550,7 @@ Phaser.Physics.Body = function (sprite) {
     * @property {p2.Body} data - The p2 Body data.
     * @protected
     */
-    this.data = new p2.Body({ position:[this.px2p(sprite.position.x), this.px2p(sprite.position.y)], mass: 1 });
+    this.data = new p2.Body({ position:[this.px2p(x), this.px2p(y)], mass: mass });
     this.data.parent = this;
 
     /**
@@ -51320,9 +51567,11 @@ Phaser.Physics.Body = function (sprite) {
     // this.onRemoved = new Phaser.Signal();
 
     //  Set-up the default shape
-    this.setRectangleFromSprite(sprite);
-
-    this.game.physics.addBody(this.data);
+    if (sprite)
+    {
+        this.setRectangleFromSprite(sprite);
+        this.game.physics.addBody(this.data);
+    }
 
 };
 
@@ -51475,6 +51724,23 @@ Phaser.Physics.Body.prototype = {
 
         this.data.force[0] += magnitude * Math.cos(angle);
         this.data.force[1] += magnitude * Math.sin(angle);
+
+    },
+
+    /**
+    * Applies a force to the Body that causes it to 'thrust' backwards (in reverse), based on its current angle and the given speed.
+    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
+    *
+    * @method Phaser.Physics.Body#rever
+    * @param {number} speed - The speed at which it should reverse.
+    */
+    reverse: function (speed) {
+
+        var magnitude = this.px2p(-speed);
+        var angle = this.data.angle + Math.PI / 2;
+
+        this.data.force[0] -= magnitude * Math.cos(angle);
+        this.data.force[1] -= magnitude * Math.sin(angle);
 
     },
 
@@ -51803,19 +52069,36 @@ Phaser.Physics.Body.prototype = {
         //  Did they pass in a single array of points?
         if (points.length === 1 && Array.isArray(points[0]))
         {
-            path = path.concat(points[0]);
+            path = points[0].slice(0);
         }
         else if (Array.isArray(points[0]))
         {
-            path = path.concat(points);
+            path = points[0].slice(0);
+            // for (var i = 0, len = points[0].length; i < len; i += 2)
+            // {
+            //     path.push([points[0][i], points[0][i + 1]]);
+            // }
         }
         else if (typeof points[0] === 'number')
         {
+            // console.log('addPolygon --- We\'ve a list of numbers');
             //  We've a list of numbers
             for (var i = 0, len = points.length; i < len; i += 2)
             {
                 path.push([points[i], points[i + 1]]);
             }
+        }
+
+        // console.log('addPolygon PATH pre');
+        // console.log(path[1]);
+        // console.table(path);
+
+        //  top and tail
+        var idx = path.length - 1;
+
+        if ( path[idx][0] === path[0][0] && path[idx][1] === path[0][1] )
+        {
+            path.pop();
         }
 
         //  Now process them into p2 values
@@ -51824,6 +52107,10 @@ Phaser.Physics.Body.prototype = {
             path[p][0] = this.px2p(path[p][0]);
             path[p][1] = this.px2p(path[p][1]);
         }
+
+        // console.log('addPolygon PATH POST');
+        // console.log(path[1]);
+        // console.table(path);
 
         return this.data.fromPolygon(path, options);
 
@@ -52011,10 +52298,16 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "static", {
         if (value && this.data.motionState !== Phaser.STATIC)
         {
             this.data.motionState = Phaser.STATIC;
+            this.mass = 0;
         }
         else if (!value && this.data.motionState === Phaser.STATIC)
         {
             this.data.motionState = Phaser.DYNAMIC;
+
+            if (this.mass === 0)
+            {
+                this.mass = 1;
+            }
         }
 
     }
@@ -52038,10 +52331,16 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "dynamic", {
         if (value && this.data.motionState !== Phaser.DYNAMIC)
         {
             this.data.motionState = Phaser.DYNAMIC;
+
+            if (this.mass === 0)
+            {
+                this.mass = 1;
+            }
         }
         else if (!value && this.data.motionState === Phaser.DYNAMIC)
         {
             this.data.motionState = Phaser.STATIC;
+            this.mass = 0;
         }
 
     }
@@ -52069,6 +52368,7 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "kinematic", {
         else if (!value && this.data.motionState === Phaser.KINEMATIC)
         {
             this.data.motionState = Phaser.STATIC;
+            this.mass = 0;
         }
 
     }
@@ -52266,6 +52566,11 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "mass", {
         {
             this.data.mass = value;
             this.data.updateMassProperties();
+
+            if (value === 0)
+            {
+                // this.static = true;
+            }
         }
 
     }
@@ -53558,6 +53863,11 @@ Phaser.Tilemap = function (game, key) {
     this.objects = data.objects;
 
     /**
+    * @property {array} collision - An array of collision data (polylines, etc).
+    */
+    this.collision = data.collision;
+
+    /**
     * @property {array} images - An array of Tiled Image Layers.
     */
     this.images = data.images;
@@ -53740,6 +54050,141 @@ Phaser.Tilemap.prototype = {
                 }
             }
         }
+
+    },
+
+    /**
+    * Clears all physics bodies from the world for the given layer.
+    *
+    * @method Phaser.Tilemap#clearPhysicsBodies
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to this.currentLayer.
+    */
+    clearPhysicsBodies: function (layer) {
+
+        layer = this.getLayer(layer);
+
+        var i = this.layers[layer].bodies.length;
+
+        while (i--)
+        {
+            this.layers[layer].bodies[i].destroy();
+        }
+
+    },
+
+    /**
+    * Goes through all tiles in the given layer and converts those set to collide into physics bodies in the world.
+    * Only call this *after* you have specified all of the tiles you wish to collide with calls like Tilemap.setCollisionBetween, etc.
+    * Every time you call this method it will destroy any previously created bodies and remove them from the world.
+    * Therefore understand it's an expensive operation and not to be done in a core game update loop.
+    *
+    * @method Phaser.Tilemap#generateCollisionData
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to this.currentLayer.
+    * @param {boolean} [addToWorld=true] - If true it will automatically add each body to the world, otherwise it's up to you to do so.
+    * @return {array} An array of the Phaser.Physics.Body objects that have been created.
+    */
+    generateCollisionData: function (layer, addToWorld) {
+
+        layer = this.getLayer(layer);
+
+        if (typeof addToWorld === 'undefined') { addToWorld = true; }
+
+        //  If the bodies array is already populated we need to nuke it
+        if (this.layers[layer].bodies.length > 0)
+        {
+            this.clearPhysicsBodies(layer);
+        }
+
+        this.layers[layer].bodies.length = [];
+
+        var width = 0;
+        var sx = 0;
+        var sy = 0;
+
+        for (var y = 0, h = this.layers[layer].height; y < h; y++)
+        {
+            width = 0;
+
+            for (var x = 0, w = this.layers[layer].width; x < w; x++)
+            {
+                var tile = this.layers[layer].data[y][x];
+
+                if (tile)
+                {
+                    right = this.getTileRight(layer, x, y);
+
+                    if (width === 0)
+                    {
+                        sx = tile.x * tile.width;
+                        sy = tile.y * tile.height;
+                        width = tile.width;
+                    }
+
+                    if (right && right.collides)
+                    {
+                        width += tile.width;
+                    }
+                    else
+                    {
+                        var body = this.game.physics.createBody(sx, sy, 0, false);
+
+                        body.addRectangle(width, tile.height, width / 2, tile.height / 2, 0);
+
+                        if (addToWorld)
+                        {
+                            this.game.physics.addBody(body.data);
+                        }
+
+                        this.layers[layer].bodies.push(body);
+
+                        width = 0;
+                    }
+                }
+            }
+        }
+
+        return this.layers[layer].bodies;
+
+    },
+
+    /**
+    * Converts all of the polylines inside a Tiled ObjectGroup into physics bodies that are added to the world.
+    * Note that the polylines must be created in such a way that they can withstand polygon decomposition.
+    *
+    * @method Phaser.Tilemap#createCollisionObjects
+    * @param {string} [layer] - The Tiled layer to operate on that contains the collision data.
+    * @param {boolean} [addToWorld=true] - If true it will automatically add each body to the world.
+    * @return {array} An array of the Phaser.Physics.Body objects that have been created.
+    */
+    createCollisionObjects: function (layer, addToWorld) {
+
+        if (typeof addToWorld === 'undefined') { addToWorld = true; }
+
+        var output = [];
+
+        for (var i = 0, len = this.collision[layer].length; i < len; i++)
+        {
+            // name: json.layers[i].objects[v].name,
+            // x: json.layers[i].objects[v].x,
+            // y: json.layers[i].objects[v].y,
+            // width: json.layers[i].objects[v].width,
+            // height: json.layers[i].objects[v].height,
+            // visible: json.layers[i].objects[v].visible,
+            // properties: json.layers[i].objects[v].properties,
+            // polyline: json.layers[i].objects[v].polyline
+
+            var object = this.collision[layer][i];
+
+            var body = this.game.physics.createBody(object.x, object.y, 0, addToWorld, {}, object.polyline);
+
+            if (body)
+            {
+                output.push(body);
+            }
+
+        }
+
+        return output;
 
     },
 
@@ -55706,7 +56151,7 @@ Phaser.TilemapParser = {
         }
         else
         {
-            return { layers: [], objects: [], images: [], tilesets: [] };
+            return this.getEmptyData();
         }
 
     },
@@ -55747,6 +56192,58 @@ Phaser.TilemapParser = {
         //  Build collision map
 
         return [{ name: 'csv', width: width, height: height, alpha: 1, visible: true, indexes: [], tileMargin: 0, tileSpacing: 0, data: output }];
+
+    },
+
+    /**
+    * Returns an empty map data object.
+    * @method Phaser.TilemapParser.getEmptyData
+    * @return {object} Generated map data.
+    */
+    getEmptyData: function () {
+
+        var map = {};
+
+        map.width = 0;
+        map.height = 0;
+        map.tileWidth = 0;
+        map.tileHeight = 0;
+        map.orientation = 'orthogonal';
+        map.version = '1';
+        map.properties = {};
+        map.widthInPixels = 0;
+        map.heightInPixels = 0;
+
+        var layers = [];
+
+        var layer = {
+
+            name: 'layer',
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+            widthInPixels: 0,
+            heightInPixels: 0,
+            alpha: 1,
+            visible: true,
+            properties: {},
+            indexes: [],
+            callbacks: [],
+            data: []
+
+        };
+
+        layers.push(layer);
+
+        map.layers = layers;
+        map.images = [];
+        map.objects = {};
+        map.collision = {};
+        map.tilesets = [];
+        map.tiles = [];
+
+        return map;
 
     },
 
@@ -55800,7 +56297,8 @@ Phaser.TilemapParser = {
                 visible: json.layers[i].visible,
                 properties: {},
                 indexes: [],
-                callbacks: []
+                callbacks: [],
+                bodies: []
 
             };
 
@@ -55882,8 +56380,9 @@ Phaser.TilemapParser = {
 
         map.images = images;
 
-        //  Objects
+        //  Objects & Collision Data (polylines, etc)
         var objects = {};
+        var collision = {};
 
         for (var i = 0; i < json.layers.length; i++)
         {
@@ -55893,10 +56392,11 @@ Phaser.TilemapParser = {
             }
 
             objects[json.layers[i].name] = [];
+            collision[json.layers[i].name] = [];
 
             for (var v = 0, len = json.layers[i].objects.length; v < len; v++)
             {
-                //  For now we'll just support object tiles
+                //  Object Tiles
                 if (json.layers[i].objects[v].gid)
                 {
                     var object = {
@@ -55912,11 +56412,37 @@ Phaser.TilemapParser = {
         
                     objects[json.layers[i].name].push(object);
                 }
+                else if (json.layers[i].objects[v].polyline)
+                {
+                    var object = {
+
+                        name: json.layers[i].objects[v].name,
+                        x: json.layers[i].objects[v].x,
+                        y: json.layers[i].objects[v].y,
+                        width: json.layers[i].objects[v].width,
+                        height: json.layers[i].objects[v].height,
+                        visible: json.layers[i].objects[v].visible,
+                        properties: json.layers[i].objects[v].properties
+
+                    };
+
+                    object.polyline = [];
+
+                    //  Parse the polyline into an array
+                    for (var p = 0; p < json.layers[i].objects[v].polyline.length; p++)
+                    {
+                        object.polyline.push([ json.layers[i].objects[v].polyline[p].x, json.layers[i].objects[v].polyline[p].y ]);
+                    }
+
+                    collision[json.layers[i].name].push(object);
+
+                }
 
             }
         }
 
         map.objects = objects;
+        map.collision = collision;
 
         //  Tilesets
         var tilesets = [];

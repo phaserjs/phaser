@@ -88,6 +88,7 @@ Significant API changes:
 * BitmapText has had a bit of an overhaul - the signature for adding a BitmapText has changed to: x, y, font, text, size. See the docs and examples for details.
 * World preUpdate, update and postUpdate have all been moved to Stage. So all children are updated regardless where on the display list they live.
 * Cache.getImageKeys and similar has been removed, please use Cache.getKeys(Phaser.Cache.IMAGE) instead, this now supports all 10 Cache data types.
+* After defining tiles that collide on a Tilemap, you need to call Tilemap.generateCollisionData(layer) to populate the physics world with the data required.
 
 
 New features:
@@ -117,6 +118,7 @@ New features:
 * Cache.addPhysicsData and Cache.getPhysicsData allow you to store parsed JSON physics data in the cache, for sharing between Bodies.
 * fixedToCamera now works across all display objects. When enabled it will fix at its current x/y coordinate, but can be changed via cameraOffset.
 * fixedToCamrea now works for Groups as well :) You can fix a Group to the camera and it will influence its children.
+* Tilemap.createCollisionObjects will parse Tiled data for objectgroups and convert polyline instances into physics objects you can collide with in the world.
 
 
 Updates:

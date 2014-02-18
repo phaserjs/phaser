@@ -255,7 +255,12 @@ Phaser.Physics.World.prototype.createBody = function (x, y, mass, addToWorld, op
 
     if (data)
     {
-        body.addPolygon(options, data);
+        var result = body.addPolygon(options, data);
+
+        if (!result)
+        {
+            return false;
+        }
     }
 
     if (addToWorld)

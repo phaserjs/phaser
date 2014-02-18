@@ -1068,7 +1068,6 @@ Polygon.prototype.getCutEdges = function() {
  */
 Polygon.prototype.decomp = function(){
     var edges = this.getCutEdges();
-    console.log('decomp', edges);
     if(edges.length > 0)
         return this.slice(edges);
     else
@@ -1921,6 +1920,12 @@ function Narrowphase(){
      */
     this.frictionCoefficient = 0.3;
 
+    /**
+     * Will be the .relativeVelocity in each produced FrictionEquation.
+     * @property {Number} surfaceVelocity
+     */
+    this.surfaceVelocity = 0;
+
     this.reuseObjects = true;
     this.reusableContactEquations = [];
     this.reusableFrictionEquations = [];
@@ -1973,36 +1978,6 @@ function clearObject(obj){
  * @param {World} world
  */
 Narrowphase.prototype.reset = function(world){
-
-    // Emit world separation event
-    if(world && world.emitSeparationEvent){
-        for(var i=0; i<this.collidingBodiesLastStep.keys.length; i++){
-            var key = this.collidingBodiesLastStep.keys[i],
-                id1 = parseInt(key),
-                idx = key.indexOf(" "),
-                id2 = parseInt(key.substr(idx+1)),
-                found = false;
-
-            // Find the corresponding contactEquation
-            for(var j=0; j!==this.contactEquations.length; j++){
-                var eq = this.contactEquations[j],
-                    idA = eq.bi.id,
-                    idB = eq.bj.id;
-                if( (id1 == idA && id2 == idB) ||
-                    (id1 == idB && id2 == idA)){
-                    // Found! Bodies are still in contact.
-                    found = true;
-                    break;
-                }
-            }
-
-            if(!found){
-                world.separationEvent.bodyA = world.getBodyById(id1);
-                world.separationEvent.bodyB = world.getBodyById(id2);
-                world.emit(world.separationEvent);
-            }
-        }
-    }
 
     // Save the colliding bodies data
     clearObject(this.collidingBodiesLastStep);
@@ -2074,6 +2049,7 @@ Narrowphase.prototype.createFrictionEquation = function(bodyA,bodyB,shapeA,shape
     c.shapeB = shapeB;
     c.setSlipForce(this.slipForce);
     c.frictionCoefficient = this.frictionCoefficient;
+    c.relativeVelocity = this.surfaceVelocity;
     return c;
 };
 
@@ -3941,24 +3917,31 @@ var Circle = require('../shapes/Circle')
 ,   Broadphase = require('../collision/Broadphase')
 ,   vec2 = require('../math/vec2')
 
-module.exports = SAP1DBroadphase;
+module.exports = SAPBroadphase;
 
 /**
  * Sweep and prune broadphase along one axis.
  *
- * @class SAP1DBroadphase
+ * @class SAPBroadphase
  * @constructor
  * @extends Broadphase
  */
-function SAP1DBroadphase(){
+function SAPBroadphase(){
     Broadphase.apply(this);
 
     /**
      * List of bodies currently in the broadphase.
-     * @property axisList
+     * @property axisListX
      * @type {Array}
      */
-    this.axisList = [];
+    this.axisListX = [];
+
+    /**
+     * List of bodies currently in the broadphase.
+     * @property axisListY
+     * @type {Array}
+     */
+    this.axisListY = [];
 
     /**
      * The world to search in.
@@ -3967,49 +3950,38 @@ function SAP1DBroadphase(){
      */
     this.world = null;
 
-    /**
-     * Axis to sort the bodies along. Set to 0 for x axis, and 1 for y axis. For best performance, choose an axis that the bodies are spread out more on.
-     * @property axisIndex
-     * @type {Number}
-     */
-    this.axisIndex = 0;
-
-    var axisList = this.axisList;
+    var axisListX = this.axisListX,
+        axisListY = this.axisListY;
 
     this._addBodyHandler = function(e){
-        axisList.push(e.body);
+        axisListX.push(e.body);
+        axisListY.push(e.body);
     };
 
     this._removeBodyHandler = function(e){
-        var idx = axisList.indexOf(e.body);
-        if(idx !== -1)
-            axisList.splice(idx,1);
-    }
+        // Remove from X list
+        var idx = axisListX.indexOf(e.body);
+        if(idx !== -1) axisListX.splice(idx,1);
 
-    /*
-    // Add listeners to update the list of bodies.
-    world.on("addBody",function(e){
-        axisList.push(e.body);
-    }).on("removeBody",function(e){
-        var idx = axisList.indexOf(e.body);
-        if(idx !== -1)
-            axisList.splice(idx,1);
-    });
-    */
+        // Remove from Y list
+        idx = axisListY.indexOf(e.body);
+        if(idx !== -1) axisListY.splice(idx,1);
+    }
 };
-SAP1DBroadphase.prototype = new Broadphase();
+SAPBroadphase.prototype = new Broadphase();
 
 /**
  * Change the world
  * @method setWorld
  * @param  {World} world
  */
-SAP1DBroadphase.prototype.setWorld = function(world){
+SAPBroadphase.prototype.setWorld = function(world){
     // Clear the old axis array
-    this.axisList.length = 0;
+    this.axisListX.length = this.axisListY.length = 0;
 
     // Add all bodies from the new world
-    Utils.appendArray(this.axisList,world.bodies);
+    Utils.appendArray(this.axisListX,world.bodies);
+    Utils.appendArray(this.axisListY,world.bodies);
 
     // Remove old handlers, if any
     world
@@ -4023,26 +3995,44 @@ SAP1DBroadphase.prototype.setWorld = function(world){
 };
 
 /**
- * Function for sorting bodies along the X axis. To be passed to array.sort()
+ * Sorts bodies along the X axis.
  * @method sortAxisListX
- * @param  {Body} bodyA
- * @param  {Body} bodyB
- * @return {Number}
+ * @param {Array} a
+ * @return {Array}
  */
-SAP1DBroadphase.sortAxisListX = function(bodyA,bodyB){
-    return (bodyA.position[0]-bodyA.boundingRadius) - (bodyB.position[0]-bodyB.boundingRadius);
+SAPBroadphase.sortAxisListX = function(a){
+    for(var i=1,l=a.length;i<l;i++) {
+        var v = a[i];
+        for(var j=i - 1;j>=0;j--) {
+            if(a[j].aabb.lowerBound[0] <= v.aabb.lowerBound[0])
+                break;
+            a[j+1] = a[j];
+        }
+        a[j+1] = v;
+    }
+    return a;
 };
 
 /**
- * Function for sorting bodies along the Y axis. To be passed to array.sort()
+ * Sorts bodies along the Y axis.
  * @method sortAxisListY
- * @param  {Body} bodyA
- * @param  {Body} bodyB
- * @return {Number}
+ * @param {Array} a
+ * @return {Array}
  */
-SAP1DBroadphase.sortAxisListY = function(bodyA,bodyB){
-    return (bodyA.position[1]-bodyA.boundingRadius) - (bodyB.position[1]-bodyB.boundingRadius);
+SAPBroadphase.sortAxisListY = function(a){
+    for(var i=1,l=a.length;i<l;i++) {
+        var v = a[i];
+        for(var j=i - 1;j>=0;j--) {
+            if(a[j].aabb.lowerBound[1] <= v.aabb.lowerBound[1])
+                break;
+            a[j+1] = a[j];
+        }
+        a[j+1] = v;
+    }
+    return a;
 };
+
+var preliminaryList = { keys:[] };
 
 /**
  * Get the colliding pairs
@@ -4050,32 +4040,66 @@ SAP1DBroadphase.sortAxisListY = function(bodyA,bodyB){
  * @param  {World} world
  * @return {Array}
  */
-SAP1DBroadphase.prototype.getCollisionPairs = function(world){
-    var bodies = this.axisList,
+SAPBroadphase.prototype.getCollisionPairs = function(world){
+    var bodiesX = this.axisListX,
+        bodiesY = this.axisListY,
         result = this.result,
         axisIndex = this.axisIndex,
         i,j;
 
     result.length = 0;
 
-    // Sort the list
-    bodies.sort(axisIndex === 0 ? SAP1DBroadphase.sortAxisListX : SAP1DBroadphase.sortAxisListY );
+    // Update all AABBs if needed
+    for(i=0; i!==bodiesX.length; i++){
+        var b = bodiesX[i];
+        if(b.aabbNeedsUpdate) b.updateAABB();
+    }
 
-    // Look through the list
-    for(i=0, N=bodies.length; i!==N; i++){
-        var bi = bodies[i];
+    // Sort the lists
+    SAPBroadphase.sortAxisListX(bodiesX);
+    SAPBroadphase.sortAxisListY(bodiesY);
+
+    // Look through the X list
+    for(i=0, N=bodiesX.length; i!==N; i++){
+        var bi = bodiesX[i];
 
         for(j=i+1; j<N; j++){
-            var bj = bodies[j];
+            var bj = bodiesX[j];
 
-            if(!SAP1DBroadphase.checkBounds(bi,bj,axisIndex))
+            // Bounds overlap?
+            if(!SAPBroadphase.checkBounds(bi,bj,0))
                 break;
 
-            // If we got overlap, add pair
-            if(Broadphase.boundingRadiusCheck(bi,bj))
+            // add pair to preliminary list
+            var key = bi.id < bj.id ? bi.id+' '+bj.id : bj.id+' '+bi.id;
+            preliminaryList[key] = true;
+            preliminaryList.keys.push(key);
+        }
+    }
+
+    // Look through the Y list
+    for(i=0, N=bodiesY.length; i!==N; i++){
+        var bi = bodiesY[i];
+
+        for(j=i+1; j<N; j++){
+            var bj = bodiesY[j];
+
+            if(!SAPBroadphase.checkBounds(bi,bj,1))
+                break;
+
+            // If in preliminary list, add to final result
+            var key = bi.id < bj.id ? bi.id+' '+bj.id : bj.id+' '+bi.id;
+            if(preliminaryList[key] && Broadphase.boundingRadiusCheck(bi,bj))
                 result.push(bi,bj);
         }
     }
+
+    // Empty prel list
+    var keys = preliminaryList.keys;
+    for(i=0, N=keys.length; i!==N; i++){
+        delete preliminaryList[keys[i]];
+    }
+    keys.length = 0;
 
     return result;
 };
@@ -4089,7 +4113,8 @@ SAP1DBroadphase.prototype.getCollisionPairs = function(world){
  * @param  {Number} axisIndex
  * @return {Boolean}
  */
-SAP1DBroadphase.checkBounds = function(bi,bj,axisIndex){
+SAPBroadphase.checkBounds = function(bi,bj,axisIndex){
+    /*
     var biPos = bi.position[axisIndex],
         ri = bi.boundingRadius,
         bjPos = bj.position[axisIndex],
@@ -4100,6 +4125,8 @@ SAP1DBroadphase.checkBounds = function(bi,bj,axisIndex){
         boundB2 = bjPos+rj;
 
     return boundB1 < boundA2;
+    */
+    return bj.aabb.lowerBound[axisIndex] < bi.aabb.upperBound[axisIndex];
 };
 
 },{"../collision/Broadphase":10,"../math/vec2":33,"../shapes/Circle":38,"../shapes/Particle":41,"../shapes/Plane":42,"../shapes/Shape":44,"../utils/Utils":49}],16:[function(require,module,exports){
@@ -5209,6 +5236,12 @@ function Equation(bi,bj,minForce,maxForce){
      * @type {Number}
      */
     this.multiplier = 0;
+
+    /**
+     * Relative velocity.
+     * @property {Number} relativeVelocity
+     */
+    this.relativeVelocity = 0;
 };
 Equation.prototype.constructor = Equation;
 
@@ -5306,7 +5339,7 @@ Equation.prototype.computeGW = function(){
         vj = bj.velocity,
         wi = bi.angularVelocity,
         wj = bj.angularVelocity;
-    return this.transformedGmult(G,vi,wi,vj,wj);
+    return this.transformedGmult(G,vi,wi,vj,wj) + this.relativeVelocity;
 };
 
 /**
@@ -5559,8 +5592,8 @@ FrictionEquation.prototype.computeB = function(a,b,h){
     G[4] = t[1];
     G[5] = vec2.crossLength(rj,t);
 
-    var GW = this.computeGW();
-    var GiMf = this.computeGiMf();
+    var GW = this.computeGW(),
+        GiMf = this.computeGiMf();
 
     var B = /* - g * a  */ - GW * b - h*GiMf;
 
@@ -5634,7 +5667,7 @@ RotationalVelocityEquation.prototype.computeB = function(a,b,h){
     G[5] = this.ratio;
 
     var GiMf = this.computeGiMf();
-    var GW = this.computeGW() + this.relativeVelocity;
+    var GW = this.computeGW();
     var B = - GW * b - h*GiMf;
 
     return B;
@@ -5660,7 +5693,8 @@ EventEmitter.prototype = {
      * @param  {Function} listener
      * @return {EventEmitter} The self object, for chainability.
      */
-    on: function ( type, listener ) {
+    on: function ( type, listener, context ) {
+        listener.context = context || this;
         if ( this._listeners === undefined ) this._listeners = {};
         var listeners = this._listeners;
         if ( listeners[ type ] === undefined ) {
@@ -5719,7 +5753,8 @@ EventEmitter.prototype = {
         if ( listenerArray !== undefined ) {
             event.target = this;
             for ( var i = 0, l = listenerArray.length; i < l; i ++ ) {
-                listenerArray[ i ].call( this, event );
+                var listener = listenerArray[ i ];
+                listener.call( listener.context, event );
             }
         }
         return this;
@@ -5807,6 +5842,12 @@ function ContactMaterial(materialA, materialB, options){
      * @type {Number}
      */
     this.frictionRelaxation =   typeof(options.frictionRelaxation)  !== "undefined" ?   Number(options.frictionRelaxation)  : 3;
+
+    /**
+     * Will add surface velocity to this material. If bodyA rests on top if bodyB, and the surface velocity is positive, bodyA will slide to the right.
+     * @property {Number} surfaceVelocity
+     */
+    this.surfaceVelocity = typeof(options.surfaceVelocity)    !== "undefined" ?   Number(options.surfaceVelocity)    : 0
 };
 
 },{}],30:[function(require,module,exports){
@@ -6953,7 +6994,6 @@ Body.prototype.fromPolygon = function(path,options){
 
     var p = new decomp.Polygon();
     p.vertices = path;
-
     // Make it counter-clockwise
     p.makeCCW();
 
@@ -7420,7 +7460,7 @@ module.exports = {
     PrismaticConstraint :           require('./constraints/PrismaticConstraint'),
     Rectangle :                     require('./shapes/Rectangle'),
     RotationalVelocityEquation :    require('./equations/RotationalVelocityEquation'),
-    SAP1DBroadphase :               require('./collision/SAP1DBroadphase'),
+    SAPBroadphase :                 require('./collision/SAPBroadphase'),
     Shape :                         require('./shapes/Shape'),
     Solver :                        require('./solver/Solver'),
     Spring :                        require('./objects/Spring'),
@@ -7431,7 +7471,7 @@ module.exports = {
     version :                       require('../package.json').version,
 };
 
-},{"../package.json":8,"./collision/AABB":9,"./collision/Broadphase":10,"./collision/GridBroadphase":11,"./collision/NaiveBroadphase":12,"./collision/QuadTree":14,"./collision/SAP1DBroadphase":15,"./constraints/Constraint":16,"./constraints/DistanceConstraint":17,"./constraints/GearConstraint":18,"./constraints/LockConstraint":19,"./constraints/PrismaticConstraint":20,"./constraints/RevoluteConstraint":21,"./equations/AngleLockEquation":22,"./equations/ContactEquation":23,"./equations/Equation":24,"./equations/FrictionEquation":25,"./equations/RotationalVelocityEquation":27,"./events/EventEmitter":28,"./material/ContactMaterial":29,"./material/Material":30,"./math/vec2":33,"./objects/Body":34,"./objects/Spring":35,"./shapes/Capsule":37,"./shapes/Circle":38,"./shapes/Convex":39,"./shapes/Line":40,"./shapes/Particle":41,"./shapes/Plane":42,"./shapes/Rectangle":43,"./shapes/Shape":44,"./solver/GSSolver":45,"./solver/IslandSolver":47,"./solver/Solver":48,"./utils/Utils":49,"./world/World":50}],37:[function(require,module,exports){
+},{"../package.json":8,"./collision/AABB":9,"./collision/Broadphase":10,"./collision/GridBroadphase":11,"./collision/NaiveBroadphase":12,"./collision/QuadTree":14,"./collision/SAPBroadphase":15,"./constraints/Constraint":16,"./constraints/DistanceConstraint":17,"./constraints/GearConstraint":18,"./constraints/LockConstraint":19,"./constraints/PrismaticConstraint":20,"./constraints/RevoluteConstraint":21,"./equations/AngleLockEquation":22,"./equations/ContactEquation":23,"./equations/Equation":24,"./equations/FrictionEquation":25,"./equations/RotationalVelocityEquation":27,"./events/EventEmitter":28,"./material/ContactMaterial":29,"./material/Material":30,"./math/vec2":33,"./objects/Body":34,"./objects/Spring":35,"./shapes/Capsule":37,"./shapes/Circle":38,"./shapes/Convex":39,"./shapes/Line":40,"./shapes/Particle":41,"./shapes/Plane":42,"./shapes/Rectangle":43,"./shapes/Shape":44,"./solver/GSSolver":45,"./solver/IslandSolver":47,"./solver/Solver":48,"./utils/Utils":49,"./world/World":50}],37:[function(require,module,exports){
 var Shape = require('./Shape')
 ,   vec2 = require('../math/vec2')
 
@@ -9012,13 +9052,6 @@ function World(options){
      */
     this.emitImpactEvent = true;
 
-    /**
-     * Set to true if you want to the world to emit the "separation" event. Turning this off could improve performance.
-     * @property emitSeparationEvent
-     * @type {Boolean}
-     */
-    this.emitSeparationEvent = true;
-
     // Id counters
     this._constraintIdCounter = 0;
     this._bodyIdCounter = 0;
@@ -9075,18 +9108,6 @@ function World(options){
     };
 
     /**
-     * Fired when two bodies stop touching. This event is fired during the narrowphase.
-     * @event impact
-     * @param {Body} bodyA
-     * @param {Body} bodyB
-     */
-    this.separationEvent = {
-        type: "separation",
-        bodyA : null,
-        bodyB : null,
-    };
-
-    /**
      * Fired after the Broadphase has collected collision pairs in the world.
      * Inside the event handler, you can modify the pairs array as you like, to
      * prevent collisions between objects that you don't want.
@@ -9111,6 +9132,7 @@ function World(options){
         shapeB : null,
         bodyA : null,
         bodyB : null,
+        contactEquations : [],
     };
 
     this.endContactEvent = {
@@ -9334,17 +9356,19 @@ World.prototype.internalStep = function(dt){
                     aj = bj.shapeAngles[l];
 
                 var mu = this.defaultFriction,
-                    restitution = this.defaultRestitution;
+                    restitution = this.defaultRestitution,
+                    surfaceVelocity = 0;
 
                 if(si.material && sj.material){
                     var cm = this.getContactMaterial(si.material,sj.material);
                     if(cm){
                         mu = cm.friction;
                         restitution = cm.restitution;
+                        surfaceVelocity = cm.surfaceVelocity;
                     }
                 }
 
-                this.runNarrowphase(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution);
+                this.runNarrowphase(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution,surfaceVelocity);
             }
         }
     }
@@ -9353,13 +9377,14 @@ World.prototype.internalStep = function(dt){
     var last = this.overlappingShapesLastState;
     for(var i=0; i<last.keys.length; i++){
         var key = last.keys[i];
-        if(key.indexOf("shape")!=-1)
+        if(key.indexOf("shape")!=-1 || key.indexOf("body")!=-1)
             break;
 
         if(!this.overlappingShapesCurrentState[key]){
             // Not overlapping any more! Emit event.
             var e = this.endContactEvent;
-            // TODO: add shapes to the event object
+
+            // Add shapes to the event object
             e.shapeA = last[key+"_shapeA"];
             e.shapeB = last[key+"_shapeB"];
             e.bodyA = last[key+"_bodyA"];
@@ -9375,7 +9400,7 @@ World.prototype.internalStep = function(dt){
         delete last[key+"_bodyB"];
     }
     this.overlappingShapesLastState.keys.length = 0;
-    // Swap state objects & make sure to reuse them
+    // Swap state objects
     var tmp = this.overlappingShapesLastState;
     this.overlappingShapesLastState = this.overlappingShapesCurrentState;
     this.overlappingShapesCurrentState = tmp;
@@ -9488,7 +9513,7 @@ World.integrateBody = function(body,dt){
  * @param  {Number} aj
  * @param  {Number} mu
  */
-World.prototype.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution){
+World.prototype.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution,surfaceVelocity){
 
     if(!((si.collisionGroup & sj.collisionMask) !== 0 && (sj.collisionGroup & si.collisionMask) !== 0))
         return;
@@ -9509,6 +9534,7 @@ World.prototype.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitut
     np.enableFriction = mu > 0;
     np.frictionCoefficient = mu;
     np.restitution = restitution;
+    np.surfaceVelocity = surfaceVelocity;
 
     var resolver = np[si.type | sj.type],
         numContacts = 0;
@@ -9519,31 +9545,43 @@ World.prototype.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitut
             numContacts = resolver.call(np, bj,sj,xjw,ajw, bi,si,xiw,aiw);
         }
 
-        if(numContacts > 0){
+        if(numContacts){
             var key = si.id < sj.id ? si.id+" "+ sj.id : sj.id+" "+ si.id;
             if(!this.overlappingShapesLastState[key]){
+
                 // Report new shape overlap
                 var e = this.beginContactEvent;
                 e.shapeA = si;
                 e.shapeB = sj;
                 e.bodyA = bi;
                 e.bodyB = bj;
-                this.emit(e);
-                var current = this.overlappingShapesCurrentState;
-                if(!current[key]){
-                    current[key] = true;
-                    current.keys.push(key);
 
-                    // Also store shape & body data
-                    current[key+"_shapeA"] = si;
-                    current.keys.push(key+"_shapeA");
-                    current[key+"_shapeB"] = sj;
-                    current.keys.push(key+"_shapeB");
-                    current[key+"_bodyA"] = bi;
-                    current.keys.push(key+"_bodyA");
-                    current[key+"_bodyB"] = bj;
-                    current.keys.push(key+"_bodyB");
+                if(typeof(numContacts)=="number"){
+                    // Add contacts to the event object
+                    e.contactEquations.length = 0;
+                    for(var i=np.contactEquations.length-numContacts; i<np.contactEquations.length; i++)
+                        e.contactEquations.push(np.contactEquations[i]);
                 }
+
+                this.emit(e);
+            }
+
+            // Store current contact state
+            var current = this.overlappingShapesCurrentState;
+            if(!current[key]){
+
+                current[key] = true;
+                current.keys.push(key);
+
+                // Also store shape & body data
+                current[key+"_shapeA"] = si;
+                current.keys.push(key+"_shapeA");
+                current[key+"_shapeB"] = sj;
+                current.keys.push(key+"_shapeB");
+                current[key+"_bodyA"] = bi;
+                current.keys.push(key+"_bodyA");
+                current[key+"_bodyB"] = bj;
+                current.keys.push(key+"_bodyB");
             }
         }
     }
