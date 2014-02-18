@@ -206,6 +206,40 @@ Phaser.Physics.Body.prototype = {
     },
 
     /**
+    * Moves the Body forwards based on its current angle and the given speed.
+    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
+    *
+    * @method Phaser.Physics.Body#moveForward
+    * @param {number} speed - The speed at which it should move forwards.
+    */
+    moveForward: function (speed) {
+
+        var magnitude = this.px2p(-speed);
+        var angle = this.data.angle + Math.PI / 2;
+
+        this.data.velocity[0] = magnitude * Math.cos(angle);
+        this.data.velocity[1] = magnitude * Math.sin(angle);
+
+    },
+
+    /**
+    * Moves the Body backwards based on its current angle and the given speed.
+    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
+    *
+    * @method Phaser.Physics.Body#moveBackward
+    * @param {number} speed - The speed at which it should move backwards.
+    */
+    moveBackward: function (speed) {
+
+        var magnitude = this.px2p(-speed);
+        var angle = this.data.angle + Math.PI / 2;
+
+        this.data.velocity[0] = -(magnitude * Math.cos(angle));
+        this.data.velocity[1] = -(magnitude * Math.sin(angle));
+
+    },
+
+    /**
     * Applies a force to the Body that causes it to 'thrust' forwards, based on its current angle and the given speed.
     * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
     *
@@ -859,6 +893,7 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "kinematic", {
         if (value && this.data.motionState !== Phaser.KINEMATIC)
         {
             this.data.motionState = Phaser.KINEMATIC;
+            this.mass = 4;
         }
         else if (!value && this.data.motionState === Phaser.KINEMATIC)
         {

@@ -30,6 +30,11 @@ Phaser.Physics.World = function (game) {
     */
     this.game = game;
 
+    /**
+    * @property {Phaser.PointProxy} force - The force applied to the body.
+    */
+    // this.gravity = new Phaser.Physics.PointProxy(this.data.force);
+
     this.onBodyAdded = new Phaser.Signal();
     this.onBodyRemoved = new Phaser.Signal();
 
@@ -248,6 +253,45 @@ Phaser.Physics.World.prototype.destroy = function () {
 *                                       or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
 */
 Phaser.Physics.World.prototype.createBody = function (x, y, mass, addToWorld, options, data) {
+
+    if (typeof addToWorld === 'undefined') { addToWorld = false; }
+
+    var body = new Phaser.Physics.Body(this.game, null, x, y, mass);
+
+    if (data)
+    {
+        var result = body.addPolygon(options, data);
+
+        if (!result)
+        {
+            return false;
+        }
+    }
+
+    if (addToWorld)
+    {
+        this.addBody(body.data);
+    }
+
+    return body;
+
+};
+
+/**
+* @method Phaser.Physics.World.prototype.createBody
+* @param {number} x - The x coordinate of Body.
+* @param {number} y - The y coordinate of Body.
+* @param {number} mass - The mass of the Body. A mass of 0 means a 'static' Body is created.
+* @param {boolean} [addToWorld=false] - Automatically add this Body to the world? (usually false as it won't have any shapes on construction).
+* @param {object} options - An object containing the build options: 
+* @param {boolean} [options.optimalDecomp=false] - Set to true if you need optimal decomposition. Warning: very slow for polygons with more than 10 vertices.
+* @param {boolean} [options.skipSimpleCheck=false] - Set to true if you already know that the path is not intersecting itself.
+* @param {boolean|number} [options.removeCollinearPoints=false] - Set to a number (angle threshold value) to remove collinear points, or false to keep all points.
+* @param {(number[]|...number)} points - An array of 2d vectors that form the convex or concave polygon. 
+*                                       Either [[0,0], [0,1],...] or a flat array of numbers that will be interpreted as [x,y, x,y, ...], 
+*                                       or the arguments passed can be flat x,y values e.g. `setPolygon(options, x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
+*/
+Phaser.Physics.World.prototype.createParticle = function (x, y, mass, addToWorld, options, data) {
 
     if (typeof addToWorld === 'undefined') { addToWorld = false; }
 
