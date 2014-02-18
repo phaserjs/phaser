@@ -13,12 +13,26 @@ Phaser.Math = {
 
     /**
     * = 2 &pi;
-    * @method Phaser.Math#PI2
+    * @property Phaser.Math#PI2
     */
     PI2: Math.PI * 2,
 
     /**
     * Two number are fuzzyEqual if their difference is less than &epsilon;. 
+    * = -20 pixels
+    * @property Phaser.Math._pxRatio
+    * @protected
+    */
+    _pxRatio: -20,
+
+    /**
+    * = -0.05 physics units
+    * @property Phaser.Math._pRatio
+    * @protected
+    */
+    _pRatio: -0.05,
+
+    /**
     * @method Phaser.Math#fuzzyEqual
     * @param {number} a
     * @param {number} b
@@ -1299,7 +1313,7 @@ Phaser.Math = {
     * @return {number} The scaled value.
     */
     p2px: function (v) {
-        return v *= -20;
+        return v *= Phaser.Math._pxRatio;
     },
 
     /**
@@ -1310,7 +1324,18 @@ Phaser.Math = {
     * @return {number} The scaled value.
     */
     px2p: function (v) {
-        return v * -0.05;
+        return v * Phaser.Math._pRatio;
+    },
+
+    /**
+    * Sets the pixel / p2 physics conversion scale.
+    *
+    * @method Phaser.Math#setPhysicsPixelRatio
+    * @param {number} ratio - The number of pixels per physics distance unit.
+    */
+    setPhysicsPixelRatio: function(ratio) {
+        Phaser.Math._pxRatio = -ratio;
+        Phaser.Math._pRatio  = -1 / ratio;
     },
 
     /**
