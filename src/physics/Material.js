@@ -11,7 +11,13 @@
 * @classdesc Physics Material Constructor
 * @constructor
 */
-Phaser.Physics.Material = function () {
+Phaser.Physics.Material = function (name) {
+
+    /**
+    * @property {string} name - The user defined name given to this Material.
+    * @default
+    */
+    this.name = name;
 
     p2.Material.call(this);
 

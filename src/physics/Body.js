@@ -736,6 +736,30 @@ Phaser.Physics.Body.prototype = {
     },
 
     /**
+    * Adds the given Material to all Shapes that belong to this Body.
+    * If you only wish to apply it to a specific Shape in this Body then provide that as the 2nd parameter.
+    *
+    * @method Phaser.Physics.Body#setMaterial
+    * @param {Phaser.Physics.Material} material - The Material that will be applied.
+    * @param {p2.Shape} [shape] - An optional Shape. If not provided the Material will be added to all Shapes in this Body.
+    */
+    setMaterial: function (material, shape) {
+
+        if (typeof shape === 'undefined')
+        {
+            for (var i = this.data.shapes.length - 1; i >= 0; i--)
+            {
+                this.data.shapes[i].material = material;
+            }
+        }
+        else
+        {
+            shape.material = material;
+        }
+
+    },
+
+    /**
     * Reads the shape data from a physics data file stored in the Game.Cache and adds it as a polygon to this Body.
     *
     * @method Phaser.Physics.Body#loadPolygon

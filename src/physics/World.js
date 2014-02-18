@@ -32,7 +32,17 @@ Phaser.Physics.World = function (game) {
     */
     this.game = game;
 
+    /**
+    * @property {p2.World} game - The p2 World in which the simulation is run.
+    * @protected
+    */
     this.world = new p2.World( { gravity: [0, 0] });
+
+    /**
+    * @property {array<Phaser.Physics.Material>} materials - A local array of all created Materials.
+    * @protected
+    */
+    this.materials = [];
 
     /**
     * @property {Phaser.InversePointProxy} gravity - The gravity applied to all bodies each step.
@@ -454,15 +464,66 @@ Phaser.Physics.World.prototype = {
     },
 
     /**
+    * Sets the given Material against all Shapes owned by all the Bodies in the given array.
+    *
+    * @method Phaser.Physics.World#setMaterial
+    * @param {Phaser.Physics.Material} material - The Material to be applied to the given Bodies.
+    * @param {array<Phaser.Physics.Body>} bodies - An Array of Body objects that the given Material will be set on.
+    */
+    setMaterial: function (material, bodies) {
+
+        var i = bodies.length;
+
+        while (i--)
+        {
+            bodies.setMaterial(material);
+        }
+
+    },
+
+    /**
+    * Creates a Material. Materials are applied to Shapes owned by a Body and can be set with Body.setMaterial().
+    * Materials are a way to control what happens when Shapes collide. Combine unique Materials together to create Contact Materials.
+    * Contact Materials have properties such as friction and restitution that allow for fine-grained collision control between different Materials.
+    *
+    * @method Phaser.Physics.World#createMaterial
+    * @param {string} [name] - Optional name of the Material. Each Material has a unique ID but string names are handy for debugging.
+    * @param {Phaser.Physics.Body} [body] - Optional Body. If given it will assign the newly created Material to the Body shapes.
+    * @return {Phaser.Physics.Material} The Material that was created. This is also stored in Phaser.Physics.World.materials.
+    */
+    createMaterial: function (name, body) {
+
+        name = name || '';
+
+        var material = new Phaser.Physics.Material(name);
+
+        this.materials.push(material);
+
+        if (typeof body !== 'undefined')
+        {
+            body.setMaterial(material);
+        }
+
+        return material;
+
+    },
+
+    /**
     * Creates a Contact Material from the two given Materials. You can then edit the properties of the Contact Material directly.
     *
     * @method Phaser.Physics.World#createContactMaterial
-    * @param {Phaser.Physics.Material} materialA - The first Material to create the ContactMaterial from.
-    * @param {Phaser.Physics.Material} materialB - The second Material to create the ContactMaterial from.
+    * @param {Phaser.Physics.Material} [materialA] - The first Material to create the ContactMaterial from. If undefined it will create a new Material object first.
+    * @param {Phaser.Physics.Material} [materialB] - The second Material to create the ContactMaterial from. If undefined it will create a new Material object first.
     * @return {Phaser.Physics.ContactMaterial} The Contact Material that was created.
     */
     createContactMaterial: function (materialA, materialB) {
 
+        if (typeof materialA === 'undefined') { materialA = this.createMaterial(); }
+        if (typeof materialB === 'undefined') { materialB = this.createMaterial(); }
+
+        var contact = new Phaser.Physics.ContactMaterial(materialA, materialB, options);
+
+        return this.addContactMaterial(contact);
 
     },
 
