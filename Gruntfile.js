@@ -140,6 +140,7 @@ module.exports = function (grunt) {
         'src/physics/Spring.js',
         'src/physics/Material.js',
         'src/physics/ContactMaterial.js',
+        'src/physics/CollisionGroup.js',
 
         'src/particles/Particles.js',
         'src/particles/arcade/ArcadeParticles.js',

@@ -63,6 +63,19 @@ Phaser.Physics.Body = function (game, sprite, x, y, mass) {
     */
     this.gravity = new Phaser.Point();
 
+    /**
+    * A Body can be set to collide against the World bounds automatically if this is set to true. Otherwise it will leave the World.
+    * Note that this only applies if your World has bounds! The response to the collision should be managed via CollisionMaterials.
+    * @property {boolean} collideWorldBounds - Should the Body collide with the World bounds?
+    */
+    this.collideWorldBounds = true;
+
+    /**
+    * @property {array} collidesWith - Array of CollisionGroups that this Bodies shapes collide with.
+    * @private
+    */
+    this.collidesWith = [];
+
     // this.onAdded = new Phaser.Signal();
     // this.onRemoved = new Phaser.Signal();
 
@@ -76,6 +89,66 @@ Phaser.Physics.Body = function (game, sprite, x, y, mass) {
 };
 
 Phaser.Physics.Body.prototype = {
+
+    setCollisionGroup: function (group, shape) {
+
+        if (typeof shape === 'undefined')
+        {
+            for (var i = this.data.shapes.length - 1; i >= 0; i--)
+            {
+                this.data.shapes[i].collisionGroup = group.mask;
+            }
+        }
+        else
+        {
+            shape.collisionGroup = group.mask;
+        }
+
+    },
+
+    /**
+    * Adds the given CollisionGroup to the list of groups that this body will collide with and updates the collision mask.
+    *
+    * @method Phaser.Physics.Body#collides
+    * @param {Phaser.Physics.CollisionGroup} group - The Collision Group that this Bodies shapes will collide with.
+    * @param {p2.Shape} [shape] - An optional Shape. If not provided the collision mask will be added to all Shapes in this Body.
+    */
+    collides: function (group, shape) {
+
+        //  TODO: group can be an array
+
+        if (this.collidesWith.indexOf(group) === -1)
+        {
+            this.collidesWith.push(group);
+        }
+
+        var mask = 0;
+
+        if (this.collideWorldBounds)
+        {
+            mask = this.game.physics.boundsCollisionGroup.mask;
+        }
+
+        for (var i = 0; i < this.collidesWith.length; i++)
+        {
+            mask = mask | this.collidesWith[i].mask;
+        }
+
+        if (typeof shape === 'undefined')
+        {
+            for (var i = this.data.shapes.length - 1; i >= 0; i--)
+            {
+                this.data.shapes[i].collisionMask = mask;
+            }
+        }
+        else
+        {
+            shape.collisionMask = mask;
+        }
+
+        console.log('collides', this.sprite.name, group, mask);
+
+    },
 
     /**
     * Moves the shape offsets so their center of mass becomes the body center of mass.
@@ -819,7 +892,7 @@ Phaser.Physics.Body.prototype = {
     },
 
     /**
-    * Convert p2 physics value to pixel scale.
+    * Convert p2 physics value (meters) to pixel scale.
     * 
     * @method Phaser.Math#p2px
     * @param {number} v - The value to convert.
@@ -832,7 +905,7 @@ Phaser.Physics.Body.prototype = {
     },
 
     /**
-    * Convert pixel value to p2 physics scale.
+    * Convert pixel value to p2 physics scale (meters).
     * 
     * @method Phaser.Math#px2p
     * @param {number} v - The value to convert.

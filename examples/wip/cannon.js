@@ -6,6 +6,7 @@ function preload() {
     // game.load.image('arrow', 'assets/sprites/arrow.png');
     game.load.image('arrow', 'assets/sprites/thrust_ship2.png');
     game.load.image('chunk', 'assets/sprites/chunk.png');
+    game.load.image('box', 'assets/sprites/block.png');
     game.load.spritesheet('bullets', 'assets/sprites/balls.png', 17, 17);
 
 }
@@ -16,6 +17,13 @@ var angle = 0;
 var fireRate = 100;
 var nextFire = 0;
 var cursors;
+// var PLAYER;
+// var BULLET;
+// var WORLD;
+var boxes;
+var playerGroup;
+var bulletGroup;
+var boxGroup;
 
 function create() {
 
@@ -29,9 +37,38 @@ function create() {
     bullets.createMultiple(250, 'bullets', 0, false);
 
     cannon = game.add.sprite(50, 500, 'arrow');
+    cannon.name = 'ship';
     cannon.physicsEnabled = true;
-    cannon.body.kinematic = true;
-    cannon.body.mass = 4;
+
+    playerGroup = game.physics.createCollisionGroup();
+    bulletGroup = game.physics.createCollisionGroup();
+    boxGroup = game.physics.createCollisionGroup();
+
+    // cannon.body.data.shapes[0].collisionGroup = PLAYER.mask;
+    // cannon.body.data.shapes[0].collisionMask = game.physics.WORLD.mask;
+
+    cannon.body.setCollisionGroup(playerGroup);
+    cannon.body.collides(boxGroup);
+
+
+    boxes = game.add.group();
+
+    for (var i = 0; i < 10; i++)
+    {
+        var box = boxes.create(game.rnd.integerInRange(100, 700), game.rnd.integerInRange(100, 500), 'box');
+        box.name = 'box' + i;
+        box.scale.set(0.5);
+        // box.scale.set(game.rnd.realInRange(0.2, 0.7));
+        box.physicsEnabled = true;
+        box.body.setCollisionGroup(boxGroup);
+        box.body.collides(playerGroup);
+        box.body.collides(bulletGroup);
+        // box.body.mass = 10;
+        // box.body.setMaterial(boxMaterial);
+        // box.body.fixedRotation = true;
+    }
+
+
     cursors = game.input.keyboard.createCursorKeys();
 
 }
@@ -58,6 +95,12 @@ function fire() {
 
             bullet.body.velocity.x = magnitude * Math.cos(angle);
             bullet.body.velocity.y = magnitude * Math.sin(angle);
+
+            bullet.body.setCollisionGroup(bulletGroup);
+            bullet.body.collides(boxGroup);
+
+            // bullet.body.data.shapes[0].collisionGroup = BULLET;
+            // bullet.body.data.shapes[0].collisionMask = WORLD | BULLET;
         }
     }
 
@@ -80,11 +123,13 @@ function update() {
 
     if (cursors.up.isDown)
     {
-        cannon.body.moveForward(200);
+        // cannon.body.moveForward(200);
+        cannon.body.thrust(200);
     }
     else if (cursors.down.isDown)
     {
-        cannon.body.moveBackward(200);
+        // cannon.body.moveBackward(200);
+        cannon.body.reverse(200);
     }
 
     var dx = game.input.activePointer.worldX - cannon.x;

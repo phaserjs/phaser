@@ -132,6 +132,20 @@ Phaser.Physics.World = function (game) {
     this.world.on("beginContact", this.beginContactHandler, this);
     this.world.on("endContact", this.endContactHandler, this);
 
+    /**
+    * @property {array} collisionGroups - Internal var.
+    */
+    this.collisionGroups = [];
+
+    /**
+    * @property {number} _collisionGroupID - Internal var.
+    * @private
+    */
+    this._collisionGroupID = 2;
+
+    this.boundsCollisionGroup = new Phaser.Physics.CollisionGroup(2);
+    this.boundsCollidesWith = [];
+
     this.setBoundsToWorld(true, true, true, true);
 
 };
@@ -310,24 +324,28 @@ Phaser.Physics.World.prototype = {
         if (left)
         {
             this._wallShapes[0] = new p2.Plane();
+            this._wallShapes[0].collisionGroup = this.boundsCollisionGroup.mask;
             this.bounds.addShape(this._wallShapes[0], [this.game.math.px2p(-hw), 0], 1.5707963267948966 );
         }
 
         if (right)
         {
             this._wallShapes[1] = new p2.Plane();
+            this._wallShapes[1].collisionGroup = this.boundsCollisionGroup.mask;
             this.bounds.addShape(this._wallShapes[1], [this.game.math.px2p(hw), 0], -1.5707963267948966 );
         }
 
         if (top)
         {
             this._wallShapes[2] = new p2.Plane();
+            this._wallShapes[2].collisionGroup = this.boundsCollisionGroup.mask;
             this.bounds.addShape(this._wallShapes[2], [0, this.game.math.px2p(-hh)], -3.141592653589793 );
         }
 
         if (bottom)
         {
             this._wallShapes[3] = new p2.Plane();
+            this._wallShapes[3].collisionGroup = this.boundsCollisionGroup.mask;
             this.bounds.addShape(this._wallShapes[3], [0, this.game.math.px2p(hh)] );
         }
 
@@ -659,6 +677,43 @@ Phaser.Physics.World.prototype = {
     toJSON: function () {
 
         this.world.toJSON();
+
+    },
+
+    createCollisionGroup: function () {
+
+        var bitmask = Math.pow(2, this._collisionGroupID);
+
+        //  Add it to the bounds mask automatically (they won't collide with it unless it's added back by the other group)
+        // this.boundsCollisionGroup.mask = this.boundsCollisionGroup.mask | bitmask;
+
+        if (this._wallShapes[0])
+        {
+            this._wallShapes[0].collisionMask = this._wallShapes[0].collisionMask | bitmask;
+        }
+
+        if (this._wallShapes[1])
+        {
+            this._wallShapes[1].collisionMask = this._wallShapes[1].collisionMask | bitmask;
+        }
+
+        if (this._wallShapes[2])
+        {
+            this._wallShapes[2].collisionMask = this._wallShapes[2].collisionMask | bitmask;
+        }
+
+        if (this._wallShapes[3])
+        {
+            this._wallShapes[3].collisionMask = this._wallShapes[3].collisionMask | bitmask;
+        }
+
+        this._collisionGroupID++;
+
+        var group = new Phaser.Physics.CollisionGroup(bitmask);
+
+        this.collisionGroups.push(group);
+
+        return group;
 
     },
 

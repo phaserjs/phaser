@@ -1292,7 +1292,7 @@ Phaser.Math = {
     },
 
     /**
-    * Convert p2 physics value to pixel scale.
+    * Convert p2 physics value (meters) to pixel scale.
     * 
     * @method Phaser.Math#p2px
     * @param {number} v - The value to convert.
@@ -1303,7 +1303,7 @@ Phaser.Math = {
     },
 
     /**
-    * Convert pixel value to p2 physics scale.
+    * Convert pixel value to p2 physics scale (meters).
     * 
     * @method Phaser.Math#px2p
     * @param {number} v - The value to convert.
