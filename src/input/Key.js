@@ -156,7 +156,7 @@ Phaser.Key.prototype = {
 
     /**
     * Returns the "just released" state of the Key. Just released is considered as being true if the key was released within the duration given (default 250ms)
-    * @method Phaser.Key#justPressed
+    * @method Phaser.Key#justReleased
     * @param {number} [duration=250] - The duration below which the key is considered as being just released.
     * @return {boolean} True if the key is just released otherwise false.
     */
