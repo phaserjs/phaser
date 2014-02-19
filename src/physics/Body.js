@@ -713,7 +713,7 @@ Phaser.Physics.Body.prototype = {
     */
     addCircle: function (radius, offsetX, offsetY, rotation) {
 
-        var shape = new p2.Circle(this.px2p(radius));
+        var shape = new p2.Circle(this.px2p(-radius));
 
         return this.addShape(shape, offsetX, offsetY, rotation);
 
@@ -732,7 +732,7 @@ Phaser.Physics.Body.prototype = {
     */
     addRectangle: function (width, height, offsetX, offsetY, rotation) {
 
-        var shape = new p2.Rectangle(this.px2p(width), this.px2p(height));
+        var shape = new p2.Rectangle(-this.px2p(width), -this.px2p(height));
 
         return this.addShape(shape, offsetX, offsetY, rotation);
 
@@ -786,7 +786,7 @@ Phaser.Physics.Body.prototype = {
     */
     addLine: function (length, offsetX, offsetY, rotation) {
 
-        var shape = new p2.Line(this.px2p(length));
+        var shape = new p2.Line(-this.px2p(length));
 
         return this.addShape(shape, offsetX, offsetY, rotation);
 
@@ -806,7 +806,7 @@ Phaser.Physics.Body.prototype = {
     */
     addCapsule: function (length, radius, offsetX, offsetY, rotation) {
 
-        var shape = new p2.Capsule(this.px2p(length), radius);
+        var shape = new p2.Capsule(-this.px2p(length), radius);
 
         return this.addShape(shape, offsetX, offsetY, rotation);
 
