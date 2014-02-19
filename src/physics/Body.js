@@ -134,7 +134,9 @@ Phaser.Physics.Body.prototype = {
     },
 
     /**
-    * Sets the given CollisionGroup to be the collision group for all shapes in this Body, unless a shape is specified.
+    * Sets a callback to be fired any time this Body impacts with the given Group. The impact test is performed against shape.collisionGroup values.
+    * The callback will be sent 4 parameters: This body, the body that impacted, the Shape in this body and the shape in the impacting body.
+    * This callback will only fire if this Body has been assigned a collision group.
     *
     * @method Phaser.Physics.Body#createGroupCallback
     * @param {Phaser.Physics.CollisionGroup} group - The Group to send impact events for.
@@ -148,6 +150,12 @@ Phaser.Physics.Body.prototype = {
 
     },
 
+    /**
+    * Gets the collision bitmask from the groups this body collides with.
+    *
+    * @method Phaser.Physics.Body#getCollisionMask
+    * @return {number} The bitmask.
+    */
     getCollisionMask: function () {
 
         var mask = 0;

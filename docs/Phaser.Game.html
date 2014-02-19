@@ -275,10 +275,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.QuadTree.html">QuadTree</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.RandomDataGenerator.html">RandomDataGenerator</a>
 						</li>
 						
@@ -477,7 +473,7 @@ providing quick access to common functions and handling the boot process.
     
         
 <dt>
-    <h4 class="name" id="Game"><span class="type-signature"></span>new Game<span class="signature">(<span class="optional">width</span>, <span class="optional">height</span>, <span class="optional">renderer</span>, <span class="optional">parent</span>, <span class="optional">state</span>, <span class="optional">transparent</span>, <span class="optional">antialias</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Game"><span class="type-signature"></span>new Game<span class="signature">(<span class="optional">width</span>, <span class="optional">height</span>, <span class="optional">renderer</span>, <span class="optional">parent</span>, <span class="optional">state</span>, <span class="optional">transparent</span>, <span class="optional">antialias</span>, <span class="optional">physicsConfig</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -797,6 +793,45 @@ providing quick access to common functions and handling the boot process.
         </tr>
 
 	
+
+        <tr>
+            
+                <td class="name"><code>physicsConfig</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last"><p>A physics configuration object to pass to the Physics world on creation.</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
 
@@ -825,7 +860,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-25">line 25</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-26">line 26</a>
     </li></ul></dd>
     
 
@@ -953,7 +988,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-117">line 117</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-123">line 123</a>
     </li></ul></dd>
     
 
@@ -1058,7 +1093,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-65">line 65</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-71">line 71</a>
     </li></ul></dd>
     
 
@@ -1163,7 +1198,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-123">line 123</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-129">line 129</a>
     </li></ul></dd>
     
 
@@ -1265,7 +1300,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-195">line 195</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-201">line 201</a>
     </li></ul></dd>
     
 
@@ -1367,7 +1402,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-200">line 200</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-206">line 206</a>
     </li></ul></dd>
     
 
@@ -1469,7 +1504,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-35">line 35</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-36">line 36</a>
     </li></ul></dd>
     
 
@@ -1571,7 +1606,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-205">line 205</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-211">line 211</a>
     </li></ul></dd>
     
 
@@ -1673,7 +1708,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-210">line 210</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-216">line 216</a>
     </li></ul></dd>
     
 
@@ -1775,7 +1810,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-190">line 190</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-196">line 196</a>
     </li></ul></dd>
     
 
@@ -1880,7 +1915,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-53">line 53</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-59">line 59</a>
     </li></ul></dd>
     
 
@@ -1982,7 +2017,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-30">line 30</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-31">line 31</a>
     </li></ul></dd>
     
 
@@ -2087,7 +2122,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-129">line 129</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-135">line 135</a>
     </li></ul></dd>
     
 
@@ -2192,7 +2227,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-101">line 101</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-107">line 107</a>
     </li></ul></dd>
     
 
@@ -2297,7 +2332,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-107">line 107</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-113">line 113</a>
     </li></ul></dd>
     
 
@@ -2402,7 +2437,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-135">line 135</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-141">line 141</a>
     </li></ul></dd>
     
 
@@ -2504,7 +2539,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-140">line 140</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-146">line 146</a>
     </li></ul></dd>
     
 
@@ -2606,7 +2641,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-145">line 145</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-151">line 151</a>
     </li></ul></dd>
     
 
@@ -2708,7 +2743,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-41">line 41</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-47">line 47</a>
     </li></ul></dd>
     
 
@@ -2810,7 +2845,7 @@ providing quick access to common functions and handling the boot process.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-215">line 215</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-221">line 221</a>
     </li></ul></dd>
     
 
@@ -2917,7 +2952,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-698">line 698</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-709">line 709</a>
     </li></ul></dd>
     
 
@@ -3022,7 +3057,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-229">line 229</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-235">line 235</a>
     </li></ul></dd>
     
 
@@ -3124,7 +3159,109 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-180">line 180</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-186">line 186</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="physicsConfig"><span class="type-signature"></span>physicsConfig<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>physicsConfig</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Phaser.Physics.World configuration object.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-41">line 41</a>
     </li></ul></dd>
     
 
@@ -3226,7 +3363,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-112">line 112</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-118">line 118</a>
     </li></ul></dd>
     
 
@@ -3328,7 +3465,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-71">line 71</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-77">line 77</a>
     </li></ul></dd>
     
 
@@ -3430,7 +3567,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-76">line 76</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-82">line 82</a>
     </li></ul></dd>
     
 
@@ -3532,7 +3669,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-185">line 185</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-191">line 191</a>
     </li></ul></dd>
     
 
@@ -3634,7 +3771,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-150">line 150</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-156">line 156</a>
     </li></ul></dd>
     
 
@@ -3736,7 +3873,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-155">line 155</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-161">line 161</a>
     </li></ul></dd>
     
 
@@ -3838,7 +3975,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-160">line 160</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-166">line 166</a>
     </li></ul></dd>
     
 
@@ -3940,7 +4077,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-81">line 81</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-87">line 87</a>
     </li></ul></dd>
     
 
@@ -4045,7 +4182,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-236">line 236</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-242">line 242</a>
     </li></ul></dd>
     
 
@@ -4150,7 +4287,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-222">line 222</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-228">line 228</a>
     </li></ul></dd>
     
 
@@ -4252,7 +4389,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-165">line 165</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-171">line 171</a>
     </li></ul></dd>
     
 
@@ -4357,7 +4494,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-59">line 59</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-65">line 65</a>
     </li></ul></dd>
     
 
@@ -4459,7 +4596,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-170">line 170</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-176">line 176</a>
     </li></ul></dd>
     
 
@@ -4564,7 +4701,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-47">line 47</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-53">line 53</a>
     </li></ul></dd>
     
 
@@ -4666,7 +4803,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-175">line 175</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-181">line 181</a>
     </li></ul></dd>
     
 
@@ -4731,7 +4868,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-394">line 394</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-405">line 405</a>
     </li></ul></dd>
     
 
@@ -4800,7 +4937,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-669">line 669</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-680">line 680</a>
     </li></ul></dd>
     
 
@@ -4869,7 +5006,7 @@ When a game is paused the onPause event is dispatched. When it is resumed the on
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-644">line 644</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-655">line 655</a>
     </li></ul></dd>
     
 
@@ -4939,7 +5076,7 @@ Calling step will advance the game loop by one frame. This is extremely useful t
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-630">line 630</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-641">line 641</a>
     </li></ul></dd>
     
 
@@ -5008,7 +5145,7 @@ Calling step will advance the game loop by one frame. This is extremely useful t
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-562">line 562</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-573">line 573</a>
     </li></ul></dd>
     
 
@@ -5077,7 +5214,7 @@ Calling step will advance the game loop by one frame. This is extremely useful t
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-301">line 301</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-307">line 307</a>
     </li></ul></dd>
     
 
@@ -5146,7 +5283,7 @@ Calling step will advance the game loop by one frame. This is extremely useful t
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-353">line 353</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-364">line 364</a>
     </li></ul></dd>
     
 
@@ -5215,7 +5352,7 @@ Calling step will advance the game loop by one frame. This is extremely useful t
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-510">line 510</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-521">line 521</a>
     </li></ul></dd>
     
 
@@ -5284,7 +5421,7 @@ Calling step will advance the game loop by one frame. This is extremely useful t
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-464">line 464</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-475">line 475</a>
     </li></ul></dd>
     
 
@@ -5354,7 +5491,7 @@ This is extremely useful to hard to track down errors! Use the internal stepCoun
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-656">line 656</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-667">line 667</a>
     </li></ul></dd>
     
 
@@ -5472,7 +5609,7 @@ This is extremely useful to hard to track down errors! Use the internal stepCoun
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-576">line 576</a>
+        <a href="Game.js.html">core/Game.js</a>, <a href="Game.js.html#sunlight-1-line-587">line 587</a>
     </li></ul></dd>
     
 
@@ -5523,7 +5660,7 @@ This is extremely useful to hard to track down errors! Use the internal stepCoun
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Tue Feb 18 2014 03:01:21 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 19 2014 05:26:25 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
