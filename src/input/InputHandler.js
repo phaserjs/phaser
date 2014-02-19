@@ -490,9 +490,9 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Is this sprite being dragged by the mouse or not?
-    * @method Phaser.InputHandler#pointerTimeOut
+    * @method Phaser.InputHandler#pointerDragged
     * @param {Phaser.Pointer} pointer
-    * @return {number}
+    * @return {boolean} True if the pointer is dragging an object, otherwise false.
     */
     pointerDragged: function (pointer) {
 
@@ -506,7 +506,7 @@ Phaser.InputHandler.prototype = {
     * Checks if the given pointer is over this Sprite and can click it.
     * @method Phaser.InputHandler#checkPointerDown
     * @param {Phaser.Pointer} pointer
-    * @return {boolean}
+    * @return {boolean} True if the pointer is down, otherwise false.
     */
     checkPointerDown: function (pointer) {
 
