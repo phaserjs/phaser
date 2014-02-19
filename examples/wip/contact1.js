@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render }, false, false, { gravity: [0, 10] } );
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
@@ -23,7 +23,7 @@ function create() {
     bg = game.add.tileSprite(0, 0, 800, 600, 'background');
     bg.fixedToCamera = true;
 
-    // game.physics.gravity.y = 20;
+    game.physics.gravity.y = 20;
 
     game.physics.friction = 0.5;
 
