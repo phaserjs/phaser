@@ -805,20 +805,11 @@ Phaser.Utils.Debug.prototype = {
     */
     renderShapeConvex: function (x, y, bodyAngle, shape, offset, angle) {
 
-        var points = shape.vertices;
-
         this.context.beginPath();
         this.context.save();
         this.context.translate(x + this.game.math.p2px(offset[0]), y + this.game.math.p2px(offset[1]));
         this.context.rotate(bodyAngle + angle);
-
-        this.context.moveTo(this.game.math.p2px(points[0][0]), this.game.math.p2px(points[0][1]));
-
-        for (var i = 1; i < points.length; i++)
-        {
-            this.context.lineTo(this.game.math.p2px(points[i][0]), this.game.math.p2px(points[i][1]));
-        }
-
+        this.context.arc(0, 0, this.game.math.p2px(shape.radius) , 0, Math.PI * 2);
         this.context.closePath();
         this.context.stroke();
         this.context.restore();
