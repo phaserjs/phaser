@@ -40,7 +40,7 @@ function create() {
     // game.physics.setBoundsToWorld();
 
     // game.physics.gravity.y = 9.78;
-    game.physics.setBoundsToWorld(true, true, false, true);
+    game.physics.setBoundsToWorld(true, true, false, true, false);
 
     game.physics.world.gravity[1] = -20;
     game.physics.friction = 0.5;

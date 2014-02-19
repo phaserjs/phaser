@@ -76,6 +76,8 @@ Phaser.Physics.Body = function (game, sprite, x, y, mass) {
     */
     this.collidesWith = [];
 
+
+
     // this.onAdded = new Phaser.Signal();
     // this.onRemoved = new Phaser.Signal();
 
@@ -83,6 +85,10 @@ Phaser.Physics.Body = function (game, sprite, x, y, mass) {
     if (sprite)
     {
         this.setRectangleFromSprite(sprite);
+
+        //  Default collision mask
+        // this.data.shapes[0].collisionMask = this.game.physics.boundsCollisionGroup.mask;
+
         this.game.physics.addBody(this);
     }
 

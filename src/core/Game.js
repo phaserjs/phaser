@@ -21,8 +21,9 @@
 * @param {object} [state=null] - The default state object. A object consisting of Phaser.State functions (preload, create, update, render) or null.
 * @param {boolean} [transparent=false] - Use a transparent canvas background or not.
 * @param  {boolean} [antialias=true] - Anti-alias graphics.
+* @param {object} [physicsConfig=null] - A physics configuration object to pass to the Physics world on creation.
 */
-Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias) {
+Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias, physicsConfig) {
 
     /**
     * @property {number} id - Phaser Game ID (for when Pixi supports multiple instances).
@@ -33,6 +34,11 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @property {object} config - The Phaser.Game configuration object.
     */
     this.config = null;
+
+    /**
+    * @property {object} physicsConfig - The Phaser.Physics.World configuration object.
+    */
+    this.physicsConfig = physicsConfig;
 
     /**
     * @property {HTMLElement} parent - The Games DOM parent.
@@ -339,6 +345,11 @@ Phaser.Game.prototype = {
             this.antialias = config['antialias'];
         }
 
+        if (config['physicsConfig'])
+        {
+            this.physicsConfig = config['physicsConfig'];
+        }
+
         var state = null;
 
         if (config['state'])
@@ -435,7 +446,7 @@ Phaser.Game.prototype = {
             this.tweens = new Phaser.TweenManager(this);
             this.input = new Phaser.Input(this);
             this.sound = new Phaser.SoundManager(this);
-            this.physics = new Phaser.Physics.World(this);
+            this.physics = new Phaser.Physics.World(this, this.physicsConfig);
             this.particles = new Phaser.Particles(this);
             this.plugins = new Phaser.PluginManager(this, this);
             this.net = new Phaser.Net(this);

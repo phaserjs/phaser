@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render }, false, false, { gravity: [0, 10] } );
 
 function preload() {
 
@@ -23,25 +23,13 @@ function create() {
     bg = game.add.tileSprite(0, 0, 800, 600, 'background');
     bg.fixedToCamera = true;
 
-    game.physics.gravity.y = 20;
-    // game.physics.setBoundsToWorld(true, true, false, true);
+    // game.physics.gravity.y = 20;
 
-    // game.physics.world.gravity[1] = -20;
     game.physics.friction = 0.5;
-    // game.physics.world.solver.stiffness = 1e20;
-    // game.physics.world.solver.relaxation = 3;
-
-    //  Materials
-    // var groundMaterial = game.physics.createMaterial('ground');
-    // var characterMaterial = game.physics.createMaterial('character');
-    // var boxMaterial = game.physics.createMaterial('box');
 
     player = game.add.sprite(50, 400, 'dude');
     player.physicsEnabled = true;
     player.body.fixedRotation = true;
-    // player.body.setMaterial(characterMaterial);
-    // player.body.mass = 1;
-    // player.body.damping = 0.5;
 
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('turn', [4], 20, true);
@@ -51,26 +39,14 @@ function create() {
 
     for (var i = 0; i < 1; i++)
     {
-        var box = boxes.create(game.rnd.integerInRange(200, 700), game.rnd.integerInRange(0, 100), 'box');
+        // var box = boxes.create(game.rnd.integerInRange(200, 700), game.rnd.integerInRange(0, 100), 'box');
+        var box = boxes.create(game.rnd.integerInRange(200, 700), 550, 'box');
         // box.scale.set(0.5);
         // box.scale.set(game.rnd.realInRange(0.2, 0.7));
         box.physicsEnabled = true;
-        // box.body.mass = 10;
-        // box.body.setMaterial(boxMaterial);
+        box.body.static = true;
         box.body.fixedRotation = true;
     }
-
-    //  Set the material along the ground
-    // game.physics.setWorldMaterial(groundMaterial);
-
-    // var groundCharacterCM = game.physics.createContactMaterial(groundMaterial, characterMaterial, { friction: 0.0 }); // no friction between character and ground
-    // var boxCharacterCM = game.physics.createContactMaterial(boxMaterial, characterMaterial, { friction: 0.0 }); // No friction between character and boxes
-    // var boxGroundCM = game.physics.createContactMaterial(boxMaterial, groundMaterial, { friction: 0.6 }); // Between boxes and ground
-
-    // console.log(groundCharacterCM);
-    // console.log(boxGroundCM);
-
-    // game.camera.follow(player);
 
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -145,10 +121,6 @@ return result;
 
 function render () {
 
-    // if (player.debug)
-    // {
-        game.debug.renderPhysicsBody(player.body);
-    //     game.debug.renderBodyInfo(player, 16, 24);
-    // }
+    game.debug.renderPhysicsBody(player.body);
 
 }

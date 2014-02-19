@@ -23,20 +23,26 @@ p2.Spring.prototype.parent = null;
 * @class Phaser.Physics.World
 * @classdesc Physics World Constructor
 * @constructor
-* @param {Phaser.Game} game reference to the current game instance.
+* @param {Phaser.Game} game - Reference to the current game instance.
+* @param {object} [config] - Physics configuration object passed in from the game constructor.
 */
-Phaser.Physics.World = function (game) {
+Phaser.Physics.World = function (game, config) {
 
     /**
     * @property {Phaser.Game} game - Local reference to game.
     */
     this.game = game;
 
+    if (typeof config === 'undefined')
+    {
+        config = { gravity: [0, 0], broadphase: new p2.SAPBroadphase() };
+    }
+
     /**
     * @property {p2.World} game - The p2 World in which the simulation is run.
     * @protected
     */
-    this.world = new p2.World( { gravity: [0, 0] });
+    this.world = new p2.World(config);
 
     /**
     * @property {array<Phaser.Physics.Material>} materials - A local array of all created Materials.
@@ -146,7 +152,7 @@ Phaser.Physics.World = function (game) {
     this.boundsCollisionGroup = new Phaser.Physics.CollisionGroup(2);
     this.boundsCollidesWith = [];
 
-    this.setBoundsToWorld(true, true, true, true);
+    this.setBoundsToWorld(true, true, true, true, false);
 
 };
 
@@ -161,6 +167,7 @@ Phaser.Physics.World.prototype = {
     */
     postStepHandler: function (event) {
 
+        // console.log('postStep', event);
 
     },
 
@@ -176,12 +183,14 @@ Phaser.Physics.World.prototype = {
 
         //  Body.id 1 is always the World bounds object
 
-        for (var i = 0; i < event.pairs.length; i++)
+        for (var i = 0; i < event.pairs.length; i += 2)
         {
-            // console.log(i, event.pairs[i]);
+            var a = event.pairs[i];
+            var b = event.pairs[i+1];
 
-            if (event.pairs[i].parent)
+            if (a.id !== 1 && b.id !== 1)
             {
+                // console.log('postBroadphaseHandler', a, b);
             }
         }
 
@@ -196,6 +205,15 @@ Phaser.Physics.World.prototype = {
     */
     impactHandler: function (event) {
 
+        if (event.bodyA.id > 1 && event.bodyB.id > 1)
+        {
+            console.log('impactHandler');
+            console.log(event.bodyA.parent.sprite.key);
+            console.log(event.bodyB.parent.sprite.key);
+        }
+
+        event = {};
+
     },
 
     /**
@@ -206,6 +224,15 @@ Phaser.Physics.World.prototype = {
     * @param {object} event - The event data.
     */
     beginContactHandler: function (event) {
+
+        if (event.bodyA.id > 1 && event.bodyB.id > 1)
+        {
+            console.log('beginContactHandler');
+            console.log(event.bodyA.parent.sprite.key);
+            console.log(event.bodyB.parent.sprite.key);
+        }
+
+        event = {};
 
     },
 
@@ -218,6 +245,16 @@ Phaser.Physics.World.prototype = {
     */
     endContactHandler: function (event) {
 
+            console.log('endContactHandler');
+            console.log(event);
+        if (event.bodyA.id > 1 && event.bodyB.id > 1)
+        {
+            console.log('endContactHandler');
+            console.log(event);
+        }
+
+        event = {};
+
     },
 
     /**
@@ -229,10 +266,11 @@ Phaser.Physics.World.prototype = {
     * @param {boolean} [right=true] - If true will create the right bounds wall.
     * @param {boolean} [top=true] - If true will create the top bounds wall.
     * @param {boolean} [bottom=true] - If true will create the bottom bounds wall.
+    * @param {boolean} [setCollisionGroup=true] - If true the Bounds will be set to use its own Collision Group.
     */
-    setBoundsToWorld: function (left, right, top, bottom) {
+    setBoundsToWorld: function (left, right, top, bottom, setCollisionGroup) {
 
-        this.setBounds(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, left, right, top, bottom);
+        this.setBounds(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, left, right, top, bottom, setCollisionGroup);
 
     },
 
@@ -288,13 +326,15 @@ Phaser.Physics.World.prototype = {
     * @param {boolean} [right=true] - If true will create the right bounds wall.
     * @param {boolean} [top=true] - If true will create the top bounds wall.
     * @param {boolean} [bottom=true] - If true will create the bottom bounds wall.
+    * @param {boolean} [setCollisionGroup=true] - If true the Bounds will be set to use its own Collision Group.
     */
-    setBounds: function (x, y, width, height, left, right, top, bottom) {
+    setBounds: function (x, y, width, height, left, right, top, bottom, setCollisionGroup) {
 
         if (typeof left === 'undefined') { left = true; }
         if (typeof right === 'undefined') { right = true; }
         if (typeof top === 'undefined') { top = true; }
         if (typeof bottom === 'undefined') { bottom = true; }
+        if (typeof setCollisionGroup === 'undefined') { setCollisionGroup = true; }
 
         var hw = (width / 2);
         var hh = (height / 2);
@@ -324,28 +364,48 @@ Phaser.Physics.World.prototype = {
         if (left)
         {
             this._wallShapes[0] = new p2.Plane();
-            this._wallShapes[0].collisionGroup = this.boundsCollisionGroup.mask;
+
+            if (setCollisionGroup)
+            {
+                this._wallShapes[0].collisionGroup = this.boundsCollisionGroup.mask;
+            }
+
             this.bounds.addShape(this._wallShapes[0], [this.game.math.px2p(-hw), 0], 1.5707963267948966 );
         }
 
         if (right)
         {
             this._wallShapes[1] = new p2.Plane();
-            this._wallShapes[1].collisionGroup = this.boundsCollisionGroup.mask;
+
+            if (setCollisionGroup)
+            {
+                this._wallShapes[1].collisionGroup = this.boundsCollisionGroup.mask;
+            }
+
             this.bounds.addShape(this._wallShapes[1], [this.game.math.px2p(hw), 0], -1.5707963267948966 );
         }
 
         if (top)
         {
             this._wallShapes[2] = new p2.Plane();
-            this._wallShapes[2].collisionGroup = this.boundsCollisionGroup.mask;
+
+            if (setCollisionGroup)
+            {
+                this._wallShapes[2].collisionGroup = this.boundsCollisionGroup.mask;
+            }
+
             this.bounds.addShape(this._wallShapes[2], [0, this.game.math.px2p(-hh)], -3.141592653589793 );
         }
 
         if (bottom)
         {
             this._wallShapes[3] = new p2.Plane();
-            this._wallShapes[3].collisionGroup = this.boundsCollisionGroup.mask;
+
+            if (setCollisionGroup)
+            {
+                this._wallShapes[3].collisionGroup = this.boundsCollisionGroup.mask;
+            }
+
             this.bounds.addShape(this._wallShapes[3], [0, this.game.math.px2p(hh)] );
         }
 
@@ -683,9 +743,6 @@ Phaser.Physics.World.prototype = {
     createCollisionGroup: function () {
 
         var bitmask = Math.pow(2, this._collisionGroupID);
-
-        //  Add it to the bounds mask automatically (they won't collide with it unless it's added back by the other group)
-        // this.boundsCollisionGroup.mask = this.boundsCollisionGroup.mask | bitmask;
 
         if (this._wallShapes[0])
         {
