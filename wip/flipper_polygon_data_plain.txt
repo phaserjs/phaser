@@ -1,0 +1,87 @@
+Simple plain text exporter for demo purposes
+
+See http://www.grantlee.org/apidox/for_themers.html for more information
+
+Custom values (from the <bodies> section)
+    Grav: 9.81
+
+List of all bodies:
+
+
+    Name:               flipper_left
+    Custom values (from the <bodies> section):
+        Identifier:     0
+        FixedRotation:  NO
+
+        AnchorPointRel: { 0.000,1.000 }
+        AnchorPointAbs: { 0.000,78.000 }
+        Size:           { 148.000,78.000 }
+    
+    List of all fixtures:
+
+        ----------------------------------------------------------
+        fixtureType:             POLYGON
+
+        Box2D special values (only available if box2d is active):
+            filter_groupIndex:   
+            filter_categoryBits: 
+            filter_maskBits:     
+
+        Custom values (from the <fixtures> section):
+            density:             2
+            friction:            0
+            restitution:         0
+            isSensor:            NO
+
+
+        Hull polygon:
+             (126, 0)  , (22, -23)  , (11, -27)  , (4, -34)  , (2, -41)  , (0, -62)  , (3, -69)  , (9, -75)  , (26, -78)  , (30, -77)  , (142, -29)  , (146, -25)  , (148, -10)  , (146, -5)  , (139, 0) 
+
+        Convex sub polygons:
+
+             (126, 0)  , (0, -62)  , (26, -78)  , (30, -77)  , (146, -25)  , (148, -10)  , (146, -5)  , (139, 0) 
+             (2, -41)  , (0, -62)  , (126, 0)  , (22, -23)  , (11, -27)  , (4, -34) 
+             (26, -78)  , (0, -62)  , (3, -69)  , (9, -75) 
+             (146, -25)  , (30, -77)  , (142, -29) 
+
+
+
+
+    Name:               flipper_right
+    Custom values (from the <bodies> section):
+        Identifier:     0
+        FixedRotation:  NO
+
+        AnchorPointRel: { 0.000,1.000 }
+        AnchorPointAbs: { 0.000,78.000 }
+        Size:           { 147.000,78.000 }
+    
+    List of all fixtures:
+
+        ----------------------------------------------------------
+        fixtureType:             POLYGON
+
+        Box2D special values (only available if box2d is active):
+            filter_groupIndex:   
+            filter_categoryBits: 
+            filter_maskBits:     
+
+        Custom values (from the <fixtures> section):
+            density:             2
+            friction:            0
+            restitution:         0
+            isSensor:            NO
+
+
+        Hull polygon:
+             (0, -27)  , (4, -32)  , (113, -77)  , (122, -78)  , (136, -72)  , (138, -70)  , (143, -70)  , (143, -65)  , (146, -57)  , (147, -41)  , (144, -34)  , (137, -27)  , (22, -1)  , (9, 0)  , (2, -5)  , (0, -10) 
+
+        Convex sub polygons:
+
+             (143, -65)  , (138, -70)  , (143, -70) 
+             (2, -5)  , (0, -10)  , (0, -27)  , (4, -32)  , (138, -70)  , (137, -27)  , (22, -1)  , (9, 0) 
+             (146, -57)  , (147, -41)  , (144, -34)  , (137, -27)  , (138, -70)  , (143, -65) 
+             (136, -72)  , (138, -70)  , (4, -32)  , (113, -77)  , (122, -78) 
+
+
+
