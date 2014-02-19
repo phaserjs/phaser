@@ -243,7 +243,7 @@ Phaser.Point.prototype = {
 
     /**
     * Alters the length of the vector without changing the direction
-    * @method Phaser.Point#getMagnitude
+    * @method Phaser.Point#setMagnitude
     * @param {number} magnitude the desired magnitude of the resulting vector
     * @return {Phaser.Point} the modified original vector
     */
