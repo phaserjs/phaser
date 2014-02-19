@@ -385,7 +385,7 @@ Phaser.Device.prototype = {
     */
     _checkFeatures: function () {
 
-        this.canvas = !!window['CanvasRenderingContext2D'];
+        this.canvas = !!window['CanvasRenderingContext2D'] || this.iscocoonJS;
 
         try {
             this.localStorage = !!localStorage.getItem;

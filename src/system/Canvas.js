@@ -26,7 +26,8 @@ Phaser.Canvas = {
         width = width || 256;
         height = height || 256;
 
-        var canvas = document.createElement('canvas');
+        // var canvas = document.createElement('canvas');
+        var canvas = document.createElement(navigator.isCocoonJS ? 'screencanvas' : 'canvas');
 
         if (typeof id === 'string')
         {

@@ -132,6 +132,7 @@ Updates:
 * The InputManager now sets the canvas style cursor to 'inherit' instead of 'default'.
 * World.reset now calls Camera.reset which sends the camera back to 0,0 and un-follows any object it may have been tracking.
 * Added hostname: '*' to the grunt-connect in Gruntfile.js (fixes #426)
+* Device, Canvas and GamePad classes all updated for better CocoonJS support (thanks Videlais)
 
 
 Bug Fixes:
