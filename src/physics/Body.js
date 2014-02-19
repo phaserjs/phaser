@@ -872,8 +872,8 @@ Phaser.Physics.Body.prototype = {
         //  Now process them into p2 values
         for (var p = 0; p < path.length; p++)
         {
-            path[p][0] = this.px2p(path[p][0]);
-            path[p][1] = this.px2p(path[p][1]);
+            path[p][0] = this.px2pi(path[p][0]);
+            path[p][1] = this.px2pi(path[p][1]);
         }
 
         // console.log('addPolygon PATH POST');

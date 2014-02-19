@@ -22,23 +22,25 @@ function create() {
 
     game.stage.backgroundColor = '#2d2d2d';
 
-    map = game.add.tilemap('map');
+    // map = game.add.tilemap('map');
 
-    map.addTilesetImage('ground_1x1');
-    map.addTilesetImage('tiles2');
+    // map.addTilesetImage('ground_1x1');
+    // map.addTilesetImage('tiles2');
     
-    map.setCollisionBetween(1, 12);
+    // map.setCollisionBetween(1, 12);
 
-    layer = map.createLayer('Tile Layer 1');
+    // layer = map.createLayer('Tile Layer 1');
 
-    layer.resizeWorld();
+    // layer.resizeWorld();
 
-    dump = map.generateCollisionData(layer);
+    // dump = map.generateCollisionData(layer);
 
     ship = game.add.sprite(200, 200, 'ship');
     ship.physicsEnabled = true;
     //  We do this because our ship is shaped like a triangle, not a square :)
     ship.body.addPolygon({}, 29, 23  ,  0, 23  ,  14, 1);
+    // ship.body.setCircle(32);
+    // ship.body.setCircle(32, 20, 20);
 
     game.camera.follow(ship);
 
@@ -74,11 +76,11 @@ function update() {
 
 function render() {
 
-    for (var i = 0, len = dump.length; i < len; i++)
-    {
+    // for (var i = 0, len = dump.length; i < len; i++)
+    // {
         // game.debug.renderPhysicsBody(dump[i]);
-    }
+    // }
 
-    // game.debug.renderPhysicsBody(ship.body);
+    game.debug.renderPhysicsBody(ship.body);
 
 }
