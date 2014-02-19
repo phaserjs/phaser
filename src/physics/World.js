@@ -244,6 +244,9 @@ Phaser.Physics.World.prototype = {
     */
     beginContactHandler: function (event) {
 
+            console.log('beginContactHandler');
+            console.log(event);
+
         if (event.bodyA.id > 1 && event.bodyB.id > 1)
         {
             // console.log('beginContactHandler');
@@ -261,6 +264,10 @@ Phaser.Physics.World.prototype = {
     * @param {object} event - The event data.
     */
     endContactHandler: function (event) {
+
+            console.log('endContactHandler');
+            console.log(event);
+
 
         if (event.bodyA.id > 1 && event.bodyB.id > 1)
         {

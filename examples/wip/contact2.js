@@ -23,14 +23,14 @@ function create() {
     bg = game.add.tileSprite(0, 0, 800, 600, 'background');
     bg.fixedToCamera = true;
 
-    game.physics.gravity.y = 20;
+    // game.physics.gravity.y = 20;
     game.physics.friction = 0.5;
     game.physics.setBoundsToWorld();
 
     var playerCG = game.physics.createCollisionGroup();
     var boxCG = game.physics.createCollisionGroup();
 
-    player = game.add.sprite(50, 400, 'dude');
+    player = game.add.sprite(50, 550, 'dude');
     player.physicsEnabled = true;
     player.body.fixedRotation = true;
     player.body.setCollisionGroup(playerCG);
