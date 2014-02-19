@@ -71,23 +71,44 @@ Phaser.Physics.Body = function (game, sprite, x, y, mass) {
     this.collideWorldBounds = true;
 
     /**
+    * @property {Phaser.Signal} onImpact - Dispatched when the shape/s of this Body impact with another. The event will be sent 2 parameters, this Body and the impact Body.
+    */
+    this.onImpact = new Phaser.Signal();
+
+    /**
     * @property {array} collidesWith - Array of CollisionGroups that this Bodies shapes collide with.
     * @private
     */
     this.collidesWith = [];
 
+    /**
+    * @property {array} _bodyCallbacks - Array of Body callbacks.
+    * @private
+    */
+    this._bodyCallbacks = [];
 
+    /**
+    * @property {array} _bodyCallbackContext - Array of Body callback contexts.
+    * @private
+    */
+    this._bodyCallbackContext = [];
 
-    // this.onAdded = new Phaser.Signal();
-    // this.onRemoved = new Phaser.Signal();
+    /**
+    * @property {array} _groupCallbacks - Array of Group callbacks.
+    * @private
+    */
+    this._groupCallbacks = [];
+
+    /**
+    * @property {array} _bodyCallbackContext - Array of Grouo callback contexts.
+    * @private
+    */
+    this._groupCallbackContext = [];
 
     //  Set-up the default shape
     if (sprite)
     {
         this.setRectangleFromSprite(sprite);
-
-        //  Default collision mask
-        // this.data.shapes[0].collisionMask = this.game.physics.boundsCollisionGroup.mask;
 
         this.game.physics.addBody(this);
     }
@@ -97,7 +118,57 @@ Phaser.Physics.Body = function (game, sprite, x, y, mass) {
 Phaser.Physics.Body.prototype = {
 
     /**
+    * Sets a callback to be fired any time this Body impacts with the given Body. The impact test is performed against body.id values.
+    * The callback will be sent 4 parameters: This body, the body that impacted, the Shape in this body and the shape in the impacting body.
+    *
+    * @method Phaser.Physics.Body#createBodyCallback
+    * @param {Phaser.Physics.Body} body - The Body to send impact events for.
+    * @param {function} callback - The callback to fire on impact. Set to null to clear a previously set callback.
+    * @param {object} callbackContext - The context under which the callback will fire.
+    */
+    createBodyCallback: function (body, callback, callbackContext) {
+
+        this._bodyCallbacks[body.data.id] = callback;
+        this._bodyCallbackContext[body.data.id] = callbackContext;
+
+    },
+
+    /**
     * Sets the given CollisionGroup to be the collision group for all shapes in this Body, unless a shape is specified.
+    *
+    * @method Phaser.Physics.Body#createGroupCallback
+    * @param {Phaser.Physics.CollisionGroup} group - The Group to send impact events for.
+    * @param {function} callback - The callback to fire on impact. Set to null to clear a previously set callback.
+    * @param {object} callbackContext - The context under which the callback will fire.
+    */
+    createGroupCallback: function (group, callback, callbackContext) {
+
+        this._groupCallbacks[group.mask] = callback;
+        this._groupCallbackContext[group.mask] = callbackContext;
+
+    },
+
+    getCollisionMask: function () {
+
+        var mask = 0;
+
+        if (this.collideWorldBounds)
+        {
+            mask = this.game.physics.boundsCollisionGroup.mask;
+        }
+
+        for (var i = 0; i < this.collidesWith.length; i++)
+        {
+            mask = mask | this.collidesWith[i].mask;
+        }
+
+        return mask;
+
+    },
+
+    /**
+    * Sets the given CollisionGroup to be the collision group for all shapes in this Body, unless a shape is specified.
+    * This also resets the collisionMask.
     *
     * @method Phaser.Physics.Body#setCollisionGroup
     * @param {Phaser.Physics.CollisionGroup|array} group - The Collision Group that this Bodies shapes will use.
@@ -105,16 +176,20 @@ Phaser.Physics.Body.prototype = {
     */
     setCollisionGroup: function (group, shape) {
 
+        var mask = this.getCollisionMask();
+
         if (typeof shape === 'undefined')
         {
             for (var i = this.data.shapes.length - 1; i >= 0; i--)
             {
                 this.data.shapes[i].collisionGroup = group.mask;
+                this.data.shapes[i].collisionMask = mask;
             }
         }
         else
         {
             shape.collisionGroup = group.mask;
+            shapes.collisionMask = mask;
         }
 
     },
@@ -157,6 +232,11 @@ Phaser.Physics.Body.prototype = {
             }
         }
 
+        if (clearGroup)
+        {
+            this.collidesWith.length = 0;
+        }
+
     },
 
     /**
@@ -164,9 +244,11 @@ Phaser.Physics.Body.prototype = {
     *
     * @method Phaser.Physics.Body#collides
     * @param {Phaser.Physics.CollisionGroup|array} group - The Collision Group or Array of Collision Groups that this Bodies shapes will collide with.
+    * @param {function} [callback] - Optional callback that will be triggered when this Body impacts with the given Group.
+    * @param {object} [callbackContext] - The context under which the callback will be called.
     * @param {p2.Shape} [shape] - An optional Shape. If not provided the collision mask will be added to all Shapes in this Body.
     */
-    collides: function (group, shape) {
+    collides: function (group, callback, callbackContext, shape) {
 
         if (Array.isArray(group))
         {
@@ -175,6 +257,11 @@ Phaser.Physics.Body.prototype = {
                 if (this.collidesWith.indexOf(group[i]) === -1)
                 {
                     this.collidesWith.push(group[i]);
+
+                    if (callback)
+                    {
+                        this.createGroupCallback(group[i], callback, callbackContext);
+                    }
                 }
             }
         }
@@ -183,20 +270,15 @@ Phaser.Physics.Body.prototype = {
             if (this.collidesWith.indexOf(group) === -1)
             {
                 this.collidesWith.push(group);
+
+                if (callback)
+                {
+                    this.createGroupCallback(group, callback, callbackContext);
+                }
             }
         }
 
-        var mask = 0;
-
-        if (this.collideWorldBounds)
-        {
-            mask = this.game.physics.boundsCollisionGroup.mask;
-        }
-
-        for (var i = 0; i < this.collidesWith.length; i++)
-        {
-            mask = mask | this.collidesWith[i].mask;
-        }
+        var mask = this.getCollisionMask();
 
         if (typeof shape === 'undefined')
         {

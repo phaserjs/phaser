@@ -24,12 +24,16 @@ function create() {
     bg.fixedToCamera = true;
 
     game.physics.gravity.y = 20;
-
     game.physics.friction = 0.5;
+    game.physics.setBoundsToWorld();
+
+    var playerCG = game.physics.createCollisionGroup();
+    var boxCG = game.physics.createCollisionGroup();
 
     player = game.add.sprite(50, 400, 'dude');
     player.physicsEnabled = true;
     player.body.fixedRotation = true;
+    player.body.setCollisionGroup(playerCG);
 
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('turn', [4], 20, true);
@@ -37,17 +41,19 @@ function create() {
 
     boxes = game.add.group();
 
-    for (var i = 0; i < 1; i++)
+    for (var i = 0; i < 10; i++)
     {
-        // var box = boxes.create(game.rnd.integerInRange(200, 700), game.rnd.integerInRange(0, 100), 'box');
-        var box = boxes.create(game.rnd.integerInRange(200, 700), 550, 'box');
-        // box.scale.set(0.5);
-        // box.scale.set(game.rnd.realInRange(0.2, 0.7));
+        var box = boxes.create(200 + (i * 50), 550, 'box');
+        box.scale.set(0.5);
         box.physicsEnabled = true;
-        box.body.static = true;
+        box.body.setCollisionGroup(boxCG);
+        box.body.collides(playerCG);
         box.body.fixedRotation = true;
-        box.body.createBodyCallback(player.body, gotBox, this);
     }
+
+    //  Because player is creating the collides callback, the parameter order will be: callback (playerBody, boxBody, playerShape, boxShape)
+    player.body.collides(boxCG, gotBox, this);
+
 
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -58,7 +64,7 @@ function gotBox(body1, body2, shape1, shape2) {
 
     console.log('gotBox');
 
-    body1.sprite.kill();
+    body2.sprite.kill();
 
 }
 

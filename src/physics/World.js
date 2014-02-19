@@ -152,7 +152,9 @@ Phaser.Physics.World = function (game, config) {
     this.boundsCollisionGroup = new Phaser.Physics.CollisionGroup(2);
     this.boundsCollidesWith = [];
 
-    this.setBoundsToWorld(true, true, true, true, false);
+    //  Group vs. Group callbacks
+
+    // this.setBoundsToWorld(true, true, true, true, false);
 
 };
 
@@ -166,8 +168,6 @@ Phaser.Physics.World.prototype = {
     * @param {object} event - The event data.
     */
     postStepHandler: function (event) {
-
-        // console.log('postStep', event);
 
     },
 
@@ -205,16 +205,31 @@ Phaser.Physics.World.prototype = {
     */
     impactHandler: function (event) {
 
-        if (event.bodyA.id > 1 && event.bodyB.id > 1)
+        if (event.bodyA.parent && event.bodyB.parent)
         {
-            console.log('impactHandler');
-            console.log(event);
-            console.log(event.bodyA.parent.sprite.key);
+            //  Body vs. Body callbacks
+            var a = event.bodyA.parent;
+            var b = event.bodyB.parent;
 
-            if (event.bodyB.parent.sprite.key == 'box')
+            if (a._bodyCallbacks[event.bodyB.id])
             {
-                console.log(event.bodyB.parent.sprite.key + ' KILLED');
-                event.bodyB.parent.sprite.kill();
+                a._bodyCallbacks[event.bodyB.id].call(a._bodyCallbackContext[event.bodyB.id], a, b, event.shapeA, event.shapeB);
+            }
+
+            if (b._bodyCallbacks[event.bodyA.id])
+            {
+                b._bodyCallbacks[event.bodyA.id].call(b._bodyCallbackContext[event.bodyA.id], b, a, event.shapeB, event.shapeA);
+            }
+
+            //  Body vs. Group callbacks
+            if (a._groupCallbacks[event.shapeB.collisionGroup])
+            {
+                a._groupCallbacks[event.shapeB.collisionGroup].call(a._groupCallbackContext[event.shapeB.collisionGroup], a, b, event.shapeA, event.shapeB);
+            }
+
+            if (b._groupCallbacks[event.shapeA.collisionGroup])
+            {
+                b._groupCallbacks[event.shapeA.collisionGroup].call(b._groupCallbackContext[event.shapeA.collisionGroup], b, a, event.shapeB, event.shapeA);
             }
         }
 
@@ -231,12 +246,10 @@ Phaser.Physics.World.prototype = {
 
         if (event.bodyA.id > 1 && event.bodyB.id > 1)
         {
-            console.log('beginContactHandler');
-            console.log(event.bodyA.parent.sprite.key);
-            console.log(event.bodyB.parent.sprite.key);
+            // console.log('beginContactHandler');
+            // console.log(event.bodyA.parent.sprite.key);
+            // console.log(event.bodyB.parent.sprite.key);
         }
-
-        event = {};
 
     },
 
@@ -249,15 +262,11 @@ Phaser.Physics.World.prototype = {
     */
     endContactHandler: function (event) {
 
-            console.log('endContactHandler');
-            console.log(event);
         if (event.bodyA.id > 1 && event.bodyB.id > 1)
         {
-            console.log('endContactHandler');
-            console.log(event);
+            // console.log('endContactHandler');
+            // console.log(event);
         }
-
-        event = {};
 
     },
 
