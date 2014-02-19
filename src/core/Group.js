@@ -1004,11 +1004,11 @@ Phaser.Group.prototype = {
     },
 
     /**
-    * Allows you to call your own function on each alive member of this Group (where child.alive=true). You must pass the callback and context in which it will run.
+    * Allows you to call your own function on each existing member of this Group (where child.exists=true). You must pass the callback and context in which it will run.
     * You can add as many parameters as you like, which will all be passed to the callback along with the child.
-    * For example: Group.forEachAlive(causeDamage, this, 500)
+    * For example: Group.forEachExists(causeDamage, this, 500)
     * 
-    * @method Phaser.Group#forEachAlive
+    * @method Phaser.Group#forEachExists
     * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
     * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
     */
