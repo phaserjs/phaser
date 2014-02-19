@@ -45,7 +45,7 @@ Phaser.Physics.Body = function (game, sprite, x, y, mass) {
     * @property {p2.Body} data - The p2 Body data.
     * @protected
     */
-    this.data = new p2.Body({ position:[this.px2p(x), this.px2p(y)], mass: mass });
+    this.data = new p2.Body({ position:[this.px2pi(x), this.px2pi(y)], mass: mass });
     this.data.parent = this;
 
     /**
@@ -419,7 +419,7 @@ Phaser.Physics.Body.prototype = {
     */
     rotateLeft: function (speed) {
 
-        this.data.angularVelocity = this.px2p(speed);
+        this.data.angularVelocity = this.px2p(-speed);
 
     },
 
@@ -431,7 +431,7 @@ Phaser.Physics.Body.prototype = {
     */
     rotateRight: function (speed) {
 
-        this.data.angularVelocity = this.px2p(-speed);
+        this.data.angularVelocity = this.px2p(speed);
 
     },
 
@@ -444,7 +444,7 @@ Phaser.Physics.Body.prototype = {
     */
     moveForward: function (speed) {
 
-        var magnitude = this.px2p(-speed);
+        var magnitude = this.px2pi(-speed);
         var angle = this.data.angle + Math.PI / 2;
 
         this.data.velocity[0] = magnitude * Math.cos(angle);
@@ -461,7 +461,7 @@ Phaser.Physics.Body.prototype = {
     */
     moveBackward: function (speed) {
 
-        var magnitude = this.px2p(-speed);
+        var magnitude = this.px2pi(-speed);
         var angle = this.data.angle + Math.PI / 2;
 
         this.data.velocity[0] = -(magnitude * Math.cos(angle));
@@ -478,7 +478,7 @@ Phaser.Physics.Body.prototype = {
     */
     thrust: function (speed) {
 
-        var magnitude = this.px2p(-speed);
+        var magnitude = this.px2pi(-speed);
         var angle = this.data.angle + Math.PI / 2;
 
         this.data.force[0] += magnitude * Math.cos(angle);
@@ -495,7 +495,7 @@ Phaser.Physics.Body.prototype = {
     */
     reverse: function (speed) {
 
-        var magnitude = this.px2p(-speed);
+        var magnitude = this.px2pi(-speed);
         var angle = this.data.angle + Math.PI / 2;
 
         this.data.force[0] -= magnitude * Math.cos(angle);
@@ -512,7 +512,7 @@ Phaser.Physics.Body.prototype = {
     */
     moveLeft: function (speed) {
 
-        this.data.velocity[0] = this.px2p(-speed);
+        this.data.velocity[0] = this.px2pi(-speed);
 
     },
 
@@ -525,7 +525,7 @@ Phaser.Physics.Body.prototype = {
     */
     moveRight: function (speed) {
 
-        this.data.velocity[0] = this.px2p(speed);
+        this.data.velocity[0] = this.px2pi(speed);
 
     },
 
@@ -538,7 +538,7 @@ Phaser.Physics.Body.prototype = {
     */
     moveUp: function (speed) {
 
-        this.data.velocity[1] = this.px2p(-speed);
+        this.data.velocity[1] = this.px2pi(-speed);
 
     },
 
@@ -551,7 +551,7 @@ Phaser.Physics.Body.prototype = {
     */
     moveDown: function (speed) {
 
-        this.data.velocity[1] = this.px2p(speed);
+        this.data.velocity[1] = this.px2pi(speed);
 
     },
 
@@ -572,8 +572,8 @@ Phaser.Physics.Body.prototype = {
     */
     postUpdate: function () {
 
-        this.sprite.x = this.p2px(this.data.position[0]);
-        this.sprite.y = this.p2px(this.data.position[1]);
+        this.sprite.x = this.p2pxi(this.data.position[0]);
+        this.sprite.y = this.p2pxi(this.data.position[1]);
 
         if (!this.fixedRotation)
         {
@@ -695,7 +695,7 @@ Phaser.Physics.Body.prototype = {
         if (typeof offsetY === 'undefined') { offsetY = 0; }
         if (typeof rotation === 'undefined') { rotation = 0; }
 
-        this.data.addShape(shape, [this.px2p(offsetX), this.px2p(offsetY)], rotation);
+        this.data.addShape(shape, [this.px2pi(offsetX), this.px2pi(offsetY)], rotation);
 
         return shape;
 
@@ -950,10 +950,6 @@ Phaser.Physics.Body.prototype = {
 
         if (typeof sprite === 'undefined') { sprite = this.sprite; }
 
-        //  because Sprite.phyicsEnabled = true now sets anchor to 0.5
-        // var px = (sprite.width / 2) + (-sprite.width * sprite.anchor.x);
-        // var py = (sprite.height / 2) + (-sprite.height * sprite.anchor.y);
-
         this.clearShapes();
 
         return this.addRectangle(sprite.width, sprite.height, 0, 0, sprite.rotation);
@@ -1046,24 +1042,50 @@ Phaser.Physics.Body.prototype = {
     /**
     * Convert p2 physics value (meters) to pixel scale.
     * 
-    * @method Phaser.Math#p2px
+    * @method Phaser.Physics.Body#p2px
     * @param {number} v - The value to convert.
     * @return {number} The scaled value.
     */
     p2px: function (v) {
 
-        return v *= -20;
+        return v *= 20;
 
     },
 
     /**
     * Convert pixel value to p2 physics scale (meters).
     * 
-    * @method Phaser.Math#px2p
+    * @method Phaser.Physics.Body#px2p
     * @param {number} v - The value to convert.
     * @return {number} The scaled value.
     */
     px2p: function (v) {
+
+        return v * 0.05;
+
+    },
+
+    /**
+    * Convert p2 physics value (meters) to pixel scale and inverses it.
+    * 
+    * @method Phaser.Physics.Body#p2pxi
+    * @param {number} v - The value to convert.
+    * @return {number} The scaled value.
+    */
+    p2pxi: function (v) {
+
+        return v *= -20;
+
+    },
+
+    /**
+    * Convert pixel value to p2 physics scale (meters) and inverses it.
+    * 
+    * @method Phaser.Physics.Body#px2pi
+    * @param {number} v - The value to convert.
+    * @return {number} The scaled value.
+    */
+    px2pi: function (v) {
 
         return v * -0.05;
 

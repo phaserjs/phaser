@@ -373,12 +373,12 @@ Phaser.Physics.World.prototype = {
                 this.bounds.removeShape(shape);
             }
 
-            this.bounds.position[0] = this.game.math.px2p(cx);
-            this.bounds.position[1] = this.game.math.px2p(cy);
+            this.bounds.position[0] = this.game.math.px2pi(cx);
+            this.bounds.position[1] = this.game.math.px2pi(cy);
         }
         else
         {
-            this.bounds = new p2.Body({ mass: 0, position:[this.game.math.px2p(cx), this.game.math.px2p(cy)] });
+            this.bounds = new p2.Body({ mass: 0, position:[this.game.math.px2pi(cx), this.game.math.px2pi(cy)] });
         }
 
         if (left)
