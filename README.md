@@ -89,6 +89,7 @@ Significant API changes:
 * World preUpdate, update and postUpdate have all been moved to Stage. So all children are updated regardless where on the display list they live.
 * Cache.getImageKeys and similar has been removed, please use Cache.getKeys(Phaser.Cache.IMAGE) instead, this now supports all 10 Cache data types.
 * After defining tiles that collide on a Tilemap, you need to call Tilemap.generateCollisionData(layer) to populate the physics world with the data required.
+* Phaser.QuadTree has been removed from core and moved to a plugin. It's no longer required, nor works with the physics system.
 
 
 New features:

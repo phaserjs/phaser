@@ -151,7 +151,6 @@
 
     <script src="$path/src/math/Math.js"></script>
     <script src="$path/src/math/RandomDataGenerator.js"></script>
-    <script src="$path/src/math/QuadTree.js"></script>
 
     <script src="$path/src/net/Net.js"></script>
 

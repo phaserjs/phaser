@@ -105,7 +105,6 @@ module.exports = function (grunt) {
 
         'src/math/Math.js',
         'src/math/RandomDataGenerator.js',
-        'src/math/QuadTree.js',
 
         'src/net/Net.js',
 

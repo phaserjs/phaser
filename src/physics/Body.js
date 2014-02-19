@@ -90,6 +90,13 @@ Phaser.Physics.Body = function (game, sprite, x, y, mass) {
 
 Phaser.Physics.Body.prototype = {
 
+    /**
+    * Sets the given CollisionGroup to be the collision group for all shapes in this Body, unless a shape is specified.
+    *
+    * @method Phaser.Physics.Body#setCollisionGroup
+    * @param {Phaser.Physics.CollisionGroup|array} group - The Collision Group that this Bodies shapes will use.
+    * @param {p2.Shape} [shape] - An optional Shape. If not provided the collision group will be added to all Shapes in this Body.
+    */
     setCollisionGroup: function (group, shape) {
 
         if (typeof shape === 'undefined')
@@ -107,19 +114,70 @@ Phaser.Physics.Body.prototype = {
     },
 
     /**
-    * Adds the given CollisionGroup to the list of groups that this body will collide with and updates the collision mask.
+    * Clears the collision data from the shapes in this Body. Optionally clears Group and/or Mask.
+    *
+    * @method Phaser.Physics.Body#clearCollision
+    * @param {boolean} [clearGroup=true] - Clear the collisionGroup value from the shape/s?
+    * @param {boolean} [clearMask=true] - Clear the collisionMask value from the shape/s?
+    * @param {p2.Shape} [shape] - An optional Shape. If not provided the collision data will be cleared from all Shapes in this Body.
+    */
+    clearCollision: function (clearGroup, clearMask, shape) {
+
+        if (typeof shape === 'undefined')
+        {
+            for (var i = this.data.shapes.length - 1; i >= 0; i--)
+            {
+                if (clearGroup)
+                {
+                    this.data.shapes[i].collisionGroup = null;
+                }
+
+                if (clearMask)
+                {
+                    this.data.shapes[i].collisionMask = null;
+                }
+            }
+        }
+        else
+        {
+            if (clearGroup)
+            {
+                shapes.collisionGroup = null;
+            }
+
+            if (clearMask)
+            {
+                shapes.collisionMask = null;
+            }
+        }
+
+    },
+
+    /**
+    * Adds the given CollisionGroup, or array of CollisionGroups, to the list of groups that this body will collide with and updates the collision masks.
     *
     * @method Phaser.Physics.Body#collides
-    * @param {Phaser.Physics.CollisionGroup} group - The Collision Group that this Bodies shapes will collide with.
+    * @param {Phaser.Physics.CollisionGroup|array} group - The Collision Group or Array of Collision Groups that this Bodies shapes will collide with.
     * @param {p2.Shape} [shape] - An optional Shape. If not provided the collision mask will be added to all Shapes in this Body.
     */
     collides: function (group, shape) {
 
-        //  TODO: group can be an array
-
-        if (this.collidesWith.indexOf(group) === -1)
+        if (Array.isArray(group))
         {
-            this.collidesWith.push(group);
+            for (var i = 0; i < group.length; i++)
+            {
+                if (this.collidesWith.indexOf(group[i]) === -1)
+                {
+                    this.collidesWith.push(group[i]);
+                }
+            }
+        }
+        else
+        {
+            if (this.collidesWith.indexOf(group) === -1)
+            {
+                this.collidesWith.push(group);
+            }
         }
 
         var mask = 0;
@@ -145,8 +203,6 @@ Phaser.Physics.Body.prototype = {
         {
             shape.collisionMask = mask;
         }
-
-        console.log('collides', this.sprite.name, group, mask);
 
     },
 

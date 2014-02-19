@@ -17,9 +17,6 @@ var angle = 0;
 var fireRate = 100;
 var nextFire = 0;
 var cursors;
-// var PLAYER;
-// var BULLET;
-// var WORLD;
 var boxes;
 var playerGroup;
 var bulletGroup;
@@ -44,30 +41,20 @@ function create() {
     bulletGroup = game.physics.createCollisionGroup();
     boxGroup = game.physics.createCollisionGroup();
 
-    // cannon.body.data.shapes[0].collisionGroup = PLAYER.mask;
-    // cannon.body.data.shapes[0].collisionMask = game.physics.WORLD.mask;
-
     cannon.body.setCollisionGroup(playerGroup);
     cannon.body.collides(boxGroup);
 
-
     boxes = game.add.group();
 
-    for (var i = 0; i < 10; i++)
+    for (var i = 0; i < 30; i++)
     {
         var box = boxes.create(game.rnd.integerInRange(100, 700), game.rnd.integerInRange(100, 500), 'box');
         box.name = 'box' + i;
-        box.scale.set(0.5);
-        // box.scale.set(game.rnd.realInRange(0.2, 0.7));
+        box.scale.set(game.rnd.realInRange(0.2, 0.7));
         box.physicsEnabled = true;
         box.body.setCollisionGroup(boxGroup);
-        box.body.collides(playerGroup);
-        box.body.collides(bulletGroup);
-        // box.body.mass = 10;
-        // box.body.setMaterial(boxMaterial);
-        // box.body.fixedRotation = true;
+        box.body.collides( [ playerGroup, bulletGroup, boxGroup ]);
     }
-
 
     cursors = game.input.keyboard.createCursorKeys();
 
@@ -87,7 +74,7 @@ function fire() {
             bullet.exists = true;
             bullet.position.set(cannon.x, cannon.y);
             bullet.physicsEnabled = true;
-
+            bullet.body.collideWorldBounds = false;
             bullet.body.rotation = cannon.rotation + game.math.degToRad(90);
 
             var magnitude = game.math.px2p(-500);
@@ -98,9 +85,6 @@ function fire() {
 
             bullet.body.setCollisionGroup(bulletGroup);
             bullet.body.collides(boxGroup);
-
-            // bullet.body.data.shapes[0].collisionGroup = BULLET;
-            // bullet.body.data.shapes[0].collisionMask = WORLD | BULLET;
         }
     }
 
