@@ -903,9 +903,11 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
         {
             //  exists = false
             this._cache[6] = 0;
+                console.log('exists false');
 
             if (this.body)
             {
+                console.log('exists false remove from world');
                 this.body.removeFromWorld();
             }
 

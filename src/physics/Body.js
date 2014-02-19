@@ -532,7 +532,7 @@ Phaser.Physics.Body.prototype = {
     */
     addToWorld: function () {
 
-        if (this.data.world !== this.game.physics)
+        if (this.data.world !== this.game.physics.world)
         {
             this.game.physics.addBody(this);
         }
@@ -546,9 +546,9 @@ Phaser.Physics.Body.prototype = {
     */
     removeFromWorld: function () {
 
-        if (this.data.world === this.game.physics)
+        if (this.data.world === this.game.physics.world)
         {
-            this.game.physics.removeBody(this.data);
+            this.game.physics.removeBody(this);
         }
 
     },

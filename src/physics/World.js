@@ -208,11 +208,15 @@ Phaser.Physics.World.prototype = {
         if (event.bodyA.id > 1 && event.bodyB.id > 1)
         {
             console.log('impactHandler');
+            console.log(event);
             console.log(event.bodyA.parent.sprite.key);
-            console.log(event.bodyB.parent.sprite.key);
-        }
 
-        event = {};
+            if (event.bodyB.parent.sprite.key == 'box')
+            {
+                console.log(event.bodyB.parent.sprite.key + ' KILLED');
+                event.bodyB.parent.sprite.kill();
+            }
+        }
 
     },
 
