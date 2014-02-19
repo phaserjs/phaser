@@ -472,7 +472,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Is this sprite being dragged by the mouse or not?
-    * @method Phaser.InputHandler#pointerTimeOut
+    * @method Phaser.InputHandler#pointerDragged
     * @param {Phaser.Pointer} pointer
     * @return {number}
     */
