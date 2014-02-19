@@ -154,7 +154,7 @@ Phaser.BitmapText.prototype.update = function() {
 }
 
 /**
-* @method Phaser.Text.prototype.destroy
+* @method Phaser.BitmapText.prototype.destroy
 */
 Phaser.BitmapText.prototype.destroy = function() {
 
