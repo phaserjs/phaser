@@ -995,23 +995,49 @@ Phaser.Physics.Body.prototype = {
     loadPolygon: function (key, object, options) {
 
         var data = this.game.cache.getPhysicsData(key, object);
-
-        if (data && data.shape)
+        
+        //this is not working
+        //it is expecting a single hull polygon not an array of convex sub polygons as the polygon is decomposed
+        //internally. right ?
+        if(data instanceof Array) //multiple polygons founds
         {
-            var temp = [];
+          for (var j = 0, len2 = data.length; j < len2; j++){
+            polygon_data = data[j]
+            console.log('polygon_data',j, polygon_data.shape, len2)
 
-            //  We've a list of numbers
-            for (var i = 0, len = data.shape.length; i < len; i += 2)
-            {
-                temp.push([data.shape[i], data.shape[i + 1]]);
+            if (polygon_data && polygon_data.shape){
+              var temp = [];
+
+              //  We've a list of numbers
+              for (var i = 0, len = polygon_data.shape.length; i < len; i += 2)
+              {
+                  temp.push([polygon_data.shape[i], polygon_data.shape[i + 1]]);
+              }
+              this.addPolygon(options, temp);
             }
-
-            return this.addPolygon(options, temp);
+          }
         }
+        else //single polygon
+        {
+          if (data && data.shape)
+          {
+              var temp = [];
+
+              //  We've a list of numbers
+              for (var i = 0, len = data.shape.length; i < len; i += 2)
+              {
+                  temp.push([data.shape[i], data.shape[i + 1]]);
+              }
+
+              return this.addPolygon(options, temp);
+          }
+        }
+        
 
         return false;
 
     },
+
 
     /**
     * Reads the physics data from a physics data file stored in the Game.Cache.

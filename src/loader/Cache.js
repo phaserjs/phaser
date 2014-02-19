@@ -581,7 +581,7 @@ Phaser.Cache.prototype = {
         {
             if (this._physics[key] && this._physics[key].data[object])
             {
-                return this._physics[key].data[object][0];
+                return this._physics[key].data[object];//no [0], read all sub polygons
             }
             else
             {
