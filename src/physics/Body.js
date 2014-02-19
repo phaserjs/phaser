@@ -994,7 +994,7 @@ Phaser.Physics.Body.prototype = {
     */
     loadPolygon: function (key, object, options) {
 
-        var data = game.cache.getPhysicsData(key, object);
+        var data = this.game.cache.getPhysicsData(key, object);
 
         if (data && data.shape)
         {
