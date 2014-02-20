@@ -1,5 +1,6 @@
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+// var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
@@ -43,8 +44,9 @@ function create() {
     player = game.add.sprite(100, -400, 'dude');
     player.physicsEnabled = true;
     player.body.fixedRotation = true;
+    player.body.setRectangle(12, 40, 0, 4);
     player.body.setMaterial(characterMaterial);
-    player.body.mass = 1;
+    player.body.mass = 4;
     player.body.damping = 0.5;
 
     player.animations.add('left', [0, 1, 2, 3], 10, true);
@@ -59,9 +61,9 @@ function create() {
         box.scale.set(game.rnd.realInRange(0.2, 0.6));
         box.physicsEnabled = true;
         box.body.allowSleep = true;
-        box.body.mass = 10;
+        box.body.mass = 1;
         box.body.setMaterial(boxMaterial);
-        box.body.fixedRotation = true;
+        // box.body.fixedRotation = true;
     }
 
     //  Set the material along the ground
@@ -150,7 +152,7 @@ function render () {
 
     // if (player.debug)
     // {
-        // game.debug.renderPhysicsBody(player.body);
+        game.debug.renderPhysicsBody(player.body);
     //     game.debug.renderBodyInfo(player, 16, 24);
     // }
 
