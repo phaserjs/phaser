@@ -23,14 +23,15 @@ function create() {
     bg = game.add.tileSprite(0, 0, 800, 600, 'background');
     bg.fixedToCamera = true;
 
-    // game.physics.gravity.y = 20;
+    game.physics.gravity.y = 20;
     game.physics.friction = 0.5;
-    game.physics.setBoundsToWorld();
+    // game.physics.setBoundsToWorld();
 
     var playerCG = game.physics.createCollisionGroup();
     var boxCG = game.physics.createCollisionGroup();
 
     player = game.add.sprite(50, 550, 'dude');
+    player.name = 'player';
     player.physicsEnabled = true;
     player.body.fixedRotation = true;
     player.body.setCollisionGroup(playerCG);
@@ -44,6 +45,7 @@ function create() {
     for (var i = 0; i < 10; i++)
     {
         var box = boxes.create(200 + (i * 50), 550, 'box');
+        box.name = 'box' + i;
         box.scale.set(0.5);
         box.physicsEnabled = true;
         box.body.setCollisionGroup(boxCG);
@@ -62,7 +64,7 @@ function create() {
 
 function gotBox(body1, body2, shape1, shape2) {
 
-    console.log('gotBox');
+    console.log('gotBox', body1.sprite.name, body2.sprite.name);
 
     body2.sprite.kill();
 

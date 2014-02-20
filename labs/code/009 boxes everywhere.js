@@ -1,5 +1,4 @@
 
-// var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
@@ -151,7 +150,7 @@ function render () {
 
     // if (player.debug)
     // {
-        game.debug.renderPhysicsBody(player.body);
+        // game.debug.renderPhysicsBody(player.body);
     //     game.debug.renderBodyInfo(player, 16, 24);
     // }
 

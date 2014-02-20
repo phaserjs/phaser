@@ -149,12 +149,16 @@ Phaser.Physics.World = function (game, config) {
     */
     this._collisionGroupID = 2;
 
+    this.nothingCollisionGroup = new Phaser.Physics.CollisionGroup(1);
     this.boundsCollisionGroup = new Phaser.Physics.CollisionGroup(2);
+    this.everythingCollisionGroup = new Phaser.Physics.CollisionGroup(2147483648);
+
     this.boundsCollidesWith = [];
 
     //  Group vs. Group callbacks
 
-    // this.setBoundsToWorld(true, true, true, true, false);
+    //  By default we want everything colliding with everything
+    this.setBoundsToWorld(true, true, true, true, false);
 
 };
 
@@ -244,8 +248,8 @@ Phaser.Physics.World.prototype = {
     */
     beginContactHandler: function (event) {
 
-            console.log('beginContactHandler');
-            console.log(event);
+            // console.log('beginContactHandler');
+            // console.log(event);
 
         if (event.bodyA.id > 1 && event.bodyB.id > 1)
         {
@@ -265,8 +269,8 @@ Phaser.Physics.World.prototype = {
     */
     endContactHandler: function (event) {
 
-            console.log('endContactHandler');
-            console.log(event);
+            // console.log('endContactHandler');
+            // console.log(event);
 
 
         if (event.bodyA.id > 1 && event.bodyB.id > 1)
@@ -388,9 +392,11 @@ Phaser.Physics.World.prototype = {
             if (setCollisionGroup)
             {
                 this._wallShapes[0].collisionGroup = this.boundsCollisionGroup.mask;
+                // this._wallShapes[0].collisionGroup = this.everythingCollisionGroup.mask;
+                // this._wallShapes[0].collisionMask = this.everythingCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[0], [this.game.math.px2p(-hw), 0], 1.5707963267948966 );
+            this.bounds.addShape(this._wallShapes[0], [this.game.math.px2pi(-hw), 0], 1.5707963267948966 );
         }
 
         if (right)
@@ -400,9 +406,11 @@ Phaser.Physics.World.prototype = {
             if (setCollisionGroup)
             {
                 this._wallShapes[1].collisionGroup = this.boundsCollisionGroup.mask;
+                // this._wallShapes[1].collisionGroup = this.everythingCollisionGroup.mask;
+                // this._wallShapes[1].collisionMask = this.everythingCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[1], [this.game.math.px2p(hw), 0], -1.5707963267948966 );
+            this.bounds.addShape(this._wallShapes[1], [this.game.math.px2pi(hw), 0], -1.5707963267948966 );
         }
 
         if (top)
@@ -412,9 +420,11 @@ Phaser.Physics.World.prototype = {
             if (setCollisionGroup)
             {
                 this._wallShapes[2].collisionGroup = this.boundsCollisionGroup.mask;
+                // this._wallShapes[2].collisionGroup = this.everythingCollisionGroup.mask;
+                // this._wallShapes[2].collisionMask = this.everythingCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[2], [0, this.game.math.px2p(-hh)], -3.141592653589793 );
+            this.bounds.addShape(this._wallShapes[2], [0, this.game.math.px2pi(-hh)], -3.141592653589793 );
         }
 
         if (bottom)
@@ -424,9 +434,11 @@ Phaser.Physics.World.prototype = {
             if (setCollisionGroup)
             {
                 this._wallShapes[3].collisionGroup = this.boundsCollisionGroup.mask;
+                // this._wallShapes[3].collisionGroup = this.everythingCollisionGroup.mask;
+                // this._wallShapes[3].collisionMask = this.everythingCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[3], [0, this.game.math.px2p(hh)] );
+            this.bounds.addShape(this._wallShapes[3], [0, this.game.math.px2pi(hh)] );
         }
 
         this.world.addBody(this.bounds);
