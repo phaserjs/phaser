@@ -16,7 +16,7 @@ function create() {
 
 	batch = game.add.spriteBatch();
 
-	var total = (game.renderType === Phaser.WEBGL) ? 10000 : 100;
+	var total = (game.renderType === Phaser.WEBGL) ? 5000 : 100;
 
 	for (var i = 0; i < total; i++)
 	{

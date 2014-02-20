@@ -46,7 +46,7 @@ function fire() {
             bullet.position.set(cannon.x, cannon.y);
             bullet.physicsEnabled = true;
 
-            bullet.body.rotation = cannon.rotation + game.math.degToRad(90);
+            bullet.body.rotation = cannon.rotation + game.math.degToRad(-90);
 
             var magnitude = game.math.px2p(-500);
             var angle = bullet.body.rotation + Math.PI / 2;

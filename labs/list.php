@@ -1,6 +1,8 @@
 <?php
     //  Global
     $files = dirToArray(dirname(__FILE__) . '/code');
+    $files = array_reverse($files);
+
     $total = 0;
     $demo = '';
 
