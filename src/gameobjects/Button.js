@@ -477,7 +477,7 @@ Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer) {
 * Internal function that handles input events.
 *
 * @protected
-* @method Phaser.Button.prototype.onInputOverHandler
+* @method Phaser.Button.prototype.onInputOutHandler
 * @param {Phaser.Button} sprite - The Button that the event occured on.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
@@ -503,7 +503,7 @@ Phaser.Button.prototype.onInputOutHandler = function (sprite, pointer) {
 * Internal function that handles input events.
 *
 * @protected
-* @method Phaser.Button.prototype.onInputOverHandler
+* @method Phaser.Button.prototype.onInputDownHandler
 * @param {Phaser.Button} sprite - The Button that the event occured on.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
@@ -529,7 +529,7 @@ Phaser.Button.prototype.onInputDownHandler = function (sprite, pointer) {
 * Internal function that handles input events.
 *
 * @protected
-* @method Phaser.Button.prototype.onInputOverHandler
+* @method Phaser.Button.prototype.onInputUpHandler
 * @param {Phaser.Button} sprite - The Button that the event occured on.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */

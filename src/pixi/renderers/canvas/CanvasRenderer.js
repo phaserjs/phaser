@@ -19,6 +19,27 @@ PIXI.CanvasRenderer = function(width, height, view, transparent)
 
     this.type = PIXI.CANVAS_RENDERER;
 
+    /**
+     * This sets if the CanvasRenderer will clear the canvas or not before the new render pass.
+     * If the Stage is NOT transparent Pixi will use a canvas sized fillRect operation every frame to set the canvas background color.
+     * If the Stage is transparent Pixi will use clearRect to clear the canvas every frame.
+     * Disable this by setting this to false. For example if your game has a canvas filling background image you often don't need this set.
+     *
+     * @property clearBeforeRender
+     * @type Boolean
+     * @default
+     */
+    this.clearBeforeRender = true;
+
+    /**
+     * If true Pixi will Math.floor() x/y values when rendering, stopping pixel interpolation.
+     * Handy for crisp pixel art and speed on legacy devices.
+     *
+     * @property roundPixels
+     * @type Boolean
+     * @default
+     */
+    this.roundPixels = false;
 
     /**
      * Whether the render view is transparent
@@ -124,7 +145,7 @@ PIXI.CanvasRenderer = function(width, height, view, transparent)
     this.maskManager = new PIXI.CanvasMaskManager();
 
     /**
-     * RenderSession TODO-Alvin
+     * The render session is just a bunch of parameter used for rendering
      * @property renderSession
      * @type Object
      */
@@ -165,27 +186,16 @@ PIXI.CanvasRenderer.prototype.render = function(stage)
     this.context.setTransform(1,0,0,1,0,0);
     this.context.globalAlpha = 1;
 
-    //  Update the background color / cls
-    if (!this.transparent)
+    if (!this.transparent && this.clearBeforeRender)
     {
-        if (PIXI.canvas.FILL_RECT)
-        {
-            this.context.fillStyle = stage.backgroundColorString;
-            this.context.fillRect(0, 0, this.width, this.height);
-        }
-        else if (stage.resetBackgroundColor)
-        {
-            this.view.style.backgroundColor = stage.backgroundColorString;
-            stage.resetBackgroundColor = false;
-            console.log('bgcolor reset', this.view.style.backgroundColor);
-        }
+        this.context.fillStyle = stage.backgroundColorString;
+        this.context.fillRect(0, 0, this.width, this.height);
     }
-    
-    if (PIXI.canvas.CLEAR_RECT && !PIXI.canvas.FILL_RECT)
+    else if (this.transparent && this.clearBeforeRender)
     {
         this.context.clearRect(0, 0, this.width, this.height);
     }
-   
+
     this.renderDisplayObject(stage);
 
     // run interaction!

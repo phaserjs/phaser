@@ -59,6 +59,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.BitmapFont.html">BitmapFont</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -88,10 +92,6 @@
 						
 						<li>
 							<a href="Phaser.Device.html">Device</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.DOMSprite.html">DOMSprite</a>
 						</li>
 						
 						<li>
@@ -140,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
 						
 						<li>
@@ -251,10 +255,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.Plugin.html">Plugin</a>
 						</li>
 						
@@ -272,10 +272,6 @@
 						
 						<li>
 							<a href="Phaser.Polygon.html">Polygon</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.QuadTree.html">QuadTree</a>
 						</li>
 						
 						<li>
@@ -312,6 +308,10 @@
 						
 						<li>
 							<a href="Phaser.Sprite.html">Sprite</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
 						</li>
 						
 						<li>
@@ -413,6 +413,10 @@
 						</li>
 						
 						<li>
+							<a href="global.html#getBounds">getBounds</a>
+						</li>
+						
+						<li>
 							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
 						</li>
 						
@@ -451,6 +455,7 @@
         <article>
             <pre class="sunlight-highlight-javascript linenums">/**
 * @author       Richard Davey &lt;rich@photonstorm.com>
+* @author       Adrien Brault &lt;adrien.brault@gmail.com>
 * @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
@@ -458,8 +463,8 @@
 /**
 * Creates a new Polygon. You have to provide a list of points.
 * This can be an array of Points that form the polygon, a flat array of numbers that will be interpreted as [x,y, x,y, ...], 
-* or the arguments passed can be all the points of the polygon e.g. `new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)`, or the
-* arguments passed can be flat x,y values e.g. `new PIXI.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
+* or the arguments passed can be all the points of the polygon e.g. `new Phaser.Polygon(new Phaser.Point(), new Phaser.Point(), ...)`, or the
+* arguments passed can be flat x,y values e.g. `new Phaser.Polygon(x,y, x,y, x,y, ...)` where `x` and `y` are numbers.
 *
 * @class Phaser.Polygon
 * @classdesc The polygon represents a list of orderded points in space
@@ -468,17 +473,97 @@
 */
 Phaser.Polygon = function (points) {
 
-    PIXI.Polygon.call(this, points);
-
     /**
     * @property {number} type - The base object type.
     */
     this.type = Phaser.POLYGON;
 
+    //if points isn't an array, use arguments as the array
+    if (!(points instanceof Array))
+    {
+        points = Array.prototype.slice.call(arguments);
+    }
+
+    //if this is a flat array of numbers, convert it to points
+    if (typeof points[0] === 'number')
+    {
+        var p = [];
+
+        for (var i = 0, len = points.length; i &lt; len; i += 2)
+        {
+            p.push(new Phaser.Point(points[i], points[i + 1]));
+        }
+
+        points = p;
+    }
+
+    /**
+    * @property {array&lt;Phaser.Point>|array&lt;number>} points - The array of Points.
+    */
+    this.points = points;
+
 };
 
-Phaser.Polygon.prototype = Object.create(PIXI.Polygon.prototype);
-Phaser.Polygon.prototype.constructor = Phaser.Polygon;</pre>
+Phaser.Polygon.prototype = {
+
+    /**
+    * Creates a clone of this polygon.
+    *
+    * @method Phaser.Polygon#clone
+    * @return {Phaser.Polygon} A copy of the polygon.
+    */
+    clone: function () {
+
+        var points = [];
+
+        for (var i=0; i &lt; this.points.length; i++)
+        {
+            points.push(this.points[i].clone());
+        }
+
+        return new Phaser.Polygon(points);
+
+    },
+
+    /**
+    * Checks whether the x and y coordinates are contained within this polygon.
+    *
+    * @method Phaser.Polygon#contains
+    * @param {number} x - The X value of the coordinate to test.
+    * @param {number} y - The Y value of the coordinate to test.
+    * @return {boolean} True if the coordinates are within this polygon, otherwise false.
+    */
+    contains: function (x, y) {
+
+        var inside = false;
+
+        // use some raycasting to test hits https://github.com/substack/point-in-polygon/blob/master/index.js
+        for (var i = 0, j = this.points.length - 1; i &lt; this.points.length; j = i++)
+        {
+            var xi = this.points[i].x;
+            var yi = this.points[i].y;
+            var xj = this.points[j].x;
+            var yj = this.points[j].y;
+
+            var intersect = ((yi > y) !== (yj > y)) && (x &lt; (xj - xi) * (y - yi) / (yj - yi) + xi);
+
+            if (intersect)
+            {
+                inside = true;
+            }
+        }
+
+        return inside;
+
+    }
+
+};
+
+Phaser.Polygon.prototype.constructor = Phaser.Polygon;
+
+//   Because PIXI uses its own Polygon, we'll replace it with ours to avoid duplicating code or confusion.
+PIXI.Polygon = Phaser.Polygon;
+</pre>
         </article>
     </section>
 
@@ -499,7 +584,7 @@ Phaser.Polygon.prototype.constructor = Phaser.Polygon;</pre>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Sat Feb 08 2014 07:19:40 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 19 2014 05:26:20 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

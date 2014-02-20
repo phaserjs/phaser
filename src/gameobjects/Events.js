@@ -42,9 +42,6 @@ Phaser.Events = function (sprite) {
     this.onAnimationComplete = null;
     this.onAnimationLoop = null;
 
-    this.onBeginContact = null;
-    this.onEndContact = null;
-
 };
 
 Phaser.Events.prototype = {

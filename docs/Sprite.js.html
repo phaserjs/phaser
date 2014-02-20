@@ -59,6 +59,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.BitmapFont.html">BitmapFont</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -88,10 +92,6 @@
 						
 						<li>
 							<a href="Phaser.Device.html">Device</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.DOMSprite.html">DOMSprite</a>
 						</li>
 						
 						<li>
@@ -140,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
 						
 						<li>
@@ -251,10 +255,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.Plugin.html">Plugin</a>
 						</li>
 						
@@ -272,10 +272,6 @@
 						
 						<li>
 							<a href="Phaser.Polygon.html">Polygon</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.QuadTree.html">QuadTree</a>
 						</li>
 						
 						<li>
@@ -312,6 +308,10 @@
 						
 						<li>
 							<a href="Phaser.Sprite.html">Sprite</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
 						</li>
 						
 						<li>
@@ -413,6 +413,10 @@
 						</li>
 						
 						<li>
+							<a href="global.html#getBounds">getBounds</a>
+						</li>
+						
+						<li>
 							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
 						</li>
 						
@@ -482,12 +486,6 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
     this.game = game;
- 
-    /**
-    * @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
-    * @default
-    */
-    this.exists = true;
 
     /**
     * @property {string} name - The user defined name given to this Sprite.
@@ -550,22 +548,14 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.autoCull = false;
 
     /**
-    * A Sprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera.
-    * Note that if this Image is a child of a display object that has changed its position then the offset will be calculated from that.
-    * @property {boolean} fixedToCamera - Fixes this Sprite to the Camera.
-    * @default
-    */
-    this.fixedToCamera = false;
-
-    /**
     * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
     */
     this.input = null;
 
     /**
-    * @property {Phaser.Physics.Arcade.Body} body - By default Sprites have a Phaser.Physics Body attached to them. You can operate physics actions via this property, or null it to skip all physics updates.
+    * @property {Phaser.Physics.Body|null} body - The Sprites physics Body. Will be null unless physics has been enabled via `Sprite.physicsEnabled = true`.
     */
-    this.body = new Phaser.Physics.Arcade.Body(this);
+    this.body = null;
 
     /**
     * @property {number} health - Health value. Used in combination with damage() to allow for quick killing of Sprites.
@@ -581,11 +571,20 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.lifespan = 0;
 
     /**
-    * @property {boolean} outOfBoundsKill - If true the Sprite is killed as soon as Sprite.inWorld is false.
+    * If true the Sprite checks if it is still within the world each frame, when it leaves the world it dispatches Sprite.events.onOutOfBounds
+    * and optionally kills the sprite (if Sprite.outOfBoundsKill is true). By default this is disabled because the Sprite has to calculate its
+    * bounds every frame to support it, and not all games need it. Enable it by setting the value to true.
+    * @property {boolean} checkWorldBounds
+    * @default
+    */
+    this.checkWorldBounds = false;
+
+    /**
+    * @property {boolean} outOfBoundsKill - If true Sprite.kill is called as soon as Sprite.inWorld returns false, as long as Sprite.checkWorldBounds is true.
     * @default
     */
     this.outOfBoundsKill = false;
-    
+
     /**
     * @property {boolean} debug - Handy flag to use with Game.enableStep
     * @default
@@ -593,16 +592,30 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.debug = false;
 
     /**
-    * @property {boolean} _outOfBoundsFired - Internal flag.
-    * @private
+    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
     */
-    this._outOfBoundsFired = false;
+    this.cameraOffset = new Phaser.Point();
 
     /**
-    * @property {array} _cache - A small cache for previous step values. 0 = x, 1 = y, 2 = rotation, 3 = renderID, 4 = fresh? (0 = no, 1 = yes)
+    * A small internal cache:
+    * 0 = previous position.x
+    * 1 = previous position.y
+    * 2 = previous rotation
+    * 3 = renderID
+    * 4 = fresh? (0 = no, 1 = yes)
+    * 5 = outOfBoundsFired (0 = no, 1 = yes)
+    * 6 = exists (0 = no, 1 = yes)
+    * 7 = fixed to camera (0 = no, 1 = yes)
+    * @property {Int16Array} _cache
     * @private
     */
-    this._cache = [0, 0, 0, 0, 1];
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
+
+    /**
+    * @property {Phaser.Rectangle} _bounds - Internal cache var.
+    * @private
+    */
+    this._bounds = new Phaser.Rectangle();
 
 };
 
@@ -614,29 +627,29 @@ Phaser.Sprite.prototype.constructor = Phaser.Sprite;
 *
 * @method Phaser.Sprite#preUpdate
 * @memberof Phaser.Sprite
+* @return {boolean} True if the Sprite was rendered, otherwise false.
 */
 Phaser.Sprite.prototype.preUpdate = function() {
 
     if (this._cache[4] === 1)
     {
-        console.log('sprite cache fresh');
         this.world.setTo(this.parent.position.x + this.position.x, this.parent.position.y + this.position.y);
-        this.worldTransform[2] = this.world.x;
-        this.worldTransform[5] = this.world.y;
-        // this._cache[0] = this.world.x;
-        // this._cache[1] = this.world.y;
-        // this._cache[2] = this.rotation;
+        this.worldTransform.tx = this.world.x;
+        this.worldTransform.ty = this.world.y;
+        this._cache[0] = this.world.x;
+        this._cache[1] = this.world.y;
+        this._cache[2] = this.rotation;
         this._cache[4] = 0;
 
-        if (this.body)
-        {
-            this.body.x = (this.world.x - (this.anchor.x * this.width)) + this.body.offset.x;
-            this.body.y = (this.world.y - (this.anchor.y * this.height)) + this.body.offset.y;
-            this.body.preX = this.body.x;
-            this.body.preY = this.body.y;
-        }
+        // if (this.body)
+        // {
+        //     this.body.x = (this.world.x - (this.anchor.x * this.width)) + this.body.offset.x;
+        //     this.body.y = (this.world.y - (this.anchor.y * this.height)) + this.body.offset.y;
+        //     this.body.preX = this.body.x;
+        //     this.body.preY = this.body.y;
+        // }
 
-        return;
+        return false;
     }
 
     this._cache[0] = this.world.x;
@@ -645,7 +658,8 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     if (!this.exists || !this.parent.exists)
     {
-        this.renderOrderID = -1;
+        //  Reset the renderOrderID
+        this._cache[3] = -1;
         return false;
     }
 
@@ -660,13 +674,40 @@ Phaser.Sprite.prototype.preUpdate = function() {
         }
     }
 
+    //  Cache the bounds if we need it
+    if (this.autoCull || this.checkWorldBounds)
+    {
+        this._bounds.copyFrom(this.getBounds());
+    }
+
     if (this.autoCull)
     {
         //  Won't get rendered but will still get its transform updated
-        this.renderable = this.game.world.camera.screenView.intersects(this.getBounds());
+        this.renderable = this.game.world.camera.screenView.intersects(this._bounds);
     }
 
-    this.world.setTo(this.game.camera.x + this.worldTransform[2], this.game.camera.y + this.worldTransform[5]);
+    if (this.checkWorldBounds)
+    {
+        //  The Sprite is already out of the world bounds, so let's check to see if it has come back again
+        if (this._cache[5] === 1 && this.game.world.bounds.intersects(this._bounds))
+        {
+            this._cache[5] = 0;
+        }
+        else if (this._cache[5] === 0 && !this.game.world.bounds.intersects(this._bounds))
+        {
+            //  The Sprite WAS in the screen, but has now left.
+            this._cache[5] = 1;
+            this.events.onOutOfBounds.dispatch(this);
+
+            if (this.outOfBoundsKill)
+            {
+                this.kill();
+                return false;
+            }
+        }
+    }
+
+    this.world.setTo(this.game.camera.x + this.worldTransform.tx, this.game.camera.y + this.worldTransform.ty);
 
     if (this.visible)
     {
@@ -675,42 +716,22 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     this.animations.update();
 
-    if (!this.inWorld && Phaser.Rectangle.intersects(this.getBounds(), this.game.world.bounds, this.inWorldThreshold))
-    {
-        //  It's back again, reset the OOB check
-        this._outOfBoundsFired = false;
-    }
-    else
-    {
-        //   Sprite WAS in the screen, has it now left?
-        this.inWorld = Phaser.Rectangle.intersects(this.getBounds(), this.game.world.bounds, this.inWorldThreshold);
-
-        if (this.inWorld === false)
-        {
-            this.events.onOutOfBounds.dispatch(this);
-            this._outOfBoundsFired = true;
-
-            if (this.outOfBoundsKill)
-            {
-                this.kill();
-            }
-        }
-    }
-
-    this._cache.cameraVisible = Phaser.Rectangle.intersects(this.game.world.camera.screenView, this.getBounds(), 0);
-
-    if (this.autoCull)
-    {
-        //  Won't get rendered but will still get its transform updated
-        this.renderable = this._cache.cameraVisible;
-    }
-
     if (this.body)
     {
-        this.body.preUpdate();
+        // this.body.preUpdate();
     }
 
     return true;
+
+};
+
+/**
+* Override and use this function in your own custom objects to handle any update requirements you may have.
+*
+* @method Phaser.Sprite#update
+* @memberof Phaser.Sprite
+*/
+Phaser.Sprite.prototype.update = function() {
 
 };
 
@@ -733,12 +754,13 @@ Phaser.Sprite.prototype.postUpdate = function() {
         {
             this.body.postUpdate();
         }
+    }
 
-        if (this.fixedToCamera)
-        {
-            // this.position.x = this.game.camera.view.x + this.x;
-            // this.position.y = this.game.camera.view.y + this.y;
-        }
+    //  Fixed to Camera?
+    if (this._cache[7] === 1)
+    {
+        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
     }
 
 };
@@ -760,16 +782,19 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
     {
         this.key = key.key;
         this.setTexture(key);
+        return;
     }
     else if (key instanceof Phaser.BitmapData)
     {
         this.key = key.key;
         this.setTexture(key.texture);
+        return;
     }
     else if (key instanceof PIXI.Texture)
     {
         this.key = key;
         this.setTexture(key);
+        return;
     }
     else
     {
@@ -777,11 +802,13 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         {
             this.key = '__default';
             this.setTexture(PIXI.TextureCache[this.key]);
+            return;
         }
         else if (typeof key === 'string' && !this.game.cache.checkImageKey(key))
         {
             this.key = '__missing';
             this.setTexture(PIXI.TextureCache[this.key]);
+            return;
         }
 
         if (this.game.cache.isSpriteSheet(key))
@@ -804,18 +831,19 @@ Phaser.Sprite.prototype.loadTexture = function (key, frame) {
         {
             this.key = key;
             this.setTexture(PIXI.TextureCache[key]);
+            return;
         }
     }
 
 };
 
 /**
-* Crop allows you to crop the texture used to display this Image.
-* Cropping takes place from the top-left of the Image and can be modified in real-time by providing an updated rectangle object.
+* Crop allows you to crop the texture used to display this Sprite.
+* Cropping takes place from the top-left of the Sprite and can be modified in real-time by providing an updated rectangle object.
 *
 * @method Phaser.Sprite#crop
 * @memberof Phaser.Sprite
-* @param {Phaser.Rectangle} rect - The Rectangle to crop the Image to. Pass null or no parameters to clear a previously set crop rectangle.
+* @param {Phaser.Rectangle} rect - The Rectangle to crop the Sprite to. Pass null or no parameters to clear a previously set crop rectangle.
 */
 Phaser.Sprite.prototype.crop = function(rect) {
 
@@ -928,11 +956,6 @@ Phaser.Sprite.prototype.destroy = function() {
         this.parent.remove(this);
     }
 
-    if (this.events)
-    {
-        this.events.destroy();
-    }
-
     if (this.input)
     {
         this.input.destroy();
@@ -946,6 +969,11 @@ Phaser.Sprite.prototype.destroy = function() {
     if (this.body)
     {
         this.body.destroy();
+    }
+
+    if (this.events)
+    {
+        this.events.destroy();
     }
 
     this.alive = false;
@@ -1010,7 +1038,7 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
 
     if (this.body)
     {
-        this.body.reset(false);
+        this.body.reset(x, y, false, false);
     }
 
     return this;
@@ -1070,7 +1098,7 @@ Phaser.Sprite.prototype.play = function (name, frameRate, loop, killOnComplete) 
 * If you wish to work in radians instead of degrees use the property Sprite.rotation instead. Working in radians is also a little faster as it doesn't have to convert the angle.
 * 
 * @name Phaser.Sprite#angle
-* @property {number} angle - The angle of this Image in degrees.
+* @property {number} angle - The angle of this Sprite in degrees.
 */
 Object.defineProperty(Phaser.Sprite.prototype, "angle", {
 
@@ -1140,10 +1168,10 @@ Object.defineProperty(Phaser.Sprite.prototype, "deltaZ", {
 });
 
 /**
-* Checks if the Image bounds are within the game world, otherwise false if fully outside of it.
+* Checks if the Sprite bounds are within the game world, otherwise false if fully outside of it.
 *
 * @name Phaser.Sprite#inWorld
-* @property {boolean} inWorld - True if the Image bounds is within the game world, even if only partially. Otherwise false if fully outside of it.
+* @property {boolean} inWorld - True if the Sprite bounds is within the game world, even if only partially. Otherwise false if fully outside of it.
 * @readonly
 */
 Object.defineProperty(Phaser.Sprite.prototype, "inWorld", {
@@ -1157,10 +1185,10 @@ Object.defineProperty(Phaser.Sprite.prototype, "inWorld", {
 });
 
 /**
-* Checks if the Image bounds are within the game camera, otherwise false if fully outside of it.
+* Checks if the Sprite bounds are within the game camera, otherwise false if fully outside of it.
 *
 * @name Phaser.Sprite#inCamera
-* @property {boolean} inCamera - True if the Image bounds is within the game camera, even if only partially. Otherwise false if fully outside of it.
+* @property {boolean} inCamera - True if the Sprite bounds is within the game camera, even if only partially. Otherwise false if fully outside of it.
 * @readonly
 */
 Object.defineProperty(Phaser.Sprite.prototype, "inCamera", {
@@ -1221,7 +1249,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "renderOrderID", {
 });
 
 /**
-* By default an Image won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
+* By default a Sprite won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
 * activated for this object and it will then start to process click/touch events and more.
 *
 * @name Phaser.Sprite#inputEnabled
@@ -1255,6 +1283,125 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
     }
 
 });
+
+/**
+* By default Sprites won't add themselves to the physics world. By setting physicsEnabled to true a Rectangle physics body is
+* attached to this Sprite matching its placement and dimensions, and will then start to process physics world updates.
+* You can access all physics related properties via Sprite.body.
+*
+* Important: Enabling a Sprite for physics will automatically set `Sprite.anchor` to 0.5 s0 the physics body is centered on the Sprite.
+* If you need a different result then adjust or re-create the Body shape offsets manually, and/or reset the anchor after enabling physics.
+*
+* @name Phaser.Sprite#physicsEnabled
+* @property {boolean} physicsEnabled - Set to true to add this Sprite to the physics world. Set to false to destroy the body and remove it from the physics world.
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "physicsEnabled", {
+    
+    get: function () {
+
+        return (this.body !== null);
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            if (this.body === null)
+            {
+                this.body = new Phaser.Physics.Body(this.game, this, this.x, this.y, 1);
+                this.anchor.set(0.5);
+            }
+        }
+        else
+        {
+            if (this.body)
+            {
+                this.body.destroy();
+            }
+        }
+    }
+
+});
+
+/**
+* Sprite.exists controls if the core game loop and physics update this Sprite or not.
+* When you set Sprite.exists to false it will remove its Body from the physics world (if it has one) and also set Sprite.visible to false.
+* Setting Sprite.exists to true will re-add the Body to the physics world (if it has a body) and set Sprite.visible to true.
+*
+* @name Phaser.Sprite#exists
+* @property {boolean} exists - If the Sprite is processed by the core game update and physics.
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "exists", {
+    
+    get: function () {
+
+        return !!this._cache[6];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            //  exists = true
+            this._cache[6] = 1;
+
+            if (this.body)
+            {
+                this.body.addToWorld();
+            }
+
+            this.visible = true;
+        }
+        else
+        {
+            //  exists = false
+            this._cache[6] = 0;
+
+            if (this.body)
+            {
+                this.body.removeFromWorld();
+            }
+
+            this.visible = false;
+
+        }
+    }
+
+});
+
+
+/**
+* An Sprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Sprite.cameraOffset.
+* Note that the cameraOffset values are in addition to any parent in the display list.
+* So if this Sprite was in a Group that has x: 200, then this will be added to the cameraOffset.x
+*
+* @name Phaser.Sprite#fixedToCamera
+* @property {boolean} fixedToCamera - Set to true to fix this Sprite to the Camera at its current world coordinates.
+*/
+Object.defineProperty(Phaser.Sprite.prototype, "fixedToCamera", {
+    
+    get: function () {
+
+        return !!this._cache[7];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            this._cache[7] = 1;
+            this.cameraOffset.set(this.x, this.y);
+        }
+        else
+        {
+            this._cache[7] = 0;
+        }
+    }
+
+});
 </pre>
         </article>
     </section>
@@ -1276,7 +1423,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Sat Feb 08 2014 07:19:40 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 19 2014 05:26:20 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

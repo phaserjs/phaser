@@ -97,11 +97,33 @@ Phaser.GameObjectFactory.prototype = {
     * @method Phaser.GameObjectFactory#group
     * @param {any} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
     * @param {string} [name='group'] - A name for this Group. Not used internally but useful for debugging.
+    * @param {boolean} [addToStage=false] - If set to true this Group will be added directly to the Game.Stage instead of Game.World.
     * @return {Phaser.Group} The newly created group.
     */
-    group: function (parent, name) {
+    group: function (parent, name, addToStage) {
 
-        return new Phaser.Group(this.game, parent, name);
+        if (typeof name === 'undefined') { name = 'group'; }
+        if (typeof addToStage === 'undefined') { addToStage = false; }
+
+        return new Phaser.Group(this.game, parent, name, addToStage);
+
+    },
+
+    /**
+    * A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
+    *
+    * @method Phaser.GameObjectFactory#spriteBatch
+    * @param {any} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
+    * @param {string} [name='group'] - A name for this Group. Not used internally but useful for debugging.
+    * @param {boolean} [addToStage=false] - If set to true this Group will be added directly to the Game.Stage instead of Game.World.
+    * @return {Phaser.Group} The newly created group.
+    */
+    spriteBatch: function (parent, name, addToStage) {
+
+        if (typeof name === 'undefined') { name = 'group'; }
+        if (typeof addToStage === 'undefined') { addToStage = false; }
+
+        return new Phaser.SpriteBatch(this.game, parent, name, addToStage);
 
     },
 
@@ -141,19 +163,20 @@ Phaser.GameObjectFactory.prototype = {
     * Creates a new TileSprite object.
     *
     * @method Phaser.GameObjectFactory#tileSprite
-    * @param {number} x - X position of the new tileSprite.
-    * @param {number} y - Y position of the new tileSprite.
-    * @param {number} width - the width of the tilesprite.
-    * @param {number} height - the height of the tilesprite.
-    * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+    * @param {number} x - The x coordinate (in world space) to position the TileSprite at.
+    * @param {number} y - The y coordinate (in world space) to position the TileSprite at.
+    * @param {number} width - The width of the TileSprite.
+    * @param {number} height - The height of the TileSprite.
+    * @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the TileSprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+    * @param {string|number} frame - If this TileSprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.TileSprite} The newly created tileSprite object.
     */
-    tileSprite: function (x, y, width, height, key, group) {
+    tileSprite: function (x, y, width, height, key, frame, group) {
 
         if (typeof group === 'undefined') { group = this.world; }
 
-        return group.add(new Phaser.TileSprite(this.game, x, y, width, height, key));
+        return group.add(new Phaser.TileSprite(this.game, x, y, width, height, key, frame));
 
     },
 
@@ -235,21 +258,45 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * * Create a new BitmapText object.
+    * Create a new BitmapFont object to be used as a texture for an Image or Sprite and optionally add it to the Cache.
+    * The texture can be asssigned or one or multiple images/sprites, but note that the text the BitmapFont uses will be shared across them all, 
+    * i.e. if you need each Image to have different text in it, then you need to create multiple BitmapFont objects.
+    *
+    * @method Phaser.GameObjectFactory#bitmapFont
+    * @param {string} font - The key of the image in the Game.Cache that the BitmapFont will use.
+    * @param {number} characterWidth - The width of each character in the font set.
+    * @param {number} characterHeight - The height of each character in the font set.
+    * @param {string} chars - The characters used in the font set, in display order. You can use the TEXT_SET consts for common font set arrangements.
+    * @param {number} charsPerRow - The number of characters per row in the font set.
+    * @param {number} [xSpacing=0] - If the characters in the font set have horizontal spacing between them set the required amount here.
+    * @param {number} [ySpacing=0] - If the characters in the font set have vertical spacing between them set the required amount here.
+    * @param {number} [xOffset=0] - If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
+    * @param {number} [yOffset=0] - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
+    * @return {Phaser.BitmapFont} The newly created BitmapFont texture which can be applied to an Image or Sprite.
+    */
+    bitmapFont: function (font, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset) {
+
+        return new Phaser.BitmapFont(this.game, font, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset);
+
+    },
+
+    /**
+    * Create a new BitmapText object.
     *
     * @method Phaser.GameObjectFactory#bitmapText
     * @param {number} x - X position of the new bitmapText object.
     * @param {number} y - Y position of the new bitmapText object.
-    * @param {string} text - The actual text that will be written.
-    * @param {object} style - The style object containing style attributes like font, font size , etc.
+    * @param {string} font - The key of the BitmapText font as stored in Game.Cache.
+    * @param {string} [text] - The actual text that will be rendered. Can be set later via BitmapText.text.
+    * @param {number} [size] - The size the font will be rendered in, in pixels.
     * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
     * @return {Phaser.BitmapText} The newly created bitmapText object.
     */
-    bitmapText: function (x, y, text, style, group) {
+    bitmapText: function (x, y, font, text, size, group) {
 
         if (typeof group === 'undefined') { group = this.world; }
 
-        return this.world.add(new Phaser.BitmapText(this.game, x, y, text, style));
+        return group.add(new Phaser.BitmapText(this.game, x, y, font, text, size));
 
     },
 
@@ -279,8 +326,8 @@ Phaser.GameObjectFactory.prototype = {
     */
     renderTexture: function (width, height, key, addToCache) {
 
-        if (typeof addToCache === 'undefined') { addToCache = false; }
         if (typeof key === 'undefined' || key === '') { key = this.game.rnd.uuid(); }
+        if (typeof addToCache === 'undefined') { addToCache = false; }
 
         var texture = new Phaser.RenderTexture(this.game, width, height, key);
 

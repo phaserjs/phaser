@@ -1,0 +1,12 @@
+	{ 
+		
+		"diamond": [
+			
+				{
+					"density": 2, "friction": 0, "bounce": 0, 
+					"filter": { "categoryBits": 1, "maskBits": 65535 },
+					"shape": [   32, 13  ,  17, 28  ,  15, 28  ,  0, 13  ,  0, 7  ,  7, 0  ,  25, 0  ,  32, 7  ]
+				}  
+		]
+		
+	}

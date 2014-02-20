@@ -330,6 +330,19 @@ Phaser.Camera.prototype = {
         this.view.width = width;
         this.view.height = height;
 
+    },
+
+    /**
+    * Resets the camera back to 0,0 and un-follows any object it may have been tracking.
+    * 
+    * @method Phaser.Camera#reset
+    */
+    reset: function () {
+
+        this.target = null;
+        this.view.x = 0;
+        this.view.y = 0;
+
     }
 
 };

@@ -64,6 +64,12 @@ PIXI.BaseTexture = function(source, scaleMode)
      */
     this.source = source;
 
+    //TODO will be used for futer pixi 1.5...
+    this.id = PIXI.BaseTextureCacheIdGenerator++;
+
+    // used for webGL
+    this._glTextures = [];
+    
     if(!source)return;
 
     if(this.source.complete || this.source.getContext)
@@ -88,17 +94,12 @@ PIXI.BaseTexture = function(source, scaleMode)
             PIXI.texturesToUpdate.push(scope);
             scope.dispatchEvent( { type: 'loaded', content: scope } );
         };
-        //this.image.src = imageUrl;
     }
 
     this.imageUrl = null;
     this._powerOf2 = false;
 
-    //TODO will be used for futer pixi 1.5...
-    this.id = PIXI.BaseTextureCacheIdGenerator++;
-
-    // used for webGL
-    this._glTextures = [];
+    
 
 };
 
@@ -122,11 +123,11 @@ PIXI.BaseTexture.prototype.destroy = function()
 };
 
 /**
+ * Changes the source image of the texture
  *
- *
- * @method destroy
+ * @method updateSourceImage
+ * @param newSrc {String} the path of the image
  */
-
 PIXI.BaseTexture.prototype.updateSourceImage = function(newSrc)
 {
     this.hasLoaded = false;
@@ -141,6 +142,8 @@ PIXI.BaseTexture.prototype.updateSourceImage = function(newSrc)
  * @static
  * @method fromImage
  * @param imageUrl {String} The image url of the texture
+ * @param crossorigin {Boolean} 
+ * @param scaleMode {Number} Should be one of the PIXI.scaleMode consts
  * @return BaseTexture
  */
 PIXI.BaseTexture.fromImage = function(imageUrl, crossorigin, scaleMode)

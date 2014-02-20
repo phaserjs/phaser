@@ -845,6 +845,7 @@ declare module Phaser {
         visible: boolean;
         renderable: boolean;
         width: number;
+        height: number;
         health: number;
         damage(amount: number): Phaser.Sprite;
     }
@@ -1645,9 +1646,9 @@ declare module Phaser {
         tilemap(key: string, tilesetURL: string, mapDataURL?: string, mapData?: Object, format?: string): void;
         tileset(key: string, url: string, tileWidth: number, tileHeight: number, tileMargin?: number, tileSpacing?: number, rows?: number, columns?: number, limit?: number): void;
         bitmapFont(key: string, textureURL: string, xmlURL?: string, xmlData?: Object): void;
-        atlasJSONArray(key: string, textureURL: string, atlasURL: string, atlasData: Object): void;
-        atlasJSONHash(key: string, textureURL: string, atlasURL: string, atlasData: Object): void;
-        atlasXML(key: string, textureURL: string, atlasURL: string, atlasData: Object): void;
+        atlasJSONArray(key: string, textureURL: string, atlasURL?: string, atlasData?: Object): void;
+        atlasJSONHash(key: string, textureURL: string, atlasURL?: string, atlasData?: Object): void;
+        atlasXML(key: string, textureURL: string, atlasURL?: string, atlasData?: Object): void;
         atlas(key: string, textureURL: string, atlasURL?: string, atlasData?: Object, format?: number): void;
         removeFile(key: string): void;
         removeAll(): void;
@@ -2111,9 +2112,18 @@ declare module Phaser {
         toString(): string;
     }
 
-    class TilemapRenderer {
-        constructor(game: Phaser.Game);
-        game: Phaser.Game;
-        render(tilemap: Tilemap): void;
+    class Tileset {
+        constructor(name: string, firstgid: number, width: number, height: number, margin: number, spacing: number, properties: any);
+        name: string;
+        firstgid: number;
+        tileWidth: number;
+        tileHeight: number;
+        tileMargin: number;
+        tileSpacing: number;
+        properties: any;
+        image: any;
+        rows: number;
+        setSpacing(margin: number, spacing: number);
     }
+
 }

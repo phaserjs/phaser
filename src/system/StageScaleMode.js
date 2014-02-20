@@ -32,36 +32,23 @@ Phaser.StageScaleMode = function (game, width, height) {
 
     /**
     * @property {number} minWidth - Minimum width the canvas should be scaled to (in pixels).
-    * @default
     */
     this.minWidth = null;
 
     /**
-    * @property {number} maxWidth - Maximum width the canvas should be scaled to (in pixels).
-    * If null it will scale to whatever width the browser can handle.
-    * @default
+    * @property {number} maxWidth - Maximum width the canvas should be scaled to (in pixels). If null it will scale to whatever width the browser can handle.
     */
     this.maxWidth = null;
 
     /**
     * @property {number} minHeight - Minimum height the canvas should be scaled to (in pixels).
-    * @default
     */
     this.minHeight = null;
 
     /**
-    * @property {number} maxHeight - Maximum height the canvas should be scaled to (in pixels).
-    * If null it will scale to whatever height the browser can handle.
-    * @default
+    * @property {number} maxHeight - Maximum height the canvas should be scaled to (in pixels). If null it will scale to whatever height the browser can handle.
     */
     this.maxHeight = null;
-
-    /**
-    * @property {number} _startHeight - Stage height when starting the game.
-    * @default
-    * @private
-    */
-    this._startHeight = 0;
 
     /**
     * @property {boolean} forceLandscape - If the game should be forced to use Landscape mode, this is set to true by Game.Stage
@@ -98,20 +85,6 @@ Phaser.StageScaleMode = function (game, width, height) {
     this.pageAlignVertically = false;
 
     /**
-    * @property {number} _width - Cached stage width for full screen mode.
-    * @default
-    * @private
-    */
-    this._width = 0;
-
-    /**
-    * @property {number} _height - Cached stage height for full screen mode.
-    * @default
-    * @private
-    */
-    this._height = 0;
-
-    /**
     * @property {number} maxIterations - The maximum number of times it will try to resize the canvas to fill the browser.
     * @default
     */
@@ -119,7 +92,6 @@ Phaser.StageScaleMode = function (game, width, height) {
 
     /**
     * @property {PIXI.Sprite} orientationSprite - The Sprite that is optionally displayed if the browser enters an unsupported orientation.
-    * @default
     */
     this.orientationSprite = null;
 
@@ -148,6 +120,11 @@ Phaser.StageScaleMode = function (game, width, height) {
     */
     this.hasResized = new Phaser.Signal();
 
+    /**
+    * @property {number} orientation - The orientation value of the game (as defined by window.orientation if set). 90 = landscape. 0 = portrait.
+    */
+    this.orientation = 0;
+
     if (window['orientation'])
     {
         this.orientation = window['orientation'];
@@ -157,10 +134,6 @@ Phaser.StageScaleMode = function (game, width, height) {
         if (window.outerWidth > window.outerHeight)
         {
             this.orientation = 90;
-        }
-        else
-        {
-            this.orientation = 0;
         }
     }
 
@@ -183,15 +156,49 @@ Phaser.StageScaleMode = function (game, width, height) {
     this.margin = new Phaser.Point(0, 0);
 
     /**
-    * @property {number} aspectRatio - Aspect ratio.
-    * @default
+    * @property {number} aspectRatio - The aspect ratio of the scaled game.
+    * @readonly
     */
     this.aspectRatio = 0;
+
+    /**
+    * @property {number} sourceAspectRatio - The aspect ratio (width / height) of the original game dimensions.
+    * @readonly
+    */
+    this.sourceAspectRatio = width / height;
 
     /**
     * @property {any} event- The native browser events from full screen API changes.
     */
     this.event = null;
+
+    /**
+    * @property {number} scaleMode - The current scaleMode.
+    */
+    this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
+
+    /*
+    * @property {number} fullScreenScaleMode - Scale mode to be used in fullScreen
+    */
+    this.fullScreenScaleMode = Phaser.StageScaleMode.NO_SCALE;
+
+    /**
+    * @property {number} _startHeight - Internal cache var. Stage height when starting the game.
+    * @private
+    */
+    this._startHeight = 0;
+
+    /**
+    * @property {number} _width - Cached stage width for full screen mode.
+    * @private
+    */
+    this._width = 0;
+
+    /**
+    * @property {number} _height - Cached stage height for full screen mode.
+    * @private
+    */
+    this._height = 0;
 
     var _this = this;
 
@@ -311,10 +318,10 @@ Phaser.StageScaleMode.prototype = {
 
         if (this.isFullScreen)
         {
-            if (this.game.stage.fullScreenScaleMode === Phaser.StageScaleMode.EXACT_FIT)
+            if (this.fullScreenScaleMode === Phaser.StageScaleMode.EXACT_FIT)
             {
-                this.game.stage.canvas.style['width'] = '100%';
-                this.game.stage.canvas.style['height'] = '100%';
+                this.game.canvas.style['width'] = '100%';
+                this.game.canvas.style['height'] = '100%';
 
                 this.setMaximum();
 
@@ -324,16 +331,16 @@ Phaser.StageScaleMode.prototype = {
                 this.scaleFactor.x = this.game.width / this.width;
                 this.scaleFactor.y = this.game.height / this.height;
             }
-            else if (this.game.stage.fullScreenScaleMode === Phaser.StageScaleMode.SHOW_ALL)
+            else if (this.fullScreenScaleMode === Phaser.StageScaleMode.SHOW_ALL)
             {
-                this.game.stage.scale.setShowAll();
-                this.game.stage.scale.refresh();
+                this.setShowAll();
+                this.refresh();
             }
         }
         else
         {
-            this.game.stage.canvas.style['width'] = this.game.width + 'px';
-            this.game.stage.canvas.style['height'] = this.game.height + 'px';
+            this.game.canvas.style['width'] = this.game.width + 'px';
+            this.game.canvas.style['height'] = this.game.height + 'px';
 
             this.width = this._width;
             this.height = this._height;
@@ -388,7 +395,7 @@ Phaser.StageScaleMode.prototype = {
                 this.game.world.visible = true;
             }
 
-            this.game.stage._stage.addChild(this.orientationSprite);
+            this.game.stage.addChild(this.orientationSprite);
         }
 
     },
@@ -458,7 +465,7 @@ Phaser.StageScaleMode.prototype = {
             this.enterPortrait.dispatch(this.orientation, false, true);
         }
 
-        if (this.game.stage.scaleMode !== Phaser.StageScaleMode.NO_SCALE)
+        if (this.scaleMode !== Phaser.StageScaleMode.NO_SCALE)
         {
             this.refresh();
         }
@@ -492,7 +499,7 @@ Phaser.StageScaleMode.prototype = {
             this.enterPortrait.dispatch(this.orientation, false, true);
         }
 
-        if (this.game.stage.scaleMode !== Phaser.StageScaleMode.NO_SCALE)
+        if (this.scaleMode !== Phaser.StageScaleMode.NO_SCALE)
         {
             this.refresh();
         }
@@ -571,22 +578,22 @@ Phaser.StageScaleMode.prototype = {
             }
             else if (!this.isFullScreen)
             {
-                if (this.game.stage.scaleMode == Phaser.StageScaleMode.EXACT_FIT)
+                if (this.scaleMode == Phaser.StageScaleMode.EXACT_FIT)
                 {
                     this.setExactFit();
                 }
-                else if (this.game.stage.scaleMode == Phaser.StageScaleMode.SHOW_ALL)
+                else if (this.scaleMode == Phaser.StageScaleMode.SHOW_ALL)
                 {
                     this.setShowAll();
                 }
             }
             else
             {
-                if (this.game.stage.fullScreenScaleMode == Phaser.StageScaleMode.EXACT_FIT)
+                if (this.fullScreenScaleMode == Phaser.StageScaleMode.EXACT_FIT)
                 {
                     this.setExactFit();
                 }
-                else if (this.game.stage.fullScreenScaleMode == Phaser.StageScaleMode.SHOW_ALL)
+                else if (this.fullScreenScaleMode == Phaser.StageScaleMode.SHOW_ALL)
                 {
                     this.setShowAll();
                 }

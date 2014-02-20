@@ -72,16 +72,17 @@ Phaser.Loader = function (game) {
 
     /**
     * You can optionally link a sprite to the preloader.
-    * If you do so the Sprite's width or height will be cropped based on the percentage loaded.
-    * @property {Phaser.Sprite} preloadSprite
+    * If you do so the Sprites width or height will be cropped based on the percentage loaded.
+    * @property {Phaser.Sprite|Phaser.Image} preloadSprite
     * @default
     */
     this.preloadSprite = null;
 
     /**
-    * @property {string} crossOrigin - The crossOrigin value applied to loaded images
+    * @property {boolean|string} crossOrigin - The crossOrigin value applied to loaded images.
+    * @default
     */
-    this.crossOrigin = '';
+    this.crossOrigin = false;
 
     /**
     * If you want to append a URL before the path of any asset you can set this here.
@@ -132,6 +133,12 @@ Phaser.Loader.TEXTURE_ATLAS_JSON_HASH = 1;
 */
 Phaser.Loader.TEXTURE_ATLAS_XML_STARLING = 2;
 
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Loader.PHYSICS_LIME_CORONA = 3;
+
 Phaser.Loader.prototype = {
 
     /**
@@ -160,8 +167,7 @@ Phaser.Loader.prototype = {
             this.preloadSprite.crop = new Phaser.Rectangle(0, 0, sprite.width, 1);
         }
 
-        sprite.crop = this.preloadSprite.crop;
-        sprite.cropEnabled = true;
+        sprite.crop(this.preloadSprite.crop);
 
     },
 
@@ -490,6 +496,49 @@ Phaser.Loader.prototype = {
     },
 
     /**
+    * Add a new physics data object loading request.
+    * The data must be in Lime + Corona JSON format. Physics Editor by code'n'web exports in this format natively.
+    *
+    * @method Phaser.Loader#physics
+    * @param {string} key - Unique asset key of the physics json data.
+    * @param {string} [dataURL] - The url of the map data file (csv/json)
+    * @param {object} [jsonData] - An optional JSON data object. If given then the dataURL is ignored and this JSON object is used for physics data instead.
+    * @param {string} [format=Phaser.Physics.LIME_CORONA_JSON] - The format of the physics data.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    physics: function (key, dataURL, jsonData, format) {
+
+        if (typeof dataURL === "undefined") { dataURL = null; }
+        if (typeof jsonData === "undefined") { jsonData = null; }
+        if (typeof format === "undefined") { format = Phaser.Physics.LIME_CORONA_JSON; }
+
+        if (dataURL == null && jsonData == null)
+        {
+            console.warn('Phaser.Loader.physics - Both dataURL and jsonData are null. One must be set.');
+
+            return this;
+        }
+
+        //  A map data object has been given
+        if (jsonData)
+        {
+            if (typeof jsonData === 'string')
+            {
+                jsonData = JSON.parse(jsonData);
+            }
+
+            this.game.cache.addPhysicsData(key, null, jsonData, format);
+        }
+        else
+        {
+            this.addToFileList('physics', key, dataURL, { format: format });
+        }
+
+        return this;
+
+    },
+
+    /**
     * Add a new bitmap font loading request.
     *
     * @method Phaser.Loader#bitmapFont
@@ -497,17 +546,21 @@ Phaser.Loader.prototype = {
     * @param {string} textureURL - The url of the font image file.
     * @param {string} [xmlURL] - The url of the font data file (xml/fnt)
     * @param {object} [xmlData] - An optional XML data object.
+    * @param {number} [xSpacing=0] - If you'd like to add additional horizontal spacing between the characters then set the pixel value here.
+    * @param {number} [ySpacing=0] - If you'd like to add additional vertical spacing between the lines then set the pixel value here.
     * @return {Phaser.Loader} This Loader instance.
     */
-    bitmapFont: function (key, textureURL, xmlURL, xmlData) {
+    bitmapFont: function (key, textureURL, xmlURL, xmlData, xSpacing, ySpacing) {
 
         if (typeof xmlURL === "undefined") { xmlURL = null; }
         if (typeof xmlData === "undefined") { xmlData = null; }
+        if (typeof xSpacing === "undefined") { xSpacing = 0; }
+        if (typeof ySpacing === "undefined") { ySpacing = 0; }
 
         //  A URL to a json/xml file has been given
         if (xmlURL)
         {
-            this.addToFileList('bitmapfont', key, textureURL, { xmlURL: xmlURL });
+            this.addToFileList('bitmapfont', key, textureURL, { xmlURL: xmlURL, xSpacing: xSpacing, ySpacing: ySpacing });
         }
         else
         {
@@ -540,7 +593,7 @@ Phaser.Loader.prototype = {
                 }
                 else
                 {
-                    this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml });
+                    this.addToFileList('bitmapfont', key, textureURL, { xmlURL: null, xmlData: xml, xSpacing: xSpacing, ySpacing: ySpacing });
                 }
             }
         }
@@ -773,7 +826,10 @@ Phaser.Loader.prototype = {
                 file.data.onerror = function () {
                     return _this.fileError(_this._fileIndex);
                 };
-                file.data.crossOrigin = this.crossOrigin;
+                if (this.crossOrigin)
+                {
+                    file.data.crossOrigin = this.crossOrigin;
+                }
                 file.data.src = this.baseURL + file.url;
                 break;
 
@@ -856,6 +912,7 @@ Phaser.Loader.prototype = {
 
             case 'text':
             case 'script':
+            case 'physics':
                 this._xhr.open("GET", this.baseURL + file.url, true);
                 this._xhr.responseType = "text";
                 this._xhr.onload = function () {
@@ -1002,7 +1059,7 @@ Phaser.Loader.prototype = {
 
                 if (file.xmlURL == null)
                 {
-                    this.game.cache.addBitmapFont(file.key, file.url, file.data, file.xmlData);
+                    this.game.cache.addBitmapFont(file.key, file.url, file.data, file.xmlData, file.xSpacing, file.ySpacing);
                 }
                 else
                 {
@@ -1056,6 +1113,11 @@ Phaser.Loader.prototype = {
             case 'text':
                 file.data = this._xhr.responseText;
                 this.game.cache.addText(file.key, file.url, file.data);
+                break;
+
+            case 'physics':
+                var data = JSON.parse(this._xhr.responseText);
+                this.game.cache.addPhysicsData(file.key, file.url, data, file.format);
                 break;
 
             case 'script':
@@ -1205,7 +1267,7 @@ Phaser.Loader.prototype = {
 
         if (file.type == 'bitmapfont')
         {
-            this.game.cache.addBitmapFont(file.key, file.url, file.data, xml);
+            this.game.cache.addBitmapFont(file.key, file.url, file.data, xml, file.xSpacing, file.ySpacing);
         }
         else if (file.type == 'textureatlas')
         {
@@ -1244,7 +1306,7 @@ Phaser.Loader.prototype = {
                 this.preloadSprite.crop.height = Math.floor((this.preloadSprite.height / 100) * this.progress);
             }
 
-            this.preloadSprite.sprite.crop = this.preloadSprite.crop;
+            // this.preloadSprite.sprite.crop = this.preloadSprite.crop;
         }
 
         this.onFileComplete.dispatch(this.progress, this._fileList[previousIndex].key, success, this.totalLoadedFiles(), this._fileList.length);

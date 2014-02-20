@@ -9,6 +9,9 @@ function preload() {
 
 function create() {
 
+	// game.stage.backgroundColor = '#239923';
+	game.stage.backgroundColor = 0xff8855;
+
     var mummy = game.add.sprite(300, 200, 'mummy', 5);
 
     mummy.animations.add('walk');

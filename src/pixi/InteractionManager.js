@@ -40,12 +40,37 @@ PIXI.InteractionManager = function(stage)
     // helpers
     this.tempPoint = new PIXI.Point();
 
+    /**
+     * 
+     * @property mouseoverEnabled
+     * @type Boolean
+     * @default
+     */
     this.mouseoverEnabled = true;
 
-    //tiny little interactiveData pool!
+    /**
+     * tiny little interactiveData pool !
+     * 
+     * @property pool
+     * @type Array
+     */
     this.pool = [];
 
+    /**
+     * An array containing all the iterative items from the our interactive tree
+     * @property interactiveItems
+     * @type Array
+     * @private
+     *
+     */
     this.interactiveItems = [];
+
+    /**
+     * Our canvas
+     * @property interactionDOMElement
+     * @type HTMLCanvasElement
+     * @private
+     */
     this.interactionDOMElement = null;
 
     //this will make it so that you dont have to call bind all the time
@@ -57,10 +82,23 @@ PIXI.InteractionManager = function(stage)
     this.onTouchStart = this.onTouchStart.bind(this);
     this.onTouchEnd = this.onTouchEnd.bind(this);
     this.onTouchMove = this.onTouchMove.bind(this);
+
     this.last = 0;
 
+    /**
+     * The css style of the cursor that is being used
+     * @property currentCursorStyle
+     * @type String
+     *
+     */
     this.currentCursorStyle = 'inherit';
 
+    /**
+     * Is set to true when the mouse is moved out of the canvas
+     * @property mouseOut
+     * @type Boolean
+     *
+     */
     this.mouseOut = false;
 };
 
@@ -72,7 +110,7 @@ PIXI.InteractionManager.prototype.constructor = PIXI.InteractionManager;
  *
  * @method collectInteractiveSprite
  * @param displayObject {DisplayObject} the displayObject to collect
- * @param iParent {DisplayObject}
+ * @param iParent {DisplayObject} the display object's parent
  * @private
  */
 PIXI.InteractionManager.prototype.collectInteractiveSprite = function(displayObject, iParent)
@@ -80,14 +118,13 @@ PIXI.InteractionManager.prototype.collectInteractiveSprite = function(displayObj
     var children = displayObject.children;
     var length = children.length;
 
-    /// make an interaction tree... {item.__interactiveParent}
+    // make an interaction tree... {item.__interactiveParent}
     for (var i = length-1; i >= 0; i--)
     {
         var child = children[i];
 
-//      if(child.visible) {
         // push all interactive bits
-        if(child.interactive)
+        if(child._interactive)
         {
             iParent.interactiveChildren = true;
             //child.__iParent = iParent;
@@ -107,7 +144,7 @@ PIXI.InteractionManager.prototype.collectInteractiveSprite = function(displayObj
                 this.collectInteractiveSprite(child, iParent);
             }
         }
-//      }
+
     }
 };
 
@@ -143,7 +180,6 @@ PIXI.InteractionManager.prototype.setTarget = function(target)
  */
 PIXI.InteractionManager.prototype.setTargetDomElement = function(domElement)
 {
-    //remove previouse listeners
 
     this.removeEvents();
 
@@ -168,7 +204,7 @@ PIXI.InteractionManager.prototype.setTargetDomElement = function(domElement)
     domElement.addEventListener('touchend', this.onTouchEnd, true);
     domElement.addEventListener('touchmove', this.onTouchMove, true);
 
-    document.body.addEventListener('mouseup',  this.onMouseUp, true);
+    window.addEventListener('mouseup',  this.onMouseUp, true);
 };
 
 
@@ -190,7 +226,7 @@ PIXI.InteractionManager.prototype.removeEvents = function()
 
     this.interactionDOMElement = null;
 
-    document.body.removeEventListener('mouseup',  this.onMouseUp, true);
+    window.removeEventListener('mouseup',  this.onMouseUp, true);
 };
 
 /**
@@ -209,7 +245,6 @@ PIXI.InteractionManager.prototype.update = function()
     diff = (diff * PIXI.INTERACTION_FREQUENCY ) / 1000;
     if(diff < 1)return;
     this.last = now;
-    //
 
     var i = 0;
 
@@ -235,18 +270,12 @@ PIXI.InteractionManager.prototype.update = function()
 
     // loop through interactive objects!
     var length = this.interactiveItems.length;
-
-    
-
     var cursor = 'inherit';
     var over = false;
 
     for (i = 0; i < length; i++)
     {
         var item = this.interactiveItems[i];
-
-
-        //if(!item.visible)continue;
 
         // OPTIMISATION - only calculate every time if the mousemove function exists..
         // OK so.. does the object have any other interactive functions?
@@ -266,16 +295,9 @@ PIXI.InteractionManager.prototype.update = function()
 
             if(!item.__isOver)
             {
-
                 if(item.mouseover)item.mouseover(this.mouse);
                 item.__isOver = true;
-
-                // just the one!
-                //break;
-                
-
             }
-            //break;
         }
         else
         {
@@ -286,8 +308,6 @@ PIXI.InteractionManager.prototype.update = function()
                 item.__isOver = false;
             }
         }
-     //   }
-        // --->
     }
 
     if( this.currentCursorStyle !== cursor )
@@ -295,7 +315,6 @@ PIXI.InteractionManager.prototype.update = function()
         this.currentCursorStyle = cursor;
         this.interactionDOMElement.style.cursor = cursor;
     }
-
 };
 
 /**
@@ -374,7 +393,7 @@ PIXI.InteractionManager.prototype.onMouseDown = function(event)
 /**
  * Is called when the mouse button is moved out of the renderer element
  *
- * @method onMouseDown
+ * @method onMouseOut
  * @param event {Event} The DOM event of a mouse button being moved out
  * @private 
  */
@@ -421,8 +440,6 @@ PIXI.InteractionManager.prototype.onMouseUp = function(event)
     {
         var item = this.interactiveItems[i];
 
-        //if(item.mouseup || item.mouseupoutside || item.click)
-        //{
         item.__hit = this.hitTest(item, this.mouse);
 
         if(item.__hit && !up)

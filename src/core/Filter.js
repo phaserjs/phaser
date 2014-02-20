@@ -36,6 +36,12 @@ Phaser.Filter = function (game, uniforms, fragmentSrc) {
     this.passes = [this];
     
     /**
+    * @property {array} shaders - Array an array of shaders.
+    * @private
+    */
+    this.shaders = [];
+
+    /**
     * @property {boolean} dirty - Internal PIXI var.
     * @default
     */

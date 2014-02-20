@@ -36,6 +36,10 @@
     <script src="$path/src/pixi/filters/RGBSplitFilter.js"></script>
 
     <script src="$path/src/pixi/extras/Spine.js"></script>
+    <script src="$path/src/pixi/extras/Strip.js"></script>
+    <script src="$path/src/pixi/extras/Rope.js"></script>
+
+    <script src="$path/src/pixi/display/MovieClip.js"></script>
 
     <script src="$path/src/pixi/utils/Utils.js"></script>
 
@@ -44,11 +48,16 @@
     <script src="$path/src/pixi/core/Circle.js"></script>
 
     <script src="$path/src/pixi/utils/Detector.js"></script>
+
+    <script src="$path/src/physics/arcade/SAT.js"></script>
+    <script src="$path/src/physics/arcade/ArcadePhysics.js"></script>
+    <script src="$path/src/physics/arcade/Body.js"></script>
     
 */
 
     echo <<<EOL
 
+    <script src="$path/build/p2.js"></script>
     <script src="$path/src/Intro.js"></script>
     <script src="$path/src/pixi/Pixi.js"></script>
     <script src="$path/src/Phaser.js"></script>
@@ -58,16 +67,14 @@
     <script src="$path/src/geom/Point.js"></script>
     <script src="$path/src/geom/Rectangle.js"></script>
     <script src="$path/src/geom/Line.js"></script>
+    <script src="$path/src/geom/Ellipse.js"></script>
+    <script src="$path/src/geom/Polygon.js"></script>
 
-    <script src="$path/src/pixi/Pixi.js"></script>
-    <script src="$path/src/pixi/core/Polygon.js"></script>
-    <script src="$path/src/pixi/core/Ellipse.js"></script>
     <script src="$path/src/pixi/core/Matrix.js"></script>
     <script src="$path/src/pixi/display/DisplayObject.js"></script>
     <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
     <script src="$path/src/pixi/display/Sprite.js"></script>
     <script src="$path/src/pixi/display/SpriteBatch.js"></script>
-    <script src="$path/src/pixi/display/MovieClip.js"></script>
     <script src="$path/src/pixi/filters/FilterBlock.js"></script>
     <script src="$path/src/pixi/text/Text.js"></script>
     <script src="$path/src/pixi/text/BitmapText.js"></script>
@@ -92,8 +99,6 @@
     <script src="$path/src/pixi/renderers/canvas/CanvasRenderer.js"></script>
     <script src="$path/src/pixi/renderers/canvas/CanvasGraphics.js"></script>
     <script src="$path/src/pixi/primitives/Graphics.js"></script>
-    <script src="$path/src/pixi/extras/Strip.js"></script>
-    <script src="$path/src/pixi/extras/Rope.js"></script>
     <script src="$path/src/pixi/extras/TilingSprite.js"></script>
     <script src="$path/src/pixi/textures/BaseTexture.js"></script>
     <script src="$path/src/pixi/textures/Texture.js"></script>
@@ -136,6 +141,8 @@
     <script src="$path/src/gameobjects/Button.js"></script>
     <script src="$path/src/gameobjects/Graphics.js"></script>
     <script src="$path/src/gameobjects/RenderTexture.js"></script>
+    <script src="$path/src/gameobjects/SpriteBatch.js"></script>
+    <script src="$path/src/gameobjects/BitmapFont.js"></script>
 
     <script src="$path/src/system/Canvas.js"></script>
     <script src="$path/src/system/StageScaleMode.js"></script>
@@ -144,7 +151,6 @@
 
     <script src="$path/src/math/Math.js"></script>
     <script src="$path/src/math/RandomDataGenerator.js"></script>
-    <script src="$path/src/math/QuadTree.js"></script>
 
     <script src="$path/src/net/Net.js"></script>
 
@@ -172,9 +178,14 @@
     <script src="$path/src/utils/Debug.js"></script>
     <script src="$path/src/utils/Color.js"></script>
 
-    <script src="$path/src/physics/arcade/SAT.js"></script>
-    <script src="$path/src/physics/arcade/ArcadePhysics.js"></script>
-    <script src="$path/src/physics/arcade/Body.js"></script>
+    <script src="$path/src/physics/World.js"></script>
+    <script src="$path/src/physics/PointProxy.js"></script>
+    <script src="$path/src/physics/InversePointProxy.js"></script>
+    <script src="$path/src/physics/Body.js"></script>
+    <script src="$path/src/physics/Spring.js"></script>
+    <script src="$path/src/physics/Material.js"></script>
+    <script src="$path/src/physics/ContactMaterial.js"></script>
+    <script src="$path/src/physics/CollisionGroup.js"></script>
 
     <script src="$path/src/particles/Particles.js"></script>
     <script src="$path/src/particles/arcade/ArcadeParticles.js"></script>

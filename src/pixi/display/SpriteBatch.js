@@ -3,7 +3,20 @@
  */
 
 /**
- * TODO-Alvin
+ * The SpriteBatch class is a really fast version of the DisplayObjectContainer 
+ * built solely for speed, so use when you need a lot of sprites or particles.
+ * And it's extremely easy to use : 
+
+    var container = new PIXI.SpriteBatch();
+ 
+    stage.addChild(container);
+ 
+    for(var i  = 0; i < 100; i++)
+    {
+        var sprite = new PIXI.Sprite.fromImage("myImage.png");
+        container.addChild(sprite);
+    }
+ * And here you have a hundred sprites that will be renderer at the speed of light
  *
  * @class SpriteBatch
  * @constructor
@@ -18,9 +31,8 @@ PIXI.SpriteBatch = function(texture)
     this.ready = false;
 };
 
-PIXI.SpriteBatch.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
+PIXI.SpriteBatch.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
 PIXI.SpriteBatch.constructor = PIXI.SpriteBatch;
-
 
 /*
  * Initialises the spriteBatch
@@ -30,10 +42,10 @@ PIXI.SpriteBatch.constructor = PIXI.SpriteBatch;
  */
 PIXI.SpriteBatch.prototype.initWebGL = function(gl)
 {
+    // TODO only one needed for the whole engine really?
     this.fastSpriteBatch = new PIXI.WebGLFastSpriteBatch(gl);
 
     this.ready = true;
-  //  alert("!")
 };
 
 /*
@@ -44,7 +56,7 @@ PIXI.SpriteBatch.prototype.initWebGL = function(gl)
  */
 PIXI.SpriteBatch.prototype.updateTransform = function()
 {
-   // dont need to!
+   // TODO dont need to!
     PIXI.DisplayObject.prototype.updateTransform.call( this );
   //  PIXI.DisplayObjectContainer.prototype.updateTransform.call( this );
 };
@@ -87,12 +99,12 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
     var context = renderSession.context;
     context.globalAlpha = this.worldAlpha;
 
-    var transform = this.worldTransform;
+    PIXI.DisplayObject.prototype.updateTransform.call(this);
 
+    var transform = this.worldTransform;
     // alow for trimming
        
-    context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
-    context.save();
+    var isRotated = true;
 
     for (var i = 0; i < this.children.length; i++) {
        
@@ -104,8 +116,13 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
 
         if(child.rotation % (Math.PI * 2) === 0)
         {
-          
-          // this is the fastest  way to optimise! - if rotation is 0 then we can avoid any kind of setTransform call
+            if(isRotated)
+            {
+                context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
+                isRotated = false;
+            }
+
+            // this is the fastest  way to optimise! - if rotation is 0 then we can avoid any kind of setTransform call
             context.drawImage(texture.baseTexture.source,
                                  frame.x,
                                  frame.y,
@@ -118,26 +135,23 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
         }
         else
         {
+            if(!isRotated)isRotated = true;
+    
             PIXI.DisplayObject.prototype.updateTransform.call(child);
            
-            transform = child.localTransform;
+            var childTransform = child.worldTransform;
 
-            if(this.rotation !== this.rotationCache)
+            // allow for trimming
+           
+            if (renderSession.roundPixels)
             {
-                this.rotationCache = this.rotation;
-                this._sr =  Math.sin(this.rotation);
-                this._cr =  Math.cos(this.rotation);
+                context.setTransform(childTransform.a, childTransform.c, childTransform.b, childTransform.d, childTransform.tx || 0, childTransform.ty || 0);
+            }
+            else
+            {
+                context.setTransform(childTransform.a, childTransform.c, childTransform.b, childTransform.d, childTransform.tx, childTransform.ty);
             }
 
-            var a = child._cr * child.scale.x,
-                b = -child._sr * child.scale.y,
-                c = child._sr * child.scale.x,
-                d = child._cr * child.scale.y;
-                
-            context.setTransform(a, c, b, d, child.position.x, child.position.y);
-
-            //context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx, transform.ty);
-            
             context.drawImage(texture.baseTexture.source,
                                  frame.x,
                                  frame.y,
@@ -147,10 +161,13 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
                                  ((child.anchor.y) * (-frame.height) + 0.5) | 0,
                                  frame.width,
                                  frame.height);
+           
 
         }
+
+       // context.restore();
     }
 
-    context.restore();
+//    context.restore();
 };
 

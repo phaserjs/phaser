@@ -153,16 +153,9 @@ Phaser.AnimationParser = {
                     frames[i].spriteSourceSize.h
                 );
 
-                PIXI.TextureCache[uuid].trimmed = true;
-
-                PIXI.TextureCache[uuid].trim = {
-                    x: frames[i].spriteSourceSize.x,
-                    y: frames[i].spriteSourceSize.y,
-                    realWidth: frames[i].sourceSize.w,
-                    realHeight: frames[i].sourceSize.h
-                }
-
+                PIXI.TextureCache[uuid].trim = new Phaser.Rectangle(frames[i].spriteSourceSize.x, frames[i].spriteSourceSize.y, frames[i].sourceSize.w, frames[i].sourceSize.h);
             }
+
         }
 
         return data;
@@ -229,15 +222,7 @@ Phaser.AnimationParser = {
                     frames[key].spriteSourceSize.h
                 );
 
-                PIXI.TextureCache[uuid].trimmed = true;
-
-                PIXI.TextureCache[uuid].trim = {
-                    x: frames[i].spriteSourceSize.x,
-                    y: frames[i].spriteSourceSize.y,
-                    realWidth: frames[i].sourceSize.w,
-                    realHeight: frames[i].sourceSize.h
-                }
-
+                PIXI.TextureCache[uuid].trim = new Phaser.Rectangle(frames[key].spriteSourceSize.x, frames[key].spriteSourceSize.y, frames[key].sourceSize.w, frames[key].sourceSize.h);
             }
 
             i++;
@@ -319,16 +304,7 @@ Phaser.AnimationParser = {
             {
                 newFrame.setTrim(true, width, height, frameX, frameY, frameWidth, frameHeight);
 
-                PIXI.TextureCache[uuid].realSize = { x: frameX, y: frameY, w: frameWidth, h: frameHeight };
-
-                PIXI.TextureCache[uuid].trimmed = true;
-
-                PIXI.TextureCache[uuid].trim = {
-                    x: frameX,
-                    y: frameY,
-                    realWidth: width,
-                    realHeight: height
-                }
+                PIXI.TextureCache[uuid].trim = new Phaser.Rectangle(frameX, frameY, width, height);
             }
         }
 

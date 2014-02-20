@@ -32,7 +32,7 @@
 
     function dirToArray($dir) { 
 
-        $ignore = array('.', '..', '_site', 'assets', 'states', 'book', 'filters', 'misc');
+        $ignore = array('.', '..', '_site', 'assets', 'gfx', 'states', 'book', 'filters', 'misc');
         $result = array(); 
         $root = scandir($dir); 
         $dirs = array_diff($root, $ignore);
@@ -75,6 +75,7 @@
 <html>
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0 minimal-ui" />
         <title>phaser</title>
         <base href="../"></base>
         <script src="_site/js/jquery-2.0.3.min.js" type="text/javascript"></script>

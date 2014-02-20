@@ -31,7 +31,7 @@ PIXI.Texture = function(baseTexture, frame)
         baseTexture = baseTexture.baseTexture;
 
     /**
-     * The base texture of this texture
+     * The base texture of that this texture uses
      *
      * @property baseTexture
      * @type BaseTexture
@@ -50,12 +50,14 @@ PIXI.Texture = function(baseTexture, frame)
      * The trim point
      *
      * @property trim
-     * @type Point
+     * @type Rectangle
      */
-    this.trim = new PIXI.Point();
-
+    this.trim = null;
+  
     this.scope = this;
 
+    this._uvs = null;
+    
     if(baseTexture.hasLoaded)
     {
         if(this.noFrame)frame = new PIXI.Rectangle(0,0, baseTexture.width, baseTexture.height);
@@ -228,7 +230,8 @@ PIXI.Texture.addTextureToCache = function(texture, id)
 PIXI.Texture.removeTextureFromCache = function(id)
 {
     var texture = PIXI.TextureCache[id];
-    PIXI.TextureCache[id] = null;
+    delete PIXI.TextureCache[id];
+    delete PIXI.BaseTextureCache[id];
     return texture;
 };
 
@@ -251,8 +254,4 @@ PIXI.TextureUvs = function()
 
 
 };
-
-
-
-
 

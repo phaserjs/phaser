@@ -16,7 +16,7 @@ PIXI.DisplayObjectContainer = function()
     PIXI.DisplayObject.call( this );
 
     /**
-     * [read-only] The of children of this container.
+     * [read-only] The array of children of this container.
      *
      * @property children
      * @type Array<DisplayObject>
@@ -36,7 +36,7 @@ PIXI.DisplayObjectContainer.prototype.constructor = PIXI.DisplayObjectContainer;
  * @type Number
  */
 
-/*
+ /*
 Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
     get: function() {
         return this.scale.x * this.getLocalBounds().width;
@@ -55,7 +55,7 @@ Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'width', {
  * @type Number
  */
 
- /*
+/*
 Object.defineProperty(PIXI.DisplayObjectContainer.prototype, 'height', {
     get: function() {
         return  this.scale.y * this.getLocalBounds().height;
@@ -173,6 +173,24 @@ PIXI.DisplayObjectContainer.prototype.removeChild = function(child)
     }
 };
 
+
+/**
+* Removes all the children 
+*
+* @method removeAll
+* NOT tested yet
+*/
+/* PIXI.DisplayObjectContainer.prototype.removeAll = function()
+{
+
+
+    for(var i = 0 , j = this.children.length; i < j; i++)
+    {
+        this.removeChild(this.children[i]);
+    }
+    
+};
+*/
 /*
  * Updates the container's childrens transform for rendering
  *
@@ -187,6 +205,8 @@ PIXI.DisplayObjectContainer.prototype.updateTransform = function()
 
     PIXI.DisplayObject.prototype.updateTransform.call( this );
 
+    if(this._cacheAsBitmap)return;
+
     for(var i=0,j=this.children.length; i<j; i++)
     {
         this.children[i].updateTransform();
@@ -199,12 +219,18 @@ PIXI.DisplayObjectContainer.prototype.updateTransform = function()
  * @method getBounds
  * @return {Rectangle} the rectangular bounding area
  */
-PIXI.DisplayObjectContainer.prototype.getBounds = function()
+PIXI.DisplayObjectContainer.prototype.getBounds = function(matrix)
 {
     if(this.children.length === 0)return PIXI.EmptyRectangle;
 
     // TODO the bounds have already been calculated this render session so return what we have
-   
+    if(matrix)
+    {
+        var matrixCache = this.worldTransform;
+        this.worldTransform = matrix;
+        this.updateTransform();
+        this.worldTransform = matrixCache;
+    }
 
     var minX = Infinity;
     var minY = Infinity;
@@ -226,7 +252,7 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function()
 
         childVisible = true;
 
-        childBounds = this.children[i].getBounds();
+        childBounds = this.children[i].getBounds( matrix );
      
         minX = minX < childBounds.x ? minX : childBounds.x;
         minY = minY < childBounds.y ? minY : childBounds.y;
@@ -251,6 +277,24 @@ PIXI.DisplayObjectContainer.prototype.getBounds = function()
     // TODO: store a reference so that if this function gets called again in the render cycle we do not have to recalculate
     //this._currentBounds = bounds;
    
+    return bounds;
+};
+
+PIXI.DisplayObjectContainer.prototype.getLocalBounds = function()
+{
+    var matrixCache = this.worldTransform;
+
+    this.worldTransform = PIXI.identityMatrix;
+
+    for(var i=0,j=this.children.length; i<j; i++)
+    {
+        this.children[i].updateTransform();
+    }
+
+    var bounds = this.getBounds();
+
+    this.worldTransform = matrixCache;
+
     return bounds;
 };
 
@@ -301,6 +345,12 @@ PIXI.DisplayObjectContainer.prototype.removeStageReference = function()
 PIXI.DisplayObjectContainer.prototype._renderWebGL = function(renderSession)
 {
     if(!this.visible || this.alpha <= 0)return;
+    
+    if(this._cacheAsBitmap)
+    {
+        this._renderCachedSprite(renderSession);
+        return;
+    }
     
     var i,j;
 
@@ -353,6 +403,13 @@ PIXI.DisplayObjectContainer.prototype._renderCanvas = function(renderSession)
 {
     if(this.visible === false || this.alpha === 0)return;
 
+    if(this._cacheAsBitmap)
+    {
+
+        this._renderCachedSprite(renderSession);
+        return;
+    }
+
     if(this._mask)
     {
         renderSession.maskManager.pushMask(this._mask, renderSession.context);
@@ -369,4 +426,3 @@ PIXI.DisplayObjectContainer.prototype._renderCanvas = function(renderSession)
         renderSession.maskManager.popMask(renderSession.context);
     }
 };
-

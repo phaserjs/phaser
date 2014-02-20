@@ -30,13 +30,13 @@ Phaser.Image = function (game, x, y, key, frame) {
     this.game = game;
  
     /**
-    * @property {boolean} exists - If exists = false then the Sprite isn't updated by the core game loop or physics subsystem at all.
+    * @property {boolean} exists - If exists = false then the Image isn't updated by the core game loop.
     * @default
     */
     this.exists = true;
 
     /**
-    * @property {string} name - The user defined name given to this Sprite.
+    * @property {string} name - The user defined name given to this Image.
     * @default
     */
     this.name = '';
@@ -48,16 +48,25 @@ Phaser.Image = function (game, x, y, key, frame) {
     this.type = Phaser.IMAGE;
 
     /**
-    * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.
+    * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Image or its components.
     */
     this.events = new Phaser.Events(this);
 
     /**
-    *  @property {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
+    *  @property {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Image during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
     */
     this.key = key;
 
+    /**
+    * @property {number} _frame - Internal cache var.
+    * @private
+    */
     this._frame = 0;
+
+    /**
+    * @property {string} _frameName - Internal cache var.
+    * @private
+    */
     this._frameName = '';
 
     PIXI.Sprite.call(this, PIXI.TextureCache['__default']);
@@ -67,27 +76,19 @@ Phaser.Image = function (game, x, y, key, frame) {
     this.position.set(x, y);
 
     /**
-    * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
+    * @property {Phaser.Point} world - The world coordinates of this Image. This differs from the x/y coordinates which are relative to the Images container.
     */
     this.world = new Phaser.Point(x, y);
 
     /**
-    * Should this Sprite be automatically culled if out of range of the camera?
+    * Should this Image be automatically culled if out of range of the camera?
     * A culled sprite has its renderable property set to 'false'.
     * Be advised this is quite an expensive operation, as it has to calculate the bounds of the object every frame, so only enable it if you really need it.
     *
-    * @property {boolean} autoCull - A flag indicating if the Sprite should be automatically camera culled or not.
+    * @property {boolean} autoCull - A flag indicating if the Image should be automatically camera culled or not.
     * @default
     */
     this.autoCull = false;
-
-    /**
-    * A Sprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera.
-    * Note that if this Image is a child of a display object that has changed its position then the offset will be calculated from that.
-    * @property {boolean} fixedToCamera - Fixes this Sprite to the Camera.
-    * @default
-    */
-    this.fixedToCamera = false;
 
     /**
     * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
@@ -95,10 +96,24 @@ Phaser.Image = function (game, x, y, key, frame) {
     this.input = null;
 
     /**
-    * @property {array} _cache - A small cache for previous step values. 0 = x, 1 = y, 2 = rotation, 3 = renderID
+    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    */
+    this.cameraOffset = new Phaser.Point();
+
+    /**
+    * A small internal cache:
+    * 0 = previous position.x
+    * 1 = previous position.y
+    * 2 = previous rotation
+    * 3 = renderID
+    * 4 = fresh? (0 = no, 1 = yes)
+    * 5 = outOfBoundsFired (0 = no, 1 = yes)
+    * 6 = exists (0 = no, 1 = yes)
+    * 7 = fixed to camera (0 = no, 1 = yes)
+    * @property {Int16Array} _cache
     * @private
     */
-    this._cache = [0, 0, 0, 0];
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
 
 };
 
@@ -138,7 +153,17 @@ Phaser.Image.prototype.preUpdate = function() {
 
     return true;
 
-};
+}
+
+/**
+* Override and use this function in your own custom objects to handle any update requirements you may have.
+*
+* @method Phaser.Image#update
+* @memberof Phaser.Image
+*/
+Phaser.Image.prototype.update = function() {
+
+}
 
 /**
 * Internal function called by the World postUpdate cycle.
@@ -153,22 +178,23 @@ Phaser.Image.prototype.postUpdate = function() {
         this.key.render();
     }
 
-    if (this.fixedToCamera)
+    //  Fixed to Camera?
+    if (this._cache[7] === 1)
     {
-        this.position.x = this.game.camera.view.x + this.x;
-        this.position.y = this.game.camera.view.y + this.y;
+        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
     }
 
-};
+}
 
 /**
-* Changes the Texture the Sprite is using entirely. The old texture is removed and the new one is referenced or fetched from the Cache.
+* Changes the Texture the Image is using entirely. The old texture is removed and the new one is referenced or fetched from the Cache.
 * This causes a WebGL texture update, so use sparingly or in low-intensity portions of your game.
 *
 * @method Phaser.Image#loadTexture
 * @memberof Phaser.Image
-* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
-* @param {string|number} frame - If this Sprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the Image during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
+* @param {string|number} frame - If this Image is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
 Phaser.Image.prototype.loadTexture = function (key, frame) {
 
@@ -178,16 +204,19 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
     {
         this.key = key.key;
         this.setTexture(key);
+        return;
     }
     else if (key instanceof Phaser.BitmapData)
     {
         this.key = key.key;
         this.setTexture(key.texture);
+        return;
     }
     else if (key instanceof PIXI.Texture)
     {
         this.key = key;
         this.setTexture(key);
+        return;
     }
     else
     {
@@ -195,11 +224,13 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
         {
             this.key = '__default';
             this.setTexture(PIXI.TextureCache[this.key]);
+            return;
         }
         else if (typeof key === 'string' && !this.game.cache.checkImageKey(key))
         {
             this.key = '__missing';
             this.setTexture(PIXI.TextureCache[this.key]);
+            return;
         }
 
         if (this.game.cache.isSpriteSheet(key))
@@ -213,22 +244,25 @@ Phaser.Image.prototype.loadTexture = function (key, frame) {
                 this._frame = 0;
                 this._frameName = frame;
                 this.setTexture(PIXI.TextureCache[frameData.getFrameByName(frame).uuid]);
+                return;
             }
             else
             {
                 this._frame = frame;
                 this._frameName = '';
                 this.setTexture(PIXI.TextureCache[frameData.getFrame(frame).uuid]);
+                return;
             }
         }
         else
         {
             this.key = key;
             this.setTexture(PIXI.TextureCache[key]);
+            return;
         }
     }
 
-};
+}
 
 /**
 * Crop allows you to crop the texture used to display this Image.
@@ -275,12 +309,12 @@ Phaser.Image.prototype.crop = function(rect) {
         }
     }
 
-};
+}
 
 /**
-* Brings a 'dead' Sprite back to life, optionally giving it the health value specified.
-* A resurrected Sprite has its alive, exists and visible properties all set to true.
-* It will dispatch the onRevived event, you can listen to Sprite.events.onRevived for the signal.
+* Brings a 'dead' Image back to life, optionally giving it the health value specified.
+* A resurrected Image has its alive, exists and visible properties all set to true.
+* It will dispatch the onRevived event, you can listen to Image.events.onRevived for the signal.
 * 
 * @method Phaser.Image#revive
 * @memberof Phaser.Image
@@ -299,13 +333,13 @@ Phaser.Image.prototype.revive = function() {
 
     return this;
 
-};
+}
 
 /**
-* Kills a Sprite. A killed Sprite has its alive, exists and visible properties all set to false.
-* It will dispatch the onKilled event, you can listen to Sprite.events.onKilled for the signal.
-* Note that killing a Sprite is a way for you to quickly recycle it in a Sprite pool, it doesn't free it up from memory.
-* If you don't need this Sprite any more you should call Sprite.destroy instead.
+* Kills a Image. A killed Image has its alive, exists and visible properties all set to false.
+* It will dispatch the onKilled event, you can listen to Image.events.onKilled for the signal.
+* Note that killing a Image is a way for you to quickly recycle it in a Image pool, it doesn't free it up from memory.
+* If you don't need this Image any more you should call Image.destroy instead.
 * 
 * @method Phaser.Image#kill
 * @memberof Phaser.Image
@@ -324,10 +358,10 @@ Phaser.Image.prototype.kill = function() {
 
     return this;
 
-};
+}
 
 /**
-* Destroys the Sprite. This removes it from its parent group, destroys the input, event and animation handlers if present
+* Destroys the Image. This removes it from its parent group, destroys the input, event and animation handlers if present
 * and nulls its reference to game, freeing it up for garbage collection.
 * 
 * @method Phaser.Image#destroy
@@ -361,15 +395,15 @@ Phaser.Image.prototype.destroy = function() {
 
     this.game = null;
 
-};
+}
 
 /**
-* Resets the Sprite. This places the Sprite at the given x/y world coordinates and then sets alive, exists, visible and renderable all to true.
+* Resets the Image. This places the Image at the given x/y world coordinates and then sets alive, exists, visible and renderable all to true.
 * 
 * @method Phaser.Image#reset
 * @memberof Phaser.Image
-* @param {number} x - The x coordinate (in world space) to position the Sprite at.
-* @param {number} y - The y coordinate (in world space) to position the Sprite at.
+* @param {number} x - The x coordinate (in world space) to position the Image at.
+* @param {number} y - The y coordinate (in world space) to position the Image at.
 * @return {Phaser.Image} This instance.
 */
 Phaser.Image.prototype.reset = function(x, y) {
@@ -384,10 +418,10 @@ Phaser.Image.prototype.reset = function(x, y) {
 
     return this;
     
-};
+}
 
 /**
-* Brings the Sprite to the top of the display list it is a child of. Sprites that are members of a Phaser.Group are only
+* Brings the Image to the top of the display list it is a child of. Images that are members of a Phaser.Group are only
 * bought to the top of that Group, not the entire display list.
 * 
 * @method Phaser.Image#bringToTop
@@ -410,12 +444,12 @@ Phaser.Image.prototype.bringToTop = function(child) {
 
     return this;
 
-};
+}
 
 /**
-* Indicates the rotation of the Sprite, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+* Indicates the rotation of the Image, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
-* If you wish to work in radians instead of degrees use the property Sprite.rotation instead. Working in radians is also a little faster as it doesn't have to convert the angle.
+* If you wish to work in radians instead of degrees use the property Image.rotation instead. Working in radians is also a little faster as it doesn't have to convert the angle.
 * 
 * @name Phaser.Image#angle
 * @property {number} angle - The angle of this Image in degrees.
@@ -625,6 +659,37 @@ Object.defineProperty(Phaser.Image.prototype, "inputEnabled", {
             {
                 this.input.stop();
             }
+        }
+    }
+
+});
+
+/**
+* An Image that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Image.cameraOffset.
+* Note that the cameraOffset values are in addition to any parent in the display list.
+* So if this Image was in a Group that has x: 200, then this will be added to the cameraOffset.x
+*
+* @name Phaser.Image#fixedToCamera
+* @property {boolean} fixedToCamera - Set to true to fix this Image to the Camera at its current world coordinates.
+*/
+Object.defineProperty(Phaser.Image.prototype, "fixedToCamera", {
+    
+    get: function () {
+
+        return !!this._cache[7];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            this._cache[7] = 1;
+            this.cameraOffset.set(this.x, this.y);
+        }
+        else
+        {
+            this._cache[7] = 0;
         }
     }
 

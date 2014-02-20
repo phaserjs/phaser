@@ -59,6 +59,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.BitmapFont.html">BitmapFont</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -88,10 +92,6 @@
 						
 						<li>
 							<a href="Phaser.Device.html">Device</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.DOMSprite.html">DOMSprite</a>
 						</li>
 						
 						<li>
@@ -140,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
 						
 						<li>
@@ -251,10 +255,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.Plugin.html">Plugin</a>
 						</li>
 						
@@ -272,10 +272,6 @@
 						
 						<li>
 							<a href="Phaser.Polygon.html">Polygon</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.QuadTree.html">QuadTree</a>
 						</li>
 						
 						<li>
@@ -312,6 +308,10 @@
 						
 						<li>
 							<a href="Phaser.Sprite.html">Sprite</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
 						</li>
 						
 						<li>
@@ -413,6 +413,10 @@
 						</li>
 						
 						<li>
+							<a href="global.html#getBounds">getBounds</a>
+						</li>
+						
+						<li>
 							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
 						</li>
 						
@@ -456,8 +460,9 @@
     </h2>
     
         <div class="class-description"><p>BitmapText objects work by taking a texture file and an XML file that describes the font layout.</p>
-<p>On Windows you can use the free app BMFont: <a href="http://www.angelcode.com/products/bmfont/">http://www.angelcode.com/products/bmfont/</a></p>
-<p>On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphdesigner">http://www.71squared.com/en/glyphdesigner</a></p></div>
+<p>On Windows you can use the free app BMFont: <a href="http://www.angelcode.com/products/bmfont/">http://www.angelcode.com/products/bmfont/</a>
+On OS X we recommend Glyph Designer: <a href="http://www.71squared.com/en/glyphdesigner">http://www.71squared.com/en/glyphdesigner</a>
+For Web there is the great Littera: <a href="http://kvazars.com/littera/">http://kvazars.com/littera/</a></p></div>
     
 </header>
 
@@ -468,7 +473,7 @@
     
         
 <dt>
-    <h4 class="name" id="BitmapText"><span class="type-signature"></span>new BitmapText<span class="signature">(game, x, y, text, style)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="BitmapText"><span class="type-signature"></span>new BitmapText<span class="signature">(game, x, y, font, <span class="optional">text</span>, <span class="optional">size</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -498,7 +503,11 @@
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -523,7 +532,19 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>A reference to the currently running game.</p></td>
@@ -546,7 +567,19 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>X position of the new bitmapText object.</p></td>
@@ -569,10 +602,57 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>Y position of the new bitmapText object.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>font</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The key of the BitmapFont as stored in Game.Cache.</p></td>
         </tr>
 
 	
@@ -592,33 +672,65 @@
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The actual text that will be written.</p></td>
+            
+                <td class="default">
+                
+                    ''
+                
+                </td>
+            
+
+            <td class="description last"><p>The actual text that will be rendered. Can be set later via BitmapText.text.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>style</code></td>
+                <td class="name"><code>size</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">number</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>The style object containing style attributes like font, font size , etc.</p></td>
+            
+                <td class="default">
+                
+                    32
+                
+                </td>
+            
+
+            <td class="description last"><p>The size the font will be rendered in, in pixels.</p></td>
         </tr>
 
 	
@@ -650,7 +762,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-25">line 25</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-26">line 26</a>
     </li></ul></dd>
     
 
@@ -694,7 +806,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="alive"><span class="type-signature"></span>alive<span class="type-signature"></span></h4>
+    <h4 class="name" id="align"><span class="type-signature"></span>align<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -733,13 +845,13 @@
 
         <tr>
             
-                <td class="name"><code>alive</code></td>
+                <td class="name"><code>align</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">string</span>
 
 
             
@@ -749,119 +861,7 @@
 
             
 
-            <td class="description last"><p>This is a handy little var your game can use to determine if a sprite is alive or not, it doesn't effect rendering.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy"><li>true</li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-47">line 47</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="anchor"><span class="type-signature"></span>anchor<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The anchor sets the origin point of the texture.
-The default is 0,0 this means the textures origin is the top left 
-Setting than anchor to 0.5,0.5 means the textures origin is centered
-Setting the anchor to 1,1 would mean the textures origin points will be the bottom right</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>anchor</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The anchor around which rotation and scaling takes place.</p></td>
+            <td class="description last"><p>Alignment for multiline text ('left', 'center' or 'right'), does not affect single line text.</p></td>
         </tr>
 
 	
@@ -890,7 +890,7 @@ Setting the anchor to 1,1 would mean the textures origin points will be the bott
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-86">line 86</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-233">line 233</a>
     </li></ul></dd>
     
 
@@ -915,7 +915,7 @@ Setting the anchor to 1,1 would mean the textures origin points will be the bott
 <dd>
     
     <div class="description">
-        <p>Indicates the rotation of the BitmapText, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+        <p>Indicates the rotation of the Text, in degrees, from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
 Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement player.angle = 450 is the same as player.angle = 90.
 If you wish to work in radians instead of degrees use the property Sprite.rotation instead.</p>
     </div>
@@ -998,7 +998,211 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-182">line 182</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-277">line 277</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="cameraOffset"><span class="type-signature"></span>cameraOffset<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>cameraOffset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-105">line 105</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="events"><span class="type-signature"></span>events<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>events</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Events.html">Phaser.Events</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Events you can subscribe to that are dispatched when certain things happen on this Sprite or its components.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-95">line 95</a>
     </li></ul></dd>
     
 
@@ -1103,7 +1307,319 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-41">line 41</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-43">line 43</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="fixedToCamera"><span class="type-signature"></span>fixedToCamera<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>An BitmapText that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in BitmapText.cameraOffset.
+Note that the cameraOffset values are in addition to any parent in the display list.
+So if this BitmapText was in a Group that has x: 200, then this will be added to the cameraOffset.x</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>fixedToCamera</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Set to true to fix this BitmapText to the Camera at its current world coordinates.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-403">line 403</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="font"><span class="type-signature"></span>font<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>font</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The font the text will be rendered in, i.e. 'Arial'. Must be loaded in the browser before use.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-296">line 296</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="fontSize"><span class="type-signature"></span>fontSize<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>fontSize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The size of the font in pixels.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-319">line 319</a>
     </li></ul></dd>
     
 
@@ -1205,7 +1721,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-35">line 35</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-37">line 37</a>
     </li></ul></dd>
     
 
@@ -1223,7 +1739,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
         
             
 <dt>
-    <h4 class="name" id="group"><span class="type-signature"></span>group<span class="type-signature"></span></h4>
+    <h4 class="name" id="input"><span class="type-signature"></span>input<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1262,13 +1778,16 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
 
         <tr>
             
-                <td class="name"><code>group</code></td>
+                <td class="name"><code>input</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Group.html">Phaser.Group</a></span>
+<span class="param-type"><a href="Phaser.InputHandler.html">Phaser.InputHandler</a></span>
+|
+
+<span class="param-type">null</span>
 
 
             
@@ -1278,7 +1797,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
 
             
 
-            <td class="description last"><p>The parent Group of this BitmapText.</p></td>
+            <td class="description last"><p>The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.</p></td>
         </tr>
 
 	
@@ -1307,7 +1826,114 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-52">line 52</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-100">line 100</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="inputEnabled"><span class="type-signature"></span>inputEnabled<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>By default a Text object won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
+activated for this object and it will then start to process click/touch events and more.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>inputEnabled</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Set to true to allow this object to receive input events.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-367">line 367</a>
     </li></ul></dd>
     
 
@@ -1409,7 +2035,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-58">line 58</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-49">line 49</a>
     </li></ul></dd>
     
 
@@ -1427,7 +2053,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
         
             
 <dt>
-    <h4 class="name" id="scale"><span class="type-signature"></span>scale<span class="type-signature"></span></h4>
+    <h4 class="name" id="text"><span class="type-signature"></span>text<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1466,13 +2092,13 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
 
         <tr>
             
-                <td class="name"><code>scale</code></td>
+                <td class="name"><code>text</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
+<span class="param-type">string</span>
 
 
             
@@ -1482,7 +2108,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
 
             
 
-            <td class="description last"><p>The scale of the object when rendered. By default it's set to 1 (no scale). You can modify it via scale.x or scale.y or scale.setTo(x, y). A value of 1 means no change to the scale, 0.5 means &quot;half the size&quot;, 2 means &quot;twice the size&quot;, etc.</p></td>
+            <td class="description last"><p>Set this value to update the text in this sprite. Carriage returns are automatically stripped out if multiLine is false. Text is converted to upper case if autoUpperCase is true.</p></td>
         </tr>
 
 	
@@ -1511,7 +2137,215 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-91">line 91</a>
+        <a href="BitmapFont.js.html">gameobjects/BitmapFont.js</a>, <a href="BitmapFont.js.html#sunlight-1-line-536">line 536</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="text"><span class="type-signature"></span>text<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The text string to be displayed by this Text object, taking into account the style settings.</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>text</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The text string to be displayed by this Text object, taking into account the style settings.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-344">line 344</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="tint"><span class="type-signature"></span>tint<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>tint</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The tint applied to the BitmapText. This is a hex value. Set to white to disable (0xFFFFFF)</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-255">line 255</a>
     </li></ul></dd>
     
 
@@ -1613,7 +2447,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-64">line 64</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-55">line 55</a>
     </li></ul></dd>
     
 
@@ -1631,15 +2465,11 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
         
             
 <dt>
-    <h4 class="name" id="x"><span class="type-signature"></span>x<span class="type-signature"></span></h4>
+    <h4 class="name" id="world"><span class="type-signature"></span>world<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
-    
-    <div class="description">
-        <p>The x coordinate of this object in world space.</p>
-    </div>
     
     
     
@@ -1674,13 +2504,13 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
 
         <tr>
             
-                <td class="name"><code>x</code></td>
+                <td class="name"><code>world</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type"><a href="Phaser.Point.html">Phaser.Point</a></span>
 
 
             
@@ -1690,7 +2520,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
 
             
 
-            <td class="description last"><p>The x coordinate of this object in world space.</p></td>
+            <td class="description last"><p>The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.</p></td>
         </tr>
 
 	
@@ -1719,113 +2549,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-201">line 201</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="y"><span class="type-signature"></span>y<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The y coordinate of this object in world space.</p>
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-
-        <h5 class="subsection-title">Properties:</h5>
-
-        <dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The y coordinate of this object in world space.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-218">line 218</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-60">line 60</a>
     </li></ul></dd>
     
 
@@ -1849,7 +2573,72 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
         <dl>
             
 <dt>
-    <h4 class="name" id="update"><span class="type-signature"></span>update<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-202">line 202</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="postUpdate"><span class="type-signature"></span>postUpdate<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1857,7 +2646,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     
     <div class="description">
-        <p>Automatically called by World.update</p>
+        <p>Automatically called by World.postUpdate.</p>
     </div>
     
 
@@ -1890,7 +2679,145 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-128">line 128</a>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-187">line 187</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="preUpdate"><span class="type-signature"></span>preUpdate<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Automatically called by World.preUpdate.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-144">line 144</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="update"><span class="type-signature"></span>update<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Override and use this function in your own custom objects to handle any update requirements you may have.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapText.js.html">gameobjects/BitmapText.js</a>, <a href="BitmapText.js.html#sunlight-1-line-177">line 177</a>
     </li></ul></dd>
     
 
@@ -1941,7 +2868,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Sat Feb 08 2014 07:19:42 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 19 2014 05:26:22 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

@@ -21,8 +21,9 @@
 * @param {object} [state=null] - The default state object. A object consisting of Phaser.State functions (preload, create, update, render) or null.
 * @param {boolean} [transparent=false] - Use a transparent canvas background or not.
 * @param  {boolean} [antialias=true] - Anti-alias graphics.
+* @param {object} [physicsConfig=null] - A physics configuration object to pass to the Physics world on creation.
 */
-Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias) {
+Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias, physicsConfig) {
 
     /**
     * @property {number} id - Phaser Game ID (for when Pixi supports multiple instances).
@@ -33,6 +34,11 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @property {object} config - The Phaser.Game configuration object.
     */
     this.config = null;
+
+    /**
+    * @property {object} physicsConfig - The Phaser.Physics.World configuration object.
+    */
+    this.physicsConfig = physicsConfig;
 
     /**
     * @property {HTMLElement} parent - The Games DOM parent.
@@ -108,13 +114,11 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
     /**
     * @property {Phaser.RequestAnimationFrame} raf - Automatically handles the core game loop via requestAnimationFrame or setTimeout
-    * @default
     */
     this.raf = null;
 
     /**
     * @property {Phaser.GameObjectFactory} add - Reference to the GameObject Factory.
-    * @default
     */
     this.add = null;
 
@@ -138,91 +142,81 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
 
     /**
     * @property {Phaser.Math} math - Reference to the math helper.
-    * @default
     */
     this.math = null;
 
     /**
     * @property {Phaser.Net} net - Reference to the network class.
-    * @default
     */
     this.net = null;
 
     /**
+    * @property {Phaser.StageScaleMode} scale - The game scale manager.
+    */
+    this.scale = null;
+
+    /**
     * @property {Phaser.SoundManager} sound - Reference to the sound manager.
-    * @default
     */
     this.sound = null;
 
     /**
     * @property {Phaser.Stage} stage - Reference to the stage.
-    * @default
     */
     this.stage = null;
 
     /**
     * @property {Phaser.TimeManager} time - Reference to game clock.
-    * @default
     */
     this.time = null;
 
     /**
     * @property {Phaser.TweenManager} tweens - Reference to the tween manager.
-    * @default
     */
     this.tweens = null;
 
     /**
     * @property {Phaser.World} world - Reference to the world.
-    * @default
     */
     this.world = null;
 
     /**
-    * @property {Phaser.Physics.PhysicsManager} physics - Reference to the physics manager.
-    * @default
+    * @property {Phaser.Physics.World} physics - Reference to the physics world.
     */
     this.physics = null;
 
     /**
     * @property {Phaser.RandomDataGenerator} rnd - Instance of repeatable random data generator helper.
-    * @default
     */
     this.rnd = null;
 
     /**
     * @property {Phaser.Device} device - Contains device information and capabilities.
-    * @default
     */
     this.device = null;
 
     /**
     * @property {Phaser.Physics.PhysicsManager} camera - A handy reference to world.camera.
-    * @default
     */
     this.camera = null;
 
-       /**
-    * @property {HTMLCanvasElement} canvas - A handy reference to renderer.view.
-    * @default
+    /**
+    * @property {HTMLCanvasElement} canvas - A handy reference to renderer.view, the canvas that the game is being rendered in to.
     */
     this.canvas = null;
 
     /**
-    * @property {Context} context - A handy reference to renderer.context (only set for CANVAS games)
-    * @default
+    * @property {Context} context - A handy reference to renderer.context (only set for CANVAS games, not WebGL)
     */
     this.context = null;
 
     /**
     * @property {Phaser.Utils.Debug} debug - A set of useful debug utilitie.
-    * @default
     */
     this.debug = null;
 
     /**
     * @property {Phaser.Particles} particles - The Particle Manager.
-    * @default
     */
     this.particles = null;
 
@@ -351,6 +345,11 @@ Phaser.Game.prototype = {
             this.antialias = config['antialias'];
         }
 
+        if (config['physicsConfig'])
+        {
+            this.physicsConfig = config['physicsConfig'];
+        }
+
         var state = null;
 
         if (config['state'])
@@ -435,6 +434,7 @@ Phaser.Game.prototype = {
             this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
 
             this.stage = new Phaser.Stage(this, this.width, this.height);
+            this.scale = new Phaser.StageScaleMode(this, this.width, this.height);
 
             this.setUpRenderer();
 
@@ -446,7 +446,7 @@ Phaser.Game.prototype = {
             this.tweens = new Phaser.TweenManager(this);
             this.input = new Phaser.Input(this);
             this.sound = new Phaser.SoundManager(this);
-            this.physics = new Phaser.Physics.Arcade(this);
+            this.physics = new Phaser.Physics.World(this, this.physicsConfig);
             this.particles = new Phaser.Particles(this);
             this.plugins = new Phaser.PluginManager(this, this);
             this.net = new Phaser.Net(this);
@@ -466,7 +466,15 @@ Phaser.Game.prototype = {
             this.isRunning = true;
             this._loadComplete = false;
 
-            this.raf = new Phaser.RequestAnimationFrame(this);
+            if (this.config && this.config['forceSetTimeOut'])
+            {
+                this.raf = new Phaser.RequestAnimationFrame(this, this.config['forceSetTimeOut']);
+            }
+            else
+            {
+                this.raf = new Phaser.RequestAnimationFrame(this, false);
+            }
+
             this.raf.start();
         }
 
@@ -543,9 +551,9 @@ Phaser.Game.prototype = {
                     this.renderType = Phaser.CANVAS;
                 }
 
-                this.renderer = new PIXI.CanvasRenderer(this.width, this.height, this.stage.canvas, this.transparent);
+                this.renderer = new PIXI.CanvasRenderer(this.width, this.height, this.canvas, this.transparent);
                 Phaser.Canvas.setSmoothingEnabled(this.renderer.context, this.antialias);
-                this.canvas = this.renderer.view;
+                // this.canvas = this.renderer.view;
                 this.context = this.renderer.context;
             }
             else
@@ -557,13 +565,16 @@ Phaser.Game.prototype = {
         {
             //  They requested WebGL, and their browser supports it
             this.renderType = Phaser.WEBGL;
-            this.renderer = new PIXI.WebGLRenderer(this.width, this.height, this.stage.canvas, this.transparent, this.antialias);
-            this.canvas = this.renderer.view;
+            this.renderer = new PIXI.WebGLRenderer(this.width, this.height, this.canvas, this.transparent, this.antialias);
+            // this.canvas = this.renderer.view;
             this.context = null;
         }
 
-        Phaser.Canvas.addToDOM(this.renderer.view, this.parent, true);
-        Phaser.Canvas.setTouchAction(this.renderer.view);
+        // Phaser.Canvas.addToDOM(this.renderer.view, this.parent, true);
+        // Phaser.Canvas.setTouchAction(this.renderer.view);
+
+        Phaser.Canvas.addToDOM(this.canvas, this.parent, true);
+        Phaser.Canvas.setTouchAction(this.canvas);
 
     },
 
@@ -594,7 +605,7 @@ Phaser.Game.prototype = {
 
         if (this._paused)
         {
-            this.renderer.render(this.stage._stage);
+            this.renderer.render(this.stage);
             this.plugins.render();
             this.state.render();
         }
@@ -608,24 +619,24 @@ Phaser.Game.prototype = {
                 }
 
                 this.plugins.preUpdate();
-                this.world.preUpdate();
+                this.stage.preUpdate();
 
                 this.stage.update();
                 this.tweens.update();
                 this.sound.update();
                 this.input.update();
                 this.state.update();
-                this.world.update();
+                this.physics.update();
                 this.particles.update();            
                 this.plugins.update();
 
-                this.world.postUpdate();
+                this.stage.postUpdate();
                 this.plugins.postUpdate();
             }
 
             if (this.renderType !== Phaser.HEADLESS)
             {
-                this.renderer.render(this.stage._stage);
+                this.renderer.render(this.stage);
                 this.plugins.render();
                 this.state.render();
 

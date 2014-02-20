@@ -20,7 +20,7 @@ PIXI.WebGLSpriteBatch = function(gl)
 {
 
     /**
-     * TODO-Alvin
+     * 
      *
      * @property vertSize
      * @type Number
@@ -28,13 +28,12 @@ PIXI.WebGLSpriteBatch = function(gl)
     this.vertSize = 6;
 
     /**
-     * TODO-Alvin
+     * The number of images in the SpriteBatch before it flushes
      * @property size
      * @type Number
      */
     this.size = 10000;//Math.pow(2, 16) /  this.vertSize;
 
- //   console.log(this.size);
     //the total number of floats in our batch
     var numVerts = this.size * 4 *  this.vertSize;
     //the total number of indices in our batch
@@ -134,15 +133,17 @@ PIXI.WebGLSpriteBatch.prototype.end = function()
 * 
 * @method render
 * 
-* @param sprite {Sprite} the sprite to render TODO-Alvin
+* @param sprite {Sprite} the sprite to render when using this spritebatch
 */
 PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
 {
+    var texture = sprite.texture;
+
     // check texture..
-    if(sprite.texture.baseTexture !== this.currentBaseTexture || this.currentBatchSize >= this.size)
+    if(texture.baseTexture !== this.currentBaseTexture || this.currentBatchSize >= this.size)
     {
         this.flush();
-        this.currentBaseTexture = sprite.texture.baseTexture;
+        this.currentBaseTexture = texture.baseTexture;
     }
 
 
@@ -161,10 +162,8 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
     var alpha = sprite.worldAlpha;
     var tint = sprite.tint;
 
-    var  verticies = this.vertices;
+    var verticies = this.vertices;
 
-    var width = sprite.texture.frame.width;
-    var height = sprite.texture.frame.height;
 
     // TODO trim??
     var aX = sprite.anchor.x;
@@ -172,24 +171,25 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
 
     var w0, w1, h0, h1;
         
-    if (sprite.texture.trimmed)
+    if (sprite.texture.trim)
     {
         // if the sprite is trimmed then we need to add the extra space before transforming the sprite coords..
         var trim = sprite.texture.trim;
 
-        w1 = trim.x - aX * trim.realWidth;
-        w0 = w1 + width;
+        w1 = trim.x - aX * trim.width;
+        w0 = w1 + texture.frame.width;
 
-        h1 = trim.y - aY * trim.realHeight;
-        h0 = h1 + height;
+        h1 = trim.y - aY * trim.height;
+        h0 = h1 + texture.frame.height;
+
     }
     else
     {
-        w0 = (width ) * (1-aX);
-        w1 = (width ) * -aX;
+        w0 = (texture.frame.width ) * (1-aX);
+        w1 = (texture.frame.width ) * -aX;
 
-        h0 = height * (1-aY);
-        h1 = height * -aY;
+        h0 = texture.frame.height * (1-aY);
+        h1 = texture.frame.height * -aY;
     }
 
     var index = this.currentBatchSize * 4 * this.vertSize;
@@ -250,10 +250,10 @@ PIXI.WebGLSpriteBatch.prototype.render = function(sprite)
 };
 
 /**
-* 
+* Renders a tilingSprite using the spriteBatch
 * @method renderTilingSprite
 * 
-* @param sprite {TilingSprite} the sprite to render TODO-Alvin
+* @param sprite {TilingSprite} the tilingSprite to render
 */
 PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
 {
@@ -274,15 +274,15 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
      // set the textures uvs temporarily
     // TODO create a separate texture so that we can tile part of a texture
 
-    if(!tilingSprite._uvs)tilingSprite._uvs = new Float32Array(8);
+    if(!tilingSprite._uvs)tilingSprite._uvs = new PIXI.TextureUvs();
 
     var uvs = tilingSprite._uvs;
 
-    tilingSprite.tilePosition.x %= texture.baseTexture.width;
-    tilingSprite.tilePosition.y %= texture.baseTexture.height;
+    tilingSprite.tilePosition.x %= texture.baseTexture.width * tilingSprite.tileScaleOffset.x;
+    tilingSprite.tilePosition.y %= texture.baseTexture.height * tilingSprite.tileScaleOffset.y;
 
-    var offsetX =  tilingSprite.tilePosition.x/texture.baseTexture.width;
-    var offsetY =  tilingSprite.tilePosition.y/texture.baseTexture.height;
+    var offsetX =  tilingSprite.tilePosition.x/(texture.baseTexture.width*tilingSprite.tileScaleOffset.x);
+    var offsetY =  tilingSprite.tilePosition.y/(texture.baseTexture.height*tilingSprite.tileScaleOffset.y);
 
     var scaleX =  (tilingSprite.width / texture.baseTexture.width)  / (tilingSprite.tileScale.x * tilingSprite.tileScaleOffset.x);
     var scaleY =  (tilingSprite.height / texture.baseTexture.height) / (tilingSprite.tileScale.y * tilingSprite.tileScaleOffset.y);
@@ -299,7 +299,6 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
     uvs.x3 = 0 - offsetX;
     uvs.y3 = (1 *scaleY) - offsetY;
 
-   
     // get the tilingSprites current alpha
     var alpha = tilingSprite.worldAlpha;
     var tint = tilingSprite.tint;
@@ -375,9 +374,9 @@ PIXI.WebGLSpriteBatch.prototype.renderTilingSprite = function(tilingSprite)
 
 
 /**
-* 
+* Renders the content and empties the current batch
 *
-* @method flush TODO-Alvin
+* @method flush
 * 
 */
 PIXI.WebGLSpriteBatch.prototype.flush = function()
@@ -460,11 +459,10 @@ PIXI.WebGLSpriteBatch.prototype.start = function()
 };
 
 /**
-* 
+* Sets-up the given blendMode from WebGL's point of view
 * @method setBlendMode 
 *
 * @param blendMode {Number} the blendMode, should be a Pixi const, such as PIXI.BlendModes.ADD
-* TODO-Alvin
 */
 PIXI.WebGLSpriteBatch.prototype.setBlendMode = function(blendMode)
 {

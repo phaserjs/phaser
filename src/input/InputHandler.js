@@ -107,10 +107,22 @@ Phaser.InputHandler = function (sprite) {
     this.snapOffsetY = 0;
 
     /**
-    * @property {number} pixelPerfect - Should we use pixel perfect hit detection? Warning: expensive. Only enable if you really need it!
+    * Set to true to use pixel perfect hit detection when checking if the pointer is over this Sprite.
+    * The x/y coordinates of the pointer are tested against the image in combination with the InputHandler.pixelPerfectAlpha value.
+    * Warning: This is expensive, especially on mobile (where it's not even needed!) so only enable if required. Also see the less-expensive InputHandler.pixelPerfectClick.
+    * @property {number} pixelPerfectOver - Use a pixel perfect check when testing for pointer over.
     * @default
     */
-    this.pixelPerfect = false;
+    this.pixelPerfectOver = false;
+
+    /**
+    * Set to true to use pixel perfect hit detection when checking if the pointer is over this Sprite when it's clicked or touched.
+    * The x/y coordinates of the pointer are tested against the image in combination with the InputHandler.pixelPerfectAlpha value.
+    * Warning: This is expensive so only enable if you really need it.
+    * @property {number} pixelPerfectClick - Use a pixel perfect check when testing for clicks or touches on the Sprite.
+    * @default
+    */
+    this.pixelPerfectClick = false;
 
     /**
     * @property {number} pixelPerfectAlpha - The alpha tolerance threshold. If the alpha value of the pixel matches or is above this value, it's considered a hit.
@@ -145,11 +157,15 @@ Phaser.InputHandler = function (sprite) {
     this.consumePointerEvent = false;
 
     /**
-    * @property {Phaser.Point} _tempPoint - Description.
+    * @property {Phaser.Point} _tempPoint - Internal cache var.
     * @private
     */
     this._tempPoint = new Phaser.Point();
 
+    /**
+    * @property {array} _pointerData - Internal cache var.
+    * @private
+    */
     this._pointerData = [];
 
     this._pointerData.push({
@@ -290,10 +306,12 @@ Phaser.InputHandler.prototype = {
 
             this.game.input.interactiveItems.remove(this);
 
-            this.stop();
-
+            this._pointerData.length = 0;
+            this.boundsRect = null;
+            this.boundsSprite = null;
             this.sprite = null;
         }
+
     },
 
     /**
@@ -472,15 +490,45 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Is this sprite being dragged by the mouse or not?
-    * @method Phaser.InputHandler#pointerTimeOut
+    * @method Phaser.InputHandler#pointerDragged
     * @param {Phaser.Pointer} pointer
-    * @return {number}
+    * @return {boolean} True if the pointer is dragging an object, otherwise false.
     */
     pointerDragged: function (pointer) {
 
         pointer = pointer || 0;
 
         return this._pointerData[pointer].isDragged;
+
+    },
+
+    /**
+    * Checks if the given pointer is over this Sprite and can click it.
+    * @method Phaser.InputHandler#checkPointerDown
+    * @param {Phaser.Pointer} pointer
+    * @return {boolean} True if the pointer is down, otherwise false.
+    */
+    checkPointerDown: function (pointer) {
+
+        if (this.enabled === false || this.sprite.visible === false || this.sprite.parent.visible === false)
+        {
+            return false;
+        }
+
+        //  Need to pass it a temp point, in case we need it again for the pixel check
+        if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))
+        {
+            if (this.pixelPerfectClick)
+            {
+                return this.checkPixel(this._tempPoint.x, this._tempPoint.y);
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        return false;
 
     },
 
@@ -500,7 +548,7 @@ Phaser.InputHandler.prototype = {
         //  Need to pass it a temp point, in case we need it again for the pixel check
         if (this.game.input.hitTest(this.sprite, pointer, this._tempPoint))
         {
-            if (this.pixelPerfect)
+            if (this.pixelPerfectOver)
             {
                 return this.checkPixel(this._tempPoint.x, this._tempPoint.y);
             }
@@ -520,14 +568,34 @@ Phaser.InputHandler.prototype = {
     * @method Phaser.InputHandler#checkPixel
     * @param {number} x - The x coordinate to check.
     * @param {number} y - The y coordinate to check.
+    * @param {Phaser.Pointer} [pointer] - The pointer to get the x/y coordinate from if not passed as the first two parameters.
     * @return {boolean} true if there is the alpha of the pixel is >= InputHandler.pixelPerfectAlpha
     */
-    checkPixel: function (x, y) {
+    checkPixel: function (x, y, pointer) {
 
         //  Grab a pixel from our image into the hitCanvas and then test it
         if (this.sprite.texture.baseTexture.source)
         {
             this.game.input.hitContext.clearRect(0, 0, 1, 1);
+
+            if (x === null && y === null)
+            {
+                //  Use the pointer parameter
+                this.game.input.getLocalPosition(this.sprite, pointer, this._tempPoint);
+
+                var x = this._tempPoint.x;
+                var y = this._tempPoint.y;
+            }
+
+            if (this.sprite.anchor.x !== 0)
+            {
+                x -= -this.sprite.texture.frame.width * this.sprite.anchor.x;
+            }
+
+            if (this.sprite.anchor.y !== 0)
+            {
+                y -= -this.sprite.texture.frame.height * this.sprite.anchor.y;
+            }
 
             x += this.sprite.texture.frame.x;
             y += this.sprite.texture.frame.y;
@@ -549,9 +617,16 @@ Phaser.InputHandler.prototype = {
     /**
     * Update.
     * @method Phaser.InputHandler#update
+    * @protected
     * @param {Phaser.Pointer} pointer
     */
     update: function (pointer) {
+
+        if (this.sprite === null)
+        {
+            //  Abort. We've been destroyed.
+            return;
+        }
 
         if (this.enabled === false || this.sprite.visible === false || (this.sprite.group && this.sprite.group.visible === false))
         {
@@ -587,6 +662,12 @@ Phaser.InputHandler.prototype = {
     */
     _pointerOverHandler: function (pointer) {
 
+        if (this.sprite === null)
+        {
+            //  Abort. We've been destroyed.
+            return;
+        }
+
         if (this._pointerData[pointer.id].isOver === false)
         {
             this._pointerData[pointer.id].isOver = true;
@@ -602,6 +683,7 @@ Phaser.InputHandler.prototype = {
 
             this.sprite.events.onInputOver.dispatch(this.sprite, pointer);
         }
+
     },
 
     /**
@@ -611,6 +693,12 @@ Phaser.InputHandler.prototype = {
     * @param {Phaser.Pointer} pointer
     */
     _pointerOutHandler: function (pointer) {
+
+        if (this.sprite === null)
+        {
+            //  Abort. We've been destroyed.
+            return;
+        }
 
         this._pointerData[pointer.id].isOver = false;
         this._pointerData[pointer.id].isOut = true;
@@ -636,8 +724,19 @@ Phaser.InputHandler.prototype = {
     */
     _touchedHandler: function (pointer) {
 
+        if (this.sprite === null)
+        {
+            //  Abort. We've been destroyed.
+            return;
+        }
+
         if (this._pointerData[pointer.id].isDown === false && this._pointerData[pointer.id].isOver === true)
         {
+            if (this.pixelPerfectClick && !this.checkPixel(null, null, pointer))
+            {
+                return;
+            }
+
             this._pointerData[pointer.id].isDown = true;
             this._pointerData[pointer.id].isUp = false;
             this._pointerData[pointer.id].timeDown = this.game.time.now;
@@ -667,6 +766,12 @@ Phaser.InputHandler.prototype = {
     * @param {Phaser.Pointer} pointer
     */
     _releasedHandler: function (pointer) {
+
+        if (this.sprite === null)
+        {
+            //  Abort. We've been destroyed.
+            return;
+        }
 
         //  If was previously touched by this Pointer, check if still is AND still over this item
         if (this._pointerData[pointer.id].isDown && pointer.isUp)
@@ -811,7 +916,7 @@ Phaser.InputHandler.prototype = {
     },
 
     /**
-    * Returns true if the pointer has entered the Sprite within the specified delay time (defaults to 500ms, half a second)
+    * Returns true if the pointer has touched or clicked on the Sprite within the specified delay time (defaults to 500ms, half a second)
     * @method Phaser.InputHandler#justPressed
     * @param {Phaser.Pointer} pointer
     * @param {number} delay - The time below which the pointer is considered as just over.
@@ -827,7 +932,7 @@ Phaser.InputHandler.prototype = {
     },
 
     /**
-    * Returns true if the pointer has left the Sprite within the specified delay time (defaults to 500ms, half a second)
+    * Returns true if the pointer was touching this Sprite, but has been released within the specified delay time (defaults to 500ms, half a second)
     * @method Phaser.InputHandler#justReleased
     * @param {Phaser.Pointer} pointer
     * @param {number} delay - The time below which the pointer is considered as just out.

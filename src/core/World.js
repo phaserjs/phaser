@@ -39,7 +39,7 @@ Phaser.World = function (game) {
     */
     this.currentRenderOrderID = 0;
     
-};
+}
 
 Phaser.World.prototype = Object.create(Phaser.Group.prototype);
 Phaser.World.prototype.constructor = Phaser.World;
@@ -58,84 +58,7 @@ Phaser.World.prototype.boot = function () {
 
     this.game.camera = this.camera;
 
-    this.game.stage._stage.addChild(this);
-
-}
-
-/**
-* This is called automatically after the plugins preUpdate and before the State.update.
-* Most objects have preUpdate methods and it's where initial movement, drawing and calculations are done.
-* 
-* @method Phaser.World#preUpdate
-*/
-Phaser.World.prototype.preUpdate = function () {
-    
-    this.currentRenderOrderID = 0;
-
-    for (var i = 0, len = this.children.length; i < len; i++)
-    {
-        if (this.children[i]['preUpdate'])
-        {
-            this.children[i].preUpdate();
-        }
-    }
-
-}
-
-/**
-* This is called automatically after the State.update, but before particles or plugins update.
-* Most objects won't have an update method set unless explicitly given one.
-* 
-* @method Phaser.World#update
-*/
-Phaser.World.prototype.update = function () {
-
-    for (var i = 0, len = this.children.length; i < len; i++)
-    {
-        if (this.children[i]['update'])
-        {
-            this.children[i].update();
-        }
-    }
-
-}
-
-/**
-* This is called automatically before the renderer runs and after the plugins have updated.
-* In postUpdate this is where all the final physics calculatations and object positioning happens.
-* The objects are processed in the order of the display list.
-* The only exception to this is if the camera is following an object, in which case that is updated first.
-* 
-* @method Phaser.World#postUpdate
-*/
-Phaser.World.prototype.postUpdate = function () {
-
-    if (this.camera.target && this.camera.target['postUpdate'])
-    {
-        this.camera.target.postUpdate();
-
-        this.camera.update();
-
-        for (var i = 0, len = this.children.length; i < len; i++)
-        {
-            if (this.children[i]['postUpdate'])
-            {
-                this.children[i].postUpdate();
-            }
-        }
-    }
-    else
-    {
-        this.camera.update();
-
-        for (var i = 0, len = this.children.length; i < len; i++)
-        {
-            if (this.children[i]['postUpdate'])
-            {
-                this.children[i].postUpdate();
-            }
-        }
-    }
+    this.game.stage.addChild(this);
 
 }
 
@@ -178,8 +101,7 @@ Phaser.World.prototype.setBounds = function (x, y, width, height) {
 */
 Phaser.World.prototype.destroy = function () {
 
-    this.camera.x = 0;
-    this.camera.y = 0;
+    this.camera.reset();
 
     this.game.input.reset(true);
 

@@ -59,6 +59,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.BitmapFont.html">BitmapFont</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.BitmapText.html">BitmapText</a>
 						</li>
 						
@@ -88,10 +92,6 @@
 						
 						<li>
 							<a href="Phaser.Device.html">Device</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.DOMSprite.html">DOMSprite</a>
 						</li>
 						
 						<li>
@@ -140,6 +140,10 @@
 						
 						<li>
 							<a href="Phaser.Easing.Sinusoidal.html">Sinusoidal</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Ellipse.html">Ellipse</a>
 						</li>
 						
 						<li>
@@ -251,10 +255,6 @@
 						</li>
 						
 						<li>
-							<a href="Phaser.Physics.Arcade.Body.html">Body</a>
-						</li>
-						
-						<li>
 							<a href="Phaser.Plugin.html">Plugin</a>
 						</li>
 						
@@ -272,10 +272,6 @@
 						
 						<li>
 							<a href="Phaser.Polygon.html">Polygon</a>
-						</li>
-						
-						<li>
-							<a href="Phaser.QuadTree.html">QuadTree</a>
 						</li>
 						
 						<li>
@@ -312,6 +308,10 @@
 						
 						<li>
 							<a href="Phaser.Sprite.html">Sprite</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.SpriteBatch.html">SpriteBatch</a>
 						</li>
 						
 						<li>
@@ -413,6 +413,10 @@
 						</li>
 						
 						<li>
+							<a href="global.html#getBounds">getBounds</a>
+						</li>
+						
+						<li>
 							<a href="global.html#getNextPowerOfTwo">getNextPowerOfTwo</a>
 						</li>
 						
@@ -476,8 +480,8 @@
     <div class="description">
         <p>Creates a new Polygon. You have to provide a list of points.
 This can be an array of Points that form the polygon, a flat array of numbers that will be interpreted as [x,y, x,y, ...], 
-or the arguments passed can be all the points of the polygon e.g. <code>new PIXI.Polygon(new PIXI.Point(), new PIXI.Point(), ...)</code>, or the
-arguments passed can be flat x,y values e.g. <code>new PIXI.Polygon(x,y, x,y, x,y, ...)</code> where <code>x</code> and <code>y</code> are numbers.</p>
+or the arguments passed can be all the points of the polygon e.g. <code>new Phaser.Polygon(new Phaser.Point(), new Phaser.Point(), ...)</code>, or the
+arguments passed can be flat x,y values e.g. <code>new Phaser.Polygon(x,y, x,y, x,y, ...)</code> where <code>x</code> and <code>y</code> are numbers.</p>
     </div>
     
 
@@ -562,7 +566,7 @@ arguments passed can be flat x,y values e.g. <code>new PIXI.Polygon(x,y, x,y, x,
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Polygon.js.html">geom/Polygon.js</a>, <a href="Polygon.js.html#sunlight-1-line-18">line 18</a>
+        <a href="Polygon.js.html">geom/Polygon.js</a>, <a href="Polygon.js.html#sunlight-1-line-19">line 19</a>
     </li></ul></dd>
     
 
@@ -604,6 +608,111 @@ arguments passed can be flat x,y values e.g. <code>new PIXI.Polygon(x,y, x,y, x,
         <h3 class="subsection-title">Members</h3>
 
         <dl>
+            
+<dt>
+    <h4 class="name" id="points"><span class="type-signature"></span>points<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>points</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array.&lt;<a href="Phaser.Point.html">Phaser.Point</a>></span>
+|
+
+<span class="param-type">array.&lt;number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The array of Points.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Polygon.js.html">geom/Polygon.js</a>, <a href="Polygon.js.html#sunlight-1-line-48">line 48</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
             
 <dt>
     <h4 class="name" id="type"><span class="type-signature"></span>type<span class="type-signature"></span></h4>
@@ -690,7 +799,7 @@ arguments passed can be flat x,y values e.g. <code>new PIXI.Polygon(x,y, x,y, x,
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Polygon.js.html">geom/Polygon.js</a>, <a href="Polygon.js.html#sunlight-1-line-25">line 25</a>
+        <a href="Polygon.js.html">geom/Polygon.js</a>, <a href="Polygon.js.html#sunlight-1-line-24">line 24</a>
     </li></ul></dd>
     
 
@@ -708,6 +817,266 @@ arguments passed can be flat x,y values e.g. <code>new PIXI.Polygon(x,y, x,y, x,
         </dl>
     
 
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<dt>
+    <h4 class="name" id="clone"><span class="type-signature"></span>clone<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Phaser.Polygon.html">Phaser.Polygon</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Creates a clone of this polygon.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Polygon.js.html">geom/Polygon.js</a>, <a href="Polygon.js.html#sunlight-1-line-54">line 54</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>A copy of the polygon.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="Phaser.Polygon.html">Phaser.Polygon</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="contains"><span class="type-signature"></span>contains<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Checks whether the x and y coordinates are contained within this polygon.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The X value of the coordinate to test.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Y value of the coordinate to test.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Polygon.js.html">geom/Polygon.js</a>, <a href="Polygon.js.html#sunlight-1-line-73">line 73</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>True if the coordinates are within this polygon, otherwise false.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">boolean</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        </dl>
     
 
     
@@ -733,7 +1102,7 @@ arguments passed can be flat x,y values e.g. <code>new PIXI.Polygon(x,y, x,y, x,
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Sat Feb 08 2014 07:19:49 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Wed Feb 19 2014 05:26:30 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

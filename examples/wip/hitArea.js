@@ -5,11 +5,13 @@ function preload() {
 
     game.load.image('mushroom', 'assets/sprites/mushroom2.png');
     game.load.image('ball', 'assets/sprites/wizball.png');
+    game.load.atlas('seacreatures', 'assets/sprites/seacreatures_json.png', 'assets/sprites/seacreatures_json.json');
 
 }
 
 var image;
 var image2;
+var jellyfish;
 
 var down;
 var p;
@@ -18,7 +20,6 @@ var c;
 function create() {
 
     image = game.add.image(200, 200, 'mushroom');
-
     image2 = game.add.image(400, 200, 'ball');
 
     // image.rotation = 0.8;
@@ -39,9 +40,18 @@ function create() {
     image2.events.onInputOut.add(out, this);
 
 
-    // game.input.mouse.mouseDownCallback = onMouseDown;
-    // game.input.mouse.mouseUpCallback = onMouseUp;
-    // game.input.mouse.mouseMoveCallback = onMouseMove;
+
+    jellyfish = game.add.sprite(500, 450, 'seacreatures', 'octopus0000');
+    jellyfish.inputEnabled = true;
+    jellyfish.anchor.set(0.5);
+    // jellyfish.pivot.set(jellyfish.width / 2, jellyfish.height / 2);
+    jellyfish.angle = 60;
+    jellyfish.scale.set(2);
+    jellyfish.input.pixelPerfectClick = true;
+
+    jellyfish.events.onInputDown.add(clicked, this);
+    jellyfish.events.onInputOver.add(over, this);
+    jellyfish.events.onInputOut.add(out, this);
 
 }
 
@@ -72,10 +82,12 @@ function render() {
 
     // var p = game.input.getLocalPosition(image);
     // var p = game.input.getLocalPosition(image2);
+    var p = game.input.getLocalPosition(jellyfish, game.input.activePointer);
 
 
-    // game.debug.renderPointInfo(p, 32, 32);
-    // game.debug.renderPoint(p);
-    game.debug.renderCircle(image2.hitArea);
+    game.debug.renderPointInfo(p, 32, 32);
+    game.debug.renderPoint(p);
+    game.debug.renderText();
+    // game.debug.renderCircle(image2.hitArea);
 
 }

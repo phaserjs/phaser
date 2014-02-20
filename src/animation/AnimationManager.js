@@ -135,6 +135,12 @@ Phaser.AnimationManager.prototype = {
         this.currentFrame = this.currentAnim.currentFrame;
         this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
 
+        if (this.sprite.__tilePattern)
+        {
+            this.__tilePattern = false;
+            this.tilingTexture = false;
+        }
+
         return this._anims[name];
 
     },
@@ -253,7 +259,6 @@ Phaser.AnimationManager.prototype = {
         if (this.currentAnim && this.currentAnim.update() === true)
         {
             this.currentFrame = this.currentAnim.currentFrame;
-            this.sprite.currentFrame = this.currentFrame;
             return true;
         }
 
@@ -270,7 +275,7 @@ Phaser.AnimationManager.prototype = {
     */
     getAnimation: function (name) {
 
-        if (typeof name == 'string')
+        if (typeof name === 'string')
         {
             if (this._anims[name])
             {
@@ -289,8 +294,13 @@ Phaser.AnimationManager.prototype = {
     */
     refreshFrame: function () {
 
-        this.sprite.currentFrame = this.currentFrame;
         this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+
+        if (this.sprite.__tilePattern)
+        {
+            this.__tilePattern = false;
+            this.tilingTexture = false;
+        }
 
     },
 
@@ -388,8 +398,13 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frame', {
         {
             this.currentFrame = this._frameData.getFrame(value);
             this._frameIndex = value;
-            this.sprite.currentFrame = this.currentFrame;
             this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+    
+            if (this.sprite.__tilePattern)
+            {
+                this.__tilePattern = false;
+                this.tilingTexture = false;
+            }
         }
 
     }
@@ -417,8 +432,13 @@ Object.defineProperty(Phaser.AnimationManager.prototype, 'frameName', {
         {
             this.currentFrame = this._frameData.getFrameByName(value);
             this._frameIndex = this.currentFrame.index;
-            this.sprite.currentFrame = this.currentFrame;
             this.sprite.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+    
+            if (this.sprite.__tilePattern)
+            {
+                this.__tilePattern = false;
+                this.tilingTexture = false;
+            }
         }
         else
         {

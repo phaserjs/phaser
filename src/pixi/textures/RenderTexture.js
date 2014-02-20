@@ -24,21 +24,45 @@
     doc.addChild(sprite);
     renderTexture.render(doc);  // Renders to center of renderTexture
 
- @class RenderTexture
- @extends Texture
- @constructor
- @param width {Number} The width of the render texture
- @param height {Number} The height of the render texture
+ * @class RenderTexture
+ * @extends Texture
+ * @constructor
+ * @param width {Number} The width of the render texture
+ * @param height {Number} The height of the render texture
  */
 PIXI.RenderTexture = function(width, height, renderer)
 {
     PIXI.EventTarget.call( this );
 
+    /**
+     * The with of the render texture
+     *
+     * @property width
+     * @type Number
+     */
     this.width = width || 100;
+    /**
+     * The height of the render texture
+     *
+     * @property height
+     * @type Number
+     */
     this.height = height || 100;
 
+    /**
+     * The framing rectangle of the render texture
+     *
+     * @property frame
+     * @type Rectangle
+     */
     this.frame = new PIXI.Rectangle(0, 0, this.width, this.height);
 
+    /**
+     * The base texture object that this texture uses
+     *
+     * @property baseTexture
+     * @type BaseTexture
+     */
     this.baseTexture = new PIXI.BaseTexture();
     this.baseTexture.width = this.width;
     this.baseTexture.height = this.height;
@@ -71,7 +95,7 @@ PIXI.RenderTexture = function(width, height, renderer)
 
 };
 
-PIXI.RenderTexture.prototype = Object.create( PIXI.Texture.prototype );
+PIXI.RenderTexture.prototype = Object.create(PIXI.Texture.prototype);
 PIXI.RenderTexture.prototype.constructor = PIXI.RenderTexture;
 
 PIXI.RenderTexture.prototype.resize = function(width, height)
@@ -87,7 +111,7 @@ PIXI.RenderTexture.prototype.resize = function(width, height)
         this.projection.x = this.width / 2;
         this.projection.y = -this.height / 2;
 
-        var gl = this.gl;
+        var gl = this.renderer.gl;
         gl.bindTexture(gl.TEXTURE_2D, this.baseTexture._glTextures[gl.id]);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA,  this.width,  this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
     }
@@ -109,6 +133,7 @@ PIXI.RenderTexture.prototype.resize = function(width, height)
  */
 PIXI.RenderTexture.prototype.renderWebGL = function(displayObject, position, clear)
 {
+    //TOOD replace position with matrix..
     var gl = this.renderer.gl;
 
     gl.colorMask(true, true, true, true);
@@ -160,8 +185,9 @@ PIXI.RenderTexture.prototype.renderWebGL = function(displayObject, position, cle
  */
 PIXI.RenderTexture.prototype.renderCanvas = function(displayObject, position, clear)
 {
-    //console.log("!!")
     var children = displayObject.children;
+
+    var originalWorldTransform = displayObject.worldTransform;
 
     displayObject.worldTransform = PIXI.RenderTexture.tempMatrix;
 
@@ -183,6 +209,8 @@ PIXI.RenderTexture.prototype.renderCanvas = function(displayObject, position, cl
     this.renderer.renderDisplayObject(displayObject, context);
 
     context.setTransform(1,0,0,1,0,0);
+
+    displayObject.worldTransform = originalWorldTransform;
 };
 
 PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();

@@ -9,7 +9,7 @@
  * http://www.bmglyph.com/ for mac.
  *
  * @class BitmapText
- * @extends SpriteBatch
+ * @extends DisplayObjectContainer
  * @constructor
  * @param text {String} The copy that you would like the text to display
  * @param style {Object} The style parameters
@@ -18,7 +18,7 @@
  */
 PIXI.BitmapText = function(text, style)
 {
-    PIXI.SpriteBatch.call(this);
+    PIXI.DisplayObjectContainer.call(this);
 
     this._pool = [];
 
@@ -29,7 +29,7 @@ PIXI.BitmapText = function(text, style)
 };
 
 // constructor
-PIXI.BitmapText.prototype = Object.create(PIXI.SpriteBatch.prototype);
+PIXI.BitmapText.prototype = Object.create(PIXI.DisplayObjectContainer.prototype);
 PIXI.BitmapText.prototype.constructor = PIXI.BitmapText;
 
 /**
@@ -67,7 +67,7 @@ PIXI.BitmapText.prototype.setStyle = function(style)
 };
 
 /**
- * Renders text
+ * Renders text and updates it when needed
  *
  * @method updateText
  * @private
@@ -156,8 +156,24 @@ PIXI.BitmapText.prototype.updateText = function()
         this.removeChild(child);
     }
 
-    this.width = maxLineWidth * scale;
-    this.height = (pos.y + data.lineHeight) * scale;
+
+    /**
+     * [read-only] The width of the overall text, different from fontSize,
+     * which is defined in the style object
+     *
+     * @property textWidth
+     * @type Number
+     */
+    this.textWidth = maxLineWidth * scale;
+
+    /**
+     * [read-only] The height of the overall text, different from fontSize,
+     * which is defined in the style object
+     *
+     * @property textHeight
+     * @type Number
+     */
+    this.textHeight = (pos.y + data.lineHeight) * scale;
 };
 
 /**
@@ -174,7 +190,7 @@ PIXI.BitmapText.prototype.updateTransform = function()
         this.dirty = false;
     }
 
-    PIXI.SpriteBatch.prototype.updateTransform.call(this);
+    PIXI.DisplayObjectContainer.prototype.updateTransform.call(this);
 };
 
 PIXI.BitmapText.fonts = {};

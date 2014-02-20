@@ -7,14 +7,14 @@
 /**
 * Phaser Group constructor.
 * @class Phaser.Group
-* @classdesc A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
+* @classdesc A Group is a container for display objects that allows for fast pooling and object recycling. Groups can be nested within other Groups and have their own local transforms.
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {*} parent - The parent Group, DisplayObject or DisplayObjectContainer that this Group will be added to. If undefined or null it will use game.world.
+* @param {Phaser.Group|Phaser.Sprite} parent - The parent Group, DisplayObject or DisplayObjectContainer that this Group will be added to. If undefined or null it will use game.world.
 * @param {string} [name=group] - A name for this Group. Not used internally but useful for debugging.
-* @param {boolean} [useStage=false] - Should this Group be added to the World (default, false) or direct to the Stage (true).
+* @param {boolean} [addToStage=false] - If set to true this Group will be added directly to the Game.Stage instead of Game.World.
 */
-Phaser.Group = function (game, parent, name, useStage) {
+Phaser.Group = function (game, parent, name, addToStage) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
@@ -33,7 +33,7 @@ Phaser.Group = function (game, parent, name, useStage) {
 
     PIXI.DisplayObjectContainer.call(this);
 
-    if (typeof useStage === 'undefined')
+    if (typeof addToStage === 'undefined' || addToStage === false)
     {
         if (parent)
         {
@@ -41,12 +41,12 @@ Phaser.Group = function (game, parent, name, useStage) {
         }
         else
         {
-            this.game.stage._stage.addChild(this);
+            this.game.stage.addChild(this);
         }
     }
     else
     {
-        this.game.stage._stage.addChild(this);
+        this.game.stage.addChild(this);
     }
 
     /**
@@ -70,7 +70,6 @@ Phaser.Group = function (game, parent, name, useStage) {
     /**
     * @property {Phaser.Group|Phaser.Sprite} parent - The parent of this Group.
     */
-    // this.group = null;
 
     /**
     * @property {Phaser.Point} scale - The scale of the Group container.
@@ -89,6 +88,26 @@ Phaser.Group = function (game, parent, name, useStage) {
     this.cursor = null;
 
     this._cursorIndex = 0;
+
+    /**
+    * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
+    */
+    this.cameraOffset = new Phaser.Point();
+
+    /**
+    * A small internal cache:
+    * 0 = previous position.x
+    * 1 = previous position.y
+    * 2 = previous rotation
+    * 3 = renderID
+    * 4 = fresh? (0 = no, 1 = yes)
+    * 5 = outOfBoundsFired (0 = no, 1 = yes)
+    * 6 = exists (0 = no, 1 = yes)
+    * 7 = fixed to camera (0 = no, 1 = yes)
+    * @property {Int16Array} _cache
+    * @private
+    */
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
 
 };
 
@@ -124,8 +143,6 @@ Phaser.Group.SORT_ASCENDING = -1;
 * @type {number}
 */
 Phaser.Group.SORT_DESCENDING = 1;
-
-// PIXI.DisplayObjectContainer.prototype.addChildAt = function(child, index)
 
 /**
 * Adds an existing object to this Group. The object can be an instance of Phaser.Sprite, Phaser.Button or any other display object.
@@ -705,6 +722,69 @@ Phaser.Group.prototype.callAll = function (method, context) {
 }
 
 /**
+* The core preUpdate - as called by World.
+* @method Phaser.Group#preUpdate
+* @protected
+*/
+Phaser.Group.prototype.preUpdate = function () {
+
+    if (!this.exists || !this.parent.exists)
+    {
+        this.renderOrderID = -1;
+        return false;
+    }
+
+   var i = this.children.length;
+
+    while (i--)
+    {
+        this.children[i].preUpdate();
+    }
+
+    return true;
+
+}
+
+/**
+* The core update - as called by World.
+* @method Phaser.Group#update
+* @protected
+*/
+Phaser.Group.prototype.update = function () {
+
+    var i = this.children.length;
+
+    while (i--)
+    {
+        this.children[i].update();
+    }
+
+}
+
+/**
+* The core postUpdate - as called by World.
+* @method Phaser.Group#postUpdate
+* @protected
+*/
+Phaser.Group.prototype.postUpdate = function () {
+
+    //  Fixed to Camera?
+    if (this._cache[7] === 1)
+    {
+        this.x = this.game.camera.view.x + this.cameraOffset.x;
+        this.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
+
+    var i = this.children.length;
+
+    while (i--)
+    {
+        this.children[i].postUpdate();
+    }
+
+}
+
+/**
 * Allows you to call your own function on each member of this Group. You must pass the callback and context in which it will run.
 * After the checkExists parameter you can add as many parameters as you like, which will all be passed to the callback along with the child.
 * For example: Group.forEach(awardBonusGold, this, true, 100, 500)
@@ -737,11 +817,11 @@ Phaser.Group.prototype.forEach = function (callback, callbackContext, checkExist
 }
 
 /**
-* Allows you to call your own function on each alive member of this Group (where child.alive=true). You must pass the callback and context in which it will run.
+* Allows you to call your own function on each member of this Group where child.exists=true. You must pass the callback and context in which it will run.
 * You can add as many parameters as you like, which will all be passed to the callback along with the child.
-* For example: Group.forEachAlive(causeDamage, this, 500)
+* For example: Group.forEachExists(causeDamage, this, 500)
 * 
-* @method Phaser.Group#forEachAlive
+* @method Phaser.Group#forEachExists
 * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
 * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
 */
@@ -1134,6 +1214,37 @@ Object.defineProperty(Phaser.Group.prototype, "angle", {
 
     set: function(value) {
         this.rotation = Phaser.Math.degToRad(value);
+    }
+
+});
+
+/**
+* A Group that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Group.cameraOffset.
+* Note that the cameraOffset values are in addition to any parent in the display list.
+* So if this Group was in a Group that has x: 200, then this will be added to the cameraOffset.x
+*
+* @name Phaser.Group#fixedToCamera
+* @property {boolean} fixedToCamera - Set to true to fix this Group to the Camera at its current world coordinates.
+*/
+Object.defineProperty(Phaser.Group.prototype, "fixedToCamera", {
+    
+    get: function () {
+
+        return !!this._cache[7];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            this._cache[7] = 1;
+            this.cameraOffset.set(this.x, this.y);
+        }
+        else
+        {
+            this._cache[7] = 0;
+        }
     }
 
 });

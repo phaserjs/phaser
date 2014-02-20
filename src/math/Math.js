@@ -32,7 +32,7 @@ Phaser.Math = {
 
     /**
     * a is fuzzyLessThan b if it is less than b + &epsilon;. 
-    * @method Phaser.Math#fuzzyEqual
+    * @method Phaser.Math#fuzzyLessThan
     * @param {number} a
     * @param {number} b
     * @param {number} epsilon 
@@ -336,7 +336,18 @@ Phaser.Math = {
     * @return {number}
     */
     angleBetween: function (x1, y1, x2, y2) {
-        return Math.atan2(y2 - y1, x2 - x1);
+        return Math.atan2(x2 - x1, y2 - y1);
+    },
+
+    /**
+    * Find the angle of a segment from (point1.x, point1.y) -> (point2.x, point2.y).
+    * @method Phaser.Math#angleBetweenPoints
+    * @param {Phaser.Point} point1
+    * @param {Phaser.Point} point2
+    * @return {number}
+    */
+    angleBetweenPoints: function (point1, point2) {
+        return Math.atan2(point2.x - point1.x, point2.y - point1.y);
     },
 
     /**
@@ -799,7 +810,6 @@ Phaser.Math = {
     * @param {number} angle - The angle value to check. Must be between -180 and +180.
     * @param {number} min - The minimum angle that is allowed (must be -180 or greater).
     * @param {number} max - The maximum angle that is allowed (must be 180 or less).
-    *
     * @return {number} The new angle value, returns the same as the input angle if it was within bounds
     */
     angleLimit: function (angle, min, max) {
@@ -1277,6 +1287,58 @@ Phaser.Math = {
     sign: function ( x ) {
 
         return ( x < 0 ) ? -1 : ( ( x > 0 ) ? 1 : 0 );
+
+    },
+
+    /**
+    * Convert p2 physics value (meters) to pixel scale.
+    * 
+    * @method Phaser.Math#p2px
+    * @param {number} v - The value to convert.
+    * @return {number} The scaled value.
+    */
+    p2px: function (v) {
+
+        return v *= 20;
+
+    },
+
+    /**
+    * Convert pixel value to p2 physics scale (meters).
+    * 
+    * @method Phaser.Math#px2p
+    * @param {number} v - The value to convert.
+    * @return {number} The scaled value.
+    */
+    px2p: function (v) {
+
+        return v * 0.05;
+
+    },
+
+    /**
+    * Convert p2 physics value (meters) to pixel scale and inverses it.
+    * 
+    * @method Phaser.Math#p2pxi
+    * @param {number} v - The value to convert.
+    * @return {number} The scaled value.
+    */
+    p2pxi: function (v) {
+
+        return v *= -20;
+
+    },
+
+    /**
+    * Convert pixel value to p2 physics scale (meters) and inverses it.
+    * 
+    * @method Phaser.Math#px2pi
+    * @param {number} v - The value to convert.
+    * @return {number} The scaled value.
+    */
+    px2pi: function (v) {
+
+        return v * -0.05;
 
     },
 

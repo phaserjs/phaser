@@ -10,73 +10,75 @@
 * @class Phaser.LoaderParser
 */
 Phaser.LoaderParser = {
-    
-    /**
-    * Parse frame data from an XML file.
-    * @method Phaser.LoaderParser.bitmapFont
-    * @param {object} xml - XML data you want to parse.
-    * @return {FrameData} Generated FrameData object.
-    */
-    bitmapFont: function (game, xml, cacheKey) {
 
-        //  Malformed?
-        if (!xml.getElementsByTagName('font'))
+    /**
+    * Parse a Bitmap Font from an XML file.
+    * @method Phaser.LoaderParser.bitmapFont
+    * @param {Phaser.Game} game - A reference to the current game.
+    * @param {object} xml - XML data you want to parse.
+    * @param {string} cacheKey - The key of the texture this font uses in the cache.
+    */
+    bitmapFont: function (game, xml, cacheKey, xSpacing, ySpacing) {
+
+        if (!xml || /MSIE 9/i.test(navigator.userAgent) || navigator.isCocoonJS)
         {
-            console.warn("Phaser.LoaderParser.bitmapFont: Invalid XML given, missing <font> tag");
-            return;
+            if (typeof(window.DOMParser) === 'function')
+            {
+                var domparser = new DOMParser();
+                xml = domparser.parseFromString(this.ajaxRequest.responseText, 'text/xml');
+            }
+            else
+            {
+                var div = document.createElement('div');
+                div.innerHTML = this.ajaxRequest.responseText;
+                xml = div;
+            }
         }
 
-        var texture = PIXI.TextureCache[cacheKey];
-
         var data = {};
-        var info = xml.getElementsByTagName("info")[0];
-        var common = xml.getElementsByTagName("common")[0];
-        data.font = info.attributes.getNamedItem("face").nodeValue;
-        data.size = parseInt(info.attributes.getNamedItem("size").nodeValue, 10);
-        data.lineHeight = parseInt(common.attributes.getNamedItem("lineHeight").nodeValue, 10);
+        var info = xml.getElementsByTagName('info')[0];
+        var common = xml.getElementsByTagName('common')[0];
+
+        data.font = info.getAttribute('face');
+        data.size = parseInt(info.getAttribute('size'), 10);
+        data.lineHeight = parseInt(common.getAttribute('lineHeight'), 10) + ySpacing;
         data.chars = {};
 
-        //parse letters
-        var letters = xml.getElementsByTagName("char");
+        var letters = xml.getElementsByTagName('char');
+        var texture = PIXI.TextureCache[cacheKey];
 
         for (var i = 0; i < letters.length; i++)
         {
-            var charCode = parseInt(letters[i].attributes.getNamedItem("id").nodeValue, 10);
+            var charCode = parseInt(letters[i].getAttribute('id'), 10);
 
-            var textureRect = {
-                x: parseInt(letters[i].attributes.getNamedItem("x").nodeValue, 10),
-                y: parseInt(letters[i].attributes.getNamedItem("y").nodeValue, 10),
-                width: parseInt(letters[i].attributes.getNamedItem("width").nodeValue, 10),
-                height: parseInt(letters[i].attributes.getNamedItem("height").nodeValue, 10)
-            };
-
-            //  Note: This means you can only have 1 BitmapFont loaded at once!
-            //  Need to replace this with our own handler soon.
-            PIXI.TextureCache[charCode] = new PIXI.Texture(texture, textureRect);
+            var textureRect = new PIXI.Rectangle(
+                parseInt(letters[i].getAttribute('x'), 10),
+                parseInt(letters[i].getAttribute('y'), 10),
+                parseInt(letters[i].getAttribute('width'), 10),
+                parseInt(letters[i].getAttribute('height'), 10)
+            );
 
             data.chars[charCode] = {
-                xOffset: parseInt(letters[i].attributes.getNamedItem("xoffset").nodeValue, 10),
-                yOffset: parseInt(letters[i].attributes.getNamedItem("yoffset").nodeValue, 10),
-                xAdvance: parseInt(letters[i].attributes.getNamedItem("xadvance").nodeValue, 10),
+                xOffset: parseInt(letters[i].getAttribute('xoffset'), 10),
+                yOffset: parseInt(letters[i].getAttribute('yoffset'), 10),
+                xAdvance: parseInt(letters[i].getAttribute('xadvance'), 10) + xSpacing,
                 kerning: {},
-                texture:new PIXI.Texture(texture, textureRect)
-
+                texture: PIXI.TextureCache[cacheKey] = new PIXI.Texture(texture, textureRect)
             };
         }
 
-        //parse kernings
-        var kernings = xml.getElementsByTagName("kerning");
+        var kernings = xml.getElementsByTagName('kerning');
 
         for (i = 0; i < kernings.length; i++)
         {
-            var first = parseInt(kernings[i].attributes.getNamedItem("first").nodeValue, 10);
-            var second = parseInt(kernings[i].attributes.getNamedItem("second").nodeValue, 10);
-            var amount = parseInt(kernings[i].attributes.getNamedItem("amount").nodeValue, 10);
+            var first = parseInt(kernings[i].getAttribute('first'), 10);
+            var second = parseInt(kernings[i].getAttribute('second'), 10);
+            var amount = parseInt(kernings[i].getAttribute('amount'), 10);
 
             data.chars[second].kerning[first] = amount;
         }
 
-        PIXI.BitmapText.fonts[data.font] = data;
+        PIXI.BitmapText.fonts[cacheKey] = data;
 
     }
 

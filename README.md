@@ -61,8 +61,8 @@ Version 1.2 - "Shienar" - -in development-
 
 Significant API changes:
 
-* Upgraded to Pixi.js 1.4.4
-* Group now extends PIXI.DisplayObjectContainer, rather than owning a _container property, which makes life a whole lot easier re: nesting.
+* Upgraded to Pixi.js 1.5.2
+* Group now extends PIXI.DisplayObjectContainer, rather than owning a _container property, which makes life a whole lot easier re: nesting and child iteration.
 * Removed Sprite.group property. You can use Sprite.parent for all similar needs now.
 * PIXI.Point is now aliased to Phaser.Point - saves on code duplication and works exactly the same.
 * PIXI.Rectangle is now aliased to Phaser.Rectangle - saves on code duplication and works exactly the same.
@@ -70,28 +70,69 @@ Significant API changes:
 * Sprite.deltaX and deltaY swapped to functions: Sprite.deltaX() and Sprite.deltaY()
 * Sprite.crop() now takes a Phaser.Rectangle instead of explicit parameters.
 * PixiPatch no longer needed, all features that it patched are now native in Pixi :)
-* Removed: Sprite.offset, center, topLeft, topRight, bottomRight, bottomLeft and bounds as no longer needed internally. Use Sprite.getBounds() to derive them.
+* Removed: Sprite.offset, center, topLeft, topRight, bottomRight, bottomLeft and bounds, as no longer needed internally. Use Sprite.getBounds() to derive them.
 * Button now extends Phaser.Image not Phaser.Sprite, all the same functionality as before remains, just no animations or physics body.
+* Text.content has been replaced with Text.text. The Text class has a lot of new methods, check the docs!
+* Loader won't set crossOrigin on  Images unless it's set to something. The default is false, it used to be '' and can be any valid string.
+* Sprite.input.pixelPerfect has been split into two: Sprite.input.pixelPerfectClick and Sprite.input.pixelPerfectOver (see new features)
+* Phaser.Stage now extends PIXI.Stage, rather than containing a _stage object.
+* If you set Sprite.exists to false it will also set Sprite.visible to false and remove its body from the physics world (if it has one).
+* If you set Sprite.exists to true it will also set Sprite.visible to true and add its body back into the physics world (if it has one).
+* Stage.scale has been moved to Game.scale. The same game scaling properties exist as before, but now accessed via Game.scale instead.
+* Stage.aspectRatio has been moved to StageScaleMode.sourceAspectRatio (so now game.scale.sourceAspectRatio)
+* Stage.scaleMode has been moved to StageScaleMode.scaleMode (so now game.scale.scaleMode)
+* Stage.fullScreenScaleMode has been moved to StageScaleMode.fullScreenScaleMode (so now game.scale.fullScreenScaleMode)
+* Stage.canvas has been moved to Game.canvas (which used to be a reference to Stage.canvas, but is now the actual object).
+* BitmapData.addTo removed and enhanced BitmapData.add so it can accept either a single Sprite/Image or an Array of them.
+* BitmapData has had all of the EaselJS functions removed. It was just taking up space and you can do it all via BitmapData.context directly.
+* BitmapText has had a bit of an overhaul - the signature for adding a BitmapText has changed to: x, y, font, text, size. See the docs and examples for details.
+* World preUpdate, update and postUpdate have all been moved to Stage. So all children are updated regardless where on the display list they live.
+* Cache.getImageKeys and similar has been removed, please use Cache.getKeys(Phaser.Cache.IMAGE) instead, this now supports all 10 Cache data types.
+* After defining tiles that collide on a Tilemap, you need to call Tilemap.generateCollisionData(layer) to populate the physics world with the data required.
+* Phaser.QuadTree has been removed from core and moved to a plugin. It's no longer required, nor works with the physics system.
 
 
 New features:
 
-* Phaser.Image is a brand new display object perfect for logos, backgrounds, etc. You can scale, rotate, tint and blend and Image, but it has no animation, physics body or input events.
+* Phaser.Image is a brand new display object perfect for logos, backgrounds, etc. You can scale, rotate, tint, blend an get input events from an Image, but it has no animation, physics body.
 * You can now use the hitArea property on Sprites and Image objects. hitArea can be a geometry object (Rectangle, Circle, Polygon, Ellipse) and is used in pointerOver checks.
 * InputManager.getLocalPosition(displayObject, pointer, output) will return the local coordinates of the specified displayObject and pointer.
 * InputManager.hitTest will test for pointer hits against a Sprite/Image, its hitArea (if set) or any of its children.
-
-
-New Examples:
+* Text has lots of new methods to help style it: Text.fill, Text.align, Text.stroke, etc.
+* Text now works happily with font names with spaces in them.
+* Text.setShadow applies a drop shadow to the Text being rendered. Control the x, y, color and blur.
+* Text.lineSpacing allows you to set additional spacing between each line that is rendered.
+* Text.inputEnabled allows you to enable all input events over Text objects: dragging, clicking, etc - anything that works on a Sprite works on Text now too.
+* Phaser.Ellipse added. A fully compatible port of the PIXI.Ellipse class, can be used in Sprite/Image hitArea tests.
+* Phaser.Polygon added. A fully compatible port of the PIXI.Polygon class, can be used in Sprite/Image hitArea tests.
+* InputHandler.pixelPerfectOver - performs a pixel perfect check to see if any pointer is over the current object (warning: very expensive!)
+* InputHandler.pixelPerfectClick - performs a pixel perfect check but only when the pointer touches/clicks on the current object.
+* TileSprite can now use a frame from a texture atlas or a sprite sheet.
+* TileSprites can now be animated. See new example :)
+* TileSprites have a new method: autoScroll(x, y) which sets an automatic scroll running (until stopped with TileSprite.stopScroll).
+* BitmapText now uses the new XML parser which should work under CocoonJS without clashes.
+* BitmapText signature changed so you can support fonts with spaces in their names.
+* Loader.bitmapFont now has 2 extra parameters: xSpacing and ySpacing. These allow you to add extra spacing to each letter or line of the font.
+* Added the new BitmapFont class. This is for rendering retro style fixed-width bitmap fonts into an Image object. It's a texture you can apply to a Sprite/Image.
+* Added Cache.updateFrameData which is really useful for swapping FrameData blocks in the cache.
+* Loader.physics now lets you load Lime + Corona JSON Physics data, which can be used with Body.loadPolygon and Body.loadData.
+* Cache.addPhysicsData and Cache.getPhysicsData allow you to store parsed JSON physics data in the cache, for sharing between Bodies.
+* fixedToCamera now works across all display objects. When enabled it will fix at its current x/y coordinate, but can be changed via cameraOffset.
+* fixedToCamrea now works for Groups as well :) You can fix a Group to the camera and it will influence its children.
+* Tilemap.createCollisionObjects will parse Tiled data for objectgroups and convert polyline instances into physics objects you can collide with in the world.
 
 
 Updates:
 
+* Massive thanks to clark-stevenson for doing an amazing job update the TypeScript definitions file.
 * Debug.renderRectangle has a new parameter: filled. If true it renders as with fillRect, if false strokeRect.
 * Phaser.AnimationParser now sets the trimmed data directly for Pixi Texture frames. Tested across JSON Hash, JSON Data, Sprite Sheet and XML.
 * Game.add.renderTexture now has the addToCache parameter. If set the texture will be stored in Game.Cache and can be retrieved with Cache.getTexture(key).
 * Game.add.bitmapData now has the addToCache parameter. If set the texture will be stored in Game.Cache and can be retrieved with Cache.getBitmapData(key).
 * The InputManager now sets the canvas style cursor to 'inherit' instead of 'default'.
+* World.reset now calls Camera.reset which sends the camera back to 0,0 and un-follows any object it may have been tracking.
+* Added hostname: '*' to the grunt-connect in Gruntfile.js (fixes #426)
+* Device, Canvas and GamePad classes all updated for better CocoonJS support (thanks Videlais)
 
 
 Bug Fixes:
@@ -99,8 +140,21 @@ Bug Fixes:
 * Explicitly paused Timer continues if you un-focus and focus the browser window (thanks georgiee)
 * Added TimerEvent.pendingDelete and checks in Timer.update, so that removing an event in a callback no longer throws an exception (thanks georgiee)
 * Fixed TypeScript defs on lines 1741-1748 (thanks wombatbuddy)
-* Previously if you used Sprite.crop() it would crop all Sprites using the same base image. It now takes a local copy of the texture data and crops just that.
+* Previously if you used Sprite.crop() it would crop all Sprites that shared the same base image. It now takes a local copy of the texture data and crops just that.
 * Tilemap had the wrong @method signatures so most were missing from the docs.
+* Fixed bug where changing State would cause the camera to not reset if it was following an object.
+* Tile had 2 properties (callback and callbackContext) that were never assigned, updated to use the proper names (thanks ratkingsimon)
+* Fixed an error that would occur if you used InputHandler.onInputUp and the Sprite destroys itself during the event.
+* IE11 didn't populate the Device.ieVersion value. Now extracted from Trident revision, but still use Device.trident instead for IE11+ checks.
+* Fixed bug in Math.angleBetween where it was using the coordinates in the wrong order.
+* Previously using a Pixel Perfect check didn't work if the Sprite was rotated or had a non-zero anchor point, now works under all conditions + atlas frames.
+* If pixelPerfect Input Sprites overlapped each other the pixel check wasn't taken into consieration in the Pointer move method.
+
+
+TO DO:
+
+* If you change the frame name of a pixel precise input Sprite, it will fail all clicks on it after the frame change.
+
 
 
 You can view the Change Log for all previous versions at https://github.com/photonstorm/phaser/changelog.md

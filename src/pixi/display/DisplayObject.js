@@ -10,8 +10,6 @@
  */
 PIXI.DisplayObject = function()
 {
-    this.last = this;
-    this.first = this;
     /**
      * The coordinate of the object relative to the local coordinates of the parent.
      *
@@ -196,8 +194,9 @@ PIXI.DisplayObject = function()
      */
     this._mask = null;
 
-    this.x = this.position.x;
-    this.y = this.position.y;
+    this._cacheAsBitmap = false;
+    this._cacheIsDirty = false;
+
 
     /*
      * MOUSE Callbacks
@@ -384,6 +383,28 @@ Object.defineProperty(PIXI.DisplayObject.prototype, 'filters', {
     }
 });
 
+Object.defineProperty(PIXI.DisplayObject.prototype, 'cacheAsBitmap', {
+    get: function() {
+        return  this._cacheAsBitmap;
+    },
+    set: function(value) {
+
+        if(this._cacheAsBitmap === value)return;
+
+        if(value)
+        {
+            //this._cacheIsDirty = true;
+            this._generateCachedSprite();
+        }
+        else
+        {
+            this._destroyCachedSprite();
+        }
+
+        this._cacheAsBitmap = value;
+    }
+});
+
 /*
  * Updates the object transform for rendering
  *
@@ -395,8 +416,6 @@ PIXI.DisplayObject.prototype.updateTransform = function()
     // TODO OPTIMIZE THIS!! with dirty
     if(this.rotation !== this.rotationCache)
     {
-        if(isNaN(parseFloat(this.rotation)))
-            throw new Error('DisplayObject rotation values must be numeric.');
 
         this.rotationCache = this.rotation;
         this._sr =  Math.sin(this.rotation);
@@ -406,7 +425,7 @@ PIXI.DisplayObject.prototype.updateTransform = function()
    // var localTransform = this.localTransform//.toArray();
     var parentTransform = this.parent.worldTransform;//.toArray();
     var worldTransform = this.worldTransform;//.toArray();
-    //console.log(localTransform)
+
     var px = this.pivot.x;
     var py = this.pivot.y;
 
@@ -414,18 +433,18 @@ PIXI.DisplayObject.prototype.updateTransform = function()
         a01 = -this._sr * this.scale.y,
         a10 = this._sr * this.scale.x,
         a11 = this._cr * this.scale.y,
-        a02 = this.position.x + a00 * px - py * a01,
-        a12 = this.position.y + a11 * py - px * a10,
-        b00 = parentTransform.a, b01 = parentTransform.b, b02 = parentTransform.tx,
-        b10 = parentTransform.c, b11 = parentTransform.d, b12 = parentTransform.ty;
+        a02 = this.position.x - a00 * px - py * a01,
+        a12 = this.position.y - a11 * py - px * a10,
+        b00 = parentTransform.a, b01 = parentTransform.b,
+        b10 = parentTransform.c, b11 = parentTransform.d;
 
     worldTransform.a = b00 * a00 + b01 * a10;
     worldTransform.b = b00 * a01 + b01 * a11;
-    worldTransform.tx = b00 * a02 + b01 * a12 + b02;
+    worldTransform.tx = b00 * a02 + b01 * a12 + parentTransform.tx;
 
     worldTransform.c = b10 * a00 + b11 * a10;
     worldTransform.d = b10 * a01 + b11 * a11;
-    worldTransform.ty = b10 * a02 + b11 * a12 + b12;
+    worldTransform.ty = b10 * a02 + b11 * a12 + parentTransform.ty;
 
     this.worldAlpha = this.alpha * this.parent.worldAlpha;
 };
@@ -436,8 +455,9 @@ PIXI.DisplayObject.prototype.updateTransform = function()
  * @method getBounds
  * @return {Rectangle} the rectangular bounding area
  */
-PIXI.DisplayObject.prototype.getBounds = function()
+PIXI.DisplayObject.prototype.getBounds = function( matrix )
 {
+    matrix = matrix;//just to get passed js hinting (and preserve inheritance)
     return PIXI.EmptyRectangle;
 };
 
@@ -449,18 +469,9 @@ PIXI.DisplayObject.prototype.getBounds = function()
  */
 PIXI.DisplayObject.prototype.getLocalBounds = function()
 {
-    var matrixCache = this.worldTransform;
-
-    this.worldTransform = PIXI.identityMatrix;
-
-    this.updateTransform();
-
-    var bounds = this.getBounds();
-
-    this.worldTransform = matrixCache;
-
-    return bounds;
+    return this.getBounds(PIXI.identityMatrix);///PIXI.EmptyRectangle();
 };
+
 
 /**
  * Sets the object's stage reference, the stage this object is connected to
@@ -474,6 +485,62 @@ PIXI.DisplayObject.prototype.setStageReference = function(stage)
     if(this._interactive)this.stage.dirty = true;
 };
 
+PIXI.DisplayObject.prototype.generateTexture = function(renderer)
+{
+    var bounds = this.getLocalBounds();
+
+    var renderTexture = new PIXI.RenderTexture(bounds.width | 0, bounds.height | 0, renderer);
+    renderTexture.render(this);
+
+    return renderTexture;
+};
+
+PIXI.DisplayObject.prototype.updateCache = function()
+{
+    this._generateCachedSprite();
+};
+
+PIXI.DisplayObject.prototype._renderCachedSprite = function(renderSession)
+{
+    if(renderSession.gl)
+    {
+        PIXI.Sprite.prototype._renderWebGL.call(this._cachedSprite, renderSession);
+    }
+    else
+    {
+        PIXI.Sprite.prototype._renderCanvas.call(this._cachedSprite, renderSession);
+    }
+};
+
+PIXI.DisplayObject.prototype._generateCachedSprite = function()//renderSession)
+{
+    this._cacheAsBitmap = false;
+    var bounds = this.getLocalBounds();
+   
+    if(!this._cachedSprite)
+    {
+        var renderTexture = new PIXI.RenderTexture(bounds.width | 0, bounds.height | 0);//, renderSession.renderer);
+        
+        this._cachedSprite = new PIXI.Sprite(renderTexture);
+        this._cachedSprite.worldTransform = this.worldTransform;
+    }
+    else
+    {
+        this._cachedSprite.texture.resize(bounds.width | 0, bounds.height | 0);
+    }
+
+    //REMOVE filter!
+    var tempFilters = this._filters;
+    this._filters = null;
+
+    this._cachedSprite.filters = tempFilters;
+    this._cachedSprite.texture.render(this);
+
+    this._filters = tempFilters;
+
+    this._cacheAsBitmap = true;
+};
+
 /**
 * Renders the object using the WebGL renderer
 *
@@ -481,6 +548,18 @@ PIXI.DisplayObject.prototype.setStageReference = function(stage)
 * @param renderSession {RenderSession} 
 * @private
 */
+PIXI.DisplayObject.prototype._destroyCachedSprite = function()
+{
+    if(!this._cachedSprite)return;
+
+    this._cachedSprite.texture.destroy(true);
+  //  console.log("DESTROY")
+    // let the gc collect the unused sprite
+    // TODO could be object pooled!
+    this._cachedSprite = null;
+};
+
+
 PIXI.DisplayObject.prototype._renderWebGL = function(renderSession)
 {
     // OVERWRITE;
