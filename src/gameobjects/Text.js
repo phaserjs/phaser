@@ -5,7 +5,10 @@
 */
 
 /**
-* Create a new `Text` object.
+* Create a new `Text` object. This uses a local hidden Canvas object and renders the type into it. It then makes a texture from this for renderning to the view.
+* Because of this you can only display fonts that are currently loaded and available to the browser. It won't load the fonts for you.
+* Here is a compatibility table showing the available default fonts across different mobile browsers: http://www.jordanm.co.uk/tinytype
+*
 * @class Phaser.Text
 * @constructor
 * @param {Phaser.Game} game - Current game instance.

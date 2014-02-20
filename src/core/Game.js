@@ -466,7 +466,15 @@ Phaser.Game.prototype = {
             this.isRunning = true;
             this._loadComplete = false;
 
-            this.raf = new Phaser.RequestAnimationFrame(this);
+            if (this.config && this.config['forceSetTimeOut'])
+            {
+                this.raf = new Phaser.RequestAnimationFrame(this, this.config['forceSetTimeOut']);
+            }
+            else
+            {
+                this.raf = new Phaser.RequestAnimationFrame(this, false);
+            }
+
             this.raf.start();
         }
 
