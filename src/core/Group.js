@@ -1147,7 +1147,7 @@ Phaser.Group.prototype.destroy = function (destroyChildren) {
         {
             do
             {
-                if (this.children[0].group)
+                if (this.children[0].parent)
                 {
                     this.children[0].destroy();
                 }
