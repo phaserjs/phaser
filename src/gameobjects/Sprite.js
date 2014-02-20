@@ -916,7 +916,6 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
 
 });
 
-
 /**
 * An Sprite that is fixed to the camera uses its x/y coordinates as offsets from the top left of the camera. These are stored in Sprite.cameraOffset.
 * Note that the cameraOffset values are in addition to any parent in the display list.

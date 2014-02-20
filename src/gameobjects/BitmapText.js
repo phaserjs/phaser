@@ -129,7 +129,7 @@ Phaser.BitmapText.prototype = Object.create(PIXI.BitmapText.prototype);
 Phaser.BitmapText.prototype.constructor = Phaser.BitmapText;
 
 /**
-* @method setStyle
+* @method Phaser.BitmapText.prototype.setStyle
 * @private
 */
 Phaser.BitmapText.prototype.setStyle = function() {
@@ -177,8 +177,7 @@ Phaser.BitmapText.prototype.preUpdate = function () {
 /**
 * Override and use this function in your own custom objects to handle any update requirements you may have.
 *
-* @method Phaser.BitmapText#update
-* @memberof Phaser.BitmapText
+* @method Phaser.BitmapText.prototype.update
 */
 Phaser.BitmapText.prototype.update = function() {
 
@@ -200,6 +199,7 @@ Phaser.BitmapText.prototype.postUpdate = function () {
 }
 
 /**
+* Destroy this BitmapText instance. This will remove any filters and un-parent any children.
 * @method Phaser.BitmapText.prototype.destroy
 */
 Phaser.BitmapText.prototype.destroy = function() {

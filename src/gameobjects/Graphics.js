@@ -137,7 +137,7 @@ Phaser.Graphics.prototype.postUpdate = function () {
 /**
 * Destroy this Graphics instance.
 * 
-* @method Phaser.Sprite.prototype.destroy
+* @method Phaser.Graphics.prototype.destroy
 */
 Phaser.Graphics.prototype.destroy = function() {
 
@@ -158,7 +158,7 @@ Phaser.Graphics.prototype.destroy = function() {
 /*
 * Draws a {Phaser.Polygon} or a {PIXI.Polygon} filled
 * 
-* @method Phaser.Sprite.prototype.drawPolygon
+* @method Phaser.Graphics.prototype.drawPolygon
 */
 Phaser.Graphics.prototype.drawPolygon = function (poly) {
 

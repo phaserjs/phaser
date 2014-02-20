@@ -32,7 +32,7 @@ Phaser.Math = {
 
     /**
     * a is fuzzyLessThan b if it is less than b + &epsilon;. 
-    * @method Phaser.Math#fuzzyEqual
+    * @method Phaser.Math#fuzzyLessThan
     * @param {number} a
     * @param {number} b
     * @param {number} epsilon 
@@ -810,7 +810,6 @@ Phaser.Math = {
     * @param {number} angle - The angle value to check. Must be between -180 and +180.
     * @param {number} min - The minimum angle that is allowed (must be -180 or greater).
     * @param {number} max - The maximum angle that is allowed (must be 180 or less).
-    *
     * @return {number} The new angle value, returns the same as the input angle if it was within bounds
     */
     angleLimit: function (angle, min, max) {

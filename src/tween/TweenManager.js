@@ -174,7 +174,7 @@ Phaser.TweenManager.prototype = {
     /**
     * Pauses all currently running tweens.
     *
-    * @method Phaser.TweenManager#update
+    * @method Phaser.TweenManager#pauseAll
     */
     pauseAll: function () {
 
