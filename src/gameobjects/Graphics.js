@@ -36,7 +36,7 @@ Phaser.Graphics.prototype.constructor = Phaser.Graphics;
 /**
 * Destroy this Graphics instance.
 * 
-* @method Phaser.Sprite.prototype.destroy
+* @method Phaser.Graphics.prototype.destroy
 */
 Phaser.Graphics.prototype.destroy = function() {
 
