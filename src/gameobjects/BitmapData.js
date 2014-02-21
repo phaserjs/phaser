@@ -278,31 +278,77 @@ Phaser.BitmapData.prototype = {
     /**
     * Copies the pixels from the source image to this BitmapData based on the given area and destination.
     *
-    * @param {HTMLImage} source - The Image to copy from. If you want to use an image in Phasers Cache, use game.cache.getImage(key).
+    * @param {HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
     * @param {Phaser.Rectangle} area - The Rectangle region to copy from the source image.
     * @param {number} destX - The destination x coordinate to copy the image to.
     * @param {number} destY - The destination y coordinate to copy the image to.
     */
     copyPixels: function (source, area, destX, destY) {
 
-        this.context.drawImage(source, area.x, area.y, area.width, area.height, destX, destY, area.width, area.height);
+        if (typeof source === 'string')
+        {
+            source = this.game.cache.getImage(source);
+        }
+
+        if (source)
+        {
+            this.context.drawImage(source, area.x, area.y, area.width, area.height, destX, destY, area.width, area.height);
+        }
 
     },
 
     /**
-    * Alpha mask.
+    * Draws the given image to this BitmapData at the coordinates specified. If you need to only draw a part of the image use BitmapData.copyPixels instead.
     *
-    * @param {HTMLImage} source - The Image to copy from. If you want to use an image in Phasers Cache, use game.cache.getImage(key).
-    * @param {Phaser.Rectangle} area - The Rectangle region to copy from the source image.
-    * @param {number} destX - The destination x coordinate to copy the image to.
-    * @param {number} destY - The destination y coordinate to copy the image to.
+    * @param {HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
+    * @param {number} destX - The destination x coordinate to draw the image to.
+    * @param {number} destY - The destination y coordinate to draw the image to.
     */
-    alphaMask: function (source) {
+    draw: function (source, destX, destY) {
+
+        if (typeof source === 'string')
+        {
+            source = this.game.cache.getImage(source);
+        }
+
+        if (source)
+        {
+            this.context.drawImage(source, 0, 0, source.width, source.height, destX, destY, source.width, source.height);
+        }
+
+    },
+
+    /**
+    * Draws the given image onto this BitmapData using an image as an alpha mask.
+    *
+    * @param {HTMLImage|string} source - The Image to draw. If you give a key it will try and find the Image in the Game.Cache.
+    * @param {HTMLImage|string} mask - The Image to use as the alpha mask. If you give a key it will try and find the Image in the Game.Cache.
+    */
+    alphaMask: function (source, mask) {
 
         var temp = this.context.globalCompositeOperation;
 
+        if (typeof mask === 'string')
+        {
+            mask = this.game.cache.getImage(mask);
+        }
+
+        if (mask)
+        {
+            this.context.drawImage(mask, 0, 0);
+        }
+
         this.context.globalCompositeOperation = 'source-atop';
-        // this.context.drawImage(source, area.x, area.y, area.width, area.height, destX, destY, area.width, area.height);
+
+        if (typeof source === 'string')
+        {
+            source = this.game.cache.getImage(source);
+        }
+
+        if (source)
+        {
+            this.context.drawImage(source, 0, 0);
+        }
 
         this.context.globalCompositeOperation = temp;
 

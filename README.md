@@ -135,6 +135,7 @@ Updates:
 * World.reset now calls Camera.reset which sends the camera back to 0,0 and un-follows any object it may have been tracking.
 * Added hostname: '*' to the grunt-connect in Gruntfile.js (fixes #426)
 * Device, Canvas and GamePad classes all updated for better CocoonJS support (thanks Videlais)
+* BitmapData.alphaMask will draw the given image onto a BitmapData using an image as an alpha mask.
 
 
 Bug Fixes:
