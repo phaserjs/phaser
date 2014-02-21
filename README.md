@@ -153,6 +153,7 @@ Bug Fixes:
 * Fixed bug in Math.angleBetween where it was using the coordinates in the wrong order.
 * Previously using a Pixel Perfect check didn't work if the Sprite was rotated or had a non-zero anchor point, now works under all conditions + atlas frames.
 * If pixelPerfect Input Sprites overlapped each other the pixel check wasn't taken into consieration in the Pointer move method.
+* Updated Input.Mouse to use event.button not event.which, so the const reference from input.mouse.button is correct (thanks grimor)
 
 
 TO DO:
