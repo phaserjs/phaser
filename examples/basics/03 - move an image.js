@@ -19,6 +19,8 @@ function create() {
     //  and assign it to a variable
     var image = game.add.sprite(0, 0, 'einstein');
 
-    image.body.velocity.x=50;
+    image.physicsEnabled = true;
+
+    image.body.moveRight(150);
 
 }

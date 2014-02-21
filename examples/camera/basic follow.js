@@ -31,6 +31,8 @@ function create() {
 
     player = game.add.sprite(150, 320, 'player');
 
+    player.physicsEnabled = true;
+
     cursors = game.input.keyboard.createCursorKeys();
 
     game.camera.follow(player);
@@ -39,15 +41,15 @@ function create() {
 
 function update() {
 
-    player.body.velocity.setTo(0, 0);
+    player.body.setZeroVelocity();
 
     if (cursors.up.isDown)
     {
-        player.body.velocity.y = -200;
+        player.body.moveUp(200)
     }
     else if (cursors.down.isDown)
     {
-        player.body.velocity.y = 200;
+        player.body.moveDown(200);
     }
 
     if (cursors.left.isDown)
@@ -56,7 +58,7 @@ function update() {
     }
     else if (cursors.right.isDown)
     {
-        player.body.velocity.x = 200;
+        player.body.moveRight(200);
     }
 
 }

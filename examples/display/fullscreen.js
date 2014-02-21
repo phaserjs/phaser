@@ -26,7 +26,7 @@ function create() {
 
 function gofull() {
 
-    game.stage.scale.startFullScreen();
+    game.scale.startFullScreen();
 
 }
 
