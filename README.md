@@ -91,6 +91,7 @@ Significant API changes:
 * After defining tiles that collide on a Tilemap, you need to call Tilemap.generateCollisionData(layer) to populate the physics world with the data required.
 * Phaser.QuadTree has been removed from core and moved to a plugin. It's no longer required, nor works with the physics system.
 * Phaser.Animation.frame now returns the frame of the current animation, rather than the global frame from the sprite sheet / atlas.
+* When adding a Group if the parent value is `null` the Group won't be added to the World, so you can add it when ready. If parent is `undefined` it's added to World by default.
 
 
 New features:
