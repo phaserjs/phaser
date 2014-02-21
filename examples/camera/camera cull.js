@@ -43,5 +43,6 @@ function update() {
 function render() {
 
     game.debug.renderSpriteBounds(s);
+    game.debug.renderSpriteInfo(s, 20, 32);
 
 }
