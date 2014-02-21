@@ -167,6 +167,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
 						</li>
 						
@@ -252,6 +256,38 @@
 						
 						<li>
 							<a href="Phaser.Physics.Arcade.html">Arcade</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Spring.html">Spring</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.World.html">World</a>
 						</li>
 						
 						<li>
@@ -478,7 +514,9 @@
     
     
     <div class="description">
-        <p>Create a new <code>Text</code> object.</p>
+        <p>Create a new <code>Text</code> object. This uses a local hidden Canvas object and renders the type into it. It then makes a texture from this for renderning to the view.
+Because of this you can only display fonts that are currently loaded and available to the browser. It won't load the fonts for you.
+Here is a compatibility table showing the available default fonts across different mobile browsers: <a href="http://www.jordanm.co.uk/tinytype">http://www.jordanm.co.uk/tinytype</a></p>
     </div>
     
 
@@ -652,7 +690,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-17">line 17</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-21">line 21</a>
     </li></ul></dd>
     
 
@@ -680,6 +718,12 @@
     
     </div>
 
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        <ul>
+            <li>PIXI.Text</li>
+        </ul>
     
 
     
@@ -780,7 +824,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-526">line 526</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-533">line 533</a>
     </li></ul></dd>
     
 
@@ -888,7 +932,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-391">line 391</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-398">line 398</a>
     </li></ul></dd>
     
 
@@ -990,7 +1034,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-95">line 95</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-99">line 99</a>
     </li></ul></dd>
     
 
@@ -1092,7 +1136,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-85">line 85</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-89">line 89</a>
     </li></ul></dd>
     
 
@@ -1197,7 +1241,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-33">line 33</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-37">line 37</a>
     </li></ul></dd>
     
 
@@ -1299,7 +1343,7 @@ If you wish to work in radians instead of degrees use the property Sprite.rotati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-504">line 504</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-511">line 511</a>
     </li></ul></dd>
     
 
@@ -1407,7 +1451,7 @@ So if this Text was in a Group that has x: 200, then this will be added to the c
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-782">line 782</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-789">line 789</a>
     </li></ul></dd>
     
 
@@ -1509,7 +1553,7 @@ So if this Text was in a Group that has x: 200, then this will be added to the c
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-433">line 433</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-440">line 440</a>
     </li></ul></dd>
     
 
@@ -1611,7 +1655,7 @@ So if this Text was in a Group that has x: 200, then this will be added to the c
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-456">line 456</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-463">line 463</a>
     </li></ul></dd>
     
 
@@ -1713,7 +1757,7 @@ So if this Text was in a Group that has x: 200, then this will be added to the c
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-481">line 481</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-488">line 488</a>
     </li></ul></dd>
     
 
@@ -1815,7 +1859,7 @@ So if this Text was in a Group that has x: 200, then this will be added to the c
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-27">line 27</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-31">line 31</a>
     </li></ul></dd>
     
 
@@ -1920,7 +1964,7 @@ So if this Text was in a Group that has x: 200, then this will be added to the c
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-90">line 90</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-94">line 94</a>
     </li></ul></dd>
     
 
@@ -2027,7 +2071,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-746">line 746</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-753">line 753</a>
     </li></ul></dd>
     
 
@@ -2129,7 +2173,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-636">line 636</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-643">line 643</a>
     </li></ul></dd>
     
 
@@ -2231,7 +2275,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-39">line 39</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-43">line 43</a>
     </li></ul></dd>
     
 
@@ -2333,7 +2377,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-724">line 724</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-731">line 731</a>
     </li></ul></dd>
     
 
@@ -2435,7 +2479,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-702">line 702</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-709">line 709</a>
     </li></ul></dd>
     
 
@@ -2537,7 +2581,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-658">line 658</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-665">line 665</a>
     </li></ul></dd>
     
 
@@ -2639,7 +2683,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-680">line 680</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-687">line 687</a>
     </li></ul></dd>
     
 
@@ -2741,7 +2785,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-548">line 548</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-555">line 555</a>
     </li></ul></dd>
     
 
@@ -2843,7 +2887,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-570">line 570</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-577">line 577</a>
     </li></ul></dd>
     
 
@@ -2949,7 +2993,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-410">line 410</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-417">line 417</a>
     </li></ul></dd>
     
 
@@ -3051,7 +3095,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-45">line 45</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-49">line 49</a>
     </li></ul></dd>
     
 
@@ -3153,7 +3197,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-592">line 592</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-599">line 599</a>
     </li></ul></dd>
     
 
@@ -3255,7 +3299,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-614">line 614</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-621">line 621</a>
     </li></ul></dd>
     
 
@@ -3357,7 +3401,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-50">line 50</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-54">line 54</a>
     </li></ul></dd>
     
 
@@ -3418,7 +3462,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-179">line 179</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-182">line 182</a>
     </li></ul></dd>
     
 
@@ -3487,7 +3531,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-164">line 164</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-168">line 168</a>
     </li></ul></dd>
     
 
@@ -3556,7 +3600,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-121">line 121</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-125">line 125</a>
     </li></ul></dd>
     
 
@@ -3807,7 +3851,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-213">line 213</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-220">line 220</a>
     </li></ul></dd>
     
 
@@ -4240,7 +4284,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-230">line 230</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-237">line 237</a>
     </li></ul></dd>
     
 
@@ -4309,7 +4353,7 @@ activated for this object and it will then start to process click/touch events a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-154">line 154</a>
+        <a href="Text.js.html">gameobjects/Text.js</a>, <a href="Text.js.html#sunlight-1-line-158">line 158</a>
     </li></ul></dd>
     
 
@@ -4360,7 +4404,7 @@ activated for this object and it will then start to process click/touch events a
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Wed Feb 19 2014 05:26:32 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Feb 21 2014 15:36:34 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

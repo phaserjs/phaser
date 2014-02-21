@@ -167,6 +167,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
 						</li>
 						
@@ -252,6 +256,38 @@
 						
 						<li>
 							<a href="Phaser.Physics.Arcade.html">Arcade</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Spring.html">Spring</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.World.html">World</a>
 						</li>
 						
 						<li>
@@ -2074,7 +2110,7 @@ A single BitmapData can be used as the texture one or many Images/Sprites. So if
     
     
     <div class="description">
-        <p>Updates the given objects so that they use this BitmapData as their texture.</p>
+        <p>Updates the given objects so that they use this BitmapData as their texture. This will replace any texture they will currently have set.</p>
     </div>
     
 
@@ -2193,6 +2229,153 @@ A single BitmapData can be used as the texture one or many Images/Sprites. So if
         
             
 <dt>
+    <h4 class="name" id="alphaMask"><span class="type-signature"></span>alphaMask<span class="signature">(source, mask)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Draws the given image onto this BitmapData using an image as an alpha mask.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>source</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLImage</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Image to draw. If you give a key it will try and find the Image in the Game.Cache.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>mask</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLImage</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Image to use as the alpha mask. If you give a key it will try and find the Image in the Game.Cache.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-327">line 327</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="clear"><span class="type-signature"></span>clear<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
@@ -2262,6 +2445,363 @@ A single BitmapData can be used as the texture one or many Images/Sprites. So if
         
             
 <dt>
+    <h4 class="name" id="copyPixels"><span class="type-signature"></span>copyPixels<span class="signature">(source, area, destX, destY)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Copies the pixels from the source image to this BitmapData based on the given area and destination.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>source</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLImage</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Image to draw. If you give a key it will try and find the Image in the Game.Cache.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>area</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Rectangle region to copy from the source image.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>destX</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The destination x coordinate to copy the image to.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>destY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The destination y coordinate to copy the image to.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-286">line 286</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="draw"><span class="type-signature"></span>draw<span class="signature">(source, destX, destY)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Draws the given image to this BitmapData at the coordinates specified. If you need to only draw a part of the image use BitmapData.copyPixels instead.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>source</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLImage</span>
+|
+
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Image to draw. If you give a key it will try and find the Image in the Game.Cache.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>destX</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The destination x coordinate to draw the image to.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>destY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The destination y coordinate to draw the image to.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-307">line 307</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="getPixel"><span class="type-signature"></span>getPixel<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {number}</span></h4>
     
     
@@ -2270,7 +2810,7 @@ A single BitmapData can be used as the texture one or many Images/Sprites. So if
     
     
     <div class="description">
-        <p>Get a color of a specific pixel.</p>
+        <p>Get the color of a specific pixel.</p>
     </div>
     
 
@@ -2375,7 +2915,7 @@ A single BitmapData can be used as the texture one or many Images/Sprites. So if
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-239">line 239</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-241">line 241</a>
     </li></ul></dd>
     
 
@@ -2434,7 +2974,7 @@ A single BitmapData can be used as the texture one or many Images/Sprites. So if
     
     
     <div class="description">
-        <p>Get a color of a specific pixel (including alpha value).</p>
+        <p>Get the color of a specific pixel including its alpha value.</p>
     </div>
     
 
@@ -2539,7 +3079,7 @@ A single BitmapData can be used as the texture one or many Images/Sprites. So if
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-254">line 254</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-257">line 257</a>
     </li></ul></dd>
     
 
@@ -2598,7 +3138,7 @@ A single BitmapData can be used as the texture one or many Images/Sprites. So if
     
     
     <div class="description">
-        <p>Get pixels in array in a specific Rectangle.</p>
+        <p>Gets all the pixels from the region specified by the given Rectangle object.</p>
     </div>
     
 
@@ -2638,7 +3178,7 @@ A single BitmapData can be used as the texture one or many Images/Sprites. So if
             <td class="type">
             
                 
-<span class="param-type">Rectangle</span>
+<span class="param-type"><a href="Phaser.Rectangle.html">Phaser.Rectangle</a></span>
 
 
             
@@ -2648,7 +3188,7 @@ A single BitmapData can be used as the texture one or many Images/Sprites. So if
 
             
 
-            <td class="description last"><p>The specific Rectangle.</p></td>
+            <td class="description last"><p>The Rectangle region to get.</p></td>
         </tr>
 
 	
@@ -2680,7 +3220,7 @@ A single BitmapData can be used as the texture one or many Images/Sprites. So if
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-268">line 268</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-272">line 272</a>
     </li></ul></dd>
     
 
@@ -2838,7 +3378,7 @@ This is called automatically if the BitmapData is being used by a Sprite, otherw
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-280">line 280</a>
+        <a href="BitmapData.js.html">gameobjects/BitmapData.js</a>, <a href="BitmapData.js.html#sunlight-1-line-357">line 357</a>
     </li></ul></dd>
     
 
@@ -3401,7 +3941,7 @@ This is called automatically if the BitmapData is being used by a Sprite, otherw
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Wed Feb 19 2014 05:26:22 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Feb 21 2014 15:36:23 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

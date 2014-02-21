@@ -167,6 +167,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
 						</li>
 						
@@ -252,6 +256,38 @@
 						
 						<li>
 							<a href="Phaser.Physics.Arcade.html">Arcade</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Spring.html">Spring</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.World.html">World</a>
 						</li>
 						
 						<li>
@@ -3504,6 +3540,10 @@ It compares the alpha value of the pixel and if &gt;= InputHandler.pixelPerfectA
     <h5>Returns:</h5>
     
             
+<div class="param-desc">
+    <p>True if the pointer is down, otherwise false.</p>
+</div>
+
 
 
 <dl>
@@ -5589,6 +5629,147 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
         
             
 <dt>
+    <h4 class="name" id="pointerDragged"><span class="type-signature"></span>pointerDragged<span class="signature">(pointer)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Is this sprite being dragged by the mouse or not?</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>pointer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="InputHandler.js.html">input/InputHandler.js</a>, <a href="InputHandler.js.html#sunlight-1-line-491">line 491</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>True if the pointer is dragging an object, otherwise false.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">boolean</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="pointerOut"><span class="type-signature"></span>pointerOut<span class="signature">(<span class="optional">index</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
     
@@ -6123,143 +6304,6 @@ For example 16x16 as the snapX and snapY would make the sprite snap to every 16 
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="InputHandler.js.html">input/InputHandler.js</a>, <a href="InputHandler.js.html#sunlight-1-line-477">line 477</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">number</span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="pointerTimeOut"><span class="type-signature"></span>pointerTimeOut<span class="signature">(pointer)</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Is this sprite being dragged by the mouse or not?</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>pointer</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Phaser.Pointer.html">Phaser.Pointer</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="InputHandler.js.html">input/InputHandler.js</a>, <a href="InputHandler.js.html#sunlight-1-line-491">line 491</a>
     </li></ul></dd>
     
 
@@ -7994,7 +8038,7 @@ This value is only set when the pointer is over this Sprite.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Wed Feb 19 2014 05:26:27 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Feb 21 2014 15:36:28 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
