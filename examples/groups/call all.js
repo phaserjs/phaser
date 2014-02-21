@@ -19,12 +19,12 @@ function create() {
         item = game.add.sprite(290, 98 * (i + 1), 'item', i);
 
         // Enable input.
-        item.input.start(0, true);
+        item.inputEnabled = true;
         item.events.onInputUp.add(kill);
 
         // An item besides the left one.
         item = game.add.sprite(388, 98 * (i + 1), 'item', i + 3);
-        item.input.start(0, true);
+        item.inputEnabled = true;
         item.events.onInputUp.add(kill);
     }
 

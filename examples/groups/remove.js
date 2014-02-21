@@ -23,7 +23,7 @@ function create() {
         // Directly create sprites from the group.
         item = items.create(90, 90 * i, 'item', i);
         // Enable input detection, then it's possible be dragged.
-        item.input.start(0,true);
+        item.inputEnabled = true;
         // Make this item draggable.
         item.input.enableDrag();
         // Then we make it snap to 90x90 grids.
