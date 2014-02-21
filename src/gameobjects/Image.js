@@ -384,6 +384,13 @@ Phaser.Image.prototype.destroy = function() {
         this.input.destroy();
     }
 
+    var i = this.children.length;
+
+    while (i--)
+    {
+        this.removeChild(this.children[i]);
+    }
+
     this.alive = false;
     this.exists = false;
     this.visible = false;

@@ -288,9 +288,18 @@ Phaser.TileSprite.prototype.destroy = function() {
 
     this.events.destroy();
 
+    var i = this.children.length;
+
+    while (i--)
+    {
+        this.removeChild(this.children[i]);
+    }
+
     this.exists = false;
     this.visible = false;
 
+    this.filters = null;
+    this.mask = null;
     this.game = null;
 
 }
