@@ -730,6 +730,22 @@ Phaser.Input.prototype = {
 
             return false;
         }
+        else if (displayObject instanceof Phaser.TileSprite)
+        {
+            var width = displayObject.width;
+            var height = displayObject.height;
+            var x1 = -width * displayObject.anchor.x;
+
+            if (this._localPoint.x > x1 && this._localPoint.x < x1 + width)
+            {
+                var y1 = -height * displayObject.anchor.y;
+
+                if (this._localPoint.y > y1 && this._localPoint.y < y1 + height)
+                {
+                    return true;
+                }
+            }
+        }
         else if (displayObject instanceof PIXI.Sprite)
         {
             var width = displayObject.texture.frame.width;
