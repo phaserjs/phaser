@@ -1467,13 +1467,13 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "x", {
     
     get: function () {
 
-        return this.p2px(this.data.position[0]);
+        return this.p2pxi(this.data.position[0]);
 
     },
 
     set: function (value) {
 
-        this.data.position[0] = this.px2p(value);
+        this.data.position[0] = this.px2pi(value);
 
     }
 
@@ -1487,13 +1487,13 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "y", {
     
     get: function () {
 
-        return this.p2px(this.data.position[1]);
+        return this.p2pxi(this.data.position[1]);
 
     },
 
     set: function (value) {
 
-        this.data.position[1] = this.px2p(value);
+        this.data.position[1] = this.px2pi(value);
 
     }
 
