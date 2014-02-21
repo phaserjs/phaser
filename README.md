@@ -136,6 +136,7 @@ Updates:
 * Added hostname: '*' to the grunt-connect in Gruntfile.js (fixes #426)
 * Device, Canvas and GamePad classes all updated for better CocoonJS support (thanks Videlais)
 * BitmapData.alphaMask will draw the given image onto a BitmapData using an image as an alpha mask.
+* The new GameObjectCreator (which you access via game.make or State.make) lets you easily create an object but NOT add it to the display list.
 
 
 Bug Fixes:

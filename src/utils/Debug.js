@@ -351,6 +351,21 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
+    * Renders the Sprites bounds. Note: This is really expensive as it has to calculate the bounds every time you call it!
+    * @method Phaser.Utils.Debug#renderSpriteBounds
+    * @param {Phaser.Sprite} sprite - Description.
+    * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
+    * @param {boolean} [filled=true] - Render the rectangle as a fillRect (default, true) or a strokeRect (false)
+    */
+    renderSpriteBounds: function (sprite, color, filled) {
+
+        var bounds = sprite.getBounds();
+
+        this.renderRectangle(bounds, color, filled);
+
+    },
+
+    /**
     * Render debug infos (including name, bounds info, position and some other properties) about the Sprite.
     * @method Phaser.Utils.Debug#renderSpriteInfo
     * @param {Phaser.Sprite} sprite - Description.

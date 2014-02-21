@@ -49,14 +49,14 @@ Phaser.Physics.Body = function (game, sprite, x, y, mass) {
     this.data.parent = this;
 
     /**
-    * @property {Phaser.PointProxy} velocity - The velocity of the body. Set velocity.x to a negative value to move to the left, position to the right. velocity.y negative values move up, positive move down.
+    * @property {Phaser.InversePointProxy} velocity - The velocity of the body. Set velocity.x to a negative value to move to the left, position to the right. velocity.y negative values move up, positive move down.
     */
-    this.velocity = new Phaser.Physics.PointProxy(this.data.velocity);
+    this.velocity = new Phaser.Physics.InversePointProxy(this.game, this.data.velocity);
 
     /**
-    * @property {Phaser.PointProxy} force - The force applied to the body.
+    * @property {Phaser.InversePointProxy} force - The force applied to the body.
     */
-    this.force = new Phaser.Physics.PointProxy(this.data.force);
+    this.force = new Phaser.Physics.InversePointProxy(this.game, this.data.force);
 
     /**
     * @property {Phaser.Point} gravity - A locally applied gravity force to the Body. Applied directly before the world step. NOTE: Not currently implemented.
