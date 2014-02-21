@@ -165,7 +165,7 @@ Phaser.Mouse.prototype = {
             event.preventDefault();
         }
 
-        this.button = event.which;
+        this.button = event.button;
 
         if (this.mouseDownCallback)
         {
