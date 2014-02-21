@@ -120,11 +120,11 @@ CDNJS
 
 Thanks to a community member Phaser is now available on [CDNJS](http://cdnjs.com). You can include the following in your html:
 
-`http://cdnjs.cloudflare.com/ajax/libs/phaser/1.1.4/phaser.min.js`
+`http://cdnjs.cloudflare.com/ajax/libs/phaser/1.1.5/phaser.min.js`
 
 Or if you prefer you can leave the protocol off, so it works via http and https:
 
-`//cdnjs.cloudflare.com/ajax/libs/phaser/1.1.4/phaser.min.js`
+`//cdnjs.cloudflare.com/ajax/libs/phaser/1.1.5/phaser.min.js`
 
 
 Requirements
