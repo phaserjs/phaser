@@ -12,32 +12,29 @@
             it's because it makes debugging *significantly* easier for us. Feel free to replace all the below
             with just a call to ../build/phaser.js instead if you prefer.
         -->
+        <script src="../build/p2.js"></script>
         <script src="../src/Intro.js"></script>
         <script src="../src/pixi/Pixi.js"></script>
         <script src="../src/Phaser.js"></script>
         <script src="../src/utils/Utils.js"></script>
 
-        <script src="../src/pixi/Pixi.js"></script>
-        <script src="../src/pixi/core/Point.js"></script>
-        <script src="../src/pixi/core/Rectangle.js"></script>
-        <script src="../src/pixi/core/Polygon.js"></script>
-        <script src="../src/pixi/core/Circle.js"></script>
-        <script src="../src/pixi/core/Ellipse.js"></script>
+        <script src="../src/geom/Circle.js"></script>
+        <script src="../src/geom/Point.js"></script>
+        <script src="../src/geom/Rectangle.js"></script>
+        <script src="../src/geom/Line.js"></script>
+        <script src="../src/geom/Ellipse.js"></script>
+        <script src="../src/geom/Polygon.js"></script>
+
         <script src="../src/pixi/core/Matrix.js"></script>
         <script src="../src/pixi/display/DisplayObject.js"></script>
         <script src="../src/pixi/display/DisplayObjectContainer.js"></script>
         <script src="../src/pixi/display/Sprite.js"></script>
         <script src="../src/pixi/display/SpriteBatch.js"></script>
-        <script src="../src/pixi/display/MovieClip.js"></script>
         <script src="../src/pixi/filters/FilterBlock.js"></script>
         <script src="../src/pixi/text/Text.js"></script>
         <script src="../src/pixi/text/BitmapText.js"></script>
-        <script src="../src/pixi/InteractionData.js"></script>
-        <script src="../src/pixi/InteractionManager.js"></script>
         <script src="../src/pixi/display/Stage.js"></script>
-        <script src="../src/pixi/utils/Utils.js"></script>
         <script src="../src/pixi/utils/EventTarget.js"></script>
-        <script src="../src/pixi/utils/Detector.js"></script>
         <script src="../src/pixi/utils/Polyk.js"></script>
         <script src="../src/pixi/renderers/webgl/utils/WebGLShaderUtils.js"></script>
         <script src="../src/pixi/renderers/webgl/shaders/PixiShader.js"></script>
@@ -57,36 +54,10 @@
         <script src="../src/pixi/renderers/canvas/CanvasRenderer.js"></script>
         <script src="../src/pixi/renderers/canvas/CanvasGraphics.js"></script>
         <script src="../src/pixi/primitives/Graphics.js"></script>
-        <script src="../src/pixi/extras/Strip.js"></script>
-        <script src="../src/pixi/extras/Rope.js"></script>
         <script src="../src/pixi/extras/TilingSprite.js"></script>
-        <script src="../src/pixi/extras/Spine.js"></script>
         <script src="../src/pixi/textures/BaseTexture.js"></script>
         <script src="../src/pixi/textures/Texture.js"></script>
         <script src="../src/pixi/textures/RenderTexture.js"></script>
-        <script src="../src/pixi/loaders/AssetLoader.js"></script>
-        <script src="../src/pixi/loaders/JsonLoader.js"></script>
-        <script src="../src/pixi/loaders/AtlasLoader.js"></script>
-        <script src="../src/pixi/loaders/SpriteSheetLoader.js"></script>
-        <script src="../src/pixi/loaders/ImageLoader.js"></script>
-        <script src="../src/pixi/loaders/BitmapFontLoader.js"></script>
-        <script src="../src/pixi/loaders/SpineLoader.js"></script>
-        <script src="../src/pixi/filters/AbstractFilter.js"></script>
-        <script src="../src/pixi/filters/AlphaMaskFilter.js"></script>
-        <script src="../src/pixi/filters/ColorMatrixFilter.js"></script>
-        <script src="../src/pixi/filters/GrayFilter.js"></script>
-        <script src="../src/pixi/filters/DisplacementFilter.js"></script>
-        <script src="../src/pixi/filters/PixelateFilter.js"></script>
-        <script src="../src/pixi/filters/BlurXFilter.js"></script>
-        <script src="../src/pixi/filters/BlurYFilter.js"></script>
-        <script src="../src/pixi/filters/BlurFilter.js"></script>
-        <script src="../src/pixi/filters/InvertFilter.js"></script>
-        <script src="../src/pixi/filters/SepiaFilter.js"></script>
-        <script src="../src/pixi/filters/TwistFilter.js"></script>
-        <script src="../src/pixi/filters/ColorStepFilter.js"></script>
-        <script src="../src/pixi/filters/DotScreenFilter.js"></script>
-        <script src="../src/pixi/filters/CrossHatchFilter.js"></script>
-        <script src="../src/pixi/filters/RGBSplitFilter.js"></script>
 
         <script src="../src/core/Camera.js"></script>
         <script src="../src/core/State.js"></script>
@@ -115,29 +86,27 @@
         <script src="../src/input/InputHandler.js"></script>
 
         <script src="../src/gameobjects/Events.js"></script>
+        <script src="../src/gameobjects/GameObjectCreator.js"></script>
         <script src="../src/gameobjects/GameObjectFactory.js"></script>
         <script src="../src/gameobjects/BitmapData.js"></script>
         <script src="../src/gameobjects/Sprite.js"></script>
+        <script src="../src/gameobjects/Image.js"></script>
         <script src="../src/gameobjects/TileSprite.js"></script>
         <script src="../src/gameobjects/Text.js"></script>
         <script src="../src/gameobjects/BitmapText.js"></script>
         <script src="../src/gameobjects/Button.js"></script>
         <script src="../src/gameobjects/Graphics.js"></script>
         <script src="../src/gameobjects/RenderTexture.js"></script>
+        <script src="../src/gameobjects/SpriteBatch.js"></script>
+        <script src="../src/gameobjects/BitmapFont.js"></script>
 
         <script src="../src/system/Canvas.js"></script>
         <script src="../src/system/StageScaleMode.js"></script>
         <script src="../src/system/Device.js"></script>
         <script src="../src/system/RequestAnimationFrame.js"></script>
 
-        <script src="../src/math/RandomDataGenerator.js"></script>
         <script src="../src/math/Math.js"></script>
-        <script src="../src/math/QuadTree.js"></script>
-
-        <script src="../src/geom/Circle.js"></script>
-        <script src="../src/geom/Point.js"></script>
-        <script src="../src/geom/Rectangle.js"></script>
-        <script src="../src/geom/Line.js"></script>
+        <script src="../src/math/RandomDataGenerator.js"></script>
 
         <script src="../src/net/Net.js"></script>
 
@@ -165,9 +134,14 @@
         <script src="../src/utils/Debug.js"></script>
         <script src="../src/utils/Color.js"></script>
 
-        <script src="../src/physics/arcade/SAT.js"></script>
-        <script src="../src/physics/arcade/ArcadePhysics.js"></script>
-        <script src="../src/physics/arcade/Body.js"></script>
+        <script src="../src/physics/World.js"></script>
+        <script src="../src/physics/PointProxy.js"></script>
+        <script src="../src/physics/InversePointProxy.js"></script>
+        <script src="../src/physics/Body.js"></script>
+        <script src="../src/physics/Spring.js"></script>
+        <script src="../src/physics/Material.js"></script>
+        <script src="../src/physics/ContactMaterial.js"></script>
+        <script src="../src/physics/CollisionGroup.js"></script>
 
         <script src="../src/particles/Particles.js"></script>
         <script src="../src/particles/arcade/ArcadeParticles.js"></script>

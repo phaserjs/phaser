@@ -329,6 +329,7 @@ Phaser.StateManager.prototype = {
 
         this.states[key].game = this.game;
         this.states[key].add = this.game.add;
+        this.states[key].make = this.game.make;
         this.states[key].camera = this.game.camera;
         this.states[key].cache = this.game.cache;
         this.states[key].input = this.game.input;

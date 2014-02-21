@@ -108,7 +108,7 @@ Phaser.BitmapData = function (game, key, width, height) {
 Phaser.BitmapData.prototype = {
 
     /**
-    * Updates the given objects so that they use this BitmapData as their texture.
+    * Updates the given objects so that they use this BitmapData as their texture. This will replace any texture they will currently have set.
     * 
     * @method Phaser.BitmapData#add
     * @param {Phaser.Sprite|Phaser.Sprite[]|Phaser.Image|Phaser.Image[]} object - Either a single Sprite/Image or an Array of Sprites/Images.
@@ -217,6 +217,7 @@ Phaser.BitmapData.prototype = {
 
     /**
     * Sets the color of the given pixel to the specified red, green and blue values.
+    *
     * @method Phaser.BitmapData#setPixel
     * @param {number} x - The X coordinate of the pixel to be set.
     * @param {number} y - The Y coordinate of the pixel to be set.
@@ -231,7 +232,8 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
-    * Get a color of a specific pixel.
+    * Get the color of a specific pixel.
+    *
     * @param {number} x - The X coordinate of the pixel to get.
     * @param {number} y - The Y coordinate of the pixel to get.
     * @return {number} A native color value integer (format: 0xRRGGBB)
@@ -246,7 +248,8 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
-    * Get a color of a specific pixel (including alpha value).
+    * Get the color of a specific pixel including its alpha value.
+    *
     * @param {number} x - The X coordinate of the pixel to get.
     * @param {number} y - The Y coordinate of the pixel to get.
     * @return {number} A native color value integer (format: 0xAARRGGBB)
@@ -261,8 +264,9 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
-    * Get pixels in array in a specific Rectangle.
-    * @param rect {Rectangle} The specific Rectangle.
+    * Gets all the pixels from the region specified by the given Rectangle object.
+    *
+    * @param {Phaser.Rectangle} rect - The Rectangle region to get.
     * @return {array} CanvasPixelArray.
     */
     getPixels: function (rect) {
@@ -271,6 +275,14 @@ Phaser.BitmapData.prototype = {
 
     },
 
+    /**
+    * Copies the pixels from the source image to this BitmapData based on the given area and destination.
+    *
+    * @param {HTMLImage} source - The Image to copy from. If you want to use an image in Phasers Cache, use game.cache.getImage(key).
+    * @param {Phaser.Rectangle} area - The Rectangle region to copy from the source image.
+    * @param {number} destX - The destination x coordinate to copy the image to.
+    * @param {number} destY - The destination y coordinate to copy the image to.
+    */
     copyPixels: function (source, area, destX, destY) {
 
         this.context.drawImage(source, area.x, area.y, area.width, area.height, destX, destY, area.width, area.height);
@@ -278,8 +290,28 @@ Phaser.BitmapData.prototype = {
     },
 
     /**
+    * Alpha mask.
+    *
+    * @param {HTMLImage} source - The Image to copy from. If you want to use an image in Phasers Cache, use game.cache.getImage(key).
+    * @param {Phaser.Rectangle} area - The Rectangle region to copy from the source image.
+    * @param {number} destX - The destination x coordinate to copy the image to.
+    * @param {number} destY - The destination y coordinate to copy the image to.
+    */
+    alphaMask: function (source) {
+
+        var temp = this.context.globalCompositeOperation;
+
+        this.context.globalCompositeOperation = 'source-atop';
+        // this.context.drawImage(source, area.x, area.y, area.width, area.height, destX, destY, area.width, area.height);
+
+        this.context.globalCompositeOperation = temp;
+
+    },
+
+    /**
     * If the game is running in WebGL this will push the texture up to the GPU if it's dirty.
     * This is called automatically if the BitmapData is being used by a Sprite, otherwise you need to remember to call it in your render function.
+    *
     * @method Phaser.BitmapData#render
     */
     render: function () {
