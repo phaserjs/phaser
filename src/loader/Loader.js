@@ -362,6 +362,32 @@ Phaser.Loader.prototype = {
     },
 
     /**
+    * Add a json file to the Loader.
+    *
+    * @method Phaser.Loader#json
+    * @param {string} key - Unique asset key of the json file.
+    * @param {string} url - URL of the json file.
+    * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    json: function (key, url, overwrite) {
+
+        if (typeof overwrite === "undefined") { overwrite = false; }
+
+        if (overwrite)
+        {
+            this.replaceInFileList('json', key, url);
+        }
+        else
+        {
+            this.addToFileList('json', key, url);
+        }
+
+        return this;
+
+    },
+
+    /**
     * Add a JavaScript file to the Loader. Once loaded the JavaScript file will be automatically turned into a script tag (and executed), so be careful what you load!
     *
     * @method Phaser.Loader#script
@@ -885,6 +911,15 @@ Phaser.Loader.prototype = {
 
                 break;
 
+            case 'json':
+                this._xhr.open("GET", this.baseURL + file.url, true);
+                this._xhr.responseType = "text";
+                this._xhr.onload = function () {
+                    return _this.jsonLoadComplete(_this._fileIndex);
+                };
+                this._xhr.send();
+                break;
+
             case 'tilemap':
                 this._xhr.open("GET", this.baseURL + file.url, true);
                 this._xhr.responseType = "text";
@@ -1175,6 +1210,10 @@ Phaser.Loader.prototype = {
         if (file.type === 'tilemap')
         {
             this.game.cache.addTilemap(file.key, file.url, data, file.format);
+        }
+        else if (file.type === 'json')
+        {
+            this.game.cache.addJSON(file.key, file.url, data);
         }
         else
         {

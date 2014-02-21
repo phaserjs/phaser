@@ -122,6 +122,7 @@ New features:
 * fixedToCamera now works across all display objects. When enabled it will fix at its current x/y coordinate, but can be changed via cameraOffset.
 * fixedToCamrea now works for Groups as well :) You can fix a Group to the camera and it will influence its children.
 * Tilemap.createCollisionObjects will parse Tiled data for objectgroups and convert polyline instances into physics objects you can collide with in the world.
+* Loader can now load JSON files specifically (game.load.json) and they are parsed and stored in the Game.Cache. Retrieve with game.cache.getJSON(key).
 
 
 Updates:

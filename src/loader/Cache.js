@@ -50,6 +50,12 @@ Phaser.Cache = function (game) {
     this._text = {};
 
     /**
+    * @property {object} _text - Text key-value container.
+    * @private
+    */
+    this._json = {};
+
+    /**
     * @property {object} _physics - Physics data key-value container.
     * @private
     */
@@ -148,6 +154,12 @@ Phaser.Cache.BITMAPDATA = 9;
 * @type {number}
 */
 Phaser.Cache.BITMAPFONT = 10;
+
+/**
+* @constant
+* @type {number}
+*/
+Phaser.Cache.JSON = 11;
 
 Phaser.Cache.prototype = {
 
@@ -379,6 +391,20 @@ Phaser.Cache.prototype = {
     addText: function (key, url, data) {
 
         this._text[key] = { url: url, data: data };
+
+    },
+
+    /**
+    * Add a new json object into the cache.
+    *
+    * @method Phaser.Cache#addJSON
+    * @param {string} key - Asset key for the text data. 
+    * @param {string} url - URL of this text data file.
+    * @param {object} data - Extra text data.
+    */
+    addJSON: function (key, url, data) {
+
+        this._json[key] = { url: url, data: data };
 
     },
 
@@ -881,6 +907,26 @@ Phaser.Cache.prototype = {
     },
 
     /**
+    * Get a JSON object by key from the cache.
+    *
+    * @method Phaser.Cache#getJSON
+    * @param {string} key - Asset key of the json object to retrieve from the Cache.
+    * @return {object} The JSON object.
+    */
+    getJSON: function (key) {
+
+        if (this._json[key])
+        {
+            return this._json[key].data;
+        }
+        else
+        {
+            console.warn('Phaser.Cache.getJSON: Invalid key: "' + key + '"');
+        }
+        
+    },
+
+    /**
     * Get binary data by key.
     *
     * @method Phaser.Cache#getBinary
@@ -952,6 +998,10 @@ Phaser.Cache.prototype = {
             case Phaser.Cache.BITMAPFONT:
                 array = this._bitmapFont;
                 break;
+
+            case Phaser.Cache.JSON:
+                array = this._json;
+                break;
         }
 
         if (!array)
@@ -1011,6 +1061,16 @@ Phaser.Cache.prototype = {
     */
     removeText: function (key) {
         delete this._text[key];
+    },
+
+    /**
+    * Removes a json object from the cache.
+    *
+    * @method Phaser.Cache#removeJSON
+    * @param {string} key - Key of the asset you want to remove.
+    */
+    removeJSON: function (key) {
+        delete this._json[key];
     },
 
     /**
@@ -1088,6 +1148,11 @@ Phaser.Cache.prototype = {
         for (var item in this._text)
         {
             delete this._text[item['key']];
+        }
+
+        for (var item in this._json)
+        {
+            delete this._json[item['key']];
         }
 
         for (var item in this._textures)
