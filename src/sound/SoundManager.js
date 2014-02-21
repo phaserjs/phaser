@@ -352,12 +352,9 @@ Phaser.SoundManager.prototype = {
     * @param {string} key - Asset key for the sound.
     * @param {number} [volume=1] - Default value for the volume.
     * @param {boolean} [loop=false] - Whether or not the sound will loop.
-    * @param {boolean} [destroyOnComplete=false] - If true the Sound will destroy itself once it has finished playing, or is stopped.
     * @return {Phaser.Sound} The new sound instance.
     */
-    play: function (key, volume, loop, destroyOnComplete) {
-
-        if (typeof destroyOnComplete == 'undefined') { destroyOnComplete = false; }
+    play: function (key, volume, loop) {
 
         var sound = this.add(key, volume, loop);
 
