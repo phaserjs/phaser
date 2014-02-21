@@ -416,7 +416,7 @@ Object.defineProperty(Phaser.Animation.prototype, 'frame', {
 
     set: function (value) {
 
-        this.currentFrame = this._frameData.getFrame(value);
+        this.currentFrame = this._frameData.getFrame(this._frames[value]);
 
         if (this.currentFrame !== null)
         {
