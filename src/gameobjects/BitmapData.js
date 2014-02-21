@@ -365,7 +365,7 @@ Phaser.BitmapData.prototype = {
         if (this._dirty)
         {
             //  Only needed if running in WebGL, otherwise this array will never get cleared down
-            if (this.game.renderType == Phaser.WEBGL)
+            if (this.game.renderType === Phaser.WEBGL)
             {
                 PIXI.texturesToUpdate.push(this.baseTexture);
             }

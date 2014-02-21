@@ -137,6 +137,7 @@ Updates:
 * Device, Canvas and GamePad classes all updated for better CocoonJS support (thanks Videlais)
 * BitmapData.alphaMask will draw the given image onto a BitmapData using an image as an alpha mask.
 * The new GameObjectCreator (which you access via game.make or State.make) lets you easily create an object but NOT add it to the display list.
+* TilemapParser will now throw a warning if the tileset image isn't the right size for the tile dimensions.
 
 
 Bug Fixes:
@@ -154,6 +155,8 @@ Bug Fixes:
 * Previously using a Pixel Perfect check didn't work if the Sprite was rotated or had a non-zero anchor point, now works under all conditions + atlas frames.
 * If pixelPerfect Input Sprites overlapped each other the pixel check wasn't taken into consieration in the Pointer move method.
 * Updated Input.Mouse to use event.button not event.which, so the const reference from input.mouse.button is correct (thanks grimor)
+* Text that was fixedToCamera would 'jitter' if the world scrolled. Now works as expected across all fixed objects.
+
 
 
 TO DO:
