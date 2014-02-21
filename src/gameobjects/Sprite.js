@@ -491,11 +491,6 @@ Phaser.Sprite.prototype.kill = function() {
 */
 Phaser.Sprite.prototype.destroy = function() {
 
-    if (this.filters)
-    {
-        this.filters = null;
-    }
-
     if (this.parent)
     {
         this.parent.remove(this);
@@ -525,6 +520,8 @@ Phaser.Sprite.prototype.destroy = function() {
     this.exists = false;
     this.visible = false;
 
+    this.filters = null;
+    this.mask = null;
     this.game = null;
 
 };

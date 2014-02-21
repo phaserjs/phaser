@@ -369,11 +369,6 @@ Phaser.Image.prototype.kill = function() {
 */
 Phaser.Image.prototype.destroy = function() {
 
-    if (this.filters)
-    {
-        this.filters = null;
-    }
-
     if (this.parent)
     {
         this.parent.remove(this);
@@ -393,6 +388,8 @@ Phaser.Image.prototype.destroy = function() {
     this.exists = false;
     this.visible = false;
 
+    this.filters = null;
+    this.mask = null;
     this.game = null;
 
 }
