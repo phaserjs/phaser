@@ -428,6 +428,36 @@ Object.defineProperty(Phaser.Animation.prototype, 'frame', {
 
 });
 
+Object.defineProperty(Phaser.Animation.prototype, 'localframe', {
+
+    get: function () {
+
+        if (this.currentFrame !== null)
+        {
+            return this.currentFrame.index;
+        }
+        else
+        {
+            return this._frameIndex;
+        }
+
+    },
+
+    set: function (value) {
+
+        //this.currentFrame = this._frameData.getFrame(value);
+        this.currentFrame = this._frameData.getFrame(this._frames[value]);
+
+        if (this.currentFrame !== null)
+        {
+            this._frameIndex = value;
+            this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
+        }
+
+    }
+
+});
+
 /**
 * Really handy function for when you are creating arrays of animation data but it's using frame names and not numbers.
 * For example imagine you've got 30 frames named: 'explosion_0001-large' to 'explosion_0030-large'
