@@ -66,7 +66,7 @@ Phaser.TilemapParser = {
     },
 
     /**
-    * Parse tileset data from the cache and creates a Tileset object.
+    * Parse tilemap data from the cache and creates a Tilemap object.
     * @method Phaser.TilemapParser.parse
     * @param {Phaser.Game} game - Game reference to the currently running game.
     * @param {string} key - The key of the tilemap in the Cache.
