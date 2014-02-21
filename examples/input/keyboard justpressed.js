@@ -19,9 +19,12 @@ function create() {
 
     bullets = game.add.group();
     bullets.createMultiple(10, 'bullet');
+    bullets.setAll('physicsEnabled',true);
     bullets.callAll('events.onOutOfBounds.add', 'events.onOutOfBounds', resetBullet, this);
 
     sprite = game.add.sprite(400, 550, 'phaser');
+
+    sprite.physicsEnabled = true;
 
     //  Stop the following keys from propagating up to the browser
     game.input.keyboard.addKeyCapture([ Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT, Phaser.Keyboard.SPACEBAR ]);
