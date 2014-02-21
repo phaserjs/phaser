@@ -138,6 +138,8 @@ Updates:
 * BitmapData.alphaMask will draw the given image onto a BitmapData using an image as an alpha mask.
 * The new GameObjectCreator (which you access via game.make or State.make) lets you easily create an object but NOT add it to the display list.
 * TilemapParser will now throw a warning if the tileset image isn't the right size for the tile dimensions.
+* We now force IE11 into Canvas mode to avoid a Pixi bug with pre-multiplied alpha. Will remove once that is fixed, sorry, but it's better than no game at all, right? :(
+* Loader.setPreloadSprite() will now set sprite.visible = true once the crop has been applied. Should help avoid issues (#430) on super-slow connections.
 
 
 Bug Fixes:
