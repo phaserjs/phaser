@@ -143,6 +143,7 @@ Updates:
 * TilemapParser will now throw a warning if the tileset image isn't the right size for the tile dimensions.
 * We now force IE11 into Canvas mode to avoid a Pixi bug with pre-multiplied alpha. Will remove once that is fixed, sorry, but it's better than no game at all, right? :(
 * Loader.setPreloadSprite() will now set sprite.visible = true once the crop has been applied. Should help avoid issues (#430) on super-slow connections.
+* Updated the way the page visibility is checked, should now be more compatible across more browsers.
 
 
 Bug Fixes:
@@ -161,7 +162,7 @@ Bug Fixes:
 * If pixelPerfect Input Sprites overlapped each other the pixel check wasn't taken into consieration in the Pointer move method.
 * Updated Input.Mouse to use event.button not event.which, so the const reference from input.mouse.button is correct (thanks grimor)
 * Text that was fixedToCamera would 'jitter' if the world scrolled. Now works as expected across all fixed objects.
-
+* Fixed a bug where Sound.play wouldn't pick-up the local loop setting if not specified in the parameter.
 
 
 TO DO:

@@ -341,7 +341,7 @@ Phaser.Sound.prototype = {
 
             if (this.currentTime >= this.durationMS)
             {
-                //console.log(this.currentMarker, 'has hit duration');
+                console.log(this.currentMarker, 'has hit duration');
                 if (this.usingWebAudio)
                 {
                     if (this.loop)
@@ -400,7 +400,7 @@ Phaser.Sound.prototype = {
         position = position || 0;
 
         if (typeof volume === 'undefined') { volume = this._volume; }
-        if (typeof loop === 'undefined') { loop = false; }
+        if (typeof loop === 'undefined') { loop = this.loop; }
         if (typeof forceRestart === 'undefined') { forceRestart = true; }
 
         // console.log(this.name + ' play ' + marker + ' position ' + position + ' volume ' + volume + ' loop ' + loop, 'force', forceRestart);
