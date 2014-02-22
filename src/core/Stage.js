@@ -56,6 +56,12 @@ Phaser.Stage = function (game, width, height) {
     this.exists = true;
 
     /**
+    * @property {string} hiddenVar - The page visibility API event name.
+    * @private
+    */
+    this._hiddenVar = 'hidden';
+
+    /**
     * @property {number} _nextOffsetCheck - The time to run the next offset check.
     * @private
     */
@@ -230,10 +236,38 @@ Phaser.Stage.prototype.boot = function () {
     Phaser.Canvas.setUserSelect(this.game.canvas, 'none');
     Phaser.Canvas.setTouchAction(this.game.canvas, 'none');
 
-    document.addEventListener('visibilitychange', this._onChange, false);
-    document.addEventListener('webkitvisibilitychange', this._onChange, false);
-    document.addEventListener('pagehide', this._onChange, false);
-    document.addEventListener('pageshow', this._onChange, false);
+    this.checkVisibility();
+
+}
+
+/**
+* Starts a page visibility event listener running, or window.blur/focus if not supported by the browser.
+* @method Phaser.Stage#checkVisibility
+*/
+Phaser.Stage.prototype.checkVisibility = function () {
+
+    var supportsVisibilityApi = false;
+    var prefixes = [ "", "moz", "ms", "webkit" ];
+
+    while (prefixes.length)
+    {
+        prefix = prefixes.pop();
+        this._hiddenVar = prefix ? prefix + "Hidden" : "hidden";
+
+        if (this._hiddenVar in document)
+        {
+            supportsVisibilityApi = true;
+            break;
+        }
+    }
+
+    //  Does browser support it? If not (like in IE9 or old Android) we need to fall back to blur/focus
+    if (supportsVisibilityApi)
+    {
+        document.addEventListener(this._hiddenVar, this._onChange, false);
+        document.addEventListener('pagehide', this._onChange, false);
+        document.addEventListener('pageshow', this._onChange, false);
+    }
 
     window.onblur = this._onChange;
     window.onfocus = this._onChange;
@@ -270,7 +304,7 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
         return;
     }
 
-    if (this.game.paused === false && (event.type == 'pagehide' || event.type == 'blur' || document['hidden'] === true || document['webkitHidden'] === true))
+    if (this.game.paused === false && (event.type === 'pagehide' || event.type === 'blur' || document[this._hiddenVar] === true))
     {
         this.game.paused = true;
     }
