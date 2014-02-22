@@ -167,6 +167,10 @@
 						</li>
 						
 						<li>
+							<a href="Phaser.GameObjectCreator.html">GameObjectCreator</a>
+						</li>
+						
+						<li>
 							<a href="Phaser.GameObjectFactory.html">GameObjectFactory</a>
 						</li>
 						
@@ -252,6 +256,38 @@
 						
 						<li>
 							<a href="Phaser.Physics.Arcade.html">Arcade</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Body.html">Body</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.CollisionGroup.html">CollisionGroup</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.ContactMaterial.html">ContactMaterial</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.InversePointProxy.html">InversePointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Material.html">Material</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.PointProxy.html">PointProxy</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.Spring.html">Spring</a>
+						</li>
+						
+						<li>
+							<a href="Phaser.Physics.World.html">World</a>
 						</li>
 						
 						<li>
@@ -470,7 +506,7 @@
     
         
 <dt>
-    <h4 class="name" id="RequestAnimationFrame"><span class="type-signature"></span>new RequestAnimationFrame<span class="signature">(game)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="RequestAnimationFrame"><span class="type-signature"></span>new RequestAnimationFrame<span class="signature">(game, <span class="optional">forceSetTimeOut</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -500,7 +536,11 @@
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
+		
+		<th>Default</th>
 		
 
 		<th class="last">Description</th>
@@ -525,10 +565,61 @@
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>A reference to the currently running game.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>forceSetTimeOut</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Tell Phaser to use setTimeOut even if raf is available.</p></td>
         </tr>
 
 	
@@ -560,7 +651,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-14">line 14</a>
+        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-15">line 15</a>
     </li></ul></dd>
     
 
@@ -602,6 +693,108 @@
         <h3 class="subsection-title">Members</h3>
 
         <dl>
+            
+<dt>
+    <h4 class="name" id="forceSetTimeOut"><span class="type-signature"></span>forceSetTimeOut<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>forceSetTimeOut</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Tell Phaser to use setTimeOut even if raf is available.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-33">line 33</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+        
             
 <dt>
     <h4 class="name" id="game"><span class="type-signature"></span>game<span class="type-signature"></span></h4>
@@ -688,7 +881,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-19">line 19</a>
+        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-22">line 22</a>
     </li></ul></dd>
     
 
@@ -793,7 +986,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-25">line 25</a>
+        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-28">line 28</a>
     </li></ul></dd>
     
 
@@ -858,7 +1051,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-148">line 148</a>
+        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-156">line 156</a>
     </li></ul></dd>
     
 
@@ -946,7 +1139,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-139">line 139</a>
+        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-147">line 147</a>
     </li></ul></dd>
     
 
@@ -1034,7 +1227,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-62">line 62</a>
+        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-70">line 70</a>
     </li></ul></dd>
     
 
@@ -1103,7 +1296,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-120">line 120</a>
+        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-128">line 128</a>
     </li></ul></dd>
     
 
@@ -1221,7 +1414,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-95">line 95</a>
+        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-103">line 103</a>
     </li></ul></dd>
     
 
@@ -1290,7 +1483,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-108">line 108</a>
+        <a href="RequestAnimationFrame.js.html">system/RequestAnimationFrame.js</a>, <a href="RequestAnimationFrame.js.html#sunlight-1-line-116">line 116</a>
     </li></ul></dd>
     
 
@@ -1341,7 +1534,7 @@
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-dev</a>
-		on Wed Feb 19 2014 05:26:30 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		on Fri Feb 21 2014 15:36:32 GMT-0000 (GMT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>

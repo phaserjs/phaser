@@ -13,6 +13,10 @@ var aliens;
 
 function create() {
 
+    //  We only want world bounds on the left and right
+    game.physics.setBoundsToWorld(true, true, false, false);
+    game.physics.friction = 0;
+
     player = game.add.sprite(400, 500, 'ship');
     player.anchor.setTo(0.5, 0.5);
 
@@ -24,7 +28,9 @@ function create() {
         {
             var alien = aliens.create(200 + x * 48, y * 50, 'alien');
             alien.name = 'alien' + x.toString() + y.toString();
+            alien.checkWorldBounds = true;
             alien.events.onOutOfBounds.add(alienOut, this);
+            alien.physicsEnabled = true;
             alien.body.velocity.y = 50 + Math.random() * 200;
         }
     }

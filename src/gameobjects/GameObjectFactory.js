@@ -83,7 +83,7 @@ Phaser.GameObjectFactory.prototype = {
     *
     * @method Phaser.GameObjectFactory#tween
     * @param {object} obj - Object the tween will be run on.
-    * @return {Phaser.Tween} Description.
+    * @return {Phaser.Tween} The newly created Phaser.Tween object.
     */
     tween: function (obj) {
 
@@ -95,7 +95,7 @@ Phaser.GameObjectFactory.prototype = {
     * A Group is a container for display objects that allows for fast pooling, recycling and collision checks.
     *
     * @method Phaser.GameObjectFactory#group
-    * @param {any} parent - The parent Group or DisplayObjectContainer that will hold this group, if any.
+    * @param {any} [parent] - The parent Group or DisplayObjectContainer that will hold this group, if any. If set to null the Group won't be added to the display list. If undefined it will be added to World by default.
     * @param {string} [name='group'] - A name for this Group. Not used internally but useful for debugging.
     * @param {boolean} [addToStage=false] - If set to true this Group will be added directly to the Game.Stage instead of Game.World.
     * @return {Phaser.Group} The newly created group.

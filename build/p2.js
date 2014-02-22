@@ -1614,12 +1614,22 @@ Broadphase.aabbCheck = function(bodyA, bodyB){
  * @return {Boolean}
  */
 Broadphase.canCollide = function(bodyA, bodyB){
+
     // Cannot collide static bodies
-    if(bodyA.motionState & Body.STATIC && bodyB.motionState & Body.STATIC)
+    if(bodyA.motionState == Body.STATIC && bodyB.motionState == Body.STATIC)
         return false;
 
-    // Cannot collide sleeping bodies
-    if(bodyA.sleepState & Body.SLEEPING && bodyB.sleepState & Body.SLEEPING)
+    // Cannot collide static vs kinematic bodies
+    if( (bodyA.motionState == Body.KINEMATIC && bodyB.motionState == Body.STATIC) ||
+        (bodyA.motionState == Body.STATIC    && bodyB.motionState == Body.KINEMATIC))
+        return false;
+
+    // Cannot collide kinematic vs kinematic
+    if(bodyA.motionState == Body.KINEMATIC && bodyB.motionState == Body.KINEMATIC)
+        return false;
+
+    // Cannot collide both sleeping bodies
+    if(bodyA.sleepState == Body.SLEEPING && bodyB.sleepState == Body.SLEEPING)
         return false;
 
     return true;
@@ -2027,9 +2037,9 @@ Narrowphase.prototype.createContactEquation = function(bodyA,bodyB,shapeA,shapeB
     c.firstImpact = !this.collidedLastStep(bodyA,bodyB);
     c.enabled = true;
 
-    if(bodyA.allowSleep && (bodyA.motionState & Body.DYNAMIC) && !(bodyB.motionState & Body.STATIC || bodyB.sleepState === Body.SLEEPY))
+    if(bodyA.allowSleep && (bodyA.motionState == Body.DYNAMIC) && !(bodyB.motionState == Body.STATIC || bodyB.sleepState === Body.SLEEPY))
         bodyA.wakeUp();
-    if(bodyB.allowSleep && (bodyB.motionState & Body.DYNAMIC) && !(bodyA.motionState & Body.STATIC || bodyA.sleepState === Body.SLEEPY))
+    if(bodyB.allowSleep && (bodyB.motionState == Body.DYNAMIC) && !(bodyA.motionState == Body.STATIC || bodyA.sleepState === Body.SLEEPY))
         bodyB.wakeUp();
 
     return c;
@@ -4111,9 +4121,11 @@ SAPBroadphase.prototype.getCollisionPairs = function(world){
                 break;
 
             // add pair to preliminary list
-            var key = bi.id < bj.id ? bi.id+' '+bj.id : bj.id+' '+bi.id;
-            preliminaryList[key] = true;
-            preliminaryList.keys.push(key);
+            if(Broadphase.canCollide(bi,bj)){
+                var key = bi.id < bj.id ? bi.id+' '+bj.id : bj.id+' '+bi.id;
+                preliminaryList[key] = true;
+                preliminaryList.keys.push(key);
+            }
         }
     }
 
@@ -4128,9 +4140,11 @@ SAPBroadphase.prototype.getCollisionPairs = function(world){
                 break;
 
             // If in preliminary list, add to final result
-            var key = bi.id < bj.id ? bi.id+' '+bj.id : bj.id+' '+bi.id;
-            if(preliminaryList[key] && Broadphase.boundingRadiusCheck(bi,bj))
-                result.push(bi,bj);
+            if(Broadphase.canCollide(bi,bj)){
+                var key = bi.id < bj.id ? bi.id+' '+bj.id : bj.id+' '+bi.id;
+                if(preliminaryList[key] && Broadphase.boundingRadiusCheck(bi,bj))
+                    result.push(bi,bj);
+            }
         }
     }
 
@@ -6793,6 +6807,12 @@ function Body(options){
      */
     this.sleepTimeLimit = 1;
 
+    /**
+     * Gravity scaling factor. If you want the body to ignore gravity, set this to zero. If you want to reverse gravity, set it to -1.
+     * @property {Number} gravityScale
+     */
+    this.gravityScale = 1;
+
     this.timeLastSleepy = 0;
 
     this.concavePath = null;
@@ -7040,6 +7060,7 @@ Body.prototype.fromPolygon = function(path,options){
 
     var p = new decomp.Polygon();
     p.vertices = path;
+
     // Make it counter-clockwise
     p.makeCCW();
 
@@ -7174,7 +7195,7 @@ Body.prototype.addConstraintVelocity = function(){
  * @param  {number} dt Current time step
  */
 Body.prototype.applyDamping = function(dt){
-    if(this.motionState & Body.DYNAMIC){ // Only for dynamic bodies
+    if(this.motionState == Body.DYNAMIC){ // Only for dynamic bodies
 
         // Since Math.pow generates garbage we check if we can reuse the scaling coefficient from last step
         if(dt != this.lastDampingTimeStep){
@@ -8619,7 +8640,7 @@ function getUnvisitedNode(nodes){
     var Nnodes = nodes.length;
     for(var i=0; i!==Nnodes; i++){
         var node = nodes[i];
-        if(!node.visited && !(node.body.motionState & STATIC)){ // correct?
+        if(!node.visited && !(node.body.motionState == STATIC)){ // correct?
             return node;
         }
     }
@@ -9401,7 +9422,7 @@ World.prototype.internalStep = function(dt){
         for(var i=0; i!==Nbodies; i++){
             var b = bodies[i],
                 fi = b.force;
-            vec2.scale(mg,g,b.mass); // F=m*g
+            vec2.scale(mg,g,b.mass*b.gravityScale); // F=m*g
             add(fi,fi,mg);
         }
     }
@@ -9417,7 +9438,8 @@ World.prototype.internalStep = function(dt){
     if(this.applyDamping){
         for(var i=0; i!==Nbodies; i++){
             var b = bodies[i];
-            b.applyDamping(dt);
+            if(b.motionState == Body.DYNAMIC)
+                b.applyDamping(dt);
         }
     }
 
@@ -9466,13 +9488,14 @@ World.prototype.internalStep = function(dt){
 
     // Emit shape end overlap events
     var last = this.overlappingShapesLastState;
-    for(var i=0; i<last.keys.length; i++){
+    for(var i=0; i!==last.keys.length; i++){
         var key = last.keys[i];
-        if(key.indexOf("shape")!=-1 || key.indexOf("body")!=-1)
-            break;
+
+        if(last[key]!==true)
+            continue;
 
         if(!this.overlappingShapesCurrentState[key]){
-            // Not overlapping any more! Emit event.
+            // Not overlapping in current state, but in last state. Emit event!
             var e = this.endContactEvent;
 
             // Add shapes to the event object
@@ -9482,19 +9505,24 @@ World.prototype.internalStep = function(dt){
             e.bodyB = last[key+"_bodyB"];
             this.emit(e);
         }
-
-        // Clear old data
-        delete last[key];
-        delete last[key+"_shapeA"];
-        delete last[key+"_shapeB"];
-        delete last[key+"_bodyA"];
-        delete last[key+"_bodyB"];
     }
-    this.overlappingShapesLastState.keys.length = 0;
-    // Swap state objects
-    var tmp = this.overlappingShapesLastState;
-    this.overlappingShapesLastState = this.overlappingShapesCurrentState;
-    this.overlappingShapesCurrentState = tmp;
+
+    // Clear last object
+    for(var i=0; i!==last.keys.length; i++)
+        delete last[last.keys[i]];
+    last.keys.length = 0;
+
+    // Transfer from new object to old
+    var current = this.overlappingShapesCurrentState;
+    for(var i=0; i!==current.keys.length; i++){
+        last[current.keys[i]] = current[current.keys[i]];
+        last.keys.push(current.keys[i]);
+    }
+
+    // Clear current object
+    for(var i=0; i!==current.keys.length; i++)
+        delete current[current.keys[i]];
+    current.keys.length = 0;
 
     var preSolveEvent = this.preSolveEvent;
     preSolveEvent.contactEquations = np.contactEquations;
@@ -9522,7 +9550,7 @@ World.prototype.internalStep = function(dt){
     for(var i=0; i!==Nbodies; i++){
         var body = bodies[i];
 
-        if(body.sleepState !== Body.SLEEPING && body.mass>0){
+        if(body.sleepState !== Body.SLEEPING && body.motionState!=Body.STATIC){
             World.integrateBody(body,dt);
         }
     }

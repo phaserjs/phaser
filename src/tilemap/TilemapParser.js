@@ -66,7 +66,7 @@ Phaser.TilemapParser = {
     },
 
     /**
-    * Parse tileset data from the cache and creates a Tileset object.
+    * Parse tilemap data from the cache and creates a Tilemap object.
     * @method Phaser.TilemapParser.parse
     * @param {Phaser.Game} game - Game reference to the currently running game.
     * @param {string} key - The key of the tilemap in the Cache.
@@ -400,7 +400,14 @@ Phaser.TilemapParser = {
             newSet.columns = (set.imagewidth - set.margin) / (set.tilewidth + set.spacing);
             newSet.total = newSet.rows * newSet.columns;
 
-            tilesets.push(newSet);
+            if (newSet.rows % 1 !== 0 || newSet.columns % 1 !== 0)
+            {
+                console.warn('TileSet image dimensions do not match expected dimensions. Tileset width/height must be evenly divisible by Tilemap tile width/height.');
+            }
+            else
+            {
+                tilesets.push(newSet);
+            }
         }
 
         map.tilesets = tilesets;

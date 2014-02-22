@@ -131,6 +131,7 @@
     <script src="$path/src/input/InputHandler.js"></script>
 
     <script src="$path/src/gameobjects/Events.js"></script>
+    <script src="$path/src/gameobjects/GameObjectCreator.js"></script>
     <script src="$path/src/gameobjects/GameObjectFactory.js"></script>
     <script src="$path/src/gameobjects/BitmapData.js"></script>
     <script src="$path/src/gameobjects/Sprite.js"></script>

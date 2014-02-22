@@ -14,7 +14,7 @@
             "../../src/math/", 
             "../../src/net/", 
             "../../src/particles/", 
-            "../../src/physics/arcade/", 
+            "../../src/physics/", 
             "../../src/sound/", 
             "../../src/system/", 
             "../../src/tilemap/", 

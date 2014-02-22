@@ -86,6 +86,7 @@ module.exports = function (grunt) {
 
         'src/gameobjects/Events.js',
         'src/gameobjects/GameObjectFactory.js',
+        'src/gameobjects/GameObjectCreator.js',
         'src/gameobjects/BitmapData.js',
         'src/gameobjects/Sprite.js',
         'src/gameobjects/Image.js',

@@ -94,6 +94,11 @@ Phaser.StateManager = function (game, pendingState) {
     this.onPausedCallback = null;
 
     /**
+    * @property {function} onResumedCallback - This will be called when the state is resumed from a paused state.
+    */
+    this.onResumedCallback = null;
+
+    /**
     * @property {function} onShutDownCallback - This will be called when the state is shut down (i.e. swapped to another state).
     */
     this.onShutDownCallback = null;
@@ -195,6 +200,7 @@ Phaser.StateManager.prototype = {
             this.onUpdateCallback = null;
             this.onRenderCallback = null;
             this.onPausedCallback = null;
+            this.onResumedCallback = null;
             this.onDestroyCallback = null;
         }
 
@@ -329,6 +335,7 @@ Phaser.StateManager.prototype = {
 
         this.states[key].game = this.game;
         this.states[key].add = this.game.add;
+        this.states[key].make = this.game.make;
         this.states[key].camera = this.game.camera;
         this.states[key].cache = this.game.cache;
         this.states[key].input = this.game.input;
@@ -369,6 +376,7 @@ Phaser.StateManager.prototype = {
         this.onPreRenderCallback = this.states[key]['preRender'] || null;
         this.onRenderCallback = this.states[key]['render'] || null;
         this.onPausedCallback = this.states[key]['paused'] || null;
+        this.onResumedCallback = this.states[key]['resumed'] || null;
 
         //  Used when the state is no longer the current active state
         this.onShutDownCallback = this.states[key]['shutdown'] || this.dummy;
@@ -417,7 +425,7 @@ Phaser.StateManager.prototype = {
 
         if (this._created && this.onPausedCallback)
         {
-            this.onPausedCallback.call(this.callbackContext, this.game, true);
+            this.onPausedCallback.call(this.callbackContext, this.game);
         }
 
     },
@@ -428,9 +436,9 @@ Phaser.StateManager.prototype = {
     */
     resume: function () {
 
-        if (this._created && this.onre)
+        if (this._created && this.onResumedCallback)
         {
-            this.onPausedCallback.call(this.callbackContext, this.game, false);
+            this.onResumedCallback.call(this.callbackContext, this.game);
         }
 
     },
@@ -517,6 +525,7 @@ Phaser.StateManager.prototype = {
         this.onUpdateCallback = null;
         this.onRenderCallback = null;
         this.onPausedCallback = null;
+        this.onResumedCallback = null;
         this.onDestroyCallback = null;
 
         this.game = null;

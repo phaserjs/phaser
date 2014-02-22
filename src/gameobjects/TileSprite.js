@@ -84,6 +84,11 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
     this.position.set(x, y);
 
     /**
+    * @property {Phaser.InputHandler|null} input - The Input Handler for this object. Needs to be enabled with image.inputEnabled = true before you can use it.
+    */
+    this.input = null;
+
+    /**
     * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
     */
     this.world = new Phaser.Point(x, y);
@@ -288,9 +293,18 @@ Phaser.TileSprite.prototype.destroy = function() {
 
     this.events.destroy();
 
+    var i = this.children.length;
+
+    while (i--)
+    {
+        this.removeChild(this.children[i]);
+    }
+
     this.exists = false;
     this.visible = false;
 
+    this.filters = null;
+    this.mask = null;
     this.game = null;
 
 }
@@ -405,6 +419,42 @@ Object.defineProperty(Phaser.TileSprite.prototype, "fixedToCamera", {
         else
         {
             this._cache[7] = 0;
+        }
+    }
+
+});
+
+/**
+* By default a TileSprite won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
+* activated for this object and it will then start to process click/touch events and more.
+*
+* @name Phaser.TileSprite#inputEnabled
+* @property {boolean} inputEnabled - Set to true to allow this object to receive input events.
+*/
+Object.defineProperty(Phaser.TileSprite.prototype, "inputEnabled", {
+    
+    get: function () {
+
+        return (this.input && this.input.enabled);
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            if (this.input === null)
+            {
+                this.input = new Phaser.InputHandler(this);
+                this.input.start();
+            }
+        }
+        else
+        {
+            if (this.input && this.input.enabled)
+            {
+                this.input.stop();
+            }
         }
     }
 

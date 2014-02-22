@@ -10,10 +10,12 @@
 * @class Phaser.Physics.InversePointProxy
 * @classdesc InversePointProxy
 * @constructor
+* @param {Phaser.Game} game - A reference to the Phaser.Game instance.
 * @param {any} destination - The object to bind to.
 */
-Phaser.Physics.InversePointProxy = function (destination) {
+Phaser.Physics.InversePointProxy = function (game, destination) {
 
+    this.game = game;
 	this.destination = destination;
 
 };
@@ -34,7 +36,7 @@ Object.defineProperty(Phaser.Physics.InversePointProxy.prototype, "x", {
 
     set: function (value) {
 
-        this.destination[0] = -value;
+        this.destination[0] = this.game.math.px2p(-value);
 
     }
 
@@ -54,7 +56,7 @@ Object.defineProperty(Phaser.Physics.InversePointProxy.prototype, "y", {
 
     set: function (value) {
 
-        this.destination[1] = -value;
+        this.destination[1] = this.game.math.px2p(-value);
 
     }
 

@@ -18,7 +18,7 @@ function create() {
         item = game.add.sprite(90, 90 * i, 'item', i);
 
         // Enable input detection, then it's possible be dragged.
-        item.input.start(0,true);
+        item.inputEnabled = true;
 
         // Make this item draggable.
         item.input.enableDrag();

@@ -144,10 +144,10 @@ Phaser.Loader.prototype = {
     /**
     * You can set a Sprite to be a "preload" sprite by passing it to this method.
     * A "preload" sprite will have its width or height crop adjusted based on the percentage of the loader in real-time.
-    * This allows you to easily make loading bars for games.
+    * This allows you to easily make loading bars for games. Note that Sprite.visible = true will be set when calling this.
     *
     * @method Phaser.Loader#setPreloadSprite
-    * @param {Phaser.Sprite} sprite - The sprite that will be cropped during the load.
+    * @param {Phaser.Sprite|Phaser.Image} sprite - The sprite that will be cropped during the load.
     * @param {number} [direction=0] - A value of zero means the sprite width will be cropped, a value of 1 means its height will be cropped.
     */
     setPreloadSprite: function (sprite, direction) {
@@ -168,6 +168,8 @@ Phaser.Loader.prototype = {
         }
 
         sprite.crop(this.preloadSprite.crop);
+
+        sprite.visible = true;
 
     },
 
@@ -353,6 +355,32 @@ Phaser.Loader.prototype = {
         else
         {
             this.addToFileList('text', key, url);
+        }
+
+        return this;
+
+    },
+
+    /**
+    * Add a json file to the Loader.
+    *
+    * @method Phaser.Loader#json
+    * @param {string} key - Unique asset key of the json file.
+    * @param {string} url - URL of the json file.
+    * @param {boolean} [overwrite=false] - If an unloaded file with a matching key already exists in the queue, this entry will overwrite it.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    json: function (key, url, overwrite) {
+
+        if (typeof overwrite === "undefined") { overwrite = false; }
+
+        if (overwrite)
+        {
+            this.replaceInFileList('json', key, url);
+        }
+        else
+        {
+            this.addToFileList('json', key, url);
         }
 
         return this;
@@ -883,6 +911,15 @@ Phaser.Loader.prototype = {
 
                 break;
 
+            case 'json':
+                this._xhr.open("GET", this.baseURL + file.url, true);
+                this._xhr.responseType = "text";
+                this._xhr.onload = function () {
+                    return _this.jsonLoadComplete(_this._fileIndex);
+                };
+                this._xhr.send();
+                break;
+
             case 'tilemap':
                 this._xhr.open("GET", this.baseURL + file.url, true);
                 this._xhr.responseType = "text";
@@ -1174,6 +1211,10 @@ Phaser.Loader.prototype = {
         {
             this.game.cache.addTilemap(file.key, file.url, data, file.format);
         }
+        else if (file.type === 'json')
+        {
+            this.game.cache.addJSON(file.key, file.url, data);
+        }
         else
         {
             this.game.cache.addTextureAtlas(file.key, file.url, file.data, data, file.format);
@@ -1305,8 +1346,6 @@ Phaser.Loader.prototype = {
             {
                 this.preloadSprite.crop.height = Math.floor((this.preloadSprite.height / 100) * this.progress);
             }
-
-            // this.preloadSprite.sprite.crop = this.preloadSprite.crop;
         }
 
         this.onFileComplete.dispatch(this.progress, this._fileList[previousIndex].key, success, this.totalLoadedFiles(), this._fileList.length);

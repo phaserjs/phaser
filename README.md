@@ -90,6 +90,8 @@ Significant API changes:
 * Cache.getImageKeys and similar has been removed, please use Cache.getKeys(Phaser.Cache.IMAGE) instead, this now supports all 10 Cache data types.
 * After defining tiles that collide on a Tilemap, you need to call Tilemap.generateCollisionData(layer) to populate the physics world with the data required.
 * Phaser.QuadTree has been removed from core and moved to a plugin. It's no longer required, nor works with the physics system.
+* Phaser.Animation.frame now returns the frame of the current animation, rather than the global frame from the sprite sheet / atlas.
+* When adding a Group if the parent value is `null` the Group won't be added to the World, so you can add it when ready. If parent is `undefined` it's added to World by default.
 
 
 New features:
@@ -120,6 +122,9 @@ New features:
 * fixedToCamera now works across all display objects. When enabled it will fix at its current x/y coordinate, but can be changed via cameraOffset.
 * fixedToCamrea now works for Groups as well :) You can fix a Group to the camera and it will influence its children.
 * Tilemap.createCollisionObjects will parse Tiled data for objectgroups and convert polyline instances into physics objects you can collide with in the world.
+* Loader can now load JSON files specifically (game.load.json) and they are parsed and stored in the Game.Cache. Retrieve with game.cache.getJSON(key).
+* TileSprites can now receive full Input events, dragging, etc and be positioned in-world and fixed to cameras.
+* The StateManager now looks for a function called 'resumed' which is called when a game un-pauses.
 
 
 Updates:
@@ -133,6 +138,11 @@ Updates:
 * World.reset now calls Camera.reset which sends the camera back to 0,0 and un-follows any object it may have been tracking.
 * Added hostname: '*' to the grunt-connect in Gruntfile.js (fixes #426)
 * Device, Canvas and GamePad classes all updated for better CocoonJS support (thanks Videlais)
+* BitmapData.alphaMask will draw the given image onto a BitmapData using an image as an alpha mask.
+* The new GameObjectCreator (which you access via game.make or State.make) lets you easily create an object but NOT add it to the display list.
+* TilemapParser will now throw a warning if the tileset image isn't the right size for the tile dimensions.
+* We now force IE11 into Canvas mode to avoid a Pixi bug with pre-multiplied alpha. Will remove once that is fixed, sorry, but it's better than no game at all, right? :(
+* Loader.setPreloadSprite() will now set sprite.visible = true once the crop has been applied. Should help avoid issues (#430) on super-slow connections.
 
 
 Bug Fixes:
@@ -149,6 +159,9 @@ Bug Fixes:
 * Fixed bug in Math.angleBetween where it was using the coordinates in the wrong order.
 * Previously using a Pixel Perfect check didn't work if the Sprite was rotated or had a non-zero anchor point, now works under all conditions + atlas frames.
 * If pixelPerfect Input Sprites overlapped each other the pixel check wasn't taken into consieration in the Pointer move method.
+* Updated Input.Mouse to use event.button not event.which, so the const reference from input.mouse.button is correct (thanks grimor)
+* Text that was fixedToCamera would 'jitter' if the world scrolled. Now works as expected across all fixed objects.
+
 
 
 TO DO:

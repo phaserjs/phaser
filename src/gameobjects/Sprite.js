@@ -14,6 +14,7 @@
 * events (via Sprite.events), animation (via Sprite.animations), camera culling and more. Please see the Examples for use cases.
 *
 * @constructor
+* @extends PIXI.Sprite
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} x - The x coordinate (in world space) to position the Sprite at.
 * @param {number} y - The y coordinate (in world space) to position the Sprite at.
@@ -491,11 +492,6 @@ Phaser.Sprite.prototype.kill = function() {
 */
 Phaser.Sprite.prototype.destroy = function() {
 
-    if (this.filters)
-    {
-        this.filters = null;
-    }
-
     if (this.parent)
     {
         this.parent.remove(this);
@@ -521,10 +517,19 @@ Phaser.Sprite.prototype.destroy = function() {
         this.events.destroy();
     }
 
+    var i = this.children.length;
+
+    while (i--)
+    {
+        this.removeChild(this.children[i]);
+    }
+
     this.alive = false;
     this.exists = false;
     this.visible = false;
 
+    this.filters = null;
+    this.mask = null;
     this.game = null;
 
 };

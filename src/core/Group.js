@@ -10,18 +10,20 @@
 * @classdesc A Group is a container for display objects that allows for fast pooling and object recycling. Groups can be nested within other Groups and have their own local transforms.
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
-* @param {Phaser.Group|Phaser.Sprite} parent - The parent Group, DisplayObject or DisplayObjectContainer that this Group will be added to. If undefined or null it will use game.world.
+* @param {Phaser.Group|Phaser.Sprite|null} parent - The parent Group, DisplayObject or DisplayObjectContainer that this Group will be added to. If undefined it will use game.world. If null it won't be added to anything.
 * @param {string} [name=group] - A name for this Group. Not used internally but useful for debugging.
 * @param {boolean} [addToStage=false] - If set to true this Group will be added directly to the Game.Stage instead of Game.World.
 */
 Phaser.Group = function (game, parent, name, addToStage) {
+
+    if (typeof addToStage === 'undefined') { addToStage = false; }
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
     */
     this.game = game;
 
-    if (typeof parent === 'undefined' || parent === null)
+    if (typeof parent === 'undefined')
     {
         parent = game.world;
     }
@@ -33,20 +35,16 @@ Phaser.Group = function (game, parent, name, addToStage) {
 
     PIXI.DisplayObjectContainer.call(this);
 
-    if (typeof addToStage === 'undefined' || addToStage === false)
+    if (addToStage)
+    {
+        this.game.stage.addChild(this);
+    }
+    else
     {
         if (parent)
         {
             parent.addChild(this);
         }
-        else
-        {
-            this.game.stage.addChild(this);
-        }
-    }
-    else
-    {
-        this.game.stage.addChild(this);
     }
 
     /**
@@ -1147,7 +1145,7 @@ Phaser.Group.prototype.destroy = function (destroyChildren) {
         {
             do
             {
-                if (this.children[0].group)
+                if (this.children[0].parent)
                 {
                     this.children[0].destroy();
                 }

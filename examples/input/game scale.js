@@ -14,6 +14,8 @@ function preload() {
 
 }
 
+var cursors;
+
 function create() {
 
     //We increase the size of our game world
@@ -25,26 +27,28 @@ function create() {
         game.add.sprite(game.world.randomX, game.world.randomY, 'melon');
     }
 
+    cursors = game.input.keyboard.createCursorKeys();
+
 }
 
 function update() {
 
     //This allows us to move the game camera using the keyboard
 
-    if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+    if (cursors.left.isDown)
     {
         game.camera.x -= 4;
     }
-    else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+    else if (cursors.right.isDown)
     {
         game.camera.x += 4;
     }
 
-    if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
+    if (cursors.up.isDown)
     {
         game.camera.y -= 4;
     }
-    else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN))
+    else if (cursors.down.isDown)
     {
         game.camera.y += 4;
     }

@@ -628,7 +628,7 @@ Phaser.InputHandler.prototype = {
             return;
         }
 
-        if (this.enabled === false || this.sprite.visible === false || (this.sprite.group && this.sprite.group.visible === false))
+        if (!this.enabled || !this.sprite.visible || !this.sprite.parent.visible)
         {
             this._pointerOutHandler(pointer);
             return false;

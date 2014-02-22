@@ -30,9 +30,51 @@ Phaser.RenderTexture = function (game, width, height, key) {
     */
     this.type = Phaser.RENDERTEXTURE;
 
+    /**
+    * @property {Phaser.Point} _temp - Internal var.
+    * @private
+    */
+    this._temp = new Phaser.Point();
+
     PIXI.RenderTexture.call(this, width, height);
     
 };
 
 Phaser.RenderTexture.prototype = Object.create(PIXI.RenderTexture.prototype);
 Phaser.RenderTexture.prototype.constructor = Phaser.RenderTexture;
+
+/**
+* This function will draw the display object to the texture.
+*
+* @method Phaser.RenderTexture.prototype.renderXY
+* @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapText|Phaser.Group} displayObject  The display object to render to this texture.
+* @param {number} x - The x position to render the object at.
+* @param {number} y - The y position to render the object at.
+* @param {boolean} clear - If true the texture will be cleared before the display object is drawn.
+*/
+Phaser.RenderTexture.prototype.renderXY = function (displayObject, x, y, clear) {
+
+    this._temp.set(x, y);
+
+    this.render(displayObject, this._temp, clear);
+
+}
+
+//  Documentation stubs
+
+/**
+* This function will draw the display object to the texture.
+*
+* @method Phaser.RenderTexture.prototype.render
+* @param {Phaser.Sprite|Phaser.Image|Phaser.Text|Phaser.BitmapText|Phaser.Group} displayObject  The display object to render to this texture.
+* @param {Phaser.Point} position - A Point object containing the position to render the display object at.
+* @param {boolean} clear - If true the texture will be cleared before the display object is drawn.
+*/
+
+/**
+* Resize this RenderTexture to the given width and height.
+*
+* @method Phaser.RenderTexture.prototype.resize
+* @param {number} width - The new width of the RenderTexture.
+* @param {number} height - The new height of the RenderTexture.
+*/

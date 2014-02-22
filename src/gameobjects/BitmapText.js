@@ -204,29 +204,24 @@ Phaser.BitmapText.prototype.postUpdate = function () {
 */
 Phaser.BitmapText.prototype.destroy = function() {
 
-    if (this.filters)
-    {
-        this.filters = null;
-    }
-
     if (this.parent)
     {
         this.parent.remove(this);
     }
 
+    var i = this.children.length;
+
+    while (i--)
+    {
+        this.removeChild(this.children[i]);
+    }
+
     this.exists = false;
     this.visible = false;
 
+    this.filters = null;
+    this.mask = null;
     this.game = null;
-
-    if (this.children.length > 0)
-    {
-        do
-        {
-            this.removeChild(this.children[0]);
-        }
-        while (this.children.length > 0);
-    }
 
 }
 

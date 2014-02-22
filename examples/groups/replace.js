@@ -25,12 +25,12 @@ function create() {
         // Directly create sprites from the left group.
         item = left.create(290, 98 * (i + 1), 'item', i);
         // Enable input.
-        item.input.start(0, false, true);
+        item.inputEnabled = true;
         item.events.onInputUp.add(select);
         // Add another to the right group.
         item = right.create(388, 98 * (i + 1), 'item', i + 3);
         // Enable input.
-        item.input.start(0,true);
+        item.inputEnabled = true;
         item.events.onInputUp.add(select);
     }
 }

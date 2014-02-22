@@ -10,6 +10,7 @@
 * Here is a compatibility table showing the available default fonts across different mobile browsers: http://www.jordanm.co.uk/tinytype
 *
 * @class Phaser.Text
+* @extends PIXI.Text
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
 * @param {number} x - X position of the new text object.
@@ -170,7 +171,6 @@ Phaser.Text.prototype.update = function() {
 */
 Phaser.Text.prototype.postUpdate = function () {
 
-    //  Fixed to Camera?
     if (this._cache[7] === 1)
     {
         this.position.x = this.game.camera.view.x + this.cameraOffset.x;
@@ -183,11 +183,6 @@ Phaser.Text.prototype.postUpdate = function () {
 * @method Phaser.Text.prototype.destroy
 */
 Phaser.Text.prototype.destroy = function () {
-
-    if (this.filters)
-    {
-        this.filters = null;
-    }
 
     if (this.parent)
     {
@@ -206,9 +201,18 @@ Phaser.Text.prototype.destroy = function () {
         this.context = null;
     }
 
+    var i = this.children.length;
+
+    while (i--)
+    {
+        this.removeChild(this.children[i]);
+    }
+
     this.exists = false;
     this.visible = false;
 
+    this.filters = null;
+    this.mask = null;
     this.game = null;
 
 }

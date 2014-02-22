@@ -118,9 +118,14 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.raf = null;
 
     /**
-    * @property {Phaser.GameObjectFactory} add - Reference to the GameObject Factory.
+    * @property {Phaser.GameObjectFactory} add - Reference to the Phaser.GameObjectFactory.
     */
     this.add = null;
+
+    /**
+    * @property {Phaser.GameObjectCreator} make - Reference to the GameObject Creator.
+    */
+    this.make = null;
 
     /**
     * @property {Phaser.Cache} cache - Reference to the assets cache.
@@ -440,6 +445,7 @@ Phaser.Game.prototype = {
 
             this.world = new Phaser.World(this);
             this.add = new Phaser.GameObjectFactory(this);
+            this.make = new Phaser.GameObjectCreator(this);
             this.cache = new Phaser.Cache(this);
             this.load = new Phaser.Loader(this);
             this.time = new Phaser.Time(this);
@@ -534,13 +540,12 @@ Phaser.Game.prototype = {
     */
     setUpRenderer: function () {
 
-        /*
         if (this.device.trident)
         {
-            //  Pixi WebGL renderer on IE11 doesn't work correctly with masks, if you need them you may want to comment this block out
+            //  Pixi WebGL renderer on IE11 doesn't work correctly at the moment, the pre-multiplied alpha gets all washed out.
+            //  So we're forcing canvas for now until this is fixed, sorry. It's got to be better than no game appearing at all, right?
             this.renderType = Phaser.CANVAS;
         }
-        */
 
         if (this.renderType === Phaser.HEADLESS || this.renderType === Phaser.CANVAS || (this.renderType === Phaser.AUTO && this.device.webGL === false))
         {
@@ -553,7 +558,6 @@ Phaser.Game.prototype = {
 
                 this.renderer = new PIXI.CanvasRenderer(this.width, this.height, this.canvas, this.transparent);
                 Phaser.Canvas.setSmoothingEnabled(this.renderer.context, this.antialias);
-                // this.canvas = this.renderer.view;
                 this.context = this.renderer.context;
             }
             else
@@ -566,12 +570,8 @@ Phaser.Game.prototype = {
             //  They requested WebGL, and their browser supports it
             this.renderType = Phaser.WEBGL;
             this.renderer = new PIXI.WebGLRenderer(this.width, this.height, this.canvas, this.transparent, this.antialias);
-            // this.canvas = this.renderer.view;
             this.context = null;
         }
-
-        // Phaser.Canvas.addToDOM(this.renderer.view, this.parent, true);
-        // Phaser.Canvas.setTouchAction(this.renderer.view);
 
         Phaser.Canvas.addToDOM(this.canvas, this.parent, true);
         Phaser.Canvas.setTouchAction(this.canvas);

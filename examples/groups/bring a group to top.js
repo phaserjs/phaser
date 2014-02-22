@@ -34,7 +34,7 @@ function create() {
         var tempSprite = game.add.sprite(game.world.randomX, game.world.randomY, 'atari1');
 
         tempSprite.name = 'atari' + i;
-        tempSprite.input.start(i, true);
+        tempSprite.inputEnabled = true;
         tempSprite.input.enableDrag(false, true);
 
         group1.add(tempSprite);
@@ -44,7 +44,7 @@ function create() {
         var tempSprite=game.add.sprite(game.world.randomX, game.world.randomY, 'sonic');
 
         tempSprite.name = 'sonic' + i;
-        tempSprite.input.start(10 + i, true);
+        tempSprite.inputEnabled = true;
         tempSprite.input.enableDrag(false, true);
 
         group2.add(tempSprite);

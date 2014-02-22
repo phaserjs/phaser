@@ -35,6 +35,8 @@ function create() {
     //  The player
     sprite = group.create(300, 200, 'phaser');
 
+    sprite.physicsEnabled = true;
+
     //  Some trees
     for (var i = 0; i < 50; i++)
     {

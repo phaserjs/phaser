@@ -351,6 +351,21 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
+    * Renders the Sprites bounds. Note: This is really expensive as it has to calculate the bounds every time you call it!
+    * @method Phaser.Utils.Debug#renderSpriteBounds
+    * @param {Phaser.Sprite} sprite - Description.
+    * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
+    * @param {boolean} [filled=true] - Render the rectangle as a fillRect (default, true) or a strokeRect (false)
+    */
+    renderSpriteBounds: function (sprite, color, filled) {
+
+        var bounds = sprite.getBounds();
+
+        this.renderRectangle(bounds, color, filled);
+
+    },
+
+    /**
     * Render debug infos (including name, bounds info, position and some other properties) about the Sprite.
     * @method Phaser.Utils.Debug#renderSpriteInfo
     * @param {Phaser.Sprite} sprite - Description.
@@ -373,26 +388,7 @@ Phaser.Utils.Debug.prototype = {
         this.line('x: ' + sprite.x.toFixed(1) + ' y: ' + sprite.y.toFixed(1));
         this.line('angle: ' + sprite.angle.toFixed(1) + ' rotation: ' + sprite.rotation.toFixed(1));
         this.line('visible: ' + sprite.visible + ' in camera: ' + sprite.inCamera);
-        this.line('body x: ' + sprite.body.x.toFixed(1) + ' y: ' + sprite.body.y.toFixed(1));
 
-        //  0 = scaleX
-        //  1 = skewY
-        //  2 = translateX
-        //  3 = skewX
-        //  4 = scaleY
-        //  5 = translateY
-
-        this.line('id: ' + sprite._id);
-        this.line('scale x: ' + sprite.worldTransform[0]);
-        this.line('scale y: ' + sprite.worldTransform[4]);
-        this.line('tx: ' + sprite.worldTransform[2]);
-        this.line('ty: ' + sprite.worldTransform[5]);
-        this.line('skew x: ' + sprite.worldTransform[3]);
-        this.line('skew y: ' + sprite.worldTransform[1]);
-        this.line('sdx: ' + sprite.deltaX);
-        this.line('sdy: ' + sprite.deltaY);
-
-        // this.line('inCamera: ' + this.game.renderer.spriteRenderer.inCamera(this.game.camera, sprite));
         this.stop();
 
     },
