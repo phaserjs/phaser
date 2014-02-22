@@ -124,6 +124,7 @@ New features:
 * Tilemap.createCollisionObjects will parse Tiled data for objectgroups and convert polyline instances into physics objects you can collide with in the world.
 * Loader can now load JSON files specifically (game.load.json) and they are parsed and stored in the Game.Cache. Retrieve with game.cache.getJSON(key).
 * TileSprites can now receive full Input events, dragging, etc and be positioned in-world and fixed to cameras.
+* The StateManager now looks for a function called 'resumed' which is called when a game un-pauses.
 
 
 Updates:
