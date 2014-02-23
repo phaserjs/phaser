@@ -53,7 +53,7 @@ Phaser.Physics.World = function (game, config) {
     /**
     * @property {Phaser.InversePointProxy} gravity - The gravity applied to all bodies each step.
     */
-    this.gravity = new Phaser.Physics.InversePointProxy(this.world.gravity);
+    this.gravity = new Phaser.Physics.InversePointProxy(game, this.world.gravity);
 
     /**
     * @property {p2.Body} bounds - The bounds body contains the 4 walls that border the World. Define or disable with setBounds.
