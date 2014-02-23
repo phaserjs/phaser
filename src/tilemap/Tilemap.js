@@ -367,7 +367,7 @@ Phaser.Tilemap.prototype = {
 
                         if (addToWorld)
                         {
-                            this.game.physics.addBody(body.data);
+                            this.game.physics.addBody(body);
                         }
 
                         this.layers[layer].bodies.push(body);
