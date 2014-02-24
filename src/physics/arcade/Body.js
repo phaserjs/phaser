@@ -501,8 +501,7 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.speed = 0;
             }
 
-            //  Don't bother if speed 0
-            if (this.speed > 0)
+            if (this.speed > 0 || !this.velocity.isZero())
             {
                 this.velocity.x = Math.cos(this.angle) * this.speed;
                 this.velocity.y = Math.sin(this.angle) * this.speed;
