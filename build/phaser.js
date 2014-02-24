@@ -18,7 +18,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v1.1.5 - Built at: Wed Feb 12 2014 15:32:36
+* v1.1.6 - Built at: Mon Feb 24 2014 01:27:13
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -57,8 +57,8 @@ var PIXI = PIXI || {};
 */
 var Phaser = Phaser || {
 
-	VERSION: '1.1.5',
-	DEV_VERSION: '1.1.5',
+	VERSION: '1.1.6',
+	DEV_VERSION: '1.1.6',
 	GAMES: [],
 
 	AUTO: 0,
@@ -11925,11 +11925,11 @@ Phaser.Group.prototype = {
     },
 
     /**
-    * Allows you to call your own function on each alive member of this Group (where child.alive=true). You must pass the callback and context in which it will run.
+    * Allows you to call your own function on each existing member of this Group (where child.exists=true). You must pass the callback and context in which it will run.
     * You can add as many parameters as you like, which will all be passed to the callback along with the child.
-    * For example: Group.forEachAlive(causeDamage, this, 500)
+    * For example: Group.forEachExists(causeDamage, this, 500)
     * 
-    * @method Phaser.Group#forEachAlive
+    * @method Phaser.Group#forEachExists
     * @param {function} callback - The function that will be called. Each child of the Group will be passed to it as its first parameter.
     * @param {Object} callbackContext - The context in which the function should be called (usually 'this').
     */
@@ -12593,7 +12593,7 @@ Phaser.World.prototype.boot = function () {
 * This is called automatically after the plugins preUpdate and before the State.update.
 * Most objects have preUpdate methods and it's where initial movement, drawing and calculations are done.
 * 
-* @method Phaser.World#update
+* @method Phaser.World#preUpdate
 */
 Phaser.World.prototype.preUpdate = function () {
     
@@ -14620,7 +14620,7 @@ Phaser.Key.prototype = {
 
     /**
     * Returns the "just released" state of the Key. Just released is considered as being true if the key was released within the duration given (default 250ms)
-    * @method Phaser.Key#justPressed
+    * @method Phaser.Key#justReleased
     * @param {number} [duration=250] - The duration below which the key is considered as being just released.
     * @return {boolean} True if the key is just released otherwise false.
     */
@@ -17128,7 +17128,7 @@ Phaser.InputHandler.prototype = {
 
     /**
     * Is this sprite being dragged by the mouse or not?
-    * @method Phaser.InputHandler#pointerTimeOut
+    * @method Phaser.InputHandler#pointerDragged
     * @param {Phaser.Pointer} pointer
     * @return {number}
     */
@@ -18531,7 +18531,7 @@ Phaser.SinglePad.prototype = {
 
     /**
     * Add callbacks to the this Gamepad to handle connect/disconnect/button down/button up/axis change/float value buttons
-    * @method Phaser.Gamepad#addCallbacks
+    * @method Phaser.SinglePad#addCallbacks
     * @param {Object} context - The context under which the callbacks are run.
     * @param {Object} callbacks - Object that takes six different callbak methods:
     * onConnectCallback, onDisconnectCallback, onDownCallback, onUpCallback, onAxisCallback, onFloatCallback
@@ -22516,7 +22516,7 @@ Phaser.BitmapText.prototype.update = function() {
 }
 
 /**
-* @method Phaser.Text.prototype.destroy
+* @method Phaser.BitmapText.prototype.destroy
 */
 Phaser.BitmapText.prototype.destroy = function() {
 
@@ -23071,7 +23071,7 @@ Phaser.Button.prototype.onInputOverHandler = function (sprite, pointer) {
 * Internal function that handles input events.
 *
 * @protected
-* @method Phaser.Button.prototype.onInputOverHandler
+* @method Phaser.Button.prototype.onInputOutHandler
 * @param {Phaser.Button} sprite - The Button that the event occured on.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
@@ -23097,7 +23097,7 @@ Phaser.Button.prototype.onInputOutHandler = function (sprite, pointer) {
 * Internal function that handles input events.
 *
 * @protected
-* @method Phaser.Button.prototype.onInputOverHandler
+* @method Phaser.Button.prototype.onInputDownHandler
 * @param {Phaser.Button} sprite - The Button that the event occured on.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
@@ -23123,7 +23123,7 @@ Phaser.Button.prototype.onInputDownHandler = function (sprite, pointer) {
 * Internal function that handles input events.
 *
 * @protected
-* @method Phaser.Button.prototype.onInputOverHandler
+* @method Phaser.Button.prototype.onInputUpHandler
 * @param {Phaser.Button} sprite - The Button that the event occured on.
 * @param {Phaser.Pointer} pointer - The Pointer that activated the Button.
 */
@@ -23268,7 +23268,7 @@ Phaser.Graphics.prototype.constructor = Phaser.Graphics;
 /**
 * Destroy this Graphics instance.
 * 
-* @method Phaser.Sprite.prototype.destroy
+* @method Phaser.Graphics.prototype.destroy
 */
 Phaser.Graphics.prototype.destroy = function() {
 
@@ -25856,7 +25856,7 @@ Phaser.Math = {
 
     /**
     * a is fuzzyLessThan b if it is less than b + &epsilon;. 
-    * @method Phaser.Math#fuzzyEqual
+    * @method Phaser.Math#fuzzyLessThan
     * @param {number} a
     * @param {number} b
     * @param {number} epsilon 
@@ -28153,7 +28153,7 @@ Phaser.Point.prototype = {
 
     /**
     * Alters the length of the vector without changing the direction
-    * @method Phaser.Point#getMagnitude
+    * @method Phaser.Point#setMagnitude
     * @param {number} magnitude the desired magnitude of the resulting vector
     * @return {Phaser.Point} the modified original vector
     */
@@ -29250,7 +29250,7 @@ Object.defineProperty(Phaser.Line.prototype, "perpSlope", {
 * Returns the intersection segment of AB and EF as a Point, or null if there is no intersection.
 * Adapted from code by Keith Hair
 *
-* @method Phaser.Line.intersects
+* @method Phaser.Line.intersectsPoints
 * @param {Phaser.Point} a - The start of the first Line to be checked.
 * @param {Phaser.Point} b - The end of the first line to be checked.
 * @param {Phaser.Point} e - The start of the second Line to be checked.
@@ -29670,7 +29670,7 @@ Phaser.TweenManager.prototype = {
     /**
     * Pauses all currently running tweens.
     *
-    * @method Phaser.TweenManager#update
+    * @method Phaser.TweenManager#pauseAll
     */
     pauseAll: function () {
 
@@ -29682,7 +29682,7 @@ Phaser.TweenManager.prototype = {
     },
 
     /**
-    * Pauses all currently paused tweens.
+    * Resumes all currently paused tweens.
     *
     * @method Phaser.TweenManager#resumeAll
     */
@@ -34630,6 +34630,22 @@ Phaser.Loader.prototype = {
         return this;
 
     },
+    
+    /**
+    * Add a custom JSON file to the Loader.
+    *
+    * @method Phaser.Loader#json
+    * @param {string} key - Unique asset key of the json file.
+    * @param {string} url - URL of the json file.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    json: function (key, url) {
+
+        this.addToFileList('json', key, url);
+
+        return this;
+
+    },
 
     /**
     * Add a binary file to the Loader. It will be loaded via xhr with a responseType of "arraybuffer". You can specify an optional callback to process the file after load.
@@ -35088,12 +35104,12 @@ Phaser.Loader.prototype = {
                 }
 
                 break;
-
             case 'tilemap':
+            case 'json':
                 this._xhr.open("GET", this.baseURL + file.url, true);
                 this._xhr.responseType = "text";
 
-                if (file.format === Phaser.Tilemap.TILED_JSON)
+                if (!file.format || file.format === Phaser.Tilemap.TILED_JSON)
                 {
                     this._xhr.onload = function () {
                         return _this.jsonLoadComplete(_this._fileIndex);
@@ -35115,7 +35131,6 @@ Phaser.Loader.prototype = {
                 };
                 this._xhr.send();
                 break;
-
             case 'text':
             case 'script':
                 this._xhr.open("GET", this.baseURL + file.url, true);
@@ -35373,6 +35388,10 @@ Phaser.Loader.prototype = {
         if (file.type === 'tilemap')
         {
             this.game.cache.addTilemap(file.key, file.url, data, file.format);
+        }
+        else if (file.type === 'json')
+        {
+             this.game.cache.addText(file.key, file.url, data);
         }
         else
         {
@@ -39775,14 +39794,8 @@ Phaser.Physics.Arcade.prototype = {
             return;
         }
 
-        if (this._mapData.length > 1)
+        for (var i = 0; i < this._mapData.length; i++)
         {
-            this.separateTiles(sprite.body, this._mapData);
-        }
-        else
-        {
-            var i = 0;
-
             if (this.separateTile(sprite.body, this._mapData[i]))
             {
                 //  They collided, is there a custom process callback?
@@ -39809,6 +39822,8 @@ Phaser.Physics.Arcade.prototype = {
                 }
             }
         }
+
+        return true;
 
     },
 
@@ -39896,7 +39911,7 @@ Phaser.Physics.Arcade.prototype = {
 
         if (a.width <= 0 || a.height <= 0 || b.width <= 0 || b.height <= 0)
         {
-            result = false;
+            return false;
         }
 
         result = !(a.right < b.left || a.bottom < b.top || a.left > b.right || a.top > b.bottom);
@@ -39906,6 +39921,7 @@ Phaser.Physics.Arcade.prototype = {
             a.removeContact(b);
         }
 
+        return result;
     },
 
     /**
@@ -39938,32 +39954,6 @@ Phaser.Physics.Arcade.prototype = {
         this._intersection[4] = 0;
 
         return this._intersection;
-
-    },
-
-    /**
-    * The core separation function to separate a physics body and an array of tiles.
-    * @method Phaser.Physics.Arcade#separateTiles
-    * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
-    * @param {array<Phaser.Tile>} tiles - The array of tiles to collide against.
-    * @returns {boolean} Returns true if the body was separated, otherwise false.
-    */
-    separateTiles: function (body, tiles) {
-
-        var tile;
-        var result = false;
-
-        for (var i = 0; i < tiles.length; i++)
-        {
-            tile = tiles[i];
-
-            if (this.separateTile(body, tile))
-            {
-                result = true;
-            }
-        }
-
-        return result;
 
     },
 
@@ -41012,8 +41002,7 @@ Phaser.Physics.Arcade.Body.prototype = {
                 this.speed = 0;
             }
 
-            //  Don't bother if speed 0
-            if (this.speed > 0)
+            if (this.speed > 0 || !this.velocity.isZero())
             {
                 this.velocity.x = Math.cos(this.angle) * this.speed;
                 this.velocity.y = Math.sin(this.angle) * this.speed;
@@ -45541,6 +45530,10 @@ Phaser.TilemapParser = {
             newSet.columns = (set.imagewidth - set.margin) / (set.tilewidth + set.spacing);
             newSet.total = newSet.rows * newSet.columns;
 
+            if (newSet.rows % 1 !== 0 || newSet.columns % 1 !== 0) {
+                console.warn('TileSet image dimensions do not match expected dimensions.');
+            }
+
             tilesets.push(newSet);
         }
 
@@ -45892,27 +45885,32 @@ PIXI.CanvasRenderer.prototype.renderDisplayObject = function(displayObject, rend
         }
         else if (displayObject instanceof PIXI.FilterBlock)
         {
-            if (displayObject.open)
+            if(displayObject.data instanceof PIXI.Graphics)
             {
-                this.context.save();
-                
-                var cacheAlpha = displayObject.mask.alpha;
-                var maskTransform = displayObject.mask.worldTransform;
-                
-                this.context.setTransform(maskTransform[0], maskTransform[3], maskTransform[1], maskTransform[4], maskTransform[2], maskTransform[5])
-                
-                displayObject.mask.worldAlpha = 0.5;
-                
-                this.context.worldAlpha = 0;
-                
-                PIXI.CanvasGraphics.renderGraphicsMask(displayObject.mask, this.context);
-                this.context.clip();
-                
-                displayObject.mask.worldAlpha = cacheAlpha;
-            }
-            else
-            {
-                this.context.restore();
+                var mask = displayObject.data;
+
+                if(displayObject.open)
+                {
+                    this.context.save();
+
+                    var cacheAlpha = mask.alpha;
+                    var maskTransform = mask.worldTransform;
+
+                    this.context.setTransform(maskTransform[0], maskTransform[3], maskTransform[1], maskTransform[4], maskTransform[2], maskTransform[5]);
+
+                    mask.worldAlpha = 0.5;
+
+                    this.context.worldAlpha = 0;
+
+                    PIXI.CanvasGraphics.renderGraphicsMask(mask, this.context);
+                    this.context.clip();
+
+                    mask.worldAlpha = cacheAlpha;
+                }
+                else
+                {
+                    this.context.restore();
+                }
             }
         }
         //  count++
