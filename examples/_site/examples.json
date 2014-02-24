@@ -293,6 +293,10 @@
     {
       "file": "tanks.js",
       "title": "tanks"
+    },
+    {
+      "file": "golf.js",
+      "title": "golf"
     }
   ],
   "geometry": [
