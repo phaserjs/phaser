@@ -257,7 +257,7 @@ Phaser.StageScaleMode.prototype = {
             return;
         }
 
-        if (typeof antialias !== 'undefined')
+        if (typeof antialias !== 'undefined' && this.game.renderType === Phaser.CANVAS)
         {
             Phaser.Canvas.setSmoothingEnabled(this.game.context, antialias);
         }

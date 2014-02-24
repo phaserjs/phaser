@@ -324,6 +324,14 @@ Phaser.Utils.Debug.prototype = {
 
     },
 
+    /**
+    * Renders Phaser.Key object information.
+    * @method Phaser.Utils.Debug#renderKey
+    * @param {Phaser.Key} key - The Key to render the information for.
+    * @param {number} x - X position of the debug info to be rendered.
+    * @param {number} y - Y position of the debug info to be rendered.
+    * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
+    */
     renderKey: function (key, x, y, color) {
 
         if (this.context === null)
@@ -338,7 +346,6 @@ Phaser.Utils.Debug.prototype = {
         this.splitline('Key:', key.keyCode, 'isDown:', key.isDown);
         this.splitline('justPressed:', key.justPressed(), 'justReleased:', key.justReleased());
         this.splitline('Time Down:', key.timeDown.toFixed(0), 'duration:', key.duration.toFixed(0));
-        this.line('Repeats: ' + key.repeats);
 
         this.stop();
 

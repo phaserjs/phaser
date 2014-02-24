@@ -76,6 +76,7 @@ Significant API changes:
 * When adding a Group if the parent value is `null` the Group won't be added to the World, so you can add it when ready. If parent is `undefined` it's added by default.
 * The Keyboard class has had a complete overhaul. Phaser.Key objects are created automatically, there are fixes against duration and keys reset properly on visibility loss.
 * Keyboard.removeKey has been removed. The way the new keyboard manager works means it's no longer required.
+* When a game un-pauses (from a visibility loss) it resets all Input components.
 
 
 New features:
