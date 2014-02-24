@@ -1,6 +1,24 @@
 Change Log
 ==========
 
+Version 1.1.5 - "Saldaea" - 12th February 2014
+----------------------------------------------
+
+Bug Fixes:
+
+* Explicitly paused Timer continues if you un-focus and focus the browser window (thanks georgiee)
+* Added TimerEvent.pendingDelete and checks in Timer.update, so that removing an event in a callback no longer throws an exception (thanks georgiee)
+* Fixed TypeScript defs on lines 1741-1748 (thanks wombatbuddy)
+* Added SAT.js to TypeScript definition. Now compiles properly.
+* Added missing Line.js to the Grunt file.
+* Tilemap#paste diffX and diffY equations changed, fixed issue #393 (thanks brejep)
+* Added missing return value in Body.hitLeft and hitRight, fixes issue #398 (thanks ram64).
+* Fixed easing tween example case. Issue #379 (thanks wesleywerner)
+* Removed SAT.js UMD wrapped, fixes issue #361 (thanks luizbills)
+* Removed inContact check from Body.separate.
+* Fixed Tilemap docs (wrongly pointed to Tileset methods)
+
+
 Version 1.1.4 - "Kandor" - February 5th 2014
 --------------------------------------------
 

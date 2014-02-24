@@ -32,7 +32,7 @@ Phaser.Math = {
 
     /**
     * a is fuzzyLessThan b if it is less than b + &epsilon;. 
-    * @method Phaser.Math#fuzzyEqual
+    * @method Phaser.Math#fuzzyLessThan
     * @param {number} a
     * @param {number} b
     * @param {number} epsilon 

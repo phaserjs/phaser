@@ -368,6 +368,22 @@ Phaser.Loader.prototype = {
         return this;
 
     },
+    
+    /**
+    * Add a custom JSON file to the Loader.
+    *
+    * @method Phaser.Loader#json
+    * @param {string} key - Unique asset key of the json file.
+    * @param {string} url - URL of the json file.
+    * @return {Phaser.Loader} This Loader instance.
+    */
+    json: function (key, url) {
+
+        this.addToFileList('json', key, url);
+
+        return this;
+
+    },
 
     /**
     * Add a binary file to the Loader. It will be loaded via xhr with a responseType of "arraybuffer". You can specify an optional callback to process the file after load.
@@ -826,12 +842,12 @@ Phaser.Loader.prototype = {
                 }
 
                 break;
-
             case 'tilemap':
+            case 'json':
                 this._xhr.open("GET", this.baseURL + file.url, true);
                 this._xhr.responseType = "text";
 
-                if (file.format === Phaser.Tilemap.TILED_JSON)
+                if (!file.format || file.format === Phaser.Tilemap.TILED_JSON)
                 {
                     this._xhr.onload = function () {
                         return _this.jsonLoadComplete(_this._fileIndex);
@@ -853,7 +869,6 @@ Phaser.Loader.prototype = {
                 };
                 this._xhr.send();
                 break;
-
             case 'text':
             case 'script':
                 this._xhr.open("GET", this.baseURL + file.url, true);
@@ -1111,6 +1126,10 @@ Phaser.Loader.prototype = {
         if (file.type === 'tilemap')
         {
             this.game.cache.addTilemap(file.key, file.url, data, file.format);
+        }
+        else if (file.type === 'json')
+        {
+             this.game.cache.addText(file.key, file.url, data);
         }
         else
         {

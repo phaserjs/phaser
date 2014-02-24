@@ -696,14 +696,8 @@ Phaser.Physics.Arcade.prototype = {
             return;
         }
 
-        if (this._mapData.length > 1)
+        for (var i = 0; i < this._mapData.length; i++)
         {
-            this.separateTiles(sprite.body, this._mapData);
-        }
-        else
-        {
-            var i = 0;
-
             if (this.separateTile(sprite.body, this._mapData[i]))
             {
                 //  They collided, is there a custom process callback?
@@ -730,6 +724,8 @@ Phaser.Physics.Arcade.prototype = {
                 }
             }
         }
+
+        return true;
 
     },
 
@@ -817,7 +813,7 @@ Phaser.Physics.Arcade.prototype = {
 
         if (a.width <= 0 || a.height <= 0 || b.width <= 0 || b.height <= 0)
         {
-            result = false;
+            return false;
         }
 
         result = !(a.right < b.left || a.bottom < b.top || a.left > b.right || a.top > b.bottom);
@@ -827,6 +823,7 @@ Phaser.Physics.Arcade.prototype = {
             a.removeContact(b);
         }
 
+        return result;
     },
 
     /**
@@ -859,32 +856,6 @@ Phaser.Physics.Arcade.prototype = {
         this._intersection[4] = 0;
 
         return this._intersection;
-
-    },
-
-    /**
-    * The core separation function to separate a physics body and an array of tiles.
-    * @method Phaser.Physics.Arcade#separateTiles
-    * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
-    * @param {array<Phaser.Tile>} tiles - The array of tiles to collide against.
-    * @returns {boolean} Returns true if the body was separated, otherwise false.
-    */
-    separateTiles: function (body, tiles) {
-
-        var tile;
-        var result = false;
-
-        for (var i = 0; i < tiles.length; i++)
-        {
-            tile = tiles[i];
-
-            if (this.separateTile(body, tile))
-            {
-                result = true;
-            }
-        }
-
-        return result;
 
     },
 

@@ -186,7 +186,7 @@ Object.defineProperty(Phaser.Line.prototype, "perpSlope", {
 * Returns the intersection segment of AB and EF as a Point, or null if there is no intersection.
 * Adapted from code by Keith Hair
 *
-* @method Phaser.Line.intersects
+* @method Phaser.Line.intersectsPoints
 * @param {Phaser.Point} a - The start of the first Line to be checked.
 * @param {Phaser.Point} b - The end of the first line to be checked.
 * @param {Phaser.Point} e - The start of the second Line to be checked.
