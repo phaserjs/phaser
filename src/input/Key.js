@@ -28,7 +28,7 @@ Phaser.Key = function (game, keycode) {
     * @property {boolean} isUp - The "up" state of the key.
     * @default
     */
-    this.isUp = false;
+    this.isUp = true;
 
     /**
     * @property {boolean} altKey - The down state of the ALT key, if pressed at the same time as this key.
