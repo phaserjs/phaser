@@ -428,6 +428,8 @@ Phaser.Input.prototype = {
     */
     update: function () {
 
+        this.keyboard.update();
+
         if (this.pollRate > 0 && this._pollCounter < this.pollRate)
         {
             this._pollCounter++;

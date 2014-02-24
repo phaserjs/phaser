@@ -73,7 +73,9 @@ Significant API changes:
 * After defining tiles that collide on a Tilemap, you need to call Tilemap.generateCollisionData(layer) to populate the physics world with the data required.
 * Phaser.QuadTree has been removed from core and moved to a plugin. It's no longer required, nor works with the physics system.
 * Phaser.Animation.frame now returns the frame of the current animation, rather than the global frame from the sprite sheet / atlas.
-* When adding a Group if the parent value is `null` the Group won't be added to the World, so you can add it when ready. If parent is `undefined` it's added to World by default.
+* When adding a Group if the parent value is `null` the Group won't be added to the World, so you can add it when ready. If parent is `undefined` it's added by default.
+* The Keyboard class has had a complete overhaul. Phaser.Key objects are created automatically, there are fixes against duration and keys reset properly on visibility loss.
+* Keyboard.removeKey has been removed. The way the new keyboard manager works means it's no longer required.
 
 
 New features:
@@ -107,6 +109,7 @@ New features:
 * Loader can now load JSON files specifically (game.load.json) and they are parsed and stored in the Game.Cache. Retrieve with game.cache.getJSON(key).
 * TileSprites can now receive full Input events, dragging, etc and be positioned in-world and fixed to cameras.
 * The StateManager now looks for a function called 'resumed' which is called when a game un-pauses.
+* Key.onHold added. This event is dispatched every time the browser sends a keydown event and the key is already being held down.
 
 
 Updates:

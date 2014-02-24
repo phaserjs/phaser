@@ -324,6 +324,26 @@ Phaser.Utils.Debug.prototype = {
 
     },
 
+    renderKey: function (key, x, y, color) {
+
+        if (this.context === null)
+        {
+            return;
+        }
+
+        color = color || 'rgb(255,255,255)';
+
+        this.start(x, y, color, 150);
+
+        this.splitline('Key:', key.keyCode, 'isDown:', key.isDown);
+        this.splitline('justPressed:', key.justPressed(), 'justReleased:', key.justReleased());
+        this.splitline('Time Down:', key.timeDown.toFixed(0), 'duration:', key.duration.toFixed(0));
+        this.line('Repeats: ' + key.repeats);
+
+        this.stop();
+
+    },
+
     /**
     * Render debug information about the Input object.
     * @method Phaser.Utils.Debug#renderInputInfo

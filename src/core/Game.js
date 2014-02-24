@@ -741,6 +741,7 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
             if (this._paused)
             {
                 this._paused = false;
+                this.input.reset();
                 this.onResume.dispatch(this);
             }
         }
