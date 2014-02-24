@@ -67,7 +67,7 @@ There is also an [un-official Getting Started Guide](http://www.antonoffplus.com
 Change Log
 ----------
 
-Version 1.1.6 - "Shienar" - 24th February 2014
+Version 1.1.6 - "Shienar" - 24th February 2014 (amended 21:34 GMT)
 
 New Examples:
 
@@ -82,6 +82,8 @@ Updates:
 
 Bug Fixes:
 
+* Physics.processRebound now takes Body direction into account, helps with body-body collision bounces (thanks ram64)
+* Fixed the Example / physics / mass velocity test.
 * Updated Physics.Body.applyDamping so that velocity is reduced down to zero properly (thanks caezs)
 * ArcadePhysics.collideSpriteVsTilemapLayer wouldn't call the process or collide callbacks if only 1 tile was involved in the check (thanks mandarinx)
 * Lots of documentation fixes (thanks nhowell)

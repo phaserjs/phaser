@@ -652,7 +652,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.rebound)
         {
-            this.processRebound(body);
+            this.processRebound(body, response.overlapN);
             this.reboundCheck(true, true, false);
             body.reboundCheck(true, true, false);
         }
@@ -673,7 +673,7 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         if (this.rebound)
         {
-            this.processRebound(body);
+            this.processRebound(body, response.overlapN);
             this.reboundCheck(true, true, false);
             body.reboundCheck(true, true, false);
         }
@@ -756,17 +756,23 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @protected
     * @param {Phaser.Physics.Arcade.Body} body - The Body that collided.
     */
-    processRebound: function (body) {
+    processRebound: function (body, overlapN) {
 
         //  Don't rebound again if they've already rebounded in this frame
         if (!(this._vx <= 0 && this.velocity.x > 0) && !(this._vx >= 0 && this.velocity.x < 0))
         {
-            this.velocity.x = body.velocity.x - this.velocity.x * this.bounce.x;
+            if (overlapN.x != 0)
+            {
+                this.velocity.x = body.velocity.x - this.velocity.x * this.bounce.x;
+            }
         }
 
         if (!(this._vy <= 0 && this.velocity.y > 0) && !(this._vy >= 0 && this.velocity.y < 0))
         {
-            this.velocity.y = body.velocity.y - this.velocity.y * this.bounce.y;
+            if (overlapN.y != 0)
+            {
+                this.velocity.y = body.velocity.y - this.velocity.y * this.bounce.y;
+            }
         }
 
         this.angle = Math.atan2(this.velocity.y, this.velocity.x);
