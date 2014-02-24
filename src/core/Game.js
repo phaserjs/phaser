@@ -77,7 +77,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.renderer = Phaser.AUTO;
 
     /**
-    * @property {number} renderType - The Renderer this Phaser.Game will use. Either Phaser.RENDERER_AUTO, Phaser.RENDERER_CANVAS or Phaser.RENDERER_WEBGL.
+    * @property {number} renderType - The Renderer this game will use. Either Phaser.AUTO, Phaser.CANVAS or Phaser.WEBGL.
     */
     this.renderType = Phaser.AUTO;
 

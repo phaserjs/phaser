@@ -144,6 +144,7 @@ Updates:
 * We now force IE11 into Canvas mode to avoid a Pixi bug with pre-multiplied alpha. Will remove once that is fixed, sorry, but it's better than no game at all, right? :(
 * Loader.setPreloadSprite() will now set sprite.visible = true once the crop has been applied. Should help avoid issues (#430) on super-slow connections.
 * Updated the way the page visibility is checked, should now be more compatible across more browsers.
+* Phaser.Input.Key.isUp now defaults to 'true' (#474)
 
 
 Bug Fixes:
