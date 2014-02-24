@@ -150,6 +150,7 @@ Bug Fixes:
 * Updated Input.Mouse to use event.button not event.which, so the const reference from input.mouse.button is correct (thanks grimor)
 * Text that was fixedToCamera would 'jitter' if the world scrolled. Now works as expected across all fixed objects.
 * Fixed a bug where Sound.play wouldn't pick-up the local loop setting if not specified in the parameter.
+* Active animations now monitor if the game pauses, and resume normally when the game un-pauses (fixes #179)
 
 
 TO DO:

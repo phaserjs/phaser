@@ -251,7 +251,7 @@ Phaser.AnimationManager.prototype = {
     */
     update: function () {
 
-        if (this.updateIfVisible && this.sprite.visible === false)
+        if (this.updateIfVisible && !this.sprite.visible)
         {
             return false;
         }

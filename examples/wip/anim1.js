@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
@@ -7,15 +7,30 @@ function preload() {
 
 }
 
+var mummy;
+var anim;
+
 function create() {
 
-	// game.stage.backgroundColor = '#239923';
 	game.stage.backgroundColor = 0xff8855;
 
-    var mummy = game.add.sprite(300, 200, 'mummy', 5);
+    mummy = game.add.sprite(300, 200, 'mummy', 5);
 
-    mummy.animations.add('walk');
+    mummy.animations.updateIfVisible = false;
 
-    mummy.animations.play('walk', 20, true);
+    anim = mummy.animations.add('walk');
 
+    anim.play(2, false);
+    // anim.play(2, true);
+
+}
+
+function update() {
+
+}
+
+function render() {
+
+	game.debug.renderText(anim.frame + ' / 17', 32, 32);
+	
 }

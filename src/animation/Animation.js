@@ -115,6 +115,10 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     * @property {Phaser.Frame} currentFrame - The currently displayed frame of the Animation.
     */
     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
+
+    //  Set-up some event listeners
+    this.game.onPause.add(this.onPause, this);
+    this.game.onResume.add(this.onResume, this);
     
 };
 
@@ -162,6 +166,7 @@ Phaser.Animation.prototype = {
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
         this._parent.setTexture(PIXI.TextureCache[this.currentFrame.uuid]);
 
+        //  TODO: Double check if required
         if (this._parent.__tilePattern)
         {
             this._parent.__tilePattern = false;
@@ -216,6 +221,36 @@ Phaser.Animation.prototype = {
         if (resetFrame)
         {
             this.currentFrame = this._frameData.getFrame(this._frames[0]);
+        }
+
+    },
+
+    /**
+    * Called when the Game enters a paused state.
+    *
+    * @method Phaser.Animation#onPause
+    * @memberof Phaser.Animation
+    */
+    onPause: function () {
+
+        if (this.isPlaying)
+        {
+            this._frameDiff = this._timeNextFrame - this.game.time.now;
+        }
+
+    },
+
+    /**
+    * Called when the Game resumes from a paused state.
+    *
+    * @method Phaser.Animation#onResume
+    * @memberof Phaser.Animation
+    */
+    onResume: function () {
+
+        if (this.isPlaying)
+        {
+            this._timeNextFrame = this.game.time.now + this._frameDiff;
         }
 
     },
@@ -317,6 +352,9 @@ Phaser.Animation.prototype = {
         this._frameData = null;
         this.currentFrame = null;
         this.isPlaying = false;
+
+        this.game.onPause.remove(this.onPause, this);
+        this.game.onResume.remove(this.onResume, this);
 
     },
 
