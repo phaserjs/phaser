@@ -1,12 +1,12 @@
 {
   "name": "phaser",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "homepage": "http://phaser.io",
   "authors": [
     "photonstorm <rich@photonstorm.com>"
   ],
   "description": "A fun, free and fast 2D game framework for making HTML5 games for desktop and mobile, supporting Canvas and WebGL.",
-  "main": "build/phaser.min.js",
+  "main": "build/phaser.js",
   "keywords": [
     "html5",
     "game",
