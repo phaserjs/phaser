@@ -121,6 +121,16 @@ Phaser.ScaleManager = function (game, width, height) {
     this.hasResized = new Phaser.Signal();
 
     /**
+    * @property {Phaser.Signal} enterFullScreen - The event that is dispatched when the browser enters full screen mode (if it supports the FullScreen API).
+    */
+    this.enterFullScreen = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} leaveFullScreen - The event that is dispatched when the browser leaves full screen mode (if it supports the FullScreen API).
+    */
+    this.leaveFullScreen = new Phaser.Signal();
+
+    /**
     * @property {number} orientation - The orientation value of the game (as defined by window.orientation if set). 90 = landscape. 0 = portrait.
     */
     this.orientation = 0;
@@ -323,19 +333,24 @@ Phaser.ScaleManager.prototype = {
                 this.game.canvas.style['width'] = '100%';
                 this.game.canvas.style['height'] = '100%';
 
-                this.setMaximum();
+                this.width = window.outerWidth;
+                this.height = window.outerHeight;
 
                 this.game.input.scale.setTo(this.game.width / this.width, this.game.height / this.height);
 
                 this.aspectRatio = this.width / this.height;
                 this.scaleFactor.x = this.game.width / this.width;
                 this.scaleFactor.y = this.game.height / this.height;
+
+                this.checkResize();
             }
             else if (this.fullScreenScaleMode === Phaser.ScaleManager.SHOW_ALL)
             {
                 this.setShowAll();
                 this.refresh();
             }
+
+            this.enterFullScreen.dispatch(this.width, this.height);
         }
         else
         {
@@ -350,6 +365,8 @@ Phaser.ScaleManager.prototype = {
             this.aspectRatio = this.width / this.height;
             this.scaleFactor.x = this.game.width / this.width;
             this.scaleFactor.y = this.game.height / this.height;
+
+            this.leaveFullScreen.dispatch(this.width, this.height);
         }
 
     },

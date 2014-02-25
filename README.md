@@ -139,6 +139,7 @@ Updates:
 * Phaser.Input.Key.isUp now defaults to 'true', as does GamepadButton.isUp (#474)
 * Vastly improved visibility API support + pageshow/pagehide + focus/blur. Working across Chrome, IE, Firefox, iOS, Android (also fixes #161)
 * Pausing the game will now mute audio and resuming will un-mute, unless it was muted via the game (fixes #439)
+* ScaleManager has 2 new events: ScaleManager.enterFullScreen and ScaleManager.leaveFullScreen, so you can respond to fullscreen changes directly.
 
 
 Bug Fixes:
@@ -161,6 +162,7 @@ Bug Fixes:
 * Active animations now monitor if the game pauses, and resume normally when the game un-pauses (fixes #179)
 * Swapping between tabs will now pause the game correctly on mobile browsers (iOS7+)
 * Swapping between tabs will pause and resume tweens correctly, allowing their onComplete events to still fire (fixes #292)
+* Fullscreen mode now uses window.outerWidth/Height when using EXACT_FIT as the scale mode, which fixes input coordinate errors (fixes #232)
 
 
 TO DO:
