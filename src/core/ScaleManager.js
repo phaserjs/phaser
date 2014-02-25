@@ -262,35 +262,26 @@ Phaser.ScaleManager.prototype = {
     */
     startFullScreen: function (antialias) {
 
-        if (this.isFullScreen)
+        if (this.isFullScreen || !this.game.device.fullscreen)
         {
             return;
         }
 
         if (typeof antialias !== 'undefined' && this.game.renderType === Phaser.CANVAS)
         {
-            Phaser.Canvas.setSmoothingEnabled(this.game.context, antialias);
+            this.game.stage.smoothed = antialias;
         }
 
-        var element = this.game.canvas;
-        
         this._width = this.width;
         this._height = this.height;
 
-        //  This needs updating to match the final spec:
-        //  http://generatedcontent.org/post/70347573294/is-your-fullscreen-api-code-up-to-date-find-out-how-to
-
-        if (element['requestFullScreen'])
+        if (this.game.device.fullscreenKeyboard)
         {
-            element['requestFullScreen']();
+            this.game.canvas[this.game.device.requestFullscreen](Element.ALLOW_KEYBOARD_INPUT);
         }
-        else if (element['mozRequestFullScreen'])
+        else
         {
-            element.parentNode['mozRequestFullScreen']();
-        }
-        else if (element['webkitRequestFullScreen'])
-        {
-            element['webkitRequestFullScreen'](Element.ALLOW_KEYBOARD_INPUT);
+            this.game.canvas[this.game.device.requestFullscreen]();
         }
 
     },
@@ -301,18 +292,7 @@ Phaser.ScaleManager.prototype = {
     */
     stopFullScreen: function () {
 
-        if (document['cancelFullScreen'])
-        {
-            document['cancelFullScreen']();
-        }
-        else if (document['mozCancelFullScreen'])
-        {
-            document['mozCancelFullScreen']();
-        }
-        else if (document['webkitCancelFullScreen'])
-        {
-            document['webkitCancelFullScreen']();
-        }
+        this.game.canvas[this.game.device.cancelFullscreen]();
 
     },
 

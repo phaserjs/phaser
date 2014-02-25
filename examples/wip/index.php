@@ -106,11 +106,15 @@
         <input type="button" id="step" value="step" />
         <input type="button" id="start" value="start" style="margin-left: 32px" />
 
+        <div style="padding: 32px">
+
         <h2>work in progress examples</h2>
 
         <?php
             echo printJSLinks('wip', $files);
         ?>
+
+        </div>
 
     </body>
 </html>

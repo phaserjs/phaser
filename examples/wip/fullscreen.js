@@ -51,7 +51,7 @@ function onLeaveFullScreen() {
 
 function gofull() {
 
-    game.scale.startFullScreen();
+    game.scale.startFullScreen(false);
 
 }
 

@@ -163,6 +163,7 @@ Bug Fixes:
 * Swapping between tabs will now pause the game correctly on mobile browsers (iOS7+)
 * Swapping between tabs will pause and resume tweens correctly, allowing their onComplete events to still fire (fixes #292)
 * Fullscreen mode now uses window.outerWidth/Height when using EXACT_FIT as the scale mode, which fixes input coordinate errors (fixes #232)
+* Fullscreen mode now works in Internet Explorer and uses the new fullscreen non-prefix call.
 
 
 TO DO:

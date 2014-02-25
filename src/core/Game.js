@@ -394,7 +394,7 @@ Phaser.Game.prototype = {
 
             this.isBooted = true;
 
-            this.device = new Phaser.Device();
+            this.device = new Phaser.Device(this);
             this.math = Phaser.Math;
             this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
 
@@ -402,6 +402,8 @@ Phaser.Game.prototype = {
             this.scale = new Phaser.ScaleManager(this, this.width, this.height);
 
             this.setUpRenderer();
+
+            this.device.checkFullScreenSupport();
 
             this.world = new Phaser.World(this);
             this.add = new Phaser.GameObjectFactory(this);

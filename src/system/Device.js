@@ -11,7 +11,12 @@
 * @constructor
 */
 
-Phaser.Device = function () {
+Phaser.Device = function (game) {
+
+    /**
+    * @property {Phaser.Game} game - A reference to the currently running game.
+    */
+    this.game = game;
 
     /**
     * An optional 'fix' for the horrendous Android stock browser bug https://code.google.com/p/android/issues/detail?id=39247
@@ -325,6 +330,30 @@ Phaser.Device = function () {
     */
     this.littleEndian = false;
 
+    /**
+    * @property {boolean} fullscreen - Does the browser support the Full Screen API?
+    * @default
+    */
+    this.fullscreen = false;
+
+    /**
+    * @property {string} requestFullscreen - If the browser supports the Full Screen API this holds the call you need to use to activate it.
+    * @default
+    */
+    this.requestFullscreen = '';
+
+    /**
+    * @property {string} cancelFullscreen - If the browser supports the Full Screen API this holds the call you need to use to cancel it.
+    * @default
+    */
+    this.cancelFullscreen = '';
+
+    /**
+    * @property {boolean} fullscreenKeyboard - Does the browser support access to the Keyboard during Full Screen mode?
+    * @default
+    */
+    this.fullscreenKeyboard = false;
+
     //  Run the checks
     this._checkAudio();
     this._checkBrowser();
@@ -421,6 +450,65 @@ Phaser.Device.prototype = {
         this.pointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
         this.quirksMode = (document.compatMode === 'CSS1Compat') ? false : true;
+
+
+
+    },
+
+    /**
+    * Checks for support of the Full Screen API.
+    *
+    * @method Phaser.Device#checkFullScreenSupport
+    */
+    checkFullScreenSupport: function () {
+
+        var fs = [
+            'requestFullscreen',
+            'requestFullScreen',
+            'webkitRequestFullscreen',
+            'webkitRequestFullScreen',
+            'msRequestFullscreen',
+            'msRequestFullScreen',
+            'mozRequestFullScreen',
+            'mozRequestFullscreen'
+        ];
+
+        for (var i = 0; i < fs.length; i++)
+        {
+            if (this.game.canvas[fs[i]])
+            {
+                this.fullscreen = true;
+                this.requestFullscreen = fs[i];
+            }
+        }
+
+        var cfs = [
+            'cancelFullScreen',
+            'exitFullscreen',
+            'webkitCancelFullScreen',
+            'webkitExitFullscreen',
+            'msCancelFullScreen',
+            'msExitFullscreen',
+            'mozCancelFullScreen',
+            'mozExitFullscreen'
+        ];
+
+        if (this.fullscreen)
+        {
+            for (var i = 0; i < cfs.length; i++)
+            {
+                if (this.game.canvas[cfs[i]])
+                {
+                    this.cancelFullscreen = cfs[i];
+                }
+            }
+        }
+
+        //  Keyboard Input?
+        if (window['Element'] && Element['ALLOW_KEYBOARD_INPUT'])
+        {
+            this.fullscreenKeyboard = true;
+        }
 
     },
 
