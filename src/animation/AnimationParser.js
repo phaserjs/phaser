@@ -47,8 +47,8 @@ Phaser.AnimationParser = {
             frameHeight = Math.floor(-height / Math.min(-1, frameHeight));
         }
 
-        var row = Math.round(width / frameWidth);
-        var column = Math.round(height / frameHeight);
+        var row = Math.floor((width - margin) / (frameWidth + spacing));
+        var column = Math.floor((height - margin) / (frameHeight + spacing));
         var total = row * column;
         
         if (frameMax !== -1)
@@ -83,7 +83,7 @@ Phaser.AnimationParser = {
 
             x += frameWidth + spacing;
 
-            if (x === width)
+            if (x + frameWidth > width)
             {
                 x = margin;
                 y += frameHeight + spacing;
