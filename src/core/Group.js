@@ -680,7 +680,7 @@ Phaser.Group.prototype.callAll = function (method, context) {
 
     var methodLength = method.length;
 
-    if (typeof context === 'undefined')
+    if (typeof context === 'undefined' || context === null || context === '')
     {
         context = null;
     }
