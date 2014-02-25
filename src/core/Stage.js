@@ -246,27 +246,37 @@ Phaser.Stage.prototype.boot = function () {
 */
 Phaser.Stage.prototype.checkVisibility = function () {
 
-    var supportsVisibilityApi = false;
-    var prefixes = [ "", "moz", "ms", "webkit" ];
-
-    while (prefixes.length)
+    if (document.webkitHidden != undefined)
     {
-        prefix = prefixes.pop();
-        this._hiddenVar = prefix ? prefix + "Hidden" : "hidden";
-
-        if (this._hiddenVar in document)
-        {
-            supportsVisibilityApi = true;
-            break;
-        }
+        this._hiddenVar = 'webkitvisibilitychange';
+    }
+    else if (document.mozHidden != undefined)
+    {
+        this._hiddenVar = 'mozvisibilitychange';
+    }
+    else if (document.msHidden != undefined)
+    {
+        this._hiddenVar = 'msvisibilitychange';
+    }
+    else if (document.hidden != undefined)
+    {
+        this._hiddenVar = 'visibilitychange';
+    }
+    else
+    {
+        this._hiddenVar = null;
     }
 
     //  Does browser support it? If not (like in IE9 or old Android) we need to fall back to blur/focus
-    if (supportsVisibilityApi)
+    if (this._hiddenVar)
     {
         document.addEventListener(this._hiddenVar, this._onChange, false);
-        document.addEventListener('pagehide', this._onChange, false);
-        document.addEventListener('pageshow', this._onChange, false);
+    }
+
+    if (window['onpagehide'])
+    {
+        window.onpagehide = this._onChange;
+        window.onpageshow = this._onChange;
     }
 
     window.onblur = this._onChange;
@@ -304,13 +314,27 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
         return;
     }
 
-    if (this.game.paused === false && (event.type === 'pagehide' || event.type === 'blur' || document[this._hiddenVar] === true))
+    if (event.type === 'pagehide' || event.type === 'blur' || event.type === 'pageshow' || event.type === 'focus')
     {
-        this.game.paused = true;
+        if (event.type === 'pagehide' || event.type === 'blur')
+        {
+            this.game.gamePaused(event.timeStamp);
+        }
+        else if (event.type === 'pageshow' || event.type === 'focus')
+        {
+            this.game.gameResumed(event.timeStamp);
+        }
+
+        return;
+    }
+
+    if (document.hidden || document.mozHidden || document.msHidden || document.webkitHidden)
+    {
+        this.game.gamePaused(event.timeStamp);
     }
     else
     {
-        this.game.paused = false;
+        this.game.gameResumed(event.timeStamp);
     }
 
 }

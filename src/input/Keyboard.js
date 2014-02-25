@@ -71,7 +71,7 @@ Phaser.Keyboard = function (game) {
 Phaser.Keyboard.prototype = {
 
     /**
-    * Add callbacks to the Keyboard handler so that each time a key is pressed down or releases the callbacks are activated.
+    * Add callbacks to the Keyboard handler so that each time a key is pressed down or released the callbacks are activated.
     *
     * @method Phaser.Keyboard#addCallbacks
     * @param {Object} context - The context under which the callbacks are run.

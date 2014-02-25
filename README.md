@@ -131,6 +131,7 @@ Updates:
 * Loader.setPreloadSprite() will now set sprite.visible = true once the crop has been applied. Should help avoid issues (#430) on super-slow connections.
 * Updated the way the page visibility is checked, should now be more compatible across more browsers.
 * Phaser.Input.Key.isUp now defaults to 'true', as does GamepadButton.isUp (#474)
+* Vastly improved visibility API support + pageshow/pagehide + focus/blur. Working across Chrome, IE, Firefox, iOS, Android (also fixes #161)
 
 
 Bug Fixes:

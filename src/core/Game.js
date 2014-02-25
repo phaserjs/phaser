@@ -87,20 +87,6 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.state = null;
 
     /**
-    * @property {boolean} _paused - Is game paused?
-    * @private
-    * @default
-    */
-    this._paused = false;
-
-    /**
-    * @property {boolean} _loadComplete - Whether load complete loading or not.
-    * @private
-    * @default
-    */
-    this._loadComplete = false;
-
-    /**
     * @property {boolean} isBooted - Whether the game engine is booted, aka available.
     * @default
     */
@@ -245,6 +231,27 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     * @readonly
     */
     this.stepCount = 0;
+
+    /**
+    * @property {boolean} _paused - Is game paused?
+    * @private
+    * @default
+    */
+    this._paused = false;
+
+    /**
+    * @property {boolean} _codePaused - Was the game paused via code or a visibility change?
+    * @private
+    * @default
+    */
+    this._codePaused = false;
+
+    /**
+    * @property {boolean} _loadComplete - Whether load complete loading or not.
+    * @private
+    * @default
+    */
+    this._loadComplete = false;
 
     //  Parse the configuration object (if any)
     if (arguments.length === 1 && typeof arguments[0] === 'object')
@@ -605,9 +612,16 @@ Phaser.Game.prototype = {
 
         if (this._paused)
         {
-            this.renderer.render(this.stage);
-            this.plugins.render();
-            this.state.render();
+            this.input.update();
+
+            if (this.renderType !== Phaser.HEADLESS)
+            {
+                this.renderer.render(this.stage);
+                this.plugins.render();
+                this.state.render();
+
+                this.plugins.postRender();
+            }
         }
         else
         {
@@ -708,6 +722,43 @@ Phaser.Game.prototype = {
         this.world = null;
         this.isBooted = false;
 
+    },
+
+    /**
+    * Called by the Stage visibility handler.
+    *
+    * @method Phaser.Game#gamePaused
+    */
+    gamePaused: function (time) {
+
+        //   If the game is already paused it was done via game code, so don't re-pause it
+        if (!this._paused)
+        {
+            this._paused = true;
+            this.time.gamePaused(time);
+            this.sound.mute = true;
+            this.onPause.dispatch(this);
+        }
+
+    },
+
+    /**
+    * Called by the Stage visibility handler.
+    *
+    * @method Phaser.Game#gameResumed
+    */
+    gameResumed: function (time) {
+
+        //  Game is paused, but wasn't paused via code, so resume it
+        if (this._paused && !this._codePaused)
+        {
+            this._paused = false;
+            this.time.gameResumed(time);
+            this.input.reset();
+            this.sound.mute = false;
+            this.onResume.dispatch(this);
+        }
+
     }
 
 };
@@ -733,6 +784,9 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
             if (this._paused === false)
             {
                 this._paused = true;
+                this._codePaused = true;
+                this.sound.mute = true;
+                this.time.gamePaused();
                 this.onPause.dispatch(this);
             }
         }
@@ -741,7 +795,10 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
             if (this._paused)
             {
                 this._paused = false;
+                this._codePaused = false;
                 this.input.reset();
+                this.sound.mute = false;
+                this.time.gameResumed();
                 this.onResume.dispatch(this);
             }
         }

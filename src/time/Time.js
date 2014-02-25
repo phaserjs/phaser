@@ -143,8 +143,8 @@ Phaser.Time = function (game) {
     this._i = 0;
 
     //  Listen for game pause/resume events
-    this.game.onPause.add(this.gamePaused, this);
-    this.game.onResume.add(this.gameResumed, this);
+    // this.game.onPause.add(this.gamePaused, this);
+    // this.game.onResume.add(this.gameResumed, this);
 
 };
 
@@ -218,6 +218,7 @@ Phaser.Time.prototype = {
 
         this.elapsed = this.now - this.time;
 
+        /*
         this.msMin = this.game.math.min(this.msMin, this.elapsed);
         this.msMax = this.game.math.max(this.msMax, this.elapsed);
 
@@ -231,9 +232,12 @@ Phaser.Time.prototype = {
             this._timeLastSecond = this.now;
             this.frames = 0;
         }
+        */
 
         this.time = this.now;
         this.lastTime = time + this.timeToCall;
+
+        /*
         this.physicsElapsed = 1.0 * (this.elapsed / 1000);
 
         //  Clamp the delta
@@ -241,11 +245,12 @@ Phaser.Time.prototype = {
         {
             this.physicsElapsed = 0.05;
         }
+        */
 
-        //  Paused?
+        //  Paused but still running?
         if (this.game.paused)
         {
-            this.pausedTime = this.now - this._pauseStarted;
+            // this.pausedTime = this.now - this._pauseStarted;
         }
         else
         {
@@ -278,13 +283,22 @@ Phaser.Time.prototype = {
     * @method Phaser.Time#gamePaused
     * @private
     */
-    gamePaused: function () {
+    gamePaused: function (time) {
         
-        this._pauseStarted = this.now;
+        if (typeof time === 'undefined')
+        {
+            this._pauseStarted = this.now;
+        }
+        else
+        {
+            this._pauseStarted = time;
+        }
 
         this.events.pause();
 
-        for (var i = 0; i < this._timers.length; i++)
+        var i = this._timers.length;
+
+        while (i--)
         {
             this._timers[i].pause();
         }
@@ -296,11 +310,21 @@ Phaser.Time.prototype = {
     * @method Phaser.Time#gameResumed
     * @private
     */
-    gameResumed: function () {
+    gameResumed: function (time) {
+
+        if (typeof time === 'undefined')
+        {
+            this.pauseDuration = this.now - this._pauseStarted;
+        }
+        else
+        {
+            this.pauseDuration = time - this._pauseStarted;
+        }
 
         //  Level out the elapsed timer to avoid spikes
+
         this.time = Date.now();
-        this.pauseDuration = this.pausedTime;
+
         this._justResumed = true;
 
     },
