@@ -132,6 +132,7 @@ Updates:
 * Updated the way the page visibility is checked, should now be more compatible across more browsers.
 * Phaser.Input.Key.isUp now defaults to 'true', as does GamepadButton.isUp (#474)
 * Vastly improved visibility API support + pageshow/pagehide + focus/blur. Working across Chrome, IE, Firefox, iOS, Android (also fixes #161)
+* Pausing the game will now mute audio and resuming will un-mute, unless it was muted via the game (fixes #439)
 
 
 Bug Fixes:
@@ -152,6 +153,7 @@ Bug Fixes:
 * Text that was fixedToCamera would 'jitter' if the world scrolled. Now works as expected across all fixed objects.
 * Fixed a bug where Sound.play wouldn't pick-up the local loop setting if not specified in the parameter.
 * Active animations now monitor if the game pauses, and resume normally when the game un-pauses (fixes #179)
+* Swapping between tabs will now pause the game correctly on mobile browsers (iOS7+)
 
 
 TO DO:

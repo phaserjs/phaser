@@ -27,6 +27,13 @@ Phaser.SoundManager = function (game) {
     this.onSoundDecode = new Phaser.Signal();
     
     /**
+    * @property {boolean} _codeMuted - Internal mute tracking var.
+    * @private
+    * @default
+    */
+    this._codeMuted = false;
+
+    /**
     * @property {boolean} _muted - Internal mute tracking var.
     * @private
     * @default
@@ -362,6 +369,57 @@ Phaser.SoundManager.prototype = {
 
         return sound;
 
+    },
+
+    setMute: function () {
+
+        if (this._muted)
+        {
+            return;
+        }
+
+        this._muted = true;
+
+        if (this.usingWebAudio)
+        {
+            this._muteVolume = this.masterGain.gain.value;
+            this.masterGain.gain.value = 0;
+        }
+
+        //  Loop through sounds
+        for (var i = 0; i < this._sounds.length; i++)
+        {
+            if (this._sounds[i].usingAudioTag)
+            {
+                this._sounds[i].mute = true;
+            }
+        }
+
+    },
+
+    unsetMute: function () {
+
+        if (!this._muted || this._codeMuted)
+        {
+            return;
+        }
+
+        this._muted = false;
+
+        if (this.usingWebAudio)
+        {
+            this.masterGain.gain.value = this._muteVolume;
+        }
+
+        //  Loop through sounds
+        for (var i = 0; i < this._sounds.length; i++)
+        {
+            if (this._sounds[i].usingAudioTag)
+            {
+                this._sounds[i].mute = false;
+            }
+        }
+
     }
 
 };
@@ -391,22 +449,8 @@ Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
                 return;
             }
 
-            this._muted = true;
-            
-            if (this.usingWebAudio)
-            {
-                this._muteVolume = this.masterGain.gain.value;
-                this.masterGain.gain.value = 0;
-            }
-
-            //  Loop through sounds
-            for (var i = 0; i < this._sounds.length; i++)
-            {
-                if (this._sounds[i].usingAudioTag)
-                {
-                    this._sounds[i].mute = true;
-                }
-            }
+            this._codeMuted = true;
+            this.setMute();
         }
         else
         {
@@ -415,21 +459,8 @@ Object.defineProperty(Phaser.SoundManager.prototype, "mute", {
                 return;
             }
 
-            this._muted = false;
-
-            if (this.usingWebAudio)
-            {
-                this.masterGain.gain.value = this._muteVolume;
-            }
-
-            //  Loop through sounds
-            for (var i = 0; i < this._sounds.length; i++)
-            {
-                if (this._sounds[i].usingAudioTag)
-                {
-                    this._sounds[i].mute = false;
-                }
-            }
+            this._codeMuted = false;
+            this.unsetMute();
         }
     }
 

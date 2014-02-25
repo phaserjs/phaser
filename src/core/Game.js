@@ -736,7 +736,7 @@ Phaser.Game.prototype = {
         {
             this._paused = true;
             this.time.gamePaused(time);
-            this.sound.mute = true;
+            this.sound.setMute();
             this.onPause.dispatch(this);
         }
 
@@ -755,7 +755,7 @@ Phaser.Game.prototype = {
             this._paused = false;
             this.time.gameResumed(time);
             this.input.reset();
-            this.sound.mute = false;
+            this.sound.unsetMute();
             this.onResume.dispatch(this);
         }
 

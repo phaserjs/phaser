@@ -31,9 +31,22 @@ function create() {
     game.onResume.add(resumed, this);
 
     var space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    space.onDown.add(pauseToggle, this);
+    space.onDown.add(muteToggle, this);
 
     s.push('starting: ' + game.stage._hiddenVar);
+
+}
+
+function muteToggle() {
+
+	if (game.sound.mute)
+	{
+		game.sound.mute = false;
+	}
+	else
+	{
+		game.sound.mute	= true;
+	}
 
 }
 
