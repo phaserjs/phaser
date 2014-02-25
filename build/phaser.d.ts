@@ -1267,6 +1267,7 @@ declare module Phaser {
         fileError(key: number): void;
         getAsset(type: string, key: string): any;
         image(key: string, url: string, overwrite?: boolean): Phaser.Loader;
+        json(key: string, url: string): Phaser.Loader;
         jsonLoadComplete(index: number): void;
         removeAll(): void;
         removeFile(key: string, type: string): void;
