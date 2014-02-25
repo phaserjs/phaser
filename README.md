@@ -112,6 +112,8 @@ New features:
 * TileSprites can now receive full Input events, dragging, etc and be positioned in-world and fixed to cameras.
 * The StateManager now looks for a function called 'resumed' which is called when a game un-pauses.
 * Key.onHold added. This event is dispatched every time the browser sends a keydown event and the key is already being held down.
+* Stage.smoothed allows you to set if sprites will be smoothed when rendered. Set to false if you're using pixel art in your game. Default is true. Works in Canvas and WebGL.
+* Sprite.smoothed and Image.smoothed allows you to set per-Sprite smoothing, perfect if you just want to keep a few sprites smoothed (or not)
 
 
 Updates:

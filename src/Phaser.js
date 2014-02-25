@@ -48,9 +48,6 @@ var Phaser = Phaser || {
 	STATIC: 2,
 	KINEMATIC: 4,
 
-	CANVAS_PX_ROUND: false,
-	CANVAS_CLEAR_RECT: true,
-
 	// the various blend modes supported by pixi / phaser
 	blendModes: {
 	    NORMAL:0,
@@ -70,6 +67,13 @@ var Phaser = Phaser || {
 	    SATURATION:14,
 	    COLOR:15,
 	    LUMINOSITY:16
+	},
+
+	// the scale modes
+	scaleModes: {
+	    DEFAULT:0,
+	    LINEAR:0,
+	    NEAREST:1
 	}
 
 };

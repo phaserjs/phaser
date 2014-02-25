@@ -698,3 +698,37 @@ Object.defineProperty(Phaser.Image.prototype, "fixedToCamera", {
     }
 
 });
+
+/**
+* Enable or disable texture smoothing for this Image. Only works for bitmap/image textures. Smoothing is enabled by default.
+*
+* @name Phaser.Image#smoothed
+* @property {boolean} smoothed - Set to true to smooth the texture of this Image, or false to disable smoothing (great for pixel art)
+*/
+Object.defineProperty(Phaser.Image.prototype, "smoothed", {
+    
+    get: function () {
+
+        return !!this.texture.baseTexture.scaleMode;
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            if (this.texture)
+            {
+                this.texture.baseTexture.scaleMode = 0;
+            }
+        }
+        else
+        {
+            if (this.texture)
+            {
+                this.texture.baseTexture.scaleMode = 1;
+            }
+        }
+    }
+
+});

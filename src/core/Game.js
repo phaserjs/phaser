@@ -20,7 +20,7 @@
 * @param {string|HTMLElement} [parent=''] - The DOM element into which this games canvas will be injected. Either a DOM ID (string) or the element itself.
 * @param {object} [state=null] - The default state object. A object consisting of Phaser.State functions (preload, create, update, render) or null.
 * @param {boolean} [transparent=false] - Use a transparent canvas background or not.
-* @param  {boolean} [antialias=true] - Anti-alias graphics.
+* @param  {boolean} [antialias=true] - Draw all image textures anti-aliased or not. The default is for smooth textures, but disable if your game features pixel art.
 * @param {object} [physicsConfig=null] - A physics configuration object to pass to the Physics world on creation.
 */
 Phaser.Game = function (width, height, renderer, parent, state, transparent, antialias, physicsConfig) {
@@ -564,7 +564,6 @@ Phaser.Game.prototype = {
                 }
 
                 this.renderer = new PIXI.CanvasRenderer(this.width, this.height, this.canvas, this.transparent);
-                Phaser.Canvas.setSmoothingEnabled(this.renderer.context, this.antialias);
                 this.context = this.renderer.context;
             }
             else
@@ -578,6 +577,11 @@ Phaser.Game.prototype = {
             this.renderType = Phaser.WEBGL;
             this.renderer = new PIXI.WebGLRenderer(this.width, this.height, this.canvas, this.transparent, this.antialias);
             this.context = null;
+        }
+
+        if (!this.antialias)
+        {
+            this.stage.smoothed = false;
         }
 
         Phaser.Canvas.addToDOM(this.canvas, this.parent, true);

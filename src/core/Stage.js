@@ -381,3 +381,31 @@ Object.defineProperty(Phaser.Stage.prototype, "backgroundColor", {
     }
 
 });
+
+/**
+* Enable or disable texture smoothing for all objects on this Stage. Only works for bitmap/image textures. Smoothing is enabled by default.
+*
+* @name Phaser.Stage#smoothed
+* @property {boolean} smoothed - Set to true to smooth all sprites rendered on this Stage, or false to disable smoothing (great for pixel art)
+*/
+Object.defineProperty(Phaser.Stage.prototype, "smoothed", {
+    
+    get: function () {
+
+        return !!PIXI.scaleModes.LINEAR;
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            PIXI.scaleModes.LINEAR = 0;
+        }
+        else
+        {
+            PIXI.scaleModes.LINEAR = 1;
+        }
+    }
+
+});
