@@ -121,7 +121,6 @@ Phaser.StateManager = function (game, pendingState) {
     */
     this.onShutDownCallback = null;
 
-
 };
 
 Phaser.StateManager.prototype = {
@@ -135,6 +134,7 @@ Phaser.StateManager.prototype = {
 
         this.game.onPause.add(this.pause, this);
         this.game.onResume.add(this.resume, this);
+        this.game.load.onLoadComplete.add(this.loadComplete, this);
 
         if (this._pendingState !== null)
         {
@@ -306,7 +306,8 @@ Phaser.StateManager.prototype = {
                 //  Is the loader empty?
                 if (this.game.load.totalQueuedFiles() === 0)
                 {
-                    this.game.loadComplete();
+                    this.loadComplete();
+                    // this.game.loadComplete();
                 }
                 else
                 {
@@ -317,7 +318,8 @@ Phaser.StateManager.prototype = {
             else
             {
                 //  No init? Then there was nothing to load either
-                this.game.loadComplete();
+                this.loadComplete();
+                // this.game.loadComplete();
             }
 
             this._pendingState = null;

@@ -246,13 +246,6 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     */
     this._codePaused = false;
 
-    /**
-    * @property {boolean} _loadComplete - Whether load complete loading or not.
-    * @private
-    * @default
-    */
-    this._loadComplete = false;
-
     //  Parse the configuration object (if any)
     if (arguments.length === 1 && typeof arguments[0] === 'object')
     {
@@ -328,12 +321,12 @@ Phaser.Game.prototype = {
 
         if (config['width'])
         {
-            this.width = this.parseDimension(config['width'], 0);
+            this.width = Phaser.Utils.parseDimension(config['width'], 0);
         }
 
         if (config['height'])
         {
-            this.height = this.parseDimension(config['height'], 1);
+            this.height = Phaser.Utils.parseDimension(config['height'], 1);
         }
 
         if (config['renderer'])
@@ -373,46 +366,6 @@ Phaser.Game.prototype = {
 
     },
 
-    /**
-    * Get dimension.
-    *
-    * @method Phaser.Game#parseDimension
-    * @protected
-    */
-    parseDimension: function (size, dimension) {
-
-        var f = 0;
-        var px = 0;
-
-        if (typeof size === 'string')
-        {
-            //  %?
-            if (size.substr(-1) === '%')
-            {
-                f = parseInt(size, 10) / 100;
-
-                if (dimension === 0)
-                {
-                    px = window.innerWidth * f;
-                }
-                else
-                {
-                    px = window.innerHeight * f;
-                }
-            }
-            else
-            {
-                px = parseInt(size, 10);
-            }
-        }
-        else
-        {
-            px = size;
-        }
-
-        return px;
-
-    },
 
     /**
     * Initialize engine sub modules and start the game.
@@ -472,12 +425,9 @@ Phaser.Game.prototype = {
             this.sound.boot();
             this.state.boot();
 
-            this.load.onLoadComplete.add(this.loadComplete, this);
-
             this.showDebugHeader();
 
             this.isRunning = true;
-            this._loadComplete = false;
 
             if (this.config && this.config['forceSetTimeOut'])
             {
@@ -586,20 +536,6 @@ Phaser.Game.prototype = {
 
         Phaser.Canvas.addToDOM(this.canvas, this.parent, true);
         Phaser.Canvas.setTouchAction(this.canvas);
-
-    },
-
-    /**
-    * Called when the load has finished, after preload was run.
-    *
-    * @method Phaser.Game#loadComplete
-    * @protected
-    */
-    loadComplete: function () {
-
-        this._loadComplete = true;
-
-        this.state.loadComplete();
 
     },
 
