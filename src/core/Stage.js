@@ -161,6 +161,15 @@ Phaser.Stage.prototype.postUpdate = function () {
         }
     }
 
+    if (this.checkOffsetInterval !== false)
+    {
+        if (this.game.time.now > this._nextOffsetCheck)
+        {
+            Phaser.Canvas.getOffset(this.game.canvas, this.offset);
+            this._nextOffsetCheck = this.game.time.now + this.checkOffsetInterval;
+        }
+    }
+
 }
 
 /**
@@ -281,24 +290,6 @@ Phaser.Stage.prototype.checkVisibility = function () {
 
     window.onblur = this._onChange;
     window.onfocus = this._onChange;
-
-}
-
-/**
-* Runs Stage processes that need periodic updates, such as the offset checks.
-* @method Phaser.Stage#update
-*/
-Phaser.Stage.prototype.update = function () {
-
-    if (this.checkOffsetInterval !== false)
-    {
-        if (this.game.time.now > this._nextOffsetCheck)
-        {
-            Phaser.Canvas.getOffset(this.game.canvas, this.offset);
-            this._nextOffsetCheck = this.game.time.now + this.checkOffsetInterval;
-        }
-
-    }
 
 }
 
