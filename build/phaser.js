@@ -10274,7 +10274,7 @@ World.prototype.hitTest = function(worldPoint,bodies,precision){
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.0 - Built at: Tue Feb 25 2014 11:56:36
+* v2.0.0 - Built at: Tue Feb 25 2014 11:57:58
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -22974,9 +22974,6 @@ Phaser.StateManager.prototype = {
                 this._args = [];
             }
         }
-
-console.log('state start', key);
-console.log(arguments);
 
         if (arguments.length > 3)
         {

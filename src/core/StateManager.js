@@ -252,9 +252,6 @@ Phaser.StateManager.prototype = {
             }
         }
 
-console.log('state start', key);
-console.log(arguments);
-
         if (arguments.length > 3)
         {
             this._args = Array.prototype.splice.call(arguments, 3);
