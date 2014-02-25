@@ -89,4 +89,4 @@ game.state.add('Boot', BasicGame.Boot);
 game.state.add('Preloader', BasicGame.Preloader);
 game.state.add('MainMenu', BasicGame.MainMenu);
 
-game.state.start('Boot', true, false, 'hello', 'world');
+game.state.start('Boot');

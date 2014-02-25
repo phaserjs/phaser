@@ -142,7 +142,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.net = null;
 
     /**
-    * @property {Phaser.StageScaleMode} scale - The game scale manager.
+    * @property {Phaser.ScaleManager} scale - The game scale manager.
     */
     this.scale = null;
 
@@ -446,7 +446,7 @@ Phaser.Game.prototype = {
             this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
 
             this.stage = new Phaser.Stage(this, this.width, this.height);
-            this.scale = new Phaser.StageScaleMode(this, this.width, this.height);
+            this.scale = new Phaser.ScaleManager(this, this.width, this.height);
 
             this.setUpRenderer();
 
@@ -636,6 +636,7 @@ Phaser.Game.prototype = {
                     this.pendingStep = true;
                 }
 
+                this.state.preUpdate();
                 this.plugins.preUpdate();
                 this.stage.preUpdate();
 

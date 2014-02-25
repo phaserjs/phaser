@@ -5,15 +5,15 @@
 */
 
 /**
-* The StageScaleMode object is responsible for helping you manage the scaling, resizing and alignment of your game within the browser.
+* The ScaleManager object is responsible for helping you manage the scaling, resizing and alignment of your game within the browser.
 *
-* @class Phaser.StageScaleMode 
+* @class Phaser.ScaleManager 
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {number} width - The native width of the game.
 * @param {number} height - The native height of the game.
 */
-Phaser.StageScaleMode = function (game, width, height) {
+Phaser.ScaleManager = function (game, width, height) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running game.
@@ -175,12 +175,12 @@ Phaser.StageScaleMode = function (game, width, height) {
     /**
     * @property {number} scaleMode - The current scaleMode.
     */
-    this.scaleMode = Phaser.StageScaleMode.NO_SCALE;
+    this.scaleMode = Phaser.ScaleManager.NO_SCALE;
 
     /*
     * @property {number} fullScreenScaleMode - Scale mode to be used in fullScreen
     */
-    this.fullScreenScaleMode = Phaser.StageScaleMode.NO_SCALE;
+    this.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
 
     /**
     * @property {number} _startHeight - Internal cache var. Stage height when starting the game.
@@ -228,26 +228,26 @@ Phaser.StageScaleMode = function (game, width, height) {
 * @constant
 * @type {number}
 */
-Phaser.StageScaleMode.EXACT_FIT = 0;
+Phaser.ScaleManager.EXACT_FIT = 0;
 
 /**
 * @constant
 * @type {number}
 */
-Phaser.StageScaleMode.NO_SCALE = 1;
+Phaser.ScaleManager.NO_SCALE = 1;
 
 /**
 * @constant
 * @type {number}
 */
-Phaser.StageScaleMode.SHOW_ALL = 2;
+Phaser.ScaleManager.SHOW_ALL = 2;
 
-Phaser.StageScaleMode.prototype = {
+Phaser.ScaleManager.prototype = {
 
     /**
     * Tries to enter the browser into full screen mode.
     * Please note that this needs to be supported by the web browser and isn't the same thing as setting your game to fill the browser.
-    * @method Phaser.StageScaleMode#startFullScreen
+    * @method Phaser.ScaleManager#startFullScreen
     * @param {boolean} antialias - You can toggle the anti-alias feature of the canvas before jumping in to full screen (false = retain pixel art, true = smooth art)
     */
     startFullScreen: function (antialias) {
@@ -287,7 +287,7 @@ Phaser.StageScaleMode.prototype = {
 
     /**
     * Stops full screen mode if the browser is in it.
-    * @method Phaser.StageScaleMode#stopFullScreen
+    * @method Phaser.ScaleManager#stopFullScreen
     */
     stopFullScreen: function () {
 
@@ -308,7 +308,7 @@ Phaser.StageScaleMode.prototype = {
 
     /**
     * Called automatically when the browser enters of leaves full screen mode.
-    * @method Phaser.StageScaleMode#fullScreenChange
+    * @method Phaser.ScaleManager#fullScreenChange
     * @param {Event} event - The fullscreenchange event
     * @protected
     */
@@ -318,7 +318,7 @@ Phaser.StageScaleMode.prototype = {
 
         if (this.isFullScreen)
         {
-            if (this.fullScreenScaleMode === Phaser.StageScaleMode.EXACT_FIT)
+            if (this.fullScreenScaleMode === Phaser.ScaleManager.EXACT_FIT)
             {
                 this.game.canvas.style['width'] = '100%';
                 this.game.canvas.style['height'] = '100%';
@@ -331,7 +331,7 @@ Phaser.StageScaleMode.prototype = {
                 this.scaleFactor.x = this.game.width / this.width;
                 this.scaleFactor.y = this.game.height / this.height;
             }
-            else if (this.fullScreenScaleMode === Phaser.StageScaleMode.SHOW_ALL)
+            else if (this.fullScreenScaleMode === Phaser.ScaleManager.SHOW_ALL)
             {
                 this.setShowAll();
                 this.refresh();
@@ -357,7 +357,7 @@ Phaser.StageScaleMode.prototype = {
     /**
     * If you need your game to run in only one orientation you can force that to happen.
     * The optional orientationImage is displayed when the game is in the incorrect orientation.
-    * @method Phaser.StageScaleMode#forceOrientation
+    * @method Phaser.ScaleManager#forceOrientation
     * @param {boolean} forceLandscape - true if the game should run in landscape mode only.
     * @param {boolean} [forcePortrait=false] - true if the game should run in portrait mode only.
     * @param {string} [orientationImage=''] - The string of an image in the Phaser.Cache to display when this game is in the incorrect orientation.
@@ -402,7 +402,7 @@ Phaser.StageScaleMode.prototype = {
 
     /**
     * Checks if the browser is in the correct orientation for your game (if forceLandscape or forcePortrait have been set)
-    * @method Phaser.StageScaleMode#checkOrientationState
+    * @method Phaser.ScaleManager#checkOrientationState
     */
     checkOrientationState: function () {
 
@@ -447,7 +447,7 @@ Phaser.StageScaleMode.prototype = {
 
     /**
     * Handle window.orientationchange events
-    * @method Phaser.StageScaleMode#checkOrientation
+    * @method Phaser.ScaleManager#checkOrientation
     * @param {Event} event - The orientationchange event data.
     */
     checkOrientation: function (event) {
@@ -465,7 +465,7 @@ Phaser.StageScaleMode.prototype = {
             this.enterPortrait.dispatch(this.orientation, false, true);
         }
 
-        if (this.scaleMode !== Phaser.StageScaleMode.NO_SCALE)
+        if (this.scaleMode !== Phaser.ScaleManager.NO_SCALE)
         {
             this.refresh();
         }
@@ -474,7 +474,7 @@ Phaser.StageScaleMode.prototype = {
 
     /**
     * Handle window.resize events
-    * @method Phaser.StageScaleMode#checkResize
+    * @method Phaser.ScaleManager#checkResize
     * @param {Event} event - The resize event data.
     */
     checkResize: function (event) {
@@ -499,7 +499,7 @@ Phaser.StageScaleMode.prototype = {
             this.enterPortrait.dispatch(this.orientation, false, true);
         }
 
-        if (this.scaleMode !== Phaser.StageScaleMode.NO_SCALE)
+        if (this.scaleMode !== Phaser.ScaleManager.NO_SCALE)
         {
             this.refresh();
         }
@@ -510,7 +510,7 @@ Phaser.StageScaleMode.prototype = {
 
     /**
     * Re-calculate scale mode and update screen size.
-    * @method Phaser.StageScaleMode#refresh
+    * @method Phaser.ScaleManager#refresh
     */
     refresh: function () {
 
@@ -578,22 +578,22 @@ Phaser.StageScaleMode.prototype = {
             }
             else if (!this.isFullScreen)
             {
-                if (this.scaleMode == Phaser.StageScaleMode.EXACT_FIT)
+                if (this.scaleMode == Phaser.ScaleManager.EXACT_FIT)
                 {
                     this.setExactFit();
                 }
-                else if (this.scaleMode == Phaser.StageScaleMode.SHOW_ALL)
+                else if (this.scaleMode == Phaser.ScaleManager.SHOW_ALL)
                 {
                     this.setShowAll();
                 }
             }
             else
             {
-                if (this.fullScreenScaleMode == Phaser.StageScaleMode.EXACT_FIT)
+                if (this.fullScreenScaleMode == Phaser.ScaleManager.EXACT_FIT)
                 {
                     this.setExactFit();
                 }
-                else if (this.fullScreenScaleMode == Phaser.StageScaleMode.SHOW_ALL)
+                else if (this.fullScreenScaleMode == Phaser.ScaleManager.SHOW_ALL)
                 {
                     this.setShowAll();
                 }
@@ -608,7 +608,7 @@ Phaser.StageScaleMode.prototype = {
 
     /**
     * Sets the canvas style width and height values based on minWidth/Height and maxWidth/Height.
-    * @method Phaser.StageScaleMode#setSize
+    * @method Phaser.ScaleManager#setSize
     */
     setSize: function () {
 
@@ -686,7 +686,7 @@ Phaser.StageScaleMode.prototype = {
 
     /**
     * Sets this.width equal to window.innerWidth and this.height equal to window.innerHeight
-    * @method Phaser.StageScaleMode#setMaximum
+    * @method Phaser.ScaleManager#setMaximum
     */
     setMaximum: function () {
 
@@ -697,7 +697,7 @@ Phaser.StageScaleMode.prototype = {
 
     /**
     * Calculates the multiplier needed to scale the game proportionally.
-    * @method Phaser.StageScaleMode#setShowAll
+    * @method Phaser.ScaleManager#setShowAll
     */
     setShowAll: function () {
 
@@ -710,7 +710,7 @@ Phaser.StageScaleMode.prototype = {
 
     /**
     * Sets the width and height values of the canvas, no larger than the maxWidth/Height.
-    * @method Phaser.StageScaleMode#setExactFit
+    * @method Phaser.ScaleManager#setExactFit
     */
     setExactFit: function () {
 
@@ -739,14 +739,14 @@ Phaser.StageScaleMode.prototype = {
 
 };
 
-Phaser.StageScaleMode.prototype.constructor = Phaser.StageScaleMode;
+Phaser.ScaleManager.prototype.constructor = Phaser.ScaleManager;
 
 /**
-* @name Phaser.StageScaleMode#isFullScreen
+* @name Phaser.ScaleManager#isFullScreen
 * @property {boolean} isFullScreen - Returns true if the browser is in full screen mode, otherwise false.
 * @readonly
 */
-Object.defineProperty(Phaser.StageScaleMode.prototype, "isFullScreen", {
+Object.defineProperty(Phaser.ScaleManager.prototype, "isFullScreen", {
 
     get: function () {
 
@@ -757,11 +757,11 @@ Object.defineProperty(Phaser.StageScaleMode.prototype, "isFullScreen", {
 });
 
 /**
-* @name Phaser.StageScaleMode#isPortrait
+* @name Phaser.ScaleManager#isPortrait
 * @property {boolean} isPortrait - Returns true if the browser dimensions match a portrait display.
 * @readonly
 */
-Object.defineProperty(Phaser.StageScaleMode.prototype, "isPortrait", {
+Object.defineProperty(Phaser.ScaleManager.prototype, "isPortrait", {
 
     get: function () {
         return this.orientation === 0 || this.orientation == 180;
@@ -770,11 +770,11 @@ Object.defineProperty(Phaser.StageScaleMode.prototype, "isPortrait", {
 });
 
 /**
-* @name Phaser.StageScaleMode#isLandscape
+* @name Phaser.ScaleManager#isLandscape
 * @property {boolean} isLandscape - Returns true if the browser dimensions match a landscape display.
 * @readonly
 */
-Object.defineProperty(Phaser.StageScaleMode.prototype, "isLandscape", {
+Object.defineProperty(Phaser.ScaleManager.prototype, "isLandscape", {
 
     get: function () {
         return this.orientation === 90 || this.orientation === -90;

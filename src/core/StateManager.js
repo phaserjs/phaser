@@ -38,6 +38,18 @@ Phaser.StateManager = function (game, pendingState) {
     }
 
     /**
+    * @property {boolean} _clearWorld - Clear the world when we switch state?
+    * @private
+    */
+    this._clearWorld = false;
+
+    /**
+    * @property {boolean} _clearCache - Clear the cache when we switch state?
+    * @private
+    */
+    this._clearCache = false;
+
+    /**
     * @property {boolean} _created - Flag that sets if the State has been created or not.
     * @private
     */
@@ -228,7 +240,27 @@ Phaser.StateManager.prototype = {
         if (typeof clearWorld === "undefined") { clearWorld = true; }
         if (typeof clearCache === "undefined") { clearCache = false; }
 
-        if (this.game.isBooted === false)
+        if (this.checkState(key))
+        {
+            //  Place the state in the queue. It will be started the next time the game loop starts.
+            this._pendingState = key;
+            this._clearWorld = clearWorld;
+            this._clearCache = clearCache;
+
+            if (arguments.length > 3)
+            {
+                this._args = Array.prototype.splice.call(arguments, 3);
+            }
+
+            //  Already got a state running?
+            if (this.current)
+            {
+                this.onShutDownCallback.call(this.callbackContext, this.game);
+            }
+        }
+
+
+/*        if (this.game.isBooted === false)
         {
             this._pendingState = key;
 
@@ -251,7 +283,6 @@ Phaser.StateManager.prototype = {
                 this._args = [];
             }
         }
-
         if (arguments.length > 3)
         {
             this._args = Array.prototype.splice.call(arguments, 3);
@@ -305,6 +336,7 @@ Phaser.StateManager.prototype = {
             //  No init? Then there was nothing to load either
             this.game.loadComplete();
         }
+        */
 
     },
     
@@ -323,6 +355,64 @@ Phaser.StateManager.prototype = {
     * @param {string} key - The key of the state you want to check.
     * @return {boolean} Description.
     */
+    preUpdate: function () {
+
+        if (this._pendingState && this.game.isBooted)
+        {
+            //  Already got a state running?
+            if (this.current)
+            {
+                this.onShutDownCallback.call(this.callbackContext, this.game);
+            }
+
+            if (this._clearWorld)
+            {
+                this.game.tweens.removeAll();
+
+                this.game.world.destroy();
+
+                if (this._clearCache === true)
+                {
+                    this.game.cache.destroy();
+                }
+            }
+
+            this.setCurrentState(this._pendingState);
+
+            if (this.onPreloadCallback)
+            {
+                this.game.load.reset();
+                this.onPreloadCallback.call(this.callbackContext, this.game);
+
+                //  Is the loader empty?
+                if (this.game.load.totalQueuedFiles() === 0)
+                {
+                    this.game.loadComplete();
+                }
+                else
+                {
+                    //  Start the loader going as we have something in the queue
+                    this.game.load.start();
+                }
+            }
+            else
+            {
+                //  No init? Then there was nothing to load either
+                this.game.loadComplete();
+            }
+
+            this._pendingState = null;
+        }
+
+    },
+
+    /**
+    * Checks if a given phaser state is valid. A State is considered valid if it has at least one of the core functions: preload, create, update or render.
+    *
+    * @method Phaser.StateManager#checkState
+    * @param {string} key - The key of the state you want to check.
+    * @return {boolean} true if the State has the required functions, otherwise false.
+    */
     checkState: function (key) {
 
         if (this.states[key])
@@ -330,18 +420,13 @@ Phaser.StateManager.prototype = {
             var valid = false;
 
             if (this.states[key]['preload']) { valid = true; }
-
-            if (valid === false && this.states[key]['loadRender']) { valid = true; }
-            if (valid === false && this.states[key]['loadUpdate']) { valid = true; }
-            if (valid === false && this.states[key]['create']) { valid = true; }
-            if (valid === false && this.states[key]['update']) { valid = true; }
-            if (valid === false && this.states[key]['preRender']) { valid = true; }
-            if (valid === false && this.states[key]['render']) { valid = true; }
-            if (valid === false && this.states[key]['paused']) { valid = true; }
+            if (this.states[key]['create']) { valid = true; }
+            if (this.states[key]['update']) { valid = true; }
+            if (this.states[key]['render']) { valid = true; }
 
             if (valid === false)
             {
-                console.warn("Invalid Phaser State object given. Must contain at least a one of the required functions.");
+                console.warn("Invalid Phaser State object given. Must contain at least a one of the required functions: preload, create, update or render");
                 return false;
             }
 
@@ -373,6 +458,7 @@ Phaser.StateManager.prototype = {
         this.states[key].math = this.game.math;
         this.states[key].sound = this.game.sound;
         this.states[key].scale = this.game.scale;
+        this.states[key].state = this;
         this.states[key].stage = this.game.stage;
         this.states[key].time = this.game.time;
         this.states[key].tweens = this.game.tweens;

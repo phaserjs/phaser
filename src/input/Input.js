@@ -104,7 +104,7 @@ Phaser.Input = function (game) {
     this.circle = null;
 
     /**
-    * @property {Phaser.Point} scale - The scale by which all input coordinates are multiplied; calculated by the StageScaleMode. In an un-scaled game the values will be x = 1 and y = 1.
+    * @property {Phaser.Point} scale - The scale by which all input coordinates are multiplied; calculated by the ScaleManager. In an un-scaled game the values will be x = 1 and y = 1.
     */
     this.scale = null;
 

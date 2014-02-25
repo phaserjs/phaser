@@ -78,6 +78,8 @@ Significant API changes:
 * Keyboard.removeKey has been removed. The way the new keyboard manager works means it's no longer required.
 * When a game un-pauses (from a visibility loss) it resets all Input components.
 * Time.advancedTiming is a new boolean property. If true Time.fps, fpsMin, fpsMax, frames, msMin and msMax will be calculated, otherwise they remain at their defaults.
+* Phaser.StageScaleMode has been renamed to ScaleManager and moved from the system folder to the core folder. It's still available under game.scale.
+* If your game references the old Phaser.StageScaleMode consts like SHOW_ALL you need to update them to Phaser.ScaleManager, i.e. Phaser.ScaleManager.SHOW_ALL.
 
 
 New features:

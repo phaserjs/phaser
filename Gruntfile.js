@@ -70,6 +70,7 @@ module.exports = function (grunt) {
         'src/core/Stage.js',
         'src/core/Group.js',
         'src/core/World.js',
+        'src/core/ScaleManager.js',
         'src/core/Game.js',
 
         'src/input/Input.js',
@@ -100,7 +101,6 @@ module.exports = function (grunt) {
         'src/gameobjects/BitmapFont.js',
 
         'src/system/Canvas.js',
-        'src/system/StageScaleMode.js',
         'src/system/Device.js',
         'src/system/RequestAnimationFrame.js',
 

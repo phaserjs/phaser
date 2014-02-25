@@ -117,6 +117,7 @@
     <script src="$path/src/core/Group.js"></script>
     <script src="$path/src/core/World.js"></script>
     <script src="$path/src/core/Game.js"></script>
+    <script src="$path/src/core/ScaleManager.js"></script>
 
     <script src="$path/src/input/Input.js"></script>
     <script src="$path/src/input/Key.js"></script>
@@ -146,7 +147,6 @@
     <script src="$path/src/gameobjects/BitmapFont.js"></script>
 
     <script src="$path/src/system/Canvas.js"></script>
-    <script src="$path/src/system/StageScaleMode.js"></script>
     <script src="$path/src/system/Device.js"></script>
     <script src="$path/src/system/RequestAnimationFrame.js"></script>
 
