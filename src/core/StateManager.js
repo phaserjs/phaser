@@ -134,7 +134,7 @@ Phaser.StateManager.prototype = {
     * @method Phaser.StateManager#add
     * @param key {string} - A unique key you use to reference this state, i.e. "MainMenu", "Level1".
     * @param state {State} - The state you want to switch to.
-    * @param autoStart {boolean} - Start the state immediately after creating it? (default true)
+    * @param autoStart {boolean} - Start the state immediately after creating it? (default false)
     */
     add: function (key, state, autoStart) {
 
