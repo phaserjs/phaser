@@ -18,7 +18,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v1.1.6 - Built at: Mon Feb 24 2014 01:27:13
+* v1.1.6 - Built at: Tue Feb 25 2014 20:52:38
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -45526,8 +45526,8 @@ Phaser.TilemapParser = {
                 newSet.tileProperties = set.tileproperties;
             }
 
-            newSet.rows = (set.imageheight - set.margin) / (set.tileheight + set.spacing);
-            newSet.columns = (set.imagewidth - set.margin) / (set.tilewidth + set.spacing);
+            newSet.rows = Math.round((set.imageheight - set.margin) / (set.tileheight + set.spacing));
+            newSet.columns = Math.round((set.imagewidth - set.margin) / (set.tilewidth + set.spacing));
             newSet.total = newSet.rows * newSet.columns;
 
             if (newSet.rows % 1 !== 0 || newSet.columns % 1 !== 0) {
