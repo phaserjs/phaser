@@ -44,6 +44,12 @@ Phaser.StateManager = function (game, pendingState) {
     this._created = false;
 
     /**
+    * @property {array} _args - Temporary container when you pass vars from one State to another.
+    * @private
+    */
+    this._args = [];
+
+    /**
     * @property {string} current - The current active State object (defaults to null).
     */
     this.current = '';
@@ -215,6 +221,7 @@ Phaser.StateManager.prototype = {
     * @param {string} key - The key of the state you want to start.
     * @param {boolean} [clearWorld=true] - Clear everything in the world? This clears the World display list fully (but not the Stage, so if you've added your own objects to the Stage they will need managing directly)
     * @param {boolean} [clearCache=false] - Clear the Game.Cache? This purges out all loaded assets. The default is false and you must have clearWorld=true if you want to clearCache as well.
+    * @param {...*} parameter - Additional parameters that will be passed to the State.init function (if it has one).
     */
     start: function (key, clearWorld, clearCache) {
 
@@ -224,7 +231,33 @@ Phaser.StateManager.prototype = {
         if (this.game.isBooted === false)
         {
             this._pendingState = key;
+
+            if (arguments.length > 3)
+            {
+                this._args = Array.prototype.splice.call(arguments, 3);
+            }
+
             return;
+        }
+        else
+        {
+            //  If we still have a _pendingState it's left over from game boot, so glob the args
+            if (this._pendingState)
+            {
+                this._pendingState = null;
+            }
+            else
+            {
+                this._args = [];
+            }
+        }
+
+console.log('state start', key);
+console.log(arguments);
+
+        if (arguments.length > 3)
+        {
+            this._args = Array.prototype.splice.call(arguments, 3);
         }
 
         if (this.checkState(key) === false)
@@ -384,7 +417,7 @@ Phaser.StateManager.prototype = {
         this.current = key;
         this._created = false;
 
-        this.onInitCallback.call(this.callbackContext, this.game);
+        this.onInitCallback.apply(this.callbackContext, this._args);
 
     },
 
