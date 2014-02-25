@@ -207,6 +207,10 @@
       "title": "bitmapdata wobble"
     },
     {
+      "file": "fullscreen+buttons.js",
+      "title": "fullscreen buttons"
+    },
+    {
       "file": "fullscreen.js",
       "title": "fullscreen"
     },
