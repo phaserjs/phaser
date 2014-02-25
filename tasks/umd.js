@@ -11,6 +11,7 @@ var umdBefore = [
 ].join('\n');
 
 var umdAfter = [
+  '  Phaser.PIXI = PIXI', // Because JS.
   '  return Phaser;',
   '});'
 ].join('\n');
