@@ -445,11 +445,20 @@ Phaser.Tween.prototype = {
     * Resumes a paused tween.
     *
     * @method Phaser.Tween#resume
+    * @param {boolean} [fromManager=false] - Did this resume request come from the TweenManager or game code?
     */
-    resume: function () {
+    resume: function (fromManager) {
 
         this._paused = false;
-        this._startTime += (this.game.time.now - this._pausedTime);
+
+        if (typeof fromManager === 'undefined' || !fromManager)
+        {
+            this._startTime += (this.game.time.now - this._pausedTime);
+        }
+        else
+        {
+            this._startTime += this.game.time.pauseDuration;
+        }
 
     },
 

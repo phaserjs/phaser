@@ -154,6 +154,7 @@ Bug Fixes:
 * Fixed a bug where Sound.play wouldn't pick-up the local loop setting if not specified in the parameter.
 * Active animations now monitor if the game pauses, and resume normally when the game un-pauses (fixes #179)
 * Swapping between tabs will now pause the game correctly on mobile browsers (iOS7+)
+* Swapping between tabs will pause and resume tweens correctly, allowing their onComplete events to still fire (fixes #292)
 
 
 TO DO:

@@ -194,7 +194,7 @@ Phaser.TweenManager.prototype = {
 
         for (var i = this._tweens.length - 1; i >= 0; i--)
         {
-            this._tweens[i].resume();
+            this._tweens[i].resume(true);
         }
 
     }
