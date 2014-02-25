@@ -259,85 +259,6 @@ Phaser.StateManager.prototype = {
             }
         }
 
-
-/*        if (this.game.isBooted === false)
-        {
-            this._pendingState = key;
-
-            if (arguments.length > 3)
-            {
-                this._args = Array.prototype.splice.call(arguments, 3);
-            }
-
-            return;
-        }
-        else
-        {
-            //  If we still have a _pendingState it's left over from game boot, so glob the args
-            if (this._pendingState)
-            {
-                this._pendingState = null;
-            }
-            else
-            {
-                this._args = [];
-            }
-        }
-        if (arguments.length > 3)
-        {
-            this._args = Array.prototype.splice.call(arguments, 3);
-        }
-
-        if (this.checkState(key) === false)
-        {
-            return;
-        }
-        else
-        {
-            //  Already got a state running?
-            if (this.current)
-            {
-                this.onShutDownCallback.call(this.callbackContext, this.game);
-            }
-
-            if (clearWorld)
-            {
-                this.game.tweens.removeAll();
-
-                this.game.world.destroy();
-
-                if (clearCache === true)
-                {
-                    this.game.cache.destroy();
-                }
-            }
-
-            this.setCurrentState(key);
-        }
-
-        if (this.onPreloadCallback)
-        {
-            this.game.load.reset();
-            this.onPreloadCallback.call(this.callbackContext, this.game);
-
-            //  Is the loader empty?
-            if (this.game.load.totalQueuedFiles() === 0)
-            {
-                this.game.loadComplete();
-            }
-            else
-            {
-                //  Start the loader going as we have something in the queue
-                this.game.load.start();
-            }
-        }
-        else
-        {
-            //  No init? Then there was nothing to load either
-            this.game.loadComplete();
-        }
-        */
-
     },
     
     /**
@@ -349,11 +270,9 @@ Phaser.StateManager.prototype = {
     },
 
     /**
-    * Checks if a given phaser state is valid.
-    * State must exist and have at least one callback function registered..
-    * @method Phaser.StateManager#checkState
-    * @param {string} key - The key of the state you want to check.
-    * @return {boolean} Description.
+    * preUpdate is called right at the start of the game loop. It is responsible for changing to a new state that was requested previously.
+    *
+    * @method Phaser.StateManager#preUpdate
     */
     preUpdate: function () {
 
@@ -501,6 +420,8 @@ Phaser.StateManager.prototype = {
         this._created = false;
 
         this.onInitCallback.apply(this.callbackContext, this._args);
+
+        this._args = [];
 
     },
 
