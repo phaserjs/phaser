@@ -44,29 +44,35 @@ Phaser.Time = function (game) {
     this.pausedTime = 0;
 
     /**
-    * @property {number} fps - Frames per second.
+    * @property {boolean} advancedTiming - If true Phaser.Time will perform advanced profiling including the fps rate, fps min/max and msMin and msMax.
+    * @default
+    */
+    this.advancedTiming = false;
+
+    /**
+    * @property {number} fps - Frames per second. Only calculated if Time.advancedTiming is true.
     * @protected
     */
     this.fps = 0;
 
     /**
-    * @property {number} fpsMin - The lowest rate the fps has dropped to.
+    * @property {number} fpsMin - The lowest rate the fps has dropped to. Only calculated if Time.advancedTiming is true.
     */
     this.fpsMin = 1000;
 
     /**
-    * @property {number} fpsMax - The highest rate the fps has reached (usually no higher than 60fps).
+    * @property {number} fpsMax - The highest rate the fps has reached (usually no higher than 60fps). Only calculated if Time.advancedTiming is true.
     */
     this.fpsMax = 0;
 
     /**
-    * @property {number} msMin - The minimum amount of time the game has taken between two frames.
+    * @property {number} msMin - The minimum amount of time the game has taken between two frames. Only calculated if Time.advancedTiming is true.
     * @default
     */
     this.msMin = 1000;
 
     /**
-    * @property {number} msMax - The maximum amount of time the game has taken between two frames.
+    * @property {number} msMax - The maximum amount of time the game has taken between two frames. Only calculated if Time.advancedTiming is true.
     */
     this.msMax = 0;
 
@@ -76,7 +82,7 @@ Phaser.Time = function (game) {
     this.physicsElapsed = 0;
 
     /**
-    * @property {number} frames - The number of frames record in the last second.
+    * @property {number} frames - The number of frames record in the last second. Only calculated if Time.advancedTiming is true.
     */
     this.frames = 0;
 
@@ -141,10 +147,6 @@ Phaser.Time = function (game) {
     * @private
     */
     this._i = 0;
-
-    //  Listen for game pause/resume events
-    // this.game.onPause.add(this.gamePaused, this);
-    // this.game.onResume.add(this.gameResumed, this);
 
 };
 
@@ -218,26 +220,26 @@ Phaser.Time.prototype = {
 
         this.elapsed = this.now - this.time;
 
-        /*
-        this.msMin = this.game.math.min(this.msMin, this.elapsed);
-        this.msMax = this.game.math.max(this.msMax, this.elapsed);
-
-        this.frames++;
-
-        if (this.now > this._timeLastSecond + 1000)
+        if (this.advancedTiming)
         {
-            this.fps = Math.round((this.frames * 1000) / (this.now - this._timeLastSecond));
-            this.fpsMin = this.game.math.min(this.fpsMin, this.fps);
-            this.fpsMax = this.game.math.max(this.fpsMax, this.fps);
-            this._timeLastSecond = this.now;
-            this.frames = 0;
+            this.msMin = this.game.math.min(this.msMin, this.elapsed);
+            this.msMax = this.game.math.max(this.msMax, this.elapsed);
+
+            this.frames++;
+
+            if (this.now > this._timeLastSecond + 1000)
+            {
+                this.fps = Math.round((this.frames * 1000) / (this.now - this._timeLastSecond));
+                this.fpsMin = this.game.math.min(this.fpsMin, this.fps);
+                this.fpsMax = this.game.math.max(this.fpsMax, this.fps);
+                this._timeLastSecond = this.now;
+                this.frames = 0;
+            }
         }
-        */
 
         this.time = this.now;
         this.lastTime = time + this.timeToCall;
 
-        /*
         this.physicsElapsed = 1.0 * (this.elapsed / 1000);
 
         //  Clamp the delta
@@ -245,14 +247,9 @@ Phaser.Time.prototype = {
         {
             this.physicsElapsed = 0.05;
         }
-        */
 
         //  Paused but still running?
-        if (this.game.paused)
-        {
-            // this.pausedTime = this.now - this._pauseStarted;
-        }
-        else
+        if (!this.game.paused)
         {
             //  Our internal Phaser.Timer
             this.events.update(this.now);

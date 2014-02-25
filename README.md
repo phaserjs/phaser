@@ -77,6 +77,7 @@ Significant API changes:
 * The Keyboard class has had a complete overhaul. Phaser.Key objects are created automatically, there are fixes against duration and keys reset properly on visibility loss.
 * Keyboard.removeKey has been removed. The way the new keyboard manager works means it's no longer required.
 * When a game un-pauses (from a visibility loss) it resets all Input components.
+* Time.advancedTiming is a new boolean property. If true Time.fps, fpsMin, fpsMax, frames, msMin and msMax will be calculated, otherwise they remain at their defaults.
 
 
 New features:
