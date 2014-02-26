@@ -11,7 +11,7 @@ It's important to us that you feel you can contribute towards the evolution of P
 
 2. **Create an isolated and reproducible test case.** If you are reporting a bug, make sure you also have a minimal, runnable, code example that reproduces the problem you have.
 
-3. **Include a live example.** After narrowing your code down to only the problem areas, make use of[jsFiddle][1], [jsBin][2], or a link to your live site so that we can view a live example of the problem.
+3. **Include a live example.** After narrowing your code down to only the problem areas, make use of [jsFiddle][1], [jsBin][2], or a link to your live site so that we can view a live example of the problem.
 
 4. **Share as much information as possible.** Include browser version affected, your OS, version of the library, steps to reproduce, etc. "X isn't working!!!1!" will probably just be closed.
 
@@ -35,7 +35,7 @@ The dev branch of Phaser is our 'current working' version. It is always ahead of
 
 To take advantage of our grunt build script and jshint config it will be easiest for you if you have node.js and grunt installed locally.
 
-You can download node.js from[nodejs.org][3]. After it has been installed open a console and run `npm i - g grunt - cli` to install the global `grunt` executable.
+You can download node.js from [nodejs.org][3]. After it has been installed open a console and run `npm i - g grunt - cli` to install the global `grunt` executable.
 
 After that you can clone the repository and run `npm i` inside the cloned folder. This will install dependencies necessary for building the project. Once that is ready,
 make your changes and submit a Pull Request:
