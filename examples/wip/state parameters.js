@@ -21,6 +21,7 @@ BasicGame.Boot.prototype = {
 
     create: function () {
 
+        console.log('Boot create');
         this.game.state.start('Preloader', true, false, this.a, this.b);
 
     }
@@ -48,6 +49,7 @@ BasicGame.Preloader.prototype = {
 
     create: function () {
 
+        console.log('Preloader create');
         this.game.state.start('MainMenu', true, false, this.a, this.b);
 
     }
@@ -89,4 +91,4 @@ game.state.add('Boot', BasicGame.Boot);
 game.state.add('Preloader', BasicGame.Preloader);
 game.state.add('MainMenu', BasicGame.MainMenu);
 
-game.state.start('Boot');
+game.state.start('Boot', true, false, 'hello', 'world');

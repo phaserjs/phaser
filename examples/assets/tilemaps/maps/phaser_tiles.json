@@ -1,0 +1,39 @@
+{ "height":6,
+ "layers":[
+        {
+         "data":[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+         "height":6,
+         "name":"Ground",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":6,
+         "x":0,
+         "y":0
+        }],
+ "orientation":"orthogonal",
+ "properties":
+    {
+
+    },
+ "tileheight":100,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "image":"C:\/Program Files (x86)\/Tiled\/examples\/tmw_desert_spacing.png",
+         "imageheight":607,
+         "imagewidth":607,
+         "margin":1,
+         "name":"Desert",
+         "properties":
+            {
+
+            },
+         "spacing":1,
+         "tileheight":100,
+         "tilewidth":100
+        }],
+ "tilewidth":100,
+ "version":1,
+ "width":6
+}

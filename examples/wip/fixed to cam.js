@@ -41,6 +41,13 @@ function create() {
     var text2 = game.add.bitmapText(200, 500, 'desyrel', 'camera fixies', 32);
     text2.fixedToCamera = true;
 
+    //  Test fixing a Graphics object to the Camera
+    var graphics = game.add.graphics(0, 0);
+    graphics.fixedToCamera = true;
+    graphics.beginFill(0xFF3300);
+    graphics.lineStyle(2, 0x0000FF, 1);
+    graphics.drawRect(50, 250, 100, 100);
+
     //  Button! do mouse events still work then?
 
     game.camera.follow(mushroom);

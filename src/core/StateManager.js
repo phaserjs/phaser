@@ -141,13 +141,12 @@ Phaser.StateManager.prototype = {
             if (typeof this._pendingState === 'string')
             {
                 //  State was already added, so just start it
-                this.start(this._pendingState, false, false);
+                // this.start(this._pendingState, false, false);
             }
             else
             {
                 this.add('default', this._pendingState, true);
             }
-
         }
 
     },
@@ -251,12 +250,6 @@ Phaser.StateManager.prototype = {
             {
                 this._args = Array.prototype.splice.call(arguments, 3);
             }
-
-            //  Already got a state running?
-            if (this.current)
-            {
-                this.onShutDownCallback.call(this.callbackContext, this.game);
-            }
         }
 
     },
@@ -307,7 +300,6 @@ Phaser.StateManager.prototype = {
                 if (this.game.load.totalQueuedFiles() === 0)
                 {
                     this.loadComplete();
-                    // this.game.loadComplete();
                 }
                 else
                 {
@@ -319,10 +311,12 @@ Phaser.StateManager.prototype = {
             {
                 //  No init? Then there was nothing to load either
                 this.loadComplete();
-                // this.game.loadComplete();
             }
 
-            this._pendingState = null;
+            if (this.current === this._pendingState)
+            {
+                this._pendingState = null;
+            }
         }
 
     },
