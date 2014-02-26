@@ -425,10 +425,11 @@ Phaser.Timer.prototype = {
     },
 
     /**
-    * Pauses the Timer and all events in the queue.
-    * @method Phaser.Timer#_timePause
+    * This is called by the core Game loop. Do not call it directly, instead use Timer.pause.
+    * @method Phaser.Timer#_pause
+    * @private
     */
-    _timePause: function () {
+    _pause: function () {
         
         if (this.running && !this.expired)
         {
@@ -463,10 +464,11 @@ Phaser.Timer.prototype = {
     },
 
     /**
-    * Resumes the Timer and updates all pending events.
-    * @method Phaser.Timer#_timeResume
+    * This is called by the core Game loop. Do not call it directly, instead use Timer.pause.
+    * @method Phaser.Timer#_resume
+    * @private
     */
-    _timeResume: function () {
+    _resume: function () {
 
         if (this._codePaused)
         {

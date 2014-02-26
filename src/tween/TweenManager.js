@@ -39,8 +39,8 @@ Phaser.TweenManager = function (game) {
     */
     this._add = [];
 
-    this.game.onPause.add(this.pauseAll, this);
-    this.game.onResume.add(this.resumeAll, this);
+    this.game.onPause.add(this._pauseAll, this);
+    this.game.onResume.add(this._resumeAll, this);
 
 };
 
@@ -172,6 +172,36 @@ Phaser.TweenManager.prototype = {
     },
 
     /**
+    * Private. Called by game focus loss. Pauses all currently running tweens.
+    *
+    * @method Phaser.TweenManager#_pauseAll
+    * @private
+    */
+    _pauseAll: function () {
+
+        for (var i = this._tweens.length - 1; i >= 0; i--)
+        {
+            this._tweens[i]._pause();
+        }
+
+    },
+
+    /**
+    * Private. Called by game focus loss. Resumes all currently paused tweens.
+    *
+    * @method Phaser.TweenManager#_resumeAll
+    * @private
+    */
+    _resumeAll: function () {
+
+        for (var i = this._tweens.length - 1; i >= 0; i--)
+        {
+            this._tweens[i]._resume();
+        }
+
+    },
+
+    /**
     * Pauses all currently running tweens.
     *
     * @method Phaser.TweenManager#pauseAll
@@ -186,7 +216,7 @@ Phaser.TweenManager.prototype = {
     },
 
     /**
-    * Pauses all currently paused tweens.
+    * Resumes all currently paused tweens.
     *
     * @method Phaser.TweenManager#resumeAll
     */

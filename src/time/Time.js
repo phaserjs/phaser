@@ -219,7 +219,7 @@ Phaser.Time.prototype = {
 
             for (var i = 0; i < this._timers.length; i++)
             {
-                this._timers[i]._timeResume();
+                this._timers[i]._resume();
             }
         }
 
@@ -299,7 +299,7 @@ Phaser.Time.prototype = {
 
         while (i--)
         {
-            this._timers[i]._timePause();
+            this._timers[i]._pause();
         }
 
     },

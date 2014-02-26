@@ -173,6 +173,9 @@ Bug Fixes:
 * Fixed issue stopping SoundManager.volume from working correctly on a global volume basis (fixes #488)
 * Phaser.Timer will no longer create negative ticks during game boot, no matter how small the Timer delay is (fixes #366)
 * Phaser.Timer will no longer resume if it was previously paused and the game loses focus and then resumes (fixes #383)
+* Tweens now resume correctly if the game pauses (focus loss) while they are paused.
+* Tweens don't double pause if they were already paused and the game pauses.
+
 
 
 TO DO:

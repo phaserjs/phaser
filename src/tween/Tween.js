@@ -133,11 +133,24 @@ Phaser.Tween = function (object, game) {
     this._onUpdateCallbackContext = null;
 
     /**
+    * @property {boolean} _paused - Is this Tween paused or not?
+    * @private
+    * @default
+    */
+    this._paused = false;
+
+    /**
     * @property {number} _pausedTime - Private pause timer.
     * @private
     * @default
     */
     this._pausedTime = 0;
+
+    /**
+    * @property {boolean} _codePaused - Was the Tween paused by code or by Game focus loss?
+    * @private
+    */
+    this._codePaused = false;
 
     /**
     * @property {boolean} pendingDelete - If this tween is ready to be deleted by the TweenManager.
@@ -436,8 +449,24 @@ Phaser.Tween.prototype = {
     */
     pause: function () {
 
+        this._codePaused = true;
         this._paused = true;
         this._pausedTime = this.game.time.now;
+
+    },
+
+    /**
+    * This is called by the core Game loop. Do not call it directly, instead use Tween.pause.
+    * @method Phaser.Tween#_pause
+    * @private
+    */
+    _pause: function () {
+        
+        if (!this._codePaused)
+        {
+            this._paused = true;
+            this._pausedTime = this.game.time.now;
+        }
 
     },
 
@@ -445,19 +474,34 @@ Phaser.Tween.prototype = {
     * Resumes a paused tween.
     *
     * @method Phaser.Tween#resume
-    * @param {boolean} [fromManager=false] - Did this resume request come from the TweenManager or game code?
     */
-    resume: function (fromManager) {
+    resume: function () {
 
-        this._paused = false;
-
-        if (typeof fromManager === 'undefined' || !fromManager)
+        if (this._paused)
         {
+            this._paused = false;
+            this._codePaused = false;
+
             this._startTime += (this.game.time.now - this._pausedTime);
+        }
+
+    },
+
+    /**
+    * This is called by the core Game loop. Do not call it directly, instead use Tween.pause.
+    * @method Phaser.Tween#_resume
+    * @private
+    */
+    _resume: function () {
+
+        if (this._codePaused)
+        {
+            return;
         }
         else
         {
             this._startTime += this.game.time.pauseDuration;
+            this._paused = false;
         }
 
     },

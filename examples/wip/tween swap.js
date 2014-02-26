@@ -23,13 +23,28 @@ function create() {
 
     anim.play(10, true);
 
-    game.onPause.add(paused, this);
-    game.onResume.add(resumed, this);
+    // game.onPause.add(paused, this);
+    // game.onResume.add(resumed, this);
 
     t = game.add.tween(mummy).to({x:700}, 15000, Phaser.Easing.Linear.None, true);
     t.onComplete.add(tweenOver, this);
 
     s.push('starting: ' + game.stage._hiddenVar);
+
+    game.input.onDown.add(pauseTween, this);
+
+}
+
+function pauseTween(pointer) {
+
+	if (pointer.x < 400)
+	{
+		t.pause();
+	}
+	else
+	{
+		t.resume();
+	}
 
 }
 
@@ -37,7 +52,7 @@ function tweenOver() {
 	console.log('yay all over after 15 seconds anyway');
 }
 
-function pauseToggle() {
+/*function pauseToggle() {
 
 	if (game.paused)
 	{
@@ -49,7 +64,6 @@ function pauseToggle() {
 	}
 
 }
-
 function paused() {
 
 	s.push('paused now: ' + game.time.now);
@@ -64,6 +78,7 @@ function resumed() {
 	s.push('pause duration: ' + game.time.pauseDuration);
 
 }
+*/
 
 function update() {
 
