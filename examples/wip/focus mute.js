@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render }, true);
 
 function preload() {
 
@@ -15,7 +15,7 @@ var music;
 
 function create() {
 
-    game.stage.backgroundColor = '#182d3b';
+    // game.stage.backgroundColor = '#182d3b';
     game.input.touch.preventDefault = false;
 
     music = game.add.audio('boden');

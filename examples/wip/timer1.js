@@ -1,30 +1,29 @@
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { create: create });
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
-
-function preload() {
-
-	game.load.image('pic', 'assets/pics/backscroll.png');
-
-}
-
-var text;
-var b;
-var grd;
+var last;
+var i = 0;
 
 function create() {
 
-	game.stage.setBackgroundColor(0x2d2d2d);
+  //Maybe you have to set it even lower for your machine.
+  //It's related to the time Phaser needs to boot up.
+  //The tick stops being negative and behaves nearly normal for me at around 550 - 600ms
 
-    text = game.add.text(0, 0, "time");
+  delay = 250;
+  foreverTimer = game.time.events.repeat(delay, 10, handleEvent, this);
+
+  last = Date.now();
+
+  console.log('create started', last);
 
 }
 
-function update() {
+function handleEvent() {
 
+	console.log('>> Tick', i, 'ms diff:', Date.now() - last);
 
-}
+	last = Date.now();
 
-function render() {
-
+	i++;
 
 }

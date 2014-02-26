@@ -107,7 +107,7 @@ Phaser.RequestAnimationFrame.prototype = {
     */
     updateRAF: function (time) {
 
-        this.game.update(time);
+        this.game.update(Date.now());
 
         this._timeOutID = window.requestAnimationFrame(this._onLoop);
 

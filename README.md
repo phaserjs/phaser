@@ -80,6 +80,7 @@ Significant API changes:
 * Time.advancedTiming is a new boolean property. If true Time.fps, fpsMin, fpsMax, frames, msMin and msMax will be calculated, otherwise they remain at their defaults.
 * Phaser.StageScaleMode has been renamed to ScaleManager and moved from the system folder to the core folder. It's still available under game.scale.
 * If your game references the old Phaser.StageScaleMode consts like SHOW_ALL you need to update them to Phaser.ScaleManager, i.e. Phaser.ScaleManager.SHOW_ALL.
+* Time.physicsElapsed is no longer bound or clamped, be wary of this if you use the value anywhere in your code.
 
 
 New features:
@@ -168,7 +169,8 @@ Bug Fixes:
 * Fixed TilemapParser - would spit out a tileset warning if margin/spacing were set (fix #485, thanks Cybolic)
 * AnimationParser.spriteSheet wasn't taking the margin or spacing into account when calculating the numbers of sprites per row/column, nor was it allowing for extra power-of-two padding at the end (fix #482, thanks yig)
 * AnimationManager.add documentation said that 'frames' could be null, but the code couldn't handle this so it defaults to an empty array if none given (thanks yig)
-* Fixed issue stopping SoundManager.volume from working correctly on a global volume basis (fix # 488)
+* Fixed issue stopping SoundManager.volume from working correctly on a global volume basis (fixes #488)
+* The Timer will no longer create negative ticks during game boot, no matter how small the Timer delay is (fixes #366)
 
 
 TO DO:

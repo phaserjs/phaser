@@ -153,7 +153,10 @@ Phaser.Time = function (game) {
 Phaser.Time.prototype = {
 
     /**
+    * Called automatically by Phaser.Game after boot. Should not be called directly.
+    *
     * @method Phaser.Time#boot
+    * @protected
     */
     boot: function () {
 
@@ -163,6 +166,7 @@ Phaser.Time.prototype = {
 
     /**
     * Creates a new stand-alone Phaser.Timer object.
+    *
     * @method Phaser.Time#create
     * @param {boolean} [autoDestroy=true] - A Timer that is set to automatically destroy itself will do so after all of its events have been dispatched (assuming no looping events).
     * @return {Phaser.Timer} The Timer object that was created.
@@ -181,6 +185,7 @@ Phaser.Time.prototype = {
 
     /**
     * Remove all Timer objects, regardless of their state.
+    *
     * @method Phaser.Time#removeAll
     */
     removeAll: function () {
@@ -195,8 +200,10 @@ Phaser.Time.prototype = {
     },
 
     /**
-    * Updates the game clock and calculate the fps. This is called automatically by Phaser.Game.
+    * Updates the game clock and if enabled the advanced timing data. This is called automatically by Phaser.Game.
+    *
     * @method Phaser.Time#update
+    * @protected
     * @param {number} time - The current timestamp, either performance.now or Date.now depending on the browser.
     */
     update: function (time) {
@@ -242,12 +249,6 @@ Phaser.Time.prototype = {
 
         this.physicsElapsed = 1.0 * (this.elapsed / 1000);
 
-        //  Clamp the delta
-        if (this.physicsElapsed > 0.05)
-        {
-            this.physicsElapsed = 0.05;
-        }
-
         //  Paused but still running?
         if (!this.game.paused)
         {
@@ -277,6 +278,7 @@ Phaser.Time.prototype = {
 
     /**
     * Called when the game enters a paused state.
+    *
     * @method Phaser.Time#gamePaused
     * @private
     */
@@ -304,6 +306,7 @@ Phaser.Time.prototype = {
 
     /**
     * Called when the game resumes from a paused state.
+    *
     * @method Phaser.Time#gameResumed
     * @private
     */
@@ -328,8 +331,9 @@ Phaser.Time.prototype = {
 
     /**
     * The number of seconds that have elapsed since the game was started.
+    *
     * @method Phaser.Time#totalElapsedSeconds
-    * @return {number}
+    * @return {number} The number of seconds that have elapsed since the game was started.
     */
     totalElapsedSeconds: function() {
         return (this.now - this._started) * 0.001;
@@ -337,6 +341,7 @@ Phaser.Time.prototype = {
 
     /**
     * How long has passed since the given time.
+    *
     * @method Phaser.Time#elapsedSince
     * @param {number} since - The time you want to measure against.
     * @return {number} The difference between the given time and now.
@@ -347,6 +352,7 @@ Phaser.Time.prototype = {
 
     /**
     * How long has passed since the given time (in seconds).
+    *
     * @method Phaser.Time#elapsedSecondsSince
     * @param {number} since - The time you want to measure (in seconds).
     * @return {number} Duration between given time and now (in seconds).
@@ -357,6 +363,7 @@ Phaser.Time.prototype = {
 
     /**
     * Resets the private _started value to now.
+    *
     * @method Phaser.Time#reset
     */
     reset: function () {

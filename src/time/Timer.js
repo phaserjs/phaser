@@ -143,7 +143,14 @@ Phaser.Timer.prototype = {
 
         if (this.running)
         {
-            tick += this._now;
+            if (this._now === 0)
+            {
+                tick += this.game.time.now;
+            }
+            else
+            {
+                tick += this._now;
+            }
         }
 
         var event = new Phaser.TimerEvent(this, delay, tick, repeatCount, loop, callback, callbackContext, args);
@@ -216,7 +223,7 @@ Phaser.Timer.prototype = {
     * Starts this Timer running.
     * @method Phaser.Timer#start
     */
-    start: function() {
+    start: function () {
 
         this._started = this.game.time.now;
         this.running = true;
@@ -227,7 +234,7 @@ Phaser.Timer.prototype = {
     * Stops this Timer from running. Does not cause it to be destroyed if autoDestroy is set to true.
     * @method Phaser.Timer#stop
     */
-    stop: function() {
+    stop: function () {
 
         this.running = false;
         this.events.length = 0;
@@ -239,7 +246,7 @@ Phaser.Timer.prototype = {
     * @param {Phaser.TimerEvent} event - The event to remove from the queue.
     * @method Phaser.Timer#remove
     */
-    remove: function(event) {
+    remove: function (event) {
 
         for (var i = 0; i < this.events.length; i++)
         {
@@ -297,14 +304,17 @@ Phaser.Timer.prototype = {
     * @param {number} time - The time from the core game clock.
     * @return {boolean} True if there are still events waiting to be dispatched, otherwise false if this Timer can be destroyed.
     */
-    update: function(time) {
+    update: function (time) {
 
         if (this.paused)
         {
             return true;
         }
 
-        this._now = time - this._started;
+        // this._now = time - this._started;
+        this._now = time;
+
+        // console.log('Timer update', this._now, time);
 
         this._len = this.events.length;
 
@@ -331,15 +341,23 @@ Phaser.Timer.prototype = {
             {
                 if (this._now >= this.events[this._i].tick)
                 {
+                    var diff = this._now - this.events[this._i].tick;
+                    var newTick = (this._now + this.events[this._i].delay) - diff;
+
+                    if (newTick < 0)
+                    {
+                        newTick = this._now + this.events[this._i].delay;
+                    }
+
                     if (this.events[this._i].loop === true)
                     {
-                        this.events[this._i].tick += this.events[this._i].delay - (this._now - this.events[this._i].tick);
+                        this.events[this._i].tick = newTick;
                         this.events[this._i].callback.apply(this.events[this._i].callbackContext, this.events[this._i].args);
                     }
                     else if (this.events[this._i].repeatCount > 0)
                     {
                         this.events[this._i].repeatCount--;
-                        this.events[this._i].tick += this.events[this._i].delay - (this._now - this.events[this._i].tick);
+                        this.events[this._i].tick = newTick;
                         this.events[this._i].callback.apply(this.events[this._i].callbackContext, this.events[this._i].args);
                     }
                     else
@@ -418,10 +436,10 @@ Phaser.Timer.prototype = {
     },
 
     /**
-    * Destroys this Timer. Events are not dispatched.
+    * Destroys this Timer. Any pending Events are not dispatched.
     * @method Phaser.Timer#destroy
     */
-    destroy: function() {
+    destroy: function () {
 
         this.onComplete.removeAll();
         this.running = false;
@@ -488,7 +506,7 @@ Object.defineProperty(Phaser.Timer.prototype, "length", {
 Object.defineProperty(Phaser.Timer.prototype, "ms", {
 
     get: function () {
-        return this._now;
+        return this._now - this._started;
     }
 
 });
@@ -501,7 +519,7 @@ Object.defineProperty(Phaser.Timer.prototype, "ms", {
 Object.defineProperty(Phaser.Timer.prototype, "seconds", {
 
     get: function () {
-        return this._now * 0.001;
+        return this.ms * 0.001;
     }
 
 });
