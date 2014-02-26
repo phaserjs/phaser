@@ -168,6 +168,7 @@ Bug Fixes:
 * Fixed TilemapParser - would spit out a tileset warning if margin/spacing were set (fix #485, thanks Cybolic)
 * AnimationParser.spriteSheet wasn't taking the margin or spacing into account when calculating the numbers of sprites per row/column, nor was it allowing for extra power-of-two padding at the end (fix #482, thanks yig)
 * AnimationManager.add documentation said that 'frames' could be null, but the code couldn't handle this so it defaults to an empty array if none given (thanks yig)
+* Fixed issue stopping SoundManager.volume from working correctly on a global volume basis (fix # 488)
 
 
 TO DO:

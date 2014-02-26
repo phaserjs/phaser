@@ -371,6 +371,12 @@ Phaser.SoundManager.prototype = {
 
     },
 
+    /**
+    * Internal mute handler called automatically by the Sound.mute setter.
+    *
+    * @method Phaser.SoundManager#setMute
+    * @private
+    */
     setMute: function () {
 
         if (this._muted)
@@ -397,6 +403,12 @@ Phaser.SoundManager.prototype = {
 
     },
 
+    /**
+    * Internal mute handler called automatically by the Sound.mute setter.
+    *
+    * @method Phaser.SoundManager#unsetMute
+    * @private
+    */
     unsetMute: function () {
 
         if (!this._muted || this._codeMuted)
@@ -487,21 +499,21 @@ Object.defineProperty(Phaser.SoundManager.prototype, "volume", {
 
     set: function (value) {
 
-        value = this.game.math.clamp(value, 1, 0);
-
         this._volume = value;
 
         if (this.usingWebAudio)
         {
             this.masterGain.gain.value = value;
         }
-
-        //  Loop through the sound cache and change the volume of all html audio tags
-        for (var i = 0; i < this._sounds.length; i++)
+        else
         {
-            if (this._sounds[i].usingAudioTag)
+            //  Loop through the sound cache and change the volume of all html audio tags
+            for (var i = 0; i < this._sounds.length; i++)
             {
-                this._sounds[i].volume = this._sounds[i].volume * value;
+                if (this._sounds[i].usingAudioTag)
+                {
+                    this._sounds[i].volume = this._sounds[i].volume * value;
+                }
             }
         }
         
