@@ -101,6 +101,7 @@ Phaser.AnimationManager.prototype = {
             return;
         }
 
+        frames = frames || [];
         frameRate = frameRate || 60;
 
         if (typeof loop === 'undefined') { loop = false; }
