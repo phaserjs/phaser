@@ -773,6 +773,10 @@
       "title": "bitmap fonts"
     },
     {
+      "file": "google+webfonts.js",
+      "title": "google webfonts"
+    },
+    {
       "file": "hello+arial.js",
       "title": "hello arial"
     },
