@@ -85,6 +85,10 @@ Phaser.Group = function (game, parent, name, addToStage) {
     */
     this.cursor = null;
 
+    /**
+    * @property {number} _cursorIndex - Internal pointer.
+    * @private
+    */
     this._cursorIndex = 0;
 
     /**

@@ -117,6 +117,7 @@ New features:
 * Stage.smoothed allows you to set if sprites will be smoothed when rendered. Set to false if you're using pixel art in your game. Default is true. Works in Canvas and WebGL.
 * Sprite.smoothed and Image.smoothed allows you to set per-Sprite smoothing, perfect if you just want to keep a few sprites smoothed (or not)
 * StateManager.start can now have as many parameters as you like. The order is: start(key, clearWorld, clearCache, ...) - they are passed to State.init() (NOT create!)
+* Loader.script now has callback (and callbackContext) parameters, so you can specify a function to run once the JS has been injected into the body.
 
 
 Updates:

@@ -389,15 +389,21 @@ Phaser.Loader.prototype = {
 
     /**
     * Add a JavaScript file to the Loader. Once loaded the JavaScript file will be automatically turned into a script tag (and executed), so be careful what you load!
+    * You can also specify a callback. This will be executed as soon as the script tag has been created.
     *
     * @method Phaser.Loader#script
     * @param {string} key - Unique asset key of the script file.
     * @param {string} url - URL of the JavaScript file.
+    * @param {function} [callback] - Optional callback that will be called after the script tag has loaded, so you can perform additional processing.
+    * @param {function} [callbackContext] - The context under which the callback will be applied. If not specified it will use the callback itself as the context.
     * @return {Phaser.Loader} This Loader instance.
     */
-    script: function (key, url) {
+    script: function (key, url, callback, callbackContext) {
 
-        this.addToFileList('script', key, url);
+        if (typeof callback === 'undefined') { callback = false; }
+        if (callback !== false && typeof callbackContext === 'undefined') { callbackContext = callback; }
+
+        this.addToFileList('script', key, url, { callback: callback, callbackContext: callbackContext });
 
         return this;
 
@@ -1164,6 +1170,10 @@ Phaser.Loader.prototype = {
                 file.data.defer = false;
                 file.data.text = this._xhr.responseText;
                 document.head.appendChild(file.data);
+                if (file.callback)
+                {
+                    file.data = file.callback.call(file.callbackContext, file.key, this._xhr.responseText);
+                }
                 break;
 
             case 'binary':
