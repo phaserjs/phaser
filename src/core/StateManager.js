@@ -152,11 +152,14 @@ Phaser.StateManager.prototype = {
     },
 
     /**
-    * Add a new State.
+    * Adds a new State into the StateManager. You must give each State a unique key by which you'll identify it.
+    * The State can be either a Phaser.State object (or an object that extends it), a plain JavaScript object or a function.
+    * If a function is given a new state object will be created by calling it.
+    *
     * @method Phaser.StateManager#add
-    * @param key {string} - A unique key you use to reference this state, i.e. "MainMenu", "Level1".
-    * @param state {State} - The state you want to switch to.
-    * @param autoStart {boolean} - Start the state immediately after creating it? (default true)
+    * @param {string} key - A unique key you use to reference this state, i.e. "MainMenu", "Level1".
+    * @param {Phaser.State|object|function} state  - The state you want to switch to.
+    * @param {boolean} [autoStart=false]  - If true the State will be started immediately after adding it.
     */
     add: function (key, state, autoStart) {
 
