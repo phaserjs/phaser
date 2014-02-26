@@ -67,6 +67,12 @@ Phaser.Timer = function (game, autoDestroy) {
     this.paused = false;
 
     /**
+    * @property {boolean} _codePaused - Was the Timer paused by code or by Game focus loss?
+    * @private
+    */
+    this._codePaused = false;
+
+    /**
     * @property {number} _started - The time at which this Timer instance started running.
     * @private
     * @default
@@ -233,11 +239,18 @@ Phaser.Timer.prototype = {
     /**
     * Stops this Timer from running. Does not cause it to be destroyed if autoDestroy is set to true.
     * @method Phaser.Timer#stop
+    * @param {boolean} [clearEvents=true] - If true all the events in Timer will be cleared, otherwise they will remain.
     */
-    stop: function () {
+    stop: function (clearEvents) {
 
         this.running = false;
-        this.events.length = 0;
+
+        if (typeof clearEvents === 'undefined') { clearEvents = true; }
+
+        if (clearEvents)
+        {
+            this.events.length = 0;
+        }
 
     },
 
@@ -311,10 +324,7 @@ Phaser.Timer.prototype = {
             return true;
         }
 
-        // this._now = time - this._started;
         this._now = time;
-
-        // console.log('Timer update', this._now, time);
 
         this._len = this.events.length;
 
@@ -409,6 +419,22 @@ Phaser.Timer.prototype = {
             this._pauseStarted = this.game.time.now;
 
             this.paused = true;
+            this._codePaused = true;
+        }
+
+    },
+
+    /**
+    * Pauses the Timer and all events in the queue.
+    * @method Phaser.Timer#_timePause
+    */
+    _timePause: function () {
+        
+        if (this.running && !this.expired)
+        {
+            this._pauseStarted = this.game.time.now;
+
+            this.paused = true;
         }
 
     },
@@ -431,6 +457,24 @@ Phaser.Timer.prototype = {
             this.nextTick += pauseDuration;
 
             this.paused = false;
+            this._codePaused = false;
+        }
+
+    },
+
+    /**
+    * Resumes the Timer and updates all pending events.
+    * @method Phaser.Timer#_timeResume
+    */
+    _timeResume: function () {
+
+        if (this._codePaused)
+        {
+            return;
+        }
+        else
+        {
+            this.resume();
         }
 
     },

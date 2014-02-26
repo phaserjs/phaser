@@ -219,7 +219,7 @@ Phaser.Time.prototype = {
 
             for (var i = 0; i < this._timers.length; i++)
             {
-                this._timers[i].resume();
+                this._timers[i]._timeResume();
             }
         }
 
@@ -299,7 +299,7 @@ Phaser.Time.prototype = {
 
         while (i--)
         {
-            this._timers[i].pause();
+            this._timers[i]._timePause();
         }
 
     },
@@ -322,7 +322,6 @@ Phaser.Time.prototype = {
         }
 
         //  Level out the elapsed timer to avoid spikes
-
         this.time = Date.now();
 
         this._justResumed = true;

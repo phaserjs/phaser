@@ -119,6 +119,7 @@ New features:
 * Sprite.smoothed and Image.smoothed allows you to set per-Sprite smoothing, perfect if you just want to keep a few sprites smoothed (or not)
 * StateManager.start can now have as many parameters as you like. The order is: start(key, clearWorld, clearCache, ...) - they are passed to State.init() (NOT create!)
 * Loader.script now has callback (and callbackContext) parameters, so you can specify a function to run once the JS has been injected into the body.
+* Phaser.Timer.stop has a new parameter: clearEvents (default true), if true all the events in Timer will be cleared, otherwise they will remain (fixes #383)
 
 
 Updates:
@@ -170,7 +171,8 @@ Bug Fixes:
 * AnimationParser.spriteSheet wasn't taking the margin or spacing into account when calculating the numbers of sprites per row/column, nor was it allowing for extra power-of-two padding at the end (fix #482, thanks yig)
 * AnimationManager.add documentation said that 'frames' could be null, but the code couldn't handle this so it defaults to an empty array if none given (thanks yig)
 * Fixed issue stopping SoundManager.volume from working correctly on a global volume basis (fixes #488)
-* The Timer will no longer create negative ticks during game boot, no matter how small the Timer delay is (fixes #366)
+* Phaser.Timer will no longer create negative ticks during game boot, no matter how small the Timer delay is (fixes #366)
+* Phaser.Timer will no longer resume if it was previously paused and the game loses focus and then resumes (fixes #383)
 
 
 TO DO:
