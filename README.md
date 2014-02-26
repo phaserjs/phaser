@@ -164,6 +164,7 @@ Bug Fixes:
 * Swapping between tabs will pause and resume tweens correctly, allowing their onComplete events to still fire (fixes #292)
 * Fullscreen mode now uses window.outerWidth/Height when using EXACT_FIT as the scale mode, which fixes input coordinate errors (fixes #232)
 * Fullscreen mode now works in Internet Explorer and uses the new fullscreen non-prefix call.
+* Fixed TilemapParser - would spit out a tileset warning if margin/spacing were set (fix #485, thanks Cybolic)
 
 
 TO DO:

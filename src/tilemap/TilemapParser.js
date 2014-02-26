@@ -396,8 +396,8 @@ Phaser.TilemapParser = {
                 newSet.tileProperties = set.tileproperties;
             }
 
-            newSet.rows = (set.imageheight - set.margin) / (set.tileheight + set.spacing);
-            newSet.columns = (set.imagewidth - set.margin) / (set.tilewidth + set.spacing);
+            newSet.rows = Math.round((set.imageheight - set.margin) / (set.tileheight + set.spacing));
+            newSet.columns = Math.round((set.imagewidth - set.margin) / (set.tilewidth + set.spacing));
             newSet.total = newSet.rows * newSet.columns;
 
             if (newSet.rows % 1 !== 0 || newSet.columns % 1 !== 0)
