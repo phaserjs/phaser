@@ -294,10 +294,16 @@ Phaser.Loader.prototype = {
             }
         }
 
-        if (this.checkKeyExists(type, key) === false)
+        for (var i = 0; i < this._fileList.length; i++)
         {
-            this._fileList.push(entry);
+            if (this._fileList[i].type === type && this._fileList[i].key === key)
+            {
+                this._fileList[i] = entry;
+                return;
+            }
         }
+
+        this._fileList.push(entry);
 
     },
 
@@ -1129,7 +1135,7 @@ Phaser.Loader.prototype = {
         }
         else if (file.type === 'json')
         {
-             this.game.cache.addText(file.key, file.url, data);
+            this.game.cache.addText(file.key, file.url, data);
         }
         else
         {
