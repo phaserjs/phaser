@@ -382,8 +382,12 @@ Phaser.StateManager.prototype = {
         this.states[key].tweens = this.game.tweens;
         this.states[key].world = this.game.world;
         this.states[key].particles = this.game.particles;
-        this.states[key].physics = this.game.physics;
         this.states[key].rnd = this.game.rnd;
+
+        if (this.game.physics)
+        {
+            this.states[key].physics = this.game.physics;
+        }
 
     },
 

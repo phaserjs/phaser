@@ -143,6 +143,8 @@ Updates:
 * Vastly improved visibility API support + pageshow/pagehide + focus/blur. Working across Chrome, IE, Firefox, iOS, Android (also fixes #161)
 * Pausing the game will now mute audio and resuming will un-mute, unless it was muted via the game (fixes #439)
 * ScaleManager has 2 new events: ScaleManager.enterFullScreen and ScaleManager.leaveFullScreen, so you can respond to fullscreen changes directly.
+* The grunt task now creates an optional version of Phaser without any Physics support built in. Quite a bit smaller now.
+* The grunt task now has a new `noUmd` option which builds Phaser without the UMD wrapper.
 
 
 Bug Fixes:

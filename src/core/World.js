@@ -91,7 +91,10 @@ Phaser.World.prototype.setBounds = function (x, y, width, height) {
         this.camera.bounds.setTo(x, y, width, height);
     }
 
-    this.game.physics.setBoundsToWorld();
+    if (this.game.physics)
+    {
+        this.game.physics.setBoundsToWorld();
+    }
 
 }
 
@@ -210,4 +213,3 @@ Object.defineProperty(Phaser.World.prototype, "randomY", {
     }
 
 });
-
