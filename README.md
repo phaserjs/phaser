@@ -183,6 +183,7 @@ Bug Fixes:
 * You can now safely destroy a Group and the 'destroyChildren' boolean will propogate fully down the display list.
 * Calling destroy on an already destroyed object would throw a run-time error. Now checked for and aborted.
 * Calling destroy while in an Input Event callback now works for either the parent Group or the calling object itself.
+* Loader.replaceInFileList wouldn't over-write the previous entry correctly, which caused the Loader.image overwrite parameter to fail (thanks basoko, fixes #493)
 
 
 TO DO:

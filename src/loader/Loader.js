@@ -199,6 +199,31 @@ Phaser.Loader.prototype = {
     },
 
     /**
+    * Gets the fileList index for the given key.
+    *
+    * @method Phaser.Loader#getAssetIndex
+    * @param {string} type - The type asset you want to check.
+    * @param {string} key - Key of the asset you want to check.
+    * @return {number} The index of this key in the filelist, or -1 if not found.
+    */
+    getAssetIndex: function (type, key) {
+
+        if (this._fileList.length > 0)
+        {
+            for (var i = 0; i < this._fileList.length; i++)
+            {
+                if (this._fileList[i].type === type && this._fileList[i].key === key)
+                {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+        
+    },
+
+    /**
     * Gets the asset that is queued for load.
     *
     * @method Phaser.Loader#getAsset
@@ -302,9 +327,15 @@ Phaser.Loader.prototype = {
             }
         }
 
-        if (this.checkKeyExists(type, key) === false)
+        var index = this.getAssetIndex(type, key);
+
+        if (index === -1)
         {
             this._fileList.push(entry);
+        }
+        else
+        {
+            this._fileList[index] = entry;
         }
 
     },
