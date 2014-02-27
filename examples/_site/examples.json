@@ -241,6 +241,10 @@
       "title": "blur"
     },
     {
+      "file": "gray.js",
+      "title": "gray"
+    },
+    {
       "file": "checker+wave.js",
       "title": "checker wave"
     },
