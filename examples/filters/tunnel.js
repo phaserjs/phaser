@@ -35,6 +35,6 @@ function update() {
 	filter.update();
 
 	//	Uncomment for coolness :)
-	filter.origin = filter.origin + 0.001;
+	// filter.origin = filter.origin + 0.001;
 
 }
