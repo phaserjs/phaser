@@ -201,8 +201,13 @@ Phaser.BitmapText.prototype.postUpdate = function () {
 /**
 * Destroy this BitmapText instance. This will remove any filters and un-parent any children.
 * @method Phaser.BitmapText.prototype.destroy
+* @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
-Phaser.BitmapText.prototype.destroy = function() {
+Phaser.BitmapText.prototype.destroy = function(destroyChildren) {
+
+    if (this.game === null) { return; }
+
+    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
 
     if (this.parent)
     {
@@ -211,9 +216,26 @@ Phaser.BitmapText.prototype.destroy = function() {
 
     var i = this.children.length;
 
-    while (i--)
+    if (destroyChildren)
     {
-        this.removeChild(this.children[i]);
+        while (i--)
+        {
+            if (this.children[i].destroy)
+            {
+                this.children[i].destroy(destroyChildren);
+            }
+            else
+            {
+                this.removeChild(this.children[i]);
+            }
+        }
+    }
+    else
+    {
+        while (i--)
+        {
+            this.removeChild(this.children[i]);
+        }
     }
 
     this.exists = false;

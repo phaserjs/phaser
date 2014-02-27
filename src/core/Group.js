@@ -1137,11 +1137,13 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
 * Destroys this Group. Removes all children, then removes the container from the display list and nulls references.
 *
 * @method Phaser.Group#destroy
-* @param {boolean} [destroyChildren=false] - Should every child of this Group have its destroy method called?
+* @param {boolean} [destroyChildren=true] - Should every child of this Group have its destroy method called?
 */
 Phaser.Group.prototype.destroy = function (destroyChildren) {
 
-    if (typeof destroyChildren === 'undefined') { destroyChildren = false; }
+    if (this.game === null) { return; }
+
+    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
 
     if (destroyChildren)
     {
@@ -1151,7 +1153,7 @@ Phaser.Group.prototype.destroy = function (destroyChildren) {
             {
                 if (this.children[0].parent)
                 {
-                    this.children[0].destroy();
+                    this.children[0].destroy(destroyChildren);
                 }
             }
             while (this.children.length > 0);

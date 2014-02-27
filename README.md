@@ -81,6 +81,7 @@ Significant API changes:
 * Phaser.StageScaleMode has been renamed to ScaleManager and moved from the system folder to the core folder. It's still available under game.scale.
 * If your game references the old Phaser.StageScaleMode consts like SHOW_ALL you need to update them to Phaser.ScaleManager, i.e. Phaser.ScaleManager.SHOW_ALL.
 * Time.physicsElapsed is no longer bound or clamped, be wary of this if you use the value anywhere in your code.
+* In Group.destroy the default for 'destroyChildren' was false. It's now `true` as this is a far more likely requirement when destroying a Group.
 
 
 New features:
@@ -120,6 +121,7 @@ New features:
 * StateManager.start can now have as many parameters as you like. The order is: start(key, clearWorld, clearCache, ...) - they are passed to State.init() (NOT create!)
 * Loader.script now has callback (and callbackContext) parameters, so you can specify a function to run once the JS has been injected into the body.
 * Phaser.Timer.stop has a new parameter: clearEvents (default true), if true all the events in Timer will be cleared, otherwise they will remain (fixes #383)
+* All GameObjects now have a 'destroyChildren' boolean as a parameter to their destroy method. It's default is true and the value propogates down its children.
 
 
 Updates:
@@ -177,7 +179,10 @@ Bug Fixes:
 * Phaser.Timer will no longer resume if it was previously paused and the game loses focus and then resumes (fixes #383)
 * Tweens now resume correctly if the game pauses (focus loss) while they are paused.
 * Tweens don't double pause if they were already paused and the game pauses.
-
+* Buttons are now cleanly destroyed if part of a Group without leaving their InputHandler running.
+* You can now safely destroy a Group and the 'destroyChildren' boolean will propogate fully down the display list.
+* Calling destroy on an already destroyed object would throw a run-time error. Now checked for and aborted.
+* Calling destroy while in an Input Event callback now works for either the parent Group or the calling object itself.
 
 
 TO DO:

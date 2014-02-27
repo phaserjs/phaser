@@ -276,8 +276,13 @@ Phaser.TileSprite.prototype.loadTexture = function (key, frame) {
 * 
 * @method Phaser.TileSprite#destroy
 * @memberof Phaser.TileSprite
+* @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
-Phaser.TileSprite.prototype.destroy = function() {
+Phaser.TileSprite.prototype.destroy = function(destroyChildren) {
+
+    if (this.game === null) { return; }
+
+    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
 
     if (this.filters)
     {
@@ -295,9 +300,19 @@ Phaser.TileSprite.prototype.destroy = function() {
 
     var i = this.children.length;
 
-    while (i--)
+    if (destroyChildren)
     {
-        this.removeChild(this.children[i]);
+        while (i--)
+        {
+            this.children[i].destroy(destroyChildren);
+        }
+    }
+    else
+    {
+        while (i--)
+        {
+            this.removeChild(this.children[i]);
+        }
     }
 
     this.exists = false;

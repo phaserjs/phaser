@@ -489,8 +489,13 @@ Phaser.Sprite.prototype.kill = function() {
 * 
 * @method Phaser.Sprite#destroy
 * @memberof Phaser.Sprite
+* @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
-Phaser.Sprite.prototype.destroy = function() {
+Phaser.Sprite.prototype.destroy = function(destroyChildren) {
+
+    if (this.game === null) { return; }
+
+    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
 
     if (this.parent)
     {
@@ -519,9 +524,19 @@ Phaser.Sprite.prototype.destroy = function() {
 
     var i = this.children.length;
 
-    while (i--)
+    if (destroyChildren)
     {
-        this.removeChild(this.children[i]);
+        while (i--)
+        {
+            this.children[i].destroy(destroyChildren);
+        }
+    }
+    else
+    {
+        while (i--)
+        {
+            this.removeChild(this.children[i]);
+        }
     }
 
     this.alive = false;

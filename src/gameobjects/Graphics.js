@@ -138,14 +138,34 @@ Phaser.Graphics.prototype.postUpdate = function () {
 * Destroy this Graphics instance.
 * 
 * @method Phaser.Graphics.prototype.destroy
+* @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
-Phaser.Graphics.prototype.destroy = function() {
+Phaser.Graphics.prototype.destroy = function(destroyChildren) {
+
+    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
 
     this.clear();
 
     if (this.parent)
     {
         this.parent.remove(this);
+    }
+
+    var i = this.children.length;
+
+    if (destroyChildren)
+    {
+        while (i--)
+        {
+            this.children[i].destroy(destroyChildren);
+        }
+    }
+    else
+    {
+        while (i--)
+        {
+            this.removeChild(this.children[i]);
+        }
     }
 
     this.exists = false;
