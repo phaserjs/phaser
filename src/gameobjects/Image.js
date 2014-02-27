@@ -724,7 +724,7 @@ Object.defineProperty(Phaser.Image.prototype, "smoothed", {
     
     get: function () {
 
-        return !!this.texture.baseTexture.scaleMode;
+        return !this.texture.baseTexture.scaleMode;
 
     },
 

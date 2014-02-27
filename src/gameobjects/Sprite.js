@@ -977,7 +977,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "smoothed", {
     
     get: function () {
 
-        return !!this.texture.baseTexture.scaleMode;
+        return !this.texture.baseTexture.scaleMode;
 
     },
 
