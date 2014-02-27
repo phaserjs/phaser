@@ -65,7 +65,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.transparent = false;
 
     /**
-    * @property {boolean} antialias - Anti-alias graphics (in WebGL this helps with edges, in Canvas2D it retains pixel-art quality).
+    * @property {boolean} antialias - Anti-alias graphics. By default scaled images are smoothed in Canvas and WebGL, set anti-alias to false to disable this globally.
     * @default
     */
     this.antialias = true;
@@ -531,10 +531,7 @@ Phaser.Game.prototype = {
             this.context = null;
         }
 
-        if (!this.antialias)
-        {
-            this.stage.smoothed = false;
-        }
+        this.stage.smoothed = this.antialias;
 
         Phaser.Canvas.addToDOM(this.canvas, this.parent, true);
         Phaser.Canvas.setTouchAction(this.canvas);

@@ -383,7 +383,7 @@ Object.defineProperty(Phaser.Stage.prototype, "smoothed", {
     
     get: function () {
 
-        return !!PIXI.scaleModes.LINEAR;
+        return !PIXI.scaleModes.LINEAR;
 
     },
 
