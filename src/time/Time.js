@@ -160,6 +160,7 @@ Phaser.Time.prototype = {
     */
     boot: function () {
 
+        this._started = Date.now();
         this.events.start();
 
     },

@@ -122,6 +122,7 @@ New features:
 * Loader.script now has callback (and callbackContext) parameters, so you can specify a function to run once the JS has been injected into the body.
 * Phaser.Timer.stop has a new parameter: clearEvents (default true), if true all the events in Timer will be cleared, otherwise they will remain (fixes #383)
 * All GameObjects now have a 'destroyChildren' boolean as a parameter to their destroy method. It's default is true and the value propogates down its children.
+* Pixi GrayFilter ported over (thanks nickryall #404)
 
 
 Updates:
