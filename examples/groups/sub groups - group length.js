@@ -25,9 +25,9 @@ function create() {
     normalBaddies = game.add.group();
     purpleBaddies = game.add.group();
 
-    // Add both teams to enemies group, using the Pixi container otherwise it's impossible 
-    enemies.add(normalBaddies._container);
-    enemies.add(purpleBaddies._container);
+    
+    enemies.add(normalBaddies);
+    enemies.add(purpleBaddies);
 
 
     // Create a ufo as a friend sprite.

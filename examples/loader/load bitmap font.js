@@ -25,7 +25,7 @@ function create() {
 
     game.stage.backgroundColor = '#0072bc';
 
-    text = game.add.bitmapText(200, 100, 'Bitmap Fonts!', { font: '64px Desyrel', align: 'center' });
+    text = game.add.bitmapText(200, 100, 'desyrel','Bitmap Fonts!',64);
 
 }
 

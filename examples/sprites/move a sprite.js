@@ -10,7 +10,7 @@ var s;
 function create() {
 
     s = game.add.sprite(game.world.centerX, game.world.centerY, 'bot');
-    // s.anchor.setTo(0.5, 0.5);
+    s.anchor.setTo(0.5, 0.5);
     s.scale.setTo(2, 2);
 
     s.animations.add('run');
@@ -41,8 +41,6 @@ function update() {
 }
 
 function render() {
-
-    game.debug.renderSpriteCorners(s, false, false);
     game.debug.renderSpriteInfo(s, 20, 32);
 
 }

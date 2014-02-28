@@ -20,20 +20,20 @@ function create() {
     sprite = game.add.sprite(0, 0, 'sprite');
     sprite.alpha = 0.5 ;
     sprite.x = game.width / 2 ;
-    sprite.anchor.x = sprite.anchor.y = 0.5 ;
+    sprite.physicsEnabled = true;
 
     // create sprite B
     otherSprite = game.add.sprite(0, 0, 'otherSprite');
     otherSprite.alpha = 0.5 ;
     otherSprite.x = (game.width / 2) + 150 ;
     otherSprite.y = (game.height / 2) + 150 ;
-    otherSprite.anchor.x = sprite.anchor.y = 0.5 ;
+    otherSprite.physicsEnabled = true;
     otherSprite.body.immovable = true ;
 }
 
 function update()
 {
-    game.physics.collide( sprite, otherSprite ) ;
+    // game.physics.collide( sprite, otherSprite ) ;
 
     // Move sprite up and down smoothly for show
     var tStep = Math.sin( counter ) ;
@@ -45,9 +45,8 @@ function update()
 function render() {
 
     // Physics
-    game.debug.renderSpriteBody(sprite);
-    game.debug.renderSpriteCollision(sprite, 32, 32);
+    game.debug.renderSpriteBounds(sprite);
 
-    game.debug.renderSpriteBody(otherSprite);
+    game.debug.renderSpriteBounds(otherSprite);
 
 }

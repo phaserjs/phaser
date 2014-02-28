@@ -35,7 +35,5 @@ function render() {
 
     // Sprite debug info
     game.debug.renderSpriteInfo(sprite, 32, 32);
-    game.debug.renderLocalTransformInfo(sprite, 32, 160);
-    game.debug.renderWorldTransformInfo(sprite, 32, 290);
 
 }

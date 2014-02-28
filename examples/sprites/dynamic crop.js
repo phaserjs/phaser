@@ -11,6 +11,7 @@ function create() {
 
     pic = game.add.sprite(0, 0, 'trsi');
 
+
     pic.cropEnabled = true;
 
     pic.crop.width = 128;

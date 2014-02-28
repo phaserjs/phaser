@@ -7,16 +7,16 @@ function preload() {
 
 }
 
-var text;
+var bpmText;
 
 function create() {
 
-    text = game.add.bitmapText(200, 100, 'Phaser & Pixi\nrocking!', { font: '64px Desyrel', align: 'center' });
+    bmpText = game.add.bitmapText(200, 100, 'desyrel','Phaser & Pixi \nrocking!',64);
 
 }
 
 function update() {
 
-    text.setText('Phaser & Pixi\nrocking!\n' + Math.round(game.time.now));
+    bmpText.setText('Phaser & Pixi\nrocking!\n' + Math.round(game.time.now));
 
 }

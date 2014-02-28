@@ -39,12 +39,12 @@ function create() {
 
 	stuffContainer = game.add.group();
 	stuffContainer.x = 800/2;
-	stuffContainer.y = 600/2
+	stuffContainer.y = 600/2;
 
 	// now create some items and randomly position them in the stuff container
 	for (var i = 0; i < 20; i++)
 	{
-		var item = stuffContainer.create(Math.random() * 400 - 200, Math.random() * 400 - 200, game.rnd.pick(game.cache.getImageKeys()));
+		var item = stuffContainer.create(Math.random() * 400 - 200, Math.random() * 400 - 200, game.rnd.pick(game.cache.getKeys(Phaser.Cache.IMAGE)));
 		item.anchor.setTo(0.5, 0.5);
 	}
 
@@ -73,6 +73,6 @@ function update() {
 
 	// render the stage to the texture
 	// the true clears the texture before content is rendered
-	renderTexture2.renderXY(game.stage.display, 0, 0, true);
+	renderTexture2.renderXY(game.stage, 0, 0, true);
 
 }
