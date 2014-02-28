@@ -366,6 +366,7 @@ Phaser.Sound.prototype = {
                     {
                         // console.log('stopping, no loop for marker');
                         this.stop();
+                        this.onMarkerComplete.dispatch(this);
                     }
                 }
                 else
@@ -378,6 +379,7 @@ Phaser.Sound.prototype = {
                     else
                     {
                         this.stop();
+                        this.onMarkerComplete.dispatch(this);
                     }
                 }
             }
