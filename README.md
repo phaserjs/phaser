@@ -362,6 +362,7 @@ Beyond version 2.2
 * Look at HiDPI Canvas settings.
 * Multiple Camera support.
 * DragonBones support.
+* Cache to localStorage using If-Modified-Since. [See github request](https://github.com/photonstorm/phaser/issues/495)
 
 
 Nadion

@@ -64,7 +64,7 @@
             $value2 = substr($value, 0, -3);
             $file = urlencode($value);
 
-            $output .= "<tr><td><a href=\"wip/index.php?f=$file\">$value2</a></td><td><a href=\"wip/index-fs.php?f=$file\">(full screen)</a></td><td><a href=\"wip/cocoon.php?f=$file\">(cocoon)</a></td></tr>";
+            $output .= "<a href=\"wip/index.php?f=$file\">$value2</a><br />";
         }
 
         return $output;
@@ -75,48 +75,21 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0 minimal-ui" />
         <title>phaser</title>
-        <base href="../" />
-        <script src="_site/js/jquery-2.0.3.min.js" type="text/javascript"></script>
         <?php
-            require('../../build/config.php');
-
             if (isset($_GET['f']))
             {
                 $f = $_GET['f'];
         ?>
-        <script src="wip/<?php echo $f?>" type="text/javascript"></script>
+        <script src="../../dist/phaser.js" type="text/javascript"></script>
+        <script src="<?php echo $f?>" type="text/javascript"></script>
         <?php
             }
         ?>
-        <style>
-            body {
-                margin: 0;
-                padding: 0;
-                font-family: Arial;
-                font-size: 14px;
-            }
-        </style>
     </head>
     <body>
 
         <div id="phaser-example"></div>
-
-        <input type="button" id="step" value="step" />
-        <input type="button" id="start" value="start" style="margin-left: 32px" />
-
-        <div style="padding: 32px">
-
-        <h2>work in progress examples</h2>
-
-        <table>
-        <?php
-            echo printJSLinks('wip', $files);
-        ?>
-        </table>
-
-        </div>
 
     </body>
 </html>

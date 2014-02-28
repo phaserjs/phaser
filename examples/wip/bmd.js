@@ -1,9 +1,9 @@
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
-	game.load.image('pic', 'assets/pics/backscroll.png');
+	game.load.image('pic', '../assets/pics/questar.png');
 
 }
 
@@ -12,33 +12,26 @@ var bmd;
 
 function create() {
 
-	bmd = game.add.bitmapData(800, 600);
-	bmd.fillStyle('rgba(255,0,0,0.2)');
-	// bmd.fillRect(0, 0, 300, 100);
-	// bmd.fillRect(0, 200, 300, 100);
+	game.add.image(0, 0, 'pic');
 
-	image = game.add.image(0, 0, bmd);
-	// image.anchor.set(0.5);
+	console.log('pic?');
 
-	game.input.onDown.add(tint, this);
+	// bmd = game.add.bitmapData(800, 600);
+	// bmd.context.fillStyle = 'rgba(255,0,0,0.2)';
+	// bmd.context.fillRect(0, 0, 300, 100);
 
-}
-
-function tint() {
-
-	image.tint = Math.random() * 0xFFFFFF;
+	// image = game.add.image(0, 0, bmd);
 
 }
 
 function update() {
 
-	bmd.fillStyle('rgba(255,0,0,0.2)');
-	bmd.fillRect(game.input.x, game.input.y, 6, 6);
+	// bmd.context.fillRect(game.input.x, game.input.y, 8, 8);
 
 }
 
 function render() {
 
-	game.debug.renderText(game.input.x, 32, 32);
+	// game.debug.renderText(game.input.x, 32, 32);
 
 }

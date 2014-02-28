@@ -998,10 +998,15 @@ Phaser.Tilemap.prototype = {
     * @method Phaser.Tilemap#getTileWorldXY
     * @param {number} x - X position to get the tile from (given in pixels)
     * @param {number} y - Y position to get the tile from (given in pixels)
+    * @param {number} [tileWidth] - The width of the tiles. If not given the map default is used.
+    * @param {number} [tileHeight] - The height of the tiles. If not given the map default is used.
     * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to get the tile from.
     * @return {Phaser.Tile} The tile at the given coordinates.
     */
     getTileWorldXY: function (x, y, tileWidth, tileHeight, layer) {
+
+        if (typeof tileWidth === 'undefined') { tileWidth = this.tileWidth; }
+        if (typeof tileHeight === 'undefined') { tileHeight = this.tileHeight; }
 
         layer = this.getLayer(layer);
 
