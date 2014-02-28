@@ -40,7 +40,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     /**
     * @property {HTMLCanvasElement} canvas - The canvas to which this TilemapLayer draws.
     */
-    this.canvas = Phaser.Canvas.create(width, height);
+    this.canvas = Phaser.Canvas.create(width, height, '', true);
     
     /**
     * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.

@@ -64,7 +64,7 @@
             $value2 = substr($value, 0, -3);
             $file = urlencode($value);
 
-            $output .= "<tr><td><a href=\"wip/index.php?f=$file\">$value2</a></td><td><a href=\"wip/index-fs.php?f=$file\">(full screen)</a></td><td><a href=\"wip/cocoon.php?f=$file\">(cocoon)</a></td></tr>";
+            $output .= "<tr><td><a href=\"wip/index.php?f=$file\">$value2</a></td><td><a href=\"wip/index-fs.php?f=$file\">(full screen)</a></td><td><a href=\"wip/index-cocoon.php?f=$file\">(cocoon)</a></td></tr>";
         }
 
         return $output;

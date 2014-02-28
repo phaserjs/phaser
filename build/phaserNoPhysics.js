@@ -18,7 +18,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.0.np - Built at: Thu Feb 27 2014 16:59:28
+* v2.0.0.np - Built at: Fri Feb 28 2014 03:53:18
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -5936,7 +5936,7 @@ PIXI.PixiShader.prototype.initSampler2D = function(uniform)
     var gl = this.gl;
 
     gl.activeTexture(gl['TEXTURE' + this.textureCount]);
-    gl.bindTexture(gl.TEXTURE_2D, uniform.value.baseTexture._glTexture);
+    gl.bindTexture(gl.TEXTURE_2D, uniform.value.baseTexture._glTextures[gl.id]);
 
     //  Extended texture data
     if (uniform.textureData)
@@ -6010,7 +6010,6 @@ PIXI.PixiShader.prototype.syncUniforms = function()
     //  This would probably be faster in an array and it would guarantee key order
     for (var key in this.uniforms)
     {
-
         uniform = this.uniforms[key];
 
         if (uniform.glValueLength === 1)
@@ -14692,7 +14691,7 @@ Object.defineProperty(Phaser.Stage.prototype, "smoothed", {
     
     get: function () {
 
-        return !!PIXI.scaleModes.LINEAR;
+        return !PIXI.scaleModes.LINEAR;
 
     },
 
@@ -15849,11 +15848,13 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
 * Destroys this Group. Removes all children, then removes the container from the display list and nulls references.
 *
 * @method Phaser.Group#destroy
-* @param {boolean} [destroyChildren=false] - Should every child of this Group have its destroy method called?
+* @param {boolean} [destroyChildren=true] - Should every child of this Group have its destroy method called?
 */
 Phaser.Group.prototype.destroy = function (destroyChildren) {
 
-    if (typeof destroyChildren === 'undefined') { destroyChildren = false; }
+    if (this.game === null) { return; }
+
+    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
 
     if (destroyChildren)
     {
@@ -15863,7 +15864,7 @@ Phaser.Group.prototype.destroy = function (destroyChildren) {
             {
                 if (this.children[0].parent)
                 {
-                    this.children[0].destroy();
+                    this.children[0].destroy(destroyChildren);
                 }
             }
             while (this.children.length > 0);
@@ -24320,7 +24321,7 @@ Phaser.BitmapData = function (game, key, width, height) {
     * @property {HTMLCanvasElement} canvas - The canvas to which this BitmapData draws.
     * @default
     */
-    this.canvas = Phaser.Canvas.create(width, height);
+    this.canvas = Phaser.Canvas.create(width, height, '', true);
     
     /**
     * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
@@ -25143,8 +25144,13 @@ Phaser.Sprite.prototype.kill = function() {
 * 
 * @method Phaser.Sprite#destroy
 * @memberof Phaser.Sprite
+* @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
-Phaser.Sprite.prototype.destroy = function() {
+Phaser.Sprite.prototype.destroy = function(destroyChildren) {
+
+    if (this.game === null) { return; }
+
+    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
 
     if (this.parent)
     {
@@ -25173,9 +25179,19 @@ Phaser.Sprite.prototype.destroy = function() {
 
     var i = this.children.length;
 
-    while (i--)
+    if (destroyChildren)
     {
-        this.removeChild(this.children[i]);
+        while (i--)
+        {
+            this.children[i].destroy(destroyChildren);
+        }
+    }
+    else
+    {
+        while (i--)
+        {
+            this.removeChild(this.children[i]);
+        }
     }
 
     this.alive = false;
@@ -25616,7 +25632,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "smoothed", {
     
     get: function () {
 
-        return !!this.texture.baseTexture.scaleMode;
+        return !this.texture.baseTexture.scaleMode;
 
     },
 
@@ -26008,8 +26024,13 @@ Phaser.Image.prototype.kill = function() {
 * 
 * @method Phaser.Image#destroy
 * @memberof Phaser.Image
+* @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
-Phaser.Image.prototype.destroy = function() {
+Phaser.Image.prototype.destroy = function(destroyChildren) {
+
+    if (this.game === null) { return; }
+
+    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
 
     if (this.parent)
     {
@@ -26028,9 +26049,19 @@ Phaser.Image.prototype.destroy = function() {
 
     var i = this.children.length;
 
-    while (i--)
+    if (destroyChildren)
     {
-        this.removeChild(this.children[i]);
+        while (i--)
+        {
+            this.children[i].destroy(destroyChildren);
+        }
+    }
+    else
+    {
+        while (i--)
+        {
+            this.removeChild(this.children[i]);
+        }
     }
 
     this.alive = false;
@@ -26351,7 +26382,7 @@ Object.defineProperty(Phaser.Image.prototype, "smoothed", {
     
     get: function () {
 
-        return !!this.texture.baseTexture.scaleMode;
+        return !this.texture.baseTexture.scaleMode;
 
     },
 
@@ -26653,8 +26684,13 @@ Phaser.TileSprite.prototype.loadTexture = function (key, frame) {
 * 
 * @method Phaser.TileSprite#destroy
 * @memberof Phaser.TileSprite
+* @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
-Phaser.TileSprite.prototype.destroy = function() {
+Phaser.TileSprite.prototype.destroy = function(destroyChildren) {
+
+    if (this.game === null) { return; }
+
+    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
 
     if (this.filters)
     {
@@ -26672,9 +26708,19 @@ Phaser.TileSprite.prototype.destroy = function() {
 
     var i = this.children.length;
 
-    while (i--)
+    if (destroyChildren)
     {
-        this.removeChild(this.children[i]);
+        while (i--)
+        {
+            this.children[i].destroy(destroyChildren);
+        }
+    }
+    else
+    {
+        while (i--)
+        {
+            this.removeChild(this.children[i]);
+        }
     }
 
     this.exists = false;
@@ -27020,8 +27066,13 @@ Phaser.Text.prototype.postUpdate = function () {
 
 /**
 * @method Phaser.Text.prototype.destroy
+* @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
-Phaser.Text.prototype.destroy = function () {
+Phaser.Text.prototype.destroy = function (destroyChildren) {
+
+    if (this.game === null) { return; }
+
+    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
 
     if (this.parent)
     {
@@ -27042,9 +27093,19 @@ Phaser.Text.prototype.destroy = function () {
 
     var i = this.children.length;
 
-    while (i--)
+    if (destroyChildren)
     {
-        this.removeChild(this.children[i]);
+        while (i--)
+        {
+            this.children[i].destroy(destroyChildren);
+        }
+    }
+    else
+    {
+        while (i--)
+        {
+            this.removeChild(this.children[i]);
+        }
     }
 
     this.exists = false;
@@ -27859,8 +27920,13 @@ Phaser.BitmapText.prototype.postUpdate = function () {
 /**
 * Destroy this BitmapText instance. This will remove any filters and un-parent any children.
 * @method Phaser.BitmapText.prototype.destroy
+* @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
-Phaser.BitmapText.prototype.destroy = function() {
+Phaser.BitmapText.prototype.destroy = function(destroyChildren) {
+
+    if (this.game === null) { return; }
+
+    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
 
     if (this.parent)
     {
@@ -27869,9 +27935,26 @@ Phaser.BitmapText.prototype.destroy = function() {
 
     var i = this.children.length;
 
-    while (i--)
+    if (destroyChildren)
     {
-        this.removeChild(this.children[i]);
+        while (i--)
+        {
+            if (this.children[i].destroy)
+            {
+                this.children[i].destroy(destroyChildren);
+            }
+            else
+            {
+                this.removeChild(this.children[i]);
+            }
+        }
+    }
+    else
+    {
+        while (i--)
+        {
+            this.removeChild(this.children[i]);
+        }
     }
 
     this.exists = false;
@@ -28862,14 +28945,34 @@ Phaser.Graphics.prototype.postUpdate = function () {
 * Destroy this Graphics instance.
 * 
 * @method Phaser.Graphics.prototype.destroy
+* @param {boolean} [destroyChildren=true] - Should every child of this object have its destroy method called?
 */
-Phaser.Graphics.prototype.destroy = function() {
+Phaser.Graphics.prototype.destroy = function(destroyChildren) {
+
+    if (typeof destroyChildren === 'undefined') { destroyChildren = true; }
 
     this.clear();
 
     if (this.parent)
     {
         this.parent.remove(this);
+    }
+
+    var i = this.children.length;
+
+    if (destroyChildren)
+    {
+        while (i--)
+        {
+            this.children[i].destroy(destroyChildren);
+        }
+    }
+    else
+    {
+        while (i--)
+        {
+            this.removeChild(this.children[i]);
+        }
     }
 
     this.exists = false;
@@ -29658,16 +29761,26 @@ Phaser.Canvas = {
     * @param {number} [width=256] - The width of the canvas element.
     * @param {number} [height=256] - The height of the canvas element..
     * @param {string} [id=''] - If given this will be set as the ID of the canvas element, otherwise no ID will be set.
+    * @param {boolean} [noCocoon=false] - CocoonJS only allows 1 screencanvas object, which should be your game. If you need to create another canvas (i.e. for a texture) set this to 'true'.
     * @return {HTMLCanvasElement} The newly created canvas element.
     */
-    create: function (width, height, id) {
+    create: function (width, height, id, noCocoon) {
+
+        if (typeof noCocoon === 'undefined') { noCocoon = false; }
 
         width = width || 256;
         height = height || 256;
 
-        var canvas = document.createElement(navigator.isCocoonJS ? 'screencanvas' : 'canvas');
+        if (noCocoon)
+        {
+            var canvas = document.createElement('canvas');
+        }
+        else
+        {
+            var canvas = document.createElement(navigator.isCocoonJS ? 'screencanvas' : 'canvas');
+        }
 
-        if (typeof id === 'string')
+        if (typeof id === 'string' && id !== '')
         {
             canvas.id = id;
         }
@@ -30340,7 +30453,7 @@ Phaser.Device.prototype = {
     */
     _checkFeatures: function () {
 
-        this.canvas = !!window['CanvasRenderingContext2D'] || this.iscocoonJS;
+        this.canvas = !!window['CanvasRenderingContext2D'] || this.cocoonJS;
 
         try {
             this.localStorage = !!localStorage.getItem;
@@ -34254,6 +34367,7 @@ Phaser.Time.prototype = {
     */
     boot: function () {
 
+        this._started = Date.now();
         this.events.start();
 
     },
@@ -38231,6 +38345,31 @@ Phaser.Loader.prototype = {
     },
 
     /**
+    * Gets the fileList index for the given key.
+    *
+    * @method Phaser.Loader#getAssetIndex
+    * @param {string} type - The type asset you want to check.
+    * @param {string} key - Key of the asset you want to check.
+    * @return {number} The index of this key in the filelist, or -1 if not found.
+    */
+    getAssetIndex: function (type, key) {
+
+        if (this._fileList.length > 0)
+        {
+            for (var i = 0; i < this._fileList.length; i++)
+            {
+                if (this._fileList[i].type === type && this._fileList[i].key === key)
+                {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+        
+    },
+
+    /**
     * Gets the asset that is queued for load.
     *
     * @method Phaser.Loader#getAsset
@@ -38334,9 +38473,15 @@ Phaser.Loader.prototype = {
             }
         }
 
-        if (this.checkKeyExists(type, key) === false)
+        var index = this.getAssetIndex(type, key);
+
+        if (index === -1)
         {
             this._fileList.push(entry);
+        }
+        else
+        {
+            this._fileList[index] = entry;
         }
 
     },
@@ -41184,6 +41329,7 @@ Phaser.Utils.Debug.prototype = {
         this.line('World X: ' + pointer.worldX + " World Y: " + pointer.worldY);
         this.line('Screen X: ' + pointer.x + " Screen Y: " + pointer.y);
         this.line('Duration: ' + pointer.duration + " ms");
+        this.line('is Down: ' + pointer.isDown + " is Up: " + pointer.isUp);
         this.stop();
 
     },
@@ -43398,10 +43544,15 @@ Phaser.Tilemap.prototype = {
     * @method Phaser.Tilemap#getTileWorldXY
     * @param {number} x - X position to get the tile from (given in pixels)
     * @param {number} y - Y position to get the tile from (given in pixels)
+    * @param {number} [tileWidth] - The width of the tiles. If not given the map default is used.
+    * @param {number} [tileHeight] - The height of the tiles. If not given the map default is used.
     * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to get the tile from.
     * @return {Phaser.Tile} The tile at the given coordinates.
     */
     getTileWorldXY: function (x, y, tileWidth, tileHeight, layer) {
+
+        if (typeof tileWidth === 'undefined') { tileWidth = this.tileWidth; }
+        if (typeof tileHeight === 'undefined') { tileHeight = this.tileHeight; }
 
         layer = this.getLayer(layer);
 
@@ -43856,7 +44007,7 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     /**
     * @property {HTMLCanvasElement} canvas - The canvas to which this TilemapLayer draws.
     */
-    this.canvas = Phaser.Canvas.create(width, height);
+    this.canvas = Phaser.Canvas.create(width, height, '', true);
     
     /**
     * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.

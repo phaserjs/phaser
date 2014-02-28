@@ -47,7 +47,7 @@ Phaser.BitmapData = function (game, key, width, height) {
     * @property {HTMLCanvasElement} canvas - The canvas to which this BitmapData draws.
     * @default
     */
-    this.canvas = Phaser.Canvas.create(width, height);
+    this.canvas = Phaser.Canvas.create(width, height, '', true);
     
     /**
     * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
