@@ -257,14 +257,15 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     if (this.visible)
     {
-        this._cache[3] = this.game.world.currentRenderOrderID++;
+        this._cache[3] = this.game.stage.currentRenderOrderID++;
     }
 
     this.animations.update();
 
-    if (this.body)
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
     {
-        // this.body.preUpdate();
+        this.children[i].preUpdate();
     }
 
     return true;
@@ -273,6 +274,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
 /**
 * Override and use this function in your own custom objects to handle any update requirements you may have.
+* Remember if this Sprite has any children you should call update on them too.
 *
 * @method Phaser.Sprite#update
 * @memberof Phaser.Sprite
@@ -307,6 +309,12 @@ Phaser.Sprite.prototype.postUpdate = function() {
     {
         this.position.x = this.game.camera.view.x + this.cameraOffset.x;
         this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].postUpdate();
     }
 
 };

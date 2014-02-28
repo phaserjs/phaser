@@ -355,7 +355,7 @@ Phaser.Pointer.prototype = {
         }
 
         //  Work out which object is on the top
-        this._highestRenderOrderID = -1;
+        this._highestRenderOrderID = Number.MAX_SAFE_INTEGER;
         this._highestRenderObject = null;
         this._highestInputPriorityID = -1;
 
@@ -367,11 +367,11 @@ Phaser.Pointer.prototype = {
             do
             {
                 //  If the object is using pixelPerfect checks, or has a higher InputManager.PriorityID OR if the priority ID is the same as the current highest AND it has a higher renderOrderID, then set it to the top
-                if (currentNode.pixelPerfectClick || currentNode.pixelPerfectOver || currentNode.priorityID > this._highestInputPriorityID || (currentNode.priorityID === this._highestInputPriorityID && currentNode.sprite.renderOrderID > this._highestRenderOrderID))
+                if (currentNode.pixelPerfectClick || currentNode.pixelPerfectOver || currentNode.priorityID > this._highestInputPriorityID || (currentNode.priorityID === this._highestInputPriorityID && currentNode.sprite._cache[3] < this._highestRenderOrderID))
                 {
                     if ((!fromClick && currentNode.checkPointerOver(this)) || (fromClick && currentNode.checkPointerDown(this)))
                     {
-                        this._highestRenderOrderID = currentNode.sprite.renderOrderID;
+                        this._highestRenderOrderID = currentNode.sprite._cache[3]; // renderOrderID
                         this._highestInputPriorityID = currentNode.priorityID;
                         this._highestRenderObject = currentNode;
                     }

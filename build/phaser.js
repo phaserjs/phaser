@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.0 "Aes Sedai" - Built: Fri Feb 28 2014 18:53:23
+* v2.0.0 "Aes Sedai" - Built: Fri Feb 28 2014 19:43:09
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -20265,7 +20265,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.0 "Aes Sedai" - Built: Fri Feb 28 2014 18:53:23
+* v2.0.0 "Aes Sedai" - Built: Fri Feb 28 2014 19:43:09
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -25574,6 +25574,11 @@ Phaser.Stage = function (game, width, height) {
     this.exists = true;
 
     /**
+    * @property {number} currentRenderOrderID - Reset each frame, keeps a count of the total number of objects updated.
+    */
+    this.currentRenderOrderID = 0;
+
+    /**
     * @property {string} hiddenVar - The page visibility API event name.
     * @private
     */
@@ -25616,9 +25621,10 @@ Phaser.Stage.prototype.preUpdate = function () {
     
     this.currentRenderOrderID = 0;
 
-    var i = this.children.length;
+    //  This can't loop in reverse, we need the orderID to be in sequence
+    var len = this.children.length;
 
-    while (i--)
+    for (var i = 0; i < len; i++)
     {
         this.children[i].preUpdate();
     }
@@ -27316,11 +27322,6 @@ Phaser.World = function (game) {
     * @property {Phaser.Camera} camera - Camera instance.
     */
     this.camera = null;
-
-    /**
-    * @property {number} currentRenderOrderID - Reset each frame, keeps a count of the total number of objects updated.
-    */
-    this.currentRenderOrderID = 0;
     
 }
 
@@ -31485,7 +31486,7 @@ Phaser.Pointer.prototype = {
         }
 
         //  Work out which object is on the top
-        this._highestRenderOrderID = -1;
+        this._highestRenderOrderID = Number.MAX_SAFE_INTEGER;
         this._highestRenderObject = null;
         this._highestInputPriorityID = -1;
 
@@ -31497,11 +31498,11 @@ Phaser.Pointer.prototype = {
             do
             {
                 //  If the object is using pixelPerfect checks, or has a higher InputManager.PriorityID OR if the priority ID is the same as the current highest AND it has a higher renderOrderID, then set it to the top
-                if (currentNode.pixelPerfectClick || currentNode.pixelPerfectOver || currentNode.priorityID > this._highestInputPriorityID || (currentNode.priorityID === this._highestInputPriorityID && currentNode.sprite.renderOrderID > this._highestRenderOrderID))
+                if (currentNode.pixelPerfectClick || currentNode.pixelPerfectOver || currentNode.priorityID > this._highestInputPriorityID || (currentNode.priorityID === this._highestInputPriorityID && currentNode.sprite._cache[3] < this._highestRenderOrderID))
                 {
                     if ((!fromClick && currentNode.checkPointerOver(this)) || (fromClick && currentNode.checkPointerDown(this)))
                     {
-                        this._highestRenderOrderID = currentNode.sprite.renderOrderID;
+                        this._highestRenderOrderID = currentNode.sprite._cache[3]; // renderOrderID
                         this._highestInputPriorityID = currentNode.priorityID;
                         this._highestRenderObject = currentNode;
                     }
@@ -36223,14 +36224,15 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     if (this.visible)
     {
-        this._cache[3] = this.game.world.currentRenderOrderID++;
+        this._cache[3] = this.game.stage.currentRenderOrderID++;
     }
 
     this.animations.update();
 
-    if (this.body)
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
     {
-        // this.body.preUpdate();
+        this.children[i].preUpdate();
     }
 
     return true;
@@ -36239,6 +36241,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
 /**
 * Override and use this function in your own custom objects to handle any update requirements you may have.
+* Remember if this Sprite has any children you should call update on them too.
 *
 * @method Phaser.Sprite#update
 * @memberof Phaser.Sprite
@@ -36273,6 +36276,12 @@ Phaser.Sprite.prototype.postUpdate = function() {
     {
         this.position.x = this.game.camera.view.x + this.cameraOffset.x;
         this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].postUpdate();
     }
 
 };
@@ -37110,7 +37119,7 @@ Phaser.Image.prototype.preUpdate = function() {
 
     if (!this.exists || !this.parent.exists)
     {
-        this.renderOrderID = -1;
+        this._cache[3] = -1;
         return false;
     }
 
@@ -37124,7 +37133,13 @@ Phaser.Image.prototype.preUpdate = function() {
 
     if (this.visible)
     {
-        this._cache[3] = this.game.world.currentRenderOrderID++;
+        this._cache[3] = this.game.stage.currentRenderOrderID++;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].preUpdate();
     }
 
     return true;
@@ -37159,6 +37174,12 @@ Phaser.Image.prototype.postUpdate = function() {
     {
         this.position.x = this.game.camera.view.x + this.cameraOffset.x;
         this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].postUpdate();
     }
 
 }
@@ -37873,6 +37894,17 @@ Phaser.TileSprite.prototype.preUpdate = function() {
         this.tilePosition.y += this._scroll.y * this.game.time.physicsElapsed;
     }
 
+    if (this.visible)
+    {
+        this._cache[3] = this.game.stage.currentRenderOrderID++;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].preUpdate();
+    }
+
     return true;
 
 }
@@ -37900,6 +37932,12 @@ Phaser.TileSprite.prototype.postUpdate = function() {
     {
         this.position.x = this.game.camera.view.x + this.cameraOffset.x;
         this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].postUpdate();
     }
 
 }
@@ -38365,7 +38403,13 @@ Phaser.Text.prototype.preUpdate = function () {
 
     if (this.visible)
     {
-        this._cache[3] = this.game.world.currentRenderOrderID++;
+        this._cache[3] = this.game.stage.currentRenderOrderID++;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].preUpdate();
     }
 
     return true;
@@ -38392,6 +38436,12 @@ Phaser.Text.prototype.postUpdate = function () {
     {
         this.position.x = this.game.camera.view.x + this.cameraOffset.x;
         this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].postUpdate();
     }
 
 }
@@ -39225,7 +39275,7 @@ Phaser.BitmapText.prototype.preUpdate = function () {
 
     if (this.visible)
     {
-        this._cache[3] = this.game.world.currentRenderOrderID++;
+        this._cache[3] = this.game.stage.currentRenderOrderID++;
     }
 
     return true;
@@ -40255,7 +40305,7 @@ Phaser.Graphics.prototype.preUpdate = function () {
 
     if (this.visible)
     {
-        this._cache[3] = this.game.world.currentRenderOrderID++;
+        this._cache[3] = this.game.stage.currentRenderOrderID++;
     }
 
     return true;
