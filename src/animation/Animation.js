@@ -467,6 +467,29 @@ Object.defineProperty(Phaser.Animation.prototype, 'frame', {
 });
 
 /**
+* @name Phaser.Animation#speed
+* @property {number} speed - Gets or sets the current speed of the animation, the time between each frame of the animation, given in ms. Takes effect from the NEXT frame. Minimum value is 1.
+*/
+Object.defineProperty(Phaser.Animation.prototype, 'speed', {
+
+    get: function () {
+
+        return Math.round(1000 / this.delay);
+
+    },
+
+    set: function (value) {
+
+        if (value >= 1)
+        {
+            this.delay = 1000 / value;
+        }
+
+    }
+
+});
+
+/**
 * Really handy function for when you are creating arrays of animation data but it's using frame names and not numbers.
 * For example imagine you've got 30 frames named: 'explosion_0001-large' to 'explosion_0030-large'
 * You could use this function to generate those by doing: Phaser.Animation.generateFrameNames('explosion_', 1, 30, '-large', 4);
