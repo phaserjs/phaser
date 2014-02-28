@@ -1,6 +1,7 @@
 {
   "name": "Phaser",
   "version": "2.0.0",
+  "release": "Aes Sedai",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
   "author": "Richard Davey",
   "logo": "https://raw.github.com/photonstorm/phaser/master/phaser-logo-small.png",
@@ -30,7 +31,7 @@
     "grunt-contrib-connect": "~0.5.0",
     "grunt-contrib-copy": "~0.4.1",
     "grunt-contrib-clean": "~0.5.0",
-    "grunt-contrib-uglify": "~0.2.4",
+    "grunt-contrib-uglify": "~0.3.3",
     "lodash": "~2.2.1"
   }
 }

@@ -1,75 +1,19 @@
 <?php
-    //  All JS files in build order.
-    //  Much easier for debugging re: line numbers
     if (!isset($path))
     {
         $path = '..';
     }
 
-/*
-    <script src="$path/src/pixi/InteractionData.js"></script>
-    <script src="$path/src/pixi/InteractionManager.js"></script>
-
-    <script src="$path/src/pixi/loaders/AssetLoader.js"></script>
-    <script src="$path/src/pixi/loaders/JsonLoader.js"></script>
-    <script src="$path/src/pixi/loaders/AtlasLoader.js"></script>
-    <script src="$path/src/pixi/loaders/SpriteSheetLoader.js"></script>
-    <script src="$path/src/pixi/loaders/ImageLoader.js"></script>
-    <script src="$path/src/pixi/loaders/BitmapFontLoader.js"></script>
-    <script src="$path/src/pixi/loaders/SpineLoader.js"></script>
-
-    <script src="$path/src/pixi/filters/AbstractFilter.js"></script>
-    <script src="$path/src/pixi/filters/AlphaMaskFilter.js"></script>
-    <script src="$path/src/pixi/filters/ColorMatrixFilter.js"></script>
-    <script src="$path/src/pixi/filters/GrayFilter.js"></script>
-    <script src="$path/src/pixi/filters/DisplacementFilter.js"></script>
-    <script src="$path/src/pixi/filters/PixelateFilter.js"></script>
-    <script src="$path/src/pixi/filters/BlurXFilter.js"></script>
-    <script src="$path/src/pixi/filters/BlurYFilter.js"></script>
-    <script src="$path/src/pixi/filters/BlurFilter.js"></script>
-    <script src="$path/src/pixi/filters/InvertFilter.js"></script>
-    <script src="$path/src/pixi/filters/SepiaFilter.js"></script>
-    <script src="$path/src/pixi/filters/TwistFilter.js"></script>
-    <script src="$path/src/pixi/filters/ColorStepFilter.js"></script>
-    <script src="$path/src/pixi/filters/DotScreenFilter.js"></script>
-    <script src="$path/src/pixi/filters/CrossHatchFilter.js"></script>
-    <script src="$path/src/pixi/filters/RGBSplitFilter.js"></script>
-
-    <script src="$path/src/pixi/extras/Spine.js"></script>
-    <script src="$path/src/pixi/extras/Strip.js"></script>
-    <script src="$path/src/pixi/extras/Rope.js"></script>
-
-    <script src="$path/src/pixi/display/MovieClip.js"></script>
-
-    <script src="$path/src/pixi/utils/Utils.js"></script>
-
-    <script src="$path/src/pixi/core/Point.js"></script>
-    <script src="$path/src/pixi/core/Rectangle.js"></script>
-    <script src="$path/src/pixi/core/Circle.js"></script>
-
-    <script src="$path/src/pixi/utils/Detector.js"></script>
-
-    <script src="$path/src/physics/arcade/SAT.js"></script>
-    <script src="$path/src/physics/arcade/ArcadePhysics.js"></script>
-    <script src="$path/src/physics/arcade/Body.js"></script>
-    
-*/
-
     echo <<<EOL
 
-    <script src="$path/build/p2.js"></script>
-    <script src="$path/src/Intro.js"></script>
+    <script src="$path/src/p2.js"></script>
+
     <script src="$path/src/pixi/Pixi.js"></script>
-    <script src="$path/src/Phaser.js"></script>
-    <script src="$path/src/utils/Utils.js"></script>
-
-    <script src="$path/src/geom/Circle.js"></script>
-    <script src="$path/src/geom/Point.js"></script>
-    <script src="$path/src/geom/Rectangle.js"></script>
-    <script src="$path/src/geom/Line.js"></script>
-    <script src="$path/src/geom/Ellipse.js"></script>
-    <script src="$path/src/geom/Polygon.js"></script>
-
+    <script src="$path/src/pixi/core/Point.js"></script>
+    <script src="$path/src/pixi/core/Rectangle.js"></script>
+    <script src="$path/src/pixi/core/Polygon.js"></script>
+    <script src="$path/src/pixi/core/Circle.js"></script>
+    <script src="$path/src/pixi/core/Ellipse.js"></script>
     <script src="$path/src/pixi/core/Matrix.js"></script>
     <script src="$path/src/pixi/display/DisplayObject.js"></script>
     <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
@@ -79,6 +23,7 @@
     <script src="$path/src/pixi/text/Text.js"></script>
     <script src="$path/src/pixi/text/BitmapText.js"></script>
     <script src="$path/src/pixi/display/Stage.js"></script>
+    <script src="$path/src/pixi/utils/Utils.js"></script>
     <script src="$path/src/pixi/utils/EventTarget.js"></script>
     <script src="$path/src/pixi/utils/Polyk.js"></script>
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLShaderUtils.js"></script>
@@ -103,6 +48,16 @@
     <script src="$path/src/pixi/textures/BaseTexture.js"></script>
     <script src="$path/src/pixi/textures/Texture.js"></script>
     <script src="$path/src/pixi/textures/RenderTexture.js"></script>
+
+    <script src="$path/src/Phaser.js"></script>
+    <script src="$path/src/utils/Utils.js"></script>
+
+    <script src="$path/src/geom/Circle.js"></script>
+    <script src="$path/src/geom/Point.js"></script>
+    <script src="$path/src/geom/Rectangle.js"></script>
+    <script src="$path/src/geom/Line.js"></script>
+    <script src="$path/src/geom/Ellipse.js"></script>
+    <script src="$path/src/geom/Polygon.js"></script>
 
     <script src="$path/src/core/Camera.js"></script>
     <script src="$path/src/core/State.js"></script>

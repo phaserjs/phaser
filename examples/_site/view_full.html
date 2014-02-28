@@ -10,21 +10,16 @@
         <!--
             If you're wondering why we embed each script separately, and not just the single-file phaser lib
             it's because it makes debugging *significantly* easier for us. Feel free to replace all the below
-            with just a call to ../dist/phaser.js instead if you prefer.
+            with just a call to ../build/phaser.js instead if you prefer.
         -->
-        <script src="../build/p2.js"></script>
-        <script src="../src/Intro.js"></script>
+        <script src="../src/p2.js"></script>
+
         <script src="../src/pixi/Pixi.js"></script>
-        <script src="../src/Phaser.js"></script>
-        <script src="../src/utils/Utils.js"></script>
-
-        <script src="../src/geom/Circle.js"></script>
-        <script src="../src/geom/Point.js"></script>
-        <script src="../src/geom/Rectangle.js"></script>
-        <script src="../src/geom/Line.js"></script>
-        <script src="../src/geom/Ellipse.js"></script>
-        <script src="../src/geom/Polygon.js"></script>
-
+        <script src="../src/pixi/core/Point.js"></script>
+        <script src="../src/pixi/core/Rectangle.js"></script>
+        <script src="../src/pixi/core/Polygon.js"></script>
+        <script src="../src/pixi/core/Circle.js"></script>
+        <script src="../src/pixi/core/Ellipse.js"></script>
         <script src="../src/pixi/core/Matrix.js"></script>
         <script src="../src/pixi/display/DisplayObject.js"></script>
         <script src="../src/pixi/display/DisplayObjectContainer.js"></script>
@@ -34,6 +29,7 @@
         <script src="../src/pixi/text/Text.js"></script>
         <script src="../src/pixi/text/BitmapText.js"></script>
         <script src="../src/pixi/display/Stage.js"></script>
+        <script src="../src/pixi/utils/Utils.js"></script>
         <script src="../src/pixi/utils/EventTarget.js"></script>
         <script src="../src/pixi/utils/Polyk.js"></script>
         <script src="../src/pixi/renderers/webgl/utils/WebGLShaderUtils.js"></script>
@@ -59,6 +55,16 @@
         <script src="../src/pixi/textures/Texture.js"></script>
         <script src="../src/pixi/textures/RenderTexture.js"></script>
 
+        <script src="../src/Phaser.js"></script>
+        <script src="../src/utils/Utils.js"></script>
+
+        <script src="../src/geom/Circle.js"></script>
+        <script src="../src/geom/Point.js"></script>
+        <script src="../src/geom/Rectangle.js"></script>
+        <script src="../src/geom/Line.js"></script>
+        <script src="../src/geom/Ellipse.js"></script>
+        <script src="../src/geom/Polygon.js"></script>
+
         <script src="../src/core/Camera.js"></script>
         <script src="../src/core/State.js"></script>
         <script src="../src/core/StateManager.js"></script>
@@ -71,8 +77,8 @@
         <script src="../src/core/Stage.js"></script>
         <script src="../src/core/Group.js"></script>
         <script src="../src/core/World.js"></script>
-        <script src="../src/core/ScaleManager.js"></script>
         <script src="../src/core/Game.js"></script>
+        <script src="../src/core/ScaleManager.js"></script>
 
         <script src="../src/input/Input.js"></script>
         <script src="../src/input/Key.js"></script>
@@ -163,7 +169,7 @@
         <div class="header">
             <div class="box100 no-padding">
                 <div class="phaser-version">
-                    <span>Phaser Version: 1.2</span>
+                    <span>Phaser Version: 2.0.0</span>
                     <a id="upgrade" href="https://github.com/photonstorm/phaser" class="version-button">New version: </a>
                 </div>
             </div>
