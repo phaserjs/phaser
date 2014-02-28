@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.0 "Aes Sedai" - Built: Fri Feb 28 2014 09:11:13
+* v2.0.0 "Aes Sedai" - Built: Fri Feb 28 2014 18:53:23
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -364,66 +364,6 @@ Phaser.Utils = {
 };
 
 /**
- * Converts a hex color number to an [R, G, B] array
- *
- * @method hex2rgb
- * @param hex {Number}
-PIXI.hex2rgb = function(hex) {
-    return [(hex >> 16 & 0xFF) / 255, ( hex >> 8 & 0xFF) / 255, (hex & 0xFF)/ 255];
-};
- */
-
-/**
- * Converts a color as an [R, G, B] array to a hex number
- *
- * @method rgb2hex
- * @param rgb {Array}
-PIXI.rgb2hex = function(rgb) {
-    return ((rgb[0]*255 << 16) + (rgb[1]*255 << 8) + rgb[2]*255);
-};
- */
-
-/**
- * Checks whether the Canvas BlendModes are supported by the current browser
- *
- * @method canUseNewCanvasBlendModes
- * @return {Boolean} whether they are supported
-PIXI.canUseNewCanvasBlendModes = function()
-{
-    var canvas = document.createElement('canvas');
-    canvas.width = 1;
-    canvas.height = 1;
-    var context = canvas.getContext('2d');
-    context.fillStyle = '#000';
-    context.fillRect(0,0,1,1);
-    context.globalCompositeOperation = 'multiply';
-    context.fillStyle = '#fff';
-    context.fillRect(0,0,1,1);
-    return context.getImageData(0,0,1,1).data[0] === 0;
-};
- */
-
-/**
- * Given a number, this function returns the closest number that is a power of two
- * this function is taken from Starling Framework as its pretty neat ;)
- *
- * @method getNextPowerOfTwo
- * @param number {Number}
- * @return {Number} the closest number that is a power of two
-PIXI.getNextPowerOfTwo = function(number)
-{
-    if (number > 0 && (number & (number - 1)) === 0) // see: http://goo.gl/D9kPj
-        return number;
-    else
-    {
-        var result = 1;
-        while (result < number) result <<= 1;
-        return result;
-    }
-};
- */
-
-/**
 * A polyfill for Function.prototype.bind
 */
 if (typeof Function.prototype.bind != 'function') {
@@ -468,7 +408,6 @@ if (!Array.isArray) {
     return Object.prototype.toString.call(arg) == '[object Array]';
   };
 }
-
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
@@ -5937,11 +5876,18 @@ Phaser.Group.prototype.addAt = function (child, index) {
 *
 * @method Phaser.Group#getAt
 * @param {number} index - The index to return the child from.
-* @return {*} The child that was found at the given index.
+* @return {*} The child that was found at the given index. If the index was out of bounds then this will return -1.
 */
 Phaser.Group.prototype.getAt = function (index) {
 
-    return this.getChildAt(index);
+    if (index < 0 || index > this.children.length)
+    {
+        return -1;
+    }
+    else
+    {
+        return this.getChildAt(index);
+    }
 
 }
 
@@ -6076,10 +6022,77 @@ Phaser.Group.prototype.swap = function (child1, child2) {
 */
 Phaser.Group.prototype.bringToTop = function (child) {
 
-    if (child.parent === this)
+    if (child.parent === this && this.getIndex(child) < this.children.length)
     {
         this.remove(child);
         this.add(child);
+    }
+
+    return child;
+
+}
+
+/**
+* Sends the given child to the bottom of this Group so it renders below all other children.
+*
+* @method Phaser.Group#sendToBottom
+* @param {*} child - The child to send to the bottom of this Group.
+* @return {*} The child that was moved.
+*/
+Phaser.Group.prototype.sendToBottom = function (child) {
+
+    if (child.parent === this && this.getIndex(child) > 0)
+    {
+        this.remove(child);
+        this.addAt(child, 0);
+    }
+
+    return child;
+
+}
+
+/**
+* Moves the given child up one place in this Group unless it's already at the top.
+*
+* @method Phaser.Group#moveUp
+* @param {*} child - The child to move up in the Group.
+* @return {*} The child that was moved.
+*/
+Phaser.Group.prototype.moveUp = function (child) {
+
+    if (child.parent === this && this.getIndex(child) < this.children.length - 1)
+    {
+        var a = this.getIndex(child);
+        var b = this.getAt(a + 1);
+
+        if (b)
+        {
+            this.swap(a, b);
+        }
+    }
+
+    return child;
+
+}
+
+/**
+* Moves the given child down one place in this Group unless it's already at the top.
+*
+* @method Phaser.Group#moveDown
+* @param {*} child - The child to move down in the Group.
+* @return {*} The child that was moved.
+*/
+Phaser.Group.prototype.moveDown = function (child) {
+
+    if (child.parent === this && this.getIndex(child) > 0)
+    {
+        var a = this.getIndex(child);
+        var b = this.getAt(a - 1);
+
+        if (b)
+        {
+            this.swap(a, b);
+        }
     }
 
     return child;

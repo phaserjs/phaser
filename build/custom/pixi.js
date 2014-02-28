@@ -2160,6 +2160,9 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
     for (var i = 0; i < this.children.length; i++) {
        
         var child = this.children[i];
+
+        if(!child.visible)continue;
+
         var texture = child.texture;
         var frame = texture.frame;
 
@@ -3453,7 +3456,6 @@ PIXI.PixiShader = function(gl)
         '}'
     ];
 
-
     /**
     * @property {number} textureCount - A local texture counter for multi-texture shaders.
     */
@@ -3471,7 +3473,6 @@ PIXI.PixiShader = function(gl)
 */
 PIXI.PixiShader.prototype.init = function()
 {
-
     var gl = this.gl;
 
     var program = PIXI.compileProgram(gl, this.vertexSrc || PIXI.PixiShader.defaultVertexSrc, this.fragmentSrc);
@@ -3725,7 +3726,6 @@ PIXI.PixiShader.prototype.syncUniforms = function()
 /**
 * Destroys the shader
 * @method destroy
-*
 */
 PIXI.PixiShader.prototype.destroy = function()
 {
@@ -3737,7 +3737,7 @@ PIXI.PixiShader.prototype.destroy = function()
 };
 
 /**
-*
+* The Default Vertex shader source
 * @property defaultVertexSrc
 * @type String
 */
@@ -3761,10 +3761,6 @@ PIXI.PixiShader.defaultVertexSrc = [
     '   vColor = vec4(color * aColor.x, aColor.x);',
     '}'
 ];
-
-
-
-
 
 /**
  * @author Mat Groves http://matgroves.com/ @Doormat23
@@ -6084,6 +6080,7 @@ PIXI.WebGLFastSpriteBatch.prototype.render = function(spriteBatch)
 PIXI.WebGLFastSpriteBatch.prototype.renderSprite = function(sprite)
 {
     //sprite = children[i];
+    if(!sprite.visible)return;
     
     // TODO trim??
     if(sprite.texture.baseTexture !== this.currentBaseTexture)
@@ -8429,7 +8426,7 @@ PIXI.Graphics.ELIP = 3;
  * A tiling sprite is a fast way of rendering a tiling image
  *
  * @class TilingSprite
- * @extends DisplayObjectContainer
+ * @extends Sprite
  * @constructor
  * @param texture {Texture} the texture of the tiling sprite
  * @param width {Number}  the width of the tiling sprite
@@ -8446,6 +8443,7 @@ PIXI.TilingSprite = function(texture, width, height)
      * @type Number
      */
     this.width = width || 100;
+
     /**
      * The height of the tiling sprite
      *
@@ -8599,58 +8597,46 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
     
     var i,j;
 
-    if(this.mask || this.filters)
+    if(this.mask)
     {
-        if(this.mask)
-        {
-            renderSession.spriteBatch.stop();
-            renderSession.maskManager.pushMask(this.mask, renderSession);
-            renderSession.spriteBatch.start();
-        }
-
-        if(this.filters)
-        {
-            renderSession.spriteBatch.flush();
-            renderSession.filterManager.pushFilter(this._filterBlock);
-        }
-
-        if(!this.tilingTexture || this.refreshTexture)this.generateTilingTexture(true);
-        else renderSession.spriteBatch.renderTilingSprite(this);
-
-        // simple render children!
-        for(i=0,j=this.children.length; i<j; i++)
-        {
-            this.children[i]._renderWebGL(renderSession);
-        }
-
         renderSession.spriteBatch.stop();
-
-        if(this.filters)renderSession.filterManager.popFilter();
-        if(this.mask)renderSession.maskManager.popMask(renderSession);
-        
+        renderSession.maskManager.pushMask(this.mask, renderSession);
         renderSession.spriteBatch.start();
     }
-    else
+
+    if(this.filters)
     {
-        if(!this.tilingTexture || this.refreshTexture)
+        renderSession.spriteBatch.flush();
+        renderSession.filterManager.pushFilter(this._filterBlock);
+    }
+
+
+    if(!this.tilingTexture || this.refreshTexture)
+    {
+        this.generateTilingTexture(true);
+        if(this.tilingTexture && this.tilingTexture.needsUpdate)
         {
-            this.generateTilingTexture(true);
-            if(this.tilingTexture.needsUpdate)
-            {
-                //TODO - tweaking
-                PIXI.updateWebGLTexture(this.tilingTexture.baseTexture, renderSession.gl);
-                this.tilingTexture.needsUpdate = false;
-               // this.tilingTexture._uvs = null;
-            }
-        }
-        else renderSession.spriteBatch.renderTilingSprite(this);
-        
-        // simple render children!
-        for(i=0,j=this.children.length; i<j; i++)
-        {
-            this.children[i]._renderWebGL(renderSession);
+            //TODO - tweaking
+            PIXI.updateWebGLTexture(this.tilingTexture.baseTexture, renderSession.gl);
+            this.tilingTexture.needsUpdate = false;
+           // this.tilingTexture._uvs = null;
         }
     }
+    else renderSession.spriteBatch.renderTilingSprite(this);
+    
+
+    // simple render children!
+    for(i=0,j=this.children.length; i<j; i++)
+    {
+        this.children[i]._renderWebGL(renderSession);
+    }
+
+    renderSession.spriteBatch.stop();
+
+    if(this.filters)renderSession.filterManager.popFilter();
+    if(this.mask)renderSession.maskManager.popMask(renderSession);
+    
+    renderSession.spriteBatch.start();
 };
 
 /**
@@ -8831,17 +8817,9 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
     {
         if(isFrame)
         {
-            if (texture.trim)
-            {
-                targetWidth = texture.trim.width;
-                targetHeight = texture.trim.height;
-            }
-            else
-            {
-                targetWidth = frame.width;
-                targetHeight = frame.height;
-            }           
-
+            targetWidth = frame.width;
+            targetHeight = frame.height;
+           
             newTextureRequired = true;
             
         }
@@ -8874,7 +8852,7 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
             this.tilingTexture.isTiling = true;
 
         }
-
+        
         canvasBuffer.context.drawImage(texture.baseTexture.source,
                                            frame.x,
                                            frame.y,

@@ -6,7 +6,7 @@
  * A tiling sprite is a fast way of rendering a tiling image
  *
  * @class TilingSprite
- * @extends DisplayObjectContainer
+ * @extends Sprite
  * @constructor
  * @param texture {Texture} the texture of the tiling sprite
  * @param width {Number}  the width of the tiling sprite
@@ -23,6 +23,7 @@ PIXI.TilingSprite = function(texture, width, height)
      * @type Number
      */
     this.width = width || 100;
+
     /**
      * The height of the tiling sprite
      *
@@ -176,58 +177,46 @@ PIXI.TilingSprite.prototype._renderWebGL = function(renderSession)
     
     var i,j;
 
-    if(this.mask || this.filters)
+    if(this.mask)
     {
-        if(this.mask)
-        {
-            renderSession.spriteBatch.stop();
-            renderSession.maskManager.pushMask(this.mask, renderSession);
-            renderSession.spriteBatch.start();
-        }
-
-        if(this.filters)
-        {
-            renderSession.spriteBatch.flush();
-            renderSession.filterManager.pushFilter(this._filterBlock);
-        }
-
-        if(!this.tilingTexture || this.refreshTexture)this.generateTilingTexture(true);
-        else renderSession.spriteBatch.renderTilingSprite(this);
-
-        // simple render children!
-        for(i=0,j=this.children.length; i<j; i++)
-        {
-            this.children[i]._renderWebGL(renderSession);
-        }
-
         renderSession.spriteBatch.stop();
-
-        if(this.filters)renderSession.filterManager.popFilter();
-        if(this.mask)renderSession.maskManager.popMask(renderSession);
-        
+        renderSession.maskManager.pushMask(this.mask, renderSession);
         renderSession.spriteBatch.start();
     }
-    else
+
+    if(this.filters)
     {
-        if(!this.tilingTexture || this.refreshTexture)
+        renderSession.spriteBatch.flush();
+        renderSession.filterManager.pushFilter(this._filterBlock);
+    }
+
+
+    if(!this.tilingTexture || this.refreshTexture)
+    {
+        this.generateTilingTexture(true);
+        if(this.tilingTexture && this.tilingTexture.needsUpdate)
         {
-            this.generateTilingTexture(true);
-            if(this.tilingTexture.needsUpdate)
-            {
-                //TODO - tweaking
-                PIXI.updateWebGLTexture(this.tilingTexture.baseTexture, renderSession.gl);
-                this.tilingTexture.needsUpdate = false;
-               // this.tilingTexture._uvs = null;
-            }
-        }
-        else renderSession.spriteBatch.renderTilingSprite(this);
-        
-        // simple render children!
-        for(i=0,j=this.children.length; i<j; i++)
-        {
-            this.children[i]._renderWebGL(renderSession);
+            //TODO - tweaking
+            PIXI.updateWebGLTexture(this.tilingTexture.baseTexture, renderSession.gl);
+            this.tilingTexture.needsUpdate = false;
+           // this.tilingTexture._uvs = null;
         }
     }
+    else renderSession.spriteBatch.renderTilingSprite(this);
+    
+
+    // simple render children!
+    for(i=0,j=this.children.length; i<j; i++)
+    {
+        this.children[i]._renderWebGL(renderSession);
+    }
+
+    renderSession.spriteBatch.stop();
+
+    if(this.filters)renderSession.filterManager.popFilter();
+    if(this.mask)renderSession.maskManager.popMask(renderSession);
+    
+    renderSession.spriteBatch.start();
 };
 
 /**
@@ -408,17 +397,9 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
     {
         if(isFrame)
         {
-            if (texture.trim)
-            {
-                targetWidth = texture.trim.width;
-                targetHeight = texture.trim.height;
-            }
-            else
-            {
-                targetWidth = frame.width;
-                targetHeight = frame.height;
-            }           
-
+            targetWidth = frame.width;
+            targetHeight = frame.height;
+           
             newTextureRequired = true;
             
         }
@@ -451,7 +432,7 @@ PIXI.TilingSprite.prototype.generateTilingTexture = function(forcePowerOfTwo)
             this.tilingTexture.isTiling = true;
 
         }
-
+        
         canvasBuffer.context.drawImage(texture.baseTexture.source,
                                            frame.x,
                                            frame.y,

@@ -6,7 +6,7 @@
         <title>phaser</title>
         <base href="../" />
         <script src="_site/js/jquery-2.0.3.min.js" type="text/javascript"></script>
-        <script src="../dist/phaser.js" type="text/javascript"></script>
+        <script src="../build/phaser.js" type="text/javascript"></script>
         <?php
             if (isset($_GET['f']))
             {

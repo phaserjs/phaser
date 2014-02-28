@@ -33,7 +33,6 @@ PIXI.PixiShader = function(gl)
         '}'
     ];
 
-
     /**
     * @property {number} textureCount - A local texture counter for multi-texture shaders.
     */
@@ -51,7 +50,6 @@ PIXI.PixiShader = function(gl)
 */
 PIXI.PixiShader.prototype.init = function()
 {
-
     var gl = this.gl;
 
     var program = PIXI.compileProgram(gl, this.vertexSrc || PIXI.PixiShader.defaultVertexSrc, this.fragmentSrc);
@@ -305,7 +303,6 @@ PIXI.PixiShader.prototype.syncUniforms = function()
 /**
 * Destroys the shader
 * @method destroy
-*
 */
 PIXI.PixiShader.prototype.destroy = function()
 {
@@ -317,7 +314,7 @@ PIXI.PixiShader.prototype.destroy = function()
 };
 
 /**
-*
+* The Default Vertex shader source
 * @property defaultVertexSrc
 * @type String
 */
@@ -341,7 +338,3 @@ PIXI.PixiShader.defaultVertexSrc = [
     '   vColor = vec4(color * aColor.x, aColor.x);',
     '}'
 ];
-
-
-
-
