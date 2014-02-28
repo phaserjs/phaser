@@ -88,8 +88,6 @@ function render() {
 
     game.debug.renderCameraInfo(game.camera, 32, 32);
     game.debug.renderSpriteInfo(d, 32, 200);
-    // game.debug.renderWorldTransformInfo(d, 32, 200);
-    // game.debug.renderLocalTransformInfo(d, 32, 400);
     game.debug.renderSpriteCorners(d, false, true);
 
 }

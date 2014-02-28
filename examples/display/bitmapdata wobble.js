@@ -28,8 +28,6 @@ function create() {
     //  Populate the wave with some data
 	waveData = game.math.sinCosGenerator(32, 8, 8, 2);
 
-	console.log(bmd.context)
-
 }
 
 function update() {

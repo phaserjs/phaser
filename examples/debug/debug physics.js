@@ -33,7 +33,6 @@ function create() {
 
 function update()
 {
-    // game.physics.collide( sprite, otherSprite ) ;
 
     // Move sprite up and down smoothly for show
     var tStep = Math.sin( counter ) ;
