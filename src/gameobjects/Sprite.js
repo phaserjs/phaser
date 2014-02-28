@@ -499,7 +499,14 @@ Phaser.Sprite.prototype.destroy = function(destroyChildren) {
 
     if (this.parent)
     {
-        this.parent.remove(this);
+        if (this.parent.instanceof Phaser.Group)
+        {
+            this.parent.remove(this);
+        }
+        else
+        {
+            this.parent.removeChild(this);
+        }
     }
 
     if (this.input)
