@@ -409,7 +409,6 @@ Phaser.ScaleManager.prototype = {
             if ((this.forceLandscape && window.innerWidth > window.innerHeight) || (this.forcePortrait && window.innerHeight > window.innerWidth))
             {
                 //  Back to normal
-                this.game.paused = false;
                 this.incorrectOrientation = false;
                 this.leaveIncorrectOrientation.dispatch();
 
@@ -419,7 +418,10 @@ Phaser.ScaleManager.prototype = {
                     this.game.world.visible = true;
                 }
 
-                this.refresh();
+                if (this.scaleMode !== Phaser.ScaleManager.NO_SCALE)
+                {
+                    this.refresh();
+                }
             }
         }
         else
@@ -427,7 +429,6 @@ Phaser.ScaleManager.prototype = {
             if ((this.forceLandscape && window.innerWidth < window.innerHeight) || (this.forcePortrait && window.innerHeight < window.innerWidth))
             {
                 //  Show orientation screen
-                this.game.paused = true;
                 this.incorrectOrientation = true;
                 this.enterIncorrectOrientation.dispatch();
 
@@ -437,7 +438,10 @@ Phaser.ScaleManager.prototype = {
                     this.game.world.visible = false;
                 }
 
-                this.refresh();
+                if (this.scaleMode !== Phaser.ScaleManager.NO_SCALE)
+                {
+                    this.refresh();
+                }
             }
         }
     },

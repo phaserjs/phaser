@@ -82,6 +82,7 @@ Significant API changes:
 * If your game references the old Phaser.StageScaleMode consts like SHOW_ALL you need to update them to Phaser.ScaleManager, i.e. Phaser.ScaleManager.SHOW_ALL.
 * Time.physicsElapsed is no longer bound or clamped, be wary of this if you use the value anywhere in your code.
 * In Group.destroy the default for 'destroyChildren' was false. It's now `true` as this is a far more likely requirement when destroying a Group.
+* Game no longer pauses if you've forced orientation and change it, also doesn't resize a NO_SCALE game.
 
 
 New features:
@@ -185,6 +186,7 @@ Bug Fixes:
 * Calling destroy on an already destroyed object would throw a run-time error. Now checked for and aborted.
 * Calling destroy while in an Input Event callback now works for either the parent Group or the calling object itself.
 * Loader.replaceInFileList wouldn't over-write the previous entry correctly, which caused the Loader.image overwrite parameter to fail (thanks basoko, fixes #493)
+* If the game was set to NO_SCALE and you swapped orientation, it would pause and resize, then fail to resize when you swapped back (thanks starnut, fixes #258)
 
 
 TO DO:
