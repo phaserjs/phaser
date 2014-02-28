@@ -125,6 +125,9 @@ New features:
 * All GameObjects now have a 'destroyChildren' boolean as a parameter to their destroy method. It's default is true and the value propogates down its children.
 * Pixi GrayFilter ported over (thanks nickryall #404)
 * Animation.speed added. You can now change the animation speed on the fly, without re-starting the animation (feature request #458)
+* Brand new Grunt task - creates each core library as its own file and a combined phaser.js.
+* New build script now cleanly splits Phaser, Pixi and p2 so they are each UMD wrapped and each available in the global scope (now more requireJS friendly!).
+* phaser-no-libs.js allows you to use your own version of p2.js or pixi.js with Phaser. Warning: This is totally unsupported. If you hit bugs, you fix them yourself.
 
 
 Updates:
@@ -148,8 +151,6 @@ Updates:
 * Vastly improved visibility API support + pageshow/pagehide + focus/blur. Working across Chrome, IE, Firefox, iOS, Android (also fixes #161)
 * Pausing the game will now mute audio and resuming will un-mute, unless it was muted via the game (fixes #439)
 * ScaleManager has 2 new events: ScaleManager.enterFullScreen and ScaleManager.leaveFullScreen, so you can respond to fullscreen changes directly.
-* The grunt task now creates an optional version of Phaser without any Physics support built in. Quite a bit smaller now.
-* The grunt task now has a new `noUmd` option which builds Phaser without the UMD wrapper.
 
 
 Bug Fixes:

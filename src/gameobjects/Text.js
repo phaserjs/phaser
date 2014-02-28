@@ -191,7 +191,7 @@ Phaser.Text.prototype.destroy = function (destroyChildren) {
 
     if (this.parent)
     {
-        if (this.parent.instanceof Phaser.Group)
+        if (this.parent instanceof Phaser.Group)
         {
             this.parent.remove(this);
         }

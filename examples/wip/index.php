@@ -64,7 +64,10 @@
             $value2 = substr($value, 0, -3);
             $file = urlencode($value);
 
-            $output .= "<tr><td><a href=\"wip/index.php?f=$file\">$value2</a></td><td><a href=\"wip/index-fs.php?f=$file\">(full screen)</a></td><td><a href=\"wip/index-cocoon.php?f=$file\">(cocoon)</a></td></tr>";
+            $output .= "<tr><td><a href=\"wip/index.php?f=$file\">$value2</a></td>";
+            $output .= "<td><a href=\"wip/index-lib.php?f=$file\">[ single lib ]</a></td>";
+            $output .= "<td><a href=\"wip/index-fs.php?f=$file\">[ full screen ]</a></td>";
+            $output .= "<td><a href=\"wip/index-cocoon.php?f=$file\">[ cocoon ]</a></td></tr>";
         }
 
         return $output;
@@ -103,14 +106,9 @@
 
         <div id="phaser-example"></div>
 
-        <input type="button" id="step" value="step" />
-        <input type="button" id="start" value="start" style="margin-left: 32px" />
-
         <div style="padding: 32px">
 
-        <h2>work in progress examples</h2>
-
-        <table>
+        <table cellpadding="8">
         <?php
             echo printJSLinks('wip', $files);
         ?>
