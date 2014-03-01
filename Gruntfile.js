@@ -40,6 +40,7 @@ module.exports = function (grunt) {
 '*                                                     -- Albert Einstein\n' +
 '*/\n',
 
+        release_dir: 'build',
         compile_dir: 'dist',
 
         p2: [
@@ -274,6 +275,23 @@ module.exports = function (grunt) {
 
         },
 
+        copy: {
+            main: {
+                files: [
+                    { src: ['dist/phaser.js'], dest: 'build/phaser.js' },
+                    { src: ['dist/phaser.min.js'], dest: 'build/phaser.min.js' },
+                    { src: ['dist/phaser.map'], dest: 'build/phaser.map' },
+
+                    { src: ['dist/p2.js'], dest: 'build/custom/p2.js' },
+                    { src: ['dist/p2.min.js'], dest: 'build/custom/p2.min.js' },
+                    { src: ['dist/phaser-no-libs.js'], dest: 'build/custom/phaser-no-libs.js' },
+                    { src: ['dist/phaser-no-libs.min.js'], dest: 'build/custom/phaser-no-libs.min.js' },
+                    { src: ['dist/pixi.js'], dest: 'build/custom/pixi.js' },
+                    { src: ['dist/pixi.min.js'], dest: 'build/custom/pixi.min.js' }
+                ]
+            }
+        },
+
         examples: {
             all: {
             options: {
@@ -298,5 +316,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', ['build', 'examples']);
     grunt.registerTask('build', ['clean', 'concat', 'uglify']);
+    grunt.registerTask('dist', ['clean', 'concat', 'uglify', 'copy']);
 
 };

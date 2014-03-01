@@ -33,11 +33,6 @@ Phaser.World = function (game) {
     * @property {Phaser.Camera} camera - Camera instance.
     */
     this.camera = null;
-
-    /**
-    * @property {number} currentRenderOrderID - Reset each frame, keeps a count of the total number of objects updated.
-    */
-    this.currentRenderOrderID = 0;
     
 }
 

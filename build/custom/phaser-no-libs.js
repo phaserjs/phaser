@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.0 "Aes Sedai" - Built: Fri Feb 28 2014 09:11:13
+* v2.0.0 "Aes Sedai" - Built: Fri Feb 28 2014 19:43:09
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -364,66 +364,6 @@ Phaser.Utils = {
 };
 
 /**
- * Converts a hex color number to an [R, G, B] array
- *
- * @method hex2rgb
- * @param hex {Number}
-PIXI.hex2rgb = function(hex) {
-    return [(hex >> 16 & 0xFF) / 255, ( hex >> 8 & 0xFF) / 255, (hex & 0xFF)/ 255];
-};
- */
-
-/**
- * Converts a color as an [R, G, B] array to a hex number
- *
- * @method rgb2hex
- * @param rgb {Array}
-PIXI.rgb2hex = function(rgb) {
-    return ((rgb[0]*255 << 16) + (rgb[1]*255 << 8) + rgb[2]*255);
-};
- */
-
-/**
- * Checks whether the Canvas BlendModes are supported by the current browser
- *
- * @method canUseNewCanvasBlendModes
- * @return {Boolean} whether they are supported
-PIXI.canUseNewCanvasBlendModes = function()
-{
-    var canvas = document.createElement('canvas');
-    canvas.width = 1;
-    canvas.height = 1;
-    var context = canvas.getContext('2d');
-    context.fillStyle = '#000';
-    context.fillRect(0,0,1,1);
-    context.globalCompositeOperation = 'multiply';
-    context.fillStyle = '#fff';
-    context.fillRect(0,0,1,1);
-    return context.getImageData(0,0,1,1).data[0] === 0;
-};
- */
-
-/**
- * Given a number, this function returns the closest number that is a power of two
- * this function is taken from Starling Framework as its pretty neat ;)
- *
- * @method getNextPowerOfTwo
- * @param number {Number}
- * @return {Number} the closest number that is a power of two
-PIXI.getNextPowerOfTwo = function(number)
-{
-    if (number > 0 && (number & (number - 1)) === 0) // see: http://goo.gl/D9kPj
-        return number;
-    else
-    {
-        var result = 1;
-        while (result < number) result <<= 1;
-        return result;
-    }
-};
- */
-
-/**
 * A polyfill for Function.prototype.bind
 */
 if (typeof Function.prototype.bind != 'function') {
@@ -468,7 +408,6 @@ if (!Array.isArray) {
     return Object.prototype.toString.call(arg) == '[object Array]';
   };
 }
-
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
@@ -5377,6 +5316,11 @@ Phaser.Stage = function (game, width, height) {
     this.exists = true;
 
     /**
+    * @property {number} currentRenderOrderID - Reset each frame, keeps a count of the total number of objects updated.
+    */
+    this.currentRenderOrderID = 0;
+
+    /**
     * @property {string} hiddenVar - The page visibility API event name.
     * @private
     */
@@ -5419,9 +5363,10 @@ Phaser.Stage.prototype.preUpdate = function () {
     
     this.currentRenderOrderID = 0;
 
-    var i = this.children.length;
+    //  This can't loop in reverse, we need the orderID to be in sequence
+    var len = this.children.length;
 
-    while (i--)
+    for (var i = 0; i < len; i++)
     {
         this.children[i].preUpdate();
     }
@@ -5937,11 +5882,18 @@ Phaser.Group.prototype.addAt = function (child, index) {
 *
 * @method Phaser.Group#getAt
 * @param {number} index - The index to return the child from.
-* @return {*} The child that was found at the given index.
+* @return {*} The child that was found at the given index. If the index was out of bounds then this will return -1.
 */
 Phaser.Group.prototype.getAt = function (index) {
 
-    return this.getChildAt(index);
+    if (index < 0 || index > this.children.length)
+    {
+        return -1;
+    }
+    else
+    {
+        return this.getChildAt(index);
+    }
 
 }
 
@@ -6076,10 +6028,77 @@ Phaser.Group.prototype.swap = function (child1, child2) {
 */
 Phaser.Group.prototype.bringToTop = function (child) {
 
-    if (child.parent === this)
+    if (child.parent === this && this.getIndex(child) < this.children.length)
     {
         this.remove(child);
         this.add(child);
+    }
+
+    return child;
+
+}
+
+/**
+* Sends the given child to the bottom of this Group so it renders below all other children.
+*
+* @method Phaser.Group#sendToBottom
+* @param {*} child - The child to send to the bottom of this Group.
+* @return {*} The child that was moved.
+*/
+Phaser.Group.prototype.sendToBottom = function (child) {
+
+    if (child.parent === this && this.getIndex(child) > 0)
+    {
+        this.remove(child);
+        this.addAt(child, 0);
+    }
+
+    return child;
+
+}
+
+/**
+* Moves the given child up one place in this Group unless it's already at the top.
+*
+* @method Phaser.Group#moveUp
+* @param {*} child - The child to move up in the Group.
+* @return {*} The child that was moved.
+*/
+Phaser.Group.prototype.moveUp = function (child) {
+
+    if (child.parent === this && this.getIndex(child) < this.children.length - 1)
+    {
+        var a = this.getIndex(child);
+        var b = this.getAt(a + 1);
+
+        if (b)
+        {
+            this.swap(a, b);
+        }
+    }
+
+    return child;
+
+}
+
+/**
+* Moves the given child down one place in this Group unless it's already at the top.
+*
+* @method Phaser.Group#moveDown
+* @param {*} child - The child to move down in the Group.
+* @return {*} The child that was moved.
+*/
+Phaser.Group.prototype.moveDown = function (child) {
+
+    if (child.parent === this && this.getIndex(child) > 0)
+    {
+        var a = this.getIndex(child);
+        var b = this.getAt(a - 1);
+
+        if (b)
+        {
+            this.swap(a, b);
+        }
     }
 
     return child;
@@ -7045,11 +7064,6 @@ Phaser.World = function (game) {
     * @property {Phaser.Camera} camera - Camera instance.
     */
     this.camera = null;
-
-    /**
-    * @property {number} currentRenderOrderID - Reset each frame, keeps a count of the total number of objects updated.
-    */
-    this.currentRenderOrderID = 0;
     
 }
 
@@ -11214,7 +11228,7 @@ Phaser.Pointer.prototype = {
         }
 
         //  Work out which object is on the top
-        this._highestRenderOrderID = -1;
+        this._highestRenderOrderID = Number.MAX_SAFE_INTEGER;
         this._highestRenderObject = null;
         this._highestInputPriorityID = -1;
 
@@ -11226,11 +11240,11 @@ Phaser.Pointer.prototype = {
             do
             {
                 //  If the object is using pixelPerfect checks, or has a higher InputManager.PriorityID OR if the priority ID is the same as the current highest AND it has a higher renderOrderID, then set it to the top
-                if (currentNode.pixelPerfectClick || currentNode.pixelPerfectOver || currentNode.priorityID > this._highestInputPriorityID || (currentNode.priorityID === this._highestInputPriorityID && currentNode.sprite.renderOrderID > this._highestRenderOrderID))
+                if (currentNode.pixelPerfectClick || currentNode.pixelPerfectOver || currentNode.priorityID > this._highestInputPriorityID || (currentNode.priorityID === this._highestInputPriorityID && currentNode.sprite._cache[3] < this._highestRenderOrderID))
                 {
                     if ((!fromClick && currentNode.checkPointerOver(this)) || (fromClick && currentNode.checkPointerDown(this)))
                     {
-                        this._highestRenderOrderID = currentNode.sprite.renderOrderID;
+                        this._highestRenderOrderID = currentNode.sprite._cache[3]; // renderOrderID
                         this._highestInputPriorityID = currentNode.priorityID;
                         this._highestRenderObject = currentNode;
                     }
@@ -15952,14 +15966,15 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     if (this.visible)
     {
-        this._cache[3] = this.game.world.currentRenderOrderID++;
+        this._cache[3] = this.game.stage.currentRenderOrderID++;
     }
 
     this.animations.update();
 
-    if (this.body)
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
     {
-        // this.body.preUpdate();
+        this.children[i].preUpdate();
     }
 
     return true;
@@ -15968,6 +15983,7 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
 /**
 * Override and use this function in your own custom objects to handle any update requirements you may have.
+* Remember if this Sprite has any children you should call update on them too.
 *
 * @method Phaser.Sprite#update
 * @memberof Phaser.Sprite
@@ -16002,6 +16018,12 @@ Phaser.Sprite.prototype.postUpdate = function() {
     {
         this.position.x = this.game.camera.view.x + this.cameraOffset.x;
         this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].postUpdate();
     }
 
 };
@@ -16839,7 +16861,7 @@ Phaser.Image.prototype.preUpdate = function() {
 
     if (!this.exists || !this.parent.exists)
     {
-        this.renderOrderID = -1;
+        this._cache[3] = -1;
         return false;
     }
 
@@ -16853,7 +16875,13 @@ Phaser.Image.prototype.preUpdate = function() {
 
     if (this.visible)
     {
-        this._cache[3] = this.game.world.currentRenderOrderID++;
+        this._cache[3] = this.game.stage.currentRenderOrderID++;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].preUpdate();
     }
 
     return true;
@@ -16888,6 +16916,12 @@ Phaser.Image.prototype.postUpdate = function() {
     {
         this.position.x = this.game.camera.view.x + this.cameraOffset.x;
         this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].postUpdate();
     }
 
 }
@@ -17602,6 +17636,17 @@ Phaser.TileSprite.prototype.preUpdate = function() {
         this.tilePosition.y += this._scroll.y * this.game.time.physicsElapsed;
     }
 
+    if (this.visible)
+    {
+        this._cache[3] = this.game.stage.currentRenderOrderID++;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].preUpdate();
+    }
+
     return true;
 
 }
@@ -17629,6 +17674,12 @@ Phaser.TileSprite.prototype.postUpdate = function() {
     {
         this.position.x = this.game.camera.view.x + this.cameraOffset.x;
         this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].postUpdate();
     }
 
 }
@@ -18094,7 +18145,13 @@ Phaser.Text.prototype.preUpdate = function () {
 
     if (this.visible)
     {
-        this._cache[3] = this.game.world.currentRenderOrderID++;
+        this._cache[3] = this.game.stage.currentRenderOrderID++;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].preUpdate();
     }
 
     return true;
@@ -18121,6 +18178,12 @@ Phaser.Text.prototype.postUpdate = function () {
     {
         this.position.x = this.game.camera.view.x + this.cameraOffset.x;
         this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].postUpdate();
     }
 
 }
@@ -18954,7 +19017,7 @@ Phaser.BitmapText.prototype.preUpdate = function () {
 
     if (this.visible)
     {
-        this._cache[3] = this.game.world.currentRenderOrderID++;
+        this._cache[3] = this.game.stage.currentRenderOrderID++;
     }
 
     return true;
@@ -19984,7 +20047,7 @@ Phaser.Graphics.prototype.preUpdate = function () {
 
     if (this.visible)
     {
-        this._cache[3] = this.game.world.currentRenderOrderID++;
+        this._cache[3] = this.game.stage.currentRenderOrderID++;
     }
 
     return true;

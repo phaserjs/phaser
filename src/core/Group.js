@@ -213,11 +213,18 @@ Phaser.Group.prototype.addAt = function (child, index) {
 *
 * @method Phaser.Group#getAt
 * @param {number} index - The index to return the child from.
-* @return {*} The child that was found at the given index.
+* @return {*} The child that was found at the given index. If the index was out of bounds then this will return -1.
 */
 Phaser.Group.prototype.getAt = function (index) {
 
-    return this.getChildAt(index);
+    if (index < 0 || index > this.children.length)
+    {
+        return -1;
+    }
+    else
+    {
+        return this.getChildAt(index);
+    }
 
 }
 
@@ -352,10 +359,77 @@ Phaser.Group.prototype.swap = function (child1, child2) {
 */
 Phaser.Group.prototype.bringToTop = function (child) {
 
-    if (child.parent === this)
+    if (child.parent === this && this.getIndex(child) < this.children.length)
     {
         this.remove(child);
         this.add(child);
+    }
+
+    return child;
+
+}
+
+/**
+* Sends the given child to the bottom of this Group so it renders below all other children.
+*
+* @method Phaser.Group#sendToBottom
+* @param {*} child - The child to send to the bottom of this Group.
+* @return {*} The child that was moved.
+*/
+Phaser.Group.prototype.sendToBottom = function (child) {
+
+    if (child.parent === this && this.getIndex(child) > 0)
+    {
+        this.remove(child);
+        this.addAt(child, 0);
+    }
+
+    return child;
+
+}
+
+/**
+* Moves the given child up one place in this Group unless it's already at the top.
+*
+* @method Phaser.Group#moveUp
+* @param {*} child - The child to move up in the Group.
+* @return {*} The child that was moved.
+*/
+Phaser.Group.prototype.moveUp = function (child) {
+
+    if (child.parent === this && this.getIndex(child) < this.children.length - 1)
+    {
+        var a = this.getIndex(child);
+        var b = this.getAt(a + 1);
+
+        if (b)
+        {
+            this.swap(a, b);
+        }
+    }
+
+    return child;
+
+}
+
+/**
+* Moves the given child down one place in this Group unless it's already at the top.
+*
+* @method Phaser.Group#moveDown
+* @param {*} child - The child to move down in the Group.
+* @return {*} The child that was moved.
+*/
+Phaser.Group.prototype.moveDown = function (child) {
+
+    if (child.parent === this && this.getIndex(child) > 0)
+    {
+        var a = this.getIndex(child);
+        var b = this.getAt(a - 1);
+
+        if (b)
+        {
+            this.swap(a, b);
+        }
     }
 
     return child;

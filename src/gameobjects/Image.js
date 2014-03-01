@@ -134,7 +134,7 @@ Phaser.Image.prototype.preUpdate = function() {
 
     if (!this.exists || !this.parent.exists)
     {
-        this.renderOrderID = -1;
+        this._cache[3] = -1;
         return false;
     }
 
@@ -148,7 +148,13 @@ Phaser.Image.prototype.preUpdate = function() {
 
     if (this.visible)
     {
-        this._cache[3] = this.game.world.currentRenderOrderID++;
+        this._cache[3] = this.game.stage.currentRenderOrderID++;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].preUpdate();
     }
 
     return true;
@@ -183,6 +189,12 @@ Phaser.Image.prototype.postUpdate = function() {
     {
         this.position.x = this.game.camera.view.x + this.cameraOffset.x;
         this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].postUpdate();
     }
 
 }

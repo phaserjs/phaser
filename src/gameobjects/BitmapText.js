@@ -167,7 +167,7 @@ Phaser.BitmapText.prototype.preUpdate = function () {
 
     if (this.visible)
     {
-        this._cache[3] = this.game.world.currentRenderOrderID++;
+        this._cache[3] = this.game.stage.currentRenderOrderID++;
     }
 
     return true;

@@ -56,6 +56,11 @@ Phaser.Stage = function (game, width, height) {
     this.exists = true;
 
     /**
+    * @property {number} currentRenderOrderID - Reset each frame, keeps a count of the total number of objects updated.
+    */
+    this.currentRenderOrderID = 0;
+
+    /**
     * @property {string} hiddenVar - The page visibility API event name.
     * @private
     */
@@ -98,9 +103,10 @@ Phaser.Stage.prototype.preUpdate = function () {
     
     this.currentRenderOrderID = 0;
 
-    var i = this.children.length;
+    //  This can't loop in reverse, we need the orderID to be in sequence
+    var len = this.children.length;
 
-    while (i--)
+    for (var i = 0; i < len; i++)
     {
         this.children[i].preUpdate();
     }

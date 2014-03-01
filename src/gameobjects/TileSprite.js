@@ -140,6 +140,17 @@ Phaser.TileSprite.prototype.preUpdate = function() {
         this.tilePosition.y += this._scroll.y * this.game.time.physicsElapsed;
     }
 
+    if (this.visible)
+    {
+        this._cache[3] = this.game.stage.currentRenderOrderID++;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].preUpdate();
+    }
+
     return true;
 
 }
@@ -167,6 +178,12 @@ Phaser.TileSprite.prototype.postUpdate = function() {
     {
         this.position.x = this.game.camera.view.x + this.cameraOffset.x;
         this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+    }
+
+    //  Update any Children
+    for (var i = 0, len = this.children.length; i < len; i++)
+    {
+        this.children[i].postUpdate();
     }
 
 }

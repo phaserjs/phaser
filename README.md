@@ -128,6 +128,9 @@ New features:
 * Brand new Grunt task - creates each core library as its own file and a combined phaser.js.
 * New build script now cleanly splits Phaser, Pixi and p2 so they are each UMD wrapped and each available in the global scope (now more requireJS friendly!).
 * phaser-no-libs.js allows you to use your own version of p2.js or pixi.js with Phaser. Warning: This is totally unsupported. If you hit bugs, you fix them yourself.
+* Group.sendToBottom(child) is the handy opposite of Group.bringToTop()
+* Group.moveUp(child) will move a child up the display list, swapping with the child above it.
+* Group.moveDown(child) will move a child down the display list, swapping with the child below it.
 
 
 Updates:
