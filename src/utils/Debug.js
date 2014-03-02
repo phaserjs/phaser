@@ -20,9 +20,34 @@ Phaser.Utils.Debug = function (game) {
     this.game = game;
   
     /**
-    * @property {Context} context - The canvas context on which to render the debug information.
+    * @property {PIXI.Sprite} sprite - If debugging in WebGL mode we need this.
     */
-    this.context = game.context;
+    this.sprite = null;
+
+    /**
+    * @property {HTMLCanvasElement} canvas - The canvas to which this BitmapData draws.
+    */
+    this.canvas = null;
+
+    /**
+    * @property {PIXI.BaseTexture} baseTexture - Required Pixi var.
+    */
+    this.baseTexture = null;
+    
+    /**
+    * @property {PIXI.Texture} texture - Required Pixi var.
+    */
+    this.texture = null;
+
+    /**
+    * @property {Phaser.Frame} textureFrame - Dimensions of the renderable area.
+    */
+    this.textureFrame = null;
+
+    /**
+    * @property {CanvasRenderingContext2D} context - The 2d context of the canvas.
+    */
+    this.context = null;
 
     /**
     * @property {string} font - The font that the debug information is rendered in.
@@ -62,6 +87,24 @@ Phaser.Utils.Debug = function (game) {
     * @default
     */
     this.currentAlpha = 1;
+
+    if (this.game.renderType === Phaser.CANVAS)
+    {
+        this.context = this.game.context;
+    }
+    else
+    {
+        this.canvas = Phaser.Canvas.create(this.game.width, this.game.height, '', true);
+        this.context = this.canvas.getContext('2d');
+        this.context.fillStyle = '#ff0000';
+        this.context.fillRect(0,0,400,400);
+        this.baseTexture = new PIXI.BaseTexture(this.canvas);
+        this.texture = new PIXI.Texture(this.baseTexture);
+        this.textureFrame = new Phaser.Frame(0, 0, 0, this.game.width, this.game.height, 'debug', game.rnd.uuid());
+        this.sprite = this.game.make.image(0, 0, this.texture, this.textureFrame);
+
+        this.game.stage.addChild(this.sprite);
+    }
 
 };
 
@@ -110,6 +153,13 @@ Phaser.Utils.Debug.prototype = {
 
         this.context.restore();
         this.context.globalAlpha = this.currentAlpha;
+
+        if (this.sprite)
+        {
+            this.context.fillStyle = '#ff0000';
+            this.context.fillRect(0,0,400,400);
+            PIXI.updateWebGLTexture(this.baseTexture, this.game.renderer.gl);
+        }
 
     },
 

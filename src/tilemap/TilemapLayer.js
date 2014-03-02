@@ -666,7 +666,6 @@ Phaser.TilemapLayer.prototype.render = function () {
         this.renderDebug();
     }
 
-    //  Only needed if running in WebGL, otherwise this array will never get cleared down I don't think!
     if (this.game.renderType === Phaser.WEBGL)
     {
         // PIXI.updateWebGLTexture(this.baseTexture, renderSession.gl);        

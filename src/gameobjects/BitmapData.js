@@ -152,7 +152,6 @@ Phaser.BitmapData.prototype = {
 
         if (width !== this.width || height !== this.height)
         {
-            console.log('bmd resize', width, height);
             this.width = width;
             this.height = height;
             this.canvas.width = width;
@@ -367,7 +366,8 @@ Phaser.BitmapData.prototype = {
             //  Only needed if running in WebGL, otherwise this array will never get cleared down
             if (this.game.renderType === Phaser.WEBGL)
             {
-                PIXI.texturesToUpdate.push(this.baseTexture);
+                //  should use the rendersession
+                PIXI.updateWebGLTexture(this.baseTexture, this.game.renderer.gl);
             }
 
             this._dirty = false;
