@@ -33,13 +33,13 @@ BasicGame.MainMenu.prototype = {
         this.stage.backgroundColor = 0x2d2d2d;
 
         this.mummy = this.add.sprite(200, 400, 'mummy');
+        this.mummy.physicsEnabled = true;
 
         this.anim = this.mummy.animations.add('walk');
 
         this.anim.play(10, false);
 
         this.mummy.events.onAnimationComplete.add(this.changeIt, this);
-
     },
 
     changeIt: function () {
@@ -63,7 +63,13 @@ BasicGame.GameOver.prototype = {
         this.stage.backgroundColor = 0xff7744;
 
         this.dude = this.add.sprite(300, 300, 'mummy');
+        this.dude.physicsEnabled = true;
 
+        this.physics.world.bodies.forEach(function (body) {
+            if (body.parent) {
+                console.log(body.parent.sprite.key);
+            }
+        });
     }
 
 };
