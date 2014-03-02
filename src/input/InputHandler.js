@@ -1118,7 +1118,6 @@ Phaser.InputHandler.prototype = {
         }
 
         this.sprite.events.onDragStop.dispatch(this.sprite, pointer);
-        this.sprite.events.onInputUp.dispatch(this.sprite, pointer);
 
         if (this.checkPointerOver(pointer) === false)
         {
