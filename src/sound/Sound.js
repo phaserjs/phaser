@@ -341,7 +341,7 @@ Phaser.Sound.prototype = {
 
             if (this.currentTime >= this.durationMS)
             {
-                console.log(this.currentMarker, 'has hit duration');
+                // console.log(this.currentMarker, 'has hit duration');
                 if (this.usingWebAudio)
                 {
                     if (this.loop)
@@ -359,6 +359,7 @@ Phaser.Sound.prototype = {
                         else
                         {
                             // console.log('loop3');
+                            this.onMarkerComplete.dispatch(this.currentMarker, this);
                             this.play(this.currentMarker, 0, this.volume, true, true);
                         }
                     }
@@ -709,6 +710,11 @@ Phaser.Sound.prototype = {
         this.isPlaying = false;
         var prevMarker = this.currentMarker;
         
+        if (this.currentMarker !== '')
+        {
+            this.onMarkerComplete.dispatch(this.currentMarker, this);
+        }
+
         this.currentMarker = '';
         this.onStop.dispatch(this, prevMarker);
 
