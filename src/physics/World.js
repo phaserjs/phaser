@@ -455,6 +455,19 @@ Phaser.Physics.World.prototype = {
     },
 
     /**
+    * Clears all bodies from the simulation.
+    *
+    * @method Phaser.Physics.World#clear
+    */
+    clear: function () {
+
+        this.world.clear();
+
+    },
+
+    /**
+    * Clears all bodies from the simulation and unlinks World from Game. Should only be called on game shutdown. Call `clear` on a State change.
+    *
     * @method Phaser.Physics.World#destroy
     */
     destroy: function () {

@@ -286,6 +286,11 @@ Phaser.StateManager.prototype = {
 
                 this.game.world.destroy();
 
+                if (this.game.physics)
+                {
+                    this.game.physics.clear();
+                }
+
                 if (this._clearCache === true)
                 {
                     this.game.cache.destroy();
