@@ -155,6 +155,7 @@ Updates:
 * Vastly improved visibility API support + pageshow/pagehide + focus/blur. Working across Chrome, IE, Firefox, iOS, Android (also fixes #161)
 * Pausing the game will now mute audio and resuming will un-mute, unless it was muted via the game (fixes #439)
 * ScaleManager has 2 new events: ScaleManager.enterFullScreen and ScaleManager.leaveFullScreen, so you can respond to fullscreen changes directly.
+* RandomDataGenerator.integerInRange(min, max) now includes both `min` and `max` within its range (#501)
 
 
 Bug Fixes:

@@ -154,14 +154,15 @@ Phaser.RandomDataGenerator.prototype = {
     },
 
     /**
-    * Returns a random integer between min and max.
+    * Returns a random integer between and including min and max.
+    *
     * @method Phaser.RandomDataGenerator#integerInRange
     * @param {number} min - The minimum value in the range.
     * @param {number} max - The maximum value in the range.
     * @return {number} A random number between min and max.
     */
     integerInRange: function (min, max) {
-        return Math.floor(this.realInRange(min, max));
+        return Math.round(this.realInRange(min, max));
     },
 
     /**
