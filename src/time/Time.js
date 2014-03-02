@@ -362,12 +362,15 @@ Phaser.Time.prototype = {
     },
 
     /**
-    * Resets the private _started value to now.
+    * Resets the private _started value to now and removes all currently running Timers.
     *
     * @method Phaser.Time#reset
     */
     reset: function () {
+
         this._started = this.now;
+        this.removeAll();
+
     }
 
 };

@@ -81,6 +81,12 @@ Phaser.Device = function (game) {
     */
     this.windows = false;
 
+    /**
+    * @property {boolean} windowsPhone - Is running on a Windows Phone?
+    * @default
+    */
+    this.windowsPhone = false;
+
     //  Features
 
     /**
@@ -398,11 +404,22 @@ Phaser.Device.prototype = {
         else if (/Windows/.test(ua))
         {
             this.windows = true;
+
+            if (/Windows Phone/i.test(ua))
+            {
+                this.windowsPhone = true;
+            }
         }
 
         if (this.windows || this.macOS || (this.linux && this.silk === false))
         {
             this.desktop = true;
+        }
+
+        //  Windows Phone / Table reset
+        if (this.windowsPhone || ((/Windows NT/i.test(ua)) && (/Touch/i.test(ua))))
+        {
+            this.desktop = false;
         }
 
     },

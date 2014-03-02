@@ -131,6 +131,7 @@ New features:
 * Group.sendToBottom(child) is the handy opposite of Group.bringToTop()
 * Group.moveUp(child) will move a child up the display list, swapping with the child above it.
 * Group.moveDown(child) will move a child down the display list, swapping with the child below it.
+* Device.windowsPhone is now tested for.
 
 
 Updates:
@@ -192,6 +193,7 @@ Bug Fixes:
 * Calling destroy while in an Input Event callback now works for either the parent Group or the calling object itself.
 * Loader.replaceInFileList wouldn't over-write the previous entry correctly, which caused the Loader.image overwrite parameter to fail (thanks basoko, fixes #493)
 * If the game was set to NO_SCALE and you swapped orientation, it would pause and resize, then fail to resize when you swapped back (thanks starnut, fixes #258)
+* Device no longer things a Windows Phone or Windows Tablet are desktop devices (thanks wombatbuddy, fixes #506)
 
 
 TO DO:
