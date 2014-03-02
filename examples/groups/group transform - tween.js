@@ -35,12 +35,12 @@ function create() {
     eye = robot.create(335, 173,'eye');
 
     // Tween the robot's size, so all the components also scaled.
-    game.add.tween(robot._container.scale).to( {x: 1.2, y: 1.2}, 1000, Phaser.Easing.Back.InOut, true, 0, false).yoyo(true);
+    game.add.tween(robot.scale).to( {x: 1.2, y: 1.2}, 1000, Phaser.Easing.Back.InOut, true, 0, false).yoyo(true);
 
 }
 
 function render() {
 
-    game.debug.renderText('The robot is a group and every component is a sprite.', 240, 580);
+    game.debug.renderText('The robot is a group and every component is a sprite.', 32,32);
 
 }

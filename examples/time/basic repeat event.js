@@ -33,9 +33,7 @@ function createBall() {
 
     var ball = game.add.sprite(game.world.randomX, 0, 'ball');
 
-    ball.body.gravity.y = 200;
-    ball.body.bounce.y = 0.5;
-    ball.body.collideWorldBounds = true;
+    ball.physicsEnabled = true;
 
 }
 

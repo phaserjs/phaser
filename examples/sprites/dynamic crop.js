@@ -6,25 +6,32 @@ function preload() {
 }
 
 var pic;
+var cropRect;
 
 function create() {
 
     pic = game.add.sprite(0, 0, 'trsi');
 
-    pic.cropEnabled = true;
-
-    pic.crop.width = 128;
-    pic.crop.height = 128;
-
+    cropRect = {x : 0, y : 0 , width : 128, height : 128};
 }
 
 function update() {
 
-    pic.x = game.input.x;
-    pic.y = game.input.y;
+    if(game.input.x < pic.width && game.input.y < pic.height){
 
-    pic.crop.x = game.input.x;
-    pic.crop.y = game.input.y;
+        pic.x = game.input.x;
+        pic.y = game.input.y;
+
+        cropRect.x = game.input.x;
+        cropRect.y = game.input.y;
+
+        pic.crop(cropRect);
+
+        
+
+    }
+
+    
 
 }
 

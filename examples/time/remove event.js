@@ -29,7 +29,7 @@ function updateCounter(idx) {
 
     counters[idx]++;
 
-    text[idx].content = 'Counter ' + idx + ' = ' + counters[idx];
+    text[idx].setText('Counter ' + idx + ' = ' + counters[idx]);
 
 }
 
@@ -42,7 +42,7 @@ function removeCounter() {
 
         //  Just updates the text
         text[i].style.fill = '#3344aa';
-        text[i].content = 'Counter ' + i + ' removed';
+        text[i].setText('Counter ' + i + ' removed');
         i--;
     }
 

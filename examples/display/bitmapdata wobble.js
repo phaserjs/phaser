@@ -1,5 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update });
 
 function preload() {
 
@@ -44,6 +44,8 @@ function update() {
 
 function updateWobblyBall()
 {
+
+
 	var s = 0;
 	var copyRect = { x: 0, y: 0, w: wavePixelChunk, h: 32 };
 	var copyPoint = { x: 0, y: 0 };

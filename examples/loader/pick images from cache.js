@@ -17,7 +17,7 @@ function preload() {
 function create() {
 
     //  This returns an array of all the image keys in the cache
-    var images = game.cache.getImageKeys();
+    var images = game.cache.getKeys(Phaser.Cache.IMAGE);
 
     //  Now let's create some random sprites and enable them all for drag and 'bring to top'
     for (var i = 0; i < 20; i++)

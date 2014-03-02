@@ -17,7 +17,7 @@ function preload() {
 function create() {
 
     //  This returns an array of all the image keys in the cache
-    var images = game.cache.getImageKeys();
+    var images = game.cache.getKeys(Phaser.Cache.IMAGE);
 
     var test = game.add.group();
 

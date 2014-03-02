@@ -19,7 +19,7 @@ WebFontConfig = {
 function preload() {
 
     //  Load the Google WebFont Loader script
-    game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
+    game.load.script('webfont', 'http://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
 
 }
 
