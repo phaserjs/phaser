@@ -11,7 +11,7 @@
 *
 * For example to tell when a Sprite has been added to a new group:
 *
-* ```sprite.events.onAddedToGroup.add(yourFunction, this);```
+* `sprite.events.onAddedToGroup.add(yourFunction, this);`
 *
 * Where `yourFunction` is the function you want called when this event occurs.
 *

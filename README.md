@@ -85,6 +85,7 @@ Significant API changes:
 * Game no longer pauses if you've forced orientation and change it, also doesn't resize a NO_SCALE game.
 * All the Debug methods have had the word 'render' removed from the start. So where you did `debug.renderSpriteInfo` before, it's now just `debug.spriteInfo`.
 * Debug methods that rendered geometry (Rectangle, Circle, Line, Point) have been merged into the single method: `Debug.geom`.
+* Animation.looped has been renamed to Animation.loop. It's a boolean you can toggle at run-time to turn on/off animation looping.
 
 
 New features:
@@ -136,7 +137,8 @@ New features:
 * Device.windowsPhone is now tested for.
 * The Debug panel now works in WebGL mode. Pay attention to the warning at the top of the Debug docs (feature request #499)
 * You can now create blank Tilemaps and then populate them with data later.
-
+* A single Animation object now has 3 new events: onStart, onLoop and onComplete.
+* Animation.loopCount holds the number of times the animation has looped since it last started.
 
 Updates:
 
@@ -163,6 +165,7 @@ Updates:
 * Tween no longer copies all the object properties into the `_valuesStart` object on creation.
 * Completely empty Tilemaps can now be created. This allows for dynamic map generation at runtime.
 * Keyboard.event now stores the most recent DOM keyboard event.
+* Animation.stop has a new parameter: dispatchComplete. If true it'll dispatch an Animation.onComplete event.
 
 
 Bug Fixes:

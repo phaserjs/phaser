@@ -42,9 +42,7 @@ function update() {
 //  This creates a simple sine-wave effect running through our BitmapData.
 //  This is then duplicated across all 100 sprites using it, meaning we only have to calculate it and upload it to the GPU once.
 
-function updateWobblyBall()
-{
-
+function updateWobblyBall() {
 
 	var s = 0;
 	var copyRect = { x: 0, y: 0, w: wavePixelChunk, h: 32 };
@@ -76,4 +74,5 @@ function updateWobblyBall()
 	{
 		waveDataCounter = 0;
 	}
+
 }

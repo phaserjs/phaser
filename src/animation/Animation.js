@@ -16,9 +16,9 @@
 * @param {Phaser.FrameData} frameData - The FrameData object that contains all frames used by this Animation.
 * @param {(Array.<number>|Array.<string>)} frames - An array of numbers or strings indicating which frames to play in which order.
 * @param {number} delay - The time between each frame of the animation, given in ms.
-* @param {boolean} looped - Should this animation loop or play through once.
+* @param {boolean} loop - Should this animation loop when it reaches the end or play through once.
 */
-Phaser.Animation = function (game, parent, name, frameData, frames, delay, looped) {
+Phaser.Animation = function (game, parent, name, frameData, frames, delay, loop) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
@@ -55,9 +55,14 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     this.delay = 1000 / delay;
 
     /**
-    * @property {boolean} looped - The loop state of the Animation.
+    * @property {boolean} loop - The loop state of the Animation.
     */
-    this.looped = looped;
+    this.loop = loop;
+
+    /**
+    * @property {number} loopCount - The number of times the animation has looped since it was last started.
+    */
+    this.loopCount = 0;
 
     /**
     * @property {boolean} killOnComplete - Should the parent of this Animation be killed when the animation completes?
@@ -116,9 +121,26 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loope
     */
     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
+    /**
+    * @property {Phaser.Signal} onStart - This event is dispatched when this Animation starts playback.
+    */
+    this.onStart = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onComplete - This event is dispatched when this Animation completes playback. If the animation is set to loop this is never fired, listen for onAnimationLoop instead.
+    */
+    this.onComplete = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onLoop - This event is dispatched when this Animation loops.
+    */
+    this.onLoop = new Phaser.Signal();
+
     //  Set-up some event listeners
     this.game.onPause.add(this.onPause, this);
     this.game.onResume.add(this.onResume, this);
+
+    console.log('animation created', this);
     
 };
 
@@ -145,7 +167,7 @@ Phaser.Animation.prototype = {
         if (typeof loop === 'boolean')
         {
             //  If they set a new loop value then use it, otherwise use the one set on creation
-            this.looped = loop;
+            this.loop = loop;
         }
 
         if (typeof killOnComplete !== 'undefined')
@@ -157,6 +179,7 @@ Phaser.Animation.prototype = {
         this.isPlaying = true;
         this.isFinished = false;
         this.paused = false;
+        this.loopCount = 0;
 
         this._timeLastFrame = this.game.time.now;
         this._timeNextFrame = this.game.time.now + this.delay;
@@ -173,10 +196,8 @@ Phaser.Animation.prototype = {
             this._parent.tilingTexture = false;
         }
 
-        if (this._parent.events)
-        {
-            this._parent.events.onAnimationStart.dispatch(this._parent, this);
-        }
+        this._parent.events.onAnimationStart.dispatch(this._parent, this);
+        this.onStart.dispatch(this._parent, this);
 
         return this;
 
@@ -193,6 +214,7 @@ Phaser.Animation.prototype = {
         this.isPlaying = true;
         this.isFinished = false;
         this.paused = false;
+        this.loopCount = 0;
 
         this._timeLastFrame = this.game.time.now;
         this._timeNextFrame = this.game.time.now + this.delay;
@@ -201,18 +223,23 @@ Phaser.Animation.prototype = {
 
         this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
 
+        this.onStart.dispatch(this._parent, this);
+
     },
 
     /**
     * Stops playback of this animation and set it to a finished state. If a resetFrame is provided it will stop playback and set frame to the first in the animation.
+    * If `dispatchComplete` is true it will dispatch the complete events, otherwise they'll be ignored.
     *
     * @method Phaser.Animation#stop
     * @memberof Phaser.Animation
     * @param {boolean} [resetFrame=false] - If true after the animation stops the currentFrame value will be set to the first frame in this animation.
+    * @param {boolean} [dispatchComplete=false] - Dispatch the Animation.onComplete and parent.onAnimationComplete events?
     */
-    stop: function (resetFrame) {
+    stop: function (resetFrame, dispatchComplete) {
 
         if (typeof resetFrame === 'undefined') { resetFrame = false; }
+        if (typeof dispatchComplete === 'undefined') { dispatchComplete = false; }
 
         this.isPlaying = false;
         this.isFinished = true;
@@ -221,6 +248,12 @@ Phaser.Animation.prototype = {
         if (resetFrame)
         {
             this.currentFrame = this._frameData.getFrame(this._frames[0]);
+        }
+
+        if (dispatchComplete)
+        {
+            this._parent.events.onAnimationComplete.dispatch(this._parent, this);
+            this.onComplete.dispatch(this._parent, this);
         }
 
     },
@@ -292,7 +325,7 @@ Phaser.Animation.prototype = {
 
             if (this._frameIndex >= this._frames.length)
             {
-                if (this.looped)
+                if (this.loop)
                 {
                     this._frameIndex %= this._frames.length;
                     this.currentFrame = this._frameData.getFrame(this._frames[this._frameIndex]);
@@ -308,11 +341,13 @@ Phaser.Animation.prototype = {
                         }
                     }
                     
+                    this.loopCount++;
                     this._parent.events.onAnimationLoop.dispatch(this._parent, this);
+                    this.onLoop.dispatch(this._parent, this);
                 }
                 else
                 {
-                    this.onComplete();
+                    this.complete();
                 }
             }
             else
@@ -353,27 +388,31 @@ Phaser.Animation.prototype = {
         this.currentFrame = null;
         this.isPlaying = false;
 
+        this.onStart.destroy();
+        this.onLoop.destroy();
+        this.onComplete.destroy();
+
         this.game.onPause.remove(this.onPause, this);
         this.game.onResume.remove(this.onResume, this);
 
     },
 
     /**
-    * Called internally when the animation finishes playback. Sets the isPlaying and isFinished states and dispatches the onAnimationComplete event if it exists on the parent.
+    * Called internally when the animation finishes playback.
+    * Sets the isPlaying and isFinished states and dispatches the onAnimationComplete event if it exists on the parent and local onComplete event.
     *
-    * @method Phaser.Animation#onComplete
+    * @method Phaser.Animation#complete
     * @memberof Phaser.Animation
     */
-    onComplete: function () {
+    complete: function () {
 
         this.isPlaying = false;
         this.isFinished = true;
         this.paused = false;
 
-        if (this._parent.events)
-        {
-            this._parent.events.onAnimationComplete.dispatch(this._parent, this);
-        }
+        this._parent.events.onAnimationComplete.dispatch(this._parent, this);
+
+        this.onComplete.dispatch(this._parent, this);
 
         if (this.killOnComplete)
         {
