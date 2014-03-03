@@ -35,7 +35,7 @@ function create() {
     layer.resizeWorld();
 
     //  Create our tile selector at the top of the screen
-    this.createTileSelector();
+    createTileSelector();
 
     game.input.setMoveCallback(updateMarker, this);
 

@@ -301,15 +301,23 @@ Phaser.GameObjectFactory.prototype = {
     },
 
     /**
-    * Creates a new Tilemap object.
+    * Creates a new Phaser.Tilemap object. The map can either be populated with data from a Tiled JSON file or from a CSV file.
+    * To do this pass the Cache key as the first parameter. When using Tiled data you need only provide the key.
+    * When using CSV data you must provide the key and the tileWidth and tileHeight parameters.
+    * If creating a blank tilemap to be populated later, you can either specify no parameters at all and then use `Tilemap.create` or pass the map and tile dimensions here.
+    * Note that all Tilemaps use a base tile size to calculate dimensions from, but that a TilemapLayer may have its own unique tile size that overrides it.
     *
     * @method Phaser.GameObjectFactory#tilemap
-    * @param {string} [key] - The key of the tilemap data as stored in the Cache. If you're creating a blank map don't pass anything for this parameter.
+    * @param {string} [key] - The key of the tilemap data as stored in the Cache. If you're creating a blank map either leave this parameter out or pass `null`.
+    * @param {number} [tileWidth=32] - The pixel width of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
+    * @param {number} [tileHeight=32] - The pixel height of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
+    * @param {number} [width=10] - The width of the map in tiles. If this map is created from Tiled or CSV data you don't need to specify this.
+    * @param {number} [height=10] - The height of the map in tiles. If this map is created from Tiled or CSV data you don't need to specify this.
     * @return {Phaser.Tilemap} The newly created tilemap object.
     */
-    tilemap: function (key) {
+    tilemap: function (key, tileWidth, tileHeight, width, height) {
 
-        return new Phaser.Tilemap(this.game, key);
+        return new Phaser.Tilemap(this.game, key, tileWidth, tileHeight, width, height);
 
     },
 

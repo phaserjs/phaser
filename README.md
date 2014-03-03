@@ -135,6 +135,7 @@ New features:
 * Group.moveDown(child) will move a child down the display list, swapping with the child below it.
 * Device.windowsPhone is now tested for.
 * The Debug panel now works in WebGL mode. Pay attention to the warning at the top of the Debug docs (feature request #499)
+* You can now create blank Tilemaps and then populate them with data later.
 
 
 Updates:
@@ -203,6 +204,7 @@ Bug Fixes:
 * Device no longer things a Windows Phone or Windows Tablet are desktop devices (thanks wombatbuddy, fixes #506)
 * Sound.onMarkerComplete event is now dispatched when a marker stops. See Sound.onLoop for a looping marker event (thanks registered99, fixes #500)
 * Events.onInputUp would be dispatched twice if the Sprite had drag enabled, now only dispatched once (thanks Overbryd, fixes #502)
+* You can now load in CSV Tilemaps again and they get created properly (fixes #391)
 
 
 TO DO:

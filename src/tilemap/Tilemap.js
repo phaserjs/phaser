@@ -5,15 +5,24 @@
 */
 
 /**
-* A Tile Map object. A Tile map consists of a set of tile data and tile sets. It is rendered to the display using a TilemapLayer.
+* Creates a new Phaser.Tilemap object. The map can either be populated with data from a Tiled JSON file or from a CSV file.
+* To do this pass the Cache key as the first parameter. When using Tiled data you need only provide the key.
+* When using CSV data you must provide the key and the tileWidth and tileHeight parameters.
+* If creating a blank tilemap to be populated later, you can either specify no parameters at all and then use `Tilemap.create` or pass the map and tile dimensions here.
+* Note that all Tilemaps use a base tile size to calculate dimensions from, but that a TilemapLayer may have its own unique tile size that overrides it.
+* A Tile map is rendered to the display using a TilemapLayer. It is not added to the display list directly itself.
 * A map may have multiple layers. You can perform operations on the map data such as copying, pasting, filling and shuffling the tiles around.
 *
 * @class Phaser.Tilemap
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
-* @param {string} [key] - The key of the tilemap data as stored in the Cache. If you're creating a blank map don't pass anything for this parameter.
+* @param {string} [key] - The key of the tilemap data as stored in the Cache. If you're creating a blank map either leave this parameter out or pass `null`.
+* @param {number} [tileWidth=32] - The pixel width of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
+* @param {number} [tileHeight=32] - The pixel height of a single map tile. If using CSV data you must specify this. Not required if using Tiled map data.
+* @param {number} [width=10] - The width of the map in tiles. If this map is created from Tiled or CSV data you don't need to specify this.
+* @param {number} [height=10] - The height of the map in tiles. If this map is created from Tiled or CSV data you don't need to specify this.
 */
-Phaser.Tilemap = function (game, key) {
+Phaser.Tilemap = function (game, key, tileWidth, tileHeight, width, height) {
 
     /**
     * @property {Phaser.Game} game - A reference to the currently running Game.
@@ -25,7 +34,7 @@ Phaser.Tilemap = function (game, key) {
     */
     this.key = key;
 
-    var data = Phaser.TilemapParser.parse(this.game, key);
+    var data = Phaser.TilemapParser.parse(this.game, key, tileWidth, tileHeight, width, height);
 
     if (data === null)
     {
@@ -165,10 +174,8 @@ Phaser.Tilemap.prototype = {
 
         this.width = width;
         this.height = height;
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
-        this.widthInPixels = width * tileWidth;
-        this.heightInPixels = height * tileHeight;
+
+        this.setTileSize(tileWidth, tileHeight);
 
         var row;
         var output = [];
@@ -205,6 +212,22 @@ Phaser.Tilemap.prototype = {
         });
 
         this.currentLayer = this.layers.length - 1;
+
+    },
+
+    /**
+    * Sets the base tile size for the map.
+    *
+    * @method Phaser.Tilemap#setTileSize
+    * @param {number} tileWidth - The width of the tiles the map uses for calculations.
+    * @param {number} tileHeight - The height of the tiles the map uses for calculations.
+    */
+    setTileSize: function (tileWidth, tileHeight) {
+
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
+        this.widthInPixels = this.width * tileWidth;
+        this.heightInPixels = this.height * tileHeight;
 
     },
 

@@ -197,7 +197,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.canvas = null;
 
     /**
-    * @property {Context} context - A handy reference to renderer.context (only set for CANVAS games, not WebGL)
+    * @property {CanvasRenderingContext2D} context - A handy reference to renderer.context (only set for CANVAS games, not WebGL)
     */
     this.context = null;
 
