@@ -17,18 +17,6 @@ Phaser.Keyboard = function (game) {
     * @property {Phaser.Game} game - Local reference to game.
     */
     this.game = game;
-    
-    /**
-    * @property {array<Phaser.Key>} _keys - The array the Phaser.Key objects are stored in.
-    * @private
-    */
-    this._keys = [];
-    
-    /**
-    * @property {array} _capture - The array the key capture values are stored in.
-    * @private
-    */
-    this._capture = [];
 
     /**
     * You can disable all Keyboard Input by setting disabled to true. While true all new input related events will be ignored.
@@ -38,18 +26,9 @@ Phaser.Keyboard = function (game) {
     this.disabled = false;
 
     /**
-    * @property {function} _onKeyDown
-    * @private
-    * @default
+    * @property {Object} event - The most recent DOM event. This is updated every time a new key is pressed or released.
     */
-    this._onKeyDown = null;
-    
-    /**
-    * @property {function} _onKeyUp
-    * @private
-    * @default
-    */
-    this._onKeyUp = null;
+    this.event = null;
 
     /**
     * @property {Object} callbackContext - The context under which the callbacks are run.
@@ -65,6 +44,32 @@ Phaser.Keyboard = function (game) {
     * @property {function} onUpCallback - This callback is invoked every time a key is released.
     */
     this.onUpCallback = null;
+
+    /**
+    * @property {array<Phaser.Key>} _keys - The array the Phaser.Key objects are stored in.
+    * @private
+    */
+    this._keys = [];
+    
+    /**
+    * @property {array} _capture - The array the key capture values are stored in.
+    * @private
+    */
+    this._capture = [];
+
+    /**
+    * @property {function} _onKeyDown
+    * @private
+    * @default
+    */
+    this._onKeyDown = null;
+    
+    /**
+    * @property {function} _onKeyUp
+    * @private
+    * @default
+    */
+    this._onKeyUp = null;
     
 };
 
@@ -238,6 +243,8 @@ Phaser.Keyboard.prototype = {
     */
     processKeyDown: function (event) {
 
+        this.event = event;
+
         if (this.game.input.disabled || this.disabled)
         {
             return;
@@ -272,6 +279,8 @@ Phaser.Keyboard.prototype = {
     */
     processKeyUp: function (event) {
 
+        this.event = event;
+
         if (this.game.input.disabled || this.disabled)
         {
             return;
@@ -302,6 +311,8 @@ Phaser.Keyboard.prototype = {
     * @method Phaser.Keyboard#reset
     */
     reset: function () {
+
+        this.event = null;
 
         var i = this._keys.length;
 

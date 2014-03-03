@@ -161,6 +161,7 @@ Updates:
 * RandomDataGenerator.integerInRange(min, max) now includes both `min` and `max` within its range (#501)
 * Tween no longer copies all the object properties into the `_valuesStart` object on creation.
 * Completely empty Tilemaps can now be created. This allows for dynamic map generation at runtime.
+* Keyboard.event now stores the most recent DOM keyboard event.
 
 
 Bug Fixes:
