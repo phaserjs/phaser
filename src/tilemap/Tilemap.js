@@ -11,7 +11,7 @@
 * @class Phaser.Tilemap
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
-* @param {string} [key] - The key of the tilemap data as stored in the Cache.
+* @param {string} [key] - The key of the tilemap data as stored in the Cache. If you're creating a blank map don't pass anything for this parameter.
 */
 Phaser.Tilemap = function (game, key) {
 
@@ -155,37 +155,52 @@ Phaser.Tilemap.prototype = {
     * Creates an empty map of the given dimensions.
     *
     * @method Phaser.Tilemap#create
-    * @param {string} name - The name of the map (mostly used for debugging)
+    * @param {string} name - The name of the default layer of the map
     * @param {number} width - The width of the map in tiles.
     * @param {number} height - The height of the map in tiles.
+    * @param {number} tileWidth - The width of the tiles the map uses for calculations.
+    * @param {number} tileHeight - The height of the tiles the map uses for calculations.
     */
-    create: function (name, width, height) {
+    create: function (name, width, height, tileWidth, tileHeight) {
 
-        var data = [];
+        this.width = width;
+        this.height = height;
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
+        this.widthInPixels = width * tileWidth;
+        this.heightInPixels = height * tileHeight;
+
+        var row;
+        var output = [];
 
         for (var y = 0; y < height; y++)
         {
-            data[y] = [];
+            row = [];
 
             for (var x = 0; x < width; x++)
             {
-                data[y][x] = 0;
+                row.push(null);
             }
+
+            output.push(row);
         }
 
         this.layers.push({
 
             name: name,
+            x: 0,
+            y: 0,
             width: width,
             height: height,
+            widthInPixels: this.widthInPixels,
+            heightInPixels: this.heightInPixels,
             alpha: 1,
             visible: true,
-            tileMargin: 0,
-            tileSpacing: 0,
-            format: Phaser.Tilemap.CSV,
-            data: data,
+            properties: {},
             indexes: [],
-			dirty: true
+            callbacks: [],
+            bodies: [],
+            data: output
 
         });
 
@@ -200,8 +215,17 @@ Phaser.Tilemap.prototype = {
     * @method Phaser.Tilemap#addTilesetImage
     * @param {string} tileset - The name of the tileset as specified in the map data.
     * @param {string} [key] - The key of the Phaser.Cache image used for this tileset. If not specified it will look for an image with a key matching the tileset parameter.
+    * @param {number} [tileWidth] - The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value.
+    * @param {number} [tileHeight] - The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value.
+    * @param {number} [tileMargin=0] - The width of the tiles in the Tileset Image. If not given it will default to the map.tileWidth value.
+    * @param {number} [tileSpacing=0] - The height of the tiles in the Tileset Image. If not given it will default to the map.tileHeight value.
     */
-    addTilesetImage: function (tileset, key) {
+    addTilesetImage: function (tileset, key, tileWidth, tileHeight, tileMargin, tileSpacing) {
+
+        if (typeof tileWidth === 'undefined') { tileWidth = this.tileWidth; }
+        if (typeof tileHeight === 'undefined') { tileHeight = this.tileHeight; }
+        if (typeof tileMargin === 'undefined') { tileMargin = 0; }
+        if (typeof tileSpacing === 'undefined') { tileSpacing = 0; }
 
         if (typeof key === 'undefined')
         {
@@ -222,9 +246,16 @@ Phaser.Tilemap.prototype = {
 
         if (this.tilesets[tileset])
         {
-            this.tilesets[tileset].image = this.game.cache.getImage(key);
-
+            this.tilesets[tileset].setImage(this.game.cache.getImage(key));
             return true;
+        }
+        else
+        {
+            var newSet = new Phaser.Tileset(key, 0, tileWidth, tileHeight, tileMargin, tileSpacing, {});
+
+            newSet.setImage(this.game.cache.getImage(key));
+
+            this.tilesets.push(newSet);
         }
 
         return false;
@@ -920,6 +951,12 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    hasTile: function (x, y, layer) {
+
+        return (this.layers[layer].data[y] !== null && this.layers[layer].data[y][x] !== null);
+
+    },
+
     /**
     * Puts a tile of the given index value at the coordinate specified.
     *
@@ -937,14 +974,30 @@ Phaser.Tilemap.prototype = {
         {
             if (tile instanceof Phaser.Tile)
             {
-                this.layers[layer].data[y][x].copy(tile);
+                if (this.hasTile(x, y, layer))
+                {
+                    this.layers[layer].data[y][x].copy(tile);
+                }
+                else
+                {
+                    //Phaser.Tile = function (layer, index, x, y, width, height) {
+                    this.layers[layer].data[y][x] = new Phaser.Tile(layer, tile.index, x, y, tile.width, tile.height);
+                }
             }
             else
             {
-                this.layers[layer].data[y][x].index = tile;
+                if (this.hasTile(x, y, layer))
+                {
+                    this.layers[layer].data[y][x].index = tile;
+                }
+                else
+                {
+                    this.layers[layer].data[y][x] = new Phaser.Tile(layer, tile, x, y, this.tileWidth, this.tileHeight);
+                }
             }
 
 			this.layers[layer].dirty = true;
+
             this.calculateFaces(layer);
         }
 

@@ -273,13 +273,12 @@ Phaser.GameObjectCreator.prototype = {
     * Creates a new Tilemap object.
     *
     * @method Phaser.GameObjectCreator#tilemap
-    * @param {string} key - Asset key for the JSON or CSV map data in the cache.
-    * @param {object|string} tilesets - An object mapping Cache.tileset keys with the tileset names in the JSON file. If a string is provided that will be used.
+    * @param {string} [key] - The key of the tilemap data as stored in the Cache. If you're creating a blank map don't pass anything for this parameter.
     * @return {Phaser.Tilemap} The newly created tilemap object.
     */
-    tilemap: function (key, tilesets) {
+    tilemap: function (key) {
 
-        return new Phaser.Tilemap(this.game, key, tilesets);
+        return new Phaser.Tilemap(this.game, key);
 
     },
 

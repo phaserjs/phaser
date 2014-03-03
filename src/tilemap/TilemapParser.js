@@ -74,6 +74,11 @@ Phaser.TilemapParser = {
     */
     parse: function (game, key) {
 
+        if (typeof key === 'undefined')
+        {
+            return this.getEmptyData();
+        }
+
         var map = game.cache.getTilemapData(key);
 
         if (map)
@@ -89,7 +94,7 @@ Phaser.TilemapParser = {
         }
         else
         {
-            return this.getEmptyData();
+            console.warn('Phaser.TilemapParser.parse - No map data found for key ' + key);
         }
 
     },

@@ -90,6 +90,11 @@ Phaser.Utils.Debug = function (game) {
     */
     this.currentAlpha = 1;
 
+    /**
+    * @property {boolean} dirty - Does the canvas need re-rendering?
+    */
+    this.dirty = false;
+
 };
 
 Phaser.Utils.Debug.prototype = {
@@ -141,6 +146,11 @@ Phaser.Utils.Debug.prototype = {
         this.currentColor = color;
         this.currentAlpha = this.context.globalAlpha;
         this.columnWidth = columnWidth;
+
+        if (this.sprite && this.dirty)
+        {
+            // this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        }
 
         this.context.save();
         this.context.setTransform(1, 0, 0, 1, 0, 0);

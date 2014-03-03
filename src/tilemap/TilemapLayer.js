@@ -62,7 +62,8 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
     */
     this.textureFrame = new Phaser.Frame(0, 0, 0, width, height, 'tilemapLayer', game.rnd.uuid());
 
-    Phaser.Sprite.call(this, this.game, 0, 0, this.texture, this.textureFrame);
+    // Phaser.Sprite.call(this, this.game, 0, 0, this.texture, this.textureFrame);
+    Phaser.Image.call(this, this.game, 0, 0, this.texture, this.textureFrame);
 
     /**
     * @property {string} name - The name of the layer.
@@ -280,8 +281,8 @@ Phaser.TilemapLayer = function (game, tilemap, index, width, height) {
 
 };
 
-Phaser.TilemapLayer.prototype = Object.create(Phaser.Sprite.prototype);
-Phaser.TilemapLayer.prototype = Phaser.Utils.extend(true, Phaser.TilemapLayer.prototype, Phaser.Sprite.prototype, PIXI.Sprite.prototype);
+Phaser.TilemapLayer.prototype = Object.create(Phaser.Image.prototype);
+// Phaser.TilemapLayer.prototype = Phaser.Utils.extend(true, Phaser.TilemapLayer.prototype, Phaser.Sprite.prototype, PIXI.Sprite.prototype);
 Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 
 /**
@@ -292,7 +293,8 @@ Phaser.TilemapLayer.prototype.constructor = Phaser.TilemapLayer;
 */
 Phaser.TilemapLayer.prototype.postUpdate = function () {
 
-	Phaser.Sprite.prototype.postUpdate.call(this);
+    // Phaser.Sprite.prototype.postUpdate.call(this);
+	Phaser.Image.prototype.postUpdate.call(this);
 	
     //  Stops you being able to auto-scroll the camera if it's not following a sprite
     this.scrollX = this.game.camera.x * this.scrollFactorX;
@@ -554,7 +556,7 @@ Phaser.TilemapLayer.prototype.updateMax = function () {
 */
 Phaser.TilemapLayer.prototype.render = function () {
 
-	if (this.layer.dirty)
+    if (this.layer.dirty)
     {
         this.dirty = true;
     }
@@ -562,6 +564,102 @@ Phaser.TilemapLayer.prototype.render = function () {
     if (!this.dirty || !this.visible)
     {
         return;
+    }
+
+    this._prevX = this._dx;
+    this._prevY = this._dy;
+
+    this._dx = -(this._x - (this._startX * this.map.tileWidth));
+    this._dy = -(this._y - (this._startY * this.map.tileHeight));
+
+    this._tx = this._dx;
+    this._ty = this._dy;
+
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.context.fillStyle = this.tileColor;
+
+    var tile;
+    var set;
+    var ox = 0;
+    var oy = 0;
+
+    if (this.debug)
+    {
+        this.context.globalAlpha = this.debugAlpha;
+    }
+
+    for (var y = this._startY, lenY = this._startY + this._maxY; y < lenY; y++)
+    {
+        this._column = this.layer.data[y];
+
+        for (var x = this._startX, lenX = this._startX + this._maxX; x < lenX; x++)
+        {
+            if (this._column[x])
+            {
+                tile = this._column[x];
+
+                //  this needs to know which set the index is from
+                // set = this.map.tilesets[this.map.tiles[tile.index][2]]
+                set = this.map.tilesets[0];
+
+                if (this.debug === false && tile.alpha !== this.context.globalAlpha)
+                {
+                    this.context.globalAlpha = tile.alpha;
+                }
+
+                set.draw(this.context, Math.floor(this._tx), Math.floor(this._ty), tile.index);
+
+                if (tile.debug)
+                {
+                    this.context.fillStyle = 'rgba(0, 255, 0, 0.4)';
+                    this.context.fillRect(Math.floor(this._tx), Math.floor(this._ty), this.map.tileWidth, this.map.tileHeight);
+                }
+            }
+
+            this._tx += this.map.tileWidth;
+
+        }
+
+        this._tx = this._dx;
+        this._ty += this.map.tileHeight;
+
+    }
+
+    if (this.debug)
+    {
+        this.context.globalAlpha = 1;
+        this.renderDebug();
+    }
+
+    if (this.game.renderType === Phaser.WEBGL)
+    {
+        // PIXI.updateWebGLTexture(this.baseTexture, renderSession.gl);        
+        PIXI.updateWebGLTexture(this.baseTexture, this.game.renderer.gl);        
+    }
+
+    this.dirty = false;
+    this.layer.dirty = false;
+
+    return true;
+
+}
+
+/**
+* Renders the tiles to the layer canvas and pushes to the display.
+* @method Phaser.TilemapLayer#render
+* @memberof Phaser.TilemapLayer
+*/
+Phaser.TilemapLayer.prototype.OLDrender = function () {
+
+	if (this.layer.dirty)
+    {
+        this.dirty = true;
+    }
+
+    if (!this.dirty || !this.visible)
+    {
+        // return;
     }
 
     this._prevX = this._dx;
@@ -638,11 +736,11 @@ Phaser.TilemapLayer.prototype.render = function () {
                             );
                         }
 
-                        if (tile.debug)
-                        {
+                        // if (tile.debug)
+                        // {
                             this.context.fillStyle = 'rgba(0, 255, 0, 0.4)';
                             this.context.fillRect(Math.floor(this._tx), Math.floor(this._ty), this.map.tileWidth, this.map.tileHeight);
-                        }
+                        // }
                     }
                     else
                     {

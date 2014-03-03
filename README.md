@@ -160,6 +160,7 @@ Updates:
 * ScaleManager has 2 new events: ScaleManager.enterFullScreen and ScaleManager.leaveFullScreen, so you can respond to fullscreen changes directly.
 * RandomDataGenerator.integerInRange(min, max) now includes both `min` and `max` within its range (#501)
 * Tween no longer copies all the object properties into the `_valuesStart` object on creation.
+* Completely empty Tilemaps can now be created. This allows for dynamic map generation at runtime.
 
 
 Bug Fixes:

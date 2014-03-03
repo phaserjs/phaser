@@ -13,6 +13,7 @@ var layer;
 
 var marker;
 var currentTile;
+var cursors;
 
 function create() {
 
@@ -29,6 +30,8 @@ function create() {
     marker = game.add.graphics();
     marker.lineStyle(2, 0x000000, 1);
     marker.drawRect(0, 0, 32, 32);
+
+    cursors = game.input.keyboard.createCursorKeys();
 
 }
 
@@ -52,11 +55,28 @@ function update() {
         }
     }
 
+    if (cursors.left.isDown)
+    {
+        game.camera.x -= 4;
+    }
+    else if (cursors.right.isDown)
+    {
+        game.camera.x += 4;
+    }
+
+    if (cursors.up.isDown)
+    {
+        game.camera.y -= 4;
+    }
+    else if (cursors.down.isDown)
+    {
+        game.camera.y += 4;
+    }
+
 }
 
 function render() {
 
-    game.debug.text('Left-click to paint. Shift + Left-click to select tile.', 32, 32, 'rgb(0,0,0)');
-    game.debug.text('Tile: ' + map.getTile(layer.getTileX(marker.x), layer.getTileY(marker.y)), 32, 48, 'rgb(0,0,0)');
+    game.debug.text('Left-click to paint. Shift + Left-click to select tile. Arrows to scroll.', 32, 32, '#efefef');
 
 }

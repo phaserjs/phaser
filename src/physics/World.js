@@ -367,7 +367,10 @@ Phaser.Physics.World.prototype = {
 
         if (this.bounds !== null)
         {
-            this.world.removeBody(this.bounds);
+            if (this.bounds.world)
+            {
+                this.world.removeBody(this.bounds);
+            }
 
             var i = this.bounds.shapes.length;
 
