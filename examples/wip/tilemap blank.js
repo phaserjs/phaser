@@ -1,6 +1,5 @@
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
-// var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
@@ -9,8 +8,10 @@ function preload() {
 }
 
 var map;
-var tileset;
 var layer;
+
+var marker;
+var currentTile = 0;
 var cursors;
 
 function create() {
@@ -27,19 +28,36 @@ function create() {
     //  Add a Tileset image to the map
     map.addTilesetImage('ground_1x1');
     
-    map.putTile(4, 1, 1)
-    map.putTile(10, 2, 1)
-    map.putTile(10, 3, 1)
-    map.putTile(10, 4, 1)
-
     //  Create a layer. This is where the map is rendered to.
     layer = map.createLayer('level1');
 
-    // layer.resizeWorld();
-    // map.setCollisionBetween(1, 12);
-    // layer.debug = true;
+    //  Resize the world
+    layer.resizeWorld();
+
+    //  Create our tile selector at the top of the screen
+    this.createTileSelector();
+
+    game.input.setMoveCallback(updateMarker, this);
 
     cursors = game.input.keyboard.createCursorKeys();
+
+}
+
+function pickTile(sprite, pointer) {
+
+    currentTile = game.math.snapToFloor(pointer.x, 32) / 32;
+
+}
+
+function updateMarker() {
+
+    marker.x = layer.getTileX(game.input.activePointer.worldX) * 32;
+    marker.y = layer.getTileY(game.input.activePointer.worldY) * 32;
+
+    if (game.input.mousePointer.isDown)
+    {
+        map.putTile(currentTile, layer.getTileX(marker.x), layer.getTileY(marker.y))
+    }
 
 }
 
@@ -47,22 +65,49 @@ function update() {
 
     if (cursors.left.isDown)
     {
+        game.camera.x -= 4;
     }
     else if (cursors.right.isDown)
     {
+        game.camera.x += 4;
     }
 
     if (cursors.up.isDown)
     {
+        game.camera.y -= 4;
     }
     else if (cursors.down.isDown)
     {
+        game.camera.y += 4;
     }
 
 }
 
 function render() {
 
-    game.debug.cameraInfo(game.camera, 32, 32);
+}
+
+function createTileSelector() {
+
+    //  Our tile selection window
+    var tileSelector = game.add.group();
+
+    var tileSelectorBackground = game.make.graphics();
+    tileSelectorBackground.beginFill(0x000000, 0.5);
+    tileSelectorBackground.drawRect(0, 0, 800, 34);
+    tileSelectorBackground.endFill();
+
+    tileSelector.add(tileSelectorBackground);
+
+    var tileStrip = tileSelector.create(1, 1, 'ground_1x1');
+    tileStrip.inputEnabled = true;
+    tileStrip.events.onInputDown.add(pickTile, this);
+
+    tileSelector.fixedToCamera = true;
+
+    //  Our painting marker
+    marker = game.add.graphics();
+    marker.lineStyle(2, 0x000000, 1);
+    marker.drawRect(0, 0, 32, 32);
 
 }
