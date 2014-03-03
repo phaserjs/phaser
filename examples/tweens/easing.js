@@ -31,16 +31,16 @@ function create() {
         // Also set the origin to the center since we don't want to
         // see the shadow scale to the left top.
         shadow.anchor.setTo(0.5, 0.5);
-        game.add.tween(shadow.scale).to({x: 1.0, y: 1.0}, 2400, Phaser.Easing.Bounce.Out);
+        game.add.tween(shadow.scale).to({x: 1.0, y: 1.0}, 2400, Phaser.Easing.Bounce.Out, true);
 
         // Add characters on top of shadows.
-        item = game.add.sprite(190 + 69 * i, -100, 'phaser', i);
+        item = game.add.sprite(190 + 69 * i, -50, 'phaser', i);
 
         // Set origin to the center to make the rotation look better.
         item.anchor.setTo(0.5, 0.5);
 
         // Add a simple bounce tween to each character's position.
-        tween = game.add.tween(item).to({y: 240}, 2400, Phaser.Easing.Bounce.Out);
+        tween = game.add.tween(item).to( { y: 245 }, 2400, Phaser.Easing.Bounce.Out, true);
     }
 
 }

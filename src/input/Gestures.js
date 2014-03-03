@@ -93,14 +93,16 @@ Phaser.Gestures.prototype = {
     */
     remove: function (gesture) {
 
-        for(var i = this._gestures.length - 1; i >= 0; --i)
+        for (var i = this._gestures.length - 1; i >= 0; --i)
         {
-            if(this._gestures[i].gesture.name == new gesture().name)
+            if (this._gestures[i].gesture.name == new gesture().name)
             {
                 delete this._gestures[i];
             }
         }       
+
         this._gestures = this._gestures.filter(function(a){return typeof a !== 'undefined';});
+
     },
     
     /**
@@ -109,16 +111,18 @@ Phaser.Gestures.prototype = {
     */
     update: function () {
     
-        if(this.active && this._pointers.length > 0)
+        if (this.active && this._pointers.length > 0)
         {   
             var hasPointers = this._pointers.filter(function(p){return p.isDown;}).length > 0;
-            for(var i = this._gestures.length - 1; i >= 0; --i)
+
+            for (var i = this._gestures.length - 1; i >= 0; --i)
             {
-                if(!this._gestures[i].hasStarted)
+                if (!this._gestures[i].hasStarted)
                 {
                     this._gestures[i].hasStarted = true;
                     this._gestures[i].gesture.start(this._pointers);
-                    if(this._gestures[i].onGestureStarted != null)
+
+                    if (this._gestures[i].onGestureStarted != null)
                     {
                         this._gestures[i].onGestureStarted();
                     }
@@ -126,18 +130,22 @@ Phaser.Gestures.prototype = {
                 else
                 {
                     var result = this._gestures[i].gesture.update(this._pointers);
-                    if(result){
+
+                    if (result)
+                    {
                         var data = this._gestures[i].gesture.getData();
-                        if(this._gestures[i].onGestureUpdated != null)
+
+                        if (this._gestures[i].onGestureUpdated != null)
                         {
                             this._gestures[i].onGestureUpdated(data);
                         }
                     }
-                    if(!hasPointers)
+                    if (!hasPointers)
                     {
                         this._gestures[i].gesture.stop(this._pointers);
                         this._gestures[i].hasStarted = false;
-                        if(this._gestures[i].onGestureStopped != null)
+
+                        if (this._gestures[i].onGestureStopped != null)
                         {
                             this._gestures[i].onGestureStopped();
                         }
@@ -147,6 +155,7 @@ Phaser.Gestures.prototype = {
 
             this._pointers = this._pointers.filter(function(p){return p.isDown;});
         }
+
     },
     
     /**
@@ -157,32 +166,35 @@ Phaser.Gestures.prototype = {
     _updatePointerState: function (pointer) {
     
         var pointerObject = null;
-        for(var i = this._pointers.length - 1; i >= 0; --i)
+
+        for (var i = this._pointers.length - 1; i >= 0; --i)
         {
-            if(this._pointers[i].pointer == pointer)
+            if (this._pointers[i].pointer == pointer)
             {
                 pointerObject = this._pointers[i];
                 break;
             }
         }
 
-        if(pointerObject == null && pointer.isDown)
+        if (pointerObject == null && pointer.isDown)
         {
             pointerObject = {
-                pointer:pointer,
-                justPressed:true,
-                isUp:false,
-                isDown:true
+                pointer: pointer,
+                justPressed: true,
+                isUp: false,
+                isDown: true
             }
+
             this._pointers.push(pointerObject);
         } 
-        else if(pointerObject != null)
+        else if (pointerObject != null)
         {
             pointerObject.justPressed = false;
             pointerObject.isDown = pointer.isDown;
             pointerObject.isUp = pointer.isUp;
         }
     }
+
 };
 
 Phaser.Gestures.prototype.constructor = Phaser.Gestures;
@@ -201,24 +213,29 @@ Phaser.Gestures.Helpers = {
     createOrFindPointerData: function(pointerArray, pointer) {
 
         var pointerObject = null;
-        for(var i = pointerArray.length - 1; i >= 0; --i)
+
+        for (var i = pointerArray.length - 1; i >= 0; --i)
         {
-            if(pointerArray[i].pointer == pointer)
+            if (pointerArray[i].pointer == pointer)
             {
                 pointerObject = pointerArray[i];
                 break;
             }
         }
-        if(pointerObject == null)
+
+        if (pointerObject == null)
         {
             pointerObject = {
                 pointer:pointer,
                 isNew: true
             }
+
             pointerArray.push(pointerObject);
         } 
+
         return pointerObject;
     }
+
 };
 
 Phaser.Gesture = {};

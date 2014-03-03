@@ -159,6 +159,7 @@ Updates:
 * Pausing the game will now mute audio and resuming will un-mute, unless it was muted via the game (fixes #439)
 * ScaleManager has 2 new events: ScaleManager.enterFullScreen and ScaleManager.leaveFullScreen, so you can respond to fullscreen changes directly.
 * RandomDataGenerator.integerInRange(min, max) now includes both `min` and `max` within its range (#501)
+* Tween no longer copies all the object properties into the `_valuesStart` object on creation.
 
 
 Bug Fixes:

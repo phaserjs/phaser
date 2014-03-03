@@ -581,14 +581,15 @@ Phaser.Utils.Debug.prototype = {
 
         this.start();
         this.context.font = font;
-        this.context.fillStyle = color;
-        this.context.fillText(text, x, y);
 
         if (this.renderShadow)
         {
             this.context.fillStyle = 'rgb(0,0,0)';
-            this.context.fillText(text, this.currentX + 1, this.currentY + 1);
+            this.context.fillText(text, x + 1, y + 1);
         }
+
+        this.context.fillStyle = color;
+        this.context.fillText(text, x, y);
 
         this.stop();
 

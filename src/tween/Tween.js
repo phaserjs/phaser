@@ -158,11 +158,11 @@ Phaser.Tween = function (object, game) {
     */
     this.pendingDelete = false;
 
-    // Set all starting values present on the target object
-    for (var field in object)
-    {
-        this._valuesStart[field] = parseFloat(object[field], 10);
-    }
+    // Set all starting values present on the target object - why? this will copy loads of properties we don't need - commenting out for now
+    // for (var field in object)
+    // {
+    //     this._valuesStart[field] = parseFloat(object[field], 10);
+    // }
     
     /**
     * @property {Phaser.Signal} onStart - The onStart event is fired when the Tween begins.
@@ -277,7 +277,7 @@ Phaser.Tween.prototype = {
         for (var property in this._valuesEnd)
         {
             // check if an Array was provided as property value
-            if (this._valuesEnd[property] instanceof Array)
+            if (Array.isArray(this._valuesEnd[property]))
             {
                 if (this._valuesEnd[property].length === 0)
                 {
@@ -290,7 +290,7 @@ Phaser.Tween.prototype = {
 
             this._valuesStart[property] = this._object[property];
 
-            if ((this._valuesStart[property] instanceof Array) === false)
+            if (!Array.isArray(this._valuesStart[property]))
             {
                 this._valuesStart[property] *= 1.0; // Ensures we're using numbers, not strings
             }
