@@ -322,6 +322,13 @@ Phaser.Input.prototype = {
      * @default
      */
     gamepad: null,
+    
+    /**
+     * The Gestures manager.
+     * @property {Phaser.Gestures} gestures - The Gestures manager.
+     * @default
+     */
+    gestures: null,
 
     /**
     * A Signal that is dispatched each time a pointer is pressed down.
@@ -373,6 +380,7 @@ Phaser.Input.prototype = {
         this.touch = new Phaser.Touch(this.game);
         this.mspointer = new Phaser.MSPointer(this.game);
         this.gamepad = new Phaser.Gamepad(this.game);
+        this.gestures = new Phaser.Gestures(this.game);
 
         this.onDown = new Phaser.Signal();
         this.onUp = new Phaser.Signal();
@@ -413,6 +421,7 @@ Phaser.Input.prototype = {
         this.touch.stop();
         this.mspointer.stop();
         this.gamepad.stop();
+        this.gestures.stop();
 
         this.moveCallback = null;
 
@@ -496,6 +505,8 @@ Phaser.Input.prototype = {
         if (this.pointer8) { this.pointer8.update(); }
         if (this.pointer9) { this.pointer9.update(); }
         if (this.pointer10) { this.pointer10.update(); }
+        
+        this.gestures.update();
 
         this._pollCounter = 0;
     },
