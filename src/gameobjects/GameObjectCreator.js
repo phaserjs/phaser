@@ -66,11 +66,11 @@ Phaser.GameObjectCreator.prototype = {
     *
     * @method Phaser.GameObjectCreator#tween
     * @param {object} obj - Object the tween will be run on.
-    * @return {Phaser.Tween} Description.
+    * @return {Phaser.Tween} The Tween object.
     */
     tween: function (obj) {
 
-        return this.game.tweens.create(obj);
+        return new Phaser.Tween(obj, this.game);
 
     },
 

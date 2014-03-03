@@ -139,6 +139,8 @@ New features:
 * You can now create blank Tilemaps and then populate them with data later.
 * A single Animation object now has 3 new events: onStart, onLoop and onComplete.
 * Animation.loopCount holds the number of times the animation has looped since it last started.
+* Tween.generateData(frameRate) allows you to generate tween data into an array, which can then be used however you wish (see new examples)
+
 
 Updates:
 

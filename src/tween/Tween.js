@@ -304,6 +304,106 @@ Phaser.Tween.prototype = {
     },
 
     /**
+    * This will generate an array populated with the tweened object values from start to end.
+    * It works by running the tween simulation at the given frame rate based on the values set-up in Tween.to and similar functions.
+    * It ignores delay and repeat counts and any chained tweens. Just one play through of tween data is returned, including yoyo if set.
+    *
+    * @method Phaser.Tween#generateData
+    * @param {number} [frameRate=60] - The speed in frames per second that the data should be generated at. The higher the value, the larger the array it creates.
+    * @return {array} An array of tweened values.
+    */
+    generateData: function (frameRate) {
+
+        if (this.game === null || this._object === null)
+        {
+            return null;
+        }
+
+        this._startTime = 0;
+
+        for (var property in this._valuesEnd)
+        {
+            // Check if an Array was provided as property value
+            if (Array.isArray(this._valuesEnd[property]))
+            {
+                if (this._valuesEnd[property].length === 0)
+                {
+                    continue;
+                }
+
+                // create a local copy of the Array with the start value at the front
+                this._valuesEnd[property] = [this._object[property]].concat(this._valuesEnd[property]);
+            }
+
+            this._valuesStart[property] = this._object[property];
+
+            if (!Array.isArray(this._valuesStart[property]))
+            {
+                this._valuesStart[property] *= 1.0; // Ensures we're using numbers, not strings
+            }
+
+            this._valuesStartRepeat[property] = this._valuesStart[property] || 0;
+        }
+
+        //  Simulate the tween. We will run for frameRate * (this._duration / 1000) (ms)
+        var time = 0;
+        var total = frameRate * (this._duration / 1000);
+        var tick = this._duration / total;
+
+        var output = [];
+
+        while (total--)
+        {
+            var property;
+
+            var elapsed = (time - this._startTime) / this._duration;
+            elapsed = elapsed > 1 ? 1 : elapsed;
+
+            var value = this._easingFunction(elapsed);
+            var blob = {};
+
+            for (property in this._valuesEnd)
+            {
+                var start = this._valuesStart[property] || 0;
+                var end = this._valuesEnd[property];
+
+                if (end instanceof Array)
+                {
+                    blob[property] = this._interpolationFunction(end, value);
+                }
+                else
+                {
+                    // Parses relative end values with start as base (e.g.: +10, -3)
+                    if (typeof(end) === 'string')
+                    {
+                        end = start + parseFloat(end, 10);
+                    }
+
+                    // protect against non numeric properties.
+                    if (typeof(end) === 'number')
+                    {
+                        blob[property] = start + ( end - start ) * value;
+                    }
+                }
+            }
+
+            output.push(blob);
+
+            time += tick;
+        }
+
+        if (this._yoyo)
+        {
+            var reversed = output.slice();
+            reversed.reverse();
+            output = output.concat(reversed);
+        }
+
+        return output;
+
+    },
+
+    /**
     * Stops the tween if running and removes it from the TweenManager. If there are any onComplete callbacks or events they are not dispatched.
     *
     * @method Phaser.Tween#stop

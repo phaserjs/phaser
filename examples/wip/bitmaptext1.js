@@ -3,8 +3,8 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: p
 
 function preload() {
 
-    game.load.bitmapFont('desyrel', 'assets/fonts/bitmapFonts/desyrel.png', 'assets/fonts/desyrel.xml', null, 0, -32);
-    game.load.bitmapFont('carrier', 'assets/fonts/bitmapFonts/carrier_command.png', 'assets/fonts/carrier_command.xml', null, 0, 24);
+    game.load.bitmapFont('desyrel', 'assets/fonts/bitmapFonts/desyrel.png', 'assets/fonts/bitmapFonts/desyrel.xml', null, 0, -32);
+    game.load.bitmapFont('carrier', 'assets/fonts/bitmapFonts/carrier_command.png', 'assets/fonts/bitmapFonts/carrier_command.xml', null, 0, 24);
 
 }
 

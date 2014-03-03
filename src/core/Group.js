@@ -372,11 +372,11 @@ Phaser.Group.prototype.bringToTop = function (child) {
 /**
 * Sends the given child to the bottom of this Group so it renders below all other children.
 *
-* @method Phaser.Group#sendToBottom
+* @method Phaser.Group#sendToBack
 * @param {*} child - The child to send to the bottom of this Group.
 * @return {*} The child that was moved.
 */
-Phaser.Group.prototype.sendToBottom = function (child) {
+Phaser.Group.prototype.sendToBack = function (child) {
 
     if (child.parent === this && this.getIndex(child) > 0)
     {
@@ -433,6 +433,28 @@ Phaser.Group.prototype.moveDown = function (child) {
     }
 
     return child;
+
+}
+
+/**
+* Positions the child found at the given index within this Group to the given x and y coordinates.
+*
+* @method Phaser.Group#xy
+* @param {number} index - The index of the child in the Group to set the position of.
+* @param {number} x - The new x position of the child.
+* @param {number} y - The new y position of the child.
+*/
+Phaser.Group.prototype.xy = function (index, x, y) {
+
+    if (index < 0 || index > this.children.length)
+    {
+        return -1;
+    }
+    else
+    {
+        this.getChildAt(index).x = x;
+        this.getChildAt(index).y = y;
+    }
 
 }
 
