@@ -46,30 +46,6 @@ Phaser.Input = function (game) {
     * @default
     */
     this.pollRate = 0;
-    
-    /**
-    * @property {number} _pollCounter - Internal var holding the current poll counter.
-    * @private
-    */
-    this._pollCounter = 0;
-
-    /**
-    * @property {Phaser.Point} _oldPosition - A point object representing the previous position of the Pointer.
-    * @private
-    */
-    this._oldPosition = null;
-
-    /**
-    * @property {number} _x - x coordinate of the most recent Pointer event
-    * @private
-    */
-    this._x = 0;
-
-    /**
-    * @property {number} _y - Y coordinate of the most recent Pointer event
-    * @private
-    */
-    this._y = 0;
 
     /**
     * You can disable all Input by setting Input.disabled = true. While set all new input related events will be ignored.
@@ -261,6 +237,11 @@ Phaser.Input = function (game) {
     this.gamepad = null;
 
     /**
+    * @property {Phaser.Gestures} gestures - The Gestures manager.
+    */
+    this.gestures = null;
+
+    /**
     * @property {Phaser.Signal} onDown - A Signal that is dispatched each time a pointer is pressed down.
     */
     this.onDown = null;
@@ -292,6 +273,30 @@ Phaser.Input = function (game) {
     */
     this._localPoint = new Phaser.Point();
     
+    /**
+    * @property {number} _pollCounter - Internal var holding the current poll counter.
+    * @private
+    */
+    this._pollCounter = 0;
+
+    /**
+    * @property {Phaser.Point} _oldPosition - A point object representing the previous position of the Pointer.
+    * @private
+    */
+    this._oldPosition = null;
+
+    /**
+    * @property {number} _x - x coordinate of the most recent Pointer event
+    * @private
+    */
+    this._x = 0;
+
+    /**
+    * @property {number} _y - Y coordinate of the most recent Pointer event
+    * @private
+    */
+    this._y = 0;
+
 };
 
 /**
@@ -330,6 +335,7 @@ Phaser.Input.prototype = {
         this.touch = new Phaser.Touch(this.game);
         this.mspointer = new Phaser.MSPointer(this.game);
         this.gamepad = new Phaser.Gamepad(this.game);
+        this.gestures = new Phaser.Gestures(this.game);
 
         this.onDown = new Phaser.Signal();
         this.onUp = new Phaser.Signal();
@@ -370,6 +376,7 @@ Phaser.Input.prototype = {
         this.touch.stop();
         this.mspointer.stop();
         this.gamepad.stop();
+        this.gestures.stop();
 
         this.moveCallback = null;
 
@@ -457,6 +464,8 @@ Phaser.Input.prototype = {
         if (this.pointer10) { this.pointer10.update(); }
 
         this._pollCounter = 0;
+
+        if (this.gestures.active) { this.gestures.update(); }
 
     },
 

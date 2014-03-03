@@ -130,6 +130,7 @@ module.exports = function (grunt) {
             'src/input/SinglePad.js',
             'src/input/GamepadButton.js',
             'src/input/InputHandler.js',
+            'src/input/Gestures.js',
 
             'src/gameobjects/Events.js',
             'src/gameobjects/GameObjectFactory.js',
