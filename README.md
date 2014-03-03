@@ -109,7 +109,7 @@ New features:
 * BitmapText now uses the new XML parser which should work under CocoonJS without clashes.
 * BitmapText signature changed so you can support fonts with spaces in their names.
 * Loader.bitmapFont now has 2 extra parameters: xSpacing and ySpacing. These allow you to add extra spacing to each letter or line of the font.
-* Added the new BitmapFont class. This is for rendering retro style fixed-width bitmap fonts into an Image object. It's a texture you can apply to a Sprite/Image.
+* Added the new RetroFont class. This is for rendering fixed-width bitmap fonts into an Image object. It's a texture you can apply to a Sprite/Image.
 * Added Cache.updateFrameData which is really useful for swapping FrameData blocks in the cache.
 * Loader.physics now lets you load Lime + Corona JSON Physics data, which can be used with Body.loadPolygon and Body.loadData.
 * Cache.addPhysicsData and Cache.getPhysicsData allow you to store parsed JSON physics data in the cache, for sharing between Bodies.

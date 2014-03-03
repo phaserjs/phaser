@@ -145,7 +145,7 @@ module.exports = function (grunt) {
             'src/gameobjects/Graphics.js',
             'src/gameobjects/RenderTexture.js',
             'src/gameobjects/SpriteBatch.js',
-            'src/gameobjects/BitmapFont.js',
+            'src/gameobjects/RetroFont.js',
 
             'src/system/Canvas.js',
             'src/system/Device.js',

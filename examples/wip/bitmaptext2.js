@@ -3,8 +3,8 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: p
 
 function preload() {
 
-    game.load.image('goldFont', 'assets/fonts/gold_font.png');
-    game.load.image('bluePink', 'assets/fonts/bluepink_font.png');
+    game.load.image('goldFont', 'assets/fonts/retroFonts/gold_font.png');
+    game.load.image('bluePink', 'assets/fonts/retroFonts/bluepink_font.png');
 
 }
 

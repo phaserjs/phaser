@@ -5,7 +5,7 @@
 */
 
 /**
-* @class Phaser.BitmapFont
+* @class Phaser.RetroFont
 * @extends Phaser.RenderTexture
 * @constructor
 * @param {Phaser.Game} game - Current game instance.
@@ -19,7 +19,7 @@
 * @param {number} [xOffset=0] - If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
 * @param {number} [yOffset=0] - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
 */
-Phaser.BitmapFont = function (game, key, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset) {
+Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, charsPerRow, xSpacing, ySpacing, xOffset, yOffset) {
 
     /**
     * @property {number} characterWidth - The width of each character in the font set.
@@ -57,7 +57,7 @@ Phaser.BitmapFont = function (game, key, characterWidth, characterHeight, chars,
     this.offsetY = yOffset || 0;
 
     /**
-    * @property {string} align - Alignment of the text when multiLine = true or a fixedWidth is set. Set to BitmapFont.ALIGN_LEFT (default), BitmapFont.ALIGN_RIGHT or BitmapFont.ALIGN_CENTER.
+    * @property {string} align - Alignment of the text when multiLine = true or a fixedWidth is set. Set to RetroFont.ALIGN_LEFT (default), RetroFont.ALIGN_RIGHT or RetroFont.ALIGN_CENTER.
     */
     this.align = "left";
 
@@ -86,7 +86,7 @@ Phaser.BitmapFont = function (game, key, characterWidth, characterHeight, chars,
     this.customSpacingY = 0;
 
     /**
-    * If you need this BitmapFont image to have a fixed width you can set the width in this value.
+    * If you need this RetroFont image to have a fixed width you can set the width in this value.
     * If text is wider than the width specified it will be cropped off.
     * @property {number} fixedWidth
     */
@@ -157,117 +157,117 @@ Phaser.BitmapFont = function (game, key, characterWidth, characterHeight, chars,
     
 };
 
-Phaser.BitmapFont.prototype = Object.create(Phaser.RenderTexture.prototype);
-Phaser.BitmapFont.prototype.constructor = Phaser.BitmapFont;
+Phaser.RetroFont.prototype = Object.create(Phaser.RenderTexture.prototype);
+Phaser.RetroFont.prototype.constructor = Phaser.RetroFont;
 
 /**
 * Align each line of multi-line text to the left.
 * @constant
 * @type {string}
 */
-Phaser.BitmapFont.ALIGN_LEFT = "left";
+Phaser.RetroFont.ALIGN_LEFT = "left";
         
 /**
 * Align each line of multi-line text to the right.
 * @constant
 * @type {string}
 */
-Phaser.BitmapFont.ALIGN_RIGHT = "right";
+Phaser.RetroFont.ALIGN_RIGHT = "right";
         
 /**
 * Align each line of multi-line text in the center.
 * @constant
 * @type {string}
 */
-Phaser.BitmapFont.ALIGN_CENTER = "center";
+Phaser.RetroFont.ALIGN_CENTER = "center";
         
 /**
 * Text Set 1 = !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
 * @constant
 * @type {string}
 */
-Phaser.BitmapFont.TEXT_SET1 = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+Phaser.RetroFont.TEXT_SET1 = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
         
 /**
 * Text Set 2 =  !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
 * @constant
 * @type {string}
 */
-Phaser.BitmapFont.TEXT_SET2 = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+Phaser.RetroFont.TEXT_SET2 = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         
 /**
 * Text Set 3 = ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 
 * @constant
 * @type {string}
 */
-Phaser.BitmapFont.TEXT_SET3 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
+Phaser.RetroFont.TEXT_SET3 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
         
 /**
 * Text Set 4 = ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789
 * @constant
 * @type {string}
 */
-Phaser.BitmapFont.TEXT_SET4 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789";
+Phaser.RetroFont.TEXT_SET4 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789";
         
 /**
 * Text Set 5 = ABCDEFGHIJKLMNOPQRSTUVWXYZ.,/() '!?-*:0123456789
 * @constant
 * @type {string}
 */
-Phaser.BitmapFont.TEXT_SET5 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.,/() '!?-*:0123456789";
+Phaser.RetroFont.TEXT_SET5 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.,/() '!?-*:0123456789";
         
 /**
 * Text Set 6 = ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789\"(),-.' 
 * @constant
 * @type {string}
 */
-Phaser.BitmapFont.TEXT_SET6 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789\"(),-.' ";
+Phaser.RetroFont.TEXT_SET6 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789\"(),-.' ";
         
 /**
 * Text Set 7 = AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW\")28FLRX-'39
 * @constant
 * @type {string}
 */
-Phaser.BitmapFont.TEXT_SET7 = "AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW\")28FLRX-'39";
+Phaser.RetroFont.TEXT_SET7 = "AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW\")28FLRX-'39";
         
 /**
 * Text Set 8 = 0123456789 .ABCDEFGHIJKLMNOPQRSTUVWXYZ
 * @constant
 * @type {string}
 */
-Phaser.BitmapFont.TEXT_SET8 = "0123456789 .ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+Phaser.RetroFont.TEXT_SET8 = "0123456789 .ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         
 /**
 * Text Set 9 = ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,'\"?!
 * @constant
 * @type {string}
 */
-Phaser.BitmapFont.TEXT_SET9 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,'\"?!";
+Phaser.RetroFont.TEXT_SET9 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,'\"?!";
         
 /**
 * Text Set 10 = ABCDEFGHIJKLMNOPQRSTUVWXYZ
 * @constant
 * @type {string}
 */
-Phaser.BitmapFont.TEXT_SET10 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+Phaser.RetroFont.TEXT_SET10 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         
 /**
 * Text Set 11 = ABCDEFGHIJKLMNOPQRSTUVWXYZ.,\"-+!?()':;0123456789
 * @constant
 * @type {string}
 */
-Phaser.BitmapFont.TEXT_SET11 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.,\"-+!?()':;0123456789";
+Phaser.RetroFont.TEXT_SET11 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.,\"-+!?()':;0123456789";
 
 /**
 * If you need this FlxSprite to have a fixed width and custom alignment you can set the width here.<br>
 * If text is wider than the width specified it will be cropped off.
 *
-* @method Phaser.BitmapFont#setFixedWidth
-* @memberof Phaser.BitmapFont
-* @param {number} width - Width in pixels of this BitmapFont. Set to zero to disable and re-enable automatic resizing.
-* @param {string} [lineAlignment='left'] - Align the text within this width. Set to BitmapFont.ALIGN_LEFT (default), BitmapFont.ALIGN_RIGHT or BitmapFont.ALIGN_CENTER.
+* @method Phaser.RetroFont#setFixedWidth
+* @memberof Phaser.RetroFont
+* @param {number} width - Width in pixels of this RetroFont. Set to zero to disable and re-enable automatic resizing.
+* @param {string} [lineAlignment='left'] - Align the text within this width. Set to RetroFont.ALIGN_LEFT (default), RetroFont.ALIGN_RIGHT or RetroFont.ALIGN_CENTER.
 */
-Phaser.BitmapFont.prototype.setFixedWidth = function (width, lineAlignment) { 
+Phaser.RetroFont.prototype.setFixedWidth = function (width, lineAlignment) { 
 
     if (typeof lineAlignment === 'undefined') { lineAlignment = 'left'; }
 
@@ -279,16 +279,16 @@ Phaser.BitmapFont.prototype.setFixedWidth = function (width, lineAlignment) {
 /**
 * A helper function that quickly sets lots of variables at once, and then updates the text.
 * 
-* @method Phaser.BitmapFont#setText
-* @memberof Phaser.BitmapFont
+* @method Phaser.RetroFont#setText
+* @memberof Phaser.RetroFont
 * @param {string} content - The text of this sprite.
 * @param {boolean} [multiLine=false] - Set to true if you want to support carriage-returns in the text and create a multi-line sprite instead of a single line.
 * @param {number} [characterSpacing=0] - To add horizontal spacing between each character specify the amount in pixels.
 * @param {number} [lineSpacing=0] - To add vertical spacing between each line of text, set the amount in pixels.
-* @param {string} [lineAlignment='left'] - Align each line of multi-line text. Set to BitmapFont.ALIGN_LEFT, BitmapFont.ALIGN_RIGHT or BitmapFont.ALIGN_CENTER.
+* @param {string} [lineAlignment='left'] - Align each line of multi-line text. Set to RetroFont.ALIGN_LEFT, RetroFont.ALIGN_RIGHT or RetroFont.ALIGN_CENTER.
 * @param {boolean} [allowLowerCase=false] - Lots of bitmap font sets only include upper-case characters, if yours needs to support lower case then set this to true.
 */
-Phaser.BitmapFont.prototype.setText = function (content, multiLine, characterSpacing, lineSpacing, lineAlignment, allowLowerCase) {
+Phaser.RetroFont.prototype.setText = function (content, multiLine, characterSpacing, lineSpacing, lineAlignment, allowLowerCase) {
 
     this.multiLine = multiLine || false;
     this.customSpacingX = characterSpacing || 0;
@@ -314,10 +314,10 @@ Phaser.BitmapFont.prototype.setText = function (content, multiLine, characterSpa
 /**
 * Over rides the default PIXI.RenderTexture resize event as we need our baseTexture resized as well.
 * 
-* @method Phaser.BitmapFont#resize
-* @memberof Phaser.BitmapFont
+* @method Phaser.RetroFont#resize
+* @memberof Phaser.RetroFont
 */
-Phaser.BitmapFont.prototype.resize = function (width, height) {
+Phaser.RetroFont.prototype.resize = function (width, height) {
 
     this.width = width;
     this.height = height;
@@ -349,10 +349,10 @@ Phaser.BitmapFont.prototype.resize = function (width, height) {
 /**
 * Updates the BitmapData of the Sprite with the text
 * 
-* @method Phaser.BitmapFont#buildBitmapFontText
-* @memberof Phaser.BitmapFont
+* @method Phaser.RetroFont#buildRetroFontText
+* @memberof Phaser.RetroFont
 */
-Phaser.BitmapFont.prototype.buildBitmapFontText = function () { 
+Phaser.RetroFont.prototype.buildRetroFontText = function () { 
 
     var cx = 0;
     var cy = 0;
@@ -378,15 +378,15 @@ Phaser.BitmapFont.prototype.buildBitmapFontText = function () {
             //  This line of text is held in lines[i] - need to work out the alignment
             switch (this.align)
             {
-                case Phaser.BitmapFont.ALIGN_LEFT:
+                case Phaser.RetroFont.ALIGN_LEFT:
                     cx = 0;
                     break;
                     
-                case Phaser.BitmapFont.ALIGN_RIGHT:
+                case Phaser.RetroFont.ALIGN_RIGHT:
                     cx = this.width - (lines[i].length * (this.characterWidth + this.customSpacingX));
                     break;
                     
-                case Phaser.BitmapFont.ALIGN_CENTER:
+                case Phaser.RetroFont.ALIGN_CENTER:
                     cx = (this.width / 2) - ((lines[i].length * (this.characterWidth + this.customSpacingX)) / 2);
                     cx += this.customSpacingX / 2;
                     break;
@@ -418,15 +418,15 @@ Phaser.BitmapFont.prototype.buildBitmapFontText = function () {
         
         switch (this.align)
         {
-            case Phaser.BitmapFont.ALIGN_LEFT:
+            case Phaser.RetroFont.ALIGN_LEFT:
                 cx = 0;
                 break;
                 
-            case Phaser.BitmapFont.ALIGN_RIGHT:
+            case Phaser.RetroFont.ALIGN_RIGHT:
                 cx = this.width - (this._text.length * (this.characterWidth + this.customSpacingX));
                 break;
                 
-            case Phaser.BitmapFont.ALIGN_CENTER:
+            case Phaser.RetroFont.ALIGN_CENTER:
                 cx = (this.width / 2) - ((this._text.length * (this.characterWidth + this.customSpacingX)) / 2);
                 cx += this.customSpacingX / 2;
                 break;
@@ -441,14 +441,14 @@ Phaser.BitmapFont.prototype.buildBitmapFontText = function () {
 * Internal function that takes a single line of text (2nd parameter) and pastes it into the BitmapData at the given coordinates.
 * Used by getLine and getMultiLine
 * 
-* @method Phaser.BitmapFont#buildBitmapFontText
-* @memberof Phaser.BitmapFont
+* @method Phaser.RetroFont#buildRetroFontText
+* @memberof Phaser.RetroFont
 * @param {string} line - The single line of text to paste.
 * @param {number} x - The x coordinate.
 * @param {number} y - The y coordinate.
 * @param {number} customSpacingX - Custom X spacing.
 */
-Phaser.BitmapFont.prototype.pasteLine = function (line, x, y, customSpacingX) { 
+Phaser.RetroFont.prototype.pasteLine = function (line, x, y, customSpacingX) { 
 
     var p = new Phaser.Point();
 
@@ -482,11 +482,11 @@ Phaser.BitmapFont.prototype.pasteLine = function (line, x, y, customSpacingX) {
 /**
 * Works out the longest line of text in _text and returns its length
 * 
-* @method Phaser.BitmapFont#getLongestLine
-* @memberof Phaser.BitmapFont
+* @method Phaser.RetroFont#getLongestLine
+* @memberof Phaser.RetroFont
 * @return {number} The length of the longest line of text.
 */
-Phaser.BitmapFont.prototype.getLongestLine = function () { 
+Phaser.RetroFont.prototype.getLongestLine = function () { 
 
     var longestLine = 0;
     
@@ -509,13 +509,13 @@ Phaser.BitmapFont.prototype.getLongestLine = function () {
 /**
 * Internal helper function that removes all unsupported characters from the _text String, leaving only characters contained in the font set.
 * 
-* @method Phaser.BitmapFont#removeUnsupportedCharacters
-* @memberof Phaser.BitmapFont
+* @method Phaser.RetroFont#removeUnsupportedCharacters
+* @memberof Phaser.RetroFont
 * @protected
 * @param {boolean} [stripCR=true] - Should it strip carriage returns as well?
 * @return {string}  A clean version of the string.
 */
-Phaser.BitmapFont.prototype.removeUnsupportedCharacters = function (stripCR) { 
+Phaser.RetroFont.prototype.removeUnsupportedCharacters = function (stripCR) { 
 
     var newString = "";
     
@@ -537,7 +537,7 @@ Phaser.BitmapFont.prototype.removeUnsupportedCharacters = function (stripCR) {
 * @name Phaser.BitmapText#text
 * @property {string} text - Set this value to update the text in this sprite. Carriage returns are automatically stripped out if multiLine is false. Text is converted to upper case if autoUpperCase is true.
 */
-Object.defineProperty(Phaser.BitmapFont.prototype, "text", {
+Object.defineProperty(Phaser.RetroFont.prototype, "text", {
     
     get: function () {
 
@@ -564,7 +564,7 @@ Object.defineProperty(Phaser.BitmapFont.prototype, "text", {
             
             this.removeUnsupportedCharacters(this.multiLine);
             
-            this.buildBitmapFontText();
+            this.buildRetroFontText();
         }
 
     }

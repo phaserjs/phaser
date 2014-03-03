@@ -4,7 +4,7 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: p
 
 function preload() {
 
-    game.load.image('knightHawks', 'assets/fonts/KNIGHT3.png');
+    game.load.image('knightHawks', 'assets/fonts/retroFonts/KNIGHT3.png');
 
 }
 
