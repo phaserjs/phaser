@@ -52,9 +52,9 @@ function update() {
 
 function render() {
 
-    game.debug.renderText('One item will be killed each second.', 280, 420);
+    game.debug.text('One item will be killed each second.', 280, 420);
 
     // Get living and dead number of a group.
-    game.debug.renderText('Living: ' + game.world.countLiving() + ', Dead: ' + game.world.countDead(), 330, 440);
+    game.debug.text('Living: ' + game.world.countLiving() + ', Dead: ' + game.world.countDead(), 330, 440);
     
 }

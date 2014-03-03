@@ -65,8 +65,8 @@ function update() {
 
 function render() {
 
-	game.debug.renderText(sprite.cameraOffset.x, 32, 32);
-	game.debug.renderText(sprite.cameraOffset.y, 32, 64);
-	game.debug.renderPointer(game.input.activePointer);
+	game.debug.text(sprite.cameraOffset.x, 32, 32);
+	game.debug.text(sprite.cameraOffset.y, 32, 64);
+	game.debug.pointer(game.input.activePointer);
 
 }

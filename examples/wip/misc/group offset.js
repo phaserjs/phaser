@@ -33,6 +33,6 @@ function create() {
 
 function render() {
 
-    game.debug.renderText('sx: ' + sprite.x + ' wx: ' + sprite.world.x, 32, 32);
+    game.debug.text('sx: ' + sprite.x + ' wx: ' + sprite.world.x, 32, 32);
 
 }

@@ -78,9 +78,9 @@ function render() {
 
     // for (var i = 0, len = dump.length; i < len; i++)
     // {
-        // game.debug.renderPhysicsBody(dump[i]);
+        // game.debug.physicsBody(dump[i]);
     // }
 
-    game.debug.renderPhysicsBody(ship.body);
+    game.debug.physicsBody(ship.body);
 
 }

@@ -101,9 +101,9 @@ function update() {
 
 function render() {
 
-    game.debug.renderText('Hold left/right to move the ufo.', 16, 32);
-    game.debug.renderText('Direction and Space key events are stopped by Phaser now,', 16, 48);
-    game.debug.renderText('so they will no longer be sent to the browser', 16, 64);
-    game.debug.renderText('Now you can press UP/DOWN or SPACE to see what happened.', 16, 80);
+    game.debug.text('Hold left/right to move the ufo.', 16, 32);
+    game.debug.text('Direction and Space key events are stopped by Phaser now,', 16, 48);
+    game.debug.text('so they will no longer be sent to the browser', 16, 64);
+    game.debug.text('Now you can press UP/DOWN or SPACE to see what happened.', 16, 80);
 
 }

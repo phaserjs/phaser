@@ -57,7 +57,7 @@ function fire() {
 
 function render() {
 
-    game.debug.renderText('Active Bullets: ' + bullets.countLiving() + ' / ' + bullets.total, 32, 32);
-    game.debug.renderSpriteInfo(sprite, 32, 450);
+    game.debug.text('Active Bullets: ' + bullets.countLiving() + ' / ' + bullets.total, 32, 32);
+    game.debug.spriteInfo(sprite, 32, 450);
 
 }

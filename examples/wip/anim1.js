@@ -31,6 +31,6 @@ function update() {
 
 function render() {
 
-	game.debug.renderText(anim.frame + ' / 17', 32, 32);
+	game.debug.text(anim.frame + ' / 17', 32, 32);
 	
 }

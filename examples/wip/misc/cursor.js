@@ -48,8 +48,8 @@ function update() {
 
 function render() {
 
-    game.debug.renderText(group.cursor.name, 32, 32);
+    game.debug.text(group.cursor.name, 32, 32);
 
-    // game.debug.renderInputInfo(32, 32);
+    // game.debug.inputInfo(32, 32);
 
 }

@@ -57,9 +57,9 @@ function collisionCallback (obj1, obj2) {
 
 function render() {
 
-    game.debug.renderText('The processCallback will only collide if sprite1 is going fastest.', 32, 32);
-    game.debug.renderText('Sprite 1 speed: ' + sprite1.body.speed, 32, 64);
-    game.debug.renderText('Sprite 2 speed: ' + sprite2.body.speed, 32, 96);
+    game.debug.text('The processCallback will only collide if sprite1 is going fastest.', 32, 32);
+    game.debug.text('Sprite 1 speed: ' + sprite1.body.speed, 32, 64);
+    game.debug.text('Sprite 2 speed: ' + sprite2.body.speed, 32, 96);
 
 }
 

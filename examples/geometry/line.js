@@ -36,9 +36,9 @@ function update() {
 
 function render() {
 
-    game.debug.renderLine(line1);
-    game.debug.renderLineInfo(line1, 32, 32);
+    game.debug.line(line1);
+    game.debug.lineInfo(line1, 32, 32);
 
-    game.debug.renderText("Drag the handles", 32, 550);
+    game.debug.text("Drag the handles", 32, 550);
 
 }

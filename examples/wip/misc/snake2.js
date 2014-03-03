@@ -158,11 +158,11 @@ function eatFruit(snakeHead, fruit) {
 
 function render() {
 
-    //game.debug.renderCircle(node);
+    //game.debug.circle(node);
 
     for (var i = 0; i <= numSnakeSections - 1; i++)
     {
-        //game.debug.renderCircle(snakeCircles[i], 'rgb(255,0,0)');
+        //game.debug.circle(snakeCircles[i], 'rgb(255,0,0)');
     }
 
 

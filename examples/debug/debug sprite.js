@@ -34,6 +34,6 @@ function update()
 function render() {
 
     // Sprite debug info
-    game.debug.renderSpriteInfo(sprite, 32, 32);
+    game.debug.spriteInfo(sprite, 32, 32);
 
 }

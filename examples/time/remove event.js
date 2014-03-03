@@ -50,6 +50,6 @@ function removeCounter() {
 
 function render() {
 
-    game.debug.renderText("Queued events: " + game.time.events.length + ' - click to remove', 32, 32);
+    game.debug.text("Queued events: " + game.time.events.length + ' - click to remove', 32, 32);
 
 }

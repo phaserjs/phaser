@@ -31,6 +31,6 @@ function update() {
 
 function render() {
 
-	game.debug.renderText(game.input.x, 32, 32);
+	game.debug.text(game.input.x, 32, 32);
 
 }

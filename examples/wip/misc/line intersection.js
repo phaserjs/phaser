@@ -138,11 +138,11 @@ function update() {
 
 function render() {
 
-    game.debug.renderLine(line1, c);
-    game.debug.renderLine(line2, c);
+    game.debug.line(line1, c);
+    game.debug.line(line2, c);
 
-    game.debug.renderLineInfo(line1, 32, 32);
-    game.debug.renderLineInfo(line2, 32, 100);
+    game.debug.lineInfo(line1, 32, 32);
+    game.debug.lineInfo(line2, 32, 100);
 
     if (p)
     {

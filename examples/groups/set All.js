@@ -30,6 +30,6 @@ function resetAlpha() {
 
 function render() {
 
-    game.debug.renderText('Tap or click to set random alpha of all the items.', 240, 480);
+    game.debug.text('Tap or click to set random alpha of all the items.', 240, 480);
     
 }

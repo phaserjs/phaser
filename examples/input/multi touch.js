@@ -21,12 +21,12 @@ function create() {
 function render() {
 
     //  Just renders out the pointer data when you touch the canvas
-    game.debug.renderPointer(game.input.mousePointer);
-    game.debug.renderPointer(game.input.pointer1);
-    game.debug.renderPointer(game.input.pointer2);
-    game.debug.renderPointer(game.input.pointer3);
-    game.debug.renderPointer(game.input.pointer4);
-    game.debug.renderPointer(game.input.pointer5);
-    game.debug.renderPointer(game.input.pointer6);
+    game.debug.pointer(game.input.mousePointer);
+    game.debug.pointer(game.input.pointer1);
+    game.debug.pointer(game.input.pointer2);
+    game.debug.pointer(game.input.pointer3);
+    game.debug.pointer(game.input.pointer4);
+    game.debug.pointer(game.input.pointer5);
+    game.debug.pointer(game.input.pointer6);
 
 }

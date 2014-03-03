@@ -54,11 +54,11 @@ function update() {
 
 function render() {
 
-    game.debug.renderBodyInfo(sprite4, 32, 32);
+    game.debug.bodyInfo(sprite4, 32, 32);
 
-    game.debug.renderPhysicsBody(sprite1.body);
-    game.debug.renderPhysicsBody(sprite2.body);
-    game.debug.renderPhysicsBody(sprite3.body);
-    game.debug.renderPhysicsBody(sprite4.body);
+    game.debug.physicsBody(sprite1.body);
+    game.debug.physicsBody(sprite2.body);
+    game.debug.physicsBody(sprite3.body);
+    game.debug.physicsBody(sprite4.body);
 
 }

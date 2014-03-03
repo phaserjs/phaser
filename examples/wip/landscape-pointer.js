@@ -54,6 +54,6 @@ function update() {
 
 function render() {
 
-	game.debug.renderPointer(game.input.activePointer);
+	game.debug.pointer(game.input.activePointer);
 	
 }

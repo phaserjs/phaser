@@ -34,8 +34,8 @@ function update()
 function render() {
 
     // Input debug info
-    game.debug.renderInputInfo(32, 32);
-    game.debug.renderSpriteInputInfo(sprite, 32, 130);
-    game.debug.renderPointer( game.input.activePointer );
+    game.debug.inputInfo(32, 32);
+    game.debug.spriteInputInfo(sprite, 32, 130);
+    game.debug.pointer( game.input.activePointer );
 
 }

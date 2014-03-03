@@ -57,6 +57,6 @@ function update() {
 
 function render() {
 
-    game.debug.renderInputInfo(16, 16);
+    game.debug.inputInfo(16, 16);
 
 }

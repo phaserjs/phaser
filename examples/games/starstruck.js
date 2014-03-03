@@ -123,8 +123,8 @@ function render () {
 
     if (player.debug)
     {
-        game.debug.renderPhysicsBody(player.body);
-        game.debug.renderBodyInfo(player, 16, 24);
+        game.debug.physicsBody(player.body);
+        game.debug.bodyInfo(player, 16, 24);
     }
 
 }

@@ -408,15 +408,15 @@ function render() {
 
 	if (sprite)
 	{
-		game.debug.renderBodyInfo(sprite2, 16, 24);
-		// game.debug.renderText(sprite.name + ' x: ' + sprite.x.toFixed(2) + '  dx: ' + sprite.body._dx.toFixed(2), 16, 500);
-		// game.debug.renderText(sprite.name + ' y: ' + sprite.y.toFixed(2) + '  dy: ' + sprite.body._dy.toFixed(2), 16, 520);
+		game.debug.bodyInfo(sprite2, 16, 24);
+		// game.debug.text(sprite.name + ' x: ' + sprite.x.toFixed(2) + '  dx: ' + sprite.body._dx.toFixed(2), 16, 500);
+		// game.debug.text(sprite.name + ' y: ' + sprite.y.toFixed(2) + '  dy: ' + sprite.body._dy.toFixed(2), 16, 520);
 	}
 
 	if (sprite2)
 	{
-		// game.debug.renderBodyInfo(sprite2, 16, 190);
-		// game.debug.renderText(sprite2.name + ' x: ' + sprite2.x, 400, 500);
+		// game.debug.bodyInfo(sprite2, 16, 190);
+		// game.debug.text(sprite2.name + ' x: ' + sprite2.x, 400, 500);
 	}
 
 }

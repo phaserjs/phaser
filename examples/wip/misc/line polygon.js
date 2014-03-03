@@ -143,14 +143,14 @@ function update() {
 
 function render() {
 
-    game.debug.renderLine(line, c);
-    game.debug.renderLineInfo(line, 32, 32);
+    game.debug.line(line, c);
+    game.debug.lineInfo(line, 32, 32);
 
-    game.debug.renderPolygon(polygon);
+    game.debug.polygon(polygon);
 
     if (result.intersects)
     {
-        game.debug.renderText(result.intersects, 32, 100);
+        game.debug.text(result.intersects, 32, 100);
 
         game.context.fillStyle = 'rgb(255,0,255)';
 

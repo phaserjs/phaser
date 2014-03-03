@@ -8,11 +8,11 @@ var point = new Phaser.Point( 100, 280 ) ;
 function render() {
 
     // Draw debug tools
-    game.debug.renderRectangle( rect, 'rgba(255,0,0,1)' ) ;
-    game.debug.renderCircle( circle, 'rgba(255,255,0,1)' ) ;
-    game.debug.renderPoint( point, 'rgba(255,255,255,1)' ) ;
-    game.debug.renderPixel( 200, 280, 'rgba(0,255,255,1)' ) ;
-    game.debug.renderText( "This is debug text", 100, 380 );
+    game.debug.geom( rect, 'rgba(255,0,0,1)' ) ;
+    game.debug.geom( circle, 'rgba(255,255,0,1)' ) ;
+    game.debug.geom( point, 'rgba(255,255,255,1)' ) ;
+    game.debug.pixel( 200, 280, 'rgba(0,255,255,1)' ) ;
+    game.debug.text( "This is debug text", 100, 380 );
 
 
 }

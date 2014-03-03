@@ -31,11 +31,11 @@ function create() {
 
 function render() {
 
-    game.debug.renderSoundInfo(music, 32, 32);
+    game.debug.soundInfo(music, 32, 32);
 
     if (music.isDecoding)
     {
-        game.debug.renderText("Decoding MP3 ...", 32, 200);
+        game.debug.text("Decoding MP3 ...", 32, 200);
     }
 
 }

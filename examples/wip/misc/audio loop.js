@@ -41,6 +41,6 @@ function update() {
 
 function render() {
 
-	game.debug.renderSoundInfo(music, 32, 32);
+	game.debug.soundInfo(music, 32, 32);
 
 }

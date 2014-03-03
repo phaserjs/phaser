@@ -35,7 +35,7 @@ function update()
 function render() {
 
     // Display
-    game.debug.renderSpriteBounds(sprite);
-    game.debug.renderSpriteCorners(sprite, true, true);
+    game.debug.spriteBounds(sprite);
+    game.debug.spriteCorners(sprite, true, true);
 
 }

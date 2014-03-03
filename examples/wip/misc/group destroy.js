@@ -49,6 +49,6 @@ function nuke() {
 
 function render() {
 
-    game.debug.renderText('Click to nuke', 32, 32);
+    game.debug.text('Click to nuke', 32, 32);
 
 }

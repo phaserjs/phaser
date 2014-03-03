@@ -97,19 +97,18 @@ function changeSky (button) {
 
 function render () {
 
-    game.debug.renderSpriteCorners(button1, false, true);
-    game.debug.renderSpriteCorners(button2, false, true);
-    game.debug.renderSpriteCorners(button3, false, true);
-    game.debug.renderSpriteCorners(button4, false, true);
-    game.debug.renderSpriteCorners(button5, false, true);
-    game.debug.renderSpriteCorners(button6, false, true);
+    // game.debug.spriteCorners(button1, false, true);
+    // game.debug.spriteCorners(button2, false, true);
+    // game.debug.spriteCorners(button3, false, true);
+    // game.debug.spriteCorners(button4, false, true);
+    // game.debug.spriteCorners(button5, false, true);
+    // game.debug.spriteCorners(button6, false, true);
 
-    // game.debug.renderWorldTransformInfo(button1, 32, 132);
-    // game.debug.renderText('sx: ' + button3.scale.x + ' sy: ' + button3.scale.y + ' w: ' + button3.width + ' cw: ' + button3._cache.width, 32, 20);
-    // game.debug.renderText('ox: ' + game.stage.offset.x + ' oy: ' + game.stage.offset.y, 32, 20);
-    // game.debug.renderPoint(button3.input._tempPoint);
-    // game.debug.renderPoint(button6.input._tempPoint);
+    // game.debug.text('sx: ' + button3.scale.x + ' sy: ' + button3.scale.y + ' w: ' + button3.width + ' cw: ' + button3._cache.width, 32, 20);
+    // game.debug.text('ox: ' + game.stage.offset.x + ' oy: ' + game.stage.offset.y, 32, 20);
+    // game.debug.point(button3.input._tempPoint);
+    // game.debug.point(button6.input._tempPoint);
 
-   game.debug.renderInputInfo(32, 32);
+   game.debug.inputInfo(32, 32);
 
 }

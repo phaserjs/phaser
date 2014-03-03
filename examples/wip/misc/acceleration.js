@@ -94,7 +94,7 @@ function update() {
 
 function render() {
 
-    // game.debug.renderSpriteInfo(car, 32, 32);
-    game.debug.renderBodyInfo(car, 16, 24);
+    // game.debug.spriteInfo(car, 32, 32);
+    game.debug.bodyInfo(car, 16, 24);
 
 }

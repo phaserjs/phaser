@@ -11,6 +11,6 @@ function create() {
 
 function render () {
 
-    game.debug.renderRectangle(floor,'#0fffff');
+    game.debug.geom(floor,'#0fffff');
 
 }

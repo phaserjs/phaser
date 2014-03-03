@@ -45,6 +45,6 @@ function update() {
 
 function render() {
 
-	game.debug.renderBodyInfo(sprite, 16, 24);
+	game.debug.bodyInfo(sprite, 16, 24);
 
 }

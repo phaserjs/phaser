@@ -40,7 +40,7 @@ function update() {
 
 function render() {
 
-    game.debug.renderPhysicsBody(sprite.body);
-    game.debug.renderPhysicsBody(sprite2.body);
+    game.debug.physicsBody(sprite.body);
+    game.debug.physicsBody(sprite2.body);
 
 }

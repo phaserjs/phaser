@@ -31,7 +31,7 @@ function render() {
 
     for (var i = 0; i < 30; i++)
     {
-        game.debug.renderText(text[i], 32, i * 20);
+        game.debug.text(text[i], 32, i * 20);
     }
 
 }

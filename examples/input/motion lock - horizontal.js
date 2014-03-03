@@ -31,7 +31,7 @@ function create() {
 
 function render() {
 
-    game.debug.renderInputInfo(32, 32);
-    game.debug.renderSpriteInputInfo(sprite, 300, 32);
+    game.debug.inputInfo(32, 32);
+    game.debug.spriteInputInfo(sprite, 300, 32);
 
 }

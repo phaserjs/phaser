@@ -205,22 +205,22 @@ function getHiddenTile() {
 
 function render() {
 
-    game.debug.renderText(timesUp, 620, 208, 'rgb(0,255,0)');
-    game.debug.renderText(youWin, 620, 240, 'rgb(0,255,0)');
+    game.debug.text(timesUp, 620, 208, 'rgb(0,255,0)');
+    game.debug.text(youWin, 620, 240, 'rgb(0,255,0)');
 
-    game.debug.renderText('Time: ' + myCountdownSeconds, 620, 15, 'rgb(0,255,0)');
+    game.debug.text('Time: ' + myCountdownSeconds, 620, 15, 'rgb(0,255,0)');
     
-    //game.debug.renderText('squareCounter: ' + squareCounter, 620, 272, 'rgb(0,0,255)');
-    game.debug.renderText('Matched Pairs: ' + masterCounter, 620, 304, 'rgb(0,0,255)');
+    //game.debug.text('squareCounter: ' + squareCounter, 620, 272, 'rgb(0,0,255)');
+    game.debug.text('Matched Pairs: ' + masterCounter, 620, 304, 'rgb(0,0,255)');
     
-    //game.debug.renderText('startList: ' + myString1, 620, 208, 'rgb(255,0,0)');
-    //game.debug.renderText('squareList: ' + myString2, 620, 240, 'rgb(255,0,0)');
+    //game.debug.text('startList: ' + myString1, 620, 208, 'rgb(255,0,0)');
+    //game.debug.text('squareList: ' + myString2, 620, 240, 'rgb(255,0,0)');
 
-    game.debug.renderText('Tile: ' + map.getTile(layer.getTileX(marker.x), layer.getTileY(marker.y)), 620, 48, 'rgb(255,0,0)');
+    game.debug.text('Tile: ' + map.getTile(layer.getTileX(marker.x), layer.getTileY(marker.y)), 620, 48, 'rgb(255,0,0)');
 
-    game.debug.renderText('LayerX: ' + layer.getTileX(marker.x), 620, 80, 'rgb(255,0,0)');
-    game.debug.renderText('LayerY: ' + layer.getTileY(marker.y), 620, 112, 'rgb(255,0,0)');
+    game.debug.text('LayerX: ' + layer.getTileX(marker.x), 620, 80, 'rgb(255,0,0)');
+    game.debug.text('LayerY: ' + layer.getTileY(marker.y), 620, 112, 'rgb(255,0,0)');
 
-    game.debug.renderText('Tile Position: ' + currentTilePosition, 620, 144, 'rgb(255,0,0)');
-    game.debug.renderText('Hidden Tile: ' + getHiddenTile(), 620, 176, 'rgb(255,0,0)');
+    game.debug.text('Tile Position: ' + currentTilePosition, 620, 144, 'rgb(255,0,0)');
+    game.debug.text('Hidden Tile: ' + getHiddenTile(), 620, 176, 'rgb(255,0,0)');
 }

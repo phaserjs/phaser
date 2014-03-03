@@ -138,6 +138,6 @@ return result;
 
 function render () {
 
-    game.debug.renderPhysicsBody(player.body);
+    game.debug.physicsBody(player.body);
 
 }

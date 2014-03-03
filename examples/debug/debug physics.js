@@ -44,8 +44,8 @@ function update()
 function render() {
 
     // Physics
-    game.debug.renderSpriteBounds(sprite);
+    game.debug.spriteBounds(sprite);
 
-    game.debug.renderSpriteBounds(otherSprite);
+    game.debug.spriteBounds(otherSprite);
 
 }

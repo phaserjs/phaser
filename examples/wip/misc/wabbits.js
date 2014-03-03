@@ -150,14 +150,14 @@ function update() {
 
 function render() {
 
-	// game.debug.renderSpriteCollision(ball, 32, 32);
+	// game.debug.spriteCollision(ball, 32, 32);
 
 	// var graphics = game.add.graphics(0, 0);
 	// game.context.fillStyle = 'rgba(0,0,255,0.5)';
 	// game.context.fillRect(770, 400, 30, 200);	
-	// game.debug.renderText("Drag the ball to launch", 32, 32);
-	// game.debug.renderText("Try to get all 5 wabbits in the blue area with the least number of shots", 32, 64);
-	// game.debug.renderText("Shot Count: " + shotCount, 32, 96);
-	// game.debug.renderText("Wabbits Left: " + wabbitCount, 32, 128);
+	// game.debug.text("Drag the ball to launch", 32, 32);
+	// game.debug.text("Try to get all 5 wabbits in the blue area with the least number of shots", 32, 64);
+	// game.debug.text("Shot Count: " + shotCount, 32, 96);
+	// game.debug.text("Wabbits Left: " + wabbitCount, 32, 128);
 
 }

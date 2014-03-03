@@ -42,8 +42,8 @@ function create() {
 
 function render() {
 
-    game.debug.renderText('Size of group: ' + items.length, 100, 560);
-    game.debug.renderText('Drop here to cut items from groups entirely.', 390, 24);
+    game.debug.text('Size of group: ' + items.length, 100, 560);
+    game.debug.text('Drop here to cut items from groups entirely.', 390, 24);
     
 }
 

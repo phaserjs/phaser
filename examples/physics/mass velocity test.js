@@ -67,15 +67,15 @@ function render() {
 
     for (var i = 0; i < aliens._container.children.length; i++)
     {
-        game.debug.renderPolygon(aliens._container.children[i].body.polygons);
+        game.debug.polygon(aliens._container.children[i].body.polygons);
     }
 
-    game.debug.renderPolygon(car.body.polygons);
+    game.debug.polygon(car.body.polygons);
 
-    // game.debug.renderBodyInfo(aliens._container.children[0], 32, 32);
-    game.debug.renderBodyInfo(aliens._container.children[0], 32, 32);
+    // game.debug.bodyInfo(aliens._container.children[0], 32, 32);
+    game.debug.bodyInfo(aliens._container.children[0], 32, 32);
 
-    // game.debug.renderBodyInfo(car, 16, 24);
-    // game.debug.renderBodyInfo(aliens.getFirstAlive(), 16, 24);
+    // game.debug.bodyInfo(car, 16, 24);
+    // game.debug.bodyInfo(aliens.getFirstAlive(), 16, 24);
 
 }

@@ -42,7 +42,7 @@ function update() {
 
 function render() {
 
-    game.debug.renderSpriteBounds(s);
-    game.debug.renderSpriteInfo(s, 20, 32);
+    game.debug.spriteBounds(s);
+    game.debug.spriteInfo(s, 20, 32);
 
 }

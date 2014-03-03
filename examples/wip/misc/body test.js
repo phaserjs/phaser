@@ -66,12 +66,11 @@ function update() {
 
 function render() {
 
-	game.debug.renderWorldTransformInfo(dropper, 32, 32);
-	game.debug.renderText(dropper.position.x, 200, 32);
-	game.debug.renderText(dropper.position.y, 260, 32);
+	game.debug.text(dropper.position.x, 200, 32);
+	game.debug.text(dropper.position.y, 260, 32);
 
-	game.debug.renderRectangle(atari.body, 'rgba(255,0,0,0.3)');
-	game.debug.renderRectangle(coke.body, 'rgba(255,0,0,0.3)');
-	game.debug.renderRectangle(dropper.body, 'rgba(0,255,0,0.3)');
+	game.debug.geom(atari.body, 'rgba(255,0,0,0.3)');
+	game.debug.geom(coke.body, 'rgba(255,0,0,0.3)');
+	game.debug.geom(dropper.body, 'rgba(0,255,0,0.3)');
 
 }

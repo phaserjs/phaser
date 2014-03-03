@@ -142,11 +142,11 @@ function render() {
 
     layer.render();
 
-    // game.debug.renderSpriteBody(sprite);
+    // game.debug.spriteBody(sprite);
 
-    // game.debug.renderSpriteInfo(sprite, 32, 450);
+    // game.debug.spriteInfo(sprite, 32, 450);
 
-    // game.debug.renderCameraInfo(game.camera, 32, 32);
+    // game.debug.cameraInfo(game.camera, 32, 32);
 
     /*
     game.context.save();
@@ -192,6 +192,6 @@ function render() {
     game.context.restore();
     */
 
-    // game.debug.renderRectangle(game.camera.deadzone, 'rgba(0,200,0,0.5)');
+    // game.debug.geom(game.camera.deadzone, 'rgba(0,200,0,0.5)');
 
 }

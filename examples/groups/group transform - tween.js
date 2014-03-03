@@ -41,6 +41,6 @@ function create() {
 
 function render() {
 
-    game.debug.renderText('The robot is a group and every component is a sprite.', 32,32);
+    game.debug.text('The robot is a group and every component is a sprite.', 32,32);
 
 }

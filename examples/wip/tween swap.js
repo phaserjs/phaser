@@ -88,7 +88,7 @@ function render() {
 
 	for (var i = 0; i < s.length; i++)
 	{
-		game.debug.renderText(s[i], 16, 160 + (16 * i));
+		game.debug.text(s[i], 16, 160 + (16 * i));
 	}
 	
 }

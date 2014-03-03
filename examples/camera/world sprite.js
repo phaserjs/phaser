@@ -49,8 +49,8 @@ function update() {
 
 function render() {
 
-    game.debug.renderCameraInfo(game.camera, 500, 32);
-    game.debug.renderSpriteCoords(card, 32, 32);
-    // game.debug.renderPhysicsBody(card.body);
+    game.debug.cameraInfo(game.camera, 500, 32);
+    game.debug.spriteCoords(card, 32, 32);
+    // game.debug.physicsBody(card.body);
 
 }

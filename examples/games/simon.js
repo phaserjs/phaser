@@ -190,25 +190,25 @@ function render() {
     {
         if (simonSez)
         {
-            game.debug.renderText('Simon Sez', 360, 96, 'rgb(255,0,0)');
+            game.debug.text('Simon Sez', 360, 96, 'rgb(255,0,0)');
         }
         else
         {
-            game.debug.renderText('Your Turn', 360, 96, 'rgb(0,255,0)');
+            game.debug.text('Your Turn', 360, 96, 'rgb(0,255,0)');
         }
     }
     else
     {
-        game.debug.renderText('Get Ready', 360, 96, 'rgb(0,0,255)');
+        game.debug.text('Get Ready', 360, 96, 'rgb(0,0,255)');
     }
     
     if (winner)
     {
-        game.debug.renderText('You Win!', 360, 32, 'rgb(0,0,255)');
+        game.debug.text('You Win!', 360, 32, 'rgb(0,0,255)');
     }
     else if (loser)
     {
-        game.debug.renderText('You Lose!', 360, 32, 'rgb(0,0,255)');
+        game.debug.text('You Lose!', 360, 32, 'rgb(0,0,255)');
     }
         
 }

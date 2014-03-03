@@ -33,7 +33,7 @@ function update() {
 
 function render() {
 
-	game.debug.renderBodyInfo(sprite, 32, 32);
-	game.debug.renderPhysicsBody(sprite.body);
+	game.debug.bodyInfo(sprite, 32, 32);
+	game.debug.physicsBody(sprite.body);
 
 }

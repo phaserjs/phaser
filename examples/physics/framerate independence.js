@@ -133,5 +133,5 @@ function update() {
 };
 
 function render() {
-    game.debug.renderText("Framerate: " + (currentConfiguration.description || (currentConfiguration.framerate + 'hz')), 10, 40);
+    game.debug.text("Framerate: " + (currentConfiguration.description || (currentConfiguration.framerate + 'hz')), 10, 40);
 };

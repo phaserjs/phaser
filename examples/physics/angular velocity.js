@@ -40,10 +40,10 @@ function update() {
 
 function render() {
 
-    game.debug.renderSpriteInfo(sprite, 32, 32);
-    game.debug.renderText('angularVelocity: ' + sprite.body.angularVelocity, 32, 200);
-    game.debug.renderText('angularAcceleration: ' + sprite.body.angularAcceleration, 32, 232);
-    game.debug.renderText('angularDrag: ' + sprite.body.angularDrag, 32, 264);
-    game.debug.renderText('deltaZ: ' + sprite.body.deltaZ(), 32, 296);
+    game.debug.spriteInfo(sprite, 32, 32);
+    game.debug.text('angularVelocity: ' + sprite.body.angularVelocity, 32, 200);
+    game.debug.text('angularAcceleration: ' + sprite.body.angularAcceleration, 32, 232);
+    game.debug.text('angularDrag: ' + sprite.body.angularDrag, 32, 264);
+    game.debug.text('deltaZ: ' + sprite.body.deltaZ(), 32, 296);
 
 }

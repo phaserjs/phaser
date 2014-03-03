@@ -40,6 +40,6 @@ function update() {
 
 function render() {
 
-	// game.debug.renderText(sprite.position.y, 32, 32);
+	// game.debug.text(sprite.position.y, 32, 32);
 
 }

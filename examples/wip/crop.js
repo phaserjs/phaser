@@ -42,6 +42,6 @@ function update() {
 
 function render() {
 
-	game.debug.renderText(image2.width, 32, 32);
+	game.debug.text(image2.width, 32, 32);
 
 }

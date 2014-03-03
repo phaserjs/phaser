@@ -32,11 +32,11 @@ function tileIntersects (body, tile) {
 
     result = !(body.right < tile.x || body.bottom < tile.y || body.left > tile.right || body.top > tile.bottom);
 
-	// game.debug.renderText('intersects: ' + result, 32, 32);
-	// game.debug.renderText('test 1: ' + test1, 320, 60);
-	// game.debug.renderText('test 2: ' + test2, 320, 80);
-	// game.debug.renderText('test 3: ' + test3, 320, 100);
-	// game.debug.renderText('test 4: ' + test4, 320, 120);
+	// game.debug.text('intersects: ' + result, 32, 32);
+	// game.debug.text('test 1: ' + test1, 320, 60);
+	// game.debug.text('test 2: ' + test2, 320, 80);
+	// game.debug.text('test 3: ' + test3, 320, 100);
+	// game.debug.text('test 4: ' + test4, 320, 120);
 
     return result;
 

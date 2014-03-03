@@ -30,6 +30,6 @@ function swapSprites() {
 
 function render () {
 
-    game.debug.renderText('Tap screen to swap the children and therefore swap their indexes.', 10, 280);
+    game.debug.text('Tap screen to swap the children and therefore swap their indexes.', 10, 280);
 
 }

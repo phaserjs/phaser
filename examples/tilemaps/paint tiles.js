@@ -56,7 +56,7 @@ function update() {
 
 function render() {
 
-    game.debug.renderText('Left-click to paint. Shift + Left-click to select tile.', 32, 32, 'rgb(0,0,0)');
-    game.debug.renderText('Tile: ' + map.getTile(layer.getTileX(marker.x), layer.getTileY(marker.y)), 32, 48, 'rgb(0,0,0)');
+    game.debug.text('Left-click to paint. Shift + Left-click to select tile.', 32, 32, 'rgb(0,0,0)');
+    game.debug.text('Tile: ' + map.getTile(layer.getTileX(marker.x), layer.getTileY(marker.y)), 32, 48, 'rgb(0,0,0)');
 
 }

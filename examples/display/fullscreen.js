@@ -39,6 +39,6 @@ function update() {
 
 function render () {
 
-    game.debug.renderText('Click / Tap to go fullscreen', 270, 16);
+    game.debug.text('Click / Tap to go fullscreen', 270, 16);
 
 }

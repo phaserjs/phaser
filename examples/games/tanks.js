@@ -290,7 +290,7 @@ function fire () {
 
 function render () {
 
-    // game.debug.renderText('Active Bullets: ' + bullets.countLiving() + ' / ' + bullets.total, 32, 32);
+    // game.debug.text('Active Bullets: ' + bullets.countLiving() + ' / ' + bullets.total, 32, 32);
 
 }
 

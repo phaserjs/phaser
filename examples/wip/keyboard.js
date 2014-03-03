@@ -52,6 +52,6 @@ function update() {
 
 function render() {
 
-    game.debug.renderPhysicsBody(ship.body);
+    game.debug.physicsBody(ship.body);
 
 }

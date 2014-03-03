@@ -50,9 +50,9 @@ function update() {
 
 function render() {
 
-	// game.debug.renderBodyInfo(sprite, 16, 24);
+	// game.debug.bodyInfo(sprite, 16, 24);
 
-	game.debug.renderPhysicsBody(sprite.body);
-	game.debug.renderPhysicsBody(sprite2.body);
+	game.debug.physicsBody(sprite.body);
+	game.debug.physicsBody(sprite2.body);
 
 }

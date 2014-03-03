@@ -55,6 +55,6 @@ function update() {
 
 function render() {
 
-    // game.debug.renderText(sprite.frame, 32, 32);
+    // game.debug.text(sprite.frame, 32, 32);
 
 }

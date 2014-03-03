@@ -89,6 +89,6 @@ function changePicture() {
 
 function render() {
 
-    game.debug.renderText("Time until event: " + timer.duration.toFixed(0), 10, 20);
+    game.debug.text("Time until event: " + timer.duration.toFixed(0), 10, 20);
 
 }

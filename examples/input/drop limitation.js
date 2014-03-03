@@ -34,8 +34,8 @@ function create() {
 
 function render() {
 
-    game.debug.renderText('Group Left.', 100, 560);
-    game.debug.renderText('Group Right.', 280, 560);
+    game.debug.text('Group Left.', 100, 560);
+    game.debug.text('Group Right.', 280, 560);
 
 }
 

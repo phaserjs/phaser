@@ -35,6 +35,6 @@ function update()
 function render() {
 
     // Camera
-    game.debug.renderCameraInfo(game.camera, 32, 32);
+    game.debug.cameraInfo(game.camera, 32, 32);
 
 }

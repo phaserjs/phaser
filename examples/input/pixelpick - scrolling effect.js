@@ -93,6 +93,6 @@ function update() {
 
 function render() {
 
-    game.debug.renderSpriteInputInfo(b, 32, 32);
+    game.debug.spriteInputInfo(b, 32, 32);
 
 }

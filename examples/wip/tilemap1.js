@@ -154,23 +154,23 @@ function update() {
 
 function render() {
 
-    // game.debug.renderCameraInfo(game.camera, 420, 320);
+    // game.debug.cameraInfo(game.camera, 420, 320);
 
-    // game.debug.renderText(box2.body.velocity.x, 32, 32);
-    // game.debug.renderText(box2.body.velocity.y, 32, 64);
+    // game.debug.text(box2.body.velocity.x, 32, 32);
+    // game.debug.text(box2.body.velocity.y, 32, 64);
 
-    // game.debug.renderText(b.body.velocity.x, 32, 32);
-    // game.debug.renderText(b.body.velocity.y, 32, 64);
+    // game.debug.text(b.body.velocity.x, 32, 32);
+    // game.debug.text(b.body.velocity.y, 32, 64);
 
     for (var i = 0, len = dump.length; i < len; i++)
     {
-        game.debug.renderPhysicsBody(dump[i]);
+        game.debug.physicsBody(dump[i]);
     }
 
-        // game.debug.renderPhysicsBody(dump[0]);
-        // game.debug.renderPhysicsBody(b);
+        // game.debug.physicsBody(dump[0]);
+        // game.debug.physicsBody(b);
 
-    // game.debug.renderPhysicsBody(ship.body);
+    // game.debug.physicsBody(ship.body);
 
 
 }

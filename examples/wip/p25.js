@@ -62,8 +62,8 @@ function update() {
 
 function render() {
 
-	game.debug.renderText('x: ' + ship.body.x, 32, 32);
-	game.debug.renderText('y: ' + ship.body.y, 32, 64);
+	game.debug.text('x: ' + ship.body.x, 32, 32);
+	game.debug.text('y: ' + ship.body.y, 32, 64);
 
 }
 

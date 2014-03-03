@@ -47,7 +47,7 @@ function killThem() {
 
 function render() {
 
-    game.debug.renderText("Time until event: " + t.duration.toFixed(0), 32, 32);
-    game.debug.renderText("Next tick: " + t.next.toFixed(0), 32, 64);
+    game.debug.text("Time until event: " + t.duration.toFixed(0), 32, 32);
+    game.debug.text("Next tick: " + t.next.toFixed(0), 32, 64);
 
 }

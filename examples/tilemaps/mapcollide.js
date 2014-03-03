@@ -79,7 +79,7 @@ function update() {
 
 function render() {
 
-    game.debug.renderCameraInfo(game.camera, 420, 320);
-    game.debug.renderPhysicsBody(p.body);
+    game.debug.cameraInfo(game.camera, 420, 320);
+    game.debug.physicsBody(p.body);
 
 }

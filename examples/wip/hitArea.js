@@ -85,9 +85,9 @@ function render() {
     var p = game.input.getLocalPosition(jellyfish, game.input.activePointer);
 
 
-    game.debug.renderPointInfo(p, 32, 32);
-    game.debug.renderPoint(p);
-    game.debug.renderText();
-    // game.debug.renderCircle(image2.hitArea);
+    game.debug.pointInfo(p, 32, 32);
+    game.debug.point(p);
+    game.debug.text();
+    // game.debug.circle(image2.hitArea);
 
 }

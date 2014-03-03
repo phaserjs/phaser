@@ -77,7 +77,7 @@ function update() {
 
 function render() {
 
-    // game.debug.renderRectangle(b);
-	// game.debug.renderText(sprite.position.y, 32, 32);
+    // game.debug.geom(b);
+	// game.debug.text(sprite.position.y, 32, 32);
 
 }

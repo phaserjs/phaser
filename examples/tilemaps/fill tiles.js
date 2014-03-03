@@ -68,8 +68,8 @@ function update() {
 
 function render() {
 
-    game.debug.renderText('Click to fill tiles', 32, 32, 'rgb(0,0,0)');
-    game.debug.renderText('Tile X: ' + layer.getTileX(sprite.x), 32, 48, 'rgb(0,0,0)');
-    game.debug.renderText('Tile Y: ' + layer.getTileY(sprite.y), 32, 64, 'rgb(0,0,0)');
+    game.debug.text('Click to fill tiles', 32, 32, 'rgb(0,0,0)');
+    game.debug.text('Tile X: ' + layer.getTileX(sprite.x), 32, 48, 'rgb(0,0,0)');
+    game.debug.text('Tile Y: ' + layer.getTileY(sprite.y), 32, 64, 'rgb(0,0,0)');
 
 }

@@ -84,24 +84,24 @@ function update() {
 
 function render() {
 
-	game.debug.renderPolygon(land.body.polygons);
+	game.debug.polygon(land.body.polygons);
 
 	if (sprite)
 	{
-		game.debug.renderBodyInfo(sprite, 16, 24);
+		game.debug.bodyInfo(sprite, 16, 24);
 	}
 
 	if (sprite)
 	{
-		game.debug.renderPolygon(sprite.body.polygons);
+		game.debug.polygon(sprite.body.polygons);
 	}
 
 	if (sprite2)
 	{
-		game.debug.renderPolygon(sprite2.body.polygons);
+		game.debug.polygon(sprite2.body.polygons);
 	}
 
-	// game.debug.renderRectangle(land.body);
+	// game.debug.geom(land.body);
 
 
 }

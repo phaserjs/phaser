@@ -48,10 +48,10 @@ function render() {
 
 	if (sprite.x === 100 || sprite.x === 400)
 	{
-		game.debug.renderText('Click sprite to tween', 32, 32);
+		game.debug.text('Click sprite to tween', 32, 32);
 	}
 
-	game.debug.renderText('x: ' + arrowStart.x, arrowStart.x, arrowStart.y - 4);
-	game.debug.renderText('x: ' + arrowEnd.x, arrowEnd.x, arrowEnd.y - 4);
+	game.debug.text('x: ' + arrowStart.x, arrowStart.x, arrowStart.y - 4);
+	game.debug.text('x: ' + arrowEnd.x, arrowEnd.x, arrowEnd.y - 4);
 
 }

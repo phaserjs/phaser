@@ -37,10 +37,6 @@ function update() {
 
 function render() {
 
-    //Phaser.DebugUtils.renderSpriteWorldViewBounds(fuji);
-    //Phaser.DebugUtils.renderSpriteBounds(fuji);
-    game.debug.renderSpriteCorners(fuji);
-    //Phaser.DebugUtils.renderSpriteWorldView(fuji, 32, 32);
-    game.debug.renderRectangle(b, 'rgba(0,20,91,1)');
+    game.debug.geom(b, 'rgba(0,20,91,1)');
 
 }

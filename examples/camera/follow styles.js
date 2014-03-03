@@ -103,7 +103,7 @@ function update() {
 
 function render () {
 
-    game.debug.renderText('Click buttons to switch follow styles', 32, 32);
-    game.debug.renderText('Current style: ' + style, 32, 64);
+    game.debug.text('Click buttons to switch follow styles', 32, 32);
+    game.debug.text('Current style: ' + style, 32, 64);
 
 }

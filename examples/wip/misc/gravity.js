@@ -35,5 +35,5 @@ function update() {
 }
 
 function render() {
-    game.debug.renderBodyInfo(sprite,30,32);
+    game.debug.bodyInfo(sprite,30,32);
 }

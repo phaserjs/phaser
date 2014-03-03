@@ -27,7 +27,7 @@ function update() {
 
 function render() {
 
-    game.debug.renderSpriteCorners(sprite1);
+    game.debug.spriteCorners(sprite1);
 
 }
 

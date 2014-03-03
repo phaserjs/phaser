@@ -32,6 +32,6 @@ function fadePicture() {
 
 function render() {
 
-    game.debug.renderText("Time until event: " + game.time.events.duration, 32, 32);
+    game.debug.text("Time until event: " + game.time.events.duration, 32, 32);
 
 }

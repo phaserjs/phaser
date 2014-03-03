@@ -44,8 +44,8 @@ function outSprite() {
 
 function render() {
 
-    game.debug.renderSpriteInputInfo(b, 32, 32);
-    game.debug.renderSpriteCorners(b);
-    game.debug.renderPoint(b.input._tempPoint);
+    game.debug.spriteInputInfo(b, 32, 32);
+    game.debug.spriteCorners(b);
+    game.debug.point(b.input._tempPoint);
 
 }

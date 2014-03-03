@@ -44,6 +44,6 @@ function update() {
 
 function render() {
     
-    game.debug.renderText('The robot is a group and every component is a sprite.', 240, 580);
+    game.debug.text('The robot is a group and every component is a sprite.', 240, 580);
 
 }

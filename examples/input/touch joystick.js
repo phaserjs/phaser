@@ -62,7 +62,7 @@ function update() {
 }
 
 function render() {
-    game.debug.renderText('Use the virtual joystick to move the UFO.', 20, 20);
-    game.debug.renderText('This requires touch events, so try on your phone.', 20, 40);
+    game.debug.text('Use the virtual joystick to move the UFO.', 20, 20);
+    game.debug.text('This requires touch events, so try on your phone.', 20, 40);
 }
 

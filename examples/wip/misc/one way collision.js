@@ -304,22 +304,22 @@ function render() {
 
 	if (sprite)
 	{
-		game.debug.renderBodyInfo(sprite, 16, 24);
+		game.debug.bodyInfo(sprite, 16, 24);
 	}
 
 	if (sprite)
 	{
-		game.debug.renderPhysicsBody(sprite.body);
+		game.debug.physicsBody(sprite.body);
 	}
 
 	if (sprite2)
 	{
-		game.debug.renderPhysicsBody(sprite2.body);
+		game.debug.physicsBody(sprite2.body);
 	}
 
 	if (sprite3)
 	{
-		game.debug.renderPhysicsBody(sprite3.body);
+		game.debug.physicsBody(sprite3.body);
 	}
 
 }

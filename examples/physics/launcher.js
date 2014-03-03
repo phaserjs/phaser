@@ -93,11 +93,11 @@ function update() {
 
 function render() {
 
-    game.debug.renderText("Drag the ball and release to launch", 32, 32);
+    game.debug.text("Drag the ball and release to launch", 32, 32);
 
-    game.debug.renderBodyInfo(ball, 32, 64);
+    game.debug.bodyInfo(ball, 32, 64);
 
-    // game.debug.renderSpriteInfo(ball, 32, 64);
-    // game.debug.renderText("Launch Velocity: " + parseInt(launchVelocity), 32, 250);
+    // game.debug.spriteInfo(ball, 32, 64);
+    // game.debug.text("Launch Velocity: " + parseInt(launchVelocity), 32, 250);
 
 }

@@ -61,10 +61,10 @@ function processCallback(a, b) {
 
 function render() {
 
-	game.debug.renderText(Phaser.Circle.intersectsRectangle(circle, platform.body), 32, 32);
-	game.debug.renderText(ball.body.velocity.y, 32, 64);
-	// game.debug.renderText(ball.body.overlapY, 64, 64);
-	game.debug.renderCircle(circle);
-	game.debug.renderRectangle(platform.body);
+	game.debug.text(Phaser.Circle.intersectsRectangle(circle, platform.body), 32, 32);
+	game.debug.text(ball.body.velocity.y, 32, 64);
+	// game.debug.text(ball.body.overlapY, 64, 64);
+	game.debug.circle(circle);
+	game.debug.geom(platform.body);
 
 }

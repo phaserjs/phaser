@@ -38,6 +38,6 @@ function update() {
 
 function render() {
 
-    game.debug.renderText('Alpha of items is always changing.', 280, 480);
+    game.debug.text('Alpha of items is always changing.', 280, 480);
 
 }

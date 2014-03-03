@@ -69,8 +69,8 @@ function select(item, pointer) {
 
 function render() {
 
-    game.debug.renderText('Left Group', 300, 80);
-    game.debug.renderText('Right Group', 400, 80);
-    game.debug.renderText('Click an item and one from another group to replace it.', 240, 480);
+    game.debug.text('Left Group', 300, 80);
+    game.debug.text('Right Group', 400, 80);
+    game.debug.text('Click an item and one from another group to replace it.', 240, 480);
 
 }

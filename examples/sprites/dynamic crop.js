@@ -37,6 +37,6 @@ function update() {
 
 function render() {
 
-    game.debug.renderText('x: ' + game.input.x + ' y: ' + game.input.y, 32, 32);
+    game.debug.text('x: ' + game.input.x + ' y: ' + game.input.y, 32, 32);
 
 }

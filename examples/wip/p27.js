@@ -90,9 +90,9 @@ function update() {
 
 function render() {
 
-	game.debug.renderPhysicsBody(box.body, 0);
+	game.debug.physicsBody(box.body, 0);
 
-	// game.debug.renderText(box.body., 32, 32);
-	// game.debug.renderText('y: ' + box.body.velocity.y, 32, 64);
+	// game.debug.text(box.body., 32, 32);
+	// game.debug.text('y: ' + box.body.velocity.y, 32, 64);
 
 }

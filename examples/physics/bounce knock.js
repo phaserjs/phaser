@@ -72,6 +72,6 @@ function update () {
 function render () {
 
     //debug helper
-    game.debug.renderSpriteInfo(ball, 32, 32);
+    game.debug.spriteInfo(ball, 32, 32);
 
 }

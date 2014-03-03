@@ -45,6 +45,6 @@ function update () {
 function render () {
 
     //debug helper
-    game.debug.renderSpriteInfo(image,32,32);
+    game.debug.spriteInfo(image,32,32);
 
 }

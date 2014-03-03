@@ -187,21 +187,21 @@ function update() {
 
 function render() {
 
-	game.debug.renderText('Sample ' + sample1 + ' : ' + sampleName1, 16, 32);
-	game.debug.renderText('Sample ' + sample2 + ' : ' + sampleName2, 16, 64);
-	game.debug.renderText('Sample ' + sample3 + ' : ' + sampleName3, 16, 96);
-	game.debug.renderText('Sample ' + sample4 + ' : ' + sampleName4, 16, 128);
+	game.debug.text('Sample ' + sample1 + ' : ' + sampleName1, 16, 32);
+	game.debug.text('Sample ' + sample2 + ' : ' + sampleName2, 16, 64);
+	game.debug.text('Sample ' + sample3 + ' : ' + sampleName3, 16, 96);
+	game.debug.text('Sample ' + sample4 + ' : ' + sampleName4, 16, 128);
 
-	game.debug.renderText('Position: ' + module.position, 16, 160);
-	game.debug.renderText('Pattern: ' + module.row, 16, 192);
-	game.debug.renderText('BPM: ' + module.bpm, 16, 224);
-	game.debug.renderText('Speed: ' + module.speed, 16, 256);
-	game.debug.renderText('Name: ' + module.title, 16, 288);
-	game.debug.renderText('Signature: ' + module.signature, 16, 320);
+	game.debug.text('Position: ' + module.position, 16, 160);
+	game.debug.text('Pattern: ' + module.row, 16, 192);
+	game.debug.text('BPM: ' + module.bpm, 16, 224);
+	game.debug.text('Speed: ' + module.speed, 16, 256);
+	game.debug.text('Name: ' + module.title, 16, 288);
+	game.debug.text('Signature: ' + module.signature, 16, 320);
 
-	game.debug.renderText('vu1: ' + module.vu[0], 16, 352);
-	game.debug.renderText('vu2: ' + module.vu[1], 16, 384);
-	game.debug.renderText('vu3: ' + module.vu[2], 16, 416);
-	game.debug.renderText('vu4: ' + module.vu[3], 16, 448);
+	game.debug.text('vu1: ' + module.vu[0], 16, 352);
+	game.debug.text('vu2: ' + module.vu[1], 16, 384);
+	game.debug.text('vu3: ' + module.vu[2], 16, 416);
+	game.debug.text('vu4: ' + module.vu[3], 16, 448);
 
 }

@@ -40,6 +40,6 @@ function createBaddie() {
 
 function render() {
 
-    game.debug.renderText('Tap screen or click to create new baddies.', 16, 24);
+    game.debug.text('Tap screen or click to create new baddies.', 16, 24);
 
 }

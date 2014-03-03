@@ -85,13 +85,13 @@ function update() {
 
 function render() {
 
-	// game.debug.renderText(anim.frame + ' / 17', 32, 32);
+	// game.debug.text(anim.frame + ' / 17', 32, 32);
 
 	for (var i = 0; i < s.length; i++)
 	{
-		game.debug.renderText(s[i], 16, 160 + (16 * i));
+		game.debug.text(s[i], 16, 160 + (16 * i));
 	}
 
-    game.debug.renderSoundInfo(music, 20, 32);
+    game.debug.soundInfo(music, 20, 32);
 	
 }

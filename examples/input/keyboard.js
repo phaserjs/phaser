@@ -75,6 +75,6 @@ function update() {
 
 function render() {
 
-    game.debug.renderText('Hold left/right to move the ufo.');
+    game.debug.text('Hold left/right to move the ufo.');
 
 }

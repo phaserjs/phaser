@@ -42,7 +42,7 @@ function update() {
 
 function render() {
 
-    game.debug.renderPolygon(sprite.body.polygons, 'rgb(255,0,0)');
-    game.debug.renderPolygon(sprite2.body.polygons, 'rgb(255,0,0)');
+    game.debug.polygon(sprite.body.polygons, 'rgb(255,0,0)');
+    game.debug.polygon(sprite2.body.polygons, 'rgb(255,0,0)');
 
 }

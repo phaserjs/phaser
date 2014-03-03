@@ -35,8 +35,8 @@ function actionOnClick () {
 
 function render () {
 
-    game.debug.renderSpriteCorners(button);
+    game.debug.spriteCorners(button);
 
-    game.debug.renderPoint(button.input._tempPoint);
+    game.debug.point(button.input._tempPoint);
 
 }

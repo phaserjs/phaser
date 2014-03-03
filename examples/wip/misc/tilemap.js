@@ -200,18 +200,18 @@ function update() {
 
 function render() {
 
-    // game.debug.renderSpriteBody(sprite);
-    // game.debug.renderSpriteBounds(sprite);
-    game.debug.renderPhysicsBody(sprite.body);
+    // game.debug.spriteBody(sprite);
+    // game.debug.spriteBounds(sprite);
+    game.debug.physicsBody(sprite.body);
 
-    // game.debug.renderText(sprite.deltaX, 32, 32);
-    // game.debug.renderText(sprite.deltaY, 32, 48);
-    // game.debug.renderText(sprite.body.deltaX(), 232, 32);
-    // game.debug.renderText(sprite.body.deltaY(), 232, 48);
+    // game.debug.text(sprite.deltaX, 32, 32);
+    // game.debug.text(sprite.deltaY, 32, 48);
+    // game.debug.text(sprite.body.deltaX(), 232, 32);
+    // game.debug.text(sprite.body.deltaY(), 232, 48);
 
-    // game.debug.renderText(sprite.body.left, 32, 32);
-    // game.debug.renderText(sprite.body.right, 32, 48);
+    // game.debug.text(sprite.body.left, 32, 32);
+    // game.debug.text(sprite.body.right, 32, 48);
 
-    game.debug.renderSpriteCoords(sprite, 32, 32);
+    game.debug.spriteCoords(sprite, 32, 32);
 
 }

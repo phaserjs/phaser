@@ -33,7 +33,7 @@ function update() {
 
 function render() {
 
-    game.debug.renderText("Drag the ball", 32, 32);
-    game.debug.renderSpriteInfo(arrow, 32, 100);
+    game.debug.text("Drag the ball", 32, 32);
+    game.debug.spriteInfo(arrow, 32, 100);
 
 }

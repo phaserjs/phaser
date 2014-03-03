@@ -81,6 +81,6 @@ function update() {
 
 function render() {
 
-	game.debug.renderText('Tile X: ' + currentTile.x + ' Y: ' + currentTile.y, 32, 32);
+	game.debug.text('Tile X: ' + currentTile.x + ' Y: ' + currentTile.y, 32, 32);
 	
 }

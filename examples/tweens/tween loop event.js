@@ -58,6 +58,6 @@ function onComplete() {
 
 function render() {
 
-	game.debug.renderText('Bounces: ' + bounces, 32, 32);
+	game.debug.text('Bounces: ' + bounces, 32, 32);
 
 }

@@ -27,7 +27,7 @@ function update() {
 
 function render() {
 
-    game.debug.renderKey(key1, 32, 64);
-    game.debug.renderKey(key2, 32, 220);
+    game.debug.key(key1, 32, 64);
+    game.debug.key(key2, 32, 220);
 
 }

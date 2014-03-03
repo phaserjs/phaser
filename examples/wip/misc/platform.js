@@ -97,14 +97,14 @@ function update() {
 
 function render() {
 
-    game.debug.renderBodyInfo(sprite2, 32, 32);
-    game.debug.renderPhysicsBody(sprite2.body);
+    game.debug.bodyInfo(sprite2, 32, 32);
+    game.debug.physicsBody(sprite2.body);
 
 
-    // game.debug.renderText(sprite2.body.left, 32, 30);
-    // game.debug.renderText(sprite2.body.right, 32, 50);
-    // game.debug.renderText(sprite2.body.top, 32, 70);
-    // game.debug.renderText(sprite2.body.bottom, 32, 90);
+    // game.debug.text(sprite2.body.left, 32, 30);
+    // game.debug.text(sprite2.body.right, 32, 50);
+    // game.debug.text(sprite2.body.top, 32, 70);
+    // game.debug.text(sprite2.body.bottom, 32, 90);
 
  
     // for (var i = 0; i < balls._container.length; i++)
@@ -114,8 +114,8 @@ function render() {
 
     // if (sprite)
     // {
-    //     // game.debug.renderBodyInfo(sprite, 20, 30);
-        // game.debug.renderBodyInfo(sprite2, 20, 230);
+    //     // game.debug.bodyInfo(sprite, 20, 30);
+        // game.debug.bodyInfo(sprite2, 20, 230);
     // }
 
 }

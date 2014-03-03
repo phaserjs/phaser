@@ -94,9 +94,9 @@ function update() {
 
 function render() {
 
-    game.debug.renderText("Drag the sprite and release to launch", 32, 32, 'rgb(0,255,0)');
-    game.debug.renderCameraInfo(game.camera, 32, 64);
-    game.debug.renderSpriteCoords(player, 32, 150);
-    game.debug.renderText("Launch Velocity: " + parseInt(launchVelocity), 550, 32, 'rgb(0,255,0)');
+    game.debug.text("Drag the sprite and release to launch", 32, 32, 'rgb(0,255,0)');
+    game.debug.cameraInfo(game.camera, 32, 64);
+    game.debug.spriteCoords(player, 32, 150);
+    game.debug.text("Launch Velocity: " + parseInt(launchVelocity), 550, 32, 'rgb(0,255,0)');
 
 }

@@ -62,11 +62,11 @@ function createBaddie() {
 
 function render() {
 
-    game.debug.renderStyle = '#fff';
-    game.debug.renderText('Tap screen or click to create new baddies.', 16, 24);
-    game.debug.renderText('enemies: ' + enemies.length + ' (actually ' + enemies.length + ' groups)', 16, 48);
-    game.debug.renderText('normal baddies: ' + normalBaddies.length, 16, 60);
-    game.debug.renderText('purple baddies: ' + purpleBaddies.length, 16, 72);
-    game.debug.renderText('friends: ' + friendAndFoe.length, 16, 96);
+    game.debug.style = '#fff';
+    game.debug.text('Tap screen or click to create new baddies.', 16, 24);
+    game.debug.text('enemies: ' + enemies.length + ' (actually ' + enemies.length + ' groups)', 16, 48);
+    game.debug.text('normal baddies: ' + normalBaddies.length, 16, 60);
+    game.debug.text('purple baddies: ' + purpleBaddies.length, 16, 72);
+    game.debug.text('friends: ' + friendAndFoe.length, 16, 96);
 
 }

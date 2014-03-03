@@ -96,7 +96,7 @@ function update() {
 
 function render() {
 
-    // game.debug.renderBodyInfo(sprite, 16, 24);
-    // game.debug.renderPhysicsBody(sprite.body);
+    // game.debug.bodyInfo(sprite, 16, 24);
+    // game.debug.physicsBody(sprite.body);
 
 }

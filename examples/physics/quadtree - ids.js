@@ -73,18 +73,18 @@ function render() {
 
     for (var i = 0; i < aliens.length; i++)
     {
-        // game.debug.renderRectangle(aliens[i].bounds);
+        // game.debug.geom(aliens[i].bounds);
     }
 
-    game.debug.renderText(total.length, 32, 32);
-    game.debug.renderQuadTree(game.physics.quadTree);
-    // game.debug.renderRectangle(ship);
+    game.debug.text(total.length, 32, 32);
+    game.debug.QuadTree(game.physics.quadTree);
+    // game.debug.geom(ship);
 
-    game.debug.renderText('Index: ' + ship.body.quadTreeIndex, 32, 80);
+    game.debug.text('Index: ' + ship.body.quadTreeIndex, 32, 80);
     
     for (var i = 0; i < ship.body.quadTreeIDs.length; i++)
     {
-        game.debug.renderText('ID: ' + ship.body.quadTreeIDs[i], 32, 100 + (i * 20));
+        game.debug.text('ID: ' + ship.body.quadTreeIDs[i], 32, 100 + (i * 20));
     }
 
 }

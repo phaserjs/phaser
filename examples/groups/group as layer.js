@@ -64,10 +64,10 @@ function create() {
 
 function render() {
     
-    game.debug.renderText('sky layer:    z = 0', 16, 20);
-    game.debug.renderText('cloud layer:  z = 1', 16, 36);
-    game.debug.renderText('ground layer: z = 2', 16, 52);
-    game.debug.renderText('sprite layer: z = 3', 16, 68);
-    game.debug.renderText('river layer:  z = 4', 16, 84);
+    game.debug.text('sky layer:    z = 0', 16, 20);
+    game.debug.text('cloud layer:  z = 1', 16, 36);
+    game.debug.text('ground layer: z = 2', 16, 52);
+    game.debug.text('sprite layer: z = 3', 16, 68);
+    game.debug.text('river layer:  z = 4', 16, 84);
     
 }

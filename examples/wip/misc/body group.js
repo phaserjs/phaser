@@ -328,9 +328,9 @@ function render() {
 
     for (var i = 0; i < aliens._container.children.length; i++)
     {
-        // game.debug.renderPhysicsBody(aliens._container.children[i].body);
+        // game.debug.physicsBody(aliens._container.children[i].body);
     }
  
-       game.debug.renderPhysicsBody(bob.body);
+       game.debug.physicsBody(bob.body);
  
 }

@@ -89,6 +89,6 @@ function update () {
 function render () {
 
     //debug helper
-    game.debug.renderSpriteInfo(flyer,32,32);
+    game.debug.spriteInfo(flyer,32,32);
 
 }

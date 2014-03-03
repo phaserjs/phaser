@@ -84,6 +84,6 @@ function update() {
 
 function render() {
 
-    game.debug.renderText('Swap: ' + swapCount, 32, 32);
+    game.debug.text('Swap: ' + swapCount, 32, 32);
 
 }

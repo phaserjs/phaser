@@ -99,6 +99,6 @@ function collectCoin(player, coin) {
 
 function render() {
 
-    game.debug.renderPhysicsBody(sprite.body);
+    game.debug.physicsBody(sprite.body);
 
 }

@@ -134,10 +134,10 @@ function render() {
 
     layer.render();
 
-    game.debug.renderSpriteBody(sprite);
+    game.debug.spriteBody(sprite);
 
-    game.debug.renderSpriteInfo(sprite, 32, 450);
-    // game.debug.renderCameraInfo(game.camera, 32, 32);
+    game.debug.spriteInfo(sprite, 32, 450);
+    // game.debug.cameraInfo(game.camera, 32, 32);
 
     /*
     game.context.save();
@@ -183,6 +183,6 @@ function render() {
     game.context.restore();
     */
 
-    // game.debug.renderRectangle(sprite.body.hullX);
+    // game.debug.geom(sprite.body.hullX);
 
 }

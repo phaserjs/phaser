@@ -27,6 +27,6 @@ function update() {
 
 function render() {
 
-	game.debug.renderRectangle(sprite.getLocalBounds(), 'rgb(255, 255, 255)', false);
+	game.debug.geom(sprite.getLocalBounds(), 'rgb(255, 255, 255)', false);
 
 }

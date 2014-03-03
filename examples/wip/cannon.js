@@ -131,6 +131,6 @@ function update() {
 
 function render() {
 
-    game.debug.renderPhysicsBody(cannon.body);
+    game.debug.physicsBody(cannon.body);
 
 }

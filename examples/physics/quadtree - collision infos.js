@@ -54,14 +54,14 @@ function update() {
 
 function render() {
 
-    game.debug.renderQuadTree(game.physics.quadTree);
-    game.debug.renderRectangle(ship.body);
+    game.debug.QuadTree(game.physics.quadTree);
+    game.debug.geom(ship.body);
 
-    // game.debug.renderText('total: ' + total.length, 32, 50);
+    // game.debug.text('total: ' + total.length, 32, 50);
 
-    game.debug.renderText('up: ' + ship.body.touching.up, 32, 70);
-    game.debug.renderText('down: ' + ship.body.touching.down, 32, 90);
-    game.debug.renderText('left: ' + ship.body.touching.left, 32, 110);
-    game.debug.renderText('right: ' + ship.body.touching.right, 32, 130);
+    game.debug.text('up: ' + ship.body.touching.up, 32, 70);
+    game.debug.text('down: ' + ship.body.touching.down, 32, 90);
+    game.debug.text('left: ' + ship.body.touching.left, 32, 110);
+    game.debug.text('right: ' + ship.body.touching.right, 32, 130);
 
 }

@@ -54,6 +54,6 @@ function update() {
 
 function render() {
 
-    // game.debug.renderPhysicsBody(tilesprite);
+    // game.debug.physicsBody(tilesprite);
 
 }

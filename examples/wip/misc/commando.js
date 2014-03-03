@@ -125,13 +125,13 @@ function update() {
 
 function render() {
 
-    // game.debug.renderSpriteBody(sprite);
-    // game.debug.renderSpriteBounds(sprite);
+    // game.debug.spriteBody(sprite);
+    // game.debug.spriteBounds(sprite);
 
-    // game.debug.renderText(sprite.x, 32, 32);
-    // game.debug.renderText(sprite.y, 32, 48);
+    // game.debug.text(sprite.x, 32, 32);
+    // game.debug.text(sprite.y, 32, 48);
 
-    // game.debug.renderText(layer.scrollX, 32, 32);
-    // game.debug.renderText(layer.scrollY, 32, 48);
+    // game.debug.text(layer.scrollX, 32, 32);
+    // game.debug.text(layer.scrollY, 32, 48);
 
 }

@@ -36,11 +36,11 @@ function update() {
 
 function render() {
 
-    game.debug.renderPixel(sprite1.pivot.x, sprite1.pivot.y);
+    game.debug.pixel(sprite1.pivot.x, sprite1.pivot.y);
 
-    // game.debug.renderSpriteInfo(sprite1, 100, 400);
-    // game.debug.renderSpriteBounds(sprite1);
-    // game.debug.renderSpriteInfo(sprite2, 100, 100);
-    // game.debug.renderSpriteBounds(sprite2);
+    // game.debug.spriteInfo(sprite1, 100, 400);
+    // game.debug.spriteBounds(sprite1);
+    // game.debug.spriteInfo(sprite2, 100, 100);
+    // game.debug.spriteBounds(sprite2);
 }
 

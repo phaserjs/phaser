@@ -23,7 +23,7 @@ function onGameResume() {
 
 function render() {
 
-	game.debug.renderText('now: ' + game.time.now, 32, 32);
-	game.debug.renderText('paused: ' + game.paused, 32, 64);
+	game.debug.text('now: ' + game.time.now, 32, 32);
+	game.debug.text('paused: ' + game.paused, 32, 64);
 
 }

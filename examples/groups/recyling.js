@@ -55,8 +55,8 @@ function createBaddie() {
 
 function render() {
 
-    game.debug.renderText('Recycle baddies from a group using getFirstExists.', 16, 24);
-    game.debug.renderText('Notice that you cannot add more than 8 baddies since we only create 8 instance.', 16, 36);
-    game.debug.renderText('Living baddies: ' + (enemies.countLiving()), 340, 420);
+    game.debug.text('Recycle baddies from a group using getFirstExists.', 16, 24);
+    game.debug.text('Notice that you cannot add more than 8 baddies since we only create 8 instance.', 16, 36);
+    game.debug.text('Living baddies: ' + (enemies.countLiving()), 340, 420);
 
 }

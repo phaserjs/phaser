@@ -43,6 +43,6 @@ function update() {
 
 function render() {
 
-	game.debug.renderText(anim.speed, 32, 32);
+	game.debug.text(anim.speed, 32, 32);
 	
 }

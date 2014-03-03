@@ -270,12 +270,12 @@ function render() {
 
 	if (sprite)
 	{
-		game.debug.renderBodyInfo(sprite, 16, 24);
+		game.debug.bodyInfo(sprite, 16, 24);
 	}
 
 	if (sprite2)
 	{
-		game.debug.renderBodyInfo(sprite2, 16, 190);
+		game.debug.bodyInfo(sprite2, 16, 190);
 	}
 
 }
