@@ -186,15 +186,6 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache[1] = this.world.y;
         this._cache[2] = this.rotation;
         this._cache[4] = 0;
-
-        // if (this.body)
-        // {
-        //     this.body.x = (this.world.x - (this.anchor.x * this.width)) + this.body.offset.x;
-        //     this.body.y = (this.world.y - (this.anchor.y * this.height)) + this.body.offset.y;
-        //     this.body.preX = this.body.x;
-        //     this.body.preY = this.body.y;
-        // }
-
         return false;
     }
 

@@ -17,12 +17,10 @@ var sprite;
 
 function create() {
 
-    sprite = game.add.tileSprite(0, 0, 800, 600, 'starfield');
-    sprite.autoScroll(0, 200);
+    var tile = game.add.tileSprite(0, 0, 800, 600, 'starfield');
+    tile.autoScroll(0, 200);
 
-    game.add.image(200, 200, 'mummy');
-
-    game.world.scale.set(2);
+    sprite = game.add.image(200, 200, 'mummy');
 
 }
 
@@ -32,6 +30,6 @@ function update() {
 
 function render() {
 
-    game.debug.renderText(sprite.frame, 32, 32);
+    game.debug.spriteInfo(sprite, 32, 32);
 
 }

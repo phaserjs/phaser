@@ -426,6 +426,7 @@ Phaser.Game.prototype = {
             this.input.boot();
             this.sound.boot();
             this.state.boot();
+            this.debug.boot();
 
             this.showDebugHeader();
 

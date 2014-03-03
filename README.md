@@ -83,6 +83,8 @@ Significant API changes:
 * Time.physicsElapsed is no longer bound or clamped, be wary of this if you use the value anywhere in your code.
 * In Group.destroy the default for 'destroyChildren' was false. It's now `true` as this is a far more likely requirement when destroying a Group.
 * Game no longer pauses if you've forced orientation and change it, also doesn't resize a NO_SCALE game.
+* All the Debug methods have had the word 'render' removed from the start. So where you did `debug.renderSpriteInfo` before, it's now just `debug.spriteInfo`.
+* Debug methods that rendered geometry (Rectangle, Circle, Line, Point) have been merged into the single method: `Debug.geom`.
 
 
 New features:
@@ -132,6 +134,7 @@ New features:
 * Group.moveUp(child) will move a child up the display list, swapping with the child above it.
 * Group.moveDown(child) will move a child down the display list, swapping with the child below it.
 * Device.windowsPhone is now tested for.
+* The Debug panel now works in WebGL mode. Pay attention to the warning at the top of the Debug docs (feature request #499)
 
 
 Updates:
