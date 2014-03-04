@@ -310,9 +310,10 @@ Phaser.Tween.prototype = {
     *
     * @method Phaser.Tween#generateData
     * @param {number} [frameRate=60] - The speed in frames per second that the data should be generated at. The higher the value, the larger the array it creates.
+    * @param {array} [data] - If given the generated data will be appended to this array, otherwise a new array will be returned.
     * @return {array} An array of tweened values.
     */
-    generateData: function (frameRate) {
+    generateData: function (frameRate, data) {
 
         if (this.game === null || this._object === null)
         {
@@ -399,7 +400,16 @@ Phaser.Tween.prototype = {
             output = output.concat(reversed);
         }
 
-        return output;
+        if (typeof data !== 'undefined')
+        {
+            data = data.concat(output);
+
+            return data;
+        }
+        else
+        {
+            return output;
+        }
 
     },
 

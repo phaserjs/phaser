@@ -586,7 +586,7 @@ Phaser.Math = {
 
     /**
     * Adds value to amount and ensures that the result always stays between 0 and max, by wrapping the value around.
-    * <p>Values must be positive integers, and are passed through Math.abs</p>
+    * Values must be positive integers, and are passed through Math.abs.
     *
     * @method Phaser.Math#wrapValue
     * @param {number} value - The value to add the amount to.

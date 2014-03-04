@@ -140,6 +140,8 @@ New features:
 * A single Animation object now has 3 new events: onStart, onLoop and onComplete.
 * Animation.loopCount holds the number of times the animation has looped since it last started.
 * Tween.generateData(frameRate) allows you to generate tween data into an array, which can then be used however you wish (see new examples)
+* Group.xy(index, x, y) allows you to set the x and y coordinates of a Group child at the given index.
+* Group.reverse() reverses the display order of all children in the Group.
 
 
 Updates:

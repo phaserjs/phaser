@@ -459,6 +459,17 @@ Phaser.Group.prototype.xy = function (index, x, y) {
 }
 
 /**
+* Reverses all children in this Group. Note that this does not propagate, only direct children are re-ordered.
+*
+* @method Phaser.Group#reverse
+*/
+Phaser.Group.prototype.reverse = function () {
+
+    this.children.reverse();
+
+}
+
+/**
 * Get the index position of the given child in this Group.
 *
 * @method Phaser.Group#getIndex
