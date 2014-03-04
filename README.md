@@ -212,6 +212,8 @@ Bug Fixes:
 * Sound.onMarkerComplete event is now dispatched when a marker stops. See Sound.onLoop for a looping marker event (thanks registered99, fixes #500)
 * Events.onInputUp would be dispatched twice if the Sprite had drag enabled, now only dispatched once (thanks Overbryd, fixes #502)
 * You can now load in CSV Tilemaps again and they get created properly (fixes #391)
+* Tilemap.putTile can now insert a tile into a null/blank area of the map (before it could only replace existing tiles)
+* Tilemap.putTile now correctly re-calculates the collision data based on the new collideIndexes array (fixes #371)
 
 
 TO DO:

@@ -179,10 +179,12 @@ Phaser.Tile.prototype = {
 
         if (left || right || up || down)
         {
+            this.collides = true;
             this.collideNone = false;
         }
         else
         {
+            this.collides = false;
             this.collideNone = true;
         }
 
@@ -199,6 +201,11 @@ Phaser.Tile.prototype = {
         this.collideRight = false;
         this.collideUp = false;
         this.collideDown = false;
+        this.collides = false;
+        this.faceTop = false;
+        this.faceBottom = false;
+        this.faceLeft = false;
+        this.faceRight = false;
 
     },
 

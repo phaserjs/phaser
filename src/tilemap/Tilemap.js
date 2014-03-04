@@ -107,6 +107,11 @@ Phaser.Tilemap = function (game, key, tileWidth, tileHeight, width, height) {
     this.objects = data.objects;
 
     /**
+    * @property {array} collideIndexes - An array of tile indexes that collide.
+    */
+    this.collideIndexes = [];
+
+    /**
     * @property {array} collision - An array of collision data (polylines, etc).
     */
     this.collision = data.collision;
@@ -763,6 +768,20 @@ Phaser.Tilemap.prototype = {
         if (typeof layer === 'undefined') { layer = this.currentLayer; }
         if (typeof recalculate === 'undefined') { recalculate = true; }
 
+        if (collides)
+        {
+            this.collideIndexes.push(index);
+        }
+        else
+        {
+            var i = this.collideIndexes.indexOf(index);
+
+            if (i > -1)
+            {
+                this.collideIndexes.splice(i, 1);
+            }
+        }
+
         for (var y = 0; y < this.layers[layer].height ; y++)
         {
             for (var x = 0; x < this.layers[layer].width; x++)
@@ -847,6 +866,14 @@ Phaser.Tilemap.prototype = {
                     below = this.getTileBelow(layer, x, y);
                     left = this.getTileLeft(layer, x, y);
                     right = this.getTileRight(layer, x, y);
+
+                    if (tile.collides)
+                    {
+                        tile.faceTop = true;
+                        tile.faceBottom = true;
+                        tile.faceLeft = true;
+                        tile.faceRight = true;
+                    }
 
                     if (above && above.collides)
                     {
@@ -974,6 +1001,15 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Checks if there is a tile at the given location.
+    *
+    * @method Phaser.Tilemap#hasTile
+    * @param {number} x - X position to check if a tile exists at (given in tile units, not pixels)
+    * @param {number} y - Y position to check if a tile exists at (given in tile units, not pixels)
+    * @param {number|string|Phaser.TilemapLayer} layer - The layer to set as current.
+    * @return {boolean} True if there is a tile at the given location, otherwise false.
+    */
     hasTile: function (x, y, layer) {
 
         return (this.layers[layer].data[y] !== null && this.layers[layer].data[y][x] !== null);
@@ -995,28 +1031,42 @@ Phaser.Tilemap.prototype = {
 
         if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
         {
+            var index;
+
             if (tile instanceof Phaser.Tile)
             {
+                index = tile.index;
+
                 if (this.hasTile(x, y, layer))
                 {
                     this.layers[layer].data[y][x].copy(tile);
                 }
                 else
                 {
-                    //Phaser.Tile = function (layer, index, x, y, width, height) {
-                    this.layers[layer].data[y][x] = new Phaser.Tile(layer, tile.index, x, y, tile.width, tile.height);
+                    this.layers[layer].data[y][x] = new Phaser.Tile(layer, index, x, y, tile.width, tile.height);
                 }
             }
             else
             {
+                index = tile;
+
                 if (this.hasTile(x, y, layer))
                 {
-                    this.layers[layer].data[y][x].index = tile;
+                    this.layers[layer].data[y][x].index = index;
                 }
                 else
                 {
-                    this.layers[layer].data[y][x] = new Phaser.Tile(layer, tile, x, y, this.tileWidth, this.tileHeight);
+                    this.layers[layer].data[y][x] = new Phaser.Tile(layer, index, x, y, this.tileWidth, this.tileHeight);
                 }
+            }
+
+            if (this.collideIndexes.indexOf(index) > -1)
+            {
+                this.layers[layer].data[y][x].setCollision(true, true, true, true);
+            }
+            else
+            {
+                this.layers[layer].data[y][x].resetCollision();
             }
 
 			this.layers[layer].dirty = true;

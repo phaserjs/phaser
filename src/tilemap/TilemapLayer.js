@@ -837,12 +837,12 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
             }
 
             //  Collision callback
-            if (tile && (tile.collisionCallback || tile.layer.callbacks[tile.index]))
-            {
-                this.context.fillStyle = this.debugCallbackColor;
-                this.context.fillRect(this._tx, this._ty, this._cw, this._ch);
-                this.context.fillStyle = this.debugFillColor;
-            }
+            // if (tile && (tile.collisionCallback || tile.layer.callbacks[tile.index]))
+            // {
+            //     this.context.fillStyle = this.debugCallbackColor;
+            //     this.context.fillRect(this._tx, this._ty, this._cw, this._ch);
+            //     this.context.fillStyle = this.debugFillColor;
+            // }
 
             this._tx += this.map.tileWidth;
 
