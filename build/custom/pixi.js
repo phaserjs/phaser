@@ -1926,7 +1926,7 @@ PIXI.Sprite.prototype._renderCanvas = function(renderSession)
         // allow for trimming
         if (renderSession.roundPixels)
         {
-            context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx || 0, transform.ty || 0);
+            context.setTransform(transform.a, transform.c, transform.b, transform.d, transform.tx | 0, transform.ty | 0);
         }
         else
         {
@@ -2199,7 +2199,7 @@ PIXI.SpriteBatch.prototype._renderCanvas = function(renderSession)
            
             if (renderSession.roundPixels)
             {
-                context.setTransform(childTransform.a, childTransform.c, childTransform.b, childTransform.d, childTransform.tx || 0, childTransform.ty || 0);
+                context.setTransform(childTransform.a, childTransform.c, childTransform.b, childTransform.d, childTransform.tx | 0, childTransform.ty | 0);
             }
             else
             {
@@ -5495,7 +5495,7 @@ PIXI.WebGLSpriteBatch = function(gl)
      * @property size
      * @type Number
      */
-    this.size = 10000;//Math.pow(2, 16) /  this.vertSize;
+    this.size = 2000;//Math.pow(2, 16) /  this.vertSize;
 
     //the total number of floats in our batch
     var numVerts = this.size * 4 *  this.vertSize;
