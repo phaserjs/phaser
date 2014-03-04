@@ -6,7 +6,7 @@ function preload() {
     game.load.image('backdrop', 'assets/pics/remember-me.jpg');
     game.load.image('mushroom', 'assets/sprites/mushroom2.png');
 	game.load.image('coke', 'assets/sprites/cokecan.png');
-    game.load.bitmapFont('desyrel', 'assets/fonts/desyrel.png', 'assets/fonts/desyrel.xml', null, 0, -32);
+    game.load.bitmapFont('desyrel', 'assets/fonts/bitmapFonts/desyrel.png', 'assets/fonts/bitmapFonts/desyrel.xml', null, 0, -32);
 
 }
 

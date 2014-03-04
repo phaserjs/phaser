@@ -19,9 +19,7 @@
         <link rel="stylesheet" type="text/css" href="css/demo.css" />
         <link rel="stylesheet" type="text/css" href="css/component.css" />
         <script src="js/modernizr.custom.js"></script>
-        <?php
-            require('build/config.php');
-        ?>
+        <script src="js/phaser.min.js" type="text/javascript"></script>
         <script src="code/<?php echo $f?>" type="text/javascript"></script>
     </head>
     <body>
