@@ -1,5 +1,6 @@
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
+// var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
@@ -48,7 +49,12 @@ function create() {
     sprite = game.add.sprite(200, 70, 'phaser');
     sprite.anchor.setTo(0.5, 0.5);
 
+
     game.physics.enable(sprite);
+
+    sprite.body.setSize(14, 14, 2, 0);
+
+    console.log(sprite.body);
 
     game.camera.follow(sprite);
 
@@ -72,26 +78,36 @@ function update() {
 
     if (cursors.up.isDown)
     {
-        sprite.body.velocity.y = -150;
+        sprite.body.velocity.y = -100;
         // particleBurst();
     }
     else if (cursors.down.isDown)
     {
-        sprite.body.velocity.y = 150;
+        sprite.body.velocity.y = 100;
         // particleBurst();
     }
 
     if (cursors.left.isDown)
     {
-        sprite.body.velocity.x = -150;
+        sprite.body.velocity.x = -100;
         sprite.scale.x = -1;
         // particleBurst();
     }
     else if (cursors.right.isDown)
     {
-        sprite.body.velocity.x = 150;
+        sprite.body.velocity.x = 100;
         sprite.scale.x = 1;
         // particleBurst();
     }
+
+}
+
+function render() {
+
+    // game.debug.text(game.physics.arcade._intersection.width, 32, 32);
+    // game.debug.text(game.physics.arcade._intersection.height, 32, 64);
+
+    game.debug.text(sprite.body.overlapX, 32, 32);
+    game.debug.text(sprite.body.overlapY, 32, 64);
 
 }

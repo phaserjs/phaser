@@ -156,7 +156,8 @@ Phaser.Physics.Arcade = function (game) {
     * @property {number} _intersection - Internal cache var.
     * @private
     */
-    this._intersection = [0,0,0,0];
+    // this._intersection = [0,0,0,0];
+    this._intersection = new Phaser.Rectangle();
 
 };
 
@@ -672,7 +673,7 @@ Phaser.Physics.Arcade.prototype = {
                 //  Body1 is moving right and/or Body2 is moving left
                 this._overlap = body1.x + body1.width - body2.x;
 
-                if ((this._overlap > this._maxOverlap) || body1.allowCollision.right === false || body2.allowCollision.left === false)
+                if ((this._overlap > this._maxOverlap) || body1.checkCollision.right === false || body2.checkCollision.left === false)
                 {
                     this._overlap = 0;
                 }
@@ -687,7 +688,7 @@ Phaser.Physics.Arcade.prototype = {
                 //  Body1 is moving left and/or Body2 is moving right
                 this._overlap = body1.x - body2.width - body2.x;
 
-                if ((-this._overlap > this._maxOverlap) || body1.allowCollision.left === false || body2.allowCollision.right === false)
+                if ((-this._overlap > this._maxOverlap) || body1.checkCollision.left === false || body2.checkCollision.right === false)
                 {
                     this._overlap = 0;
                 }
@@ -781,7 +782,7 @@ Phaser.Physics.Arcade.prototype = {
                 //  Body1 is moving down and/or Body2 is moving up
                 this._overlap = body1.y + body1.height - body2.y;
 
-                if ((this._overlap > this._maxOverlap) || body1.allowCollision.down === false || body2.allowCollision.up === false)
+                if ((this._overlap > this._maxOverlap) || body1.checkCollision.down === false || body2.checkCollision.up === false)
                 {
                     this._overlap = 0;
                 }
@@ -796,7 +797,7 @@ Phaser.Physics.Arcade.prototype = {
                 //  Body1 is moving up and/or Body2 is moving down
                 this._overlap = body1.y - body2.height - body2.y;
 
-                if ((-this._overlap > this._maxOverlap) || body1.allowCollision.up === false || body2.allowCollision.down === false)
+                if ((-this._overlap > this._maxOverlap) || body1.checkCollision.up === false || body2.checkCollision.down === false)
                 {
                     this._overlap = 0;
                 }
@@ -879,22 +880,17 @@ Phaser.Physics.Arcade.prototype = {
     */
     tileIntersects: function (body, tile) {
 
+        this._intersection[0] = 0;
+        this._intersection[1] = 0;
+        this._intersection[2] = 0;
+        this._intersection[3] = 0;
+        this._intersection[4] = 0;
+
         if (body.width <= 0 || body.height <= 0 || tile.width <= 0 || tile.height <= 0)
         {
             this._intersection[4] = 0;
             return this._intersection;
         }
-
-        // if (!(body.right < tile.x || body.bottom < tile.y || body.left > tile.right || body.top > tile.bottom))
-        // {
-        //     this._intersection[0] = Math.max(body.left, tile.x);                                    // x
-        //     this._intersection[1] = Math.max(body.top, tile.y);                                     // y
-        //     this._intersection[2] = Math.min(body.right, tile.right) - this._intersection[0];       // width
-        //     this._intersection[3] = Math.min(body.bottom, tile.bottom) - this._intersection[1];     // height
-        //     this._intersection[4] = 1;
-
-        //     return this._intersection;
-        // }
 
         if (!(body.right < tile.x || body.bottom < tile.y || body.x > tile.right || body.y > tile.bottom))
         {
@@ -920,7 +916,7 @@ Phaser.Physics.Arcade.prototype = {
     * @param {array<Phaser.Tile>} tiles - The array of tiles to collide against.
     * @returns {boolean} Returns true if the body was separated, otherwise false.
     */
-    OLDseparateTiles: function (body, tiles) {
+    separateTiles: function (body, tiles) {
 
         var tile;
         var result = false;
@@ -946,8 +942,9 @@ Phaser.Physics.Arcade.prototype = {
     * @param {Phaser.Tile} tile - The tile to collide against.
     * @returns {boolean} Returns true if the body was separated, otherwise false.
     */
-    OLDseparateTile: function (body, tile) {
+    separateTile: function (body, tile) {
 
+        /*
         this._intersection = this.tileIntersects(body, tile);
 
         //  If the intersection area is either entirely null, or has a width/height of zero, we bail out now
@@ -955,6 +952,17 @@ Phaser.Physics.Arcade.prototype = {
         {
             return false;
         }
+        */
+
+        Phaser.Rectangle.intersection(body, tile, this._intersection);
+
+        if (this._intersection.width === 0 && this._intersection.height === 0)
+        {
+            return false;
+        }
+
+        // console.log(this._intersection);
+        // console.log(tile, body.x, body.y);
 
         //  They overlap. Any custom callbacks?
         if (tile.tile.callback || tile.layer.callbacks[tile.tile.index])
@@ -973,11 +981,112 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         body.overlapX = 0;
+
+        var process = false;
+
+        if (this._intersection.width > 0)
+        {
+            //  Tile is blocking to the right and body is moving left
+            if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight)
+            {
+                process = true;
+                body.overlapX = -this._intersection.width;
+            }
+
+            //  Tile is blocking to the left and body is moving right
+            if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft)
+            {
+                process = true;
+                body.overlapX = this._intersection.width;
+            }
+        }
+
+        if (body.overlapX !== 0)
+        {
+            if (body.overlapX < 0)
+            {
+                body.blocked.left = true;
+            }
+            else if (body.overlapX > 0)
+            {
+                body.blocked.right = true;
+            }
+
+            body.x -= body.overlapX;
+            body.preX -= body.overlapX;
+            body.blocked.x = Math.floor(body.x);
+            body.blocked.y = Math.floor(body.y);
+
+            if (body.bounce.x === 0)
+            {
+                body.velocity.x = 0;
+            }
+            else
+            {
+                body.velocity.x = -body.velocity.x * body.bounce.x;
+            }
+        }
+
+        Phaser.Rectangle.intersection(body, tile, this._intersection);
+
+        if (this._intersection.width === 0 && this._intersection.height === 0)
+        {
+            return false;
+        }
+
         body.overlapY = 0;
 
         var process = false;
 
+        if (this._intersection.height > 0)
+        {
+            //  Tile is blocking to the bottom and body is moving up
+            if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom)
+            {
+                process = true;
+                body.overlapY = -this._intersection.height;
+            }
+            
+            //  Tile is blocking to the top and body is moving down
+            if (body.deltaY() > 0 && body.checkCollision.down && tile.tile.faceTop)
+            {
+                process = true;
+                body.overlapY = this._intersection.height;
+            }
+        }
+
+        if (body.overlapY !== 0)
+        {
+            if (body.overlapY < 0)
+            {
+                body.blocked.up = true;
+            }
+            else if (body.overlapY > 0)
+            {
+                body.blocked.down = true;
+            }
+
+            body.y -= body.overlapY;
+            body.preY -= body.overlapY;
+            body.blocked.x = Math.floor(body.x);
+            body.blocked.y = Math.floor(body.y);
+
+            if (body.bounce.y === 0)
+            {
+                body.velocity.y = 0;
+            }
+            else
+            {
+                body.velocity.y = -body.velocity.y * body.bounce.y;
+            }
+        }
+
+        return;
+
+
+        /*
         if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight && !body.blocked.left)
+        // if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight)
         {
             //  LEFT
             body.overlapX = body.x - tile.right;
@@ -992,6 +1101,7 @@ Phaser.Physics.Arcade.prototype = {
             }
         }
         else if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft && !body.blocked.right)
+        // else if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft)
         {
             //  RIGHT
             body.overlapX = body.right - tile.x;
@@ -1007,6 +1117,7 @@ Phaser.Physics.Arcade.prototype = {
         }
 
         if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom && !body.blocked.up)
+        // if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom)
         {
             //  UP
             body.overlapY = body.y - tile.bottom;
@@ -1021,6 +1132,7 @@ Phaser.Physics.Arcade.prototype = {
             }
         }
         else if (body.deltaY() > 0 && body.checkCollision.down && tile.tile.faceTop && !body.blocked.down)
+        // else if (body.deltaY() > 0 && body.checkCollision.down && tile.tile.faceTop)
         {
             //  DOWN
             body.overlapY = body.bottom - tile.y;
@@ -1034,8 +1146,10 @@ Phaser.Physics.Arcade.prototype = {
                 body.overlapY = 0;
             }
         }
+        */
 
         //  Only separate on the smallest of the two values if it's a single tile
+        /*
         if (body.overlapX !== 0 && body.overlapY !== 0)
         {
             if (Math.abs(body.overlapX) > Math.abs(body.overlapY))
@@ -1047,9 +1161,10 @@ Phaser.Physics.Arcade.prototype = {
                 body.overlapY = 0;
             }
         }
+        */
 
         //  Separate in a single sweep
-        if (process)
+/*        if (process)
         {
             return this.processTileSeparation(body);
         }
@@ -1057,7 +1172,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             return false;
         }
-
+*/
     },
 
     /**
@@ -1069,29 +1184,22 @@ Phaser.Physics.Arcade.prototype = {
     */
     processTileSeparation: function (body) {
 
-        if (body.overlapX < 0)
-        {
-            body.x -= body.overlapX;
-            body.preX -= body.overlapX;
-            // body.left -= body.overlapX;
-            // body.right -= body.overlapX;
-            body.blocked.x = Math.floor(body.x);
-            body.blocked.y = Math.floor(body.y);
-            body.blocked.left = true;
-        }
-        else if (body.overlapX > 0)
-        {
-            body.x -= body.overlapX;
-            body.preX -= body.overlapX;
-            // body.left -= body.overlapX;
-            // body.right -= body.overlapX;
-            body.blocked.x = Math.floor(body.x);
-            body.blocked.y = Math.floor(body.y);
-            body.blocked.right = true;
-        }
-
         if (body.overlapX !== 0)
         {
+            if (body.overlapX < 0)
+            {
+                body.blocked.left = true;
+            }
+            else if (body.overlapX > 0)
+            {
+                body.blocked.right = true;
+            }
+
+            body.x -= body.overlapX;
+            body.preX -= body.overlapX;
+            body.blocked.x = Math.floor(body.x);
+            body.blocked.y = Math.floor(body.y);
+
             if (body.bounce.x === 0)
             {
                 body.velocity.x = 0;
@@ -1102,29 +1210,22 @@ Phaser.Physics.Arcade.prototype = {
             }
         }
 
-        if (body.overlapY < 0)
-        {
-            body.y -= body.overlapY;
-            body.preY -= body.overlapY;
-            // body.top -= body.overlapY;
-            // body.bottom -= body.overlapY;
-            body.blocked.x = Math.floor(body.x);
-            body.blocked.y = Math.floor(body.y);
-            body.blocked.up = true;
-        }
-        else if (body.overlapY > 0)
-        {
-            body.y -= body.overlapY;
-            body.preY -= body.overlapY;
-            // body.top -= body.overlapY;
-            // body.bottom -= body.overlapY;
-            body.blocked.x = Math.floor(body.x);
-            body.blocked.y = Math.floor(body.y);
-            body.blocked.down = true;
-        }
-
         if (body.overlapY !== 0)
         {
+            if (body.overlapY < 0)
+            {
+                body.blocked.up = true;
+            }
+            else if (body.overlapY > 0)
+            {
+                body.blocked.down = true;
+            }
+
+            body.y -= body.overlapY;
+            body.preY -= body.overlapY;
+            body.blocked.x = Math.floor(body.x);
+            body.blocked.y = Math.floor(body.y);
+
             if (body.bounce.y === 0)
             {
                 body.velocity.y = 0;
@@ -1146,7 +1247,7 @@ Phaser.Physics.Arcade.prototype = {
     * @param {Phaser.Tile} tile - The tile to collide against.
     * @returns {boolean} Returns true if the bodies were separated, otherwise false.
     */
-    separateTiles: function (body, tiles) {
+    OLDseparateTiles: function (body, tiles) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
         // if (body.immovable)
@@ -1167,7 +1268,7 @@ Phaser.Physics.Arcade.prototype = {
 
             if (Phaser.Rectangle.intersects(body, tile))
             {
-                if (body.deltaX() < 0 && body.allowCollision.left && tile.tile.faceRight)
+                if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight)
                 {
                     //  LEFT
                     localOverlapX = body.x - tile.right;
@@ -1181,7 +1282,7 @@ Phaser.Physics.Arcade.prototype = {
                         body.touching.none = false;
                     }
                 }
-                else if (body.deltaX() > 0 && body.allowCollision.right && tile.tile.faceLeft)
+                else if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft)
                 {
                     //  RIGHT
                     localOverlapX = body.right - tile.x;
@@ -1196,7 +1297,7 @@ Phaser.Physics.Arcade.prototype = {
                     }
                 }
 
-                if (body.deltaY() < 0 && body.allowCollision.up && tile.tile.faceBottom)
+                if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom)
                 {
                     //  UP
                     localOverlapY = body.y - tile.bottom;
@@ -1210,7 +1311,7 @@ Phaser.Physics.Arcade.prototype = {
                         body.touching.none = false;
                     }
                 }
-                else if (body.deltaY() > 0 && body.allowCollision.down && tile.tile.faceTop)
+                else if (body.deltaY() > 0 && body.checkCollision.down && tile.tile.faceTop)
                 {
                     //  DOWN
                     localOverlapY = body.bottom - tile.y;
@@ -1284,10 +1385,11 @@ Phaser.Physics.Arcade.prototype = {
     * @param {Phaser.Tile} tile - The tile to collide against.
     * @returns {boolean} Returns true if the bodies were separated, otherwise false.
     */
-    separateTile: function (body, tile) {
+    OLDseparateTile: function (body, tile) {
 
         //  Can't separate two immovable objects (tiles are always immovable)
-        if (body.immovable || Phaser.Rectangle.intersects(body, tile) === false)
+        // if (body.immovable || Phaser.Rectangle.intersects(body, tile) === false)
+        if (Phaser.Rectangle.intersects(body, tile) === false)
         {
             // console.log('no intersects');
             // console.log('tx', tile.x, 'ty', tile.y, 'tw', tile.width, 'th', tile.height, 'tr', tile.right, 'tb', tile.bottom);
@@ -1306,7 +1408,7 @@ Phaser.Physics.Arcade.prototype = {
         // console.log(Phaser.Rectangle.intersects(body, tile));
         // console.log('dx', body.deltaX(), 'dy', body.deltaY(), 'dax', body.deltaAbsX(), 'day', body.deltaAbsY(), 'cax', Math.ceil(body.deltaAbsX()), 'cay', Math.ceil(body.deltaAbsY()));
 
-        if (body.deltaX() < 0 && body.allowCollision.left && tile.tile.faceRight)
+        if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight)
         {
             //  LEFT
             body.overlapX = body.x - tile.right;
@@ -1320,7 +1422,7 @@ Phaser.Physics.Arcade.prototype = {
                 body.touching.none = false;
             }
         }
-        else if (body.deltaX() > 0 && body.allowCollision.right && tile.tile.faceLeft)
+        else if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft)
         {
             //  RIGHT
             body.overlapX = body.right - tile.x;
@@ -1335,7 +1437,7 @@ Phaser.Physics.Arcade.prototype = {
             }
         }
 
-        if (body.deltaY() < 0 && body.allowCollision.up && tile.tile.faceBottom)
+        if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom)
         {
             //  UP
             body.overlapY = body.y - tile.bottom;
@@ -1349,7 +1451,7 @@ Phaser.Physics.Arcade.prototype = {
                 body.touching.none = false;
             }
         }
-        else if (body.deltaY() > 0 && body.allowCollision.down && tile.tile.faceTop)
+        else if (body.deltaY() > 0 && body.checkCollision.down && tile.tile.faceTop)
         {
             //  DOWN
             body.overlapY = body.bottom - tile.y;

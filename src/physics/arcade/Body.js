@@ -351,8 +351,8 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         this.embedded = false;
 
-        this.screenX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
-        this.screenY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+        // this.screenX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+        // this.screenY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
 
         this.preX = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
         this.preY = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
@@ -363,8 +363,8 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.y = this.preY;
         this.rotation = this.preRotation;
 
-        this.overlapX = 0;
-        this.overlapY = 0;
+        // this.overlapX = 0;
+        // this.overlapY = 0;
 
         this.blocked.up = false;
         this.blocked.down = false;
@@ -564,7 +564,8 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
     * @return {number}
     */
     get: function () {
-        return Math.floor(this.y + this.height);
+        // return Math.floor(this.y + this.height);
+        return this.y + this.height;
     },
 
     /**
@@ -600,7 +601,8 @@ Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
     * @return {number}
     */
     get: function () {
-        return Math.floor(this.x + this.width);
+        // return Math.floor(this.x + this.width);
+        return this.x + this.width;
     },
 
     /**
