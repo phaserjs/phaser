@@ -1276,7 +1276,7 @@ declare module Phaser {
         spritesheet(key: string, url: string, frameWidth: number, frameHeight: number, frameMax?: number, margin?: number, spacing?: number): Phaser.Loader;
         start(): void;
         text(key: string, url: string, overwrite?: boolean): Phaser.Loader;
-        tilemap(key: string, mapDataURL?: string, mapData?: Object, format?: string): Phaser.Loader;
+        tilemap(key: string, mapDataURL?: string, mapData?: Object, format?: number): Phaser.Loader;
         totalLoadedFiles(): number;
         totalQueuedFiles(): number;
         xmlLoadComplete(index:number): void;
