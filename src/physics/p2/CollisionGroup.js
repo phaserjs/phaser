@@ -7,11 +7,11 @@
 /**
 * Collision Group
 *
-* @class Phaser.Physics.CollisionGroup
+* @class Phaser.Physics.P2.CollisionGroup
 * @classdesc Physics Collision Group Constructor
 * @constructor
 */
-Phaser.Physics.CollisionGroup = function (bitmask) {
+Phaser.Physics.P2.CollisionGroup = function (bitmask) {
 
     /**
     * @property {number} mask - The CollisionGroup bitmask.

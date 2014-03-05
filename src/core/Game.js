@@ -172,7 +172,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.world = null;
 
     /**
-    * @property {Phaser.Physics.World} physics - Reference to the physics world.
+    * @property {Phaser.Physics} physics - Reference to the physics manager.
     */
     this.physics = null;
 
@@ -414,7 +414,7 @@ Phaser.Game.prototype = {
             this.tweens = new Phaser.TweenManager(this);
             this.input = new Phaser.Input(this);
             this.sound = new Phaser.SoundManager(this);
-            this.physics = new Phaser.Physics.World(this, this.physicsConfig);
+            this.physics = new Phaser.Physics(this, this.physicsConfig);
             this.particles = new Phaser.Particles(this);
             this.plugins = new Phaser.PluginManager(this, this);
             this.net = new Phaser.Net(this);

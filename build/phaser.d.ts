@@ -1450,7 +1450,7 @@ declare module Phaser {
         static intersectsRectangle(c: Phaser.Circle, r: Phaser.Rectangle): boolean;
         //methods
         circumference(): number;
-        circumferencePoint(angle: number, asDegrees: number, output?: Phaser.Point): Phaser.Point;
+        circumferencePoint(angle: number, asDegrees: boolean, output?: Phaser.Point): Phaser.Point;
         clone(out: Phaser.Circle): Phaser.Circle;
         contains(x: number, y: number): boolean;
         copyFrom(source: any): Circle;

@@ -135,14 +135,20 @@
     <script src="$path/src/utils/Debug.js"></script>
     <script src="$path/src/utils/Color.js"></script>
 
-    <script src="$path/src/physics/World.js"></script>
-    <script src="$path/src/physics/PointProxy.js"></script>
-    <script src="$path/src/physics/InversePointProxy.js"></script>
-    <script src="$path/src/physics/Body.js"></script>
-    <script src="$path/src/physics/Spring.js"></script>
-    <script src="$path/src/physics/Material.js"></script>
-    <script src="$path/src/physics/ContactMaterial.js"></script>
-    <script src="$path/src/physics/CollisionGroup.js"></script>
+    <script src="$path/src/physics/Physics.js"></script>
+
+    <script src="$path/src/physics/arcade/World.js"></script>
+    <script src="$path/src/physics/arcade/Body.js"></script>
+    <script src="$path/src/physics/arcade/QuadTree.js"></script>
+
+    <script src="$path/src/physics/p2/World.js"></script>
+    <script src="$path/src/physics/p2/PointProxy.js"></script>
+    <script src="$path/src/physics/p2/InversePointProxy.js"></script>
+    <script src="$path/src/physics/p2/Body.js"></script>
+    <script src="$path/src/physics/p2/Spring.js"></script>
+    <script src="$path/src/physics/p2/Material.js"></script>
+    <script src="$path/src/physics/p2/ContactMaterial.js"></script>
+    <script src="$path/src/physics/p2/CollisionGroup.js"></script>
 
     <script src="$path/src/particles/Particles.js"></script>
     <script src="$path/src/particles/arcade/ArcadeParticles.js"></script>
@@ -154,4 +160,12 @@
     <script src="$path/src/tilemap/TilemapParser.js"></script>
     <script src="$path/src/tilemap/Tileset.js"></script>
 EOL;
+
+/*
+
+
+
+
+*/
+
 ?>

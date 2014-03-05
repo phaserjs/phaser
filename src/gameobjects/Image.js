@@ -466,18 +466,11 @@ Phaser.Image.prototype.reset = function(x, y) {
 * @memberof Phaser.Image
 * @return {Phaser.Image} This instance.
 */
-Phaser.Image.prototype.bringToTop = function(child) {
+Phaser.Image.prototype.bringToTop = function() {
 
-    if (typeof child === 'undefined')
+    if (this.parent)
     {
-        if (this.parent)
-        {
-            this.parent.bringToTop(this);
-        }
-    }
-    else
-    {
-
+        this.parent.bringToTop(this);
     }
 
     return this;

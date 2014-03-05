@@ -117,7 +117,7 @@ Phaser.Utils.Debug.prototype = {
             this.context = this.canvas.getContext('2d');
             this.baseTexture = new PIXI.BaseTexture(this.canvas);
             this.texture = new PIXI.Texture(this.baseTexture);
-            this.textureFrame = new Phaser.Frame(0, 0, 0, this.game.width, this.game.height, 'debug', game.rnd.uuid());
+            this.textureFrame = new Phaser.Frame(0, 0, 0, this.game.width, this.game.height, 'debug', this.game.rnd.uuid());
             this.sprite = this.game.make.image(0, 0, this.texture, this.textureFrame);
             this.game.stage.addChild(this.sprite);
         }

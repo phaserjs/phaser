@@ -7,7 +7,7 @@
 /**
 * Creates a spring, connecting two bodies.
 *
-* @class Phaser.Physics.Spring
+* @class Phaser.Physics.P2.Spring
 * @classdesc Physics Spring Constructor
 * @constructor
 * @param {Phaser.Game} game - A reference to the current game.
@@ -21,7 +21,7 @@
 * @param {Array} [localA] - Where to hook the spring to body A, in local body coordinates.
 * @param {Array} [localB] - Where to hook the spring to body B, in local body coordinates.
 */
-Phaser.Physics.Spring = function (game, bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB) {
+Phaser.Physics.P2.Spring = function (game, bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB) {
 
     /**
     * @property {Phaser.Game} game - Local reference to game.
@@ -62,5 +62,5 @@ Phaser.Physics.Spring = function (game, bodyA, bodyB, restLength, stiffness, dam
 
 }
 
-Phaser.Physics.Spring.prototype = Object.create(p2.Spring.prototype);
-Phaser.Physics.Spring.prototype.constructor = Phaser.Physics.Spring;
+Phaser.Physics.P2.Spring.prototype = Object.create(p2.Spring.prototype);
+Phaser.Physics.P2.Spring.prototype.constructor = Phaser.Physics.P2.Spring;

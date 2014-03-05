@@ -214,6 +214,7 @@ Bug Fixes:
 * You can now load in CSV Tilemaps again and they get created properly (fixes #391)
 * Tilemap.putTile can now insert a tile into a null/blank area of the map (before it could only replace existing tiles)
 * Tilemap.putTile now correctly re-calculates the collision data based on the new collideIndexes array (fixes #371)
+* Circle.circumferencePoint using the asDegrees parameter would apply degToRad instead of radToDeg (thanks Ziriax, fixes #509)
 
 
 TO DO:

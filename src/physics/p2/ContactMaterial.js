@@ -7,25 +7,25 @@
 /**
 * Defines a physics material
 *
-* @class Phaser.Physics.ContactMaterial
+* @class Phaser.Physics.P2.ContactMaterial
 * @classdesc Physics ContactMaterial Constructor
 * @constructor
-* @param {Phaser.Physics.Material} materialA
-* @param {Phaser.Physics.Material} materialB
+* @param {Phaser.Physics.P2.Material} materialA
+* @param {Phaser.Physics.P2.Material} materialB
 * @param {object} [options]
 */
-Phaser.Physics.ContactMaterial = function (materialA, materialB, options) {
+Phaser.Physics.P2.ContactMaterial = function (materialA, materialB, options) {
 
 	/**
 	* @property {number} id - The contact material identifier.
 	*/
 
 	/**
-	* @property {Phaser.Physics.Material} materialA - First material participating in the contact material.
+	* @property {Phaser.Physics.P2.Material} materialA - First material participating in the contact material.
 	*/
 
 	/**
-	* @property {Phaser.Physics.Material} materialB - First second participating in the contact material.
+	* @property {Phaser.Physics.P2.Material} materialB - First second participating in the contact material.
 	*/
 
 	/**
@@ -60,5 +60,5 @@ Phaser.Physics.ContactMaterial = function (materialA, materialB, options) {
 
 }
 
-Phaser.Physics.ContactMaterial.prototype = Object.create(p2.ContactMaterial.prototype);
-Phaser.Physics.ContactMaterial.prototype.constructor = Phaser.Physics.ContactMaterial;
+Phaser.Physics.P2.ContactMaterial.prototype = Object.create(p2.ContactMaterial.prototype);
+Phaser.Physics.P2.ContactMaterial.prototype.constructor = Phaser.Physics.P2.ContactMaterial;

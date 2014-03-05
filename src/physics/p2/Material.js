@@ -7,11 +7,11 @@
 /**
 * \o/ ~ "Because I'm a Material girl"
 *
-* @class Phaser.Physics.Material
+* @class Phaser.Physics.P2.Material
 * @classdesc Physics Material Constructor
 * @constructor
 */
-Phaser.Physics.Material = function (name) {
+Phaser.Physics.P2.Material = function (name) {
 
     /**
     * @property {string} name - The user defined name given to this Material.
@@ -23,5 +23,5 @@ Phaser.Physics.Material = function (name) {
 
 }
 
-Phaser.Physics.Material.prototype = Object.create(p2.Material.prototype);
-Phaser.Physics.Material.prototype.constructor = Phaser.Physics.Material;
+Phaser.Physics.P2.Material.prototype = Object.create(p2.Material.prototype);
+Phaser.Physics.P2.Material.prototype.constructor = Phaser.Physics.P2.Material;

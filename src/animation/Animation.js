@@ -139,8 +139,6 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loop)
     //  Set-up some event listeners
     this.game.onPause.add(this.onPause, this);
     this.game.onResume.add(this.onResume, this);
-
-    console.log('animation created', this);
     
 };
 

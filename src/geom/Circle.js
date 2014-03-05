@@ -482,7 +482,7 @@ Phaser.Circle.circumferencePoint = function (a, angle, asDegrees, out) {
 
     if (asDegrees === true)
     {
-        angle = Phaser.Math.radToDeg(angle);
+        angle = Phaser.Math.degToRad(angle);
     }
 
     out.x = a.x + a.radius * Math.cos(angle);
