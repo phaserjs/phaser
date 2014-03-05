@@ -188,31 +188,6 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this.skipQuadTree = false;
 
-    //  Allow collision
-
-    /**
-    * Set the allowCollision properties to control which directions collision is processed for this Body.
-    * For example allowCollision.up = false means it won't collide when the collision happened while moving up.
-    * @property {object} allowCollision - An object containing allowed collision.
-    */
-    //  This would be faster as an array
-    this.allowCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
-
-    /**
-    * This object is populated with boolean values when the Body collides with another.
-    * touching.up = true means the collision happened to the top of this Body for example.
-    * @property {object} touching - An object containing touching results.
-    */
-    //  This would be faster as an array
-    this.touching = { none: true, up: false, down: false, left: false, right: false };
-
-    /**
-    * This object is populated with previous touching values from the bodies previous collision.
-    * @property {object} wasTouching - An object containing previous touching results.
-    */
-    //  This would be faster as an array
-    this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
-
     /**
     * @property {number} facing - A const reference to the direction the Body is traveling or facing.
     * @default
@@ -301,7 +276,32 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     */
     this.collideWorldBounds = false;
 
-    this.blocked = { up: false, down: false, left: false, right: false };
+    /**
+    * Set the checkCollision properties to control which directions collision is processed for this Body.
+    * For example checkCollision.up = false means it won't collide when the collision happened while moving up.
+    * @property {object} checkCollision - An object containing allowed collision.
+    */
+    this.checkCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
+
+    /**
+    * This object is populated with boolean values when the Body collides with another.
+    * touching.up = true means the collision happened to the top of this Body for example.
+    * @property {object} touching - An object containing touching results.
+    */
+    this.touching = { none: true, up: false, down: false, left: false, right: false };
+
+    /**
+    * This object is populated with previous touching values from the bodies previous collision.
+    * @property {object} wasTouching - An object containing previous touching results.
+    */
+    this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
+
+    /**
+    * This object is populated with boolean values when the Body collides with the World bounds or a Tile.
+    * For example if blocked.up is true then the Body cannot move up.
+    * @property {object} blocked - An object containing on which faces this Body is blocked from moving, if any.
+    */
+    this.blocked = { x: 0, y: 0, up: false, down: false, left: false, right: false };
 
 };
 
@@ -363,8 +363,8 @@ Phaser.Physics.Arcade.Body.prototype = {
         this.y = this.preY;
         this.rotation = this.preRotation;
 
-        // this.overlapX = 0;
-        // this.overlapY = 0;
+        this.overlapX = 0;
+        this.overlapY = 0;
 
         this.blocked.up = false;
         this.blocked.down = false;
@@ -390,16 +390,6 @@ Phaser.Physics.Arcade.Body.prototype = {
     * @protected
     */
     postUpdate: function () {
-
-        // if (this.overlapX !== 0)
-        // {
-        //     this.x -= this.overlapX;
-        // }
-
-        // if (this.overlapY !== 0)
-        // {
-        //     this.y -= this.overlapY;
-        // }
 
         if (this.deltaX() < 0 && this.blocked.left === false)
         {
