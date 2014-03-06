@@ -124,7 +124,7 @@ Phaser.Physics.Ninja.prototype = {
         {
             if (object[i].body === null)
             {
-                object[i].body = new Phaser.Physics.Ninja.Body(this, object[i], type, id);
+                object[i].body = new Phaser.Physics.Ninja.Body(this, object[i], type, id, radius);
                 object[i].anchor.set(0.5);
             }
         }
@@ -442,7 +442,15 @@ Phaser.Physics.Ninja.prototype = {
             return body2.aabb.collideAABBVsTile(body1.tile);
         }
 
-        //  circles next
+        if (body1.circle && body2.tile)
+        {
+            return body1.circle.collideCircleVsTile(body2.tile);
+        }
+
+        if (body1.tile && body2.circle)
+        {
+            return body2.circle.collideCircleVsTile(body1.tile);
+        }
 
     }
 

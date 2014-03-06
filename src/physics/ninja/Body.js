@@ -15,11 +15,13 @@
 * @param {Phaser.Sprite} sprite - The Sprite object this physics body belongs to.
 * @param {number} [type=1] - The type of Ninja shape to create. 1 = AABB, 2 = Circle or 3 = Tile.
 * @param {number} [id=1] - If this body is using a Tile shape, you can set the Tile id here, i.e. Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn, Phaser.Physics.Ninja.Tile.CONVEXpp, etc.
+* @param {number} [radius=16] - If this body is using a Circle shape this controls the radius.
 */
-Phaser.Physics.Ninja.Body = function (system, sprite, type, id) {
+Phaser.Physics.Ninja.Body = function (system, sprite, type, id, radius) {
 
     if (typeof type === 'undefined') { type = 1; }
     if (typeof id === 'undefined') { id = 1; }
+    if (typeof radius === 'undefined') { radius = 16; }
 
     /**
     * @property {Phaser.Sprite} sprite - Reference to the parent Sprite.
@@ -68,7 +70,7 @@ Phaser.Physics.Ninja.Body = function (system, sprite, type, id) {
     }
     else if (type === 2)
     {
-        this.circle = new Phaser.Physics.Ninja.Circle(system, sprite.x, sprite.y, sprite.width, sprite.height);
+        this.circle = new Phaser.Physics.Ninja.Circle(system, sprite.x, sprite.y, radius);
         this.shape = this.circle;
     }
     else if (type === 3)
