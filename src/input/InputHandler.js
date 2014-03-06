@@ -1153,7 +1153,7 @@ Phaser.InputHandler.prototype = {
     * @param {number} [snapOffsetX=0] - Used to offset the top-left starting point of the snap grid.
     * @param {number} [snapOffsetX=0] - Used to offset the top-left starting point of the snap grid.
     */
-    enableSnap: function (snapX, snapY, onDrag, onRelease, snappOffsetX, snappOffsetY) {
+    enableSnap: function (snapX, snapY, onDrag, onRelease, snapOffsetX, snapOffsetY) {
 
         if (typeof onDrag == 'undefined') { onDrag = true; }
         if (typeof onRelease == 'undefined') { onRelease = false; }
