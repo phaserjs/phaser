@@ -1957,7 +1957,7 @@ declare module Phaser {
         swap(child1: any, child2: any): boolean;
     }
 
-    class Image {
+    class Image extends PIXI.Sprite {
         //constructor
         constructor(game: Phaser.Game, x: number, y: number, key: any, frame: any);
         //members
