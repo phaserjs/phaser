@@ -514,7 +514,7 @@ Phaser.Loader.prototype = {
     * @param {string} key - Unique asset key of the tilemap data.
     * @param {string} [mapDataURL] - The url of the map data file (csv/json)
     * @param {object} [mapData] - An optional JSON data object. If given then the mapDataURL is ignored and this JSON object is used for map data instead.
-    * @param {string} [format=Phaser.Tilemap.CSV] - The format of the map data. Either Phaser.Tilemap.CSV or Phaser.Tilemap.TILED_JSON.
+    * @param {number} [format=Phaser.Tilemap.CSV] - The format of the map data. Either Phaser.Tilemap.CSV or Phaser.Tilemap.TILED_JSON.
     * @return {Phaser.Loader} This Loader instance.
     */
     tilemap: function (key, mapDataURL, mapData, format) {
