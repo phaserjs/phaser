@@ -1,6 +1,10 @@
 {
   "animation": [
     {
+      "file": "animation+events.js",
+      "title": "animation events"
+    },
+    {
       "file": "change+texture+on+click.js",
       "title": "change texture on click"
     },
@@ -789,8 +793,20 @@
       "title": "kern of duty"
     },
     {
+      "file": "littera.js",
+      "title": "littera"
+    },
+    {
       "file": "remove+text.js",
       "title": "remove text"
+    },
+    {
+      "file": "retro+font+1.js",
+      "title": "retro font 1"
+    },
+    {
+      "file": "retro+font+2.js",
+      "title": "retro font 2"
     },
     {
       "file": "text+stroke.js",
@@ -911,6 +927,10 @@
     {
       "file": "fading+in+a+sprite.js",
       "title": "fading in a sprite"
+    },
+    {
+      "file": "generate+data.js",
+      "title": "generate data"
     },
     {
       "file": "pause+tween.js",
