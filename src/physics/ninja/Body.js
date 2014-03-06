@@ -63,36 +63,65 @@ Phaser.Physics.Ninja.Body = function (system, sprite, type, id, radius) {
     */
     this.shape = null;
 
+    var sx = sprite.x;
+    var sy = sprite.y;
+
+    if (sprite.anchor.x === 0)
+    {
+        sx += (sprite.width * 0.5);
+    }
+
+    if (sprite.anchor.y === 0)
+    {
+        sy += (sprite.height * 0.5);
+    }
+
     if (type === 1)
     {
-        this.aabb = new Phaser.Physics.Ninja.AABB(system, sprite.x, sprite.y, sprite.width, sprite.height);
+        this.aabb = new Phaser.Physics.Ninja.AABB(this, sx, sy, sprite.width, sprite.height);
         this.shape = this.aabb;
     }
     else if (type === 2)
     {
-        this.circle = new Phaser.Physics.Ninja.Circle(system, sprite.x, sprite.y, radius);
+        this.circle = new Phaser.Physics.Ninja.Circle(this, sx, sy, radius);
         this.shape = this.circle;
     }
     else if (type === 3)
     {
-        this.tile = new Phaser.Physics.Ninja.Tile(system, sprite.x, sprite.y, sprite.width, sprite.height, id);
+        this.tile = new Phaser.Physics.Ninja.Tile(this, sx, sy, sprite.width, sprite.height, id);
         this.shape = this.tile;
     }
+
+    //  Setting drag to 0 and friction to 0 means you get a normalised speed (px psec)
+
+    /**
+    * @property {number} drag - The drag applied to this object as it moves.
+    * @default
+    */
+    this.drag = 1;
+
+    /**
+    * @property {number} friction - The friction applied to this object as it moves.
+    * @default
+    */
+    this.friction = 0.05;
+
+    /**
+    * @property {number} gravityScale - How much of the world gravity should be applied to this object? 1 = all of it, 0.5 = 50%, etc.
+    * @default
+    */
+    this.gravityScale = 1;
+
+    /**
+    * @property {number} bounce - The bounciness of this object when it collides. A value between 0 and 1. We recommend setting it to 0.999 to avoid jittering.
+    * @default
+    */
+    this.bounce = 0.3;
 
     /**
     * @property {Phaser.Point} velocity - The velocity in pixels per second sq. of the Body.
     */
     this.velocity = new Phaser.Point();
-
-    /**
-    * @property {Phaser.Point} drag - The drag applied to the motion of the Body.
-    */
-    this.drag = new Phaser.Point();
-
-    /**
-    * @property {Phaser.Point} bounce - The elasticitiy of the Body when colliding. bounce.x/y = 1 means full rebound, bounce.x/y = 0.5 means 50% rebound velocity.
-    */
-    this.bounce = new Phaser.Point();
 
     /**
     * @property {boolean} skipQuadTree - If the Body is an irregular shape you can set this to true to avoid it being added to any QuadTrees.

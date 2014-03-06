@@ -7,8 +7,10 @@
 /**
 * Ninja Physics constructor.
 *
+* The Ninja Physics system was created in Flash by Metanet Software and ported to JavaScript by Richard Davey.
+*
 * @class Phaser.Physics.Ninja
-* @classdesc Arcade Physics Constructor
+* @classdesc Ninja Physics Constructor
 * @constructor
 * @param {Phaser.Game} game reference to the current game instance.
 */
@@ -83,7 +85,7 @@ Phaser.Physics.Ninja.prototype = {
     *
     * @method Phaser.Physics.Ninja#enableTile
     * @param {object|array} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array.
-    * @param {number} radius - The radius of the Circle.
+    * @param {number} [id=1] - The type of Tile this will use, i.e. Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn, Phaser.Physics.Ninja.Tile.CONVEXpp, etc.
     */
     enableTile: function (object, id) {
 
@@ -132,13 +134,39 @@ Phaser.Physics.Ninja.prototype = {
     },
 
     /**
+    * Updates the size of this physics world.
+    *
+    * @method Phaser.Physics.Ninja#setBounds
+    * @param {number} x - Top left most corner of the world.
+    * @param {number} y - Top left most corner of the world.
+    * @param {number} width - New width of the world. Can never be smaller than the Game.width.
+    * @param {number} height - New height of the world. Can never be smaller than the Game.height.
+    */
+    setBounds: function (x, y, width, height) {
+
+        this.bounds.setTo(x, y, width, height);
+
+    },
+
+    /**
+    * Updates the size of this physics world to match the size of the game world.
+    *
+    * @method Phaser.Physics.Ninja#setBoundsToWorld
+    */
+    setBoundsToWorld: function () {
+
+        this.bounds.setTo(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height);
+
+    },
+
+    /**
     * Called automatically by a Physics body, it updates all motion related values on the Body.
     *
     * @method Phaser.Physics.Ninja#updateMotion
     * @param {Phaser.Physics.Ninja.Body} The Body object to be updated.
-    */
     update: function () {
     },
+    */
 
     /**
     * Checks for overlaps between two game objects. The objects can be Sprites, Groups or Emitters.

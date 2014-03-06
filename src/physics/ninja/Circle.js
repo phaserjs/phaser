@@ -6,33 +6,77 @@
 
 /**
 * Ninja Physics Circle constructor.
+* Note: This class could be massively optimised and reduced in size. I leave that challenge up to you.
 *
 * @class Phaser.Physics.Ninja.Circle
 * @classdesc Arcade Physics Constructor
 * @constructor
-* @param {Phaser.Game} game reference to the current game instance.
+* @param {Phaser.Physics.Ninja.Body} body - The body that owns this shape.
+* @param {number} x - The x coordinate to create this shape at.
+* @param {number} y - The y coordinate to create this shape at.
+* @param {number} radius - The radius of this Circle.
 */
-Phaser.Physics.Ninja.Circle = function (system, x, y, radius) {
+Phaser.Physics.Ninja.Circle = function (body, x, y, radius) {
 
-    this.system = system;
+    /**
+    * @property {Phaser.Physics.Ninja.Body} system - A reference to the body that owns this shape.
+    */
+    this.body = body;
+
+    /**
+    * @property {Phaser.Physics.Ninja} system - A reference to the physics system.
+    */
+    this.system = body.system;
+
+    /**
+    * @property {Phaser.Point} pos - The position of this object.
+    */
     this.pos = new Phaser.Point(x, y);
+
+    /**
+    * @property {Phaser.Point} oldpos - The position of this object in the previous update.
+    */
     this.oldpos = new Phaser.Point(x, y);
+
+    /**
+    * @property {number} radius - The radius of this circle shape.
+    */
     this.radius = radius;
 
+    /**
+    * @property {number} width - The width.
+    * @readonly
+    */
     this.width = radius * 2;
+
+    /**
+    * @property {number} height - The height.
+    * @readonly
+    */
     this.height = radius * 2;
 
+    /**
+    * @property {number} oH - Internal var.
+    * @private
+    */
     this.oH = 0;
+
+    /**
+    * @property {number} oV - Internal var.
+    * @private
+    */
     this.oV = 0;
 
-    //  Setting drag to 0 and friction to 0 means you get a normalised speed (px psec)
-    this.drag = 1;
-    this.friction = 0.05;
-    this.gravityScale = 1;
-    this.bounce = 0.3;
+    /**
+    * @property {Phaser.Point} velocity - The velocity of this object.
+    */
     this.velocity = new Phaser.Point();
 
+    /**
+    * @property {object} circleTileProjections - All of the collision response handlers.
+    */
     this.circleTileProjections = {};
+
     this.circleTileProjections[Phaser.Physics.Ninja.Tile.TYPE_FULL] = this.projCircle_Full;
     this.circleTileProjections[Phaser.Physics.Ninja.Tile.TYPE_45DEG] = this.projCircle_45Deg;
     this.circleTileProjections[Phaser.Physics.Ninja.Tile.TYPE_CONCAVE] = this.projCircle_Concave;
@@ -64,8 +108,8 @@ Phaser.Physics.Ninja.Circle.prototype = {
         var py = this.pos.y;
 
         //  integrate
-        this.pos.x += (this.drag * this.pos.x) - (this.drag * this.oldpos.x);
-        this.pos.y += (this.drag * this.pos.y) - (this.drag * this.oldpos.y) + (this.system.gravity * this.gravityScale);
+        this.pos.x += (this.body.drag * this.pos.x) - (this.body.drag * this.oldpos.x);
+        this.pos.y += (this.body.drag * this.pos.y) - (this.body.drag * this.oldpos.y) + (this.system.gravity * this.body.gravityScale);
 
         //  store
         this.velocity.set(this.pos.x - px, this.pos.y - py);
@@ -88,29 +132,28 @@ Phaser.Physics.Ninja.Circle.prototype = {
         var p = this.pos;
         var o = this.oldpos;
 
-        //calc velocity
+        //  Calc velocity
         var vx = p.x - o.x;
         var vy = p.y - o.y;
 
-        //find component of velocity parallel to collision normal
+        //  Find component of velocity parallel to collision normal
         var dp = (vx * dx + vy * dy);
-        var nx = dp * dx;//project velocity onto collision normal
+        var nx = dp * dx;   //project velocity onto collision normal
 
-        var ny = dp * dy;//nx,ny is normal velocity
+        var ny = dp * dy;   //nx,ny is normal velocity
 
-        var tx = vx - nx;//px,py is tangent velocity
+        var tx = vx - nx;   //px,py is tangent velocity
         var ty = vy - ny;
 
-        //we only want to apply collision response forces if the object is travelling into, and not out of, the collision
-        var b, bx, by, f, fx, fy;
+        //  We only want to apply collision response forces if the object is travelling into, and not out of, the collision
+        var b, bx, by, fx, fy;
 
         if (dp < 0)
         {
-            //f = FRICTION;
-            fx = tx * this.friction;
-            fy = ty * this.friction;
+            fx = tx * this.body.friction;
+            fy = ty * this.body.friction;
 
-            b = 1 + this.bounce;
+            b = 1 + this.body.bounce;
 
             bx = (nx * b);
             by = (ny * b);
@@ -118,14 +161,16 @@ Phaser.Physics.Ninja.Circle.prototype = {
         }
         else
         {
-            //moving out of collision, do not apply forces
+            //  Moving out of collision, do not apply forces
             bx = by = fx = fy = 0;
         }
 
-        p.x += px;//project object out of collision
+        //  Project object out of collision
+        p.x += px;
         p.y += py;
 
-        o.x += px + bx + fx;//apply bounce+friction impulses which alter velocity
+        //  Apply bounce+friction impulses which alter velocity
+        o.x += px + bx + fx;
         o.y += py + by + fy;
 
     },
@@ -197,40 +242,41 @@ Phaser.Physics.Ninja.Circle.prototype = {
         var txw = c.xw;
         var tyw = c.yw;
 
-        var dx = pos.x - tx;//tile->obj delta
-        var px = (txw + r) - Math.abs(dx);//penetration depth in x
+        var dx = pos.x - tx;    //  tile->obj delta
+        var px = (txw + r) - Math.abs(dx);  //  penetration depth in x
 
         if (0 < px)
         {
-            var dy = pos.y - ty;//tile->obj delta
-            var py = (tyw + r) - Math.abs(dy);//pen depth in y
+            var dy = pos.y - ty;    //  tile->obj delta
+            var py = (tyw + r) - Math.abs(dy);  //  pen depth in y
 
             if (0 < py)
             {
-                //object may be colliding with tile
+                //  object may be colliding with tile
 
-                //determine grid/voronoi region of circle center
+                //  determine grid/voronoi region of circle center
                 this.oH = 0;
                 this.oV = 0;
+
                 if (dx < -txw)
                 {
-                    //circle is on left side of tile
+                    //  circle is on left side of tile
                     this.oH = -1;
                 }
                 else if (txw < dx)
                 {
-                    //circle is on right side of tile
+                    //  circle is on right side of tile
                     this.oH = 1;
                 }
 
                 if (dy < -tyw)
                 {
-                    //circle is on top side of tile
+                    //  circle is on top side of tile
                     this.oV = -1;
                 }
                 else if (tyw < dy)
                 {
-                    //circle is on bottom side of tile
+                    //  circle is on bottom side of tile
                     this.oV = 1;
                 }
 
@@ -260,7 +306,7 @@ Phaser.Physics.Ninja.Circle.prototype = {
         }
         else
         {
-            console.log("ResolveCircleTile() was called with an empty (or unknown) tile!: ID=" + t.id + ")");
+            // console.log("ResolveCircleTile() was called with an empty (or unknown) tile!: ID=" + t.id + ")");
             return false;
         }
 
@@ -352,6 +398,7 @@ Phaser.Physics.Ninja.Circle.prototype = {
 
             var len = Math.sqrt(dx * dx + dy * dy);
             var pen = obj.radius - len;
+
             if (0 < pen)
             {
                 //vertex is in the circle; project outward
@@ -417,6 +464,7 @@ Phaser.Physics.Ninja.Circle.prototype = {
                 //if the dotprod of (ox,oy) and (sx,sy) is negative, the innermost point is in the slope
                 //and we need toproject it out by the magnitude of the projection of (ox,oy) onto (sx,sy)
                 var dp = (ox * sx) + (oy * sy);
+
                 if (dp < 0)
                 {
                     //collision; project delta onto slope and use this as the slope penetration vector

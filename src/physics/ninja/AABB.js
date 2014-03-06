@@ -6,11 +6,16 @@
 
 /**
 * Ninja Physics AABB constructor.
+* Note: This class could be massively optimised and reduced in size. I leave that challenge up to you.
 *
 * @class Phaser.Physics.Ninja.AABB
 * @classdesc Arcade Physics Constructor
 * @constructor
-* @param {Phaser.Game} game reference to the current game instance.
+* @param {Phaser.Physics.Ninja} system - A reference to the physics system.
+* @param {number} x - The x coordinate to create this shape at.
+* @param {number} y - The y coordinate to create this shape at.
+* @param {number} width - The width of this AABB.
+* @param {number} height - The height of this AABB.
 */
 Phaser.Physics.Ninja.AABB = function (system, x, y, width, height) {
     

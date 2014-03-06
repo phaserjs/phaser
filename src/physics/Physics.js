@@ -94,7 +94,7 @@ Phaser.Physics.prototype = {
     * Phaser.Physics.Arcade is running by default, but all others need activating directly.
     * You can start the following physics systems:
     * Phaser.Physics.P2 - A full-body advanced physics system by Stefan Hedman.
-    * Phaser.Physics.NINJA - A port of the metanet N+ physics system.
+    * Phaser.Physics.NINJA - A port of Metanet Softwares N+ physics system.
     * Phaser.Physics.BOX2D and Phaser.Physics.CHIPMUNK are still in development.
     *
     * @method Phaser.Physics#startSystem
@@ -132,7 +132,7 @@ Phaser.Physics.prototype = {
     *
     * Phaser.Physics.Arcade - A light weight AABB based collision system with basic separation.
     * Phaser.Physics.P2 - A full-body advanced physics system supporting multiple object shapes, polygon loading, contact materials, springs and constraints.
-    * Phaser.Physics.NINJA - A port of the metanet N+ physics system. Advanced AABB and Circle vs. Tile collision.
+    * Phaser.Physics.NINJA - A port of Metanet Softwares N+ physics system. Advanced AABB and Circle vs. Tile collision.
     * Phaser.Physics.BOX2D and Phaser.Physics.CHIPMUNK are still in development.
     *
     * @method Phaser.Physics#enable
@@ -202,6 +202,11 @@ Phaser.Physics.prototype = {
     * @protected
     */
     setBoundsToWorld: function () {
+
+        if (this.ninja)
+        {
+            this.ninja.setBoundsToWorld();
+        }
 
     },
 

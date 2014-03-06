@@ -6,22 +6,53 @@
 
 /**
 * Ninja Physics Tile constructor.
+* 
+* Note: This class could be massively optimised and reduced in size. I leave that challenge up to you.
 *
 * @class Phaser.Physics.Ninja.Tile
-* @classdesc Arcade Physics Constructor
+* @classdesc The Ninja Physics Tile class. Based on code by Metanet Software.
 * @constructor
-* @param {Phaser.Game} game reference to the current game instance.
+* @param {Phaser.Physics.Ninja.Body} body - The body that owns this shape.
+* @param {number} x - The x coordinate to create this shape at.
+* @param {number} y - The y coordinate to create this shape at.
+* @param {number} width - The width of this AABB.
+* @param {number} height - The height of this AABB.
+* @param {number} [type=1] - The type of Ninja shape to create. 1 = AABB, 2 = Circle or 3 = Tile.
 */
-Phaser.Physics.Ninja.Tile = function (system, x, y, width, height, type) {
+Phaser.Physics.Ninja.Tile = function (body, x, y, width, height, type) {
     
     if (typeof type === 'undefined') { type = Phaser.Physics.Ninja.Tile.EMPTY; }
 
-    this.system = system;
+    /**
+    * @property {Phaser.Physics.Ninja.Body} system - A reference to the body that owns this shape.
+    */
+    this.body = body;
 
+    /**
+    * @property {Phaser.Physics.Ninja} system - A reference to the physics system.
+    */
+    this.system = body.system;
+
+    /**
+    * @property {number} id - The ID of this Tile.
+    * @readonly
+    */
     this.id = type;
+
+    /**
+    * @property {number} type - The type of this Tile.
+    * @readonly
+    */
     this.type = Phaser.Physics.Ninja.Tile.TYPE_EMPTY;
 
+    /**
+    * @property {Phaser.Point} pos - The position of this object.
+    */
     this.pos = new Phaser.Point(x, y);
+
+    /**
+    * @property {Phaser.Point} oldpos - The position of this object in the previous update.
+    */
     this.oldpos = new Phaser.Point(x, y);
 
     if (this.id > 1 && this.id < 30)
@@ -30,22 +61,57 @@ Phaser.Physics.Ninja.Tile = function (system, x, y, width, height, type) {
         height = width;
     }
 
+    /**
+    * @property {number} xw - Half the width.
+    * @readonly
+    */
     this.xw = Math.abs(width / 2);
+
+    /**
+    * @property {number} xw - Half the height.
+    * @readonly
+    */
     this.yw = Math.abs(height / 2);
 
+    /**
+    * @property {number} width - The width.
+    * @readonly
+    */
     this.width = width;
+
+    /**
+    * @property {number} height - The height.
+    * @readonly
+    */
     this.height = height;
 
-    this.drag = 1;
-    this.friction = 0.05;
-    this.gravityScale = 1;
-    this.bounce = 0.3;
+    /**
+    * @property {Phaser.Point} velocity - The velocity of this object.
+    */
     this.velocity = new Phaser.Point();
 
-    //  This stores tile-specific collision information
+    /**
+    * @property {number} signx - Internal var.
+    * @private
+    */
     this.signx = 0;
+
+    /**
+    * @property {number} signy - Internal var.
+    * @private
+    */
     this.signy = 0;
+
+    /**
+    * @property {number} sx - Internal var.
+    * @private
+    */
     this.sx = 0;
+
+    /**
+    * @property {number} sy - Internal var.
+    * @private
+    */
     this.sy = 0;
 
     if (this.id > 0)
@@ -60,29 +126,37 @@ Phaser.Physics.Ninja.Tile.prototype.constructor = Phaser.Physics.Ninja.Tile;
 Phaser.Physics.Ninja.Tile.prototype = {
 
     /**
-    * Updates this AABBs position.
+    * Updates this objects position.
     *
-    * @method Phaser.Physics.Ninja.AABB#integrate
+    * @method Phaser.Physics.Ninja.Tile#integrate
     */
     integrate: function () {
 
         var px = this.pos.x;
         var py = this.pos.y;
 
-        this.pos.x += (this.drag * this.pos.x) - (this.drag * this.oldpos.x);
-        this.pos.y += (this.drag * this.pos.y) - (this.drag * this.oldpos.y);
+        this.pos.x += (this.body.drag * this.pos.x) - (this.body.drag * this.oldpos.x);
+        this.pos.y += (this.body.drag * this.pos.y) - (this.body.drag * this.oldpos.y);
 
         this.velocity.set(this.pos.x - px, this.pos.y - py);
         this.oldpos.set(px, py);
 
     },
 
+    /**
+    * Tiles cannot collide with the world bounds, it's up to you to keep them where you want them. But we need this API stub to satisfy the Body.
+    *
+    * @method Phaser.Physics.Ninja.Tile#collideWorldBounds
+    */
     collideWorldBounds: function () {
     },
 
-    //these functions are used to update the cell
-    //note: id is assumed to NOT be "empty" state..
-    //if it IS the empty state, the tile clears itself
+    /**
+    * Tiles cannot collide with the world bounds, it's up to you to keep them where you want them. But we need this API stub to satisfy the Body.
+    *
+    * @method Phaser.Physics.Ninja.Tile#setType
+    * @param {number} id - The type of Tile this will use, i.e. Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn, Phaser.Physics.Ninja.Tile.CONVEXpp, etc.
+    */
     setType: function (id) {
 
         if (id === Phaser.Physics.Ninja.Tile.EMPTY)
@@ -91,7 +165,6 @@ Phaser.Physics.Ninja.Tile.prototype = {
         }
         else
         {
-            //set tile state to a non-emtpy value, and update it's edges and those of the neighbors
             this.id = id;
             this.updateType();
         }
@@ -100,6 +173,11 @@ Phaser.Physics.Ninja.Tile.prototype = {
 
     },
 
+    /**
+    * Sets this tile to be empty.
+    *
+    * @method Phaser.Physics.Ninja.Tile#clear
+    */
     clear: function () {
 
         this.id = Phaser.Physics.Ninja.Tile.EMPTY;
@@ -107,28 +185,13 @@ Phaser.Physics.Ninja.Tile.prototype = {
 
     },
 
-    render: function (context, key) {
-        
-        if (this.id === 0)
-        {
-            return;
-        }
-
-        var image = this.system.game.cache.getImage(key);
-        var data = this.system.game.cache.getFrameData(key);
-        var frame = data._frames[this.id - 1];
-
-        context.drawImage(image, frame.x, frame.y, frame.width, frame.height, this.x, this.y, this.width, this.height);
-
-        // context.beginPath();
-        // context.strokeStyle = 'rgb(255,255,0)';
-        // context.strokeRect(this.x, this.y, this.width, this.height);
-        // context.strokeRect(this.pos.x, this.pos.y, 2, 2); // center point
-        // context.closePath();
-
-    },
-
-    //this converts a tile from implicitly-defined (via id), to explicit (via properties)
+    /**
+    * This converts a tile from implicitly-defined (via id), to explicit (via properties).
+    * Don't call directly, instead of setType.
+    *
+    * @method Phaser.Physics.Ninja.Tile#updateType
+    * @private
+    */
     updateType: function () {
 
         if (this.id === 0)
@@ -567,7 +630,6 @@ Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "right", {
 
 });
 
-//  TILETYPE ENUMERATION
 Phaser.Physics.Ninja.Tile.EMPTY = 0;
 Phaser.Physics.Ninja.Tile.FULL = 1;//fullAABB tile
 Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn = 2;//45-degree triangle, whose normal is (+ve,-ve)
@@ -603,7 +665,6 @@ Phaser.Physics.Ninja.Tile.HALFr = 31;
 Phaser.Physics.Ninja.Tile.HALFu = 32;
 Phaser.Physics.Ninja.Tile.HALFl = 33;
 
-//collision shape  "types"
 Phaser.Physics.Ninja.Tile.TYPE_EMPTY = 0;
 Phaser.Physics.Ninja.Tile.TYPE_FULL = 1;
 Phaser.Physics.Ninja.Tile.TYPE_45DEG = 2;
