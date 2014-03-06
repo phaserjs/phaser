@@ -99,7 +99,15 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.input = null;
 
     /**
-    * @property {Phaser.Physics.Arcade.Body|Phaser.Physics.P2.Body|null} body - The Sprites physics Body. Will be null unless physics has been enabled via `Sprite.physicsEnabled = true`.
+    * By default Sprites won't add themselves to any physics system and their physics body will be `null`.
+    * To enable them for physics you need to call `game.physics.enable(sprite, system)` where `sprite` is this object 
+    * and `system` is the Physics system you want to use to manage this body. Once enabled you can access all physics related properties via `Sprite.body`.
+    *
+    * Important: Enabling a Sprite for P2 or Ninja physics will automatically set `Sprite.anchor` to 0.5 so the physics body is centered on the Sprite.
+    * If you need a different result then adjust or re-create the Body shape offsets manually, and/or reset the anchor after enabling physics.
+    *
+    * @property {Phaser.Physics.Arcade.Body|Phaser.Physics.P2.Body|Phaser.Physics.Ninja.Body|null} body
+    * @default
     */
     this.body = null;
 
@@ -851,46 +859,6 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
 });
 
 /**
-* By default Sprites won't add themselves to the physics simulation. By setting physicsEnabled to true a Rectangle physics body is
-* attached to this Sprite matching its placement and dimensions, and will then start to process physics world updates.
-* You can access all physics related properties via Sprite.body.
-*
-* Important: Enabling a Sprite for physics will automatically set `Sprite.anchor` to 0.5 so the physics body is centered on the Sprite.
-* If you need a different result then adjust or re-create the Body shape offsets manually, and/or reset the anchor after enabling physics.
-*
-* @name Phaser.Sprite#physicsEnabled
-* @property {boolean} physicsEnabled - Set to true to add this Sprite to the physics world. Set to false to destroy the body and remove it from the physics world.
-Object.defineProperty(Phaser.Sprite.prototype, "physicsEnabled", {
-    
-    get: function () {
-
-        return (this.body !== null);
-
-    },
-
-    set: function (value) {
-
-        if (value)
-        {
-            if (this.body === null)
-            {
-                this.body = new Phaser.Physics.Body(this.game, this, this.x, this.y, 1);
-                this.anchor.set(0.5);
-            }
-        }
-        else
-        {
-            if (this.body)
-            {
-                this.body.destroy();
-            }
-        }
-    }
-
-});
-*/
-
-/**
 * Sprite.exists controls if the core game loop and physics update this Sprite or not.
 * When you set Sprite.exists to false it will remove its Body from the physics world (if it has one) and also set Sprite.visible to false.
 * Setting Sprite.exists to true will re-add the Body to the physics world (if it has a body) and set Sprite.visible to true.
@@ -913,7 +881,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
             //  exists = true
             this._cache[6] = 1;
 
-            if (this.body)
+            if (this.body && this.body.type === Phaser.Physics.P2)
             {
                 this.body.addToWorld();
             }
@@ -925,7 +893,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
             //  exists = false
             this._cache[6] = 0;
 
-            if (this.body)
+            if (this.body && this.body.type === Phaser.Physics.P2)
             {
                 this.body.removeFromWorld();
             }

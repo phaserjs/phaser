@@ -518,33 +518,35 @@ Phaser.Utils.Debug.prototype = {
     * @param {Phaser.Rectangle|Phaser.Circle|Phaser.Point|Phaser.Line} object - The geometry object to render.
     * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
     * @param {boolean} [filled=true] - Render the objected as a filled (default, true) or a stroked (false)
+    * @param {number} [forceType=0] - Force rendering of a specific type. If 0 no type will be forced, otherwise 1 = Rectangle, 2 = Circle, 3 = Point and 4 = Line.
     */
-    geom: function (object, color, filled) {
+    geom: function (object, color, filled, forceType) {
 
         if (typeof filled === 'undefined') { filled = true; }
+        if (typeof forceType === 'undefined') { forceType = 0; }
 
-        color = color || 'rgba(0,255,0,0.3)';
+        color = color || 'rgba(0,255,0,0.4)';
 
         this.start();
 
         this.context.fillStyle = color;
         this.context.strokeStyle = color;
 
-        if (object instanceof Phaser.Rectangle)
+        if (object instanceof Phaser.Rectangle || forceType === 1)
         {
             if (filled)
             {
-                this.context.fillRect(object.x, object.y, object.width, object.height);
+                this.context.fillRect(object.x - this.game.camera.x, object.y - this.game.camera.y, object.width, object.height);
             }
             else
             {
-                this.context.strokeRect(object.x, object.y, object.width, object.height);
+                this.context.strokeRect(object.x - this.game.camera.x, object.y - this.game.camera.y, object.width, object.height);
             }
         }
-        else if (object instanceof Phaser.Circle)
+        else if (object instanceof Phaser.Circle || forceType === 2)
         {
             this.context.beginPath();
-            this.context.arc(object.x, object.y, object.radius, 0, Math.PI * 2, false);
+            this.context.arc(object.x - this.game.camera.x, object.y - this.game.camera.y, object.radius, 0, Math.PI * 2, false);
             this.context.closePath();
 
             if (filled)
@@ -556,16 +558,16 @@ Phaser.Utils.Debug.prototype = {
                 this.context.stroke();
             }
         }
-        else if (object instanceof Phaser.Point)
+        else if (object instanceof Phaser.Point || forceType === 3)
         {
-            this.context.fillRect(object.x, object.y, 4, 4);
+            this.context.fillRect(object.x - this.game.camera.x, object.y - this.game.camera.y, 4, 4);
         }
-        else if (object instanceof Phaser.Line)
+        else if (object instanceof Phaser.Line || forceType === 4)
         {
             this.context.lineWidth = 1;
             this.context.beginPath();
-            this.context.moveTo(object.start.x + 0.5, object.start.y + 0.5);
-            this.context.lineTo(object.end.x + 0.5, object.end.y + 0.5);
+            this.context.moveTo((object.start.x + 0.5) - this.game.camera.x, (object.start.y + 0.5) - this.game.camera.y);
+            this.context.lineTo((object.end.x + 0.5) - this.game.camera.x, (object.end.y + 0.5) - this.game.camera.y);
             this.context.closePath();
             this.context.stroke();
         }

@@ -227,6 +227,7 @@ Phaser.Time.prototype = {
         this.timeToCall = this.game.math.max(0, 16 - (time - this.lastTime));
 
         this.elapsed = this.now - this.time;
+        this.physicsElapsed = this.elapsed / 1000;
 
         if (this.advancedTiming)
         {
@@ -247,8 +248,6 @@ Phaser.Time.prototype = {
 
         this.time = this.now;
         this.lastTime = time + this.timeToCall;
-
-        this.physicsElapsed = 1.0 * (this.elapsed / 1000);
 
         //  Paused but still running?
         if (!this.game.paused)

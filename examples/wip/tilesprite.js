@@ -21,6 +21,7 @@ function create() {
     // sprite = game.add.tileSprite(100, 100, 400, 300, 'starfield');
 
     sprite = game.add.tileSprite(100, 100, 400, 300, 'mummy');
+    sprite.pivot.setTo(200, 200);
 
     sprite.animations.add('walk');
 
@@ -31,6 +32,8 @@ function create() {
 }
 
 function update() {
+
+    sprite.rotation += 0.01;
 
     if (cursors.left.isDown)
     {

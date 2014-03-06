@@ -19,6 +19,7 @@ function create() {
 
     sprite1 = game.add.sprite(50, 200, 'atari');
     sprite1.name = 'atari';
+    // sprite1.anchor.set(0.5);
 
     sprite2 = game.add.sprite(700, 220, 'mushroom');
     sprite2.name = 'mushroom';
@@ -37,6 +38,9 @@ function update() {
     // object1, object2, collideCallback, processCallback, callbackContext
     game.physics.arcade.collide(sprite1, sprite2, collisionHandler, null, this);
 
+    // var b = sprite1.getBounds();
+    // console.log(b);
+
 }
 
 function collisionHandler (obj1, obj2) {
@@ -46,9 +50,14 @@ function collisionHandler (obj1, obj2) {
 
 }
 
+
 function render() {
 
-    // game.debug.physicsBody(sprite1.body);
-    // game.debug.physicsBody(sprite2.body);
+    // var b = sprite1.getBounds();
+
+    // game.debug.geom(b, 'rgba(255,0,0,0.8)', true, 1);
+
+    game.debug.geom(sprite1.body, 'rgba(0,255,0,0.4)', true, 1);
+    game.debug.geom(sprite2.body, 'rgba(0,255,0,0.4)', true, 1);
 
 }

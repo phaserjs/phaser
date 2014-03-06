@@ -141,6 +141,12 @@
     <script src="$path/src/physics/arcade/Body.js"></script>
     <script src="$path/src/physics/arcade/QuadTree.js"></script>
 
+    <script src="$path/src/physics/ninja/World.js"></script>
+    <script src="$path/src/physics/ninja/Body.js"></script>
+    <script src="$path/src/physics/ninja/AABB.js"></script>
+    <script src="$path/src/physics/ninja/Tile.js"></script>
+    <script src="$path/src/physics/ninja/Circle.js"></script>
+
     <script src="$path/src/physics/p2/World.js"></script>
     <script src="$path/src/physics/p2/PointProxy.js"></script>
     <script src="$path/src/physics/p2/InversePointProxy.js"></script>

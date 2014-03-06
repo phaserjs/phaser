@@ -40,6 +40,16 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     this.y = y;
 
     /**
+    * @property {number} x - The x map coordinate of this tile.
+    */
+    this.worldX = x * width;
+    
+    /**
+    * @property {number} y - The y map coordinate of this tile.
+    */
+    this.worldY = y * height;
+
+    /**
     * @property {number} width - The width of the tile in pixels.
     */
     this.width = width;
@@ -48,6 +58,16 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     * @property {number} height - The height of the tile in pixels.
     */
     this.height = height;
+
+    /**
+    * @property {number} width - The width of the tile in pixels.
+    */
+    this.centerX = Math.abs(width / 2);
+    
+    /**
+    * @property {number} height - The height of the tile in pixels.
+    */
+    this.centerY = Math.abs(height / 2);
 
     /**
     * @property {number} alpha - The alpha value at which this tile is drawn to the canvas.
@@ -134,6 +154,32 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
 };
 
 Phaser.Tile.prototype = {
+
+    intersects: function (x, y, right, bottom) {
+
+        if (right <= this.worldX)
+        {
+            return false;
+        }
+
+        if (bottom <= this.worldY)
+        {
+            return false;
+        }
+
+        if (x >= this.worldX + this.width)
+        {
+            return false;
+        }
+
+        if (y >= this.worldY + this.height)
+        {
+            return false;
+        }
+
+        return true;
+
+    },
 
     /**
     * Set a callback to be called when this tile is hit by an object.

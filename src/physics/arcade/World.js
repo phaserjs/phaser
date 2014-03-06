@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -161,6 +161,8 @@ Phaser.Physics.Arcade = function (game) {
 
 };
 
+Phaser.Physics.Arcade.prototype.constructor = Phaser.Physics.Arcade;
+
 Phaser.Physics.Arcade.prototype = {
 
     /**
@@ -172,56 +174,41 @@ Phaser.Physics.Arcade.prototype = {
     updateMotion: function (body) {
 
         //  Rotation
-        this._velocityDelta = (this.computeVelocity(body, body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular, 0) - body.angularVelocity) * 0.5;
+        this._velocityDelta = (this.computeVelocity(body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular, 0) - body.angularVelocity) * 0.5;
         body.angularVelocity += this._velocityDelta;
         body.rotation += (body.angularVelocity * this.game.time.physicsElapsed);
         body.angularVelocity += this._velocityDelta;
 
-        if (body.allowGravity)
-        {
-            // Gravity was previously applied without taking physicsElapsed into account
-            // so it needs to be multiplied by 60 (fps) for compatibility with existing games
-            this._gravityX = (this.gravity.x + body.gravity.x) * 60;
-            this._gravityY = (this.gravity.y + body.gravity.y) * 60;
-        }
-        else
-        {
-            this._gravityX = this._gravityY = 0;
-        }
+        //  Apply gravity using the p2 style gravityScale
+        body.velocity.x += this.gravity.x * this.game.time.physicsElapsed * body.gravityScale.x;
+        body.velocity.y += this.gravity.y * this.game.time.physicsElapsed * body.gravityScale.y;
 
-        //  Horizontal
-        this._velocityDelta = (this.computeVelocity(body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x, this._gravityX) - body.velocity.x) * 0.5;
-        body.velocity.x += this._velocityDelta;
-        body.x += (body.velocity.x * this.game.time.physicsElapsed);
-        body.velocity.x += this._velocityDelta;
-
-        //  Vertical
-        this._velocityDelta = (this.computeVelocity(body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y, this._gravityY) - body.velocity.y) * 0.5;
-        body.velocity.y += this._velocityDelta;
-        body.y += (body.velocity.y * this.game.time.physicsElapsed);
-        body.velocity.y += this._velocityDelta;
+        //  Apply velocity
+        body.velocity.x = this.computeVelocity(body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x);
+        body.velocity.y = this.computeVelocity(body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y);
 
     },
 
     /**
     * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
+    * Based on a function in Flixel by @ADAMATOMIC
     *
     * @method Phaser.Physics.Arcade#computeVelocity
-    * @param {Phaser.Physics.Arcade.Body} body - The Body object to be updated.
     * @param {number} velocity - Any component of velocity (e.g. 20).
     * @param {number} acceleration - Rate at which the velocity is changing.
     * @param {number} drag - Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
     * @param {number} [max=10000] - An absolute value cap for the velocity.
-    * @param {number} gravity - The acceleration due to gravity. Gravity will not induce drag.
     * @return {number} The altered Velocity value.
     */
-    computeVelocity: function (body, velocity, acceleration, drag, max, gravity) {
+    computeVelocity: function (velocity, acceleration, drag, max) {
 
         max = max || 10000;
 
-        velocity += (acceleration + gravity) * this.game.time.physicsElapsed;
-        
-        if (acceleration === 0 && drag !== 0)
+        if (acceleration)
+        {
+            velocity + acceleration * this.game.time.physicsElapsed;
+        }
+        else if (drag)
         {
             this._drag = drag * this.game.time.physicsElapsed;
 
@@ -537,17 +524,30 @@ Phaser.Physics.Arcade.prototype = {
     collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext) {
 
         // this._mapData = tilemapLayer.getTiles(sprite.body.left, sprite.body.top, sprite.body.width, sprite.body.height, true);
-        this._mapData = tilemapLayer.getTiles(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height, true);
+        // this._mapData = tilemapLayer.getTiles(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height, true);
+
+        this._mapData = tilemapLayer.getIntersectingTiles(sprite.body.position.x, sprite.body.position.y, sprite.body.width, sprite.body.height, true);
+
+        // var vx = sprite.body.x;
+        // var vy = sprite.body.y;
+
+        // vx += sprite.body.newVelocity.x;
+        // vy += sprite.body.newVelocity.y;
+
+        // this._mapData = tilemapLayer.getIntersectingTiles(vx, vy, sprite.body.width, sprite.body.height, true);
 
         if (this._mapData.length === 0)
         {
             return;
         }
 
-        if (this._mapData.length > 1)
-        {
+        // if (this._mapData.length > 1)
+        // {
+            //  Needs process callback added
             this.separateTiles(sprite.body, this._mapData);
-        }
+        // }
+
+        /*
         else
         {
             var i = 0;
@@ -578,6 +578,7 @@ Phaser.Physics.Arcade.prototype = {
                 }
             }
         }
+        */
 
     },
 
@@ -870,68 +871,101 @@ Phaser.Physics.Arcade.prototype = {
 
     },
 
-    /**
-    * Performs a rect intersection test against the two objects.
-    * Objects must expose properties: width, height, left, right, top, bottom.
-    * @method Phaser.Physics.Arcade#tileIntersects
-    * @param {object} body - The Body to test.
-    * @param {object} tile - The Tile to test.
-    * @returns {boolean} Returns true if the objects intersect, otherwise false.
-    */
-    tileIntersects: function (body, tile) {
-
-        this._intersection[0] = 0;
-        this._intersection[1] = 0;
-        this._intersection[2] = 0;
-        this._intersection[3] = 0;
-        this._intersection[4] = 0;
-
-        if (body.width <= 0 || body.height <= 0 || tile.width <= 0 || tile.height <= 0)
-        {
-            this._intersection[4] = 0;
-            return this._intersection;
-        }
-
-        if (!(body.right < tile.x || body.bottom < tile.y || body.x > tile.right || body.y > tile.bottom))
-        {
-            this._intersection[0] = Math.max(body.x, tile.x);                                       // x
-            this._intersection[1] = Math.max(body.y, tile.y);                                       // y
-            this._intersection[2] = Math.min(body.right, tile.right) - this._intersection[0];       // width
-            this._intersection[3] = Math.min(body.bottom, tile.bottom) - this._intersection[1];     // height
-            this._intersection[4] = 1;
-
-            return this._intersection;
-        }
-
-        this._intersection[4] = 0;
-
-        return this._intersection;
-
-    },
-
-    /**
-    * The core separation function to separate a physics body and an array of tiles.
-    * @method Phaser.Physics.Arcade#separateTiles
-    * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
-    * @param {array<Phaser.Tile>} tiles - The array of tiles to collide against.
-    * @returns {boolean} Returns true if the body was separated, otherwise false.
-    */
     separateTiles: function (body, tiles) {
 
-        var tile;
+        body.resetResult();
+
         var result = false;
 
         for (var i = 0; i < tiles.length; i++)
         {
-            tile = tiles[i];
-
-            if (this.separateTile(body, tile))
+            if (this.separateTile(i, body, tiles[i]))
             {
                 result = true;
             }
         }
 
         return result;
+
+    },
+
+    separateTile: function (i, body, tile) {
+
+        //  we re-check for collision in case body was separated in a previous step
+        if (i > 0 && !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+        {
+            //  no collision so bail out (separted in a previous step)
+            console.log('no collision so bail out (separted in a previous step');
+            return false;
+        }
+
+        // console.log('body intersecting tile');
+        // console.log('x', body.position.x, 'y', body.position.y, 'r', body.right, 'b', body.bottom, 'wh', body.width, body.height);
+        // console.log('x', tile.x, 'y', tile.y, 'r', tile.right, 'b', tile.bottom);
+
+        if (body.newVelocity.x && (tile.faceLeft || tile.faceRight))
+        {
+            var px = 0;
+            var tx = 0;
+
+            if (body.newVelocity.x > 0 && tile.faceLeft)
+            {
+                px = body.width;
+            }
+            else if (body.newVelocity.x < 0 && tile.faceRight)
+            {
+                tx = tile.width;
+            }
+
+            body.position.x = tile.worldX - px + tx;
+    
+            body.velocity.x = 0; // rebound check
+            // body.newVelocity.x = 0; // rebound check
+        }
+
+        //  Vertical only if still colliding
+
+        // if (tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+        // if (body.newVelocity.y && tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+        if (body.newVelocity.y && (tile.faceTop || tile.faceBottom))
+        {
+            var py = 0;
+            var ty = 0;
+
+            if (body.newVelocity.y > 0 && tile.faceBottom)
+            {
+                py = body.height;
+            }
+            else if (body.newVelocity.y < 0 && tile.faceTop)
+            {
+                ty = tile.height;
+            }
+
+            // console.log('cy', body.newVelocity.y, py, ty);
+
+            body.position.y = tile.worldY - py + ty;
+
+            body.velocity.y = 0; // rebound check
+            // body.newVelocity.y = 0; // rebound check
+        }
+
+        // var pxOffsetX = (body.newVelocity.x > 0 ? body.width : 0);
+        // var tileOffsetX = (body.newVelocity.x < 0 ? tile.width : 0);
+        // var pxOffsetY = (body.newVelocity.y > 0 ? body.height : 0);
+        // var tileOffsetY = (body.newVelocity.y < 0 ? tile.height : 0);
+
+        //  Assume fully solid for now
+
+        // body.result.x = true;
+        // body.result.tile = tile;
+        // body.result.px = tile.x - pxOffsetX + tileOffsetX;
+        // body.position.x = tile.x - pxOffsetX + tileOffsetX;
+
+        // res.pos.y = tileY * this.tilesize - pxOffsetY + tileOffsetY;
+
+
+
+        // console.log('nv', body.newVelocity.x, 'tile.xy', tile.x, tile.y, 'p', pxOffsetX, 't', tileOffsetX, 'body xy', body.position.x, body.position.y);
 
     },
 
@@ -942,7 +976,7 @@ Phaser.Physics.Arcade.prototype = {
     * @param {Phaser.Tile} tile - The tile to collide against.
     * @returns {boolean} Returns true if the body was separated, otherwise false.
     */
-    separateTile: function (body, tile) {
+    XXXseparateTile: function (body, tile) {
 
         /*
         this._intersection = this.tileIntersects(body, tile);
@@ -952,7 +986,6 @@ Phaser.Physics.Arcade.prototype = {
         {
             return false;
         }
-        */
 
         Phaser.Rectangle.intersection(body, tile, this._intersection);
 
@@ -960,6 +993,7 @@ Phaser.Physics.Arcade.prototype = {
         {
             return false;
         }
+        */
 
         // console.log(this._intersection);
         // console.log(tile, body.x, body.y);
@@ -982,6 +1016,16 @@ Phaser.Physics.Arcade.prototype = {
 
         body.overlapX = 0;
 
+        if (body.deltaX() < 0 && body.checkCollision.left)
+        {
+            //  Body is moving LEFT
+            if (tile.tile.faceRight && body.x < tile.right)
+            {
+
+            }
+        }
+
+
         var process = false;
 
         if (this._intersection.width > 0)
@@ -989,18 +1033,21 @@ Phaser.Physics.Arcade.prototype = {
             //  Tile is blocking to the right and body is moving left
             if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight)
             {
-                process = true;
-                body.overlapX = -this._intersection.width;
+                body.x = tile.right;
+                // process = true;
+                // body.overlapX = -this._intersection.width;
             }
 
             //  Tile is blocking to the left and body is moving right
             if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft)
             {
-                process = true;
-                body.overlapX = this._intersection.width;
+                body.right = tile.x;
+                // process = true;
+                // body.overlapX = this._intersection.width;
             }
         }
 
+/*
         if (body.overlapX !== 0)
         {
             if (body.overlapX < 0)
@@ -1013,7 +1060,7 @@ Phaser.Physics.Arcade.prototype = {
             }
 
             body.x -= body.overlapX;
-            body.preX -= body.overlapX;
+            // body.preX -= body.overlapX;
             body.blocked.x = Math.floor(body.x);
             body.blocked.y = Math.floor(body.y);
 
@@ -1026,6 +1073,7 @@ Phaser.Physics.Arcade.prototype = {
                 body.velocity.x = -body.velocity.x * body.bounce.x;
             }
         }
+*/
 
         Phaser.Rectangle.intersection(body, tile, this._intersection);
 
@@ -1043,8 +1091,9 @@ Phaser.Physics.Arcade.prototype = {
             //  Tile is blocking to the bottom and body is moving up
             if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom)
             {
-                process = true;
-                body.overlapY = -this._intersection.height;
+
+                // process = true;
+                // body.overlapY = -this._intersection.height;
             }
             
             //  Tile is blocking to the top and body is moving down
@@ -1067,7 +1116,7 @@ Phaser.Physics.Arcade.prototype = {
             }
 
             body.y -= body.overlapY;
-            body.preY -= body.overlapY;
+            // body.preY -= body.overlapY;
             body.blocked.x = Math.floor(body.x);
             body.blocked.y = Math.floor(body.y);
 
@@ -1225,274 +1274,6 @@ Phaser.Physics.Arcade.prototype = {
             body.preY -= body.overlapY;
             body.blocked.x = Math.floor(body.x);
             body.blocked.y = Math.floor(body.y);
-
-            if (body.bounce.y === 0)
-            {
-                body.velocity.y = 0;
-            }
-            else
-            {
-                body.velocity.y = -body.velocity.y * body.bounce.y;
-            }
-        }
-
-        return true;
-
-    },
-
-    /**
-    * The core separation function to separate a physics body and an array of tiles.
-    * @method Phaser.Physics.Arcade#separateTiles
-    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
-    * @param {Phaser.Tile} tile - The tile to collide against.
-    * @returns {boolean} Returns true if the bodies were separated, otherwise false.
-    */
-    OLDseparateTiles: function (body, tiles) {
-
-        //  Can't separate two immovable objects (tiles are always immovable)
-        // if (body.immovable)
-        // {
-        //     return false;
-        // }
-
-        body.overlapX = 0;
-        body.overlapY = 0;
-
-        var tile;
-        var localOverlapX = 0;
-        var localOverlapY = 0;
-
-        for (var i = 0; i < tiles.length; i++)
-        {
-            tile = tiles[i];
-
-            if (Phaser.Rectangle.intersects(body, tile))
-            {
-                if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight)
-                {
-                    //  LEFT
-                    localOverlapX = body.x - tile.right;
-
-                    if (localOverlapX >= body.deltaX())
-                    {
-                        // console.log('m left overlapX', localOverlapX, body.deltaX());
-                        //  use touching instead of blocked?
-                        body.blocked.left = true;
-                        body.touching.left = true;
-                        body.touching.none = false;
-                    }
-                }
-                else if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft)
-                {
-                    //  RIGHT
-                    localOverlapX = body.right - tile.x;
-
-                    //  Distance check
-                    if (localOverlapX <= body.deltaX())
-                    {
-                        // console.log('m right overlapX', localOverlapX, body.deltaX());
-                        body.blocked.right = true;
-                        body.touching.right = true;
-                        body.touching.none = false;
-                    }
-                }
-
-                if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom)
-                {
-                    //  UP
-                    localOverlapY = body.y - tile.bottom;
-
-                    //  Distance check
-                    if (localOverlapY >= body.deltaY())
-                    {
-                        // console.log('m up overlapY', localOverlapY, body.deltaY());
-                        body.blocked.up = true;
-                        body.touching.up = true;
-                        body.touching.none = false;
-                    }
-                }
-                else if (body.deltaY() > 0 && body.checkCollision.down && tile.tile.faceTop)
-                {
-                    //  DOWN
-                    localOverlapY = body.bottom - tile.y;
-
-                    if (localOverlapY <= body.deltaY())
-                    {
-                        // console.log('m down overlapY', localOverlapY, body.deltaY());
-                        body.blocked.down = true;
-                        body.touching.down = true;
-                        body.touching.none = false;
-                    }
-                }
-            }
-        }
-
-        if (localOverlapX !== 0)
-        {
-            body.overlapX = localOverlapX;
-        }
-
-        if (localOverlapY !== 0)
-        {
-            body.overlapY = localOverlapY;
-        }
-
-        if (body.touching.none)
-        {
-            return false;
-        }
-
-        // if (body.overlapX !== 0)
-        if (body.touching.left || body.touching.right)
-        {
-            body.x -= body.overlapX;
-            body.preX -= body.overlapX;
-
-            if (body.bounce.x === 0)
-            {
-                body.velocity.x = 0;
-            }
-            else
-            {
-                body.velocity.x = -body.velocity.x * body.bounce.x;
-            }
-        }
-
-        // if (body.overlapY !== 0)
-        if (body.touching.up || body.touching.down)
-        {
-            body.y -= body.overlapY;
-            body.preY -= body.overlapY;
-
-            if (body.bounce.y === 0)
-            {
-                body.velocity.y = 0;
-            }
-            else
-            {
-                body.velocity.y = -body.velocity.y * body.bounce.y;
-            }
-        }
-
-        return true;
-
-    },
-
-    /**
-    * The core separation function to separate a physics body and a tile.
-    * @method Phaser.Physics.Arcade#separateTile
-    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
-    * @param {Phaser.Tile} tile - The tile to collide against.
-    * @returns {boolean} Returns true if the bodies were separated, otherwise false.
-    */
-    OLDseparateTile: function (body, tile) {
-
-        //  Can't separate two immovable objects (tiles are always immovable)
-        // if (body.immovable || Phaser.Rectangle.intersects(body, tile) === false)
-        if (Phaser.Rectangle.intersects(body, tile) === false)
-        {
-            // console.log('no intersects');
-            // console.log('tx', tile.x, 'ty', tile.y, 'tw', tile.width, 'th', tile.height, 'tr', tile.right, 'tb', tile.bottom);
-            // console.log('bx', body.x, 'by', body.y, 'bw', body.width, 'bh', body.height, 'br', body.right, 'bb', body.bottom);
-            return false;
-        }
-
-        //  use body var instead
-        body.overlapX = 0;
-        body.overlapY = 0;
-
-        //  Remember - this happens AFTER the body has been moved by the motion update, so it needs moving back again
-        // console.log('---------------------------------------------------------------------------------------------');
-        // console.log('tx', tile.x, 'ty', tile.y, 'tw', tile.width, 'th', tile.height, 'tr', tile.right, 'tb', tile.bottom);
-        // console.log('bx', body.x, 'by', body.y, 'bw', body.width, 'bh', body.height, 'br', body.right, 'bb', body.bottom);
-        // console.log(Phaser.Rectangle.intersects(body, tile));
-        // console.log('dx', body.deltaX(), 'dy', body.deltaY(), 'dax', body.deltaAbsX(), 'day', body.deltaAbsY(), 'cax', Math.ceil(body.deltaAbsX()), 'cay', Math.ceil(body.deltaAbsY()));
-
-        if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight)
-        {
-            //  LEFT
-            body.overlapX = body.x - tile.right;
-
-            if (body.overlapX >= body.deltaX())
-            {
-                // console.log('left overlapX', body.overlapX, body.deltaX());
-                //  use touching instead of blocked?
-                body.blocked.left = true;
-                body.touching.left = true;
-                body.touching.none = false;
-            }
-        }
-        else if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft)
-        {
-            //  RIGHT
-            body.overlapX = body.right - tile.x;
-
-            //  Distance check
-            if (body.overlapX <= body.deltaX())
-            {
-                // console.log('right overlapX', body.overlapX, body.deltaX());
-                body.blocked.right = true;
-                body.touching.right = true;
-                body.touching.none = false;
-            }
-        }
-
-        if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom)
-        {
-            //  UP
-            body.overlapY = body.y - tile.bottom;
-
-            //  Distance check
-            if (body.overlapY >= body.deltaY())
-            {
-                // console.log('up overlapY', body.overlapY, body.deltaY());
-                body.blocked.up = true;
-                body.touching.up = true;
-                body.touching.none = false;
-            }
-        }
-        else if (body.deltaY() > 0 && body.checkCollision.down && tile.tile.faceTop)
-        {
-            //  DOWN
-            body.overlapY = body.bottom - tile.y;
-
-            if (body.overlapY <= body.deltaY())
-            {
-                // console.log('down overlapY', body.overlapY, body.deltaY());
-                body.blocked.down = true;
-                body.touching.down = true;
-                body.touching.none = false;
-            }
-        }
-
-        //  Separate in a single sweep
-
-        if (body.touching.none)
-        {
-            return false;
-        }
-
-        // if (body.overlapX !== 0)
-        if (body.touching.left || body.touching.right)
-        {
-            body.x -= body.overlapX;
-            body.preX -= body.overlapX;
-
-            if (body.bounce.x === 0)
-            {
-                body.velocity.x = 0;
-            }
-            else
-            {
-                body.velocity.x = -body.velocity.x * body.bounce.x;
-            }
-        }
-
-        // if (body.overlapY !== 0)
-        if (body.touching.up || body.touching.down)
-        {
-            body.y -= body.overlapY;
-            body.preY -= body.overlapY;
 
             if (body.bounce.y === 0)
             {

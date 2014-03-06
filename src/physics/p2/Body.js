@@ -38,6 +38,11 @@ Phaser.Physics.Body = function (game, sprite, x, y, mass) {
     this.sprite = sprite;
 
     /**
+    * @property {number} type - The type of physics system this body belongs to.
+    */
+    this.type = Phaser.Physics.P2;
+
+    /**
     * @property {Phaser.Point} offset - The offset of the Physics Body from the Sprite x/y position.
     */
     this.offset = new Phaser.Point();

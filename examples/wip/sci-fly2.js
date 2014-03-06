@@ -52,7 +52,7 @@ function create() {
 
     game.physics.enable(sprite);
 
-    sprite.body.setSize(14, 14, 2, 0);
+    // sprite.body.setSize(14, 14, 2, 0);
 
     console.log(sprite.body);
 
@@ -106,6 +106,8 @@ function render() {
 
     // game.debug.text(game.physics.arcade._intersection.width, 32, 32);
     // game.debug.text(game.physics.arcade._intersection.height, 32, 64);
+
+    game.debug.geom(sprite.body, 'rgba(0,255,0,0.4)', true, 1);
 
     game.debug.text(sprite.body.overlapX, 32, 32);
     game.debug.text(sprite.body.overlapY, 32, 64);

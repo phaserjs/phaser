@@ -1,6 +1,6 @@
 /**
 * @author       Antony Woods <antony@teamwoods.org>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 

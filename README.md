@@ -14,6 +14,7 @@ By Richard Davey, [Photon Storm](http://www.photonstorm.com)
 * Join the [Forum](http://www.html5gamedevs.com/forum/14-phaser/)
 * Try out 220+ [Phaser Examples](http://examples.phaser.io)
 * Read the [documentation online](http://docs.phaser.io)
+* Join our [#phaserio IRC channel](http://www.html5gamedevs.com/topic/4470-official-phaserio-irc-channel-phaserio-on-freenode/) on freenode
 
 [Subscribe to our new Phaser Newsletter](https://confirmsubscription.com/h/r/369DE48E3E86AF1E). We'll email you when new versions are released as well as send you our regular Phaser game making magazine.
 
