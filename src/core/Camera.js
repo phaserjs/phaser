@@ -90,6 +90,11 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     * @property {PIXI.DisplayObject} displayObject - The display object to which all game objects are added. Set by World.boot
     */
     this.displayObject = null;
+
+    /**
+    * @property {Phaser.Point} scale - The scale of the display object to which all game objects are added. Set by World.boot
+    */
+    this.scale = null;
     
 };
 

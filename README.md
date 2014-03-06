@@ -217,6 +217,7 @@ Bug Fixes:
 * Tilemap.putTile now correctly re-calculates the collision data based on the new collideIndexes array (fixes #371)
 * Circle.circumferencePoint using the asDegrees parameter would apply degToRad instead of radToDeg (thanks Ziriax, fixes #509)
 * InputHandler.enableSnap now correctly assigns the snap offset parameters (fixes #515)
+* Objects that are 'fixedToCamera' are now still correctly placed even if the camera is scaled (#512)
 
 
 TO DO:

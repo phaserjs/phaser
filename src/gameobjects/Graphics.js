@@ -128,8 +128,8 @@ Phaser.Graphics.prototype.postUpdate = function () {
     //  Fixed to Camera?
     if (this._cache[7] === 1)
     {
-        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
-        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
     }
 
 }
