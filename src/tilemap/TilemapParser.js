@@ -82,9 +82,13 @@ Phaser.TilemapParser = {
             {
                 return this.parseCSV(map.data);
             }
-            else if (map.format === Phaser.Tilemap.TILED_JSON)
+            else if (!map.format || map.format === Phaser.Tilemap.TILED_JSON)
             {
                 return this.parseTiledJSON(map.data);
+            }
+            else
+            {
+                console.warn("Phaser.TilemapParser.parse: unrecognised map format");
             }
         }
         else
