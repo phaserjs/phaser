@@ -116,12 +116,8 @@ Phaser.Physics.Ninja.AABB.prototype = {
         var py = this.pos.y;
 
         //  integrate
-        // this.pos.x += (this.body.drag * this.pos.x) - (this.body.drag * this.oldpos.x);
-        // this.pos.y += (this.body.drag * this.pos.y) - (this.body.drag * this.oldpos.y) + (this.system.gravity * this.body.gravityScale);
-
         this.pos.x += (this.body.drag * this.pos.x) - (this.body.drag * this.oldpos.x);
         this.pos.y += (this.body.drag * this.pos.y) - (this.body.drag * this.oldpos.y) + (this.system.gravity * this.body.gravityScale);
-
 
         //  store
         this.velocity.set(this.pos.x - px, this.pos.y - py);
@@ -216,6 +212,9 @@ Phaser.Physics.Ninja.AABB.prototype = {
     */
     reportCollisionVsBody: function (px, py, dx, dy, obj) {
 
+        //  Here - we check if obj is immovable, etc and then we canswap the p/o values below depending on which is heavy
+        //  But then still need to work out how to split force
+
         var p = this.pos;
         var o = this.oldpos;
 
@@ -251,21 +250,44 @@ Phaser.Physics.Ninja.AABB.prototype = {
             bx = by = fx = fy = 0;
         }
 
-        //  Project object out of collision
+        //  working version
+        // p.x += px;
+        // p.y += py;
+        // o.x += px + bx + fx;
+        // o.y += py + by + fy;
+
+        //  Project object out of collision (applied to the position value)
         p.x += px;
         p.y += py;
 
-        //  Apply bounce+friction impulses which alter velocity
-        o.x += px + bx + fx;
-        o.y += py + by + fy;
+        // obj.pos.x += px;
+        // obj.pos.y += py;
 
-        //  apply to obj
-        if (obj)
-        {
-            // obj.oldpos.x = 
-            // console.log('reportCollisionVsBody');
-            // obj.reportCollisionVsBody(px *= -1, py *= -1, dx *= -1, dy *= -1, null);
-        }
+
+        //  Apply bounce+friction impulses which alter velocity (applied to old position, thus setting a sort of velocity up)
+        var rx = px + bx + fx;
+        var ry = py + by + fy;
+
+        //  let's pretend obj is immovable
+        // rx *= -1;
+        // ry *= -1;
+
+
+        //  Now let's share the load
+        o.x += rx;
+        o.y += ry;
+
+        //  work out objs velocity
+
+
+        // rx *= -1;
+        // ry *= -1;
+
+        // obj.oldpos.x += rx;
+        // obj.oldpos.y += ry;
+
+
+            // console.log(this.body.sprite.name, 'o.x', rx, ry, obj);
 
     },
 

@@ -5,22 +5,33 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 function preload() {
 
     game.load.image('block', 'assets/sprites/block.png');
+    game.load.spritesheet('ninja-tiles', 'assets/physics/ninja-tiles128.png', 128, 128, 34);
 
 }
 
 var sprite1;
 var sprite2;
+var tile;
 var cursors;
 
 function create() {
 
 	game.physics.startSystem(Phaser.Physics.NINJA);
 
-    sprite1 = game.add.sprite(100, 100, 'block');
-    sprite2 = game.add.sprite(400, 100, 'block');
+    // game.physics.ninja.gravity = 6;
+
+    // sprite1 = game.add.sprite(200, 100, 'block');
+    sprite1 = game.add.sprite(200, 500, 'block');
+    sprite1.name = 'blockA';
+
+    sprite2 = game.add.sprite(600, 100, 'block');
+    sprite2.name = 'blockB';
 
     // game.physics.ninja.enableAABB([sprite1]);
     game.physics.ninja.enableAABB([sprite1, sprite2]);
+
+    tile = game.add.sprite(600, 480, 'ninja-tiles', 3);
+    game.physics.ninja.enableTile(tile, tile.frame);
 
     cursors = game.input.keyboard.createCursorKeys();
 
@@ -29,6 +40,10 @@ function create() {
 function update() {
 
     game.physics.ninja.collide(sprite1, sprite2);
+    game.physics.ninja.collide(sprite1, tile);
+    game.physics.ninja.collide(sprite2, tile);
+
+    sprite1.body.moveRight(5);
 
     if (cursors.left.isDown)
     {
