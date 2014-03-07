@@ -6,6 +6,9 @@
 
 /**
 * Ninja Physics Tile constructor.
+* A Tile is defined by its width, height and type. It's type can include slope data, such as 45 degree slopes, or convex slopes.
+* Understand that for any type including a slope (types 2 to 29) the Tile must be SQUARE, i.e. have an equal width and height.
+* Also note that as Tiles are primarily used for levels they have gravity disabled and world bounds collision disabled by default.
 * 
 * Note: This class could be massively optimised and reduced in size. I leave that challenge up to you.
 *
@@ -114,6 +117,10 @@ Phaser.Physics.Ninja.Tile = function (body, x, y, width, height, type) {
     */
     this.sy = 0;
 
+    //  By default Tiles disable gravity and world bounds collision
+    this.body.gravityScale = 0;
+    this.body.collideWorldBounds = false;
+
     if (this.id > 0)
     {
         this.setType(this.id);
@@ -136,7 +143,7 @@ Phaser.Physics.Ninja.Tile.prototype = {
         var py = this.pos.y;
 
         this.pos.x += (this.body.drag * this.pos.x) - (this.body.drag * this.oldpos.x);
-        this.pos.y += (this.body.drag * this.pos.y) - (this.body.drag * this.oldpos.y);
+        this.pos.y += (this.body.drag * this.pos.y) - (this.body.drag * this.oldpos.y) + (this.system.gravity * this.body.gravityScale);
 
         this.velocity.set(this.pos.x - px, this.pos.y - py);
         this.oldpos.set(px, py);
@@ -149,6 +156,114 @@ Phaser.Physics.Ninja.Tile.prototype = {
     * @method Phaser.Physics.Ninja.Tile#collideWorldBounds
     */
     collideWorldBounds: function () {
+
+        var dx = this.system.bounds.x - (this.pos.x - this.xw);
+
+        if (0 < dx)
+        {
+            this.reportCollisionVsWorld(dx, 0, 1, 0, null);
+        }
+        else
+        {
+            dx = (this.pos.x + this.xw) - this.system.bounds.width;
+
+            if (0 < dx)
+            {
+                this.reportCollisionVsWorld(-dx, 0, -1, 0, null);
+            }
+        }
+
+        var dy = this.system.bounds.y - (this.pos.y - this.yw);
+
+        if (0 < dy)
+        {
+            this.reportCollisionVsWorld(0, dy, 0, 1, null);
+        }
+        else
+        {
+            dy = (this.pos.y + this.yw) - this.system.bounds.height;
+
+            if (0 < dy)
+            {
+                this.reportCollisionVsWorld(0, -dy, 0, -1, null);
+            }
+        }
+
+    },
+
+    /**
+    * Process a world collision and apply the resulting forces.
+    *
+    * @method Phaser.Physics.Ninja.Tile#reportCollisionVsWorld
+    * @param {number} px - The tangent velocity
+    * @param {number} py - The tangent velocity
+    * @param {number} dx - Collision normal
+    * @param {number} dy - Collision normal
+    * @param {number} obj - Object this Tile collided with
+    */
+    reportCollisionVsWorld: function (px, py, dx, dy, obj) {
+
+        var p = this.pos;
+        var o = this.oldpos;
+
+        //  Calc velocity
+        var vx = p.x - o.x;
+        var vy = p.y - o.y;
+
+        //  Find component of velocity parallel to collision normal
+        var dp = (vx * dx + vy * dy);
+        var nx = dp * dx;   //project velocity onto collision normal
+
+        var ny = dp * dy;   //nx,ny is normal velocity
+
+        var tx = vx - nx;   //px,py is tangent velocity
+        var ty = vy - ny;
+
+        //  We only want to apply collision response forces if the object is travelling into, and not out of, the collision
+        var b, bx, by, fx, fy;
+
+        if (dp < 0)
+        {
+            fx = tx * this.body.friction;
+            fy = ty * this.body.friction;
+
+            b = 1 + this.body.bounce;
+
+            bx = (nx * b);
+            by = (ny * b);
+
+            if (dx === 1)
+            {
+                this.body.touching.left = true;
+            }
+            else if (dx === -1)
+            {
+                this.body.touching.right = true;
+            }
+
+            if (dy === 1)
+            {
+                this.body.touching.up = true;
+            }
+            else if (dy === -1)
+            {
+                this.body.touching.down = true;
+            }
+        }
+        else
+        {
+            //  Moving out of collision, do not apply forces
+            bx = by = fx = fy = 0;
+        }
+
+        //  Project object out of collision
+        p.x += px;
+        p.y += py;
+
+        //  Apply bounce+friction impulses which alter velocity
+        o.x += px + bx + fx;
+        o.y += py + by + fy;
+
     },
 
     /**

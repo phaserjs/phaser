@@ -457,7 +457,12 @@ Phaser.Physics.Ninja.prototype = {
 
         if (body1.type !== Phaser.Physics.NINJA || body2.type !== Phaser.Physics.NINJA)
         {
-            return;
+            return false;
+        }
+
+        if (body1.aabb && body2.aabb)
+        {
+            return body1.aabb.collideAABBVsAABB(body2.aabb);
         }
 
         if (body1.aabb && body2.tile)

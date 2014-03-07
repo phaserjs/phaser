@@ -63,35 +63,6 @@ Phaser.Physics.Ninja.Body = function (system, sprite, type, id, radius) {
     */
     this.shape = null;
 
-    var sx = sprite.x;
-    var sy = sprite.y;
-
-    if (sprite.anchor.x === 0)
-    {
-        sx += (sprite.width * 0.5);
-    }
-
-    if (sprite.anchor.y === 0)
-    {
-        sy += (sprite.height * 0.5);
-    }
-
-    if (type === 1)
-    {
-        this.aabb = new Phaser.Physics.Ninja.AABB(this, sx, sy, sprite.width, sprite.height);
-        this.shape = this.aabb;
-    }
-    else if (type === 2)
-    {
-        this.circle = new Phaser.Physics.Ninja.Circle(this, sx, sy, radius);
-        this.shape = this.circle;
-    }
-    else if (type === 3)
-    {
-        this.tile = new Phaser.Physics.Ninja.Tile(this, sx, sy, sprite.width, sprite.height, id);
-        this.shape = this.tile;
-    }
-
     //  Setting drag to 0 and friction to 0 means you get a normalised speed (px psec)
 
     /**
@@ -160,7 +131,40 @@ Phaser.Physics.Ninja.Body = function (system, sprite, type, id, radius) {
     */
     this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
 
+    /**
+    * @property {number} maxSpeed - The maximum speed this body can travel at (taking drag and friction into account)
+    * @default
+    */
     this.maxSpeed = 8;
+
+    var sx = sprite.x;
+    var sy = sprite.y;
+
+    if (sprite.anchor.x === 0)
+    {
+        sx += (sprite.width * 0.5);
+    }
+
+    if (sprite.anchor.y === 0)
+    {
+        sy += (sprite.height * 0.5);
+    }
+
+    if (type === 1)
+    {
+        this.aabb = new Phaser.Physics.Ninja.AABB(this, sx, sy, sprite.width, sprite.height);
+        this.shape = this.aabb;
+    }
+    else if (type === 2)
+    {
+        this.circle = new Phaser.Physics.Ninja.Circle(this, sx, sy, radius);
+        this.shape = this.circle;
+    }
+    else if (type === 3)
+    {
+        this.tile = new Phaser.Physics.Ninja.Tile(this, sx, sy, sprite.width, sprite.height, id);
+        this.shape = this.tile;
+    }
 
 };
 
@@ -173,18 +177,6 @@ Phaser.Physics.Ninja.Body.prototype = {
     * @protected
     */
     updateBounds: function (centerX, centerY, scaleX, scaleY) {
-
-        if (scaleX != this._sx || scaleY != this._sy)
-        {
-            // this.width = this.sourceWidth * scaleX;
-            // this.height = this.sourceHeight * scaleY;
-            // this.halfWidth = Math.floor(this.width / 2);
-            // this.halfHeight = Math.floor(this.height / 2);
-            // this._sx = scaleX;
-            // this._sy = scaleY;
-            // this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
-        }
-
     },
 
     /**
@@ -228,8 +220,17 @@ Phaser.Physics.Ninja.Body.prototype = {
     */
     postUpdate: function () {
 
-        this.sprite.x = this.shape.pos.x;
-        this.sprite.y = this.shape.pos.y;
+        if (this.sprite.type === Phaser.TILESPRITE)
+        {
+            //  TileSprites don't use their anchor property, so we need to adjust the coordinates
+            this.sprite.x = this.shape.pos.x - this.shape.xw;
+            this.sprite.y = this.shape.pos.y - this.shape.yw;
+        }
+        else
+        {
+            this.sprite.x = this.shape.pos.x;
+            this.sprite.y = this.shape.pos.y;
+        }
 
     },
 
@@ -399,6 +400,44 @@ Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "y", {
     */
     set: function (value) {
         this.shape.pos.y = value;
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Ninja.Body#width
+* @property {number} width - The width of this Body
+* @readonly
+*/
+Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "width", {
+    
+    /**
+    * The width of this Body
+    * @method width
+    * @return {number}
+    * @readonly
+    */
+    get: function () {
+        return this.shape.width;
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Ninja.Body#height
+* @property {number} height - The height of this Body
+* @readonly
+*/
+Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "height", {
+    
+    /**
+    * The height of this Body
+    * @method height
+    * @return {number}
+    * @readonly
+    */
+    get: function () {
+        return this.shape.height;
     }
 
 });

@@ -172,6 +172,7 @@ Updates:
 * Completely empty Tilemaps can now be created. This allows for dynamic map generation at runtime.
 * Keyboard.event now stores the most recent DOM keyboard event.
 * Animation.stop has a new parameter: dispatchComplete. If true it'll dispatch an Animation.onComplete event.
+* TileSprites now have a physics body property and call it in the pre and post updates. As with all physics bodies it's null by default.
 
 
 Bug Fixes:

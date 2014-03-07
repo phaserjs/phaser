@@ -15,7 +15,6 @@ var sprite1;
 var tiles;
 var cursors;
 
-
 function create() {
 
 	var sky = game.add.image(0, 0, 'sky');
