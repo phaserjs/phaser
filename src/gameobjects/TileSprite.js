@@ -99,6 +99,19 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
     this.cameraOffset = new Phaser.Point();
 
     /**
+    * By default Sprites won't add themselves to any physics system and their physics body will be `null`.
+    * To enable them for physics you need to call `game.physics.enable(sprite, system)` where `sprite` is this object 
+    * and `system` is the Physics system you want to use to manage this body. Once enabled you can access all physics related properties via `Sprite.body`.
+    *
+    * Important: Enabling a Sprite for P2 or Ninja physics will automatically set `Sprite.anchor` to 0.5 so the physics body is centered on the Sprite.
+    * If you need a different result then adjust or re-create the Body shape offsets manually, and/or reset the anchor after enabling physics.
+    *
+    * @property {Phaser.Physics.Arcade.Body|Phaser.Physics.P2.Body|Phaser.Physics.Ninja.Body|null} body
+    * @default
+    */
+    this.body = null;
+
+    /**
     * A small internal cache:
     * 0 = previous position.x
     * 1 = previous position.y
@@ -145,6 +158,11 @@ Phaser.TileSprite.prototype.preUpdate = function() {
         this._cache[3] = this.game.stage.currentRenderOrderID++;
     }
 
+    if (this.exists && this.body)
+    {
+        this.body.preUpdate();
+    }
+
     //  Update any Children
     for (var i = 0, len = this.children.length; i < len; i++)
     {
@@ -172,6 +190,11 @@ Phaser.TileSprite.prototype.update = function() {
 * @memberof Phaser.TileSprite
 */
 Phaser.TileSprite.prototype.postUpdate = function() {
+
+    if (this.exists && this.body)
+    {
+        this.body.postUpdate();
+    }
 
     //  Fixed to Camera?
     if (this._cache[7] === 1)
@@ -458,6 +481,53 @@ Object.defineProperty(Phaser.TileSprite.prototype, "fixedToCamera", {
         else
         {
             this._cache[7] = 0;
+        }
+    }
+
+});
+
+/**
+* TileSprite.exists controls if the core game loop and physics update this TileSprite or not.
+* When you set TileSprite.exists to false it will remove its Body from the physics world (if it has one) and also set TileSprite.visible to false.
+* Setting TileSprite.exists to true will re-add the Body to the physics world (if it has a body) and set TileSprite.visible to true.
+*
+* @name Phaser.TileSprite#exists
+* @property {boolean} exists - If the TileSprite is processed by the core game update and physics.
+*/
+Object.defineProperty(Phaser.TileSprite.prototype, "exists", {
+    
+    get: function () {
+
+        return !!this._cache[6];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            //  exists = true
+            this._cache[6] = 1;
+
+            if (this.body && this.body.type === Phaser.Physics.P2)
+            {
+                this.body.addToWorld();
+            }
+
+            this.visible = true;
+        }
+        else
+        {
+            //  exists = false
+            this._cache[6] = 0;
+
+            if (this.body && this.body.type === Phaser.Physics.P2)
+            {
+                this.body.removeFromWorld();
+            }
+
+            this.visible = false;
+
         }
     }
 
