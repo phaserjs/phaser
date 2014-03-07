@@ -81,6 +81,7 @@ Phaser.TweenManager.prototype = {
     */
     add: function (tween) {
 
+        tween._manager = this;
         this._add.push(tween);
 
     },
@@ -94,7 +95,7 @@ Phaser.TweenManager.prototype = {
     */
     create: function (object) {
 
-        return new Phaser.Tween(object, this.game);
+        return new Phaser.Tween(object, this.game, this);
 
     },
 

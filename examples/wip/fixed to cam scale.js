@@ -18,7 +18,7 @@ function create() {
     game.world.setBounds(0, 0, 1920, 1200);
     game.add.image(0, 0, 'backdrop');
 
-    mushroom = game.add.sprite(400, 400, 'mushroom');
+    mushroom = game.add.sprite(100, 100, 'mushroom');
 
     //  Test Fixing an Image to the Camera
     var fixie = game.add.image(100, 100, 'coke');
@@ -50,9 +50,12 @@ function create() {
 
     //  Button! do mouse events still work then?
 
-    game.camera.scale.set(2);
+    // game.world.pivot.set(400, 300);
+    // game.camera.scale.set(2);
 
     game.camera.follow(mushroom);
+    game.camera.deadzone = new Phaser.Rectangle(200, 150, 400, 300);
+    // game.camera.deadzone = new Phaser.Rectangle(0, 0, 800, 600);
 
     cursors = game.input.keyboard.createCursorKeys();
 

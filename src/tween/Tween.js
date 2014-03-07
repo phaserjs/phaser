@@ -12,8 +12,9 @@
 * @constructor
 * @param {object} object - Target object will be affected by this tween.
 * @param {Phaser.Game} game - Current game instance.
+* @param {Phaser.TweenManager} manager - The TweenManager responsible for looking after this Tween.
 */
-Phaser.Tween = function (object, game) {
+Phaser.Tween = function (object, game, manager) {
 
     /**
     * Reference to the target object.
@@ -31,7 +32,7 @@ Phaser.Tween = function (object, game) {
     * @property {Phaser.TweenManager} _manager - Reference to the TweenManager.
     * @private
     */
-    this._manager = this.game.tweens;
+    this._manager = manager;
 
     /**
     * @property {object} _valuesStart - Private value object.

@@ -127,8 +127,8 @@ Phaser.Camera.prototype = {
     /**
     * Tells this camera which sprite to follow.
     * @method Phaser.Camera#follow
-    * @param {Phaser.Sprite} target - The object you want the camera to track. Set to null to not follow anything.
-    * @param {number} [style] Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.Text} target - The object you want the camera to track. Set to null to not follow anything.
+    * @param {number} [style] - Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
     */
     follow: function (target, style) {
 

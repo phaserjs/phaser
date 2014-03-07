@@ -143,6 +143,7 @@ New features:
 * Tween.generateData(frameRate) allows you to generate tween data into an array, which can then be used however you wish (see new examples)
 * Group.xy(index, x, y) allows you to set the x and y coordinates of a Group child at the given index.
 * Group.reverse() reverses the display order of all children in the Group.
+* Tweens are now bound to their own TweenManager, not always the global game one. So you can create your own managers now (for you clark :)
 
 
 Updates:
