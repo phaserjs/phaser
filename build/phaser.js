@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.0 "Aes Sedai" - Built: Tue Mar 04 2014 01:28:23
+* v2.0.0 "Aes Sedai" - Built: Fri Mar 07 2014 15:16:50
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -20265,7 +20265,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.0 "Aes Sedai" - Built: Tue Mar 04 2014 01:28:22
+* v2.0.0 "Aes Sedai" - Built: Fri Mar 07 2014 15:16:50
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -21151,7 +21151,7 @@ Phaser.Circle.circumferencePoint = function (a, angle, asDegrees, out) {
 
     if (asDegrees === true)
     {
-        angle = Phaser.Math.radToDeg(angle);
+        angle = Phaser.Math.degToRad(angle);
     }
 
     out.x = a.x + a.radius * Math.cos(angle);
@@ -23206,6 +23206,11 @@ Phaser.Camera = function (game, id, x, y, width, height) {
     * @property {PIXI.DisplayObject} displayObject - The display object to which all game objects are added. Set by World.boot
     */
     this.displayObject = null;
+
+    /**
+    * @property {Phaser.Point} scale - The scale of the display object to which all game objects are added. Set by World.boot
+    */
+    this.scale = null;
     
 };
 
@@ -23238,8 +23243,8 @@ Phaser.Camera.prototype = {
     /**
     * Tells this camera which sprite to follow.
     * @method Phaser.Camera#follow
-    * @param {Phaser.Sprite} target - The object you want the camera to track. Set to null to not follow anything.
-    * @param {number} [style] Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
+    * @param {Phaser.Sprite|Phaser.Image|Phaser.Text} target - The object you want the camera to track. Set to null to not follow anything.
+    * @param {number} [style] - Leverage one of the existing "deadzone" presets. If you use a custom deadzone, ignore this parameter and manually specify the deadzone after calling follow().
     */
     follow: function (target, style) {
 
@@ -24007,10 +24012,7 @@ Phaser.StateManager.prototype = {
 
                 this.game.world.destroy();
 
-                if (this.game.physics)
-                {
-                    this.game.physics.clear();
-                }
+                this.game.physics.clear();
 
                 if (this._clearCache === true)
                 {
@@ -24109,11 +24111,7 @@ Phaser.StateManager.prototype = {
         this.states[key].world = this.game.world;
         this.states[key].particles = this.game.particles;
         this.states[key].rnd = this.game.rnd;
-
-        if (this.game.physics)
-        {
-            this.states[key].physics = this.game.physics;
-        }
+        this.states[key].physics = this.game.physics;
 
     },
 
@@ -27378,6 +27376,8 @@ Phaser.World.prototype.boot = function () {
 
     this.camera.displayObject = this;
 
+    this.camera.scale = this.scale;
+
     this.game.camera = this.camera;
 
     this.game.stage.addChild(this);
@@ -28495,7 +28495,7 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.world = null;
 
     /**
-    * @property {Phaser.Physics.World} physics - Reference to the physics world.
+    * @property {Phaser.Physics} physics - Reference to the physics manager.
     */
     this.physics = null;
 
@@ -28737,7 +28737,7 @@ Phaser.Game.prototype = {
             this.tweens = new Phaser.TweenManager(this);
             this.input = new Phaser.Input(this);
             this.sound = new Phaser.SoundManager(this);
-            this.physics = new Phaser.Physics.World(this, this.physicsConfig);
+            this.physics = new Phaser.Physics(this, this.physicsConfig);
             this.particles = new Phaser.Particles(this);
             this.plugins = new Phaser.PluginManager(this, this);
             this.net = new Phaser.Net(this);
@@ -34680,7 +34680,7 @@ Phaser.InputHandler.prototype = {
     * @param {number} [snapOffsetX=0] - Used to offset the top-left starting point of the snap grid.
     * @param {number} [snapOffsetX=0] - Used to offset the top-left starting point of the snap grid.
     */
-    enableSnap: function (snapX, snapY, onDrag, onRelease, snappOffsetX, snappOffsetY) {
+    enableSnap: function (snapX, snapY, onDrag, onRelease, snapOffsetX, snapOffsetY) {
 
         if (typeof onDrag == 'undefined') { onDrag = true; }
         if (typeof onRelease == 'undefined') { onRelease = false; }
@@ -34811,7 +34811,7 @@ Phaser.InputHandler.prototype.constructor = Phaser.InputHandler;
 
 /**
 * @author       Antony Woods <antony@teamwoods.org>
-* @copyright    2013 Photon Storm Ltd.
+* @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
@@ -36888,7 +36888,15 @@ Phaser.Sprite = function (game, x, y, key, frame) {
     this.input = null;
 
     /**
-    * @property {Phaser.Physics.Body|null} body - The Sprites physics Body. Will be null unless physics has been enabled via `Sprite.physicsEnabled = true`.
+    * By default Sprites won't add themselves to any physics system and their physics body will be `null`.
+    * To enable them for physics you need to call `game.physics.enable(sprite, system)` where `sprite` is this object 
+    * and `system` is the Physics system you want to use to manage this body. Once enabled you can access all physics related properties via `Sprite.body`.
+    *
+    * Important: Enabling a Sprite for P2 or Ninja physics will automatically set `Sprite.anchor` to 0.5 so the physics body is centered on the Sprite.
+    * If you need a different result then adjust or re-create the Body shape offsets manually, and/or reset the anchor after enabling physics.
+    *
+    * @property {Phaser.Physics.Arcade.Body|Phaser.Physics.P2.Body|Phaser.Physics.Ninja.Body|null} body
+    * @default
     */
     this.body = null;
 
@@ -37042,6 +37050,11 @@ Phaser.Sprite.prototype.preUpdate = function() {
 
     this.animations.update();
 
+    if (this.exists && this.body)
+    {
+        this.body.preUpdate();
+    }
+
     //  Update any Children
     for (var i = 0, len = this.children.length; i < len; i++)
     {
@@ -37076,19 +37089,16 @@ Phaser.Sprite.prototype.postUpdate = function() {
         this.key.render();
     }
 
-    if (this.exists)
+    if (this.exists && this.body)
     {
-        if (this.body)
-        {
-            this.body.postUpdate();
-        }
+        this.body.postUpdate();
     }
 
     //  Fixed to Camera?
     if (this._cache[7] === 1)
     {
-        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
-        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
     }
 
     //  Update any Children
@@ -37413,18 +37423,11 @@ Phaser.Sprite.prototype.reset = function(x, y, health) {
 * @memberof Phaser.Sprite
 * @return (Phaser.Sprite) This instance.
 */
-Phaser.Sprite.prototype.bringToTop = function(child) {
+Phaser.Sprite.prototype.bringToTop = function() {
 
-    if (typeof child === 'undefined')
+    if (this.parent)
     {
-        if (this.parent)
-        {
-            this.parent.bringToTop(this);
-        }
-    }
-    else
-    {
-
+        this.parent.bringToTop(this);
     }
 
     return this;
@@ -37645,46 +37648,6 @@ Object.defineProperty(Phaser.Sprite.prototype, "inputEnabled", {
 });
 
 /**
-* By default Sprites won't add themselves to the physics world. By setting physicsEnabled to true a Rectangle physics body is
-* attached to this Sprite matching its placement and dimensions, and will then start to process physics world updates.
-* You can access all physics related properties via Sprite.body.
-*
-* Important: Enabling a Sprite for physics will automatically set `Sprite.anchor` to 0.5 s0 the physics body is centered on the Sprite.
-* If you need a different result then adjust or re-create the Body shape offsets manually, and/or reset the anchor after enabling physics.
-*
-* @name Phaser.Sprite#physicsEnabled
-* @property {boolean} physicsEnabled - Set to true to add this Sprite to the physics world. Set to false to destroy the body and remove it from the physics world.
-*/
-Object.defineProperty(Phaser.Sprite.prototype, "physicsEnabled", {
-    
-    get: function () {
-
-        return (this.body !== null);
-
-    },
-
-    set: function (value) {
-
-        if (value)
-        {
-            if (this.body === null)
-            {
-                this.body = new Phaser.Physics.Body(this.game, this, this.x, this.y, 1);
-                this.anchor.set(0.5);
-            }
-        }
-        else
-        {
-            if (this.body)
-            {
-                this.body.destroy();
-            }
-        }
-    }
-
-});
-
-/**
 * Sprite.exists controls if the core game loop and physics update this Sprite or not.
 * When you set Sprite.exists to false it will remove its Body from the physics world (if it has one) and also set Sprite.visible to false.
 * Setting Sprite.exists to true will re-add the Body to the physics world (if it has a body) and set Sprite.visible to true.
@@ -37707,7 +37670,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
             //  exists = true
             this._cache[6] = 1;
 
-            if (this.body)
+            if (this.body && this.body.type === Phaser.Physics.P2)
             {
                 this.body.addToWorld();
             }
@@ -37719,7 +37682,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
             //  exists = false
             this._cache[6] = 0;
 
-            if (this.body)
+            if (this.body && this.body.type === Phaser.Physics.P2)
             {
                 this.body.removeFromWorld();
             }
@@ -37985,8 +37948,8 @@ Phaser.Image.prototype.postUpdate = function() {
     //  Fixed to Camera?
     if (this._cache[7] === 1)
     {
-        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
-        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
     }
 
     //  Update any Children
@@ -38264,18 +38227,11 @@ Phaser.Image.prototype.reset = function(x, y) {
 * @memberof Phaser.Image
 * @return {Phaser.Image} This instance.
 */
-Phaser.Image.prototype.bringToTop = function(child) {
+Phaser.Image.prototype.bringToTop = function() {
 
-    if (typeof child === 'undefined')
+    if (this.parent)
     {
-        if (this.parent)
-        {
-            this.parent.bringToTop(this);
-        }
-    }
-    else
-    {
-
+        this.parent.bringToTop(this);
     }
 
     return this;
@@ -38666,6 +38622,19 @@ Phaser.TileSprite = function (game, x, y, width, height, key, frame) {
     this.cameraOffset = new Phaser.Point();
 
     /**
+    * By default Sprites won't add themselves to any physics system and their physics body will be `null`.
+    * To enable them for physics you need to call `game.physics.enable(sprite, system)` where `sprite` is this object 
+    * and `system` is the Physics system you want to use to manage this body. Once enabled you can access all physics related properties via `Sprite.body`.
+    *
+    * Important: Enabling a Sprite for P2 or Ninja physics will automatically set `Sprite.anchor` to 0.5 so the physics body is centered on the Sprite.
+    * If you need a different result then adjust or re-create the Body shape offsets manually, and/or reset the anchor after enabling physics.
+    *
+    * @property {Phaser.Physics.Arcade.Body|Phaser.Physics.P2.Body|Phaser.Physics.Ninja.Body|null} body
+    * @default
+    */
+    this.body = null;
+
+    /**
     * A small internal cache:
     * 0 = previous position.x
     * 1 = previous position.y
@@ -38712,6 +38681,11 @@ Phaser.TileSprite.prototype.preUpdate = function() {
         this._cache[3] = this.game.stage.currentRenderOrderID++;
     }
 
+    if (this.exists && this.body)
+    {
+        this.body.preUpdate();
+    }
+
     //  Update any Children
     for (var i = 0, len = this.children.length; i < len; i++)
     {
@@ -38739,6 +38713,11 @@ Phaser.TileSprite.prototype.update = function() {
 * @memberof Phaser.TileSprite
 */
 Phaser.TileSprite.prototype.postUpdate = function() {
+
+    if (this.exists && this.body)
+    {
+        this.body.postUpdate();
+    }
 
     //  Fixed to Camera?
     if (this._cache[7] === 1)
@@ -39031,6 +39010,53 @@ Object.defineProperty(Phaser.TileSprite.prototype, "fixedToCamera", {
 });
 
 /**
+* TileSprite.exists controls if the core game loop and physics update this TileSprite or not.
+* When you set TileSprite.exists to false it will remove its Body from the physics world (if it has one) and also set TileSprite.visible to false.
+* Setting TileSprite.exists to true will re-add the Body to the physics world (if it has a body) and set TileSprite.visible to true.
+*
+* @name Phaser.TileSprite#exists
+* @property {boolean} exists - If the TileSprite is processed by the core game update and physics.
+*/
+Object.defineProperty(Phaser.TileSprite.prototype, "exists", {
+    
+    get: function () {
+
+        return !!this._cache[6];
+
+    },
+
+    set: function (value) {
+
+        if (value)
+        {
+            //  exists = true
+            this._cache[6] = 1;
+
+            if (this.body && this.body.type === Phaser.Physics.P2)
+            {
+                this.body.addToWorld();
+            }
+
+            this.visible = true;
+        }
+        else
+        {
+            //  exists = false
+            this._cache[6] = 0;
+
+            if (this.body && this.body.type === Phaser.Physics.P2)
+            {
+                this.body.removeFromWorld();
+            }
+
+            this.visible = false;
+
+        }
+    }
+
+});
+
+/**
 * By default a TileSprite won't process any input events at all. By setting inputEnabled to true the Phaser.InputHandler is
 * activated for this object and it will then start to process click/touch events and more.
 *
@@ -39247,8 +39273,8 @@ Phaser.Text.prototype.postUpdate = function () {
 
     if (this._cache[7] === 1)
     {
-        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
-        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
     }
 
     //  Update any Children
@@ -40113,8 +40139,8 @@ Phaser.BitmapText.prototype.postUpdate = function () {
     //  Fixed to Camera?
     if (this._cache[7] === 1)
     {
-        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
-        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
     }
 
 }
@@ -41144,8 +41170,8 @@ Phaser.Graphics.prototype.postUpdate = function () {
     //  Fixed to Camera?
     if (this._cache[7] === 1)
     {
-        this.position.x = this.game.camera.view.x + this.cameraOffset.x;
-        this.position.y = this.game.camera.view.y + this.cameraOffset.y;
+        this.position.x = (this.game.camera.view.x + this.cameraOffset.x) / this.game.camera.scale.x;
+        this.position.y = (this.game.camera.view.y + this.cameraOffset.y) / this.game.camera.scale.y;
     }
 
 }
@@ -44847,6 +44873,272 @@ Phaser.RandomDataGenerator.prototype.constructor = Phaser.RandomDataGenerator;
 */
 
 /**
+ * Javascript QuadTree 
+ * @version 1.0
+ * @author Timo Hausmann
+ *
+ * @version 1.2, September 4th 2013
+ * @author Richard Davey
+ * The original code was a conversion of the Java code posted to GameDevTuts. However I've tweaked
+ * it massively to add node indexing, removed lots of temp. var creation and significantly
+ * increased performance as a result.
+ *
+ * Original version at https://github.com/timohausmann/quadtree-js/
+ */
+ 
+/**
+* @copyright © 2012 Timo Hausmann
+*
+* Permission is hereby granted, free of charge, to any person obtaining
+* a copy of this software and associated documentation files (the
+* "Software"), to deal in the Software without restriction, including
+* without limitation the rights to use, copy, modify, merge, publish,
+* distribute, sublicense, and/or sell copies of the Software, and to
+* permit persons to whom the Software is furnished to do so, subject to
+* the following conditions:
+*
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+* NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+* LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+* OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+* WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+/**
+ * QuadTree Constructor
+ * 
+ * @class Phaser.QuadTree
+ * @classdesc A QuadTree implementation. The original code was a conversion of the Java code posted to GameDevTuts. However I've tweaked
+ * it massively to add node indexing, removed lots of temp. var creation and significantly increased performance as a result. Original version at https://github.com/timohausmann/quadtree-js/
+ * @constructor
+ * @param {Description} physicsManager - Description.
+ * @param {Description} x - Description.
+ * @param {Description} y - Description.
+ * @param {number} width - The width of your game in game pixels.
+ * @param {number} height - The height of your game in game pixels.
+ * @param {number} maxObjects - Description.
+ * @param {number} maxLevels - Description.
+ * @param {number} level - Description.
+ */
+Phaser.QuadTree = function (physicsManager, x, y, width, height, maxObjects, maxLevels, level) {
+        
+    this.physicsManager = physicsManager;
+    this.ID = physicsManager.quadTreeID;
+    physicsManager.quadTreeID++;
+
+    this.maxObjects = maxObjects || 10;
+    this.maxLevels = maxLevels || 4;
+    this.level = level || 0;
+
+    this.bounds = {
+        x: Math.round(x),
+        y: Math.round(y),
+        width: width,
+        height: height,
+        subWidth: Math.floor(width / 2),
+        subHeight: Math.floor(height / 2),
+        right: Math.round(x) + Math.floor(width / 2),
+        bottom: Math.round(y) + Math.floor(height / 2)
+    };
+    
+    this.objects = [];
+    this.nodes = [];
+
+};
+
+Phaser.QuadTree.prototype = {
+
+    /*
+    * Split the node into 4 subnodes
+    * 
+    * @method Phaser.QuadTree#split
+    */
+    split: function() {
+
+        this.level++;
+        
+        //  top right node
+        this.nodes[0] = new Phaser.QuadTree(this.physicsManager, this.bounds.right, this.bounds.y, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+        
+        //  top left node
+        this.nodes[1] = new Phaser.QuadTree(this.physicsManager, this.bounds.x, this.bounds.y, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+        
+        //  bottom left node
+        this.nodes[2] = new Phaser.QuadTree(this.physicsManager, this.bounds.x, this.bounds.bottom, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+        
+        //  bottom right node
+        this.nodes[3] = new Phaser.QuadTree(this.physicsManager, this.bounds.right, this.bounds.bottom, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+
+    },
+
+    /*
+    * Insert the object into the node. If the node
+    * exceeds the capacity, it will split and add all
+    * objects to their corresponding subnodes.
+    * 
+    * @method Phaser.QuadTree#insert
+    * @param {object} body - Description.
+    */
+    insert: function (body) {
+        
+        var i = 0;
+        var index;
+        
+        //  if we have subnodes ...
+        if (this.nodes[0] != null)
+        {
+            index = this.getIndex(body);
+     
+            if (index !== -1)
+            {
+                this.nodes[index].insert(body);
+                return;
+            }
+        }
+     
+        this.objects.push(body);
+        
+        if (this.objects.length > this.maxObjects && this.level < this.maxLevels)
+        {
+            //  Split if we don't already have subnodes
+            if (this.nodes[0] == null)
+            {
+                this.split();
+            }
+            
+            //  Add objects to subnodes
+            while (i < this.objects.length)
+            {
+                index = this.getIndex(this.objects[i]);
+                
+                if (index !== -1)
+                {
+                    //  this is expensive - see what we can do about it
+                    this.nodes[index].insert(this.objects.splice(i, 1)[0]);
+                }
+                else
+                {
+                    i++;
+                }
+            }
+        }
+
+    },
+     
+    /*
+    * Determine which node the object belongs to.
+    * 
+    * @method Phaser.QuadTree#getIndex
+    * @param {object} rect - Description.
+    * @return {number} index - Index of the subnode (0-3), or -1 if rect cannot completely fit within a subnode and is part of the parent node.
+    */
+    getIndex: function (rect) {
+        
+        //  default is that rect doesn't fit, i.e. it straddles the internal quadrants
+        var index = -1;
+
+        if (rect.x < this.bounds.right && rect.right < this.bounds.right)
+        {
+            if ((rect.y < this.bounds.bottom && rect.bottom < this.bounds.bottom))
+            {
+                //  rect fits within the top-left quadrant of this quadtree
+                index = 1;
+            }
+            else if ((rect.y > this.bounds.bottom))
+            {
+                //  rect fits within the bottom-left quadrant of this quadtree
+                index = 2;
+            }
+        }
+        else if (rect.x > this.bounds.right)
+        {
+            //  rect can completely fit within the right quadrants
+            if ((rect.y < this.bounds.bottom && rect.bottom < this.bounds.bottom))
+            {
+                //  rect fits within the top-right quadrant of this quadtree
+                index = 0;
+            }
+            else if ((rect.y > this.bounds.bottom))
+            {
+                //  rect fits within the bottom-right quadrant of this quadtree
+                index = 3;
+            }
+        }
+     
+        return index;
+
+    },
+
+     /*
+    * Return all objects that could collide with the given object.
+    * 
+    * @method Phaser.QuadTree#retrieve
+    * @param {object} rect - Description.
+    * @Return {array} - Array with all detected objects.
+    */
+    retrieve: function (sprite) {
+        
+        var returnObjects = this.objects;
+
+        sprite.body.quadTreeIndex = this.getIndex(sprite.body);
+
+        //  Temp store for the node IDs this sprite is in, we can use this for fast elimination later
+        sprite.body.quadTreeIDs.push(this.ID);
+
+        if (this.nodes[0])
+        {
+            //  if rect fits into a subnode ..
+            if (sprite.body.quadTreeIndex !== -1)
+            {
+                returnObjects = returnObjects.concat(this.nodes[sprite.body.quadTreeIndex].retrieve(sprite));
+            }
+            else
+            {
+                //  if rect does not fit into a subnode, check it against all subnodes (unrolled for speed)
+                returnObjects = returnObjects.concat(this.nodes[0].retrieve(sprite));
+                returnObjects = returnObjects.concat(this.nodes[1].retrieve(sprite));
+                returnObjects = returnObjects.concat(this.nodes[2].retrieve(sprite));
+                returnObjects = returnObjects.concat(this.nodes[3].retrieve(sprite));
+            }
+        }
+     
+        return returnObjects;
+
+    },
+
+    /*
+    * Clear the quadtree.
+    * @method Phaser.QuadTree#clear
+    */
+    clear: function () {
+        
+        this.objects = [];
+     
+        for (var i = 0, len = this.nodes.length; i < len; i++)
+        {
+            // if (typeof this.nodes[i] !== 'undefined')
+            if (this.nodes[i])
+            {
+                this.nodes[i].clear();
+                delete this.nodes[i];
+            }
+        }
+    }
+
+};
+
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2014 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
 * Phaser.Net handles browser URL related tasks such as checking host names, domain names and query string manipulation.
 *
 * @class Phaser.Net
@@ -45090,6 +45382,7 @@ Phaser.TweenManager.prototype = {
     */
     add: function (tween) {
 
+        tween._manager = this;
         this._add.push(tween);
 
     },
@@ -45103,7 +45396,7 @@ Phaser.TweenManager.prototype = {
     */
     create: function (object) {
 
-        return new Phaser.Tween(object, this.game);
+        return new Phaser.Tween(object, this.game, this);
 
     },
 
@@ -45256,8 +45549,9 @@ Phaser.TweenManager.prototype.constructor = Phaser.TweenManager;
 * @constructor
 * @param {object} object - Target object will be affected by this tween.
 * @param {Phaser.Game} game - Current game instance.
+* @param {Phaser.TweenManager} manager - The TweenManager responsible for looking after this Tween.
 */
-Phaser.Tween = function (object, game) {
+Phaser.Tween = function (object, game, manager) {
 
     /**
     * Reference to the target object.
@@ -45275,7 +45569,7 @@ Phaser.Tween = function (object, game) {
     * @property {Phaser.TweenManager} _manager - Reference to the TweenManager.
     * @private
     */
-    this._manager = this.game.tweens;
+    this._manager = manager;
 
     /**
     * @property {object} _valuesStart - Private value object.
@@ -46778,6 +47072,7 @@ Phaser.Time.prototype = {
         this.timeToCall = this.game.math.max(0, 16 - (time - this.lastTime));
 
         this.elapsed = this.now - this.time;
+        this.physicsElapsed = this.elapsed / 1000;
 
         if (this.advancedTiming)
         {
@@ -46798,8 +47093,6 @@ Phaser.Time.prototype = {
 
         this.time = this.now;
         this.lastTime = time + this.timeToCall;
-
-        this.physicsElapsed = 1.0 * (this.elapsed / 1000);
 
         //  Paused but still running?
         if (!this.game.paused)
@@ -48168,8 +48461,6 @@ Phaser.Animation = function (game, parent, name, frameData, frames, delay, loop)
     //  Set-up some event listeners
     this.game.onPause.add(this.onPause, this);
     this.game.onResume.add(this.onResume, this);
-
-    console.log('animation created', this);
     
 };
 
@@ -51069,7 +51360,7 @@ Phaser.Loader.prototype = {
     * @param {string} key - Unique asset key of the tilemap data.
     * @param {string} [mapDataURL] - The url of the map data file (csv/json)
     * @param {object} [mapData] - An optional JSON data object. If given then the mapDataURL is ignored and this JSON object is used for map data instead.
-    * @param {string} [format=Phaser.Tilemap.CSV] - The format of the map data. Either Phaser.Tilemap.CSV or Phaser.Tilemap.TILED_JSON.
+    * @param {number} [format=Phaser.Tilemap.CSV] - The format of the map data. Either Phaser.Tilemap.CSV or Phaser.Tilemap.TILED_JSON.
     * @return {Phaser.Loader} This Loader instance.
     */
     tilemap: function (key, mapDataURL, mapData, format) {
@@ -53568,7 +53859,7 @@ Phaser.Utils.Debug.prototype = {
             this.context = this.canvas.getContext('2d');
             this.baseTexture = new PIXI.BaseTexture(this.canvas);
             this.texture = new PIXI.Texture(this.baseTexture);
-            this.textureFrame = new Phaser.Frame(0, 0, 0, this.game.width, this.game.height, 'debug', game.rnd.uuid());
+            this.textureFrame = new Phaser.Frame(0, 0, 0, this.game.width, this.game.height, 'debug', this.game.rnd.uuid());
             this.sprite = this.game.make.image(0, 0, this.texture, this.textureFrame);
             this.game.stage.addChild(this.sprite);
         }
@@ -53969,33 +54260,35 @@ Phaser.Utils.Debug.prototype = {
     * @param {Phaser.Rectangle|Phaser.Circle|Phaser.Point|Phaser.Line} object - The geometry object to render.
     * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
     * @param {boolean} [filled=true] - Render the objected as a filled (default, true) or a stroked (false)
+    * @param {number} [forceType=0] - Force rendering of a specific type. If 0 no type will be forced, otherwise 1 = Rectangle, 2 = Circle, 3 = Point and 4 = Line.
     */
-    geom: function (object, color, filled) {
+    geom: function (object, color, filled, forceType) {
 
         if (typeof filled === 'undefined') { filled = true; }
+        if (typeof forceType === 'undefined') { forceType = 0; }
 
-        color = color || 'rgba(0,255,0,0.3)';
+        color = color || 'rgba(0,255,0,0.4)';
 
         this.start();
 
         this.context.fillStyle = color;
         this.context.strokeStyle = color;
 
-        if (object instanceof Phaser.Rectangle)
+        if (object instanceof Phaser.Rectangle || forceType === 1)
         {
             if (filled)
             {
-                this.context.fillRect(object.x, object.y, object.width, object.height);
+                this.context.fillRect(object.x - this.game.camera.x, object.y - this.game.camera.y, object.width, object.height);
             }
             else
             {
-                this.context.strokeRect(object.x, object.y, object.width, object.height);
+                this.context.strokeRect(object.x - this.game.camera.x, object.y - this.game.camera.y, object.width, object.height);
             }
         }
-        else if (object instanceof Phaser.Circle)
+        else if (object instanceof Phaser.Circle || forceType === 2)
         {
             this.context.beginPath();
-            this.context.arc(object.x, object.y, object.radius, 0, Math.PI * 2, false);
+            this.context.arc(object.x - this.game.camera.x, object.y - this.game.camera.y, object.radius, 0, Math.PI * 2, false);
             this.context.closePath();
 
             if (filled)
@@ -54007,16 +54300,16 @@ Phaser.Utils.Debug.prototype = {
                 this.context.stroke();
             }
         }
-        else if (object instanceof Phaser.Point)
+        else if (object instanceof Phaser.Point || forceType === 3)
         {
-            this.context.fillRect(object.x, object.y, 4, 4);
+            this.context.fillRect(object.x - this.game.camera.x, object.y - this.game.camera.y, 4, 4);
         }
-        else if (object instanceof Phaser.Line)
+        else if (object instanceof Phaser.Line || forceType === 4)
         {
             this.context.lineWidth = 1;
             this.context.beginPath();
-            this.context.moveTo(object.start.x + 0.5, object.start.y + 0.5);
-            this.context.lineTo(object.end.x + 0.5, object.end.y + 0.5);
+            this.context.moveTo((object.start.x + 0.5) - this.game.camera.x, (object.start.y + 0.5) - this.game.camera.y);
+            this.context.lineTo((object.end.x + 0.5) - this.game.camera.x, (object.end.y + 0.5) - this.game.camera.y);
             this.context.closePath();
             this.context.stroke();
         }
@@ -54607,28 +54900,8089 @@ Phaser.Color = {
 */
 
 /**
+* The Physics Manager is responsible for looking after all of the running physics systems.
+* Phaser supports 3 physics systems: Arcade Physics, P2 and Ninja Physics (with Box2D and Chipmunk in development)
+* Game Objects can belong to only 1 physics system, but you can have multiple systems active in a single game.
+*
+* For example you could have P2 managing a polygon-built terrain landscape that an vehicle drives over, while it could be firing bullets that use the
+* faster (due to being much simpler) Arcade Physics system.
+*
 * @class Phaser.Physics
+*
+* @constructor
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {object} [physicsConfig=null] - A physics configuration object to pass to the Physics world on creation.
 */
-Phaser.Physics = {};
+Phaser.Physics = function (game, config) {
+
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
+    this.game = game;
+
+    /**
+    * @property {object} config - The physics configuration object as passed to the game on creation.
+    */
+    this.config = config;
+
+    /**
+    * @property {Phaser.Physics.Arcade} arcade - The Arcade Physics system.
+    */
+    this.arcade = new Phaser.Physics.Arcade(game);
+
+    /**
+    * @property {Phaser.Physics.P2} p2 - The P2.JS Physics system.
+    */
+    this.p2 = null;
+
+    /**
+    * @property {Phaser.Physics.Ninja} ninja - The N+ Ninja Physics System.
+    */
+    this.ninja = null;
+
+    /**
+    * @property {Phaser.Physics.Box2D} box2d - The Box2D Physics system (to be done).
+    */
+    this.box2d = null;
+
+    /**
+    * @property {Phaser.Physics.Chipmunk} chipmunk - The Chipmunk Physics system (to be done).
+    */
+    this.chipmunk = null;
+
+};
 
 /**
 * @const
 * @type {number}
 */
-Phaser.Physics.LIME_CORONA_JSON = 0;
+Phaser.Physics.ARCADE = 0;
+
+/**
+* @const
+* @type {number}
+*/
+Phaser.Physics.P2 = 1;
+
+/**
+* @const
+* @type {number}
+*/
+Phaser.Physics.NINJA = 2;
+
+/**
+* @const
+* @type {number}
+*/
+Phaser.Physics.BOX2D = 3;
+
+/**
+* @const
+* @type {number}
+*/
+Phaser.Physics.CHIPMUNK = 5;
+
+Phaser.Physics.prototype = {
+
+    /**
+    * This will create an instance of the requested physics simulation.
+    * Phaser.Physics.Arcade is running by default, but all others need activating directly.
+    * You can start the following physics systems:
+    * Phaser.Physics.P2 - A full-body advanced physics system by Stefan Hedman.
+    * Phaser.Physics.NINJA - A port of Metanet Softwares N+ physics system.
+    * Phaser.Physics.BOX2D and Phaser.Physics.CHIPMUNK are still in development.
+    *
+    * @method Phaser.Physics#startSystem
+    * @param {number} The physics system to start.
+    */
+    startSystem: function (system) {
+
+        if (system === Phaser.Physics.ARCADE && this.arcade === null)
+        {
+            this.arcade = new Phaser.Physics.Arcade(this.game);
+        }
+        else if (system === Phaser.Physics.P2 && this.p2 === null)
+        {
+            this.p2 = new Phaser.Physics.P2(this.game, this.config);
+        }
+        if (system === Phaser.Physics.NINJA && this.ninja === null)
+        {
+            this.ninja = new Phaser.Physics.Ninja(this.game);
+        }
+        else if (system === Phaser.Physics.BOX2D && this.box2d === null)
+        {
+            //  Coming soon
+        }
+        else if (system === Phaser.Physics.CHIPMUNK && this.chipmunk === null)
+        {
+            //  Coming soon
+        }
+
+    },
+
+    /**
+    * This will create a physics body on the given game object.
+    * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
+    * It can be for any of the physics systems that have been started:
+    *
+    * Phaser.Physics.Arcade - A light weight AABB based collision system with basic separation.
+    * Phaser.Physics.P2 - A full-body advanced physics system supporting multiple object shapes, polygon loading, contact materials, springs and constraints.
+    * Phaser.Physics.NINJA - A port of Metanet Softwares N+ physics system. Advanced AABB and Circle vs. Tile collision.
+    * Phaser.Physics.BOX2D and Phaser.Physics.CHIPMUNK are still in development.
+    *
+    * @method Phaser.Physics#enable
+    * @param {object|array} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array.
+    * @param {number} [system=Phaser.Physics.ARCADE] - The physics system that will be used to create the body. Defaults to Arcade Physics.
+    */
+    enable: function (object, system) {
+
+        if (typeof system === 'undefined') { system = Phaser.Physics.ARCADE; }
+
+        var i = 1;
+
+        if (object instanceof Phaser.Group)
+        {
+
+        }
+        else
+        {
+            if (Array.isArray(object))
+            {
+                //  Add to Group
+                i = object.length;
+            }
+            else
+            {
+                object = [object];
+            }
+
+            while (i--)
+            {
+                if (object[i].body === null)
+                {
+                    if (system === Phaser.Physics.ARCADE)
+                    {
+                        object[i].body = new Phaser.Physics.Arcade.Body(object[i]);
+                    }
+                    else if (system === Phaser.Physics.P2)
+                    {
+                        object[i].body = new Phaser.Physics.P2.Body(this.game, object[i], object[i].x, object[i].y, 1);
+                        object[i].anchor.set(0.5);
+                    }
+                    else if (system === Phaser.Physics.NINJA)
+                    {
+                        object[i].body = new Phaser.Physics.Ninja.Body(this.ninja, object[i]);
+                        object[i].anchor.set(0.5);
+                    }
+                }
+            }
+        }
+
+    },
+
+    /**
+    * Updates all running physics systems.
+    *
+    * @method Phaser.Physics#update
+    * @protected
+    */
+    update: function () {
+
+        //  ArcadePhysics / Ninja don't have a core to update
+
+        if (this.p2)
+        {
+            this.p2.update();
+        }
+
+    },
+
+    /**
+    * Updates the physics bounds to match the world dimensions.
+    *
+    * @method Phaser.Physics#setBoundsToWorld
+    * @protected
+    */
+    setBoundsToWorld: function () {
+
+        if (this.ninja)
+        {
+            this.ninja.setBoundsToWorld();
+        }
+
+    },
+
+    /**
+    * Clears down all active physics systems. This doesn't destroy them, it just clears them of objects and is called when the State changes.
+    *
+    * @method Phaser.Physics#clear
+    * @protected
+    */
+    clear: function () {
+
+        if (this.p2)
+        {
+            this.p2.clear();
+        }
+
+    }
+
+};
+
+Phaser.Physics.prototype.constructor = Phaser.Physics;
+
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2014 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* Arcade Physics constructor.
+*
+* @class Phaser.Physics.Arcade
+* @classdesc Arcade Physics Constructor
+* @constructor
+* @param {Phaser.Game} game reference to the current game instance.
+*/
+Phaser.Physics.Arcade = function (game) {
+    
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
+    this.game = game;
+
+    /**
+    * @property {Phaser.Point} gravity - The World gravity setting. Defaults to x: 0, y: 0, or no gravity.
+    */
+    this.gravity = new Phaser.Point();
+
+    /**
+    * @property {Phaser.Rectangle} bounds - The bounds inside of which the physics world exists. Defaults to match the world bounds.
+    */
+    this.bounds = new Phaser.Rectangle(0, 0, game.world.width, game.world.height);
+
+    /**
+    * @property {number} maxObjects - Used by the QuadTree to set the maximum number of objects per quad.
+    */
+    this.maxObjects = 10;
+
+    /**
+    * @property {number} maxLevels - Used by the QuadTree to set the maximum number of iteration levels.
+    */
+    this.maxLevels = 4;
+
+    /**
+    * @property {number} OVERLAP_BIAS - A value added to the delta values during collision checks.
+    */
+    this.OVERLAP_BIAS = 4;
+
+    /**
+    * @property {Phaser.QuadTree} quadTree - The world QuadTree.
+    */
+    this.quadTree = new Phaser.Physics.Arcade.QuadTree(this, this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
+
+    /**
+    * @property {number} quadTreeID - The QuadTree ID.
+    */
+    this.quadTreeID = 0;
+
+    //  Avoid gc spikes by caching these values for re-use
+
+    /**
+    * @property {Phaser.Rectangle} _bounds1 - Internal cache var.
+    * @private
+    */
+    this._bounds1 = new Phaser.Rectangle();
+
+    /**
+    * @property {Phaser.Rectangle} _bounds2 - Internal cache var.
+    * @private
+    */
+    this._bounds2 = new Phaser.Rectangle();
+
+    /**
+    * @property {number} _overlap - Internal cache var.
+    * @private
+    */
+    this._overlap = 0;
+
+    /**
+    * @property {number} _maxOverlap - Internal cache var.
+    * @private
+    */
+    this._maxOverlap = 0;
+
+    /**
+    * @property {number} _velocity1 - Internal cache var.
+    * @private
+    */
+    this._velocity1 = 0;
+
+    /**
+    * @property {number} _velocity2 - Internal cache var.
+    * @private
+    */
+    this._velocity2 = 0;
+
+    /**
+    * @property {number} _newVelocity1 - Internal cache var.
+    * @private
+    */
+    this._newVelocity1 = 0;
+
+    /**
+    * @property {number} _newVelocity2 - Internal cache var.
+    * @private
+    */
+    this._newVelocity2 = 0;
+
+    /**
+    * @property {number} _average - Internal cache var.
+    * @private
+    */
+    this._average = 0;
+
+    /**
+    * @property {Array} _mapData - Internal cache var.
+    * @private
+    */
+    this._mapData = [];
+
+    /**
+    * @property {number} _mapTiles - Internal cache var.
+    * @private
+    */
+    this._mapTiles = 0;
+
+    /**
+    * @property {boolean} _result - Internal cache var.
+    * @private
+    */
+    this._result = false;
+
+    /**
+    * @property {number} _total - Internal cache var.
+    * @private
+    */
+    this._total = 0;
+
+    /**
+    * @property {number} _angle - Internal cache var.
+    * @private
+    */
+    this._angle = 0;
+
+    /**
+    * @property {number} _dx - Internal cache var.
+    * @private
+    */
+    this._dx = 0;
+
+    /**
+    * @property {number} _dy - Internal cache var.
+    * @private
+    */
+    this._dy = 0;
+
+    /**
+    * @property {number} _intersection - Internal cache var.
+    * @private
+    */
+    // this._intersection = [0,0,0,0];
+    this._intersection = new Phaser.Rectangle();
+
+};
+
+Phaser.Physics.Arcade.prototype.constructor = Phaser.Physics.Arcade;
+
+Phaser.Physics.Arcade.prototype = {
+
+    /**
+    * This will create an Arcade Physics body on the given game object or array of game objects.
+    * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
+    *
+    * @method Phaser.Physics.Arcade#enable
+    * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array that has a body parameter.
+    * @param {boolean} [children=true] - Should a body be created on all children of this object? If true it will propagate down the display list.
+    */
+    enable: function (object, children) {
+
+        if (typeof children === 'undefined') { children = true; }
+
+        var i = 1;
+
+        if (Array.isArray(object))
+        {
+            //  Add to Group
+            i = object.length;
+        }
+        else
+        {
+            object = [object];
+        }
+
+        while (i--)
+        {
+            if (object[i] instanceof Phaser.Group)
+            {
+                object[i].forEach(this.enableBody, this, false, children);
+            }
+            else
+            {
+                this.enableBody(object[i]);
+            }
+        }
+
+    },
+
+    enableBody: function (object, children) {
+
+        if (object instanceof Phaser.Group)
+        {
+            this.enable(object, true, children);
+            return;
+        }
+
+        if (object.hasOwnProperty('body') && object.body === null)
+        {
+            object.body = new Phaser.Physics.Arcade.Body(object);
+        }
+
+        if (children && object.hasOwnProperty('children'))
+        {
+            object.children.forEach(this.enable, this);
+        }
+
+    },
+
+    /**
+    * Called automatically by a Physics body, it updates all motion related values on the Body.
+    *
+    * @method Phaser.Physics.Arcade#updateMotion
+    * @param {Phaser.Physics.Arcade.Body} The Body object to be updated.
+    */
+    updateMotion: function (body) {
+
+        //  Rotation
+        this._velocityDelta = (this.computeVelocity(body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular, 0) - body.angularVelocity) * 0.5;
+        body.angularVelocity += this._velocityDelta;
+        body.rotation += (body.angularVelocity * this.game.time.physicsElapsed);
+        body.angularVelocity += this._velocityDelta;
+
+        //  Apply gravity using the p2 style gravityScale
+        body.velocity.x += this.gravity.x * this.game.time.physicsElapsed * body.gravityScale.x;
+        body.velocity.y += this.gravity.y * this.game.time.physicsElapsed * body.gravityScale.y;
+
+        //  Apply velocity
+        body.velocity.x = this.computeVelocity(body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x);
+        body.velocity.y = this.computeVelocity(body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y);
+
+    },
+
+    /**
+    * A tween-like function that takes a starting velocity and some other factors and returns an altered velocity.
+    * Based on a function in Flixel by @ADAMATOMIC
+    *
+    * @method Phaser.Physics.Arcade#computeVelocity
+    * @param {number} velocity - Any component of velocity (e.g. 20).
+    * @param {number} acceleration - Rate at which the velocity is changing.
+    * @param {number} drag - Really kind of a deceleration, this is how much the velocity changes if Acceleration is not set.
+    * @param {number} [max=10000] - An absolute value cap for the velocity.
+    * @return {number} The altered Velocity value.
+    */
+    computeVelocity: function (velocity, acceleration, drag, max) {
+
+        max = max || 10000;
+
+        if (acceleration)
+        {
+            velocity + acceleration * this.game.time.physicsElapsed;
+        }
+        else if (drag)
+        {
+            this._drag = drag * this.game.time.physicsElapsed;
+
+            if (velocity - this._drag > 0)
+            {
+                velocity -= this._drag;
+            }
+            else if (velocity + this._drag < 0)
+            {
+                velocity += this._drag;
+            }
+            else
+            {
+                velocity = 0;
+            }
+        }
+
+        if (velocity > max)
+        {
+            velocity = max;
+        }
+        else if (velocity < -max)
+        {
+            velocity = -max;
+        }
+
+        return velocity;
+
+    },
+
+    /**
+    * Checks for overlaps between two game objects. The objects can be Sprites, Groups or Emitters.
+    * You can perform Sprite vs. Sprite, Sprite vs. Group and Group vs. Group overlap checks.
+    * Unlike collide the objects are NOT automatically separated or have any physics applied, they merely test for overlap results.
+    * The second parameter can be an array of objects, of differing types.
+    *
+    * @method Phaser.Physics.Arcade#overlap
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group or Phaser.Particles.Emitter.
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|array} object2 - The second object or array of objects to check. Can be Phaser.Sprite, Phaser.Group or Phaser.Particles.Emitter.
+    * @param {function} [overlapCallback=null] - An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then overlapCallback will only be called if processCallback returns true.
+    * @param {object} [callbackContext] - The context in which to run the callbacks.
+    * @returns {boolean} True if an overlap occured otherwise false.
+    */
+    overlap: function (object1, object2, overlapCallback, processCallback, callbackContext) {
+
+        overlapCallback = overlapCallback || null;
+        processCallback = processCallback || null;
+        callbackContext = callbackContext || overlapCallback;
+
+        this._result = false;
+        this._total = 0;
+
+        if (Array.isArray(object2))
+        {
+            for (var i = 0,  len = object2.length; i < len; i++)
+            {
+                this.collideHandler(object1, object2[i], overlapCallback, processCallback, callbackContext, true);
+            }
+        }
+        else
+        {
+            this.collideHandler(object1, object2, overlapCallback, processCallback, callbackContext, true);
+        }
+
+        return (this._total > 0);
+
+    },
+
+    /**
+    * Checks for collision between two game objects. You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap Layer or Group vs. Tilemap Layer collisions.
+    * The second parameter can be an array of objects, of differing types.
+    * The objects are also automatically separated. If you don't require separation then use ArcadePhysics.overlap instead.
+    * An optional processCallback can be provided. If given this function will be called when two sprites are found to be colliding. It is called before any separation takes place,
+    * giving you the chance to perform additional checks. If the function returns true then the collision and separation is carried out. If it returns false it is skipped.
+    * The collideCallback is an optional function that is only called if two sprites collide. If a processCallback has been set then it needs to return true for collideCallback to be called.
+    *
+    * @method Phaser.Physics.Arcade#collide
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap.
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap|array} object2 - The second object or array of objects to check. Can be Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap.
+    * @param {function} [collideCallback=null] - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {object} [callbackContext] - The context in which to run the callbacks.
+    * @returns {boolean} True if a collision occured otherwise false.
+    */
+    collide: function (object1, object2, collideCallback, processCallback, callbackContext) {
+
+        collideCallback = collideCallback || null;
+        processCallback = processCallback || null;
+        callbackContext = callbackContext || collideCallback;
+
+        this._result = false;
+        this._total = 0;
+
+        if (Array.isArray(object2))
+        {
+            for (var i = 0,  len = object2.length; i < len; i++)
+            {
+                this.collideHandler(object1, object2[i], collideCallback, processCallback, callbackContext, false);
+            }
+        }
+        else
+        {
+            this.collideHandler(object1, object2, collideCallback, processCallback, callbackContext, false);
+        }
+
+        return (this._total > 0);
+
+    },
+
+    /**
+    * Internal collision handler.
+    *
+    * @method Phaser.Physics.Arcade#collideHandler
+    * @private
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap.
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object2 - The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap. Can also be an array of objects to check.
+    * @param {function} collideCallback - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} processCallback - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {object} callbackContext - The context in which to run the callbacks.
+    * @param {boolean} overlapOnly - Just run an overlap or a full collision.
+    */
+    collideHandler: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly) {
+
+        //  Only collide valid objects
+        if (typeof object2 === 'undefined' && (object1.type === Phaser.GROUP || object1.type === Phaser.EMITTER))
+        {
+            this.collideGroupVsSelf(object1, collideCallback, processCallback, callbackContext, overlapOnly);
+            return;
+        }
+
+        if (object1 && object2 && object1.exists && object2.exists)
+        {
+            //  SPRITES
+            if (object1.type == Phaser.SPRITE || object1.type == Phaser.TILESPRITE)
+            {
+                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
+                {
+                    this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+                }
+                else if (object2.type == Phaser.TILEMAPLAYER)
+                {
+                    this.collideSpriteVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext);
+                }
+            }
+            //  GROUPS
+            else if (object1.type == Phaser.GROUP)
+            {
+                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
+                {
+                    this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+                }
+                else if (object2.type == Phaser.TILEMAPLAYER)
+                {
+                    this.collideGroupVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext);
+                }
+            }
+            //  TILEMAP LAYERS
+            else if (object1.type == Phaser.TILEMAPLAYER)
+            {
+                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
+                {
+                    this.collideSpriteVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.collideGroupVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext);
+                }
+            }
+            //  EMITTER
+            else if (object1.type == Phaser.EMITTER)
+            {
+                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
+                {
+                    this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+                }
+                else if (object2.type == Phaser.TILEMAPLAYER)
+                {
+                    this.collideGroupVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext);
+                }
+            }
+        }
+
+    },
+
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    *
+    * @method Phaser.Physics.Arcade#collideSpriteVsSprite
+    * @private
+    */
+    collideSpriteVsSprite: function (sprite1, sprite2, collideCallback, processCallback, callbackContext, overlapOnly) {
+
+        if (this.separate(sprite1.body, sprite2.body, processCallback, callbackContext, overlapOnly))
+        {
+            if (collideCallback)
+            {
+                collideCallback.call(callbackContext, sprite1, sprite2);
+            }
+
+            this._total++;
+        }
+
+    },
+
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    *
+    * @method Phaser.Physics.Arcade#collideSpriteVsGroup
+    * @private
+    */
+    collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext, overlapOnly) {
+
+        if (group.length === 0)
+        {
+            return;
+        }
+
+        //  What is the sprite colliding with in the quadtree?
+        this.quadTree.clear();
+
+        this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
+
+        this.quadTree.populate(group);
+
+        this._potentials = this.quadTree.retrieve(sprite);
+
+        for (var i = 0, len = this._potentials.length; i < len; i++)
+        {
+            //  We have our potential suspects, are they in this group?
+            if (this.separate(sprite.body, this._potentials[i], processCallback, callbackContext, overlapOnly))
+            {
+                if (collideCallback)
+                {
+                    collideCallback.call(callbackContext, sprite, this._potentials[i].sprite);
+                }
+
+                this._total++;
+            }
+        }
+
+    },
+
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    *
+    * @method Phaser.Physics.Arcade#collideGroupVsSelf
+    * @private
+    */
+    collideGroupVsSelf: function (group, collideCallback, processCallback, callbackContext, overlapOnly) {
+
+        if (group.length === 0)
+        {
+            return;
+        }
+
+        var len = group.children.length;
+
+        for (var i = 0; i < len; i++)
+        {
+            for (var j = i + 1; j <= len; j++)
+            {
+                if (group.children[i] && group.children[j] && group.children[i].exists && group.children[j].exists)
+                {
+                    this.collideSpriteVsSprite(group.children[i], group.children[j], collideCallback, processCallback, callbackContext, overlapOnly);
+                }
+            }
+        }
+
+    },
+
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    *
+    * @method Phaser.Physics.Arcade#collideGroupVsGroup
+    * @private
+    */
+    collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext, overlapOnly) {
+
+        if (group1.length === 0 || group2.length === 0)
+        {
+            return;
+        }
+
+        for (var i = 0, len = group1.children.length; i < len; i++)
+        {
+            if (group1.children[i].exists)
+            {
+                this.collideSpriteVsGroup(group1.children[i], group2, collideCallback, processCallback, callbackContext, overlapOnly);
+            }
+        }
+
+    },
+
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    *
+    * @method Phaser.Physics.Arcade#collideSpriteVsTilemapLayer
+    * @private
+    */
+    collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext) {
+
+        // this._mapData = tilemapLayer.getTiles(sprite.body.left, sprite.body.top, sprite.body.width, sprite.body.height, true);
+        // this._mapData = tilemapLayer.getTiles(sprite.body.x, sprite.body.y, sprite.body.width, sprite.body.height, true);
+
+        this._mapData = tilemapLayer.getIntersectingTiles(sprite.body.position.x, sprite.body.position.y, sprite.body.width, sprite.body.height, true);
+
+        // var vx = sprite.body.x;
+        // var vy = sprite.body.y;
+
+        // vx += sprite.body.newVelocity.x;
+        // vy += sprite.body.newVelocity.y;
+
+        // this._mapData = tilemapLayer.getIntersectingTiles(vx, vy, sprite.body.width, sprite.body.height, true);
+
+        if (this._mapData.length === 0)
+        {
+            return;
+        }
+
+        // if (this._mapData.length > 1)
+        // {
+            //  Needs process callback added
+            this.separateTiles(sprite.body, this._mapData);
+        // }
+
+        /*
+        else
+        {
+            var i = 0;
+
+            if (this.separateTile(sprite.body, this._mapData[i]))
+            {
+                //  They collided, is there a custom process callback?
+                if (processCallback)
+                {
+                    if (processCallback.call(callbackContext, sprite, this._mapData[i]))
+                    {
+                        this._total++;
+
+                        if (collideCallback)
+                        {
+                            collideCallback.call(callbackContext, sprite, this._mapData[i]);
+                        }
+                    }
+                }
+                else
+                {
+                    this._total++;
+
+                    if (collideCallback)
+                    {
+                        collideCallback.call(callbackContext, sprite, this._mapData[i]);
+                    }
+                }
+            }
+        }
+        */
+
+    },
+
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    *
+    * @method Phaser.Physics.Arcade#collideGroupVsTilemapLayer
+    * @private
+    */
+    collideGroupVsTilemapLayer: function (group, tilemapLayer, collideCallback, processCallback, callbackContext) {
+
+        if (group.length === 0)
+        {
+            return;
+        }
+
+        for (var i = 0, len = group.children.length; i < len; i++)
+        {
+            if (group.children[i].exists)
+            {
+                this.collideSpriteVsTilemapLayer(group.children[i], tilemapLayer, collideCallback, processCallback, callbackContext);
+            }
+        }
+
+    },
+
+    /**
+    * The core separation function to separate two physics bodies.
+    * @method Phaser.Physics.Arcade#separate
+    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
+    * @param {Phaser.Physics.Arcade.Body} body2 - The Body object to separate.
+    * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this function is set then the sprites will only be collided if it returns true.
+    * @param {object} [callbackContext] - The context in which to run the process callback.
+    * @returns {boolean} Returns true if the bodies collided, otherwise false.
+    */
+    separate: function (body1, body2, processCallback, callbackContext, overlapOnly) {
+
+        if (!Phaser.Rectangle.intersects(body1, body2))
+        {
+            return false;
+        }
+
+        //  They overlap. Is there a custom process callback? If it returns true then we can carry on, otherwise we should abort.
+        if (processCallback && processCallback.call(callbackContext, body1.sprite, body2.sprite) === false)
+        {
+            return false;
+        }
+
+        if (this.separateX(body1, body2, overlapOnly) || this.separateY(body1, body2, overlapOnly))
+        {
+            this._result = true;
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    },
+
+    /**
+    * The core separation function to separate two physics bodies on the x axis.
+    * @method Phaser.Physics.Arcade#separateX
+    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
+    * @param {Phaser.Physics.Arcade.Body} body2 - The Body object to separate.
+    * @param {boolean} overlapOnly - If true the bodies will only have their overlap data set, no separation or exchange of velocity will take place.
+    * @returns {boolean} Returns true if the bodies were separated, otherwise false.
+    */
+    separateX: function (body1, body2, overlapOnly) {
+
+        //  Can't separate two immovable bodies
+        if (body1.immovable && body2.immovable)
+        {
+            return false;
+        }
+
+        this._overlap = 0;
+
+        //  Check if the hulls actually overlap
+        if (Phaser.Rectangle.intersects(body1, body2))
+        {
+            this._maxOverlap = body1.deltaAbsX() + body2.deltaAbsX() + this.OVERLAP_BIAS;
+
+            if (body1.deltaX() === 0 && body2.deltaX() === 0)
+            {
+                //  They overlap but neither of them are moving
+                body1.embedded = true;
+                body2.embedded = true;
+            }
+            else if (body1.deltaX() > body2.deltaX())
+            {
+                //  Body1 is moving right and/or Body2 is moving left
+                this._overlap = body1.x + body1.width - body2.x;
+
+                if ((this._overlap > this._maxOverlap) || body1.checkCollision.right === false || body2.checkCollision.left === false)
+                {
+                    this._overlap = 0;
+                }
+                else
+                {
+                    body1.touching.right = true;
+                    body2.touching.left = true;
+                }
+            }
+            else if (body1.deltaX() < body2.deltaX())
+            {
+                //  Body1 is moving left and/or Body2 is moving right
+                this._overlap = body1.x - body2.width - body2.x;
+
+                if ((-this._overlap > this._maxOverlap) || body1.checkCollision.left === false || body2.checkCollision.right === false)
+                {
+                    this._overlap = 0;
+                }
+                else
+                {
+                    body1.touching.left = true;
+                    body2.touching.right = true;
+                }
+            }
+
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
+            if (this._overlap !== 0)
+            {
+                body1.overlapX = this._overlap;
+                body2.overlapX = this._overlap;
+
+                if (overlapOnly || body1.customSeparateX || body2.customSeparateX)
+                {
+                    return true;
+                }
+
+                this._velocity1 = body1.velocity.x;
+                this._velocity2 = body2.velocity.x;
+
+                if (!body1.immovable && !body2.immovable)
+                {
+                    this._overlap *= 0.5;
+
+                    body1.x = body1.x - this._overlap;
+                    body2.x += this._overlap;
+
+                    this._newVelocity1 = Math.sqrt((this._velocity2 * this._velocity2 * body2.mass) / body1.mass) * ((this._velocity2 > 0) ? 1 : -1);
+                    this._newVelocity2 = Math.sqrt((this._velocity1 * this._velocity1 * body1.mass) / body2.mass) * ((this._velocity1 > 0) ? 1 : -1);
+                    this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
+                    this._newVelocity1 -= this._average;
+                    this._newVelocity2 -= this._average;
+
+                    body1.velocity.x = this._average + this._newVelocity1 * body1.bounce.x;
+                    body2.velocity.x = this._average + this._newVelocity2 * body2.bounce.x;
+                }
+                else if (!body1.immovable)
+                {
+                    body1.x = body1.x - this._overlap;
+                    body1.velocity.x = this._velocity2 - this._velocity1 * body1.bounce.x;
+                }
+                else if (!body2.immovable)
+                {
+                    body2.x += this._overlap;
+                    body2.velocity.x = this._velocity1 - this._velocity2 * body2.bounce.x;
+                }
+
+                return true;
+            }
+        }
+
+        return false;
+
+    },
+
+    /**
+    * The core separation function to separate two physics bodies on the y axis.
+    * @method Phaser.Physics.Arcade#separateY
+    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
+    * @param {Phaser.Physics.Arcade.Body} body2 - The Body object to separate.
+    * @param {boolean} overlapOnly - If true the bodies will only have their overlap data set, no separation or exchange of velocity will take place.
+    * @returns {boolean} Returns true if the bodies were separated, otherwise false.
+    */
+    separateY: function (body1, body2, overlapOnly) {
+
+        //  Can't separate two immovable or non-existing bodys
+        if (body1.immovable && body2.immovable)
+        {
+            return false;
+        }
+
+        this._overlap = 0;
+
+        //  Check if the hulls actually overlap
+        if (Phaser.Rectangle.intersects(body1, body2))
+        {
+            this._maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + this.OVERLAP_BIAS;
+
+            if (body1.deltaY() === 0 && body2.deltaY() === 0)
+            {
+                //  They overlap but neither of them are moving
+                body1.embedded = true;
+                body2.embedded = true;
+            }
+            else if (body1.deltaY() > body2.deltaY())
+            {
+                //  Body1 is moving down and/or Body2 is moving up
+                this._overlap = body1.y + body1.height - body2.y;
+
+                if ((this._overlap > this._maxOverlap) || body1.checkCollision.down === false || body2.checkCollision.up === false)
+                {
+                    this._overlap = 0;
+                }
+                else
+                {
+                    body1.touching.down = true;
+                    body2.touching.up = true;
+                }
+            }
+            else if (body1.deltaY() < body2.deltaY())
+            {
+                //  Body1 is moving up and/or Body2 is moving down
+                this._overlap = body1.y - body2.height - body2.y;
+
+                if ((-this._overlap > this._maxOverlap) || body1.checkCollision.up === false || body2.checkCollision.down === false)
+                {
+                    this._overlap = 0;
+                }
+                else
+                {
+                    body1.touching.up = true;
+                    body2.touching.down = true;
+                }
+            }
+
+            //  Then adjust their positions and velocities accordingly (if there was any overlap)
+            if (this._overlap !== 0)
+            {
+                body1.overlapY = this._overlap;
+                body2.overlapY = this._overlap;
+
+                if (overlapOnly || body1.customSeparateY || body2.customSeparateY)
+                {
+                    return true;
+                }
+
+                this._velocity1 = body1.velocity.y;
+                this._velocity2 = body2.velocity.y;
+
+                if (!body1.immovable && !body2.immovable)
+                {
+                    this._overlap *= 0.5;
+
+                    body1.y = body1.y - this._overlap;
+                    body2.y += this._overlap;
+
+                    this._newVelocity1 = Math.sqrt((this._velocity2 * this._velocity2 * body2.mass) / body1.mass) * ((this._velocity2 > 0) ? 1 : -1);
+                    this._newVelocity2 = Math.sqrt((this._velocity1 * this._velocity1 * body1.mass) / body2.mass) * ((this._velocity1 > 0) ? 1 : -1);
+                    this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
+                    this._newVelocity1 -= this._average;
+                    this._newVelocity2 -= this._average;
+
+                    body1.velocity.y = this._average + this._newVelocity1 * body1.bounce.y;
+                    body2.velocity.y = this._average + this._newVelocity2 * body2.bounce.y;
+                }
+                else if (!body1.immovable)
+                {
+                    body1.y = body1.y - this._overlap;
+                    body1.velocity.y = this._velocity2 - this._velocity1 * body1.bounce.y;
+
+                    //  This is special case code that handles things like horizontal moving platforms you can ride
+                    if (body2.moves)
+                    {
+                        body1.x += body2.x - body2.preX;
+                    }
+                }
+                else if (!body2.immovable)
+                {
+                    body2.y += this._overlap;
+                    body2.velocity.y = this._velocity1 - this._velocity2 * body2.bounce.y;
+
+                    //  This is special case code that handles things like horizontal moving platforms you can ride
+                    if (body1.moves)
+                    {
+                        body2.x += body1.x - body1.preX;
+                    }
+                }
+
+                return true;
+            }
+
+        }
+
+        return false;
+
+    },
+
+    separateTiles: function (body, tiles) {
+
+        body.resetResult();
+
+        var result = false;
+
+        for (var i = 0; i < tiles.length; i++)
+        {
+            if (this.separateTile(i, body, tiles[i]))
+            {
+                result = true;
+            }
+        }
+
+        return result;
+
+    },
+
+    separateTile: function (i, body, tile) {
+
+        //  we re-check for collision in case body was separated in a previous step
+        if (i > 0 && !tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+        {
+            //  no collision so bail out (separted in a previous step)
+            console.log('no collision so bail out (separted in a previous step');
+            return false;
+        }
+
+        // console.log('body intersecting tile');
+        // console.log('x', body.position.x, 'y', body.position.y, 'r', body.right, 'b', body.bottom, 'wh', body.width, body.height);
+        // console.log('x', tile.x, 'y', tile.y, 'r', tile.right, 'b', tile.bottom);
+
+        if (body.newVelocity.x && (tile.faceLeft || tile.faceRight))
+        {
+            var px = 0;
+            var tx = 0;
+
+            if (body.newVelocity.x > 0 && tile.faceLeft)
+            {
+                px = body.width;
+            }
+            else if (body.newVelocity.x < 0 && tile.faceRight)
+            {
+                tx = tile.width;
+            }
+
+            body.position.x = tile.worldX - px + tx;
+    
+            body.velocity.x = 0; // rebound check
+            // body.newVelocity.x = 0; // rebound check
+        }
+
+        //  Vertical only if still colliding
+
+        // if (tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+        // if (body.newVelocity.y && tile.intersects(body.position.x, body.position.y, body.right, body.bottom))
+        if (body.newVelocity.y && (tile.faceTop || tile.faceBottom))
+        {
+            var py = 0;
+            var ty = 0;
+
+            if (body.newVelocity.y > 0 && tile.faceBottom)
+            {
+                py = body.height;
+            }
+            else if (body.newVelocity.y < 0 && tile.faceTop)
+            {
+                ty = tile.height;
+            }
+
+            // console.log('cy', body.newVelocity.y, py, ty);
+
+            body.position.y = tile.worldY - py + ty;
+
+            body.velocity.y = 0; // rebound check
+            // body.newVelocity.y = 0; // rebound check
+        }
+
+        // var pxOffsetX = (body.newVelocity.x > 0 ? body.width : 0);
+        // var tileOffsetX = (body.newVelocity.x < 0 ? tile.width : 0);
+        // var pxOffsetY = (body.newVelocity.y > 0 ? body.height : 0);
+        // var tileOffsetY = (body.newVelocity.y < 0 ? tile.height : 0);
+
+        //  Assume fully solid for now
+
+        // body.result.x = true;
+        // body.result.tile = tile;
+        // body.result.px = tile.x - pxOffsetX + tileOffsetX;
+        // body.position.x = tile.x - pxOffsetX + tileOffsetX;
+
+        // res.pos.y = tileY * this.tilesize - pxOffsetY + tileOffsetY;
+
+
+
+        // console.log('nv', body.newVelocity.x, 'tile.xy', tile.x, tile.y, 'p', pxOffsetX, 't', tileOffsetX, 'body xy', body.position.x, body.position.y);
+
+    },
+
+    /**
+    * The core separation function to separate a physics body and a tile.
+    * @method Phaser.Physics.Arcade#separateTile
+    * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
+    * @param {Phaser.Tile} tile - The tile to collide against.
+    * @returns {boolean} Returns true if the body was separated, otherwise false.
+    */
+    XXXseparateTile: function (body, tile) {
+
+        /*
+        this._intersection = this.tileIntersects(body, tile);
+
+        //  If the intersection area is either entirely null, or has a width/height of zero, we bail out now
+        if (this._intersection[4] === 0 || this._intersection[2] === 0 || this._intersection[3] === 0)
+        {
+            return false;
+        }
+
+        Phaser.Rectangle.intersection(body, tile, this._intersection);
+
+        if (this._intersection.width === 0 && this._intersection.height === 0)
+        {
+            return false;
+        }
+        */
+
+        // console.log(this._intersection);
+        // console.log(tile, body.x, body.y);
+
+        //  They overlap. Any custom callbacks?
+        if (tile.tile.callback || tile.layer.callbacks[tile.tile.index])
+        {
+            //  A local callback takes priority over a global callback.
+            if (tile.tile.callback && tile.tile.callback.call(tile.tile.callbackContext, body.sprite, tile) === false)
+            {
+                //  Is there a tile specific collision callback? If it returns true then we can carry on, otherwise we should abort.
+                return false;
+            }
+            else if (tile.layer.callbacks[tile.tile.index] && tile.layer.callbacks[tile.tile.index].callback.call(tile.layer.callbacks[tile.tile.index].callbackContext, body.sprite, tile) === false)
+            {
+                //  Is there a tile index collision callback? If it returns true then we can carry on, otherwise we should abort.
+                return false;
+            }
+        }
+
+        body.overlapX = 0;
+
+        if (body.deltaX() < 0 && body.checkCollision.left)
+        {
+            //  Body is moving LEFT
+            if (tile.tile.faceRight && body.x < tile.right)
+            {
+
+            }
+        }
+
+
+        var process = false;
+
+        if (this._intersection.width > 0)
+        {
+            //  Tile is blocking to the right and body is moving left
+            if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight)
+            {
+                body.x = tile.right;
+                // process = true;
+                // body.overlapX = -this._intersection.width;
+            }
+
+            //  Tile is blocking to the left and body is moving right
+            if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft)
+            {
+                body.right = tile.x;
+                // process = true;
+                // body.overlapX = this._intersection.width;
+            }
+        }
+
+/*
+        if (body.overlapX !== 0)
+        {
+            if (body.overlapX < 0)
+            {
+                body.blocked.left = true;
+            }
+            else if (body.overlapX > 0)
+            {
+                body.blocked.right = true;
+            }
+
+            body.x -= body.overlapX;
+            // body.preX -= body.overlapX;
+            body.blocked.x = Math.floor(body.x);
+            body.blocked.y = Math.floor(body.y);
+
+            if (body.bounce.x === 0)
+            {
+                body.velocity.x = 0;
+            }
+            else
+            {
+                body.velocity.x = -body.velocity.x * body.bounce.x;
+            }
+        }
+*/
+
+        Phaser.Rectangle.intersection(body, tile, this._intersection);
+
+        if (this._intersection.width === 0 && this._intersection.height === 0)
+        {
+            return false;
+        }
+
+        body.overlapY = 0;
+
+        var process = false;
+
+        if (this._intersection.height > 0)
+        {
+            //  Tile is blocking to the bottom and body is moving up
+            if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom)
+            {
+
+                // process = true;
+                // body.overlapY = -this._intersection.height;
+            }
+            
+            //  Tile is blocking to the top and body is moving down
+            if (body.deltaY() > 0 && body.checkCollision.down && tile.tile.faceTop)
+            {
+                process = true;
+                body.overlapY = this._intersection.height;
+            }
+        }
+
+        if (body.overlapY !== 0)
+        {
+            if (body.overlapY < 0)
+            {
+                body.blocked.up = true;
+            }
+            else if (body.overlapY > 0)
+            {
+                body.blocked.down = true;
+            }
+
+            body.y -= body.overlapY;
+            // body.preY -= body.overlapY;
+            body.blocked.x = Math.floor(body.x);
+            body.blocked.y = Math.floor(body.y);
+
+            if (body.bounce.y === 0)
+            {
+                body.velocity.y = 0;
+            }
+            else
+            {
+                body.velocity.y = -body.velocity.y * body.bounce.y;
+            }
+        }
+
+        return;
+
+
+        /*
+        if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight && !body.blocked.left)
+        // if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight)
+        {
+            //  LEFT
+            body.overlapX = body.x - tile.right;
+
+            if (body.overlapX < 0)
+            {
+                process = true;
+            }
+            else
+            {
+                body.overlapX = 0;
+            }
+        }
+        else if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft && !body.blocked.right)
+        // else if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft)
+        {
+            //  RIGHT
+            body.overlapX = body.right - tile.x;
+
+            if (body.overlapX > 0)
+            {
+                process = true;
+            }
+            else
+            {
+                body.overlapX = 0;
+            }
+        }
+
+        if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom && !body.blocked.up)
+        // if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom)
+        {
+            //  UP
+            body.overlapY = body.y - tile.bottom;
+
+            if (body.overlapY < 0)
+            {
+                process = true;
+            }
+            else
+            {
+                body.overlapY = 0;
+            }
+        }
+        else if (body.deltaY() > 0 && body.checkCollision.down && tile.tile.faceTop && !body.blocked.down)
+        // else if (body.deltaY() > 0 && body.checkCollision.down && tile.tile.faceTop)
+        {
+            //  DOWN
+            body.overlapY = body.bottom - tile.y;
+
+            if (body.overlapY > 0)
+            {
+                process = true;
+            }
+            else
+            {
+                body.overlapY = 0;
+            }
+        }
+        */
+
+        //  Only separate on the smallest of the two values if it's a single tile
+        /*
+        if (body.overlapX !== 0 && body.overlapY !== 0)
+        {
+            if (Math.abs(body.overlapX) > Math.abs(body.overlapY))
+            {
+                body.overlapX = 0;
+            }
+            else
+            {
+                body.overlapY = 0;
+            }
+        }
+        */
+
+        //  Separate in a single sweep
+/*        if (process)
+        {
+            return this.processTileSeparation(body);
+        }
+        else
+        {
+            return false;
+        }
+*/
+    },
+
+    /**
+    * Internal function to process the separation of a physics body from a tile.
+    * @method Phaser.Physics.Arcade#processTileSeparation
+    * @protected
+    * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
+    * @returns {boolean} Returns true if separated, false if not.
+    */
+    processTileSeparation: function (body) {
+
+        if (body.overlapX !== 0)
+        {
+            if (body.overlapX < 0)
+            {
+                body.blocked.left = true;
+            }
+            else if (body.overlapX > 0)
+            {
+                body.blocked.right = true;
+            }
+
+            body.x -= body.overlapX;
+            body.preX -= body.overlapX;
+            body.blocked.x = Math.floor(body.x);
+            body.blocked.y = Math.floor(body.y);
+
+            if (body.bounce.x === 0)
+            {
+                body.velocity.x = 0;
+            }
+            else
+            {
+                body.velocity.x = -body.velocity.x * body.bounce.x;
+            }
+        }
+
+        if (body.overlapY !== 0)
+        {
+            if (body.overlapY < 0)
+            {
+                body.blocked.up = true;
+            }
+            else if (body.overlapY > 0)
+            {
+                body.blocked.down = true;
+            }
+
+            body.y -= body.overlapY;
+            body.preY -= body.overlapY;
+            body.blocked.x = Math.floor(body.x);
+            body.blocked.y = Math.floor(body.y);
+
+            if (body.bounce.y === 0)
+            {
+                body.velocity.y = 0;
+            }
+            else
+            {
+                body.velocity.y = -body.velocity.y * body.bounce.y;
+            }
+        }
+
+        return true;
+
+    },
+
+    /**
+    * Move the given display object towards the destination object at a steady velocity.
+    * If you specify a maxTime then it will adjust the speed (overwriting what you set) so it arrives at the destination in that number of seconds.
+    * Timings are approximate due to the way browser timers work. Allow for a variance of +- 50ms.
+    * Note: The display object does not continuously track the target. If the target changes location during transit the display object will not modify its course.
+    * Note: The display object doesn't stop moving once it reaches the destination coordinates.
+    * Note: Doesn't take into account acceleration, maxVelocity or drag (if you've set drag or acceleration too high this object may not move at all)
+    * 
+    * @method Phaser.Physics.Arcade#moveToObject
+    * @param {any} displayObject - The display object to move.
+    * @param {any} destination - The display object to move towards. Can be any object but must have visible x/y properties.
+    * @param {number} [speed=60] - The speed it will move, in pixels per second (default is 60 pixels/sec)
+    * @param {number} [maxTime=0] - Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the object will arrive at destination in the given number of ms.
+    * @return {number} The angle (in radians) that the object should be visually set to in order to match its new velocity.
+    */
+    moveToObject: function (displayObject, destination, speed, maxTime) {
+
+        if (typeof speed === 'undefined') { speed = 60; }
+        if (typeof maxTime === 'undefined') { maxTime = 0; }
+
+        this._angle = Math.atan2(destination.y - displayObject.y, destination.x - displayObject.x);
+        
+        if (maxTime > 0)
+        {
+            //  We know how many pixels we need to move, but how fast?
+            speed = this.distanceBetween(displayObject, destination) / (maxTime / 1000);
+        }
+        
+        displayObject.body.velocity.x = Math.cos(this._angle) * speed;
+        displayObject.body.velocity.y = Math.sin(this._angle) * speed;
+
+        return this._angle;
+
+    },
+
+    /**
+    * Move the given display object towards the destination object at a steady velocity.
+    * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.
+    * Timings are approximate due to the way browser timers work. Allow for a variance of +- 50ms.
+    * Note: The display object does not continuously track the target. If the target changes location during transit the display object will not modify its course.
+    * Note: The display object doesn't stop moving once it reaches the destination coordinates.
+    * Note: Doesn't take into account acceleration, maxVelocity or drag (if you've set drag or acceleration too high this object may not move at all)
+    * 
+    * @method Phaser.Physics.Arcade#moveToObject
+    * @param {any} displayObject - The display object to move.
+    * @param {any} destination - The display object to move towards. Can be any object but must have visible x/y properties.
+    * @param {number} [speed=60] - The speed it will move, in pixels per second (default is 60 pixels/sec)
+    * @param {number} [maxTime=0] - Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the object will arrive at destination in the given number of ms.
+    * @return {number} The angle (in radians) that the object should be visually set to in order to match its new velocity.
+    */
+    moveToObject: function (displayObject, destination, speed, maxTime) {
+
+        if (typeof speed === 'undefined') { speed = 60; }
+        if (typeof maxTime === 'undefined') { maxTime = 0; }
+
+        this._angle = Math.atan2(destination.y - displayObject.y, destination.x - displayObject.x);
+        
+        if (maxTime > 0)
+        {
+            //  We know how many pixels we need to move, but how fast?
+            speed = this.distanceBetween(displayObject, destination) / (maxTime / 1000);
+        }
+        
+        displayObject.body.velocity.x = Math.cos(this._angle) * speed;
+        displayObject.body.velocity.y = Math.sin(this._angle) * speed;
+
+        return this._angle;
+
+    },
+
+    /**
+    * Move the given display object towards the pointer at a steady velocity. If no pointer is given it will use Phaser.Input.activePointer.
+    * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.
+    * Timings are approximate due to the way browser timers work. Allow for a variance of +- 50ms.
+    * Note: The display object does not continuously track the target. If the target changes location during transit the display object will not modify its course.
+    * Note: The display object doesn't stop moving once it reaches the destination coordinates.
+    * 
+    * @method Phaser.Physics.Arcade#moveToPointer
+    * @param {any} displayObject - The display object to move.
+    * @param {number} [speed=60] - The speed it will move, in pixels per second (default is 60 pixels/sec)
+    * @param {Phaser.Pointer} [pointer] - The pointer to move towards. Defaults to Phaser.Input.activePointer.
+    * @param {number} [maxTime=0] - Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the object will arrive at destination in the given number of ms.
+    * @return {number} The angle (in radians) that the object should be visually set to in order to match its new velocity.
+    */
+    moveToPointer: function (displayObject, speed, pointer, maxTime) {
+
+        if (typeof speed === 'undefined') { speed = 60; }
+        pointer = pointer || this.game.input.activePointer;
+        if (typeof maxTime === 'undefined') { maxTime = 0; }
+
+        this._angle = this.angleToPointer(displayObject, pointer);
+        
+        if (maxTime > 0)
+        {
+            //  We know how many pixels we need to move, but how fast?
+            speed = this.distanceToPointer(displayObject, pointer) / (maxTime / 1000);
+        }
+        
+        displayObject.body.velocity.x = Math.cos(this._angle) * speed;
+        displayObject.body.velocity.y = Math.sin(this._angle) * speed;
+
+        return this._angle;
+
+    },
+
+    /**
+    * Move the given display object towards the x/y coordinates at a steady velocity.
+    * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.
+    * Timings are approximate due to the way browser timers work. Allow for a variance of +- 50ms.
+    * Note: The display object does not continuously track the target. If the target changes location during transit the display object will not modify its course.
+    * Note: The display object doesn't stop moving once it reaches the destination coordinates.
+    * Note: Doesn't take into account acceleration, maxVelocity or drag (if you've set drag or acceleration too high this object may not move at all)
+    * 
+    * @method Phaser.Physics.Arcade#moveToXY
+    * @param {any} displayObject - The display object to move.
+    * @param {number} x - The x coordinate to move towards.
+    * @param {number} y - The y coordinate to move towards.
+    * @param {number} [speed=60] - The speed it will move, in pixels per second (default is 60 pixels/sec)
+    * @param {number} [maxTime=0] - Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the object will arrive at destination in the given number of ms.
+    * @return {number} The angle (in radians) that the object should be visually set to in order to match its new velocity.
+    */
+    moveToXY: function (displayObject, x, y, speed, maxTime) {
+
+        if (typeof speed === 'undefined') { speed = 60; }
+        if (typeof maxTime === 'undefined') { maxTime = 0; }
+
+        this._angle = Math.atan2(y - displayObject.y, x - displayObject.x);
+        
+        if (maxTime > 0)
+        {
+            //  We know how many pixels we need to move, but how fast?
+            speed = this.distanceToXY(displayObject, x, y) / (maxTime / 1000);
+        }
+        
+        displayObject.body.velocity.x = Math.cos(this._angle) * speed;
+        displayObject.body.velocity.y = Math.sin(this._angle) * speed;
+
+        return this._angle;
+
+    },
+
+    /**
+    * Given the angle (in degrees) and speed calculate the velocity and return it as a Point object, or set it to the given point object.
+    * One way to use this is: velocityFromAngle(angle, 200, sprite.velocity) which will set the values directly to the sprites velocity and not create a new Point object.
+    * 
+    * @method Phaser.Physics.Arcade#velocityFromAngle
+    * @param {number} angle - The angle in degrees calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
+    * @param {number} [speed=60] - The speed it will move, in pixels per second sq.
+    * @param {Phaser.Point|object} [point] - The Point object in which the x and y properties will be set to the calculated velocity.
+    * @return {Phaser.Point} - A Point where point.x contains the velocity x value and point.y contains the velocity y value.
+    */
+    velocityFromAngle: function (angle, speed, point) {
+
+        if (typeof speed === 'undefined') { speed = 60; }
+        point = point || new Phaser.Point();
+
+        return point.setTo((Math.cos(this.game.math.degToRad(angle)) * speed), (Math.sin(this.game.math.degToRad(angle)) * speed));
+
+    },
+
+    /**
+    * Given the rotation (in radians) and speed calculate the velocity and return it as a Point object, or set it to the given point object.
+    * One way to use this is: velocityFromRotation(rotation, 200, sprite.velocity) which will set the values directly to the sprites velocity and not create a new Point object.
+    * 
+    * @method Phaser.Physics.Arcade#velocityFromRotation
+    * @param {number} rotation - The angle in radians.
+    * @param {number} [speed=60] - The speed it will move, in pixels per second sq.
+    * @param {Phaser.Point|object} [point] - The Point object in which the x and y properties will be set to the calculated velocity.
+    * @return {Phaser.Point} - A Point where point.x contains the velocity x value and point.y contains the velocity y value.
+    */
+    velocityFromRotation: function (rotation, speed, point) {
+
+        if (typeof speed === 'undefined') { speed = 60; }
+        point = point || new Phaser.Point();
+
+        return point.setTo((Math.cos(rotation) * speed), (Math.sin(rotation) * speed));
+
+    },
+
+    /**
+    * Given the rotation (in radians) and speed calculate the acceleration and return it as a Point object, or set it to the given point object.
+    * One way to use this is: accelerationFromRotation(rotation, 200, sprite.acceleration) which will set the values directly to the sprites acceleration and not create a new Point object.
+    * 
+    * @method Phaser.Physics.Arcade#accelerationFromRotation
+    * @param {number} rotation - The angle in radians.
+    * @param {number} [speed=60] - The speed it will move, in pixels per second sq.
+    * @param {Phaser.Point|object} [point] - The Point object in which the x and y properties will be set to the calculated acceleration.
+    * @return {Phaser.Point} - A Point where point.x contains the acceleration x value and point.y contains the acceleration y value.
+    */
+    accelerationFromRotation: function (rotation, speed, point) {
+
+        if (typeof speed === 'undefined') { speed = 60; }
+        point = point || new Phaser.Point();
+
+        return point.setTo((Math.cos(rotation) * speed), (Math.sin(rotation) * speed));
+
+    },
+
+    /**
+    * Sets the acceleration.x/y property on the display object so it will move towards the target at the given speed (in pixels per second sq.)
+    * You must give a maximum speed value, beyond which the display object won't go any faster.
+    * Note: The display object does not continuously track the target. If the target changes location during transit the display object will not modify its course.
+    * Note: The display object doesn't stop moving once it reaches the destination coordinates.
+    * 
+    * @method Phaser.Physics.Arcade#accelerateToObject
+    * @param {any} displayObject - The display object to move.
+    * @param {any} destination - The display object to move towards. Can be any object but must have visible x/y properties.
+    * @param {number} [speed=60] - The speed it will accelerate in pixels per second.
+    * @param {number} [xSpeedMax=500] - The maximum x velocity the display object can reach.
+    * @param {number} [ySpeedMax=500] - The maximum y velocity the display object can reach.
+    * @return {number} The angle (in radians) that the object should be visually set to in order to match its new trajectory.
+    */
+    accelerateToObject: function (displayObject, destination, speed, xSpeedMax, ySpeedMax) {
+
+        if (typeof speed === 'undefined') { speed = 60; }
+        if (typeof xSpeedMax === 'undefined') { xSpeedMax = 1000; }
+        if (typeof ySpeedMax === 'undefined') { ySpeedMax = 1000; }
+
+        this._angle = this.angleBetween(displayObject, destination);
+
+        displayObject.body.acceleration.setTo(Math.cos(this._angle) * speed, Math.sin(this._angle) * speed);
+        displayObject.body.maxVelocity.setTo(xSpeedMax, ySpeedMax);
+
+        return this._angle;
+
+    },
+
+    /**
+    * Sets the acceleration.x/y property on the display object so it will move towards the target at the given speed (in pixels per second sq.)
+    * You must give a maximum speed value, beyond which the display object won't go any faster.
+    * Note: The display object does not continuously track the target. If the target changes location during transit the display object will not modify its course.
+    * Note: The display object doesn't stop moving once it reaches the destination coordinates.
+    * 
+    * @method Phaser.Physics.Arcade#accelerateToPointer
+    * @param {any} displayObject - The display object to move.
+    * @param {Phaser.Pointer} [pointer] - The pointer to move towards. Defaults to Phaser.Input.activePointer.
+    * @param {number} [speed=60] - The speed it will accelerate in pixels per second.
+    * @param {number} [xSpeedMax=500] - The maximum x velocity the display object can reach.
+    * @param {number} [ySpeedMax=500] - The maximum y velocity the display object can reach.
+    * @return {number} The angle (in radians) that the object should be visually set to in order to match its new trajectory.
+    */
+    accelerateToPointer: function (displayObject, pointer, speed, xSpeedMax, ySpeedMax) {
+
+        if (typeof speed === 'undefined') { speed = 60; }
+        if (typeof pointer === 'undefined') { pointer = this.game.input.activePointer; }
+        if (typeof xSpeedMax === 'undefined') { xSpeedMax = 1000; }
+        if (typeof ySpeedMax === 'undefined') { ySpeedMax = 1000; }
+
+        this._angle = this.angleToPointer(displayObject, pointer);
+        
+        displayObject.body.acceleration.setTo(Math.cos(this._angle) * speed, Math.sin(this._angle) * speed);
+        displayObject.body.maxVelocity.setTo(xSpeedMax, ySpeedMax);
+
+        return this._angle;
+
+    },
+
+    /**
+    * Sets the acceleration.x/y property on the display object so it will move towards the x/y coordinates at the given speed (in pixels per second sq.)
+    * You must give a maximum speed value, beyond which the display object won't go any faster.
+    * Note: The display object does not continuously track the target. If the target changes location during transit the display object will not modify its course.
+    * Note: The display object doesn't stop moving once it reaches the destination coordinates.
+    * 
+    * @method Phaser.Physics.Arcade#accelerateToXY
+    * @param {any} displayObject - The display object to move.
+    * @param {number} x - The x coordinate to accelerate towards.
+    * @param {number} y - The y coordinate to accelerate towards.
+    * @param {number} [speed=60] - The speed it will accelerate in pixels per second.
+    * @param {number} [xSpeedMax=500] - The maximum x velocity the display object can reach.
+    * @param {number} [ySpeedMax=500] - The maximum y velocity the display object can reach.
+    * @return {number} The angle (in radians) that the object should be visually set to in order to match its new trajectory.
+    */
+    accelerateToXY: function (displayObject, x, y, speed, xSpeedMax, ySpeedMax) {
+
+        if (typeof speed === 'undefined') { speed = 60; }
+        if (typeof xSpeedMax === 'undefined') { xSpeedMax = 1000; }
+        if (typeof ySpeedMax === 'undefined') { ySpeedMax = 1000; }
+
+        this._angle = this.angleToXY(displayObject, x, y);
+
+        displayObject.body.acceleration.setTo(Math.cos(this._angle) * speed, Math.sin(this._angle) * speed);
+        displayObject.body.maxVelocity.setTo(xSpeedMax, ySpeedMax);
+
+        return this._angle;
+
+    },
+
+    /**
+    * Find the distance between two display objects (like Sprites).
+    * 
+    * @method Phaser.Physics.Arcade#distanceBetween
+    * @param {any} source - The Display Object to test from.
+    * @param {any} target - The Display Object to test to.
+    * @return {number} The distance between the source and target objects.
+    */
+    distanceBetween: function (source, target) {
+
+        this._dx = source.x - target.x;
+        this._dy = source.y - target.y;
+        
+        return Math.sqrt(this._dx * this._dx + this._dy * this._dy);
+
+    },
+
+    /**
+    * Find the distance between a display object (like a Sprite) and the given x/y coordinates.
+    * The calculation is made from the display objects x/y coordinate. This may be the top-left if its anchor hasn't been changed.
+    * If you need to calculate from the center of a display object instead use the method distanceBetweenCenters()
+    * 
+    * @method Phaser.Physics.Arcade#distanceToXY
+    * @param {any} displayObject - The Display Object to test from.
+    * @param {number} x - The x coordinate to move towards.
+    * @param {number} y - The y coordinate to move towards.
+    * @return {number} The distance between the object and the x/y coordinates.
+    */
+    distanceToXY: function (displayObject, x, y) {
+
+        this._dx = displayObject.x - x;
+        this._dy = displayObject.y - y;
+        
+        return Math.sqrt(this._dx * this._dx + this._dy * this._dy);
+
+    },
+
+    /**
+    * Find the distance between a display object (like a Sprite) and a Pointer. If no Pointer is given the Input.activePointer is used.
+    * The calculation is made from the display objects x/y coordinate. This may be the top-left if its anchor hasn't been changed.
+    * If you need to calculate from the center of a display object instead use the method distanceBetweenCenters()
+    * 
+    * @method Phaser.Physics.Arcade#distanceToPointer
+    * @param {any} displayObject - The Display Object to test from.
+    * @param {Phaser.Pointer} [pointer] - The Phaser.Pointer to test to. If none is given then Input.activePointer is used.
+    * @return {number} The distance between the object and the Pointer.
+    */
+    distanceToPointer: function (displayObject, pointer) {
+
+        pointer = pointer || this.game.input.activePointer;
+
+        this._dx = displayObject.x - pointer.x;
+        this._dy = displayObject.y - pointer.y;
+        
+        return Math.sqrt(this._dx * this._dx + this._dy * this._dy);
+
+    },
+
+    /**
+    * Find the angle in radians between two display objects (like Sprites).
+    * 
+    * @method Phaser.Physics.Arcade#angleBetween
+    * @param {any} source - The Display Object to test from.
+    * @param {any} target - The Display Object to test to.
+    * @return {number} The angle in radians between the source and target display objects.
+    */
+    angleBetween: function (source, target) {
+
+        this._dx = target.x - source.x;
+        this._dy = target.y - source.y;
+
+        return Math.atan2(this._dy, this._dx);
+
+    },
+
+    /**
+    * Find the angle in radians between a display object (like a Sprite) and the given x/y coordinate.
+    * 
+    * @method Phaser.Physics.Arcade#angleToXY
+    * @param {any} displayObject - The Display Object to test from.
+    * @param {number} x - The x coordinate to get the angle to.
+    * @param {number} y - The y coordinate to get the angle to.
+    * @return {number} The angle in radians between displayObject.x/y to Pointer.x/y
+    */
+    angleToXY: function (displayObject, x, y) {
+
+        this._dx = x - displayObject.x;
+        this._dy = y - displayObject.y;
+        
+        return Math.atan2(this._dy, this._dx);
+
+    },
+    
+    /**
+    * Find the angle in radians between a display object (like a Sprite) and a Pointer, taking their x/y and center into account.
+    * 
+    * @method Phaser.Physics.Arcade#angleToPointer
+    * @param {any} displayObject - The Display Object to test from.
+    * @param {Phaser.Pointer} [pointer] - The Phaser.Pointer to test to. If none is given then Input.activePointer is used.
+    * @return {number} The angle in radians between displayObject.x/y to Pointer.x/y
+    */
+    angleToPointer: function (displayObject, pointer) {
+
+        pointer = pointer || this.game.input.activePointer;
+
+        this._dx = pointer.worldX - displayObject.x;
+        this._dy = pointer.worldY - displayObject.y;
+        
+        return Math.atan2(this._dy, this._dx);
+
+    }
+
+};
+
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2014 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* The Physics Body is linked to a single Sprite. All physics operations should be performed against the body rather than
+* the Sprite itself. For example you can set the velocity, acceleration, bounce values etc all on the Body.
+*
+* @class Phaser.Physics.Arcade.Body
+* @classdesc Arcade Physics Body Constructor
+* @constructor
+* @param {Phaser.Sprite} sprite - The Sprite object this physics body belongs to.
+*/
+Phaser.Physics.Arcade.Body = function (sprite) {
+
+    /**
+    * @property {Phaser.Sprite} sprite - Reference to the parent Sprite.
+    */
+    this.sprite = sprite;
+
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
+    this.game = sprite.game;
+
+    /**
+    * @property {number} type - The type of physics system this body belongs to.
+    */
+    this.type = Phaser.Physics.ARCADE;
+
+    /**
+    * @property {Phaser.Point} offset - The offset of the Physics Body from the Sprite x/y position.
+    */
+    this.offset = new Phaser.Point(-(sprite.anchor.x * sprite.width), -(sprite.anchor.y * sprite.height));
+
+    /**
+    * @property {Phaser.Point} position - The position of the physics body.
+    * @readonly
+    */
+    this.position = new Phaser.Point(sprite.x + this.offset.x, sprite.y + this.offset.y);
+
+    /**
+    * @property {Phaser.Point} prev - The previous position of the physics body.
+    * @readonly
+    */
+    this.prev = new Phaser.Point(this.position.x, this.position.y);
+
+    /**
+    * @property {number} preRotation - The previous rotation of the physics body.
+    * @readonly
+    */
+    this.preRotation = sprite.angle;
+
+    /**
+    * @property {number} sourceWidth - The un-scaled original size.
+    * @readonly
+    */
+    this.sourceWidth = sprite.texture.frame.width;
+
+    /**
+    * @property {number} sourceHeight - The un-scaled original size.
+    * @readonly
+    */
+    this.sourceHeight = sprite.texture.frame.height;
+
+    /**
+    * @property {number} width - The calculated width of the physics body.
+    */
+    this.width = sprite.width;
+
+    /**
+    * @property .numInternal ID cache
+    */
+    this.height = sprite.height;
+
+    /**
+    * @property {number} halfWidth - The calculated width / 2 of the physics body.
+    */
+    this.halfWidth = Math.abs(sprite.width / 2);
+
+    /**
+    * @property {number} halfHeight - The calculated height / 2 of the physics body.
+    */
+    this.halfHeight = Math.abs(sprite.height / 2);
+
+    /**
+    * @property {Phaser.Point} center - The center coordinate of the Physics Body.
+    */
+    this.center = new Phaser.Point(sprite.x + this.halfWidth, sprite.y + this.halfHeight);
+
+    /**
+    * @property {number} _sx - Internal cache var.
+    * @private
+    */
+    this._sx = sprite.scale.x;
+
+    /**
+    * @property {number} _sy - Internal cache var.
+    * @private
+    */
+    this._sy = sprite.scale.y;
+
+    /**
+    * @property {Phaser.Point} velocity - The velocity in pixels per second sq. of the Body.
+    */
+    this.velocity = new Phaser.Point();
+
+    /**
+    * @property {Phaser.Point} newVelocity - New velocity.
+    * @readonly
+    */
+    this.newVelocity = new Phaser.Point(0, 0);
+
+    /**
+    * @property {Phaser.Point} acceleration - The velocity in pixels per second sq. of the Body.
+    */
+    this.acceleration = new Phaser.Point();
+
+    /**
+    * @property {Phaser.Point} drag - The drag applied to the motion of the Body.
+    */
+    this.drag = new Phaser.Point();
+
+    /**
+    * @property {Phaser.Point} gravityScale - Gravity scaling factor. If you want the body to ignore gravity, set this to zero. If you want to reverse gravity, set it to -1.
+    */
+    this.gravityScale = new Phaser.Point(1, 1);
+
+    /**
+    * @property {Phaser.Point} bounce - The elasticitiy of the Body when colliding. bounce.x/y = 1 means full rebound, bounce.x/y = 0.5 means 50% rebound velocity.
+    */
+    this.bounce = new Phaser.Point();
+
+    /**
+    * @property {Phaser.Point} maxVelocity - The maximum velocity in pixels per second sq. that the Body can reach.
+    * @default
+    */
+    this.maxVelocity = new Phaser.Point(10000, 10000);
+
+    /**
+    * @property {number} angularVelocity - The angular velocity in pixels per second sq. of the Body.
+    * @default
+    */
+    this.angularVelocity = 0;
+
+    /**
+    * @property {number} angularAcceleration - The angular acceleration in pixels per second sq. of the Body.
+    * @default
+    */
+    this.angularAcceleration = 0;
+
+    /**
+    * @property {number} angularDrag - The angular drag applied to the rotation of the Body.
+    * @default
+    */
+    this.angularDrag = 0;
+
+    /**
+    * @property {number} maxAngular - The maximum angular velocity in pixels per second sq. that the Body can reach.
+    * @default
+    */
+    this.maxAngular = 1000;
+
+    /**
+    * @property {number} mass - The mass of the Body.
+    * @default
+    */
+    this.mass = 1;
+
+    /**
+    * @property {boolean} skipQuadTree - If the Body is an irregular shape you can set this to true to avoid it being added to any QuadTrees.
+    * @default
+    */
+    this.skipQuadTree = false;
+
+    /**
+    * @property {number} facing - A const reference to the direction the Body is traveling or facing.
+    * @default
+    */
+    this.facing = Phaser.NONE;
+
+    /**
+    * @property {boolean} immovable - An immovable Body will not receive any impacts from other bodies.
+    * @default
+    */
+    this.immovable = false;
+
+    /**
+    * @property {boolean} moves - Set to true to allow the Physics system to move this Body, other false to move it manually.
+    * @default
+    */
+    this.moves = true;
+
+    /**
+    * @property {number} rotation - The amount the Body is rotated.
+    * @default
+    */
+    this.rotation = 0;
+
+    /**
+    * @property {boolean} allowRotation - Allow this Body to be rotated? (via angularVelocity, etc)
+    * @default
+    */
+    this.allowRotation = true;
+
+    /**
+    * This flag allows you to disable the custom x separation that takes place by Physics.Arcade.separate.
+    * Used in combination with your own collision processHandler you can create whatever type of collision response you need.
+    * @property {boolean} customSeparateX - Use a custom separation system or the built-in one?
+    * @default
+    */
+    this.customSeparateX = false;
+
+    /**
+    * This flag allows you to disable the custom y separation that takes place by Physics.Arcade.separate.
+    * Used in combination with your own collision processHandler you can create whatever type of collision response you need.
+    * @property {boolean} customSeparateY - Use a custom separation system or the built-in one?
+    * @default
+    */
+    this.customSeparateY = false;
+
+    /**
+    * When this body collides with another, the amount of overlap is stored here.
+    * @property {number} overlapX - The amount of horizontal overlap during the collision.
+    */
+    this.overlapX = 0;
+
+    /**
+    * When this body collides with another, the amount of overlap is stored here.
+    * @property {number} overlapY - The amount of vertical overlap during the collision.
+    */
+    this.overlapY = 0;
+
+    /**
+    * If a body is overlapping with another body, but neither of them are moving (maybe they spawned on-top of each other?) this is set to true.
+    * @property {boolean} embedded - Body embed value.
+    */
+    this.embedded = false;
+
+    /**
+    * A Body can be set to collide against the World bounds automatically and rebound back into the World if this is set to true. Otherwise it will leave the World.
+    * @property {boolean} collideWorldBounds - Should the Body collide with the World bounds?
+    */
+    this.collideWorldBounds = false;
+
+    /**
+    * Set the checkCollision properties to control which directions collision is processed for this Body.
+    * For example checkCollision.up = false means it won't collide when the collision happened while moving up.
+    * @property {object} checkCollision - An object containing allowed collision.
+    */
+    this.checkCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
+
+    /**
+    * This object is populated with boolean values when the Body collides with another.
+    * touching.up = true means the collision happened to the top of this Body for example.
+    * @property {object} touching - An object containing touching results.
+    */
+    this.touching = { none: true, up: false, down: false, left: false, right: false };
+
+    /**
+    * This object is populated with previous touching values from the bodies previous collision.
+    * @property {object} wasTouching - An object containing previous touching results.
+    */
+    this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
+
+    /**
+    * This object is populated with boolean values when the Body collides with the World bounds or a Tile.
+    * For example if blocked.up is true then the Body cannot move up.
+    * @property {object} blocked - An object containing on which faces this Body is blocked from moving, if any.
+    */
+    this.blocked = { x: 0, y: 0, up: false, down: false, left: false, right: false };
+
+    /**
+    * This object is populated with boolean values when the Body collides with the World bounds or a Tile.
+    * For example if blocked.up is true then the Body cannot move up.
+    * @property {object} blocked - An object containing on which faces this Body is blocked from moving, if any.
+    */
+    this.result = { x: 0, y: 0, px: 0, py: 0, tx: 0, ty: 0, slope: false };
+
+};
+
+Phaser.Physics.Arcade.Body.prototype = {
+
+    resetResult: function () {
+
+        this.result.x = false;
+        this.result.y = false;
+        this.result.slope = false;
+        this.result.px = this.position.x;
+        this.result.py = this.position.y;
+        this.result.tx = 0;
+        this.result.ty = 0;
+
+    },
+
+    /**
+    * Internal method.
+    *
+    * @method Phaser.Physics.Arcade#updateBounds
+    * @protected
+    */
+    updateBounds: function (centerX, centerY, scaleX, scaleY) {
+
+        if (scaleX != this._sx || scaleY != this._sy)
+        {
+            this.width = this.sourceWidth * scaleX;
+            this.height = this.sourceHeight * scaleY;
+            this.halfWidth = Math.floor(this.width / 2);
+            this.halfHeight = Math.floor(this.height / 2);
+            this._sx = scaleX;
+            this._sy = scaleY;
+            this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
+        }
+
+    },
+
+    /**
+    * Internal method.
+    *
+    * @method Phaser.Physics.Arcade#preUpdate
+    * @protected
+    */
+    preUpdate: function () {
+
+        this.resetResult();
+
+        //  Store and reset collision flags
+        this.wasTouching.none = this.touching.none;
+        this.wasTouching.up = this.touching.up;
+        this.wasTouching.down = this.touching.down;
+        this.wasTouching.left = this.touching.left;
+        this.wasTouching.right = this.touching.right;
+
+        this.touching.none = true;
+        this.touching.up = false;
+        this.touching.down = false;
+        this.touching.left = false;
+        this.touching.right = false;
+
+        this.embedded = false;
+
+        // this.screenX = (this.sprite.worldTransform[2] - (this.sprite.anchor.x * this.width)) + this.offset.x;
+        // this.screenY = (this.sprite.worldTransform[5] - (this.sprite.anchor.y * this.height)) + this.offset.y;
+
+        //  this is where the Sprite currently is, in world coordinates
+        // this.preX = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
+        // this.preY = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
+        // this.preRotation = this.sprite.angle;
+
+        // this.x = this.preX;
+        // this.y = this.preY;
+        // this.rotation = this.preRotation;
+
+        // this.overlapX = 0;
+        // this.overlapY = 0;
+
+        this.prev.set(this.position.x, this.position.y);
+
+        // this.position.x = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
+        // this.position.y = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
+
+
+        // this.blocked.up = false;
+        // this.blocked.down = false;
+        // this.blocked.left = false;
+        // this.blocked.right = false;
+
+        if (this.moves)
+        {
+            this.game.physics.arcade.updateMotion(this);
+
+            this.newVelocity.set(this.velocity.x * this.game.time.physicsElapsed, this.velocity.y * this.game.time.physicsElapsed);
+
+            this.position.x += this.newVelocity.x;
+            this.position.y += this.newVelocity.y;
+
+            //  Now the State update will throw collision checks at the Body
+            //  And finally we'll integrate the new position back to the Sprite in postUpdate
+
+            if (this.collideWorldBounds)
+            {
+                this.checkWorldBounds();
+            }
+        }
+
+    },
+
+    /**
+    * Internal method.
+    *
+    * @method Phaser.Physics.Arcade#postUpdate
+    * @protected
+    */
+    postUpdate: function () {
+
+        // if (this.result.x)
+        // {
+        //     this.position.x = this.result.px;
+        //     this.velocity.x = 0;
+        // }
+        // else
+        // {
+        //     this.position.x += this.newVelocity.x;
+        // }
+
+        // this.position.y += this.newVelocity.y;
+
+        // this.position.add(this.newVelocity.x, this.newVelocity.y);
+
+        this.sprite.x = (this.position.x - this.offset.x);
+        this.sprite.y = (this.position.y - this.offset.y);
+
+
+/*        if (this.deltaX() < 0)
+        {
+            this.facing = Phaser.LEFT;
+            this.sprite.x += this.deltaX();
+        }
+        else if (this.deltaX() > 0)
+        {
+            this.facing = Phaser.RIGHT;
+            this.sprite.x += this.deltaX();
+        }
+
+        if (this.deltaY() < 0)
+        {
+            this.facing = Phaser.UP;
+            this.sprite.y += this.deltaY();
+        }
+        else if (this.deltaY() > 0)
+        {
+            this.facing = Phaser.DOWN;
+            this.sprite.y += this.deltaY();
+        }
+*/
+
+        // this.sprite.x += this.overlapX;
+        // this.sprite.y += this.overlapY;
+
+        //  this is where the Sprite currently is, in world coordinates
+        // this.sprite.x = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
+        // this.sprite.y = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
+
+
+        /*
+        if (this.deltaX() < 0 && this.blocked.left === false)
+        {
+            this.facing = Phaser.LEFT;
+            this.sprite.x += this.deltaX();
+        }
+        else if (this.deltaX() > 0 && this.blocked.right === false)
+        {
+            this.facing = Phaser.RIGHT;
+            this.sprite.x += this.deltaX();
+        }
+
+        if (this.deltaY() < 0 && this.blocked.up === false)
+        {
+            this.facing = Phaser.UP;
+            this.sprite.y += this.deltaY();
+        }
+        else if (this.deltaY() > 0 && this.blocked.down === false)
+        {
+            this.facing = Phaser.DOWN;
+            this.sprite.y += this.deltaY();
+        }
+        */
+        
+        this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
+
+        if (this.allowRotation)
+        {
+            this.sprite.angle += this.deltaZ();
+        }
+
+    },
+
+    /**
+    * Internal method.
+    *
+    * @method Phaser.Physics.Arcade#checkWorldBounds
+    * @protected
+    */
+    checkWorldBounds: function () {
+
+        if (this.x < this.game.world.bounds.x)
+        {
+            this.x = this.game.world.bounds.x;
+            this.velocity.x *= -this.bounce.x;
+        }
+        else if (this.right > this.game.world.bounds.right)
+        {
+            this.x = this.game.world.bounds.right - this.width;
+            this.velocity.x *= -this.bounce.x;
+        }
+
+        if (this.y < this.game.world.bounds.y)
+        {
+            this.y = this.game.world.bounds.y;
+            this.velocity.y *= -this.bounce.y;
+        }
+        else if (this.bottom > this.game.world.bounds.bottom)
+        {
+            this.y = this.game.world.bounds.bottom - this.height;
+            this.velocity.y *= -this.bounce.y;
+        }
+
+    },
+
+    /**
+    * You can modify the size of the physics Body to be any dimension you need.
+    * So it could be smaller or larger than the parent Sprite. You can also control the x and y offset, which
+    * is the position of the Body relative to the top-left of the Sprite.
+    *
+    * @method Phaser.Physics.Arcade#setSize
+    * @param {number} width - The width of the Body.
+    * @param {number} height - The height of the Body.
+    * @param {number} offsetX - The X offset of the Body from the Sprite position.
+    * @param {number} offsetY - The Y offset of the Body from the Sprite position.
+    */
+    setSize: function (width, height, offsetX, offsetY) {
+
+        offsetX = offsetX || this.offset.x;
+        offsetY = offsetY || this.offset.y;
+
+        this.sourceWidth = width;
+        this.sourceHeight = height;
+        this.width = this.sourceWidth * this._sx;
+        this.height = this.sourceHeight * this._sy;
+        this.halfWidth = Math.floor(this.width / 2);
+        this.halfHeight = Math.floor(this.height / 2);
+        this.offset.setTo(offsetX, offsetY);
+
+        this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
+
+    },
+
+    /**
+    * Resets all Body values (velocity, acceleration, rotation, etc)
+    *
+    * @method Phaser.Physics.Arcade#reset
+    */
+    reset: function () {
+
+        this.velocity.setTo(0, 0);
+        this.acceleration.setTo(0, 0);
+
+        this.angularVelocity = 0;
+        this.angularAcceleration = 0;
+        this.preX = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
+        this.preY = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
+        this.preRotation = this.sprite.angle;
+
+        this.x = this.preX;
+        this.y = this.preY;
+        this.rotation = this.preRotation;
+        
+        this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
+
+    },
+
+    /**
+    * Returns the absolute delta x value.
+    *
+    * @method Phaser.Physics.Arcade.Body#deltaAbsX
+    * @return {number} The absolute delta value.
+    */
+    deltaAbsX: function () {
+        return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
+    },
+
+    /**
+    * Returns the absolute delta y value.
+    *
+    * @method Phaser.Physics.Arcade.Body#deltaAbsY
+    * @return {number} The absolute delta value.
+    */
+    deltaAbsY: function () {
+        return (this.deltaY() > 0 ? this.deltaY() : -this.deltaY());
+    },
+
+    /**
+    * Returns the delta x value. The difference between Body.x now and in the previous step.
+    *
+    * @method Phaser.Physics.Arcade.Body#deltaX
+    * @return {number} The delta value. Positive if the motion was to the right, negative if to the left.
+    */
+    deltaX: function () {
+        return this.position.x - this.prev.x;
+    },
+
+    /**
+    * Returns the delta y value. The difference between Body.y now and in the previous step.
+    *
+    * @method Phaser.Physics.Arcade.Body#deltaY
+    * @return {number} The delta value. Positive if the motion was downwards, negative if upwards.
+    */
+    deltaY: function () {
+        return this.position.y - this.prev.y;
+    },
+
+    /**
+    * Returns the delta z value. The difference between Body.rotation now and in the previous step.
+    *
+    * @method Phaser.Physics.Arcade.Body#deltaZ
+    * @return {number} The delta value. Positive if the motion was clockwise, negative if anti-clockwise.
+    */
+    deltaZ: function () {
+        return this.rotation - this.preRotation;
+    }
+
+};
+
+/**
+* @name Phaser.Physics.Arcade.Body#bottom
+* @property {number} bottom - The bottom value of this Body (same as Body.y + Body.height)
+* @readonly
+*/
+Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "bottom", {
+    
+    /**
+    * The sum of the y and height properties.
+    * @method bottom
+    * @return {number}
+    * @readonly
+    */
+    get: function () {
+        return this.position.y + this.height;
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Arcade.Body#right
+* @property {number} right - The right value of this Body (same as Body.x + Body.width)
+* @readonly
+*/
+Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "right", {
+    
+    /**
+    * The sum of the x and width properties.
+    * @method right
+    * @return {number}
+    * @readonly
+    */
+    get: function () {
+        return this.position.x + this.width;
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Arcade.Body#x
+* @property {number} x - The x position.
+*/
+Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "x", {
+    
+    /**
+    * The x position.
+    * @method x
+    * @return {number}
+    */
+    get: function () {
+        return this.position.x;
+    },
+
+    /**
+    * The x position.
+    * @method x
+    * @param {number} value
+    */
+    set: function (value) {
+        this.position.x = value;
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Arcade.Body#y
+* @property {number} y - The y position.
+*/
+Object.defineProperty(Phaser.Physics.Arcade.Body.prototype, "y", {
+    
+    /**
+    * The y position.
+    * @method y
+    * @return {number}
+    */
+    get: function () {
+        return this.position.y;
+    },
+
+    /**
+    * The y position.
+    * @method y
+    * @param {number} value
+    */
+    set: function (value) {
+        this.position.y = value;
+    }
+
+});
+
+Phaser.Physics.Arcade.Body.prototype.constructor = Phaser.Physics.Arcade.Body;
+
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2014 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* Ninja Physics constructor.
+*
+* The Ninja Physics system was created in Flash by Metanet Software and ported to JavaScript by Richard Davey.
+*
+* @class Phaser.Physics.Ninja
+* @classdesc Ninja Physics Constructor
+* @constructor
+* @param {Phaser.Game} game reference to the current game instance.
+*/
+Phaser.Physics.Ninja = function (game) {
+    
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
+    this.game = game;
+
+    this.time = this.game.time;
+
+    /**
+    * @property {number} gravity - The World gravity setting.
+    */
+    this.gravity = 0.2;
+
+    /**
+    * @property {Phaser.Rectangle} bounds - The bounds inside of which the physics world exists. Defaults to match the world bounds.
+    */
+    this.bounds = new Phaser.Rectangle(0, 0, game.world.width, game.world.height);
+
+    /**
+    * @property {Phaser.QuadTree} quadTree - The world QuadTree.
+    */
+    // this.quadTree = new Phaser.Physics.Ninja.QuadTree(this, this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
+
+    /**
+    * @property {Array} _mapData - Internal cache var.
+    * @private
+    */
+    this._mapData = [];
+
+};
+
+Phaser.Physics.Ninja.prototype.constructor = Phaser.Physics.Ninja;
+
+Phaser.Physics.Ninja.prototype = {
+
+    /**
+    * This will create a Ninja Physics AABB body on the given game object. Its dimensions will match the width and height of the object at the point it is created.
+    * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
+    *
+    * @method Phaser.Physics.Ninja#enableAABB
+    * @param {object|array} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array.
+    */
+    enableAABB: function (object) {
+
+        this.enable(object, 1);
+
+    },
+
+    /**
+    * This will create a Ninja Physics Circle body on the given game object.
+    * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
+    *
+    * @method Phaser.Physics.Ninja#enableCircle
+    * @param {object|array} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array.
+    * @param {number} radius - The radius of the Circle.
+    */
+    enableCircle: function (object, radius) {
+
+        this.enable(object, 2, 0, radius);
+
+    },
+
+    /**
+    * This will create a Ninja Physics Tile body on the given game object. There are 34 different types of tile you can create, including 45 degree slopes,
+    * convex and concave circles and more. The id parameter controls which Tile type is created, but you can also change it at run-time.
+    * Note that for all degree based tile types they need to have an equal width and height. If the given object doesn't have equal width and height it will use the width.
+    * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
+    *
+    * @method Phaser.Physics.Ninja#enableTile
+    * @param {object|array} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array.
+    * @param {number} [id=1] - The type of Tile this will use, i.e. Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn, Phaser.Physics.Ninja.Tile.CONVEXpp, etc.
+    */
+    enableTile: function (object, id) {
+
+        this.enable(object, 3, id);
+
+    },
+
+    /**
+    * This will create a Ninja Physics Tile body on the given game object. There are 34 different types of tile you can create, including 45 degree slopes,
+    * convex and concave circles and more. The id parameter controls which Tile type is created, but you can also change it at run-time.
+    * Note that for all degree based tile types they need to have an equal width and height. If the given object doesn't have equal width and height it will use the width.
+    * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
+    *
+    * @method Phaser.Physics.Ninja#enable
+    * @param {object|array} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array.
+    * @param {number} [type=1] - The type of Ninja shape to create. 1 = AABB, 2 = Circle or 3 = Tile.
+    * @param {number} [id=1] - If this body is using a Tile shape, you can set the Tile id here, i.e. Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn, Phaser.Physics.Ninja.Tile.CONVEXpp, etc.
+    * @param {number} [radius=0] - If this body is using a Circle shape this controls the radius.
+    */
+    enable: function (object, type, id, radius) {
+
+        if (typeof type === 'undefined') { type = 1; }
+        if (typeof id === 'undefined') { id = 1; }
+
+        var i = 1;
+
+        if (Array.isArray(object))
+        {
+            //  Add to Group
+            i = object.length;
+        }
+        else
+        {
+            object = [object];
+        }
+
+        while (i--)
+        {
+            if (object[i].body === null)
+            {
+                object[i].body = new Phaser.Physics.Ninja.Body(this, object[i], type, id, radius);
+                object[i].anchor.set(0.5);
+            }
+        }
+
+    },
+
+    /**
+    * Updates the size of this physics world.
+    *
+    * @method Phaser.Physics.Ninja#setBounds
+    * @param {number} x - Top left most corner of the world.
+    * @param {number} y - Top left most corner of the world.
+    * @param {number} width - New width of the world. Can never be smaller than the Game.width.
+    * @param {number} height - New height of the world. Can never be smaller than the Game.height.
+    */
+    setBounds: function (x, y, width, height) {
+
+        this.bounds.setTo(x, y, width, height);
+
+    },
+
+    /**
+    * Updates the size of this physics world to match the size of the game world.
+    *
+    * @method Phaser.Physics.Ninja#setBoundsToWorld
+    */
+    setBoundsToWorld: function () {
+
+        this.bounds.setTo(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height);
+
+    },
+
+    /**
+    * Called automatically by a Physics body, it updates all motion related values on the Body.
+    *
+    * @method Phaser.Physics.Ninja#updateMotion
+    * @param {Phaser.Physics.Ninja.Body} The Body object to be updated.
+    update: function () {
+    },
+    */
+
+    /**
+    * Checks for overlaps between two game objects. The objects can be Sprites, Groups or Emitters.
+    * You can perform Sprite vs. Sprite, Sprite vs. Group and Group vs. Group overlap checks.
+    * Unlike collide the objects are NOT automatically separated or have any physics applied, they merely test for overlap results.
+    * The second parameter can be an array of objects, of differing types.
+    *
+    * @method Phaser.Physics.Arcade#overlap
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group or Phaser.Particles.Emitter.
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|array} object2 - The second object or array of objects to check. Can be Phaser.Sprite, Phaser.Group or Phaser.Particles.Emitter.
+    * @param {function} [overlapCallback=null] - An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then overlapCallback will only be called if processCallback returns true.
+    * @param {object} [callbackContext] - The context in which to run the callbacks.
+    * @returns {boolean} True if an overlap occured otherwise false.
+    */
+    overlap: function (object1, object2, overlapCallback, processCallback, callbackContext) {
+
+        overlapCallback = overlapCallback || null;
+        processCallback = processCallback || null;
+        callbackContext = callbackContext || overlapCallback;
+
+        this._result = false;
+        this._total = 0;
+
+        if (Array.isArray(object2))
+        {
+            for (var i = 0,  len = object2.length; i < len; i++)
+            {
+                this.collideHandler(object1, object2[i], overlapCallback, processCallback, callbackContext, true);
+            }
+        }
+        else
+        {
+            this.collideHandler(object1, object2, overlapCallback, processCallback, callbackContext, true);
+        }
+
+        return (this._total > 0);
+
+    },
+
+    /**
+    * Checks for collision between two game objects. You can perform Sprite vs. Sprite, Sprite vs. Group, Group vs. Group, Sprite vs. Tilemap Layer or Group vs. Tilemap Layer collisions.
+    * The second parameter can be an array of objects, of differing types.
+    * The objects are also automatically separated. If you don't require separation then use ArcadePhysics.overlap instead.
+    * An optional processCallback can be provided. If given this function will be called when two sprites are found to be colliding. It is called before any separation takes place,
+    * giving you the chance to perform additional checks. If the function returns true then the collision and separation is carried out. If it returns false it is skipped.
+    * The collideCallback is an optional function that is only called if two sprites collide. If a processCallback has been set then it needs to return true for collideCallback to be called.
+    *
+    * @method Phaser.Physics.Ninja#collide
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap.
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap|array} object2 - The second object or array of objects to check. Can be Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap.
+    * @param {function} [collideCallback=null] - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {object} [callbackContext] - The context in which to run the callbacks.
+    * @returns {boolean} True if a collision occured otherwise false.
+    */
+    collide: function (object1, object2, collideCallback, processCallback, callbackContext) {
+
+        collideCallback = collideCallback || null;
+        processCallback = processCallback || null;
+        callbackContext = callbackContext || collideCallback;
+
+        this._result = false;
+        this._total = 0;
+
+        if (Array.isArray(object2))
+        {
+            for (var i = 0,  len = object2.length; i < len; i++)
+            {
+                this.collideHandler(object1, object2[i], collideCallback, processCallback, callbackContext, false);
+            }
+        }
+        else
+        {
+            this.collideHandler(object1, object2, collideCallback, processCallback, callbackContext, false);
+        }
+
+        return (this._total > 0);
+
+    },
+
+    /**
+    * Internal collision handler.
+    *
+    * @method Phaser.Physics.Arcade#collideHandler
+    * @private
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap.
+    * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object2 - The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap. Can also be an array of objects to check.
+    * @param {function} collideCallback - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {function} processCallback - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then collision will only happen if processCallback returns true. The two objects will be passed to this function in the same order in which you specified them.
+    * @param {object} callbackContext - The context in which to run the callbacks.
+    * @param {boolean} overlapOnly - Just run an overlap or a full collision.
+    */
+    collideHandler: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly) {
+
+        //  Only collide valid objects
+        if (typeof object2 === 'undefined' && (object1.type === Phaser.GROUP || object1.type === Phaser.EMITTER))
+        {
+            this.collideGroupVsSelf(object1, collideCallback, processCallback, callbackContext, overlapOnly);
+            return;
+        }
+
+        if (object1 && object2 && object1.exists && object2.exists)
+        {
+            //  SPRITES
+            if (object1.type == Phaser.SPRITE || object1.type == Phaser.TILESPRITE)
+            {
+                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
+                {
+                    this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+                }
+                else if (object2.type == Phaser.TILEMAPLAYER)
+                {
+                    this.collideSpriteVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext);
+                }
+            }
+            //  GROUPS
+            else if (object1.type == Phaser.GROUP)
+            {
+                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
+                {
+                    this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+                }
+                else if (object2.type == Phaser.TILEMAPLAYER)
+                {
+                    this.collideGroupVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext);
+                }
+            }
+            //  TILEMAP LAYERS
+            else if (object1.type == Phaser.TILEMAPLAYER)
+            {
+                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
+                {
+                    this.collideSpriteVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.collideGroupVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext);
+                }
+            }
+            //  EMITTER
+            else if (object1.type == Phaser.EMITTER)
+            {
+                if (object2.type == Phaser.SPRITE || object2.type == Phaser.TILESPRITE)
+                {
+                    this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
+                }
+                else if (object2.type == Phaser.GROUP || object2.type == Phaser.EMITTER)
+                {
+                    this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
+                }
+                else if (object2.type == Phaser.TILEMAPLAYER)
+                {
+                    this.collideGroupVsTilemapLayer(object1, object2, collideCallback, processCallback, callbackContext);
+                }
+            }
+        }
+
+    },
+
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    *
+    * @method Phaser.Physics.Arcade#collideSpriteVsSprite
+    * @private
+    */
+    collideSpriteVsSprite: function (sprite1, sprite2, collideCallback, processCallback, callbackContext, overlapOnly) {
+
+        if (this.separate(sprite1.body, sprite2.body, processCallback, callbackContext, overlapOnly))
+        {
+            if (collideCallback)
+            {
+                collideCallback.call(callbackContext, sprite1, sprite2);
+            }
+
+            this._total++;
+        }
+
+    },
+
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    *
+    * @method Phaser.Physics.Arcade#collideSpriteVsGroup
+    * @private
+    */
+    collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext, overlapOnly) {
+
+        if (group.length === 0)
+        {
+            return;
+        }
+
+        //  What is the sprite colliding with in the quadtree?
+        // this.quadTree.clear();
+
+        // this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
+
+        // this.quadTree.populate(group);
+
+        // this._potentials = this.quadTree.retrieve(sprite);
+
+        for (var i = 0, len = group.children.length; i < len; i++)
+        {
+            //  We have our potential suspects, are they in this group?
+            if (group.children[i].exists && group.children[i].body && this.separate(sprite.body, group.children[i].body, processCallback, callbackContext, overlapOnly))
+            {
+                if (collideCallback)
+                {
+                    collideCallback.call(callbackContext, sprite, group.children[i]);
+                }
+
+                this._total++;
+            }
+        }
+
+    },
+
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    *
+    * @method Phaser.Physics.Arcade#collideGroupVsSelf
+    * @private
+    */
+    collideGroupVsSelf: function (group, collideCallback, processCallback, callbackContext, overlapOnly) {
+
+        if (group.length === 0)
+        {
+            return;
+        }
+
+        var len = group.children.length;
+
+        for (var i = 0; i < len; i++)
+        {
+            for (var j = i + 1; j <= len; j++)
+            {
+                if (group.children[i] && group.children[j] && group.children[i].exists && group.children[j].exists)
+                {
+                    this.collideSpriteVsSprite(group.children[i], group.children[j], collideCallback, processCallback, callbackContext, overlapOnly);
+                }
+            }
+        }
+
+    },
+
+    /**
+    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    *
+    * @method Phaser.Physics.Arcade#collideGroupVsGroup
+    * @private
+    */
+    collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext, overlapOnly) {
+
+        if (group1.length === 0 || group2.length === 0)
+        {
+            return;
+        }
+
+        for (var i = 0, len = group1.children.length; i < len; i++)
+        {
+            if (group1.children[i].exists)
+            {
+                this.collideSpriteVsGroup(group1.children[i], group2, collideCallback, processCallback, callbackContext, overlapOnly);
+            }
+        }
+
+    },
+
+    /**
+    * The core separation function to separate two physics bodies.
+    * @method Phaser.Physics.Arcade#separate
+    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
+    * @param {Phaser.Physics.Arcade.Body} body2 - The Body object to separate.
+    * @param {function} [processCallback=null] - UN-USED: A callback function that lets you perform additional checks against the two objects if they overlap. If this function is set then the sprites will only be collided if it returns true.
+    * @param {object} [callbackContext] - UN-USED: The context in which to run the process callback.
+    * @returns {boolean} Returns true if the bodies collided, otherwise false.
+    */
+    separate: function (body1, body2, processCallback, callbackContext, overlapOnly) {
+
+        if (body1.type !== Phaser.Physics.NINJA || body2.type !== Phaser.Physics.NINJA)
+        {
+            return false;
+        }
+
+        if (body1.aabb && body2.aabb)
+        {
+            return body1.aabb.collideAABBVsAABB(body2.aabb);
+        }
+
+        if (body1.aabb && body2.tile)
+        {
+            return body1.aabb.collideAABBVsTile(body2.tile);
+        }
+
+        if (body1.tile && body2.aabb)
+        {
+            return body2.aabb.collideAABBVsTile(body1.tile);
+        }
+
+        if (body1.circle && body2.tile)
+        {
+            return body1.circle.collideCircleVsTile(body2.tile);
+        }
+
+        if (body1.tile && body2.circle)
+        {
+            return body2.circle.collideCircleVsTile(body1.tile);
+        }
+
+    }
+
+};
+
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2014 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* The Physics Body is linked to a single Sprite. All physics operations should be performed against the body rather than
+* the Sprite itself. For example you can set the velocity, bounce values etc all on the Body.
+*
+* @class Phaser.Physics.Ninja.Body
+* @classdesc Ninja Physics Body Constructor
+* @constructor
+* @param {Phaser.Physics.Ninja} system - The physics system this Body belongs to.
+* @param {Phaser.Sprite} sprite - The Sprite object this physics body belongs to.
+* @param {number} [type=1] - The type of Ninja shape to create. 1 = AABB, 2 = Circle or 3 = Tile.
+* @param {number} [id=1] - If this body is using a Tile shape, you can set the Tile id here, i.e. Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn, Phaser.Physics.Ninja.Tile.CONVEXpp, etc.
+* @param {number} [radius=16] - If this body is using a Circle shape this controls the radius.
+*/
+Phaser.Physics.Ninja.Body = function (system, sprite, type, id, radius) {
+
+    if (typeof type === 'undefined') { type = 1; }
+    if (typeof id === 'undefined') { id = 1; }
+    if (typeof radius === 'undefined') { radius = 16; }
+
+    /**
+    * @property {Phaser.Sprite} sprite - Reference to the parent Sprite.
+    */
+    this.sprite = sprite;
+
+    /**
+    * @property {Phaser.Game} game - Local reference to game.
+    */
+    this.game = sprite.game;
+
+    /**
+    * @property {number} type - The type of physics system this body belongs to.
+    */
+    this.type = Phaser.Physics.NINJA;
+
+    /**
+    * @property {Phaser.Physics.Ninja} system - The parent physics system.
+    */
+    this.system = system;
+
+    /**
+    * @property {Phaser.Physics.Ninja.AABB} aabb - The AABB object this body is using for collision.
+    */
+    this.aabb = null;
+
+    /**
+    * @property {Phaser.Physics.Ninja.Tile} tile - The Tile object this body is using for collision.
+    */
+    this.tile = null;
+
+    /**
+    * @property {Phaser.Physics.Ninja.Circle} circle - The Circle object this body is using for collision.
+    */
+    this.circle = null;
+
+    /**
+    * @property {object} shape - A local reference to the body shape.
+    */
+    this.shape = null;
+
+    //  Setting drag to 0 and friction to 0 means you get a normalised speed (px psec)
+
+    /**
+    * @property {number} drag - The drag applied to this object as it moves.
+    * @default
+    */
+    this.drag = 1;
+
+    /**
+    * @property {number} friction - The friction applied to this object as it moves.
+    * @default
+    */
+    this.friction = 0.05;
+
+    /**
+    * @property {number} gravityScale - How much of the world gravity should be applied to this object? 1 = all of it, 0.5 = 50%, etc.
+    * @default
+    */
+    this.gravityScale = 1;
+
+    /**
+    * @property {number} bounce - The bounciness of this object when it collides. A value between 0 and 1. We recommend setting it to 0.999 to avoid jittering.
+    * @default
+    */
+    this.bounce = 0.3;
+
+    /**
+    * @property {Phaser.Point} velocity - The velocity in pixels per second sq. of the Body.
+    */
+    this.velocity = new Phaser.Point();
+
+    /**
+    * @property {boolean} skipQuadTree - If the Body is an irregular shape you can set this to true to avoid it being added to any QuadTrees.
+    * @default
+    */
+    this.skipQuadTree = false;
+
+    /**
+    * @property {number} facing - A const reference to the direction the Body is traveling or facing.
+    * @default
+    */
+    this.facing = Phaser.NONE;
+
+    /**
+    * @property {boolean} immovable - An immovable Body will not receive any impacts from other bodies.
+    * @default
+    */
+    this.immovable = false;
+
+    /**
+    * A Body can be set to collide against the World bounds automatically and rebound back into the World if this is set to true. Otherwise it will leave the World.
+    * @property {boolean} collideWorldBounds - Should the Body collide with the World bounds?
+    */
+    this.collideWorldBounds = true;
+
+    /**
+    * This object is populated with boolean values when the Body collides with another.
+    * touching.up = true means the collision happened to the top of this Body for example.
+    * @property {object} touching - An object containing touching results.
+    */
+    this.touching = { none: true, up: false, down: false, left: false, right: false };
+
+    /**
+    * This object is populated with previous touching values from the bodies previous collision.
+    * @property {object} wasTouching - An object containing previous touching results.
+    */
+    this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
+
+    /**
+    * @property {number} maxSpeed - The maximum speed this body can travel at (taking drag and friction into account)
+    * @default
+    */
+    this.maxSpeed = 8;
+
+    var sx = sprite.x;
+    var sy = sprite.y;
+
+    if (sprite.anchor.x === 0)
+    {
+        sx += (sprite.width * 0.5);
+    }
+
+    if (sprite.anchor.y === 0)
+    {
+        sy += (sprite.height * 0.5);
+    }
+
+    if (type === 1)
+    {
+        this.aabb = new Phaser.Physics.Ninja.AABB(this, sx, sy, sprite.width, sprite.height);
+        this.shape = this.aabb;
+    }
+    else if (type === 2)
+    {
+        this.circle = new Phaser.Physics.Ninja.Circle(this, sx, sy, radius);
+        this.shape = this.circle;
+    }
+    else if (type === 3)
+    {
+        this.tile = new Phaser.Physics.Ninja.Tile(this, sx, sy, sprite.width, sprite.height, id);
+        this.shape = this.tile;
+    }
+
+};
+
+Phaser.Physics.Ninja.Body.prototype = {
+
+    /**
+    * Internal method.
+    *
+    * @method Phaser.Physics.Ninja.Body#updateBounds
+    * @protected
+    */
+    updateBounds: function (centerX, centerY, scaleX, scaleY) {
+    },
+
+    /**
+    * Internal method.
+    *
+    * @method Phaser.Physics.Ninja.Body#preUpdate
+    * @protected
+    */
+    preUpdate: function () {
+
+        //  Store and reset collision flags
+        this.wasTouching.none = this.touching.none;
+        this.wasTouching.up = this.touching.up;
+        this.wasTouching.down = this.touching.down;
+        this.wasTouching.left = this.touching.left;
+        this.wasTouching.right = this.touching.right;
+
+        this.touching.none = true;
+        this.touching.up = false;
+        this.touching.down = false;
+        this.touching.left = false;
+        this.touching.right = false;
+
+        this.shape.integrate();
+
+        if (this.collideWorldBounds)
+        {
+            this.shape.collideWorldBounds();
+        }
+
+        this.speed = Math.sqrt(this.shape.velocity.x * this.shape.velocity.x + this.shape.velocity.y * this.shape.velocity.y);
+        this.angle = Math.atan2(this.shape.velocity.y, this.shape.velocity.x);
+
+    },
+
+    /**
+    * Internal method.
+    *
+    * @method Phaser.Physics.Ninja.Body#postUpdate
+    * @protected
+    */
+    postUpdate: function () {
+
+        if (this.sprite.type === Phaser.TILESPRITE)
+        {
+            //  TileSprites don't use their anchor property, so we need to adjust the coordinates
+            this.sprite.x = this.shape.pos.x - this.shape.xw;
+            this.sprite.y = this.shape.pos.y - this.shape.yw;
+        }
+        else
+        {
+            this.sprite.x = this.shape.pos.x;
+            this.sprite.y = this.shape.pos.y;
+        }
+
+    },
+
+    /**
+    * Stops all movement of this body.
+    *
+    * @method Phaser.Physics.Ninja.Body#setZeroVelocity
+    */
+    setZeroVelocity: function () {
+
+        this.shape.oldpos.x = this.shape.pos.x;
+        this.shape.oldpos.y = this.shape.pos.y;
+
+    },
+
+    /**
+    * Moves the Body forwards based on its current angle and the given speed.
+    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
+    *
+    * @method Phaser.Physics.Body#moveTo
+    * @param {number} speed - The speed at which it should move forwards.
+    * @param {number} angle - The angle in which it should move, given in degrees.
+    */
+    moveTo: function (speed, angle) {
+
+        var magnitude = speed * this.game.time.physicsElapsed;
+        var angle = this.game.math.degToRad(angle);
+
+        this.shape.pos.x = this.shape.oldpos.x + (magnitude * Math.cos(angle));
+        this.shape.pos.y = this.shape.oldpos.y + (magnitude * Math.sin(angle));
+
+    },
+
+    /**
+    * Moves the Body backwards based on its current angle and the given speed.
+    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
+    *
+    * @method Phaser.Physics.Body#moveBackward
+    * @param {number} speed - The speed at which it should move backwards.
+    * @param {number} angle - The angle in which it should move, given in degrees.
+    */
+    moveFrom: function (speed, angle) {
+
+        var magnitude = -speed * this.game.time.physicsElapsed;
+        var angle = this.game.math.degToRad(angle);
+
+        this.shape.pos.x = this.shape.oldpos.x + (magnitude * Math.cos(angle));
+        this.shape.pos.y = this.shape.oldpos.y + (magnitude * Math.sin(angle));
+
+    },
+
+    /**
+    * If this Body is dynamic then this will move it to the left by setting its x velocity to the given speed.
+    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
+    *
+    * @method Phaser.Physics.Body#moveLeft
+    * @param {number} speed - The speed at which it should move to the left, in pixels per second.
+    */
+    moveLeft: function (speed) {
+
+        var fx = -speed * this.game.time.physicsElapsed;
+
+        this.shape.pos.x = this.shape.oldpos.x + Math.min(this.maxSpeed, Math.max(-this.maxSpeed, this.shape.pos.x - this.shape.oldpos.x + fx));
+
+    },
+
+    /**
+    * If this Body is dynamic then this will move it to the right by setting its x velocity to the given speed.
+    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
+    *
+    * @method Phaser.Physics.Body#moveRight
+    * @param {number} speed - The speed at which it should move to the right, in pixels per second.
+    */
+    moveRight: function (speed) {
+
+        var fx = speed * this.game.time.physicsElapsed;
+
+        this.shape.pos.x = this.shape.oldpos.x + Math.min(this.maxSpeed, Math.max(-this.maxSpeed, this.shape.pos.x - this.shape.oldpos.x + fx));
+
+    },
+
+    /**
+    * If this Body is dynamic then this will move it up by setting its y velocity to the given speed.
+    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
+    *
+    * @method Phaser.Physics.Body#moveUp
+    * @param {number} speed - The speed at which it should move up, in pixels per second.
+    */
+    moveUp: function (speed) {
+
+        var fx = -speed * this.game.time.physicsElapsed;
+
+        this.shape.pos.y = this.shape.oldpos.y + Math.min(this.maxSpeed, Math.max(-this.maxSpeed, this.shape.pos.y - this.shape.oldpos.y + fx));
+
+    },
+
+    /**
+    * If this Body is dynamic then this will move it down by setting its y velocity to the given speed.
+    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
+    *
+    * @method Phaser.Physics.Body#moveDown
+    * @param {number} speed - The speed at which it should move down, in pixels per second.
+    */
+    moveDown: function (speed) {
+
+        var fx = speed * this.game.time.physicsElapsed;
+
+        this.shape.pos.y = this.shape.oldpos.y + Math.min(this.maxSpeed, Math.max(-this.maxSpeed, this.shape.pos.y - this.shape.oldpos.y + fx));
+
+    },
+
+    /**
+    * Resets all Body values (velocity, acceleration, rotation, etc)
+    *
+    * @method Phaser.Physics.Ninja.Body#reset
+    */
+    reset: function () {
+    },
+
+};
+
+/**
+* @name Phaser.Physics.Ninja.Body#x
+* @property {number} x - The x position.
+*/
+Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "x", {
+    
+    /**
+    * The x position.
+    * @method x
+    * @return {number}
+    */
+    get: function () {
+        return this.shape.pos.x;
+    },
+
+    /**
+    * The x position.
+    * @method x
+    * @param {number} value
+    */
+    set: function (value) {
+        this.shape.pos.x = value;
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Ninja.Body#y
+* @property {number} y - The y position.
+*/
+Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "y", {
+    
+    /**
+    * The y position.
+    * @method y
+    * @return {number}
+    */
+    get: function () {
+        return this.shape.pos.y;
+    },
+
+    /**
+    * The y position.
+    * @method y
+    * @param {number} value
+    */
+    set: function (value) {
+        this.shape.pos.y = value;
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Ninja.Body#width
+* @property {number} width - The width of this Body
+* @readonly
+*/
+Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "width", {
+    
+    /**
+    * The width of this Body
+    * @method width
+    * @return {number}
+    * @readonly
+    */
+    get: function () {
+        return this.shape.width;
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Ninja.Body#height
+* @property {number} height - The height of this Body
+* @readonly
+*/
+Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "height", {
+    
+    /**
+    * The height of this Body
+    * @method height
+    * @return {number}
+    * @readonly
+    */
+    get: function () {
+        return this.shape.height;
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Ninja.Body#bottom
+* @property {number} bottom - The bottom value of this Body (same as Body.y + Body.height)
+* @readonly
+*/
+Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "bottom", {
+    
+    /**
+    * The sum of the y and height properties.
+    * @method bottom
+    * @return {number}
+    * @readonly
+    */
+    get: function () {
+        return this.shape.pos.y + this.shape.height;
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Ninja.Body#right
+* @property {number} right - The right value of this Body (same as Body.x + Body.width)
+* @readonly
+*/
+Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "right", {
+    
+    /**
+    * The sum of the x and width properties.
+    * @method right
+    * @return {number}
+    * @readonly
+    */
+    get: function () {
+        return this.shape.pos.x + this.shape.width;
+    }
+
+});
+
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2014 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* Ninja Physics AABB constructor.
+* Note: This class could be massively optimised and reduced in size. I leave that challenge up to you.
+*
+* @class Phaser.Physics.Ninja.AABB
+* @classdesc Arcade Physics Constructor
+* @constructor
+* @param {Phaser.Physics.Ninja.Body} body - The body that owns this shape.
+* @param {number} x - The x coordinate to create this shape at.
+* @param {number} y - The y coordinate to create this shape at.
+* @param {number} width - The width of this AABB.
+* @param {number} height - The height of this AABB.
+*/
+Phaser.Physics.Ninja.AABB = function (body, x, y, width, height) {
+    
+    /**
+    * @property {Phaser.Physics.Ninja.Body} system - A reference to the body that owns this shape.
+    */
+    this.body = body;
+
+    /**
+    * @property {Phaser.Physics.Ninja} system - A reference to the physics system.
+    */
+    this.system = body.system;
+
+    /**
+    * @property {Phaser.Point} pos - The position of this object.
+    */
+    this.pos = new Phaser.Point(x, y);
+
+    /**
+    * @property {Phaser.Point} oldpos - The position of this object in the previous update.
+    */
+    this.oldpos = new Phaser.Point(x, y);
+
+    /**
+    * @property {number} xw - Half the width.
+    * @readonly
+    */
+    this.xw = Math.abs(width / 2);
+
+    /**
+    * @property {number} xw - Half the height.
+    * @readonly
+    */
+    this.yw = Math.abs(height / 2);
+
+    /**
+    * @property {number} width - The width.
+    * @readonly
+    */
+    this.width = width;
+
+    /**
+    * @property {number} height - The height.
+    * @readonly
+    */
+    this.height = height;
+
+    /**
+    * @property {number} oH - Internal var.
+    * @private
+    */
+    this.oH = 0;
+
+    /**
+    * @property {number} oV - Internal var.
+    * @private
+    */
+    this.oV = 0;
+
+    /**
+    * @property {Phaser.Point} velocity - The velocity of this object.
+    */
+    this.velocity = new Phaser.Point();
+
+    /**
+    * @property {object} aabbTileProjections - All of the collision response handlers.
+    */
+    this.aabbTileProjections = {};
+
+    this.aabbTileProjections[Phaser.Physics.Ninja.Tile.TYPE_FULL] = this.projAABB_Full;
+    this.aabbTileProjections[Phaser.Physics.Ninja.Tile.TYPE_45DEG] = this.projAABB_45Deg;
+    this.aabbTileProjections[Phaser.Physics.Ninja.Tile.TYPE_CONCAVE] = this.projAABB_Concave;
+    this.aabbTileProjections[Phaser.Physics.Ninja.Tile.TYPE_CONVEX] = this.projAABB_Convex;
+    this.aabbTileProjections[Phaser.Physics.Ninja.Tile.TYPE_22DEGs] = this.projAABB_22DegS;
+    this.aabbTileProjections[Phaser.Physics.Ninja.Tile.TYPE_22DEGb] = this.projAABB_22DegB;
+    this.aabbTileProjections[Phaser.Physics.Ninja.Tile.TYPE_67DEGs] = this.projAABB_67DegS;
+    this.aabbTileProjections[Phaser.Physics.Ninja.Tile.TYPE_67DEGb] = this.projAABB_67DegB;
+    this.aabbTileProjections[Phaser.Physics.Ninja.Tile.TYPE_HALF] = this.projAABB_Half;
+
+};
+
+Phaser.Physics.Ninja.AABB.prototype.constructor = Phaser.Physics.Ninja.AABB;
+
+Phaser.Physics.Ninja.AABB.COL_NONE = 0;
+Phaser.Physics.Ninja.AABB.COL_AXIS = 1;
+Phaser.Physics.Ninja.AABB.COL_OTHER = 2;
+
+Phaser.Physics.Ninja.AABB.prototype = {
+
+    /**
+    * Updates this AABBs position.
+    *
+    * @method Phaser.Physics.Ninja.AABB#integrate
+    */
+    integrate: function () {
+
+        var px = this.pos.x;
+        var py = this.pos.y;
+
+        //  integrate
+        this.pos.x += (this.body.drag * this.pos.x) - (this.body.drag * this.oldpos.x);
+        this.pos.y += (this.body.drag * this.pos.y) - (this.body.drag * this.oldpos.y) + (this.system.gravity * this.body.gravityScale);
+
+        //  store
+        this.velocity.set(this.pos.x - px, this.pos.y - py);
+        this.oldpos.set(px, py);
+
+    },
+
+    /**
+    * Process a world collision and apply the resulting forces.
+    *
+    * @method Phaser.Physics.Ninja.AABB#reportCollisionVsWorld
+    * @param {number} px - The tangent velocity
+    * @param {number} py - The tangent velocity
+    * @param {number} dx - Collision normal
+    * @param {number} dy - Collision normal
+    * @param {number} obj - Object this AABB collided with
+    */
+    reportCollisionVsWorld: function (px, py, dx, dy, obj) {
+
+        var p = this.pos;
+        var o = this.oldpos;
+
+        //  Calc velocity
+        var vx = p.x - o.x;
+        var vy = p.y - o.y;
+
+        //  Find component of velocity parallel to collision normal
+        var dp = (vx * dx + vy * dy);
+        var nx = dp * dx;   //project velocity onto collision normal
+
+        var ny = dp * dy;   //nx,ny is normal velocity
+
+        var tx = vx - nx;   //px,py is tangent velocity
+        var ty = vy - ny;
+
+        //  We only want to apply collision response forces if the object is travelling into, and not out of, the collision
+        var b, bx, by, fx, fy;
+
+        if (dp < 0)
+        {
+            fx = tx * this.body.friction;
+            fy = ty * this.body.friction;
+
+            b = 1 + this.body.bounce;
+
+            bx = (nx * b);
+            by = (ny * b);
+
+            if (dx === 1)
+            {
+                this.body.touching.left = true;
+            }
+            else if (dx === -1)
+            {
+                this.body.touching.right = true;
+            }
+
+            if (dy === 1)
+            {
+                this.body.touching.up = true;
+            }
+            else if (dy === -1)
+            {
+                this.body.touching.down = true;
+            }
+        }
+        else
+        {
+            //  Moving out of collision, do not apply forces
+            bx = by = fx = fy = 0;
+        }
+
+        //  Project object out of collision
+        p.x += px;
+        p.y += py;
+
+        //  Apply bounce+friction impulses which alter velocity
+        o.x += px + bx + fx;
+        o.y += py + by + fy;
+
+    },
+
+    /**
+    * Process a body collision and apply the resulting forces.
+    *
+    * @method Phaser.Physics.Ninja.AABB#reportCollisionVsBody
+    * @param {number} px - The tangent velocity
+    * @param {number} py - The tangent velocity
+    * @param {number} dx - Collision normal
+    * @param {number} dy - Collision normal
+    * @param {number} obj - Object this AABB collided with
+    */
+    reportCollisionVsBody: function (px, py, dx, dy, obj) {
+
+        //  Here - we check if obj is immovable, etc and then we canswap the p/o values below depending on which is heavy
+        //  But then still need to work out how to split force
+
+        var p = this.pos;
+        var o = this.oldpos;
+
+        //  Calc velocity
+        var vx = p.x - o.x;
+        var vy = p.y - o.y;
+
+        //  Find component of velocity parallel to collision normal
+        var dp = (vx * dx + vy * dy);
+        var nx = dp * dx;   //project velocity onto collision normal
+
+        var ny = dp * dy;   //nx,ny is normal velocity
+
+        var tx = vx - nx;   //px,py is tangent velocity
+        var ty = vy - ny;
+
+        //  We only want to apply collision response forces if the object is travelling into, and not out of, the collision
+        var b, bx, by, fx, fy;
+
+        if (dp < 0)
+        {
+            fx = tx * this.body.friction;
+            fy = ty * this.body.friction;
+
+            b = 1 + this.body.bounce;
+
+            bx = (nx * b);
+            by = (ny * b);
+        }
+        else
+        {
+            //  Moving out of collision, do not apply forces
+            bx = by = fx = fy = 0;
+        }
+
+        //  working version
+        // p.x += px;
+        // p.y += py;
+        // o.x += px + bx + fx;
+        // o.y += py + by + fy;
+
+        //  Project object out of collision (applied to the position value)
+        p.x += px;
+        p.y += py;
+
+        // obj.pos.x += px;
+        // obj.pos.y += py;
+
+
+        //  Apply bounce+friction impulses which alter velocity (applied to old position, thus setting a sort of velocity up)
+        var rx = px + bx + fx;
+        var ry = py + by + fy;
+
+        //  let's pretend obj is immovable
+        // rx *= -1;
+        // ry *= -1;
+
+
+        //  Now let's share the load
+        o.x += rx;
+        o.y += ry;
+
+        //  work out objs velocity
+
+
+        // rx *= -1;
+        // ry *= -1;
+
+        // obj.oldpos.x += rx;
+        // obj.oldpos.y += ry;
+
+
+            // console.log(this.body.sprite.name, 'o.x', rx, ry, obj);
+
+    },
+
+    /**
+    * Collides this AABB against the world bounds.
+    *
+    * @method Phaser.Physics.Ninja.AABB#collideWorldBounds
+    */
+    collideWorldBounds: function () {
+
+        var dx = this.system.bounds.x - (this.pos.x - this.xw);
+
+        if (0 < dx)
+        {
+            this.reportCollisionVsWorld(dx, 0, 1, 0, null);
+        }
+        else
+        {
+            dx = (this.pos.x + this.xw) - this.system.bounds.width;
+
+            if (0 < dx)
+            {
+                this.reportCollisionVsWorld(-dx, 0, -1, 0, null);
+            }
+        }
+
+        var dy = this.system.bounds.y - (this.pos.y - this.yw);
+
+        if (0 < dy)
+        {
+            this.reportCollisionVsWorld(0, dy, 0, 1, null);
+        }
+        else
+        {
+            dy = (this.pos.y + this.yw) - this.system.bounds.height;
+
+            if (0 < dy)
+            {
+                this.reportCollisionVsWorld(0, -dy, 0, -1, null);
+            }
+        }
+
+    },
+
+    /**
+    * Collides this AABB against a AABB.
+    *
+    * @method Phaser.Physics.Ninja.AABB#collideAABBVsAABB
+    * @param {Phaser.Physics.Ninja.AABB} aabb - The AABB to collide against.
+    */
+    collideAABBVsAABB: function (aabb) {
+
+        var pos = this.pos;
+        var c = aabb;
+
+        var tx = c.pos.x;
+        var ty = c.pos.y;
+        var txw = c.xw;
+        var tyw = c.yw;
+
+        var dx = pos.x - tx;//tile->obj delta
+        var px = (txw + this.xw) - Math.abs(dx);//penetration depth in x
+
+        if (0 < px)
+        {
+            var dy = pos.y - ty;//tile->obj delta
+            var py = (tyw + this.yw) - Math.abs(dy);//pen depth in y
+
+            if (0 < py)
+            {
+                //object may be colliding with tile; call tile-specific collision function
+
+                //calculate projection vectors
+                if (px < py)
+                {
+                    //project in x
+                    if (dx < 0)
+                    {
+                        //project to the left
+                        px *= -1;
+                        py = 0;
+                    }
+                    else
+                    {
+                        //proj to right
+                        py = 0;
+                    }
+                }
+                else
+                {
+                    //project in y
+                    if (dy < 0)
+                    {
+                        //project up
+                        px = 0;
+                        py *= -1;
+                    }
+                    else
+                    {
+                        //project down
+                        px = 0;
+                    }
+                }
+
+                // return this.aabbTileProjections[1](px, py, this, c);
+
+                var l = Math.sqrt(px * px + py * py);
+                // this.reportCollisionVsWorld(px, py, px / l, py / l, c);
+                this.reportCollisionVsBody(px, py, px / l, py / l, c);
+
+                return Phaser.Physics.Ninja.AABB.COL_AXIS;
+
+            }
+        }
+
+        return false;
+
+    },
+
+    /**
+    * Collides this AABB against a Tile.
+    *
+    * @method Phaser.Physics.Ninja.AABB#collideAABBVsTile
+    * @param {Phaser.Physics.Ninja.Tile} tile - The Tile to collide against.
+    */
+    collideAABBVsTile: function (tile) {
+
+        var pos = this.pos;
+        var c = tile;
+
+        var tx = c.pos.x;
+        var ty = c.pos.y;
+        var txw = c.xw;
+        var tyw = c.yw;
+
+        var dx = pos.x - tx;//tile->obj delta
+        var px = (txw + this.xw) - Math.abs(dx);//penetration depth in x
+
+        if (0 < px)
+        {
+            var dy = pos.y - ty;//tile->obj delta
+            var py = (tyw + this.yw) - Math.abs(dy);//pen depth in y
+
+            if (0 < py)
+            {
+                //object may be colliding with tile; call tile-specific collision function
+
+                //calculate projection vectors
+                if (px < py)
+                {
+                    //project in x
+                    if (dx < 0)
+                    {
+                        //project to the left
+                        px *= -1;
+                        py = 0;
+                    }
+                    else
+                    {
+                        //proj to right
+                        py = 0;
+                    }
+                }
+                else
+                {
+                    //project in y
+                    if (dy < 0)
+                    {
+                        //project up
+                        px = 0;
+                        py *= -1;
+                    }
+                    else
+                    {
+                        //project down
+                        px = 0;
+                    }
+                }
+
+                return this.resolveTile(px, py, this, c);
+            }
+        }
+
+        return false;
+
+    },
+
+    /**
+    * Resolves tile collision.
+    *
+    * @method Phaser.Physics.Ninja.AABB#resolveTile
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {Phaser.Physics.Ninja.AABB} body - The AABB involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} tile - The Tile involved in the collision.
+    * @return {boolean} True if the collision was processed, otherwise false.
+    */
+    resolveTile: function (x, y, body, tile) {
+
+        if (0 < tile.id)
+        {
+            return this.aabbTileProjections[tile.type](x, y, body, tile);
+        }
+        else
+        {
+            // console.warn("Ninja.AABB.resolveTile was called with an empty (or unknown) tile!: id=" + tile.id + ")");
+            return false;
+        }
+
+    },
+
+    /**
+    * Resolves Full tile collision.
+    *
+    * @method Phaser.Physics.Ninja.AABB#projAABB_Full
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {Phaser.Physics.Ninja.AABB} obj - The AABB involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    projAABB_Full: function (x, y, obj, t) {
+
+        var l = Math.sqrt(x * x + y * y);
+        obj.reportCollisionVsWorld(x, y, x / l, y / l, t);
+
+        return Phaser.Physics.Ninja.AABB.COL_AXIS;
+
+    },
+
+    /**
+    * Resolves Half tile collision.
+    *
+    * @method Phaser.Physics.Ninja.AABB#projAABB_Half
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {Phaser.Physics.Ninja.AABB} obj - The AABB involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    projAABB_Half: function (x, y, obj, t) {
+
+        //signx or signy must be 0; the other must be -1 or 1
+        //calculate the projection vector for the half-edge, and then 
+        //(if collision is occuring) pick the minimum
+        
+        var sx = t.signx;
+        var sy = t.signy;
+            
+        var ox = (obj.pos.x - (sx*obj.xw)) - t.pos.x;//this gives is the coordinates of the innermost
+        var oy = (obj.pos.y - (sy*obj.yw)) - t.pos.y;//point on the AABB, relative to the tile center
+
+        //we perform operations analogous to the 45deg tile, except we're using 
+        //an axis-aligned slope instead of an angled one..
+
+        //if the dotprod of (ox,oy) and (sx,sy) is negative, the corner is in the slope
+        //and we need toproject it out by the magnitude of the projection of (ox,oy) onto (sx,sy)
+        var dp = (ox*sx) + (oy*sy);
+
+        if (dp < 0)
+        {
+            //collision; project delta onto slope and use this to displace the object
+            sx *= -dp;//(sx,sy) is now the projection vector
+            sy *= -dp;      
+                
+            var lenN = Math.sqrt(sx*sx + sy*sy);
+            var lenP = Math.sqrt(x*x + y*y);
+            
+            if (lenP < lenN)
+            {
+                //project along axis; note that we're assuming that this tile is horizontal OR vertical
+                //relative to the AABB's current tile, and not diagonal OR the current tile.
+                obj.reportCollisionVsWorld(x,y,x/lenP, y/lenP, t);
+
+                return Phaser.Physics.Ninja.AABB.COL_AXIS;
+            }
+            else
+            {       
+                //note that we could use -= instead of -dp
+                obj.reportCollisionVsWorld(sx,sy,t.signx, t.signy, t);
+                    
+                return Phaser.Physics.Ninja.AABB.COL_OTHER;
+            }
+        }
+            
+        return Phaser.Physics.Ninja.AABB.COL_NONE;
+
+    },
+
+    /**
+    * Resolves 45 Degree tile collision.
+    *
+    * @method Phaser.Physics.Ninja.AABB#projAABB_45Deg
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {Phaser.Physics.Ninja.AABB} obj - The AABB involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    projAABB_45Deg: function (x, y, obj, t) {
+
+        var signx = t.signx;
+        var signy = t.signy;
+
+        var ox = (obj.pos.x - (signx*obj.xw)) - t.pos.x;//this gives is the coordinates of the innermost
+        var oy = (obj.pos.y - (signy*obj.yw)) - t.pos.y;//point on the AABB, relative to the tile center
+
+        var sx = t.sx;
+        var sy = t.sy;
+            
+        //if the dotprod of (ox,oy) and (sx,sy) is negative, the corner is in the slope
+        //and we need toproject it out by the magnitude of the projection of (ox,oy) onto (sx,sy)
+        var dp = (ox*sx) + (oy*sy);
+
+        if (dp < 0)
+        {
+            //collision; project delta onto slope and use this to displace the object
+            sx *= -dp;//(sx,sy) is now the projection vector
+            sy *= -dp;      
+            
+            var lenN = Math.sqrt(sx*sx + sy*sy);
+            var lenP = Math.sqrt(x*x + y*y);
+
+            if (lenP < lenN)
+            {
+                //project along axis
+                obj.reportCollisionVsWorld(x,y,x/lenP, y/lenP, t);
+
+                return Phaser.Physics.Ninja.AABB.COL_AXIS;
+            }
+            else
+            {
+                //project along slope
+                obj.reportCollisionVsWorld(sx,sy,t.sx,t.sy);
+
+                return Phaser.Physics.Ninja.AABB.COL_OTHER;
+            }
+        }
+        
+        return Phaser.Physics.Ninja.AABB.COL_NONE;
+    },
+
+    /**
+    * Resolves 22 Degree tile collision.
+    *
+    * @method Phaser.Physics.Ninja.AABB#projAABB_22DegS
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {Phaser.Physics.Ninja.AABB} obj - The AABB involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    projAABB_22DegS: function (x, y, obj, t) {
+        
+        var signx = t.signx;
+        var signy = t.signy;
+
+        //first we need to check to make sure we're colliding with the slope at all
+        var py = obj.pos.y - (signy*obj.yw);
+        var penY = t.pos.y - py;//this is the vector from the innermost point on the box to the highest point on
+                                //the tile; if it is positive, this means the box is above the tile and
+                                //no collision is occuring
+        if (0 < (penY*signy))
+        {
+            var ox = (obj.pos.x - (signx*obj.xw)) - (t.pos.x + (signx*t.xw));//this gives is the coordinates of the innermost
+            var oy = (obj.pos.y - (signy*obj.yw)) - (t.pos.y - (signy*t.yw));//point on the AABB, relative to a point on the slope
+                                                        
+            var sx = t.sx;//get slope unit normal
+            var sy = t.sy;
+            
+            //if the dotprod of (ox,oy) and (sx,sy) is negative, the corner is in the slope
+            //and we need toproject it out by the magnitude of the projection of (ox,oy) onto (sx,sy)
+            var dp = (ox*sx) + (oy*sy);
+
+            if (dp < 0)
+            {
+                //collision; project delta onto slope and use this to displace the object
+                sx *= -dp;//(sx,sy) is now the projection vector
+                sy *= -dp;      
+
+                var lenN = Math.sqrt(sx*sx + sy*sy);
+                var lenP = Math.sqrt(x*x + y*y);
+                
+                var aY = Math.abs(penY);
+
+                if (lenP < lenN)
+                {
+                    if (aY < lenP)
+                    {
+                        obj.reportCollisionVsWorld(0, penY, 0, penY/aY, t);
+                        
+                        return Phaser.Physics.Ninja.AABB.COL_OTHER;
+                    }
+                    else
+                    {
+                        obj.reportCollisionVsWorld(x,y,x/lenP, y/lenP, t);
+                        
+                        return Phaser.Physics.Ninja.AABB.COL_AXIS;
+                    }
+                }
+                else
+                {
+                    if (aY < lenN)
+                    {
+                        obj.reportCollisionVsWorld(0, penY, 0, penY/aY, t);
+                        
+                        return Phaser.Physics.Ninja.AABB.COL_OTHER;
+                    }
+                    else
+                    {
+                        obj.reportCollisionVsWorld(sx,sy,t.sx,t.sy,t);
+
+                        return Phaser.Physics.Ninja.AABB.COL_OTHER;
+                    }
+                }
+            }
+        }
+        
+        //if we've reached this point, no collision has occured
+        return Phaser.Physics.Ninja.AABB.COL_NONE;
+    },
+
+    /**
+    * Resolves 22 Degree tile collision.
+    *
+    * @method Phaser.Physics.Ninja.AABB#projAABB_22DegB
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {Phaser.Physics.Ninja.AABB} obj - The AABB involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    projAABB_22DegB: function (x, y, obj, t) {
+
+        var signx = t.signx;
+        var signy = t.signy;
+
+        var ox = (obj.pos.x - (signx*obj.xw)) - (t.pos.x - (signx*t.xw));//this gives is the coordinates of the innermost
+        var oy = (obj.pos.y - (signy*obj.yw)) - (t.pos.y + (signy*t.yw));//point on the AABB, relative to a point on the slope
+            
+        var sx = t.sx;//get slope unit normal
+        var sy = t.sy;
+            
+        //if the dotprod of (ox,oy) and (sx,sy) is negative, the corner is in the slope
+        //and we need toproject it out by the magnitude of the projection of (ox,oy) onto (sx,sy)
+        var dp = (ox*sx) + (oy*sy);
+
+        if (dp < 0)
+        {
+            //collision; project delta onto slope and use this to displace the object
+            sx *= -dp;//(sx,sy) is now the projection vector
+            sy *= -dp;      
+
+            var lenN = Math.sqrt(sx*sx + sy*sy);
+            var lenP = Math.sqrt(x*x + y*y);
+
+            if (lenP < lenN)
+            {
+                obj.reportCollisionVsWorld(x,y,x/lenP, y/lenP, t);
+                    
+                return Phaser.Physics.Ninja.AABB.COL_AXIS;
+            }
+            else
+            {       
+                obj.reportCollisionVsWorld(sx,sy,t.sx,t.sy,t);
+                                    
+                return Phaser.Physics.Ninja.AABB.COL_OTHER;
+            }
+        
+        }
+            
+        return Phaser.Physics.Ninja.AABB.COL_NONE;
+
+    },
+
+    /**
+    * Resolves 67 Degree tile collision.
+    *
+    * @method Phaser.Physics.Ninja.AABB#projAABB_67DegS
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {Phaser.Physics.Ninja.AABB} obj - The AABB involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    projAABB_67DegS: function (x, y, obj, t) {
+
+        var signx = t.signx;
+        var signy = t.signy;
+
+        var px = obj.pos.x - (signx*obj.xw);
+        var penX = t.pos.x - px;
+
+        if (0 < (penX*signx))
+        {
+            var ox = (obj.pos.x - (signx*obj.xw)) - (t.pos.x - (signx*t.xw));//this gives is the coordinates of the innermost
+            var oy = (obj.pos.y - (signy*obj.yw)) - (t.pos.y + (signy*t.yw));//point on the AABB, relative to a point on the slope
+
+            var sx = t.sx;//get slope unit normal
+            var sy = t.sy;
+            
+            //if the dotprod of (ox,oy) and (sx,sy) is negative, the corner is in the slope
+            //and we need to project it out by the magnitude of the projection of (ox,oy) onto (sx,sy)
+            var dp = (ox*sx) + (oy*sy);
+
+            if (dp < 0)
+            {
+                //collision; project delta onto slope and use this to displace the object
+                sx *= -dp;//(sx,sy) is now the projection vector
+                sy *= -dp;      
+
+                var lenN = Math.sqrt(sx*sx + sy*sy);
+                var lenP = Math.sqrt(x*x + y*y);
+
+                var aX = Math.abs(penX);
+
+                if (lenP < lenN)
+                {
+                    if (aX < lenP)
+                    {
+                        obj.reportCollisionVsWorld(penX, 0, penX/aX, 0, t);
+                        
+                        return Phaser.Physics.Ninja.AABB.COL_OTHER;
+                    }
+                    else
+                    {
+                        obj.reportCollisionVsWorld(x,y,x/lenP, y/lenP, t);
+                        
+                        return Phaser.Physics.Ninja.AABB.COL_AXIS;
+                    }
+                }
+                else
+                {
+                    if (aX < lenN)
+                    {
+                        obj.reportCollisionVsWorld(penX, 0, penX/aX, 0, t);
+                        
+                        return Phaser.Physics.Ninja.AABB.COL_OTHER;
+                    }
+                    else
+                    {               
+                        obj.reportCollisionVsWorld(sx,sy,t.sx,t.sy,t);
+
+                        return Phaser.Physics.Ninja.AABB.COL_OTHER;
+                    }
+                }
+            }
+        }
+        
+        //if we've reached this point, no collision has occured
+        return Phaser.Physics.Ninja.AABB.COL_NONE;    
+
+    },
+
+    /**
+    * Resolves 67 Degree tile collision.
+    *
+    * @method Phaser.Physics.Ninja.AABB#projAABB_67DegB
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {Phaser.Physics.Ninja.AABB} obj - The AABB involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    projAABB_67DegB: function (x, y, obj, t) {
+
+        var signx = t.signx;
+        var signy = t.signy;
+            
+        var ox = (obj.pos.x - (signx*obj.xw)) - (t.pos.x + (signx*t.xw));//this gives is the coordinates of the innermost
+        var oy = (obj.pos.y - (signy*obj.yw)) - (t.pos.y - (signy*t.yw));//point on the AABB, relative to a point on the slope
+                                                        
+        var sx = t.sx;//get slope unit normal
+        var sy = t.sy;
+            
+        //if the dotprod of (ox,oy) and (sx,sy) is negative, the corner is in the slope
+        //and we need toproject it out by the magnitude of the projection of (ox,oy) onto (sx,sy)
+        var dp = (ox*sx) + (oy*sy);
+
+        if (dp < 0)
+        {
+            //collision; project delta onto slope and use this to displace the object
+            sx *= -dp;//(sx,sy) is now the projection vector
+            sy *= -dp;      
+                
+            var lenN = Math.sqrt(sx*sx + sy*sy);
+            var lenP = Math.sqrt(x*x + y*y);
+                
+            if (lenP < lenN)
+            {
+                obj.reportCollisionVsWorld(x,y,x/lenP, y/lenP, t);
+
+                return Phaser.Physics.Ninja.AABB.COL_AXIS;
+            }
+            else
+            {       
+                obj.reportCollisionVsWorld(sx,sy,t.sx,t.sy,t);
+                    
+                return Phaser.Physics.Ninja.AABB.COL_OTHER;
+            }
+        }
+            
+        return Phaser.Physics.Ninja.AABB.COL_NONE;    
+    },
+
+    /**
+    * Resolves Convex tile collision.
+    *
+    * @method Phaser.Physics.Ninja.AABB#projAABB_Convex
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {Phaser.Physics.Ninja.AABB} obj - The AABB involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    projAABB_Convex: function (x, y, obj, t) {
+
+        //if distance from "innermost" corner of AABB is less than than tile radius,
+        //collision is occuring and we need to project
+
+        var signx = t.signx;
+        var signy = t.signy;
+
+        var ox = (obj.pos.x - (signx * obj.xw)) - (t.pos.x - (signx * t.xw));//(ox,oy) is the vector from the circle center to
+        var oy = (obj.pos.y - (signy * obj.yw)) - (t.pos.y - (signy * t.yw));//the AABB
+        var len = Math.sqrt(ox * ox + oy * oy);
+
+        var twid = t.xw * 2;
+        var rad = Math.sqrt(twid * twid + 0);//this gives us the radius of a circle centered on the tile's corner and extending to the opposite edge of the tile;
+        //note that this should be precomputed at compile-time since it's constant
+
+        var pen = rad - len;
+
+        if (((signx * ox) < 0) || ((signy * oy) < 0))
+        {
+            //the test corner is "outside" the 1/4 of the circle we're interested in
+            var lenP = Math.sqrt(x * x + y * y);
+            obj.reportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
+
+            return Phaser.Physics.Ninja.AABB.COL_AXIS;//we need to report 		
+        }
+        else if (0 < pen)
+        {
+            //project along corner->circle vector
+            ox /= len;
+            oy /= len;
+            obj.reportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+
+            return Phaser.Physics.Ninja.AABB.COL_OTHER;
+        }
+
+        return Phaser.Physics.Ninja.AABB.COL_NONE;
+
+    },
+
+    /**
+    * Resolves Concave tile collision.
+    *
+    * @method Phaser.Physics.Ninja.AABB#projAABB_Concave
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {Phaser.Physics.Ninja.AABB} obj - The AABB involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    projAABB_Concave: function (x, y, obj, t) {
+
+        //if distance from "innermost" corner of AABB is further than tile radius,
+        //collision is occuring and we need to project
+
+        var signx = t.signx;
+        var signy = t.signy;
+
+        var ox = (t.pos.x + (signx * t.xw)) - (obj.pos.x - (signx * obj.xw));//(ox,oy) is the vector form the innermost AABB corner to the
+        var oy = (t.pos.y + (signy * t.yw)) - (obj.pos.y - (signy * obj.yw));//circle's center
+
+        var twid = t.xw * 2;
+        var rad = Math.sqrt(twid * twid + 0);//this gives us the radius of a circle centered on the tile's corner and extending to the opposite edge of the tile;
+        //note that this should be precomputed at compile-time since it's constant
+
+        var len = Math.sqrt(ox * ox + oy * oy);
+        var pen = len - rad;
+
+        if (0 < pen)
+        {
+            //collision; we need to either project along the axes, or project along corner->circlecenter vector
+
+            var lenP = Math.sqrt(x * x + y * y);
+
+            if (lenP < pen)
+            {
+                //it's shorter to move along axis directions
+                obj.reportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
+
+                return Phaser.Physics.Ninja.AABB.COL_AXIS;
+            }
+            else
+            {
+                //project along corner->circle vector
+                ox /= len;//len should never be 0, since if it IS 0, rad should be > than len
+                oy /= len;//and we should never reach here
+
+                obj.reportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+
+                return Phaser.Physics.Ninja.AABB.COL_OTHER;
+            }
+
+        }
+
+        return Phaser.Physics.Ninja.AABB.COL_NONE;
+		
+    }
+
+}
+
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2014 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* Ninja Physics Tile constructor.
+* A Tile is defined by its width, height and type. It's type can include slope data, such as 45 degree slopes, or convex slopes.
+* Understand that for any type including a slope (types 2 to 29) the Tile must be SQUARE, i.e. have an equal width and height.
+* Also note that as Tiles are primarily used for levels they have gravity disabled and world bounds collision disabled by default.
+* 
+* Note: This class could be massively optimised and reduced in size. I leave that challenge up to you.
+*
+* @class Phaser.Physics.Ninja.Tile
+* @classdesc The Ninja Physics Tile class. Based on code by Metanet Software.
+* @constructor
+* @param {Phaser.Physics.Ninja.Body} body - The body that owns this shape.
+* @param {number} x - The x coordinate to create this shape at.
+* @param {number} y - The y coordinate to create this shape at.
+* @param {number} width - The width of this AABB.
+* @param {number} height - The height of this AABB.
+* @param {number} [type=1] - The type of Ninja shape to create. 1 = AABB, 2 = Circle or 3 = Tile.
+*/
+Phaser.Physics.Ninja.Tile = function (body, x, y, width, height, type) {
+    
+    if (typeof type === 'undefined') { type = Phaser.Physics.Ninja.Tile.EMPTY; }
+
+    /**
+    * @property {Phaser.Physics.Ninja.Body} system - A reference to the body that owns this shape.
+    */
+    this.body = body;
+
+    /**
+    * @property {Phaser.Physics.Ninja} system - A reference to the physics system.
+    */
+    this.system = body.system;
+
+    /**
+    * @property {number} id - The ID of this Tile.
+    * @readonly
+    */
+    this.id = type;
+
+    /**
+    * @property {number} type - The type of this Tile.
+    * @readonly
+    */
+    this.type = Phaser.Physics.Ninja.Tile.TYPE_EMPTY;
+
+    /**
+    * @property {Phaser.Point} pos - The position of this object.
+    */
+    this.pos = new Phaser.Point(x, y);
+
+    /**
+    * @property {Phaser.Point} oldpos - The position of this object in the previous update.
+    */
+    this.oldpos = new Phaser.Point(x, y);
+
+    if (this.id > 1 && this.id < 30)
+    {
+        //  Tile Types 2 to 29 require square tile dimensions, so use the width as the base
+        height = width;
+    }
+
+    /**
+    * @property {number} xw - Half the width.
+    * @readonly
+    */
+    this.xw = Math.abs(width / 2);
+
+    /**
+    * @property {number} xw - Half the height.
+    * @readonly
+    */
+    this.yw = Math.abs(height / 2);
+
+    /**
+    * @property {number} width - The width.
+    * @readonly
+    */
+    this.width = width;
+
+    /**
+    * @property {number} height - The height.
+    * @readonly
+    */
+    this.height = height;
+
+    /**
+    * @property {Phaser.Point} velocity - The velocity of this object.
+    */
+    this.velocity = new Phaser.Point();
+
+    /**
+    * @property {number} signx - Internal var.
+    * @private
+    */
+    this.signx = 0;
+
+    /**
+    * @property {number} signy - Internal var.
+    * @private
+    */
+    this.signy = 0;
+
+    /**
+    * @property {number} sx - Internal var.
+    * @private
+    */
+    this.sx = 0;
+
+    /**
+    * @property {number} sy - Internal var.
+    * @private
+    */
+    this.sy = 0;
+
+    //  By default Tiles disable gravity and world bounds collision
+    this.body.gravityScale = 0;
+    this.body.collideWorldBounds = false;
+
+    if (this.id > 0)
+    {
+        this.setType(this.id);
+    }
+
+};
+
+Phaser.Physics.Ninja.Tile.prototype.constructor = Phaser.Physics.Ninja.Tile;
+
+Phaser.Physics.Ninja.Tile.prototype = {
+
+    /**
+    * Updates this objects position.
+    *
+    * @method Phaser.Physics.Ninja.Tile#integrate
+    */
+    integrate: function () {
+
+        var px = this.pos.x;
+        var py = this.pos.y;
+
+        this.pos.x += (this.body.drag * this.pos.x) - (this.body.drag * this.oldpos.x);
+        this.pos.y += (this.body.drag * this.pos.y) - (this.body.drag * this.oldpos.y) + (this.system.gravity * this.body.gravityScale);
+
+        this.velocity.set(this.pos.x - px, this.pos.y - py);
+        this.oldpos.set(px, py);
+
+    },
+
+    /**
+    * Tiles cannot collide with the world bounds, it's up to you to keep them where you want them. But we need this API stub to satisfy the Body.
+    *
+    * @method Phaser.Physics.Ninja.Tile#collideWorldBounds
+    */
+    collideWorldBounds: function () {
+
+        var dx = this.system.bounds.x - (this.pos.x - this.xw);
+
+        if (0 < dx)
+        {
+            this.reportCollisionVsWorld(dx, 0, 1, 0, null);
+        }
+        else
+        {
+            dx = (this.pos.x + this.xw) - this.system.bounds.width;
+
+            if (0 < dx)
+            {
+                this.reportCollisionVsWorld(-dx, 0, -1, 0, null);
+            }
+        }
+
+        var dy = this.system.bounds.y - (this.pos.y - this.yw);
+
+        if (0 < dy)
+        {
+            this.reportCollisionVsWorld(0, dy, 0, 1, null);
+        }
+        else
+        {
+            dy = (this.pos.y + this.yw) - this.system.bounds.height;
+
+            if (0 < dy)
+            {
+                this.reportCollisionVsWorld(0, -dy, 0, -1, null);
+            }
+        }
+
+    },
+
+    /**
+    * Process a world collision and apply the resulting forces.
+    *
+    * @method Phaser.Physics.Ninja.Tile#reportCollisionVsWorld
+    * @param {number} px - The tangent velocity
+    * @param {number} py - The tangent velocity
+    * @param {number} dx - Collision normal
+    * @param {number} dy - Collision normal
+    * @param {number} obj - Object this Tile collided with
+    */
+    reportCollisionVsWorld: function (px, py, dx, dy, obj) {
+
+        var p = this.pos;
+        var o = this.oldpos;
+
+        //  Calc velocity
+        var vx = p.x - o.x;
+        var vy = p.y - o.y;
+
+        //  Find component of velocity parallel to collision normal
+        var dp = (vx * dx + vy * dy);
+        var nx = dp * dx;   //project velocity onto collision normal
+
+        var ny = dp * dy;   //nx,ny is normal velocity
+
+        var tx = vx - nx;   //px,py is tangent velocity
+        var ty = vy - ny;
+
+        //  We only want to apply collision response forces if the object is travelling into, and not out of, the collision
+        var b, bx, by, fx, fy;
+
+        if (dp < 0)
+        {
+            fx = tx * this.body.friction;
+            fy = ty * this.body.friction;
+
+            b = 1 + this.body.bounce;
+
+            bx = (nx * b);
+            by = (ny * b);
+
+            if (dx === 1)
+            {
+                this.body.touching.left = true;
+            }
+            else if (dx === -1)
+            {
+                this.body.touching.right = true;
+            }
+
+            if (dy === 1)
+            {
+                this.body.touching.up = true;
+            }
+            else if (dy === -1)
+            {
+                this.body.touching.down = true;
+            }
+        }
+        else
+        {
+            //  Moving out of collision, do not apply forces
+            bx = by = fx = fy = 0;
+        }
+
+        //  Project object out of collision
+        p.x += px;
+        p.y += py;
+
+        //  Apply bounce+friction impulses which alter velocity
+        o.x += px + bx + fx;
+        o.y += py + by + fy;
+
+    },
+
+    /**
+    * Tiles cannot collide with the world bounds, it's up to you to keep them where you want them. But we need this API stub to satisfy the Body.
+    *
+    * @method Phaser.Physics.Ninja.Tile#setType
+    * @param {number} id - The type of Tile this will use, i.e. Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn, Phaser.Physics.Ninja.Tile.CONVEXpp, etc.
+    */
+    setType: function (id) {
+
+        if (id === Phaser.Physics.Ninja.Tile.EMPTY)
+        {
+            this.clear();
+        }
+        else
+        {
+            this.id = id;
+            this.updateType();
+        }
+
+        return this;
+
+    },
+
+    /**
+    * Sets this tile to be empty.
+    *
+    * @method Phaser.Physics.Ninja.Tile#clear
+    */
+    clear: function () {
+
+        this.id = Phaser.Physics.Ninja.Tile.EMPTY;
+        this.updateType();
+
+    },
+
+    /**
+    * This converts a tile from implicitly-defined (via id), to explicit (via properties).
+    * Don't call directly, instead of setType.
+    *
+    * @method Phaser.Physics.Ninja.Tile#updateType
+    * @private
+    */
+    updateType: function () {
+
+        if (this.id === 0)
+        {
+            //EMPTY
+            this.type = Phaser.Physics.Ninja.Tile.TYPE_EMPTY;
+            this.signx = 0;
+            this.signy = 0;
+            this.sx = 0;
+            this.sy = 0;
+
+            return true;
+        }
+
+        //tile is non-empty; collide
+        if (this.id < Phaser.Physics.Ninja.Tile.TYPE_45DEG)
+        {
+            //FULL
+            this.type = Phaser.Physics.Ninja.Tile.TYPE_FULL;
+            this.signx = 0;
+            this.signy = 0;
+            this.sx = 0;
+            this.sy = 0;
+        }
+        else if (this.id < Phaser.Physics.Ninja.Tile.TYPE_CONCAVE)
+        {
+            //  45deg
+            this.type = Phaser.Physics.Ninja.Tile.TYPE_45DEG;
+
+            if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn)
+            {
+                this.signx = 1;
+                this.signy = -1;
+                this.sx = this.signx / Math.SQRT2;//get slope _unit_ normal
+                this.sy = this.signy / Math.SQRT2;//since normal is (1,-1), length is sqrt(1*1 + -1*-1) = sqrt(2)               
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_45DEGnn)
+            {
+                this.signx = -1;
+                this.signy = -1;
+                this.sx = this.signx / Math.SQRT2;//get slope _unit_ normal
+                this.sy = this.signy / Math.SQRT2;//since normal is (1,-1), length is sqrt(1*1 + -1*-1) = sqrt(2)               
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_45DEGnp)
+            {
+                this.signx = -1;
+                this.signy = 1;
+                this.sx = this.signx / Math.SQRT2;//get slope _unit_ normal
+                this.sy = this.signy / Math.SQRT2;//since normal is (1,-1), length is sqrt(1*1 + -1*-1) = sqrt(2)               
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_45DEGpp)
+            {
+                this.signx = 1;
+                this.signy = 1;
+                this.sx = this.signx / Math.SQRT2;//get slope _unit_ normal
+                this.sy = this.signy / Math.SQRT2;//since normal is (1,-1), length is sqrt(1*1 + -1*-1) = sqrt(2)               
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else if (this.id < Phaser.Physics.Ninja.Tile.TYPE_CONVEX)
+        {
+            //  Concave
+            this.type = Phaser.Physics.Ninja.Tile.TYPE_CONCAVE;
+
+            if (this.id == Phaser.Physics.Ninja.Tile.CONCAVEpn)
+            {
+                this.signx = 1;
+                this.signy = -1;
+                this.sx = 0;
+                this.sy = 0;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.CONCAVEnn)
+            {
+                this.signx = -1;
+                this.signy = -1;
+                this.sx = 0;
+                this.sy = 0;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.CONCAVEnp)
+            {
+                this.signx = -1;
+                this.signy = 1;
+                this.sx = 0;
+                this.sy = 0;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.CONCAVEpp)
+            {
+                this.signx = 1;
+                this.signy = 1;
+                this.sx = 0;
+                this.sy = 0;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else if (this.id < Phaser.Physics.Ninja.Tile.TYPE_22DEGs)
+        {
+            //  Convex
+            this.type = Phaser.Physics.Ninja.Tile.TYPE_CONVEX;
+
+            if (this.id == Phaser.Physics.Ninja.Tile.CONVEXpn)
+            {
+                this.signx = 1;
+                this.signy = -1;
+                this.sx = 0;
+                this.sy = 0;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.CONVEXnn)
+            {
+                this.signx = -1;
+                this.signy = -1;
+                this.sx = 0;
+                this.sy = 0;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.CONVEXnp)
+            {
+                this.signx = -1;
+                this.signy = 1;
+                this.sx = 0;
+                this.sy = 0;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.CONVEXpp)
+            {
+                this.signx = 1;
+                this.signy = 1;
+                this.sx = 0;
+                this.sy = 0;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else if (this.id < Phaser.Physics.Ninja.Tile.TYPE_22DEGb)
+        {
+            //  22deg small
+            this.type = Phaser.Physics.Ninja.Tile.TYPE_22DEGs;
+
+            if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_22DEGpnS)
+            {
+                this.signx = 1;
+                this.signy = -1;
+                var slen = Math.sqrt(2 * 2 + 1 * 1);
+                this.sx = (this.signx * 1) / slen;
+                this.sy = (this.signy * 2) / slen;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_22DEGnnS)
+            {
+                this.signx = -1;
+                this.signy = -1;
+                var slen = Math.sqrt(2 * 2 + 1 * 1);
+                this.sx = (this.signx * 1) / slen;
+                this.sy = (this.signy * 2) / slen;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_22DEGnpS)
+            {
+                this.signx = -1;
+                this.signy = 1;
+                var slen = Math.sqrt(2 * 2 + 1 * 1);
+                this.sx = (this.signx * 1) / slen;
+                this.sy = (this.signy * 2) / slen;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_22DEGppS)
+            {
+                this.signx = 1;
+                this.signy = 1;
+                var slen = Math.sqrt(2 * 2 + 1 * 1);
+                this.sx = (this.signx * 1) / slen;
+                this.sy = (this.signy * 2) / slen;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else if (this.id < Phaser.Physics.Ninja.Tile.TYPE_67DEGs)
+        {
+            //  22deg big
+            this.type = Phaser.Physics.Ninja.Tile.TYPE_22DEGb;
+
+            if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_22DEGpnB)
+            {
+                this.signx = 1;
+                this.signy = -1;
+                var slen = Math.sqrt(2 * 2 + 1 * 1);
+                this.sx = (this.signx * 1) / slen;
+                this.sy = (this.signy * 2) / slen;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_22DEGnnB)
+            {
+                this.signx = -1;
+                this.signy = -1;
+                var slen = Math.sqrt(2 * 2 + 1 * 1);
+                this.sx = (this.signx * 1) / slen;
+                this.sy = (this.signy * 2) / slen;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_22DEGnpB)
+            {
+                this.signx = -1;
+                this.signy = 1;
+                var slen = Math.sqrt(2 * 2 + 1 * 1);
+                this.sx = (this.signx * 1) / slen;
+                this.sy = (this.signy * 2) / slen;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_22DEGppB)
+            {
+                this.signx = 1;
+                this.signy = 1;
+                var slen = Math.sqrt(2 * 2 + 1 * 1);
+                this.sx = (this.signx * 1) / slen;
+                this.sy = (this.signy * 2) / slen;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else if (this.id < Phaser.Physics.Ninja.Tile.TYPE_67DEGb)
+        {
+            //  67deg small
+            this.type = Phaser.Physics.Ninja.Tile.TYPE_67DEGs;
+
+            if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_67DEGpnS)
+            {
+                this.signx = 1;
+                this.signy = -1;
+                var slen = Math.sqrt(2 * 2 + 1 * 1);
+                this.sx = (this.signx * 2) / slen;
+                this.sy = (this.signy * 1) / slen;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_67DEGnnS)
+            {
+                this.signx = -1;
+                this.signy = -1;
+                var slen = Math.sqrt(2 * 2 + 1 * 1);
+                this.sx = (this.signx * 2) / slen;
+                this.sy = (this.signy * 1) / slen;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_67DEGnpS)
+            {
+                this.signx = -1;
+                this.signy = 1;
+                var slen = Math.sqrt(2 * 2 + 1 * 1);
+                this.sx = (this.signx * 2) / slen;
+                this.sy = (this.signy * 1) / slen;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_67DEGppS)
+            {
+                this.signx = 1;
+                this.signy = 1;
+                var slen = Math.sqrt(2 * 2 + 1 * 1);
+                this.sx = (this.signx * 2) / slen;
+                this.sy = (this.signy * 1) / slen;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else if (this.id < Phaser.Physics.Ninja.Tile.TYPE_HALF)
+        {
+            //  67deg big
+            this.type = Phaser.Physics.Ninja.Tile.TYPE_67DEGb;
+
+            if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_67DEGpnB)
+            {
+                this.signx = 1;
+                this.signy = -1;
+                var slen = Math.sqrt(2 * 2 + 1 * 1);
+                this.sx = (this.signx * 2) / slen;
+                this.sy = (this.signy * 1) / slen;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_67DEGnnB)
+            {
+                this.signx = -1;
+                this.signy = -1;
+                var slen = Math.sqrt(2 * 2 + 1 * 1);
+                this.sx = (this.signx * 2) / slen;
+                this.sy = (this.signy * 1) / slen;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_67DEGnpB)
+            {
+                this.signx = -1;
+                this.signy = 1;
+                var slen = Math.sqrt(2 * 2 + 1 * 1);
+                this.sx = (this.signx * 2) / slen;
+                this.sy = (this.signy * 1) / slen;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.SLOPE_67DEGppB)
+            {
+                this.signx = 1;
+                this.signy = 1;
+                var slen = Math.sqrt(2 * 2 + 1 * 1);
+                this.sx = (this.signx * 2) / slen;
+                this.sy = (this.signy * 1) / slen;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            //  Half-full tile
+            this.type = Phaser.Physics.Ninja.Tile.TYPE_HALF;
+
+            if (this.id == Phaser.Physics.Ninja.Tile.HALFd)
+            {
+                this.signx = 0;
+                this.signy = -1;
+                this.sx = this.signx;
+                this.sy = this.signy;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.HALFu)
+            {
+                this.signx = 0;
+                this.signy = 1;
+                this.sx = this.signx;
+                this.sy = this.signy;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.HALFl)
+            {
+                this.signx = 1;
+                this.signy = 0;
+                this.sx = this.signx;
+                this.sy = this.signy;
+            }
+            else if (this.id == Phaser.Physics.Ninja.Tile.HALFr)
+            {
+                this.signx = -1;
+                this.signy = 0;
+                this.sx = this.signx;
+                this.sy = this.signy;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
+}
+
+/**
+* @name Phaser.Physics.Ninja.Tile#x
+* @property {number} x - The x position.
+*/
+Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "x", {
+    
+    /**
+    * The x position.
+    * @method x
+    * @return {number}
+    */
+    get: function () {
+        return this.pos.x - this.xw;
+    },
+
+    /**
+    * The x position.
+    * @method x
+    * @param {number} value
+    */
+    set: function (value) {
+        this.pos.x = value;
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Ninja.Tile#y
+* @property {number} y - The y position.
+*/
+Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "y", {
+    
+    /**
+    * The y position.
+    * @method y
+    * @return {number}
+    */
+    get: function () {
+        return this.pos.y - this.yw;
+    },
+
+    /**
+    * The y position.
+    * @method y
+    * @param {number} value
+    */
+    set: function (value) {
+        this.pos.y = value;
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Ninja.Tile#bottom
+* @property {number} bottom - The bottom value of this Body (same as Body.y + Body.height)
+* @readonly
+*/
+Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "bottom", {
+    
+    /**
+    * The sum of the y and height properties.
+    * @method bottom
+    * @return {number}
+    * @readonly
+    */
+    get: function () {
+        return this.pos.y + this.yw;
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Ninja.Tile#right
+* @property {number} right - The right value of this Body (same as Body.x + Body.width)
+* @readonly
+*/
+Object.defineProperty(Phaser.Physics.Ninja.Tile.prototype, "right", {
+    
+    /**
+    * The sum of the x and width properties.
+    * @method right
+    * @return {number}
+    * @readonly
+    */
+    get: function () {
+        return this.pos.x + this.xw;
+    }
+
+});
+
+Phaser.Physics.Ninja.Tile.EMPTY = 0;
+Phaser.Physics.Ninja.Tile.FULL = 1;//fullAABB tile
+Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn = 2;//45-degree triangle, whose normal is (+ve,-ve)
+Phaser.Physics.Ninja.Tile.SLOPE_45DEGnn = 3;//(+ve,+ve)
+Phaser.Physics.Ninja.Tile.SLOPE_45DEGnp = 4;//(-ve,+ve)
+Phaser.Physics.Ninja.Tile.SLOPE_45DEGpp = 5;//(-ve,-ve)
+Phaser.Physics.Ninja.Tile.CONCAVEpn = 6;//1/4-circle cutout
+Phaser.Physics.Ninja.Tile.CONCAVEnn = 7;
+Phaser.Physics.Ninja.Tile.CONCAVEnp = 8;
+Phaser.Physics.Ninja.Tile.CONCAVEpp = 9;
+Phaser.Physics.Ninja.Tile.CONVEXpn = 10;//1/4/circle
+Phaser.Physics.Ninja.Tile.CONVEXnn = 11;
+Phaser.Physics.Ninja.Tile.CONVEXnp = 12;
+Phaser.Physics.Ninja.Tile.CONVEXpp = 13;
+Phaser.Physics.Ninja.Tile.SLOPE_22DEGpnS = 14;//22.5 degree slope
+Phaser.Physics.Ninja.Tile.SLOPE_22DEGnnS = 15;
+Phaser.Physics.Ninja.Tile.SLOPE_22DEGnpS = 16;
+Phaser.Physics.Ninja.Tile.SLOPE_22DEGppS = 17;
+Phaser.Physics.Ninja.Tile.SLOPE_22DEGpnB = 18;
+Phaser.Physics.Ninja.Tile.SLOPE_22DEGnnB = 19;
+Phaser.Physics.Ninja.Tile.SLOPE_22DEGnpB = 20;
+Phaser.Physics.Ninja.Tile.SLOPE_22DEGppB = 21;
+Phaser.Physics.Ninja.Tile.SLOPE_67DEGpnS = 22;//67.5 degree slope
+Phaser.Physics.Ninja.Tile.SLOPE_67DEGnnS = 23;
+Phaser.Physics.Ninja.Tile.SLOPE_67DEGnpS = 24;
+Phaser.Physics.Ninja.Tile.SLOPE_67DEGppS = 25;
+Phaser.Physics.Ninja.Tile.SLOPE_67DEGpnB = 26;
+Phaser.Physics.Ninja.Tile.SLOPE_67DEGnnB = 27;
+Phaser.Physics.Ninja.Tile.SLOPE_67DEGnpB = 28;
+Phaser.Physics.Ninja.Tile.SLOPE_67DEGppB = 29;
+Phaser.Physics.Ninja.Tile.HALFd = 30;//half-full tiles
+Phaser.Physics.Ninja.Tile.HALFr = 31;
+Phaser.Physics.Ninja.Tile.HALFu = 32;
+Phaser.Physics.Ninja.Tile.HALFl = 33;
+
+Phaser.Physics.Ninja.Tile.TYPE_EMPTY = 0;
+Phaser.Physics.Ninja.Tile.TYPE_FULL = 1;
+Phaser.Physics.Ninja.Tile.TYPE_45DEG = 2;
+Phaser.Physics.Ninja.Tile.TYPE_CONCAVE = 6;
+Phaser.Physics.Ninja.Tile.TYPE_CONVEX = 10;
+Phaser.Physics.Ninja.Tile.TYPE_22DEGs = 14;
+Phaser.Physics.Ninja.Tile.TYPE_22DEGb = 18;
+Phaser.Physics.Ninja.Tile.TYPE_67DEGs = 22;
+Phaser.Physics.Ninja.Tile.TYPE_67DEGb = 26;
+Phaser.Physics.Ninja.Tile.TYPE_HALF = 30;
+
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2014 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* Ninja Physics Circle constructor.
+* Note: This class could be massively optimised and reduced in size. I leave that challenge up to you.
+*
+* @class Phaser.Physics.Ninja.Circle
+* @classdesc Arcade Physics Constructor
+* @constructor
+* @param {Phaser.Physics.Ninja.Body} body - The body that owns this shape.
+* @param {number} x - The x coordinate to create this shape at.
+* @param {number} y - The y coordinate to create this shape at.
+* @param {number} radius - The radius of this Circle.
+*/
+Phaser.Physics.Ninja.Circle = function (body, x, y, radius) {
+
+    /**
+    * @property {Phaser.Physics.Ninja.Body} system - A reference to the body that owns this shape.
+    */
+    this.body = body;
+
+    /**
+    * @property {Phaser.Physics.Ninja} system - A reference to the physics system.
+    */
+    this.system = body.system;
+
+    /**
+    * @property {Phaser.Point} pos - The position of this object.
+    */
+    this.pos = new Phaser.Point(x, y);
+
+    /**
+    * @property {Phaser.Point} oldpos - The position of this object in the previous update.
+    */
+    this.oldpos = new Phaser.Point(x, y);
+
+    /**
+    * @property {number} radius - The radius of this circle shape.
+    */
+    this.radius = radius;
+
+    /**
+    * @property {number} width - The width.
+    * @readonly
+    */
+    this.width = radius * 2;
+
+    /**
+    * @property {number} height - The height.
+    * @readonly
+    */
+    this.height = radius * 2;
+
+    /**
+    * @property {number} oH - Internal var.
+    * @private
+    */
+    this.oH = 0;
+
+    /**
+    * @property {number} oV - Internal var.
+    * @private
+    */
+    this.oV = 0;
+
+    /**
+    * @property {Phaser.Point} velocity - The velocity of this object.
+    */
+    this.velocity = new Phaser.Point();
+
+    /**
+    * @property {object} circleTileProjections - All of the collision response handlers.
+    */
+    this.circleTileProjections = {};
+
+    this.circleTileProjections[Phaser.Physics.Ninja.Tile.TYPE_FULL] = this.projCircle_Full;
+    this.circleTileProjections[Phaser.Physics.Ninja.Tile.TYPE_45DEG] = this.projCircle_45Deg;
+    this.circleTileProjections[Phaser.Physics.Ninja.Tile.TYPE_CONCAVE] = this.projCircle_Concave;
+    this.circleTileProjections[Phaser.Physics.Ninja.Tile.TYPE_CONVEX] = this.projCircle_Convex;
+    this.circleTileProjections[Phaser.Physics.Ninja.Tile.TYPE_22DEGs] = this.projCircle_22DegS;
+    this.circleTileProjections[Phaser.Physics.Ninja.Tile.TYPE_22DEGb] = this.projCircle_22DegB;
+    this.circleTileProjections[Phaser.Physics.Ninja.Tile.TYPE_67DEGs] = this.projCircle_67DegS;
+    this.circleTileProjections[Phaser.Physics.Ninja.Tile.TYPE_67DEGb] = this.projCircle_67DegB;
+    this.circleTileProjections[Phaser.Physics.Ninja.Tile.TYPE_HALF] = this.projCircle_Half;
+
+}
+
+Phaser.Physics.Ninja.Circle.prototype.constructor = Phaser.Physics.Ninja.Circle;
+
+Phaser.Physics.Ninja.Circle.COL_NONE = 0;
+Phaser.Physics.Ninja.Circle.COL_AXIS = 1;
+Phaser.Physics.Ninja.Circle.COL_OTHER = 2;
+
+Phaser.Physics.Ninja.Circle.prototype = {
+
+    /**
+    * Updates this Circles position.
+    *
+    * @method Phaser.Physics.Ninja.Circle#integrate
+    */
+    integrate: function () {
+
+        var px = this.pos.x;
+        var py = this.pos.y;
+
+        //  integrate
+        this.pos.x += (this.body.drag * this.pos.x) - (this.body.drag * this.oldpos.x);
+        this.pos.y += (this.body.drag * this.pos.y) - (this.body.drag * this.oldpos.y) + (this.system.gravity * this.body.gravityScale);
+
+        //  store
+        this.velocity.set(this.pos.x - px, this.pos.y - py);
+        this.oldpos.set(px, py);
+
+    },
+
+    /**
+    * Process a world collision and apply the resulting forces.
+    *
+    * @method Phaser.Physics.Ninja.Circle#reportCollisionVsWorld
+    * @param {number} px - The tangent velocity
+    * @param {number} py - The tangent velocity
+    * @param {number} dx - Collision normal
+    * @param {number} dy - Collision normal
+    * @param {number} obj - Object this Circle collided with
+    */
+    reportCollisionVsWorld: function (px, py, dx, dy, obj) {
+
+        var p = this.pos;
+        var o = this.oldpos;
+
+        //  Calc velocity
+        var vx = p.x - o.x;
+        var vy = p.y - o.y;
+
+        //  Find component of velocity parallel to collision normal
+        var dp = (vx * dx + vy * dy);
+        var nx = dp * dx;   //project velocity onto collision normal
+
+        var ny = dp * dy;   //nx,ny is normal velocity
+
+        var tx = vx - nx;   //px,py is tangent velocity
+        var ty = vy - ny;
+
+        //  We only want to apply collision response forces if the object is travelling into, and not out of, the collision
+        var b, bx, by, fx, fy;
+
+        if (dp < 0)
+        {
+            fx = tx * this.body.friction;
+            fy = ty * this.body.friction;
+
+            b = 1 + this.body.bounce;
+
+            bx = (nx * b);
+            by = (ny * b);
+
+            if (dx === 1)
+            {
+                this.body.touching.left = true;
+            }
+            else if (dx === -1)
+            {
+                this.body.touching.right = true;
+            }
+
+            if (dy === 1)
+            {
+                this.body.touching.up = true;
+            }
+            else if (dy === -1)
+            {
+                this.body.touching.down = true;
+            }
+        }
+        else
+        {
+            //  Moving out of collision, do not apply forces
+            bx = by = fx = fy = 0;
+        }
+
+        //  Project object out of collision
+        p.x += px;
+        p.y += py;
+
+        //  Apply bounce+friction impulses which alter velocity
+        o.x += px + bx + fx;
+        o.y += py + by + fy;
+
+    },
+
+    /**
+    * Collides this Circle against the world bounds.
+    *
+    * @method Phaser.Physics.Ninja.Circle#collideWorldBounds
+    */
+    collideWorldBounds: function () {
+
+        var dx = this.system.bounds.x - (this.pos.x - this.xw);
+
+        if (0 < dx)
+        {
+            this.reportCollisionVsWorld(dx, 0, 1, 0, null);
+        }
+        else
+        {
+            dx = (this.pos.x + this.xw) - this.system.bounds.width;
+
+            if (0 < dx)
+            {
+                this.reportCollisionVsWorld(-dx, 0, -1, 0, null);
+            }
+        }
+
+        var dy = this.system.bounds.y - (this.pos.y - this.yw);
+
+        if (0 < dy)
+        {
+            this.reportCollisionVsWorld(0, dy, 0, 1, null);
+        }
+        else
+        {
+            dy = (this.pos.y + this.yw) - this.system.bounds.height;
+
+            if (0 < dy)
+            {
+                this.reportCollisionVsWorld(0, -dy, 0, -1, null);
+            }
+        }
+
+    },
+
+    /**
+    * Collides this Circle with a Tile.
+    *
+    * @method Phaser.Physics.Ninja.Circle#collideCircleVsTile
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {boolean} True if they collide, otherwise false.
+    */
+    collideCircleVsTile: function (tile) {
+
+        var pos = this.pos;
+        var r = this.radius;
+        var c = tile;
+
+        var tx = c.pos.x;
+        var ty = c.pos.y;
+        var txw = c.xw;
+        var tyw = c.yw;
+
+        var dx = pos.x - tx;    //  tile->obj delta
+        var px = (txw + r) - Math.abs(dx);  //  penetration depth in x
+
+        if (0 < px)
+        {
+            var dy = pos.y - ty;    //  tile->obj delta
+            var py = (tyw + r) - Math.abs(dy);  //  pen depth in y
+
+            if (0 < py)
+            {
+                //  object may be colliding with tile
+
+                //  determine grid/voronoi region of circle center
+                this.oH = 0;
+                this.oV = 0;
+
+                if (dx < -txw)
+                {
+                    //  circle is on left side of tile
+                    this.oH = -1;
+                }
+                else if (txw < dx)
+                {
+                    //  circle is on right side of tile
+                    this.oH = 1;
+                }
+
+                if (dy < -tyw)
+                {
+                    //  circle is on top side of tile
+                    this.oV = -1;
+                }
+                else if (tyw < dy)
+                {
+                    //  circle is on bottom side of tile
+                    this.oV = 1;
+                }
+
+                return this.resolveCircleTile(px, py, this.oH, this.oV, this, c);
+
+            }
+        }
+    },
+
+    /**
+    * Resolves tile collision.
+    *
+    * @method Phaser.Physics.Ninja.Circle#resolveCircleTile
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {number} oH - Grid / voronoi region.
+    * @param {number} oV - Grid / voronoi region.
+    * @param {Phaser.Physics.Ninja.Circle} obj - The Circle involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    resolveCircleTile: function (x, y, oH, oV, obj, t) {
+
+        if (0 < t.id)
+        {
+            return this.circleTileProjections[t.type](x, y, oH, oV, obj, t);
+        }
+        else
+        {
+            // console.log("ResolveCircleTile() was called with an empty (or unknown) tile!: ID=" + t.id + ")");
+            return false;
+        }
+
+    },
+
+    /**
+    * Resolves Full tile collision.
+    *
+    * @method Phaser.Physics.Ninja.Circle#projCircle_Full
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {number} oH - Grid / voronoi region.
+    * @param {number} oV - Grid / voronoi region.
+    * @param {Phaser.Physics.Ninja.Circle} obj - The Circle involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    projCircle_Full: function (x, y, oH, oV, obj, t) {
+
+        //if we're colliding vs. the current cell, we need to project along the
+        //smallest penetration vector.
+        //if we're colliding vs. horiz. or vert. neighb, we simply project horiz/vert
+        //if we're colliding diagonally, we need to collide vs. tile corner
+
+        if (oH == 0)
+        {
+            if (oV == 0)
+            {
+                //collision with current cell
+                if (x < y)
+                {
+                    //penetration in x is smaller; project in x
+                    var dx = obj.pos.x - t.pos.x;//get sign for projection along x-axis
+
+                    //NOTE: should we handle the delta == 0 case?! and how? (project towards oldpos?)
+                    if (dx < 0)
+                    {
+                        obj.reportCollisionVsWorld(-x, 0, -1, 0, t);
+                        return Phaser.Physics.Ninja.Circle.COL_AXIS;
+                    }
+                    else
+                    {
+                        obj.reportCollisionVsWorld(x, 0, 1, 0, t);
+                        return Phaser.Physics.Ninja.Circle.COL_AXIS;
+                    }
+                }
+                else
+                {
+                    //penetration in y is smaller; project in y     
+                    var dy = obj.pos.y - t.pos.y;//get sign for projection along y-axis
+
+                    //NOTE: should we handle the delta == 0 case?! and how? (project towards oldpos?)                   
+                    if (dy < 0)
+                    {
+                        obj.reportCollisionVsWorld(0, -y, 0, -1, t);
+                        return Phaser.Physics.Ninja.Circle.COL_AXIS;
+                    }
+                    else
+                    {
+                        obj.reportCollisionVsWorld(0, y, 0, 1, t);
+                        return Phaser.Physics.Ninja.Circle.COL_AXIS;
+                    }
+                }
+            }
+            else
+            {
+                //collision with vertical neighbor
+                obj.reportCollisionVsWorld(0, y * oV, 0, oV, t);
+
+                return Phaser.Physics.Ninja.Circle.COL_AXIS;
+            }
+        }
+        else if (oV == 0)
+        {
+            //collision with horizontal neighbor
+            obj.reportCollisionVsWorld(x * oH, 0, oH, 0, t);
+            return Phaser.Physics.Ninja.Circle.COL_AXIS;
+        }
+        else
+        {
+            //diagonal collision
+
+            //get diag vertex position
+            var vx = t.pos.x + (oH * t.xw);
+            var vy = t.pos.y + (oV * t.yw);
+
+            var dx = obj.pos.x - vx;//calc vert->circle vector      
+            var dy = obj.pos.y - vy;
+
+            var len = Math.sqrt(dx * dx + dy * dy);
+            var pen = obj.radius - len;
+
+            if (0 < pen)
+            {
+                //vertex is in the circle; project outward
+                if (len == 0)
+                {
+                    //project out by 45deg
+                    dx = oH / Math.SQRT2;
+                    dy = oV / Math.SQRT2;
+                }
+                else
+                {
+                    dx /= len;
+                    dy /= len;
+                }
+
+                obj.reportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
+
+                return Phaser.Physics.Ninja.Circle.COL_OTHER;
+            }
+        }
+
+        return Phaser.Physics.Ninja.Circle.COL_NONE;
+
+    },
+
+    /**
+    * Resolves 45 Degree tile collision.
+    *
+    * @method Phaser.Physics.Ninja.Circle#projCircle_45Deg
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {number} oH - Grid / voronoi region.
+    * @param {number} oV - Grid / voronoi region.
+    * @param {Phaser.Physics.Ninja.Circle} obj - The Circle involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    projCircle_45Deg: function (x, y, oH, oV, obj, t) {
+
+        //if we're colliding diagonally:
+        //  -if obj is in the diagonal pointed to by the slope normal: we can't collide, do nothing
+        //  -else, collide vs. the appropriate vertex
+        //if obj is in this tile: perform collision as for aabb-ve-45deg
+        //if obj is horiz OR very neighb in direction of slope: collide only vs. slope
+        //if obj is horiz or vert neigh against direction of slope: collide vs. face
+
+        var signx = t.signx;
+        var signy = t.signy;
+        var lenP;
+
+        if (oH == 0)
+        {
+            if (oV == 0)
+            {
+                //colliding with current tile
+
+                var sx = t.sx;
+                var sy = t.sy;
+
+                var ox = (obj.pos.x - (sx * obj.radius)) - t.pos.x;//this gives is the coordinates of the innermost
+                var oy = (obj.pos.y - (sy * obj.radius)) - t.pos.y;//point on the circle, relative to the tile center   
+
+                //if the dotprod of (ox,oy) and (sx,sy) is negative, the innermost point is in the slope
+                //and we need toproject it out by the magnitude of the projection of (ox,oy) onto (sx,sy)
+                var dp = (ox * sx) + (oy * sy);
+
+                if (dp < 0)
+                {
+                    //collision; project delta onto slope and use this as the slope penetration vector
+                    sx *= -dp;//(sx,sy) is now the penetration vector
+                    sy *= -dp;
+
+                    //find the smallest axial projection vector
+                    if (x < y)
+                    {
+                        //penetration in x is smaller
+                        lenP = x;
+                        y = 0;
+
+                        //get sign for projection along x-axis      
+                        if ((obj.pos.x - t.pos.x) < 0)
+                        {
+                            x *= -1;
+                        }
+                    }
+                    else
+                    {
+                        //penetration in y is smaller
+                        lenP = y;
+                        x = 0;
+
+                        //get sign for projection along y-axis      
+                        if ((obj.pos.y - t.pos.y) < 0)
+                        {
+                            y *= -1;
+                        }
+                    }
+
+                    var lenN = Math.sqrt(sx * sx + sy * sy);
+
+                    if (lenP < lenN)
+                    {
+                        obj.reportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
+
+                        return Phaser.Physics.Ninja.Circle.COL_AXIS;
+                    }
+                    else
+                    {
+                        obj.reportCollisionVsWorld(sx, sy, t.sx, t.sy, t);
+
+                        return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                    }
+                }
+
+            }
+            else
+            {
+                //colliding vertically
+                if ((signy * oV) < 0)
+                {
+                    //colliding with face/edge
+                    obj.reportCollisionVsWorld(0, y * oV, 0, oV, t);
+
+                    return Phaser.Physics.Ninja.Circle.COL_AXIS;
+                }
+                else
+                {
+                    //we could only be colliding vs the slope OR a vertex
+                    //look at the vector form the closest vert to the circle to decide
+
+                    var sx = t.sx;
+                    var sy = t.sy;
+
+                    var ox = obj.pos.x - (t.pos.x - (signx * t.xw));//this gives is the coordinates of the innermost
+                    var oy = obj.pos.y - (t.pos.y + (oV * t.yw));//point on the circle, relative to the closest tile vert   
+
+                    //if the component of (ox,oy) parallel to the normal's righthand normal
+                    //has the same sign as the slope of the slope (the sign of the slope's slope is signx*signy)
+                    //then we project by the vertex, otherwise by the normal.
+                    //note that this is simply a VERY tricky/weird method of determining 
+                    //if the circle is in side the slope/face's voronoi region, or that of the vertex.                                            
+                    var perp = (ox * -sy) + (oy * sx);
+                    if (0 < (perp * signx * signy))
+                    {
+                        //collide vs. vertex
+                        var len = Math.sqrt(ox * ox + oy * oy);
+                        var pen = obj.radius - len;
+                        if (0 < pen)
+                        {
+                            //note: if len=0, then perp=0 and we'll never reach here, so don't worry about div-by-0
+                            ox /= len;
+                            oy /= len;
+
+                            obj.reportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+
+                            return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                        }
+                    }
+                    else
+                    {
+                        //collide vs. slope
+
+                        //if the component of (ox,oy) parallel to the normal is less than the circle radius, we're
+                        //penetrating the slope. note that this method of penetration calculation doesn't hold
+                        //in general (i.e it won't work if the circle is in the slope), but works in this case
+                        //because we know the circle is in a neighboring cell
+                        var dp = (ox * sx) + (oy * sy);
+                        var pen = obj.radius - Math.abs(dp);//note: we don't need the abs because we know the dp will be positive, but just in case..
+                        if (0 < pen)
+                        {
+                            //collision; circle out along normal by penetration amount
+                            obj.reportCollisionVsWorld(sx * pen, sy * pen, sx, sy, t);
+
+                            return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                        }
+                    }
+                }
+            }
+        }
+        else if (oV == 0)
+        {
+            //colliding horizontally
+            if ((signx * oH) < 0)
+            {
+                //colliding with face/edge
+                obj.reportCollisionVsWorld(x * oH, 0, oH, 0, t);
+
+                return Phaser.Physics.Ninja.Circle.COL_AXIS;
+            }
+            else
+            {
+                //we could only be colliding vs the slope OR a vertex
+                //look at the vector form the closest vert to the circle to decide
+
+                var sx = t.sx;
+                var sy = t.sy;
+
+                var ox = obj.pos.x - (t.pos.x + (oH * t.xw));//this gives is the coordinates of the innermost
+                var oy = obj.pos.y - (t.pos.y - (signy * t.yw));//point on the circle, relative to the closest tile vert    
+
+                //if the component of (ox,oy) parallel to the normal's righthand normal
+                //has the same sign as the slope of the slope (the sign of the slope's slope is signx*signy)
+                //then we project by the normal, otherwise by the vertex.
+                //(NOTE: this is the opposite logic of the vertical case;
+                // for vertical, if the perp prod and the slope's slope agree, it's outside.
+                // for horizontal, if the perp prod and the slope's slope agree, circle is inside.
+                //  ..but this is only a property of flahs' coord system (i.e the rules might swap
+                // in righthanded systems))
+                //note that this is simply a VERY tricky/weird method of determining 
+                //if the circle is in side the slope/face's voronio region, or that of the vertex.                                            
+                var perp = (ox * -sy) + (oy * sx);
+                if ((perp * signx * signy) < 0)
+                {
+                    //collide vs. vertex
+                    var len = Math.sqrt(ox * ox + oy * oy);
+                    var pen = obj.radius - len;
+                    if (0 < pen)
+                    {
+                        //note: if len=0, then perp=0 and we'll never reach here, so don't worry about div-by-0
+                        ox /= len;
+                        oy /= len;
+
+                        obj.reportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+
+                        return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                    }
+                }
+                else
+                {
+                    //collide vs. slope
+
+                    //if the component of (ox,oy) parallel to the normal is less than the circle radius, we're
+                    //penetrating the slope. note that this method of penetration calculation doesn't hold
+                    //in general (i.e it won't work if the circle is in the slope), but works in this case
+                    //because we know the circle is in a neighboring cell
+                    var dp = (ox * sx) + (oy * sy);
+                    var pen = obj.radius - Math.abs(dp);//note: we don't need the abs because we know the dp will be positive, but just in case..
+                    if (0 < pen)
+                    {
+                        //collision; circle out along normal by penetration amount
+                        obj.reportCollisionVsWorld(sx * pen, sy * pen, sx, sy, t);
+
+                        return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                    }
+                }
+            }
+        }
+        else
+        {
+            //colliding diagonally
+            if (0 < ((signx * oH) + (signy * oV)))
+            {
+                //the dotprod of slope normal and cell offset is strictly positive,
+                //therefore obj is in the diagonal neighb pointed at by the normal, and
+                //it cannot possibly reach/touch/penetrate the slope
+                return Phaser.Physics.Ninja.Circle.COL_NONE;
+            }
+            else
+            {
+                //collide vs. vertex
+                //get diag vertex position
+                var vx = t.pos.x + (oH * t.xw);
+                var vy = t.pos.y + (oV * t.yw);
+
+                var dx = obj.pos.x - vx;//calc vert->circle vector      
+                var dy = obj.pos.y - vy;
+
+                var len = Math.sqrt(dx * dx + dy * dy);
+                var pen = obj.radius - len;
+                if (0 < pen)
+                {
+                    //vertex is in the circle; project outward
+                    if (len == 0)
+                    {
+                        //project out by 45deg
+                        dx = oH / Math.SQRT2;
+                        dy = oV / Math.SQRT2;
+                    }
+                    else
+                    {
+                        dx /= len;
+                        dy /= len;
+                    }
+
+                    obj.reportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
+                    return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                }
+
+            }
+
+        }
+
+        return Phaser.Physics.Ninja.Circle.COL_NONE;
+    },
+
+    /**
+    * Resolves Concave tile collision.
+    *
+    * @method Phaser.Physics.Ninja.Circle#projCircle_Concave
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {number} oH - Grid / voronoi region.
+    * @param {number} oV - Grid / voronoi region.
+    * @param {Phaser.Physics.Ninja.Circle} obj - The Circle involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    projCircle_Concave: function (x, y, oH, oV, obj, t) {
+
+        //if we're colliding diagonally:
+        //  -if obj is in the diagonal pointed to by the slope normal: we can't collide, do nothing
+        //  -else, collide vs. the appropriate vertex
+        //if obj is in this tile: perform collision as for aabb
+        //if obj is horiz OR very neighb in direction of slope: collide vs vert
+        //if obj is horiz or vert neigh against direction of slope: collide vs. face
+
+        var signx = t.signx;
+        var signy = t.signy;
+        var lenP;
+
+        if (oH == 0)
+        {
+            if (oV == 0)
+            {
+                //colliding with current tile
+
+                var ox = (t.pos.x + (signx * t.xw)) - obj.pos.x;//(ox,oy) is the vector from the circle to 
+                var oy = (t.pos.y + (signy * t.yw)) - obj.pos.y;//tile-circle's center
+
+                var twid = t.xw * 2;
+                var trad = Math.sqrt(twid * twid + 0);//this gives us the radius of a circle centered on the tile's corner and extending to the opposite edge of the tile;
+                //note that this should be precomputed at compile-time since it's constant
+
+                var len = Math.sqrt(ox * ox + oy * oy);
+                var pen = (len + obj.radius) - trad;
+
+                if (0 < pen)
+                {
+                    //find the smallest axial projection vector
+                    if (x < y)
+                    {
+                        //penetration in x is smaller
+                        lenP = x;
+                        y = 0;
+
+                        //get sign for projection along x-axis      
+                        if ((obj.pos.x - t.pos.x) < 0)
+                        {
+                            x *= -1;
+                        }
+                    }
+                    else
+                    {
+                        //penetration in y is smaller
+                        lenP = y;
+                        x = 0;
+
+                        //get sign for projection along y-axis      
+                        if ((obj.pos.y - t.pos.y) < 0)
+                        {
+                            y *= -1;
+                        }
+                    }
+
+
+                    if (lenP < pen)
+                    {
+                        obj.reportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
+
+                        return Phaser.Physics.Ninja.Circle.COL_AXIS;
+                    }
+                    else
+                    {
+                        //we can assume that len >0, because if we're here then
+                        //(len + obj.radius) > trad, and since obj.radius <= trad
+                        //len MUST be > 0
+                        ox /= len;
+                        oy /= len;
+
+                        obj.reportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+
+                        return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                    }
+                }
+                else
+                {
+                    return Phaser.Physics.Ninja.Circle.COL_NONE;
+                }
+
+            }
+            else
+            {
+                //colliding vertically
+                if ((signy * oV) < 0)
+                {
+                    //colliding with face/edge
+                    obj.reportCollisionVsWorld(0, y * oV, 0, oV, t);
+
+                    return Phaser.Physics.Ninja.Circle.COL_AXIS;
+                }
+                else
+                {
+                    //we could only be colliding vs the vertical tip
+
+                    //get diag vertex position
+                    var vx = t.pos.x - (signx * t.xw);
+                    var vy = t.pos.y + (oV * t.yw);
+
+                    var dx = obj.pos.x - vx;//calc vert->circle vector      
+                    var dy = obj.pos.y - vy;
+
+                    var len = Math.sqrt(dx * dx + dy * dy);
+                    var pen = obj.radius - len;
+                    if (0 < pen)
+                    {
+                        //vertex is in the circle; project outward
+                        if (len == 0)
+                        {
+                            //project out vertically
+                            dx = 0;
+                            dy = oV;
+                        }
+                        else
+                        {
+                            dx /= len;
+                            dy /= len;
+                        }
+
+                        obj.reportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
+
+                        return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                    }
+                }
+            }
+        }
+        else if (oV == 0)
+        {
+            //colliding horizontally
+            if ((signx * oH) < 0)
+            {
+                //colliding with face/edge
+                obj.reportCollisionVsWorld(x * oH, 0, oH, 0, t);
+
+                return Phaser.Physics.Ninja.Circle.COL_AXIS;
+            }
+            else
+            {
+                //we could only be colliding vs the horizontal tip
+
+                //get diag vertex position
+                var vx = t.pos.x + (oH * t.xw);
+                var vy = t.pos.y - (signy * t.yw);
+
+                var dx = obj.pos.x - vx;//calc vert->circle vector      
+                var dy = obj.pos.y - vy;
+
+                var len = Math.sqrt(dx * dx + dy * dy);
+                var pen = obj.radius - len;
+                if (0 < pen)
+                {
+                    //vertex is in the circle; project outward
+                    if (len == 0)
+                    {
+                        //project out horizontally
+                        dx = oH;
+                        dy = 0;
+                    }
+                    else
+                    {
+                        dx /= len;
+                        dy /= len;
+                    }
+
+                    obj.reportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
+
+                    return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                }
+            }
+        }
+        else
+        {
+            //colliding diagonally
+            if (0 < ((signx * oH) + (signy * oV)))
+            {
+                //the dotprod of slope normal and cell offset is strictly positive,
+                //therefore obj is in the diagonal neighb pointed at by the normal, and
+                //it cannot possibly reach/touch/penetrate the slope
+                return Phaser.Physics.Ninja.Circle.COL_NONE;
+            }
+            else
+            {
+                //collide vs. vertex
+                //get diag vertex position
+                var vx = t.pos.x + (oH * t.xw);
+                var vy = t.pos.y + (oV * t.yw);
+
+                var dx = obj.pos.x - vx;//calc vert->circle vector      
+                var dy = obj.pos.y - vy;
+
+                var len = Math.sqrt(dx * dx + dy * dy);
+                var pen = obj.radius - len;
+                if (0 < pen)
+                {
+                    //vertex is in the circle; project outward
+                    if (len == 0)
+                    {
+                        //project out by 45deg
+                        dx = oH / Math.SQRT2;
+                        dy = oV / Math.SQRT2;
+                    }
+                    else
+                    {
+                        dx /= len;
+                        dy /= len;
+                    }
+
+                    obj.reportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
+
+                    return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                }
+
+            }
+
+        }
+
+        return Phaser.Physics.Ninja.Circle.COL_NONE;
+
+    },
+
+    /**
+    * Resolves Convex tile collision.
+    *
+    * @method Phaser.Physics.Ninja.Circle#projCircle_Convex
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {number} oH - Grid / voronoi region.
+    * @param {number} oV - Grid / voronoi region.
+    * @param {Phaser.Physics.Ninja.Circle} obj - The Circle involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    projCircle_Convex: function (x, y, oH, oV, obj, t) {
+
+        //if the object is horiz AND/OR vertical neighbor in the normal (signx,signy)
+        //direction, collide vs. tile-circle only.
+        //if we're colliding diagonally:
+        //  -else, collide vs. the appropriate vertex
+        //if obj is in this tile: perform collision as for aabb
+        //if obj is horiz or vert neigh against direction of slope: collide vs. face
+
+        var signx = t.signx;
+        var signy = t.signy;
+        var lenP;
+
+        if (oH == 0)
+        {
+            if (oV == 0)
+            {
+                //colliding with current tile
+
+
+                var ox = obj.pos.x - (t.pos.x - (signx * t.xw));//(ox,oy) is the vector from the tile-circle to 
+                var oy = obj.pos.y - (t.pos.y - (signy * t.yw));//the circle's center
+
+                var twid = t.xw * 2;
+                var trad = Math.sqrt(twid * twid + 0);//this gives us the radius of a circle centered on the tile's corner and extending to the opposite edge of the tile;
+                //note that this should be precomputed at compile-time since it's constant
+
+                var len = Math.sqrt(ox * ox + oy * oy);
+                var pen = (trad + obj.radius) - len;
+
+                if (0 < pen)
+                {
+                    //find the smallest axial projection vector
+                    if (x < y)
+                    {
+                        //penetration in x is smaller
+                        lenP = x;
+                        y = 0;
+
+                        //get sign for projection along x-axis      
+                        if ((obj.pos.x - t.pos.x) < 0)
+                        {
+                            x *= -1;
+                        }
+                    }
+                    else
+                    {
+                        //penetration in y is smaller
+                        lenP = y;
+                        x = 0;
+
+                        //get sign for projection along y-axis      
+                        if ((obj.pos.y - t.pos.y) < 0)
+                        {
+                            y *= -1;
+                        }
+                    }
+
+
+                    if (lenP < pen)
+                    {
+                        obj.reportCollisionVsWorld(x, y, x / lenP, y / lenP, t);
+
+                        return Phaser.Physics.Ninja.Circle.COL_AXIS;
+                    }
+                    else
+                    {
+                        //note: len should NEVER be == 0, because if it is, 
+                        //projeciton by an axis shoudl always be shorter, and we should
+                        //never arrive here
+                        ox /= len;
+                        oy /= len;
+
+                        obj.reportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+
+                        return Phaser.Physics.Ninja.Circle.COL_OTHER;
+
+                    }
+                }
+            }
+            else
+            {
+                //colliding vertically
+                if ((signy * oV) < 0)
+                {
+                    //colliding with face/edge
+                    obj.reportCollisionVsWorld(0, y * oV, 0, oV, t);
+
+                    return Phaser.Physics.Ninja.Circle.COL_AXIS;
+                }
+                else
+                {
+                    //obj in neighboring cell pointed at by tile normal;
+                    //we could only be colliding vs the tile-circle surface
+
+                    var ox = obj.pos.x - (t.pos.x - (signx * t.xw));//(ox,oy) is the vector from the tile-circle to 
+                    var oy = obj.pos.y - (t.pos.y - (signy * t.yw));//the circle's center
+
+                    var twid = t.xw * 2;
+                    var trad = Math.sqrt(twid * twid + 0);//this gives us the radius of a circle centered on the tile's corner and extending to the opposite edge of the tile;
+                    //note that this should be precomputed at compile-time since it's constant
+
+                    var len = Math.sqrt(ox * ox + oy * oy);
+                    var pen = (trad + obj.radius) - len;
+
+                    if (0 < pen)
+                    {
+
+                        //note: len should NEVER be == 0, because if it is, 
+                        //obj is not in a neighboring cell!
+                        ox /= len;
+                        oy /= len;
+
+                        obj.reportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+
+                        return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                    }
+                }
+            }
+        }
+        else if (oV == 0)
+        {
+            //colliding horizontally
+            if ((signx * oH) < 0)
+            {
+                //colliding with face/edge
+                obj.reportCollisionVsWorld(x * oH, 0, oH, 0, t);
+
+                return Phaser.Physics.Ninja.Circle.COL_AXIS;
+            }
+            else
+            {
+                //obj in neighboring cell pointed at by tile normal;
+                //we could only be colliding vs the tile-circle surface
+
+                var ox = obj.pos.x - (t.pos.x - (signx * t.xw));//(ox,oy) is the vector from the tile-circle to 
+                var oy = obj.pos.y - (t.pos.y - (signy * t.yw));//the circle's center
+
+                var twid = t.xw * 2;
+                var trad = Math.sqrt(twid * twid + 0);//this gives us the radius of a circle centered on the tile's corner and extending to the opposite edge of the tile;
+                //note that this should be precomputed at compile-time since it's constant
+
+                var len = Math.sqrt(ox * ox + oy * oy);
+                var pen = (trad + obj.radius) - len;
+
+                if (0 < pen)
+                {
+
+                    //note: len should NEVER be == 0, because if it is, 
+                    //obj is not in a neighboring cell!
+                    ox /= len;
+                    oy /= len;
+
+                    obj.reportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+
+                    return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                }
+            }
+        }
+        else
+        {
+            //colliding diagonally
+            if (0 < ((signx * oH) + (signy * oV)))
+            {
+                //obj in diag neighb cell pointed at by tile normal;
+                //we could only be colliding vs the tile-circle surface
+
+                var ox = obj.pos.x - (t.pos.x - (signx * t.xw));//(ox,oy) is the vector from the tile-circle to 
+                var oy = obj.pos.y - (t.pos.y - (signy * t.yw));//the circle's center
+
+                var twid = t.xw * 2;
+                var trad = Math.sqrt(twid * twid + 0);//this gives us the radius of a circle centered on the tile's corner and extending to the opposite edge of the tile;
+                //note that this should be precomputed at compile-time since it's constant
+
+                var len = Math.sqrt(ox * ox + oy * oy);
+                var pen = (trad + obj.radius) - len;
+
+                if (0 < pen)
+                {
+
+                    //note: len should NEVER be == 0, because if it is, 
+                    //obj is not in a neighboring cell!
+                    ox /= len;
+                    oy /= len;
+
+                    obj.reportCollisionVsWorld(ox * pen, oy * pen, ox, oy, t);
+
+                    return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                }
+            }
+            else
+            {
+                //collide vs. vertex
+                //get diag vertex position
+                var vx = t.pos.x + (oH * t.xw);
+                var vy = t.pos.y + (oV * t.yw);
+
+                var dx = obj.pos.x - vx;//calc vert->circle vector      
+                var dy = obj.pos.y - vy;
+
+                var len = Math.sqrt(dx * dx + dy * dy);
+                var pen = obj.radius - len;
+                if (0 < pen)
+                {
+                    //vertex is in the circle; project outward
+                    if (len == 0)
+                    {
+                        //project out by 45deg
+                        dx = oH / Math.SQRT2;
+                        dy = oV / Math.SQRT2;
+                    }
+                    else
+                    {
+                        dx /= len;
+                        dy /= len;
+                    }
+
+                    obj.reportCollisionVsWorld(dx * pen, dy * pen, dx, dy, t);
+
+                    return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                }
+
+            }
+
+        }
+
+        return Phaser.Physics.Ninja.Circle.COL_NONE;
+
+    },
+
+    /**
+    * Resolves Half tile collision.
+    *
+    * @method Phaser.Physics.Ninja.Circle#projCircle_Half
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {number} oH - Grid / voronoi region.
+    * @param {number} oV - Grid / voronoi region.
+    * @param {Phaser.Physics.Ninja.Circle} obj - The Circle involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    projCircle_Half: function (x,y,oH,oV,obj,t) {
+
+        //if obj is in a neighbor pointed at by the halfedge normal,
+        //we'll never collide (i.e if the normal is (0,1) and the obj is in the DL.D, or R neighbors)
+        //
+        //if obj is in a neigbor perpendicular to the halfedge normal, it might
+        //collide with the halfedge-vertex, or with the halfedge side.
+        //
+        //if obj is in a neigb pointing opposite the halfedge normal, obj collides with edge
+        //
+        //if obj is in a diagonal (pointing away from the normal), obj collides vs vertex
+        //
+        //if obj is in the halfedge cell, it collides as with aabb
+
+        var signx = t.signx;
+        var signy = t.signy;
+
+        var celldp = (oH*signx + oV*signy);//this tells us about the configuration of cell-offset relative to tile normal
+        if(0 < celldp)
+        {
+            //obj is in "far" (pointed-at-by-normal) neighbor of halffull tile, and will never hit
+            return Phaser.Physics.Ninja.Circle.COL_NONE;
+        }
+        else if(oH == 0)
+        {
+            if(oV == 0)
+            {
+                //colliding with current tile
+                var r = obj.radius;
+                var ox = (obj.pos.x - (signx*r)) - t.pos.x;//this gives is the coordinates of the innermost
+                var oy = (obj.pos.y - (signy*r)) - t.pos.y;//point on the circle, relative to the tile center
+                
+        
+                //we perform operations analogous to the 45deg tile, except we're using 
+                //an axis-aligned slope instead of an angled one..
+                var sx = signx;
+                var sy = signy;
+                
+                //if the dotprod of (ox,oy) and (sx,sy) is negative, the corner is in the slope
+                //and we need toproject it out by the magnitude of the projection of (ox,oy) onto (sx,sy)
+                var dp = (ox*sx) + (oy*sy);
+                if(dp < 0)
+                {
+                    //collision; project delta onto slope and use this to displace the object
+                    sx *= -dp;//(sx,sy) is now the projection vector
+                    sy *= -dp;      
+                    
+                    
+                    var lenN = Math.sqrt(sx*sx + sy*sy);
+                    var lenP = Math.sqrt(x*x + y*y);
+        
+                    if(lenP < lenN)
+                    {
+                        obj.reportCollisionVsWorld(x,y,x/lenP, y/lenP,t);
+
+                        return Phaser.Physics.Ninja.Circle.COL_AXIS;
+                    }
+                    else
+                    {       
+                        obj.reportCollisionVsWorld(sx,sy,t.signx,t.signy);
+
+                        return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                    }
+                    return true;
+                }           
+                
+            }
+            else
+            {
+                //colliding vertically
+
+                if(celldp == 0)
+                {
+        
+                    var r = obj.radius;
+                    var dx = obj.pos.x - t.pos.x;
+                            
+                    //we're in a cell perpendicular to the normal, and can collide vs. halfedge vertex
+                    //or halfedge side
+                    if((dx*signx) < 0)
+                    {
+                        //collision with halfedge side
+                        obj.reportCollisionVsWorld(0,y*oV,0,oV,t);
+                        
+                        return Phaser.Physics.Ninja.Circle.COL_AXIS;                        
+                    }
+                    else
+                    {
+                        //collision with halfedge vertex
+                        var dy = obj.pos.y - (t.pos.y + oV*t.yw);//(dx,dy) is now the vector from the appropriate halfedge vertex to the circle
+                        
+                        var len = Math.sqrt(dx*dx + dy*dy);
+                        var pen = obj.radius - len;
+                        if(0 < pen)
+                        {
+                            //vertex is in the circle; project outward
+                            if(len == 0)
+                            {
+                                //project out by 45deg
+                                dx = signx / Math.SQRT2;
+                                dy = oV / Math.SQRT2;
+                            }
+                            else
+                            {
+                                dx /= len;
+                                dy /= len;
+                            }
+                                
+                            obj.reportCollisionVsWorld(dx*pen, dy*pen, dx, dy, t);
+                            
+                            return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                        }                   
+                        
+                    }
+                }
+                else
+                {
+                    //due to the first conditional (celldp >0), we know we're in the cell "opposite" the normal, and so
+                    //we can only collide with the cell edge
+                    //collision with vertical neighbor
+                    obj.reportCollisionVsWorld(0,y*oV,0,oV,t);
+                    
+                    return Phaser.Physics.Ninja.Circle.COL_AXIS;
+                }
+                
+            }
+        }
+        else if(oV == 0)
+        {
+            //colliding horizontally
+            if(celldp == 0)
+            {
+        
+                var r = obj.radius;
+                var dy = obj.pos.y - t.pos.y;
+                            
+                //we're in a cell perpendicular to the normal, and can collide vs. halfedge vertex
+                //or halfedge side
+                if((dy*signy) < 0)
+                {
+                    //collision with halfedge side
+                    obj.reportCollisionVsWorld(x*oH,0,oH,0,t);
+                    
+                    return Phaser.Physics.Ninja.Circle.COL_AXIS;                        
+                }
+                else
+                {
+                    //collision with halfedge vertex
+                    var dx = obj.pos.x - (t.pos.x + oH*t.xw);//(dx,dy) is now the vector from the appropriate halfedge vertex to the circle
+                        
+                    var len = Math.sqrt(dx*dx + dy*dy);
+                    var pen = obj.radius - len;
+                    if(0 < pen)
+                    {
+                        //vertex is in the circle; project outward
+                        if(len == 0)
+                        {
+                            //project out by 45deg
+                            dx = signx / Math.SQRT2;
+                            dy = oV / Math.SQRT2;
+                        }
+                        else
+                        {
+                            dx /= len;
+                            dy /= len;
+                        }
+                                
+                        obj.reportCollisionVsWorld(dx*pen, dy*pen, dx, dy, t);
+                        
+                        return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                    }                   
+                        
+                }
+            }
+            else
+            {           
+                //due to the first conditional (celldp >0), we know w're in the cell "opposite" the normal, and so
+                //we can only collide with the cell edge
+                obj.reportCollisionVsWorld(x*oH, 0, oH, 0, t);
+                
+                return Phaser.Physics.Ninja.Circle.COL_AXIS;
+            }       
+        }
+        else
+        {       
+            //colliding diagonally; we know, due to the initial (celldp >0) test which has failed
+            //if we've reached this point, that we're in a diagonal neighbor on the non-normal side, so
+            //we could only be colliding with the cell vertex, if at all.
+
+            //get diag vertex position
+            var vx = t.pos.x + (oH*t.xw);
+            var vy = t.pos.y + (oV*t.yw);
+                
+            var dx = obj.pos.x - vx;//calc vert->circle vector      
+            var dy = obj.pos.y - vy;
+                
+            var len = Math.sqrt(dx*dx + dy*dy);
+            var pen = obj.radius - len;
+            if(0 < pen)
+            {
+                //vertex is in the circle; project outward
+                if(len == 0)
+                {
+                    //project out by 45deg
+                    dx = oH / Math.SQRT2;
+                    dy = oV / Math.SQRT2;
+                }
+                else
+                {
+                    dx /= len;
+                    dy /= len;
+                }
+
+                obj.reportCollisionVsWorld(dx*pen, dy*pen, dx, dy, t);
+                
+                return Phaser.Physics.Ninja.Circle.COL_OTHER;
+            }       
+            
+        }
+        
+        return Phaser.Physics.Ninja.Circle.COL_NONE;
+        
+    },
+
+    /**
+    * Resolves 22 Degree tile collision.
+    *
+    * @method Phaser.Physics.Ninja.Circle#projCircle_22DegS
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {number} oH - Grid / voronoi region.
+    * @param {number} oV - Grid / voronoi region.
+    * @param {Phaser.Physics.Ninja.Circle} obj - The Circle involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    projCircle_22DegS: function (x,y,oH,oV,obj,t) {
+        
+        //if the object is in a cell pointed at by signy, no collision will ever occur
+        //otherwise,
+        //
+        //if we're colliding diagonally:
+        //  -collide vs. the appropriate vertex
+        //if obj is in this tile: collide vs slope or vertex
+        //if obj is horiz neighb in direction of slope: collide vs. slope or vertex
+        //if obj is horiz neighb against the slope:
+        //   if(distance in y from circle to 90deg corner of tile < 1/2 tileheight, collide vs. face)
+        //   else(collide vs. corner of slope) (vert collision with a non-grid-aligned vert)
+        //if obj is vert neighb against direction of slope: collide vs. face
+
+        var signx = t.signx;
+        var signy = t.signy;
+
+        if(0 < (signy*oV))
+        {
+            //object will never collide vs tile, it can't reach that far
+            
+            return Phaser.Physics.Ninja.Circle.COL_NONE;
+        }
+        else if(oH == 0)
+        {
+            if(oV == 0)
+            {
+                //colliding with current tile
+                //we could only be colliding vs the slope OR a vertex
+                //look at the vector form the closest vert to the circle to decide
+        
+                var sx = t.sx;
+                var sy = t.sy;
+                
+                var r = obj.radius;
+                var ox = obj.pos.x - (t.pos.x - (signx*t.xw));//this gives is the coordinates of the innermost
+                var oy = obj.pos.y - t.pos.y;//point on the circle, relative to the tile corner 
+            
+                //if the component of (ox,oy) parallel to the normal's righthand normal
+                //has the same sign as the slope of the slope (the sign of the slope's slope is signx*signy)
+                //then we project by the vertex, otherwise by the normal or axially.
+                //note that this is simply a VERY tricky/weird method of determining 
+                //if the circle is in side the slope/face's voronio region, or that of the vertex.
+                    
+                var perp = (ox*-sy) + (oy*sx);
+                if(0 < (perp*signx*signy))
+                {
+                    //collide vs. vertex
+                    var len = Math.sqrt(ox*ox + oy*oy);
+                    var pen = r - len;
+                    if(0 < pen)
+                    {
+                        //note: if len=0, then perp=0 and we'll never reach here, so don't worry about div-by-0
+                        ox /= len;
+                        oy /= len;
+
+                        obj.reportCollisionVsWorld(ox*pen, oy*pen, ox, oy, t);
+                        
+                        return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                    }                   
+                }
+                else
+                {
+                    //collide vs. slope or vs axis
+                    ox -= r*sx;//this gives us the vector from  
+                    oy -= r*sy;//a point on the slope to the innermost point on the circle
+            
+                    //if the dotprod of (ox,oy) and (sx,sy) is negative, the point on the circle is in the slope
+                    //and we need toproject it out by the magnitude of the projection of (ox,oy) onto (sx,sy)
+                    var dp = (ox*sx) + (oy*sy);
+                    
+                    if(dp < 0)
+                    {
+                        //collision; project delta onto slope and use this to displace the object
+                        sx *= -dp;//(sx,sy) is now the projection vector
+                        sy *= -dp;      
+                            
+                        var lenN = Math.sqrt(sx*sx + sy*sy);
+                
+                        //find the smallest axial projection vector
+                        if(x < y)
+                        {                   
+                            //penetration in x is smaller
+                            lenP = x;
+                            y = 0;  
+                            //get sign for projection along x-axis      
+                            if((obj.pos.x - t.pos.x) < 0)
+                            {
+                                x *= -1;
+                            }
+                        }
+                        else
+                        {       
+                            //penetration in y is smaller
+                            lenP = y;
+                            x = 0;  
+                            //get sign for projection along y-axis      
+                            if((obj.pos.y - t.pos.y)< 0)
+                            {
+                                y *= -1;
+                            }           
+                        }
+
+                        if(lenP < lenN)
+                        {
+                            obj.reportCollisionVsWorld(x,y,x/lenP, y/lenP, t);
+
+                            return Phaser.Physics.Ninja.Circle.COL_AXIS;
+                        }
+                        else
+                        {               
+                            obj.reportCollisionVsWorld(sx,sy,t.sx,t.sy,t);
+
+                            return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                        }
+                
+                    }
+                }
+                
+            }
+            else
+            {
+                //colliding vertically; we can assume that (signy*oV) < 0
+                //due to the first conditional far above
+
+                obj.reportCollisionVsWorld(0,y*oV, 0, oV, t);
+                    
+                return Phaser.Physics.Ninja.Circle.COL_AXIS;
+            }       
+        }
+        else if(oV == 0)
+        {
+            //colliding horizontally
+            if((signx*oH) < 0)
+            {
+                //colliding with face/edge OR with corner of wedge, depending on our position vertically
+                    
+                //collide vs. vertex
+                //get diag vertex position
+                var vx = t.pos.x - (signx*t.xw);
+                var vy = t.pos.y;
+                        
+                var dx = obj.pos.x - vx;//calc vert->circle vector      
+                var dy = obj.pos.y - vy;
+                        
+                if((dy*signy) < 0)
+                {
+                    //colliding vs face
+                    obj.reportCollisionVsWorld(x*oH, 0, oH, 0, t);
+                    
+                    return Phaser.Physics.Ninja.Circle.COL_AXIS;                    
+                }
+                else
+                {
+                    //colliding vs. vertex
+                        
+                    var len = Math.sqrt(dx*dx + dy*dy);
+                    var pen = obj.radius - len;
+                    if(0 < pen)
+                    {
+                        //vertex is in the circle; project outward
+                        if(len == 0)
+                        {
+                            //project out by 45deg
+                            dx = oH / Math.SQRT2;
+                            dy = oV / Math.SQRT2;
+                        }
+                        else
+                        {
+                            dx /= len;
+                            dy /= len;
+                        }
+
+                        obj.reportCollisionVsWorld(dx*pen, dy*pen, dx, dy, t);
+                        
+                        return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                    }
+                }
+            }
+            else
+            {
+                //we could only be colliding vs the slope OR a vertex
+                //look at the vector form the closest vert to the circle to decide
+        
+                var sx = t.sx;
+                var sy = t.sy;
+                    
+                var ox = obj.pos.x - (t.pos.x + (oH*t.xw));//this gives is the coordinates of the innermost
+                var oy = obj.pos.y - (t.pos.y - (signy*t.yw));//point on the circle, relative to the closest tile vert  
+        
+                //if the component of (ox,oy) parallel to the normal's righthand normal
+                //has the same sign as the slope of the slope (the sign of the slope's slope is signx*signy)
+                //then we project by the normal, otherwise by the vertex.
+                //(NOTE: this is the opposite logic of the vertical case;
+                // for vertical, if the perp prod and the slope's slope agree, it's outside.
+                // for horizontal, if the perp prod and the slope's slope agree, circle is inside.
+                //  ..but this is only a property of flahs' coord system (i.e the rules might swap
+                // in righthanded systems))
+                //note that this is simply a VERY tricky/weird method of determining 
+                //if the circle is in side the slope/face's voronio region, or that of the vertex.                                            
+                var perp = (ox*-sy) + (oy*sx);
+                if((perp*signx*signy) < 0)
+                {
+                    //collide vs. vertex
+                    var len = Math.sqrt(ox*ox + oy*oy);
+                    var pen = obj.radius - len;
+                    if(0 < pen)
+                    {
+                        //note: if len=0, then perp=0 and we'll never reach here, so don't worry about div-by-0
+                        ox /= len;
+                        oy /= len;
+
+                        obj.reportCollisionVsWorld(ox*pen, oy*pen, ox, oy, t);
+                        
+                        return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                    }                   
+                }
+                else
+                {
+                    //collide vs. slope
+                            
+                    //if the component of (ox,oy) parallel to the normal is less than the circle radius, we're
+                    //penetrating the slope. note that this method of penetration calculation doesn't hold
+                    //in general (i.e it won't work if the circle is in the slope), but works in this case
+                    //because we know the circle is in a neighboring cell
+                    var dp = (ox*sx) + (oy*sy);
+                    var pen = obj.radius - Math.abs(dp);//note: we don't need the abs because we know the dp will be positive, but just in case..                
+
+                    if(0 < pen)
+                    {
+                        //collision; circle out along normal by penetration amount
+                        obj.reportCollisionVsWorld(sx*pen, sy*pen, sx, sy, t);
+                        
+                        return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                    }
+                }
+            }
+        }
+        else
+        {
+
+            //colliding diagonally; due to the first conditional above,
+            //obj is vertically offset against slope, and offset in either direction horizontally
+
+            //collide vs. vertex
+            //get diag vertex position
+            var vx = t.pos.x + (oH*t.xw);
+            var vy = t.pos.y + (oV*t.yw);
+                
+            var dx = obj.pos.x - vx;//calc vert->circle vector      
+            var dy = obj.pos.y - vy;
+                
+            var len = Math.sqrt(dx*dx + dy*dy);
+            var pen = obj.radius - len;
+            if(0 < pen)
+            {
+                //vertex is in the circle; project outward
+                if(len == 0)
+                {
+                    //project out by 45deg
+                    dx = oH / Math.SQRT2;
+                    dy = oV / Math.SQRT2;
+                }
+                else
+                {
+                    dx /= len;
+                    dy /= len;
+                }
+
+                obj.reportCollisionVsWorld(dx*pen, dy*pen, dx, dy, t);
+                
+                return Phaser.Physics.Ninja.Circle.COL_OTHER;
+            }
+        }
+
+        return Phaser.Physics.Ninja.Circle.COL_NONE;
+
+    },
+
+    /**
+    * Resolves 22 Degree tile collision.
+    *
+    * @method Phaser.Physics.Ninja.Circle#projCircle_22DegB
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {number} oH - Grid / voronoi region.
+    * @param {number} oV - Grid / voronoi region.
+    * @param {Phaser.Physics.Ninja.Circle} obj - The Circle involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    projCircle_22DegB: function (x,y,oH, oV, obj,t) {
+
+        //if we're colliding diagonally:
+        //  -if we're in the cell pointed at by the normal, collide vs slope, else
+        //  collide vs. the appropriate corner/vertex
+        //
+        //if obj is in this tile: collide as with aabb
+        //
+        //if obj is horiz or vertical neighbor AGAINST the slope: collide with edge
+        //
+        //if obj is horiz neighb in direction of slope: collide vs. slope or vertex or edge
+        //
+        //if obj is vert neighb in direction of slope: collide vs. slope or vertex
+
+        var signx = t.signx;
+        var signy = t.signy;
+
+        if(oH == 0)
+        {
+            if(oV == 0)
+            {
+                //colliding with current cell
+
+                var sx = t.sx;
+                var sy = t.sy;
+        
+                var r = obj.radius;
+                var ox = (obj.pos.x - (sx*r)) - (t.pos.x - (signx*t.xw));//this gives is the coordinates of the innermost
+                var oy = (obj.pos.y - (sy*r)) - (t.pos.y + (signy*t.yw));//point on the AABB, relative to a point on the slope
+            
+                //if the dotprod of (ox,oy) and (sx,sy) is negative, the point on the circle is in the slope
+                //and we need toproject it out by the magnitude of the projection of (ox,oy) onto (sx,sy)
+                var dp = (ox*sx) + (oy*sy);
+                        
+                if(dp < 0)
+                {
+                    //collision; project delta onto slope and use this to displace the object
+                    sx *= -dp;//(sx,sy) is now the projection vector
+                    sy *= -dp;      
+                                
+                    var lenN = Math.sqrt(sx*sx + sy*sy);
+                    
+                    //find the smallest axial projection vector
+                    if(x < y)
+                    {                   
+                        //penetration in x is smaller
+                        lenP = x;
+                        y = 0;  
+                        //get sign for projection along x-axis      
+                        if((obj.pos.x - t.pos.x) < 0)
+                        {
+                            x *= -1;
+                        }
+                    }
+                    else
+                    {       
+                        //penetration in y is smaller
+                        lenP = y;
+                        x = 0;  
+                        //get sign for projection along y-axis      
+                        if((obj.pos.y - t.pos.y)< 0)
+                        {
+                            y *= -1;
+                        }           
+                    }
+        
+                    if(lenP < lenN)
+                    {
+                        obj.reportCollisionVsWorld(x, y, x/lenP, y/lenP, t);
+                        
+                        return Phaser.Physics.Ninja.Circle.COL_AXIS;
+                    }
+                    else
+                    {           
+                        obj.reportCollisionVsWorld(sx, sy, t.sx, t.sy, t);
+                
+                        return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                    }   
+                }                   
+            }
+            else
+            {
+                //colliding vertically
+                
+                if((signy*oV) < 0)
+                {
+                    //colliding with face/edge
+                    obj.reportCollisionVsWorld(0, y*oV, 0, oV, t);
+                    
+                    return Phaser.Physics.Ninja.Circle.COL_AXIS;
+                }
+                else
+                {
+                    //we could only be colliding vs the slope OR a vertex
+                    //look at the vector form the closest vert to the circle to decide
+
+                    var sx = t.sx;
+                    var sy = t.sy;
+                    
+                    var ox = obj.pos.x - (t.pos.x - (signx*t.xw));//this gives is the coordinates of the innermost
+                    var oy = obj.pos.y - (t.pos.y + (signy*t.yw));//point on the circle, relative to the closest tile vert  
+
+                    //if the component of (ox,oy) parallel to the normal's righthand normal
+                    //has the same sign as the slope of the slope (the sign of the slope's slope is signx*signy)
+                    //then we project by the vertex, otherwise by the normal.
+                    //note that this is simply a VERY tricky/weird method of determining 
+                    //if the circle is in side the slope/face's voronio region, or that of the vertex.                                            
+                    var perp = (ox*-sy) + (oy*sx);
+                    if(0 < (perp*signx*signy))
+                    {
+                        //collide vs. vertex
+                        var len = Math.sqrt(ox*ox + oy*oy);
+                        var pen = obj.radius - len;
+                        if(0 < pen)
+                        {
+                            //note: if len=0, then perp=0 and we'll never reach here, so don't worry about div-by-0
+                            ox /= len;
+                            oy /= len;
+
+                            obj.reportCollisionVsWorld(ox*pen, oy*pen, ox, oy, t);
+                            
+                            return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                        }                   
+                    }
+                    else
+                    {
+                        //collide vs. slope
+                        
+                        //if the component of (ox,oy) parallel to the normal is less than the circle radius, we're
+                        //penetrating the slope. note that this method of penetration calculation doesn't hold
+                        //in general (i.e it won't work if the circle is in the slope), but works in this case
+                        //because we know the circle is in a neighboring cell
+                        var dp = (ox*sx) + (oy*sy);
+                        var pen = obj.radius - Math.abs(dp);//note: we don't need the abs because we know the dp will be positive, but just in case..
+                        if(0 < pen)
+                        {
+                            //collision; circle out along normal by penetration amount
+                            obj.reportCollisionVsWorld(sx*pen, sy*pen,sx, sy, t);
+                            
+                            return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                        }
+                    }
+                }
+            }
+        }
+        else if(oV == 0)
+        {
+            //colliding horizontally
+            
+            if((signx*oH) < 0)
+            {
+                //colliding with face/edge
+                obj.reportCollisionVsWorld(x*oH, 0, oH, 0, t);
+                
+                return Phaser.Physics.Ninja.Circle.COL_AXIS;
+            }
+            else
+            {
+                //colliding with edge, slope, or vertex
+            
+                var ox = obj.pos.x - (t.pos.x + (signx*t.xw));//this gives is the coordinates of the innermost
+                var oy = obj.pos.y - t.pos.y;//point on the circle, relative to the closest tile vert   
+                    
+                if((oy*signy) < 0)
+                {
+                    //we're colliding with the halfface
+                    obj.reportCollisionVsWorld(x*oH, 0, oH, 0, t);
+                    
+                    return Phaser.Physics.Ninja.Circle.COL_AXIS;            
+                }
+                else
+                {
+                    //colliding with the vertex or slope
+
+                    var sx = t.sx;
+                    var sy = t.sy;
+                                    
+                    //if the component of (ox,oy) parallel to the normal's righthand normal
+                    //has the same sign as the slope of the slope (the sign of the slope's slope is signx*signy)
+                    //then we project by the slope, otherwise by the vertex.
+                    //note that this is simply a VERY tricky/weird method of determining 
+                    //if the circle is in side the slope/face's voronio region, or that of the vertex.                                            
+                    var perp = (ox*-sy) + (oy*sx);
+                    if((perp*signx*signy) < 0)
+                    {
+                        //collide vs. vertex
+                        var len = Math.sqrt(ox*ox + oy*oy);
+                        var pen = obj.radius - len;
+                        if(0 < pen)
+                        {
+                            //note: if len=0, then perp=0 and we'll never reach here, so don't worry about div-by-0
+                            ox /= len;
+                            oy /= len;
+        
+                            obj.reportCollisionVsWorld(ox*pen, oy*pen, ox, oy, t);
+                            
+                            return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                        }                   
+                    }
+                    else
+                    {
+                        //collide vs. slope
+                            
+                        //if the component of (ox,oy) parallel to the normal is less than the circle radius, we're
+                        //penetrating the slope. note that this method of penetration calculation doesn't hold
+                        //in general (i.e it won't work if the circle is in the slope), but works in this case
+                        //because we know the circle is in a neighboring cell
+                        var dp = (ox*sx) + (oy*sy);
+                        var pen = obj.radius - Math.abs(dp);//note: we don't need the abs because we know the dp will be positive, but just in case..
+                        if(0 < pen)
+                        {
+                            //collision; circle out along normal by penetration amount
+                            obj.reportCollisionVsWorld(sx*pen, sy*pen, t.sx, t.sy, t);
+                            
+                            return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                        }
+                    }   
+                }
+            }
+        }
+        else
+        {
+            //colliding diagonally
+            if( 0 < ((signx*oH) + (signy*oV)) ) 
+            {
+                //the dotprod of slope normal and cell offset is strictly positive,
+                //therefore obj is in the diagonal neighb pointed at by the normal.
+                
+                //collide vs slope
+
+                //we should really precalc this at compile time, but for now, fuck it
+                var slen = Math.sqrt(2*2 + 1*1);//the raw slope is (-2,-1)
+                var sx = (signx*1) / slen;//get slope _unit_ normal;
+                var sy = (signy*2) / slen;//raw RH normal is (1,-2)
+        
+                var r = obj.radius;
+                var ox = (obj.pos.x - (sx*r)) - (t.pos.x - (signx*t.xw));//this gives is the coordinates of the innermost
+                var oy = (obj.pos.y - (sy*r)) - (t.pos.y + (signy*t.yw));//point on the circle, relative to a point on the slope
+            
+                //if the dotprod of (ox,oy) and (sx,sy) is negative, the point on the circle is in the slope
+                //and we need toproject it out by the magnitude of the projection of (ox,oy) onto (sx,sy)
+                var dp = (ox*sx) + (oy*sy);
+                        
+                if(dp < 0)
+                {
+                    //collision; project delta onto slope and use this to displace the object   
+                    //(sx,sy)*-dp is the projection vector
+                    obj.reportCollisionVsWorld(-sx*dp, -sy*dp, t.sx, t.sy, t);
+                    
+                    return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                }
+                return Phaser.Physics.Ninja.Circle.COL_NONE;
+            }
+            else
+            {
+                //collide vs the appropriate vertex
+                var vx = t.pos.x + (oH*t.xw);
+                var vy = t.pos.y + (oV*t.yw);
+                
+                var dx = obj.pos.x - vx;//calc vert->circle vector      
+                var dy = obj.pos.y - vy;
+                
+                var len = Math.sqrt(dx*dx + dy*dy);
+                var pen = obj.radius - len;
+                if(0 < pen)
+                {
+                    //vertex is in the circle; project outward
+                    if(len == 0)
+                    {
+                        //project out by 45deg
+                        dx = oH / Math.SQRT2;
+                        dy = oV / Math.SQRT2;
+                    }
+                    else
+                    {
+                        dx /= len;
+                        dy /= len;
+                    }
+
+                    obj.reportCollisionVsWorld(dx*pen, dy*pen, dx, dy, t);
+
+                    return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                }
+                    
+            }       
+        }
+        
+        return Phaser.Physics.Ninja.Circle.COL_NONE;
+    },
+
+    /**
+    * Resolves 67 Degree tile collision.
+    *
+    * @method Phaser.Physics.Ninja.Circle#projCircle_67DegS
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {number} oH - Grid / voronoi region.
+    * @param {number} oV - Grid / voronoi region.
+    * @param {Phaser.Physics.Ninja.Circle} obj - The Circle involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    projCircle_67DegS: function (x,y,oH,oV,obj,t) {
+
+        //if the object is in a cell pointed at by signx, no collision will ever occur
+        //otherwise,
+        //
+        //if we're colliding diagonally:
+        //  -collide vs. the appropriate vertex
+        //if obj is in this tile: collide vs slope or vertex or axis
+        //if obj is vert neighb in direction of slope: collide vs. slope or vertex
+        //if obj is vert neighb against the slope:
+        //   if(distance in y from circle to 90deg corner of tile < 1/2 tileheight, collide vs. face)
+        //   else(collide vs. corner of slope) (vert collision with a non-grid-aligned vert)
+        //if obj is horiz neighb against direction of slope: collide vs. face
+
+        var signx = t.signx;
+        var signy = t.signy;
+
+        if(0 < (signx*oH))
+        {
+            //object will never collide vs tile, it can't reach that far
+
+            return Phaser.Physics.Ninja.Circle.COL_NONE;
+        }
+        else if(oH == 0)
+        {
+            if(oV == 0)
+            {
+                //colliding with current tile
+                //we could only be colliding vs the slope OR a vertex
+                //look at the vector form the closest vert to the circle to decide
+        
+                var sx = t.sx;
+                var sy = t.sy;
+                
+                var r = obj.radius;
+                var ox = obj.pos.x - t.pos.x;//this gives is the coordinates of the innermost
+                var oy = obj.pos.y - (t.pos.y - (signy*t.yw));//point on the circle, relative to the tile corner    
+            
+                //if the component of (ox,oy) parallel to the normal's righthand normal
+                //has the same sign as the slope of the slope (the sign of the slope's slope is signx*signy)
+                //then we project by the normal or axis, otherwise by the corner/vertex
+                //note that this is simply a VERY tricky/weird method of determining 
+                //if the circle is in side the slope/face's voronoi region, or that of the vertex.
+                    
+                var perp = (ox*-sy) + (oy*sx);
+                if((perp*signx*signy) < 0)
+                {
+                    //collide vs. vertex
+                    var len = Math.sqrt(ox*ox + oy*oy);
+                    var pen = r - len;
+                    if(0 < pen)
+                    {
+                        //note: if len=0, then perp=0 and we'll never reach here, so don't worry about div-by-0
+                        ox /= len;
+                        oy /= len;
+
+                        obj.reportCollisionVsWorld(ox*pen, oy*pen, ox, oy, t);
+                        return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                    }                   
+                }
+                else
+                {
+                    //collide vs. slope or vs axis
+                    ox -= r*sx;//this gives us the vector from  
+                    oy -= r*sy;//a point on the slope to the innermost point on the circle
+            
+                    //if the dotprod of (ox,oy) and (sx,sy) is negative, the point on the circle is in the slope
+                    //and we need toproject it out by the magnitude of the projection of (ox,oy) onto (sx,sy)
+                    var dp = (ox*sx) + (oy*sy);
+                    
+                    if(dp < 0)
+                    {
+                        //collision; project delta onto slope and use this to displace the object
+                        sx *= -dp;//(sx,sy) is now the projection vector
+                        sy *= -dp;      
+                            
+                        var lenN = Math.sqrt(sx*sx + sy*sy);
+                
+                        //find the smallest axial projection vector
+                        if(x < y)
+                        {                   
+                            //penetration in x is smaller
+                            lenP = x;
+                            y = 0;  
+                            //get sign for projection along x-axis      
+                            if((obj.pos.x - t.pos.x) < 0)
+                            {
+                                x *= -1;
+                            }
+                        }
+                        else
+                        {       
+                            //penetration in y is smaller
+                            lenP = y;
+                            x = 0;  
+                            //get sign for projection along y-axis      
+                            if((obj.pos.y - t.pos.y)< 0)
+                            {
+                                y *= -1;
+                            }           
+                        }
+
+                        if(lenP < lenN)
+                        {
+                            obj.reportCollisionVsWorld(x,y,x/lenP, y/lenP, t);
+                            
+                            return Phaser.Physics.Ninja.Circle.COL_AXIS
+                        }
+                        else
+                        {       
+                            obj.reportCollisionVsWorld(sx,sy,t.sx,t.sy,t);
+                            
+                            return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                        }   
+                    }
+                }
+                
+            }
+            else
+            {
+                //colliding vertically
+                
+                if((signy*oV) < 0)
+                {
+                    //colliding with face/edge OR with corner of wedge, depending on our position vertically
+                        
+                    //collide vs. vertex
+                    //get diag vertex position
+                    var vx = t.pos.x;
+                    var vy = t.pos.y - (signy*t.yw);
+                            
+                    var dx = obj.pos.x - vx;//calc vert->circle vector      
+                    var dy = obj.pos.y - vy;
+                            
+                    if((dx*signx) < 0)
+                    {   
+                        //colliding vs face
+                        obj.reportCollisionVsWorld(0, y*oV, 0, oV, t);
+                        
+                        return Phaser.Physics.Ninja.Circle.COL_AXIS;                    
+                    }
+                    else
+                    {
+                        //colliding vs. vertex
+                            
+                        var len = Math.sqrt(dx*dx + dy*dy);
+                        var pen = obj.radius - len;
+                        if(0 < pen)
+                        {
+                            //vertex is in the circle; project outward
+                            if(len == 0)
+                            {
+                                //project out by 45deg
+                                dx = oH / Math.SQRT2;
+                                dy = oV / Math.SQRT2;
+                            }
+                            else
+                            {
+                                dx /= len;
+                                dy /= len;
+                            }
+                                
+                            obj.reportCollisionVsWorld(dx*pen, dy*pen, dx, dy, t);
+                            
+                            return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                        }
+                    }
+                }
+                else
+                {
+                    //we could only be colliding vs the slope OR a vertex
+                    //look at the vector form the closest vert to the circle to decide
+            
+                    var sx = t.sx;
+                    var sy = t.sy;
+                        
+                    var ox = obj.pos.x - (t.pos.x - (signx*t.xw));//this gives is the coordinates of the innermost
+                    var oy = obj.pos.y - (t.pos.y + (oV*t.yw));//point on the circle, relative to the closest tile vert 
+            
+                    //if the component of (ox,oy) parallel to the normal's righthand normal
+                    //has the same sign as the slope of the slope (the sign of the slope's slope is signx*signy)
+                    //then we project by the vertex, otherwise by the normal.
+                    //note that this is simply a VERY tricky/weird method of determining 
+                    //if the circle is in side the slope/face's voronio region, or that of the vertex.                                            
+                    var perp = (ox*-sy) + (oy*sx);
+                    if(0 < (perp*signx*signy))
+                    {
+                        //collide vs. vertex
+                        var len = Math.sqrt(ox*ox + oy*oy);
+                        var pen = obj.radius - len;
+                        if(0 < pen)
+                        {
+                            //note: if len=0, then perp=0 and we'll never reach here, so don't worry about div-by-0
+                            ox /= len;
+                            oy /= len;
+
+                            obj.reportCollisionVsWorld(ox*pen, oy*pen, ox, oy, t);
+                            
+                            return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                        }                   
+                    }
+                    else
+                    {
+                        //collide vs. slope
+                                
+                        //if the component of (ox,oy) parallel to the normal is less than the circle radius, we're
+                        //penetrating the slope. note that this method of penetration calculation doesn't hold
+                        //in general (i.e it won't work if the circle is in the slope), but works in this case
+                        //because we know the circle is in a neighboring cell
+                        var dp = (ox*sx) + (oy*sy);
+                        var pen = obj.radius - Math.abs(dp);//note: we don't need the abs because we know the dp will be positive, but just in case..                
+
+                        if(0 < pen)
+                        {
+                            //collision; circle out along normal by penetration amount
+                            obj.reportCollisionVsWorld(sx*pen, sy*pen, t.sx, t.sy, t);
+                            
+                            return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                        }
+                    }
+                }
+            }       
+        }
+        else if(oV == 0)
+        {
+            //colliding horizontally; we can assume that (signy*oV) < 0
+            //due to the first conditional far above
+
+                obj.reportCollisionVsWorld(x*oH, 0, oH, 0, t);
+                
+                return Phaser.Physics.Ninja.Circle.COL_AXIS;
+        }
+        else
+        {       
+            //colliding diagonally; due to the first conditional above,
+            //obj is vertically offset against slope, and offset in either direction horizontally
+
+            //collide vs. vertex
+            //get diag vertex position
+            var vx = t.pos.x + (oH*t.xw);
+            var vy = t.pos.y + (oV*t.yw);
+                
+            var dx = obj.pos.x - vx;//calc vert->circle vector      
+            var dy = obj.pos.y - vy;
+                
+            var len = Math.sqrt(dx*dx + dy*dy);
+            var pen = obj.radius - len;
+            if(0 < pen)
+            {
+                //vertex is in the circle; project outward
+                if(len == 0)
+                {
+                    //project out by 45deg
+                    dx = oH / Math.SQRT2;
+                    dy = oV / Math.SQRT2;
+                }
+                else
+                {
+                    dx /= len;
+                    dy /= len;
+                }
+
+                obj.reportCollisionVsWorld(dx*pen, dy*pen, dx, dy, t);
+                
+                return Phaser.Physics.Ninja.Circle.COL_OTHER;
+            }
+        }
+
+        return Phaser.Physics.Ninja.Circle.COL_NONE;
+
+    },
+
+    /**
+    * Resolves 67 Degree tile collision.
+    *
+    * @method Phaser.Physics.Ninja.Circle#projCircle_67DegB
+    * @param {number} x - Penetration depth on the x axis.
+    * @param {number} y - Penetration depth on the y axis.
+    * @param {number} oH - Grid / voronoi region.
+    * @param {number} oV - Grid / voronoi region.
+    * @param {Phaser.Physics.Ninja.Circle} obj - The Circle involved in the collision.
+    * @param {Phaser.Physics.Ninja.Tile} t - The Tile involved in the collision.
+    * @return {number} The result of the collision.
+    */
+    projCircle_67DegB: function (x,y,oH, oV, obj,t) {
+
+        //if we're colliding diagonally:
+        //  -if we're in the cell pointed at by the normal, collide vs slope, else
+        //  collide vs. the appropriate corner/vertex
+        //
+        //if obj is in this tile: collide as with aabb
+        //
+        //if obj is horiz or vertical neighbor AGAINST the slope: collide with edge
+        //
+        //if obj is vert neighb in direction of slope: collide vs. slope or vertex or halfedge
+        //
+        //if obj is horiz neighb in direction of slope: collide vs. slope or vertex
+
+        var signx = t.signx;
+        var signy = t.signy;
+
+        if(oH == 0)
+        {
+            if(oV == 0)
+            {
+                //colliding with current cell
+
+                var sx = t.sx;
+                var sy = t.sy;
+        
+                var r = obj.radius;
+                var ox = (obj.pos.x - (sx*r)) - (t.pos.x + (signx*t.xw));//this gives is the coordinates of the innermost
+                var oy = (obj.pos.y - (sy*r)) - (t.pos.y - (signy*t.yw));//point on the AABB, relative to a point on the slope
+            
+                //if the dotprod of (ox,oy) and (sx,sy) is negative, the point on the circle is in the slope
+                //and we need toproject it out by the magnitude of the projection of (ox,oy) onto (sx,sy)
+                var dp = (ox*sx) + (oy*sy);
+                        
+                if(dp < 0)
+                {
+                    //collision; project delta onto slope and use this to displace the object
+                    sx *= -dp;//(sx,sy) is now the projection vector
+                    sy *= -dp;      
+                                
+                    var lenN = Math.sqrt(sx*sx + sy*sy);
+                    
+                    //find the smallest axial projection vector
+                    if(x < y)
+                    {                   
+                        //penetration in x is smaller
+                        lenP = x;
+                        y = 0;  
+                        //get sign for projection along x-axis      
+                        if((obj.pos.x - t.pos.x) < 0)
+                        {
+                            x *= -1;
+                        }
+                    }
+                    else
+                    {       
+                        //penetration in y is smaller
+                        lenP = y;
+                        x = 0;  
+                        //get sign for projection along y-axis      
+                        if((obj.pos.y - t.pos.y)< 0)
+                        {
+                            y *= -1;
+                        }           
+                    }
+        
+                    if(lenP < lenN)
+                    {
+                        obj.reportCollisionVsWorld(x,y,x/lenP, y/lenP, t);
+                        
+                        return Phaser.Physics.Ninja.Circle.COL_AXIS;
+                    }
+                    else
+                    {
+                        obj.reportCollisionVsWorld(sx, sy, t.sx, t.sy, t);
+                        
+                        return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                    }
+        
+                }                   
+            }
+            else
+            {
+                //colliding vertically
+            
+                if((signy*oV) < 0)
+                {
+                    //colliding with face/edge
+                    obj.reportCollisionVsWorld(0, y*oV, 0, oV, t);
+
+                    return Phaser.Physics.Ninja.Circle.COL_AXIS;
+                }
+                else
+                {
+                    //colliding with edge, slope, or vertex
+                
+                    var ox = obj.pos.x - t.pos.x;//this gives is the coordinates of the innermost
+                    var oy = obj.pos.y - (t.pos.y + (signy*t.yw));//point on the circle, relative to the closest tile vert  
+                        
+                    if((ox*signx) < 0)
+                    {
+                        //we're colliding with the halfface
+                        obj.reportCollisionVsWorld(0, y*oV, 0, oV, t);
+
+                        return Phaser.Physics.Ninja.Circle.COL_AXIS;            
+                    }
+                    else
+                    {
+                        //colliding with the vertex or slope
+
+                        var sx = t.sx;
+                        var sy = t.sy;
+                                        
+                        //if the component of (ox,oy) parallel to the normal's righthand normal
+                        //has the same sign as the slope of the slope (the sign of the slope's slope is signx*signy)
+                        //then we project by the vertex, otherwise by the slope.
+                        //note that this is simply a VERY tricky/weird method of determining 
+                        //if the circle is in side the slope/face's voronio region, or that of the vertex.                                            
+                        var perp = (ox*-sy) + (oy*sx);
+                        if(0 < (perp*signx*signy))
+                        {
+                            //collide vs. vertex
+                            var len = Math.sqrt(ox*ox + oy*oy);
+                            var pen = obj.radius - len;
+                            if(0 < pen)
+                            {
+                                //note: if len=0, then perp=0 and we'll never reach here, so don't worry about div-by-0
+                                ox /= len;
+                                oy /= len;
+            
+                                obj.reportCollisionVsWorld(ox*pen, oy*pen, ox, oy, t);
+                                
+                                return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                            }                   
+                        }
+                        else
+                        {
+                            //collide vs. slope
+                                
+                            //if the component of (ox,oy) parallel to the normal is less than the circle radius, we're
+                            //penetrating the slope. note that this method of penetration calculation doesn't hold
+                            //in general (i.e it won't work if the circle is in the slope), but works in this case
+                            //because we know the circle is in a neighboring cell
+                            var dp = (ox*sx) + (oy*sy);
+                            var pen = obj.radius - Math.abs(dp);//note: we don't need the abs because we know the dp will be positive, but just in case..
+                            if(0 < pen)
+                            {
+                                //collision; circle out along normal by penetration amount
+                                obj.reportCollisionVsWorld(sx*pen, sy*pen, sx, sy, t);
+                                
+                                return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                            }
+                        }   
+                    }
+                }
+            }
+        }
+        else if(oV == 0)
+        {
+            //colliding horizontally
+                
+            if((signx*oH) < 0)
+            {
+                //colliding with face/edge
+                obj.reportCollisionVsWorld(x*oH, 0, oH, 0, t);
+                
+                return Phaser.Physics.Ninja.Circle.COL_AXIS;
+            }
+            else
+            {
+                //we could only be colliding vs the slope OR a vertex
+                //look at the vector form the closest vert to the circle to decide
+
+                var slen = Math.sqrt(2*2 + 1*1);//the raw slope is (-2,-1)
+                var sx = (signx*2) / slen;//get slope _unit_ normal;
+                var sy = (signy*1) / slen;//raw RH normal is (1,-2)
+                    
+                var ox = obj.pos.x - (t.pos.x + (signx*t.xw));//this gives is the coordinates of the innermost
+                var oy = obj.pos.y - (t.pos.y - (signy*t.yw));//point on the circle, relative to the closest tile vert  
+
+                //if the component of (ox,oy) parallel to the normal's righthand normal
+                //has the same sign as the slope of the slope (the sign of the slope's slope is signx*signy)
+                //then we project by the slope, otherwise by the vertex.
+                //note that this is simply a VERY tricky/weird method of determining 
+                //if the circle is in side the slope/face's voronio region, or that of the vertex.                                            
+                var perp = (ox*-sy) + (oy*sx);
+                if((perp*signx*signy) < 0)
+                {
+                    //collide vs. vertex
+                    var len = Math.sqrt(ox*ox + oy*oy);
+                    var pen = obj.radius - len;
+                    if(0 < pen)
+                    {
+                        //note: if len=0, then perp=0 and we'll never reach here, so don't worry about div-by-0
+                        ox /= len;
+                        oy /= len;
+
+                        obj.reportCollisionVsWorld(ox*pen, oy*pen, ox, oy, t);
+                        
+                        return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                    }                   
+                }
+                else
+                {
+                    //collide vs. slope
+                        
+                    //if the component of (ox,oy) parallel to the normal is less than the circle radius, we're
+                    //penetrating the slope. note that this method of penetration calculation doesn't hold
+                    //in general (i.e it won't work if the circle is in the slope), but works in this case
+                    //because we know the circle is in a neighboring cell
+                    var dp = (ox*sx) + (oy*sy);
+                    var pen = obj.radius - Math.abs(dp);//note: we don't need the abs because we know the dp will be positive, but just in case..
+                    if(0 < pen)
+                    {
+                        //collision; circle out along normal by penetration amount
+                        obj.reportCollisionVsWorld(sx*pen, sy*pen, t.sx, t.sy, t);
+                        
+                        return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                    }
+                }
+            }
+        }
+        else
+        {
+            //colliding diagonally
+            if( 0 < ((signx*oH) + (signy*oV)) ) 
+            {
+                //the dotprod of slope normal and cell offset is strictly positive,
+                //therefore obj is in the diagonal neighb pointed at by the normal.
+                
+                //collide vs slope
+
+                var sx = t.sx;
+                var sy = t.sy;
+        
+                var r = obj.radius;
+                var ox = (obj.pos.x - (sx*r)) - (t.pos.x + (signx*t.xw));//this gives is the coordinates of the innermost
+                var oy = (obj.pos.y - (sy*r)) - (t.pos.y - (signy*t.yw));//point on the circle, relative to a point on the slope
+            
+                //if the dotprod of (ox,oy) and (sx,sy) is negative, the point on the circle is in the slope
+                //and we need toproject it out by the magnitude of the projection of (ox,oy) onto (sx,sy)
+                var dp = (ox*sx) + (oy*sy);
+                        
+                if(dp < 0)
+                {
+                    //collision; project delta onto slope and use this to displace the object   
+                    //(sx,sy)*-dp is the projection vector
+
+                    obj.reportCollisionVsWorld(-sx*dp, -sy*dp, t.sx, t.sy, t);
+
+                    return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                }
+                return Phaser.Physics.Ninja.Circle.COL_NONE;
+            }
+            else
+            {
+                
+                //collide vs the appropriate vertex
+                var vx = t.pos.x + (oH*t.xw);
+                var vy = t.pos.y + (oV*t.yw);
+                
+                var dx = obj.pos.x - vx;//calc vert->circle vector      
+                var dy = obj.pos.y - vy;
+                
+                var len = Math.sqrt(dx*dx + dy*dy);
+                var pen = obj.radius - len;
+                if(0 < pen)
+                {
+                    //vertex is in the circle; project outward
+                    if(len == 0)
+                    {
+                        //project out by 45deg
+                        dx = oH / Math.SQRT2;
+                        dy = oV / Math.SQRT2;
+                    }
+                    else
+                    {
+                        dx /= len;
+                        dy /= len;
+                    }
+
+                    obj.reportCollisionVsWorld(dx*pen, dy*pen, dx, dy, t);
+
+                    return Phaser.Physics.Ninja.Circle.COL_OTHER;
+                }
+                    
+            }       
+        }
+        
+        return Phaser.Physics.Ninja.Circle.COL_NONE;
+    }
+
+}
+
+/**
+* @author       Richard Davey <rich@photonstorm.com>
+* @copyright    2014 Photon Storm Ltd.
+* @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* @const
+* @type {number}
+*/
+Phaser.Physics.P2.LIME_CORONA_JSON = 0;
 
 //  Add an extra properties to p2 that we need
 p2.Body.prototype.parent = null;
 p2.Spring.prototype.parent = null;
 
 /**
-* @class Phaser.Physics.World
+* @class Phaser.Physics.P2
 * @classdesc Physics World Constructor
 * @constructor
 * @param {Phaser.Game} game - Reference to the current game instance.
 * @param {object} [config] - Physics configuration object passed in from the game constructor.
 */
-Phaser.Physics.World = function (game, config) {
+Phaser.Physics.P2 = function (game, config) {
 
     /**
     * @property {Phaser.Game} game - Local reference to game.
@@ -54647,7 +63001,7 @@ Phaser.Physics.World = function (game, config) {
     this.world = new p2.World(config);
 
     /**
-    * @property {array<Phaser.Physics.Material>} materials - A local array of all created Materials.
+    * @property {array<Phaser.Physics.P2.Material>} materials - A local array of all created Materials.
     * @protected
     */
     this.materials = [];
@@ -54655,7 +63009,7 @@ Phaser.Physics.World = function (game, config) {
     /**
     * @property {Phaser.InversePointProxy} gravity - The gravity applied to all bodies each step.
     */
-    this.gravity = new Phaser.Physics.InversePointProxy(game, this.world.gravity);
+    this.gravity = new Phaser.Physics.P2.InversePointProxy(game, this.world.gravity);
 
     /**
     * @property {p2.Body} bounds - The bounds body contains the 4 walls that border the World. Define or disable with setBounds.
@@ -54751,9 +63105,9 @@ Phaser.Physics.World = function (game, config) {
     */
     this._collisionGroupID = 2;
 
-    this.nothingCollisionGroup = new Phaser.Physics.CollisionGroup(1);
-    this.boundsCollisionGroup = new Phaser.Physics.CollisionGroup(2);
-    this.everythingCollisionGroup = new Phaser.Physics.CollisionGroup(2147483648);
+    this.nothingCollisionGroup = new Phaser.Physics.P2.CollisionGroup(1);
+    this.boundsCollisionGroup = new Phaser.Physics.P2.CollisionGroup(2);
+    this.everythingCollisionGroup = new Phaser.Physics.P2.CollisionGroup(2147483648);
 
     this.boundsCollidesWith = [];
 
@@ -54764,12 +63118,12 @@ Phaser.Physics.World = function (game, config) {
 
 };
 
-Phaser.Physics.World.prototype = {
+Phaser.Physics.P2.prototype = {
 
     /**
     * Handles a p2 postStep event.
     *
-    * @method Phaser.Physics.World#postStepHandler
+    * @method Phaser.Physics.P2#postStepHandler
     * @private
     * @param {object} event - The event data.
     */
@@ -54781,7 +63135,7 @@ Phaser.Physics.World.prototype = {
     * Fired after the Broadphase has collected collision pairs in the world.
     * Inside the event handler, you can modify the pairs array as you like, to prevent collisions between objects that you don't want.
     *
-    * @method Phaser.Physics.World#postBroadphaseHandler
+    * @method Phaser.Physics.P2#postBroadphaseHandler
     * @private
     * @param {object} event - The event data.
     */
@@ -54805,7 +63159,7 @@ Phaser.Physics.World.prototype = {
     /**
     * Handles a p2 impact event.
     *
-    * @method Phaser.Physics.World#impactHandler
+    * @method Phaser.Physics.P2#impactHandler
     * @private
     * @param {object} event - The event data.
     */
@@ -54844,7 +63198,7 @@ Phaser.Physics.World.prototype = {
     /**
     * Handles a p2 begin contact event.
     *
-    * @method Phaser.Physics.World#beginContactHandler
+    * @method Phaser.Physics.P2#beginContactHandler
     * @private
     * @param {object} event - The event data.
     */
@@ -54865,7 +63219,7 @@ Phaser.Physics.World.prototype = {
     /**
     * Handles a p2 end contact event.
     *
-    * @method Phaser.Physics.World#endContactHandler
+    * @method Phaser.Physics.P2#endContactHandler
     * @private
     * @param {object} event - The event data.
     */
@@ -54904,7 +63258,7 @@ Phaser.Physics.World.prototype = {
     * Sets the given material against the 4 bounds of this World.
     *
     * @method Phaser.Physics#setWorldMaterial
-    * @param {Phaser.Physics.Material} material - The material to set.
+    * @param {Phaser.Physics.P2.Material} material - The material to set.
     * @param {boolean} [left=true] - If true will set the material on the left bounds wall.
     * @param {boolean} [right=true] - If true will set the material on the right bounds wall.
     * @param {boolean} [top=true] - If true will set the material on the top bounds wall.
@@ -54943,7 +63297,7 @@ Phaser.Physics.World.prototype = {
     * Sets the bounds of the Physics world to match the given world pixel dimensions.
     * You can optionally set which 'walls' to create: left, right, top or bottom.
     *
-    * @method Phaser.Physics.World#setBounds
+    * @method Phaser.Physics.P2#setBounds
     * @param {number} x - The x coordinate of the top-left corner of the bounds.
     * @param {number} y - The y coordinate of the top-left corner of the bounds.
     * @param {number} width - The width of the bounds.
@@ -55051,7 +63405,7 @@ Phaser.Physics.World.prototype = {
     },
 
     /**
-    * @method Phaser.Physics.World#update
+    * @method Phaser.Physics.P2#update
     */
     update: function () {
 
@@ -55062,7 +63416,7 @@ Phaser.Physics.World.prototype = {
     /**
     * Clears all bodies from the simulation.
     *
-    * @method Phaser.Physics.World#clear
+    * @method Phaser.Physics.P2#clear
     */
     clear: function () {
 
@@ -55073,7 +63427,7 @@ Phaser.Physics.World.prototype = {
     /**
     * Clears all bodies from the simulation and unlinks World from Game. Should only be called on game shutdown. Call `clear` on a State change.
     *
-    * @method Phaser.Physics.World#destroy
+    * @method Phaser.Physics.P2#destroy
     */
     destroy: function () {
 
@@ -55086,8 +63440,8 @@ Phaser.Physics.World.prototype = {
     /**
     * Add a body to the world.
     *
-    * @method Phaser.Physics.World#addBody
-    * @param {Phaser.Physics.Body} body - The Body to add to the World.
+    * @method Phaser.Physics.P2#addBody
+    * @param {Phaser.Physics.P2.Body} body - The Body to add to the World.
     * @return {boolean} True if the Body was added successfully, otherwise false.
     */
     addBody: function (body) {
@@ -55110,9 +63464,9 @@ Phaser.Physics.World.prototype = {
     /**
     * Removes a body from the world.
     *
-    * @method Phaser.Physics.World#removeBody
-    * @param {Phaser.Physics.Body} body - The Body to remove from the World.
-    * @return {Phaser.Physics.Body} The Body that was removed.
+    * @method Phaser.Physics.P2#removeBody
+    * @param {Phaser.Physics.P2.Body} body - The Body to remove from the World.
+    * @return {Phaser.Physics.P2.Body} The Body that was removed.
     */
     removeBody: function (body) {
 
@@ -55127,9 +63481,9 @@ Phaser.Physics.World.prototype = {
     /**
     * Adds a Spring to the world.
     *
-    * @method Phaser.Physics.World#addSpring
-    * @param {Phaser.Physics.Spring} spring - The Spring to add to the World.
-    * @return {Phaser.Physics.Spring} The Spring that was added.
+    * @method Phaser.Physics.P2#addSpring
+    * @param {Phaser.Physics.P2.Spring} spring - The Spring to add to the World.
+    * @return {Phaser.Physics.P2.Spring} The Spring that was added.
     */
     addSpring: function (spring) {
 
@@ -55144,9 +63498,9 @@ Phaser.Physics.World.prototype = {
     /**
     * Removes a Spring from the world.
     *
-    * @method Phaser.Physics.World#removeSpring
-    * @param {Phaser.Physics.Spring} spring - The Spring to remove from the World.
-    * @return {Phaser.Physics.Spring} The Spring that was removed.
+    * @method Phaser.Physics.P2#removeSpring
+    * @param {Phaser.Physics.P2.Spring} spring - The Spring to remove from the World.
+    * @return {Phaser.Physics.P2.Spring} The Spring that was removed.
     */
     removeSpring: function (spring) {
 
@@ -55161,9 +63515,9 @@ Phaser.Physics.World.prototype = {
     /**
     * Adds a Constraint to the world.
     *
-    * @method Phaser.Physics.World#addConstraint
-    * @param {Phaser.Physics.Constraint} constraint - The Constraint to add to the World.
-    * @return {Phaser.Physics.Constraint} The Constraint that was added.
+    * @method Phaser.Physics.P2#addConstraint
+    * @param {Phaser.Physics.P2.Constraint} constraint - The Constraint to add to the World.
+    * @return {Phaser.Physics.P2.Constraint} The Constraint that was added.
     */
     addConstraint: function (constraint) {
 
@@ -55178,9 +63532,9 @@ Phaser.Physics.World.prototype = {
     /**
     * Removes a Constraint from the world.
     *
-    * @method Phaser.Physics.World#removeConstraint
-    * @param {Phaser.Physics.Constraint} constraint - The Constraint to be removed from the World.
-    * @return {Phaser.Physics.Constraint} The Constraint that was removed.
+    * @method Phaser.Physics.P2#removeConstraint
+    * @param {Phaser.Physics.P2.Constraint} constraint - The Constraint to be removed from the World.
+    * @return {Phaser.Physics.P2.Constraint} The Constraint that was removed.
     */
     removeConstraint: function (constraint) {
 
@@ -55195,9 +63549,9 @@ Phaser.Physics.World.prototype = {
     /**
     * Adds a Contact Material to the world.
     *
-    * @method Phaser.Physics.World#addContactMaterial
-    * @param {Phaser.Physics.ContactMaterial} material - The Contact Material to be added to the World.
-    * @return {Phaser.Physics.ContactMaterial} The Contact Material that was added.
+    * @method Phaser.Physics.P2#addContactMaterial
+    * @param {Phaser.Physics.P2.ContactMaterial} material - The Contact Material to be added to the World.
+    * @return {Phaser.Physics.P2.ContactMaterial} The Contact Material that was added.
     */
     addContactMaterial: function (material) {
 
@@ -55212,9 +63566,9 @@ Phaser.Physics.World.prototype = {
     /**
     * Removes a Contact Material from the world.
     *
-    * @method Phaser.Physics.World#removeContactMaterial
-    * @param {Phaser.Physics.ContactMaterial} material - The Contact Material to be removed from the World.
-    * @return {Phaser.Physics.ContactMaterial} The Contact Material that was removed.
+    * @method Phaser.Physics.P2#removeContactMaterial
+    * @param {Phaser.Physics.P2.ContactMaterial} material - The Contact Material to be removed from the World.
+    * @return {Phaser.Physics.P2.ContactMaterial} The Contact Material that was removed.
     */
     removeContactMaterial: function (material) {
 
@@ -55229,10 +63583,10 @@ Phaser.Physics.World.prototype = {
     /**
     * Gets a Contact Material based on the two given Materials.
     *
-    * @method Phaser.Physics.World#getContactMaterial
-    * @param {Phaser.Physics.Material} materialA - The first Material to search for.
-    * @param {Phaser.Physics.Material} materialB - The second Material to search for.
-    * @return {Phaser.Physics.ContactMaterial|boolean} The Contact Material or false if none was found matching the Materials given.
+    * @method Phaser.Physics.P2#getContactMaterial
+    * @param {Phaser.Physics.P2.Material} materialA - The first Material to search for.
+    * @param {Phaser.Physics.P2.Material} materialB - The second Material to search for.
+    * @return {Phaser.Physics.P2.ContactMaterial|boolean} The Contact Material or false if none was found matching the Materials given.
     */
     getContactMaterial: function (materialA, materialB) {
 
@@ -55243,9 +63597,9 @@ Phaser.Physics.World.prototype = {
     /**
     * Sets the given Material against all Shapes owned by all the Bodies in the given array.
     *
-    * @method Phaser.Physics.World#setMaterial
-    * @param {Phaser.Physics.Material} material - The Material to be applied to the given Bodies.
-    * @param {array<Phaser.Physics.Body>} bodies - An Array of Body objects that the given Material will be set on.
+    * @method Phaser.Physics.P2#setMaterial
+    * @param {Phaser.Physics.P2.Material} material - The Material to be applied to the given Bodies.
+    * @param {array<Phaser.Physics.P2.Body>} bodies - An Array of Body objects that the given Material will be set on.
     */
     setMaterial: function (material, bodies) {
 
@@ -55263,16 +63617,16 @@ Phaser.Physics.World.prototype = {
     * Materials are a way to control what happens when Shapes collide. Combine unique Materials together to create Contact Materials.
     * Contact Materials have properties such as friction and restitution that allow for fine-grained collision control between different Materials.
     *
-    * @method Phaser.Physics.World#createMaterial
+    * @method Phaser.Physics.P2#createMaterial
     * @param {string} [name] - Optional name of the Material. Each Material has a unique ID but string names are handy for debugging.
-    * @param {Phaser.Physics.Body} [body] - Optional Body. If given it will assign the newly created Material to the Body shapes.
-    * @return {Phaser.Physics.Material} The Material that was created. This is also stored in Phaser.Physics.World.materials.
+    * @param {Phaser.Physics.P2.Body} [body] - Optional Body. If given it will assign the newly created Material to the Body shapes.
+    * @return {Phaser.Physics.P2.Material} The Material that was created. This is also stored in Phaser.Physics.P2.materials.
     */
     createMaterial: function (name, body) {
 
         name = name || '';
 
-        var material = new Phaser.Physics.Material(name);
+        var material = new Phaser.Physics.P2.Material(name);
 
         this.materials.push(material);
 
@@ -55288,18 +63642,18 @@ Phaser.Physics.World.prototype = {
     /**
     * Creates a Contact Material from the two given Materials. You can then edit the properties of the Contact Material directly.
     *
-    * @method Phaser.Physics.World#createContactMaterial
-    * @param {Phaser.Physics.Material} [materialA] - The first Material to create the ContactMaterial from. If undefined it will create a new Material object first.
-    * @param {Phaser.Physics.Material} [materialB] - The second Material to create the ContactMaterial from. If undefined it will create a new Material object first.
+    * @method Phaser.Physics.P2#createContactMaterial
+    * @param {Phaser.Physics.P2.Material} [materialA] - The first Material to create the ContactMaterial from. If undefined it will create a new Material object first.
+    * @param {Phaser.Physics.P2.Material} [materialB] - The second Material to create the ContactMaterial from. If undefined it will create a new Material object first.
     * @param {object} [options] - Material options object.
-    * @return {Phaser.Physics.ContactMaterial} The Contact Material that was created.
+    * @return {Phaser.Physics.P2.ContactMaterial} The Contact Material that was created.
     */
     createContactMaterial: function (materialA, materialB, options) {
 
         if (typeof materialA === 'undefined') { materialA = this.createMaterial(); }
         if (typeof materialB === 'undefined') { materialB = this.createMaterial(); }
 
-        var contact = new Phaser.Physics.ContactMaterial(materialA, materialB, options);
+        var contact = new Phaser.Physics.P2.ContactMaterial(materialA, materialB, options);
 
         return this.addContactMaterial(contact);
 
@@ -55308,8 +63662,8 @@ Phaser.Physics.World.prototype = {
     /**
     * Populates and returns an array of all current Bodies in the world.
     *
-    * @method Phaser.Physics.World#getBodies
-    * @return {array<Phaser.Physics.Body>} An array containing all current Bodies in the world.
+    * @method Phaser.Physics.P2#getBodies
+    * @return {array<Phaser.Physics.P2.Body>} An array containing all current Bodies in the world.
     */
     getBodies: function () {
 
@@ -55328,8 +63682,8 @@ Phaser.Physics.World.prototype = {
     /**
     * Populates and returns an array of all current Springs in the world.
     *
-    * @method Phaser.Physics.World#getSprings
-    * @return {array<Phaser.Physics.Spring>} An array containing all current Springs in the world.
+    * @method Phaser.Physics.P2#getSprings
+    * @return {array<Phaser.Physics.P2.Spring>} An array containing all current Springs in the world.
     */
     getSprings: function () {
 
@@ -55348,8 +63702,8 @@ Phaser.Physics.World.prototype = {
     /**
     * Populates and returns an array of all current Constraints in the world.
     *
-    * @method Phaser.Physics.World#getConstraints
-    * @return {array<Phaser.Physics.Constraints>} An array containing all current Constraints in the world.
+    * @method Phaser.Physics.P2#getConstraints
+    * @return {array<Phaser.Physics.P2.Constraints>} An array containing all current Constraints in the world.
     */
     getConstraints: function () {
 
@@ -55368,7 +63722,7 @@ Phaser.Physics.World.prototype = {
     /**
     * Test if a world point overlaps bodies.
     *
-    * @method Phaser.Physics.World#hitTest
+    * @method Phaser.Physics.P2#hitTest
     * @param {Phaser.Point} worldPoint - Point to use for intersection tests.
     * @param {Array} bodies - A list of objects to check for intersection.
     * @param {number} precision - Used for matching against particles and lines. Adds some margin to these infinitesimal objects.
@@ -55381,7 +63735,7 @@ Phaser.Physics.World.prototype = {
     /**
     * Converts the current world into a JSON object.
     *
-    * @method Phaser.Physics.World#toJSON
+    * @method Phaser.Physics.P2#toJSON
     * @return {object} A JSON representation of the world.
     */
     toJSON: function () {
@@ -55416,7 +63770,7 @@ Phaser.Physics.World.prototype = {
 
         this._collisionGroupID++;
 
-        var group = new Phaser.Physics.CollisionGroup(bitmask);
+        var group = new Phaser.Physics.P2.CollisionGroup(bitmask);
 
         this.collisionGroups.push(group);
 
@@ -55425,7 +63779,7 @@ Phaser.Physics.World.prototype = {
     },
 
     /**
-    * @method Phaser.Physics.World.prototype.createBody
+    * @method Phaser.Physics.P2.prototype.createBody
     * @param {number} x - The x coordinate of Body.
     * @param {number} y - The y coordinate of Body.
     * @param {number} mass - The mass of the Body. A mass of 0 means a 'static' Body is created.
@@ -55442,7 +63796,7 @@ Phaser.Physics.World.prototype = {
 
         if (typeof addToWorld === 'undefined') { addToWorld = false; }
 
-        var body = new Phaser.Physics.Body(this.game, null, x, y, mass);
+        var body = new Phaser.Physics.P2.Body(this.game, null, x, y, mass);
 
         if (data)
         {
@@ -55464,7 +63818,7 @@ Phaser.Physics.World.prototype = {
     },
 
     /**
-    * @method Phaser.Physics.World.prototype.createBody
+    * @method Phaser.Physics.P2.prototype.createBody
     * @param {number} x - The x coordinate of Body.
     * @param {number} y - The y coordinate of Body.
     * @param {number} mass - The mass of the Body. A mass of 0 means a 'static' Body is created.
@@ -55481,7 +63835,7 @@ Phaser.Physics.World.prototype = {
 
         if (typeof addToWorld === 'undefined') { addToWorld = false; }
 
-        var body = new Phaser.Physics.Body(this.game, null, x, y, mass);
+        var body = new Phaser.Physics.P2.Body(this.game, null, x, y, mass);
 
         if (data)
         {
@@ -55507,10 +63861,10 @@ Phaser.Physics.World.prototype = {
 };
 
 /**
-* @name Phaser.Physics.World#friction
+* @name Phaser.Physics.P2#friction
 * @property {number} friction - Friction between colliding bodies. This value is used if no matching ContactMaterial is found for a Material pair.
 */
-Object.defineProperty(Phaser.Physics.World.prototype, "friction", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "friction", {
     
     get: function () {
 
@@ -55527,10 +63881,10 @@ Object.defineProperty(Phaser.Physics.World.prototype, "friction", {
 });
 
 /**
-* @name Phaser.Physics.World#restituion
+* @name Phaser.Physics.P2#restituion
 * @property {number} restitution - Default coefficient of restitution between colliding bodies. This value is used if no matching ContactMaterial is found for a Material pair.
 */
-Object.defineProperty(Phaser.Physics.World.prototype, "restituion", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "restituion", {
     
     get: function () {
 
@@ -55547,10 +63901,10 @@ Object.defineProperty(Phaser.Physics.World.prototype, "restituion", {
 });
 
 /**
-* @name Phaser.Physics.World#applySpringForces
+* @name Phaser.Physics.P2#applySpringForces
 * @property {boolean} applySpringForces - Enable to automatically apply spring forces each step.
 */
-Object.defineProperty(Phaser.Physics.World.prototype, "applySpringForces", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "applySpringForces", {
     
     get: function () {
 
@@ -55567,10 +63921,10 @@ Object.defineProperty(Phaser.Physics.World.prototype, "applySpringForces", {
 });
 
 /**
-* @name Phaser.Physics.World#applyDamping
+* @name Phaser.Physics.P2#applyDamping
 * @property {boolean} applyDamping - Enable to automatically apply body damping each step.
 */
-Object.defineProperty(Phaser.Physics.World.prototype, "applyDamping", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "applyDamping", {
     
     get: function () {
 
@@ -55587,10 +63941,10 @@ Object.defineProperty(Phaser.Physics.World.prototype, "applyDamping", {
 });
 
 /**
-* @name Phaser.Physics.World#applyGravity
+* @name Phaser.Physics.P2#applyGravity
 * @property {boolean} applyGravity - Enable to automatically apply gravity each step.
 */
-Object.defineProperty(Phaser.Physics.World.prototype, "applyGravity", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "applyGravity", {
     
     get: function () {
 
@@ -55607,10 +63961,10 @@ Object.defineProperty(Phaser.Physics.World.prototype, "applyGravity", {
 });
 
 /**
-* @name Phaser.Physics.World#solveConstraints
+* @name Phaser.Physics.P2#solveConstraints
 * @property {boolean} solveConstraints - Enable/disable constraint solving in each step.
 */
-Object.defineProperty(Phaser.Physics.World.prototype, "solveConstraints", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "solveConstraints", {
     
     get: function () {
 
@@ -55627,11 +63981,11 @@ Object.defineProperty(Phaser.Physics.World.prototype, "solveConstraints", {
 });
 
 /**
-* @name Phaser.Physics.World#time
+* @name Phaser.Physics.P2#time
 * @property {boolean} time - The World time.
 * @readonly
 */
-Object.defineProperty(Phaser.Physics.World.prototype, "time", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "time", {
     
     get: function () {
 
@@ -55642,10 +63996,10 @@ Object.defineProperty(Phaser.Physics.World.prototype, "time", {
 });
 
 /**
-* @name Phaser.Physics.World#emitImpactEvent
+* @name Phaser.Physics.P2#emitImpactEvent
 * @property {boolean} emitImpactEvent - Set to true if you want to the world to emit the "impact" event. Turning this off could improve performance.
 */
-Object.defineProperty(Phaser.Physics.World.prototype, "emitImpactEvent", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "emitImpactEvent", {
     
     get: function () {
 
@@ -55662,10 +64016,10 @@ Object.defineProperty(Phaser.Physics.World.prototype, "emitImpactEvent", {
 });
 
 /**
-* @name Phaser.Physics.World#enableBodySleeping
+* @name Phaser.Physics.P2#enableBodySleeping
 * @property {boolean} enableBodySleeping - Enable / disable automatic body sleeping.
 */
-Object.defineProperty(Phaser.Physics.World.prototype, "enableBodySleeping", {
+Object.defineProperty(Phaser.Physics.P2.prototype, "enableBodySleeping", {
     
     get: function () {
 
@@ -55690,26 +64044,26 @@ Object.defineProperty(Phaser.Physics.World.prototype, "enableBodySleeping", {
 /**
 * A PointProxy is an internal class that allows for direct getter/setter style property access to Arrays and TypedArrays.
 *
-* @class Phaser.Physics.PointProxy
+* @class Phaser.Physics.P2.PointProxy
 * @classdesc PointProxy
 * @constructor
 * @param {Phaser.Game} game - A reference to the Phaser.Game instance.
 * @param {any} destination - The object to bind to.
 */
-Phaser.Physics.PointProxy = function (game, destination) {
+Phaser.Physics.P2.PointProxy = function (game, destination) {
 
     this.game = game;
 	this.destination = destination;
 
 };
 
-Phaser.Physics.PointProxy.prototype.constructor = Phaser.Physics.PointProxy;
+Phaser.Physics.P2.PointProxy.prototype.constructor = Phaser.Physics.P2.PointProxy;
 
 /**
-* @name Phaser.Physics.PointProxy#x
+* @name Phaser.Physics.P2.PointProxy#x
 * @property {number} x - The x property of this PointProxy.
 */
-Object.defineProperty(Phaser.Physics.PointProxy.prototype, "x", {
+Object.defineProperty(Phaser.Physics.P2.PointProxy.prototype, "x", {
     
     get: function () {
 
@@ -55726,10 +64080,10 @@ Object.defineProperty(Phaser.Physics.PointProxy.prototype, "x", {
 });
 
 /**
-* @name Phaser.Physics.PointProxy#y
+* @name Phaser.Physics.P2.PointProxy#y
 * @property {number} y - The y property of this PointProxy.
 */
-Object.defineProperty(Phaser.Physics.PointProxy.prototype, "y", {
+Object.defineProperty(Phaser.Physics.P2.PointProxy.prototype, "y", {
     
     get: function () {
 
@@ -55754,26 +64108,26 @@ Object.defineProperty(Phaser.Physics.PointProxy.prototype, "y", {
 /**
 * A InversePointProxy is an internal class that allows for direct getter/setter style property access to Arrays and TypedArrays but inverses the values on set.
 *
-* @class Phaser.Physics.InversePointProxy
+* @class Phaser.Physics.P2.InversePointProxy
 * @classdesc InversePointProxy
 * @constructor
 * @param {Phaser.Game} game - A reference to the Phaser.Game instance.
 * @param {any} destination - The object to bind to.
 */
-Phaser.Physics.InversePointProxy = function (game, destination) {
+Phaser.Physics.P2.InversePointProxy = function (game, destination) {
 
     this.game = game;
 	this.destination = destination;
 
 };
 
-Phaser.Physics.InversePointProxy.prototype.constructor = Phaser.Physics.InversePointProxy;
+Phaser.Physics.P2.InversePointProxy.prototype.constructor = Phaser.Physics.P2.InversePointProxy;
 
 /**
-* @name Phaser.Physics.InversePointProxy#x
+* @name Phaser.Physics.P2.InversePointProxy#x
 * @property {number} x - The x property of this InversePointProxy.
 */
-Object.defineProperty(Phaser.Physics.InversePointProxy.prototype, "x", {
+Object.defineProperty(Phaser.Physics.P2.InversePointProxy.prototype, "x", {
     
     get: function () {
 
@@ -55790,10 +64144,10 @@ Object.defineProperty(Phaser.Physics.InversePointProxy.prototype, "x", {
 });
 
 /**
-* @name Phaser.Physics.InversePointProxy#y
+* @name Phaser.Physics.P2.InversePointProxy#y
 * @property {number} y - The y property of this InversePointProxy.
 */
-Object.defineProperty(Phaser.Physics.InversePointProxy.prototype, "y", {
+Object.defineProperty(Phaser.Physics.P2.InversePointProxy.prototype, "y", {
     
     get: function () {
 
@@ -55847,6 +64201,11 @@ Phaser.Physics.Body = function (game, sprite, x, y, mass) {
     * @property {Phaser.Sprite} sprite - Reference to the parent Sprite.
     */
     this.sprite = sprite;
+
+    /**
+    * @property {number} type - The type of physics system this body belongs to.
+    */
+    this.type = Phaser.Physics.P2;
 
     /**
     * @property {Phaser.Point} offset - The offset of the Physics Body from the Sprite x/y position.
@@ -57361,7 +65720,7 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "y", {
 /**
 * Creates a spring, connecting two bodies.
 *
-* @class Phaser.Physics.Spring
+* @class Phaser.Physics.P2.Spring
 * @classdesc Physics Spring Constructor
 * @constructor
 * @param {Phaser.Game} game - A reference to the current game.
@@ -57375,7 +65734,7 @@ Object.defineProperty(Phaser.Physics.Body.prototype, "y", {
 * @param {Array} [localA] - Where to hook the spring to body A, in local body coordinates.
 * @param {Array} [localB] - Where to hook the spring to body B, in local body coordinates.
 */
-Phaser.Physics.Spring = function (game, bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB) {
+Phaser.Physics.P2.Spring = function (game, bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB) {
 
     /**
     * @property {Phaser.Game} game - Local reference to game.
@@ -57416,8 +65775,8 @@ Phaser.Physics.Spring = function (game, bodyA, bodyB, restLength, stiffness, dam
 
 }
 
-Phaser.Physics.Spring.prototype = Object.create(p2.Spring.prototype);
-Phaser.Physics.Spring.prototype.constructor = Phaser.Physics.Spring;
+Phaser.Physics.P2.Spring.prototype = Object.create(p2.Spring.prototype);
+Phaser.Physics.P2.Spring.prototype.constructor = Phaser.Physics.P2.Spring;
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
@@ -57428,11 +65787,11 @@ Phaser.Physics.Spring.prototype.constructor = Phaser.Physics.Spring;
 /**
 * \o/ ~ "Because I'm a Material girl"
 *
-* @class Phaser.Physics.Material
+* @class Phaser.Physics.P2.Material
 * @classdesc Physics Material Constructor
 * @constructor
 */
-Phaser.Physics.Material = function (name) {
+Phaser.Physics.P2.Material = function (name) {
 
     /**
     * @property {string} name - The user defined name given to this Material.
@@ -57444,8 +65803,8 @@ Phaser.Physics.Material = function (name) {
 
 }
 
-Phaser.Physics.Material.prototype = Object.create(p2.Material.prototype);
-Phaser.Physics.Material.prototype.constructor = Phaser.Physics.Material;
+Phaser.Physics.P2.Material.prototype = Object.create(p2.Material.prototype);
+Phaser.Physics.P2.Material.prototype.constructor = Phaser.Physics.P2.Material;
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
@@ -57456,25 +65815,25 @@ Phaser.Physics.Material.prototype.constructor = Phaser.Physics.Material;
 /**
 * Defines a physics material
 *
-* @class Phaser.Physics.ContactMaterial
+* @class Phaser.Physics.P2.ContactMaterial
 * @classdesc Physics ContactMaterial Constructor
 * @constructor
-* @param {Phaser.Physics.Material} materialA
-* @param {Phaser.Physics.Material} materialB
+* @param {Phaser.Physics.P2.Material} materialA
+* @param {Phaser.Physics.P2.Material} materialB
 * @param {object} [options]
 */
-Phaser.Physics.ContactMaterial = function (materialA, materialB, options) {
+Phaser.Physics.P2.ContactMaterial = function (materialA, materialB, options) {
 
 	/**
 	* @property {number} id - The contact material identifier.
 	*/
 
 	/**
-	* @property {Phaser.Physics.Material} materialA - First material participating in the contact material.
+	* @property {Phaser.Physics.P2.Material} materialA - First material participating in the contact material.
 	*/
 
 	/**
-	* @property {Phaser.Physics.Material} materialB - First second participating in the contact material.
+	* @property {Phaser.Physics.P2.Material} materialB - First second participating in the contact material.
 	*/
 
 	/**
@@ -57509,8 +65868,8 @@ Phaser.Physics.ContactMaterial = function (materialA, materialB, options) {
 
 }
 
-Phaser.Physics.ContactMaterial.prototype = Object.create(p2.ContactMaterial.prototype);
-Phaser.Physics.ContactMaterial.prototype.constructor = Phaser.Physics.ContactMaterial;
+Phaser.Physics.P2.ContactMaterial.prototype = Object.create(p2.ContactMaterial.prototype);
+Phaser.Physics.P2.ContactMaterial.prototype.constructor = Phaser.Physics.P2.ContactMaterial;
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
@@ -57521,11 +65880,11 @@ Phaser.Physics.ContactMaterial.prototype.constructor = Phaser.Physics.ContactMat
 /**
 * Collision Group
 *
-* @class Phaser.Physics.CollisionGroup
+* @class Phaser.Physics.P2.CollisionGroup
 * @classdesc Physics Collision Group Constructor
 * @constructor
 */
-Phaser.Physics.CollisionGroup = function (bitmask) {
+Phaser.Physics.P2.CollisionGroup = function (bitmask) {
 
     /**
     * @property {number} mask - The CollisionGroup bitmask.
@@ -58294,6 +66653,16 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     this.y = y;
 
     /**
+    * @property {number} x - The x map coordinate of this tile.
+    */
+    this.worldX = x * width;
+    
+    /**
+    * @property {number} y - The y map coordinate of this tile.
+    */
+    this.worldY = y * height;
+
+    /**
     * @property {number} width - The width of the tile in pixels.
     */
     this.width = width;
@@ -58302,6 +66671,16 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
     * @property {number} height - The height of the tile in pixels.
     */
     this.height = height;
+
+    /**
+    * @property {number} width - The width of the tile in pixels.
+    */
+    this.centerX = Math.abs(width / 2);
+    
+    /**
+    * @property {number} height - The height of the tile in pixels.
+    */
+    this.centerY = Math.abs(height / 2);
 
     /**
     * @property {number} alpha - The alpha value at which this tile is drawn to the canvas.
@@ -58389,6 +66768,32 @@ Phaser.Tile = function (layer, index, x, y, width, height) {
 
 Phaser.Tile.prototype = {
 
+    intersects: function (x, y, right, bottom) {
+
+        if (right <= this.worldX)
+        {
+            return false;
+        }
+
+        if (bottom <= this.worldY)
+        {
+            return false;
+        }
+
+        if (x >= this.worldX + this.width)
+        {
+            return false;
+        }
+
+        if (y >= this.worldY + this.height)
+        {
+            return false;
+        }
+
+        return true;
+
+    },
+
     /**
     * Set a callback to be called when this tile is hit by an object.
     * The callback must true true for collision processing to take place.
@@ -58433,10 +66838,12 @@ Phaser.Tile.prototype = {
 
         if (left || right || up || down)
         {
+            this.collides = true;
             this.collideNone = false;
         }
         else
         {
+            this.collides = false;
             this.collideNone = true;
         }
 
@@ -58453,6 +66860,11 @@ Phaser.Tile.prototype = {
         this.collideRight = false;
         this.collideUp = false;
         this.collideDown = false;
+        this.collides = false;
+        this.faceTop = false;
+        this.faceBottom = false;
+        this.faceLeft = false;
+        this.faceRight = false;
 
     },
 
@@ -58655,6 +67067,11 @@ Phaser.Tilemap = function (game, key, tileWidth, tileHeight, width, height) {
     this.objects = data.objects;
 
     /**
+    * @property {array} collideIndexes - An array of tile indexes that collide.
+    */
+    this.collideIndexes = [];
+
+    /**
     * @property {array} collision - An array of collision data (polylines, etc).
     */
     this.collision = data.collision;
@@ -58853,14 +67270,16 @@ Phaser.Tilemap.prototype = {
     * @param {string} key - The Game.cache key of the image that this Sprite will use.
     * @param {number|string} [frame] - If the Sprite image contains multiple frames you can specify which one to use here.
     * @param {boolean} [exists=true] - The default exists state of the Sprite.
-    * @param {boolean} [autoCull=true] - The default autoCull state of the Sprite. Sprites that are autoCulled are culled from the camera if out of its range.
-    * @param {Phaser.Group} [group] - Optional Group to add the Sprite to. If not specified it will be added to the World group.
+    * @param {boolean} [autoCull=false] - The default autoCull state of the Sprite. Sprites that are autoCulled are culled from the camera if out of its range.
+    * @param {Phaser.Group} [group=Phaser.World] - Group to add the Sprite to. If not specified it will be added to the World group.
+    * @param {object} [objectClass=Phaser.Sprite] - If you wish to create your own class, rather than Phaser.Sprite, pass the class here. Your class must extend Phaser.Sprite and have the same constructor parameters.
     */
-    createFromObjects: function (name, gid, key, frame, exists, autoCull, group) {
+    createFromObjects: function (name, gid, key, frame, exists, autoCull, group, objectClass) {
 
         if (typeof exists === 'undefined') { exists = true; }
-        if (typeof autoCull === 'undefined') { autoCull = true; }
+        if (typeof autoCull === 'undefined') { autoCull = false; }
         if (typeof group === 'undefined') { group = this.game.world; }
+        if (typeof objectClass === 'undefined') { objectClass = Phaser.Sprite; }
 
         if (!this.objects[name])
         {
@@ -58874,17 +67293,21 @@ Phaser.Tilemap.prototype = {
         {
             if (this.objects[name][i].gid === gid)
             {
-                sprite = group.create(this.objects[name][i].x, this.objects[name][i].y, key, frame, exists);
+                sprite = new objectClass(this.game, this.objects[name][i].x, this.objects[name][i].y, key, frame);
 
                 sprite.anchor.setTo(0, 1);
                 sprite.name = this.objects[name][i].name;
                 sprite.visible = this.objects[name][i].visible;
                 sprite.autoCull = autoCull;
+                sprite.exists = exists;
+
+                group.add(sprite);
 
                 for (property in this.objects[name][i].properties)
                 {
                     group.set(sprite, property, this.objects[name][i].properties[property], false, false, 0);
                 }
+
             }
         }
 
@@ -59311,6 +67734,20 @@ Phaser.Tilemap.prototype = {
         if (typeof layer === 'undefined') { layer = this.currentLayer; }
         if (typeof recalculate === 'undefined') { recalculate = true; }
 
+        if (collides)
+        {
+            this.collideIndexes.push(index);
+        }
+        else
+        {
+            var i = this.collideIndexes.indexOf(index);
+
+            if (i > -1)
+            {
+                this.collideIndexes.splice(i, 1);
+            }
+        }
+
         for (var y = 0; y < this.layers[layer].height ; y++)
         {
             for (var x = 0; x < this.layers[layer].width; x++)
@@ -59395,6 +67832,14 @@ Phaser.Tilemap.prototype = {
                     below = this.getTileBelow(layer, x, y);
                     left = this.getTileLeft(layer, x, y);
                     right = this.getTileRight(layer, x, y);
+
+                    if (tile.collides)
+                    {
+                        tile.faceTop = true;
+                        tile.faceBottom = true;
+                        tile.faceLeft = true;
+                        tile.faceRight = true;
+                    }
 
                     if (above && above.collides)
                     {
@@ -59522,6 +67967,15 @@ Phaser.Tilemap.prototype = {
 
     },
 
+    /**
+    * Checks if there is a tile at the given location.
+    *
+    * @method Phaser.Tilemap#hasTile
+    * @param {number} x - X position to check if a tile exists at (given in tile units, not pixels)
+    * @param {number} y - Y position to check if a tile exists at (given in tile units, not pixels)
+    * @param {number|string|Phaser.TilemapLayer} layer - The layer to set as current.
+    * @return {boolean} True if there is a tile at the given location, otherwise false.
+    */
     hasTile: function (x, y, layer) {
 
         return (this.layers[layer].data[y] !== null && this.layers[layer].data[y][x] !== null);
@@ -59543,28 +67997,42 @@ Phaser.Tilemap.prototype = {
 
         if (x >= 0 && x < this.layers[layer].width && y >= 0 && y < this.layers[layer].height)
         {
+            var index;
+
             if (tile instanceof Phaser.Tile)
             {
+                index = tile.index;
+
                 if (this.hasTile(x, y, layer))
                 {
                     this.layers[layer].data[y][x].copy(tile);
                 }
                 else
                 {
-                    //Phaser.Tile = function (layer, index, x, y, width, height) {
-                    this.layers[layer].data[y][x] = new Phaser.Tile(layer, tile.index, x, y, tile.width, tile.height);
+                    this.layers[layer].data[y][x] = new Phaser.Tile(layer, index, x, y, tile.width, tile.height);
                 }
             }
             else
             {
+                index = tile;
+
                 if (this.hasTile(x, y, layer))
                 {
-                    this.layers[layer].data[y][x].index = tile;
+                    this.layers[layer].data[y][x].index = index;
                 }
                 else
                 {
-                    this.layers[layer].data[y][x] = new Phaser.Tile(layer, tile, x, y, this.tileWidth, this.tileHeight);
+                    this.layers[layer].data[y][x] = new Phaser.Tile(layer, index, x, y, this.tileWidth, this.tileHeight);
                 }
+            }
+
+            if (this.collideIndexes.indexOf(index) > -1)
+            {
+                this.layers[layer].data[y][x].setCollision(true, true, true, true);
+            }
+            else
+            {
+                this.layers[layer].data[y][x].resetCollision();
             }
 
 			this.layers[layer].dirty = true;
@@ -60499,6 +68967,93 @@ Phaser.TilemapLayer.prototype.getTileXY = function (x, y, point) {
 
 }
 
+Phaser.TilemapLayer.prototype.getIntersectingTiles = function (x, y, width, height) {
+
+    // var tiles = this.getTiles(x, y, width,height, true);
+    var tiles = this.getTiles(x, y, width,height, false);
+
+    var right = x + width;
+    var bottom = y + height;
+
+    //  We only want the ones that we actually intersect with
+    var i = tiles.length;
+
+    while (i--)
+    {
+        if (tiles[i].intersects(x, y, right, bottom))
+        {
+            // tiles[i].debug = true;
+        }
+        else
+        {
+            // console.log('sliced off tile', i);
+            // tiles.pop();
+        }
+    }
+
+    return tiles;
+
+}
+
+/*
+Phaser.TilemapLayer.prototype.getTilesX = function (x, y, width, height, collides) {
+
+    //  Should we only get tiles that have at least one of their collision flags set? (true = yes, false = no just get them all)
+    if (typeof collides === 'undefined') { collides = false; }
+
+    // adjust the x,y coordinates for scrollFactor
+    x = this._fixX(x);
+    y = this._fixY(y);
+
+    if (width > this.layer.widthInPixels)
+    {
+        width = this.layer.widthInPixels;
+    }
+
+    if (height > this.layer.heightInPixels)
+    {
+        height = this.layer.heightInPixels;
+    }
+
+    //  Convert the pixel values into tile coordinates
+    // this._tx = this.game.math.snapToFloor(x, this._cw) / this._cw;
+    // this._ty = this.game.math.snapToFloor(y, this._ch) / this._ch;
+    // this._tw = (this.game.math.snapToCeil(width, this._cw) + this._cw) / this._cw;
+    // this._th = (this.game.math.snapToCeil(height, this._ch) + this._ch) / this._ch;
+
+    // var firstTileX = Math.max( Math.floor(res.pos.x / this.tilesize), 0 );
+    // var lastTileX = Math.min( Math.ceil((res.pos.x + width) / this.tilesize), this.width );
+    // var tileY = Math.floor( (res.pos.y + pxOffsetY) / this.tilesize );
+
+    this._tx = Math.max(Math.floor(x / this.tileWidth), 0);
+    this._tw = Math.min(Math.ceil((x + width) / this.tileWidth), this.width);
+    this._ty = Math.floor((y + px) / this.tileHeight);
+
+    this._results.length = 0;
+
+    for (var wy = this._ty; wy < this._ty + this._th; wy++)
+    {
+        for (var wx = this._tx; wx < this._tx + this._tw; wx++)
+        {
+            if (this.layer.data[wy] && this.layer.data[wy][wx])
+            {
+                if (collides === false || (collides && this.layer.data[wy][wx].canCollide))
+                {
+                    this._results.push(this.layer.data[wy][wx]);
+                }
+            }
+        }
+    }
+
+    //  DEBUG ONLY - REMOVE
+    this.layer.dirty = true;
+
+    return this._results;
+
+}
+*/
+
+
 /**
 * Get all tiles that exist within the given area, defined by the top-left corner, width and height. Values given are in pixels, not tiles.
 * @method Phaser.TilemapLayer#getTiles
@@ -60536,7 +69091,8 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
     this._th = (this.game.math.snapToCeil(height, this._ch) + this._ch) / this._ch;
 
     //  This should apply the layer x/y here
-    this._results.length = 0;
+    // this._results.length = 0;
+    this._results = [];
 
     for (var wy = this._ty; wy < this._ty + this._th; wy++)
     {
@@ -60546,6 +69102,7 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
             {
                 if (collides === false || (collides && this.layer.data[wy][wx].canCollide))
                 {
+                    /*
                     //  Convert tile coordinates back to camera space for return
                     var _wx = this._unfixX(wx * this._cw) / this._cw;
                     var _wy = this._unfixY(wy * this._ch) / this._ch;
@@ -60558,10 +69115,17 @@ Phaser.TilemapLayer.prototype.getTiles = function (x, y, width, height, collides
                         tile: this.layer.data[wy][wx],
                         layer: this.layer.data[wy][wx].layer
                     });
+                    */
+
+                    this._results.push(this.layer.data[wy][wx]);
+
                 }
             }
         }
     }
+
+    //  DEBUG ONLY - REMOVE
+    this.layer.dirty = true;
 
     return this._results;
 
@@ -60882,12 +69446,12 @@ Phaser.TilemapLayer.prototype.renderDebug = function () {
             }
 
             //  Collision callback
-            if (tile && (tile.collisionCallback || tile.layer.callbacks[tile.index]))
-            {
-                this.context.fillStyle = this.debugCallbackColor;
-                this.context.fillRect(this._tx, this._ty, this._cw, this._ch);
-                this.context.fillStyle = this.debugFillColor;
-            }
+            // if (tile && (tile.collisionCallback || tile.layer.callbacks[tile.index]))
+            // {
+            //     this.context.fillStyle = this.debugCallbackColor;
+            //     this.context.fillRect(this._tx, this._ty, this._cw, this._ch);
+            //     this.context.fillStyle = this.debugFillColor;
+            // }
 
             this._tx += this.map.tileWidth;
 
