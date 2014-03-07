@@ -153,6 +153,7 @@ module.exports = function (grunt) {
 
             'src/math/Math.js',
             'src/math/RandomDataGenerator.js',
+            'src/math/QuadTree.js',
 
             'src/net/Net.js',
 
@@ -184,7 +185,6 @@ module.exports = function (grunt) {
 
             'src/physics/arcade/World.js',
             'src/physics/arcade/Body.js',
-            'src/physics/arcade/QuadTree.js',
 
             'src/physics/ninja/World.js',
             'src/physics/ninja/Body.js',

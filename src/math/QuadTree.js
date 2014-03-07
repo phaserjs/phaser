@@ -44,7 +44,7 @@
 /**
  * QuadTree Constructor
  * 
- * @class Phaser.Physics.Arcade.QuadTree
+ * @class Phaser.QuadTree
  * @classdesc A QuadTree implementation. The original code was a conversion of the Java code posted to GameDevTuts. However I've tweaked
  * it massively to add node indexing, removed lots of temp. var creation and significantly increased performance as a result. Original version at https://github.com/timohausmann/quadtree-js/
  * @constructor
@@ -57,7 +57,7 @@
  * @param {number} maxLevels - Description.
  * @param {number} level - Description.
  */
-Phaser.Physics.Arcade.QuadTree = function (physicsManager, x, y, width, height, maxObjects, maxLevels, level) {
+Phaser.QuadTree = function (physicsManager, x, y, width, height, maxObjects, maxLevels, level) {
         
     this.physicsManager = physicsManager;
     this.ID = physicsManager.quadTreeID;
@@ -83,28 +83,28 @@ Phaser.Physics.Arcade.QuadTree = function (physicsManager, x, y, width, height, 
 
 };
 
-Phaser.Physics.Arcade.QuadTree.prototype = {
+Phaser.QuadTree.prototype = {
 
     /*
     * Split the node into 4 subnodes
     * 
-    * @method Phaser.Physics.Arcade.QuadTree#split
+    * @method Phaser.QuadTree#split
     */
     split: function() {
 
         this.level++;
         
         //  top right node
-        this.nodes[0] = new Phaser.Physics.Arcade.QuadTree(this.physicsManager, this.bounds.right, this.bounds.y, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+        this.nodes[0] = new Phaser.QuadTree(this.physicsManager, this.bounds.right, this.bounds.y, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
         
         //  top left node
-        this.nodes[1] = new Phaser.Physics.Arcade.QuadTree(this.physicsManager, this.bounds.x, this.bounds.y, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+        this.nodes[1] = new Phaser.QuadTree(this.physicsManager, this.bounds.x, this.bounds.y, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
         
         //  bottom left node
-        this.nodes[2] = new Phaser.Physics.Arcade.QuadTree(this.physicsManager, this.bounds.x, this.bounds.bottom, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+        this.nodes[2] = new Phaser.QuadTree(this.physicsManager, this.bounds.x, this.bounds.bottom, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
         
         //  bottom right node
-        this.nodes[3] = new Phaser.Physics.Arcade.QuadTree(this.physicsManager, this.bounds.right, this.bounds.bottom, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
+        this.nodes[3] = new Phaser.QuadTree(this.physicsManager, this.bounds.right, this.bounds.bottom, this.bounds.subWidth, this.bounds.subHeight, this.maxObjects, this.maxLevels, this.level);
 
     },
 
@@ -113,7 +113,7 @@ Phaser.Physics.Arcade.QuadTree.prototype = {
     * exceeds the capacity, it will split and add all
     * objects to their corresponding subnodes.
     * 
-    * @method Phaser.Physics.Arcade.QuadTree#insert
+    * @method Phaser.QuadTree#insert
     * @param {object} body - Description.
     */
     insert: function (body) {
@@ -165,7 +165,7 @@ Phaser.Physics.Arcade.QuadTree.prototype = {
     /*
     * Determine which node the object belongs to.
     * 
-    * @method Phaser.Physics.Arcade.QuadTree#getIndex
+    * @method Phaser.QuadTree#getIndex
     * @param {object} rect - Description.
     * @return {number} index - Index of the subnode (0-3), or -1 if rect cannot completely fit within a subnode and is part of the parent node.
     */
@@ -209,7 +209,7 @@ Phaser.Physics.Arcade.QuadTree.prototype = {
      /*
     * Return all objects that could collide with the given object.
     * 
-    * @method Phaser.Physics.Arcade.QuadTree#retrieve
+    * @method Phaser.QuadTree#retrieve
     * @param {object} rect - Description.
     * @Return {array} - Array with all detected objects.
     */
@@ -245,7 +245,7 @@ Phaser.Physics.Arcade.QuadTree.prototype = {
 
     /*
     * Clear the quadtree.
-    * @method Phaser.Physics.Arcade.QuadTree#clear
+    * @method Phaser.QuadTree#clear
     */
     clear: function () {
         

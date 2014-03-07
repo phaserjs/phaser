@@ -17,7 +17,7 @@ function create() {
 	game.stage.backgroundColor = 0x3d4d3d;
 
     mummy = game.add.sprite(0, 300, 'mummy', 5);
-    mummy.scale.set(2);
+    // mummy.scale.set(2);
 
     anim = mummy.animations.add('walk');
 
@@ -26,6 +26,7 @@ function create() {
     // game.onPause.add(paused, this);
     // game.onResume.add(resumed, this);
 
+    game.add.tween(mummy.scale).to({x:4,y:4}, 1000, Phaser.Easing.Linear.None, true);
     t = game.add.tween(mummy).to({x:700}, 15000, Phaser.Easing.Linear.None, true);
     t.onComplete.add(tweenOver, this);
 

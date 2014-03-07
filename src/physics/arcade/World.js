@@ -166,6 +166,64 @@ Phaser.Physics.Arcade.prototype.constructor = Phaser.Physics.Arcade;
 Phaser.Physics.Arcade.prototype = {
 
     /**
+    * This will create an Arcade Physics body on the given game object or array of game objects.
+    * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
+    *
+    * @method Phaser.Physics.Arcade#enable
+    * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array that has a body parameter.
+    * @param {boolean} [children=true] - Should a body be created on all children of this object? If true it will propagate down the display list.
+    */
+    enable: function (object, children) {
+
+        if (typeof children === 'undefined') { children = true; }
+
+        var i = 1;
+
+        if (Array.isArray(object))
+        {
+            //  Add to Group
+            i = object.length;
+        }
+        else
+        {
+            object = [object];
+        }
+
+        while (i--)
+        {
+            if (object[i] instanceof Phaser.Group)
+            {
+                object[i].forEach(this.enableBody, this, false, children);
+            }
+            else
+            {
+                this.enableBody(object[i]);
+            }
+        }
+
+    },
+
+    enableBody: function (object, children) {
+
+        if (object instanceof Phaser.Group)
+        {
+            this.enable(object, true, children);
+            return;
+        }
+
+        if (object.hasOwnProperty('body') && object.body === null)
+        {
+            object.body = new Phaser.Physics.Arcade.Body(object);
+        }
+
+        if (children && object.hasOwnProperty('children'))
+        {
+            object.children.forEach(this.enable, this);
+        }
+
+    },
+
+    /**
     * Called automatically by a Physics body, it updates all motion related values on the Body.
     *
     * @method Phaser.Physics.Arcade#updateMotion

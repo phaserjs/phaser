@@ -108,6 +108,7 @@
 
     <script src="$path/src/math/Math.js"></script>
     <script src="$path/src/math/RandomDataGenerator.js"></script>
+    <script src="$path/src/math/QuadTree.js"></script>
 
     <script src="$path/src/net/Net.js"></script>
 
@@ -139,7 +140,6 @@
 
     <script src="$path/src/physics/arcade/World.js"></script>
     <script src="$path/src/physics/arcade/Body.js"></script>
-    <script src="$path/src/physics/arcade/QuadTree.js"></script>
 
     <script src="$path/src/physics/ninja/World.js"></script>
     <script src="$path/src/physics/ninja/Body.js"></script>

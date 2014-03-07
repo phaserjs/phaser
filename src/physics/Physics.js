@@ -137,7 +137,7 @@ Phaser.Physics.prototype = {
     *
     * @method Phaser.Physics#enable
     * @param {object|array} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array.
-    * @param {number} [system=0] - The physics system that will be used to create the body. Defaults to Arcade Physics.
+    * @param {number} [system=Phaser.Physics.ARCADE] - The physics system that will be used to create the body. Defaults to Arcade Physics.
     */
     enable: function (object, system) {
 
@@ -145,33 +145,40 @@ Phaser.Physics.prototype = {
 
         var i = 1;
 
-        if (Array.isArray(object))
+        if (object instanceof Phaser.Group)
         {
-            //  Add to Group
-            i = object.length;
+
         }
         else
         {
-            object = [object];
-        }
-
-        while (i--)
-        {
-            if (object[i].body === null)
+            if (Array.isArray(object))
             {
-                if (system === Phaser.Physics.ARCADE)
+                //  Add to Group
+                i = object.length;
+            }
+            else
+            {
+                object = [object];
+            }
+
+            while (i--)
+            {
+                if (object[i].body === null)
                 {
-                    object[i].body = new Phaser.Physics.Arcade.Body(object[i]);
-                }
-                else if (system === Phaser.Physics.P2)
-                {
-                    object[i].body = new Phaser.Physics.P2.Body(this.game, object[i], object[i].x, object[i].y, 1);
-                    object[i].anchor.set(0.5);
-                }
-                else if (system === Phaser.Physics.NINJA)
-                {
-                    object[i].body = new Phaser.Physics.Ninja.Body(this.ninja, object[i]);
-                    object[i].anchor.set(0.5);
+                    if (system === Phaser.Physics.ARCADE)
+                    {
+                        object[i].body = new Phaser.Physics.Arcade.Body(object[i]);
+                    }
+                    else if (system === Phaser.Physics.P2)
+                    {
+                        object[i].body = new Phaser.Physics.P2.Body(this.game, object[i], object[i].x, object[i].y, 1);
+                        object[i].anchor.set(0.5);
+                    }
+                    else if (system === Phaser.Physics.NINJA)
+                    {
+                        object[i].body = new Phaser.Physics.Ninja.Body(this.ninja, object[i]);
+                        object[i].anchor.set(0.5);
+                    }
                 }
             }
         }
