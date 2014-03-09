@@ -10,7 +10,7 @@
         }
         exports.Phaser = Phaser;
     } else if (typeof define !== 'undefined' && define.amd) {
-        define(Phaser);
+        define('phaser', Phaser);
     } else {
         root.Phaser = Phaser;
     }
