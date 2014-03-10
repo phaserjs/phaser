@@ -43,6 +43,11 @@ Phaser.Graphics = function (game, x, y) {
     this.type = Phaser.GRAPHICS;
 
     /**
+    * @property {number} z - The z-depth value of this object within its Group (remember the World is a Group as well). No two objects in a Group can have the same z value.
+    */
+    this.z = 0;
+
+    /**
     * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
     */
     this.world = new Phaser.Point(x, y);

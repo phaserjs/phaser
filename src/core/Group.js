@@ -1072,6 +1072,8 @@ Phaser.Group.prototype.sort = function (index, order) {
         this.children.sort(this.descendingSortHandler.bind(this));
     }
 
+    this.updateZ();
+
 }
 
 /**

@@ -29,13 +29,13 @@ function create() {
     //  This group will hold the main player + all the tree sprites to depth sort against
     group = game.add.group();
 
-    //  Create some trees, each in a unique location (otherwise we'll get sort flicker)
+    //  Create some trees, each in a unique location
     for (var i = 0; i < 200; i++)
     {
         createUniqueLocation();
     }
 
-    sprite = group.create(300, 32, 'phaser');
+    sprite = group.create(300, 28, 'phaser');
 
     group.sort();
 
@@ -46,20 +46,19 @@ function create() {
 
 function createUniqueLocation() {
 
-    var x = game.math.snapTo(game.world.randomX, 32) / 32;
-    var y = game.math.snapTo(game.world.randomY, 32) / 32;
-    y--;
+    do {
+        var x = game.math.snapTo(game.world.randomX, 32) / 32;
+        var y = game.math.snapTo(game.world.randomY, 32) / 32;
 
-    var idx = (y * 19) + x;
+        if (y > 17)
+        {
+            y = 17;
+        }
 
-    while (locs.indexOf(idx) !== -1)
-    {
-        x = game.math.snapTo(game.world.randomX, 32) / 32;
-        y = game.math.snapTo(game.world.randomY, 32) / 32;
-        y--;
-        idx = (y * 19) + x;
+        var idx = (y * 17) + x;
     }
-    
+    while (locs.indexOf(idx) !== -1)
+
     locs.push(idx);
 
     group.create(x * 32, y * 32, 'trees', game.rnd.integerInRange(0, 7));
@@ -92,8 +91,6 @@ function update() {
 
 function render() {
 
-    // game.debug.text(sprite.y, 32, 32);
-    // game.debug.text(group.getIndex(sprite), 32, 64);
-    // game.debug.text(sprite.z, 32, 64);
+    game.debug.text('Sprite z-depth: ' + sprite.z, 10, 20);
 
 }
