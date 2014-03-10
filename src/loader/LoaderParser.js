@@ -20,7 +20,7 @@ Phaser.LoaderParser = {
     */
     bitmapFont: function (game, xml, cacheKey, xSpacing, ySpacing) {
 
-        if (!xml || /MSIE 9/i.test(navigator.userAgent) || navigator.isCocoonJS)
+        if (!xml || /MSIE 9/i.test(navigator.userAgent))
         {
             if (typeof(window.DOMParser) === 'function')
             {
