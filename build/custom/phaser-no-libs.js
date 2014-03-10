@@ -7,7 +7,7 @@
 *
 * Phaser - http://www.phaser.io
 *
-* v2.0.0 "Aes Sedai" - Built: Mon Mar 10 2014 02:30:54
+* v2.0.0 "Aes Sedai" - Built: Mon Mar 10 2014 11:07:14
 *
 * By Richard Davey http://www.photonstorm.com @photonstorm
 *
@@ -5759,15 +5759,19 @@ Phaser.Group = function (game, parent, name, addToStage) {
     this.cursor = null;
 
     /**
-    * @property {number} _cursorIndex - Internal pointer.
-    * @private
-    */
-    this._cursorIndex = 0;
-
-    /**
     * @property {Phaser.Point} cameraOffset - If this object is fixedToCamera then this stores the x/y offset that its drawn at, from the top-left of the camera view.
     */
     this.cameraOffset = new Phaser.Point();
+
+    /**
+    * @property {boolean} enableBody - If true all Sprites created with `Group.create` or `Group.createMulitple` will have a physics body created on them. Change the body type with `Group.physicsBodyType`.
+    */
+    this.enableBody = false;
+
+    /**
+    * @property {number} physicsBodyType - If Group.enableBody is true this is the type of physics body that is created on new Sprites. Phaser.Physics.ARCADE, Phaser.Physics.P2, Phaser.Physics.NINJA, etc.
+    */
+    this.physicsBodyType = Phaser.Physics.ARCADE;
 
     /**
     * A small internal cache:
@@ -5779,10 +5783,11 @@ Phaser.Group = function (game, parent, name, addToStage) {
     * 5 = outOfBoundsFired (0 = no, 1 = yes)
     * 6 = exists (0 = no, 1 = yes)
     * 7 = fixed to camera (0 = no, 1 = yes)
+    * 8 = cursor index
     * @property {Int16Array} _cache
     * @private
     */
-    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0]);
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0, 0]);
 
 };
 
@@ -5935,6 +5940,22 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
         this.cursor = child;
     }
 
+    if (this.enableBody)
+    {
+        if (this.physicsBodyType === Phaser.Physics.ARCADE)
+        {
+            child.body = new Phaser.Physics.Arcade.Body(child);
+        }
+        else if (this.physicsBodyType === Phaser.Physics.NINJA && this.game.physics.ninja)
+        {
+            child.body = new Phaser.Physics.Ninja.Body(this.game.physics.ninja, child, 1);
+        }
+        else if (this.physicsBodyType === Phaser.Physics.P2 && this.game.physics.p2)
+        {
+            child.body = new Phaser.Physics.P2.Body(this.game, child, x, y, 1);
+        }
+    }
+
     return child;
 
 }
@@ -5971,16 +5992,16 @@ Phaser.Group.prototype.next = function () {
     if (this.cursor)
     {
         //  Wrap the cursor?
-        if (this._cursorIndex === this.children.length)
+        if (this._cache[8] === this.children.length)
         {
-            this._cursorIndex = 0;
+            this._cache[8] = 0;
         }
         else
         {
-            this._cursorIndex++;
+            this._cache[8]++;
         }
 
-        this.cursor = this.children[this._cursorIndex];
+        this.cursor = this.children[this._cache[8]];
     }
 
 }
@@ -5995,16 +6016,16 @@ Phaser.Group.prototype.previous = function () {
     if (this.cursor)
     {
         //  Wrap the cursor?
-        if (this._cursorIndex === 0)
+        if (this._cache[8] === 0)
         {
-            this._cursorIndex = this.children.length - 1;
+            this._cache[8] = this.children.length - 1;
         }
         else
         {
-            this._cursorIndex--;
+            this._cache[8]--;
         }
 
-        this.cursor = this.children[this._cursorIndex];
+        this.cursor = this.children[this._cache[8]];
     }
 
 }
@@ -35120,7 +35141,7 @@ Phaser.Physics.Arcade.prototype = {
     * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
     *
     * @method Phaser.Physics.Arcade#enable
-    * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array that has a body parameter.
+    * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array or Group of objects, a body will be created on every child that has a `body` property.
     * @param {boolean} [children=true] - Should a body be created on all children of this object? If true it will propagate down the display list.
     */
     enable: function (object, children) {
@@ -35855,7 +35876,7 @@ Phaser.Physics.Arcade.prototype = {
                     //  This is special case code that handles things like horizontal moving platforms you can ride
                     if (body2.moves)
                     {
-                        body1.x += body2.x - body2.preX;
+                        body1.x += body2.x - body2.prev.x;
                     }
                 }
                 else if (!body2.immovable)
@@ -35866,7 +35887,7 @@ Phaser.Physics.Arcade.prototype = {
                     //  This is special case code that handles things like horizontal moving platforms you can ride
                     if (body1.moves)
                     {
-                        body2.x += body1.x - body1.preX;
+                        body2.x += body1.x - body1.prev.x;
                     }
                 }
 

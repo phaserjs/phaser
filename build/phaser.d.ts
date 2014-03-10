@@ -2521,21 +2521,13 @@ declare module Phaser {
         class Arcade {
             //constructor
             constructor(game: Phaser.Game);
-            //static methods
-            static CIRCLE: number;
-            static POLYGON: number;
-            static RECT: number;
             //members
+            bounds: Phaser.Rectangle;
             game: Phaser.Game;
             gravity: Phaser.Point;
             maxLevels: number;
             maxObjects: number;
             quadTree: Phaser.QuadTree;
-            worldBottom: SAT.Box;
-            worldLeft: SAT.Box;
-            worldPolys: SAT.Polygon[];
-            worldRight: SAT.Box;
-            worldTop: SAT.Box;
             //methods
             accelerateToObject(displayObject: any, destination: any, speed?: number, xSpeedMax?: number, ySpeedMax?: number): number;
             accelerateToPointer(displayObject: any, pointer: any, speed?: number, xSpeedMax?: number, ySpeedMax?: number): number;
@@ -2568,13 +2560,18 @@ declare module Phaser {
 
         module Arcade {
 
+            class FaceChoices {
+                none: boolean;
+                any: boolean;
+                up: boolean;
+                down: boolean;
+                left: boolean;
+                right: boolean;
+            }
+
             class Body {
                 //constructor
                 constructor(sprite: Phaser.Sprite);
-                //static members
-                static CIRCLE: number;
-                static POLYGON: number;
-                static RECT: number;
                 //members
                 acceleration: Phaser.Point;
                 allowGravity: boolean;
@@ -2583,23 +2580,21 @@ declare module Phaser {
                 angularAcceleration: number;
                 angularDrag: number;
                 angularVelocity: number;
-                blocked: FaceChoices;
                 bottom: number;
                 bounce: Phaser.Point;
                 checkCollision: FaceChoices;
                 collideCallback: any;
                 collideCallbackContext: any;
                 collideWorldBounds: boolean;
-                contacts: Phaser.Physics.Arcade.Body[];
                 customSeparateCallback: Function;
                 customSeparateContext: any;
+                drag: Phaser.Point;
                 facing: number;
                 game: Phaser.Game;
                 gravity: Phaser.Point;
                 height: number;
                 immovable: boolean;
                 left: number;
-                linearDamping: number;
                 mass: number;
                 maxAngular: number;
                 maxVelocity: Phaser.Point;
@@ -2608,14 +2603,13 @@ declare module Phaser {
                 offset: Phaser.Point;
                 overlapX: number;
                 overlapY: number;
-                polygon: SAT.Polygon;
                 preRotation: number;
                 preX: number;
                 preY: number;
+                prev: Phaser.Point;
                 rebound: boolean;
                 right: number;
                 rotation: number;
-                shape: any;
                 speed: number;
                 sprite: Phaser.Sprite;
                 top: number;
@@ -2626,54 +2620,18 @@ declare module Phaser {
                 x: number;
                 y: number;
                 //methods
-                add(v:SAT.Vector): void;
-                addContact(body: Phaser.Physics.Arcade.Body): boolean;
-                applyDamping(): void;
-                checkBlocked(): void;
+                checkWorldBounds(): void;
                 deltaX(): number;
                 deltaY(): number;
                 deltaZ(): number;
                 destroy(): void;
-                exchange(body: Phaser.Physics.Arcade.Body): void;
-                getDownwardForce(): number;
-                getUpwardForce(): number;
-                give(body: Phaser.Physics.Arcade.Body, response: SAT.Response): void;
-                hitBottom(body: Phaser.Physics.Arcade.Body, response: SAT.Response): void;
-                hitLeft(body: Phaser.Physics.Arcade.Body, response: SAT.Response): void;
-                hitRight(body: Phaser.Physics.Arcade.Body, response: SAT.Response): void;
-                hitTop(body: Phaser.Physics.Arcade.Body, response: SAT.Response): void;
-                inContact(body: Phaser.Physics.Arcade.Body): boolean;
-                integrateVelocity(): void;
-                onFloor(): boolean;
-                onWall(): boolean;
-                overlap(body: Phaser.Physics.Arcade.Body, response: SAT.Response): boolean;
                 postUpdate(): void;
                 preUpdate(): void;
-                processRebound(body: Phaser.Physics.Arcade.Body): void;
-                reboundCheck(x: number, y: number, rebound: boolean): void;
-                removeContact(body: Phaser.Physics.Arcade.Body): boolean;
+                setSize(width: number, height: number, offsetX: number, offsetY: number): void;
                 reset(full: boolean): void;
-                separate(body: Phaser.Physics.Arcade.Body, response: SAT.Response): boolean;
-                setCircle(radius: number, offsetX?: number, offsetY?: number): void;
-                setPolygon(points: any[]): void; 
-                setRectangle(width?: number, height?: number, translateX?: number, translateY?: number): void;
-                split(body: Phaser.Physics.Arcade.Body, response: SAT.Response): void;
-                sub(v: SAT.Vector): void;
-                take(body: Phaser.Physics.Arcade.Body, response: SAT.Response): void;
-                translate(x: number, y: number): void;
+                update(): void;
                 updateBounds(): void;
                 updateScale(): void;
-            }
-
-            class FaceChoices {
-                none: boolean;
-                any: boolean;
-                up: boolean;
-                down: boolean;
-                left: boolean;
-                right: boolean;
-                x: number;
-                y: number;
             }
         }
     }
