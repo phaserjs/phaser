@@ -9,6 +9,8 @@ Phaser.Physics.Box2D = function (game, config) {
     * @property {Phaser.Game} game - Local reference to game.
     */
     this.game = game;
+    this.velocityiterations = 8
+    this.positionIterations = 10
     
     var gravity = new box2d.b2Vec2(0.0, -9.8);
     
@@ -18,7 +20,9 @@ Phaser.Physics.Box2D = function (game, config) {
 
 Phaser.Physics.Box2D.prototype = {
     update: function () {
-        this.world.Step(1.0 / 60);
+        
+
+        this.world.Step(1.0 / 60, this.velocityiterations, this.positionIterations);
         this.world.ClearForces();
 
         this.world.DrawDebugData()
