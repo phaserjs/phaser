@@ -22,9 +22,9 @@ var locs = [];
 function create() {
 
     //  Create our tilemap to walk around
-    map = game.add.tilemap('desert');
-    map.addTilesetImage('ground_1x1');
-    layer = map.createLayer('Tile Layer 1');
+    // map = game.add.tilemap('desert');
+    // map.addTilesetImage('ground_1x1');
+    // layer = map.createLayer('Tile Layer 1');
 
     //  This group will hold the main player + all the tree sprites to depth sort against
     group = game.add.group();
@@ -35,12 +35,21 @@ function create() {
         createUniqueLocation();
     }
 
+    sprite = group.create(300, 32, 'phaser');
+
     //  The player
-    sprite = group.create(300, 200, 'phaser');
+    // group.create(128, 0, 'trees', game.rnd.integerInRange(0, 7));
+    // group.create(64, 0, 'trees', game.rnd.integerInRange(0, 7));
+    // group.create(256, 0, 'trees', game.rnd.integerInRange(0, 7));
 
-    group.sort();
+    // group.create(128, 32, 'trees', game.rnd.integerInRange(0, 7));
+    // group.create(64, 32, 'trees', game.rnd.integerInRange(0, 7));
+    // group.create(256, 32, 'trees', game.rnd.integerInRange(0, 7));
 
-    dump();
+
+    // group.sort();
+
+    // dump();
 
     // group.children[0].alpha = 0.2;
     // group.children[100].alpha = 0.2;
@@ -112,5 +121,6 @@ function update() {
 function render() {
 
     game.debug.text(sprite.y, 32, 32);
+    game.debug.text(group.getIndex(sprite), 32, 64);
 
 }

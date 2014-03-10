@@ -1017,11 +1017,21 @@ Phaser.Group.prototype.forEachDead = function (callback, callbackContext) {
 */
 Phaser.Group.prototype.sort = function (index, order) {
 
+    if (this.children.length < 2)
+    {
+        //  Nothing to swap
+        return;
+    }
+
     if (typeof index === 'undefined') { index = 'y'; }
     if (typeof order === 'undefined') { order = Phaser.Group.SORT_ASCENDING; }
 
     this._sortProperty = index;
 
+        this.children.sort(this.ascendingSortHandler.bind(this));
+
+
+    /*
     if (order === Phaser.Group.SORT_ASCENDING)
     {
         this.children.sort(this.ascendingSortHandler.bind(this));
@@ -1030,6 +1040,7 @@ Phaser.Group.prototype.sort = function (index, order) {
     {
         this.children.sort(this.descendingSortHandler.bind(this));
     }
+    */
 
 }
 
@@ -1042,19 +1053,18 @@ Phaser.Group.prototype.sort = function (index, order) {
 */
 Phaser.Group.prototype.ascendingSortHandler = function (a, b) {
 
-    if (a[this._sortProperty] && b[this._sortProperty])
+    if (a[this._sortProperty] < b[this._sortProperty] && this.getIndex(a) > this.getIndex(b))
     {
-        if (a[this._sortProperty] < b[this._sortProperty])
-        {
-            return -1;
-        }
-        else if (a[this._sortProperty] > b[this._sortProperty])
-        {
-            return 1;
-        }
+        return -1;
     }
-
-    return 0;
+    else if (a[this._sortProperty] > b[this._sortProperty] && this.getIndex(a) < this.getIndex(b))
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 
 }
 

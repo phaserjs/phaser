@@ -67,7 +67,7 @@ Phaser.Physics.ARCADE = 0;
 * @const
 * @type {number}
 */
-Phaser.Physics.P2 = 1;
+Phaser.Physics.P2JS = 1;
 
 /**
 * @const
@@ -93,7 +93,7 @@ Phaser.Physics.prototype = {
     * This will create an instance of the requested physics simulation.
     * Phaser.Physics.Arcade is running by default, but all others need activating directly.
     * You can start the following physics systems:
-    * Phaser.Physics.P2 - A full-body advanced physics system by Stefan Hedman.
+    * Phaser.Physics.P2JS - A full-body advanced physics system by Stefan Hedman.
     * Phaser.Physics.NINJA - A port of Metanet Softwares N+ physics system.
     * Phaser.Physics.BOX2D and Phaser.Physics.CHIPMUNK are still in development.
     *
@@ -106,7 +106,7 @@ Phaser.Physics.prototype = {
         {
             this.arcade = new Phaser.Physics.Arcade(this.game);
         }
-        else if (system === Phaser.Physics.P2 && this.p2 === null)
+        else if (system === Phaser.Physics.P2JS && this.p2 === null)
         {
             this.p2 = new Phaser.Physics.P2(this.game, this.config);
         }
@@ -131,7 +131,7 @@ Phaser.Physics.prototype = {
     * It can be for any of the physics systems that have been started:
     *
     * Phaser.Physics.Arcade - A light weight AABB based collision system with basic separation.
-    * Phaser.Physics.P2 - A full-body advanced physics system supporting multiple object shapes, polygon loading, contact materials, springs and constraints.
+    * Phaser.Physics.P2JS - A full-body advanced physics system supporting multiple object shapes, polygon loading, contact materials, springs and constraints.
     * Phaser.Physics.NINJA - A port of Metanet Softwares N+ physics system. Advanced AABB and Circle vs. Tile collision.
     * Phaser.Physics.BOX2D and Phaser.Physics.CHIPMUNK are still in development.
     *
@@ -171,7 +171,7 @@ Phaser.Physics.prototype = {
                     {
                         object[i].body = new Phaser.Physics.Arcade.Body(object[i]);
                     }
-                    else if (system === Phaser.Physics.P2)
+                    else if (system === Phaser.Physics.P2JS)
                     {
                         object[i].body = new Phaser.Physics.P2.Body(this.game, object[i], object[i].x, object[i].y, 1);
                         object[i].body.debug = debug
