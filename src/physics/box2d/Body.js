@@ -30,9 +30,82 @@ Phaser.Physics.Box2D.Body = function (game, sprite, x, y, mass) {
     this.game = game;
     this.sprite = sprite;
     this.type = Phaser.Physics.Box2D;
+    this.data = null
     this.offset = new Phaser.Point();
+    if (sprite)
+    {
+        this.game.physics.box2d.addBody(this);
+    }
+
 };
 
 Phaser.Physics.Box2D.Body.prototype = {
+    create: function(world){
+      //create the body through the provided factory
+      this.data = world.CreateBody(this.getBodyDef());
+      this.data.CreateFixture(this.getFixtureDef());
+    },
+    
+    getFixtureDef: function(){
+      circle = new box2d.b2CircleShape();
+      circle.m_radius = Phaser.Physics.Box2D.Utils.px2b(20)
+      
+      fd = new box2d.b2FixtureDef();
+      fd.restitution = 0.5;
+      fd.shape = circle;
+      fd.density = 1.0;
+      fd.friction = 0.9;
 
+      return fd
+    },
+    
+    getBodyDef: function(){
+      var bd = new box2d.b2BodyDef()
+      bd.type = box2d.b2BodyType.b2_dynamicBody
+      return bd
+    },
+    
+    preUpdate: function(){
+
+    },
+    
+    postUpdate: function () {
+        position = this.data.GetPosition()
+        this.sprite.x = Phaser.Physics.Box2D.Utils.b2pxi(position.x);
+        this.sprite.y = Phaser.Physics.Box2D.Utils.b2pxi(position.y);
+
+        //if (!this.fixedRotation)
+        //{
+            angle = Phaser.Math.radToDeg(this.data.GetAngleRadians()) * -1
+            this.sprite.rotation = angle;
+        //}
+
+    }
 }
+/**
+* @name Phaser.Physics.P2.Body#debug
+* @property {boolean} debug - Enable or disable debug drawing of this body
+*/
+Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "debug", {
+    
+    get: function () {
+
+        return (!this.debugBody);
+
+    },
+
+    set: function (value) {
+
+        if (value && !this.debugBody)
+        {
+            //this will be added to the global space
+            this.debugBody = new Phaser.Physics.Box2D.BodyDebug(this.game, this.data)
+        }
+        else if (!value && this.debugBody)
+        {
+            //destroy this.debugBody
+        }
+
+    }
+
+});

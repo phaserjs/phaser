@@ -183,9 +183,10 @@ Phaser.Physics.prototype = {
                         object[i].body = new Phaser.Physics.Ninja.Body(this.ninja, object[i]);
                         object[i].anchor.set(0.5);
                     }
-                    else if (system === Phaser.Physics.Box2D)
+                    else if (system === Phaser.Physics.BOX2D)
                     {
                         object[i].body = new Phaser.Physics.Box2D.Body(this.game, object[i], object[i].x, object[i].y, 1);
+                        object[i].body.debug = debug
                         object[i].anchor.set(0.5);
                     }
                 }
