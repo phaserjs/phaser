@@ -138,10 +138,12 @@ Phaser.Physics.prototype = {
     * @method Phaser.Physics#enable
     * @param {object|array} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array.
     * @param {number} [system=Phaser.Physics.ARCADE] - The physics system that will be used to create the body. Defaults to Arcade Physics.
+    * @param {boolean} [debug=false] - Enable the debug drawing for this body. Defaults to false.
     */
-    enable: function (object, system) {
+    enable: function (object, system, debug) {
 
         if (typeof system === 'undefined') { system = Phaser.Physics.ARCADE; }
+        if (typeof debug === 'undefined') { debug = false; }
 
         var i = 1;
 
@@ -172,6 +174,7 @@ Phaser.Physics.prototype = {
                     else if (system === Phaser.Physics.P2)
                     {
                         object[i].body = new Phaser.Physics.P2.Body(this.game, object[i], object[i].x, object[i].y, 1);
+                        object[i].body.debug = debug
                         object[i].anchor.set(0.5);
                     }
                     else if (system === Phaser.Physics.NINJA)

@@ -111,6 +111,13 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     */
     this._groupCallbackContext = [];
 
+
+
+    /**
+    * @property {Phaser.Physics.P2.BodyDebug} debugBody - Reference to the debug drawer.
+    */
+    this.debugBody = null
+
     //  Set-up the default shape
     if (sprite)
     {
@@ -682,6 +689,8 @@ Phaser.Physics.P2.Body.prototype = {
             this.data.removeShape(shape);
         }
 
+        this.shapeChanged()
+
     },
 
     /**
@@ -702,6 +711,7 @@ Phaser.Physics.P2.Body.prototype = {
         if (typeof rotation === 'undefined') { rotation = 0; }
 
         this.data.addShape(shape, [this.px2pi(offsetX), this.px2pi(offsetY)], rotation);
+        this.shapeChanged()
 
         return shape;
 
@@ -886,8 +896,10 @@ Phaser.Physics.P2.Body.prototype = {
         // console.log(path[1]);
         // console.table(path);
 
-        return this.data.fromPolygon(path, options);
+        result = this.data.fromPolygon(path, options);
+        this.shapeChanged()
 
+        return result
     },
 
     /**
@@ -985,6 +997,12 @@ Phaser.Physics.P2.Body.prototype = {
         }
 
     },
+      
+    shapeChanged: function(){
+      console.log('shapeChanged', this.debugBody)
+      //shape has changed, so try to redraw if debug is available
+      if(this.debugBody) this.debugBody.draw()
+    },
 
     /**
     * Reads the shape data from a physics data file stored in the Game.Cache and adds it as a polygon to this Body.
@@ -1052,7 +1070,7 @@ Phaser.Physics.P2.Body.prototype = {
 
             // this.data.adjustCenterOfMass();
             this.data.aabbNeedsUpdate = true;
-
+            this.shapeChanged();
             return true;
         }
 
@@ -1541,6 +1559,35 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "y", {
     set: function (value) {
 
         this.data.position[1] = this.px2pi(value);
+
+    }
+
+});
+
+
+/**
+* @name Phaser.Physics.P2.Body#debug
+* @property {boolean} debug - Enable or disable debug drawing of this body
+*/
+Object.defineProperty(Phaser.Physics.P2.Body.prototype, "debug", {
+    
+    get: function () {
+
+        return (!this.debugBody);
+
+    },
+
+    set: function (value) {
+
+        if (value && !this.debugBody)
+        {
+            //this will be added to the global space
+            this.debugBody = new Phaser.Physics.P2.BodyDebug(this.game, this.data)
+        }
+        else if (!value && this.debugBody)
+        {
+            //destroy this.debugBody
+        }
 
     }
 
