@@ -10,7 +10,7 @@
         }
         exports.Phaser = Phaser;
     } else if (typeof define !== 'undefined' && define.amd) {
-        define('phaser', Phaser);
+        define('Phaser', (function() { return root.Phaser = Phaser; }) ());
     } else {
         root.Phaser = Phaser;
     }
