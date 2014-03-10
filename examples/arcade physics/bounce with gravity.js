@@ -32,9 +32,8 @@ function create() {
     //  This sets the image bounce energy for the horizontal  and vertical vectors (as an x,y point). "1" is 100% energy return
     image.body.bounce.setTo(0.8, 0.8);
     
-    //  This sets the gravity the sprite responds to in the world, as a point
-    //  Leave x=0 and set y=180 to simulate falling
-    image.body.gravity.setTo(0, 180);
+
+    image.body.gravityScale.setTo(0, 18);
 
 }
 

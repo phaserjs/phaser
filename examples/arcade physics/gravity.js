@@ -39,12 +39,12 @@ function create() {
     sprite2.body.collideWorldBounds = true;
     sprite2.body.bounce.y = 0.8;
     sprite2.body.allowGravity = false;
-    sprite2.body.gravity.y = 100;
+    sprite3.body.gravityScale.y = 10;
 
     
     sprite3.body.collideWorldBounds = true;
     sprite3.body.bounce.y = 0.8;
-    sprite3.body.gravity.y = 100;
+    sprite3.body.gravityScale.y = 10;
 
     
 

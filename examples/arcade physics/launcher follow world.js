@@ -46,7 +46,7 @@ function create() {
     player.body.collideWorldBounds = true;
     player.body.bounce.setTo(0.9, 0.9);
     player.body.linearDamping = 0.2;
-    player.body.gravity.setTo(0, 8);
+    player.body.gravityScale.setTo(0, 0.8);
 
     // Enable input.
     player.inputEnabled = true;

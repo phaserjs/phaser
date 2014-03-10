@@ -36,9 +36,6 @@ function create() {
     //  and vertical vectors (as an x,y point). "1" is 100% energy return
     ball.body.bounce.setTo(1, 1);
 
-    //  This sets the gravity the sprite responds to in the world, as a point
-    //  Here we leave x=0 and set y=80 to simulate falling
-    ball.body.gravity.setTo(0, 80);
 
 }
 
