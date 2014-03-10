@@ -151,6 +151,7 @@
     <script src="$path/src/physics/p2/PointProxy.js"></script>
     <script src="$path/src/physics/p2/InversePointProxy.js"></script>
     <script src="$path/src/physics/p2/Body.js"></script>
+    <script src="$path/src/physics/p2/BodyDebug.js"></script>
     <script src="$path/src/physics/p2/Spring.js"></script>
     <script src="$path/src/physics/p2/Material.js"></script>
     <script src="$path/src/physics/p2/ContactMaterial.js"></script>

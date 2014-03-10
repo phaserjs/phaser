@@ -19,8 +19,11 @@ var start = false;
 
 function create() {
 
+	//	Enable p2 physics
+	game.physics.startSystem(Phaser.Physics.P2);
+
 	contra = game.add.sprite(400, 300, 'contra2');
-	contra.physicsEnabled = true;
+	game.physics.enable(contra, Phaser.Physics.P2, true);
 	contra.body.clearShapes();
 	contra.body.loadPolygon('physicsData', 'contra2');
 
@@ -39,6 +42,6 @@ function update() {
 
 function render() {
 
-	game.debug.physicsBody(contra.body, '#00ffff');
+	// game.debug.physicsBody(contra.body, '#00ffff');
 
 }

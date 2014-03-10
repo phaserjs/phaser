@@ -203,6 +203,7 @@ module.exports = function (grunt) {
             'src/physics/p2/PointProxy.js',
             'src/physics/p2/InversePointProxy.js',
             'src/physics/p2/Body.js',
+            'src/physics/p2/BodyDebug.js',
             'src/physics/p2/Spring.js',
             'src/physics/p2/Material.js',
             'src/physics/p2/ContactMaterial.js',

@@ -147,6 +147,7 @@ New features:
 * Group.reverse() reverses the display order of all children in the Group.
 * Tweens are now bound to their own TweenManager, not always the global game one. So you can create your own managers now (for you clark :)
 * ScaleManager.fullScreenTarget allows you to change the DOM element that the fullscreen API is called on (feature request #526)
+* Merged Georges p2 BodyDebug and reformatted for jshint pass. Looks awesome :)
 
 
 Updates:

@@ -998,10 +998,18 @@ Phaser.Physics.P2.Body.prototype = {
 
     },
       
-    shapeChanged: function(){
-      console.log('shapeChanged', this.debugBody)
-      //shape has changed, so try to redraw if debug is available
-      if(this.debugBody) this.debugBody.draw()
+    /**
+    * Updates the debug draw if any body shapes change.
+    *
+    * @method Phaser.Physics.P2.Body#shapeChanged
+    */
+    shapeChanged: function() {
+
+        if (this.debugBody)
+        {
+            this.debugBody.draw();
+        }
+
     },
 
     /**
