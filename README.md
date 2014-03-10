@@ -226,6 +226,7 @@ Bug Fixes:
 * InputHandler.enableSnap now correctly assigns the snap offset parameters (fixes #515)
 * Objects that are 'fixedToCamera' are now still correctly placed even if the camera is scaled (#512)
 * Changed the define function calls to use named modules, allows pixi, phaser and p2 to reside in 1 file and still be located by requirejs (thanks brejep, #531)
+* Cache.destroy fixed to clear up properly (thanks Dumtard, #537)
 
 
 TO DO:
