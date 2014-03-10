@@ -9035,7 +9035,6 @@ PIXI.BaseTexture.prototype.updateSourceImage = function(newSrc)
 PIXI.BaseTexture.fromImage = function(imageUrl, crossorigin, scaleMode)
 {
     var baseTexture = PIXI.BaseTextureCache[imageUrl];
-    crossorigin = !crossorigin;
 
     if(!baseTexture)
     {
@@ -9561,7 +9560,7 @@ PIXI.RenderTexture.tempMatrix = new PIXI.Matrix();
         }
         exports.PIXI = PIXI;
     } else if (typeof define !== 'undefined' && define.amd) {
-        define(PIXI);
+        define('PIXI', (function() { return root.PIXI = PIXI; })() );
     } else {
         root.PIXI = PIXI;
     }

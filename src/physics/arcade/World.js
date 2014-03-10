@@ -47,12 +47,7 @@ Phaser.Physics.Arcade = function (game) {
     /**
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
     */
-    this.quadTree = new Phaser.Physics.Arcade.QuadTree(this, this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
-
-    /**
-    * @property {number} quadTreeID - The QuadTree ID.
-    */
-    this.quadTreeID = 0;
+    this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
 
     //  Avoid gc spikes by caching these values for re-use
 
@@ -170,7 +165,7 @@ Phaser.Physics.Arcade.prototype = {
     * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
     *
     * @method Phaser.Physics.Arcade#enable
-    * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array that has a body parameter.
+    * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array or Group of objects, a body will be created on every child that has a `body` property.
     * @param {boolean} [children=true] - Should a body be created on all children of this object? If true it will propagate down the display list.
     */
     enable: function (object, children) {
@@ -500,7 +495,7 @@ Phaser.Physics.Arcade.prototype = {
         //  What is the sprite colliding with in the quadtree?
         this.quadTree.clear();
 
-        this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
+        this.quadTree.reset(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
 
         this.quadTree.populate(group);
 
@@ -905,7 +900,7 @@ Phaser.Physics.Arcade.prototype = {
                     //  This is special case code that handles things like horizontal moving platforms you can ride
                     if (body2.moves)
                     {
-                        body1.x += body2.x - body2.preX;
+                        body1.x += body2.x - body2.prev.x;
                     }
                 }
                 else if (!body2.immovable)
@@ -916,7 +911,7 @@ Phaser.Physics.Arcade.prototype = {
                     //  This is special case code that handles things like horizontal moving platforms you can ride
                     if (body1.moves)
                     {
-                        body2.x += body1.x - body1.preX;
+                        body2.x += body1.x - body1.prev.x;
                     }
                 }
 

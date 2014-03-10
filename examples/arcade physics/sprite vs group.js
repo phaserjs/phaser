@@ -21,7 +21,13 @@ function create() {
     sprite = game.add.sprite(32, 200, 'phaser');
     sprite.name = 'phaser-dude';
 
+    //  Enables the arcade physics body on the sprite
+    game.physics.arcade.enable(sprite);
+
     group = game.add.group();
+
+    //  Enables the arcade physics body on all sprites this group creates
+    group.enableBody = true;
 
     for (var i = 0; i < 50; i++)
     {
@@ -44,8 +50,7 @@ function create() {
 
 function update() {
 
-    game.physics.collide(sprite, group, collisionHandler, null, this);
-    game.physics.collide(group, group);
+    game.physics.arcade.collide(sprite, group, collisionHandler, null, this);
 
     sprite.body.velocity.x = 0;
     sprite.body.velocity.y = 0;

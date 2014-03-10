@@ -33,6 +33,144 @@
       "title": "starling atlas"
     }
   ],
+  "arcade physics": [
+    {
+      "file": "accelerate+to+pointer.js",
+      "title": "accelerate to pointer"
+    },
+    {
+      "file": "angle+between.js",
+      "title": "angle between"
+    },
+    {
+      "file": "angle+to+pointer.js",
+      "title": "angle to pointer"
+    },
+    {
+      "file": "angular+acceleration.js",
+      "title": "angular acceleration"
+    },
+    {
+      "file": "angular+velocity.js",
+      "title": "angular velocity"
+    },
+    {
+      "file": "body+scale.js",
+      "title": "body scale"
+    },
+    {
+      "file": "bounce+accelerator.js",
+      "title": "bounce accelerator"
+    },
+    {
+      "file": "bounce+knock.js",
+      "title": "bounce knock"
+    },
+    {
+      "file": "bounce+with+gravity.js",
+      "title": "bounce with gravity"
+    },
+    {
+      "file": "bounce.js",
+      "title": "bounce"
+    },
+    {
+      "file": "bounding+box.js",
+      "title": "bounding box"
+    },
+    {
+      "file": "gravity.js",
+      "title": "gravity"
+    },
+    {
+      "file": "group+vs+group.js",
+      "title": "group vs group"
+    },
+    {
+      "file": "group+vs+self.js",
+      "title": "group vs self"
+    },
+    {
+      "file": "larger+bounding+box.js",
+      "title": "larger bounding box"
+    },
+    {
+      "file": "launcher+follow+world.js",
+      "title": "launcher follow world"
+    },
+    {
+      "file": "launcher+follow.js",
+      "title": "launcher follow"
+    },
+    {
+      "file": "launcher.js",
+      "title": "launcher"
+    },
+    {
+      "file": "mass+velocity+test.js",
+      "title": "mass velocity test"
+    },
+    {
+      "file": "move+towards+object.js",
+      "title": "move towards object"
+    },
+    {
+      "file": "multi+angle+to+pointer.js",
+      "title": "multi angle to pointer"
+    },
+    {
+      "file": "offset+bounding+box.js",
+      "title": "offset bounding box"
+    },
+    {
+      "file": "one+way+collision.js",
+      "title": "one way collision"
+    },
+    {
+      "file": "process+callback.js",
+      "title": "process callback"
+    },
+    {
+      "file": "quadtree+-+collision+infos.js",
+      "title": "quadtree - collision infos"
+    },
+    {
+      "file": "quadtree+-+ids.js",
+      "title": "quadtree - ids"
+    },
+    {
+      "file": "rotated+bounding+box.js",
+      "title": "rotated bounding box"
+    },
+    {
+      "file": "ship+trail.js",
+      "title": "ship trail"
+    },
+    {
+      "file": "shoot+the+pointer.js",
+      "title": "shoot the pointer"
+    },
+    {
+      "file": "snake.js",
+      "title": "snake"
+    },
+    {
+      "file": "sprite+bounds.js",
+      "title": "sprite bounds"
+    },
+    {
+      "file": "sprite+vs+group.js",
+      "title": "sprite vs group"
+    },
+    {
+      "file": "sprite+vs+sprite.js",
+      "title": "sprite vs sprite"
+    },
+    {
+      "file": "vertical+collision.js",
+      "title": "vertical collision"
+    }
+  ],
   "audio": [
     {
       "file": "loop.js",
@@ -115,68 +253,6 @@
     {
       "file": "world+sprite.js",
       "title": "world sprite"
-    }
-  ],
-  "collision": [
-    {
-      "file": "body+scale.js",
-      "title": "body scale"
-    },
-    {
-      "file": "bounding+box.js",
-      "title": "bounding box"
-    },
-    {
-      "file": "circle+body.js",
-      "title": "circle body"
-    },
-    {
-      "file": "circle+vs+polygon.js",
-      "title": "circle vs polygon"
-    },
-    {
-      "file": "group+vs+group.js",
-      "title": "group vs group"
-    },
-    {
-      "file": "group+vs+self.js",
-      "title": "group vs self"
-    },
-    {
-      "file": "larger+bounding+box.js",
-      "title": "larger bounding box"
-    },
-    {
-      "file": "offset+bounding+box.js",
-      "title": "offset bounding box"
-    },
-    {
-      "file": "one+way+collision.js",
-      "title": "one way collision"
-    },
-    {
-      "file": "polygon+body.js",
-      "title": "polygon body"
-    },
-    {
-      "file": "process+callback.js",
-      "title": "process callback"
-    },
-    {
-      "file": "rotated+bounding+box.js",
-      "title": "rotated bounding box"
-    },
-    {
-      "file": "sprite+vs+group.js",
-      "title": "sprite vs group"
-    },
-    {
-      "file": "sprite+vs+sprite.js",
-      "title": "sprite vs sprite"
-    },
-    {
-      "file": "vertical+collision.js",
-      "title": "vertical collision"
     }
   ],
   "debug": [
@@ -617,100 +693,6 @@
     {
       "file": "zero+gravity.js",
       "title": "zero gravity"
-    }
-  ],
-  "physics": [
-    {
-      "file": "accelerate+to+pointer.js",
-      "title": "accelerate to pointer"
-    },
-    {
-      "file": "angle+between.js",
-      "title": "angle between"
-    },
-    {
-      "file": "angle+to+pointer.js",
-      "title": "angle to pointer"
-    },
-    {
-      "file": "angular+acceleration.js",
-      "title": "angular acceleration"
-    },
-    {
-      "file": "angular+velocity.js",
-      "title": "angular velocity"
-    },
-    {
-      "file": "bounce+accelerator.js",
-      "title": "bounce accelerator"
-    },
-    {
-      "file": "bounce+knock.js",
-      "title": "bounce knock"
-    },
-    {
-      "file": "bounce+with+gravity.js",
-      "title": "bounce with gravity"
-    },
-    {
-      "file": "bounce.js",
-      "title": "bounce"
-    },
-    {
-      "file": "framerate+independence.js",
-      "title": "framerate independence"
-    },
-    {
-      "file": "gravity.js",
-      "title": "gravity"
-    },
-    {
-      "file": "launcher+follow+world.js",
-      "title": "launcher follow world"
-    },
-    {
-      "file": "launcher+follow.js",
-      "title": "launcher follow"
-    },
-    {
-      "file": "launcher.js",
-      "title": "launcher"
-    },
-    {
-      "file": "mass+velocity+test.js",
-      "title": "mass velocity test"
-    },
-    {
-      "file": "move+towards+object.js",
-      "title": "move towards object"
-    },
-    {
-      "file": "multi+angle+to+pointer.js",
-      "title": "multi angle to pointer"
-    },
-    {
-      "file": "quadtree+-+collision+infos.js",
-      "title": "quadtree - collision infos"
-    },
-    {
-      "file": "quadtree+-+ids.js",
-      "title": "quadtree - ids"
-    },
-    {
-      "file": "ship+trail.js",
-      "title": "ship trail"
-    },
-    {
-      "file": "shoot+the+pointer.js",
-      "title": "shoot the pointer"
-    },
-    {
-      "file": "snake.js",
-      "title": "snake"
-    },
-    {
-      "file": "sprite+bounds.js",
-      "title": "sprite bounds"
     }
   ],
   "sprites": [
