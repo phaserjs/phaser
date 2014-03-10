@@ -23,6 +23,8 @@ function create() {
 
     snakeHead = game.add.sprite(400, 300, 'ball');
     snakeHead.anchor.setTo(0.5, 0.5);
+
+    game.physics.enable(snakeHead, Phaser.Physics.ARCADE);
     
     //  Init snakeSection array
     for (var i = 1; i <= numSnakeSections-1; i++)
@@ -46,7 +48,7 @@ function update() {
 
     if (cursors.up.isDown)
     {
-        snakeHead.body.velocity.copyFrom(game.physics.velocityFromAngle(snakeHead.angle, 300));
+        snakeHead.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(snakeHead.angle, 300));
 
         // Everytime the snake head moves, insert the new location at the start of the array, 
         // and knock the last position off the end

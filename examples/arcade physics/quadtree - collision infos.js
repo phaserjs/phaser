@@ -15,7 +15,8 @@ function create() {
 
     for (var i = 0; i < 50; i++)
     {
-        var s = aliens.create(game.world.randomX, game.world.randomY, 'baddie')
+        var s = aliens.create(game.world.randomX, game.world.randomY, 'baddie');
+        game.physics.enable(s, Phaser.Physics.ARCADE);
         s.name = 'alien' + s;
         s.body.collideWorldBounds = true;
         s.body.bounce.setTo(1, 1);
@@ -23,6 +24,7 @@ function create() {
     }
 
     ship = game.add.sprite(400, 400, 'ship');
+    game.physics.enable(ship, Phaser.Physics.ARCADE);
     ship.body.collideWorldBounds = true;
     ship.body.bounce.setTo(1, 1);
 
@@ -48,13 +50,13 @@ function update() {
         ship.body.velocity.y += 2;
     }
 
-    game.physics.collide(ship, aliens);
+    game.physics.arcade.collide(ship, aliens);
 
 }
 
 function render() {
 
-    game.debug.QuadTree(game.physics.quadTree);
+    game.debug.QuadTree(game.physics.arcade.quadTree);
     game.debug.geom(ship.body);
 
     // game.debug.text('total: ' + total.length, 32, 50);

@@ -27,7 +27,7 @@ function create() {
 
 function update() {
 
-    arrow.rotation = game.physics.angleBetween(arrow, target);
+    arrow.rotation = game.physics.arcade.angleBetween(arrow, target);
 
 }
 

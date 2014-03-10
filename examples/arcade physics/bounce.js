@@ -22,6 +22,8 @@ function create() {
     //  displays it on-screen
     //  and assign it to a variable
     image = game.add.sprite(0, 0, 'flyer');
+
+    game.physics.enable(image, Phaser.Physics.ARCADE);
     
     //  This gets it moving
     image.body.velocity.setTo(200,200);

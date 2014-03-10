@@ -14,11 +14,13 @@ function create() {
     sprite = game.add.sprite(400, 300, 'arrow');
     sprite.anchor.setTo(0.5, 0.5);
 
+    game.physics.enable(sprite, Phaser.Physics.ARCADE);
+
 }
 
 function update() {
 
-    sprite.rotation = game.physics.accelerateToPointer(sprite, this.game.input.activePointer, 500, 500, 500);
+    game.physics.arcade.moveToPointer(sprite, game.input.activePointer, 60, 500, 500);
 
 }
 

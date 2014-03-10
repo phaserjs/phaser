@@ -14,6 +14,8 @@ function create() {
     sprite = game.add.sprite(400, 300, 'arrow');
     sprite.anchor.setTo(0.5, 0.5);
 
+    game.physics.enable(sprite, Phaser.Physics.ARCADE);
+
     //  We'll set a lower max angular velocity here to keep it from going totally nuts
     sprite.body.maxAngular = 500;
 

@@ -16,6 +16,7 @@ function create() {
 
     sprite1 = game.add.sprite(150, 300, 'atari');
     sprite1.name = 'atari';
+    game.physics.enable(sprite1, Phaser.Physics.ARCADE);
 
     //  Here you can visually see the two bounding boxes the sprites are using for collision.
 
@@ -23,13 +24,14 @@ function create() {
 
     sprite2 = game.add.sprite(700, 320, 'mushroom');
     sprite2.name = 'mushroom';
+    game.physics.enable(sprite2, Phaser.Physics.ARCADE);
     sprite2.body.velocity.x = -100;
 
 }
 
 function update() {
 
-    game.physics.collide(sprite1, sprite2, collisionHandler, null, this);
+    game.physics.arcade.collide(sprite1, sprite2, collisionHandler, null, this);
 
 }
 
@@ -43,7 +45,7 @@ function render() {
 
     // game.debug.bodyInfo(sprite1, 32, 32);
 
-    game.debug.physicsBody(sprite1.body);
-    game.debug.physicsBody(sprite2.body);
+    // game.debug.spriteBounds(sprite1);
+    // game.debug.spriteBounds(sprite2);
 
 }

@@ -20,6 +20,8 @@ function create() {
 
     //  This creates a simple sprite that is using our loaded image and displays it on-screen and assign it to a variable
     image = game.add.sprite(400, 200, 'flyer');
+
+     game.physics.enable(image, Phaser.Physics.ARCADE);
     
     //  This gets it moving
     image.body.velocity.setTo(200, 200);

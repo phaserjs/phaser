@@ -22,16 +22,24 @@ function create() {
     bullets.createMultiple(50, 'bullet');
     bullets.setAll('anchor.x', 0.5);
     bullets.setAll('anchor.y', 0.5);
-    bullets.setAll('outOfBoundsKill', true);
+    
 
     sprite = game.add.sprite(400, 300, 'arrow');
     sprite.anchor.setTo(0.5, 0.5);
+
+    game.physics.enable(sprite, Phaser.Physics.ARCADE);
+
+    bullets.forEach(function (sprite) {
+
+        game.physics.enable(sprite, Phaser.Physics.ARCADE);
+        sprite.body.outOfBoundsKill = true;
+    });
 
 }
 
 function update() {
 
-    sprite.rotation = game.physics.angleToPointer(sprite);
+    sprite.rotation = game.physics.arcade.angleToPointer(sprite);
 
     if (game.input.activePointer.isDown)
     {
@@ -50,7 +58,7 @@ function fire() {
 
         bullet.reset(sprite.x, sprite.y);
 
-        bullet.rotation = game.physics.moveToPointer(bullet, 300);
+        bullet.rotation = game.physics.arcade.moveToPointer(bullet, 300);
     }
 
 }

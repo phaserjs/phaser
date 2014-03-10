@@ -19,6 +19,8 @@ function create() {
 
     flyer.animations.add('left', [0, 1, 2, 3], 10, true);
     flyer.animations.add('right', [5, 6, 7, 8], 10, true);
+
+     game.physics.enable(flyer, Phaser.Physics.ARCADE);
     
     //  This gets it moving
     flyer.body.velocity.setTo(200, 200);

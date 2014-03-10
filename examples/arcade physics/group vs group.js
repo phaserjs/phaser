@@ -29,6 +29,7 @@ function create() {
     {
         var c = veggies.create(game.world.randomX, Math.random() * 500, 'veggies', game.rnd.integerInRange(0, 36));
         c.name = 'veg' + i;
+        game.physics.enable(c, Phaser.Physics.ARCADE);
         c.body.immovable = true;
     }
 
@@ -38,12 +39,14 @@ function create() {
     {
         var b = bullets.create(0, 0, 'bullet');
         b.name = 'bullet' + i;
+        game.physics.enable(b, Phaser.Physics.ARCADE);
         b.exists = false;
         b.visible = false;
         b.events.onOutOfBounds.add(resetBullet, this);
     }
 
     sprite = game.add.sprite(400, 550, 'phaser');
+    game.physics.enable(sprite, Phaser.Physics.ARCADE);
 
     cursors = game.input.keyboard.createCursorKeys();
     game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
@@ -53,7 +56,7 @@ function create() {
 function update() {
 
     //  As we don't need to exchange any velocities or motion we can the 'overlap' check instead of 'collide'
-    game.physics.overlap(bullets, veggies, collisionHandler, null, this);
+    game.physics.arcade.overlap(bullets, veggies, collisionHandler, null, this);
 
     sprite.body.velocity.x = 0;
     sprite.body.velocity.y = 0;

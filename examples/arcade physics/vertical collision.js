@@ -17,22 +17,28 @@ function create() {
 
     sprite1 = game.add.sprite(300, 50, 'atari');
     sprite1.name = 'atari';
+
+    game.physics.enable(sprite1, Phaser.Physics.ARCADE);
+
     sprite1.body.velocity.y = 100;
+
+    
 
     //  This adjusts the collision body size.
     //  220x10 is the new width/height.
     //  See the offset bounding box for another example.
-    sprite1.body.setRectangle(220, 10, 0, 0);
+    sprite1.body.setSize(220, 10, 0, 0);
 
     sprite2 = game.add.sprite(400, 450, 'mushroom');
     sprite2.name = 'mushroom';
+    game.physics.enable(sprite2, Phaser.Physics.ARCADE);
     sprite2.body.immovable = true;
 
 }
 
 function update() {
 
-    game.physics.collide(sprite1, sprite2, collisionHandler, null, this);
+    game.physics.arcade.collide(sprite1, sprite2, collisionHandler, null, this);
 
 }
 
@@ -44,7 +50,7 @@ function collisionHandler (obj1, obj2) {
 
 function render() {
 
-    game.debug.physicsBody(sprite1.body);
-    game.debug.physicsBody(sprite2.body);
+    // game.debug.spriteBounds(sprite1);
+    // game.debug.spriteBounds(sprite2);
 
 }

@@ -19,6 +19,8 @@ function create() {
     sprite1 = game.add.sprite(0, 200, 'atari');
     sprite2 = game.add.sprite(750, 220, 'mushroom');
 
+    game.physics.enable([sprite1,sprite2], Phaser.Physics.ARCADE);
+
     //  We'll use random velocities so we can test it in our processCallback
     sprite1.body.velocity.x = 50 + Math.random() * 100;
     sprite2.body.velocity.x = -(50 + Math.random() * 100);
@@ -27,7 +29,7 @@ function create() {
 
 function update() {
 
-    game.physics.collide(sprite1, sprite2, collisionCallback, processCallback, this);
+    game.physics.arcade.collide(sprite1, sprite2, collisionCallback, processCallback, this);
 
 }
 
