@@ -87,6 +87,7 @@ Significant API changes:
 * All the Debug methods have had the word 'render' removed from the start. So where you did `debug.renderSpriteInfo` before, it's now just `debug.spriteInfo`.
 * Debug methods that rendered geometry (Rectangle, Circle, Line, Point) have been merged into the single method: `Debug.geom`.
 * Animation.looped has been renamed to Animation.loop. It's a boolean you can toggle at run-time to turn on/off animation looping.
+* Sprite.damage will now kill the Sprite if health is less than or equal to 0 (before it would only kill if less than zero)
 
 
 New features:
@@ -144,6 +145,7 @@ New features:
 * Group.xy(index, x, y) allows you to set the x and y coordinates of a Group child at the given index.
 * Group.reverse() reverses the display order of all children in the Group.
 * Tweens are now bound to their own TweenManager, not always the global game one. So you can create your own managers now (for you clark :)
+* json is now the default tilemap format when not defined (thanks RyanDansie, #528)
 
 
 Updates:

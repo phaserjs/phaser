@@ -102,7 +102,7 @@ Phaser.TilemapParser = {
             {
                 return this.parseCSV(key, map.data, tileWidth, tileHeight);
             }
-            else if (map.format === Phaser.Tilemap.TILED_JSON)
+            else if (!map.format || map.format === Phaser.Tilemap.TILED_JSON)
             {
                 return this.parseTiledJSON(map.data);
             }

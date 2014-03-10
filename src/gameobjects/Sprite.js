@@ -567,7 +567,7 @@ Phaser.Sprite.prototype.destroy = function(destroyChildren) {
 
 /**
 * Damages the Sprite, this removes the given amount from the Sprites health property.
-* If health is then taken below zero Sprite.kill is called.
+* If health is then taken below or is equal to zero `Sprite.kill` is called.
 * 
 * @method Phaser.Sprite#damage
 * @memberof Phaser.Sprite
@@ -580,7 +580,7 @@ Phaser.Sprite.prototype.damage = function(amount) {
     {
         this.health -= amount;
 
-        if (this.health < 0)
+        if (this.health <= 0)
         {
             this.kill();
         }
