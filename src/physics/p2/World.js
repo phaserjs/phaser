@@ -1073,3 +1073,18 @@ Object.defineProperty(Phaser.Physics.P2.prototype, "enableBodySleeping", {
     }
 
 });
+
+/**
+* @name Phaser.Physics.P2#total
+* @property {number} total - The total number of bodies in the world.
+* @readonly
+*/
+Object.defineProperty(Phaser.Physics.P2.prototype, "total", {
+    
+    get: function () {
+
+        return this.world.bodies.length;
+
+    }
+
+});

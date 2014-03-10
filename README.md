@@ -44,7 +44,7 @@ Version 2.0.0 - "Aes Sedai" - -in development-
 
 Significant API changes:
 
-* Upgraded to Pixi.js 1.5.2
+* Upgraded to Pixi.js 1.5.5
 * Group now extends PIXI.DisplayObjectContainer, rather than owning a _container property, which makes life a whole lot easier re: nesting and child iteration.
 * Removed Sprite.group property. You can use Sprite.parent for all similar needs now.
 * PIXI.Point is now aliased to Phaser.Point - saves on code duplication and works exactly the same.
@@ -72,7 +72,7 @@ Significant API changes:
 * World preUpdate, update and postUpdate have all been moved to Stage. So all children are updated regardless where on the display list they live.
 * Cache.getImageKeys and similar has been removed, please use Cache.getKeys(Phaser.Cache.IMAGE) instead, this now supports all 10 Cache data types.
 * After defining tiles that collide on a Tilemap, you need to call Tilemap.generateCollisionData(layer) to populate the physics world with the data required.
-* Phaser.QuadTree has been removed from core and moved to a plugin. It's no longer required, nor works with the physics system.
+* Phaser.QuadTree has been made more generic and works with any rectangle, not just physics bodies.
 * Phaser.Animation.frame now returns the frame of the current animation, rather than the global frame from the sprite sheet / atlas.
 * When adding a Group if the parent value is `null` the Group won't be added to the World, so you can add it when ready. If parent is `undefined` it's added by default.
 * The Keyboard class has had a complete overhaul. Phaser.Key objects are created automatically, there are fixes against duration and keys reset properly on visibility loss.
@@ -88,6 +88,7 @@ Significant API changes:
 * Debug methods that rendered geometry (Rectangle, Circle, Line, Point) have been merged into the single method: `Debug.geom`.
 * Animation.looped has been renamed to Animation.loop. It's a boolean you can toggle at run-time to turn on/off animation looping.
 * Sprite.damage will now kill the Sprite if health is less than or equal to 0 (before it would only kill if less than zero)
+* By default Sprites no longer check if they are within the world bounds. It's quite an expensive process (calling getBounds every frame), so you have to enable directly.
 
 
 New features:
