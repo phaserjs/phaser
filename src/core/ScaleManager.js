@@ -381,11 +381,8 @@ Phaser.ScaleManager.prototype = {
                 orientationImage = '__default';
             }
 
-            this.orientationSprite = new PIXI.Sprite(PIXI.TextureCache[orientationImage]);
-            this.orientationSprite.anchor.x = 0.5;
-            this.orientationSprite.anchor.y = 0.5;
-            this.orientationSprite.position.x = this.game.width / 2;
-            this.orientationSprite.position.y = this.game.height / 2;
+            this.orientationSprite = new Phaser.Image(this.game, this.game.width / 2, this.game.height / 2, PIXI.TextureCache[orientationImage]);
+            this.orientationSprite.anchor.set(0.5);
 
             this.checkOrientationState();
 

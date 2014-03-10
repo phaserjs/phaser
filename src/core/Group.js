@@ -1021,30 +1021,61 @@ Phaser.Group.prototype.sort = function (index, order) {
     if (typeof order === 'undefined') { order = Phaser.Group.SORT_ASCENDING; }
 
     this._sortProperty = index;
-    this._cache[9] = order;
 
-    this.children.sort(this.sortHandler);
+    if (order === Phaser.Group.SORT_ASCENDING)
+    {
+        this.children.sort(this.ascendingSortHandler.bind(this));
+    }
+    else
+    {
+        this.children.sort(this.descendingSortHandler.bind(this));
+    }
 
 }
 
 /**
 * An internal helper function for the sort process.
 *
-* @method Phaser.Group#sortHandler
+* @method Phaser.Group#ascendingSortHandler
 * @param {object} a - The first object being sorted.
 * @param {object} b - The second object being sorted.
 */
-Phaser.Group.prototype.sortHandler = function (a, b) {
+Phaser.Group.prototype.ascendingSortHandler = function (a, b) {
 
     if (a[this._sortProperty] && b[this._sortProperty])
     {
         if (a[this._sortProperty] < b[this._sortProperty])
         {
-            return this._cache[9];
+            return -1;
         }
         else if (a[this._sortProperty] > b[this._sortProperty])
         {
-            return -this._cache[9];
+            return 1;
+        }
+    }
+
+    return 0;
+
+}
+
+/**
+* An internal helper function for the sort process.
+*
+* @method Phaser.Group#descendingSortHandler
+* @param {object} a - The first object being sorted.
+* @param {object} b - The second object being sorted.
+*/
+Phaser.Group.prototype.descendingSortHandler = function (a, b) {
+
+    if (a[this._sortProperty] && b[this._sortProperty])
+    {
+        if (a[this._sortProperty] < b[this._sortProperty])
+        {
+            return 1;
+        }
+        else if (a[this._sortProperty] > b[this._sortProperty])
+        {
+            return -1;
         }
     }
 

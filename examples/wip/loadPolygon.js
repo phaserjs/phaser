@@ -42,6 +42,4 @@ function update() {
 
 function render() {
 
-	// game.debug.physicsBody(contra.body, '#00ffff');
-
 }
