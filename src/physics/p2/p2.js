@@ -1953,6 +1953,33 @@ function Narrowphase(){
      */
     this.restitution = 0;
 
+    /**
+     * The stiffness value to use in the next contact equations.
+     * @property {Number} stiffness
+     */
+    this.stiffness = 1e7;
+
+    /**
+     * The stiffness value to use in the next contact equations.
+     * @property {Number} stiffness
+     */
+    this.relaxation = 3;
+
+    /**
+     * The stiffness value to use in the next friction equations.
+     * @property frictionStiffness
+     * @type {Number}
+     */
+    this.frictionStiffness = 1e7;
+
+    /**
+     * The relaxation value to use in the next friction equations.
+     * @property frictionRelaxation
+     * @type {Number}
+     */
+    this.frictionRelaxation = 3;
+
+
     // Keep track of the colliding bodies last step
     this.collidingBodiesLastStep = { keys:[] };
 };
@@ -2041,6 +2068,8 @@ Narrowphase.prototype.createContactEquation = function(bodyA,bodyB,shapeA,shapeB
     c.shapeB = shapeB;
     c.restitution = this.restitution;
     c.firstImpact = !this.collidedLastStep(bodyA,bodyB);
+    c.stiffness = this.stiffness;
+    c.relaxation = this.relaxation;
     c.enabled = true;
 
     if(bodyA.allowSleep && (bodyA.motionState == Body.DYNAMIC) && !(bodyB.motionState == Body.STATIC || bodyB.sleepState === Body.SLEEPY))
@@ -2068,6 +2097,8 @@ Narrowphase.prototype.createFrictionEquation = function(bodyA,bodyB,shapeA,shape
     c.frictionCoefficient = this.frictionCoefficient;
     c.relativeVelocity = this.surfaceVelocity;
     c.enabled = true;
+    c.frictionStiffness = this.frictionStiffness;
+    c.frictionRelaxation = this.frictionRelaxation;
     return c;
 };
 
@@ -5439,8 +5470,8 @@ ContactEquation.prototype.computeB = function(a,b,h){
         Gq = 0;
         GW = (1/b)*(1+this.restitution) * this.computeGW();
     } else {
-        GW = this.computeGW();
         Gq = vec2.dot(n,penetrationVec);
+        GW = this.computeGW();
     }
 
     var GiMf = this.computeGiMf();
@@ -6946,9 +6977,19 @@ function Body(options){
     this.wlambda = 0;
 
     /**
-     * The angle of the body
+     * The angle of the body, in radians.
      * @property angle
      * @type {number}
+     * @example
+     *     // The angle property is not normalized to the interval 0 to 2*pi, it can be any value.
+     *     // If you need a value between 0 and 2*pi, use the following function to normalize it.
+     *     function normalizeAngle(angle){
+     *         angle = angle % (2*Math.PI);
+     *         if(angle < 0){
+     *             angle += (2*Math.PI);
+     *         }
+     *         return angle;
+     *     }
      */
     this.angle = options.angle || 0;
 
@@ -8803,7 +8844,7 @@ GSSolver.prototype.solve = function(h,world){
         lambda = this.lambda;
     if(!useGlobalParams){
         for(var i=0, c; c = equations[i]; i++){
-            if(h !== c.h) c.updateSpookParams(h);
+            c.updateSpookParams(h);
             Bs[i] =     c.computeB(c.a,c.b,h);
             invCs[i] =  c.computeInvC(c.eps);
         }
@@ -9465,6 +9506,10 @@ function World(options){
      */
     this.defaultRestitution = 0.0;
 
+    this.defaultMaterial = new Material();
+
+    this.defaultContactMaterial = new ContactMaterial(this.defaultMaterial,this.defaultMaterial);
+
     /**
      * For keeping track of what time step size we used last step
      * @property lastTimeStep
@@ -9863,20 +9908,26 @@ World.prototype.internalStep = function(dt){
                     xj = bj.shapeOffsets[l],
                     aj = bj.shapeAngles[l];
 
+                /*
                 var mu = this.defaultFriction,
                     restitution = this.defaultRestitution,
                     surfaceVelocity = 0;
+                */
 
+                var cm = this.defaultContactMaterial;
                 if(si.material && sj.material){
-                    var cm = this.getContactMaterial(si.material,sj.material);
-                    if(cm){
+                    var tmp = this.getContactMaterial(si.material,sj.material);
+                    if(tmp){
+                        cm = tmp;
+                        /*
                         mu = cm.friction;
                         restitution = cm.restitution;
                         surfaceVelocity = cm.surfaceVelocity;
+                        */
                     }
                 }
 
-                this.runNarrowphase(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution,surfaceVelocity,glen);
+                this.runNarrowphase(np,bi,si,xi,ai,bj,sj,xj,aj,cm,glen);
             }
         }
     }
@@ -10031,7 +10082,7 @@ World.integrateBody = function(body,dt){
  * @param  {Number} aj
  * @param  {Number} mu
  */
-World.prototype.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitution,surfaceVelocity,glen){
+World.prototype.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,cm,glen){ /* mu,restitution,surfaceVelocity */
 
     if(!((si.collisionGroup & sj.collisionMask) !== 0 && (sj.collisionGroup & si.collisionMask) !== 0))
         return;
@@ -10051,8 +10102,8 @@ World.prototype.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitut
     var ajw = aj + bj.angle;
 
     // Run narrowphase
-    np.enableFriction = mu > 0;
-    np.frictionCoefficient = mu;
+    np.enableFriction = cm.friction > 0;
+    np.frictionCoefficient = cm.friction;
     var reducedMass;
     if(bi.motionState == Body.STATIC || bi.motionState == Body.KINEMATIC)
         reducedMass = bj.mass;
@@ -10060,9 +10111,13 @@ World.prototype.runNarrowphase = function(np,bi,si,xi,ai,bj,sj,xj,aj,mu,restitut
         reducedMass = bi.mass;
     else
         reducedMass = (bi.mass*bj.mass)/(bi.mass+bj.mass);
-    np.slipForce = mu*glen*reducedMass;
-    np.restitution = restitution;
-    np.surfaceVelocity = surfaceVelocity;
+    np.slipForce = cm.friction*glen*reducedMass;
+    np.restitution = cm.restitution;
+    np.surfaceVelocity = cm.surfaceVelocity;
+    np.frictionStiffness = cm.frictionStiffness;
+    np.frictionRelaxation = cm.frictionRelaxation;
+    np.stiffness = cm.stiffness;
+    np.relaxation = cm.relaxation;
 
     var resolver = np[si.type | sj.type],
         numContacts = 0;

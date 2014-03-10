@@ -25,15 +25,16 @@ module.exports = function (grunt) {
 '* By Richard Davey http://www.photonstorm.com @photonstorm\n' +
 '*\n' +
 '* Phaser is a fun, free and fast 2D game framework for making HTML5 games \n' +
-'* for desktop and mobile web browsers, supporting Canvas and WebGL rendering.\n' +
+'* for desktop and mobile web browsers, supporting Canvas and WebGL.\n' +
 '*\n' +
 '* Phaser uses Pixi.js for rendering, created by Mat Groves http://matgroves.com @Doormat23\n' +
-'* Phaser uses p2.js for physics, created by Stefan Hedman https://github.com/schteppe/p2.js @schteppe\n' +
+'* Phaser uses p2.js for full-body physics, created by Stefan Hedman https://github.com/schteppe/p2.js @schteppe\n' +
+'* Phaser contains a port of N+ Physics, converted by Richard Davey, original by http://www.metanetsoftware.com\n' +
 '*\n' +
 '* Many thanks to Adam Saltsman (@ADAMATOMIC) for releasing Flixel, from which both Phaser\n' +
-'* and my love of framework development originate.\n' +
+'* and my love of framework development can be traced.\n' +
 '*\n' +
-'* Follow Phaser development progress at http://phaser.io\n' +
+'* Follow development at http://phaser.io and on our forum\n' +
 '*\n' +
 '* "If you want your children to be intelligent,  read them fairy tales."\n' +
 '* "If you want them to be more intelligent, read them more fairy tales."\n' +
@@ -42,10 +43,6 @@ module.exports = function (grunt) {
 
         release_dir: 'build',
         compile_dir: 'dist',
-
-        p2: [
-            'src/p2.js'
-        ],
 
         pixi: [
             'src/pixi/Intro.js',
@@ -186,21 +183,6 @@ module.exports = function (grunt) {
             'src/physics/arcade/World.js',
             'src/physics/arcade/Body.js',
 
-            'src/physics/ninja/World.js',
-            'src/physics/ninja/Body.js',
-            'src/physics/ninja/AABB.js',
-            'src/physics/ninja/Tile.js',
-            'src/physics/ninja/Circle.js',
-
-            'src/physics/p2/World.js',
-            'src/physics/p2/PointProxy.js',
-            'src/physics/p2/InversePointProxy.js',
-            'src/physics/p2/Body.js',
-            'src/physics/p2/Spring.js',
-            'src/physics/p2/Material.js',
-            'src/physics/p2/ContactMaterial.js',
-            'src/physics/p2/CollisionGroup.js',
-
             'src/particles/Particles.js',
             'src/particles/arcade/ArcadeParticles.js',
             'src/particles/arcade/Emitter.js',
@@ -212,6 +194,26 @@ module.exports = function (grunt) {
             'src/tilemap/Tileset.js',
 
             'src/Outro.js'
+        ],
+
+        p2: [
+            'src/physics/p2/p2.js'
+            'src/physics/p2/World.js',
+            'src/physics/p2/PointProxy.js',
+            'src/physics/p2/InversePointProxy.js',
+            'src/physics/p2/Body.js',
+            'src/physics/p2/Spring.js',
+            'src/physics/p2/Material.js',
+            'src/physics/p2/ContactMaterial.js',
+            'src/physics/p2/CollisionGroup.js',
+        ],
+
+        ninja: [
+            'src/physics/ninja/World.js',
+            'src/physics/ninja/Body.js',
+            'src/physics/ninja/AABB.js',
+            'src/physics/ninja/Tile.js',
+            'src/physics/ninja/Circle.js',
         ],
 
         clean: ['<%= compile_dir %>'],
@@ -230,7 +232,13 @@ module.exports = function (grunt) {
                 dest: '<%= compile_dir %>/pixi.js'
             },
 
-            //  Phaser, stand-alone (no bundled libs)
+            //  Our custom version of Ninja Physics
+            ninja: {
+                src: ['<%= ninja %>'],
+                dest: '<%= compile_dir %>/ninja.js'
+            },
+
+            //  Phaser with no bundled libs
             phaser: {
                 options: {
                     banner: '<%= banner %>'
@@ -244,7 +252,7 @@ module.exports = function (grunt) {
                 options: {
                     banner: '<%= banner %>'
                 },
-                src: ['<%= compile_dir %>/p2.js', '<%= compile_dir %>/pixi.js', '<%= compile_dir %>/phaser-no-libs.js'],
+                src: ['<%= compile_dir %>/pixi.js', '<%= compile_dir %>/phaser-no-libs.js', '<%= compile_dir %>/ninja.js', '<%= compile_dir %>/p2.js'],
                 dest: '<%= compile_dir %>/phaser.js'
             }
 
@@ -266,6 +274,14 @@ module.exports = function (grunt) {
                 },
                 src: ['<%= concat.pixi.dest %>'],
                 dest: '<%= compile_dir %>/pixi.min.js'
+            },
+
+            ninja: {
+                options: {
+                    banner: '/* Ninja Physics for Phaser v<%= pkg.version %> - http://phaser.io - @photonstorm - (c) 2014 Photon Storm Ltd. */\n'
+                },
+                src: ['<%= concat.ninja.dest %>'],
+                dest: '<%= compile_dir %>/ninja.min.js'
             },
 
             phaser: {
@@ -301,6 +317,8 @@ module.exports = function (grunt) {
                     { src: ['dist/phaser-no-libs.min.js'], dest: 'build/custom/phaser-no-libs.min.js' },
                     { src: ['dist/pixi.js'], dest: 'build/custom/pixi.js' },
                     { src: ['dist/pixi.min.js'], dest: 'build/custom/pixi.min.js' }
+                    { src: ['dist/ninja.js'], dest: 'build/custom/ninja.js' },
+                    { src: ['dist/ninja.min.js'], dest: 'build/custom/ninja.min.js' }
                 ]
             }
         },

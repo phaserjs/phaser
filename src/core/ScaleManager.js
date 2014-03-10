@@ -121,6 +121,14 @@ Phaser.ScaleManager = function (game, width, height) {
     this.hasResized = new Phaser.Signal();
 
     /**
+    * This is the DOM element that will have the Full Screen mode called on it. It defaults to the game canvas, but can be retargetted to any valid DOM element.
+    * If you adjust this property it's up to you to see it has the correct CSS applied, and that you have contained the game canvas correctly.
+    * Note that if you use a scale property of EXACT_FIT then fullScreenTarget will have its width and height style set to 100%.
+    * @property {any} fullScreenTarget
+    */
+    this.fullScreenTarget = this.game.canvas;
+
+    /**
     * @property {Phaser.Signal} enterFullScreen - The event that is dispatched when the browser enters full screen mode (if it supports the FullScreen API).
     */
     this.enterFullScreen = new Phaser.Signal();
@@ -277,11 +285,11 @@ Phaser.ScaleManager.prototype = {
 
         if (this.game.device.fullscreenKeyboard)
         {
-            this.game.canvas[this.game.device.requestFullscreen](Element.ALLOW_KEYBOARD_INPUT);
+            this.fullScreenTarget[this.game.device.requestFullscreen](Element.ALLOW_KEYBOARD_INPUT);
         }
         else
         {
-            this.game.canvas[this.game.device.requestFullscreen]();
+            this.fullScreenTarget[this.game.device.requestFullscreen]();
         }
 
     },
@@ -292,7 +300,7 @@ Phaser.ScaleManager.prototype = {
     */
     stopFullScreen: function () {
 
-        this.game.canvas[this.game.device.cancelFullscreen]();
+        this.fullScreenTarget[this.game.device.cancelFullscreen]();
 
     },
 
@@ -310,8 +318,8 @@ Phaser.ScaleManager.prototype = {
         {
             if (this.fullScreenScaleMode === Phaser.ScaleManager.EXACT_FIT)
             {
-                this.game.canvas.style['width'] = '100%';
-                this.game.canvas.style['height'] = '100%';
+                this.fullScreenTarget.style['width'] = '100%';
+                this.fullScreenTarget.style['height'] = '100%';
 
                 this.width = window.outerWidth;
                 this.height = window.outerHeight;
@@ -334,8 +342,8 @@ Phaser.ScaleManager.prototype = {
         }
         else
         {
-            this.game.canvas.style['width'] = this.game.width + 'px';
-            this.game.canvas.style['height'] = this.game.height + 'px';
+            this.fullScreenTarget.style['width'] = this.game.width + 'px';
+            this.fullScreenTarget.style['height'] = this.game.height + 'px';
 
             this.width = this._width;
             this.height = this._height;

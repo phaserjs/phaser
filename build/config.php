@@ -6,7 +6,7 @@
 
     echo <<<EOL
 
-    <script src="$path/src/p2.js"></script>
+    <script src="$path/src/physics/p2/p2.js"></script>
 
     <script src="$path/src/pixi/Pixi.js"></script>
     <script src="$path/src/pixi/core/Point.js"></script>

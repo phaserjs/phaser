@@ -145,7 +145,7 @@ New features:
 * Group.xy(index, x, y) allows you to set the x and y coordinates of a Group child at the given index.
 * Group.reverse() reverses the display order of all children in the Group.
 * Tweens are now bound to their own TweenManager, not always the global game one. So you can create your own managers now (for you clark :)
-* json is now the default tilemap format when not defined (thanks RyanDansie, #528)
+* ScaleManager.fullScreenTarget allows you to change the DOM element that the fullscreen API is called on (feature request #526)
 
 
 Updates:
@@ -175,6 +175,7 @@ Updates:
 * Keyboard.event now stores the most recent DOM keyboard event.
 * Animation.stop has a new parameter: dispatchComplete. If true it'll dispatch an Animation.onComplete event.
 * TileSprites now have a physics body property and call it in the pre and post updates. As with all physics bodies it's null by default.
+* json is now the default tilemap format when not defined (thanks RyanDansie, #528)
 
 
 Bug Fixes:
