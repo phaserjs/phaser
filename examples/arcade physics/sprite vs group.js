@@ -16,21 +16,21 @@ function create() {
 
     game.stage.backgroundColor = '#2d2d2d';
 
+    game.physics.enable(game.world, Phaser.Physics.ARCADE);
+
     //  This example will check Sprite vs. Group collision
 
     sprite = game.add.sprite(32, 200, 'phaser');
     sprite.name = 'phaser-dude';
     
-
     group = game.add.group();
-
-    game.physics.enable(game.world, Phaser.Physics.ARCADE);
+    group.enableBody = true;
+    group.physicsBodyType = Phaser.Physics.ARCADE;
 
     for (var i = 0; i < 50; i++)
     {
         var c = group.create(game.rnd.integerInRange(100, 770), game.rnd.integerInRange(0, 570), 'veggies', game.rnd.integerInRange(0, 36));
         c.name = 'veg' + i;
-        game.physics.enable(c, Phaser.Physics.ARCADE);
         c.body.immovable = true;
     }
 
@@ -39,7 +39,6 @@ function create() {
         //  Here we'll create some chillis which the player can pick-up. They are still part of the same Group.
         var c = group.create(game.rnd.integerInRange(100, 770), game.rnd.integerInRange(0, 570), 'veggies', 17);
         c.name = 'chilli' + i;
-        game.physics.enable(c, Phaser.Physics.ARCADE);
         c.body.immovable = true;
     }
 

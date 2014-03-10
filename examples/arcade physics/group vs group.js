@@ -24,24 +24,27 @@ function create() {
     //  This will check Group vs. Group collision (bullets vs. veggies!)
 
     veggies = game.add.group();
+    veggies.enableBody = true;
+    veggies.physicsBodyType = Phaser.Physics.ARCADE;
 
     for (var i = 0; i < 50; i++)
     {
         var c = veggies.create(game.world.randomX, Math.random() * 500, 'veggies', game.rnd.integerInRange(0, 36));
         c.name = 'veg' + i;
-        game.physics.enable(c, Phaser.Physics.ARCADE);
         c.body.immovable = true;
     }
 
     bullets = game.add.group();
+    bullets.enableBody = true;
+    bullets.physicsBodyType = Phaser.Physics.ARCADE;
 
-    for (var i = 0; i < 10; i++)
+    for (var i = 0; i < 20; i++)
     {
         var b = bullets.create(0, 0, 'bullet');
         b.name = 'bullet' + i;
-        game.physics.enable(b, Phaser.Physics.ARCADE);
         b.exists = false;
         b.visible = false;
+        b.checkWorldBounds = true;
         b.events.onOutOfBounds.add(resetBullet, this);
     }
 

@@ -14,13 +14,17 @@ function create() {
     sprite = game.add.sprite(400, 300, 'arrow');
     sprite.anchor.setTo(0.5, 0.5);
 
+    //	Enable Arcade Physics for the sprite
     game.physics.enable(sprite, Phaser.Physics.ARCADE);
+
+    //	Tell it we don't want physics to manage the rotation
+    sprite.body.allowRotation = false;
 
 }
 
 function update() {
 
-    game.physics.arcade.moveToPointer(sprite, game.input.activePointer, 60, 500, 500);
+    sprite.rotation = game.physics.arcade.moveToPointer(sprite, 60, game.input.activePointer, 500);
 
 }
 

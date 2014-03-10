@@ -347,7 +347,7 @@ Phaser.Physics.Arcade.Body.prototype = {
         //  this is where the Sprite currently is, in world coordinates
         // this.preX = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
         // this.preY = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
-        // this.preRotation = this.sprite.angle;
+        this.preRotation = this.sprite.angle;
 
         // this.x = this.preX;
         // this.y = this.preY;
@@ -409,66 +409,33 @@ Phaser.Physics.Arcade.Body.prototype = {
 
         // this.position.add(this.newVelocity.x, this.newVelocity.y);
 
-        this.sprite.x = (this.position.x - this.offset.x);
-        this.sprite.y = (this.position.y - this.offset.y);
-
-
-/*        if (this.deltaX() < 0)
+        if (this.deltaX() < 0)
         {
             this.facing = Phaser.LEFT;
-            this.sprite.x += this.deltaX();
         }
         else if (this.deltaX() > 0)
         {
             this.facing = Phaser.RIGHT;
-            this.sprite.x += this.deltaX();
         }
 
         if (this.deltaY() < 0)
         {
             this.facing = Phaser.UP;
-            this.sprite.y += this.deltaY();
         }
         else if (this.deltaY() > 0)
         {
             this.facing = Phaser.DOWN;
-            this.sprite.y += this.deltaY();
         }
-*/
 
-        // this.sprite.x += this.overlapX;
-        // this.sprite.y += this.overlapY;
-
-        //  this is where the Sprite currently is, in world coordinates
-        // this.sprite.x = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
-        // this.sprite.y = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
-
-
-        /*
-        if (this.deltaX() < 0 && this.blocked.left === false)
+        if (this.deltaX() !== 0 || this.deltaY() !== 0)
         {
-            this.facing = Phaser.LEFT;
-            this.sprite.x += this.deltaX();
+            //  this is where the Sprite currently is, in world coordinates
+            // this.sprite.x = (this.sprite.world.x - (this.sprite.anchor.x * this.width)) + this.offset.x;
+            // this.sprite.y = (this.sprite.world.y - (this.sprite.anchor.y * this.height)) + this.offset.y;
+            this.sprite.x = (this.position.x - this.offset.x);
+            this.sprite.y = (this.position.y - this.offset.y);
+            this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
         }
-        else if (this.deltaX() > 0 && this.blocked.right === false)
-        {
-            this.facing = Phaser.RIGHT;
-            this.sprite.x += this.deltaX();
-        }
-
-        if (this.deltaY() < 0 && this.blocked.up === false)
-        {
-            this.facing = Phaser.UP;
-            this.sprite.y += this.deltaY();
-        }
-        else if (this.deltaY() > 0 && this.blocked.down === false)
-        {
-            this.facing = Phaser.DOWN;
-            this.sprite.y += this.deltaY();
-        }
-        */
-        
-        this.center.setTo(this.x + this.halfWidth, this.y + this.halfHeight);
 
         if (this.allowRotation)
         {

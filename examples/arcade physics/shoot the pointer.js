@@ -19,21 +19,17 @@ function create() {
     game.stage.backgroundColor = '#313131';
 
     bullets = game.add.group();
+    bullets.enableBody = true;
+    bullets.physicsBodyType = Phaser.Physics.ARCADE;
+
     bullets.createMultiple(50, 'bullet');
-    bullets.setAll('anchor.x', 0.5);
-    bullets.setAll('anchor.y', 0.5);
+    bullets.setAll('checkWorldBounds', true);
+    bullets.setAll('outOfBoundsKill', true);
     
-
     sprite = game.add.sprite(400, 300, 'arrow');
-    sprite.anchor.setTo(0.5, 0.5);
-
+    sprite.anchor.set(0.5);
     game.physics.enable(sprite, Phaser.Physics.ARCADE);
-
-    bullets.forEach(function (sprite) {
-
-        game.physics.enable(sprite, Phaser.Physics.ARCADE);
-        sprite.body.outOfBoundsKill = true;
-    });
+    sprite.body.allowRotation = false;
 
 }
 
@@ -56,9 +52,9 @@ function fire() {
 
         var bullet = bullets.getFirstDead();
 
-        bullet.reset(sprite.x, sprite.y);
+        bullet.reset(sprite.x - 8, sprite.y - 8);
 
-        bullet.rotation = game.physics.arcade.moveToPointer(bullet, 300);
+        game.physics.arcade.moveToPointer(bullet, 300);
     }
 
 }

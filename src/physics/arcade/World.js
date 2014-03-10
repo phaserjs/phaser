@@ -226,11 +226,9 @@ Phaser.Physics.Arcade.prototype = {
     */
     updateMotion: function (body) {
 
-        //  Rotation
-        this._velocityDelta = (this.computeVelocity(body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular, 0) - body.angularVelocity) * 0.5;
+        this._velocityDelta = this.computeVelocity(body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity;
         body.angularVelocity += this._velocityDelta;
         body.rotation += (body.angularVelocity * this.game.time.physicsElapsed);
-        body.angularVelocity += this._velocityDelta;
 
         //  Apply gravity using the p2 style gravityScale
         body.velocity.x += this.gravity.x * this.game.time.physicsElapsed * body.gravityScale.x;
@@ -259,7 +257,7 @@ Phaser.Physics.Arcade.prototype = {
 
         if (acceleration)
         {
-            velocity + acceleration * this.game.time.physicsElapsed;
+            velocity += acceleration * this.game.time.physicsElapsed;
         }
         else if (drag)
         {
@@ -1433,7 +1431,7 @@ Phaser.Physics.Arcade.prototype = {
         if (typeof maxTime === 'undefined') { maxTime = 0; }
 
         this._angle = this.angleToPointer(displayObject, pointer);
-        
+
         if (maxTime > 0)
         {
             //  We know how many pixels we need to move, but how fast?

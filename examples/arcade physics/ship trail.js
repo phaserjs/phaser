@@ -18,23 +18,19 @@ function create() {
 	game.stage.backgroundColor = '#124184';
 
 	bmd = game.add.bitmapData(800, 600);
-	bmd.fillStyle('#ffffff');
-	var bg = game.add.sprite(0, 0, bmd);
-	bg.body.moves = false;
+	bmd.context.fillStyle = '#ffffff';
 
-	// game.enableStep();
+	var bg = game.add.sprite(0, 0, bmd);
 
 	game.physics.arcade.gravity.y = 100;
 
 	sprite = game.add.sprite(32, 450, 'arrow');
-	sprite.anchor.setTo(0.5, 0.5);
+	sprite.anchor.set(0.5);
 
 	game.physics.enable(sprite, Phaser.Physics.ARCADE);
 
 	sprite.body.collideWorldBounds = true;
-	sprite.body.bounce.setTo(0.8, 0.8);
-
-	sprite.body.linearDamping = 0.1;
+	sprite.body.bounce.set(0.8);
 
 	game.input.onDown.add(launch, this);
 
@@ -55,9 +51,9 @@ function launch() {
 
 function update() {
 
-	sprite.rotation = sprite.body.angle;
+	// sprite.rotation = sprite.body.angle;
 
-	bmd.context.fillStyle('#ffff00');
+	bmd.context.fillStyle = '#ffff00';
 	bmd.context.fillRect(sprite.x, sprite.y, 2, 2);
 
 }

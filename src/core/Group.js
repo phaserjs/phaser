@@ -101,6 +101,12 @@ Phaser.Group = function (game, parent, name, addToStage) {
     this.physicsBodyType = Phaser.Physics.ARCADE;
 
     /**
+    * @property {string} _sortProperty - The property on which children are sorted.
+    * @private
+    */
+    this._sortProperty = 'y';
+
+    /**
     * A small internal cache:
     * 0 = previous position.x
     * 1 = previous position.y
@@ -111,10 +117,11 @@ Phaser.Group = function (game, parent, name, addToStage) {
     * 6 = exists (0 = no, 1 = yes)
     * 7 = fixed to camera (0 = no, 1 = yes)
     * 8 = cursor index
+    * 9 = sort order
     * @property {Int16Array} _cache
     * @private
     */
-    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0, 0]);
+    this._cache = new Int16Array([0, 0, 0, 0, 1, 0, 1, 0, 0, 0]);
 
 };
 
@@ -1013,10 +1020,35 @@ Phaser.Group.prototype.sort = function (index, order) {
     if (typeof index === 'undefined') { index = 'y'; }
     if (typeof order === 'undefined') { order = Phaser.Group.SORT_ASCENDING; }
 
+    this._sortProperty = index;
+    this._cache[9] = order;
+
+    this.children.sort(this.sortHandler);
 
 }
 
+/**
+* An internal helper function for the sort process.
+*
+* @method Phaser.Group#sortHandler
+* @param {object} a - The first object being sorted.
+* @param {object} b - The second object being sorted.
+*/
 Phaser.Group.prototype.sortHandler = function (a, b) {
+
+    if (a[this._sortProperty] && b[this._sortProperty])
+    {
+        if (a[this._sortProperty] < b[this._sortProperty])
+        {
+            return this._cache[9];
+        }
+        else if (a[this._sortProperty] > b[this._sortProperty])
+        {
+            return -this._cache[9];
+        }
+    }
+
+    return 0;
 
 }
 
