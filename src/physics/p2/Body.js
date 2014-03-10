@@ -168,7 +168,7 @@ Phaser.Physics.P2.Body.prototype = {
 
         if (this.collideWorldBounds)
         {
-            mask = this.game.physics.boundsCollisionGroup.mask;
+            mask = this.game.physics.p2.boundsCollisionGroup.mask;
         }
 
         for (var i = 0; i < this.collidesWith.length; i++)
@@ -628,9 +628,9 @@ Phaser.Physics.P2.Body.prototype = {
     */
     addToWorld: function () {
 
-        if (this.data.world !== this.game.physics.world)
+        if (this.data.world !== this.game.physics.p2.world)
         {
-            this.game.physics.addBody(this);
+            this.game.physics.p2.addBody(this);
         }
 
     },
@@ -642,9 +642,9 @@ Phaser.Physics.P2.Body.prototype = {
     */
     removeFromWorld: function () {
 
-        if (this.data.world === this.game.physics.world)
+        if (this.data.world === this.game.physics.p2.world)
         {
-            this.game.physics.removeBody(this);
+            this.game.physics.p2.removeBody(this);
         }
 
     },
