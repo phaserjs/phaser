@@ -22,49 +22,25 @@ var locs = [];
 function create() {
 
     //  Create our tilemap to walk around
-    // map = game.add.tilemap('desert');
-    // map.addTilesetImage('ground_1x1');
-    // layer = map.createLayer('Tile Layer 1');
+    map = game.add.tilemap('desert');
+    map.addTilesetImage('ground_1x1');
+    layer = map.createLayer('Tile Layer 1');
 
     //  This group will hold the main player + all the tree sprites to depth sort against
     group = game.add.group();
 
     //  Create some trees, each in a unique location (otherwise we'll get sort flicker)
-    for (var i = 0; i < 100; i++)
+    for (var i = 0; i < 200; i++)
     {
         createUniqueLocation();
     }
 
     sprite = group.create(300, 32, 'phaser');
 
-    //  The player
-    // group.create(128, 0, 'trees', game.rnd.integerInRange(0, 7));
-    // group.create(64, 0, 'trees', game.rnd.integerInRange(0, 7));
-    // group.create(256, 0, 'trees', game.rnd.integerInRange(0, 7));
-
-    // group.create(128, 32, 'trees', game.rnd.integerInRange(0, 7));
-    // group.create(64, 32, 'trees', game.rnd.integerInRange(0, 7));
-    // group.create(256, 32, 'trees', game.rnd.integerInRange(0, 7));
-
-
-    // group.sort();
-
-    // dump();
-
-    // group.children[0].alpha = 0.2;
-    // group.children[100].alpha = 0.2;
+    group.sort();
 
     //  Move it
     cursors = game.input.keyboard.createCursorKeys();
-
-}
-
-function dump() {
-
-    for (var i = 0; i < group.children.length; i++)
-    {
-        console.log('Tree',i,'at',group.children[i].y);
-    }
 
 }
 
@@ -110,17 +86,14 @@ function update() {
         sprite.y += 2;
     }
 
-    // if (sprite.y !== oldY)
-    // {
-        group.sort();
-        // oldY = sprite.y;
-    // }
+    group.sort('y', Phaser.Group.SORT_ASCENDING);
 
 }
 
 function render() {
 
-    game.debug.text(sprite.y, 32, 32);
-    game.debug.text(group.getIndex(sprite), 32, 64);
+    // game.debug.text(sprite.y, 32, 32);
+    // game.debug.text(group.getIndex(sprite), 32, 64);
+    // game.debug.text(sprite.z, 32, 64);
 
 }

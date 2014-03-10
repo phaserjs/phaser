@@ -4,12 +4,6 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-/**
-* @const
-* @type {number}
-*/
-Phaser.Physics.P2.LIME_CORONA_JSON = 0;
-
 //  Add an extra properties to p2 that we need
 p2.Body.prototype.parent = null;
 p2.Spring.prototype.parent = null;
@@ -156,6 +150,12 @@ Phaser.Physics.P2 = function (game, config) {
     this.setBoundsToWorld(true, true, true, true, false);
 
 };
+
+/**
+* @const
+* @type {number}
+*/
+Phaser.Physics.P2.LIME_CORONA_JSON = 0;
 
 Phaser.Physics.P2.prototype = {
 

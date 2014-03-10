@@ -48,6 +48,11 @@ Phaser.Group = function (game, parent, name, addToStage) {
     }
 
     /**
+    * @property {number} z - The z-depth value of this object within its Group (remember the World is a Group as well). No two objects in a Group can have the same z value.
+    */
+    this.z = 0;
+
+    /**
     * @property {number} type - Internal Phaser Type value.
     * @protected
     */
@@ -104,7 +109,7 @@ Phaser.Group = function (game, parent, name, addToStage) {
     * @property {string} _sortProperty - The property on which children are sorted.
     * @private
     */
-    this._sortProperty = 'y';
+    this._sortProperty = 'z';
 
     /**
     * A small internal cache:
@@ -175,15 +180,17 @@ Phaser.Group.prototype.add = function (child) {
     {
         this.addChild(child);
 
+        child.z = this.children.length;
+
         if (child.events)
         {
             child.events.onAddedToGroup.dispatch(child, this);
         }
-    }
 
-    if (this.cursor === null)
-    {
-        this.cursor = child;
+        if (this.cursor === null)
+        {
+            this.cursor = child;
+        }
     }
 
     return child;
@@ -205,15 +212,17 @@ Phaser.Group.prototype.addAt = function (child, index) {
     {
         this.addChildAt(child, index);
 
+        this.updateZ();
+
         if (child.events)
         {
             child.events.onAddedToGroup.dispatch(child, this);
         }
-    }
 
-    if (this.cursor === null)
-    {
-        this.cursor = child;
+        if (this.cursor === null)
+        {
+            this.cursor = child;
+        }
     }
 
     return child;
@@ -263,6 +272,8 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
     child.alive = exists;
 
     this.addChild(child);
+    
+    child.z = this.children.length;
         
     if (child.events)
     {
@@ -312,6 +323,23 @@ Phaser.Group.prototype.createMultiple = function (quantity, key, frame, exists) 
     for (var i = 0; i < quantity; i++)
     {
         this.create(0, 0, key, frame, exists);
+    }
+
+}
+
+/**
+* Internal method that re-applies all of the childrens Z values.
+*
+* @method Phaser.Group#updateZ
+* @protected
+*/
+Phaser.Group.prototype.updateZ = function () {
+
+    var i = this.children.length;
+
+    while (i--)
+    {
+        this.children[i].z = i;
     }
 
 }
@@ -374,7 +402,14 @@ Phaser.Group.prototype.previous = function () {
 */
 Phaser.Group.prototype.swap = function (child1, child2) {
 
-    return this.swapChildren(child1, child2);
+    var result = this.swapChildren(child1, child2);
+
+    if (result)
+    {
+        this.updateZ();
+    }
+
+    return result;
     
 }
 
@@ -494,11 +529,12 @@ Phaser.Group.prototype.xy = function (index, x, y) {
 Phaser.Group.prototype.reverse = function () {
 
     this.children.reverse();
+    this.updateZ();
 
 }
 
 /**
-* Get the index position of the given child in this Group.
+* Get the index position of the given child in this Group. This should always match the childs z property.
 *
 * @method Phaser.Group#getIndex
 * @param {*} child - The child to get the index for.
@@ -515,7 +551,7 @@ Phaser.Group.prototype.getIndex = function (child) {
 *
 * @method Phaser.Group#replace
 * @param {*} oldChild - The child in this Group that will be replaced.
-* @param {*} newChild - The child to be inserted into this group.
+* @param {*} newChild - The child to be inserted into this Group.
 */
 Phaser.Group.prototype.replace = function (oldChild, newChild) {
 
@@ -527,17 +563,16 @@ Phaser.Group.prototype.replace = function (oldChild, newChild) {
         {
             newChild.events.onRemovedFromGroup.dispatch(newChild, this);
             newChild.parent.removeChild(newChild);
+
+            if (newChild.parent instanceof Phaser.Group)
+            {
+                newChild.parent.updateZ();
+            }
         }
 
         this.removeChild(oldChild);
-        this.addChildAt(newChild, index);
 
-        newChild.events.onAddedToGroup.dispatch(newChild, this);
-
-        if (this.cursor === oldChild)
-        {
-            this.cursor = newChild;
-        }
+        this.addAt(newChild, index);
     }
 
 }
@@ -1012,7 +1047,7 @@ Phaser.Group.prototype.forEachDead = function (callback, callbackContext) {
 * For example to depth sort Sprites for Zelda-style game you might call `group.sort('y', Phaser.Group.SORT_ASCENDING)` at the bottom of your `State.update()`.
 *
 * @method Phaser.Group#sort
-* @param {string} [index='y'] - The `string` name of the property you want to sort on.
+* @param {string} [index='z'] - The `string` name of the property you want to sort on. Defaults to the objects z-depth value.
 * @param {number} [order=Phaser.Group.SORT_ASCENDING] - The `Group` constant that defines the sort order. Possible values are Phaser.Group.SORT_ASCENDING and Phaser.Group.SORT_DESCENDING.
 */
 Phaser.Group.prototype.sort = function (index, order) {
@@ -1028,10 +1063,6 @@ Phaser.Group.prototype.sort = function (index, order) {
 
     this._sortProperty = index;
 
-        this.children.sort(this.ascendingSortHandler.bind(this));
-
-
-    /*
     if (order === Phaser.Group.SORT_ASCENDING)
     {
         this.children.sort(this.ascendingSortHandler.bind(this));
@@ -1040,7 +1071,6 @@ Phaser.Group.prototype.sort = function (index, order) {
     {
         this.children.sort(this.descendingSortHandler.bind(this));
     }
-    */
 
 }
 
@@ -1053,17 +1083,24 @@ Phaser.Group.prototype.sort = function (index, order) {
 */
 Phaser.Group.prototype.ascendingSortHandler = function (a, b) {
 
-    if (a[this._sortProperty] < b[this._sortProperty] && this.getIndex(a) > this.getIndex(b))
+    if (a[this._sortProperty] < b[this._sortProperty])
     {
         return -1;
     }
-    else if (a[this._sortProperty] > b[this._sortProperty] && this.getIndex(a) < this.getIndex(b))
+    else if (a[this._sortProperty] > b[this._sortProperty])
     {
         return 1;
     }
     else
     {
-        return 0;
+        if (a.z < b.z)
+        {
+            return -1;
+        }
+        else
+        {
+            return 1;
+        }
     }
 
 }
@@ -1077,19 +1114,18 @@ Phaser.Group.prototype.ascendingSortHandler = function (a, b) {
 */
 Phaser.Group.prototype.descendingSortHandler = function (a, b) {
 
-    if (a[this._sortProperty] && b[this._sortProperty])
+    if (a[this._sortProperty] < b[this._sortProperty])
     {
-        if (a[this._sortProperty] < b[this._sortProperty])
-        {
-            return 1;
-        }
-        else if (a[this._sortProperty] > b[this._sortProperty])
-        {
-            return -1;
-        }
+        return 1;
     }
-
-    return 0;
+    else if (a[this._sortProperty] > b[this._sortProperty])
+    {
+        return -1;
+    }
+    else
+    {
+        return 0;
+    }
 
 }
 
@@ -1195,6 +1231,36 @@ Phaser.Group.prototype.getFirstDead = function () {
 }
 
 /**
+* Returns the child at the top of this Group. The top is the one being displayed (rendered) above every other child.
+*
+* @method Phaser.Group#getTop
+* @return {Any} The child at the top of the Group.
+*/
+Phaser.Group.prototype.getTop = function () {
+
+    if (this.children.length > 0)
+    {
+        return this.children[this.children.length - 1];
+    }
+
+}
+
+/**
+* Returns the child at the bottom of this Group. The bottom is the one being displayed (rendered) below every other child.
+*
+* @method Phaser.Group#getBottom
+* @return {Any} The child at the bottom of the Group.
+*/
+Phaser.Group.prototype.getBottom = function () {
+
+    if (this.children.length > 0)
+    {
+        return this.children[0];
+    }
+
+}
+
+/**
 * Call this function to find out how many members of the group are alive.
 *
 * @method Phaser.Group#countLiving
@@ -1260,6 +1326,8 @@ Phaser.Group.prototype.remove = function (child) {
     }
 
     this.removeChild(child);
+
+    this.updateZ();
 
     if (this.cursor === child)
     {
@@ -1331,6 +1399,8 @@ Phaser.Group.prototype.removeBetween = function (startIndex, endIndex) {
             this.cursor = null;
         }
     }
+
+    this.updateZ();
 
 }
 
