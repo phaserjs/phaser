@@ -97,6 +97,9 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
       var color;
       var transform = b.m_xf;
 
+
+      sprite = this.canvas.clear();
+
       for (var f = b.GetFixtureList(); f; f = f.m_next)
       {
         if (b.IsActive() === false)
@@ -130,13 +133,12 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
     drawShape: function (fixture, color){
       color = parseInt(color, 16);
       sprite = this.canvas;
-      sprite.clear();
       
       lineColor = 0xff0000;
       lw = this.lineWidth || 1;
 
       var shape = fixture.GetShape();
-
+      console.log('shape.m_type',shape.m_type)
       switch (shape.m_type)
       {
         case box2d.b2ShapeType.e_circleShape:
@@ -148,6 +150,21 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
             var angle = box2d.b2Vec2.UNITX;
 
             this.drawCircle(sprite,0, 0, 0, radius * this.ppu, color, lw);
+          }
+          break;
+
+        case box2d.b2ShapeType.e_edgeShape:
+          {
+            var edge = ((shape instanceof box2d.b2EdgeShape ? shape : null));
+            var v1 = edge.m_vertex1;
+            var v2 = edge.m_vertex2;
+            
+            x0 = Phaser.Physics.Box2D.Utils.b2pxi(v1.x);
+            y0 = Phaser.Physics.Box2D.Utils.b2pxi(v1.y);
+            x1 = Phaser.Physics.Box2D.Utils.b2pxi(v2.x);
+            y1 = Phaser.Physics.Box2D.Utils.b2pxi(v2.y);
+            
+            this.drawSegment(sprite, x0, y0, x1, y1, color, lw);
           }
           break;
       }
@@ -164,6 +181,14 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
       g.endFill();
       g.moveTo(x, y);
       g.lineTo(x + radius * Math.cos(-angle), y + radius * Math.sin(-angle));
+    },
 
+    drawSegment: function(g, x0, y0, x1, y1, color, lineWidth){
+      if (typeof lineWidth === 'undefined') { lineWidth = 1; }
+      g.lineStyle(lineWidth, 0x00ff00, 1);
+      g.moveTo(x0,y0);
+      //console.log(x0,y0, '--',x1,y1)
+      g.lineTo(x1,y1);
     }
+      
 })

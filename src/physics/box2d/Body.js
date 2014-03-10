@@ -32,10 +32,14 @@ Phaser.Physics.Box2D.Body = function (game, sprite, x, y, mass) {
     this.type = Phaser.Physics.Box2D;
     this.data = null
     this.offset = new Phaser.Point();
-    if (sprite)
-    {
+    
+    this.position = {x: Phaser.Physics.Box2D.Utils.px2bi(x), y: Phaser.Physics.Box2D.Utils.px2bi(y)}
+    
+    //allow to debug non sprite physics
+    //if (sprite)
+    //{
         this.game.physics.box2d.addBody(this);
-    }
+    //}
 
 };
 
@@ -43,6 +47,7 @@ Phaser.Physics.Box2D.Body.prototype = {
     create: function(world){
       //create the body through the provided factory
       this.data = world.CreateBody(this.getBodyDef());
+      this.data.SetPositionXY(this.position.x,this.position.y)
       this.data.CreateFixture(this.getFixtureDef());
     },
     
@@ -70,6 +75,7 @@ Phaser.Physics.Box2D.Body.prototype = {
     },
     
     postUpdate: function () {
+        if(!this.sprite) {return}
         position = this.data.GetPosition()
         this.sprite.x = Phaser.Physics.Box2D.Utils.b2pxi(position.x);
         this.sprite.y = Phaser.Physics.Box2D.Utils.b2pxi(position.y);

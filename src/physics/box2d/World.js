@@ -51,32 +51,32 @@ Phaser.Physics.Box2D.prototype = {
         var cy = hh + y;
         //console.log(hw,hh,cx,cy)
 
-        lowerLeft = new box2d.b2Vec2(this.px2b(0), this.px2b(0));
-        lowerRight = new box2d.b2Vec2(this.px2b(width), this.px2b(0));
-        upperRight = new box2d.b2Vec2(this.px2b(width), this.px2b(height));
-        upperLeft = new box2d.b2Vec2(this.px2b(0), this.px2b(height));
+        upperLeft = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2bi(0), Phaser.Physics.Box2D.Utils.px2bi(0));
+        upperRight = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2bi(width), Phaser.Physics.Box2D.Utils.px2bi(0));
+        lowerRight = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2bi(width), Phaser.Physics.Box2D.Utils.px2bi(height));
+        lowerLeft = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2bi(0), Phaser.Physics.Box2D.Utils.px2bi(height));
         
         var groundBodyDef = new box2d.b2BodyDef();
         var groundBody = this.world.CreateBody(groundBodyDef);
         
         var groundBox = new box2d.b2EdgeShape();
-        console.log(upperLeft)
-        // bottom
-        groundBox.Set(lowerLeft, lowerRight);
-        groundBody.CreateFixture2(groundBox,0);
-
         // top
-        groundBox.Set(upperRight, upperLeft);
-        groundBody.CreateFixture2(groundBox,0);
-
-        // left
-        groundBox.Set(upperLeft, lowerLeft);
+        groundBox.Set(upperLeft, upperRight);
         groundBody.CreateFixture2(groundBox,0);
 
         // right
-        groundBox.Set(lowerRight, upperRight);
+        groundBox.Set(upperRight, lowerRight);
         groundBody.CreateFixture2(groundBox,0);
 
+        // right
+        groundBox.Set(lowerRight, lowerLeft);
+        groundBody.CreateFixture2(groundBox,0);
+        
+        // right
+        groundBox.Set(lowerLeft, upperLeft);
+        groundBody.CreateFixture2(groundBox,0);
+
+        this.debugBounds = new Phaser.Physics.Box2D.BodyDebug(this.game, groundBody)
     },
     /**
     * Convert p2 physics value (meters) to pixel scale.
