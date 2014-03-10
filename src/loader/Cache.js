@@ -1080,7 +1080,7 @@ Phaser.Cache.prototype = {
     * @param {string} key - Key of the asset you want to remove.
     */
     removePhysics: function (key) {
-        delete this._text[key];
+        delete this._physics[key];
     },
 
     /**
@@ -1090,7 +1090,7 @@ Phaser.Cache.prototype = {
     * @param {string} key - Key of the asset you want to remove.
     */
     removeTilemap: function (key) {
-        delete this._text[key];
+        delete this._tilemaps[key];
     },
 
     /**
@@ -1100,7 +1100,7 @@ Phaser.Cache.prototype = {
     * @param {string} key - Key of the asset you want to remove.
     */
     removeBinary: function (key) {
-        delete this._text[key];
+        delete this._binary[key];
     },
 
     /**
@@ -1110,7 +1110,7 @@ Phaser.Cache.prototype = {
     * @param {string} key - Key of the asset you want to remove.
     */
     removeBitmapData: function (key) {
-        delete this._text[key];
+        delete this._bitmapDatas[key];
     },
 
     /**
@@ -1120,7 +1120,7 @@ Phaser.Cache.prototype = {
     * @param {string} key - Key of the asset you want to remove.
     */
     removeBitmapFont: function (key) {
-        delete this._text[key];
+        delete this._bitmapFont[key];
     },
 
     /**
