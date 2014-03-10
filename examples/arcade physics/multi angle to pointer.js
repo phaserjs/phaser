@@ -33,9 +33,9 @@ function update() {
     //  This will update the sprite.rotation so that it points to the currently active pointer
     //  On a Desktop that is the mouse, on mobile the most recent finger press.
 
-    sprite1.rotation = game.physics.angleToPointer(sprite1);
-    sprite2.rotation = game.physics.angleToPointer(sprite2);
-    sprite3.rotation = game.physics.angleToPointer(sprite3);
-    sprite4.rotation = game.physics.angleToPointer(sprite4);
+    sprite1.rotation = game.physics.arcade.angleToPointer(sprite1);
+    sprite2.rotation = game.physics.arcade.angleToPointer(sprite2);
+    sprite3.rotation = game.physics.arcade.angleToPointer(sprite3);
+    sprite4.rotation = game.physics.arcade.angleToPointer(sprite4);
 
 }

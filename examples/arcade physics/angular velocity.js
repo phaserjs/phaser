@@ -13,6 +13,7 @@ function create() {
 
     sprite = game.add.sprite(400, 300, 'arrow');
     sprite.anchor.setTo(0.5, 0.5);
+     game.physics.enable(sprite, Phaser.Physics.ARCADE);
 
 }
 
@@ -33,7 +34,7 @@ function update() {
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
     {
-        game.physics.velocityFromAngle(sprite.angle, 300, sprite.body.velocity);
+        game.physics.arcade.velocityFromAngle(sprite.angle, 300, sprite.body.velocity);
     }
 
 }

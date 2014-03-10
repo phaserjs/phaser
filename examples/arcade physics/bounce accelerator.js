@@ -19,6 +19,8 @@ function create() {
 
     flyer.animations.add('left', [0, 1, 2, 3], 10, true);
     flyer.animations.add('right', [5, 6, 7, 8], 10, true);
+
+     game.physics.enable(flyer, Phaser.Physics.ARCADE);
     
     //  This gets it moving
     flyer.body.velocity.setTo(200, 200);
@@ -30,9 +32,9 @@ function create() {
     //  and vertical vectors (as an x,y point). "1" is 100% energy return
     flyer.body.bounce.setTo(0.8, 0.8);
     
-    //  This sets the gravity the sprite responds to in the world, as a point
-    //  Leave x=0 and set y=80 to simulate falling
-    flyer.body.gravity.setTo(0, 80);
+    // gravityScale is a value between 0 and n, so if world gravity is 10 and gravityScale is 1, 
+    // then the body will have 10 gravity applied to it 
+    flyer.body.gravityScale.setTo(0, 6);
 
 }
 

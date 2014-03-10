@@ -15,7 +15,8 @@ function create() {
 
     for (var i = 0; i < 50; i++)
     {
-        balls.create(game.world.randomX, game.world.randomY, 'ball');
+        var ball = balls.create(game.world.randomX, game.world.randomY, 'ball');
+         game.physics.enable(ball, Phaser.Physics.ARCADE);
     }
 
 }
@@ -25,9 +26,9 @@ function update() {
     if (game.input.mousePointer.isDown)
     {
         //  First is the callback
-        //  Second is the context in which the callback runs, in this case game.physics
+        //  Second is the context in which the callback runs, in this case game.physics.arcade
         //  Third is the parameter the callback expects - it is always sent the Group child as the first parameter
-        balls.forEach(game.physics.moveToPointer, game.physics, false, 200);
+        balls.forEach(game.physics.arcade.moveToPointer, game.physics.arcade, false, 200);
     }
     else
     {

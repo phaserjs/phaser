@@ -20,6 +20,7 @@ function create() {
     {
         var s = game.add.sprite(game.world.randomX, game.world.randomY, 'baddie');
         s.name = 'alien' + s;
+        game.physics.enable(s, Phaser.Physics.ARCADE);
         s.body.collideWorldBounds = true;
         s.body.bounce.setTo(1, 1);
         s.body.velocity.setTo(10 + Math.random() * 10, 10 + Math.random() * 10);
@@ -27,6 +28,7 @@ function create() {
     }
 
     ship = game.add.sprite(400, 400, 'ship');
+    game.physics.enable(ship, Phaser.Physics.ARCADE);
     ship.body.collideWorldBounds = true;
     ship.body.bounce.setTo(0.5, 0.5);
 
@@ -39,7 +41,7 @@ function update() {
         aliens[i].alpha = 0.3;
     }
 
-    total = game.physics.quadTree.retrieve(ship);
+    total = game.physics.arcade.quadTree.retrieve(ship);
 
     //  Get the ships top-most ID. If the length of that ID is 1 then we can ignore every other result, 
     //  it's simply not colliding with anything :)
@@ -77,7 +79,7 @@ function render() {
     }
 
     game.debug.text(total.length, 32, 32);
-    game.debug.QuadTree(game.physics.quadTree);
+    game.debug.QuadTree(game.physics.arcade.quadTree);
     // game.debug.geom(ship);
 
     game.debug.text('Index: ' + ship.body.quadTreeIndex, 32, 80);

@@ -40,10 +40,13 @@ function create() {
 
     player = game.add.sprite(150, 320, 'player');
     player.anchor.setTo(0.5, 0.5);
+
+    game.physics.enable(player, Phaser.Physics.ARCADE);
+
     player.body.collideWorldBounds = true;
     player.body.bounce.setTo(0.9, 0.9);
     player.body.linearDamping = 0.2;
-    player.body.gravity.setTo(0, 8);
+    player.body.gravityScale.setTo(0, 0.8);
 
     // Enable input.
     player.inputEnabled = true;
@@ -96,13 +99,13 @@ function launch() {
 
 function update() {
 
-    arrow.rotation = game.physics.angleBetween(arrow, player);
+    arrow.rotation = game.physics.arcade.angleBetween(arrow, player);
     
     //  Track the player sprite to the mouse    
     if (catchFlag)
     {   
-        distance = game.physics.distanceToPointer(arrow);
-        theta = game.physics.angleToPointer(arrow);
+        distance = game.physics.arcade.distanceToPointer(arrow);
+        theta = game.physics.arcade.angleToPointer(arrow);
         
         // Govern the distance the sprite is dragged away from launch post
         if (distance > 300)

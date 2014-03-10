@@ -19,7 +19,7 @@ function create() {
     sprite1.name = 'atari';
 
     //  Here we're rotated both the sprite and the physics body
-
+    
     sprite1.rotation = 0.6;
     sprite1.body.polygon.rotate(0.6);
     sprite1.body.immovable = true;

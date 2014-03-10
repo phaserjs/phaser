@@ -15,22 +15,23 @@ function create() {
 
     aliens = game.add.group();
 
-    game.physics.gravity.y = 100;
+    game.physics.arcade.gravity.y = 100;
 
     for (var i = 0; i < 50; i++)
     {
         var s = aliens.create(game.world.randomX, game.world.randomY, 'baddie');
+        game.physics.enable(s, Phaser.Physics.ARCADE);
         s.name = 'alien' + s;
         s.body.collideWorldBounds = true;
         s.body.bounce.setTo(0.8, 0.8);
         s.body.linearDamping = 0;
-        s.body.minVelocity.setTo(0, 0);
         s.body.velocity.setTo(10 + Math.random() * 40, 10 + Math.random() * 40);
     }
 
     car = game.add.sprite(400, 300, 'car');
     car.name = 'car';
     car.anchor.setTo(0.5, 0.5);
+    game.physics.enable(car, Phaser.Physics.ARCADE);
     car.body.collideWorldBounds = true;
     // car.body.bounce.setTo(0.8, 0.8);
     car.body.allowRotation = true;
@@ -41,7 +42,7 @@ function create() {
 
 function update() {
 
-    game.physics.collide(car, aliens);
+    game.physics.arcade.collide(car, aliens);
 
     car.body.velocity.x = 0;
     car.body.velocity.y = 0;
@@ -58,22 +59,22 @@ function update() {
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
     {
-        car.body.velocity.copyFrom(game.physics.velocityFromAngle(car.angle, 300));
+        car.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(car.angle, 300));
     }
 
 }
 
 function render() {
 
-    for (var i = 0; i < aliens._container.children.length; i++)
-    {
-        game.debug.polygon(aliens._container.children[i].body.polygons);
-    }
+    // for (var i = 0; i < aliens._container.children.length; i++)
+    // {
+    //     game.debug.polygon(aliens._container.children[i].body.polygons);
+    // }
 
-    game.debug.polygon(car.body.polygons);
+    // game.debug.polygon(car.body.polygons);
 
     // game.debug.bodyInfo(aliens._container.children[0], 32, 32);
-    game.debug.bodyInfo(aliens._container.children[0], 32, 32);
+    // game.debug.bodyInfo(aliens._container.children[0], 32, 32);
 
     // game.debug.bodyInfo(car, 16, 24);
     // game.debug.bodyInfo(aliens.getFirstAlive(), 16, 24);

@@ -16,7 +16,7 @@ function create() {
     fuji.anchor.setTo(0, 0.5);
     // fuji.angle = 34;
 
-    b = new Phaser.Rectangle(fuji.center.x, fuji.center.y, fuji.width, fuji.height);
+    b = new Phaser.Rectangle(fuji.width/2, fuji.height/2, fuji.width, fuji.height);
 
     //Remember that the sprite is rotating around its anchor
     game.add.tween(fuji).to({ angle: 360 }, 20000, Phaser.Easing.Linear.None, true, 0, true);
@@ -27,11 +27,11 @@ function update() {
 
     if (game.input.activePointer.justPressed())
     {
-        fuji.centerOn(game.input.x, game.input.y);
+        fuji.position = game.input;
     }
 
-    b.x = fuji.center.x - fuji.halfWidth;
-    b.y = fuji.center.y - fuji.halfHeight;
+    b.x = fuji.width/2 - fuji.width/2;
+    b.y = fuji.height/2 - fuji.height/2;
 
 }
 

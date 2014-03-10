@@ -22,6 +22,8 @@ function create() {
     ball = game.add.sprite(400, 200, 'ball');
 
     knocker = game.add.sprite(400, 200, 'dude');
+
+    game.physics.enable([knocker,ball], Phaser.Physics.ARCADE);
     knocker.body.immovable = true;
 
     //  This gets it moving
@@ -34,9 +36,6 @@ function create() {
     //  and vertical vectors (as an x,y point). "1" is 100% energy return
     ball.body.bounce.setTo(1, 1);
 
-    //  This sets the gravity the sprite responds to in the world, as a point
-    //  Here we leave x=0 and set y=80 to simulate falling
-    ball.body.gravity.setTo(0, 80);
 
 }
 
@@ -44,7 +43,7 @@ function create() {
 function update () {
 
     //  Enable physics between the knocker and the ball
-    game.physics.collide(knocker, ball);
+    game.physics.arcade.collide(knocker, ball);
 
     if (cursors.up.isDown)
     {

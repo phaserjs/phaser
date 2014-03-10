@@ -18,10 +18,14 @@ function create() {
     //  This will check Sprite vs. Sprite collision
 
     sprite1 = game.add.sprite(50, 200, 'atari');
+
+    sprite2 = game.add.sprite(700, 220, 'mushroom');
+
+    game.physics.enable([sprite1,sprite2], Phaser.Physics.ARCADE);
     sprite1.name = 'atari';
     sprite1.body.velocity.x = 100;
 
-    sprite2 = game.add.sprite(700, 220, 'mushroom');
+    
     sprite2.name = 'mushroom';
     sprite2.body.velocity.x = -100;
 
@@ -30,7 +34,7 @@ function create() {
 function update() {
 
     // object1, object2, collideCallback, processCallback, callbackContext
-    game.physics.collide(sprite1, sprite2, collisionHandler, null, this);
+    game.physics.arcade.collide(sprite1, sprite2, collisionHandler, null, this);
 
 }
 
@@ -43,7 +47,7 @@ function collisionHandler (obj1, obj2) {
 
 function render() {
 
-    game.debug.physicsBody(sprite1.body);
-    game.debug.physicsBody(sprite2.body);
+    // game.debug.physicsBody(sprite1.body);
+    // game.debug.physicsBody(sprite2.body);
 
 }

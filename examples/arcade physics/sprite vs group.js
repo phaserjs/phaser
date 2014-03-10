@@ -20,19 +20,17 @@ function create() {
 
     sprite = game.add.sprite(32, 200, 'phaser');
     sprite.name = 'phaser-dude';
-
-    //  Enables the arcade physics body on the sprite
-    game.physics.arcade.enable(sprite);
+    
 
     group = game.add.group();
 
-    //  Enables the arcade physics body on all sprites this group creates
-    group.enableBody = true;
+    game.physics.enable(game.world, Phaser.Physics.ARCADE);
 
     for (var i = 0; i < 50; i++)
     {
         var c = group.create(game.rnd.integerInRange(100, 770), game.rnd.integerInRange(0, 570), 'veggies', game.rnd.integerInRange(0, 36));
         c.name = 'veg' + i;
+        game.physics.enable(c, Phaser.Physics.ARCADE);
         c.body.immovable = true;
     }
 
@@ -41,6 +39,7 @@ function create() {
         //  Here we'll create some chillis which the player can pick-up. They are still part of the same Group.
         var c = group.create(game.rnd.integerInRange(100, 770), game.rnd.integerInRange(0, 570), 'veggies', 17);
         c.name = 'chilli' + i;
+        game.physics.enable(c, Phaser.Physics.ARCADE);
         c.body.immovable = true;
     }
 
@@ -51,6 +50,7 @@ function create() {
 function update() {
 
     game.physics.arcade.collide(sprite, group, collisionHandler, null, this);
+    game.physics.arcade.collide(group, group);
 
     sprite.body.velocity.x = 0;
     sprite.body.velocity.y = 0;

@@ -34,6 +34,9 @@ function create() {
     arrow.alpha = 0;
 
     player = game.add.sprite(150, 320, 'player');
+
+    game.physics.enable([player], Phaser.Physics.ARCADE);
+
     player.anchor.setTo(0.5, 0.5);
     player.body.collideWorldBounds = true;
     player.body.bounce.setTo(0.9, 0.9);
@@ -75,7 +78,7 @@ function launch() {
 
 function update() {
 
-    arrow.rotation = game.physics.angleBetween(arrow, player);
+    arrow.rotation = game.physics.arcade.angleBetween(arrow, player);
     
     if (catchFlag == true)
     {
@@ -86,7 +89,7 @@ function update() {
         arrow.alpha = 1;    
         analog.alpha = 0.5;
         analog.rotation = arrow.rotation - 3.14 / 2;
-        analog.height = game.physics.distanceBetween(arrow, player);    
+        analog.height = game.physics.arcade.distanceBetween(arrow, player);    
         launchVelocity = analog.height;
     }
 

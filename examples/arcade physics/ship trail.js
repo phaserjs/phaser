@@ -24,10 +24,12 @@ function create() {
 
 	// game.enableStep();
 
-	game.physics.gravity.y = 100;
+	game.physics.arcade.gravity.y = 100;
 
 	sprite = game.add.sprite(32, 450, 'arrow');
 	sprite.anchor.setTo(0.5, 0.5);
+
+	game.physics.enable(sprite, Phaser.Physics.ARCADE);
 
 	sprite.body.collideWorldBounds = true;
 	sprite.body.bounce.setTo(0.8, 0.8);
@@ -55,14 +57,14 @@ function update() {
 
 	sprite.rotation = sprite.body.angle;
 
-	bmd.fillStyle('#ffff00');
-	bmd.fillRect(sprite.x, sprite.y, 2, 2);
+	bmd.context.fillStyle('#ffff00');
+	bmd.context.fillRect(sprite.x, sprite.y, 2, 2);
 
 }
 
 function render() {
 
-	game.debug.bodyInfo(sprite, 16, 24);
-	game.debug.physicsBody(sprite.body);
+	// game.debug.bodyInfo(sprite, 16, 24);
+	// game.debug.physicsBody(sprite.body);
 
 }
