@@ -223,6 +223,7 @@ Bug Fixes:
 * Circle.circumferencePoint using the asDegrees parameter would apply degToRad instead of radToDeg (thanks Ziriax, fixes #509)
 * InputHandler.enableSnap now correctly assigns the snap offset parameters (fixes #515)
 * Objects that are 'fixedToCamera' are now still correctly placed even if the camera is scaled (#512)
+* Changed the define function calls to use named modules, allows pixi, phaser and p2 to reside in 1 file and still be located by requirejs (thanks brejep, #531)
 
 
 TO DO:
@@ -241,7 +242,9 @@ We provide a fully compiled version of Phaser in the `build` directory, in both 
 
 We also provide a Grunt script that will build Phaser from source along with all the examples.
 
-Run `grunt` in the phaser folder for a list of command-line options.
+Run `grunt` to perform a default build to the `dist` folder and update the examples.
+
+If you replace Pixi or p2 then run `grunt replace` to patch their UMD strings so they work properly with Phaser and requireJS.
 
 
 Koding

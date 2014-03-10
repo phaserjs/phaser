@@ -5,6 +5,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadTasks('./tasks');
 
     grunt.initConfig({
@@ -197,7 +198,7 @@ module.exports = function (grunt) {
         ],
 
         p2: [
-            'src/physics/p2/p2.js'
+            'src/physics/p2/p2.js',
             'src/physics/p2/World.js',
             'src/physics/p2/PointProxy.js',
             'src/physics/p2/InversePointProxy.js',
@@ -205,7 +206,7 @@ module.exports = function (grunt) {
             'src/physics/p2/Spring.js',
             'src/physics/p2/Material.js',
             'src/physics/p2/ContactMaterial.js',
-            'src/physics/p2/CollisionGroup.js',
+            'src/physics/p2/CollisionGroup.js'
         ],
 
         ninja: [
@@ -213,8 +214,31 @@ module.exports = function (grunt) {
             'src/physics/ninja/Body.js',
             'src/physics/ninja/AABB.js',
             'src/physics/ninja/Tile.js',
-            'src/physics/ninja/Circle.js',
+            'src/physics/ninja/Circle.js'
         ],
+
+        //  If we've updated pixi or p2 then their UMD wrappers will be wrong, this will fix it:
+        replace: {
+
+            pixi: {
+                src: ['src/pixi/Outro.js'],
+                dest: 'src/pixi/Outro.js',
+                replacements: [{
+                    from: "define(PIXI);",
+                    to: "define('PIXI', (function() { return root.PIXI = PIXI; })() );"
+                }]
+            },
+
+            p2: {
+                src: ['src/physics/p2/p2.js'],
+                dest: 'src/physics/p2/p2.js',
+                replacements: [{
+                    from: '!function(e){"object"==typeof exports?module.exports=e():"function"==typeof define&&define.amd?define(e):"undefined"!=typeof window?window.p2=e():"undefined"!=typeof global?self.p2=e():"undefined"!=typeof self&&(self.p2=e())}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module \'"+o+"\'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){',
+                    to: '!function(e){"object"==typeof exports?module.exports=e():"function"==typeof define&&define.amd?define(\'p2\', (function() { return this.p2 = e(); })()):"undefined"!=typeof window?window.p2=e():"undefined"!=typeof global?self.p2=e():"undefined"!=typeof self&&(self.p2=e())}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module \'"+o+"\'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){'
+                }]
+            }
+
+        },
 
         clean: ['<%= compile_dir %>'],
 
@@ -316,7 +340,7 @@ module.exports = function (grunt) {
                     { src: ['dist/phaser-no-libs.js'], dest: 'build/custom/phaser-no-libs.js' },
                     { src: ['dist/phaser-no-libs.min.js'], dest: 'build/custom/phaser-no-libs.min.js' },
                     { src: ['dist/pixi.js'], dest: 'build/custom/pixi.js' },
-                    { src: ['dist/pixi.min.js'], dest: 'build/custom/pixi.min.js' }
+                    { src: ['dist/pixi.min.js'], dest: 'build/custom/pixi.min.js' },
                     { src: ['dist/ninja.js'], dest: 'build/custom/ninja.js' },
                     { src: ['dist/ninja.min.js'], dest: 'build/custom/ninja.min.js' }
                 ]
