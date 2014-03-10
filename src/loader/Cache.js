@@ -1132,57 +1132,60 @@ Phaser.Cache.prototype = {
 
         for (var item in this._canvases)
         {
-            delete this._canvases[item['key']];
+            delete this._canvases[item];
         }
 
         for (var item in this._images)
         {
-            delete this._images[item['key']];
+            if (item !== '__default' && item !== '__missing')
+            {
+                delete this._images[item];
+            }
         }
 
         for (var item in this._sounds)
         {
-            delete this._sounds[item['key']];
+            delete this._sounds[item];
         }
 
         for (var item in this._text)
         {
-            delete this._text[item['key']];
+            delete this._text[item];
         }
 
         for (var item in this._json)
         {
-            delete this._json[item['key']];
+            delete this._json[item];
         }
 
         for (var item in this._textures)
         {
-            delete this._textures[item['key']];
+            delete this._textures[item];
         }
 
         for (var item in this._physics)
         {
-            delete this._physics[item['key']];
+            delete this._physics[item];
         }
 
         for (var item in this._tilemaps)
         {
-            delete this._tilemaps[item['key']];
+            delete this._tilemaps[item];
         }
 
         for (var item in this._binary)
         {
-            delete this._binary[item['key']];
+            delete this._binary[item];
         }
 
         for (var item in this._bitmapDatas)
         {
-            delete this._bitmapDatas[item['key']];
+            delete this._bitmapDatas[item];
         }
 
         for (var item in this._bitmapFont)
         {
-            delete this._bitmapFont[item['key']];
+            delete this._bitmapFont[item];
         }
 
     }
