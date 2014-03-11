@@ -52,7 +52,7 @@ Phaser.Physics.Box2D.BodyDebug = function(game, body, settings) {
     this.canvas = new Phaser.Graphics(game);
 
     this.canvas.alpha = this.settings.alpha
-
+    this.awake = true
     this.add(this.canvas);
     this.draw();
 }
@@ -70,7 +70,16 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
     update: function() {
 
         this.updateSpriteTransform()
-
+        this.updateAwakeState()
+    },
+    updateAwakeState: function(){
+      awake = this.body.IsAwake()
+      
+      if(awake != this.awake){
+        this.awake = awake
+        console.log('new awake state', awake)
+        this.draw()
+      }
     },
 
     /**
@@ -105,34 +114,33 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
       {
         if (b.IsActive() === false)
         {
-          color = Phaser.Physics.Box2D.Utils.rgbToHex(127,127,60)
+          color = 0x333333
           this.drawShape(f, color);
         }
         else if (b.GetType() === box2d.b2BodyType.b2_staticBody)
         {
-          color = Phaser.Physics.Box2D.Utils.rgbToHex(127,235,60)
+          color = 0x00ff00
           this.drawShape(f, color);
         }
         else if (b.GetType() === box2d.b2BodyType.b2_kinematicBody)
         {
-          color = Phaser.Physics.Box2D.Utils.rgbToHex(127,127,255)
+          color = 0x0000ff
           this.drawShape(f, color);
         }
         else if (b.IsAwake() === false)
         {
-          color = Phaser.Physics.Box2D.Utils.rgbToHex(127,127,127)
+          color = 0xaaaaaa
           this.drawShape(f, color);
         }
         else //b2_dynamicBody
         {
-          color = Phaser.Physics.Box2D.Utils.rgbToHex(255,0,0)
+          color = 0xffff00
           this.drawShape(f, color);
         }
       }
     },
     
     drawShape: function (fixture, color){
-      color = parseInt(color, 16);
       sprite = this.canvas;
       
       lineColor = 0xff0000;
@@ -178,8 +186,8 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
             if(false){
               
             }else{
-              this.drawConvex(sprite, vertices, vertexCount, 0,0);
-              this.drawConvexSolid(sprite, vertices, vertexCount, 0,0);
+              this.drawConvex(sprite, vertices, vertexCount, 0,0, color);
+              this.drawConvexSolid(sprite, vertices, vertexCount, 0,0, color);
             }
             
           }
@@ -191,7 +199,7 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
     *
     * @method Phaser.Physics.P2.BodyDebug#drawConvex
     */
-    drawConvex: function(g, verts, vertsCount, offsetX, offsetY) {
+    drawConvex: function(g, verts, vertsCount, offsetX, offsetY, color) {
 
         var colors, i, v, v0, v1, x, x0, x1, y, y0, y1;
 
@@ -220,12 +228,12 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
     
     
     },
-    drawConvexSolid: function(g, verts, vertsCount, offsetX, offsetY) {
+    drawConvexSolid: function(g, verts, vertsCount, offsetX, offsetY, color) {
       //use vertsCount as verts is larger than the real existing verts
       if (typeof lineWidth === 'undefined') { lineWidth = 1; }
       
       g.lineStyle(lineWidth, 0x00ff00, 1);
-      g.beginFill(0x0000ff);
+      g.beginFill(color);
       var i = 0;
 
       while (i !== vertsCount)

@@ -124,22 +124,21 @@ Phaser.Physics.Box2D.Body.prototype = {
       
       this.createFixture(fd)
     },
-    
-    createFixture: function(fd){
-      this.data.CreateFixture(fd);
-
+    redrawDebug: function(){
       if(this.debugBody){
         this.debugBody.draw()
       }
     },
     
+    createFixture: function(fd){
+      this.data.CreateFixture(fd);
+      this.redrawDebug();
+    },
+    
     createFixtureFromShape: function(shape, mass){
       mass = mass || 1
       this.data.CreateFixture2(shape, mass);
-
-      if(this.debugBody){
-        this.debugBody.draw()
-      }
+      this.redrawDebug();
     },
     
     addRectangle: function (width, height, offsetX, offsetY, rotation) {
@@ -254,6 +253,7 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "bullet", {
         {
             this.data.SetType(box2d.b2BodyType.b2_staticBody)
         }
+        this.redrawDebug();
 
     }
 
@@ -281,6 +281,7 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "static", {
         {
             this.data.SetType(box2d.b2BodyType.dynamic)
         }
+        this.redrawDebug();
 
     }
 
@@ -308,6 +309,7 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "dynamic", {
         {
             this.data.SetType(box2d.b2BodyType.b2_staticBody)
         }
+        this.redrawDebug();
 
     }
 
@@ -338,6 +340,7 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "kinematic", {
         {
             this.data.SetType(box2d.b2BodyType.b2_staticBody)
         }
+        this.redrawDebug();
 
     }
 
@@ -362,6 +365,29 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "fixedRotation", {
         {
             this.data.SetFixedRotation(value);
             //  update anything?
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Box2D.Body#allowSleep
+* @property {boolean} allowSleep - 
+*/
+Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "allowSleep", {
+    
+    get: function () {
+
+        return this.data.IsSleepingAllowed();
+
+    },
+
+    set: function (value) {
+
+        if (value !== this.data.IsSleepingAllowed())
+        {
+            this.data.SetSleepingAllowed(value);
         }
 
     }
