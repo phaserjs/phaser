@@ -5,9 +5,22 @@
 */
 
 /**
-* Ninja Physics constructor.
+* Ninja Physics. The Ninja Physics system was created in Flash by Metanet Software and ported to JavaScript by Richard Davey.
 *
-* The Ninja Physics system was created in Flash by Metanet Software and ported to JavaScript by Richard Davey.
+* It allows for AABB and Circle to Tile collision. Tiles can be any of 34 different types, including slopes, convex and concave shapes.
+*
+* It does what it does very well, but is ripe for expansion and optimisation. Here are some features that I'd love to see the community add:
+*
+* AABB to AABB collision
+* AABB to Circle collision
+* AABB and Circle 'immovable' property support
+* n-way collision, so an AABB/Circle could pass through a tile from below and land upon it.
+* QuadTree or spatial grid for faster Body vs. Tile Group look-ups.
+* Optimise the internal vector math and reduce the quantity of temporary vars created.
+* Expand Gravity and Bounce to allow for separate x/y axis values.
+* Support Bodies linked to Sprites that don't have anchor set to 0.5
+*
+* Feel free to attempt any of the above and submit a Pull Request with your code! Be sure to include test cases proving they work.
 *
 * @class Phaser.Physics.Ninja
 * @classdesc Ninja Physics Constructor
@@ -21,6 +34,9 @@ Phaser.Physics.Ninja = function (game) {
     */
     this.game = game;
 
+    /**
+    * @property {Phaser.Time} time - Local reference to game.time.
+    */
     this.time = this.game.time;
 
     /**
@@ -34,15 +50,19 @@ Phaser.Physics.Ninja = function (game) {
     this.bounds = new Phaser.Rectangle(0, 0, game.world.width, game.world.height);
 
     /**
-    * @property {Phaser.QuadTree} quadTree - The world QuadTree.
+    * @property {number} maxObjects - Used by the QuadTree to set the maximum number of objects per quad.
     */
-    // this.quadTree = new Phaser.Physics.Ninja.QuadTree(this, this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
+    this.maxObjects = 10;
 
     /**
-    * @property {Array} _mapData - Internal cache var.
-    * @private
+    * @property {number} maxLevels - Used by the QuadTree to set the maximum number of iteration levels.
     */
-    this._mapData = [];
+    this.maxLevels = 4;
+
+    /**
+    * @property {Phaser.QuadTree} quadTree - The world QuadTree.
+    */
+    this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
 
 };
 
@@ -55,11 +75,12 @@ Phaser.Physics.Ninja.prototype = {
     * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
     *
     * @method Phaser.Physics.Ninja#enableAABB
-    * @param {object|array} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array.
+    * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array or Group of objects, a body will be created on every child that has a `body` property.
+    * @param {boolean} [children=true] - Should a body be created on all children of this object? If true it will recurse down the display list as far as it can go.
     */
-    enableAABB: function (object) {
+    enableAABB: function (object, children) {
 
-        this.enable(object, 1);
+        this.enable(object, 1, 0, 0, children);
 
     },
 
@@ -68,12 +89,13 @@ Phaser.Physics.Ninja.prototype = {
     * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
     *
     * @method Phaser.Physics.Ninja#enableCircle
-    * @param {object|array} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array.
+    * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array or Group of objects, a body will be created on every child that has a `body` property.
     * @param {number} radius - The radius of the Circle.
+    * @param {boolean} [children=true] - Should a body be created on all children of this object? If true it will recurse down the display list as far as it can go.
     */
-    enableCircle: function (object, radius) {
+    enableCircle: function (object, radius, children) {
 
-        this.enable(object, 2, 0, radius);
+        this.enable(object, 2, 0, radius, children);
 
     },
 
@@ -84,51 +106,89 @@ Phaser.Physics.Ninja.prototype = {
     * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
     *
     * @method Phaser.Physics.Ninja#enableTile
-    * @param {object|array} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array.
+    * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array or Group of objects, a body will be created on every child that has a `body` property.
     * @param {number} [id=1] - The type of Tile this will use, i.e. Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn, Phaser.Physics.Ninja.Tile.CONVEXpp, etc.
+    * @param {boolean} [children=true] - Should a body be created on all children of this object? If true it will recurse down the display list as far as it can go.
     */
-    enableTile: function (object, id) {
+    enableTile: function (object, id, children) {
 
-        this.enable(object, 3, id);
+        this.enable(object, 3, id, 0, children);
 
     },
 
     /**
-    * This will create a Ninja Physics Tile body on the given game object. There are 34 different types of tile you can create, including 45 degree slopes,
-    * convex and concave circles and more. The id parameter controls which Tile type is created, but you can also change it at run-time.
-    * Note that for all degree based tile types they need to have an equal width and height. If the given object doesn't have equal width and height it will use the width.
+    * This will create a Ninja Physics body on the given game object or array of game objects.
     * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
     *
     * @method Phaser.Physics.Ninja#enable
-    * @param {object|array} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array.
+    * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array or Group of objects, a body will be created on every child that has a `body` property.
     * @param {number} [type=1] - The type of Ninja shape to create. 1 = AABB, 2 = Circle or 3 = Tile.
     * @param {number} [id=1] - If this body is using a Tile shape, you can set the Tile id here, i.e. Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn, Phaser.Physics.Ninja.Tile.CONVEXpp, etc.
     * @param {number} [radius=0] - If this body is using a Circle shape this controls the radius.
+    * @param {boolean} [children=true] - Should a body be created on all children of this object? If true it will recurse down the display list as far as it can go.
     */
-    enable: function (object, type, id, radius) {
+    enable: function (object, type, id, radius, children) {
 
         if (typeof type === 'undefined') { type = 1; }
         if (typeof id === 'undefined') { id = 1; }
-
-        var i = 1;
+        if (typeof radius === 'undefined') { radius = 0; }
+        if (typeof children === 'undefined') { children = true; }
 
         if (Array.isArray(object))
         {
-            //  Add to Group
             i = object.length;
+
+            while (i--)
+            {
+                if (object[i] instanceof Phaser.Group)
+                {
+                    //  If it's a Group then we do it on the children regardless
+                    this.enable(object[i].children, type, id, radius, children);
+                }
+                else
+                {
+                    this.enableBody(object[i], type, id, radius);
+
+                    if (children && object[i].hasOwnProperty('children') && object[i].children.length > 0)
+                    {
+                        this.enable(object[i], type, id, radius, true);
+                    }
+                }
+            }
         }
         else
         {
-            object = [object];
+            if (object instanceof Phaser.Group)
+            {
+                //  If it's a Group then we do it on the children regardless
+                this.enable(object.children, type, id, radius, children);
+            }
+            else
+            {
+                this.enableBody(object, type, id, radius);
+
+                if (children && object.hasOwnProperty('children') && object.children.length > 0)
+                {
+                    this.enable(object.children, type, id, radius, true);
+                }
+            }
         }
 
-        while (i--)
+    },
+
+    /**
+    * Creates a Ninja Physics body on the given game object.
+    * A game object can only have 1 physics body active at any one time, and it can't be changed until the body is nulled.
+    *
+    * @method Phaser.Physics.Ninja#enableBody
+    * @param {object} object - The game object to create the physics body on. A body will only be created if this object has a null `body` property.
+    */
+    enableBody: function (object, type, id, radius) {
+
+        if (object.hasOwnProperty('body') && object.body === null)
         {
-            if (object[i].body === null)
-            {
-                object[i].body = new Phaser.Physics.Ninja.Body(this, object[i], type, id, radius);
-                object[i].anchor.set(0.5);
-            }
+            object.body = new Phaser.Physics.Ninja.Body(this, object, type, id, radius);
+            object.anchor.set(0.5);
         }
 
     },
@@ -174,7 +234,7 @@ Phaser.Physics.Ninja.prototype = {
     * Unlike collide the objects are NOT automatically separated or have any physics applied, they merely test for overlap results.
     * The second parameter can be an array of objects, of differing types.
     *
-    * @method Phaser.Physics.Arcade#overlap
+    * @method Phaser.Physics.Ninja#overlap
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group or Phaser.Particles.Emitter.
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|array} object2 - The second object or array of objects to check. Can be Phaser.Sprite, Phaser.Group or Phaser.Particles.Emitter.
     * @param {function} [overlapCallback=null] - An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you specified them.
@@ -251,7 +311,7 @@ Phaser.Physics.Ninja.prototype = {
     /**
     * Internal collision handler.
     *
-    * @method Phaser.Physics.Arcade#collideHandler
+    * @method Phaser.Physics.Ninja#collideHandler
     * @private
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap.
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object2 - The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap. Can also be an array of objects to check.
@@ -336,9 +396,9 @@ Phaser.Physics.Ninja.prototype = {
     },
 
     /**
-    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    * An internal function. Use Phaser.Physics.Ninja.collide instead.
     *
-    * @method Phaser.Physics.Arcade#collideSpriteVsSprite
+    * @method Phaser.Physics.Ninja#collideSpriteVsSprite
     * @private
     */
     collideSpriteVsSprite: function (sprite1, sprite2, collideCallback, processCallback, callbackContext, overlapOnly) {
@@ -356,9 +416,9 @@ Phaser.Physics.Ninja.prototype = {
     },
 
     /**
-    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    * An internal function. Use Phaser.Physics.Ninja.collide instead.
     *
-    * @method Phaser.Physics.Arcade#collideSpriteVsGroup
+    * @method Phaser.Physics.Ninja#collideSpriteVsGroup
     * @private
     */
     collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext, overlapOnly) {
@@ -394,9 +454,9 @@ Phaser.Physics.Ninja.prototype = {
     },
 
     /**
-    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    * An internal function. Use Phaser.Physics.Ninja.collide instead.
     *
-    * @method Phaser.Physics.Arcade#collideGroupVsSelf
+    * @method Phaser.Physics.Ninja#collideGroupVsSelf
     * @private
     */
     collideGroupVsSelf: function (group, collideCallback, processCallback, callbackContext, overlapOnly) {
@@ -422,9 +482,9 @@ Phaser.Physics.Ninja.prototype = {
     },
 
     /**
-    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    * An internal function. Use Phaser.Physics.Ninja.collide instead.
     *
-    * @method Phaser.Physics.Arcade#collideGroupVsGroup
+    * @method Phaser.Physics.Ninja#collideGroupVsGroup
     * @private
     */
     collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext, overlapOnly) {
@@ -446,9 +506,9 @@ Phaser.Physics.Ninja.prototype = {
 
     /**
     * The core separation function to separate two physics bodies.
-    * @method Phaser.Physics.Arcade#separate
-    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
-    * @param {Phaser.Physics.Arcade.Body} body2 - The Body object to separate.
+    * @method Phaser.Physics.Ninja#separate
+    * @param {Phaser.Physics.Ninja.Body} body1 - The Body object to separate.
+    * @param {Phaser.Physics.Ninja.Body} body2 - The Body object to separate.
     * @param {function} [processCallback=null] - UN-USED: A callback function that lets you perform additional checks against the two objects if they overlap. If this function is set then the sprites will only be collided if it returns true.
     * @param {object} [callbackContext] - UN-USED: The context in which to run the process callback.
     * @returns {boolean} Returns true if the bodies collided, otherwise false.
@@ -586,19 +646,13 @@ Phaser.Physics.Ninja.Body = function (system, sprite, type, id, radius) {
     this.velocity = new Phaser.Point();
 
     /**
-    * @property {boolean} skipQuadTree - If the Body is an irregular shape you can set this to true to avoid it being added to any QuadTrees.
-    * @default
-    */
-    this.skipQuadTree = false;
-
-    /**
     * @property {number} facing - A const reference to the direction the Body is traveling or facing.
     * @default
     */
     this.facing = Phaser.NONE;
 
     /**
-    * @property {boolean} immovable - An immovable Body will not receive any impacts from other bodies.
+    * @property {boolean} immovable - An immovable Body will not receive any impacts from other bodies. Not fully implemented.
     * @default
     */
     this.immovable = false;
@@ -664,15 +718,6 @@ Phaser.Physics.Ninja.Body.prototype = {
     /**
     * Internal method.
     *
-    * @method Phaser.Physics.Ninja.Body#updateBounds
-    * @protected
-    */
-    updateBounds: function (centerX, centerY, scaleX, scaleY) {
-    },
-
-    /**
-    * Internal method.
-    *
     * @method Phaser.Physics.Ninja.Body#preUpdate
     * @protected
     */
@@ -698,9 +743,6 @@ Phaser.Physics.Ninja.Body.prototype = {
             this.shape.collideWorldBounds();
         }
 
-        this.speed = Math.sqrt(this.shape.velocity.x * this.shape.velocity.x + this.shape.velocity.y * this.shape.velocity.y);
-        this.angle = Math.atan2(this.shape.velocity.y, this.shape.velocity.x);
-
     },
 
     /**
@@ -721,6 +763,24 @@ Phaser.Physics.Ninja.Body.prototype = {
         {
             this.sprite.x = this.shape.pos.x;
             this.sprite.y = this.shape.pos.y;
+        }
+
+        if (this.velocity.x < 0)
+        {
+            this.facing = Phaser.LEFT;
+        }
+        else if (this.velocity.x > 0)
+        {
+            this.facing = Phaser.RIGHT;
+        }
+
+        if (this.velocity.y < 0)
+        {
+            this.facing = Phaser.UP;
+        }
+        else if (this.velocity.y > 0)
+        {
+            this.facing = Phaser.DOWN;
         }
 
     },
@@ -834,12 +894,20 @@ Phaser.Physics.Ninja.Body.prototype = {
     },
 
     /**
-    * Resets all Body values (velocity, acceleration, rotation, etc)
+    * Resets all Body values and repositions on the Sprite.
     *
     * @method Phaser.Physics.Ninja.Body#reset
     */
     reset: function () {
-    },
+
+        this.velocity.set(0);
+
+        this.shape.pos.x = this.sprite.x;
+        this.shape.pos.y = this.sprite.y;
+
+        this.shape.oldpos.copyFrom(this.shape.pos);
+
+    }
 
 };
 
@@ -849,20 +917,10 @@ Phaser.Physics.Ninja.Body.prototype = {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "x", {
     
-    /**
-    * The x position.
-    * @method x
-    * @return {number}
-    */
     get: function () {
         return this.shape.pos.x;
     },
 
-    /**
-    * The x position.
-    * @method x
-    * @param {number} value
-    */
     set: function (value) {
         this.shape.pos.x = value;
     }
@@ -875,20 +933,10 @@ Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "x", {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "y", {
     
-    /**
-    * The y position.
-    * @method y
-    * @return {number}
-    */
     get: function () {
         return this.shape.pos.y;
     },
 
-    /**
-    * The y position.
-    * @method y
-    * @param {number} value
-    */
     set: function (value) {
         this.shape.pos.y = value;
     }
@@ -902,12 +950,6 @@ Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "y", {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "width", {
     
-    /**
-    * The width of this Body
-    * @method width
-    * @return {number}
-    * @readonly
-    */
     get: function () {
         return this.shape.width;
     }
@@ -921,12 +963,6 @@ Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "width", {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "height", {
     
-    /**
-    * The height of this Body
-    * @method height
-    * @return {number}
-    * @readonly
-    */
     get: function () {
         return this.shape.height;
     }
@@ -940,12 +976,6 @@ Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "height", {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "bottom", {
     
-    /**
-    * The sum of the y and height properties.
-    * @method bottom
-    * @return {number}
-    * @readonly
-    */
     get: function () {
         return this.shape.pos.y + this.shape.height;
     }
@@ -959,17 +989,38 @@ Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "bottom", {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "right", {
     
-    /**
-    * The sum of the x and width properties.
-    * @method right
-    * @return {number}
-    * @readonly
-    */
     get: function () {
         return this.shape.pos.x + this.shape.width;
     }
 
 });
+
+/**
+* @name Phaser.Physics.Ninja.Body#speed
+* @property {number} speed - The speed of this Body
+* @readonly
+*/
+Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "speed", {
+    
+    get: function () {
+        return Math.sqrt(this.shape.velocity.x * this.shape.velocity.x + this.shape.velocity.y * this.shape.velocity.y);
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Ninja.Body#angle
+* @property {number} angle - The angle of this Body
+* @readonly
+*/
+Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "angle", {
+    
+    get: function () {
+        return Math.atan2(this.shape.velocity.y, this.shape.velocity.x);
+    }
+
+});
+
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
@@ -1173,8 +1224,37 @@ Phaser.Physics.Ninja.AABB.prototype = {
 
     },
 
+    reverse: function () {
+
+        var vx = this.pos.x - this.oldpos.x;
+        var vy = this.pos.y - this.oldpos.y;
+
+        if (this.oldpos.x < this.pos.x)
+        {
+            this.oldpos.x = this.pos.x + vx;
+            // this.oldpos.x = this.pos.x + (vx + 1 + this.body.bounce);
+        }
+        else if (this.oldpos.x > this.pos.x)
+        {
+            this.oldpos.x = this.pos.x - vx;
+            // this.oldpos.x = this.pos.x - (vx + 1 + this.body.bounce);
+        }
+
+        if (this.oldpos.y < this.pos.y)
+        {
+            this.oldpos.y = this.pos.y + vy;
+            // this.oldpos.y = this.pos.y + (vy + 1 + this.body.bounce);
+        }
+        else if (this.oldpos.y > this.pos.y)
+        {
+            this.oldpos.y = this.pos.y - vy;
+            // this.oldpos.y = this.pos.y - (vy + 1 + this.body.bounce);
+        }
+
+    },
+
     /**
-    * Process a body collision and apply the resulting forces.
+    * Process a body collision and apply the resulting forces. Still very much WIP and doesn't work fully. Feel free to fix!
     *
     * @method Phaser.Physics.Ninja.AABB#reportCollisionVsBody
     * @param {number} px - The tangent velocity
@@ -1185,82 +1265,68 @@ Phaser.Physics.Ninja.AABB.prototype = {
     */
     reportCollisionVsBody: function (px, py, dx, dy, obj) {
 
-        //  Here - we check if obj is immovable, etc and then we canswap the p/o values below depending on which is heavy
-        //  But then still need to work out how to split force
+        var vx1 = this.pos.x - this.oldpos.x;   //  Calc velocity of this object
+        var vy1 = this.pos.y - this.oldpos.y;
+        var dp1 = (vx1 * dx + vy1 * dy);         //  Find component of velocity parallel to collision normal
+        var nx1 = dp1 * dx;                      //  Project velocity onto collision normal
+        var ny1 = dp1 * dy;                      //  nx, ny is normal velocity
 
-        var p = this.pos;
-        var o = this.oldpos;
-
-        //  Calc velocity
-        var vx = p.x - o.x;
-        var vy = p.y - o.y;
-
-        //  Find component of velocity parallel to collision normal
-        var dp = (vx * dx + vy * dy);
-        var nx = dp * dx;   //project velocity onto collision normal
-
-        var ny = dp * dy;   //nx,ny is normal velocity
-
-        var tx = vx - nx;   //px,py is tangent velocity
-        var ty = vy - ny;
+        var dx2 = dx * -1;
+        var dy2 = dy * -1;
+        var vx2 = obj.pos.x - obj.oldpos.x;      //  Calc velocity of colliding object
+        var vy2 = obj.pos.y - obj.oldpos.y;
+        var dp2 = (vx2 * dx2 + vy2 * dy2);         //  Find component of velocity parallel to collision normal
+        var nx2 = dp2 * dx2;                      //  Project velocity onto collision normal
+        var ny2 = dp2 * dy2;                      //  nx, ny is normal velocity
 
         //  We only want to apply collision response forces if the object is travelling into, and not out of, the collision
-        var b, bx, by, fx, fy;
-
-        if (dp < 0)
+        if (this.body.immovable && obj.body.immovable)
         {
-            fx = tx * this.body.friction;
-            fy = ty * this.body.friction;
+            //  Split the separation then return, no forces applied as they come to a stand-still
+            px *= 0.5;
+            py *= 0.5;
 
-            b = 1 + this.body.bounce;
+            this.pos.add(px, py);
+            this.oldpos.set(this.pos.x, this.pos.y);
 
-            bx = (nx * b);
-            by = (ny * b);
+            obj.pos.subtract(px, py);
+            obj.oldpos.set(obj.pos.x, obj.pos.y);
+
+            return;
         }
-        else
+        else if (!this.body.immovable && !obj.body.immovable)
         {
-            //  Moving out of collision, do not apply forces
-            bx = by = fx = fy = 0;
+            //  separate
+            px *= 0.5;
+            py *= 0.5;
+
+            this.pos.add(px, py);
+            obj.pos.subtract(px, py);
+
+            if (dp1 < 0)
+            {
+                this.reverse();
+                obj.reverse();
+            }
         }
+        else if (!this.body.immovable)
+        {
+            this.pos.subtract(px, py);
 
-        //  working version
-        // p.x += px;
-        // p.y += py;
-        // o.x += px + bx + fx;
-        // o.y += py + by + fy;
+            if (dp1 < 0)
+            {
+                this.reverse();
+            }
+        }
+        else if (!obj.body.immovable)
+        {
+            obj.pos.subtract(px, py);
 
-        //  Project object out of collision (applied to the position value)
-        p.x += px;
-        p.y += py;
-
-        // obj.pos.x += px;
-        // obj.pos.y += py;
-
-
-        //  Apply bounce+friction impulses which alter velocity (applied to old position, thus setting a sort of velocity up)
-        var rx = px + bx + fx;
-        var ry = py + by + fy;
-
-        //  let's pretend obj is immovable
-        // rx *= -1;
-        // ry *= -1;
-
-
-        //  Now let's share the load
-        o.x += rx;
-        o.y += ry;
-
-        //  work out objs velocity
-
-
-        // rx *= -1;
-        // ry *= -1;
-
-        // obj.oldpos.x += rx;
-        // obj.oldpos.y += ry;
-
-
-            // console.log(this.body.sprite.name, 'o.x', rx, ry, obj);
+            if (dp1 < 0)
+            {
+                obj.reverse();
+            }
+        }
 
     },
 
@@ -1365,10 +1431,7 @@ Phaser.Physics.Ninja.AABB.prototype = {
                     }
                 }
 
-                // return this.aabbTileProjections[1](px, py, this, c);
-
                 var l = Math.sqrt(px * px + py * py);
-                // this.reportCollisionVsWorld(px, py, px / l, py / l, c);
                 this.reportCollisionVsBody(px, py, px / l, py / l, c);
 
                 return Phaser.Physics.Ninja.AABB.COL_AXIS;
@@ -1388,59 +1451,50 @@ Phaser.Physics.Ninja.AABB.prototype = {
     */
     collideAABBVsTile: function (tile) {
 
-        var pos = this.pos;
-        var c = tile;
-
-        var tx = c.pos.x;
-        var ty = c.pos.y;
-        var txw = c.xw;
-        var tyw = c.yw;
-
-        var dx = pos.x - tx;//tile->obj delta
-        var px = (txw + this.xw) - Math.abs(dx);//penetration depth in x
+        var dx = this.pos.x - tile.pos.x;               //  tile->obj delta
+        var px = (tile.xw + this.xw) - Math.abs(dx);    //  penetration depth in x
 
         if (0 < px)
         {
-            var dy = pos.y - ty;//tile->obj delta
-            var py = (tyw + this.yw) - Math.abs(dy);//pen depth in y
+            var dy = this.pos.y - tile.pos.y;               //  tile->obj delta
+            var py = (tile.yw + this.yw) - Math.abs(dy);    //  pen depth in y
 
             if (0 < py)
             {
-                //object may be colliding with tile; call tile-specific collision function
-
-                //calculate projection vectors
+                //  Calculate projection vectors
                 if (px < py)
                 {
-                    //project in x
+                    //  Project in x
                     if (dx < 0)
                     {
-                        //project to the left
+                        //  Project to the left
                         px *= -1;
                         py = 0;
                     }
                     else
                     {
-                        //proj to right
+                        //  Project to the right
                         py = 0;
                     }
                 }
                 else
                 {
-                    //project in y
+                    //  Project in y
                     if (dy < 0)
                     {
-                        //project up
+                        //  Project up
                         px = 0;
                         py *= -1;
                     }
                     else
                     {
-                        //project down
+                        //  Project down
                         px = 0;
                     }
                 }
 
-                return this.resolveTile(px, py, this, c);
+                //  Object may be colliding with tile; call tile-specific collision function
+                return this.resolveTile(px, py, this, tile);
             }
         }
 

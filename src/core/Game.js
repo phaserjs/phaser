@@ -597,8 +597,6 @@ Phaser.Game.prototype = {
     */
     pausedUpdate: function (time) {
 
-        this.time.update(time);
-
         this.debug.preUpdate();
 
         this.render();
@@ -613,8 +611,6 @@ Phaser.Game.prototype = {
     * @param {number} time - The current time as provided by RequestAnimationFrame.
     */
     steppedUpdate: function (time) {
-
-        this.time.update(time);
 
         if (!this.pendingStep)
         {
