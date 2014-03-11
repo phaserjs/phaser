@@ -20,6 +20,8 @@
 */
 Phaser.Physics = function (game, config) {
 
+    config = config || {};
+
     /**
     * @property {Phaser.Game} game - Local reference to game.
     */
@@ -33,7 +35,7 @@ Phaser.Physics = function (game, config) {
     /**
     * @property {Phaser.Physics.Arcade} arcade - The Arcade Physics system.
     */
-    this.arcade = new Phaser.Physics.Arcade(game);
+    this.arcade = null;
 
     /**
     * @property {Phaser.Physics.P2} p2 - The P2.JS Physics system.
@@ -54,6 +56,8 @@ Phaser.Physics = function (game, config) {
     * @property {Phaser.Physics.Chipmunk} chipmunk - The Chipmunk Physics system (to be done).
     */
     this.chipmunk = null;
+
+    this.parseConfig();
 
 };
 
@@ -88,6 +92,31 @@ Phaser.Physics.BOX2D = 3;
 Phaser.Physics.CHIPMUNK = 5;
 
 Phaser.Physics.prototype = {
+
+    /**
+    * Parses the Physics Configuration object passed to the Game constructor and starts any physics systems specified within.
+    *
+    * @method Phaser.Physics#parseConfig
+    */
+    parseConfig: function () {
+
+        if ((!this.config.hasOwnProperty('arcade') || this.config['arcade'] === true) && Phaser.Physics.hasOwnProperty('Arcade'))
+        {
+            //  If Arcade isn't specified, we create it automatically if we can
+            this.arcade = new Phaser.Physics.Arcade(this.game);
+        }
+
+        if (this.config.hasOwnProperty('ninja') && this.config['ninja'] === true && Phaser.Physics.hasOwnProperty('Ninja'))
+        {
+            this.ninja = new Phaser.Physics.Ninja(this.game);
+        }
+
+        if (this.config.hasOwnProperty('p2') && this.config['p2'] === true && Phaser.Physics.hasOwnProperty('P2'))
+        {
+            this.p2 = new Phaser.Physics.P2(this.game, this.config);
+        }
+
+    },
 
     /**
     * This will create an instance of the requested physics simulation.
