@@ -212,82 +212,140 @@ Phaser.Physics.Ninja.AABB.prototype = {
     */
     reportCollisionVsBody: function (px, py, dx, dy, obj) {
 
-        //  Here - we check if obj is immovable, etc and then we canswap the p/o values below depending on which is heavy
-        //  But then still need to work out how to split force
+        var vx1 = this.pos.x - this.oldpos.x;   //  Calc velocity of this object
+        var vy1 = this.pos.y - this.oldpos.y;
+        var dp1 = (vx1 * dx + vy1 * dy);         //  Find component of velocity parallel to collision normal
+        var nx1 = dp1 * dx;                      //  Project velocity onto collision normal
+        var ny1 = dp1 * dy;                      //  nx, ny is normal velocity
 
-        var p = this.pos;
-        var o = this.oldpos;
+        var dx2 = dx * -1;
+        var dy2 = dy * -1;
+        var vx2 = obj.pos.x - obj.oldpos.x;      //  Calc velocity of colliding object
+        var vy2 = obj.pos.y - obj.oldpos.y;
+        var dp2 = (vx2 * dx2 + vy2 * dy2);         //  Find component of velocity parallel to collision normal
+        var nx2 = dp2 * dx2;                      //  Project velocity onto collision normal
+        var ny2 = dp2 * dy2;                      //  nx, ny is normal velocity
 
-        //  Calc velocity
-        var vx = p.x - o.x;
-        var vy = p.y - o.y;
-
-        //  Find component of velocity parallel to collision normal
-        var dp = (vx * dx + vy * dy);
-        var nx = dp * dx;   //project velocity onto collision normal
-
-        var ny = dp * dy;   //nx,ny is normal velocity
-
-        var tx = vx - nx;   //px,py is tangent velocity
-        var ty = vy - ny;
+        console.log(this.body.sprite.name, 'hit', obj.body.sprite.name, 'at', px, py, 'dx', dx, dy, 'dx2', dx2, dy2);
+        console.log(this.body.sprite.name, 'x', (this.pos.x + this.xw), obj.body.sprite.name, 'x', (obj.pos.x - obj.xw));
+        console.log('vx1', vx1, vy1, 'dp1', dp1, 'nx1', nx1, ny1);
+        console.log('vx2', vx2, vy2, 'dp2', dp2, 'nx2', nx2, ny2);
 
         //  We only want to apply collision response forces if the object is travelling into, and not out of, the collision
-        var b, bx, by, fx, fy;
 
-        if (dp < 0)
+        if (this.body.immovable && obj.body.immovable)
         {
-            fx = tx * this.body.friction;
-            fy = ty * this.body.friction;
+            //  Split the separation then return, no forces applied as they come to a stand-still
+            px *= 0.5;
+            py *= 0.5;
 
-            b = 1 + this.body.bounce;
+            this.pos.add(px, py);
+            this.oldpos.set(this.pos.x, this.pos.y);
 
-            bx = (nx * b);
-            by = (ny * b);
+            obj.pos.subtract(px, py);
+            obj.oldpos.set(obj.pos.x, obj.pos.y);
+
+            return;
         }
-        else
+        else if (!this.body.immovable && !obj.body.immovable)
         {
-            //  Moving out of collision, do not apply forces
-            bx = by = fx = fy = 0;
+            px *= 0.5;
+            py *= 0.5;
+
+            this.pos.add(px, py);
+            this.oldpos.set(this.pos.x, this.pos.y);
+
+            obj.pos.subtract(px, py);
+            obj.oldpos.set(obj.pos.x, obj.pos.y);
+
+            //  x velocity
+            var nv1 = Math.sqrt((vx2 * vx2 * 1) / 1) * ((vx2 > 0) ? 1 : -1);
+            var nv2 = Math.sqrt((vx1 * vx1 * 1) / 1) * ((vx1 > 0) ? 1 : -1);
+            var avg = (nv1 + nv2) * 0.5;
+            nv1 -= avg;
+            nv2 -= avg;
+
+            this.pos.x += avg + nv1 * this.body.bounce;
+            obj.pos.x += avg + nv2 * obj.body.bounce;
+
+            //  y velocity
+            var nv1 = Math.sqrt((vy2 * vy2 * 1) / 1) * ((vy2 > 0) ? 1 : -1);
+            var nv2 = Math.sqrt((vy1 * vy1 * 1) / 1) * ((vy1 > 0) ? 1 : -1);
+            var avg = (nv1 + nv2) * 0.5;
+            nv1 -= avg;
+            nv2 -= avg;
+
+            this.pos.y += avg + nv1 * this.body.bounce;
+            obj.pos.y += avg + nv2 * obj.body.bounce;
+        }
+        else if (!this.body.immovable)
+        {
+            /*
+            if (dp1 < 0)
+            {
+                this.pos.add(px, py);
+                //  px + bounce + friction
+                this.oldpos.x += px + (nx1 * (1 + this.body.bounce)) + ((vx2 - nx1) * this.body.friction);
+                this.oldpos.y += py + (ny1 * (1 + this.body.bounce)) + ((vy2 - ny1) * this.body.friction);
+            }
+            else
+            {
+                //  Moving out of collision, do not apply forces
+                this.pos.add(px, py);
+                this.oldpos.add(px, py);
+            }
+            */
+        }
+        else if (!obj.body.immovable)
+        {
+            /*
+            if (dp2 < 0)
+            {
+                obj.pos.add(px, py);
+                //  px + bounce + friction
+                obj.oldpos.x += px + (nx2 * (1 + obj.body.bounce)) + ((vx2 - nx2) * obj.body.friction);
+                obj.oldpos.y += py + (ny2 * (1 + obj.body.bounce)) + ((vy2 - ny2) * obj.body.friction);
+            }
+            else
+            {
+                //  Moving out of collision, do not apply forces
+                obj.pos.add(px, py);
+                obj.oldpos.add(px, py);
+            }
+            */
         }
 
-        //  working version
-        // p.x += px;
-        // p.y += py;
-        // o.x += px + bx + fx;
-        // o.y += py + by + fy;
-
-        //  Project object out of collision (applied to the position value)
-        p.x += px;
-        p.y += py;
-
-        // obj.pos.x += px;
-        // obj.pos.y += py;
 
 
-        //  Apply bounce+friction impulses which alter velocity (applied to old position, thus setting a sort of velocity up)
-        var rx = px + bx + fx;
-        var ry = py + by + fy;
+        /*
+                if (!body1.immovable && !body2.immovable)
+                {
+                    this._overlap *= 0.5;
 
-        //  let's pretend obj is immovable
-        // rx *= -1;
-        // ry *= -1;
+                    body1.x = body1.x - this._overlap;
+                    body2.x += this._overlap;
 
+                    this._newVelocity1 = Math.sqrt((this._velocity2 * this._velocity2 * body2.mass) / body1.mass) * ((this._velocity2 > 0) ? 1 : -1);
+                    this._newVelocity2 = Math.sqrt((this._velocity1 * this._velocity1 * body1.mass) / body2.mass) * ((this._velocity1 > 0) ? 1 : -1);
+                    this._average = (this._newVelocity1 + this._newVelocity2) * 0.5;
+                    this._newVelocity1 -= this._average;
+                    this._newVelocity2 -= this._average;
 
-        //  Now let's share the load
-        o.x += rx;
-        o.y += ry;
+                    body1.velocity.x = this._average + this._newVelocity1 * body1.bounce.x;
+                    body2.velocity.x = this._average + this._newVelocity2 * body2.bounce.x;
+                }
+                else if (!body1.immovable)
+                {
+                    body1.x = body1.x - this._overlap;
+                    body1.velocity.x = this._velocity2 - this._velocity1 * body1.bounce.x;
+                }
+                else if (!body2.immovable)
+                {
+                    body2.x += this._overlap;
+                    body2.velocity.x = this._velocity1 - this._velocity2 * body2.bounce.x;
+                }
 
-        //  work out objs velocity
-
-
-        // rx *= -1;
-        // ry *= -1;
-
-        // obj.oldpos.x += rx;
-        // obj.oldpos.y += ry;
-
-
-            // console.log(this.body.sprite.name, 'o.x', rx, ry, obj);
+        */
 
     },
 

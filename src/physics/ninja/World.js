@@ -176,7 +176,7 @@ Phaser.Physics.Ninja.prototype = {
     * @method Phaser.Physics.Ninja#enableBody
     * @param {object} object - The game object to create the physics body on. A body will only be created if this object has a null `body` property.
     */
-    enableBody: function (object) {
+    enableBody: function (object, type, id, radius) {
 
         if (object.hasOwnProperty('body') && object.body === null)
         {
