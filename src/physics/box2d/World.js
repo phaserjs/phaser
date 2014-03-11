@@ -55,30 +55,35 @@ Phaser.Physics.Box2D.prototype = {
         var cy = hh + y;
         //console.log(hw,hh,cx,cy)
 
-        upperLeft = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2bi(0), Phaser.Physics.Box2D.Utils.px2bi(0));
-        upperRight = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2bi(width), Phaser.Physics.Box2D.Utils.px2bi(0));
-        lowerRight = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2bi(width), Phaser.Physics.Box2D.Utils.px2bi(height));
-        lowerLeft = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2bi(0), Phaser.Physics.Box2D.Utils.px2bi(height));
+        upperLeft = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2b(0), Phaser.Physics.Box2D.Utils.px2bi(0));
+        upperRight = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2b(width), Phaser.Physics.Box2D.Utils.px2bi(0));
+        lowerRight = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2b(width), Phaser.Physics.Box2D.Utils.px2bi(height));
+        lowerLeft = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2b(0), Phaser.Physics.Box2D.Utils.px2bi(height));
         
         var groundBodyDef = new box2d.b2BodyDef();
         var groundBody = this.world.CreateBody(groundBodyDef);
         
         var groundBox = new box2d.b2EdgeShape();
+        var groundBoxDef = box2d.b2Body.prototype.CreateFixture2.s_def;
+        groundBoxDef.shape = groundBox;
+        groundBoxDef.density = 0;
+        groundBoxDef.groupIndex = -1;
+
         // top
         groundBox.Set(upperLeft, upperRight);
-        groundBody.CreateFixture2(groundBox,0);
+        groundBody.CreateFixture(groundBoxDef);
 
         // right
         groundBox.Set(upperRight, lowerRight);
-        groundBody.CreateFixture2(groundBox,0);
+        groundBody.CreateFixture(groundBoxDef);
 
         // right
         groundBox.Set(lowerRight, lowerLeft);
-        groundBody.CreateFixture2(groundBox,0);
+        groundBody.CreateFixture(groundBoxDef);
         
         // right
         groundBox.Set(lowerLeft, upperLeft);
-        groundBody.CreateFixture2(groundBox,0);
+        groundBody.CreateFixture(groundBoxDef);
 
         this.debugBounds = new Phaser.Physics.Box2D.BodyDebug(this.game, groundBody)
     }

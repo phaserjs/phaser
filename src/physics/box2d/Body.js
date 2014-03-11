@@ -155,6 +155,43 @@ Phaser.Physics.Box2D.Body.prototype = {
       this.createFixtureFromShape(shape)
     },
     
+    //i am
+    setCollisionCategory: function(category){
+      for (var f = this.data.GetFixtureList(); f; f = f.GetNext())
+      {
+        //get the existing filter
+        filter = f.GetFilterData();
+        filter.categoryBits = category;
+        f.SetFilterData(filter)
+      }
+    },
+    //i will collide with
+    setCollisionMask: function(mask){
+      for (var f = this.data.GetFixtureList(); f; f = f.GetNext())
+      {
+        //get the existing filter
+        filter = f.GetFilterData();
+        filter.maskBits = mask;
+        f.SetFilterData(filter)
+      }
+    },
+    
+    /*
+    if either fixture has a groupIndex of zero, use the category/mask rules as above
+    if both groupIndex values are non-zero but different, use the category/mask rules as above
+    if both groupIndex values are the same and positive, collide
+    if both groupIndex values are the same and negative, don't collide
+     */
+    setCollisionGroup: function(groupIndex){
+      for (var f = this.data.GetFixtureList(); f; f = f.GetNext())
+      {
+        //get the existing filter
+        filter = f.GetFilterData();
+        filter.groupIndex = groupIndex;
+        f.SetFilterData(filter)
+      }
+    },
+
     testEdgeShape: function(){
       this.clearFixtures()
 
@@ -201,6 +238,21 @@ Phaser.Physics.Box2D.Body.prototype = {
             
             this.createFixtureFromShape(polygon, 0.0);
         }
+    },
+
+    /**
+    * Moves the Body forwards based on its current angle and the given speed.
+    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
+    *
+    * @method Phaser.Physics.P2.Body#moveForward
+    * @param {number} speed - The speed at which it should move forwards.
+    */
+    moveForward: function (speed) {
+
+        var magnitude = this.px2pi(-speed);
+        var angle = this.data.angle + Math.PI / 2;
+
+        this.data.SetLinearVelocity()
     }
 }
 /**
@@ -393,3 +445,138 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "allowSleep", {
     }
 
 });
+
+
+
+/**
+* The angle of the Body in degrees from its original orientation. Values from 0 to 180 represent clockwise rotation; values from 0 to -180 represent counterclockwise rotation.
+* Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement Body.angle = 450 is the same as Body.angle = 90.
+* If you wish to work in radians instead of degrees use the property Body.rotation instead. Working in radians is faster as it doesn't have to convert values.
+* 
+* @name Phaser.Physics.P2.Body#angle
+* @property {number} angle - The angle of this Body in degrees.
+*/
+Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "angle", {
+
+    get: function() {
+
+        return this.data.GetAngleDegrees()
+
+    },
+
+    set: function(value) {
+      this.data.SetAngleDegrees(value)
+    }
+
+});
+
+/**
+* Damping is specified as a value between 0 and 1, which is the proportion of velocity lost per second.
+* @name Phaser.Physics.P2.Body#angularDamping
+* @property {number} angularDamping - The angular damping acting acting on the body.
+*/
+Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "angularDamping", {
+    
+    get: function () {
+
+        return this.data.GetAngularDamping()
+
+    },
+
+    set: function (value) {
+
+        this.data.SetAngularDamping(value)
+
+    }
+
+});
+
+
+/**
+* @name Phaser.Physics.P2.Body#angularVelocity
+* @property {number} angularVelocity - The angular velocity of the body.
+*/
+Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "linearDamping", {
+    
+    get: function () {
+
+        return this.data.GetLinearDamping();
+
+    },
+
+    set: function (value) {
+
+        this.data.SetLinearDamping(value);
+
+    }
+
+});
+
+
+/**
+* @name Phaser.Physics.Box2D.Body#gravityScale
+* @property {boolean} allowSleep - 
+*/
+Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "gravityScale", {
+    
+    get: function () {
+
+        return this.data.GetGravityScale();
+
+    },
+
+    set: function (value) {
+
+        if (value !== this.data.IsSleepingAllowed())
+        {
+            this.data.SetGravityScale(value);
+        }
+
+    }
+
+});
+
+
+/**
+* @name Phaser.Physics.P2.Body#angularVelocity
+* @property {number} angularVelocity - The angular velocity of the body.
+*/
+Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "angularVelocity", {
+    
+    get: function () {
+
+        return this.data.GetAngularVelocity();
+
+    },
+
+    set: function (value) {
+
+        this.data.SetAngularVelocity(value);
+
+    }
+
+});
+
+/**
+* @name Phaser.Physics.P2.Body#angularVelocity
+* @property {number} angularVelocity - The angular velocity of the body.
+*/
+Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "mass", {
+    
+    get: function () {
+
+        return this.data.GetMass();
+
+    },
+
+    set: function (value) {
+        //doesnt work, only read for now
+        //m = new box2d.b2MassData()
+        //m.mass = value
+        //this.data.SetMassData(value);
+
+    }
+
+});
+
+

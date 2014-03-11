@@ -172,8 +172,7 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
             y0 = Phaser.Physics.Box2D.Utils.b2pxi(v1.y);
             x1 = Phaser.Physics.Box2D.Utils.b2px(v2.x);
             y1 = Phaser.Physics.Box2D.Utils.b2pxi(v2.y);
-            
-            this.drawSegment(sprite, x0, y0, x1, y1, color, lw);
+            this.drawSegment(sprite, x0, y0, x1, y1, color, lw*4);
           }
           break;
         
@@ -204,7 +203,6 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
         var colors, i, v, v0, v1, x, x0, x1, y, y0, y1;
 
         if (typeof lineWidth === 'undefined') { lineWidth = 1; }
-        
         colors = [0xff0000, 0x00ff00, 0x0000ff];
         i = 0;
         while (i !== vertsCount + 1)
