@@ -48,7 +48,10 @@ Phaser.Physics.Box2D.Body.prototype = {
       //create the body through the provided factory
       this.data = world.CreateBody(this.getBodyDef());
       this.data.SetPositionXY(this.position.x,this.position.y)
-      this.data.CreateFixture(this.getFixtureDef());
+
+      this.addCircle(30)
+      this.addRectangle(50,50)
+      //this.data.CreateFixture(this.getFixtureDef());
     },
     
     getFixtureDef: function(){
@@ -86,6 +89,37 @@ Phaser.Physics.Box2D.Body.prototype = {
             this.sprite.rotation = angle;
         //}
 
+    },
+    
+    addCircle: function (radius, offsetX, offsetY) {
+      offsetX = offsetX || 0;
+      offsetY = offsetY || 0;
+
+      circle = new box2d.b2CircleShape();
+      circle.m_radius = Phaser.Physics.Box2D.Utils.px2b(radius)
+      circle.m_p.SetXY(Phaser.Physics.Box2D.Utils.px2b(offsetX), Phaser.Physics.Box2D.Utils.px2bi(offsetY));
+      
+      fd = new box2d.b2FixtureDef();
+      fd.restitution = 0.5;
+      fd.shape = circle;
+      fd.density = 1.0;
+      fd.friction = 0.9;
+
+      this.data.CreateFixture(fd);
+    },
+    
+    addRectangle: function (width, height, offsetX, offsetY, rotation) {
+      offsetX = offsetX || 0;
+      offsetY = offsetY || 0;
+      rotation = rotation || 0;
+
+
+      var shape = new box2d.b2PolygonShape();
+      offsets = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2b(offsetX), Phaser.Physics.Box2D.Utils.px2b(offsetY) )
+      //shape.SetAsOrientedBox(width, height, offsets, Phaser.Math.degToRad(rotation));
+      shape.SetAsOrientedBox(Phaser.Physics.Box2D.Utils.px2b(width), Phaser.Physics.Box2D.Utils.px2b(height), offsets, Phaser.Math.degToRad(rotation) )
+      
+      this.data.CreateFixture2(shape);
     }
 }
 /**

@@ -138,7 +138,7 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
       lw = this.lineWidth || 1;
 
       var shape = fixture.GetShape();
-      console.log('shape.m_type',shape.m_type)
+      
       switch (shape.m_type)
       {
         case box2d.b2ShapeType.e_circleShape:
@@ -149,7 +149,7 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
             var axis = box2d.b2Vec2.UNITX;
             var angle = box2d.b2Vec2.UNITX;
 
-            this.drawCircle(sprite,0, 0, 0, radius * this.ppu, color, lw);
+            this.drawCircle(sprite,Phaser.Physics.Box2D.Utils.b2px(center.x), Phaser.Physics.Box2D.Utils.b2pxi(center.y), 0, radius * this.ppu, color, lw);
           }
           break;
 
@@ -167,13 +167,101 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
             this.drawSegment(sprite, x0, y0, x1, y1, color, lw);
           }
           break;
+        case box2d.b2ShapeType.e_polygonShape:
+          {
+            var poly = ((shape instanceof box2d.b2PolygonShape ? shape : null));
+            var vertexCount = poly.m_count;
+            var vertices = poly.m_vertices;
+
+            if(false){
+              this.drawConvex(sprite, vertices, vertexCount, 0,0);
+            }else{
+              this.drawConvexSolid(sprite, vertices, vertexCount, 0,0);
+            }
+            
+          }
+          break;
+      }
+    },
+    /**
+    * Draws a P2 Convex shape.
+    *
+    * @method Phaser.Physics.P2.BodyDebug#drawConvex
+    */
+    drawConvex: function(g, verts, vertsCount, offsetX, offsetY) {
+
+        var colors, i, v, v0, v1, x, x0, x1, y, y0, y1;
+
+        if (typeof lineWidth === 'undefined') { lineWidth = 1; }
+        
+        colors = [0xff0000, 0x00ff00, 0x0000ff];
+        i = 0;
+        while (i !== vertsCount + 1)
+        {
+            v0 = verts[i % verts.length];
+            v1 = verts[(i + 1) % verts.length];
+            x0 = Phaser.Physics.Box2D.Utils.b2px(v0.x);
+            y0 = Phaser.Physics.Box2D.Utils.b2px(v0.y);
+            x1 = Phaser.Physics.Box2D.Utils.b2px(v1.x);
+            y1 = Phaser.Physics.Box2D.Utils.b2px(v1.y);
+            
+            g.lineStyle(lineWidth, colors[i % colors.length], 1);
+            g.moveTo(x0, -y0);
+            g.lineTo(x1, -y1);
+            g.drawCircle(x0, -y0, lineWidth * 2);
+            i++;
+        }
+
+        g.lineStyle(lineWidth, 0x000000, 1);
+        g.drawCircle(offsetX, offsetY, lineWidth * 2);
+    },
+    
+    drawConvexSolid: function(g, verts, vertsCount, offsetX, offsetY) {
+
+      if (typeof lineWidth === 'undefined') { lineWidth = 1; }
+      
+      g.lineStyle(lineWidth, 0x00ff00, 1);
+      g.beginFill(0x0000ff);
+      i = 0;
+
+      while (i !== vertsCount)
+      {
+          v = verts[i];
+          x = Phaser.Physics.Box2D.Utils.b2px(v.x);
+          y = Phaser.Physics.Box2D.Utils.b2px(v.y);
+
+          if (i === 0)
+          {
+              g.moveTo(x, -y);
+          }
+          else
+          {
+              g.lineTo(x, -y);
+          }
+
+          i++;
+      }
+
+      g.endFill();
+
+      if (vertsCount > 2)
+      {
+          v1 = verts[verts.length - 1];
+          x1 = Phaser.Physics.Box2D.Utils.b2px(v1.x);
+          y1 = Phaser.Physics.Box2D.Utils.b2px(v1.y);
+          
+          v2 = verts[0];
+          x2 = Phaser.Physics.Box2D.Utils.b2px(v2.x);
+          y2 = Phaser.Physics.Box2D.Utils.b2px(v2.y);
+
+          g.moveTo(x1,y1);
+          g.lineTo(x2,y2);
       }
     },
     
     drawCircle: function(g, x, y, angle, radius, color, lineWidth){
       if (typeof lineWidth === 'undefined') { lineWidth = 1; }
       if (typeof color === 'undefined') { color = 0xffffff; }
-      console.log('drawSolidCircle')
 
       g.lineStyle(lineWidth, 0x000000, 1);
       g.beginFill(color, 1.0);
