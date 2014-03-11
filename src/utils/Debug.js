@@ -195,32 +195,6 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-    * Internal method that outputs a single line of text.
-    *
-    * @method Phaser.Utils.Debug#line
-    * @protected
-    * @param {string} text - The line of text to draw.
-    * @param {number} [x] - The X value the debug info will start from.
-    * @param {number} [y] - The Y value the debug info will start from.
-    line: function (text, x, y) {
-
-        if (typeof x !== 'undefined') { this.currentX = x; }
-        if (typeof y !== 'undefined') { this.currentY = y; }
-
-        if (this.renderShadow)
-        {
-            this.context.fillStyle = 'rgb(0,0,0)';
-            this.context.fillText(text, this.currentX + 1, this.currentY + 1);
-            this.context.fillStyle = this.currentColor;
-        }
-
-        this.context.fillText(text, this.currentX, this.currentY);
-        this.currentY += this.lineHeight;
-
-    },
-    */
-
-    /**
     * Internal method that outputs a single line of text split over as many columns as needed, one per parameter.
     *
     * @method Phaser.Utils.Debug#line
@@ -351,7 +325,6 @@ Phaser.Utils.Debug.prototype = {
         this.context.closePath();
 
         //  Render the text
-        // this.start(pointer.x, pointer.y - 100, color);
         this.line('ID: ' + pointer.id + " Active: " + pointer.active);
         this.line('World X: ' + pointer.worldX + " World Y: " + pointer.worldY);
         this.line('Screen X: ' + pointer.x + " Screen Y: " + pointer.y);
@@ -617,6 +590,46 @@ Phaser.Utils.Debug.prototype = {
 
         this.context.fillStyle = color;
         this.context.fillText(text, x, y);
+
+        this.stop();
+
+    },
+
+    /**
+    * Visually renders a QuadTree to the display.
+    *
+    * @method Phaser.Utils.Debug#quadTree
+    * @param {Phaser.QuadTree} quadtree - The quadtree to render.
+    * @param {string} color - The color of the lines in the quadtree.
+    */
+    quadTree: function (quadtree, color) {
+
+        color = color || 'rgba(255,0,0,0.3)';
+
+        this.start();
+
+        var bounds = quadtree.bounds;
+
+        if (quadtree.nodes.length === 0)
+        {
+            this.context.strokeStyle = color;
+            this.context.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
+            this.text('size: ' + quadtree.objects.length, bounds.x + 4, bounds.y + 16, 'rgb(0,200,0)', '12px Courier');
+
+            this.context.strokeStyle = 'rgb(0,255,0)';
+
+            for (var i = 0; i < quadtree.objects.length; i++)
+            {
+                this.context.strokeRect(quadtree.objects[i].x, quadtree.objects[i].y, quadtree.objects[i].width, quadtree.objects[i].height);
+            }
+        }
+        else
+        {
+            for (var i = 0; i < quadtree.nodes.length; i++)
+            {
+                this.quadTree(quadtree.nodes[i]);
+            }
+        }
 
         this.stop();
 

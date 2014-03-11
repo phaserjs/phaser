@@ -212,6 +212,16 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.particles = null;
 
     /**
+    * @property {function} update - The current update method being called.
+    */
+    this.update = this.coreUpdate;
+
+    /**
+    * @property {function} render - The current render method being called.
+    */
+    this.render = this.coreRender;
+
+    /**
     * @property {boolean} stepping - Enable core loop stepping with Game.enableStep().
     * @default
     * @readonly
@@ -532,79 +542,117 @@ Phaser.Game.prototype = {
             this.context = null;
         }
 
-        this.stage.smoothed = this.antialias;
+        if (this.renderType === Phaser.HEADLESS)
+        {
+            this.render = this.headlessRender;
+        }
+        else
+        {
+            this.stage.smoothed = this.antialias;
 
-        Phaser.Canvas.addToDOM(this.canvas, this.parent, true);
-        Phaser.Canvas.setTouchAction(this.canvas);
+            Phaser.Canvas.addToDOM(this.canvas, this.parent, true);
+            Phaser.Canvas.setTouchAction(this.canvas);
+        }
 
     },
 
     /**
     * The core game loop.
     *
-    * @method Phaser.Game#update
+    * @method Phaser.Game#coreUpdate
     * @protected
     * @param {number} time - The current time as provided by RequestAnimationFrame.
     */
-    update: function (time) {
+    coreUpdate: function (time) {
 
         this.time.update(time);
 
-        if (this._paused)
+        this.debug.preUpdate();
+        this.state.preUpdate();
+        this.plugins.preUpdate();
+        this.stage.preUpdate();
+
+        this.stage.update();
+        this.tweens.update();
+        this.sound.update();
+        this.input.update();
+        this.state.update();
+        this.physics.update();
+        this.particles.update();            
+        this.plugins.update();
+
+        this.stage.postUpdate();
+        this.plugins.postUpdate();
+
+        this.render();
+
+    },
+
+    /**
+    * The core game loop when in a paused state.
+    *
+    * @method Phaser.Game#pausedUpdate
+    * @protected
+    * @param {number} time - The current time as provided by RequestAnimationFrame.
+    */
+    pausedUpdate: function (time) {
+
+        this.time.update(time);
+
+        this.render();
+
+    },
+
+    /**
+    * The core game loop when in a Stepped state.
+    *
+    * @method Phaser.Game#steppedUpdate
+    * @protected
+    * @param {number} time - The current time as provided by RequestAnimationFrame.
+    */
+    steppedUpdate: function (time) {
+
+        this.time.update(time);
+
+        if (!this.pendingStep)
         {
-            this.input.update();
-
-            if (this.renderType !== Phaser.HEADLESS)
+            if (this.stepping)
             {
-                this.renderer.render(this.stage);
-                this.plugins.render();
-                this.state.render();
-
-                this.plugins.postRender();
-            }
-        }
-        else
-        {
-            if (!this.pendingStep)
-            {
-                if (this.stepping)
-                {
-                    this.pendingStep = true;
-                }
-
-                this.debug.preUpdate();
-                this.state.preUpdate();
-                this.plugins.preUpdate();
-                this.stage.preUpdate();
-
-                this.stage.update();
-                this.tweens.update();
-                this.sound.update();
-                this.input.update();
-                this.state.update();
-                this.physics.update();
-                this.particles.update();            
-                this.plugins.update();
-
-                this.stage.postUpdate();
-                this.plugins.postUpdate();
+                this.pendingStep = true;
             }
 
-            if (this.renderType !== Phaser.HEADLESS)
-            {
-                this.renderer.render(this.stage);
-                this.plugins.render();
-                this.state.render();
-
-                this.plugins.postRender();
-            }
+            this.coreUpdate();
         }
 
     },
 
     /**
+    * The core render loop.
+    *
+    * @method Phaser.Game#coreRender
+    * @protected
+    */
+    coreRender: function () {
+
+        this.renderer.render(this.stage);
+        this.plugins.render();
+        this.state.render();
+        this.plugins.postRender();
+
+    },
+
+    /**
+    * The empty headless render loop.
+    *
+    * @method Phaser.Game#headlessRender
+    * @protected
+    */
+    headlessRender: function () {
+    },
+
+    /**
     * Enable core game loop stepping. When enabled you must call game.step() directly (perhaps via a DOM button?)
-    * Calling step will advance the game loop by one frame. This is extremely useful to hard to track down errors!
+    * Calling step will advance the game loop by one frame. This is extremely useful for hard to track down errors!
     *
     * @method Phaser.Game#enableStep
     */
@@ -613,6 +661,8 @@ Phaser.Game.prototype = {
         this.stepping = true;
         this.pendingStep = false;
         this.stepCount = 0;
+
+        this.update = this.steppedUpdate;
 
     },
 
@@ -625,6 +675,8 @@ Phaser.Game.prototype = {
 
         this.stepping = false;
         this.pendingStep = false;
+
+        this.update = this.coreUpdate;
 
     },
 
@@ -670,6 +722,7 @@ Phaser.Game.prototype = {
     * Called by the Stage visibility handler.
     *
     * @method Phaser.Game#gamePaused
+    * @protected
     */
     gamePaused: function (time) {
 
@@ -680,6 +733,7 @@ Phaser.Game.prototype = {
             this.time.gamePaused(time);
             this.sound.setMute();
             this.onPause.dispatch(this);
+            this.update = this.pausedUpdate;
         }
 
     },
@@ -688,6 +742,7 @@ Phaser.Game.prototype = {
     * Called by the Stage visibility handler.
     *
     * @method Phaser.Game#gameResumed
+    * @protected
     */
     gameResumed: function (time) {
 
@@ -699,6 +754,7 @@ Phaser.Game.prototype = {
             this.input.reset();
             this.sound.unsetMute();
             this.onResume.dispatch(this);
+            this.update = this.coreUpdate;
         }
 
     }
@@ -730,6 +786,7 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
                 this.sound.mute = true;
                 this.time.gamePaused();
                 this.onPause.dispatch(this);
+                this.update = this.pausedUpdate;
             }
         }
         else
@@ -742,6 +799,7 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
                 this.sound.mute = false;
                 this.time.gameResumed();
                 this.onResume.dispatch(this);
+                this.update = this.coreUpdate;
             }
         }
 

@@ -36,19 +36,13 @@ var Phaser = Phaser || {
 	WEBGL_FILTER: 15,
 	ELLIPSE: 16,
 	SPRITEBATCH: 17,
-	BITMAPFONT: 18,
+	RETROFONT: 18,
 
-	NONE: 0,
-	LEFT: 1,
-	RIGHT: 2,
-	UP: 3,
-	DOWN: 4,
+	// DYNAMIC: 1,
+	// STATIC: 2,
+	// KINEMATIC: 4,
 
-	DYNAMIC: 1,
-	STATIC: 2,
-	KINEMATIC: 4,
-
-	// the various blend modes supported by pixi / phaser
+	//	The various blend modes supported by pixi / phaser
 	blendModes: {
 	    NORMAL:0,
 	    ADD:1,
@@ -69,7 +63,7 @@ var Phaser = Phaser || {
 	    LUMINOSITY:16
 	},
 
-	// the scale modes
+	//	The scale modes
 	scaleModes: {
 	    DEFAULT:0,
 	    LINEAR:0,

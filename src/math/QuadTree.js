@@ -9,7 +9,7 @@
 * @version 1.0
 * @author Timo Hausmann
 *
-* @version 1.2, September 4th 2013
+* @version 1.3, March 11th 2014
 * @author Richard Davey
 * The original code was a conversion of the Java code posted to GameDevTuts. However I've tweaked
 * it massively to add node indexing, removed lots of temp. var creation and significantly
@@ -84,12 +84,12 @@ Phaser.QuadTree = function(x, y, width, height, maxObjects, maxLevels, level) {
     /**
     * @property {array} objects - Array of quadtree children.
     */
-    this.objects;
+    this.objects = [];
 
     /**
     * @property {array} nodes - Array of associated child nodes.
     */
-    this.nodes;
+    this.nodes = [];
 
     this.reset(x, y, width, height, maxObjects, maxLevels, level);
 
@@ -126,8 +126,8 @@ Phaser.QuadTree.prototype = {
             bottom: Math.round(y) + Math.floor(height / 2)
         };
 
-        this.objects = [];
-        this.nodes = [];
+        this.objects.length = 0;
+        this.nodes.length = 0;
 
     },
 

@@ -89,6 +89,7 @@ Significant API changes:
 * Animation.looped has been renamed to Animation.loop. It's a boolean you can toggle at run-time to turn on/off animation looping.
 * Sprite.damage will now kill the Sprite if health is less than or equal to 0 (before it would only kill if less than zero)
 * By default Sprites no longer check if they are within the world bounds. It's quite an expensive process (calling getBounds every frame), so you have to enable directly.
+* The main Game class has been modified so that the update methods no longer have any if/else checks in them. Now split into coreUpdate, etc.
 
 
 New features:
