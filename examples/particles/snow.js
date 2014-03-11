@@ -4,6 +4,7 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: p
 
 function preload() {
 
+    game.load.image('sky', 'assets/skies/sky3.png');
     game.load.spritesheet('snowflakes', 'assets/sprites/snowflakes.png', 17, 17);
     game.load.spritesheet('snowflakes_large', 'assets/sprites/snowflakes_large.png', 64, 64);
 
@@ -18,6 +19,8 @@ var i = 0;
 
 function create() {
 
+    game.add.image(0, 0, 'sky');
+
     back_emitter = game.add.emitter(game.world.centerX, -32, 600);
     back_emitter.makeParticles('snowflakes', [0, 1, 2, 3, 4, 5]);
     back_emitter.maxParticleScale = 0.6;
@@ -28,7 +31,6 @@ function create() {
     back_emitter.minRotation = 0;
     back_emitter.maxRotation = 40;
 
-
     mid_emitter = game.add.emitter(game.world.centerX, -32, 250);
     mid_emitter.makeParticles('snowflakes', [0, 1, 2, 3, 4, 5]);
     mid_emitter.maxParticleScale = 1.2;
@@ -38,7 +40,6 @@ function create() {
     mid_emitter.width = game.world.width * 1.5;
     mid_emitter.minRotation = 0;
     mid_emitter.maxRotation = 40;
-
 
     front_emitter = game.add.emitter(game.world.centerX, -32, 50);
     front_emitter.makeParticles('snowflakes_large', [0, 1, 2, 3, 4, 5]);

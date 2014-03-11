@@ -1,15 +1,18 @@
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
 
 var emitter;
 
 function preload() {
 
+    game.load.image('sky', 'assets/skies/sky4.png');
     game.load.spritesheet('veggies', 'assets/sprites/fruitnveg32wh37.png', 32, 32);
 
 }
 
 function create() {
+
+    game.add.image(0, 0, 'sky');
 
     emitter = game.add.emitter(game.world.centerX, game.world.centerY, 250);
 
@@ -27,6 +30,6 @@ function create() {
 
 function update() {
 
-    game.physics.collide(emitter);
+    game.physics.arcade.collide(emitter);
 
 }

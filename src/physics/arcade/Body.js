@@ -124,7 +124,18 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.drag = new Phaser.Point();
 
     /**
-    * @property {Phaser.Point} gravityScale - Gravity scaling factor. If you want the body to ignore gravity, set this to zero. If you want to reverse gravity, set it to -1.
+    * @property {boolean} allowGravity - Allow this Body to be influenced by world gravity?
+    * @default
+    */
+    this.allowGravity = true;
+
+    /**
+    * @property {Phaser.Point} gravity - A local gravity applied to this Body. If set this over-rides any world gravity.
+    */
+    this.gravity = new Phaser.Point(0, 0);
+
+    /**
+    * @property {Phaser.Point} gravityScale - Gravity scaling factor. This is only applied to world gravity, not local gravity. If you want the body to ignore gravity, set this to zero. If you want to reverse gravity, set it to -1.
     */
     this.gravityScale = new Phaser.Point(1, 1);
 

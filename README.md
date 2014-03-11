@@ -93,7 +93,7 @@ Significant API changes:
 
 New features:
 
-* Phaser.Image is a brand new display object perfect for logos, backgrounds, etc. You can scale, rotate, tint, blend an get input events from an Image, but it has no animation, physics body.
+* Phaser.Image is a brand new display object perfect for logos, backgrounds, etc. You can scale, rotate, tint, blend an get input events from an Image, but it has no animation or physics body.
 * You can now use the hitArea property on Sprites and Image objects. hitArea can be a geometry object (Rectangle, Circle, Polygon, Ellipse) and is used in pointerOver checks.
 * InputManager.getLocalPosition(displayObject, pointer, output) will return the local coordinates of the specified displayObject and pointer.
 * InputManager.hitTest will test for pointer hits against a Sprite/Image, its hitArea (if set) or any of its children.
@@ -178,6 +178,7 @@ Updates:
 * Animation.stop has a new parameter: dispatchComplete. If true it'll dispatch an Animation.onComplete event.
 * TileSprites now have a physics body property and call it in the pre and post updates. As with all physics bodies it's null by default.
 * json is now the default tilemap format when not defined (thanks RyanDansie, #528)
+* The Particle Emitter now remembers the frames given to it and resets it when a new particle is emitted.
 
 
 Bug Fixes:

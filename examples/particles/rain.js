@@ -4,11 +4,14 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: p
 
 function preload() {
 
+	game.load.image('sky', 'assets/skies/underwater3.png');
 	game.load.spritesheet('rain', 'assets/sprites/rain.png', 17, 17);
 
 }
 
 function create() {
+
+	game.add.image(0, 0, 'sky');
 
 	var emitter = game.add.emitter(game.world.centerX, 0, 400);
 	emitter.width = game.world.width;

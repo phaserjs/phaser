@@ -245,8 +245,23 @@ Phaser.Physics.Arcade.prototype = {
         body.rotation += (body.angularVelocity * this.game.time.physicsElapsed);
 
         //  Apply gravity using the p2 style gravityScale
-        body.velocity.x += this.gravity.x * this.game.time.physicsElapsed * body.gravityScale.x;
-        body.velocity.y += this.gravity.y * this.game.time.physicsElapsed * body.gravityScale.y;
+        if (body.gravity.x !== 0)
+        {
+            body.velocity.x += body.gravity.x * this.game.time.physicsElapsed;
+        }
+        else
+        {
+            body.velocity.x += this.gravity.x * this.game.time.physicsElapsed * body.gravityScale.x;
+        }
+
+        if (body.gravity.y !== 0)
+        {
+            body.velocity.y += body.gravity.y * this.game.time.physicsElapsed;
+        }
+        else
+        {
+            body.velocity.y += this.gravity.y * this.game.time.physicsElapsed * body.gravityScale.y;
+        }
 
         //  Apply velocity
         body.velocity.x = this.computeVelocity(body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x);

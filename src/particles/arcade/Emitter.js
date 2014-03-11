@@ -166,6 +166,12 @@ Phaser.Particles.Arcade.Emitter = function (game, x, y, maxParticles) {
     this._explode = true;
 
     /**
+    * @property {any} _frames - Internal helper for the particle frame.
+    * @private
+    */
+    this._frames = null;
+
+    /**
     * @property {boolean} on - Determines whether the emitter is currently emitting particles. It is totally safe to directly toggle this.
     * @default
     */
@@ -264,6 +270,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
     var i = 0;
     var rndKey = keys;
     var rndFrame = frames;
+    this._frames = frames;
 
     while (i < quantity)
     {
@@ -280,6 +287,7 @@ Phaser.Particles.Arcade.Emitter.prototype.makeParticles = function (keys, frames
             }
 
             particle = new Phaser.Sprite(this.game, 0, 0, rndKey, rndFrame);
+            this.game.physics.arcade.enable(particle, false);
         }
         // else
         // {
@@ -432,6 +440,15 @@ Phaser.Particles.Arcade.Emitter.prototype.emitParticle = function () {
     {
         var scale = this.game.rnd.realInRange(this.minParticleScale, this.maxParticleScale);
         particle.scale.setTo(scale, scale);
+    }
+
+    if (typeof this._frames === 'object')
+    {
+        particle.frame = this.game.rnd.pick(this._frames);
+    }
+    else
+    {
+        particle.frame = this._frames;
     }
 
     particle.body.friction = this.particleFriction;
