@@ -171,6 +171,7 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
           {
             var poly = ((shape instanceof box2d.b2PolygonShape ? shape : null));
             var vertexCount = poly.m_count;
+            console.log('vertexCount',vertexCount)
             var vertices = poly.m_vertices;
 
             if(false){
@@ -217,7 +218,6 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
     },
     
     drawConvexSolid: function(g, verts, vertsCount, offsetX, offsetY) {
-
       if (typeof lineWidth === 'undefined') { lineWidth = 1; }
       
       g.lineStyle(lineWidth, 0x00ff00, 1);

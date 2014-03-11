@@ -44,14 +44,27 @@ Phaser.Physics.Box2D.Body = function (game, sprite, x, y, mass) {
 };
 
 Phaser.Physics.Box2D.Body.prototype = {
-    create: function(world){
+    create: function(parent){
+      world = parent.world
+      this.parent = parent
       //create the body through the provided factory
       this.data = world.CreateBody(this.getBodyDef());
       this.data.SetPositionXY(this.position.x,this.position.y)
 
       this.addCircle(30)
       this.addRectangle(50,50)
+      this.clearFixtures()
       //this.data.CreateFixture(this.getFixtureDef());
+    },
+
+    clearFixtures: function(){
+      var f = this.data.GetFixtureList()
+      while (f)
+      {
+        var f0 = f;
+        f = f.GetNext();
+        this.data.DestroyFixture(f0)
+      }
     },
     
     getFixtureDef: function(){
@@ -68,9 +81,7 @@ Phaser.Physics.Box2D.Body.prototype = {
     },
     
     getBodyDef: function(){
-      var bd = new box2d.b2BodyDef()
-      bd.type = box2d.b2BodyType.b2_dynamicBody
-      return bd
+      return new box2d.b2BodyDef()
     },
     
     preUpdate: function(){
@@ -120,6 +131,24 @@ Phaser.Physics.Box2D.Body.prototype = {
       shape.SetAsOrientedBox(Phaser.Physics.Box2D.Utils.px2b(width), Phaser.Physics.Box2D.Utils.px2b(height), offsets, Phaser.Math.degToRad(rotation) )
       
       this.data.CreateFixture2(shape);
+    },
+    
+    test: function(){
+      var x1 = -20.0;
+      var y1 = 2.0 * box2d.b2Cos(x1 / 10.0 * box2d.b2_pi);
+      for (var i = 0; i < 80; ++i)
+      {
+        var x2 = x1 + 0.5;
+        var y2 = 2.0 * box2d.b2Cos(x2 / 10.0 * box2d.b2_pi);
+
+        var shape = new box2d.b2EdgeShape();
+        shape.SetAsEdge(new box2d.b2Vec2(x1, -y1), new box2d.b2Vec2(x2, -y2));
+        this.data.CreateFixture2(shape, 0.0);
+
+        x1 = x2;
+        y1 = y2;
+      }
+      this.debug = true
     }
 }
 /**
@@ -144,6 +173,117 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "debug", {
         else if (!value && this.debugBody)
         {
             //destroy this.debugBody
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Physics.P2.Body#static
+* @property {boolean} static - Returns true if the Body is static. Setting Body.static to 'false' will make it dynamic.
+*/
+Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "bullet", {
+    
+    get: function () {
+
+        return (this.data.GetType() === box2d.b2BodyType.b2_bulletBody);
+
+    },
+
+    set: function (value) {
+
+        if (value && this.data.GetType() !== box2d.b2BodyType.b2_bulletBody)
+        {
+            this.data.setType(box2d.b2BodyType.b2_bulletBody)
+        }
+        else if (!value && this.data.GetType() === box2d.b2BodyType.b2_staticBody)
+        {
+            this.data.setType(box2d.b2BodyType.b2_staticBody)
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Physics.P2.Body#static
+* @property {boolean} static - Returns true if the Body is static. Setting Body.static to 'false' will make it dynamic.
+*/
+Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "static", {
+    
+    get: function () {
+
+        return (this.data.GetType() === box2d.b2BodyType.b2_staticBody);
+
+    },
+
+    set: function (value) {
+
+        if (value && this.data.GetType() !== box2d.b2BodyType.b2_staticBody)
+        {
+            this.data.setType(box2d.b2BodyType.b2_staticBody)
+        }
+        else if (!value && this.data.GetType() === box2d.b2BodyType.b2_staticBody)
+        {
+            this.data.setType(box2d.b2BodyType.dynamic)
+        }
+
+    }
+
+});
+
+/**
+* @name Phaser.Physics.P2.Body#dynamic
+* @property {boolean} dynamic - Returns true if the Body is dynamic. Setting Body.dynamic to 'false' will make it static.
+*/
+Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "dynamic", {
+    
+    get: function () {
+
+        return (this.data.GetType() === box2d.b2BodyType.b2_dynamicBody);
+
+    },
+
+    set: function (value) {
+
+        if (value && this.data.GetType() !== box2d.b2BodyType.b2_dynamicBody)
+        {
+            this.data.setType(box2d.b2BodyType.b2_dynamicBody)
+        }
+        else if (!value && this.data.GetType() === box2d.b2BodyType.b2_staticBody)
+        {
+            this.data.setType(box2d.b2BodyType.b2_staticBody)
+        }
+
+    }
+
+});
+
+
+
+
+/**
+* @name Phaser.Physics.Box2D.Body#kinematic
+* @property {boolean} kinematic - Returns true if the Body is kinematic. Setting Body.kinematic to 'false' will make it static.
+*/
+Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "kinematic", {
+    
+    get: function () {
+
+        return (this.data.GetType() === box2d.b2BodyType.b2_kinematicBody);
+
+    },
+
+    set: function (value) {
+
+        if (value && this.data.GetType() !== box2d.b2BodyType.b2_kinematicBody)
+        {
+            this.data.setType(box2d.b2BodyType.b2_kinematicBody)
+        }
+        else if (!value && this.data.GetType() === box2d.b2BodyType.b2_staticBody)
+        {
+            this.data.setType(box2d.b2BodyType.b2_staticBody)
         }
 
     }

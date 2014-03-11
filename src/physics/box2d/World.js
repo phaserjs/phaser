@@ -16,20 +16,20 @@ Phaser.Physics.Box2D = function (game, config) {
     
     this.world = new box2d.b2World(gravity);
     this.setBoundsToWorld()
+
+    bd = new box2d.b2BodyDef();
+    this.ground = this.world.CreateBody(bd);
 };
 
 Phaser.Physics.Box2D.prototype = {
     update: function () {
-        
-
         this.world.Step(1.0 / 60, this.velocityiterations, this.positionIterations);
         this.world.ClearForces();
-
         this.world.DrawDebugData()
     },
     
     addBody: function (body) {
-      body.create(this.world)
+      body.create(this)
     },
     
     removeBody: function(body){
