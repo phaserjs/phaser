@@ -218,6 +218,15 @@ module.exports = function (grunt) {
             'src/physics/ninja/Circle.js'
         ],
 
+        box2d:[
+          'src/physics/box2d/box2d-html5.js',
+          'src/physics/box2d/World.js',
+          'src/physics/box2d/Body.js',
+          'src/physics/box2d/BodyDebug.js',
+          'src/physics/box2d/Utils.js',
+          'src/physics/box2d/SampleContactListener.js'
+        ],
+
         //  If we've updated pixi or p2 then their UMD wrappers will be wrong, this will fix it:
         replace: {
 
@@ -263,6 +272,12 @@ module.exports = function (grunt) {
                 dest: '<%= compile_dir %>/ninja.js'
             },
 
+            //  Our custom version of Ninja Physics
+            box2d: {
+                src: ['<%= box2d %>'],
+                dest: '<%= compile_dir %>/box2d.js'
+            },
+
             //  Phaser with no bundled libs
             phaser: {
                 options: {
@@ -277,7 +292,7 @@ module.exports = function (grunt) {
                 options: {
                     banner: '<%= banner %>'
                 },
-                src: ['<%= compile_dir %>/pixi.js', '<%= compile_dir %>/phaser-no-libs.js', '<%= compile_dir %>/ninja.js', '<%= compile_dir %>/p2.js'],
+                src: ['<%= compile_dir %>/pixi.js', '<%= compile_dir %>/phaser-no-libs.js', '<%= compile_dir %>/ninja.js', '<%= compile_dir %>/p2.js'/*, '<%= compile_dir %>/box2d.js'*/],
                 dest: '<%= compile_dir %>/phaser.js'
             }
 
@@ -308,6 +323,15 @@ module.exports = function (grunt) {
                 src: ['<%= concat.ninja.dest %>'],
                 dest: '<%= compile_dir %>/ninja.min.js'
             },
+
+            //stack size error in grunt task
+            //box2d: {
+            //    options: {
+            //        banner: '/* Box2D Physics for Phaser v<%= pkg.version %> - http://phaser.io - @photonstorm - (c) 2014 Photon Storm Ltd. */\n'
+            //    },
+            //    src: ['<%= concat.box2d.dest %>'],
+            //    dest: '<%= compile_dir %>/box2d.min.js'
+            //},
 
             phaser: {
                 options: {
@@ -343,7 +367,9 @@ module.exports = function (grunt) {
                     { src: ['dist/pixi.js'], dest: 'build/custom/pixi.js' },
                     { src: ['dist/pixi.min.js'], dest: 'build/custom/pixi.min.js' },
                     { src: ['dist/ninja.js'], dest: 'build/custom/ninja.js' },
-                    { src: ['dist/ninja.min.js'], dest: 'build/custom/ninja.min.js' }
+                    { src: ['dist/ninja.min.js'], dest: 'build/custom/ninja.min.js' },
+                    { src: ['dist/box2d.js'], dest: 'build/custom/box2d.js' },
+                    { src: ['dist/box2d.min.js'], dest: 'build/custom/box2d.min.js' }
                 ]
             }
         },

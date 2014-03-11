@@ -139,10 +139,6 @@
       "title": "quadtree - ids"
     },
     {
-      "file": "rotated+bounding+box.js",
-      "title": "rotated bounding box"
-    },
-    {
       "file": "ship+trail.js",
       "title": "ship trail"
     },
@@ -153,10 +149,6 @@
     {
       "file": "snake.js",
       "title": "snake"
-    },
-    {
-      "file": "sprite+bounds.js",
-      "title": "sprite bounds"
     },
     {
       "file": "sprite+vs+group.js",
