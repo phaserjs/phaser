@@ -572,6 +572,7 @@ Phaser.Game.prototype = {
                     this.pendingStep = true;
                 }
 
+                this.debug.preUpdate();
                 this.state.preUpdate();
                 this.plugins.preUpdate();
                 this.stage.preUpdate();

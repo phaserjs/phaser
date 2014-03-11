@@ -125,6 +125,21 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
+    * Internal method that clears the canvas (if a Sprite) ready for a new debug session.
+    *
+    * @method Phaser.Utils.Debug#preUpdate
+    */
+    preUpdate: function () {
+
+        if (this.dirty && this.sprite)
+        {
+            this.context.clearRect(0, 0, this.game.width, this.game.height);
+            this.dirty = false;
+        }
+
+    },
+
+    /**
     * Internal method that resets and starts the debug output values.
     *
     * @method Phaser.Utils.Debug#start
@@ -147,9 +162,9 @@ Phaser.Utils.Debug.prototype = {
         this.currentAlpha = this.context.globalAlpha;
         this.columnWidth = columnWidth;
 
-        if (this.sprite && this.dirty)
+        if (this.sprite)
         {
-            // this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.dirty = true;
         }
 
         this.context.save();
