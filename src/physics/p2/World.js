@@ -160,6 +160,82 @@ Phaser.Physics.P2.LIME_CORONA_JSON = 0;
 Phaser.Physics.P2.prototype = {
 
     /**
+    * This will create an Arcade Physics body on the given game object or array of game objects.
+    * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
+    *
+    * @method Phaser.Physics.Arcade#enable
+    * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array or Group of objects, a body will be created on every child that has a `body` property.
+    * @param {boolean} debug - Create a debug object to go with this body?
+    * @param {boolean} [children=true] - Should a body be created on all children of this object? If true it will recurse down the display list as far as it can go.
+    */
+    enable: function (object, debug, children) {
+
+        if (typeof children === 'undefined') { children = true; }
+
+        var i = 1;
+
+        if (Array.isArray(object))
+        {
+            i = object.length;
+
+            while (i--)
+            {
+                if (object[i] instanceof Phaser.Group)
+                {
+                    //  If it's a Group then we do it on the children regardless
+                    this.enable(object[i].children, children);
+                }
+                else
+                {
+                    this.enableBody(object[i]);
+
+                    if (children && object[i].hasOwnProperty('children') && object[i].children.length > 0)
+                    {
+                        this.enable(object[i], true);
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (object instanceof Phaser.Group)
+            {
+                //  If it's a Group then we do it on the children regardless
+                this.enable(object.children, children);
+            }
+            else
+            {
+                this.enableBody(object);
+
+                if (children && object.hasOwnProperty('children') && object.children.length > 0)
+                {
+                    this.enable(object.children, true);
+                }
+            }
+        }
+
+    },
+
+    /**
+    * Creates an Arcade Physics body on the given game object.
+    * A game object can only have 1 physics body active at any one time, and it can't be changed until the body is nulled.
+    *
+    * @method Phaser.Physics.Arcade#enableBody
+    * @param {object} object - The game object to create the physics body on. A body will only be created if this object has a null `body` property.
+    * @param {boolean} debug - Create a debug object to go with this body?
+    */
+    enableBody: function (object, debug) {
+
+        if (object.hasOwnProperty('body') && object.body === null)
+        {
+            object.body = new Phaser.Physics.P2.Body(this.game, object, object.x, object.y, 1);
+            object.body.debug = debug
+            object.anchor.set(0.5);
+        }
+
+    },
+
+    /**
     * Handles a p2 postStep event.
     *
     * @method Phaser.Physics.P2#postStepHandler

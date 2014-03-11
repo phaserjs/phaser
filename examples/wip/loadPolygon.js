@@ -20,10 +20,10 @@ var start = false;
 function create() {
 
 	//	Enable p2 physics
-	game.physics.startSystem(Phaser.Physics.P2);
+	game.physics.startSystem(Phaser.Physics.P2JS);
 
 	contra = game.add.sprite(400, 300, 'contra2');
-	game.physics.enable(contra, Phaser.Physics.P2, true);
+	game.physics.enable(contra, Phaser.Physics.P2JS, true);
 	contra.body.clearShapes();
 	contra.body.loadPolygon('physicsData', 'contra2');
 

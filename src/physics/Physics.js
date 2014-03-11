@@ -126,7 +126,7 @@ Phaser.Physics.prototype = {
     },
 
     /**
-    * This will create a physics body on the given game object.
+    * This will create a default physics body on the given game object or array of objects.
     * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
     * It can be for any of the physics systems that have been started:
     *
@@ -134,6 +134,9 @@ Phaser.Physics.prototype = {
     * Phaser.Physics.P2JS - A full-body advanced physics system supporting multiple object shapes, polygon loading, contact materials, springs and constraints.
     * Phaser.Physics.NINJA - A port of Metanet Softwares N+ physics system. Advanced AABB and Circle vs. Tile collision.
     * Phaser.Physics.BOX2D and Phaser.Physics.CHIPMUNK are still in development.
+    *
+    * If you require more control over what type of body is created, for example to create a Ninja Physics Circle instead of the default AABB, then see the
+    * individual physics systems `enable` methods instead of using this generic one.
     *
     * @method Phaser.Physics#enable
     * @param {object|array} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array.
@@ -145,45 +148,17 @@ Phaser.Physics.prototype = {
         if (typeof system === 'undefined') { system = Phaser.Physics.ARCADE; }
         if (typeof debug === 'undefined') { debug = false; }
 
-        var i = 1;
-
-        if (object instanceof Phaser.Group)
+        if (system === Phaser.Physics.ARCADE)
         {
-
+            this.arcade.enable(object);
         }
-        else
+        else if (system === Phaser.Physics.P2JS && this.p2)
         {
-            if (Array.isArray(object))
-            {
-                //  Add to Group
-                i = object.length;
-            }
-            else
-            {
-                object = [object];
-            }
-
-            while (i--)
-            {
-                if (object[i].body === null)
-                {
-                    if (system === Phaser.Physics.ARCADE)
-                    {
-                        object[i].body = new Phaser.Physics.Arcade.Body(object[i]);
-                    }
-                    else if (system === Phaser.Physics.P2JS)
-                    {
-                        object[i].body = new Phaser.Physics.P2.Body(this.game, object[i], object[i].x, object[i].y, 1);
-                        object[i].body.debug = debug
-                        object[i].anchor.set(0.5);
-                    }
-                    else if (system === Phaser.Physics.NINJA)
-                    {
-                        object[i].body = new Phaser.Physics.Ninja.Body(this.ninja, object[i]);
-                        object[i].anchor.set(0.5);
-                    }
-                }
-            }
+            this.p2.enable(object, debug);
+        }
+        else if (system === Phaser.Physics.NINJA && this.ninja)
+        {
+            this.ninja.enableAABB(object);
         }
 
     },

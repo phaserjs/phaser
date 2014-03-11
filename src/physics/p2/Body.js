@@ -111,10 +111,8 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     */
     this._groupCallbackContext = [];
 
-
-
     /**
-    * @property {Phaser.Physics.P2.BodyDebug} debugBody - Reference to the debug drawer.
+    * @property {Phaser.Physics.P2.BodyDebug} debugBody - Reference to the debug body.
     */
     this.debugBody = null
 
@@ -1572,7 +1570,6 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "y", {
 
 });
 
-
 /**
 * @name Phaser.Physics.P2.Body#debug
 * @property {boolean} debug - Enable or disable debug drawing of this body
@@ -1589,12 +1586,13 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "debug", {
 
         if (value && !this.debugBody)
         {
-            //this will be added to the global space
+            //  This will be added to the global space
             this.debugBody = new Phaser.Physics.P2.BodyDebug(this.game, this.data)
         }
         else if (!value && this.debugBody)
         {
-            //destroy this.debugBody
+            this.debugBody.destroy();
+            this.debugBody = null;
         }
 
     }

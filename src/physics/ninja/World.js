@@ -21,6 +21,9 @@ Phaser.Physics.Ninja = function (game) {
     */
     this.game = game;
 
+    /**
+    * @property {Phaser.Time} time - Local reference to game.time.
+    */
     this.time = this.game.time;
 
     /**
@@ -34,9 +37,19 @@ Phaser.Physics.Ninja = function (game) {
     this.bounds = new Phaser.Rectangle(0, 0, game.world.width, game.world.height);
 
     /**
+    * @property {number} maxObjects - Used by the QuadTree to set the maximum number of objects per quad.
+    */
+    this.maxObjects = 10;
+
+    /**
+    * @property {number} maxLevels - Used by the QuadTree to set the maximum number of iteration levels.
+    */
+    this.maxLevels = 4;
+
+    /**
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
     */
-    // this.quadTree = new Phaser.Physics.Ninja.QuadTree(this, this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
+    this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
 
     /**
     * @property {Array} _mapData - Internal cache var.
@@ -55,11 +68,12 @@ Phaser.Physics.Ninja.prototype = {
     * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
     *
     * @method Phaser.Physics.Ninja#enableAABB
-    * @param {object|array} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array.
+    * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array or Group of objects, a body will be created on every child that has a `body` property.
+    * @param {boolean} [children=true] - Should a body be created on all children of this object? If true it will recurse down the display list as far as it can go.
     */
-    enableAABB: function (object) {
+    enableAABB: function (object, children) {
 
-        this.enable(object, 1);
+        this.enable(object, 1, 0, 0, children);
 
     },
 
@@ -68,12 +82,13 @@ Phaser.Physics.Ninja.prototype = {
     * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
     *
     * @method Phaser.Physics.Ninja#enableCircle
-    * @param {object|array} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array.
+    * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array or Group of objects, a body will be created on every child that has a `body` property.
     * @param {number} radius - The radius of the Circle.
+    * @param {boolean} [children=true] - Should a body be created on all children of this object? If true it will recurse down the display list as far as it can go.
     */
-    enableCircle: function (object, radius) {
+    enableCircle: function (object, radius, children) {
 
-        this.enable(object, 2, 0, radius);
+        this.enable(object, 2, 0, radius, children);
 
     },
 
@@ -84,51 +99,89 @@ Phaser.Physics.Ninja.prototype = {
     * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
     *
     * @method Phaser.Physics.Ninja#enableTile
-    * @param {object|array} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array.
+    * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array or Group of objects, a body will be created on every child that has a `body` property.
     * @param {number} [id=1] - The type of Tile this will use, i.e. Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn, Phaser.Physics.Ninja.Tile.CONVEXpp, etc.
+    * @param {boolean} [children=true] - Should a body be created on all children of this object? If true it will recurse down the display list as far as it can go.
     */
-    enableTile: function (object, id) {
+    enableTile: function (object, id, children) {
 
-        this.enable(object, 3, id);
+        this.enable(object, 3, id, 0, children);
 
     },
 
     /**
-    * This will create a Ninja Physics Tile body on the given game object. There are 34 different types of tile you can create, including 45 degree slopes,
-    * convex and concave circles and more. The id parameter controls which Tile type is created, but you can also change it at run-time.
-    * Note that for all degree based tile types they need to have an equal width and height. If the given object doesn't have equal width and height it will use the width.
+    * This will create a Ninja Physics body on the given game object or array of game objects.
     * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
     *
     * @method Phaser.Physics.Ninja#enable
-    * @param {object|array} object - The game object to create the physics body on. Can also be an array of objects, a body will be created on every object in the array.
+    * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array or Group of objects, a body will be created on every child that has a `body` property.
     * @param {number} [type=1] - The type of Ninja shape to create. 1 = AABB, 2 = Circle or 3 = Tile.
     * @param {number} [id=1] - If this body is using a Tile shape, you can set the Tile id here, i.e. Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn, Phaser.Physics.Ninja.Tile.CONVEXpp, etc.
     * @param {number} [radius=0] - If this body is using a Circle shape this controls the radius.
+    * @param {boolean} [children=true] - Should a body be created on all children of this object? If true it will recurse down the display list as far as it can go.
     */
-    enable: function (object, type, id, radius) {
+    enable: function (object, type, id, radius, children) {
 
         if (typeof type === 'undefined') { type = 1; }
         if (typeof id === 'undefined') { id = 1; }
-
-        var i = 1;
+        if (typeof radius === 'undefined') { radius = 0; }
+        if (typeof children === 'undefined') { children = true; }
 
         if (Array.isArray(object))
         {
-            //  Add to Group
             i = object.length;
+
+            while (i--)
+            {
+                if (object[i] instanceof Phaser.Group)
+                {
+                    //  If it's a Group then we do it on the children regardless
+                    this.enable(object[i].children, type, id, radius, children);
+                }
+                else
+                {
+                    this.enableBody(object[i]);
+
+                    if (children && object[i].hasOwnProperty('children') && object[i].children.length > 0)
+                    {
+                        this.enable(object[i], type, id, radius, true);
+                    }
+                }
+            }
         }
         else
         {
-            object = [object];
+            if (object instanceof Phaser.Group)
+            {
+                //  If it's a Group then we do it on the children regardless
+                this.enable(object.children, type, id, radius, children);
+            }
+            else
+            {
+                this.enableBody(object);
+
+                if (children && object.hasOwnProperty('children') && object.children.length > 0)
+                {
+                    this.enable(object.children, type, id, radius, true);
+                }
+            }
         }
 
-        while (i--)
+    },
+
+    /**
+    * Creates a Ninja Physics body on the given game object.
+    * A game object can only have 1 physics body active at any one time, and it can't be changed until the body is nulled.
+    *
+    * @method Phaser.Physics.Ninja#enableBody
+    * @param {object} object - The game object to create the physics body on. A body will only be created if this object has a null `body` property.
+    */
+    enableBody: function (object) {
+
+        if (object.hasOwnProperty('body') && object.body === null)
         {
-            if (object[i].body === null)
-            {
-                object[i].body = new Phaser.Physics.Ninja.Body(this, object[i], type, id, radius);
-                object[i].anchor.set(0.5);
-            }
+            object.body = new Phaser.Physics.Ninja.Body(this, object, type, id, radius);
+            object.anchor.set(0.5);
         }
 
     },
@@ -174,7 +227,7 @@ Phaser.Physics.Ninja.prototype = {
     * Unlike collide the objects are NOT automatically separated or have any physics applied, they merely test for overlap results.
     * The second parameter can be an array of objects, of differing types.
     *
-    * @method Phaser.Physics.Arcade#overlap
+    * @method Phaser.Physics.Ninja#overlap
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group or Phaser.Particles.Emitter.
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|array} object2 - The second object or array of objects to check. Can be Phaser.Sprite, Phaser.Group or Phaser.Particles.Emitter.
     * @param {function} [overlapCallback=null] - An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you specified them.
@@ -251,7 +304,7 @@ Phaser.Physics.Ninja.prototype = {
     /**
     * Internal collision handler.
     *
-    * @method Phaser.Physics.Arcade#collideHandler
+    * @method Phaser.Physics.Ninja#collideHandler
     * @private
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object1 - The first object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter, or Phaser.Tilemap.
     * @param {Phaser.Sprite|Phaser.Group|Phaser.Particles.Emitter|Phaser.Tilemap} object2 - The second object to check. Can be an instance of Phaser.Sprite, Phaser.Group, Phaser.Particles.Emitter or Phaser.Tilemap. Can also be an array of objects to check.
@@ -336,9 +389,9 @@ Phaser.Physics.Ninja.prototype = {
     },
 
     /**
-    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    * An internal function. Use Phaser.Physics.Ninja.collide instead.
     *
-    * @method Phaser.Physics.Arcade#collideSpriteVsSprite
+    * @method Phaser.Physics.Ninja#collideSpriteVsSprite
     * @private
     */
     collideSpriteVsSprite: function (sprite1, sprite2, collideCallback, processCallback, callbackContext, overlapOnly) {
@@ -356,9 +409,9 @@ Phaser.Physics.Ninja.prototype = {
     },
 
     /**
-    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    * An internal function. Use Phaser.Physics.Ninja.collide instead.
     *
-    * @method Phaser.Physics.Arcade#collideSpriteVsGroup
+    * @method Phaser.Physics.Ninja#collideSpriteVsGroup
     * @private
     */
     collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext, overlapOnly) {
@@ -394,9 +447,9 @@ Phaser.Physics.Ninja.prototype = {
     },
 
     /**
-    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    * An internal function. Use Phaser.Physics.Ninja.collide instead.
     *
-    * @method Phaser.Physics.Arcade#collideGroupVsSelf
+    * @method Phaser.Physics.Ninja#collideGroupVsSelf
     * @private
     */
     collideGroupVsSelf: function (group, collideCallback, processCallback, callbackContext, overlapOnly) {
@@ -422,9 +475,9 @@ Phaser.Physics.Ninja.prototype = {
     },
 
     /**
-    * An internal function. Use Phaser.Physics.Arcade.collide instead.
+    * An internal function. Use Phaser.Physics.Ninja.collide instead.
     *
-    * @method Phaser.Physics.Arcade#collideGroupVsGroup
+    * @method Phaser.Physics.Ninja#collideGroupVsGroup
     * @private
     */
     collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext, overlapOnly) {
@@ -446,9 +499,9 @@ Phaser.Physics.Ninja.prototype = {
 
     /**
     * The core separation function to separate two physics bodies.
-    * @method Phaser.Physics.Arcade#separate
-    * @param {Phaser.Physics.Arcade.Body} body1 - The Body object to separate.
-    * @param {Phaser.Physics.Arcade.Body} body2 - The Body object to separate.
+    * @method Phaser.Physics.Ninja#separate
+    * @param {Phaser.Physics.Ninja.Body} body1 - The Body object to separate.
+    * @param {Phaser.Physics.Ninja.Body} body2 - The Body object to separate.
     * @param {function} [processCallback=null] - UN-USED: A callback function that lets you perform additional checks against the two objects if they overlap. If this function is set then the sprites will only be collided if it returns true.
     * @param {object} [callbackContext] - UN-USED: The context in which to run the process callback.
     * @returns {boolean} Returns true if the bodies collided, otherwise false.
