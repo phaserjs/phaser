@@ -81,10 +81,11 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
     updateSpriteTransform: function() {
         if(!this.body) { return }
         position = this.body.GetPosition()
-        this.position.x = Phaser.Physics.Box2D.Utils.b2pxi(position.x);
+
+        this.position.x = Phaser.Physics.Box2D.Utils.b2px(position.x)
         this.position.y = Phaser.Physics.Box2D.Utils.b2pxi(position.y);
 
-        this.rotation = Phaser.Math.radToDeg(this.body.GetAngleRadians()) * -1
+        this.rotation = - this.body.GetAngleRadians();
     },
 
     /**
@@ -159,24 +160,25 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
             var v1 = edge.m_vertex1;
             var v2 = edge.m_vertex2;
             
-            x0 = Phaser.Physics.Box2D.Utils.b2pxi(v1.x);
+            x0 = Phaser.Physics.Box2D.Utils.b2px(v1.x);
             y0 = Phaser.Physics.Box2D.Utils.b2pxi(v1.y);
-            x1 = Phaser.Physics.Box2D.Utils.b2pxi(v2.x);
+            x1 = Phaser.Physics.Box2D.Utils.b2px(v2.x);
             y1 = Phaser.Physics.Box2D.Utils.b2pxi(v2.y);
             
             this.drawSegment(sprite, x0, y0, x1, y1, color, lw);
           }
           break;
+        
         case box2d.b2ShapeType.e_polygonShape:
           {
             var poly = ((shape instanceof box2d.b2PolygonShape ? shape : null));
             var vertexCount = poly.m_count;
-            console.log('vertexCount',vertexCount)
             var vertices = poly.m_vertices;
 
             if(false){
-              this.drawConvex(sprite, vertices, vertexCount, 0,0);
+              
             }else{
+              this.drawConvex(sprite, vertices, vertexCount, 0,0);
               this.drawConvexSolid(sprite, vertices, vertexCount, 0,0);
             }
             
@@ -199,44 +201,46 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
         i = 0;
         while (i !== vertsCount + 1)
         {
-            v0 = verts[i % verts.length];
-            v1 = verts[(i + 1) % verts.length];
+            v0 = verts[i % vertsCount];
+            v1 = verts[(i + 1) % vertsCount];
             x0 = Phaser.Physics.Box2D.Utils.b2px(v0.x);
-            y0 = Phaser.Physics.Box2D.Utils.b2px(v0.y);
+            y0 = Phaser.Physics.Box2D.Utils.b2pxi(v0.y);
             x1 = Phaser.Physics.Box2D.Utils.b2px(v1.x);
-            y1 = Phaser.Physics.Box2D.Utils.b2px(v1.y);
+            y1 = Phaser.Physics.Box2D.Utils.b2pxi(v1.y);
             
             g.lineStyle(lineWidth, colors[i % colors.length], 1);
-            g.moveTo(x0, -y0);
-            g.lineTo(x1, -y1);
-            g.drawCircle(x0, -y0, lineWidth * 2);
+            g.moveTo(x0, y0);
+            g.lineTo(x1, y1);
+            g.drawCircle(x0, y0, lineWidth * 2);
             i++;
         }
 
         g.lineStyle(lineWidth, 0x000000, 1);
         g.drawCircle(offsetX, offsetY, lineWidth * 2);
-    },
     
+    
+    },
     drawConvexSolid: function(g, verts, vertsCount, offsetX, offsetY) {
+      //use vertsCount as verts is larger than the real existing verts
       if (typeof lineWidth === 'undefined') { lineWidth = 1; }
       
       g.lineStyle(lineWidth, 0x00ff00, 1);
       g.beginFill(0x0000ff);
-      i = 0;
+      var i = 0;
 
       while (i !== vertsCount)
       {
           v = verts[i];
           x = Phaser.Physics.Box2D.Utils.b2px(v.x);
-          y = Phaser.Physics.Box2D.Utils.b2px(v.y);
+          y = Phaser.Physics.Box2D.Utils.b2pxi(v.y);
 
           if (i === 0)
           {
-              g.moveTo(x, -y);
+              g.moveTo(x, y);
           }
           else
           {
-              g.lineTo(x, -y);
+              g.lineTo(x, y);
           }
 
           i++;
@@ -246,13 +250,13 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
 
       if (vertsCount > 2)
       {
-          v1 = verts[verts.length - 1];
+          v1 = verts[vertsCount - 1];
           x1 = Phaser.Physics.Box2D.Utils.b2px(v1.x);
-          y1 = Phaser.Physics.Box2D.Utils.b2px(v1.y);
+          y1 = Phaser.Physics.Box2D.Utils.b2pxi(v1.y);
           
           v2 = verts[0];
           x2 = Phaser.Physics.Box2D.Utils.b2px(v2.x);
-          y2 = Phaser.Physics.Box2D.Utils.b2px(v2.y);
+          y2 = Phaser.Physics.Box2D.Utils.b2pxi(v2.y);
 
           g.moveTo(x1,y1);
           g.lineTo(x2,y2);

@@ -33,13 +33,17 @@ Phaser.Physics.Box2D.Body = function (game, sprite, x, y, mass) {
     this.data = null
     this.offset = new Phaser.Point();
     
-    this.position = {x: Phaser.Physics.Box2D.Utils.px2bi(x), y: Phaser.Physics.Box2D.Utils.px2bi(y)}
+    this.position = {x: Phaser.Physics.Box2D.Utils.px2b(x), y: Phaser.Physics.Box2D.Utils.px2bi(y)}
     
     //allow to debug non sprite physics
     //if (sprite)
     //{
         this.game.physics.box2d.addBody(this);
     //}
+    if (sprite){
+      //this.setCircle(20)
+      this.setRectangleFromSprite(sprite);
+    }
 
 };
 
@@ -50,11 +54,8 @@ Phaser.Physics.Box2D.Body.prototype = {
       //create the body through the provided factory
       this.data = world.CreateBody(this.getBodyDef());
       this.data.SetPositionXY(this.position.x,this.position.y)
-
-      this.addCircle(30)
-      this.addRectangle(50,50)
-      this.clearFixtures()
-      //this.data.CreateFixture(this.getFixtureDef());
+      
+      this.addCircle(20)
     },
 
     clearFixtures: function(){
@@ -91,15 +92,20 @@ Phaser.Physics.Box2D.Body.prototype = {
     postUpdate: function () {
         if(!this.sprite) {return}
         position = this.data.GetPosition()
-        this.sprite.x = Phaser.Physics.Box2D.Utils.b2pxi(position.x);
+        this.sprite.x = Phaser.Physics.Box2D.Utils.b2px(position.x);
         this.sprite.y = Phaser.Physics.Box2D.Utils.b2pxi(position.y);
+        this.sprite.rotation = -this.data.GetAngleRadians(); //zero when fixed
+    },
 
-        //if (!this.fixedRotation)
-        //{
-            angle = Phaser.Math.radToDeg(this.data.GetAngleRadians()) * -1
-            this.sprite.rotation = angle;
-        //}
+    setRectangleFromSprite: function (sprite) {
+        if (typeof sprite === 'undefined') { sprite = this.sprite; }
+        this.clearFixtures();
+        this.addRectangle(sprite.width, sprite.height, 0, 0, sprite.rotation);
+    },
 
+    setCircle: function(radius, offsetX, offsetY){
+      this.clearFixtures()
+      this.addCircle(radius, offsetX, offsetY)
     },
     
     addCircle: function (radius, offsetX, offsetY) {
@@ -115,8 +121,25 @@ Phaser.Physics.Box2D.Body.prototype = {
       fd.shape = circle;
       fd.density = 1.0;
       fd.friction = 0.9;
-
+      
+      this.createFixture(fd)
+    },
+    
+    createFixture: function(fd){
       this.data.CreateFixture(fd);
+
+      if(this.debugBody){
+        this.debugBody.draw()
+      }
+    },
+    
+    createFixtureFromShape: function(shape, mass){
+      mass = mass || 1
+      this.data.CreateFixture2(shape, mass);
+
+      if(this.debugBody){
+        this.debugBody.draw()
+      }
     },
     
     addRectangle: function (width, height, offsetX, offsetY, rotation) {
@@ -127,13 +150,15 @@ Phaser.Physics.Box2D.Body.prototype = {
 
       var shape = new box2d.b2PolygonShape();
       offsets = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2b(offsetX), Phaser.Physics.Box2D.Utils.px2b(offsetY) )
-      //shape.SetAsOrientedBox(width, height, offsets, Phaser.Math.degToRad(rotation));
-      shape.SetAsOrientedBox(Phaser.Physics.Box2D.Utils.px2b(width), Phaser.Physics.Box2D.Utils.px2b(height), offsets, Phaser.Math.degToRad(rotation) )
+      shape.SetAsOrientedBox(Phaser.Physics.Box2D.Utils.px2b(width/2), Phaser.Physics.Box2D.Utils.px2b(height/2), offsets, Phaser.Math.degToRad(rotation) )
       
       this.data.CreateFixture2(shape);
+      this.createFixtureFromShape(shape)
     },
     
-    test: function(){
+    testEdgeShape: function(){
+      this.clearFixtures()
+
       var x1 = -20.0;
       var y1 = 2.0 * box2d.b2Cos(x1 / 10.0 * box2d.b2_pi);
       for (var i = 0; i < 80; ++i)
@@ -149,6 +174,34 @@ Phaser.Physics.Box2D.Body.prototype = {
         y1 = y2;
       }
       this.debug = true
+    },
+    
+    testPolygon: function(){
+      this.clearFixtures()
+      this.loadPolygon('pinball','flipper_right')
+      this.debug = true
+      this.dynamic = true
+    },
+
+    loadPolygon: function (key, object, options) {
+        var data = this.game.cache.getPhysicsData(key, object);
+        console.log(data)
+        for (var i = 0; i < data.length; i++)
+        {
+            var shape = data[i].shape
+            var vertices = [];
+
+            for (var s = 0; s < shape.length; s += 2)
+            { 
+              v = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2b(shape[s]), Phaser.Physics.Box2D.Utils.px2b(shape[s + 1]));
+              vertices.push(v);
+            }
+
+            var polygon = new box2d.b2PolygonShape();
+            polygon.SetAsArray(vertices, vertices.length);
+            
+            this.createFixtureFromShape(polygon, 0.0);
+        }
     }
 }
 /**
@@ -195,11 +248,11 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "bullet", {
 
         if (value && this.data.GetType() !== box2d.b2BodyType.b2_bulletBody)
         {
-            this.data.setType(box2d.b2BodyType.b2_bulletBody)
+            this.data.SetType(box2d.b2BodyType.b2_bulletBody)
         }
         else if (!value && this.data.GetType() === box2d.b2BodyType.b2_staticBody)
         {
-            this.data.setType(box2d.b2BodyType.b2_staticBody)
+            this.data.SetType(box2d.b2BodyType.b2_staticBody)
         }
 
     }
@@ -222,11 +275,11 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "static", {
 
         if (value && this.data.GetType() !== box2d.b2BodyType.b2_staticBody)
         {
-            this.data.setType(box2d.b2BodyType.b2_staticBody)
+            this.data.SetType(box2d.b2BodyType.b2_staticBody)
         }
         else if (!value && this.data.GetType() === box2d.b2BodyType.b2_staticBody)
         {
-            this.data.setType(box2d.b2BodyType.dynamic)
+            this.data.SetType(box2d.b2BodyType.dynamic)
         }
 
     }
@@ -249,11 +302,11 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "dynamic", {
 
         if (value && this.data.GetType() !== box2d.b2BodyType.b2_dynamicBody)
         {
-            this.data.setType(box2d.b2BodyType.b2_dynamicBody)
+            this.data.SetType(box2d.b2BodyType.b2_dynamicBody)
         }
         else if (!value && this.data.GetType() === box2d.b2BodyType.b2_staticBody)
         {
-            this.data.setType(box2d.b2BodyType.b2_staticBody)
+            this.data.SetType(box2d.b2BodyType.b2_staticBody)
         }
 
     }
@@ -279,11 +332,36 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "kinematic", {
 
         if (value && this.data.GetType() !== box2d.b2BodyType.b2_kinematicBody)
         {
-            this.data.setType(box2d.b2BodyType.b2_kinematicBody)
+            this.data.SetType(box2d.b2BodyType.b2_kinematicBody)
         }
         else if (!value && this.data.GetType() === box2d.b2BodyType.b2_staticBody)
         {
-            this.data.setType(box2d.b2BodyType.b2_staticBody)
+            this.data.SetType(box2d.b2BodyType.b2_staticBody)
+        }
+
+    }
+
+});
+
+
+/**
+* @name Phaser.Physics.P2.Body#fixedRotation
+* @property {boolean} fixedRotation - 
+*/
+Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "fixedRotation", {
+    
+    get: function () {
+
+        return this.data.IsFixedRotation();
+
+    },
+
+    set: function (value) {
+
+        if (value !== this.data.IsFixedRotation() )
+        {
+            this.data.SetFixedRotation(value);
+            //  update anything?
         }
 
     }
