@@ -1,10 +1,18 @@
 /**
+* @author       George https://github.com/georgiee
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-//box2d.b2ContactListener
+/**
+* Sample implementation for a box2d contact listener.
+* This is taken from the ported Box2d Testbed implementation
+*
+* @class Phaser.Physics.Box2D.SampleContactListener 
+* @classdesc SampleContactListener Constructor
+*/
+
 Phaser.Physics.Box2D.SampleContactListener = function(){
 }
 

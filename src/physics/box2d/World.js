@@ -1,7 +1,20 @@
 /**
+* @author       George https://github.com/georgiee
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+*/
+
+/**
+* Base Box2D World.
+*
+* @class Phaser.Physics.Box2D.BodyDebug
+* @classdesc Physics Body Debug Constructor
+* @constructor
+* @extends Phaser.Group
+* @param {Phaser.Game} game - Game reference to the currently running game.
+* @param {Phaser.Physics.Box2D.Body} body - The P2 Body to display debug data for.
+* @param {object} settings - Settings object.
 */
 
 Phaser.Physics.Box2D = function (game, config) {
@@ -45,7 +58,6 @@ Phaser.Physics.Box2D.prototype = {
 
     },
     setBounds: function (x, y, width, height, left, right, top, bottom, setCollisionGroup) {
-
         if (typeof left === 'undefined') { left = true; }
         if (typeof right === 'undefined') { right = true; }
         if (typeof top === 'undefined') { top = true; }
@@ -56,7 +68,6 @@ Phaser.Physics.Box2D.prototype = {
         var hh = (height / 2);
         var cx = hw + x;
         var cy = hh + y;
-        //console.log(hw,hh,cx,cy)
 
         upperLeft = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2b(0), Phaser.Physics.Box2D.Utils.px2bi(0));
         upperRight = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2b(width), Phaser.Physics.Box2D.Utils.px2bi(0));

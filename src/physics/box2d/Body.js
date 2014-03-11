@@ -1,4 +1,5 @@
 /**
+* @author       George https://github.com/georgiee
 * @author       Richard Davey <rich@photonstorm.com>
 * @copyright    2014 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
@@ -11,7 +12,7 @@
 * By default a single Rectangle shape is added to the Body that matches the dimensions of the parent Sprite. See addShape, removeShape, clearShapes to add extra shapes around the Body.
 * Note: When bound to a Sprite to avoid single-pixel jitters on mobile devices we strongly recommend using Sprite sizes that are even on both axis, i.e. 128x128 not 127x127.
 *
-* @class Phaser.Physics.P2.Body
+* @class Phaser.Physics.Box2D.Body
 * @classdesc Physics Body Constructor
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
@@ -48,54 +49,32 @@ Phaser.Physics.Box2D.Body = function (game, sprite, x, y, mass) {
 };
 
 Phaser.Physics.Box2D.Body.prototype = {
-    startContact: function(){
-      if(this.debugBody){
-        //this.debugBody.showCollision()
-      }
-    },
-    endContact: function(){
-      if(this.debugBody){
-        //this.debugBody.hideCollision()
-      }
-    },
+
+    //called by box2d after this body is requested to be added
+    //this call is necessary so that this Phaser Body can store the box2d Body reference
+    //and create the fixtures when the body becomes available through the world factory(world.CreateBody)
+    
     create: function(parent){
+      //pick the reference to the core box2d.World
       world = parent.world
+      //store a reference to the Phaser Box2D World
       this.parent = parent
       //create the body through the provided factory
       this.data = world.CreateBody(this.getBodyDef());
+      //store a reference in the Box2D Body itself. Might be useful in some 
+      //box2d body queries (collisions)
       this.data.SetUserData(this);
       this.data.SetPositionXY(this.position.x,this.position.y)
       
+      //set a default fixture. This will be cleared when a rectangle is created from the sprite (if a sprite is available )
       this.addCircle(20)
-    },
-
-    clearFixtures: function(){
-      var f = this.data.GetFixtureList()
-      while (f)
-      {
-        var f0 = f;
-        f = f.GetNext();
-        this.data.DestroyFixture(f0)
-      }
-    },
-    
-    getFixtureDef: function(){
-      circle = new box2d.b2CircleShape();
-      circle.m_radius = Phaser.Physics.Box2D.Utils.px2b(20)
-      
-      fd = new box2d.b2FixtureDef();
-      fd.restitution = 0.5;
-      fd.shape = circle;
-      fd.density = 1.0;
-      fd.friction = 0.9;
-
-      return fd
     },
     
     getBodyDef: function(){
       return new box2d.b2BodyDef()
     },
     
+    //functiosn called by the physics solver
     preUpdate: function(){
 
     },
@@ -105,7 +84,46 @@ Phaser.Physics.Box2D.Body.prototype = {
         position = this.data.GetPosition()
         this.sprite.x = Phaser.Physics.Box2D.Utils.b2px(position.x);
         this.sprite.y = Phaser.Physics.Box2D.Utils.b2pxi(position.y);
-        this.sprite.rotation = -this.data.GetAngleRadians(); //zero when fixed
+        this.sprite.rotation = -this.data.GetAngleRadians(); //zero when fixed rotation
+    },
+
+    //convenience function to redraw the debug graphics
+    redrawDebug: function(){
+      if(this.debugBody){
+        this.debugBody.draw()
+      }
+    },
+    
+    //create a fixture from the given definition.
+    createFixture: function(fd){
+      this.data.CreateFixture(fd);
+      this.redrawDebug();
+    },
+    
+    //convenience function, to create a fixture straight from a shape (wihtout a fixture definition)
+    //a ficture definition is the material of box2d. defines restitution, density, friction of the shape
+    //this function will set them to some default values. You can only pass the mass in addition.
+    createFixtureFromShape: function(shape, mass){
+      mass = mass || 1
+      this.data.CreateFixture2(shape, mass);
+      this.redrawDebug();
+    },
+
+    //////////////////////////////////////
+    //Fixture/Shape creating Methods // //
+    //////////////////////////////////////
+    
+
+
+    //remove all fixtures. These are the shapes of this body.
+    clearFixtures: function(){
+      var f = this.data.GetFixtureList()
+      while (f)
+      {
+        var f0 = f;
+        f = f.GetNext();
+        this.data.DestroyFixture(f0)
+      }
     },
 
     setRectangleFromSprite: function (sprite) {
@@ -113,6 +131,8 @@ Phaser.Physics.Box2D.Body.prototype = {
         this.clearFixtures();
         this.addRectangle(sprite.width, sprite.height, 0, 0, sprite.rotation);
     },
+
+    // replace all fixtures with a circle
     setCircle: function(radius, offsetX, offsetY){
       this.clearFixtures()
       this.addCircle(radius, offsetX, offsetY)
@@ -134,23 +154,8 @@ Phaser.Physics.Box2D.Body.prototype = {
       
       this.createFixture(fd)
     },
-    redrawDebug: function(){
-      if(this.debugBody){
-        this.debugBody.draw()
-      }
-    },
-    
-    createFixture: function(fd){
-      this.data.CreateFixture(fd);
-      this.redrawDebug();
-    },
-    
-    createFixtureFromShape: function(shape, mass){
-      mass = mass || 1
-      this.data.CreateFixture2(shape, mass);
-      this.redrawDebug();
-    },
-    
+
+    //create rectangle shapes
     setRectangle: function(width, height, offsetX, offsetY, rotation){
       this.clearFixtures()
       this.addRectangle(width, height, offsetX, offsetY, rotation)
@@ -161,7 +166,6 @@ Phaser.Physics.Box2D.Body.prototype = {
       offsetY = offsetY || 0;
       rotation = rotation || 0;
 
-
       var shape = new box2d.b2PolygonShape();
       offsets = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2b(offsetX), Phaser.Physics.Box2D.Utils.px2b(offsetY) )
       shape.SetAsOrientedBox(Phaser.Physics.Box2D.Utils.px2b(width/2), Phaser.Physics.Box2D.Utils.px2b(height/2), offsets, Phaser.Math.degToRad(rotation) )
@@ -170,70 +174,7 @@ Phaser.Physics.Box2D.Body.prototype = {
       this.createFixtureFromShape(shape)
     },
     
-    //i am
-    setCollisionCategory: function(category){
-      for (var f = this.data.GetFixtureList(); f; f = f.GetNext())
-      {
-        //get the existing filter
-        filter = f.GetFilterData();
-        filter.categoryBits = category;
-        f.SetFilterData(filter)
-      }
-    },
-    //i will collide with
-    setCollisionMask: function(mask){
-      for (var f = this.data.GetFixtureList(); f; f = f.GetNext())
-      {
-        //get the existing filter
-        filter = f.GetFilterData();
-        filter.maskBits = mask;
-        f.SetFilterData(filter)
-      }
-    },
-    
-    /*
-    if either fixture has a groupIndex of zero, use the category/mask rules as above
-    if both groupIndex values are non-zero but different, use the category/mask rules as above
-    if both groupIndex values are the same and positive, collide
-    if both groupIndex values are the same and negative, don't collide
-     */
-    setCollisionGroup: function(groupIndex){
-      for (var f = this.data.GetFixtureList(); f; f = f.GetNext())
-      {
-        //get the existing filter
-        filter = f.GetFilterData();
-        filter.groupIndex = groupIndex;
-        f.SetFilterData(filter)
-      }
-    },
-
-    testEdgeShape: function(){
-      this.clearFixtures()
-
-      var x1 = -20.0;
-      var y1 = 2.0 * box2d.b2Cos(x1 / 10.0 * box2d.b2_pi);
-      for (var i = 0; i < 80; ++i)
-      {
-        var x2 = x1 + 0.5;
-        var y2 = 2.0 * box2d.b2Cos(x2 / 10.0 * box2d.b2_pi);
-
-        var shape = new box2d.b2EdgeShape();
-        shape.SetAsEdge(new box2d.b2Vec2(x1, -y1), new box2d.b2Vec2(x2, -y2));
-        this.data.CreateFixture2(shape, 0.0);
-
-        x1 = x2;
-        y1 = y2;
-      }
-      this.debug = true
-    },
-    
-    testPolygon: function(){
-      this.clearFixtures()
-      this.loadPolygon('pinball','flipper_right')
-      this.debug = true
-      this.dynamic = true
-    },
-
+    //load a stored polygon. this is a reduced version comapred to the p2 loadPolygon method
     loadPolygon: function (key, object, options) {
         this.clearFixtures()
 
@@ -273,24 +214,94 @@ Phaser.Physics.Box2D.Body.prototype = {
         }
 
     },
+    
+    /////////////////////////////////////////////////////////////////
+    //Some methods to create collision groups, mask and categories //
+    /////////////////////////////////////////////////////////////////
+    
+    //read as: I AM in this category (use a bits, CATA | CATB)
+    
+    setCollisionCategory: function(category){
+      for (var f = this.data.GetFixtureList(); f; f = f.GetNext())
+      {
+        //get the existing filter
+        filter = f.GetFilterData();
+        filter.categoryBits = category;
+        f.SetFilterData(filter)
+      }
+    },
+    //
+    //read as: I WILL COLLIDE WITH all the categories named in the mask
+    //(use a bits, CATA | CATB)
+    setCollisionMask: function(mask){
+      for (var f = this.data.GetFixtureList(); f; f = f.GetNext())
+      {
+        //get the existing filter
+        filter = f.GetFilterData();
+        filter.maskBits = mask;
+        f.SetFilterData(filter)
+      }
+    },
 
-    /**
-    * Moves the Body forwards based on its current angle and the given speed.
-    * The speed is represented in pixels per second. So a value of 100 would move 100 pixels in 1 second (1000ms).
-    *
-    * @method Phaser.Physics.P2.Body#moveForward
-    * @param {number} speed - The speed at which it should move forwards.
-    */
-    moveForward: function (speed) {
+    //these two methods are called by the sample contact listeners
+    //uncomment to see the debug drawings change their color during a collision
+    startContact: function(){
+      if(this.debugBody){
+        //this.debugBody.showCollision()
+      }
+    },
+    endContact: function(){
+      if(this.debugBody){
+        //this.debugBody.hideCollision()
+      }
+    },
+    
+    /*
+    if either fixture has a groupIndex of zero, use the category/mask rules as above
+    if both groupIndex values are non-zero but different, use the category/mask rules as above
+    if both groupIndex values are the same and positive, collide
+    if both groupIndex values are the same and negative, don't collide
+     */
+    setCollisionGroup: function(groupIndex){
+      for (var f = this.data.GetFixtureList(); f; f = f.GetNext())
+      {
+        //get the existing filter
+        filter = f.GetFilterData();
+        filter.groupIndex = groupIndex;
+        f.SetFilterData(filter)
+      }
+    },
 
-        var magnitude = this.px2pi(-speed);
-        var angle = this.data.angle + Math.PI / 2;
+    //some testing methods. ignore.
+    testEdgeShape: function(){
+      this.clearFixtures()
 
-        this.data.SetLinearVelocity()
+      var x1 = -20.0;
+      var y1 = 2.0 * box2d.b2Cos(x1 / 10.0 * box2d.b2_pi);
+      for (var i = 0; i < 80; ++i)
+      {
+        var x2 = x1 + 0.5;
+        var y2 = 2.0 * box2d.b2Cos(x2 / 10.0 * box2d.b2_pi);
+
+        var shape = new box2d.b2EdgeShape();
+        shape.SetAsEdge(new box2d.b2Vec2(x1, -y1), new box2d.b2Vec2(x2, -y2));
+        this.data.CreateFixture2(shape, 0.0);
+
+        x1 = x2;
+        y1 = y2;
+      }
+      this.debug = true
+    },
+    
+    testPolygon: function(){
+      this.clearFixtures()
+      this.loadPolygon('pinball','flipper_right')
+      this.debug = true
+      this.dynamic = true
     }
 }
 /**
-* @name Phaser.Physics.P2.Body#debug
+* @name Phaser.Physics.Box2D.Body#debug
 * @property {boolean} debug - Enable or disable debug drawing of this body
 */
 Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "debug", {
@@ -318,7 +329,7 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "debug", {
 });
 
 /**
-* @name Phaser.Physics.P2.Body#static
+* @name Phaser.Physics.Box2D.Body#static
 * @property {boolean} static - Returns true if the Body is static. Setting Body.static to 'false' will make it dynamic.
 */
 Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "bullet", {
@@ -346,7 +357,7 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "bullet", {
 });
 
 /**
-* @name Phaser.Physics.P2.Body#static
+* @name Phaser.Physics.Box2D.Body#static
 * @property {boolean} static - Returns true if the Body is static. Setting Body.static to 'false' will make it dynamic.
 */
 Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "static", {
@@ -374,7 +385,7 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "static", {
 });
 
 /**
-* @name Phaser.Physics.P2.Body#dynamic
+* @name Phaser.Physics.Box2D.Body#dynamic
 * @property {boolean} dynamic - Returns true if the Body is dynamic. Setting Body.dynamic to 'false' will make it static.
 */
 Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "dynamic", {
@@ -434,7 +445,7 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "kinematic", {
 
 
 /**
-* @name Phaser.Physics.P2.Body#fixedRotation
+* @name Phaser.Physics.Box2D.Body#fixedRotation
 * @property {boolean} fixedRotation - 
 */
 Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "fixedRotation", {
@@ -487,7 +498,7 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "allowSleep", {
 * Values outside this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement Body.angle = 450 is the same as Body.angle = 90.
 * If you wish to work in radians instead of degrees use the property Body.rotation instead. Working in radians is faster as it doesn't have to convert values.
 * 
-* @name Phaser.Physics.P2.Body#angle
+* @name Phaser.Physics.Box2D.Body#angle
 * @property {number} angle - The angle of this Body in degrees.
 */
 Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "angle", {
@@ -506,7 +517,7 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "angle", {
 
 /**
 * Damping is specified as a value between 0 and 1, which is the proportion of velocity lost per second.
-* @name Phaser.Physics.P2.Body#angularDamping
+* @name Phaser.Physics.Box2D.Body#angularDamping
 * @property {number} angularDamping - The angular damping acting acting on the body.
 */
 Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "angularDamping", {
@@ -527,7 +538,7 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "angularDamping", {
 
 
 /**
-* @name Phaser.Physics.P2.Body#angularVelocity
+* @name Phaser.Physics.Box2D.Body#angularVelocity
 * @property {number} angularVelocity - The angular velocity of the body.
 */
 Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "linearDamping", {
@@ -572,7 +583,7 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "gravityScale", {
 
 
 /**
-* @name Phaser.Physics.P2.Body#angularVelocity
+* @name Phaser.Physics.Box2D.Body#angularVelocity
 * @property {number} angularVelocity - The angular velocity of the body.
 */
 Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "angularVelocity", {
@@ -592,7 +603,7 @@ Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "angularVelocity", {
 });
 
 /**
-* @name Phaser.Physics.P2.Body#angularVelocity
+* @name Phaser.Physics.Box2D.Body#angularVelocity
 * @property {number} angularVelocity - The angular velocity of the body.
 */
 Object.defineProperty(Phaser.Physics.Box2D.Body.prototype, "mass", {

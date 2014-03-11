@@ -15,7 +15,7 @@
 * @constructor
 * @extends Phaser.Group
 * @param {Phaser.Game} game - Game reference to the currently running game.
-* @param {Phaser.Physics.P2.Body} body - The P2 Body to display debug data for.
+* @param {Phaser.Physics.Box2D.Body} body - The P2 Body to display debug data for.
 * @param {object} settings - Settings object.
 */
 Phaser.Physics.Box2D.BodyDebug = function(game, body, settings) {
@@ -42,7 +42,7 @@ Phaser.Physics.Box2D.BodyDebug = function(game, body, settings) {
     this.ppu = -1 * this.ppu;
 
     /**
-    * @property {Phaser.Physics.P2.Body} body - The P2 Body to display debug data for.
+    * @property {Phaser.Physics.Box2D.Body} body - The P2 Body to display debug data for.
     */
     this.body = body;
 
@@ -206,7 +206,7 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
     /**
     * Draws a P2 Convex shape.
     *
-    * @method Phaser.Physics.P2.BodyDebug#drawConvex
+    * @method Phaser.Physics.Box2D.BodyDebug#drawConvex
     */
     drawConvex: function(g, verts, vertsCount, offsetX, offsetY, color) {
 
@@ -295,7 +295,6 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
       if (typeof lineWidth === 'undefined') { lineWidth = 1; }
       g.lineStyle(lineWidth, 0x00ff00, 1);
       g.moveTo(x0,y0);
-      //console.log(x0,y0, '--',x1,y1)
       g.lineTo(x1,y1);
     }
       
