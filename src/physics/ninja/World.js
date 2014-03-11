@@ -5,9 +5,22 @@
 */
 
 /**
-* Ninja Physics constructor.
+* Ninja Physics. The Ninja Physics system was created in Flash by Metanet Software and ported to JavaScript by Richard Davey.
 *
-* The Ninja Physics system was created in Flash by Metanet Software and ported to JavaScript by Richard Davey.
+* It allows for AABB and Circle to Tile collision. Tiles can be any of 34 different types, including slopes, convex and concave shapes.
+*
+* It does what it does very well, but is ripe for expansion and optimisation. Here are some features that I'd love to see the community add:
+*
+* AABB to AABB collision
+* AABB to Circle collision
+* AABB and Circle 'immovable' property support
+* n-way collision, so an AABB/Circle could pass through a tile from below and land upon it.
+* QuadTree or spatial grid for faster Body vs. Tile Group look-ups.
+* Optimise the internal vector math and reduce the quantity of temporary vars created.
+* Expand Gravity and Bounce to allow for separate x/y axis values.
+* Support Bodies linked to Sprites that don't have anchor set to 0.5
+*
+* Feel free to attempt any of the above and submit a Pull Request with your code! Be sure to include test cases proving they work.
 *
 * @class Phaser.Physics.Ninja
 * @classdesc Ninja Physics Constructor
@@ -50,12 +63,6 @@ Phaser.Physics.Ninja = function (game) {
     * @property {Phaser.QuadTree} quadTree - The world QuadTree.
     */
     this.quadTree = new Phaser.QuadTree(this.game.world.bounds.x, this.game.world.bounds.y, this.game.world.bounds.width, this.game.world.bounds.height, this.maxObjects, this.maxLevels);
-
-    /**
-    * @property {Array} _mapData - Internal cache var.
-    * @private
-    */
-    this._mapData = [];
 
 };
 
@@ -140,7 +147,7 @@ Phaser.Physics.Ninja.prototype = {
                 }
                 else
                 {
-                    this.enableBody(object[i]);
+                    this.enableBody(object[i], type, id, radius);
 
                     if (children && object[i].hasOwnProperty('children') && object[i].children.length > 0)
                     {
@@ -158,7 +165,7 @@ Phaser.Physics.Ninja.prototype = {
             }
             else
             {
-                this.enableBody(object);
+                this.enableBody(object, type, id, radius);
 
                 if (children && object.hasOwnProperty('children') && object.children.length > 0)
                 {

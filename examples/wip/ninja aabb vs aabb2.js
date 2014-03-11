@@ -41,7 +41,7 @@ function create() {
 
 function t() {
 
-    sprite1.body.shape.oldpos.x = sprite1.body.shape.pos.x - 20;
+    sprite1.body.shape.oldpos.x = sprite1.body.shape.pos.x - 30;
     sprite2.body.shape.oldpos.x = sprite2.body.shape.pos.x + 20;
 
 }

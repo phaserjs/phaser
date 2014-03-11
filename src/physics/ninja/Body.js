@@ -95,19 +95,13 @@ Phaser.Physics.Ninja.Body = function (system, sprite, type, id, radius) {
     this.velocity = new Phaser.Point();
 
     /**
-    * @property {boolean} skipQuadTree - If the Body is an irregular shape you can set this to true to avoid it being added to any QuadTrees.
-    * @default
-    */
-    this.skipQuadTree = false;
-
-    /**
     * @property {number} facing - A const reference to the direction the Body is traveling or facing.
     * @default
     */
     this.facing = Phaser.NONE;
 
     /**
-    * @property {boolean} immovable - An immovable Body will not receive any impacts from other bodies.
+    * @property {boolean} immovable - An immovable Body will not receive any impacts from other bodies. Not fully implemented.
     * @default
     */
     this.immovable = false;
@@ -173,15 +167,6 @@ Phaser.Physics.Ninja.Body.prototype = {
     /**
     * Internal method.
     *
-    * @method Phaser.Physics.Ninja.Body#updateBounds
-    * @protected
-    */
-    updateBounds: function (centerX, centerY, scaleX, scaleY) {
-    },
-
-    /**
-    * Internal method.
-    *
     * @method Phaser.Physics.Ninja.Body#preUpdate
     * @protected
     */
@@ -207,9 +192,6 @@ Phaser.Physics.Ninja.Body.prototype = {
             this.shape.collideWorldBounds();
         }
 
-        this.speed = Math.sqrt(this.shape.velocity.x * this.shape.velocity.x + this.shape.velocity.y * this.shape.velocity.y);
-        this.angle = Math.atan2(this.shape.velocity.y, this.shape.velocity.x);
-
     },
 
     /**
@@ -230,6 +212,24 @@ Phaser.Physics.Ninja.Body.prototype = {
         {
             this.sprite.x = this.shape.pos.x;
             this.sprite.y = this.shape.pos.y;
+        }
+
+        if (this.velocity.x < 0)
+        {
+            this.facing = Phaser.LEFT;
+        }
+        else if (this.velocity.x > 0)
+        {
+            this.facing = Phaser.RIGHT;
+        }
+
+        if (this.velocity.y < 0)
+        {
+            this.facing = Phaser.UP;
+        }
+        else if (this.velocity.y > 0)
+        {
+            this.facing = Phaser.DOWN;
         }
 
     },
@@ -343,12 +343,20 @@ Phaser.Physics.Ninja.Body.prototype = {
     },
 
     /**
-    * Resets all Body values (velocity, acceleration, rotation, etc)
+    * Resets all Body values and repositions on the Sprite.
     *
     * @method Phaser.Physics.Ninja.Body#reset
     */
     reset: function () {
-    },
+
+        this.velocity.set(0);
+
+        this.shape.pos.x = this.sprite.x;
+        this.shape.pos.y = this.sprite.y;
+
+        this.shape.oldpos.copyFrom(this.shape.pos);
+
+    }
 
 };
 
@@ -358,20 +366,10 @@ Phaser.Physics.Ninja.Body.prototype = {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "x", {
     
-    /**
-    * The x position.
-    * @method x
-    * @return {number}
-    */
     get: function () {
         return this.shape.pos.x;
     },
 
-    /**
-    * The x position.
-    * @method x
-    * @param {number} value
-    */
     set: function (value) {
         this.shape.pos.x = value;
     }
@@ -384,20 +382,10 @@ Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "x", {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "y", {
     
-    /**
-    * The y position.
-    * @method y
-    * @return {number}
-    */
     get: function () {
         return this.shape.pos.y;
     },
 
-    /**
-    * The y position.
-    * @method y
-    * @param {number} value
-    */
     set: function (value) {
         this.shape.pos.y = value;
     }
@@ -411,12 +399,6 @@ Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "y", {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "width", {
     
-    /**
-    * The width of this Body
-    * @method width
-    * @return {number}
-    * @readonly
-    */
     get: function () {
         return this.shape.width;
     }
@@ -430,12 +412,6 @@ Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "width", {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "height", {
     
-    /**
-    * The height of this Body
-    * @method height
-    * @return {number}
-    * @readonly
-    */
     get: function () {
         return this.shape.height;
     }
@@ -449,12 +425,6 @@ Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "height", {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "bottom", {
     
-    /**
-    * The sum of the y and height properties.
-    * @method bottom
-    * @return {number}
-    * @readonly
-    */
     get: function () {
         return this.shape.pos.y + this.shape.height;
     }
@@ -468,14 +438,35 @@ Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "bottom", {
 */
 Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "right", {
     
-    /**
-    * The sum of the x and width properties.
-    * @method right
-    * @return {number}
-    * @readonly
-    */
     get: function () {
         return this.shape.pos.x + this.shape.width;
     }
 
 });
+
+/**
+* @name Phaser.Physics.Ninja.Body#speed
+* @property {number} speed - The speed of this Body
+* @readonly
+*/
+Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "speed", {
+    
+    get: function () {
+        return Math.sqrt(this.shape.velocity.x * this.shape.velocity.x + this.shape.velocity.y * this.shape.velocity.y);
+    }
+
+});
+
+/**
+* @name Phaser.Physics.Ninja.Body#angle
+* @property {number} angle - The angle of this Body
+* @readonly
+*/
+Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "angle", {
+    
+    get: function () {
+        return Math.atan2(this.shape.velocity.y, this.shape.velocity.x);
+    }
+
+});
+
