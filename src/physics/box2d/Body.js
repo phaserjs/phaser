@@ -151,6 +151,11 @@ Phaser.Physics.Box2D.Body.prototype = {
       this.redrawDebug();
     },
     
+    setRectangle: function(width, height, offsetX, offsetY, rotation){
+      this.clearFixtures()
+      this.addRectangle(width, height, offsetX, offsetY, rotation)
+    },
+    
     addRectangle: function (width, height, offsetX, offsetY, rotation) {
       offsetX = offsetX || 0;
       offsetY = offsetY || 0;
@@ -230,8 +235,18 @@ Phaser.Physics.Box2D.Body.prototype = {
     },
 
     loadPolygon: function (key, object, options) {
+        this.clearFixtures()
+
         var data = this.game.cache.getPhysicsData(key, object);
-        console.log(data)
+
+        //test some bounciness with the polygon
+        fd = new box2d.b2FixtureDef();
+        fd.restitution = 0.5;
+        fd.density = 1.0;
+        fd.friction = 0.9;
+        
+
+
         for (var i = 0; i < data.length; i++)
         {
             var shape = data[i].shape
@@ -239,15 +254,24 @@ Phaser.Physics.Box2D.Body.prototype = {
 
             for (var s = 0; s < shape.length; s += 2)
             { 
-              v = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2b(shape[s]), Phaser.Physics.Box2D.Utils.px2b(shape[s + 1]));
+              v = new box2d.b2Vec2(Phaser.Physics.Box2D.Utils.px2b(shape[s]), Phaser.Physics.Box2D.Utils.px2bi(shape[s + 1]));
               vertices.push(v);
             }
 
             var polygon = new box2d.b2PolygonShape();
             polygon.SetAsArray(vertices, vertices.length);
+
+            console.log('polygon.m_vertexCount',polygon.m_vertexCount)
             
-            this.createFixtureFromShape(polygon, 0.0);
+            for(var k=0;k < polygon.m_count;k++){
+              polygon.m_vertices[k].x += - Phaser.Physics.Box2D.Utils.px2b(this.sprite.width / 2);
+              polygon.m_vertices[k].y += Phaser.Physics.Box2D.Utils.px2b(this.sprite.height / 2);
+            }
+            fd.shape = polygon;
+            this.createFixture(fd);
+            //this.createFixtureFromShape(polygon, 0.0);
         }
+
     },
 
     /**
