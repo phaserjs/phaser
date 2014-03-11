@@ -88,10 +88,7 @@ Phaser.World.prototype.setBounds = function (x, y, width, height) {
         this.camera.bounds.setTo(x, y, width, height);
     }
 
-    if (this.game.physics)
-    {
-        this.game.physics.setBoundsToWorld();
-    }
+    this.game.physics.setBoundsToWorld();
 
 }
 

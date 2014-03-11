@@ -650,8 +650,8 @@ Phaser.Game.prototype = {
         this.raf.stop();
 
         this.input.destroy();
-
         this.state.destroy();
+        this.physics.destroy();
 
         this.state = null;
         this.cache = null;

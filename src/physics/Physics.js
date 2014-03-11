@@ -222,6 +222,11 @@ Phaser.Physics.prototype = {
             this.ninja.setBoundsToWorld();
         }
 
+        if (this.p2)
+        {
+            this.p2.setBoundsToWorld();
+        }
+
     },
 
     /**
@@ -236,6 +241,24 @@ Phaser.Physics.prototype = {
         {
             this.p2.clear();
         }
+
+    },
+
+    /**
+    * Destroys all active physics systems. Usually only called on a Game Shutdown, not on a State swap.
+    *
+    * @method Phaser.Physics#destroy
+    */
+    destroy: function () {
+
+        if (this.p2)
+        {
+            this.p2.destroy();
+        }
+
+        this.arcade = null;
+        this.ninja = null;
+        this.p2 = null;
 
     }
 

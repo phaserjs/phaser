@@ -26,6 +26,8 @@ var dump;
 
 function create() {
 
+    game.physics.startSystem(Phaser.Physics.P2JS);
+
     game.stage.backgroundColor = '#787878';
 
     map = game.add.tilemap('map');
@@ -86,9 +88,7 @@ function create() {
     // console.log(b.body.data.shapes[0].vertices);
 
     box2 = game.add.sprite(200, 200, 'box');
-    // box2.name = 'bob';
-    // box2.anchor.set(0.5);
-    box2.physicsEnabled = true;
+    game.physics.p2.enable(box2);
     box2.body.fixedRotation = true;
 
     game.camera.follow(box2);
@@ -99,35 +99,24 @@ function create() {
 
 function update() {
 
-    // if (cursors.left.isDown)
-    // {
-    //     p.x -= 4;
-    // }
-    // else if (cursors.right.isDown)
-    // {
-    //     p.x += 4;
-    // }
+    box2.body.setZeroVelocity();
 
     if (cursors.left.isDown)
     {
-        box2.body.moveLeft(400);
+        box2.body.moveLeft(200);
     }
     else if (cursors.right.isDown)
     {
-        box2.body.moveRight(400);
-    }
-    else if (!cursors.left.isDown && !cursors.right.isDown)
-    {
-        box2.body.data.force[0] = 0;
+        box2.body.moveRight(200);
     }
 
     if (cursors.up.isDown)
     {
-        box2.body.moveUp(400);
+        box2.body.moveUp(200);
     }
     else if (cursors.down.isDown)
     {
-        box2.body.moveDown(400);
+        box2.body.moveDown(200);
     }
 
 /*    if (cursors.left.isDown)
@@ -162,10 +151,10 @@ function render() {
     // game.debug.text(b.body.velocity.x, 32, 32);
     // game.debug.text(b.body.velocity.y, 32, 64);
 
-    for (var i = 0, len = dump.length; i < len; i++)
-    {
-        game.debug.physicsBody(dump[i]);
-    }
+    // for (var i = 0, len = dump.length; i < len; i++)
+    // {
+        // game.debug.physicsBody(dump[i]);
+    // }
 
         // game.debug.physicsBody(dump[0]);
         // game.debug.physicsBody(b);
