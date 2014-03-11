@@ -113,7 +113,6 @@ Phaser.Physics.Box2D.Body.prototype = {
         this.clearFixtures();
         this.addRectangle(sprite.width, sprite.height, 0, 0, sprite.rotation);
     },
-
     setCircle: function(radius, offsetX, offsetY){
       this.clearFixtures()
       this.addCircle(radius, offsetX, offsetY)
