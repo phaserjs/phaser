@@ -149,6 +149,7 @@ New features:
 * Tweens are now bound to their own TweenManager, not always the global game one. So you can create your own managers now (for you clark :)
 * ScaleManager.fullScreenTarget allows you to change the DOM element that the fullscreen API is called on (feature request #526)
 * Merged Georges p2 BodyDebug and reformatted for jshint pass. Looks awesome :)
+* ArcadePhysics.Body has a new gravityScale property, which is a modifier multiplied against the world gravity value on a Body.
 
 
 Updates:

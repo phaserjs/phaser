@@ -124,13 +124,13 @@ Phaser.Physics.Arcade.Body = function (sprite) {
     this.drag = new Phaser.Point();
 
     /**
-    * @property {boolean} allowGravity - Allow this Body to be influenced by world gravity?
+    * @property {boolean} allowGravity - Allow this Body to be influenced by gravity? Either world or local.
     * @default
     */
     this.allowGravity = true;
 
     /**
-    * @property {Phaser.Point} gravity - A local gravity applied to this Body. If set this over-rides any world gravity.
+    * @property {Phaser.Point} gravity - A local gravity applied to this Body. If non-zero this over rides any world gravity, unless Body.allowGravity is set to false.
     */
     this.gravity = new Phaser.Point(0, 0);
 

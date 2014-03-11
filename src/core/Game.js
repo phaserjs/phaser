@@ -599,6 +599,8 @@ Phaser.Game.prototype = {
 
         this.time.update(time);
 
+        this.debug.preUpdate();
+
         this.render();
 
     },

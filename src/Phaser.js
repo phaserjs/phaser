@@ -38,10 +38,6 @@ var Phaser = Phaser || {
 	SPRITEBATCH: 17,
 	RETROFONT: 18,
 
-	// DYNAMIC: 1,
-	// STATIC: 2,
-	// KINEMATIC: 4,
-
 	//	The various blend modes supported by pixi / phaser
 	blendModes: {
 	    NORMAL:0,
