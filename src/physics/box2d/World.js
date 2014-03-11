@@ -15,6 +15,9 @@ Phaser.Physics.Box2D = function (game, config) {
     var gravity = new box2d.b2Vec2(0.0, -9.8);
     
     this.world = new box2d.b2World(gravity);
+    this.contactListener = new Phaser.Physics.Box2D.SampleContactListener()
+    this.world.SetContactListener(this.contactListener);
+
     this.setBoundsToWorld()
 
     bd = new box2d.b2BodyDef();
@@ -67,7 +70,6 @@ Phaser.Physics.Box2D.prototype = {
         var groundBoxDef = box2d.b2Body.prototype.CreateFixture2.s_def;
         groundBoxDef.shape = groundBox;
         groundBoxDef.density = 0;
-        groundBoxDef.groupIndex = -1;
 
         // top
         groundBox.Set(upperLeft, upperRight);

@@ -77,11 +77,17 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
       
       if(awake != this.awake){
         this.awake = awake
-        console.log('new awake state', awake)
         this.draw()
       }
     },
-
+    showCollision: function(){
+      this.colliding = true
+      this.draw()
+    },
+    hideCollision: function(){
+      this.colliding = false
+      this.draw()
+    },
     /**
     * Core update.
     *
@@ -112,7 +118,11 @@ Phaser.Utils.extend(Phaser.Physics.Box2D.BodyDebug.prototype, {
 
       for (var f = b.GetFixtureList(); f; f = f.m_next)
       {
-        if (b.IsActive() === false)
+        if(this.colliding){
+          color = 0xff0000
+          this.drawShape(f, color);
+        }
+        else if (b.IsActive() === false)
         {
           color = 0x333333
           this.drawShape(f, color);

@@ -48,11 +48,22 @@ Phaser.Physics.Box2D.Body = function (game, sprite, x, y, mass) {
 };
 
 Phaser.Physics.Box2D.Body.prototype = {
+    startContact: function(){
+      if(this.debugBody){
+        //this.debugBody.showCollision()
+      }
+    },
+    endContact: function(){
+      if(this.debugBody){
+        //this.debugBody.hideCollision()
+      }
+    },
     create: function(parent){
       world = parent.world
       this.parent = parent
       //create the body through the provided factory
       this.data = world.CreateBody(this.getBodyDef());
+      this.data.SetUserData(this);
       this.data.SetPositionXY(this.position.x,this.position.y)
       
       this.addCircle(20)
