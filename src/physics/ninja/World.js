@@ -220,13 +220,74 @@ Phaser.Physics.Ninja.prototype = {
     },
 
     /**
-    * Called automatically by a Physics body, it updates all motion related values on the Body.
+    * Clears all physics bodies from the given TilemapLayer that were created with `World.convertTilemap`.
     *
-    * @method Phaser.Physics.Ninja#updateMotion
-    * @param {Phaser.Physics.Ninja.Body} The Body object to be updated.
-    update: function () {
-    },
+    * @method Phaser.Physics.Ninja#clearTilemapLayerBodies
+    * @param {Phaser.Tilemap} map - The Tilemap to get the map data from.
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to map.currentLayer.
     */
+    clearTilemapLayerBodies: function (map, layer) {
+
+        layer = map.getLayer(layer);
+
+        var i = map.layers[layer].bodies.length;
+
+        while (i--)
+        {
+            map.layers[layer].bodies[i].destroy();
+        }
+
+        map.layers[layer].bodies.length = [];
+
+    },
+
+    /**
+    * Goes through all tiles in the given Tilemap and TilemapLayer and converts those set to collide into physics tiles.
+    * Only call this *after* you have specified all of the tiles you wish to collide with calls like Tilemap.setCollisionBetween, etc.
+    * Every time you call this method it will destroy any previously created bodies and remove them from the world.
+    * Therefore understand it's a very expensive operation and not to be done in a core game update loop.
+    *
+    * In Ninja the Tiles have an ID from 0 to 33, where 0 is 'empty', 1 is a full tile, 2 is a 45-degree slope, etc. You can find the ID
+    * list either at the very bottom of `Tile.js`, or in a handy visual reference in the `resources/Ninja Physics Debug Tiles` folder in the repository.
+    * The slopeMap parameter is an array that controls how the indexes of the tiles in your tilemap data will map to the Ninja Tile IDs.
+    * For example if you had 6 tiles in your tileset: Imagine the first 4 should be converted into fully solid Tiles and the other 2 are 45-degree slopes.
+    * Your slopeMap array would look like this: `[ 1, 1, 1, 1, 2, 3 ]`.
+    * Where each element of the array is a tile in your tilemap and the resulting Ninja Tile it should create.
+    *
+    * @method Phaser.Physics.Ninja#convertTilemap
+    * @param {Phaser.Tilemap} map - The Tilemap to get the map data from.
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to map.currentLayer.
+    * @param {object} [slopeMap] - The tilemap index to Tile ID map.
+    * @return {array} An array of the Phaser.Physics.Ninja.Tile objects that were created.
+    */
+    convertTilemap: function (map, layer, slopeMap) {
+
+        layer = map.getLayer(layer);
+
+        if (typeof addToWorld === 'undefined') { addToWorld = true; }
+        if (typeof optimize === 'undefined') { optimize = true; }
+
+        //  If the bodies array is already populated we need to nuke it
+        this.clearTilemapLayerBodies(map, layer);
+
+        for (var y = 0, h = map.layers[layer].height; y < h; y++)
+        {
+            for (var x = 0, w = map.layers[layer].width; x < w; x++)
+            {
+                var tile = map.layers[layer].data[y][x];
+
+                if (tile && slopeMap.hasOwnProperty(tile.index))
+                {
+                    var body = new Phaser.Physics.Ninja.Body(this, null, 3, slopeMap[tile.index], 0, tile.worldX + tile.centerX, tile.worldY + tile.centerY, tile.width, tile.height);
+
+                    map.layers[layer].bodies.push(body);
+                }
+            }
+        }
+
+        return map.layers[layer].bodies;
+
+    },
 
     /**
     * Checks for overlaps between two game objects. The objects can be Sprites, Groups or Emitters.

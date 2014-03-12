@@ -16,8 +16,14 @@
 * @param {number} [type=1] - The type of Ninja shape to create. 1 = AABB, 2 = Circle or 3 = Tile.
 * @param {number} [id=1] - If this body is using a Tile shape, you can set the Tile id here, i.e. Phaser.Physics.Ninja.Tile.SLOPE_45DEGpn, Phaser.Physics.Ninja.Tile.CONVEXpp, etc.
 * @param {number} [radius=16] - If this body is using a Circle shape this controls the radius.
+* @param {number} [x=0] - The x coordinate of this Body. This is only used if a sprite is not provided.
+* @param {number} [y=0] - The y coordinate of this Body. This is only used if a sprite is not provided.
+* @param {number} [width=0] - The width of this Body. This is only used if a sprite is not provided.
+* @param {number} [height=0] - The height of this Body. This is only used if a sprite is not provided.
 */
-Phaser.Physics.Ninja.Body = function (system, sprite, type, id, radius) {
+Phaser.Physics.Ninja.Body = function (system, sprite, type, id, radius, x, y, width, height) {
+
+    sprite = sprite || null;
 
     if (typeof type === 'undefined') { type = 1; }
     if (typeof id === 'undefined') { id = 1; }
@@ -31,7 +37,7 @@ Phaser.Physics.Ninja.Body = function (system, sprite, type, id, radius) {
     /**
     * @property {Phaser.Game} game - Local reference to game.
     */
-    this.game = sprite.game;
+    this.game = system.game;
 
     /**
     * @property {number} type - The type of physics system this body belongs to.
@@ -131,32 +137,37 @@ Phaser.Physics.Ninja.Body = function (system, sprite, type, id, radius) {
     */
     this.maxSpeed = 8;
 
-    var sx = sprite.x;
-    var sy = sprite.y;
-
-    if (sprite.anchor.x === 0)
+    if (sprite)
     {
-        sx += (sprite.width * 0.5);
-    }
+        x = sprite.x;
+        y = sprite.y;
+        width = sprite.width;
+        height = sprite.height;
 
-    if (sprite.anchor.y === 0)
-    {
-        sy += (sprite.height * 0.5);
+        if (sprite.anchor.x === 0)
+        {
+            x += (sprite.width * 0.5);
+        }
+
+        if (sprite.anchor.y === 0)
+        {
+            y += (sprite.height * 0.5);
+        }
     }
 
     if (type === 1)
     {
-        this.aabb = new Phaser.Physics.Ninja.AABB(this, sx, sy, sprite.width, sprite.height);
+        this.aabb = new Phaser.Physics.Ninja.AABB(this, x, y, width, height);
         this.shape = this.aabb;
     }
     else if (type === 2)
     {
-        this.circle = new Phaser.Physics.Ninja.Circle(this, sx, sy, radius);
+        this.circle = new Phaser.Physics.Ninja.Circle(this, x, y, radius);
         this.shape = this.circle;
     }
     else if (type === 3)
     {
-        this.tile = new Phaser.Physics.Ninja.Tile(this, sx, sy, sprite.width, sprite.height, id);
+        this.tile = new Phaser.Physics.Ninja.Tile(this, x, y, width, height, id);
         this.shape = this.tile;
     }
 
@@ -202,16 +213,19 @@ Phaser.Physics.Ninja.Body.prototype = {
     */
     postUpdate: function () {
 
-        if (this.sprite.type === Phaser.TILESPRITE)
+        if (this.sprite)
         {
-            //  TileSprites don't use their anchor property, so we need to adjust the coordinates
-            this.sprite.x = this.shape.pos.x - this.shape.xw;
-            this.sprite.y = this.shape.pos.y - this.shape.yw;
-        }
-        else
-        {
-            this.sprite.x = this.shape.pos.x;
-            this.sprite.y = this.shape.pos.y;
+            if (this.sprite.type === Phaser.TILESPRITE)
+            {
+                //  TileSprites don't use their anchor property, so we need to adjust the coordinates
+                this.sprite.x = this.shape.pos.x - this.shape.xw;
+                this.sprite.y = this.shape.pos.y - this.shape.yw;
+            }
+            else
+            {
+                this.sprite.x = this.shape.pos.x;
+                this.sprite.y = this.shape.pos.y;
+            }
         }
 
         if (this.velocity.x < 0)

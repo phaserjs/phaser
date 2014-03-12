@@ -301,6 +301,18 @@ Phaser.Physics.Ninja.Tile.prototype = {
     },
 
     /**
+    * Destroys this Tiles reference to Body and System.
+    *
+    * @method Phaser.Physics.Ninja.Tile#destroy
+    */
+    destroy: function () {
+
+        this.body = null;
+        this.system = null;
+
+    },
+
+    /**
     * This converts a tile from implicitly-defined (via id), to explicit (via properties).
     * Don't call directly, instead of setType.
     *

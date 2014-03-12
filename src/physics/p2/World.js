@@ -1027,7 +1027,7 @@ Phaser.Physics.P2.prototype = {
     /**
     * Clears all physics bodies from the given TilemapLayer that were created with `World.convertTilemap`.
     *
-    * @method Phaser.Tilemap#clearTilemapLayerBodies
+    * @method Phaser.Physics.P2#clearTilemapLayerBodies
     * @param {Phaser.Tilemap} map - The Tilemap to get the map data from.
     * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to map.currentLayer.
     */
