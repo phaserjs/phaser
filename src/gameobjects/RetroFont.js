@@ -153,7 +153,7 @@ Phaser.RetroFont = function (game, key, characterWidth, characterHeight, chars, 
     /**
     * @property {number} type - Base Phaser object type. 
     */
-    this.type = Phaser.BITMAPFONT;
+    this.type = Phaser.RETROFONT;
     
 };
 

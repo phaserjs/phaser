@@ -49,6 +49,11 @@ Phaser.Text = function (game, x, y, text, style) {
     this.type = Phaser.TEXT;
 
     /**
+    * @property {number} z - The z-depth value of this object within its Group (remember the World is a Group as well). No two objects in a Group can have the same z value.
+    */
+    this.z = 0;
+
+    /**
     * @property {Phaser.Point} world - The world coordinates of this Sprite. This differs from the x/y coordinates which are relative to the Sprites container.
     */
     this.world = new Phaser.Point(x, y);
@@ -465,6 +470,7 @@ Object.defineProperty(Phaser.Text.prototype, 'text', {
         {
             this._text = value.toString() || ' ';
             this.dirty = true;
+            this.updateTransform();
         }
 
     }
@@ -488,6 +494,7 @@ Object.defineProperty(Phaser.Text.prototype, 'font', {
             this._font = value.trim();
             this.style.font = this._fontWeight + ' ' + this._fontSize + "px '" + this._font + "'";
             this.dirty = true;
+            this.updateTransform();
         }
 
     }
@@ -513,6 +520,7 @@ Object.defineProperty(Phaser.Text.prototype, 'fontSize', {
             this._fontSize = value;
             this.style.font = this._fontWeight + ' ' + this._fontSize + "px '" + this._font + "'";
             this.dirty = true;
+            this.updateTransform();
         }
 
     }
@@ -536,6 +544,7 @@ Object.defineProperty(Phaser.Text.prototype, 'fontWeight', {
             this._fontWeight = value;
             this.style.font = this._fontWeight + ' ' + this._fontSize + "px '" + this._font + "'";
             this.dirty = true;
+            this.updateTransform();
         }
 
     }
@@ -690,6 +699,7 @@ Object.defineProperty(Phaser.Text.prototype, 'lineSpacing', {
         {
             this._lineSpacing = parseFloat(value);
             this.dirty = true;
+            this.updateTransform();
         }
 
     }

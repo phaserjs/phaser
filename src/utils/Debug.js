@@ -125,6 +125,21 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
+    * Internal method that clears the canvas (if a Sprite) ready for a new debug session.
+    *
+    * @method Phaser.Utils.Debug#preUpdate
+    */
+    preUpdate: function () {
+
+        if (this.dirty && this.sprite)
+        {
+            this.context.clearRect(0, 0, this.game.width, this.game.height);
+            this.dirty = false;
+        }
+
+    },
+
+    /**
     * Internal method that resets and starts the debug output values.
     *
     * @method Phaser.Utils.Debug#start
@@ -147,9 +162,9 @@ Phaser.Utils.Debug.prototype = {
         this.currentAlpha = this.context.globalAlpha;
         this.columnWidth = columnWidth;
 
-        if (this.sprite && this.dirty)
+        if (this.sprite)
         {
-            // this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.dirty = true;
         }
 
         this.context.save();
@@ -178,32 +193,6 @@ Phaser.Utils.Debug.prototype = {
         }
 
     },
-
-    /**
-    * Internal method that outputs a single line of text.
-    *
-    * @method Phaser.Utils.Debug#line
-    * @protected
-    * @param {string} text - The line of text to draw.
-    * @param {number} [x] - The X value the debug info will start from.
-    * @param {number} [y] - The Y value the debug info will start from.
-    line: function (text, x, y) {
-
-        if (typeof x !== 'undefined') { this.currentX = x; }
-        if (typeof y !== 'undefined') { this.currentY = y; }
-
-        if (this.renderShadow)
-        {
-            this.context.fillStyle = 'rgb(0,0,0)';
-            this.context.fillText(text, this.currentX + 1, this.currentY + 1);
-            this.context.fillStyle = this.currentColor;
-        }
-
-        this.context.fillText(text, this.currentX, this.currentY);
-        this.currentY += this.lineHeight;
-
-    },
-    */
 
     /**
     * Internal method that outputs a single line of text split over as many columns as needed, one per parameter.
@@ -336,7 +325,6 @@ Phaser.Utils.Debug.prototype = {
         this.context.closePath();
 
         //  Render the text
-        // this.start(pointer.x, pointer.y - 100, color);
         this.line('ID: ' + pointer.id + " Active: " + pointer.active);
         this.line('World X: ' + pointer.worldX + " World Y: " + pointer.worldY);
         this.line('Screen X: ' + pointer.x + " Screen Y: " + pointer.y);
@@ -577,6 +565,37 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
+    * Renders a Rectangle.
+    *
+    * @method Phaser.Utils.Debug#geom
+    * @param {Phaser.Rectangle|object} object - The geometry object to render.
+    * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
+    * @param {boolean} [filled=true] - Render the objected as a filled (default, true) or a stroked (false)
+    */
+    rectangle: function (object, color, filled) {
+
+        if (typeof filled === 'undefined') { filled = true; }
+
+        color = color || 'rgba(0,255,0,0.4)';
+
+        this.start();
+
+        if (filled)
+        {
+            this.context.fillStyle = color;
+            this.context.fillRect(object.x - this.game.camera.x, object.y - this.game.camera.y, object.width, object.height);
+        }
+        else
+        {
+            this.context.strokeStyle = color;
+            this.context.strokeRect(object.x - this.game.camera.x, object.y - this.game.camera.y, object.width, object.height);
+        }
+
+        this.stop();
+
+    },
+
+    /**
     * Render a string of text.
     *
     * @method Phaser.Utils.Debug#text
@@ -608,6 +627,46 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
+    * Visually renders a QuadTree to the display.
+    *
+    * @method Phaser.Utils.Debug#quadTree
+    * @param {Phaser.QuadTree} quadtree - The quadtree to render.
+    * @param {string} color - The color of the lines in the quadtree.
+    */
+    quadTree: function (quadtree, color) {
+
+        color = color || 'rgba(255,0,0,0.3)';
+
+        this.start();
+
+        var bounds = quadtree.bounds;
+
+        if (quadtree.nodes.length === 0)
+        {
+            this.context.strokeStyle = color;
+            this.context.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
+            this.text('size: ' + quadtree.objects.length, bounds.x + 4, bounds.y + 16, 'rgb(0,200,0)', '12px Courier');
+
+            this.context.strokeStyle = 'rgb(0,255,0)';
+
+            for (var i = 0; i < quadtree.objects.length; i++)
+            {
+                this.context.strokeRect(quadtree.objects[i].x, quadtree.objects[i].y, quadtree.objects[i].width, quadtree.objects[i].height);
+            }
+        }
+        else
+        {
+            for (var i = 0; i < quadtree.nodes.length; i++)
+            {
+                this.quadTree(quadtree.nodes[i]);
+            }
+        }
+
+        this.stop();
+
+    },
+
+    /**
     * Render Sprite Body Physics Data as text.
     *
     * @method Phaser.Utils.Debug#bodyInfo
@@ -629,169 +688,6 @@ Phaser.Utils.Debug.prototype = {
         // this.line('velocity x: ' + sprite.body.velocity.x.toFixed(2), 'y: ' + sprite.body.velocity.y.toFixed(2), 'deltaX: ' + sprite.body.deltaX().toFixed(2), 'deltaY: ' + sprite.body.deltaY().toFixed(2));
         // this.line('bounce x: ' + sprite.body.bounce.x.toFixed(2), 'y: ' + sprite.body.bounce.y.toFixed(2));
         this.stop();
-
-    },
-
-    /**
-    * Renders the physics body including all shapes.
-    *
-    * @method Phaser.Utils.Debug#physicsBody
-    * @param {Phaser.Physics.Body} body - The Phaser.Physics.Body instance to render all shapes from.
-    * @param {string} [color='rgb(255,255,255)'] - The color the polygon is stroked in.
-    */
-    physicsBody: function (body, color) {
-
-        this.start(0, 0, color);
-
-        var shapes = body.data.shapes;
-        var shapeOffsets = body.data.shapeOffsets;
-        var shapeAngles = body.data.shapeAngles;
-
-        var i = shapes.length;
-        var x = this.game.math.p2pxi(body.data.position[0]) - this.game.camera.view.x;
-        var y = this.game.math.p2pxi(body.data.position[1]) - this.game.camera.view.y;
-        var angle = body.data.angle;
-
-        while (i--)
-        {
-            if (shapes[i] instanceof p2.Rectangle)
-            {
-                this.shapeRectangle(x, y, angle, shapes[i], shapeOffsets[i], shapeAngles[i]);
-            }
-            else if (shapes[i] instanceof p2.Line)
-            {
-                this.shapeLine(x, y, angle, shapes[i], shapeOffsets[i], shapeAngles[i]);
-            }
-            else if (shapes[i] instanceof p2.Convex)
-            {
-                this.shapeConvex(x, y, angle, shapes[i], shapeOffsets[i], shapeAngles[i]);
-            }
-            else if (shapes[i] instanceof p2.Circle)
-            {
-                this.shapeCircle(x, y, angle, shapes[i], shapeOffsets[i], shapeAngles[i]);
-            }
-        }
-
-        this.stop();
-
-    },
-
-    /**
-    * Renders a p2.Rectangle shape. Do not call this directly - instead use Debug.physicsBody.
-    *
-    * @method Phaser.Utils.Debug#shapeRectangle
-    * @param {number} x - The x coordinate of the Shape to translate to.
-    * @param {number} y - The y coordinate of the Shape to translate to.
-    * @param {number} bodyAngle - The angle of the Body to rotate to.
-    * @param {p2.Shape} shape - The shape to render.
-    * @param {array} offset - The shape offset vector.
-    * @param {number} angle - The shape angle.
-    */
-    shapeRectangle: function (x, y, bodyAngle, shape, offset, angle) {
-        
-        var w = this.game.math.p2px(shape.width);
-        var h = this.game.math.p2px(shape.height);
-        var points = shape.vertices;
-
-        this.context.beginPath();
-        this.context.save();
-        this.context.translate(x + this.game.math.p2pxi(offset[0]), y + this.game.math.p2pxi(offset[1]));
-        this.context.rotate(bodyAngle + angle);
-
-        this.context.moveTo(this.game.math.p2pxi(points[0][0]), this.game.math.p2pxi(points[0][1]));
-
-        for (var i = 1; i < points.length; i++)
-        {
-            this.context.lineTo(this.game.math.p2pxi(points[i][0]), this.game.math.p2pxi(points[i][1]));
-        }
-
-        this.context.closePath();
-        this.context.stroke();
-        this.context.restore();
-
-    },
-
-    /**
-    * Renders a p2.Line shape. Do not call this directly - instead use Debug.physicsBody.
-    *
-    * @method Phaser.Utils.Debug#shapeLine
-    * @param {number} x - The x coordinate of the Shape to translate to.
-    * @param {number} y - The y coordinate of the Shape to translate to.
-    * @param {number} bodyAngle - The angle of the Body to rotate to.
-    * @param {p2.Shape} shape - The shape to render.
-    * @param {array} offset - The shape offset vector.
-    * @param {number} angle - The shape angle.
-    */
-    shapeLine: function (x, y, bodyAngle, shape, offset, angle) {
-        
-        this.context.beginPath();
-        this.context.save();
-        this.context.translate(x, y);
-        this.context.rotate(bodyAngle + angle);
-        this.context.lineWidth = 0.5;
-        this.context.moveTo(0, 0);
-        this.context.lineTo(this.game.math.p2px(shape.length), 0);
-        this.context.closePath();
-        this.context.stroke();
-        this.context.restore();
-
-    },
-
-    /**
-    * Renders a convex shape. Do not call this directly - instead use Debug.physicsBody.
-    *
-    * @method Phaser.Utils.Debug#shapeConvex
-    * @param {number} x - The x coordinate of the Shape to translate to.
-    * @param {number} y - The y coordinate of the Shape to translate to.
-    * @param {number} bodyAngle - The angle of the Body to rotate to.
-    * @param {p2.Shape} shape - The shape to render.
-    * @param {array} offset - The shape offset vector.
-    * @param {number} angle - The shape angle.
-    */
-    shapeConvex: function (x, y, bodyAngle, shape, offset, angle) {
-
-        var points = shape.vertices;
-
-        this.context.beginPath();
-        this.context.save();
-        this.context.translate(x + this.game.math.p2pxi(offset[0]), y + this.game.math.p2pxi(offset[1]));
-        this.context.rotate(bodyAngle + angle);
-
-        this.context.moveTo(this.game.math.p2pxi(points[0][0]), this.game.math.p2pxi(points[0][1]));
-
-        for (var i = 1; i < points.length; i++)
-        {
-            this.context.lineTo(this.game.math.p2pxi(points[i][0]), this.game.math.p2pxi(points[i][1]));
-        }
-
-        // this.context.arc(0, 0, this.game.math.p2px(shape.radius) , 0, Math.PI * 2);
-
-        this.context.closePath();
-        this.context.stroke();
-        this.context.restore();
-
-    },
-
-    /**
-    * Renders a p2.Circle shape. Do not call this directly - instead use Debug.physicsBody.
-    *
-    * @method Phaser.Utils.Debug#shapeCircle
-    * @param {number} x - The x coordinate of the Shape to translate to.
-    * @param {number} y - The y coordinate of the Shape to translate to.
-    * @param {number} bodyAngle - The angle of the Body to rotate to.
-    * @param {p2.Shape} shape - The shape to render.
-    * @param {array} offset - The shape offset vector.
-    * @param {number} angle - The shape angle.
-    */
-    shapeCircle: function (x, y, bodyAngle, shape, offset, angle) {
-
-        this.context.beginPath();
-        this.context.save();
-        this.context.translate(x + this.game.math.p2pxi(offset[0]), y + this.game.math.p2pxi(offset[1]));
-        this.context.arc(0, 0, this.game.math.p2px(shape.radius) , 0, Math.PI * 2);
-        this.context.closePath();
-        this.context.stroke();
-        this.context.restore();
 
     }
 

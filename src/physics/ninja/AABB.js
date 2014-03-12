@@ -200,8 +200,37 @@ Phaser.Physics.Ninja.AABB.prototype = {
 
     },
 
+    reverse: function () {
+
+        var vx = this.pos.x - this.oldpos.x;
+        var vy = this.pos.y - this.oldpos.y;
+
+        if (this.oldpos.x < this.pos.x)
+        {
+            this.oldpos.x = this.pos.x + vx;
+            // this.oldpos.x = this.pos.x + (vx + 1 + this.body.bounce);
+        }
+        else if (this.oldpos.x > this.pos.x)
+        {
+            this.oldpos.x = this.pos.x - vx;
+            // this.oldpos.x = this.pos.x - (vx + 1 + this.body.bounce);
+        }
+
+        if (this.oldpos.y < this.pos.y)
+        {
+            this.oldpos.y = this.pos.y + vy;
+            // this.oldpos.y = this.pos.y + (vy + 1 + this.body.bounce);
+        }
+        else if (this.oldpos.y > this.pos.y)
+        {
+            this.oldpos.y = this.pos.y - vy;
+            // this.oldpos.y = this.pos.y - (vy + 1 + this.body.bounce);
+        }
+
+    },
+
     /**
-    * Process a body collision and apply the resulting forces.
+    * Process a body collision and apply the resulting forces. Still very much WIP and doesn't work fully. Feel free to fix!
     *
     * @method Phaser.Physics.Ninja.AABB#reportCollisionVsBody
     * @param {number} px - The tangent velocity
@@ -212,82 +241,68 @@ Phaser.Physics.Ninja.AABB.prototype = {
     */
     reportCollisionVsBody: function (px, py, dx, dy, obj) {
 
-        //  Here - we check if obj is immovable, etc and then we canswap the p/o values below depending on which is heavy
-        //  But then still need to work out how to split force
+        var vx1 = this.pos.x - this.oldpos.x;   //  Calc velocity of this object
+        var vy1 = this.pos.y - this.oldpos.y;
+        var dp1 = (vx1 * dx + vy1 * dy);         //  Find component of velocity parallel to collision normal
+        var nx1 = dp1 * dx;                      //  Project velocity onto collision normal
+        var ny1 = dp1 * dy;                      //  nx, ny is normal velocity
 
-        var p = this.pos;
-        var o = this.oldpos;
-
-        //  Calc velocity
-        var vx = p.x - o.x;
-        var vy = p.y - o.y;
-
-        //  Find component of velocity parallel to collision normal
-        var dp = (vx * dx + vy * dy);
-        var nx = dp * dx;   //project velocity onto collision normal
-
-        var ny = dp * dy;   //nx,ny is normal velocity
-
-        var tx = vx - nx;   //px,py is tangent velocity
-        var ty = vy - ny;
+        var dx2 = dx * -1;
+        var dy2 = dy * -1;
+        var vx2 = obj.pos.x - obj.oldpos.x;      //  Calc velocity of colliding object
+        var vy2 = obj.pos.y - obj.oldpos.y;
+        var dp2 = (vx2 * dx2 + vy2 * dy2);         //  Find component of velocity parallel to collision normal
+        var nx2 = dp2 * dx2;                      //  Project velocity onto collision normal
+        var ny2 = dp2 * dy2;                      //  nx, ny is normal velocity
 
         //  We only want to apply collision response forces if the object is travelling into, and not out of, the collision
-        var b, bx, by, fx, fy;
-
-        if (dp < 0)
+        if (this.body.immovable && obj.body.immovable)
         {
-            fx = tx * this.body.friction;
-            fy = ty * this.body.friction;
+            //  Split the separation then return, no forces applied as they come to a stand-still
+            px *= 0.5;
+            py *= 0.5;
 
-            b = 1 + this.body.bounce;
+            this.pos.add(px, py);
+            this.oldpos.set(this.pos.x, this.pos.y);
 
-            bx = (nx * b);
-            by = (ny * b);
+            obj.pos.subtract(px, py);
+            obj.oldpos.set(obj.pos.x, obj.pos.y);
+
+            return;
         }
-        else
+        else if (!this.body.immovable && !obj.body.immovable)
         {
-            //  Moving out of collision, do not apply forces
-            bx = by = fx = fy = 0;
+            //  separate
+            px *= 0.5;
+            py *= 0.5;
+
+            this.pos.add(px, py);
+            obj.pos.subtract(px, py);
+
+            if (dp1 < 0)
+            {
+                this.reverse();
+                obj.reverse();
+            }
         }
+        else if (!this.body.immovable)
+        {
+            this.pos.subtract(px, py);
 
-        //  working version
-        // p.x += px;
-        // p.y += py;
-        // o.x += px + bx + fx;
-        // o.y += py + by + fy;
+            if (dp1 < 0)
+            {
+                this.reverse();
+            }
+        }
+        else if (!obj.body.immovable)
+        {
+            obj.pos.subtract(px, py);
 
-        //  Project object out of collision (applied to the position value)
-        p.x += px;
-        p.y += py;
-
-        // obj.pos.x += px;
-        // obj.pos.y += py;
-
-
-        //  Apply bounce+friction impulses which alter velocity (applied to old position, thus setting a sort of velocity up)
-        var rx = px + bx + fx;
-        var ry = py + by + fy;
-
-        //  let's pretend obj is immovable
-        // rx *= -1;
-        // ry *= -1;
-
-
-        //  Now let's share the load
-        o.x += rx;
-        o.y += ry;
-
-        //  work out objs velocity
-
-
-        // rx *= -1;
-        // ry *= -1;
-
-        // obj.oldpos.x += rx;
-        // obj.oldpos.y += ry;
-
-
-            // console.log(this.body.sprite.name, 'o.x', rx, ry, obj);
+            if (dp1 < 0)
+            {
+                obj.reverse();
+            }
+        }
 
     },
 
@@ -392,10 +407,7 @@ Phaser.Physics.Ninja.AABB.prototype = {
                     }
                 }
 
-                // return this.aabbTileProjections[1](px, py, this, c);
-
                 var l = Math.sqrt(px * px + py * py);
-                // this.reportCollisionVsWorld(px, py, px / l, py / l, c);
                 this.reportCollisionVsBody(px, py, px / l, py / l, c);
 
                 return Phaser.Physics.Ninja.AABB.COL_AXIS;
@@ -415,59 +427,50 @@ Phaser.Physics.Ninja.AABB.prototype = {
     */
     collideAABBVsTile: function (tile) {
 
-        var pos = this.pos;
-        var c = tile;
-
-        var tx = c.pos.x;
-        var ty = c.pos.y;
-        var txw = c.xw;
-        var tyw = c.yw;
-
-        var dx = pos.x - tx;//tile->obj delta
-        var px = (txw + this.xw) - Math.abs(dx);//penetration depth in x
+        var dx = this.pos.x - tile.pos.x;               //  tile->obj delta
+        var px = (tile.xw + this.xw) - Math.abs(dx);    //  penetration depth in x
 
         if (0 < px)
         {
-            var dy = pos.y - ty;//tile->obj delta
-            var py = (tyw + this.yw) - Math.abs(dy);//pen depth in y
+            var dy = this.pos.y - tile.pos.y;               //  tile->obj delta
+            var py = (tile.yw + this.yw) - Math.abs(dy);    //  pen depth in y
 
             if (0 < py)
             {
-                //object may be colliding with tile; call tile-specific collision function
-
-                //calculate projection vectors
+                //  Calculate projection vectors
                 if (px < py)
                 {
-                    //project in x
+                    //  Project in x
                     if (dx < 0)
                     {
-                        //project to the left
+                        //  Project to the left
                         px *= -1;
                         py = 0;
                     }
                     else
                     {
-                        //proj to right
+                        //  Project to the right
                         py = 0;
                     }
                 }
                 else
                 {
-                    //project in y
+                    //  Project in y
                     if (dy < 0)
                     {
-                        //project up
+                        //  Project up
                         px = 0;
                         py *= -1;
                     }
                     else
                     {
-                        //project down
+                        //  Project down
                         px = 0;
                     }
                 }
 
-                return this.resolveTile(px, py, this, c);
+                //  Object may be colliding with tile; call tile-specific collision function
+                return this.resolveTile(px, py, this, tile);
             }
         }
 

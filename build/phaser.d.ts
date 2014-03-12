@@ -1885,6 +1885,7 @@ declare module Phaser {
         postUpdate(): void;
         preUpdate(): void;
         update(): void;
+        z: nummber;
     }
 
     class Group extends PIXI.DisplayObjectContainer {
@@ -1934,11 +1935,13 @@ declare module Phaser {
         forEachDead(callback: Function, callbackContext: Object): void;
         forEachExists(callback: Function, callbackContext: Object): void;
         getAt(index: number): any;
+        getBottom(): any;
         getFirstAlive(): any;
         getFirstDead(): any;
         getFirstExists(state: boolean): any;
         getIndex(child: any): number;
         getRandom(startIndex: number, length: number): any;
+        getTop(): any;
         iterate(key: string, value: any, returnType: number, callback?: Function, callbackContext?: Object): any;
         multiplyAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
         next(): void;
@@ -1957,6 +1960,8 @@ declare module Phaser {
         subAll(property: string, amount: number, checkAlive: boolean, checkVisible: boolean): void;
         swap(child1: any, child2: any): boolean;
         update(): void;
+        updateZ(): void;
+        z: nummber;
     }
 
     class Image extends PIXI.Sprite {
@@ -2002,6 +2007,7 @@ declare module Phaser {
         reset(x: number, y: number): Phaser.Image;
         revive(): Phaser.Image;
         update(): void;
+        z: nummber;
     }
 
     class Input {
@@ -3312,6 +3318,7 @@ declare module Phaser {
         reset(x: number, y: number, health?: number): Phaser.Sprite;
         revive(health?: number): Phaser.Sprite;
         update(): void;
+        z: nummber;
     }
 
     class SpriteBatch extends Phaser.Group {
@@ -3509,6 +3516,7 @@ declare module Phaser {
         setShadow(x?: number, y?: number, color?: Object, blur?: number): void;
         setStyle(style?: { font?: string; fill?: Object; align?: string; stroke?: string; strokeThickness?: number; wordWrap?: boolean; wordWrapWidth?: number; shadowOffsetX?: number; shadowOffsetY?: number; shadowColor?: string; shadowBlur?: number; }): void;
         update(): void;
+        z: nummber;
     }
 
     class Tile {
@@ -3682,6 +3690,7 @@ declare module Phaser {
         renderDebug(): void;
         resizeWorld(): void;
         updateMax(): void;
+        z: nummber;
     }
 
     class TilemapParser {
@@ -3745,6 +3754,7 @@ declare module Phaser {
         preUpdate(): void;
         stopScroll(): void;
         update(): void;
+        z: nummber;
     }
 
     class Time {

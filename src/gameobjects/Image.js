@@ -48,6 +48,11 @@ Phaser.Image = function (game, x, y, key, frame) {
     this.type = Phaser.IMAGE;
 
     /**
+    * @property {number} z - The z-depth value of this object within its Group (remember the World is a Group as well). No two objects in a Group can have the same z value.
+    */
+    this.z = 0;
+
+    /**
     * @property {Phaser.Events} events - The Events you can subscribe to that are dispatched when certain things happen on this Image or its components.
     */
     this.events = new Phaser.Events(this);

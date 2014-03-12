@@ -4,7 +4,7 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload:
 
 function preload() {
 
-    game.load.spritesheet('ninja-tiles', 'assets/physics/ninja-tiles.png', 128, 128, 34);
+    game.load.spritesheet('ninja-tiles', 'assets/physics/ninja-tiles128.png', 128, 128, 34);
     game.load.image('a', 'assets/sprites/firstaid.png');
 
 }
@@ -34,11 +34,11 @@ function create() {
     game.physics.ninja.enableAABB(sprite1);
 
     //	But you can change it to either a Tile or a Circle
-    tile1 = game.add.sprite(0, 550, 'ninja-tiles', 14);
+    tile1 = game.add.sprite(0, 500, 'ninja-tiles', 14);
     tile1.width = 100;
     tile1.height = 100;
 
-    game.physics.ninja.enableTile(tile1, 14);
+    game.physics.ninja.enableTile(tile1, tile1.frame);
 
     // sprite1.body.aabb.friction = 0;
 
@@ -107,9 +107,9 @@ function update() {
 
 function render() {
 
-	game.debug.text(sprite1.body.shape.velocity.x, 32, 32);
-	game.debug.text(sprite1.body.shape.velocity.y, 32, 64);
-	game.debug.text(game.math.radToDeg(sprite1.body.angle), 32, 96);
+	// game.debug.text(sprite1.body.shape.velocity.x, 32, 32);
+	// game.debug.text(sprite1.body.shape.velocity.y, 32, 64);
+	// game.debug.text(game.math.radToDeg(sprite1.body.angle), 32, 96);
 
 	// tile1.render(game.context, 'ninja-tiles');
 	// tile2.render(game.context, 'ninja-tiles');

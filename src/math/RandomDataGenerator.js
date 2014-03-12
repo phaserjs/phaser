@@ -212,7 +212,7 @@ Phaser.RandomDataGenerator.prototype = {
     * @return {any} A random member of the array.
     */
     pick: function (ary) {
-        return ary[this.integerInRange(0, ary.length)];
+        return ary[this.integerInRange(0, ary.length - 1)];
     },
 
     /**
@@ -222,7 +222,7 @@ Phaser.RandomDataGenerator.prototype = {
     * @return {any} A random member of the array.
     */
     weightedPick: function (ary) {
-        return ary[~~(Math.pow(this.frac(), 2) * ary.length)];
+        return ary[~~(Math.pow(this.frac(), 2) * (ary.length - 1))];
     },
 
     /**

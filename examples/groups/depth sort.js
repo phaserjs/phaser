@@ -29,52 +29,36 @@ function create() {
     //  This group will hold the main player + all the tree sprites to depth sort against
     group = game.add.group();
 
-    //  Create some trees, each in a unique location (otherwise we'll get sort flicker)
-    for (var i = 0; i < 100; i++)
+    //  Create some trees, each in a unique location
+    for (var i = 0; i < 200; i++)
     {
         createUniqueLocation();
     }
 
-    //  The player
-    sprite = group.create(300, 200, 'phaser');
+    sprite = group.create(300, 28, 'phaser');
 
     group.sort();
-
-    dump();
-
-    // group.children[0].alpha = 0.2;
-    // group.children[100].alpha = 0.2;
 
     //  Move it
     cursors = game.input.keyboard.createCursorKeys();
 
 }
 
-function dump() {
-
-    for (var i = 0; i < group.children.length; i++)
-    {
-        console.log('Tree',i,'at',group.children[i].y);
-    }
-
-}
-
 function createUniqueLocation() {
 
-    var x = game.math.snapTo(game.world.randomX, 32) / 32;
-    var y = game.math.snapTo(game.world.randomY, 32) / 32;
-    y--;
+    do {
+        var x = game.math.snapTo(game.world.randomX, 32) / 32;
+        var y = game.math.snapTo(game.world.randomY, 32) / 32;
 
-    var idx = (y * 19) + x;
+        if (y > 17)
+        {
+            y = 17;
+        }
 
-    while (locs.indexOf(idx) !== -1)
-    {
-        x = game.math.snapTo(game.world.randomX, 32) / 32;
-        y = game.math.snapTo(game.world.randomY, 32) / 32;
-        y--;
-        idx = (y * 19) + x;
+        var idx = (y * 17) + x;
     }
-    
+    while (locs.indexOf(idx) !== -1)
+
     locs.push(idx);
 
     group.create(x * 32, y * 32, 'trees', game.rnd.integerInRange(0, 7));
@@ -101,16 +85,12 @@ function update() {
         sprite.y += 2;
     }
 
-    // if (sprite.y !== oldY)
-    // {
-        group.sort();
-        // oldY = sprite.y;
-    // }
+    group.sort('y', Phaser.Group.SORT_ASCENDING);
 
 }
 
 function render() {
 
-    game.debug.text(sprite.y, 32, 32);
+    game.debug.text('Sprite z-depth: ' + sprite.z, 10, 20);
 
 }

@@ -4,12 +4,6 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-/**
-* @const
-* @type {number}
-*/
-Phaser.Physics.P2.LIME_CORONA_JSON = 0;
-
 //  Add an extra properties to p2 that we need
 p2.Body.prototype.parent = null;
 p2.Spring.prototype.parent = null;
@@ -28,7 +22,7 @@ Phaser.Physics.P2 = function (game, config) {
     */
     this.game = game;
 
-    if (typeof config === 'undefined')
+    if (typeof config === 'undefined' || !config.hasOwnProperty('gravity') || !config.hasOwnProperty('broadphase'))
     {
         config = { gravity: [0, 0], broadphase: new p2.SAPBroadphase() };
     }
@@ -48,7 +42,7 @@ Phaser.Physics.P2 = function (game, config) {
     /**
     * @property {Phaser.InversePointProxy} gravity - The gravity applied to all bodies each step.
     */
-    this.gravity = new Phaser.Physics.P2.InversePointProxy(game, this.world.gravity);
+    this.gravity = new Phaser.Physics.P2.InversePointProxy(this, this.world.gravity);
 
     /**
     * @property {p2.Body} bounds - The bounds body contains the 4 walls that border the World. Define or disable with setBounds.
@@ -126,6 +120,15 @@ Phaser.Physics.P2 = function (game, config) {
     */
     this.onEndContact = new Phaser.Signal();
 
+    //  Pixel to meter function overrides
+    if (config.hasOwnProperty('mpx') && config.hasOwnProperty('pxm') && config.hasOwnProperty('mpxi') && config.hasOwnProperty('pxmi'))
+    {
+        this.mpx = config.mpx;
+        this.mpxi = config.mpxi;
+        this.pxm = config.pxm;
+        this.pxmi = config.pxmi;
+    }
+
     //  Hook into the World events
     this.world.on("postStep", this.postStepHandler, this);
     this.world.on("postBroadphase", this.postBroadphaseHandler, this);
@@ -157,7 +160,90 @@ Phaser.Physics.P2 = function (game, config) {
 
 };
 
+/**
+* @const
+* @type {number}
+*/
+Phaser.Physics.P2.LIME_CORONA_JSON = 0;
+
 Phaser.Physics.P2.prototype = {
+
+    /**
+    * This will create an Arcade Physics body on the given game object or array of game objects.
+    * A game object can only have 1 physics body active at any one time, and it can't be changed until the object is destroyed.
+    *
+    * @method Phaser.Physics.Arcade#enable
+    * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array or Group of objects, a body will be created on every child that has a `body` property.
+    * @param {boolean} [debug=false] - Create a debug object to go with this body?
+    * @param {boolean} [children=true] - Should a body be created on all children of this object? If true it will recurse down the display list as far as it can go.
+    */
+    enable: function (object, debug, children) {
+
+        if (typeof debug === 'undefined') { debug = false; }
+        if (typeof children === 'undefined') { children = true; }
+
+        var i = 1;
+
+        if (Array.isArray(object))
+        {
+            i = object.length;
+
+            while (i--)
+            {
+                if (object[i] instanceof Phaser.Group)
+                {
+                    //  If it's a Group then we do it on the children regardless
+                    this.enable(object[i].children, debug, children);
+                }
+                else
+                {
+                    this.enableBody(object[i], debug);
+
+                    if (children && object[i].hasOwnProperty('children') && object[i].children.length > 0)
+                    {
+                        this.enable(object[i], debug, true);
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (object instanceof Phaser.Group)
+            {
+                //  If it's a Group then we do it on the children regardless
+                this.enable(object.children, debug, children);
+            }
+            else
+            {
+                this.enableBody(object, debug);
+
+                if (children && object.hasOwnProperty('children') && object.children.length > 0)
+                {
+                    this.enable(object.children, debug, true);
+                }
+            }
+        }
+
+    },
+
+    /**
+    * Creates an Arcade Physics body on the given game object.
+    * A game object can only have 1 physics body active at any one time, and it can't be changed until the body is nulled.
+    *
+    * @method Phaser.Physics.Arcade#enableBody
+    * @param {object} object - The game object to create the physics body on. A body will only be created if this object has a null `body` property.
+    * @param {boolean} debug - Create a debug object to go with this body?
+    */
+    enableBody: function (object, debug) {
+
+        if (object.hasOwnProperty('body') && object.body === null)
+        {
+            object.body = new Phaser.Physics.P2.Body(this.game, object, object.x, object.y, 1);
+            object.body.debug = debug
+            object.anchor.set(0.5);
+        }
+
+    },
 
     /**
     * Handles a p2 postStep event.
@@ -375,12 +461,12 @@ Phaser.Physics.P2.prototype = {
                 this.bounds.removeShape(shape);
             }
 
-            this.bounds.position[0] = this.game.math.px2pi(cx);
-            this.bounds.position[1] = this.game.math.px2pi(cy);
+            this.bounds.position[0] = this.pxmi(cx);
+            this.bounds.position[1] = this.pxmi(cy);
         }
         else
         {
-            this.bounds = new p2.Body({ mass: 0, position:[this.game.math.px2pi(cx), this.game.math.px2pi(cy)] });
+            this.bounds = new p2.Body({ mass: 0, position:[this.pxmi(cx), this.pxmi(cy)] });
         }
 
         if (left)
@@ -394,7 +480,7 @@ Phaser.Physics.P2.prototype = {
                 // this._wallShapes[0].collisionMask = this.everythingCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[0], [this.game.math.px2pi(-hw), 0], 1.5707963267948966 );
+            this.bounds.addShape(this._wallShapes[0], [this.pxmi(-hw), 0], 1.5707963267948966 );
         }
 
         if (right)
@@ -408,7 +494,7 @@ Phaser.Physics.P2.prototype = {
                 // this._wallShapes[1].collisionMask = this.everythingCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[1], [this.game.math.px2pi(hw), 0], -1.5707963267948966 );
+            this.bounds.addShape(this._wallShapes[1], [this.pxmi(hw), 0], -1.5707963267948966 );
         }
 
         if (top)
@@ -422,7 +508,7 @@ Phaser.Physics.P2.prototype = {
                 // this._wallShapes[2].collisionMask = this.everythingCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[2], [0, this.game.math.px2pi(-hh)], -3.141592653589793 );
+            this.bounds.addShape(this._wallShapes[2], [0, this.pxmi(-hh)], -3.141592653589793 );
         }
 
         if (bottom)
@@ -436,7 +522,7 @@ Phaser.Physics.P2.prototype = {
                 // this._wallShapes[3].collisionMask = this.everythingCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[3], [0, this.game.math.px2pi(hh)] );
+            this.bounds.addShape(this._wallShapes[3], [0, this.pxmi(hh)] );
         }
 
         this.world.addBody(this.bounds);
@@ -895,7 +981,220 @@ Phaser.Physics.P2.prototype = {
 
     },
 
+    /**
+    * Converts all of the polylines objects inside a Tiled ObjectGroup into physics bodies that are added to the world.
+    * Note that the polylines must be created in such a way that they can withstand polygon decomposition.
+    *
+    * @method Phaser.Tilemap#createCollisionObjects
+    * @param {Phaser.Tilemap} map - The Tilemap to get the map data from.
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to map.currentLayer.
+    * @param {boolean} [addToWorld=true] - If true it will automatically add each body to the world.
+    * @return {array} An array of the Phaser.Physics.Body objects that have been created.
+    */
+    convertCollisionObjects: function (map, layer, addToWorld) {
 
+        if (typeof addToWorld === 'undefined') { addToWorld = true; }
+
+        layer = map.getLayer(layer);
+
+        var output = [];
+
+        for (var i = 0, len = map.collision[layer].length; i < len; i++)
+        {
+            // name: json.layers[i].objects[v].name,
+            // x: json.layers[i].objects[v].x,
+            // y: json.layers[i].objects[v].y,
+            // width: json.layers[i].objects[v].width,
+            // height: json.layers[i].objects[v].height,
+            // visible: json.layers[i].objects[v].visible,
+            // properties: json.layers[i].objects[v].properties,
+            // polyline: json.layers[i].objects[v].polyline
+
+            var object = map.collision[layer][i];
+
+            var body = this.createBody(object.x, object.y, 0, addToWorld, {}, object.polyline);
+
+            if (body)
+            {
+                output.push(body);
+            }
+
+        }
+
+        return output;
+
+    },
+
+    /**
+    * Clears all physics bodies from the given TilemapLayer that were created with `World.convertTilemap`.
+    *
+    * @method Phaser.Physics.P2#clearTilemapLayerBodies
+    * @param {Phaser.Tilemap} map - The Tilemap to get the map data from.
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to map.currentLayer.
+    */
+    clearTilemapLayerBodies: function (map, layer) {
+
+        layer = map.getLayer(layer);
+
+        var i = map.layers[layer].bodies.length;
+
+        while (i--)
+        {
+            map.layers[layer].bodies[i].destroy();
+        }
+
+        map.layers[layer].bodies.length = [];
+
+    },
+
+    /**
+    * Goes through all tiles in the given Tilemap and TilemapLayer and converts those set to collide into physics bodies.
+    * Only call this *after* you have specified all of the tiles you wish to collide with calls like Tilemap.setCollisionBetween, etc.
+    * Every time you call this method it will destroy any previously created bodies and remove them from the world.
+    * Therefore understand it's a very expensive operation and not to be done in a core game update loop.
+    *
+    * @method Phaser.Physics.P2#convertTilemap
+    * @param {Phaser.Tilemap} map - The Tilemap to get the map data from.
+    * @param {number|string|Phaser.TilemapLayer} [layer] - The layer to operate on. If not given will default to map.currentLayer.
+    * @param {boolean} [addToWorld=true] - If true it will automatically add each body to the world, otherwise it's up to you to do so.
+    * @param {boolean} [optimize=true] - If true adjacent colliding tiles will be combined into a single body to save processing. However it means you cannot perform specific Tile to Body collision responses.
+    * @return {array} An array of the Phaser.Physics.P2.Body objects that were created.
+    */
+    convertTilemap: function (map, layer, addToWorld, optimize) {
+
+        layer = map.getLayer(layer);
+
+        if (typeof addToWorld === 'undefined') { addToWorld = true; }
+        if (typeof optimize === 'undefined') { optimize = true; }
+
+        //  If the bodies array is already populated we need to nuke it
+        this.clearTilemapLayerBodies(map, layer);
+
+        var width = 0;
+        var sx = 0;
+        var sy = 0;
+
+        for (var y = 0, h = map.layers[layer].height; y < h; y++)
+        {
+            width = 0;
+
+            for (var x = 0, w = map.layers[layer].width; x < w; x++)
+            {
+                var tile = map.layers[layer].data[y][x];
+
+                if (tile)
+                {
+                    if (optimize)
+                    {
+                        right = map.getTileRight(layer, x, y);
+
+                        if (width === 0)
+                        {
+                            sx = tile.x * tile.width;
+                            sy = tile.y * tile.height;
+                            width = tile.width;
+                        }
+
+                        if (right && right.collides)
+                        {
+                            width += tile.width;
+                        }
+                        else
+                        {
+                            var body = this.createBody(sx, sy, 0, false);
+
+                            body.addRectangle(width, tile.height, width / 2, tile.height / 2, 0);
+
+                            if (addToWorld)
+                            {
+                                this.addBody(body);
+                            }
+
+                            map.layers[layer].bodies.push(body);
+
+                            width = 0;
+                        }
+                    }
+                    else
+                    {
+                        var body = this.createBody(tile.x * tile.width, tile.y * tile.height, 0, false);
+
+                        body.addRectangle(tile.width, tile.height, tile.width / 2, tile.height / 2, 0);
+
+                        if (addToWorld)
+                        {
+                            this.addBody(body);
+                        }
+
+                        map.layers[layer].bodies.push(body);
+                    }
+                }
+            }
+        }
+
+        return map.layers[layer].bodies;
+
+    },
+
+    /**
+    * Convert p2 physics value (meters) to pixel scale.
+    * By default Phaser uses a scale of 20px per meter.
+    * If you need to modify this you can over-ride these functions via the Physics Configuration object.
+    * 
+    * @method Phaser.Physics.P2#mpx
+    * @param {number} v - The value to convert.
+    * @return {number} The scaled value.
+    */
+    mpx: function (v) {
+
+        return v *= 20;
+
+    },
+
+    /**
+    * Convert pixel value to p2 physics scale (meters).
+    * By default Phaser uses a scale of 20px per meter.
+    * If you need to modify this you can over-ride these functions via the Physics Configuration object.
+    * 
+    * @method Phaser.Physics.P2#pxm
+    * @param {number} v - The value to convert.
+    * @return {number} The scaled value.
+    */
+    pxm: function (v) {
+
+        return v * 0.05;
+
+    },
+
+    /**
+    * Convert p2 physics value (meters) to pixel scale and inverses it.
+    * By default Phaser uses a scale of 20px per meter.
+    * If you need to modify this you can over-ride these functions via the Physics Configuration object.
+    * 
+    * @method Phaser.Physics.P2#mpxi
+    * @param {number} v - The value to convert.
+    * @return {number} The scaled value.
+    */
+    mpxi: function (v) {
+
+        return v *= -20;
+
+    },
+
+    /**
+    * Convert pixel value to p2 physics scale (meters) and inverses it.
+    * By default Phaser uses a scale of 20px per meter.
+    * If you need to modify this you can over-ride these functions via the Physics Configuration object.
+    * 
+    * @method Phaser.Physics.P2#pxmi
+    * @param {number} v - The value to convert.
+    * @return {number} The scaled value.
+    */
+    pxmi: function (v) {
+
+        return v * -0.05;
+
+    }
 
 };
 

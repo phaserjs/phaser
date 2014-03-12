@@ -44,6 +44,18 @@ Phaser.Physics.Ninja.Circle = function (body, x, y, radius) {
     this.radius = radius;
 
     /**
+    * @property {number} xw - Half the width.
+    * @readonly
+    */
+    this.xw = radius;
+
+    /**
+    * @property {number} xw - Half the height.
+    * @readonly
+    */
+    this.yw = radius;
+
+    /**
     * @property {number} width - The width.
     * @readonly
     */
@@ -199,7 +211,7 @@ Phaser.Physics.Ninja.Circle.prototype = {
     */
     collideWorldBounds: function () {
 
-        var dx = this.system.bounds.x - (this.pos.x - this.xw);
+        var dx = this.system.bounds.x - (this.pos.x - this.radius);
 
         if (0 < dx)
         {
@@ -207,7 +219,7 @@ Phaser.Physics.Ninja.Circle.prototype = {
         }
         else
         {
-            dx = (this.pos.x + this.xw) - this.system.bounds.width;
+            dx = (this.pos.x + this.radius) - this.system.bounds.width;
 
             if (0 < dx)
             {
@@ -215,7 +227,7 @@ Phaser.Physics.Ninja.Circle.prototype = {
             }
         }
 
-        var dy = this.system.bounds.y - (this.pos.y - this.yw);
+        var dy = this.system.bounds.y - (this.pos.y - this.radius);
 
         if (0 < dy)
         {
@@ -223,7 +235,7 @@ Phaser.Physics.Ninja.Circle.prototype = {
         }
         else
         {
-            dy = (this.pos.y + this.yw) - this.system.bounds.height;
+            dy = (this.pos.y + this.radius) - this.system.bounds.height;
 
             if (0 < dy)
             {

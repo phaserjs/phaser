@@ -89,11 +89,12 @@ Significant API changes:
 * Animation.looped has been renamed to Animation.loop. It's a boolean you can toggle at run-time to turn on/off animation looping.
 * Sprite.damage will now kill the Sprite if health is less than or equal to 0 (before it would only kill if less than zero)
 * By default Sprites no longer check if they are within the world bounds. It's quite an expensive process (calling getBounds every frame), so you have to enable directly.
+* The main Game class has been modified so that the update methods no longer have any if/else checks in them. Now split into coreUpdate, etc.
 
 
 New features:
 
-* Phaser.Image is a brand new display object perfect for logos, backgrounds, etc. You can scale, rotate, tint, blend an get input events from an Image, but it has no animation, physics body.
+* Phaser.Image is a brand new display object perfect for logos, backgrounds, etc. You can scale, rotate, tint, blend an get input events from an Image, but it has no animation or physics body.
 * You can now use the hitArea property on Sprites and Image objects. hitArea can be a geometry object (Rectangle, Circle, Polygon, Ellipse) and is used in pointerOver checks.
 * InputManager.getLocalPosition(displayObject, pointer, output) will return the local coordinates of the specified displayObject and pointer.
 * InputManager.hitTest will test for pointer hits against a Sprite/Image, its hitArea (if set) or any of its children.
@@ -148,6 +149,7 @@ New features:
 * Tweens are now bound to their own TweenManager, not always the global game one. So you can create your own managers now (for you clark :)
 * ScaleManager.fullScreenTarget allows you to change the DOM element that the fullscreen API is called on (feature request #526)
 * Merged Georges p2 BodyDebug and reformatted for jshint pass. Looks awesome :)
+* ArcadePhysics.Body has a new gravityScale property, which is a modifier multiplied against the world gravity value on a Body.
 
 
 Updates:
@@ -178,6 +180,7 @@ Updates:
 * Animation.stop has a new parameter: dispatchComplete. If true it'll dispatch an Animation.onComplete event.
 * TileSprites now have a physics body property and call it in the pre and post updates. As with all physics bodies it's null by default.
 * json is now the default tilemap format when not defined (thanks RyanDansie, #528)
+* The Particle Emitter now remembers the frames given to it and resets it when a new particle is emitted.
 
 
 Bug Fixes:
