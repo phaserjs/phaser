@@ -1157,7 +1157,7 @@ Phaser.Tilemap.prototype = {
         {
             this._results[index].index = this._tempB;
         }
-        else if (value.index === this._tempB)
+        if (value.index === this._tempB)
         {
             this._results[index].index = this._tempA;
         }
