@@ -1775,7 +1775,7 @@ declare module Phaser {
         sound(key: string, volume?: number, loop?: boolean, connect?: boolean): Phaser.Sound;
         sprite(x: number, y: number, key?: any, frame?: any): Phaser.Sprite;
         spriteBatch(parent: any, name?: String, addToStage?: boolean): Phaser.Group;
-        text(x: number, y: number, text: string, style: Object): Phaser.Text;
+        text(x: number, y: number, text: string, style: Phaser): Phaser.Text;
         tileMap(key: string, tilesets: any): Phaser.Tilemap;
         tileSprite(x: number, y: number, width: number, height: number, key: any, frame: any): Phaser.TileSprite;
         tween(obj: Object): Phaser.Tween;
@@ -1885,7 +1885,7 @@ declare module Phaser {
         postUpdate(): void;
         preUpdate(): void;
         update(): void;
-        z: nummber;
+        z: number;
     }
 
     class Group extends PIXI.DisplayObjectContainer {
@@ -1961,7 +1961,7 @@ declare module Phaser {
         swap(child1: any, child2: any): boolean;
         update(): void;
         updateZ(): void;
-        z: nummber;
+        z: number;
     }
 
     class Image extends PIXI.Sprite {
@@ -2007,7 +2007,7 @@ declare module Phaser {
         reset(x: number, y: number): Phaser.Image;
         revive(): Phaser.Image;
         update(): void;
-        z: nummber;
+        z: number;
     }
 
     class Input {
@@ -3318,7 +3318,7 @@ declare module Phaser {
         reset(x: number, y: number, health?: number): Phaser.Sprite;
         revive(health?: number): Phaser.Sprite;
         update(): void;
-        z: nummber;
+        z: number;
     }
 
     class SpriteBatch extends Phaser.Group {
@@ -3516,7 +3516,7 @@ declare module Phaser {
         setShadow(x?: number, y?: number, color?: Object, blur?: number): void;
         setStyle(style?: { font?: string; fill?: Object; align?: string; stroke?: string; strokeThickness?: number; wordWrap?: boolean; wordWrapWidth?: number; shadowOffsetX?: number; shadowOffsetY?: number; shadowColor?: string; shadowBlur?: number; }): void;
         update(): void;
-        z: nummber;
+        z: number;
     }
 
     class Tile {
@@ -3690,7 +3690,7 @@ declare module Phaser {
         renderDebug(): void;
         resizeWorld(): void;
         updateMax(): void;
-        z: nummber;
+        z: number;
     }
 
     class TilemapParser {
@@ -3754,7 +3754,7 @@ declare module Phaser {
         preUpdate(): void;
         stopScroll(): void;
         update(): void;
-        z: nummber;
+        z: number;
     }
 
     class Time {
@@ -3936,7 +3936,7 @@ declare module Phaser {
             geom(object: any, color?: string, fiiled?: boolean, forceType?: number): void;
             inputInfo(x: number, y: number, color?: string): void;
             lineInfo(line: Phaser.Line, x: number, y: number, color?: string): void;
-            key(key: Phaser.Key, x?: number, y?: number, color?: string) {
+            key(key: Phaser.Key, x?: number, y?: number, color?: string);
             line(text: string): void;
             pixel(x: number, y: number, color?: string): void;
             pointer(pointer: Phaser.Pointer, hideIfUp?: boolean, downColor?: string, upColor?: string, color?: string): void;
