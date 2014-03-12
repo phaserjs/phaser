@@ -324,19 +324,23 @@ Phaser.Physics.P2.prototype = {
     * Handles a p2 begin contact event.
     *
     * @method Phaser.Physics.P2#beginContactHandler
-    * @private
     * @param {object} event - The event data.
     */
     beginContactHandler: function (event) {
 
-            // console.log('beginContactHandler');
-            // console.log(event);
-
         if (event.bodyA.id > 1 && event.bodyB.id > 1)
         {
-            // console.log('beginContactHandler');
-            // console.log(event.bodyA.parent.sprite.key);
-            // console.log(event.bodyB.parent.sprite.key);
+            this.onBeginContact.dispatch(event.bodyA, event.bodyB, event.shapeA, event.shapeB, event.contactEquations);
+
+            if (event.bodyA.parent)
+            {
+                event.bodyA.parent.onBeginContact.dispatch(event.bodyB.parent, event.shapeA, event.shapeB, event.contactEquations);
+            }
+
+            if (event.bodyB.parent)
+            {
+                event.bodyB.parent.onBeginContact.dispatch(event.bodyA.parent, event.shapeB, event.shapeA, event.contactEquations);
+            }
         }
 
     },
@@ -345,19 +349,23 @@ Phaser.Physics.P2.prototype = {
     * Handles a p2 end contact event.
     *
     * @method Phaser.Physics.P2#endContactHandler
-    * @private
     * @param {object} event - The event data.
     */
     endContactHandler: function (event) {
 
-            // console.log('endContactHandler');
-            // console.log(event);
-
-
         if (event.bodyA.id > 1 && event.bodyB.id > 1)
         {
-            // console.log('endContactHandler');
-            // console.log(event);
+            this.onEndContact.dispatch(event.bodyA, event.bodyB, event.shapeA, event.shapeB);
+
+            if (event.bodyA.parent)
+            {
+                event.bodyA.parent.onEndContact.dispatch(event.bodyB.parent, event.shapeA, event.shapeB);
+            }
+
+            if (event.bodyB.parent)
+            {
+                event.bodyB.parent.onEndContact.dispatch(event.bodyA.parent, event.shapeB, event.shapeA);
+            }
         }
 
     },
@@ -817,7 +825,7 @@ Phaser.Physics.P2.prototype = {
 
         while (i--)
         {
-            output.push(this.world.springs[i]);
+            output.push(this.world.springs[i].parent);
         }
 
         return output;
@@ -828,7 +836,7 @@ Phaser.Physics.P2.prototype = {
     * Populates and returns an array of all current Constraints in the world.
     *
     * @method Phaser.Physics.P2#getConstraints
-    * @return {array<Phaser.Physics.P2.Constraints>} An array containing all current Constraints in the world.
+    * @return {array<Phaser.Physics.P2.Constraint>} An array containing all current Constraints in the world.
     */
     getConstraints: function () {
 
@@ -837,7 +845,7 @@ Phaser.Physics.P2.prototype = {
 
         while (i--)
         {
-            output.push(this.world.springs[i]);
+            output.push(this.world.constraints[i].parent);
         }
 
         return output;
@@ -898,6 +906,12 @@ Phaser.Physics.P2.prototype = {
 
     },
 
+    /**
+    * Creates a Collision Group for the wall shapes.
+    *
+    * @method Phaser.Physics.P2#createCollisionGroup
+    * @protected
+    */
     createCollisionGroup: function () {
 
         var bitmask = Math.pow(2, this._collisionGroupID);

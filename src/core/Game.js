@@ -463,10 +463,12 @@ Phaser.Game.prototype = {
         var v = Phaser.DEV_VERSION;
         var r = 'Canvas';
         var a = 'HTML Audio';
+        var c = 1;
 
-        if (this.renderType == Phaser.WEBGL)
+        if (this.renderType === Phaser.WEBGL)
         {
             r = 'WebGL';
+            c++;
         }
         else if (this.renderType == Phaser.HEADLESS)
         {
@@ -476,20 +478,32 @@ Phaser.Game.prototype = {
         if (this.device.webAudio)
         {
             a = 'WebAudio';
+            c++;
         }
 
         if (this.device.chrome)
         {
             var args = [
-                '%c %c %c  Phaser v' + v + ' - ' + r + ' - ' + a + '  %c %c ' + ' http://phaser.io  %c %c ',
+                '%c %c %c Phaser v' + v + ' - ' + r + ' - ' + a + '  %c %c ' + ' http://phaser.io  %c %c ♥%c♥%c♥ ',
                 'background: #0cf300',
                 'background: #00bc17',
                 'color: #ffffff; background: #00711f;',
                 'background: #00bc17',
                 'background: #0cf300',
-                'background: #00bc17',
-                'background: #00711f'
+                'background: #00bc17'
             ];
+
+            for (var i = 0; i < 3; i++)
+            {
+                if (i < c)
+                {
+                    args.push('color: #ff2424; background: #fff');
+                }
+                else
+                {
+                    args.push('color: #959595; background: #fff');
+                }
+            }
 
             console.log.apply(console, args);
         }

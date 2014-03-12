@@ -87,6 +87,16 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     this.onImpact = new Phaser.Signal();
 
     /**
+    * @property {Phaser.Signal} onBeginContact - Dispatched when a first contact is created between two bodies. This event is fired before the step has been done.
+    */
+    this.onBeginContact = new Phaser.Signal();
+
+    /**
+    * @property {Phaser.Signal} onEndContact - Dispatched when final contact occurs between two bodies. This event is fired before the step has been done.
+    */
+    this.onEndContact = new Phaser.Signal();
+
+    /**
     * @property {array} collidesWith - Array of CollisionGroups that this Bodies shapes collide with.
     * @private
     */
