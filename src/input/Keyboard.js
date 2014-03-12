@@ -117,6 +117,24 @@ Phaser.Keyboard.prototype = {
     },
 
     /**
+    * Removes a Key object from the Keyboard manager.
+    *
+    * @method Phaser.Keyboard#removeKey
+    * @param {number} keycode - The keycode of the key to remove, i.e. Phaser.Keyboard.UP or Phaser.Keyboard.SPACEBAR
+    */
+    removeKey: function (keycode) {
+
+        if (this._keys[keycode])
+        {
+                
+            delete (this._keys[keycode]);
+            
+            this.removeKeyCapture(keycode);
+        }
+
+    },
+
+    /**
     * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right.
     *
     * @method Phaser.Keyboard#createCursorKeys
