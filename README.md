@@ -90,6 +90,7 @@ Significant API changes:
 * Sprite.damage will now kill the Sprite if health is less than or equal to 0 (before it would only kill if less than zero)
 * By default Sprites no longer check if they are within the world bounds. It's quite an expensive process (calling getBounds every frame), so you have to enable directly.
 * The main Game class has been modified so that the update methods no longer have any if/else checks in them. Now split into coreUpdate, etc.
+* RandomDataGenerator is now started on Game creation instead of boot. You can pass a seed array in the game config object (feature request #547)
 
 
 New features:

@@ -284,6 +284,8 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
             this.antialias = antialias;
         }
 
+        this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
+
         this.state = new Phaser.StateManager(this, state);
     }
 
@@ -355,6 +357,11 @@ Phaser.Game.prototype = {
             this.physicsConfig = config['physicsConfig'];
         }
 
+        if (config['seed'])
+        {
+            this.rnd = new Phaser.RandomDataGenerator(config['seed']);
+        }
+
         var state = null;
 
         if (config['state'])
@@ -396,7 +403,6 @@ Phaser.Game.prototype = {
 
             this.device = new Phaser.Device(this);
             this.math = Phaser.Math;
-            this.rnd = new Phaser.RandomDataGenerator([(Date.now() * Math.random()).toString()]);
 
             this.stage = new Phaser.Stage(this, this.width, this.height);
             this.scale = new Phaser.ScaleManager(this, this.width, this.height);
