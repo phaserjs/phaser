@@ -146,6 +146,7 @@ Phaser.Physics.prototype = {
         else if (system === Phaser.Physics.BOX2D && this.box2d === null)
         {
             //  Coming soon
+            this.box2d = new Phaser.Physics.Box2D(this.game);
         }
         else if (system === Phaser.Physics.CHIPMUNK && this.chipmunk === null)
         {
@@ -176,7 +177,6 @@ Phaser.Physics.prototype = {
 
         if (typeof system === 'undefined') { system = Phaser.Physics.ARCADE; }
         if (typeof debug === 'undefined') { debug = false; }
-
         if (system === Phaser.Physics.ARCADE)
         {
             this.arcade.enable(object);
@@ -188,6 +188,11 @@ Phaser.Physics.prototype = {
         else if (system === Phaser.Physics.NINJA && this.ninja)
         {
             this.ninja.enableAABB(object);
+        }
+
+        else if (system === Phaser.Physics.BOX2D && this.box2d)
+        {
+            this.box2d.enable(object, debug);
         }
 
     },
@@ -205,6 +210,11 @@ Phaser.Physics.prototype = {
         if (this.p2)
         {
             this.p2.update();
+        }
+
+        if (this.box2d)
+        {
+            this.box2d.update();
         }
 
     },
