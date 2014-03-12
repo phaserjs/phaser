@@ -3931,37 +3931,24 @@ declare module Phaser {
             lineHeight: number;
             renderShadow: boolean;
             //methods
-            line(text: string, x: number, y: number): void;
-            renderBodyInfo(sprite: Phaser.Sprite, x: number, y: Number, color?: string): void;
-            renderCameraInfo(camera: Phaser.Camera, x: number, y: number, color?: string): void;
-            renderCircle(circle: Phaser.Circle, color?: string): void;
-            renderInputInfo(x: number, y: number, color?: string): void;
-            renderLine(line: Phaser.Line, color: string): void;
-            renderLineInfo(line: Phaser.Line, x: number, y: number, color?: string): void;
-            renderPhysicsBody(body: Phaser.Physics.Arcade.Body, color?: string): void;
-            renderPixel(x: number, y: number, color?: string): void;
-            renderPoint(point: Phaser.Point, color?: string): void;
-            renderPointer(pointer: Phaser.Pointer, hideIfUp?: boolean, downColor?: string, upColor?: string, color?: string): void;
-            renderPointInfo(point: Phaser.Point, x: number, y: number, color?: string): void;
-            renderRectangle(rect: Phaser.Rectangle, color?: string, filled?: boolean): void;
-            renderShapeCircle(x: number, y: number, bodyAngle: number, shape: any, offset: any[], angle: number): void;
-            renderShapeConvex(x: number, y: number, bodyAngle: number, shape: any, offset: any[], angle: number): void;
-            renderShapeLine(x: number, y: number, bodyAngle: number, shape: any, offset: any[], angle: number): void;
-            renderShapeRectangle(x: number, y: number, bodyAngle: number, shape: any, offset: any[], angle: number): void;
-            renderSoundInfo(sound: Phaser.Sound, x: number, y: number, color?: string): void;
-            renderSpriteBounds(sprite: Phaser.Sprite, color?: string, filled?: boolean): void;
-            renderSpriteCoords(line: Phaser.Sprite, x: number, y: number, color?: string): void;
-            renderSpriteInfo(sprite: Phaser.Sprite, x: number, y: number, color?: string): void;
-            renderSpriteInputInfo(sprite: Phaser.Sprite, x: number, y: number, color?: string): void;
-            renderText(text: string, x: number, y: number, color?: string, font?: string): void;
-            splitline(text: string): void;
-            start(x?: number, y?: number, color?: string, columnWidth?:number): void;
-            stop(): void;
-
-            //depricated?
-            renderPolygon(polygon: any[], color?: string): void;
-            renderQuadTree(quadtree: Phaser.QuadTree, color: string): void;
-            renderShape(shape:any, x: number, y: number, angle: number);
+            bodyInfo(sprite: Phaser.Sprite, x: number, y: Number, color?: string): void;
+            cameraInfo(camera: Phaser.Camera, x: number, y: number, color?: string): void;
+            geom(object: any, color?: string, fiiled?: boolean, forceType?: number): void;
+            inputInfo(x: number, y: number, color?: string): void;
+            lineInfo(line: Phaser.Line, x: number, y: number, color?: string): void;
+            key(key: Phaser.Key, x?: number, y?: number, color?: string) {
+            line(text: string): void;
+            pixel(x: number, y: number, color?: string): void;
+            pointer(pointer: Phaser.Pointer, hideIfUp?: boolean, downColor?: string, upColor?: string, color?: string): void;
+            quadTree(quadtree: Phaser.QuadTree, color?: string): void;
+            soundInfo(sound: Phaser.Sound, x: number, y: number, color?: string): void;
+            spriteBounds(sprite: Phaser.Sprite, color?: string, filled?: boolean): void;
+            spriteBounds(sprite: Phaser.Image, color?: string, filled?: boolean): void;
+            spriteCoords(sprite: Phaser.Sprite, x: number, y: number, color?: string): void;
+            spriteCoords(image: Phaser.Image, x: number, y: number, color?: string): void;
+            spriteInfo(sprite: Phaser.Sprite, x: number, y: number, color?: string): void;
+            spriteInputInfo(sprite: Phaser.Sprite, x: number, y: number, color?: string): void;
+            text(text: string, x: number, y: number, color?: string, font?: string): void;
         }
     }
 
