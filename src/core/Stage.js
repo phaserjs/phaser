@@ -288,11 +288,8 @@ Phaser.Stage.prototype.checkVisibility = function () {
         document.addEventListener(this._hiddenVar, this._onChange, false);
     }
 
-    if (window['onpagehide'])
-    {
-        window.onpagehide = this._onChange;
-        window.onpageshow = this._onChange;
-    }
+    window.onpagehide = this._onChange;
+    window.onpageshow = this._onChange;
 
     window.onblur = this._onChange;
     window.onfocus = this._onChange;
@@ -315,11 +312,11 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
     {
         if (event.type === 'pagehide' || event.type === 'blur')
         {
-            this.game.gamePaused(event.timeStamp);
+            this.game.focusLoss(event);
         }
         else if (event.type === 'pageshow' || event.type === 'focus')
         {
-            this.game.gameResumed(event.timeStamp);
+            this.game.focusGain(event);
         }
 
         return;
@@ -327,11 +324,11 @@ Phaser.Stage.prototype.visibilityChange = function (event) {
 
     if (document.hidden || document.mozHidden || document.msHidden || document.webkitHidden)
     {
-        this.game.gamePaused(event.timeStamp);
+        this.game.gamePaused(event);
     }
     else
     {
-        this.game.gameResumed(event.timeStamp);
+        this.game.gameResumed(event);
     }
 
 }

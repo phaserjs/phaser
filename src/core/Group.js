@@ -290,17 +290,14 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
         if (this.physicsBodyType === Phaser.Physics.ARCADE)
         {
             this.game.physics.arcade.enable(child);
-            // child.body = new Phaser.Physics.Arcade.Body(child);
         }
         else if (this.physicsBodyType === Phaser.Physics.NINJA && this.game.physics.ninja)
         {
             this.game.physics.ninja.enable(child);
-            // child.body = new Phaser.Physics.Ninja.Body(this.game.physics.ninja, child, 1);
         }
         else if (this.physicsBodyType === Phaser.Physics.P2JS && this.game.physics.p2)
         {
             this.game.physics.p2.enable(child);
-            // child.body = new Phaser.Physics.P2.Body(this.game, child, x, y, 1);
         }
     }
 

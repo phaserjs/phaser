@@ -4,79 +4,95 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: p
 function preload() {
 
     game.load.image('stars', 'assets/misc/starfield.jpg');
-    game.load.image('ship', 'assets/sprites/thrust_ship2.png');
+    game.load.spritesheet('ship', 'assets/sprites/humstar.png', 32, 32);
     game.load.image('ball', 'assets/sprites/shinyball.png');
-	game.load.spritesheet('diamonds', 'assets/sprites/diamonds32x24x5.png', 32, 24);
 
 }
 
 var ship;
 var starfield;
-var diamonds;
 var cursors;
 
 function create() {
 
-    game.world.setBounds(0, 0, 1920, 1200);
+    game.world.setBounds(0, 0, 1600, 1200);
 
     game.physics.startSystem(Phaser.Physics.P2JS);
-    game.physics.p2.defaultRestitution = 0.8;
+    game.physics.p2.defaultRestitution = 0.9;
 
-    // starfield = game.add.tileSprite(0, 0, 800, 600, 'stars');
-    // starfield.fixedToCamera = true;
+    starfield = game.add.tileSprite(0, 0, 800, 600, 'stars');
+    starfield.fixedToCamera = true;
 
-    diamonds = game.add.group();
-    // diamonds.enableBody = true;
-    // diamonds.physicsBodyType = Phaser.Physics.P2JS;
+    balls = game.add.group();
+    balls.enableBody = true;
+    balls.physicsBodyType = Phaser.Physics.P2JS;
 
     for (var i = 0; i < 50; i++)
     {
-        // var d = diamonds.create(game.world.randomX, game.world.randomY, 'diamonds', game.rnd.integerInRange(0, 5));
-        // game.physics.p2.enable(d, true);
-
-        var d = diamonds.create(game.world.randomX, game.world.randomY, 'ball');
-        game.physics.p2.enable(d);
-        d.body.setCircle(16);
+        var ball = balls.create(game.world.randomX, game.world.randomY, 'ball');
+        ball.body.setCircle(16);
     }
 
-	ship = game.add.sprite(200, 200, 'ship');
+    ship = game.add.sprite(200, 200, 'ship');
+    ship.scale.set(2);
+    ship.smoothed = false;
+    ship.animations.add('fly', [0,1,2,3,4,5], 10, true);
+    ship.play('fly');
 
-	game.physics.p2.enable(ship, true);
+    //  Create our physics body - a 28px radius circle. Set the 'false' parameter below to 'true' to enable debugging
+    game.physics.p2.enable(ship, false);
+    ship.body.setCircle(28);
 
-	game.camera.follow(ship);
+    game.camera.follow(ship);
+
+    ship.body.onBeginContact.add(hitBall, this);
 
     cursors = game.input.keyboard.createCursorKeys();
 
 }
 
+function hitBall(body) {
+
+    // body.sprite.kill();
+
+}
+
 function update() {
+
+    ship.body.setZeroVelocity();
 
     if (cursors.left.isDown)
     {
-		ship.body.rotateLeft(100);
+        ship.body.moveLeft(200);
     }
     else if (cursors.right.isDown)
     {
-		ship.body.rotateRight(100);
-    }
-    else
-    {
-		ship.body.setZeroRotation();
+        ship.body.moveRight(200);
     }
 
     if (cursors.up.isDown)
     {
-    	ship.body.thrust(400);
+        ship.body.moveUp(200);
     }
     else if (cursors.down.isDown)
     {
-        ship.body.reverse(400);
+        ship.body.moveDown(200);
     }
 
-    // starfield.tilePosition.add(ship.body.velocity.x / 4, ship.body.velocity.y / 4);
+    if (!game.camera.atLimit.x)
+    {
+        starfield.tilePosition.x += (ship.body.velocity.x * 16) * game.time.physicsElapsed;
+    }
+
+    if (!game.camera.atLimit.y)
+    {
+        starfield.tilePosition.y += (ship.body.velocity.y * 16) * game.time.physicsElapsed;
+    }
 
 }
 
 function render() {
+
+    game.debug.text('World bodies: ' + game.physics.p2.total, 32, 32);
 
 }

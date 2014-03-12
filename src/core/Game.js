@@ -233,6 +233,26 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.stepCount = 0;
 
     /**
+    * @property {Phaser.Signal} onPause - This event is fired when the game pauses.
+    */
+    this.onPause = null;
+
+    /**
+    * @property {Phaser.Signal} onResume - This event is fired when the game resumes from a paused state.
+    */
+    this.onResume = null;
+
+    /**
+    * @property {Phaser.Signal} onBlur - This event is fired when the game no longer has focus (typically on page hide).
+    */
+    this.onBlur = null;
+
+    /**
+    * @property {Phaser.Signal} onFocus - This event is fired when the game has focus (typically on page show).
+    */
+    this.onFocus = null;
+
+    /**
     * @property {boolean} _paused - Is game paused?
     * @private
     * @default
@@ -398,6 +418,8 @@ Phaser.Game.prototype = {
 
             this.onPause = new Phaser.Signal();
             this.onResume = new Phaser.Signal();
+            this.onBlur = new Phaser.Signal();
+            this.onFocus = new Phaser.Signal();
 
             this.isBooted = true;
 
@@ -573,14 +595,14 @@ Phaser.Game.prototype = {
     */
     update: function (time) {
 
+        this.time.update(time);
+
         if (!this._paused && !this.pendingStep)
         {
             if (this.stepping)
             {
                 this.pendingStep = true;
             }
-
-            this.time.update(time);
 
             this.debug.preUpdate();
             this.state.preUpdate();
@@ -682,17 +704,18 @@ Phaser.Game.prototype = {
     * Called by the Stage visibility handler.
     *
     * @method Phaser.Game#gamePaused
+    * @param {object} event - The DOM event that caused the game to pause, if any.
     * @protected
     */
-    gamePaused: function (time) {
+    gamePaused: function (event) {
 
         //   If the game is already paused it was done via game code, so don't re-pause it
         if (!this._paused)
         {
             this._paused = true;
-            this.time.gamePaused(time);
+            this.time.gamePaused();
             this.sound.setMute();
-            this.onPause.dispatch(this);
+            this.onPause.dispatch(event);
         }
 
     },
@@ -701,19 +724,50 @@ Phaser.Game.prototype = {
     * Called by the Stage visibility handler.
     *
     * @method Phaser.Game#gameResumed
+    * @param {object} event - The DOM event that caused the game to pause, if any.
     * @protected
     */
-    gameResumed: function (time) {
+    gameResumed: function (event) {
 
         //  Game is paused, but wasn't paused via code, so resume it
         if (this._paused && !this._codePaused)
         {
             this._paused = false;
-            this.time.gameResumed(time);
+            this.time.gameResumed();
             this.input.reset();
             this.sound.unsetMute();
-            this.onResume.dispatch(this);
+            this.onResume.dispatch(event);
         }
+
+    },
+
+    /**
+    * Called by the Stage visibility handler.
+    *
+    * @method Phaser.Game#focusLoss
+    * @param {object} event - The DOM event that caused the game to pause, if any.
+    * @protected
+    */
+    focusLoss: function (event) {
+
+        this.onBlur.dispatch(event);
+
+        this.gamePaused(event);
+
+    },
+
+    /**
+    * Called by the Stage visibility handler.
+    *
+    * @method Phaser.Game#focusGain
+    * @param {object} event - The DOM event that caused the game to pause, if any.
+    * @protected
+    */
+    focusGain: function (event) {
+
+        this.onFocus.dispatch(event);
+
+        this.gameResumed(event);
 
     }
 

@@ -3,6 +3,8 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { create: 
 
 function create() {
 
+	console.log('game started at ' + this.time.now);
+
 	game.onPause.add(onGamePause, this);
 	game.onResume.add(onGameResume, this);
 
