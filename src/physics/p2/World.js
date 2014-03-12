@@ -120,6 +120,15 @@ Phaser.Physics.P2 = function (game, config) {
     */
     this.onEndContact = new Phaser.Signal();
 
+    //  Pixel to meter function overrides
+    if (config.hasOwnProperty('mpx') && config.hasOwnProperty('pxm') && config.hasOwnProperty('mpxi') && config.hasOwnProperty('pxmi'))
+    {
+        this.mpx = config.mpx;
+        this.mpxi = config.mpxi;
+        this.pxm = config.pxm;
+        this.pxmi = config.pxmi;
+    }
+
     //  Hook into the World events
     this.world.on("postStep", this.postStepHandler, this);
     this.world.on("postBroadphase", this.postBroadphaseHandler, this);
