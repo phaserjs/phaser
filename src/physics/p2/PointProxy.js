@@ -10,12 +10,12 @@
 * @class Phaser.Physics.P2.PointProxy
 * @classdesc PointProxy
 * @constructor
-* @param {Phaser.Game} game - A reference to the Phaser.Game instance.
+* @param {Phaser.Physics.P2} world - A reference to the P2 World.
 * @param {any} destination - The object to bind to.
 */
-Phaser.Physics.P2.PointProxy = function (game, destination) {
+Phaser.Physics.P2.PointProxy = function (world, destination) {
 
-    this.game = game;
+    this.world = world;
 	this.destination = destination;
 
 };
@@ -36,7 +36,7 @@ Object.defineProperty(Phaser.Physics.P2.PointProxy.prototype, "x", {
 
     set: function (value) {
 
-        this.destination[0] = this.game.math.px2p(value);
+        this.destination[0] = this.world.pxm(value);
 
     }
 
@@ -56,7 +56,7 @@ Object.defineProperty(Phaser.Physics.P2.PointProxy.prototype, "y", {
 
     set: function (value) {
 
-        this.destination[1] = this.game.math.px2p(value);
+        this.destination[1] = this.world.pxm(value);
 
     }
 

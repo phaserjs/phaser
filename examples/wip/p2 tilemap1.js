@@ -82,9 +82,9 @@ function update() {
 
 function render() {
 
-    for (var i = 0, len = dump.length; i < len; i++)
-    {
-        game.debug.physicsBody(dump[i]);
-    }
+    // for (var i = 0, len = dump.length; i < len; i++)
+    // {
+    //     game.debug.physicsBody(dump[i]);
+    // }
 
 }

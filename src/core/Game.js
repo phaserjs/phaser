@@ -485,19 +485,21 @@ Phaser.Game.prototype = {
         if (this.device.chrome)
         {
             var args = [
-                '%c %c %c  Phaser v' + v + ' - Renderer: ' + r + ' - Audio: ' + a + '  %c %c ',
-                'background: #00bff3',
-                'background: #0072bc',
-                'color: #ffffff; background: #003471',
-                'background: #0072bc',
-                'background: #00bff3'
+                '%c %c %c  Phaser v' + v + ' - ' + r + ' - ' + a + '  %c %c ' + ' http://phaser.io  %c %c ',
+                'background: #0cf300',
+                'background: #00bc17',
+                'color: #ffffff; background: #00711f;',
+                'background: #00bc17',
+                'background: #0cf300',
+                'background: #00bc17',
+                'background: #00711f'
             ];
 
             console.log.apply(console, args);
         }
         else
         {
-            console.log('Phaser v' + v + ' - Renderer: ' + r + ' - Audio: ' + a);
+            console.log('Phaser v' + v + ' - Renderer: ' + r + ' - Audio: ' + a + ' - http://phaser.io');
         }
 
     },

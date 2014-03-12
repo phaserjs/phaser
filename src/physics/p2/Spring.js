@@ -10,7 +10,7 @@
 * @class Phaser.Physics.P2.Spring
 * @classdesc Physics Spring Constructor
 * @constructor
-* @param {Phaser.Game} game - A reference to the current game.
+* @param {Phaser.Physics.P2} world - A reference to the P2 World.
 * @param {p2.Body} bodyA - First connected body.
 * @param {p2.Body} bodyB - Second connected body.
 * @param {number} [restLength=1] - Rest length of the spring. A number > 0.
@@ -21,12 +21,17 @@
 * @param {Array} [localA] - Where to hook the spring to body A, in local body coordinates.
 * @param {Array} [localB] - Where to hook the spring to body B, in local body coordinates.
 */
-Phaser.Physics.P2.Spring = function (game, bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB) {
+Phaser.Physics.P2.Spring = function (world, bodyA, bodyB, restLength, stiffness, damping, worldA, worldB, localA, localB) {
 
     /**
     * @property {Phaser.Game} game - Local reference to game.
     */
-    this.game = game;
+    this.game = world.game;
+
+    /**
+    * @property {Phaser.Physics.P2.World} world - Local reference to P2 World.
+    */
+    this.world = world;
 
     if (typeof restLength === 'undefined') { restLength = 1; }
     if (typeof stiffness === 'undefined') { stiffness = 100; }
@@ -40,22 +45,22 @@ Phaser.Physics.P2.Spring = function (game, bodyA, bodyB, restLength, stiffness, 
 
     if (typeof worldA !== 'undefined' && worldA !== null)
     {
-        options.worldAnchorA = [ game.math.px2p(worldA[0]), game.math.px2p(worldA[1]) ];
+        options.worldAnchorA = [ world.pxm(worldA[0]), world.pxm(worldA[1]) ];
     }
 
     if (typeof worldB !== 'undefined' && worldB !== null)
     {
-        options.worldAnchorB = [ game.math.px2p(worldB[0]), game.math.px2p(worldB[1]) ];
+        options.worldAnchorB = [ world.pxm(worldB[0]), world.pxm(worldB[1]) ];
     }
 
     if (typeof localA !== 'undefined' && localA !== null)
     {
-        options.localAnchorA = [ game.math.px2p(localA[0]), game.math.px2p(localA[1]) ];
+        options.localAnchorA = [ world.pxm(localA[0]), world.pxm(localA[1]) ];
     }
 
     if (typeof localB !== 'undefined' && localB !== null)
     {
-        options.localAnchorB = [ game.math.px2p(localB[0]), game.math.px2p(localB[1]) ];
+        options.localAnchorB = [ world.pxm(localB[0]), world.pxm(localB[1]) ];
     }
 
     p2.Spring.call(this, bodyA, bodyB, options);

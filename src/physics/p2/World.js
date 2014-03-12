@@ -42,7 +42,7 @@ Phaser.Physics.P2 = function (game, config) {
     /**
     * @property {Phaser.InversePointProxy} gravity - The gravity applied to all bodies each step.
     */
-    this.gravity = new Phaser.Physics.P2.InversePointProxy(game, this.world.gravity);
+    this.gravity = new Phaser.Physics.P2.InversePointProxy(this, this.world.gravity);
 
     /**
     * @property {p2.Body} bounds - The bounds body contains the 4 walls that border the World. Define or disable with setBounds.
@@ -451,12 +451,12 @@ Phaser.Physics.P2.prototype = {
                 this.bounds.removeShape(shape);
             }
 
-            this.bounds.position[0] = this.game.math.px2pi(cx);
-            this.bounds.position[1] = this.game.math.px2pi(cy);
+            this.bounds.position[0] = this.pxmi(cx);
+            this.bounds.position[1] = this.pxmi(cy);
         }
         else
         {
-            this.bounds = new p2.Body({ mass: 0, position:[this.game.math.px2pi(cx), this.game.math.px2pi(cy)] });
+            this.bounds = new p2.Body({ mass: 0, position:[this.pxmi(cx), this.pxmi(cy)] });
         }
 
         if (left)
@@ -470,7 +470,7 @@ Phaser.Physics.P2.prototype = {
                 // this._wallShapes[0].collisionMask = this.everythingCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[0], [this.game.math.px2pi(-hw), 0], 1.5707963267948966 );
+            this.bounds.addShape(this._wallShapes[0], [this.pxmi(-hw), 0], 1.5707963267948966 );
         }
 
         if (right)
@@ -484,7 +484,7 @@ Phaser.Physics.P2.prototype = {
                 // this._wallShapes[1].collisionMask = this.everythingCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[1], [this.game.math.px2pi(hw), 0], -1.5707963267948966 );
+            this.bounds.addShape(this._wallShapes[1], [this.pxmi(hw), 0], -1.5707963267948966 );
         }
 
         if (top)
@@ -498,7 +498,7 @@ Phaser.Physics.P2.prototype = {
                 // this._wallShapes[2].collisionMask = this.everythingCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[2], [0, this.game.math.px2pi(-hh)], -3.141592653589793 );
+            this.bounds.addShape(this._wallShapes[2], [0, this.pxmi(-hh)], -3.141592653589793 );
         }
 
         if (bottom)
@@ -512,7 +512,7 @@ Phaser.Physics.P2.prototype = {
                 // this._wallShapes[3].collisionMask = this.everythingCollisionGroup.mask;
             }
 
-            this.bounds.addShape(this._wallShapes[3], [0, this.game.math.px2pi(hh)] );
+            this.bounds.addShape(this._wallShapes[3], [0, this.pxmi(hh)] );
         }
 
         this.world.addBody(this.bounds);
@@ -1123,6 +1123,66 @@ Phaser.Physics.P2.prototype = {
         }
 
         return map.layers[layer].bodies;
+
+    },
+
+    /**
+    * Convert p2 physics value (meters) to pixel scale.
+    * By default Phaser uses a scale of 20px per meter.
+    * If you need to modify this you can over-ride these functions via the Physics Configuration object.
+    * 
+    * @method Phaser.Physics.P2#mpx
+    * @param {number} v - The value to convert.
+    * @return {number} The scaled value.
+    */
+    mpx: function (v) {
+
+        return v *= 20;
+
+    },
+
+    /**
+    * Convert pixel value to p2 physics scale (meters).
+    * By default Phaser uses a scale of 20px per meter.
+    * If you need to modify this you can over-ride these functions via the Physics Configuration object.
+    * 
+    * @method Phaser.Physics.P2#pxm
+    * @param {number} v - The value to convert.
+    * @return {number} The scaled value.
+    */
+    pxm: function (v) {
+
+        return v * 0.05;
+
+    },
+
+    /**
+    * Convert p2 physics value (meters) to pixel scale and inverses it.
+    * By default Phaser uses a scale of 20px per meter.
+    * If you need to modify this you can over-ride these functions via the Physics Configuration object.
+    * 
+    * @method Phaser.Physics.P2#mpxi
+    * @param {number} v - The value to convert.
+    * @return {number} The scaled value.
+    */
+    mpxi: function (v) {
+
+        return v *= -20;
+
+    },
+
+    /**
+    * Convert pixel value to p2 physics scale (meters) and inverses it.
+    * By default Phaser uses a scale of 20px per meter.
+    * If you need to modify this you can over-ride these functions via the Physics Configuration object.
+    * 
+    * @method Phaser.Physics.P2#pxmi
+    * @param {number} v - The value to convert.
+    * @return {number} The scaled value.
+    */
+    pxmi: function (v) {
+
+        return v * -0.05;
 
     }
 

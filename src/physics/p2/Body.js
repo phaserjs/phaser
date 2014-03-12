@@ -33,6 +33,11 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     this.game = game;
 
     /**
+    * @property {Phaser.Physics.P2} world - Local reference to the P2 World.
+    */
+    this.world = game.physics.p2;
+
+    /**
     * @property {Phaser.Sprite} sprite - Reference to the parent Sprite.
     */
     this.sprite = sprite;
@@ -51,7 +56,7 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     * @property {p2.Body} data - The p2 Body data.
     * @protected
     */
-    this.data = new p2.Body({ position:[this.px2pi(x), this.px2pi(y)], mass: mass });
+    this.data = new p2.Body({ position:[this.world.pxmi(x), this.world.pxmi(y)], mass: mass });
     this.data.parent = this;
 
     /**
@@ -346,7 +351,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     applyForce: function (force, worldX, worldY) {
 
-        this.data.applyForce(force, [this.px2p(worldX), this.px2p(worldY)]);
+        this.data.applyForce(force, [this.world.pxm(worldX), this.world.pxm(worldY)]);
 
     },
 
@@ -430,7 +435,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     rotateLeft: function (speed) {
 
-        this.data.angularVelocity = this.px2p(-speed);
+        this.data.angularVelocity = this.world.pxm(-speed);
 
     },
 
@@ -442,7 +447,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     rotateRight: function (speed) {
 
-        this.data.angularVelocity = this.px2p(speed);
+        this.data.angularVelocity = this.world.pxm(speed);
 
     },
 
@@ -455,7 +460,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     moveForward: function (speed) {
 
-        var magnitude = this.px2pi(-speed);
+        var magnitude = this.world.pxmi(-speed);
         var angle = this.data.angle + Math.PI / 2;
 
         this.data.velocity[0] = magnitude * Math.cos(angle);
@@ -472,7 +477,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     moveBackward: function (speed) {
 
-        var magnitude = this.px2pi(-speed);
+        var magnitude = this.world.pxmi(-speed);
         var angle = this.data.angle + Math.PI / 2;
 
         this.data.velocity[0] = -(magnitude * Math.cos(angle));
@@ -489,7 +494,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     thrust: function (speed) {
 
-        var magnitude = this.px2pi(-speed);
+        var magnitude = this.world.pxmi(-speed);
         var angle = this.data.angle + Math.PI / 2;
 
         this.data.force[0] += magnitude * Math.cos(angle);
@@ -506,7 +511,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     reverse: function (speed) {
 
-        var magnitude = this.px2pi(-speed);
+        var magnitude = this.world.pxmi(-speed);
         var angle = this.data.angle + Math.PI / 2;
 
         this.data.force[0] -= magnitude * Math.cos(angle);
@@ -523,7 +528,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     moveLeft: function (speed) {
 
-        this.data.velocity[0] = this.px2pi(-speed);
+        this.data.velocity[0] = this.world.pxmi(-speed);
 
     },
 
@@ -536,7 +541,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     moveRight: function (speed) {
 
-        this.data.velocity[0] = this.px2pi(speed);
+        this.data.velocity[0] = this.world.pxmi(speed);
 
     },
 
@@ -549,7 +554,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     moveUp: function (speed) {
 
-        this.data.velocity[1] = this.px2pi(-speed);
+        this.data.velocity[1] = this.world.pxmi(-speed);
 
     },
 
@@ -562,7 +567,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     moveDown: function (speed) {
 
-        this.data.velocity[1] = this.px2pi(speed);
+        this.data.velocity[1] = this.world.pxmi(speed);
 
     },
 
@@ -583,8 +588,8 @@ Phaser.Physics.P2.Body.prototype = {
     */
     postUpdate: function () {
 
-        this.sprite.x = this.p2pxi(this.data.position[0]);
-        this.sprite.y = this.p2pxi(this.data.position[1]);
+        this.sprite.x = this.world.mpxi(this.data.position[0]);
+        this.sprite.y = this.world.mpxi(this.data.position[1]);
 
         if (!this.fixedRotation)
         {
@@ -708,7 +713,7 @@ Phaser.Physics.P2.Body.prototype = {
         if (typeof offsetY === 'undefined') { offsetY = 0; }
         if (typeof rotation === 'undefined') { rotation = 0; }
 
-        this.data.addShape(shape, [this.px2pi(offsetX), this.px2pi(offsetY)], rotation);
+        this.data.addShape(shape, [this.world.pxmi(offsetX), this.world.pxmi(offsetY)], rotation);
         this.shapeChanged()
 
         return shape;
@@ -727,7 +732,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     addCircle: function (radius, offsetX, offsetY, rotation) {
 
-        var shape = new p2.Circle(this.px2p(radius));
+        var shape = new p2.Circle(this.world.pxm(radius));
 
         return this.addShape(shape, offsetX, offsetY, rotation);
 
@@ -746,7 +751,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     addRectangle: function (width, height, offsetX, offsetY, rotation) {
 
-        var shape = new p2.Rectangle(this.px2p(width), this.px2p(height));
+        var shape = new p2.Rectangle(this.world.pxm(width), this.world.pxm(height));
 
         return this.addShape(shape, offsetX, offsetY, rotation);
 
@@ -800,7 +805,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     addLine: function (length, offsetX, offsetY, rotation) {
 
-        var shape = new p2.Line(this.px2p(length));
+        var shape = new p2.Line(this.world.pxm(length));
 
         return this.addShape(shape, offsetX, offsetY, rotation);
 
@@ -820,7 +825,7 @@ Phaser.Physics.P2.Body.prototype = {
     */
     addCapsule: function (length, radius, offsetX, offsetY, rotation) {
 
-        var shape = new p2.Capsule(this.px2p(length), radius);
+        var shape = new p2.Capsule(this.world.pxm(length), radius);
 
         return this.addShape(shape, offsetX, offsetY, rotation);
 
@@ -886,8 +891,8 @@ Phaser.Physics.P2.Body.prototype = {
         //  Now process them into p2 values
         for (var p = 0; p < path.length; p++)
         {
-            path[p][0] = this.px2pi(path[p][0]);
-            path[p][1] = this.px2pi(path[p][1]);
+            path[p][0] = this.world.pxmi(path[p][0]);
+            path[p][1] = this.world.pxmi(path[p][1]);
         }
 
         // console.log('addPolygon PATH POST');
@@ -1050,7 +1055,7 @@ Phaser.Physics.P2.Body.prototype = {
 
                 for (var s = 0; s < data[i].shape.length; s += 2)
                 {
-                    vertices.push([ this.px2pi(data[i].shape[s]), this.px2pi(data[i].shape[s + 1]) ]);
+                    vertices.push([ this.world.pxmi(data[i].shape[s]), this.world.pxmi(data[i].shape[s + 1]) ]);
                 }
 
                 var c = new p2.Convex(vertices);
@@ -1064,8 +1069,8 @@ Phaser.Physics.P2.Body.prototype = {
 
                 p2.vec2.scale(cm, c.centerOfMass, 1);
 
-                cm[0] -= this.px2pi(this.sprite.width / 2);
-                cm[1] -= this.px2pi(this.sprite.height / 2);
+                cm[0] -= this.world.pxmi(this.sprite.width / 2);
+                cm[1] -= this.world.pxmi(this.sprite.height / 2);
 
                 c.updateTriangles();
                 c.updateCenterOfMass();
@@ -1107,58 +1112,6 @@ Phaser.Physics.P2.Body.prototype = {
             //  set friction + bounce here
             this.loadPolygon(key, object);
         }
-
-    },
-
-    /**
-    * Convert p2 physics value (meters) to pixel scale.
-    * 
-    * @method Phaser.Physics.P2.Body#p2px
-    * @param {number} v - The value to convert.
-    * @return {number} The scaled value.
-    */
-    p2px: function (v) {
-
-        return v *= 20;
-
-    },
-
-    /**
-    * Convert pixel value to p2 physics scale (meters).
-    * 
-    * @method Phaser.Physics.P2.Body#px2p
-    * @param {number} v - The value to convert.
-    * @return {number} The scaled value.
-    */
-    px2p: function (v) {
-
-        return v * 0.05;
-
-    },
-
-    /**
-    * Convert p2 physics value (meters) to pixel scale and inverses it.
-    * 
-    * @method Phaser.Physics.P2.Body#p2pxi
-    * @param {number} v - The value to convert.
-    * @return {number} The scaled value.
-    */
-    p2pxi: function (v) {
-
-        return v *= -20;
-
-    },
-
-    /**
-    * Convert pixel value to p2 physics scale (meters) and inverses it.
-    * 
-    * @method Phaser.Physics.P2.Body#px2pi
-    * @param {number} v - The value to convert.
-    * @return {number} The scaled value.
-    */
-    px2pi: function (v) {
-
-        return v * -0.05;
 
     }
 
@@ -1538,13 +1491,13 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "x", {
     
     get: function () {
 
-        return this.p2pxi(this.data.position[0]);
+        return this.world.mpxi(this.data.position[0]);
 
     },
 
     set: function (value) {
 
-        this.data.position[0] = this.px2pi(value);
+        this.data.position[0] = this.world.pxmi(value);
 
     }
 
@@ -1558,13 +1511,13 @@ Object.defineProperty(Phaser.Physics.P2.Body.prototype, "y", {
     
     get: function () {
 
-        return this.p2pxi(this.data.position[1]);
+        return this.world.mpxi(this.data.position[1]);
 
     },
 
     set: function (value) {
 
-        this.data.position[1] = this.px2pi(value);
+        this.data.position[1] = this.world.pxmi(value);
 
     }
 
