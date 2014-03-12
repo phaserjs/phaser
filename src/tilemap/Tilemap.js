@@ -1114,7 +1114,7 @@ Phaser.Tilemap.prototype = {
     /**
     * Scans the given area for tiles with an index matching tileA and swaps them with tileB.
     *
-    * @method Phaser.Tilemap#swapTile
+    * @method Phaser.Tilemap#swap
     * @param {number} tileA - First tile index.
     * @param {number} tileB - Second tile index.
     * @param {number} x - X position of the top left of the area to operate one, given in tiles, not pixels.
@@ -1157,7 +1157,7 @@ Phaser.Tilemap.prototype = {
         {
             this._results[index].index = this._tempB;
         }
-        else if (value.index === this._tempB)
+        if (value.index === this._tempB)
         {
             this._results[index].index = this._tempA;
         }
