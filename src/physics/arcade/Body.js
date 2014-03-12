@@ -1001,7 +1001,9 @@ Phaser.Physics.Arcade.Body.prototype = {
         }
 
         this.touching.left = true;
+        this.touching.none = false;
         body.touching.right = true;
+        body.touching.none = false;
 
         return true;
 
@@ -1050,7 +1052,9 @@ Phaser.Physics.Arcade.Body.prototype = {
         }
 
         this.touching.right = true;
+        this.touching.none = false;
         body.touching.left = true;
+        body.touching.none = false;
 
         return true;
 
@@ -1099,7 +1103,9 @@ Phaser.Physics.Arcade.Body.prototype = {
         }
 
         this.touching.up = true;
+        this.touching.none = false;
         body.touching.down = true;
+        body.touching.none = false;
 
         return true;
 
@@ -1148,7 +1154,9 @@ Phaser.Physics.Arcade.Body.prototype = {
         }
 
         this.touching.down = true;
+        this.touching.none = false;
         body.touching.up = true;
+        body.touching.none = false;
 
         return true;
 
