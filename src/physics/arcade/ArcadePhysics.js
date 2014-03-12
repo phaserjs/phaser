@@ -897,7 +897,7 @@ Phaser.Physics.Arcade.prototype = {
 
         var process = false;
 
-        if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight && !body.blocked.left)
+        if (body.deltaX() < 0 && body.checkCollision.left && tile.tile.faceRight && !body.blocked.left && tile.collideRight)
         {
             //  LEFT
             body.overlapX = body.left - tile.right;
@@ -911,7 +911,7 @@ Phaser.Physics.Arcade.prototype = {
                 body.overlapX = 0;
             }
         }
-        else if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft && !body.blocked.right)
+        else if (body.deltaX() > 0 && body.checkCollision.right && tile.tile.faceLeft && !body.blocked.right && tile.collideLeft)
         {
             //  RIGHT
             body.overlapX = body.right - tile.x;
@@ -926,7 +926,7 @@ Phaser.Physics.Arcade.prototype = {
             }
         }
 
-        if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom && !body.blocked.up)
+        if (body.deltaY() < 0 && body.checkCollision.up && tile.tile.faceBottom && !body.blocked.up && tile.collideDown)
         {
             //  UP
             body.overlapY = body.top - tile.bottom;
@@ -940,7 +940,7 @@ Phaser.Physics.Arcade.prototype = {
                 body.overlapY = 0;
             }
         }
-        else if (body.deltaY() > 0 && body.checkCollision.down && tile.tile.faceTop && !body.blocked.down)
+        else if (body.deltaY() > 0 && body.checkCollision.down && tile.tile.faceTop && !body.blocked.down && tile.collideUp)
         {
             //  DOWN
             body.overlapY = body.bottom - tile.y;
