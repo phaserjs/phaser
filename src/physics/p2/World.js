@@ -130,9 +130,9 @@ Phaser.Physics.P2 = function (game, config) {
     }
 
     //  Hook into the World events
-    this.world.on("postStep", this.postStepHandler, this);
-    this.world.on("postBroadphase", this.postBroadphaseHandler, this);
-    this.world.on("impact", this.impactHandler, this);
+    // this.world.on("postStep", this.postStepHandler, this);
+    // this.world.on("postBroadphase", this.postBroadphaseHandler, this);
+    // this.world.on("impact", this.impactHandler, this);
     this.world.on("beginContact", this.beginContactHandler, this);
     this.world.on("endContact", this.endContactHandler, this);
 

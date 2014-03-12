@@ -6,7 +6,7 @@
 
 /**
 * A TileSprite is a Sprite that has a repeating texture. The texture can be scrolled and scaled and will automatically wrap on the edges as it does so.
-* Please note that TileSprites have no input handler or physics bodies.
+* Please note that TileSprites, as with normal Sprites, have no input handler or physics bodies by default. Both need enabling.
 *
 * @class Phaser.TileSprite
 * @constructor
