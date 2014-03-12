@@ -22,27 +22,29 @@ function create() {
 
     game.stage.backgroundColor = '#000000';
 
+    game.physics.startSystem(Phaser.Physics.P2JS);
+
     bg = game.add.tileSprite(0, 0, 800, 600, 'background');
     bg.fixedToCamera = true;
 
-    game.physics.gravity.y = 20.0;
+    // game.physics.p2.gravity.y = 20.0;
 
     game.world.setBounds(0, 0, 2000, 600);
+    game.physics.p2.setBoundsToWorld(true, true, false, true, false);
 
-    game.physics.setBoundsToWorld(true, true, false, true, false);
-
-    game.physics.friction = 0.5;
-    game.physics.enableBodySleeping = true;
-    game.physics.world.solver.stiffness = 1e20;
-    game.physics.world.solver.relaxation = 3;
+    game.physics.p2.friction = 0.5;
+    game.physics.p2.enableBodySleeping = true;
+    game.physics.p2.world.solver.stiffness = 1e20;
+    game.physics.p2.world.solver.relaxation = 3;
 
     //  Materials
-    var groundMaterial = game.physics.createMaterial('ground');
-    var characterMaterial = game.physics.createMaterial('character');
-    var boxMaterial = game.physics.createMaterial('box');
+    var groundMaterial = game.physics.p2.createMaterial('ground');
+    var characterMaterial = game.physics.p2.createMaterial('character');
+    var boxMaterial = game.physics.p2.createMaterial('box');
 
     player = game.add.sprite(100, -400, 'dude');
-    player.physicsEnabled = true;
+    game.physics.p2.enable(player);
+    // player.physicsEnabled = true;
     player.body.fixedRotation = true;
     player.body.setRectangle(12, 40, 0, 4);
     player.body.setMaterial(characterMaterial);
@@ -54,12 +56,14 @@ function create() {
     player.animations.add('right', [5, 6, 7, 8], 10, true);
 
     boxes = game.add.group();
+    boxes.enableBody = true;
+    boxes.physicsBodyType = Phaser.Physics.P2JS;
 
     for (var i = 0; i < 100; i++)
     {
         var box = boxes.create(game.rnd.integerInRange(200, 1700), game.rnd.integerInRange(-200, 400), 'box');
         box.scale.set(game.rnd.realInRange(0.2, 0.6));
-        box.physicsEnabled = true;
+        // box.physicsEnabled = true;
         box.body.allowSleep = true;
         box.body.mass = 1;
         box.body.setMaterial(boxMaterial);
@@ -67,11 +71,11 @@ function create() {
     }
 
     //  Set the material along the ground
-    game.physics.setWorldMaterial(groundMaterial);
+    game.physics.p2.setWorldMaterial(groundMaterial);
 
-    var groundCharacterCM = game.physics.createContactMaterial(groundMaterial, characterMaterial, { friction: 0.0 }); // no friction between character and ground
-    var boxCharacterCM = game.physics.createContactMaterial(boxMaterial, characterMaterial, { friction: 0.0 }); // No friction between character and boxes
-    var boxGroundCM = game.physics.createContactMaterial(boxMaterial, groundMaterial, { friction: 0.6 }); // Between boxes and ground
+    var groundCharacterCM = game.physics.p2.createContactMaterial(groundMaterial, characterMaterial, { friction: 0.0 }); // no friction between character and ground
+    var boxCharacterCM = game.physics.p2.createContactMaterial(boxMaterial, characterMaterial, { friction: 0.0 }); // No friction between character and boxes
+    var boxGroundCM = game.physics.p2.createContactMaterial(boxMaterial, groundMaterial, { friction: 0.6 }); // Between boxes and ground
 
     game.camera.follow(player);
 
@@ -152,7 +156,7 @@ function render () {
 
     // if (player.debug)
     // {
-        game.debug.renderPhysicsBody(player.body);
+        // game.debug.renderPhysicsBody(player.body);
     //     game.debug.renderBodyInfo(player, 16, 24);
     // }
 

@@ -174,11 +174,12 @@ Phaser.Physics.P2.prototype = {
     *
     * @method Phaser.Physics.Arcade#enable
     * @param {object|array|Phaser.Group} object - The game object to create the physics body on. Can also be an array or Group of objects, a body will be created on every child that has a `body` property.
-    * @param {boolean} debug - Create a debug object to go with this body?
+    * @param {boolean} [debug=false] - Create a debug object to go with this body?
     * @param {boolean} [children=true] - Should a body be created on all children of this object? If true it will recurse down the display list as far as it can go.
     */
     enable: function (object, debug, children) {
 
+        if (typeof debug === 'undefined') { debug = false; }
         if (typeof children === 'undefined') { children = true; }
 
         var i = 1;
@@ -192,15 +193,15 @@ Phaser.Physics.P2.prototype = {
                 if (object[i] instanceof Phaser.Group)
                 {
                     //  If it's a Group then we do it on the children regardless
-                    this.enable(object[i].children, children);
+                    this.enable(object[i].children, debug, children);
                 }
                 else
                 {
-                    this.enableBody(object[i]);
+                    this.enableBody(object[i], debug);
 
                     if (children && object[i].hasOwnProperty('children') && object[i].children.length > 0)
                     {
-                        this.enable(object[i], true);
+                        this.enable(object[i], debug, true);
                     }
                 }
             }
@@ -210,15 +211,15 @@ Phaser.Physics.P2.prototype = {
             if (object instanceof Phaser.Group)
             {
                 //  If it's a Group then we do it on the children regardless
-                this.enable(object.children, children);
+                this.enable(object.children, debug, children);
             }
             else
             {
-                this.enableBody(object);
+                this.enableBody(object, debug);
 
                 if (children && object.hasOwnProperty('children') && object.children.length > 0)
                 {
-                    this.enable(object.children, true);
+                    this.enable(object.children, debug, true);
                 }
             }
         }

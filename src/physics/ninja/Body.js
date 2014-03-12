@@ -119,6 +119,13 @@ Phaser.Physics.Ninja.Body = function (system, sprite, type, id, radius, x, y, wi
     this.collideWorldBounds = true;
 
     /**
+    * Set the checkCollision properties to control which directions collision is processed for this Body.
+    * For example checkCollision.up = false means it won't collide when the collision happened while moving up.
+    * @property {object} checkCollision - An object containing allowed collision.
+    */
+    this.checkCollision = { none: false, any: true, up: true, down: true, left: true, right: true };
+
+    /**
     * This object is populated with boolean values when the Body collides with another.
     * touching.up = true means the collision happened to the top of this Body for example.
     * @property {object} touching - An object containing touching results.
@@ -370,6 +377,46 @@ Phaser.Physics.Ninja.Body.prototype = {
 
         this.shape.oldpos.copyFrom(this.shape.pos);
 
+    },
+
+    /**
+    * Returns the absolute delta x value.
+    *
+    * @method Phaser.Physics.Ninja.Body#deltaAbsX
+    * @return {number} The absolute delta value.
+    */
+    deltaAbsX: function () {
+        return (this.deltaX() > 0 ? this.deltaX() : -this.deltaX());
+    },
+
+    /**
+    * Returns the absolute delta y value.
+    *
+    * @method Phaser.Physics.Ninja.Body#deltaAbsY
+    * @return {number} The absolute delta value.
+    */
+    deltaAbsY: function () {
+        return (this.deltaY() > 0 ? this.deltaY() : -this.deltaY());
+    },
+
+    /**
+    * Returns the delta x value. The difference between Body.x now and in the previous step.
+    *
+    * @method Phaser.Physics.Ninja.Body#deltaX
+    * @return {number} The delta value. Positive if the motion was to the right, negative if to the left.
+    */
+    deltaX: function () {
+        return this.shape.pos.x - this.shape.oldpos.x;
+    },
+
+    /**
+    * Returns the delta y value. The difference between Body.y now and in the previous step.
+    *
+    * @method Phaser.Physics.Ninja.Body#deltaY
+    * @return {number} The delta value. Positive if the motion was downwards, negative if upwards.
+    */
+    deltaY: function () {
+        return this.shape.pos.y - this.shape.oldpos.y;
     }
 
 };
@@ -440,7 +487,7 @@ Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "height", {
 Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "bottom", {
     
     get: function () {
-        return this.shape.pos.y + this.shape.height;
+        return this.shape.pos.y + this.shape.yw;
     }
 
 });
@@ -453,7 +500,7 @@ Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "bottom", {
 Object.defineProperty(Phaser.Physics.Ninja.Body.prototype, "right", {
     
     get: function () {
-        return this.shape.pos.x + this.shape.width;
+        return this.shape.pos.x + this.shape.xw;
     }
 
 });

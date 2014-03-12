@@ -565,6 +565,37 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
+    * Renders a Rectangle.
+    *
+    * @method Phaser.Utils.Debug#geom
+    * @param {Phaser.Rectangle|object} object - The geometry object to render.
+    * @param {string} [color] - Color of the debug info to be rendered (format is css color string).
+    * @param {boolean} [filled=true] - Render the objected as a filled (default, true) or a stroked (false)
+    */
+    rectangle: function (object, color, filled) {
+
+        if (typeof filled === 'undefined') { filled = true; }
+
+        color = color || 'rgba(0,255,0,0.4)';
+
+        this.start();
+
+        if (filled)
+        {
+            this.context.fillStyle = color;
+            this.context.fillRect(object.x - this.game.camera.x, object.y - this.game.camera.y, object.width, object.height);
+        }
+        else
+        {
+            this.context.strokeStyle = color;
+            this.context.strokeRect(object.x - this.game.camera.x, object.y - this.game.camera.y, object.width, object.height);
+        }
+
+        this.stop();
+
+    },
+
+    /**
     * Render a string of text.
     *
     * @method Phaser.Utils.Debug#text

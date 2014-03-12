@@ -44,6 +44,18 @@ Phaser.Physics.Ninja.Circle = function (body, x, y, radius) {
     this.radius = radius;
 
     /**
+    * @property {number} xw - Half the width.
+    * @readonly
+    */
+    this.xw = radius;
+
+    /**
+    * @property {number} xw - Half the height.
+    * @readonly
+    */
+    this.yw = radius;
+
+    /**
     * @property {number} width - The width.
     * @readonly
     */

@@ -295,7 +295,7 @@ Phaser.Group.prototype.create = function (x, y, key, frame, exists) {
         {
             child.body = new Phaser.Physics.Ninja.Body(this.game.physics.ninja, child, 1);
         }
-        else if (this.physicsBodyType === Phaser.Physics.P2 && this.game.physics.p2)
+        else if (this.physicsBodyType === Phaser.Physics.P2JS && this.game.physics.p2)
         {
             child.body = new Phaser.Physics.P2.Body(this.game, child, x, y, 1);
         }
