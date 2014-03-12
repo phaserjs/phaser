@@ -845,15 +845,44 @@ Phaser.Physics.P2.prototype = {
     },
 
     /**
-    * Test if a world point overlaps bodies.
+    * Test if a world point overlaps bodies. You will get an array of actual P2 bodies back. You can find out which Sprite a Body belongs to
+    * (if any) by checking the Body.parent.sprite property. Body.parent is a Phaser.Physics.P2.Body property.
     *
     * @method Phaser.Physics.P2#hitTest
-    * @param {Phaser.Point} worldPoint - Point to use for intersection tests.
-    * @param {Array} bodies - A list of objects to check for intersection.
-    * @param {number} precision - Used for matching against particles and lines. Adds some margin to these infinitesimal objects.
+    * @param {Phaser.Point} worldPoint - Point to use for intersection tests. The points values must be in world (pixel) coordinates.
+    * @param {Array<Phaser.Physics.P2.Body|Phaser.Sprite|p2.Body>} [bodies] - A list of objects to check for intersection. If not given it will check Phaser.Physics.P2.world.bodies (i.e. all world bodies)
+    * @param {number} [precision=5] - Used for matching against particles and lines. Adds some margin to these infinitesimal objects.
+    * @param {boolean} [filterStatic=false] - If true all Static objects will be removed from the results array.
     * @return {Array} Array of bodies that overlap the point.
     */
-    hitTest: function (worldPoint, bodies, precision) {
+    hitTest: function (worldPoint, bodies, precision, filterStatic) {
+
+        if (typeof bodies === 'undefined') { bodies = this.world.bodies; }
+        if (typeof precision === 'undefined') { precision = 5; }
+        if (typeof filterStatic === 'undefined') { filterStatic = false; }
+
+        var physicsPosition = [ this.pxmi(worldPoint.x), this.pxmi(worldPoint.y) ];
+
+        var query = [];
+        var i = bodies.length;
+
+        while (i--)
+        {
+            if (bodies[i] instanceof Phaser.Physics.P2.Body && !(filterStatic && bodies[i].data.motionState === p2.Body.STATIC))
+            {
+                query.push(bodies[i].data);
+            }
+            else if (bodies[i] instanceof p2.Body && bodies[i].parent && !(filterStatic && bodies[i].motionState === p2.Body.STATIC))
+            {
+                query.push(bodies[i]);
+            }
+            else if (bodies[i] instanceof Phaser.Sprite && bodies[i].hasOwnProperty('body') && !(filterStatic && bodies[i].body.data.motionState === p2.Body.STATIC))
+            {
+                query.push(bodies[i].body.data);
+            }
+        }
+
+        return this.world.hitTest(physicsPosition, query, precision);
 
     },
 
@@ -865,7 +894,7 @@ Phaser.Physics.P2.prototype = {
     */
     toJSON: function () {
 
-        this.world.toJSON();
+        return this.world.toJSON();
 
     },
 

@@ -56,7 +56,7 @@ Phaser.Physics.P2.Body = function (game, sprite, x, y, mass) {
     * @property {p2.Body} data - The p2 Body data.
     * @protected
     */
-    this.data = new p2.Body({ position:[this.world.pxmi(x), this.world.pxmi(y)], mass: mass });
+    this.data = new p2.Body({ position: [ this.world.pxmi(x), this.world.pxmi(y) ], mass: mass });
     this.data.parent = this;
 
     /**
@@ -686,13 +686,14 @@ Phaser.Physics.P2.Body.prototype = {
     */
     clearShapes: function () {
 
-        for (var i = this.data.shapes.length - 1; i >= 0; i--)
+        var i = this.data.shapes.length;
+
+        while (i--)
         {
-            var shape = this.data.shapes[i];
-            this.data.removeShape(shape);
+            this.data.removeShape(this.data.shapes[i]);
         }
 
-        this.shapeChanged()
+        this.shapeChanged();
 
     },
 
@@ -714,7 +715,7 @@ Phaser.Physics.P2.Body.prototype = {
         if (typeof rotation === 'undefined') { rotation = 0; }
 
         this.data.addShape(shape, [this.world.pxmi(offsetX), this.world.pxmi(offsetY)], rotation);
-        this.shapeChanged()
+        this.shapeChanged();
 
         return shape;
 
@@ -900,7 +901,8 @@ Phaser.Physics.P2.Body.prototype = {
         // console.table(path);
 
         result = this.data.fromPolygon(path, options);
-        this.shapeChanged()
+
+        this.shapeChanged();
 
         return result
     },
