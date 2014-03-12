@@ -1775,7 +1775,7 @@ declare module Phaser {
         sound(key: string, volume?: number, loop?: boolean, connect?: boolean): Phaser.Sound;
         sprite(x: number, y: number, key?: any, frame?: any): Phaser.Sprite;
         spriteBatch(parent: any, name?: String, addToStage?: boolean): Phaser.Group;
-        text(x: number, y: number, text: string, style: Phaser): Phaser.Text;
+        text(x: number, y: number, text: string, style: Object): Phaser.Text;
         tileMap(key: string, tilesets: any): Phaser.Tilemap;
         tileSprite(x: number, y: number, width: number, height: number, key: any, frame: any): Phaser.TileSprite;
         tween(obj: Object): Phaser.Tween;
