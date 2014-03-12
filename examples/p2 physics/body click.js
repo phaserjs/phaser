@@ -17,7 +17,7 @@ var bunny;
 var block;
 var wizball;
 
-var result = '';
+var result = 'Click a body';
 
 function create() {
 

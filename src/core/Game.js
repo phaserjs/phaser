@@ -212,16 +212,6 @@ Phaser.Game = function (width, height, renderer, parent, state, transparent, ant
     this.particles = null;
 
     /**
-    * @property {function} update - The current update method being called.
-    */
-    this.update = this.coreUpdate;
-
-    /**
-    * @property {function} render - The current render method being called.
-    */
-    this.render = this.coreRender;
-
-    /**
     * @property {boolean} stepping - Enable core loop stepping with Game.enableStep().
     * @default
     * @readonly
@@ -544,11 +534,7 @@ Phaser.Game.prototype = {
             this.context = null;
         }
 
-        if (this.renderType === Phaser.HEADLESS)
-        {
-            this.render = this.headlessRender;
-        }
-        else
+        if (this.renderType !== Phaser.HEADLESS)
         {
             this.stage.smoothed = this.antialias;
 
@@ -559,95 +545,53 @@ Phaser.Game.prototype = {
     },
 
     /**
-    * The core game loop.
-    *
-    * @method Phaser.Game#coreUpdate
-    * @protected
-    * @param {number} time - The current time as provided by RequestAnimationFrame.
-    */
-    coreUpdate: function (time) {
-
-        this.time.update(time);
-
-        this.debug.preUpdate();
-        this.state.preUpdate();
-        this.plugins.preUpdate();
-        this.stage.preUpdate();
-
-        this.stage.update();
-        this.tweens.update();
-        this.sound.update();
-        this.input.update();
-        this.state.update();
-        this.physics.update();
-        this.particles.update();            
-        this.plugins.update();
-
-        this.stage.postUpdate();
-        this.plugins.postUpdate();
-
-        this.render();
-
-    },
-
-    /**
     * The core game loop when in a paused state.
     *
-    * @method Phaser.Game#pausedUpdate
+    * @method Phaser.Game#update
     * @protected
     * @param {number} time - The current time as provided by RequestAnimationFrame.
     */
-    pausedUpdate: function (time) {
+    update: function (time) {
 
-        this.debug.preUpdate();
-
-        this.render();
-
-    },
-
-    /**
-    * The core game loop when in a Stepped state.
-    *
-    * @method Phaser.Game#steppedUpdate
-    * @protected
-    * @param {number} time - The current time as provided by RequestAnimationFrame.
-    */
-    steppedUpdate: function (time) {
-
-        if (!this.pendingStep)
+        if (!this._paused && !this.pendingStep)
         {
             if (this.stepping)
             {
                 this.pendingStep = true;
             }
 
-            this.coreUpdate();
+            this.time.update(time);
+
+            this.debug.preUpdate();
+            this.state.preUpdate();
+            this.plugins.preUpdate();
+            this.stage.preUpdate();
+
+            this.stage.update();
+            this.tweens.update();
+            this.sound.update();
+            this.input.update();
+            this.state.update();
+            this.physics.update();
+            this.particles.update();            
+            this.plugins.update();
+
+            this.stage.postUpdate();
+            this.plugins.postUpdate();
+        }
+        else
+        {
+            this.debug.preUpdate();
         }
 
-    },
+        if (this.renderType != Phaser.HEADLESS)
+        {
+            this.renderer.render(this.stage);
+            this.plugins.render();
+            this.state.render();
+            this.plugins.postRender();
+        }
 
-    /**
-    * The core render loop.
-    *
-    * @method Phaser.Game#coreRender
-    * @protected
-    */
-    coreRender: function () {
-
-        this.renderer.render(this.stage);
-        this.plugins.render();
-        this.state.render();
-        this.plugins.postRender();
-
-    },
-
-    /**
-    * The empty headless render loop.
-    *
-    * @method Phaser.Game#headlessRender
-    * @protected
-    */
-    headlessRender: function () {
     },
 
     /**
@@ -662,8 +606,6 @@ Phaser.Game.prototype = {
         this.pendingStep = false;
         this.stepCount = 0;
 
-        this.update = this.steppedUpdate;
-
     },
 
     /**
@@ -675,8 +617,6 @@ Phaser.Game.prototype = {
 
         this.stepping = false;
         this.pendingStep = false;
-
-        this.update = this.coreUpdate;
 
     },
 
@@ -733,7 +673,6 @@ Phaser.Game.prototype = {
             this.time.gamePaused(time);
             this.sound.setMute();
             this.onPause.dispatch(this);
-            this.update = this.pausedUpdate;
         }
 
     },
@@ -754,7 +693,6 @@ Phaser.Game.prototype = {
             this.input.reset();
             this.sound.unsetMute();
             this.onResume.dispatch(this);
-            this.update = this.coreUpdate;
         }
 
     }
@@ -786,7 +724,6 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
                 this.sound.mute = true;
                 this.time.gamePaused();
                 this.onPause.dispatch(this);
-                this.update = this.pausedUpdate;
             }
         }
         else
@@ -799,7 +736,6 @@ Object.defineProperty(Phaser.Game.prototype, "paused", {
                 this.sound.mute = false;
                 this.time.gameResumed();
                 this.onResume.dispatch(this);
-                this.update = this.coreUpdate;
             }
         }
 
