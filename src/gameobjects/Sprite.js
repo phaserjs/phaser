@@ -199,6 +199,12 @@ Phaser.Sprite.prototype.preUpdate = function() {
         this._cache[1] = this.world.y;
         this._cache[2] = this.rotation;
         this._cache[4] = 0;
+
+        if (this.exists && this.body)
+        {
+            this.body.preUpdate();
+        }
+
         return false;
     }
 
@@ -886,7 +892,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
             //  exists = true
             this._cache[6] = 1;
 
-            if (this.body && this.body.type === Phaser.Physics.P2)
+            if (this.body && this.body.type === Phaser.Physics.P2JS)
             {
                 this.body.addToWorld();
             }
@@ -898,7 +904,7 @@ Object.defineProperty(Phaser.Sprite.prototype, "exists", {
             //  exists = false
             this._cache[6] = 0;
 
-            if (this.body && this.body.type === Phaser.Physics.P2)
+            if (this.body && this.body.type === Phaser.Physics.P2JS)
             {
                 this.body.safeRemove = true;
             }

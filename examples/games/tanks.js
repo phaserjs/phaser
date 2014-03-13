@@ -16,9 +16,9 @@ EnemyTank = function (index, game, player, bullets) {
     this.tank = game.add.sprite(x, y, 'enemy', 'tank1');
     this.turret = game.add.sprite(x, y, 'enemy', 'turret');
 
-    this.shadow.anchor.setTo(0.5, 0.5);
-    this.tank.anchor.setTo(0.5, 0.5);
-    this.turret.anchor.setTo(0.3, 0.5);
+    this.shadow.anchor.set(0.5);
+    this.tank.anchor.set(0.5);
+    this.turret.anchor.set(0.3, 0.5);
 
     this.tank.name = index.toString();
     game.physics.enable(this.tank, Phaser.Physics.ARCADE);
@@ -142,6 +142,7 @@ function create () {
     enemyBullets.setAll('anchor.x', 0.5);
     enemyBullets.setAll('anchor.y', 0.5);
     enemyBullets.setAll('outOfBoundsKill', true);
+    enemyBullets.setAll('checkWorldBounds', true);
 
     //  Create some baddies to waste :)
     enemies = [];
@@ -163,6 +164,7 @@ function create () {
     bullets.setAll('anchor.x', 0.5);
     bullets.setAll('anchor.y', 0.5);
     bullets.setAll('outOfBoundsKill', true);
+    bullets.setAll('checkWorldBounds', true);
 
     //  Explosion pool
     explosions = game.add.group();

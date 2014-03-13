@@ -51,7 +51,7 @@ function launch() {
 
 function update() {
 
-	// sprite.rotation = sprite.body.angle;
+	sprite.rotation = sprite.body.angle;
 
 	bmd.context.fillStyle = '#ffff00';
 	bmd.context.fillRect(sprite.x, sprite.y, 2, 2);
@@ -60,7 +60,6 @@ function update() {
 
 function render() {
 
-	// game.debug.bodyInfo(sprite, 16, 24);
-	// game.debug.physicsBody(sprite.body);
+	game.debug.bodyInfo(sprite, 32, 32);
 
 }

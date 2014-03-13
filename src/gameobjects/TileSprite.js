@@ -514,7 +514,7 @@ Object.defineProperty(Phaser.TileSprite.prototype, "exists", {
             //  exists = true
             this._cache[6] = 1;
 
-            if (this.body && this.body.type === Phaser.Physics.P2)
+            if (this.body && this.body.type === Phaser.Physics.P2JS)
             {
                 this.body.addToWorld();
             }
@@ -526,7 +526,7 @@ Object.defineProperty(Phaser.TileSprite.prototype, "exists", {
             //  exists = false
             this._cache[6] = 0;
 
-            if (this.body && this.body.type === Phaser.Physics.P2)
+            if (this.body && this.body.type === Phaser.Physics.P2JS)
             {
                 this.body.safeRemove = true;
             }

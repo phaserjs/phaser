@@ -667,7 +667,30 @@ Phaser.Utils.Debug.prototype = {
     },
 
     /**
-    * Render Sprite Body Physics Data as text.
+    * Render a Sprites Physics body if it has one set. Note this only works for Arcade Physics.
+    * To display a P2 body you should enable debug mode on the body when creating it.
+    *
+    * @method Phaser.Utils.Debug#body
+    * @param {Phaser.Sprite} sprite - The sprite whos body will be rendered.
+    * @param {string} [color='rgb(255,255,255)'] - color of the debug info to be rendered. (format is css color string).
+    * @param {boolean} [filled=true] - Render the objected as a filled (default, true) or a stroked (false)
+    */
+    body: function (sprite, color, filled) {
+
+        if (sprite.body)
+        {
+            if (sprite.body.type === Phaser.Physics.ARCADE)
+            {
+                this.start();
+                Phaser.Physics.Arcade.Body.render(this.context, sprite.body, color);
+                this.stop();
+            }
+        }
+
+    },
+
+    /**
+    * Render a Sprites Physic Body information.
     *
     * @method Phaser.Utils.Debug#bodyInfo
     * @param {Phaser.Sprite} sprite - The sprite to be rendered.
@@ -677,17 +700,15 @@ Phaser.Utils.Debug.prototype = {
     */
     bodyInfo: function (sprite, x, y, color) {
 
-        this.start(x, y, color, 210);
-
-        this.line('x: ' + sprite.body.x.toFixed(2), 'y: ' + sprite.body.y.toFixed(2), 'width: ' + sprite.width, 'height: ' + sprite.height);
-        // this.line('speed: ' + sprite.body.speed.toFixed(2), 'angle: ' + sprite.body.angle.toFixed(2), 'linear damping: ' + sprite.body.linearDamping);
-        // this.line('blocked left: ' + sprite.body.blocked.left, 'right: ' + sprite.body.blocked.right, 'up: ' + sprite.body.blocked.up, 'down: ' + sprite.body.blocked.down);
-        // this.line('touching left: ' + sprite.body.touching.left, 'right: ' + sprite.body.touching.right, 'up: ' + sprite.body.touching.up, 'down: ' + sprite.body.touching.down);
-        // this.line('gravity x: ' + sprite.body.gravity.x, 'y: ' + sprite.body.gravity.y, 'world gravity x: ' + this.game.physics.gravity.x, 'y: ' + this.game.physics.gravity.y);
-        // this.line('acceleration x: ' + sprite.body.acceleration.x.toFixed(2), 'y: ' + sprite.body.acceleration.y.toFixed(2));
-        // this.line('velocity x: ' + sprite.body.velocity.x.toFixed(2), 'y: ' + sprite.body.velocity.y.toFixed(2), 'deltaX: ' + sprite.body.deltaX().toFixed(2), 'deltaY: ' + sprite.body.deltaY().toFixed(2));
-        // this.line('bounce x: ' + sprite.body.bounce.x.toFixed(2), 'y: ' + sprite.body.bounce.y.toFixed(2));
-        this.stop();
+        if (sprite.body)
+        {
+            if (sprite.body.type === Phaser.Physics.ARCADE)
+            {
+                this.start(x, y, color, 210);
+                Phaser.Physics.Arcade.Body.renderBodyInfo(this, sprite.body);
+                this.stop();
+            }
+        }
 
     }
 

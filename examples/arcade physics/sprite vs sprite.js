@@ -47,7 +47,7 @@ function collisionHandler (obj1, obj2) {
 
 function render() {
 
-    // game.debug.physicsBody(sprite1.body);
-    // game.debug.physicsBody(sprite2.body);
+    game.debug.body(sprite1);
+    game.debug.body(sprite2);
 
 }
